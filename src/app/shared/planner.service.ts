@@ -26,8 +26,8 @@ export class PlannerService {
     this.dive.maxDepth = this.firstGas.mod;
     this.dive.maxTime = this.calculateMaxDiveTime(averagePressure, availableGas);
 
-    this.dive.consumed = this.calculateConsumed(this.plan.duration, this.diver.sac, averagePressure, this.firstGas.size);
-    this.firstGas.consume(this.dive.consumed);
+    this.firstGas.consumed = this.calculateConsumed(this.plan.duration, this.diver.sac, averagePressure, this.firstGas.size);
+    this.dive.calculated = true;
   }
 
   private calculateMaxDiveTime(averagePressure: number, availableGas: number): number {

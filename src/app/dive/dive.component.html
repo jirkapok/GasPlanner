@@ -1,14 +1,8 @@
 <div class="card">
     <div class="card-header">Dive</div>
-    <div *ngIf="!dive.canRealize()" class="card-body">Not calculated yet</div>
-    <div class="card-body" *ngIf="dive.canRealize()">
+    <div *ngIf="!dive.calculated" class="card-body">Not calculated yet</div>
+    <div class="card-body" *ngIf="dive.calculated">
         <table class="table table-noheader my-0">
-            <tr>
-                <td>Maximum operation depth [m]:</td>
-                <td class="table-active">
-                    <strong>{{ dive.maxDepth }}</strong>
-                </td>
-            </tr>
             <tr>
                 <td>Time to surface [min.]:</td>
                 <td class="table-active">
@@ -22,20 +16,26 @@
                 </td>
             </tr>
             <tr>
+                <td>Turn time [min]:</td>
+                <td class="table-active">
+                    <strong>{{ dive.turnTime }}</strong>
+                </td>
+            </tr>
+            <tr>
                 <td>Rock bottom [bar]:</td>
                 <td class="table-active">
                     <strong>{{ dive.rockBottom }}</strong>
                 </td>
             </tr>
             <tr>
-                <td>Consumed [bar]:</td>
+                <td>Turn pressure [bar]:</td>
                 <td class="table-active">
-                    <strong>{{ dive.consumed }}</strong>
+                    <strong>{{ dive.turnPressure }}</strong>
                 </td>
             </tr>
         </table>
         <div>
-            Bottom gas:
+            <div>Bottom gas: {{ bottomGas.endPressure }}/{{ bottomGas.startPressure }} bar</div>
             <div class="progress gas-bar">
                 <div class="progress-bar bg-warning" role="progressbar" aria-valuemin="0" 
                     [attr.aria-valuenow]="bottomGasRockBottom" [attr.aria-valuemax]="bottomGasMax"
@@ -44,6 +44,7 @@
                     [attr.aria-valuenow]="bottomGasRemaining" [attr.aria-valuemax]="bottomGasMax"
                     [style.width]="bottomGasPercentsRemaining + '%'">{{bottomGasRemaining}}</div>
             </div>
+            <small class="text-muted">{{bottomGas.name}} MOD: {{bottomGas.mod}} m</small>
         </div>
     </div>
 </div>

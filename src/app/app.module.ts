@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { CustomFormsModule } from 'ng2-validation';
 
 import { AppComponent } from './app.component';
 import { GasesComponent } from './gases/gases.component';
@@ -30,7 +31,8 @@ import { GaslabelComponent } from './gaslabel/gaslabel.component';
     BrowserModule,
     FormsModule,
     NgbModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
+    CustomFormsModule
   ],
   exports: [],
   providers: [ PlannerService, PreferencesService ],

@@ -25,6 +25,7 @@
     "bootstrap": "^4.1.1",
     "core-js": "^2.5.7",
     "jquery": "^3.3.1",
+    "ng2-validation": "^4.2.0",
     "popper.js": "^1.14.3",
     "rxjs": "^6.2.1",
     "zone.js": "^0.8.26"

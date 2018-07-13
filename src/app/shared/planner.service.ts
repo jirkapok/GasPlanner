@@ -11,7 +11,7 @@ export class PlannerService {
   constructor() {
   }
 
-  private get firstGas(): Gas {
+  public get firstGas(): Gas {
     return this.gases.current[0];
   }
 
@@ -86,6 +86,6 @@ export class PlannerService {
 
     this.plan.loadFrom(other.plan);
     this.diver.loadFrom(other.diver);
-    this.firstGas.loadFrom(other.firstGas);
+    this.firstGas.loadFrom(other.gases.current[0]);
   }
 }

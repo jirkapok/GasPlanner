@@ -12,8 +12,6 @@ import { PlannerService } from './planner.service';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
-// import { ModalModule } from '../app-bootstrap/app-bootstrap';
-
 
 @NgModule({
   declarations: [

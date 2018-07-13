@@ -13,8 +13,10 @@
         <input [(ngModel)]="plan.depth" placeholder="30" class="form-control" type="number" min="0" required/>
       </label>
     </div>
-    <div>
+    <div class="form-group">
       <button class="btn btn-primary" (click)="calculate()">Calculate</button>
+      <button class="btn btn-default" (click)="saveDefaults()">Save</button>
+      <button class="btn btn-default" (click)="reset()">Reset</button>
     </div>
   </div>
 </div>

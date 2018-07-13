@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PlannerService, Plan } from '../planner.service';
+import { PreferencesService } from '../preferences.service';
 
 @Component({
   selector: 'app-plan',
@@ -9,13 +10,22 @@ import { PlannerService, Plan } from '../planner.service';
 export class PlanComponent implements OnInit {
   public plan: Plan;
 
-  constructor(private planer: PlannerService) { }
+  constructor(private planer: PlannerService, private preferences: PreferencesService) { }
 
   ngOnInit() {
     this.plan = this.planer.plan;
+    this.reset();
   }
 
   public calculate() {
     this.planer.calculate();
+  }
+
+  public saveDefaults() {
+    this.preferences.saveDefaults();
+  }
+
+  public reset() {
+    this.preferences.loadDefaults();
   }
 }

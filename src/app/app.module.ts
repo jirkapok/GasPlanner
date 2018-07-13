@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { GasesComponent } from './gases/gases.component';
@@ -8,7 +9,7 @@ import { DiverComponent } from './diver/diver.component';
 import { PlanComponent } from './plan/plan.component';
 import { DiveComponent } from './dive/dive.component';
 import { PlannerService } from './planner.service';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { PreferencesService } from './preferences.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     NgbModule.forRoot()
   ],
   exports: [],
-  providers: [ PlannerService ],
+  providers: [ PlannerService, PreferencesService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

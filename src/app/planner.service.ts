@@ -89,7 +89,7 @@ export class Dive {
 
 @Injectable()
 export class PlannerService {
-  public plan: Plan = new Plan(10, 30);
+  public plan: Plan = new Plan(20, 30);
   public diver: Diver = new Diver(20);
   public gases: Gases = new Gases();
   public dive: Dive = new Dive();

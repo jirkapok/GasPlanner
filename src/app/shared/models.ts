@@ -52,7 +52,7 @@ export class Diver {
 }
 
 export enum Strategies {
-    ALL_USABLE = 1,
+    ALL = 1,
     HALF = 2,
     THIRD = 3
 }

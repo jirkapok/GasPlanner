@@ -20,6 +20,9 @@ export class MainMenuComponent implements OnInit {
     // this.planComponent.reset();
   }
 
+  public toggleDiver(): void {
+  }
+
   ngOnInit() {
   }
 }

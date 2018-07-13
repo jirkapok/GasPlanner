@@ -1,13 +1,15 @@
+<form #f="ngForm" name="form" novalidate>
 <div class="container mt-5">
   <div class="row">
     <div class="col-lg-3 col-md-6 mt-4">
-      <app-gases></app-gases>
+      <app-gases (validate)="f.form.updateValueAndValidity()"></app-gases>
     </div>
     <div class="col-lg-3 col-md-6 mt-4">
-      <app-plan></app-plan>
+      <app-plan [(formValid)]="f.form.invalid"></app-plan>
     </div>
     <div class="col-lg-3 col-md-6 mt-4">
       <app-dive></app-dive>
     </div>
   </div>
 </div>
+</form>

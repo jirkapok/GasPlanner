@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Plan, Strategies } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 import { PreferencesService } from '../shared/preferences.service';
@@ -14,6 +14,7 @@ export class PlanComponent implements OnInit {
   public readonly ThirdUsable = 'Thirds usable';
   public plan: Plan;
   public strategy = this.AllUsable;
+  @Input() public formValid: boolean;
 
   constructor(private planer: PlannerService, private preferences: PreferencesService) { }
 

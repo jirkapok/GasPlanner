@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Gases, Gas, Diver } from '../shared/models';
 
@@ -13,6 +13,8 @@ export class GasesComponent implements OnInit {
   public gasNames: string[];
 
   constructor(private planer: PlannerService) { }
+
+  @Output() validate: EventEmitter<any> = new EventEmitter();
 
   ngOnInit() {
     this.gas = this.planer.gas;

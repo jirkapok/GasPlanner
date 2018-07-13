@@ -1,27 +1,36 @@
-# Planner
+# Gas planner
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.7.
+This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations. Purpose of the application is to provide easy to use calculations.
 
-## Development server
+> **NOTE:** Running instance is available at [http://gasplanner.azurewebsites.net](http://gasplanner.azurewebsites.net)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Disclaimer
 
-## Code scaffolding
+None of the authors, contributors, administrators, vandals, or anyone else connected with this project, in any way whatsoever, can be responsible for your use of the information contained in or linked from these web pages.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Calculations Background
+
+* Only one safety stop 3min. in 5 meters is currently supported (No deep stops nor GUE ascent stops).
+* The safety stop is required for dives below 20 m
+* Ascent speed 10m/min. is used
+* When calculating ascent time 2 minutes are always added, to resolve immediate issues in depth.
+
+## Prerequisites
+
+To work on the application install NodeJs, AngularCli 6.0 and TypeScript. Recommended development environment is Visual Studio Code.
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+To compile the application compile it by `npm run build` and deploy `dist` directory. To start the app use `npm run start`. For debugging purpose
 
-## Running unit tests
+## Running the tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Angular recommended testing environment is used, to run test use `npm run test` or `npm run e2e`
 
-## Running end-to-end tests
+## Contributing
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## Further help
+## License
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

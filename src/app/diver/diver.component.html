@@ -4,7 +4,7 @@
   </div>
   <div class="card-body">
     <label for="sac">Surface air consumption [L/min.]:
-      <input [(ngModel)]="diver.sac" placeholder="sac" class="form-control" type="number" />
+      <input [(ngModel)]="diver.sac" placeholder="20" class="form-control" type="number" min="0" max="100" required/>
     </label>
   </div>
 </div>

@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-class Diver {
-  constructor(public sac: number) {
-  }
-}
+import { PlannerService, Diver } from '../planner.service';
 
 @Component({
   selector: 'app-diver',
@@ -11,9 +7,10 @@ class Diver {
   styleUrls: ['./diver.component.css']
 })
 export class DiverComponent implements OnInit {
-  public diver: Diver = new Diver(20);
-  constructor() { }
+  public diver: Diver;
+  constructor(private planer: PlannerService) { }
 
   ngOnInit() {
+    this.diver = this.planer.diver;
   }
 }

@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-class Gas {
-  constructor(public size: number, public startPressure: number) {
-  }
-}
+import { PlannerService, Gases, Gas } from '../planner.service';
 
 @Component({
   selector: 'app-gases',
@@ -11,31 +7,19 @@ class Gas {
   styleUrls: ['./gases.component.css']
 })
 export class GasesComponent implements OnInit {
-  private gases: Gas[] = [this.createGas()];
+  private gases: Gases;
 
-  constructor() { }
+  constructor(private planer: PlannerService) { }
 
   ngOnInit() {
+    this.gases = this.planer.gases;
   }
 
-  add(): void {
-    const newGas = this.createGas();
-    this.gases.push(newGas);
+  public add(): void {
+    this.gases.add();
   }
 
-  remove(selected: Gas): void {
-    if (this.gases.length <= 1) {
-      return;
-    }
-
-    this.gases.forEach( (item, index) => {
-      if (item === selected) {
-        this.gases.splice(index, 1);
-      }
-    });
-  }
-
-  private createGas(): Gas {
-    return new Gas(15, 200);
+  public remove(selected: Gas): void {
+    this.gases.remove(selected);
   }
 }

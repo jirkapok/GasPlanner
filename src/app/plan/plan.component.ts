@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-class Plan {
-  constructor(public duration: number, public depth: number) {
-  }
-}
+import { PlannerService, Plan } from '../planner.service';
 
 @Component({
   selector: 'app-plan',
@@ -11,10 +7,15 @@ class Plan {
   styleUrls: ['./plan.component.css']
 })
 export class PlanComponent implements OnInit {
-  public plan: Plan = new Plan(10, 30);
+  public plan: Plan;
 
-  constructor() { }
+  constructor(private planer: PlannerService) { }
 
   ngOnInit() {
+    this.plan = this.planer.plan;
+  }
+
+  public calculate() {
+    this.planer.calculate();
   }
 }

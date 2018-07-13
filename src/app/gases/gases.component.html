@@ -1,7 +1,7 @@
 <div>
   <h2>Gases</h2>
 <button (click)="add()">+</button>
-<li *ngFor="let gas of gases">
+<li *ngFor="let gas of gases.current">
     <div>
         <label>size:
           <input [(ngModel)]="gas.size" placeholder="size"/> [L]

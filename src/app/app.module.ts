@@ -7,6 +7,7 @@ import { GasesComponent } from './gases/gases.component';
 import { DiverComponent } from './diver/diver.component';
 import { PlanComponent } from './plan/plan.component';
 import { DiveComponent } from './dive/dive.component';
+import { PlannerService } from './planner.service';
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import { DiveComponent } from './dive/dive.component';
     BrowserModule,
     FormsModule
   ],
-  providers: [],
+  providers: [ PlannerService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

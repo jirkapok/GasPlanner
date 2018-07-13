@@ -23,6 +23,15 @@ export class Gas {
     return Math.floor(result);
   }
 
+  public get name(): string {
+    const fromEnum = StandardGas[this.o2];
+    if (fromEnum) {
+      return fromEnum;
+    }
+
+    return 'EAN' + this.o2.toString();
+  }
+
   public assignStandardGas(standard: string): void {
     this.o2 = StandardGas[standard];
   }

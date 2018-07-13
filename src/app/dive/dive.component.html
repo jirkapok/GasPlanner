@@ -1,21 +1,22 @@
 <div class="card">
-  <div class="card-header">
-    Dive
-  </div>
-  <div class="card-body">
-    <div *ngIf="!dive.canRealize()">Not calculated yet</div>
-    <div *ngIf="dive.canRealize()">
-        <div>
-            Rock bottom [bar]: {{ dive.rockBottom }}
-        </div>
-        <div>
-            Time to surface [min.]: {{ dive.timeToSurface }}
-        </div>
-        <div>
-            Maximum dive time [min.]: {{ dive.maxTime }}
-        </div>
-        <div>
-            Maximum depth [m]: {{ dive.maxDepth }}
-        </div>
-    </div>
+    <div class="card-header">Dive</div>
+    <div *ngIf="!dive.canRealize()" class="card-body">Not calculated yet</div>
+    <table *ngIf="dive.canRealize()" class="card-body table my-0">
+        <tr>
+            <td>Rock bottom [bar]:</td>
+            <td class="table-active"><strong>{{ dive.rockBottom }}</strong></td>
+        </tr>
+        <tr>
+            <td>Time to surface [min.]:</td>
+            <td class="table-active"><strong>{{ dive.timeToSurface }}</strong></td>
+        </tr>
+        <tr>
+            <td>Maximum dive time [min.]:</td>
+            <td class="table-active"><strong>{{ dive.maxTime }}</strong></td>
+        </tr>
+        <tr>
+            <td>Maximum depth [m]:</td>
+            <td class="table-active"><strong>{{ dive.maxDepth }}</strong></td>
+        </tr>
+    </table>
 </div>

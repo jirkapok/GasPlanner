@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
 
+export enum StandardGas {
+  Air = 21,
+  EAN32 = 32,
+  EAN36 = 36,
+  EAN38 = 38,
+  EAN50 = 50,
+  OXYGEN = 100
+}
 export class Gas {
   constructor(public size: number, public startPressure: number, public o2: number) {
   }
@@ -13,6 +21,10 @@ export class Gas {
     const ppO2 = this.o2 / 100;
     const result = 10 * (maxPpO2 / ppO2 - 1);
     return Math.floor(result);
+  }
+
+  public assignStandardGas(standard: string): void {
+    this.o2 = StandardGas[standard];
   }
 }
 
@@ -28,6 +40,11 @@ export class Plan {
 
 export class Gases {
   public current: Gas[] = [this.createGas()];
+
+  public static gasNames(): string[] {
+    return Object.keys(StandardGas)
+      .filter(k => typeof StandardGas[k] === 'number') as string[];
+  }
 
   public add(): void {
     const newGas = this.createGas();

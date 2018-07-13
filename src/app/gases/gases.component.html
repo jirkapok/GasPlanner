@@ -25,7 +25,7 @@
             <div ngbDropdown class="input-group-append d-inline-block">
               <button class="btn btn-default" id="o2Menu" ngbDropdownToggle></button>
               <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-                <button *ngFor="let stgas of this.gasNames" class="dropdown-item" (click)="assignStandardGas(gas, stgas)">{{stgas}}</button>
+                <button *ngFor="let stgas of this.gasNames" class="dropdown-item" (click)="gas.assignStandardGas(stgas)">{{stgas}}</button>
               </div>
             </div>
           </div>

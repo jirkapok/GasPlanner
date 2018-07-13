@@ -1,14 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PlannerService, Gases, Gas } from '../planner.service';
-
-export enum StandardGas {
-  Air = 21,
-  EAN32 = 32,
-  EAN36 = 36,
-  EAN38 = 38,
-  EAN50 = 50,
-  OXYGEN = 100
-}
+import { PlannerService, Gases, Gas, StandardGas } from '../planner.service';
 
 @Component({
   selector: 'app-gases',
@@ -23,12 +14,7 @@ export class GasesComponent implements OnInit {
 
   ngOnInit() {
     this.gases = this.planer.gases;
-    this.gasNames = Object.keys(StandardGas)
-      .filter(k => typeof StandardGas[k] === 'number') as string[];
-  }
-
-  public assignStandardGas(gas: Gas, stgas: string): void {
-    gas.o2 = StandardGas[stgas];
+    this.gasNames = Gases.gasNames();
   }
 
   public add(): void {

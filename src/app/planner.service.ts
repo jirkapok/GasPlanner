@@ -52,13 +52,20 @@ export class Diver {
   }
 }
 
+export enum Strategies {
+  ALL_USABLE = 1,
+  HALF = 2,
+  THIRD = 3
+}
+
 export class Plan {
-  constructor(public duration: number, public depth: number) {
+  constructor(public duration: number, public depth: number, public strategy: Strategies) {
   }
 
   public loadFrom(other: Plan): void {
     this.depth = other.depth;
     this.duration = other.duration;
+    this.strategy = other.strategy;
   }
 }
 
@@ -113,7 +120,7 @@ export class Dive {
 
 @Injectable()
 export class PlannerService {
-  public plan: Plan = new Plan(20, 30);
+  public plan: Plan = new Plan(20, 30, 1);
   public diver: Diver = new Diver(20);
   public gases: Gases = new Gases();
   public dive: Dive = new Dive();
@@ -133,7 +140,7 @@ export class PlannerService {
 
   private calculateMaxDiveTime(averagePressure: number, rockBottom: number): number {
     const totalVolume = this.gases.totalVolume();
-    const availableGas = totalVolume - rockBottom * this.gases.current[0].size;
+    const availableGas = (totalVolume - rockBottom * this.gases.current[0].size) / this.plan.strategy;
     const result = availableGas / averagePressure / this.diver.sac;
     return Math.floor(result);
   }

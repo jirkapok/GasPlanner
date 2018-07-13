@@ -4,15 +4,20 @@
   </div>
   <div class="card-body">
     <div class="form-group">
-      <label>Duration [min.]:
-        <input [(ngModel)]="plan.duration" placeholder="10" class="form-control" type="number" min="0" required/>
+      <label for="duration">Duration [min.]:
+        <input id="duration" [(ngModel)]="plan.duration" placeholder="10" class="form-control" type="number" min="0" required/>
       </label>
     </div>
     <div class="form-group">
-      <label>Depth [m]:
-        <input [(ngModel)]="plan.depth" placeholder="30" class="form-control" type="number" min="0" required/>
+      <label for="depth">Depth [m]:
+        <input id="depth" [(ngModel)]="plan.depth" placeholder="30" class="form-control" type="number" min="0" required/>
       </label>
     </div>
+    <div class="form-group">
+        <label for="strategy">Strategy:
+          <input id="strategy" [(ngModel)]="plan.strategy" placeholder="1" class="form-control" type="number" min="1" max="3" required/>
+        </label>
+      </div>
     <div class="form-group">
       <button class="btn btn-primary" (click)="calculate()">Calculate</button>
       <button class="btn btn-default" (click)="saveDefaults()">Save</button>

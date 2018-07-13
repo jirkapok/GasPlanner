@@ -7,6 +7,13 @@ export enum StandardGas {
     OXYGEN = 100
 }
 
+export class Gases {
+    public static gasNames(): string[] {
+        return Object.keys(StandardGas)
+            .filter(k => typeof StandardGas[k] === 'number') as string[];
+    }
+}
+
 export class Gas {
     public consumed = 0;
 
@@ -19,13 +26,6 @@ export class Gas {
         return this.size * this.startPressure;
     }
 
-    public get mod(): number {
-        const maxPpO2 = 1.4;
-        const ppO2 = this.o2 / 100;
-        const result = 10 * (maxPpO2 / ppO2 - 1);
-        return Math.floor(result);
-    }
-
     public get name(): string {
         const fromEnum = StandardGas[this.o2];
         if (fromEnum) {
@@ -33,6 +33,12 @@ export class Gas {
         }
 
         return 'EAN' + this.o2.toString();
+    }
+
+    public mod(maxPpO2: number): number {
+        const ppO2 = this.o2 / 100;
+        const result = 10 * (maxPpO2 / ppO2 - 1);
+        return Math.floor(result);
     }
 
     public assignStandardGas(standard: string): void {
@@ -51,11 +57,11 @@ export class Gas {
 }
 
 export class Diver {
-    public get stressSac(): number {
-        return this.sac * 3;
+    constructor(public sac: number, public maxPpO2: number) {
     }
 
-    constructor(public sac: number) {
+    public get stressSac(): number {
+        return this.sac * 3;
     }
 
     public static gasSac(sac: number, gasSize: number): number {
@@ -96,47 +102,8 @@ export class Plan {
     }
 }
 
-export class Gases {
-    public current: Gas[] = [this.createGas()];
-
-    public static gasNames(): string[] {
-        return Object.keys(StandardGas)
-            .filter(k => typeof StandardGas[k] === 'number') as string[];
-    }
-
-    public add(): void {
-        const newGas = this.createGas();
-        this.current.push(newGas);
-    }
-
-    private createGas(): Gas {
-        return new Gas(15, 21, 200);
-    }
-
-    public remove(selected: Gas): void {
-        if (this.current.length <= 1) {
-            return;
-        }
-
-        this.current.forEach((item, index) => {
-            if (item === selected) {
-                this.current.splice(index, 1);
-            }
-        });
-    }
-
-    public totalVolume(): number {
-        let total = 0;
-        this.current.forEach(gas => {
-            total += gas.volume;
-        });
-        return total;
-    }
-}
-
 export class Dive {
     public calculated = false;
-    public maxDepth = 0;
     public maxTime = 0;
     public rockBottom = 0;
     public timeToSurface = 0;

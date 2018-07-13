@@ -3,8 +3,15 @@
     Diver
   </div>
   <div class="card-body">
-    <label for="sac">Surface air consumption [L/min.]:
-      <input [(ngModel)]="diver.sac" placeholder="20" class="form-control" type="number" min="0" max="100" required/>
-    </label>
+    <div>
+        <label for="sac">Surface air consumption [L/min.]:
+            <input [(ngModel)]="diver.sac" placeholder="20" class="form-control" type="number" min="5" max="100" required/>
+        </label>
+    </div>
+    <div>
+      <label for="maxPpO2">Maximum ppO2:
+          <input [(ngModel)]="diver.maxPpO2" placeholder="1.6" class="form-control" type="number" min=".21" max="3" required/>
+      </label>
+    </div>
   </div>
 </div>

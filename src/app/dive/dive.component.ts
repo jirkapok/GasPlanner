@@ -10,6 +10,7 @@ import { Dive, Gas } from '../shared/models';
 export class DiveComponent implements OnInit {
   public dive: Dive;
   public bottomGas: Gas;
+
   public get bottomGasMax() {
     return this.bottomGas.startPressure;
   }
@@ -34,10 +35,14 @@ export class DiveComponent implements OnInit {
     return this.planer.plan.needsReturn;
   }
 
+  public get gasMod(): number {
+    return this.bottomGas.mod(this.planer.diver.maxPpO2);
+  }
+
   constructor(private planer: PlannerService) { }
 
   ngOnInit() {
     this.dive = this.planer.dive;
-    this.bottomGas = this.planer.firstGas;
+    this.bottomGas = this.planer.gas;
   }
 }

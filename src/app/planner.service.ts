@@ -114,7 +114,6 @@ export class PlannerService {
 
   private calculateMaxDepth(): number {
     const maxPpO2 = 1.4;
-    // e.g: 21
     const ppO2 = this.gases.current[0].o2 / 100;
     const result = 10 * (maxPpO2 / ppO2 - 1);
     return Math.floor(result);

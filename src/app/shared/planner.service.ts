@@ -25,17 +25,18 @@ export class PlannerService {
     this.dive.rockBottom = rockBottom;
     this.dive.maxDepth = this.firstGas.mod;
     this.dive.maxTime = this.calculateMaxDiveTime(averagePressure, availableVolume);
-    this.dive.turnPressure = this.calculateTurnPressure(rockBottom);
-    this.dive.turnTime = 0;
     this.firstGas.consumed = this.calculateConsumed(this.plan.duration,
-        this.diver.sac, averagePressure, this.firstGas.size);
+      this.diver.sac, averagePressure, this.firstGas.size);
+
+    // TODO before turn, we should subtract surfacing
+    this.dive.turnPressure = this.calculateTurnPressure();
+    this.dive.turnTime = Math.floor(this.plan.duration / 2);
     this.dive.calculated = true;
   }
 
-  private calculateTurnPressure(rockBottom: number): number {
-    const allAvailable = this.firstGas.startPressure - rockBottom;
-    const consumed = Math.floor(allAvailable * this.plan.turnPressureRatio);
-    return this.firstGas.startPressure - consumed;
+  private calculateTurnPressure(): number {
+    const consumed = this.firstGas.consumed / 2;
+    return this.firstGas.startPressure - Math.floor(consumed);
   }
 
   private calculateMaxDiveTime(averagePressure: number, availableVolume: number): number {
@@ -57,17 +58,9 @@ export class PlannerService {
   }
 
   private calculateConsumed(time: number, sac: number, averagePressure: number, gasSize): number {
-    const result = time * averagePressure * this.gasSac(sac, gasSize);
+    const result = time * averagePressure * Diver.gasSac(sac, gasSize);
     const rounded = Math.ceil(result);
     return rounded;
-  }
-
-  public normalGasSac(gas: Gas): number {
-    return this.gasSac(this.diver.sac, gas.size);
-  }
-
-  private gasSac(sac: number, gasSize: number): number {
-    return sac / gasSize;
   }
 
   private averagePressure(): number {

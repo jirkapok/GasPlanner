@@ -58,6 +58,14 @@ export class Diver {
     constructor(public sac: number) {
     }
 
+    public static gasSac(sac: number, gasSize: number): number {
+        return sac / gasSize;
+    }
+
+    public gasSac(gas: Gas): number {
+        return Diver.gasSac(this.sac, gas.size);
+    }
+
     public loadFrom(other: Diver): void {
         this.sac = other.sac;
     }

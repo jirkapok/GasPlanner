@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Gases, Gas } from '../shared/models';
+import { Gases, Gas, Diver } from '../shared/models';
 
 @Component({
   selector: 'app-gases',
@@ -8,6 +8,7 @@ import { Gases, Gas } from '../shared/models';
   styleUrls: ['./gases.component.css']
 })
 export class GasesComponent implements OnInit {
+  private diver: Diver;
   public gases: Gases;
   public gasNames: string[];
 
@@ -15,6 +16,7 @@ export class GasesComponent implements OnInit {
 
   ngOnInit() {
     this.gases = this.planer.gases;
+    this.diver = this.planer.diver;
     this.gasNames = Gases.gasNames();
   }
 
@@ -27,6 +29,6 @@ export class GasesComponent implements OnInit {
   }
 
   public gasSac(gas: Gas): number {
-    return this.planer.normalGasSac(gas);
+    return this.diver.gasSac(gas);
   }
 }

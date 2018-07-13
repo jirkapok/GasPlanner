@@ -4,16 +4,18 @@
   </div>
   <div class="card-body">
     <!-- <button (click)="add()">+</button> -->
-    <li *ngFor="let gas of gases.current">
-      <div>
-        <label>size:
-          <input [(ngModel)]="gas.size" placeholder="size"/> [L]
+    <div *ngFor="let gas of gases.current">
+      <div class="form-group">
+        <label for="size">Size [L]:
+          <input id="size" [(ngModel)]="gas.size" placeholder="size" class="form-control" />
         </label>
-        <label>Start:
-          <input [(ngModel)]="gas.startPressure" placeholder="startPressure"/> [bar]
-        </label>
-        <!-- <button (click)="remove(gas)">-</button> -->
       </div>
-    </li>
+      <div class="form-group">
+        <label for="startPressure">Start pressure [bar]:
+          <input id="startPressure" [(ngModel)]="gas.startPressure" class="form-control"/>
+        </label>
+      </div>
+      <!-- <button (click)="remove(gas)">-</button> -->
+    </div>
   </div>
 </div>

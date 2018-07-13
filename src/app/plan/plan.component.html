@@ -5,13 +5,17 @@
   <div class="card-body">
     <div class="form-group">
       <label for="duration">Duration [min.]:
-        <input id="duration" [(ngModel)]="plan.duration" placeholder="10" class="form-control" type="number" min="0" required/>
+        <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="plan.duration" class="form-control" type="number"
+         min="1" [min]="1" required [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"/>
       </label>
+      <div class="text-danger" *ngIf="duration.invalid && (duration.dirty || duration.touched)">Needs to be number > 0 min.</div>
     </div>
     <div class="form-group">
       <label for="depth">Depth [m]:
-        <input id="depth" [(ngModel)]="plan.depth" placeholder="30" class="form-control" type="number" min="0" required/>
+        <input id="depth" name="depth" #depth="ngModel" [(ngModel)]="plan.depth" class="form-control" type="number"
+         min="1" [min]="1" required [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)"/>
       </label>
+      <div class="text-danger" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number > 0 m</div>
     </div>
 
     <div class="form-group">

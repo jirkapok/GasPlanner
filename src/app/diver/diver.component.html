@@ -8,7 +8,7 @@
         <div class="card-body">
           <div>
             <label for="sac">Surface air consumption [L/min.]:
-              <input [(ngModel)]="diver.sac" class="form-control" #sac="ngModel" name="sac"
+              <input [(ngModel)]="diver.sac" class="form-control" #sac="ngModel" name="sac" id="sac"
                type="number" min="5" max="100" [range]="[5,100]" required
                [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)"/>
             </label>
@@ -16,7 +16,7 @@
           </div>
           <div>
             <label for="maxPpO2">Maximum ppO2:
-              <input [(ngModel)]="diver.maxPpO2" class="form-control" #maxPpO2="ngModel" name="maxPpO2"
+              <input [(ngModel)]="diver.maxPpO2" class="form-control" #maxPpO2="ngModel" name="maxPpO2" id="maxPpO2"
               type="number" min=".21" max="3" [range]="[.21,3]" required
               [class.is-invalid]="maxPpO2.invalid && (maxPpO2.dirty || maxPpO2.touched)"/>
             </label>

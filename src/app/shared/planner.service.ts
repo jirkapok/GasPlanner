@@ -31,6 +31,7 @@ export class PlannerService {
     // TODO before turn, we should subtract surfacing
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
+    this.dive.needsReturn = this.plan.needsReturn;
     this.dive.calculated = true;
   }
 

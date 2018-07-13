@@ -21,13 +21,13 @@
                     <strong>{{ dive.rockBottom }}</strong>
                 </td>
             </tr>
-            <tr>
+            <tr *ngIf="dive.needsReturn">
                 <td>Turn time [min]:</td>
                 <td class="table-active">
                     <strong>{{ dive.turnTime }}</strong>
                 </td>
             </tr>
-            <tr>
+            <tr *ngIf="dive.needsReturn">
                 <td>Turn pressure [bar]:</td>
                 <td class="table-active">
                     <strong>{{ dive.turnPressure }}</strong>

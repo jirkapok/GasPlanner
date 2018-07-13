@@ -85,15 +85,8 @@ export class Plan {
         return this.strategy === Strategies.THIRD ? 2 / 3 : 1;
     }
 
-    public get turnPressureRatio(): number {
-        switch (this.strategy) {
-            case Strategies.HALF:
-                return 1 / 2;
-            case Strategies.THIRD:
-                return 1 / 3;
-            default:
-                return 1;
-        }
+    public get needsReturn(): boolean {
+        return this.strategy !== Strategies.ALL;
     }
 
     public loadFrom(other: Plan): void {
@@ -149,4 +142,5 @@ export class Dive {
     public timeToSurface = 0;
     public turnPressure = 0;
     public turnTime = 0;
+    public needsReturn = false;
 }

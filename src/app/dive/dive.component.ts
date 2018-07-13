@@ -30,6 +30,10 @@ export class DiveComponent implements OnInit {
     return this.bottomGasRemaining / this.bottomGas.startPressure * 100;
   }
 
+  public get needsReturn(): boolean {
+    return this.planer.plan.needsReturn;
+  }
+
   constructor(private planer: PlannerService) { }
 
   ngOnInit() {

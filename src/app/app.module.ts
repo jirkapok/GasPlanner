@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { GasesComponent } from './gases/gases.component';
 import { DiverComponent } from './diver/diver.component';
-import { DiveComponent } from './dive/dive.component';
+import { PlanComponent } from './plan/plan.component';
 
 
 @NgModule({
@@ -13,7 +13,7 @@ import { DiveComponent } from './dive/dive.component';
     AppComponent,
     GasesComponent,
     DiverComponent,
-    DiveComponent
+    PlanComponent
   ],
   imports: [
     BrowserModule,

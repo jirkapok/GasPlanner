@@ -10,6 +10,7 @@ import { PlanComponent } from './plan/plan.component';
 import { DiveComponent } from './dive/dive.component';
 import { PlannerService } from './shared/planner.service';
 import { PreferencesService } from './shared/preferences.service';
+import { MainMenuComponent } from './mainmenu/mainmenu.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { PreferencesService } from './shared/preferences.service';
     GasesComponent,
     DiverComponent,
     PlanComponent,
-    DiveComponent
+    DiveComponent,
+    MainMenuComponent
   ],
   imports: [
     BrowserModule,

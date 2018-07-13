@@ -8,10 +8,7 @@ import { DiverComponent } from './diver/diver.component';
 import { PlanComponent } from './plan/plan.component';
 import { DiveComponent } from './dive/dive.component';
 import { PlannerService } from './planner.service';
-
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ModalModule } from 'ngx-bootstrap/modal';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -24,11 +21,9 @@ import { ModalModule } from 'ngx-bootstrap/modal';
   imports: [
     BrowserModule,
     FormsModule,
-    BsDropdownModule.forRoot(),
-    TooltipModule.forRoot(),
-    ModalModule.forRoot()
+    NgbModule.forRoot()
   ],
-  exports: [BsDropdownModule, TooltipModule, ModalModule ],
+  exports: [],
   providers: [ PlannerService ],
   bootstrap: [AppComponent]
 })

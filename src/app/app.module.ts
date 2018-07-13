@@ -4,12 +4,14 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { GasesComponent } from './gases/gases.component';
+import { DiverComponent } from './diver/diver.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    GasesComponent
+    GasesComponent,
+    DiverComponent
   ],
   imports: [
     BrowserModule,

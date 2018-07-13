@@ -43,7 +43,7 @@ export class PlannerService {
 
   private calculateRockBottom(timeToSurface: number, averagePressure: number): number {
     const minimumRockBottom = 30;
-    const stressSac = 3 * this.diver.sac;
+    const stressSac = this.diver.stressSac;
     const result = this.calculateConsumed(timeToSurface, stressSac, averagePressure, this.firstGas.size);
     return result > minimumRockBottom ? result : minimumRockBottom;
   }

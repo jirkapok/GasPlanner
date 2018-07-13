@@ -52,6 +52,10 @@ export class Gas {
 }
 
 export class Diver {
+    public get stressSac(): number {
+        return this.sac * 3;
+    }
+
     constructor(public sac: number) {
     }
 

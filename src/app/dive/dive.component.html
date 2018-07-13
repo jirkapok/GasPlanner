@@ -44,7 +44,7 @@
                     [attr.aria-valuenow]="bottomGasRemaining" [attr.aria-valuemax]="bottomGasMax"
                     [style.width]="bottomGasPercentsRemaining + '%'">{{bottomGasRemaining}}</div>
             </div>
-            <small class="text-muted">{{bottomGas.name}} MOD: {{gasMod}} m</small>
+            <app-gaslabel></app-gaslabel>
         </div>
     </div>
 </div>

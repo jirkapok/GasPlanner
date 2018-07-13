@@ -35,10 +35,6 @@ export class DiveComponent implements OnInit {
     return this.planer.plan.needsReturn;
   }
 
-  public get gasMod(): number {
-    return this.bottomGas.mod(this.planer.diver.maxPpO2);
-  }
-
   constructor(private planer: PlannerService) { }
 
   ngOnInit() {

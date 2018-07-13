@@ -13,6 +13,7 @@ import { PreferencesService } from './shared/preferences.service';
 import { MainMenuComponent } from './mainmenu/mainmenu.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { GaslabelComponent } from './gaslabel/gaslabel.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     PlanComponent,
     DiveComponent,
     MainMenuComponent,
-    DashboardComponent
+    DashboardComponent,
+    GaslabelComponent
   ],
   imports: [
     BrowserModule,

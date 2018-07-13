@@ -2,14 +2,14 @@
   <h2>Gases</h2>
 <button (click)="add()">+</button>
 <li *ngFor="let gas of gases">
-    <!-- <input type="text">{{gas.size}}</input> <input type="text">{{gas.startPressure}}</input> -->
     <div>
         <label>size:
           <input [(ngModel)]="gas.size" placeholder="size"/> [L]
         </label>
         <label>Start:
-            <input [(ngModel)]="gas.startPressure" placeholder="startPressure"/> [bar]
-          </label>
+          <input [(ngModel)]="gas.startPressure" placeholder="startPressure"/> [bar]
+        </label>
+        <button (click)="remove(gas)">-</button>
     </div>
 </li>
 </div>

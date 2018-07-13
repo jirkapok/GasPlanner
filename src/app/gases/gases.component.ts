@@ -23,6 +23,18 @@ export class GasesComponent implements OnInit {
     this.gases.push(newGas);
   }
 
+  remove(selected: Gas): void {
+    if (this.gases.length <= 1) {
+      return;
+    }
+
+    this.gases.forEach( (item, index) => {
+      if (item === selected) {
+        this.gases.splice(index, 1);
+      }
+    });
+  }
+
   private createGas(): Gas {
     return new Gas(15, 200);
   }

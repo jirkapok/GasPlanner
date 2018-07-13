@@ -32,7 +32,11 @@ export class Gas {
             return fromEnum;
         }
 
-        return 'EAN' + this.o2.toString();
+        if (this.o2) {
+            return 'EAN' + this.o2.toString();
+        }
+
+        return '';
     }
 
     public mod(maxPpO2: number): number {

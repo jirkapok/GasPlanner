@@ -11,7 +11,7 @@ class Gas {
   styleUrls: ['./gases.component.css']
 })
 export class GasesComponent implements OnInit {
-  private gases: Gas[] = [];
+  private gases: Gas[] = [this.createGas()];
 
   constructor() { }
 
@@ -19,7 +19,11 @@ export class GasesComponent implements OnInit {
   }
 
   add(): void {
-    const newGas = new Gas(15, 200);
+    const newGas = this.createGas();
     this.gases.push(newGas);
+  }
+
+  private createGas(): Gas {
+    return new Gas(15, 200);
   }
 }

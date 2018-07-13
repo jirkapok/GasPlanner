@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 export class Gas {
-  constructor(public size: number, public startPressure: number) {
+  constructor(public size: number, public startPressure: number, public o2: number) {
   }
 
   public volume(): number {
@@ -28,7 +28,7 @@ export class Gases {
   }
 
   private createGas(): Gas {
-    return new Gas(15, 200);
+    return new Gas(15, 200, 21);
   }
 
   public remove(selected: Gas): void {
@@ -86,29 +86,41 @@ export class PlannerService {
   private calculateMaxDiveTime(averagePressure: number, rockBottom: number): number {
     const totalVolume = this.gases.totalVolume();
     const availableGas = totalVolume - rockBottom * this.gases.current[0].size;
-    return availableGas / averagePressure / this.diver.sac;
+    const result = availableGas / averagePressure / this.diver.sac;
+    return Math.floor(result);
   }
 
   private calculateRockBottom(timeToSurface: number, averagePressure: number): number {
+    const minimumRockBottom = 30;
     const firstGas = this.gases.current[0];
     const stressSac = 3 * this.diver.sac;
-    return timeToSurface * stressSac * averagePressure / firstGas.size;
+    const result = timeToSurface * stressSac * averagePressure / firstGas.size;
+    const rounded = Math.ceil(result);
+    return rounded > minimumRockBottom ? rounded : minimumRockBottom;
   }
 
   private averagePressure(): number {
     const averageDepth = this.plan.depth / 2;
-    return 1 + averageDepth / 10;
+    return this.depthToBar(averageDepth);
   }
 
   private calculateTimeToSurface(): number {
     const solutionDuration = 2;
     const swimSpeed = 10; // meter/min.
-    const safetyStop = this.dive.maxDepth >= 20 ? 3 : 0;
-    const swimTime = Math.ceil(this.dive.maxDepth / swimSpeed);
+    const safetyStop = this.plan.depth >= 20 ? 3 : 0;
+    const swimTime = Math.ceil(this.plan.depth / swimSpeed);
     return solutionDuration + swimTime + safetyStop;
   }
 
   private calculateMaxDepth(): number {
-    return 30;
+    const maxPpO2 = 1.4;
+    // e.g: 21
+    const ppO2 = this.gases.current[0].o2 / 100;
+    const result = 10 * (maxPpO2 / ppO2 - 1);
+    return Math.floor(result);
+  }
+
+  private depthToBar(depth: number): number {
+    return 1 + depth / 10;
   }
 }

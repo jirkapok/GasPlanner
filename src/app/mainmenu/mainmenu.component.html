@@ -7,12 +7,12 @@
     </button>
     <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
       <ul class="navbar-nav mr-auto">
-        <a class="nav-link" href="#" (click)="toggleDiver()">Diver</a>
+        <a class="nav-link" routerLink="/diver">Diver</a>
         <li class="nav-item dropdown" ngbDropdown>
-          <a class="nav-link dropdown-toggle" id="id01" href="#" ngbDropdownToggle>Defaults</a>
+          <a class="nav-link dropdown-toggle" id="id01" ngbDropdownToggle>Defaults</a>
           <div class="dropdown-menu" aria-labelledby="id01" ngbDropdownMenu>
-            <a class="dropdown-item" href="#" (click)="saveDefaults()">Save</a>
-            <a class="dropdown-item" href="#" (click)="loadDefaults()">Reload</a>
+            <a class="dropdown-item" (click)="saveDefaults()">Save</a>
+            <a class="dropdown-item" (click)="loadDefaults()">Reload</a>
           </div>
         </li>
       </ul>

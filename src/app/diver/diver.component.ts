@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+
 import { PlannerService } from '../shared/planner.service';
 import { Diver } from '../shared/models';
 
@@ -9,7 +11,11 @@ import { Diver } from '../shared/models';
 })
 export class DiverComponent implements OnInit {
   public diver: Diver;
-  constructor(private planer: PlannerService) { }
+  constructor(private planer: PlannerService, private location: Location) { }
+
+  public goBack(): void {
+    this.location.back();
+  }
 
   ngOnInit() {
     this.diver = this.planer.diver;

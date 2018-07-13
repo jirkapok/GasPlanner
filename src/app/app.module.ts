@@ -11,6 +11,8 @@ import { DiveComponent } from './dive/dive.component';
 import { PlannerService } from './shared/planner.service';
 import { PreferencesService } from './shared/preferences.service';
 import { MainMenuComponent } from './mainmenu/mainmenu.component';
+import { AppRoutingModule } from './app-routing.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -19,12 +21,14 @@ import { MainMenuComponent } from './mainmenu/mainmenu.component';
     DiverComponent,
     PlanComponent,
     DiveComponent,
-    MainMenuComponent
+    MainMenuComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    AppRoutingModule
   ],
   exports: [],
   providers: [ PlannerService, PreferencesService ],

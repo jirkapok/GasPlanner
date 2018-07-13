@@ -1,18 +1,21 @@
 <div class="card">
-    <div class="card-header">Dive</div>
+    <div class="card-header">
+        <fa-icon [icon]="tasks" class="mr-3"></fa-icon>
+        <span>Dive</span>
+    </div>
     <div *ngIf="!dive.calculated" class="card-body">Not calculated yet</div>
     <div *ngIf="dive.hasErrors" class="card-body">
         <div *ngIf="dive.notEnoughGas" class="alert  alert-danger">
-            <fa-icon [icon]="exclamation" class="mx-1"></fa-icon>
+            <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
             <span>Not enough gas, Maximum dive time {{dive.maxTime}} min. exceeded!</span>
         </div>
         <div *ngIf="dive.depthExceeded" class="alert  alert-danger">
-            <fa-icon [icon]="exclamation" class="mx-1"></fa-icon>
+            <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
             <span>Maximum depth {{gasMod}} m exceeded!</span>
         </div>
     </div>
 
-    <div *ngIf="!dive.hasErrors" class="card-body">
+    <div *ngIf="dive.calculated && !dive.hasErrors" class="card-body">
         <table class="table table-noheader">
             <tr>
                 <td>Time to surface [min.]:</td>

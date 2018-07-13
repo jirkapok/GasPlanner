@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, Gas } from '../shared/models';
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle, faTasks } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-dive',
@@ -12,6 +12,7 @@ export class DiveComponent implements OnInit {
   public dive: Dive;
   public bottomGas: Gas;
   public exclamation = faExclamationCircle;
+  public tasks = faTasks;
 
   public get bottomGasMax() {
     return this.bottomGas.startPressure;

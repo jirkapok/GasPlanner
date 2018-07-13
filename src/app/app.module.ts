@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { GasesComponent } from './gases/gases.component';
 import { DiverComponent } from './diver/diver.component';
 import { PlanComponent } from './plan/plan.component';
+import { DiveComponent } from './dive/dive.component';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { PlanComponent } from './plan/plan.component';
     AppComponent,
     GasesComponent,
     DiverComponent,
-    PlanComponent
+    PlanComponent,
+    DiveComponent
   ],
   imports: [
     BrowserModule,

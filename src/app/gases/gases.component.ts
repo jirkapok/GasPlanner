@@ -25,4 +25,8 @@ export class GasesComponent implements OnInit {
   public remove(selected: Gas): void {
     this.gases.remove(selected);
   }
+
+  public gasSac(gas: Gas): number {
+    return this.planer.normalGasSac(gas);
+  }
 }

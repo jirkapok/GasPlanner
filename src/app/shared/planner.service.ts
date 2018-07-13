@@ -49,9 +49,17 @@ export class PlannerService {
   }
 
   private calculateConsumed(time: number, sac: number, averagePressure: number, gasSize): number {
-    const result = time * sac * averagePressure / gasSize;
+    const result = time * averagePressure * this.gasSac(sac, gasSize);
     const rounded = Math.ceil(result);
     return rounded;
+  }
+
+  public normalGasSac(gas: Gas): number {
+    return this.gasSac(this.diver.sac, gas);
+  }
+
+  private gasSac(sac: number, gas: Gas): number {
+    return sac / gas.size;
   }
 
   private averagePressure(): number {

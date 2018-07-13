@@ -7,18 +7,22 @@
     <div *ngFor="let gas of gases.current">
       <div class="form-group">
         <label for="size">Size [L]:
-          <input id="size" [(ngModel)]="gas.size" placeholder="15" class="form-control" type="number" min="0" max="50" required/>
+          <input id="size" [(ngModel)]="gas.size" placeholder="15" class="form-control"
+           type="number" min="0" max="50" required/>
         </label>
       </div>
       <div class="form-group">
         <label for="startPressure">Start pressure [bar]:
-          <input id="startPressure" [(ngModel)]="gas.startPressure" placeholder="200" class="form-control" type="number" min="0" max="350" required/>
+          <input id="startPressure" [(ngModel)]="gas.startPressure" placeholder="200" class="form-control"
+           type="number" min="0" max="350" required/>
         </label>
       </div>
       <div class="form-group">
           <label for="ppO2">Percent O2:
-            <input id="ppO2" [(ngModel)]="gas.o2" placeholder="200" class="form-control" type="number" min="21" max="100" required/>
+            <input id="ppO2" [(ngModel)]="gas.o2" placeholder="200" class="form-control"
+             type="number" min="21" max="100" required/>
           </label>
+          <small class="form-text text-muted">MOD: {{gas.mod}} m</small>
         </div>
       <!-- <button (click)="remove(gas)">-</button> -->
     </div>

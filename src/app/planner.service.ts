@@ -4,8 +4,15 @@ export class Gas {
   constructor(public size: number, public startPressure: number, public o2: number) {
   }
 
-  public volume(): number {
+  public get volume(): number {
     return this.size * this.startPressure;
+  }
+
+  public get mod(): number {
+    const maxPpO2 = 1.4;
+    const ppO2 = this.o2 / 100;
+    const result = 10 * (maxPpO2 / ppO2 - 1);
+    return Math.floor(result);
   }
 }
 
@@ -46,7 +53,7 @@ export class Gases {
   public totalVolume(): number {
     let total = 0;
     this.current.forEach(gas => {
-      total += gas.volume();
+      total += gas.volume;
     });
     return total;
   }
@@ -79,7 +86,7 @@ export class PlannerService {
     this.dive.timeToSurface = timeToSurface;
     const rockBottom = this.calculateRockBottom(timeToSurface, averagePressure);
     this.dive.rockBottom = rockBottom;
-    this.dive.maxDepth = this.calculateMaxDepth();
+    this.dive.maxDepth = this.gases.current[0].mod;
     this.dive.maxTime = this.calculateMaxDiveTime(averagePressure, rockBottom);
   }
 
@@ -110,13 +117,6 @@ export class PlannerService {
     const safetyStop = this.plan.depth >= 20 ? 3 : 0;
     const swimTime = Math.ceil(this.plan.depth / swimSpeed);
     return solutionDuration + swimTime + safetyStop;
-  }
-
-  private calculateMaxDepth(): number {
-    const maxPpO2 = 1.4;
-    const ppO2 = this.gases.current[0].o2 / 100;
-    const result = 10 * (maxPpO2 / ppO2 - 1);
-    return Math.floor(result);
   }
 
   private depthToBar(depth: number): number {

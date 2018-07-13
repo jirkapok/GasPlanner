@@ -73,6 +73,21 @@ export class Plan {
     constructor(public duration: number, public depth: number, public strategy: Strategies) {
     }
 
+    public get availablePressureRatio(): number {
+        return this.strategy === Strategies.THIRD ? 2 / 3 : 1;
+    }
+
+    public get turnPressureRatio(): number {
+        switch (this.strategy) {
+            case Strategies.HALF:
+                return 1 / 2;
+            case Strategies.THIRD:
+                return 1 / 3;
+            default:
+                return 1;
+        }
+    }
+
     public loadFrom(other: Plan): void {
         this.depth = other.depth;
         this.duration = other.duration;

@@ -19,25 +19,33 @@ export class PlannerService {
     const averagePressure = this.averagePressure();
     const timeToSurface = this.calculateTimeToSurface();
     const rockBottom = this.calculateRockBottom(timeToSurface, averagePressure);
-    const availableGas = this.availableGas(rockBottom);
+    const availableVolume = this.availableVolume(rockBottom);
 
     this.dive.timeToSurface = timeToSurface;
     this.dive.rockBottom = rockBottom;
     this.dive.maxDepth = this.firstGas.mod;
-    this.dive.maxTime = this.calculateMaxDiveTime(averagePressure, availableGas);
-
-    this.firstGas.consumed = this.calculateConsumed(this.plan.duration, this.diver.sac, averagePressure, this.firstGas.size);
+    this.dive.maxTime = this.calculateMaxDiveTime(averagePressure, availableVolume);
+    this.dive.turnPressure = this.calculateTurnPressure(rockBottom);
+    this.dive.turnTime = 0;
+    this.firstGas.consumed = this.calculateConsumed(this.plan.duration,
+        this.diver.sac, averagePressure, this.firstGas.size);
     this.dive.calculated = true;
   }
 
-  private calculateMaxDiveTime(averagePressure: number, availableGas: number): number {
-    const result = availableGas / averagePressure / this.diver.sac;
+  private calculateTurnPressure(rockBottom: number): number {
+    const allAvailable = this.firstGas.startPressure - rockBottom;
+    const consumed = Math.floor(allAvailable * this.plan.turnPressureRatio);
+    return this.firstGas.startPressure - consumed;
+  }
+
+  private calculateMaxDiveTime(averagePressure: number, availableVolume: number): number {
+    const result = availableVolume / averagePressure / this.diver.sac;
     return Math.floor(result);
   }
 
-  private availableGas(rockBottom: number): number {
-    const totalVolume = this.gases.totalVolume();
-    const usablePart = this.plan.strategy === Strategies.THIRD ? 2 / 3 : 1;
+  private availableVolume(rockBottom: number): number {
+    const totalVolume = this.firstGas.volume;
+    const usablePart = this.plan.availablePressureRatio;
     return (totalVolume - rockBottom * this.firstGas.size) * usablePart;
   }
 
@@ -86,6 +94,7 @@ export class PlannerService {
 
     this.plan.loadFrom(other.plan);
     this.diver.loadFrom(other.diver);
+    // cant use firstGas from the other, since it doesn't have to be deserialized
     this.firstGas.loadFrom(other.gases.current[0]);
   }
 }

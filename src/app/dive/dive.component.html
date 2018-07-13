@@ -2,7 +2,7 @@
     <div class="card-header">Dive</div>
     <div *ngIf="!dive.calculated" class="card-body">Not calculated yet</div>
     <div class="card-body" *ngIf="dive.calculated">
-        <table class="table table-noheader my-0">
+        <table class="table table-noheader">
             <tr>
                 <td>Time to surface [min.]:</td>
                 <td class="table-active">
@@ -16,15 +16,15 @@
                 </td>
             </tr>
             <tr>
-                <td>Turn time [min]:</td>
-                <td class="table-active">
-                    <strong>{{ dive.turnTime }}</strong>
-                </td>
-            </tr>
-            <tr>
                 <td>Rock bottom [bar]:</td>
                 <td class="table-active">
                     <strong>{{ dive.rockBottom }}</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Turn time [min]:</td>
+                <td class="table-active">
+                    <strong>{{ dive.turnTime }}</strong>
                 </td>
             </tr>
             <tr>
@@ -37,10 +37,10 @@
         <div>
             <div>Bottom gas: {{ bottomGas.endPressure }}/{{ bottomGas.startPressure }} bar</div>
             <div class="progress gas-bar">
-                <div class="progress-bar bg-warning" role="progressbar" aria-valuemin="0" 
-                    [attr.aria-valuenow]="bottomGasRockBottom" [attr.aria-valuemax]="bottomGasMax"
+                <div class="progress-bar bg-warning" role="progressbar" aria-valuemin="0"
+                 [attr.aria-valuenow]="bottomGasRockBottom" [attr.aria-valuemax]="bottomGasMax"
                     [style.width]="percentsRockBottom + '%'">{{bottomGasRockBottom}}</div>
-                <div class="progress-bar bg-success gas-bar" role="progressbar" aria-valuemin="0" 
+                <div class="progress-bar bg-success gas-bar" role="progressbar" aria-valuemin="0"
                     [attr.aria-valuenow]="bottomGasRemaining" [attr.aria-valuemax]="bottomGasMax"
                     [style.width]="bottomGasPercentsRemaining + '%'">{{bottomGasRemaining}}</div>
             </div>

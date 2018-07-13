@@ -36,11 +36,11 @@
         </table>
         <div>
             Bottom gas:
-            <div class="progress" style="height: 2em">
+            <div class="progress gas-bar">
                 <div class="progress-bar bg-warning" role="progressbar" aria-valuemin="0" 
                     [attr.aria-valuenow]="bottomGasRockBottom" [attr.aria-valuemax]="bottomGasMax"
                     [style.width]="percentsRockBottom + '%'">{{bottomGasRockBottom}}</div>
-                <div class="progress-bar bg-success" role="progressbar" aria-valuemin="0" 
+                <div class="progress-bar bg-success gas-bar" role="progressbar" aria-valuemin="0" 
                     [attr.aria-valuenow]="bottomGasRemaining" [attr.aria-valuemax]="bottomGasMax"
                     [style.width]="bottomGasPercentsRemaining + '%'">{{bottomGasRemaining}}</div>
             </div>

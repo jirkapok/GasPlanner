@@ -1,16 +1,21 @@
-<h2>Dive</h2>
-<div *ngIf="!dive.canRealize()">Not calculated yet</div>
-<div *ngIf="dive.canRealize()">
-    <div>
-        Rock bottom [bar]: {{ dive.rockBottom }}
-    </div>
-    <div>
-        Time to surface [min.]: {{ dive.timeToSurface }}
-    </div>
-    <div>
-        Maximum dive time [min.]: {{ dive.maxTime }}
-    </div>
-    <div>
-        Maximum depth [m]: {{ dive.maxDepth }}
+<div class="card">
+  <div class="card-header">
+    Dive
+  </div>
+  <div class="card-body">
+    <div *ngIf="!dive.canRealize()">Not calculated yet</div>
+    <div *ngIf="dive.canRealize()">
+        <div>
+            Rock bottom [bar]: {{ dive.rockBottom }}
+        </div>
+        <div>
+            Time to surface [min.]: {{ dive.timeToSurface }}
+        </div>
+        <div>
+            Maximum dive time [min.]: {{ dive.maxTime }}
+        </div>
+        <div>
+            Maximum depth [m]: {{ dive.maxDepth }}
+        </div>
     </div>
 </div>

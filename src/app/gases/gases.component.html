@@ -1,15 +1,19 @@
-<div>
-  <h2>Gases</h2>
-<button (click)="add()">+</button>
-<li *ngFor="let gas of gases.current">
-    <div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">Gases</h4>
+  </div>
+  <div class="panel-body">
+    <!-- <button (click)="add()">+</button> -->
+    <li *ngFor="let gas of gases.current">
+      <div>
         <label>size:
           <input [(ngModel)]="gas.size" placeholder="size"/> [L]
         </label>
         <label>Start:
           <input [(ngModel)]="gas.startPressure" placeholder="startPressure"/> [bar]
         </label>
-        <button (click)="remove(gas)">-</button>
-    </div>
-</li>
+        <!-- <button (click)="remove(gas)">-</button> -->
+      </div>
+    </li>
+  </div>
 </div>

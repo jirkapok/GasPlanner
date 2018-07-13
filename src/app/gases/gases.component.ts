@@ -7,7 +7,7 @@ import { PlannerService, Gases, Gas } from '../planner.service';
   styleUrls: ['./gases.component.css']
 })
 export class GasesComponent implements OnInit {
-  private gases: Gases;
+  public gases: Gases;
 
   constructor(private planer: PlannerService) { }
 

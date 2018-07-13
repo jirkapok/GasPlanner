@@ -7,7 +7,7 @@ import { PlannerService, Dive } from '../planner.service';
   styleUrls: ['./dive.component.css']
 })
 export class DiveComponent implements OnInit {
-  private dive: Dive;
+  public dive: Dive;
 
   constructor(private planer: PlannerService) { }
 

@@ -1,0 +1,15 @@
+<div>
+  <div>Gases</div>
+<button (click)="add()">+</button>
+<li *ngFor="let gas of gases">
+    <!-- <input type="text">{{gas.size}}</input> <input type="text">{{gas.startPressure}}</input> -->
+    <div>
+        <label>size:
+          <input [(ngModel)]="gas.size" placeholder="size"/> L
+        </label>
+        <label>Pressure:
+            <input [(ngModel)]="gas.startPressure" placeholder="startPressure"/> bar
+          </label>
+    </div>
+</li>
+</div>

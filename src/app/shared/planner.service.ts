@@ -55,11 +55,11 @@ export class PlannerService {
   }
 
   public normalGasSac(gas: Gas): number {
-    return this.gasSac(this.diver.sac, gas);
+    return this.gasSac(this.diver.sac, gas.size);
   }
 
-  private gasSac(sac: number, gas: Gas): number {
-    return sac / gas.size;
+  private gasSac(sac: number, gasSize: number): number {
+    return sac / gasSize;
   }
 
   private averagePressure(): number {

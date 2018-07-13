@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PreferencesService } from '../shared/preferences.service';
 
 @Component({
   selector: 'app-mainmenu',
@@ -8,7 +9,16 @@ import { Component, OnInit } from '@angular/core';
 export class MainMenuComponent implements OnInit {
   public isNavbarCollapsed = true;
 
-  constructor() { }
+  constructor(private preferences: PreferencesService) { }
+
+  public saveDefaults(): void {
+    this.preferences.saveDefaults();
+  }
+
+  public loadDefaults(): void {
+    this.preferences.loadDefaults();
+    // this.planComponent.reset();
+  }
 
   ngOnInit() {
   }

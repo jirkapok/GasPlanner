@@ -26,13 +26,7 @@ export class PlanComponent implements OnInit {
     this.planer.calculate();
   }
 
-  public saveDefaults(): void {
-    this.preferences.saveDefaults();
-  }
-
   public reset(): void {
-    this.preferences.loadDefaults();
-
     switch (this.plan.strategy) {
       case Strategies.HALF: {
         this.halfUsable();

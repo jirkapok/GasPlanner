@@ -25,8 +25,4 @@ export class GasesComponent implements OnInit {
   public gasSac(gas: Gas): number {
     return this.diver.gasSac(gas);
   }
-
-  public get gasMod(): number {
-    return this.gas.mod(this.planer.diver.maxPpO2);
-  }
 }

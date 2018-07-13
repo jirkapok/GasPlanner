@@ -11,7 +11,7 @@ export class GaslabelComponent implements OnInit {
   bottomGas: Gas;
 
   public get gasMod(): number {
-    return this.bottomGas.mod(this.planer.diver.maxPpO2);
+    return this.planer.gasMod;
   }
 
   constructor(private planer: PlannerService) { }

@@ -114,4 +114,10 @@ export class Dive {
     public turnPressure = 0;
     public turnTime = 0;
     public needsReturn = false;
+    public notEnoughGas = false;
+    public depthExceeded = false;
+
+    public get hasErrors(): boolean {
+        return this.calculated && (this.notEnoughGas || this.depthExceeded);
+    }
 }

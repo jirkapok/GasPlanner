@@ -8,7 +8,8 @@ export class PlannerService {
   public gas: Gas = new Gas(15, 21, 200);
   public dive: Dive = new Dive();
 
-  constructor() {
+  public get gasMod(): number {
+    return this.gas.mod(this.diver.maxPpO2);
   }
 
   public calculate() {
@@ -27,6 +28,8 @@ export class PlannerService {
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
     this.dive.needsReturn = this.plan.needsReturn;
+    this.dive.notEnoughGas = this.gas.endPressure < this.dive.rockBottom;
+    this.dive.depthExceeded = this.plan.depth > this.gasMod;
     this.dive.calculated = true;
   }
 

@@ -26,15 +26,30 @@ export class Gas {
   public assignStandardGas(standard: string): void {
     this.o2 = StandardGas[standard];
   }
+
+  public loadFrom(other: Gas): void {
+    this.startPressure = other.startPressure;
+    this.size = other.size;
+    this.o2 = other.o2;
+  }
 }
 
 export class Diver {
   constructor(public sac: number) {
   }
+
+  public loadFrom(other: Diver): void {
+    this.sac = other.sac;
+  }
 }
 
 export class Plan {
   constructor(public duration: number, public depth: number) {
+  }
+
+  public loadFrom(other: Plan): void {
+    this.depth = other.depth;
+    this.duration = other.duration;
   }
 }
 
@@ -138,5 +153,15 @@ export class PlannerService {
 
   private depthToBar(depth: number): number {
     return 1 + depth / 10;
+  }
+
+  public loadFrom(other: PlannerService): void {
+    if (!other) {
+      return;
+    }
+
+    this.plan.loadFrom(other.plan);
+    this.diver.loadFrom(other.diver);
+    this.gases.current[0].loadFrom(other.gases.current[0]);
   }
 }

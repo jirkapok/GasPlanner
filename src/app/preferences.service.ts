@@ -16,12 +16,7 @@ export class PreferencesService {
     }
 
     const loaded = JSON.parse(toParse);
-    this.planner.diver.sac = loaded.diver.sac;
-    this.planner.gases.current[0].size = loaded.gases.current[0].size;
-    this.planner.gases.current[0].startPressure = loaded.gases.current[0].startPressure;
-    this.planner.gases.current[0].o2 = loaded.gases.current[0].o2;
-    this.planner.plan.depth = loaded.plan.depth;
-    this.planner.plan.duration = loaded.plan.duration;
+    this.planner.loadFrom(loaded);
   }
 
   public saveDefaults(): void {

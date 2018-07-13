@@ -40,14 +40,23 @@ export class Gases {
   }
 }
 
+export class Dive {
+  public maxDepth: number;
+  public maxTime: number;
+}
+
 @Injectable()
 export class PlannerService {
   public plan: Plan = new Plan(10, 30);
   public diver: Diver = new Diver(20);
   public gases: Gases = new Gases();
+  public dive: Dive = new Dive();
 
-  constructor() { }
+  constructor() {
+  }
 
   public calculate() {
+    this.dive.maxDepth = 300;
+    this.dive.maxTime = 50;
   }
 }

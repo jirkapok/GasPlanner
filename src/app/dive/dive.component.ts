@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PlannerService, Dive } from '../planner.service';
 
 @Component({
   selector: 'app-dive',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dive.component.css']
 })
 export class DiveComponent implements OnInit {
+  private dive: Dive;
 
-  constructor() { }
+  constructor(private planer: PlannerService) { }
 
   ngOnInit() {
+    this.dive = this.planer.dive;
   }
-
 }

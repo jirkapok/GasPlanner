@@ -1,12 +1,12 @@
 <div class="card">
     <div class="card-header">Dive</div>
     <div *ngIf="!dive.canRealize()" class="card-body">Not calculated yet</div>
-    <div class="card-body" *ngIf="dive.canRealize()"> 
+    <div class="card-body" *ngIf="dive.canRealize()">
         <table class="table table-noheader my-0">
             <tr>
-                <td>Rock bottom [bar]:</td>
+                <td>Maximum operation depth [m]:</td>
                 <td class="table-active">
-                    <strong>{{ dive.rockBottom }}</strong>
+                    <strong>{{ dive.maxDepth }}</strong>
                 </td>
             </tr>
             <tr>
@@ -22,13 +22,13 @@
                 </td>
             </tr>
             <tr>
-                <td>Maximum operation depth [m]:</td>
+                <td>Rock bottom [bar]:</td>
                 <td class="table-active">
-                    <strong>{{ dive.maxDepth }}</strong>
+                    <strong>{{ dive.rockBottom }}</strong>
                 </td>
             </tr>
             <tr>
-                <td>Consumed [b]:</td>
+                <td>Consumed [bar]:</td>
                 <td class="table-active">
                     <strong>{{ dive.consumed }}</strong>
                 </td>
@@ -37,12 +37,12 @@
         <div>
             Bottom gas:
             <div class="progress" style="height: 2em">
-                <div class="progress-bar bg-warning" role="progressbar" aria-valuemin="0"
+                <div class="progress-bar bg-warning" role="progressbar" aria-valuemin="0" 
                     [attr.aria-valuenow]="bottomGasRockBottom" [attr.aria-valuemax]="bottomGasMax"
-                    [style.width]="percentsRockBottom + '%'">{{dive.rockBottom}}</div>
-                <div class="progress-bar bg-success" role="progressbar" aria-valuemin="0"
-                 [attr.aria-valuenow]="bottomGasRemaining" [attr.aria-valuemax]="bottomGasMax"
-                 [style.width]="bottomGasPercentsRemaining + '%'">{{bottomGas.endPressure}}</div>
+                    [style.width]="percentsRockBottom + '%'">{{bottomGasRockBottom}}</div>
+                <div class="progress-bar bg-success" role="progressbar" aria-valuemin="0" 
+                    [attr.aria-valuenow]="bottomGasRemaining" [attr.aria-valuemax]="bottomGasMax"
+                    [style.width]="bottomGasPercentsRemaining + '%'">{{bottomGasRemaining}}</div>
             </div>
         </div>
     </div>

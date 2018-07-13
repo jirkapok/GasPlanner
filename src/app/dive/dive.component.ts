@@ -19,7 +19,7 @@ export class DiveComponent implements OnInit {
   }
 
   public get bottomGasRemaining() {
-    return this.bottomGas.endPressure;
+    return this.bottomGas.endPressure - this.bottomGasRockBottom;
   }
 
   public get percentsRockBottom() {
@@ -27,7 +27,7 @@ export class DiveComponent implements OnInit {
   }
 
   public get bottomGasPercentsRemaining() {
-    return (this.bottomGasRemaining - this.bottomGasRockBottom) / this.bottomGas.startPressure * 100;
+    return this.bottomGasRemaining / this.bottomGas.startPressure * 100;
   }
 
   constructor(private planer: PlannerService) { }

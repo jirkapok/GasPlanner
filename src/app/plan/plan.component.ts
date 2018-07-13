@@ -32,6 +32,21 @@ export class PlanComponent implements OnInit {
 
   public reset(): void {
     this.preferences.loadDefaults();
+
+    switch (this.plan.strategy) {
+      case Strategies.HALF: {
+        this.halfUsable();
+        break;
+      }
+      case Strategies.THIRD: {
+        this.thirdUsable();
+        break;
+      }
+      default: {
+        this.allUsable();
+        break;
+      }
+    }
   }
 
   public allUsable(): void {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Plan, Diver, Gases, Dive } from './models';
+import { Plan, Diver, Gases, Dive, Strategies, Gas } from './models';
 
 @Injectable()
 export class PlannerService {
@@ -11,6 +11,10 @@ export class PlannerService {
   constructor() {
   }
 
+  private get firstGas(): Gas {
+    return this.gases.current[0];
+  }
+
   public calculate() {
     const averagePressure = this.averagePressure();
     const timeToSurface = this.calculateTimeToSurface();
@@ -19,13 +23,11 @@ export class PlannerService {
 
     this.dive.timeToSurface = timeToSurface;
     this.dive.rockBottom = rockBottom;
-    this.dive.maxDepth = this.gases.current[0].mod;
+    this.dive.maxDepth = this.firstGas.mod;
     this.dive.maxTime = this.calculateMaxDiveTime(averagePressure, availableGas);
 
-    const firstGas = this.gases.current[0];
-    this.dive.consumed = this.calculateConsumed(this.plan.duration, this.diver.sac, averagePressure, firstGas.size);
-
-    firstGas.consume(this.dive.consumed);
+    this.dive.consumed = this.calculateConsumed(this.plan.duration, this.diver.sac, averagePressure, this.firstGas.size);
+    this.firstGas.consume(this.dive.consumed);
   }
 
   private calculateMaxDiveTime(averagePressure: number, availableGas: number): number {
@@ -35,14 +37,14 @@ export class PlannerService {
 
   private availableGas(rockBottom: number): number {
     const totalVolume = this.gases.totalVolume();
-    return (totalVolume - rockBottom * this.gases.current[0].size) / this.plan.strategy;
+    const usablePart = this.plan.strategy === Strategies.THIRD ? 2 / 3 : 1;
+    return (totalVolume - rockBottom * this.firstGas.size) * usablePart;
   }
 
   private calculateRockBottom(timeToSurface: number, averagePressure: number): number {
     const minimumRockBottom = 30;
-    const firstGas = this.gases.current[0];
     const stressSac = 3 * this.diver.sac;
-    const result = this.calculateConsumed(timeToSurface, stressSac, averagePressure, firstGas.size);
+    const result = this.calculateConsumed(timeToSurface, stressSac, averagePressure, this.firstGas.size);
     return result > minimumRockBottom ? result : minimumRockBottom;
   }
 
@@ -76,6 +78,6 @@ export class PlannerService {
 
     this.plan.loadFrom(other.plan);
     this.diver.loadFrom(other.diver);
-    this.gases.current[0].loadFrom(other.gases.current[0]);
+    this.firstGas.loadFrom(other.firstGas);
   }
 }

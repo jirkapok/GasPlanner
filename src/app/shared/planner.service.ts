@@ -14,27 +14,42 @@ export class PlannerService {
   public calculate() {
     const averagePressure = this.averagePressure();
     const timeToSurface = this.calculateTimeToSurface();
-    this.dive.timeToSurface = timeToSurface;
     const rockBottom = this.calculateRockBottom(timeToSurface, averagePressure);
+    const availableGas = this.availableGas(rockBottom);
+
+    this.dive.timeToSurface = timeToSurface;
     this.dive.rockBottom = rockBottom;
     this.dive.maxDepth = this.gases.current[0].mod;
-    this.dive.maxTime = this.calculateMaxDiveTime(averagePressure, rockBottom);
+    this.dive.maxTime = this.calculateMaxDiveTime(averagePressure, availableGas);
+
+    const firstGas = this.gases.current[0];
+    this.dive.consumed = this.calculateConsumed(this.plan.duration, this.diver.sac, averagePressure, firstGas.size);
+
+    firstGas.consume(this.dive.consumed);
   }
 
-  private calculateMaxDiveTime(averagePressure: number, rockBottom: number): number {
-    const totalVolume = this.gases.totalVolume();
-    const availableGas = (totalVolume - rockBottom * this.gases.current[0].size) / this.plan.strategy;
+  private calculateMaxDiveTime(averagePressure: number, availableGas: number): number {
     const result = availableGas / averagePressure / this.diver.sac;
     return Math.floor(result);
+  }
+
+  private availableGas(rockBottom: number): number {
+    const totalVolume = this.gases.totalVolume();
+    return (totalVolume - rockBottom * this.gases.current[0].size) / this.plan.strategy;
   }
 
   private calculateRockBottom(timeToSurface: number, averagePressure: number): number {
     const minimumRockBottom = 30;
     const firstGas = this.gases.current[0];
     const stressSac = 3 * this.diver.sac;
-    const result = timeToSurface * stressSac * averagePressure / firstGas.size;
+    const result = this.calculateConsumed(timeToSurface, stressSac, averagePressure, firstGas.size);
+    return result > minimumRockBottom ? result : minimumRockBottom;
+  }
+
+  private calculateConsumed(time: number, sac: number, averagePressure: number, gasSize): number {
+    const result = time * sac * averagePressure / gasSize;
     const rounded = Math.ceil(result);
-    return rounded > minimumRockBottom ? rounded : minimumRockBottom;
+    return rounded;
   }
 
   private averagePressure(): number {

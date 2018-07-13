@@ -1,22 +1,49 @@
 <div class="card">
     <div class="card-header">Dive</div>
     <div *ngIf="!dive.canRealize()" class="card-body">Not calculated yet</div>
-    <table *ngIf="dive.canRealize()" class="card-body table table-noheader my-0">
-        <tr>
-            <td>Rock bottom [bar]:</td>
-            <td class="table-active"><strong>{{ dive.rockBottom }}</strong></td>
-        </tr>
-        <tr>
-            <td>Time to surface [min.]:</td>
-            <td class="table-active"><strong>{{ dive.timeToSurface }}</strong></td>
-        </tr>
-        <tr>
-            <td>Maximum dive time [min.]:</td>
-            <td class="table-active"><strong>{{ dive.maxTime }}</strong></td>
-        </tr>
-        <tr>
-            <td>Maximum operation depth [m]:</td>
-            <td class="table-active"><strong>{{ dive.maxDepth }}</strong></td>
-        </tr>
-    </table>
+    <div class="card-body" *ngIf="dive.canRealize()"> 
+        <table class="table table-noheader my-0">
+            <tr>
+                <td>Rock bottom [bar]:</td>
+                <td class="table-active">
+                    <strong>{{ dive.rockBottom }}</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Time to surface [min.]:</td>
+                <td class="table-active">
+                    <strong>{{ dive.timeToSurface }}</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Maximum dive time [min.]:</td>
+                <td class="table-active">
+                    <strong>{{ dive.maxTime }}</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Maximum operation depth [m]:</td>
+                <td class="table-active">
+                    <strong>{{ dive.maxDepth }}</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>Consumed [b]:</td>
+                <td class="table-active">
+                    <strong>{{ dive.consumed }}</strong>
+                </td>
+            </tr>
+        </table>
+        <div>
+            Bottom gas:
+            <div class="progress" style="height: 2em">
+                <div class="progress-bar bg-warning" role="progressbar" aria-valuemin="0"
+                    [attr.aria-valuenow]="bottomGasRockBottom" [attr.aria-valuemax]="bottomGasMax"
+                    [style.width]="percentsRockBottom + '%'">{{dive.rockBottom}}</div>
+                <div class="progress-bar bg-success" role="progressbar" aria-valuemin="0"
+                 [attr.aria-valuenow]="bottomGasRemaining" [attr.aria-valuemax]="bottomGasMax"
+                 [style.width]="bottomGasPercentsRemaining + '%'">{{bottomGas.endPressure}}</div>
+            </div>
+        </div>
+    </div>
 </div>

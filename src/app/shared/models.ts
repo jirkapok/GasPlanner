@@ -8,7 +8,12 @@ export enum StandardGas {
 }
 
 export class Gas {
-    constructor(public size: number, public startPressure: number, public o2: number) {
+    public endPressure: number;
+
+    constructor(public size: number,
+        public o2: number,
+        public startPressure: number) {
+        this.endPressure = startPressure;
     }
 
     public get volume(): number {
@@ -33,6 +38,10 @@ export class Gas {
 
     public assignStandardGas(standard: string): void {
         this.o2 = StandardGas[standard];
+    }
+
+    public consume(toExtract: number): void {
+        this.endPressure = this.startPressure - toExtract;
     }
 
     public loadFrom(other: Gas): void {
@@ -82,7 +91,7 @@ export class Gases {
     }
 
     private createGas(): Gas {
-        return new Gas(15, 200, 21);
+        return new Gas(15, 21, 200);
     }
 
     public remove(selected: Gas): void {
@@ -111,6 +120,7 @@ export class Dive {
     public maxTime = 0;
     public rockBottom = 0;
     public timeToSurface = 0;
+    public consumed = 0;
 
     public canRealize(): boolean {
         return this.timeToSurface !== 0;

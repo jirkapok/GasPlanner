@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PlannerService, Gases, Gas, StandardGas } from '../planner.service';
+import { PlannerService } from '../shared/planner.service';
+import { Gases, Gas } from '../shared/models';
 
 @Component({
   selector: 'app-gases',

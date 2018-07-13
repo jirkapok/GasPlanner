@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PlannerService, Dive } from '../planner.service';
+import { PlannerService } from '../shared/planner.service';
+import { Dive } from '../shared/models';
 
 @Component({
   selector: 'app-dive',

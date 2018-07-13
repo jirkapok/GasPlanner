@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PlannerService, Plan } from '../planner.service';
-import { PreferencesService } from '../preferences.service';
+import { Plan } from '../shared/models';
+import { PlannerService } from '../shared/planner.service';
+import { PreferencesService } from '../shared/preferences.service';
 
 @Component({
   selector: 'app-plan',

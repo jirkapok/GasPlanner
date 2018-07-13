@@ -53,10 +53,14 @@ export class Gases {
 }
 
 export class Dive {
-  public maxDepth: number;
-  public maxTime: number;
-  public rockBottom: number;
-  public timeToSurface: number;
+  public maxDepth = 0;
+  public maxTime = 0;
+  public rockBottom = 0;
+  public timeToSurface = 0;
+
+  public canRealize(): boolean {
+    return this.timeToSurface !== 0;
+  }
 }
 
 @Injectable()
@@ -99,7 +103,7 @@ export class PlannerService {
   private calculateTimeToSurface(): number {
     const solutionDuration = 2;
     const swimSpeed = 10; // meter/min.
-    const safetyStop = this.dive.maxDepth >= 5 ? 3 : 0;
+    const safetyStop = this.dive.maxDepth >= 20 ? 3 : 0;
     const swimTime = Math.ceil(this.dive.maxDepth / swimSpeed);
     return solutionDuration + swimTime + safetyStop;
   }

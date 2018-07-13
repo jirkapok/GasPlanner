@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 class Plan {
-  public time = true;
-
   constructor(public duration: number, public depth: number) {
   }
 }

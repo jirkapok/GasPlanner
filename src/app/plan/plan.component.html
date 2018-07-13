@@ -2,26 +2,12 @@
   Plan
 </h2>
 <div>
-  <div>
-    <label class="radio-inline">
-      <input type="radio" [(ngModel)]="plan.time" name="time" [value]="true"> Time
-    </label>
-    <label>
-      <input type="radio" [(ngModel)]="plan.time" name="time" [value]="false"> Depth
-    </label>
-  </div>
-  <div *ngIf="plan.time" [(ngModel)]="plan">
-    <div>
-      <label>Duration:
-        <input [(ngModel)]="plan.duration" placeholder="duration" /> [min.]
-      </label>
-    </div>
-  </div>
-  <div *ngIf="!plan.time" [(ngModel)]="plan">
-    <div>
-      <label>Maximum depth:
-        <input [(ngModel)]="plan.depth" placeholder="depth" /> [m]
-      </label>
-    </div>
-  </div>
+  <label>Duration:
+    <input [(ngModel)]="plan.duration" placeholder="duration" /> [min.]
+  </label>
+</div>
+<div>
+  <label>Maximum depth:
+    <input [(ngModel)]="plan.depth" placeholder="depth" /> [m]
+  </label>
 </div>

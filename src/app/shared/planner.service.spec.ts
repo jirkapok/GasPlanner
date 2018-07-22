@@ -1,11 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { PlannerService } from './planner.service';
+import { DepthConverterService } from './depth-converter.service';
 
 describe('PlannerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PlannerService]
+      providers: [PlannerService, DepthConverterService]
     });
   });
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Plan, Diver, Dive, Strategies, Gas } from './models';
+import { DepthConverterService } from './depth-converter.service';
 
 @Injectable()
 export class PlannerService {
@@ -7,6 +8,9 @@ export class PlannerService {
   public diver: Diver = new Diver(20, 1.4);
   public gas: Gas = new Gas(15, 21, 200);
   public dive: Dive = new Dive();
+
+  constructor(private depthConverter: DepthConverterService) {
+  }
 
   public get gasMod(): number {
     return this.gas.mod(this.diver.maxPpO2);
@@ -65,7 +69,7 @@ export class PlannerService {
 
   private averagePressure(): number {
     const averageDepth = this.plan.depth / 2;
-    return this.depthToBar(averageDepth);
+    return this.depthConverter.toAtm(averageDepth);
   }
 
   private calculateTimeToSurface(): number {
@@ -74,10 +78,6 @@ export class PlannerService {
     const safetyStop = this.plan.depth >= 20 ? 3 : 0;
     const swimTime = Math.ceil(this.plan.depth / swimSpeed);
     return solutionDuration + swimTime + safetyStop;
-  }
-
-  private depthToBar(depth: number): number {
-    return 1 + depth / 10;
   }
 
   public loadFrom(other: PlannerService): void {

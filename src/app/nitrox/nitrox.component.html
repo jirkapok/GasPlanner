@@ -8,9 +8,9 @@
         </div>
         <div class="card-body">
           <div class="btn-group" role="group">
-            <button type="button" class="btn btn-secondary" [disabled]="inMod" (click)="toMod()">MOD</button>
-            <button type="button" class="btn btn-secondary" [disabled]="inBestMix" (click)="toBestMix()">Best mix</button>
-            <button type="button" class="btn btn-secondary" [disabled]="inPO2" (click)="toPO2()">ppO2</button>
+            <button type="button" class="btn" [class.btn-primary]="inMod" (click)="toMod()">MOD</button>
+            <button type="button" class="btn" [class.btn-primary]="inBestMix" (click)="toBestMix()">Best mix</button>
+            <button type="button" class="btn" [class.btn-primary]="inPO2" (click)="toPO2()">ppO2</button>
           </div>
           <div [hidden]="inPO2">
             <label for="pO2">ppO2 [bar]:

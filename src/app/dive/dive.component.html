@@ -13,6 +13,10 @@
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
             <span>Maximum depth {{gasMod}} m exceeded!</span>
         </div>
+        <div *ngIf="dive.notEnoughTime" class="alert  alert-danger">
+            <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
+            <span>Not enough time to realize the dive (duration needs to at least {{dive.timeToSurface}} min.)!</span>
+        </div>
     </div>
 
     <div *ngIf="dive.calculated && !dive.hasErrors" class="card-body">

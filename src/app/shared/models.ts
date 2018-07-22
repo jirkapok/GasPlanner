@@ -116,8 +116,9 @@ export class Dive {
     public needsReturn = false;
     public notEnoughGas = false;
     public depthExceeded = false;
+    public notEnoughTime = false;
 
     public get hasErrors(): boolean {
-        return this.calculated && (this.notEnoughGas || this.depthExceeded);
+        return this.calculated && (this.notEnoughGas || this.depthExceeded || this.notEnoughTime);
     }
 }

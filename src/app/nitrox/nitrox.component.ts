@@ -11,9 +11,32 @@ import { NitroxCalculatorService, NitroxMode } from '../shared/nitrox-calculator
 export class NitroxComponent implements OnInit {
   public calcIcon = faCalculator;
   constructor(public calc: NitroxCalculatorService) {
-    this.calc.calculation = NitroxMode.PO2;
-   }
+  }
 
   ngOnInit() {
+  }
+
+  public get inMod(): boolean {
+    return this.calc.calculation === NitroxMode.Mod;
+  }
+
+  public get inBestMix(): boolean {
+    return this.calc.calculation === NitroxMode.BestMix;
+  }
+
+  public get inPO2(): boolean {
+    return this.calc.calculation === NitroxMode.PO2;
+  }
+
+  public toMod(): void {
+    this.calc.calculation = NitroxMode.Mod;
+  }
+
+  public toBestMix(): void {
+    this.calc.calculation = NitroxMode.BestMix;
+  }
+
+  public toPO2(): void {
+    this.calc.calculation = NitroxMode.PO2;
   }
 }

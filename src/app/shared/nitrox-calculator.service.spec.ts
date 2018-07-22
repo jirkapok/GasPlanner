@@ -9,7 +9,7 @@ describe('NitroxCalculatorService', () => {
     });
   });
 
-  describe('MOD', () => {
+  describe('Maximum operational depth (MOD)', () => {
     it('pO2 1.6 with 50% fO2 has MOD 22 m (defaults)', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
       expect(service.mod).toBe(22);
     }));
@@ -21,7 +21,13 @@ describe('NitroxCalculatorService', () => {
     }));
   });
 
-  describe('Best mix', () => {
+  describe('Equivalent Air depth (EAD)', () => {
+    it('50% fO2 at 22 m has EAD 10.25 (defaults)', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
+      expect(service.ead).toBe(10.26);
+    }));
+  });
+
+  describe('Best mix (fO2)', () => {
     it('pO2 1.6 with MOD 22 m has fO2 50%', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
       service.calculation = NitroxMode.BestMix;
       service.mod = 22;
@@ -37,7 +43,7 @@ describe('NitroxCalculatorService', () => {
     }));
   });
 
-  describe('Partial O2', () => {
+  describe('Partial O2 (pO2)', () => {
     it('fO2 50% with MOD 22 m has pO2 1.6', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
       service.calculation = NitroxMode.PO2;
       service.mod = 22;

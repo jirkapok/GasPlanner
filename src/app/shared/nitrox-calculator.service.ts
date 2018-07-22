@@ -53,6 +53,12 @@ export class NitroxCalculatorService {
     this.calculate();
   }
 
+  public get ead(): number {
+    const fN2 = 1 - this._fO2 / 100;
+    const result = fN2 * (this._mod + 10) / 0.79 - 10;
+    return Math.ceil(result * 100) / 100;
+  }
+
   public get mod(): number {
     return this._mod;
   }

@@ -5,7 +5,11 @@ export class AppPage {
     return browser.get('/');
   }
 
-  getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+  calculateButton() {
+    return element(by.id('calculate'));
+  }
+
+  rockBottom() {
+    return element(by.css('.progress-bar.bg-warning')).getText();
   }
 }

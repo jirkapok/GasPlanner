@@ -7,8 +7,9 @@ describe('planner App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should show calculated rock bottom', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
+    page.calculateButton().click();
+    expect(page.rockBottom()).toBe('80');
   });
 });

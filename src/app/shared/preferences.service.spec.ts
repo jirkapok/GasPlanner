@@ -1,15 +1,23 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { PreferencesService } from './preferences.service';
+import { PlannerService } from './planner.service';
 
 describe('PreferencesService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PreferencesService]
+      providers: [PreferencesService, PlannerService]
     });
   });
 
-  it('should be created', inject([PreferencesService], (service: PreferencesService) => {
-    expect(service).toBeTruthy();
+  it('loads saved values', inject([PreferencesService, PlannerService], 
+    (service: PreferencesService, planner: PlannerService) => {
+      const ExpectedSac = 10;
+      const diver = planner.diver;
+      diver.sac = ExpectedSac;
+      service.saveDefaults();
+      diver.sac = 20;
+      service.loadDefaults();
+      expect(diver.sac).toBe(ExpectedSac);
   }));
 });

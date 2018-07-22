@@ -19,7 +19,7 @@ export class PlanComponent implements OnInit {
   public clock = faClock;
   @Input() public formValid: boolean;
 
-  constructor(private planer: PlannerService, private preferences: PreferencesService) { }
+  constructor(private planer: PlannerService) { }
 
   ngOnInit(): void {
     this.plan = this.planer.plan;

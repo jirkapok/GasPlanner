@@ -17,7 +17,6 @@ export class MainMenuComponent implements OnInit {
 
   public loadDefaults(): void {
     this.preferences.loadDefaults();
-    // this.planComponent.reset();
   }
 
   ngOnInit() {

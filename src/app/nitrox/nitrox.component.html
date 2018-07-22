@@ -1,0 +1,47 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-lg-3 col-md-6 mt-3">
+      <div class="card">
+        <div class="card-header">
+          <fa-icon [icon]="calcIcon" class="mr-3"></fa-icon>
+          <span>Nitrox calculator</span>
+        </div>
+        <div class="card-body">
+          <div>
+            <label for="pO2">PO2 [bar]:
+              <input [(ngModel)]="calc.pO2" class="form-control" #pO2="ngModel" name="pO2" id="pO2" type="number"
+               min="0.21" max="3"
+                [range]="[0.21,3]" required [class.is-invalid]="pO2.invalid && (pO2.dirty || pO2.touched)" />
+            </label>
+            <div class="text-danger" *ngIf="pO2.invalid && (pO2.dirty || pO2.touched)">Needs to be number 0.21-3 bar</div>
+          </div>
+          <div>
+            <label for="fO2">FO2 [%]:
+              <input [(ngModel)]="calc.fO2" class="form-control" #fO2="ngModel" name="fO2" id="fO2" type="number"
+               min="21" max="100"
+                [range]="[21,100]" required [class.is-invalid]="fO2.invalid && (fO2.dirty || fO2.touched)" />
+            </label>
+            <div class="text-danger" *ngIf="fO2.invalid && (fO2.dirty || fO2.touched)">Needs to be number 21-100 %</div>
+          </div>
+          <div>
+            <label for="mod">MOD [m]:
+              <input [(ngModel)]="calc.mod" class="form-control" #mod="ngModel" name="mod" id="mod" type="number"
+               min="1" max="350"
+                [range]="[1,350]" required [class.is-invalid]="mod.invalid && (mod.dirty || mod.touched)" />
+            </label>
+            <div class="text-danger" *ngIf="mod.invalid && (mod.dirty || mod.touched)">Needs to be number 3-350 m</div>
+          </div>
+          <div>
+            <label for="mod">MOD [m]:
+              <input [ngModel]="calc.mod" class="form-control" readonly/>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group mt-2">
+        <button class="btn btn-secondary mr-2" (click)="use()">Use</button>
+        <button class="btn btn-primary" (click)="goBack()">Back</button>
+      </div>
+    </div>
+  </div>
+</div>

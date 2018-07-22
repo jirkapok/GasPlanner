@@ -17,6 +17,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GaslabelComponent } from './gaslabel/gaslabel.component';
 import { SacComponent } from './sac/sac.component';
+import { NitroxComponent } from './nitrox/nitrox.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { SacComponent } from './sac/sac.component';
     SacComponent,
     MainMenuComponent,
     DashboardComponent,
-    GaslabelComponent
+    GaslabelComponent,
+    NitroxComponent
   ],
   imports: [
     BrowserModule,

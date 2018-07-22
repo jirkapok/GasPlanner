@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { PlannerService } from '../shared/planner.service';
@@ -10,6 +11,8 @@ import { PlannerService } from '../shared/planner.service';
   styleUrls: ['./sac.component.css']
 })
 export class SacComponent implements OnInit {
+  public calcIcon = faCalculator;
+
   constructor(
     private router: Router,
     private planer: PlannerService, public calc: SacCalculatorService) {

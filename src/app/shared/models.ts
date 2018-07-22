@@ -39,12 +39,6 @@ export class Gas {
         return '';
     }
 
-    public mod(maxPpO2: number): number {
-        const ppO2 = this.o2 / 100;
-        const result = 10 * (maxPpO2 / ppO2 - 1);
-        return Math.floor(result);
-    }
-
     public assignStandardGas(standard: string): void {
         this.o2 = StandardGas[standard];
     }

@@ -15,9 +15,12 @@ export class NitroxCalculatorService {
   private _fO2 = 50;
   private _mod = 22;
   private _calculation = NitroxMode.Mod;
-  private calculate: () => void = this.calculateMod;
+  private calculate: () => void = this.calculateCurrentMod;
 
-  constructor(private depthConverter: DepthConverterService) {
+  public static calculateMod(pO2: number, fO2: number): number {
+    const resultAtm = pO2 * 100 / fO2;
+    const result = DepthConverterService.fromAtm(resultAtm);
+    return Math.floor(result * 100) / 100;
   }
 
   public get calculation(): NitroxMode {
@@ -35,7 +38,7 @@ export class NitroxCalculatorService {
         this.calculate = this.calculatePartial;
         break;
       default:
-        this.calculate = this.calculateMod;
+        this.calculate = this.calculateCurrentMod;
     }
   }
 
@@ -72,20 +75,20 @@ export class NitroxCalculatorService {
     this.calculate();
   }
 
-  private calculateMod() {
+  private calculateCurrentMod() {
     const resultAtm = this._pO2 * 100 / this._fO2;
-    const result = this.depthConverter.fromAtm(resultAtm);
+    const result = DepthConverterService.fromAtm(resultAtm);
     this._mod = Math.floor(result * 100) / 100;
   }
 
   private calculateBestMix() {
-    const depthAtm = this.depthConverter.toAtm(this._mod);
+    const depthAtm = DepthConverterService.toAtm(this._mod);
     const result = this._pO2 * 100 / depthAtm;
     this._fO2 = Math.floor(result * 100) / 100;
   }
 
   private calculatePartial() {
-    const depthAtm = this.depthConverter.toAtm(this._mod);
+    const depthAtm = DepthConverterService.toAtm(this._mod);
     const result = this._fO2 * depthAtm / 100;
     this._pO2 = Math.ceil(result * 100) / 100;
   }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Plan, Diver, Dive, Strategies, Gas } from './models';
 import { DepthConverterService } from './depth-converter.service';
+import { NitroxCalculatorService } from './nitrox-calculator.service';
 
 @Injectable()
 export class PlannerService {
@@ -9,11 +10,8 @@ export class PlannerService {
   public gas: Gas = new Gas(15, 21, 200);
   public dive: Dive = new Dive();
 
-  constructor(private depthConverter: DepthConverterService) {
-  }
-
   public get gasMod(): number {
-    return this.gas.mod(this.diver.maxPpO2);
+    return NitroxCalculatorService.calculateMod(this.diver.maxPpO2, this.gas.o2);
   }
 
   public calculate() {
@@ -69,7 +67,7 @@ export class PlannerService {
 
   private averagePressure(): number {
     const averageDepth = this.plan.depth / 2;
-    return this.depthConverter.toAtm(averageDepth);
+    return DepthConverterService.toAtm(averageDepth);
   }
 
   private calculateTimeToSurface(): number {

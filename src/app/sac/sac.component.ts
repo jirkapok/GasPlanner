@@ -1,17 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
 
-class SacCalculatorService {
-  depth = 15;
-  tank = 15;
-  used = 150;
-  duration = 45;
-
-  get sac(): number {
-    const atm = 1 + this.depth / 10;
-    const result = this.tank * this.used / this.duration / atm;
-    return Math.ceil(result * 100) / 100;
-  }
-}
+import { SacCalculatorService } from '../shared/sac-calculator.service';
+import { PlannerService } from '../shared/planner.service';
 
 @Component({
   selector: 'app-sac',
@@ -19,13 +10,20 @@ class SacCalculatorService {
   styleUrls: ['./sac.component.css']
 })
 export class SacComponent implements OnInit {
-  private calc = new SacCalculatorService();
+  constructor(
+    private router: Router,
+    private planer: PlannerService, public calc: SacCalculatorService) {
+  }
 
-  constructor() {
+  public goBack(): void {
+    this.router.navigateByUrl('/');
+  }
 
-   }
+  public use(): void {
+    this.planer.diver.sac = this.calc.sac;
+    this.router.navigateByUrl('/');
+  }
 
   ngOnInit() {
   }
-
 }

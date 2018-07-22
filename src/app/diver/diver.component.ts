@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import {Router} from '@angular/router';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
@@ -13,10 +13,10 @@ import { Diver } from '../shared/models';
 export class DiverComponent implements OnInit {
   public diver: Diver;
   public user = faUser;
-  constructor(private planer: PlannerService, private location: Location) { }
+  constructor(private planer: PlannerService, private router: Router) { }
 
   public goBack(): void {
-    this.location.back();
+    this.router.navigateByUrl('/');
   }
 
   ngOnInit() {

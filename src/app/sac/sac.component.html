@@ -1,0 +1,57 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-lg-3 col-md-6 mt-3">
+      <div class="card">
+        <div class="card-header">
+          <fa-icon [icon]="user" class="mr-3"></fa-icon>
+          <span>Surface air consumption</span>
+        </div>
+        <div class="card-body">
+          <div>
+            <label for="depth">Average depth [m]:
+              <input [(ngModel)]="calc.depth" class="form-control" #depth="ngModel" name="depth" id="depth" type="number"
+               min="1" max="350"
+                [range]="[1,350]" required [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)" />
+            </label>
+            <div class="text-danger" *ngIf="depth.invalid && (sac.dirty || sac.touched)">Needs to be number 1-350 m</div>
+          </div>
+          <div>
+            <label for="used">Gas consumed [bar]:
+              <input [(ngModel)]="calc.used" class="form-control" #used="ngModel" name="used" id="used" type="number"
+               min="1" max="350"
+                [range]="[1,350]" required [class.is-invalid]="used.invalid && (used.dirty || used.touched)" />
+            </label>
+            <div class="text-danger" *ngIf="used.invalid && (used.dirty || used.touched)">Needs to be number 1-350 bar</div>
+          </div>
+          <div>
+            <label for="tank">Tank size [L]:
+              <input [(ngModel)]="calc.tank" class="form-control" #tank="ngModel" name="tank" id="tank" type="number"
+               min="1" max="350"
+                [range]="[1,350]" required [class.is-invalid]="tank.invalid && (tank.dirty || tank.touched)" />
+            </label>
+            <div class="text-danger" *ngIf="tank.invalid && (tank.dirty || tank.touched)">Needs to be number 1-350 L</div>
+          </div>
+          <div>
+            <label for="duration">Dive time [min.]:
+              <input [(ngModel)]="calc.duration" class="form-control" #duration="ngModel" name="duration" id="duration" 
+              type="number" min="1"
+                max="350" [range]="[1,350]" required [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"
+              />
+            </label>
+            <div class="text-danger" *ngIf="duration.invalid && (duration.dirty || duration.touched)"
+            >Needs to be number, at least 1 min.</div>
+          </div>
+          <div>
+            <label for="sac">Sac [L/min.]:
+              <input [(ngModel)]="calc.sac" class="form-control" #duration="ngModel" name="duration" id="duration" readonly/>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group mt-2">
+        <button class="btn btn-secondary mr-2" (click)="goBack()">Use</button>
+        <button class="btn btn-primary" (click)="goBack()">Back</button>
+      </div>
+    </div>
+  </div>
+</div>

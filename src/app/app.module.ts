@@ -16,6 +16,7 @@ import { MainMenuComponent } from './mainmenu/mainmenu.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GaslabelComponent } from './gaslabel/gaslabel.component';
+import { SacComponent } from './sac/sac.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { GaslabelComponent } from './gaslabel/gaslabel.component';
     DiverComponent,
     PlanComponent,
     DiveComponent,
+    SacComponent,
     MainMenuComponent,
     DashboardComponent,
     GaslabelComponent

@@ -9,7 +9,39 @@ describe('PlannerService', () => {
     });
   });
 
-  it('should be created', inject([PlannerService], (service: PlannerService) => {
-    expect(service).toBeTruthy();
-  }));
+  describe('30m for 20 minutes Calculates (defaults)', () => {
+    it('8 minutes time to surface', inject([PlannerService], (planner: PlannerService) => {
+      planner.calculate();
+      expect(planner.dive.timeToSurface).toBe(8);
+    }));
+
+    it('36 minutes maximum dive time', inject([PlannerService], (planner: PlannerService) => {
+      planner.calculate();
+      expect(planner.dive.maxTime).toBe(36);
+    }));
+
+    it('80 bar rock bottom', inject([PlannerService], (planner: PlannerService) => {
+      planner.calculate();
+      expect(planner.dive.rockBottom).toBe(80);
+    }));
+
+    it('133 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
+      planner.calculate();
+      expect(planner.gas.endPressure).toBe(133);
+    }));
+  });
+
+  describe('60m for 50 minutes shows errors', () => {
+    it('maximum depth exceeded', inject([PlannerService], (planner: PlannerService) => {
+      planner.plan.depth = 60;
+      planner.calculate();
+      expect(planner.dive.depthExceeded).toBeTruthy();
+    }));
+
+    it('not enough gas', inject([PlannerService], (planner: PlannerService) => {
+      planner.plan.duration = 50;
+      planner.calculate();
+      expect(planner.dive.notEnoughGas).toBeTruthy();
+    }));
+  });
 });

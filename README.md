@@ -21,7 +21,7 @@ To work on the application install NodeJs, AngularCli 6.0 and TypeScript. Recomm
 
 ## Build
 
-To compile the application compile it by `npm run build` and deploy `dist` directory. To start the app use `npm run start`. For debugging purpose
+To compile the application compile it by `npm run build` and deploy `dist` directory. To start the app use `npm run start`. For debugging purpose. To deploy the application to github pages use `angular-cli-ghpages` npm package.
 
 ## Running the tests
 

@@ -2,11 +2,11 @@
 
 This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations. Purpose of the application is to provide easy to use calculations.
 
-> **NOTE:** Running instance is available at [http://gasplanner.azurewebsites.net](http://gasplanner.azurewebsites.net)
+> **NOTE:** Running instance is available at [https://jirkapok.github.io/GasPlanner/](https://jirkapok.github.io/GasPlanner/)
 
 ## Disclaimer
 
-None of the authors, contributors, administrators, vandals, or anyone else connected with this project, in any way whatsoever, can be responsible for your use of the information contained in or linked from these web pages.
+None of the authors, contributors, administrators, or anyone else connected with this project can be responsible for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.
 
 ## Calculations Background
 

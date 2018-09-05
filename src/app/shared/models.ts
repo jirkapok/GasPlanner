@@ -111,8 +111,36 @@ export class Dive {
     public notEnoughGas = false;
     public depthExceeded = false;
     public notEnoughTime = false;
+    public wayPoints: WayPoint[] = [];
 
     public get hasErrors(): boolean {
         return this.calculated && (this.notEnoughGas || this.depthExceeded || this.notEnoughTime);
+    }
+}
+
+export class WayPoint {
+    constructor(
+        public startTime = 0,
+        public endTime = 0,
+        public startDepth = 0,
+        public endDepth = 0
+    ) {
+    }
+
+    public get label(): string {
+        if (this.startDepth !== this.endDepth) {
+            return '';
+        }
+
+        const depth = this.startDepth + ' m';
+        const duration = this.endTime - this.startTime;
+        const durationText = duration + ' min.';
+        return depth + ',' + durationText;
+    }
+
+    public toLevel(duration: number, newDepth: number): WayPoint {
+        const endTime = this.endTime + duration;
+        const result = new WayPoint(this.endTime, endTime, this.endDepth, newDepth);
+        return result;
     }
 }

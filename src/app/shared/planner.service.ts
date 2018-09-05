@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Plan, Diver, Dive, Strategies, Gas } from './models';
+import { Plan, Diver, Dive, Gas } from './models';
 import { DepthConverterService } from './depth-converter.service';
 import { NitroxCalculatorService } from './nitrox-calculator.service';
+import { WayPointsService } from './waypoints.service';
 
 @Injectable()
 export class PlannerService {
@@ -26,7 +27,7 @@ export class PlannerService {
     this.gas.consumed = this.calculateConsumed(this.plan.duration,
       this.diver.sac, averagePressure, this.gas.size);
 
-    // TODO before turn, we should subtract surfacing
+    this.dive.wayPoints = WayPointsService.calculateWayPoints(this.plan);
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
     this.dive.needsReturn = this.plan.needsReturn;

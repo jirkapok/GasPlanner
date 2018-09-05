@@ -2,3 +2,8 @@
     height: 1.5em;
     font-size: 1em;
 }
+
+.dive-level {
+    stroke:rgb(255,0,0);
+    stroke-width:2;
+}

@@ -119,28 +119,33 @@ export class Dive {
 }
 
 export class WayPoint {
-    constructor(
-        public startTime = 0,
-        public endTime = 0,
-        public startDepth = 0,
-        public endDepth = 0
-    ) {
+    private static timeScaling = 10;
+    private static depthScaling = 10;
+    public x1 = 0;
+    public y1 = 0;
+    public x2 = 0;
+    public y2 = 0;
+    constructor(public duration: number, public endDepth: number) {
+        this.x2 = duration * WayPoint.timeScaling;
+        this.y2 = endDepth * WayPoint.depthScaling;
     }
 
     public get label(): string {
-        if (this.startDepth !== this.endDepth) {
+        if (this.y1 !== this.y2) {
             return '';
         }
 
-        const depth = this.startDepth + ' m';
-        const duration = this.endTime - this.startTime;
-        const durationText = duration + ' min.';
+        const depth = this.endDepth + ' m';
+        const durationText = this.duration + ' min.';
         return depth + ',' + durationText;
     }
 
     public toLevel(duration: number, newDepth: number): WayPoint {
-        const endTime = this.endTime + duration;
-        const result = new WayPoint(this.endTime, endTime, this.endDepth, newDepth);
+        const result = new WayPoint(duration, newDepth);
+        result.x1 = this.x2;
+        result.y1 = this.y2;
+        result.x2 = this.x2 + duration * WayPoint.timeScaling;
+        result.y2 = newDepth * WayPoint.depthScaling;
         return result;
     }
 }

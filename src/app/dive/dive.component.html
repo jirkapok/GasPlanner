@@ -65,10 +65,11 @@
         <div>
             <svg width="500" height="500">
                 <line *ngFor="let point of dive.wayPoints"
-                  [attr.x1]="point.startTime" [attr.y1]="point.startDepth" 
-                  [attr.x2]="point.endTime" [attr.y2]="point.endDepth"
+                  [attr.x1]="point.x1" [attr.y1]="point.y1" 
+                  [attr.x2]="point.x2" [attr.y2]="point.y2"
                   class="dive-level" />
-                <text *ngFor="let point of wayPoints" [attr.x]="point.startTime + 5" [attr.y]="point.startDepth - 5">{{point.label}}</text>
+                <text *ngFor="let point of dive.wayPoints" 
+                  [attr.x]="point.x1 + 5" [attr.y]="point.y1 - 5">{{point.label}}</text>
             </svg>
           </div>
     </div>

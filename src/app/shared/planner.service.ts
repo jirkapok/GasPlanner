@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Plan, Diver, Dive, Gas } from './models';
+import { Plan, Diver, Dive, Gas, SafetyStop } from './models';
 import { DepthConverterService } from './depth-converter.service';
 import { NitroxCalculatorService } from './nitrox-calculator.service';
 import { WayPointsService } from './waypoints.service';
@@ -73,9 +73,8 @@ export class PlannerService {
 
   private calculateTimeToSurface(): number {
     const solutionDuration = 2;
-    const swimSpeed = 10; // meter/min.
-    const safetyStop = this.plan.depth >= 20 ? 3 : 0;
-    const swimTime = Math.ceil(this.plan.depth / swimSpeed);
+    const safetyStop = this.plan.needsSafetyStop ? SafetyStop.duration : 0;
+    const swimTime = Math.ceil(this.plan.depth /  Diver.ascSpeed);
     return solutionDuration + swimTime + safetyStop;
   }
 

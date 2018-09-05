@@ -62,8 +62,9 @@
             </div>
             <app-gaslabel></app-gaslabel>
         </div>
-        <div>
+        <div class="mt-3">
             <svg width="500" height="500">
+                <line x1="0" y1="0" x2="500" y2="0" class="dive-surface" />
                 <line *ngFor="let point of dive.wayPoints"
                   [attr.x1]="point.x1" [attr.y1]="point.y1" 
                   [attr.x2]="point.x2" [attr.y2]="point.y2"

@@ -55,6 +55,10 @@ export class Gas {
 }
 
 export class Diver {
+    // meter/min.
+    public static readonly descSpeed = 20;
+    public static readonly ascSpeed = 10;
+
     constructor(public sac: number, public maxPpO2: number) {
     }
 
@@ -91,6 +95,10 @@ export class Plan {
 
     public get needsReturn(): boolean {
         return this.strategy !== Strategies.ALL;
+    }
+
+    public get needsSafetyStop(): boolean {
+        return this.depth >= SafetyStop.mandatoryDepth;
     }
 
     public loadFrom(other: Plan): void {
@@ -148,4 +156,10 @@ export class WayPoint {
         result.y2 = newDepth * WayPoint.depthScaling;
         return result;
     }
+}
+
+export class SafetyStop {
+    public static readonly depth = 5;
+    public static readonly duration = 3;
+    public static readonly mandatoryDepth = 20;
 }

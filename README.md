@@ -8,11 +8,20 @@ This is a web based application, which allows **recreational** scuba divers to d
 
 None of the authors, contributors, administrators, or anyone else connected with this project can be responsible for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.
 
+## Features
+
+* Only open circuit dives can be planned
+* No multilevel dive profiles are supported
+* No decompression dives
+* Only air and nitrox gases are available
+* Only one gas tank
+* No repetitive dives
+
 ## Calculations Background
 
 * Only one safety stop 3min. in 5 meters is currently supported (No deep stops nor GUE ascent stops).
 * The safety stop is required for dives below 20 m
-* Ascent speed 10m/min. is used
+* Ascent speed 10m/min. and 20m/min. descend speed is used
 * When calculating ascent time 2 minutes are always added, to resolve immediate issues in depth.
 
 ## Prerequisites

@@ -66,11 +66,11 @@
             <svg height="300px" width="100%">
                 <line x1="0" y1="0" [attr.x2]="graph.offsetWidth" y2="0" class="dive-surface" />
                 <line *ngFor="let point of dive.wayPoints"
-                  [attr.x1]="point.x1 * graph.offsetWidth / graphWidth" [attr.y1]="point.y1 * 10" 
-                  [attr.x2]="point.x2 * graph.offsetWidth / graphWidth" [attr.y2]="point.y2 * 10"
+                  [attr.x1]="scaleWidth(point.x1, graph.offsetWidth)" [attr.y1]="scaleHeight(point.y1, graph.offsetHeight)" 
+                  [attr.x2]="scaleWidth(point.x2, graph.offsetWidth)" [attr.y2]="scaleHeight(point.y2, graph.offsetHeight)"
                   class="dive-level" />
                 <text *ngFor="let point of dive.wayPoints" class="dive-waypoint"
-                  [attr.x]="point.x2 * graph.offsetWidth / graphWidth - 5" [attr.y]="point.y1 * 10 - 5">{{point.label}}</text>
+                  [attr.x]="scaleWidth(point.x2, graph.offsetWidth) - 5" [attr.y]="scaleHeight(point.y1, graph.offsetHeight) - 5">{{point.label}}</text>
             </svg>
           </div>
     </div>

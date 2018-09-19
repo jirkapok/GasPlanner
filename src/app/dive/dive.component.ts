@@ -14,8 +14,20 @@ export class DiveComponent implements OnInit {
   public exclamation = faExclamationCircle;
   public tasks = faTasks;
 
-  public get graphWidth(): number {
-    return this.dive.wayPoints[this.dive.wayPoints.length - 1].x2;
+  public scaleWidth(x: number, graphWidth: number): number {
+    const maxX = this.dive.wayPoints[this.dive.wayPoints.length - 1].x2;
+    return x * graphWidth / maxX;
+  }
+
+  public scaleHeight(y: number, graphHeight: number): number {
+    // for single level dives second is always depth
+    const maxY = this.dive.wayPoints[1].y1;
+    return y * graphHeight / maxY;
+  }
+
+  public get graphHeight(): number {
+    // for single level dives second is always depth
+    return this.dive.wayPoints[1].y1;
   }
 
   public get bottomGasMax() {

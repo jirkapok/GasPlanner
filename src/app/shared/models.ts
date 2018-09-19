@@ -127,8 +127,8 @@ export class Dive {
 }
 
 export class WayPoint {
-    private static timeScaling = 10;
-    private static depthScaling = 10;
+    private static timeScaling = 1;
+    private static depthScaling = 1;
     public x1 = 0;
     public y1 = 0;
     public x2 = 0;

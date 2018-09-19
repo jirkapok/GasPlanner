@@ -12,3 +12,7 @@
     stroke:navy;
     stroke-width:4;
 }
+
+.dive-waypoint {
+    text-anchor:end;
+}

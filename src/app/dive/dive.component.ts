@@ -14,6 +14,10 @@ export class DiveComponent implements OnInit {
   public exclamation = faExclamationCircle;
   public tasks = faTasks;
 
+  public get graphWidth(): number {
+    return this.dive.wayPoints[this.dive.wayPoints.length - 1].x2;
+  }
+
   public get bottomGasMax() {
     return this.bottomGas.startPressure;
   }

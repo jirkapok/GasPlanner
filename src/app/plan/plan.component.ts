@@ -3,7 +3,6 @@ import { faClock } from '@fortawesome/free-regular-svg-icons';
 
 import { Plan, Strategies } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
-import { PreferencesService } from '../shared/preferences.service';
 
 @Component({
   selector: 'app-plan',

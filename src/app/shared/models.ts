@@ -127,17 +127,17 @@ export class Dive {
 }
 
 export class WayPoint {
-    public x1 = 0;
-    public y1 = 0;
-    public x2 = 0;
-    public y2 = 0;
-    constructor(public duration: number, public endDepth: number) {
-        this.x2 = Math.round(duration);
-        this.y2 = endDepth;
+    public startTime = 0;
+    public startDepth = 0;
+    public endTime = 0;
+    public endDepth = 0;
+    constructor(public duration: number, public newDepth: number) {
+        this.endTime = Math.round(duration);
+        this.endDepth = newDepth;
     }
 
     public get label(): string {
-        if (this.y1 !== this.y2) {
+        if (this.startDepth !== this.endDepth) {
             return '';
         }
 
@@ -148,10 +148,10 @@ export class WayPoint {
 
     public toLevel(duration: number, newDepth: number): WayPoint {
         const result = new WayPoint(duration, newDepth);
-        result.x1 = this.x2;
-        result.y1 = this.y2;
-        result.x2 = this.x2 + Math.round(duration);
-        result.y2 = newDepth;
+        result.startTime = this.endTime;
+        result.startDepth = this.endDepth;
+        result.endTime = this.endTime + Math.round(duration);
+        result.endDepth = newDepth;
         return result;
     }
 }

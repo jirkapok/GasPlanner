@@ -19,7 +19,7 @@ export class DiveComponent implements OnInit {
   }
 
   public scaleHeight(y: number, graphHeight: number): number {
-    return y * graphHeight / this.dive.maxDepth;
+    return y * (graphHeight - 10) / this.dive.maxDepth;
   }
 
   public get bottomGasMax() {
@@ -48,6 +48,10 @@ export class DiveComponent implements OnInit {
 
   public get gasMod(): number {
     return this.planer.gasMod;
+  }
+
+  public get noDecoTime(): number {
+    return this.planer.plan.noDecoTime;
   }
 
   constructor(private planer: PlannerService) { }

@@ -1,4 +1,5 @@
-import { DepthConverterService } from "./depth-converter.service";
+import { DepthConverterService } from './depth-converter.service';
+import { Decompression } from './Decompression';
 
 export enum StandardGas {
     Air = 21,
@@ -101,6 +102,10 @@ export class Plan {
 
     public get needsSafetyStop(): boolean {
         return this.depth >= SafetyStop.mandatoryDepth;
+    }
+
+    public get noDecoTime(): number {
+        return Decompression.noDecoTime(this.depth);
     }
 
     public loadFrom(other: Plan): void {

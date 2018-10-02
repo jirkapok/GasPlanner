@@ -15,8 +15,9 @@
       <label for="depth">Depth [m]:
         <input id="depth" name="depth" #depth="ngModel" [(ngModel)]="plan.depth" class="form-control" type="number"
          min="1" [min]="1" required [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)"/>
+        <small class="text-muted">No deco limit {{plan.noDecoTime}} min.</small>
+        <div class="text-danger" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number > 0 m</div>
       </label>
-      <div class="text-danger" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number > 0 m</div>
     </div>
 
     <div class="form-group">

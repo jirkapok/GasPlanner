@@ -4,7 +4,7 @@
 }
 
 .dive-level {
-    stroke:rgb(255,0,0);
+    stroke:royalblue;
     stroke-width:2;
 }
 
@@ -15,4 +15,9 @@
 
 .dive-waypoint {
     text-anchor:end;
+}
+
+.dive-nodeco {
+    fill: red;
+    r:6;
 }

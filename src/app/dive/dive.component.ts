@@ -15,14 +15,11 @@ export class DiveComponent implements OnInit {
   public tasks = faTasks;
 
   public scaleWidth(x: number, graphWidth: number): number {
-    const maxX = this.dive.wayPoints[this.dive.wayPoints.length - 1].endTime;
-    return x * graphWidth / maxX;
+    return x * graphWidth / this.dive.totalDuration;
   }
 
   public scaleHeight(y: number, graphHeight: number): number {
-    // for single level dives second is always depth
-    const maxY = this.dive.wayPoints[1].startDepth;
-    return y * graphHeight / maxY;
+    return y * graphHeight / this.dive.maxDepth;
   }
 
   public get bottomGasMax() {

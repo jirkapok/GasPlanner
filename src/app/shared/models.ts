@@ -123,11 +123,20 @@ export class Dive {
     public notEnoughTime = false;
     public wayPoints: WayPoint[] = [];
 
+    public get totalDuration(): number{
+        return this.wayPoints[this.wayPoints.length - 1].endTime;
+    }
+
+    public get maxDepth(): number {
+        return this.bottom.startDepth;
+    }
+
     public get descent(): WayPoint {
         return this.wayPoints[0];
     }
 
     public get bottom(): WayPoint {
+        // for single level dives second is always depth
         return this.wayPoints[1];
     }
 

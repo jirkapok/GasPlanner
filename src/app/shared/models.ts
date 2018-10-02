@@ -1,3 +1,5 @@
+import { DepthConverterService } from "./depth-converter.service";
+
 export enum StandardGas {
     Air = 21,
     EAN32 = 32,
@@ -121,6 +123,19 @@ export class Dive {
     public notEnoughTime = false;
     public wayPoints: WayPoint[] = [];
 
+    public get descent(): WayPoint {
+        return this.wayPoints[0];
+    }
+
+    public get bottom(): WayPoint {
+        return this.wayPoints[1];
+    }
+
+    public get ascent(): WayPoint[] {
+        // first two are descent and bottom
+        return this.wayPoints.slice(2, this.wayPoints.length);
+    }
+
     public get hasErrors(): boolean {
         return this.calculated && (this.notEnoughGas || this.depthExceeded || this.notEnoughTime);
     }
@@ -131,9 +146,11 @@ export class WayPoint {
     public startDepth = 0;
     public endTime = 0;
     public endDepth = 0;
-    constructor(public duration: number, public newDepth: number) {
+
+    constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
         this.endTime = Math.round(duration);
         this.endDepth = newDepth;
+        this.startDepth = previousDepth;
     }
 
     public get label(): string {
@@ -146,12 +163,16 @@ export class WayPoint {
         return depth + ',' + durationText;
     }
 
+    public get averagePressure(): number {
+        const averageDepth = (this.startDepth + this.endDepth) / 2;
+        return DepthConverterService.toAtm(averageDepth);
+    }
+
     public toLevel(duration: number, newDepth: number): WayPoint {
         const result = new WayPoint(duration, newDepth);
         result.startTime = this.endTime;
-        result.startDepth = this.endDepth;
         result.endTime = this.endTime + Math.round(duration);
-        result.endDepth = newDepth;
+        result.startDepth = this.endDepth;
         return result;
     }
 }

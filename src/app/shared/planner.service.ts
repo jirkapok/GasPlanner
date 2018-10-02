@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Plan, Diver, Dive, Gas, SafetyStop } from './models';
-import { DepthConverterService } from './depth-converter.service';
+import { Plan, Diver, Dive, Gas, SafetyStop, WayPoint } from './models';
 import { NitroxCalculatorService } from './nitrox-calculator.service';
 import { WayPointsService } from './waypoints.service';
 
@@ -16,20 +15,16 @@ export class PlannerService {
   }
 
   public calculate() {
-    const averagePressure = this.averagePressure();
-    const timeToSurface = this.calculateTimeToSurface();
-    const rockBottom = this.calculateRockBottom(timeToSurface, averagePressure);
-    const availableVolume = this.availableVolume(rockBottom);
-
-    this.dive.timeToSurface = timeToSurface;
-    this.dive.rockBottom = rockBottom;
-    this.dive.maxTime = this.calculateMaxDiveTime(averagePressure, availableVolume);
-    this.gas.consumed = this.calculateConsumed(this.plan.duration,
-      this.diver.sac, averagePressure, this.gas.size);
-
     this.dive.wayPoints = WayPointsService.calculateWayPoints(this.plan);
+    this.dive.timeToSurface = this.calculateTimeToSurface();
+    this.dive.rockBottom = this.calculateRockBottom();
+    this.dive.maxTime = this.calculateMaxBottomTime();
+    this.gas.consumed = this.calculateConsumedOnWay(this.dive.wayPoints, this.diver.sac);
+
+    // even in case thirds rule, the last third is reserve, so we always divide by 2
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
+
     this.dive.needsReturn = this.plan.needsReturn;
     this.dive.notEnoughGas = this.gas.endPressure < this.dive.rockBottom;
     this.dive.depthExceeded = this.plan.depth > this.gasMod;
@@ -42,33 +37,44 @@ export class PlannerService {
     return this.gas.startPressure - Math.floor(consumed);
   }
 
-  private calculateMaxDiveTime(averagePressure: number, availableVolume: number): number {
-    const result = availableVolume / averagePressure / this.diver.sac;
+  private calculateMaxBottomTime(): number {
+    const availablePressure = this.availablePressure();
+    const gasSac = this.diver.gasSac(this.gas);
+    const descent = this.dive.descent;
+    const consumedByDescent = descent.duration * gasSac * descent.duration;
+    const forBottom = availablePressure - consumedByDescent;
+    const bottom = this.dive.bottom;
+    const bottomTime = forBottom / bottom.averagePressure / gasSac;
+    const result = descent.duration + bottomTime;
     return Math.floor(result);
   }
 
-  private availableVolume(rockBottom: number): number {
-    const totalVolume = this.gas.volume;
-    const usablePart = this.plan.availablePressureRatio;
-    return (totalVolume - rockBottom * this.gas.size) * usablePart;
+  private availablePressure(): number {
+    const surfacing = this.calculateConsumedOnWay(this.dive.ascent, this.diver.sac);
+    const reserve = surfacing + this.dive.rockBottom;
+    return (this.gas.startPressure - reserve) * this.plan.availablePressureRatio;
   }
 
-  private calculateRockBottom(timeToSurface: number, averagePressure: number): number {
-    const minimumRockBottom = 30;
+  private calculateRockBottom(): number {
+    const ascent = this.dive.ascent;
+    const problemSolving = new WayPoint(2, ascent[0].startDepth, ascent[0].startDepth);
+    ascent.unshift(problemSolving);
     const stressSac = this.diver.stressSac;
-    const result = this.calculateConsumed(timeToSurface, stressSac, averagePressure, this.gas.size);
+    const result = this.calculateConsumedOnWay(ascent, stressSac);
+    const minimumRockBottom = 30;
     return result > minimumRockBottom ? result : minimumRockBottom;
   }
 
-  private calculateConsumed(time: number, sac: number, averagePressure: number, gasSize): number {
-    const result = time * averagePressure * Diver.gasSac(sac, gasSize);
+  private calculateConsumedOnWay(wayPoints: WayPoint[], sac: number): number {
+    let result = 0;
+
+    for (const wayPoint of wayPoints) {
+      const averagePressure  = wayPoint.averagePressure;
+      result += wayPoint.duration * averagePressure * Diver.gasSac(sac, this.gas.size);
+    }
+
     const rounded = Math.ceil(result);
     return rounded;
-  }
-
-  private averagePressure(): number {
-    const averageDepth = this.plan.depth / 2;
-    return DepthConverterService.toAtm(averageDepth);
   }
 
   private calculateTimeToSurface(): number {

@@ -16,9 +16,9 @@ describe('PlannerService', () => {
       expect(planner.dive.timeToSurface).toBe(8);
     }));
 
-    it('36 minutes maximum dive time', inject([PlannerService], (planner: PlannerService) => {
+    it('20 minutes maximum dive time', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();
-      expect(planner.dive.maxTime).toBe(36);
+      expect(planner.dive.maxTime).toBe(20);
     }));
 
     it('80 bar rock bottom', inject([PlannerService], (planner: PlannerService) => {
@@ -26,9 +26,9 @@ describe('PlannerService', () => {
       expect(planner.dive.rockBottom).toBe(80);
     }));
 
-    it('133 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
+    it('80 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();
-      expect(planner.gas.endPressure).toBe(133);
+      expect(planner.gas.endPressure).toBe(80);
     }));
   });
 

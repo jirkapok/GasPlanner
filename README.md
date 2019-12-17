@@ -43,3 +43,15 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+## Other tools resource
+
+Based on following tools:
+
+* https://github.com/archisgore/online-deco-console
+* https://github.com/nyxtom/dive
+
+At time of development also other implementations are available:
+
+* https://github.com/igaponov/deco-model
+* https://github.com/oliverjohnstone/npm-buhlmann-ZH-L16

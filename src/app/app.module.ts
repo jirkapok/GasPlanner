@@ -35,7 +35,7 @@ import { NitroxComponent } from './nitrox/nitrox.component';
   imports: [
     BrowserModule,
     FormsModule,
-    NgbModule.forRoot(),
+    NgbModule,
     AppRoutingModule,
     CustomFormsModule,
     FontAwesomeModule

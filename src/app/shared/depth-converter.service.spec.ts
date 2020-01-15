@@ -9,13 +9,13 @@ describe('DepthConverterService', () => {
     });
   });
 
-  it('22m converts to 3.2 bar', () => {
-    const result = DepthConverterService.toAtm(22);
-    expect(result).toBe(3.2);
+  it('22m converts to 3.157 bar', () => {
+    const result = DepthConverterService.toBar(22);
+    expect(result).toBeCloseTo(3.157, 3);
   });
 
-  it('3.2 converts to 22 m', () => {
-    const result = DepthConverterService.fromAtm(3.2);
-    expect(result).toBe(22);
+  it('3.2 converts to 22.43 m', () => {
+    const result = DepthConverterService.fromBar(3.2);
+    expect(result).toBeCloseTo(22.43, 2);
   });
 });

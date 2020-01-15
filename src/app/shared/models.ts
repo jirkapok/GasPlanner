@@ -179,7 +179,7 @@ export class WayPoint {
 
     public get averagePressure(): number {
         const averageDepth = (this.startDepth + this.endDepth) / 2;
-        return DepthConverterService.toAtm(averageDepth);
+        return DepthConverterService.toBar(averageDepth);
     }
 
     public toLevel(duration: number, newDepth: number): WayPoint {

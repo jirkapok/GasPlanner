@@ -26,9 +26,9 @@ describe('PlannerService', () => {
       expect(planner.dive.rockBottom).toBe(80);
     }));
 
-    it('80 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
+    it('81 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();
-      expect(planner.gas.endPressure).toBe(80);
+      expect(planner.gas.endPressure).toBe(81);
     }));
   });
 

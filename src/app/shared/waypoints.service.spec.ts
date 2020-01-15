@@ -3,7 +3,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { WayPointsService } from './waypoints.service';
 import { Plan, Strategies } from './models';
 
-fdescribe('WayPointsService', () => {
+describe('WayPointsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [WayPointsService]

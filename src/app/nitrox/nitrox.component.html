@@ -15,7 +15,7 @@
           <div [hidden]="inPO2">
             <label for="pO2">ppO2 [bar]:
               <input [(ngModel)]="calc.pO2" class="form-control" #pO2="ngModel" name="pO2" id="pO2" type="number"
-               min="0.21" max="3"
+               min="0.21" max="3" step="0.1"
                 [range]="[0.21,3]" required [class.is-invalid]="pO2.invalid && (pO2.dirty || pO2.touched)" />
             </label>
             <div class="text-danger" *ngIf="pO2.invalid && (pO2.dirty || pO2.touched)">Needs to be number 0.21-3 bar</div>

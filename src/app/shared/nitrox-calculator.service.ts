@@ -13,7 +13,7 @@ export enum NitroxMode {
 export class NitroxCalculatorService {
   private _pO2 = 1.6;
   private _fO2 = 50;
-  private _mod = 22;
+  private _mod = 22.43;
   private _calculation = NitroxMode.Mod;
   private calculate: () => void = this.calculateCurrentMod;
 

@@ -9,13 +9,13 @@ describe('SacCalculatorService', () => {
     });
   });
 
-  it('15m for 45 min with 15L tank (defaults) has sac 20 L/min.', inject([SacCalculatorService], (service: SacCalculatorService) => {
-    expect(service.sac).toBe(20);
+  it('15m for 45 min with 15L tank (defaults) has sac 20.24 L/min.', inject([SacCalculatorService], (service: SacCalculatorService) => {
+    expect(service.sac).toBe(20.24);
   }));
 
-  it('15m for 60 min with 15L tank has sac 15 L/min.', inject([SacCalculatorService], (service: SacCalculatorService) => {
+  it('15m for 60 min with 15L tank has sac 15.18 L/min.', inject([SacCalculatorService], (service: SacCalculatorService) => {
     service.duration = 60;
-    expect(service.sac).toBe(15);
+    expect(service.sac).toBe(15.18);
   }));
 
   it('at 0 m calculates 50 L/min.', inject([SacCalculatorService], (service: SacCalculatorService) => {

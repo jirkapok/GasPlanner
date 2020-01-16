@@ -155,6 +155,12 @@ export class Dive {
     }
 }
 
+export enum SwimDirection {
+    hover = 0,
+    ascent = 1,
+    descent = 2
+}
+
 export class WayPoint {
     public startTime = 0;
     public startDepth = 0;
@@ -165,6 +171,16 @@ export class WayPoint {
         this.endTime = Math.round(duration);
         this.endDepth = newDepth;
         this.startDepth = previousDepth;
+    }
+
+    public get swimDirection(): SwimDirection {
+        if(this.startDepth < this.endDepth)
+          return SwimDirection.descent;
+
+        if(this.startDepth > this.endDepth)
+          return SwimDirection.ascent;
+
+        return SwimDirection.hover;
     }
 
     public get label(): string {

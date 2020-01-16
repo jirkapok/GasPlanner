@@ -1,0 +1,24 @@
+<div class="card">
+    <div class="card-header">
+        <fa-icon [icon]="tasks" class="mr-3"></fa-icon>
+        <span>Dive way points</span>
+    </div>
+    <div *ngIf="dive.calculated && !dive.hasErrors" class="card-body">
+        <table class="table table-noheader">
+            <tr>
+                <th></th>
+                <th>Depth</th>
+                <th>Duration</th>
+                <th>Run</th>
+            </tr>
+            <tr *ngFor="let point of dive.wayPoints">
+                <td>
+                    <fa-icon [icon]="swimDirectionIcon(point)" [ngClass]="iconClasses(point)"></fa-icon>
+                </td>
+                <td>{{ point.endDepth }}</td>
+                <td>{{ point.duration }}</td>
+                <td>{{ point.endTime }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

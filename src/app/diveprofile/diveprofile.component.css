@@ -1,0 +1,18 @@
+.dive-level {
+    stroke:royalblue;
+    stroke-width:2;
+}
+
+.dive-surface {
+    stroke:navy;
+    stroke-width:4;
+}
+
+.dive-waypoint {
+    text-anchor:end;
+}
+
+.dive-nodeco {
+    fill: red;
+    r:6;
+}

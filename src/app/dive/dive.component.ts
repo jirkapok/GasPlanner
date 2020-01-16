@@ -14,14 +14,6 @@ export class DiveComponent implements OnInit {
   public exclamation = faExclamationCircle;
   public tasks = faTasks;
 
-  public scaleWidth(x: number, graphWidth: number): number {
-    return x * graphWidth / this.dive.totalDuration;
-  }
-
-  public scaleHeight(y: number, graphHeight: number): number {
-    return y * (graphHeight - 10) / this.dive.maxDepth;
-  }
-
   public get bottomGasMax() {
     return this.bottomGas.startPressure;
   }
@@ -48,10 +40,6 @@ export class DiveComponent implements OnInit {
 
   public get gasMod(): number {
     return this.planer.gasMod;
-  }
-
-  public get noDecoTime(): number {
-    return this.planer.plan.noDecoTime;
   }
 
   constructor(private planer: PlannerService) { }

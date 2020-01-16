@@ -62,21 +62,5 @@
             </div>
             <app-gaslabel></app-gaslabel>
         </div>
-        <div class="mt-3" #graph>
-            <svg height="300px" width="100%">
-                <line x1="0" y1="0" [attr.x2]="graph.offsetWidth" y2="0" class="dive-surface" />
-                <line *ngFor="let point of dive.wayPoints"
-                  [attr.x1]="scaleWidth(point.startTime, graph.offsetWidth)"
-                  [attr.y1]="scaleHeight(point.startDepth, graph.offsetHeight)" 
-                  [attr.x2]="scaleWidth(point.endTime, graph.offsetWidth)"
-                  [attr.y2]="scaleHeight(point.endDepth, graph.offsetHeight)"
-                  class="dive-level" />
-                <text *ngFor="let point of dive.wayPoints" class="dive-waypoint"
-                  [attr.x]="scaleWidth(point.endTime, graph.offsetWidth) - 5"
-                  [attr.y]="scaleHeight(point.startDepth, graph.offsetHeight) - 5">{{point.label}}</text>
-                <!-- <circle [attr.cx]="scaleWidth(noDecoTime, graph.offsetWidth)"
-                 [attr.cy]="scaleHeight(dive.bottom.startDepth, graph.offsetHeight)" class="dive-nodeco"/> -->
-            </svg>
-          </div>
     </div>
 </div>

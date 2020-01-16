@@ -19,6 +19,7 @@ import { GaslabelComponent } from './gaslabel/gaslabel.component';
 import { SacComponent } from './sac/sac.component';
 import { NitroxComponent } from './nitrox/nitrox.component';
 import { WayPointsComponent } from './waypoints/waypoints';
+import { DiveProfileComponent } from './diveprofile/diveprofile.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { WayPointsComponent } from './waypoints/waypoints';
     DashboardComponent,
     GaslabelComponent,
     NitroxComponent,
-    WayPointsComponent
+    WayPointsComponent,
+    DiveProfileComponent
   ],
   imports: [
     BrowserModule,

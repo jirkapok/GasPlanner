@@ -10,6 +10,9 @@ export class Limit {
     }
 }
 
+/**
+ * No decompression times based on IANTD air tables at sea level
+ */
 export class Decompression {
     private static readonly maxDepth = 42;
 

@@ -1,8 +1,7 @@
 import { Tissues } from "./Tissues";
 
-class Gas {
-    public fO2: number;
-    public fHe: number;
+export class Gas {
+    constructor(public fO2: number, public fHe: number) {}
 }
 
 class Segment {

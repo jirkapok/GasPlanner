@@ -1,16 +1,24 @@
 import { Compartments, Compartment } from "./Compartments";
 import { DepthConverterService } from "./depth-converter.service";
-import { AltitudePressure } from "./pressure-converter.service";
+import { AltitudePressure, PressureConverterService, VapourPressure, Gravity, Density } from "./pressure-converter.service";
 
 export class Tissue extends Compartment {
-    private _pN2: number;
-    private _pHe: number;
-    private _pTotal: number;
+    // initial tissue loading is needed
+    private _pN2: number = 0;
+    private _pHe: number = 0;
+    private _pTotal: number = 0;
+    private _waterVapourPressure: number;
 
     constructor(compartment: Compartment)
     {
        super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
-        compartment.HeHalfTime, compartment.heA, compartment.heB); 
+        compartment.HeHalfTime, compartment.heA, compartment.heB);
+        
+        let absPressure = 1;
+        this._waterVapourPressure = this.waterVapourPressureInBars(35.2);
+        this._pN2 = this.partialPressure(absPressure || 1, 0.79) - this._waterVapourPressure;
+        this._pHe = 0;
+        this._pTotal = this.pN2 + this.pHe;
     };
 
     public get pN2(): number {
@@ -24,6 +32,64 @@ export class Tissue extends Compartment {
     public get pTotal(): number {
         return this._pTotal;
     }
+
+    /**
+     * Calculates the partial pressure of a gas component from the volume gas fraction and total pressure.
+     * 
+     * @param absPressure - The total pressure P in bars (typically 1 bar of atmospheric pressure + x bars of water pressure).
+     * @param volumeFraction - The volume fraction of gas component (typically 0.79 for 79%) measured as percentage in decimal.
+     * @returns The partial pressure of gas component in bar absolute.
+     */
+    private partialPressure(absPressure: number, volumeFraction: number): number {
+        return absPressure * volumeFraction;
+    };
+
+    /**
+     * The vapour pressure of water may be approximated as a function of temperature.
+     * 
+     * @param degreesCelcius - The temperature to approximate the pressure of water vapour.
+     * @returns Water vapour pressure in terms of bars.
+     */
+    private waterVapourPressureInBars(degreesCelcius: number): number {
+        var mmHg = this.waterVapourPressure(degreesCelcius);
+        var pascals = this.mmHgToPascal(mmHg);
+        return PressureConverterService.pascalToBar(pascals);
+    };
+
+    /**
+     * Returns the definition of mmHg (millimeters mercury) in terms of Pascal.
+     * 
+     * @param mmHg - Millimeters high or depth.
+     * @returns Typically defined as weight density of mercury.
+     */
+    private mmHgToPascal(mmHg: number): number {
+        if (!mmHg) {
+            mmHg = 1;
+        }
+
+        return (Density.mercury / 1000) * Gravity.current * mmHg;
+    };
+
+    /**
+     * The vapour pressure of water may be approximated as a function of temperature.
+     * Based on the Antoine_equation http://en.wikipedia.org/wiki/Antoine_equation
+     * http://en.wikipedia.org/wiki/Vapour_pressure_of_water 
+     *
+     * @param degreesCelcius - The temperature to approximate the pressure of water vapour.
+     * @returns Water vapour pressure in terms of mmHg.
+     */
+    private waterVapourPressure(degreesCelcius: number): number {
+        var rangeConstants;
+        if (degreesCelcius >= 1 && degreesCelcius <= 100)
+            rangeConstants = VapourPressure.water.tempRange_1_100;
+        else if (degreesCelcius >= 99 && degreesCelcius <= 374)
+            rangeConstants = VapourPressure.water.tempRange_99_374;
+        else
+            return NaN;
+
+        var logp = rangeConstants[0] - (rangeConstants[1] / (rangeConstants[2] + degreesCelcius));
+        return Math.pow(10, logp);
+    };
 
     public calculateCeiling(gf: number, isFreshWater: boolean) {
         gf = gf || 1.0
@@ -59,15 +125,17 @@ export class Tissue extends Compartment {
         return this.pTotal - prevTotal;
     };
 
+    /**
+     * Calculates the gas loading rate for the given depth change in terms of bars inert gas.
+     * 
+     * @param beginDepth - The starting depth in meters.
+     * @param endDepth - The end depth in meters.
+     * @param time - The time in minutes that lapsed between the begin and end depths.
+     * @param fGas - The fraction of gas to calculate for.
+     * @param isFreshWater - True to calculate changes in depth while in fresh water, false for salt water.
+     * @returns The gas loading rate in bars times the fraction of inert gas.
+     */
     private gasRateInBarsPerMinute(beginDepth: number, endDepth: number, time: number, fGas: number, isFreshWater: boolean) {
-        /// <summary>Calculates the gas loading rate for the given depth change in terms of bars inert gas.</summary>
-        /// <param name="beginDepth" type="Number">The starting depth in meters.</param>
-        /// <param name="endDepth" type="Number">The end depth in meters.</param>
-        /// <param name="time" type="Number">The time in minutes that lapsed between the begin and end depths.</param>
-        /// <param name="fGas" type="Number">The fraction of gas to calculate for.</param>
-        /// <param name="isFreshWater" type="Boolean">True to calculate changes in depth while in fresh water, false for salt water.</param>
-        /// <returns>The gas loading rate in bars times the fraction of inert gas.</param>
-        
         return this.depthChangeInBarsPerMinute(beginDepth, endDepth, time, isFreshWater) * fGas;
     };
 

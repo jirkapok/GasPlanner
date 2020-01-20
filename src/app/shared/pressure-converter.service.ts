@@ -47,6 +47,13 @@ export class SurfacePressure {
   public static readonly current: number = SurfacePressure.earth;
 }
 
+export class VapourPressure {
+  public static readonly water: {
+      readonly tempRange_1_100: [8.07131,1730.63,233.426],
+      readonly tempRange_99_374: [8.14019,1810.94,244,485]
+  }
+}
+
 export class PressureConverterService {
   private static readonly coefficient: number = 100000;
 

@@ -81,9 +81,9 @@ export class Tissue extends Compartment {
     private waterVapourPressure(degreesCelcius: number): number {
         var rangeConstants;
         if (degreesCelcius >= 1 && degreesCelcius <= 100)
-            rangeConstants = VapourPressure.water.tempRange_1_100;
+            rangeConstants = VapourPressure.tempRange_1_100;
         else if (degreesCelcius >= 99 && degreesCelcius <= 374)
-            rangeConstants = VapourPressure.water.tempRange_99_374;
+            rangeConstants = VapourPressure.tempRange_99_374;
         else
             return NaN;
 

@@ -122,6 +122,41 @@
           }
         }
       }
+    },
+    "scuba-physics": {
+      "projectType": "library",
+      "root": "projects/scuba-physics",
+      "sourceRoot": "projects/scuba-physics/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/scuba-physics/tsconfig.lib.json",
+            "project": "projects/scuba-physics/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/scuba-physics/src/test.ts",
+            "tsConfig": "projects/scuba-physics/tsconfig.spec.json",
+            "karmaConfig": "projects/scuba-physics/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/scuba-physics/tsconfig.lib.json",
+              "projects/scuba-physics/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "planner",

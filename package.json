@@ -6,6 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod",
+    "build-lib": "ng build scuba-physics",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -32,10 +33,12 @@
     "ng2-validation": "^4.2.0",
     "popper.js": "^1.16.0",
     "rxjs": "^6.5.3",
+    "tslib": "^1.10.0",
     "zone.js": "^0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.23",
+    "@angular-devkit/build-ng-packagr": "~0.803.21",
     "@angular/cli": "^8.3.21",
     "@angular/compiler-cli": "8.2.14",
     "@angular/language-service": "8.2.14",
@@ -50,8 +53,10 @@
     "karma-coverage-istanbul-reporter": "^2.1.1",
     "karma-jasmine": "^2.0.1",
     "karma-jasmine-html-reporter": "^1.4.2",
+    "ng-packagr": "^5.4.0",
     "protractor": "~5.4.2",
     "ts-node": "~8.5.4",
+    "tsickle": "^0.37.0",
     "tslint": "~5.20.1",
     "typescript": "^3.5.3"
   }

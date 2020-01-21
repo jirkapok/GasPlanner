@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DepthConverterService } from './depth-converter.service';
+import { DepthConverterService } from 'scuba-physics';
 
 export enum SacMode {
   sac = 0,

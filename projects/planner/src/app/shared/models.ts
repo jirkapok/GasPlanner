@@ -1,4 +1,4 @@
-import { DepthConverterService } from './depth-converter.service';
+import { DepthConverterService } from 'scuba-physics';
 import { Decompression } from './Decompression';
 
 export enum StandardGas {

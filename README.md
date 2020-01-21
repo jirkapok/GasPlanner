@@ -26,7 +26,7 @@ None of the authors, contributors, administrators, or anyone else connected with
 
 ## Prerequisites
 
-To work on the application install NodeJs, AngularCli 6.0 and TypeScript. Recommended development environment is Visual Studio Code.
+To work on the application install NodeJs, AngularCli 8.3 and TypeScript. Recommended development environment is Visual Studio Code.
 
 ## Build
 
@@ -50,6 +50,8 @@ Based on following tools:
 
 * https://github.com/archisgore/online-deco-console
 * https://github.com/nyxtom/dive
+* http://www.lizardland.co.uk/DIYDeco.html
+* https://github.com/Subsurface-divelog
 
 At time of development also other implementations are available:
 

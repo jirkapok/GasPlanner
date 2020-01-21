@@ -1,4 +1,4 @@
-import { Density, Gravity, AltitudePressure, PressureConverterService } from './pressure-converter.service';
+import { Density, Gravity, AltitudePressure, PressureConverterService } from 'scuba-physics';
 
 export class DepthConverterService {
   /**

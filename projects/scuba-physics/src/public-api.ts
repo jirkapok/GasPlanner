@@ -2,4 +2,4 @@
  * Public API Surface of scuba-physics
  */
 
-export class TestClass {}
+export * from './lib/pressure-converter.service';

@@ -1,6 +1,6 @@
 import { Compartments, Compartment } from "./Compartments";
-import { AltitudePressure, PressureConverterService, VapourPressure, Gravity, Density,
-         DepthConverterService } from "scuba-physics";
+import { AltitudePressure, PressureConverterService, VapourPressure, Gravity, Density } from "./pressure-converter.service";
+import { DepthConverterService } from './depth-converter.service';
 
 export class Tissue extends Compartment {
     // initial tissue loading is needed

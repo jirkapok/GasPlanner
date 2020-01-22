@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod",
+    "build": "ng build scuba-physics & ng build --prod",
     "build-lib": "ng build scuba-physics --watch",
     "test": "ng test",
     "test-lib": "ng test --project scuba-physics",

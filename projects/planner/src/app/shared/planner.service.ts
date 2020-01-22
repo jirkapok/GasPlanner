@@ -5,7 +5,7 @@ import { NitroxCalculator, Decompression } from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
-  public plan: Plan = new Plan(20, 30, 1);
+  public plan: Plan = new Plan(15, 30, 1);
   public diver: Diver = new Diver(20, 1.4);
   public gas: Gas = new Gas(15, 21, 200);
   public dive: Dive = new Dive();

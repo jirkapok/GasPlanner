@@ -10,7 +10,7 @@ describe('PlannerService', () => {
     });
   });
 
-  describe('30m for 20 minutes Calculates (defaults)', () => {
+  describe('30m for 15 minutes Calculates (defaults)', () => {
     it('8 minutes time to surface', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();
       expect(planner.dive.timeToSurface).toBe(8);
@@ -26,9 +26,9 @@ describe('PlannerService', () => {
       expect(planner.dive.rockBottom).toBe(80);
     }));
 
-    it('81 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
+    it('108 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();
-      expect(planner.gas.endPressure).toBe(81);
+      expect(planner.gas.endPressure).toBe(108);
     }));
   });
 

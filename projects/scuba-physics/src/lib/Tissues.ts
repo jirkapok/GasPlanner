@@ -1,5 +1,5 @@
 import { Compartments, Compartment } from "./Compartments";
-import { AltitudePressure, PressureConverter, VapourPressure, Gravity, Density } from "./pressure-converter";
+import { AltitudePressure, VapourPressure, PressureConverter } from "./pressure-converter";
 import { DepthConverter } from './depth-converter';
 
 export class Tissue extends Compartment {
@@ -15,8 +15,8 @@ export class Tissue extends Compartment {
         compartment.HeHalfTime, compartment.heA, compartment.heB);
         
         let absPressure = 1;
-        this._waterVapourPressure = this.waterVapourPressureInBars(35.2);
-        this._pN2 = this.partialPressure(absPressure || 1, 0.79) - this._waterVapourPressure;
+        this._waterVapourPressure = VapourPressure.waterVapourPressureInBars(35.2);
+        this._pN2 = PressureConverter.partialPressure(absPressure || 1, 0.79) - this._waterVapourPressure;
         this._pHe = 0;
         this._pTotal = this.pN2 + this.pHe;
     };
@@ -32,64 +32,6 @@ export class Tissue extends Compartment {
     public get pTotal(): number {
         return this._pTotal;
     }
-
-    /**
-     * Calculates the partial pressure of a gas component from the volume gas fraction and total pressure.
-     * 
-     * @param absPressure - The total pressure P in bars (typically 1 bar of atmospheric pressure + x bars of water pressure).
-     * @param volumeFraction - The volume fraction of gas component (typically 0.79 for 79%) measured as percentage in decimal.
-     * @returns The partial pressure of gas component in bar absolute.
-     */
-    private partialPressure(absPressure: number, volumeFraction: number): number {
-        return absPressure * volumeFraction;
-    };
-
-    /**
-     * The vapour pressure of water may be approximated as a function of temperature.
-     * 
-     * @param degreesCelcius - The temperature to approximate the pressure of water vapour.
-     * @returns Water vapour pressure in terms of bars.
-     */
-    private waterVapourPressureInBars(degreesCelcius: number): number {
-        var mmHg = this.waterVapourPressure(degreesCelcius);
-        var pascals = this.mmHgToPascal(mmHg);
-        return PressureConverter.pascalToBar(pascals);
-    };
-
-    /**
-     * Returns the definition of mmHg (millimeters mercury) in terms of Pascal.
-     * 
-     * @param mmHg - Millimeters high or depth.
-     * @returns Typically defined as weight density of mercury.
-     */
-    private mmHgToPascal(mmHg: number): number {
-        if (!mmHg) {
-            mmHg = 1;
-        }
-
-        return (Density.mercury / 1000) * Gravity.current * mmHg;
-    };
-
-    /**
-     * The vapour pressure of water may be approximated as a function of temperature.
-     * Based on the Antoine_equation http://en.wikipedia.org/wiki/Antoine_equation
-     * http://en.wikipedia.org/wiki/Vapour_pressure_of_water 
-     *
-     * @param degreesCelcius - The temperature to approximate the pressure of water vapour.
-     * @returns Water vapour pressure in terms of mmHg.
-     */
-    private waterVapourPressure(degreesCelcius: number): number {
-        var rangeConstants;
-        if (degreesCelcius >= 1 && degreesCelcius <= 100)
-            rangeConstants = VapourPressure.tempRange_1_100;
-        else if (degreesCelcius >= 99 && degreesCelcius <= 374)
-            rangeConstants = VapourPressure.tempRange_99_374;
-        else
-            return NaN;
-
-        var logp = rangeConstants[0] - (rangeConstants[1] / (rangeConstants[2] + degreesCelcius));
-        return Math.pow(10, logp);
-    };
 
     public calculateCeiling(gf: number, isFreshWater: boolean) {
         gf = gf || 1.0

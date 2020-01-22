@@ -48,8 +48,55 @@ export class SurfacePressure {
 }
 
 export class VapourPressure {
-      public static readonly tempRange_1_100: number[] = [8.07131,1730.63,233.426];
-      public static readonly tempRange_99_374: number[] = [8.14019,1810.94,244,485];
+  private static readonly tempRange_1_100: number[] = [8.07131, 1730.63, 233.426];
+  private static readonly tempRange_99_374: number[] = [8.14019, 1810.94, 244, 485];
+
+  /**
+   * The vapour pressure of water may be approximated as a function of temperature.
+   * 
+   * @param degreesCelcius - The temperature to approximate the pressure of water vapour.
+   * @returns Water vapour pressure in terms of bars.
+   */
+  public static waterVapourPressureInBars(degreesCelcius: number): number {
+    var mmHg = VapourPressure.waterVapourPressure(degreesCelcius);
+    var pascals = VapourPressure.mmHgToPascal(mmHg);
+    return PressureConverter.pascalToBar(pascals);
+  };
+
+  /**
+  * Returns the definition of mmHg (millimeters mercury) in terms of Pascal.
+  * 
+  * @param mmHg - Millimeters high or depth.
+  * @returns Typically defined as weight density of mercury.
+  */
+  private static mmHgToPascal(mmHg: number): number {
+    if (!mmHg) {
+      mmHg = 1;
+    }
+
+    return (Density.mercury / 1000) * Gravity.current * mmHg;
+  };
+
+  /**
+  * The vapour pressure of water may be approximated as a function of temperature.
+  * Based on the Antoine_equation http://en.wikipedia.org/wiki/Antoine_equation
+  * http://en.wikipedia.org/wiki/Vapour_pressure_of_water 
+  *
+  * @param degreesCelcius - The temperature to approximate the pressure of water vapour.
+  * @returns Water vapour pressure in terms of mmHg.
+  */
+  private static waterVapourPressure(degreesCelcius: number): number {
+    var rangeConstants;
+    if (degreesCelcius >= 1 && degreesCelcius <= 100)
+      rangeConstants = VapourPressure.tempRange_1_100;
+    else if (degreesCelcius >= 99 && degreesCelcius <= 374)
+      rangeConstants = VapourPressure.tempRange_99_374;
+    else
+      return NaN;
+
+    var logp = rangeConstants[0] - (rangeConstants[1] / (rangeConstants[2] + degreesCelcius));
+    return Math.pow(10, logp);
+  };
 }
 
 export class PressureConverter {
@@ -77,5 +124,16 @@ export class PressureConverter {
     }
 
     return bars * (SurfacePressure.current * PressureConverter.coefficient);
+  };
+
+  /**
+   * Calculates the partial pressure of a gas component from the volume gas fraction and total pressure.
+   * 
+   * @param absPressure - The total pressure P in bars (typically 1 bar of atmospheric pressure + x bars of water pressure).
+   * @param volumeFraction - The volume fraction of gas component (typically 0.79 for 79%) measured as percentage in decimal.
+   * @returns The partial pressure of gas component in bar absolute.
+   */
+  public static partialPressure(absPressure: number, volumeFraction: number): number {
+    return absPressure * volumeFraction;
   };
 }

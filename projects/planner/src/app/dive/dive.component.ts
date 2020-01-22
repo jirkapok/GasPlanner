@@ -42,6 +42,10 @@ export class DiveComponent implements OnInit {
     return this.planer.gasMod;
   }
 
+  public get noDeco(): number {
+    return this.planer.plan.noDecoTime;
+  }
+
   constructor(private planer: PlannerService) { }
 
   ngOnInit() {

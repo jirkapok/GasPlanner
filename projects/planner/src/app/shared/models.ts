@@ -125,6 +125,7 @@ export class Dive {
     public notEnoughGas = false;
     public depthExceeded = false;
     public notEnoughTime = false;
+    public noDecoExeeded = false;
     public wayPoints: WayPoint[] = [];
 
     public get totalDuration(): number{
@@ -150,7 +151,7 @@ export class Dive {
     }
 
     public get hasErrors(): boolean {
-        return this.calculated && (this.notEnoughGas || this.depthExceeded || this.notEnoughTime);
+        return this.calculated && (this.notEnoughGas || this.depthExceeded || this.notEnoughTime || this.noDecoExeeded);
     }
 }
 

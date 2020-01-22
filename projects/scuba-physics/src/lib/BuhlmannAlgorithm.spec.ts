@@ -1,13 +1,6 @@
-import { TestBed, inject } from '@angular/core/testing';
 import { BuhlmannAlgorithm, Gas } from './BuhlmannAlgorithm';
 
 describe('BuhlmannAlgorithm', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: []
-    });
-  });
-
   // 0: depth, 1: ndl
   const noDecoLimitTestCases = [
      [10, 494], // From which depth to start count with deco?

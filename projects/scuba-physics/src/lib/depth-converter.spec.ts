@@ -1,14 +1,6 @@
-import { TestBed, inject } from '@angular/core/testing';
-
 import { DepthConverter } from './depth-converter';
 
 describe('DepthConverter', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [DepthConverter]
-    });
-  });
-
   it('22m converts to 3.157 bar', () => {
     const result = DepthConverter.toBar(22);
     expect(result).toBeCloseTo(3.157, 3);

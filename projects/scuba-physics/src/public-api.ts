@@ -8,3 +8,4 @@ export * from './lib/Compartments';
 export * from './lib/Tissues';
 export * from './lib/BuhlmannAlgorithm';
 export * from './lib/Decompression';
+export * from './lib/SacCalculator';

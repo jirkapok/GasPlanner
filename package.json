@@ -6,7 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build scuba-physics & ng build --prod",
-    "build-lib": "ng build scuba-physics --watch",
+    "build-lib": "ng build scuba-physics",
     "test": "ng test",
     "test-lib": "ng test --project scuba-physics",
     "lint": "ng lint",

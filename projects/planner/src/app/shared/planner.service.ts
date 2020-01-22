@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Plan, Diver, Dive, Gas, SafetyStop, WayPoint } from './models';
-import { NitroxCalculatorService } from './nitrox-calculator.service';
 import { WayPointsService } from './waypoints.service';
+import { NitroxCalculator } from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
@@ -11,7 +11,7 @@ export class PlannerService {
   public dive: Dive = new Dive();
 
   public get gasMod(): number {
-    return NitroxCalculatorService.calculateMod(this.diver.maxPpO2, this.gas.o2);
+    return NitroxCalculator.mod(this.diver.maxPpO2, this.gas.o2);
   }
 
   public calculate() {

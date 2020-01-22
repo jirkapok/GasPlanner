@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DepthConverter } from 'scuba-physics';
+import { NitroxCalculator } from 'scuba-physics';
 
 export enum NitroxMode {
   Mod,
@@ -16,12 +16,6 @@ export class NitroxCalculatorService {
   private _mod = 22.43;
   private _calculation = NitroxMode.Mod;
   private calculate: () => void = this.calculateCurrentMod;
-
-  public static calculateMod(pO2: number, fO2: number): number {
-    const resultAtm = pO2 * 100 / fO2;
-    const result = DepthConverter.fromBar(resultAtm);
-    return Math.floor(result * 100) / 100;
-  }
 
   public get calculation(): NitroxMode {
     return this._calculation;
@@ -61,9 +55,7 @@ export class NitroxCalculatorService {
   }
 
   public get ead(): number {
-    const fN2 = 1 - this._fO2 / 100;
-    const result = fN2 * (this._mod + 10) / 0.79 - 10;
-    return Math.ceil(result * 100) / 100;
+    return NitroxCalculator.ead(this._fO2, this._mod);
   }
 
   public get mod(): number {
@@ -76,20 +68,14 @@ export class NitroxCalculatorService {
   }
 
   private calculateCurrentMod() {
-    const resultAtm = this._pO2 * 100 / this._fO2;
-    const result = DepthConverter.fromBar(resultAtm);
-    this._mod = Math.floor(result * 100) / 100;
+    this._mod = NitroxCalculator.mod(this._pO2, this._fO2);
   }
 
   private calculateBestMix() {
-    const depthAtm = DepthConverter.toBar(this._mod);
-    const result = this._pO2 * 100 / depthAtm;
-    this._fO2 = Math.floor(result * 100) / 100;
+    this._fO2 = NitroxCalculator.bestMix(this._pO2, this._mod);
   }
 
   private calculatePartial() {
-    const depthAtm = DepthConverter.toBar(this._mod);
-    const result = this._fO2 * depthAtm / 100;
-    this._pO2 = Math.ceil(result * 100) / 100;
+    this._pO2 = NitroxCalculator.partialPressure(this._fO2, this._mod);
   }
 }

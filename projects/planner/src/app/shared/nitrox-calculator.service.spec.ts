@@ -23,6 +23,7 @@ describe('NitroxCalculatorService', () => {
 
   describe('Equivalent Air depth (EAD)', () => {
     it('50% fO2 at 22 m has EAD 10.53 (defaults)', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
+      console.log(service);
       expect(service.ead).toBe(10.53);
     }));
   });

@@ -7,3 +7,4 @@ export * from './lib/depth-converter';
 export * from './lib/Compartments';
 export * from './lib/Tissues';
 export * from './lib/BuhlmannAlgorithm';
+export * from './lib/Decompression';

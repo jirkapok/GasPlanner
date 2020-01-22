@@ -1,5 +1,4 @@
-import { DepthConverter } from 'scuba-physics';
-import { Decompression } from './Decompression';
+import { DepthConverter, Decompression } from 'scuba-physics';
 
 export enum StandardGas {
     Air = 21,

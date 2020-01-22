@@ -10,6 +10,7 @@ export class Limit {
     }
 }
 
+// TODO to be deleted, when Buhlmann algorithm can be used to replace this table.
 /**
  * No decompression times based on IANTD air tables at sea level
  */

@@ -26,7 +26,7 @@ None of the authors, contributors, administrators, or anyone else connected with
 
 ## Prerequisites
 
-To work on the application install NodeJs, AngularCli 8.3 and TypeScript. Recommended development environment is Visual Studio Code.
+To work on the application install NodeJs, AngularCli 8.3 and TypeScript. Recommended development environment is Visual Studio Code. Use `npm install --no-optional` to get initial environment.
 
 ## Build
 

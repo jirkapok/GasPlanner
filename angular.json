@@ -67,7 +67,7 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "projects/planner/src/test.ts",
-            "karmaConfig": "./karma.conf.js",
+            "karmaConfig": "projects/planner/karma.conf.js",
             "polyfills": "projects/planner/src/polyfills.ts",
             "tsConfig": "projects/planner/src/tsconfig.spec.json",
             "scripts": [],
@@ -112,7 +112,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-			  "projects/planner/tsconfig.app.json",
+			        "projects/planner/tsconfig.app.json",
               "projects/planner/tsconfig.spec.json",
               "projects/planner/e2e/tsconfig.e2e.json"
             ],

@@ -52,7 +52,7 @@ export class VapourPressure {
       public static readonly tempRange_99_374: number[] = [8.14019,1810.94,244,485];
 }
 
-export class PressureConverterService {
+export class PressureConverter {
   private static readonly coefficient: number = 100000;
 
   /**
@@ -62,7 +62,7 @@ export class PressureConverterService {
    * @returns Bar derived unit of pressure from pascal.
    */
   public static pascalToBar(pascals: number): number {
-    return pascals / (SurfacePressure.current * PressureConverterService.coefficient);
+    return pascals / (SurfacePressure.current * PressureConverter.coefficient);
   };
 
   /**
@@ -76,6 +76,6 @@ export class PressureConverterService {
       bars = 1;
     }
 
-    return bars * (SurfacePressure.current * PressureConverterService.coefficient);
+    return bars * (SurfacePressure.current * PressureConverter.coefficient);
   };
 }

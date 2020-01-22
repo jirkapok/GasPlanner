@@ -1,12 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { PlannerService } from './planner.service';
-import { DepthConverterService } from './depth-converter.service';
+import { DepthConverter } from 'scuba-physics';
 
 describe('PlannerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PlannerService, DepthConverterService]
+      providers: [PlannerService, DepthConverter]
     });
   });
 

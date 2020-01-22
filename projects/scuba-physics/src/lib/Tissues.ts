@@ -1,6 +1,6 @@
 import { Compartments, Compartment } from "./Compartments";
-import { AltitudePressure, PressureConverterService, VapourPressure, Gravity, Density } from "./pressure-converter.service";
-import { DepthConverterService } from './depth-converter.service';
+import { AltitudePressure, PressureConverter, VapourPressure, Gravity, Density } from "./pressure-converter";
+import { DepthConverter } from './depth-converter';
 
 export class Tissue extends Compartment {
     // initial tissue loading is needed
@@ -53,7 +53,7 @@ export class Tissue extends Compartment {
     private waterVapourPressureInBars(degreesCelcius: number): number {
         var mmHg = this.waterVapourPressure(degreesCelcius);
         var pascals = this.mmHgToPascal(mmHg);
-        return PressureConverterService.pascalToBar(pascals);
+        return PressureConverter.pascalToBar(pascals);
     };
 
     /**
@@ -97,7 +97,7 @@ export class Tissue extends Compartment {
         var b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
         var bars = (this.pTotal - (a * gf)) / ((gf / b) + 1.0 - gf);
         //var bars = (this.pTotal - a) * b;
-        let ceiling = DepthConverterService.fromBar(bars, isFreshWater);
+        let ceiling = DepthConverter.fromBar(bars, isFreshWater);
         //console.log("a:" + a + ", b:" + b + ", bars:" + bars + " ceiling:" + this.ceiling);
         return Math.round(ceiling);
     };
@@ -150,7 +150,7 @@ export class Tissue extends Compartment {
      */
     private depthChangeInBarsPerMinute(beginDepth: number, endDepth: number, time: number, isFreshWater: boolean) {
         var speed = (endDepth - beginDepth) / time;
-        return DepthConverterService.toBar(speed, isFreshWater) - AltitudePressure.current;
+        return DepthConverter.toBar(speed, isFreshWater) - AltitudePressure.current;
     };
 
     /**
@@ -177,7 +177,7 @@ export class Tissue extends Compartment {
      * @returns The gas pressure in bars taken in with each breath (accounting for water vapour pressure in the lungs).
      */
     private gasPressureBreathingInBars(depth: number, fGas: number, isFreshWater: boolean): number {
-        var bars = DepthConverterService.toBar(depth, isFreshWater);
+        var bars = DepthConverter.toBar(depth, isFreshWater);
         return bars * fGas;
     };
 }

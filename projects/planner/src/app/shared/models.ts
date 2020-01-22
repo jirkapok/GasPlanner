@@ -1,4 +1,4 @@
-import { DepthConverterService } from 'scuba-physics';
+import { DepthConverter } from 'scuba-physics';
 import { Decompression } from './Decompression';
 
 export enum StandardGas {
@@ -195,7 +195,7 @@ export class WayPoint {
 
     public get averagePressure(): number {
         const averageDepth = (this.startDepth + this.endDepth) / 2;
-        return DepthConverterService.toBar(averageDepth);
+        return DepthConverter.toBar(averageDepth);
     }
 
     public toLevel(duration: number, newDepth: number): WayPoint {

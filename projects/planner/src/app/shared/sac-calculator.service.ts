@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DepthConverterService } from 'scuba-physics';
+import { DepthConverter } from 'scuba-physics';
 
 export enum SacMode {
   sac = 0,
@@ -88,19 +88,19 @@ export class SacCalculatorService {
   }
 
   private calculateSac(): void {
-    const bars = DepthConverterService.toBar(this.depth);
+    const bars = DepthConverter.toBar(this.depth);
     const result = this.tank * this.used / this.duration / bars;
     this._sac = Math.ceil(result * 100) / 100;
   }
 
   private calculateDuration(): void {
-    const bars = DepthConverterService.toBar(this.depth);
+    const bars = DepthConverter.toBar(this.depth);
     const result = this.tank * this.used / this._sac / bars;
     this._duration = Math.ceil(result);
   }
 
   private calculateUsed(): void {
-    const bars = DepthConverterService.toBar(this.depth);
+    const bars = DepthConverter.toBar(this.depth);
     const result = this.duration * bars * this.sac / this.tank;
     this._used = Math.ceil(result);
   }

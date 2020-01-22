@@ -1,6 +1,6 @@
-import { Density, Gravity, AltitudePressure, PressureConverterService } from './pressure-converter.service';
+import { Density, Gravity, AltitudePressure, PressureConverter } from './pressure-converter';
 
-export class DepthConverterService {
+export class DepthConverter {
   /**
    * Calculates the absolute pressure (in bars) for 1 cubic meter of water for the given depth (meters).
    * 
@@ -17,7 +17,7 @@ export class DepthConverterService {
     }
 
     var weightDensity = liquidDensity * Gravity.current;
-    return PressureConverterService.pascalToBar((depth * weightDensity)) + AltitudePressure.current;
+    return PressureConverter.pascalToBar((depth * weightDensity)) + AltitudePressure.current;
   }
 
   /**
@@ -40,7 +40,7 @@ export class DepthConverterService {
     }
 
     var weightDensity = liquidDensity * Gravity.current;
-    var pressure = PressureConverterService.barToPascal(bars - AltitudePressure.current);
+    var pressure = PressureConverter.barToPascal(bars - AltitudePressure.current);
     return pressure / weightDensity;
   }
 }

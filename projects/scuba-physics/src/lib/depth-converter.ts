@@ -8,7 +8,7 @@ export class DepthConverter {
    * @param isFreshWater - True to calculate against the weight density of fresh water versus salt.
    * @returns The absolute pressure (in bars) for the given depth (in meters) of 1 cubic meter volume of water below the surface.
    */
-  public static toBar(depth: number, isFreshWater = true): number {
+  public static toBar(depth: number, isFreshWater: boolean): number {
     var liquidDensity;
     if (isFreshWater) {
       liquidDensity = Density.fresh;
@@ -27,7 +27,7 @@ export class DepthConverter {
    * @param isFreshWater - True to calculate against the weight density of fresh water versus salt.
    * @returns The depth (in meters) for the given number of atmospheres.
    */
-  public static fromBar(bars: number, isFreshWater = true): number {
+  public static fromBar(bars: number, isFreshWater: boolean): number {
     var liquidDensity;
     if (isFreshWater) {
       liquidDensity = Density.fresh;

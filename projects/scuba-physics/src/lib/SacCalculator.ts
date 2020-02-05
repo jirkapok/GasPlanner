@@ -14,7 +14,7 @@ export class SacCalculator {
      * @returns Sac rounded to 0 digits in liter/minute.
      */
     public static calculateSac(depth: number, tank: number, used: number, duration: number): number {
-        const bars = DepthConverter.toBar(depth);
+        const bars = DepthConverter.toBar(depth, true);
         const result = tank * used / duration / bars;
         return Math.ceil(result * 100) / 100;
     }
@@ -29,7 +29,7 @@ export class SacCalculator {
      * @returns Duration in minutes
      */
     public static calculateDuration(depth: number, tank: number, used: number, sac: number): number {
-        const bars = DepthConverter.toBar(depth);
+        const bars = DepthConverter.toBar(depth, true);
         const result = tank * used / sac / bars;
         return Math.ceil(result);
     }
@@ -44,7 +44,7 @@ export class SacCalculator {
      * @returns Used gas in bars
      */
     public static calculateUsed(depth: number, tank: number, duration: number, sac: number): number {
-        const bars = DepthConverter.toBar(depth);
+        const bars = DepthConverter.toBar(depth, true);
         const result = duration * bars * sac / tank;
         return Math.ceil(result);
     }

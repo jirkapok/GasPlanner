@@ -10,7 +10,7 @@ export class NitroxCalculator {
    * @returns Percents of oxygen fraction in required gas.
    */
   public static bestMix(pO2: number, depth: number): number {
-    const bar = DepthConverter.toBar(depth);
+    const bar = DepthConverter.toBar(depth, true);
     const result = pO2 * 100 / bar;
     return Math.floor(result * 100) / 100;
   }
@@ -37,7 +37,7 @@ export class NitroxCalculator {
    */
   public static mod(pO2: number, fO2: number): number {
     const bar = pO2 * 100 / fO2;
-    const result = DepthConverter.fromBar(bar);
+    const result = DepthConverter.fromBar(bar, true);
     return Math.floor(result * 100) / 100;
   }
 
@@ -49,7 +49,7 @@ export class NitroxCalculator {
    * @returns Constant value.
    */
   public static partialPressure(fO2: number, depth: number): number {
-    const bar = DepthConverter.toBar(depth);
+    const bar = DepthConverter.toBar(depth, true);
     const result = fO2 * bar / 100;
     return Math.ceil(result * 100) / 100;
   }

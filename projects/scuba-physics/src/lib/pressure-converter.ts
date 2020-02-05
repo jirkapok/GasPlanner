@@ -49,7 +49,7 @@ export class SurfacePressure {
 
 export class VapourPressure {
   private static readonly tempRange_1_100: number[] = [8.07131, 1730.63, 233.426];
-  private static readonly tempRange_99_374: number[] = [8.14019, 1810.94, 244, 485];
+  private static readonly tempRange_99_374: number[] = [8.14019, 1810.94, 244.485];
 
   /**
    * The vapour pressure of water may be approximated as a function of temperature.

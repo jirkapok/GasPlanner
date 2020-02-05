@@ -10,6 +10,28 @@ describe('Pressure Converter', () => {
     const result = PressureConverter.barToPascal(3.157);
     expect(result).toBeCloseTo(315700);
   });
+
+  describe('Partial pressure', () => {
+    it('At 1 bar 0.79 volume fraction converts to ', () => {
+      const result = PressureConverter.partialPressure(1, 0.79);
+      expect(result).toBe(0.79);
+    });
+
+    it('At 3 bar 0.79 volume fraction converts to ', () => {
+      const result = PressureConverter.partialPressure(6.667, 0.21);
+      expect(result).toBeCloseTo(1.40, 3);
+    });
+  
+    it('At 0 bars any fraction results in 0 partial pressure', () => {
+      const result = PressureConverter.partialPressure(0, 0.79);
+      expect(result).toBe(0);
+    });
+
+    it('At any bars 0 fraction results in 0 partial pressure', () => {
+      const result = PressureConverter.partialPressure(3, 0);
+      expect(result).toBe(0);
+    });
+  });
 });
 
 describe('Vapour pressure', () => {

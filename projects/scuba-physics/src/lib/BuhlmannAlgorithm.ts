@@ -29,18 +29,18 @@ export class BuhlmannAlgorithm {
         gfHigh = gfHigh || 1.0;
         maxppO2 = maxppO2 || 1.6;
         maxEND = maxEND || 30;
-        let currentGasName: Gas;
+        let currentGas: Gas;
 
         if (typeof fromDepth == 'undefined') {
             if (this.segments.length == 0) {
                 throw "No depth to decompress from has been specified, and neither have any dive stages been registered. Unable to decompress.";
             } else {
                 fromDepth = this.segments[this.segments.length-1].endDepth;
-                currentGasName = this.segments[this.segments.length-1].gas;
+                currentGas = this.segments[this.segments.length-1].gas;
             }
         } else {
-            currentGasName = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
-            if (!currentGasName) {
+            currentGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
+            if (!currentGas) {
                 throw "No deco gas found to decompress from provided depth " + fromDepth;
             }
         }
@@ -54,24 +54,20 @@ export class BuhlmannAlgorithm {
 
         var ceiling = this.getCeiling(gfLow, isFreshWater);
 
-        currentGasName = this.addDecoDepthChange(fromDepth, ceiling, maxppO2, maxEND, currentGasName);
+        currentGas = this.addDecoDepthChange(fromDepth, ceiling, maxppO2, maxEND, currentGas, isFreshWater);
 
-        //console.log("Start Ceiling:" + ceiling + " with GF:" + gfLow)
         while (ceiling > 0) {
             var currentDepth = ceiling;
             var nextDecoDepth = (ceiling - 3);
             var time = 0;
             var gf = gfLow + (gfChangePerMeter * (distanceToSurface - ceiling));
-            //console.log("GradientFactor:"+gf + " Next decoDepth:" + nextDecoDepth);
             while (ceiling > nextDecoDepth && time <= 10000) {
-                this.addFlat(currentDepth, currentGasName, 1, isFreshWater);
+                this.addFlat(currentDepth, currentGas, 1, isFreshWater);
                 time++;
                 ceiling = this.getCeiling(gf, isFreshWater);
             }
 
-            //console.log("Held diver at " + currentDepth + " for " + time + " minutes on gas " + currentGasName + ".");
-            //console.log("Moving diver from current depth " + currentDepth + " to next ceiling of " + ceiling);
-            currentGasName = this.addDecoDepthChange(currentDepth, ceiling, maxppO2, maxEND, currentGasName);
+            currentGas = this.addDecoDepthChange(currentDepth, ceiling, maxppO2, maxEND, currentGas, isFreshWater);
         }
         if (!maintainTissues) {
             this.tissues.reset(origTissues);
@@ -107,30 +103,25 @@ export class BuhlmannAlgorithm {
         return segments;
     };
 
-    private addDecoDepthChange = function(fromDepth, toDepth, maxppO2, maxEND, currentGasName) {
-        if (!currentGasName) {
-            currentGasName = this.bestDecoGasName(fromDepth, maxppO2, maxEND);
-            if (!currentGasName) {
+    private addDecoDepthChange(fromDepth, toDepth, maxppO2, maxEND, currentGas, isFreshWater) {
+        if (!currentGas) {
+            currentGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
+            if (!currentGas) {
                 throw "Unable to find starting gas to decompress at depth " + fromDepth + ". No segments provided with bottom mix, and no deco gas operational at this depth.";
             }
         }
 
-       // console.log("Starting depth change from " + fromDepth + " moving to " + toDepth + " with starting gas " + currentGasName);
         while (toDepth < fromDepth) { //if ceiling is higher, move our diver up.
             //ensure we're on the best gas
-            var betterDecoGasName = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND);
-            if (betterDecoGasName && betterDecoGasName != currentGasName) {
-                //console.log("At depth " + fromDepth + " found a better deco gas " + betterDecoGasName + ". Switching to better gas.");
-                currentGasName = betterDecoGasName;
+            var bestGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
+            if (bestGas && bestGas != currentGas) {
+                currentGas = bestGas;
             }
 
-            //console.log("Looking for the next best gas moving up between " + fromDepth + " and " + toDepth);
             var ceiling = toDepth; //ceiling is toDepth, unless there's a better gas to switch to on the way up.
             for (var nextDepth=fromDepth-1; nextDepth >= ceiling; nextDepth--) {
-                var nextDecoGasName = this.gases.bestDecoGas(nextDepth, maxppO2, maxEND);
-                //console.log("Testing next gas at depth: " + nextDepth + " and found: " + nextDecoGasName);
-                if (nextDecoGasName && nextDecoGasName != currentGasName) {
-                    //console.log("Found a gas " + nextDecoGasName + " to switch to at " + nextDepth + " which is lower than target ceiling of " + ceiling);
+                var nextDecoGas = this.gases.bestDecoGas(nextDepth, maxppO2, maxEND, isFreshWater);
+                if (nextDecoGas && nextDecoGas != currentGas) {
                     ceiling = nextDepth; //Only carry us up to the point where we can use this better gas.
                     break;
                 }
@@ -139,20 +130,16 @@ export class BuhlmannAlgorithm {
             //take us to the ceiling at 30fpm or 10 mpm (the fastest ascent rate possible.)
             var depthdiff = fromDepth - ceiling;
             var time = depthdiff/10;
-            //console.log("Moving diver from " + fromDepth + " to " + ceiling + " on gas " + currentGasName + " over " + time + " minutes (10 meters or 30 feet per minute).")
-            this.addDepthChange(fromDepth, ceiling, currentGasName, time);
-
+            this.addDepthChange(fromDepth, ceiling, currentGas, time, isFreshWater);
             fromDepth = ceiling; //move up from-depth
         }
 
-        var betterDecoGasName = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND);
-        if (betterDecoGasName && betterDecoGasName != currentGasName) {
-            //console.log("At depth " + fromDepth + " found a better deco gas " + betterDecoGasName + ". Switching to better gas.");
-            currentGasName = betterDecoGasName;
+        var bestGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
+        if (bestGas && bestGas != currentGas) {
+            currentGas = bestGas;
         }
 
-        return currentGasName;
-
+        return currentGas;
     }
 
     public noDecoLimit(depth: number, gas: Gas, gf: number, isFreshWater: boolean): number {
@@ -174,7 +161,6 @@ export class BuhlmannAlgorithm {
         this.tissues = JSON.parse(origTissues);
         
         if (change == 0) {
-            console.log("NDL is practically infinity. Returning largest number we know of.");
             return Number.POSITIVE_INFINITY;
         }
         return time - 1; //We went one minute past a ceiling of "0"
@@ -201,7 +187,7 @@ export class BuhlmannAlgorithm {
 
     public addDepthChange(startDepth: number, endDepth: number, gas: Gas, time: number, isFreshWater: boolean) {
         if (!this.gases.isRegistered(gas)) {
-            throw "Gasname must only be one of registered gasses. Please use plan.addBottomGas or plan.addDecoGas to register a gas.";
+            throw "Gas must only be one of registered gasses. Please use plan.addBottomGas or plan.addDecoGas to register a gas.";
         }
         var fO2 = gas.fO2;
         var fHe = gas.fHe;

@@ -138,9 +138,9 @@ export class Tissues {
         return this.compartments.length;
     }
 
-    public reset(): void {
-        var origTissuesJSON = JSON.stringify(Compartments.Buhlmann_ZHL16C);
-        var originalTissues = JSON.parse(origTissuesJSON);
+    public reset(origTissuesJSON: string): void {
+        //var origTissuesJSON = JSON.stringify(Compartments.Buhlmann_ZHL16C);
+        let originalTissues = JSON.parse(origTissuesJSON);
         for (var i = 0; i < originalTissues.length; i++) {
             for (var p in originalTissues[i]) {
                 this.compartments[i][p] = originalTissues[i][p];

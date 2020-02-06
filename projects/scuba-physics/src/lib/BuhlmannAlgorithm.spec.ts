@@ -1,4 +1,5 @@
 import { BuhlmannAlgorithm, Gas } from './BuhlmannAlgorithm';
+import { assertNotNull } from '@angular/compiler/src/output/output_ast';
 
 describe('Buhlmann Algorithm', () => {
   describe('No decompression times', () => {
@@ -37,4 +38,18 @@ describe('Buhlmann Algorithm', () => {
       });
     });
   });
+
+  describe('Calculates Plan', () => {
+    it('50m for 25 minutes using 21/35 and 50% nitrox', () => {
+      const algorithm = new BuhlmannAlgorithm(); // 1 abs pressure in fresh water
+      let bottomGas: Gas = new Gas(0.21, 0.35);
+      let decoGas: Gas = new Gas(0.5, 0.0);
+      let isFreshWater = false;
+      algorithm.addDepthChange(0, 50, bottomGas, 5, isFreshWater);
+      algorithm.addFlat(50, bottomGas, 25, isFreshWater);
+      //gradientFactorLow = 0.2, gradientFactorHigh=0.8, deco ppO2 = 1.6, and max END allowed: 30 meters.
+      //const decoPlan = algorithm.calculateDecompression(false, 0.2, 0.8, 1.6, 30, isFreshWater);
+      expect(true).toBeTruthy();
+    });
+  }); 
 });

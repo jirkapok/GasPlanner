@@ -1,13 +1,6 @@
 import { Tissues } from "./Tissues";
 import { Gases, Gas } from "./Gases";
-
-class Segment {
-    constructor (
-        public startDepth: number, 
-        public endDepth: number, 
-        public gas: Gas, 
-        public time: number) {}
-}
+import { Segment } from "./Segments";
 
 export class BuhlmannAlgorithm {
     private tissues = new Tissues();

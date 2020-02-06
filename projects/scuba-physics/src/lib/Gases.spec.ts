@@ -34,32 +34,63 @@ describe('Gas', () => {
 
 describe('Gases', () => {
   const air = new Gas(0.21, 0);
+  const ean50 = new Gas(0.5, 0);
+  const trimix = new Gas(0.18, 0.35);
 
-  it('Gas as bottom gas is registered', () => {
-    const gases = new Gases();
-    gases.addBottomGas(air);
-    let registered = gases.isRegistered(air);
-    expect(registered).toBeTrue();
+  describe('Is Registered', () => {
+    it('Gas as bottom gas is registered', () => {
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      let registered = gases.isRegistered(air);
+      expect(registered).toBeTrue();
+    });
+
+    it('Gas as deco gas is registered', () => {
+      const gases = new Gases();
+      gases.addDecoGas(air);
+      let registered = gases.isRegistered(air);
+      expect(registered).toBeTrue();
+    });
+
+    it('No gases gas is not registered', () => {
+      const gases = new Gases();
+      let registered = gases.isRegistered(air);
+      expect(registered).toBeFalse();
+    });
+
+    it('No gases gas is not registered', () => {
+      const gases = new Gases();
+      gases.addDecoGas(ean50);
+      let registered = gases.isRegistered(air);
+      expect(registered).toBeFalse();
+    });
   });
 
-  it('Gas as deco gas is registered', () => {
-    const gases = new Gases();
-    gases.addDecoGas(air);
-    let registered = gases.isRegistered(air);
-    expect(registered).toBeTrue();
-  });
+  describe('Best gas', () => {
+    it('The only deco gas is found', () => {
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      gases.addDecoGas(ean50);
+      let found = gases.bestDecoGasName(20, 1.6, 30, false);
+      expect(found).toBe(ean50);
+    });
 
-  it('No gases gas is not registered', () => {
-    const gases = new Gases();
-    let registered = gases.isRegistered(air);
-    expect(registered).toBeFalse();
-  });
+    // TODO no deco gas found, bottom gas is used
 
-  it('No gases gas is not registered', () => {
-    const gases = new Gases();
-    const ean50 = new Gas(0.5, 0)
-    gases.addDecoGas(ean50);
-    let registered = gases.isRegistered(air);
-    expect(registered).toBeFalse();
+    it('No deco gas, nothing is found', () => {
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      let found = gases.bestDecoGasName(20, 1.6, 30, false);
+      expect(found).toBeUndefined();
+    });
+    
+    it('Muntilpe deco gases, best is found', () => {
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      gases.addDecoGas(ean50);
+      gases.addDecoGas(trimix);
+      let found = gases.bestDecoGasName(20, 1.6, 30, false);
+      expect(found).toBe(ean50);
+    });
   });
 });

@@ -43,13 +43,24 @@ describe('Buhlmann Algorithm', () => {
     it('50m for 25 minutes using 21/35 and 50% nitrox', () => {
       const algorithm = new BuhlmannAlgorithm(); // 1 abs pressure in fresh water
       let bottomGas: Gas = new Gas(0.21, 0.35);
+      algorithm.addBottomGas(bottomGas);
       let decoGas: Gas = new Gas(0.5, 0.0);
+      algorithm.addDecoGas(decoGas);
       let isFreshWater = false;
       algorithm.addDepthChange(0, 50, bottomGas, 5, isFreshWater);
       algorithm.addFlat(50, bottomGas, 25, isFreshWater);
       //gradientFactorLow = 0.2, gradientFactorHigh=0.8, deco ppO2 = 1.6, and max END allowed: 30 meters.
-      //const decoPlan = algorithm.calculateDecompression(false, 0.2, 0.8, 1.6, 30, isFreshWater);
-      expect(true).toBeTruthy();
+      const decoPlan = algorithm.calculateDecompression(false, 0.2, 0.8, 1.6, 30, isFreshWater);
+      let planText = "";
+      decoPlan.forEach(segment => {
+        planText += segment.startDepth + "," + segment.endDepth + "," + segment.time +";";
+      });
+
+      const expectedPlan = "0,50,5;50,50,25;50,30,2;30,30,1;" +
+                           "30,22,0.8;22,21,0.1;21,21,1;21,18,0.3;" +
+                           "18,18,1;18,15,0.3;15,15,1;15,12,0.3;12,12,3;" + 
+                           "12,9,0.3;9,9,5;9,6,0.3;6,6,8;6,3,0.3;3,3,17;3,0,0.3;";
+      expect(planText).toBe(expectedPlan);
     });
   }); 
 });

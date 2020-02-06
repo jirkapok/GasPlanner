@@ -1,28 +1,5 @@
 import { Tissues } from "./Tissues";
-import { DepthConverter } from "./depth-converter";
-
-export class Gas {
-    public get fN2(): number {
-        return 1 - this.fO2 - this.fHe;
-    };
-
-    constructor(public fO2: number, public fHe: number) {}
-
-    public modInMeters(ppO2: number, isFreshWater: boolean) {
-        return DepthConverter.fromBar(ppO2 / this.fO2, isFreshWater);
-    };
-
-    public endInMeters(depth: number, isFreshWater: boolean) {
-
-        // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
-        var narcIndex = (this.fO2) + (this.fN2);
-
-        var bars = DepthConverter.toBar(depth, isFreshWater);
-        var equivalentBars = bars * narcIndex;
-        //console.log("Depth: " + depth + " Bars:" + bars + "Relation: " + narcIndex + " Equivalent Bars:" +equivalentBars);
-        return  DepthConverter.fromBar(equivalentBars, isFreshWater);
-    };
-}
+import { Gases, Gas } from "./Gases";
 
 class Segment {
     constructor (
@@ -35,15 +12,14 @@ class Segment {
 export class BuhlmannAlgorithm {
     private tissues = new Tissues();
     private segments: Segment[] = [];
-    private decoGasses: Gas[] = [];
-    private bottomGasses: Gas[] = [];
+    private gases: Gases = new Gases();
 
     public addBottomGas(gas: Gas) {
-        this.bottomGasses.push(gas);
+        this.gases.addBottomGas(gas);
     }
 
     public addDecoGas(gas: Gas) {
-        this.decoGasses.push(gas);
+        this.gases.addDecoGas(gas);
     }
 
     public calculateDecompression(maintainTissues: boolean, gfLow: number, gfHigh: number,
@@ -63,7 +39,7 @@ export class BuhlmannAlgorithm {
                 currentGasName = this.segments[this.segments.length-1].gas;
             }
         } else {
-            currentGasName = this.bestDecoGasName(fromDepth, maxppO2, maxEND, isFreshWater);
+            currentGasName = this.gases.bestDecoGasName(fromDepth, maxppO2, maxEND, isFreshWater);
             if (typeof currentGasName == 'undefined') {
                 throw "No deco gas found to decompress from provided depth " + fromDepth;
             }
@@ -131,30 +107,6 @@ export class BuhlmannAlgorithm {
         return segments;
     };
 
-    private bestDecoGasName(depth: number, maxppO2: number, maxEND: number, isFreshWater: boolean): Gas {
-        //console.log("Finding best deco gas for depth " + depth + " with max ppO2 of " + maxppO2 + "  and max END of " + maxEND);
-        //best gas is defined as: a ppO2 at depth <= maxppO2,
-        // the highest ppO2 among all of these.
-        // END <= 30 (equivalent narcotic depth < 30 meters)
-        var winner;
-        for (var gasName in this.decoGasses) {
-            var candidateGas = this.decoGasses[gasName];
-            var mod = Math.round(candidateGas.modInMeters(maxppO2, isFreshWater));
-            var end = Math.round(candidateGas.endInMeters(depth, isFreshWater));
-            //console.log("Found candidate deco gas " + gasName + ": " + (candidateGas.fO2) + "/" + (candidateGas.fHe) + " with mod " + mod + " and END " + end);
-            if (depth <= mod && end <= maxEND) {
-                //console.log("Candidate " + gasName + " fits within MOD and END limits.");
-                if (typeof winner == 'undefined' || //either we have no winner yet
-                    winner.fO2 < candidateGas.fO2) { //or previous winner is a lower O2
-                    //console.log("Replaced winner: " + candidateGas);
-                    winner = candidateGas;
-                }
-
-            }
-        }
-        return winner;
-    }
-
     private addDecoDepthChange = function(fromDepth, toDepth, maxppO2, maxEND, currentGasName) {
         if (typeof currentGasName == 'undefined') {
             currentGasName = this.bestDecoGasName(fromDepth, maxppO2, maxEND);
@@ -166,7 +118,7 @@ export class BuhlmannAlgorithm {
        // console.log("Starting depth change from " + fromDepth + " moving to " + toDepth + " with starting gas " + currentGasName);
         while (toDepth < fromDepth) { //if ceiling is higher, move our diver up.
             //ensure we're on the best gas
-            var betterDecoGasName = this.bestDecoGasName(fromDepth, maxppO2, maxEND);
+            var betterDecoGasName = this.gases.bestDecoGasName(fromDepth, maxppO2, maxEND);
             if (typeof betterDecoGasName != 'undefined' && betterDecoGasName != currentGasName) {
                 //console.log("At depth " + fromDepth + " found a better deco gas " + betterDecoGasName + ". Switching to better gas.");
                 currentGasName = betterDecoGasName;
@@ -175,7 +127,7 @@ export class BuhlmannAlgorithm {
             //console.log("Looking for the next best gas moving up between " + fromDepth + " and " + toDepth);
             var ceiling = toDepth; //ceiling is toDepth, unless there's a better gas to switch to on the way up.
             for (var nextDepth=fromDepth-1; nextDepth >= ceiling; nextDepth--) {
-                var nextDecoGasName = this.bestDecoGasName(nextDepth, maxppO2, maxEND);
+                var nextDecoGasName = this.gases.bestDecoGasName(nextDepth, maxppO2, maxEND);
                 //console.log("Testing next gas at depth: " + nextDepth + " and found: " + nextDecoGasName);
                 if (typeof nextDecoGasName != 'undefined' &&
                     nextDecoGasName != currentGasName) {
@@ -194,7 +146,7 @@ export class BuhlmannAlgorithm {
             fromDepth = ceiling; //move up from-depth
         }
 
-        var betterDecoGasName = this.bestDecoGasName(fromDepth, maxppO2, maxEND);
+        var betterDecoGasName = this.gases.bestDecoGasName(fromDepth, maxppO2, maxEND);
         if (typeof betterDecoGasName != 'undefined' && betterDecoGasName != currentGasName) {
             //console.log("At depth " + fromDepth + " found a better deco gas " + betterDecoGasName + ". Switching to better gas.");
             currentGasName = betterDecoGasName;
@@ -206,7 +158,7 @@ export class BuhlmannAlgorithm {
 
     public noDecoLimit(depth: number, gas: Gas, gf: number, isFreshWater: boolean): number {
         gf = gf || 1.0;
-        this.bottomGasses.push(gas);
+        this.gases.addBottomGas(gas);
 
         var ceiling = this.getCeiling(gf, isFreshWater);
         // we can have already some loading, so backup the state to be able restore later
@@ -249,7 +201,7 @@ export class BuhlmannAlgorithm {
     };
 
     public addDepthChange(startDepth: number, endDepth: number, gas: Gas, time: number, isFreshWater: boolean) {
-        if (!this.bottomGasses.includes(gas) && !this.decoGasses.includes(gas)) {
+        if (!this.gases.isRegistered(gas)) {
             throw "Gasname must only be one of registered gasses. Please use plan.addBottomGas or plan.addDecoGas to register a gas.";
         }
         var fO2 = gas.fO2;

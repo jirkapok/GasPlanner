@@ -1,5 +1,5 @@
-import { BuhlmannAlgorithm, Gas } from './BuhlmannAlgorithm';
-import { assertNotNull } from '@angular/compiler/src/output/output_ast';
+import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import { Gas } from './Gases';
 
 describe('Buhlmann Algorithm', () => {
   describe('No decompression times', () => {

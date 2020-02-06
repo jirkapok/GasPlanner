@@ -30,7 +30,7 @@ export class BuhlmannAlgorithm {
         maxppO2 = maxppO2 || 1.6;
         maxEND = maxEND || 30;
         let currentGasName: Gas;
-        //console.log(this.segments);
+
         if (typeof fromDepth == 'undefined') {
             if (this.segments.length == 0) {
                 throw "No depth to decompress from has been specified, and neither have any dive stages been registered. Unable to decompress.";
@@ -39,8 +39,8 @@ export class BuhlmannAlgorithm {
                 currentGasName = this.segments[this.segments.length-1].gas;
             }
         } else {
-            currentGasName = this.gases.bestDecoGasName(fromDepth, maxppO2, maxEND, isFreshWater);
-            if (typeof currentGasName == 'undefined') {
+            currentGasName = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
+            if (!currentGasName) {
                 throw "No deco gas found to decompress from provided depth " + fromDepth;
             }
         }
@@ -108,9 +108,9 @@ export class BuhlmannAlgorithm {
     };
 
     private addDecoDepthChange = function(fromDepth, toDepth, maxppO2, maxEND, currentGasName) {
-        if (typeof currentGasName == 'undefined') {
+        if (!currentGasName) {
             currentGasName = this.bestDecoGasName(fromDepth, maxppO2, maxEND);
-            if (typeof currentGasName == 'undefined') {
+            if (!currentGasName) {
                 throw "Unable to find starting gas to decompress at depth " + fromDepth + ". No segments provided with bottom mix, and no deco gas operational at this depth.";
             }
         }
@@ -118,8 +118,8 @@ export class BuhlmannAlgorithm {
        // console.log("Starting depth change from " + fromDepth + " moving to " + toDepth + " with starting gas " + currentGasName);
         while (toDepth < fromDepth) { //if ceiling is higher, move our diver up.
             //ensure we're on the best gas
-            var betterDecoGasName = this.gases.bestDecoGasName(fromDepth, maxppO2, maxEND);
-            if (typeof betterDecoGasName != 'undefined' && betterDecoGasName != currentGasName) {
+            var betterDecoGasName = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND);
+            if (betterDecoGasName && betterDecoGasName != currentGasName) {
                 //console.log("At depth " + fromDepth + " found a better deco gas " + betterDecoGasName + ". Switching to better gas.");
                 currentGasName = betterDecoGasName;
             }
@@ -127,10 +127,9 @@ export class BuhlmannAlgorithm {
             //console.log("Looking for the next best gas moving up between " + fromDepth + " and " + toDepth);
             var ceiling = toDepth; //ceiling is toDepth, unless there's a better gas to switch to on the way up.
             for (var nextDepth=fromDepth-1; nextDepth >= ceiling; nextDepth--) {
-                var nextDecoGasName = this.gases.bestDecoGasName(nextDepth, maxppO2, maxEND);
+                var nextDecoGasName = this.gases.bestDecoGas(nextDepth, maxppO2, maxEND);
                 //console.log("Testing next gas at depth: " + nextDepth + " and found: " + nextDecoGasName);
-                if (typeof nextDecoGasName != 'undefined' &&
-                    nextDecoGasName != currentGasName) {
+                if (nextDecoGasName && nextDecoGasName != currentGasName) {
                     //console.log("Found a gas " + nextDecoGasName + " to switch to at " + nextDepth + " which is lower than target ceiling of " + ceiling);
                     ceiling = nextDepth; //Only carry us up to the point where we can use this better gas.
                     break;
@@ -146,8 +145,8 @@ export class BuhlmannAlgorithm {
             fromDepth = ceiling; //move up from-depth
         }
 
-        var betterDecoGasName = this.gases.bestDecoGasName(fromDepth, maxppO2, maxEND);
-        if (typeof betterDecoGasName != 'undefined' && betterDecoGasName != currentGasName) {
+        var betterDecoGasName = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND);
+        if (betterDecoGasName && betterDecoGasName != currentGasName) {
             //console.log("At depth " + fromDepth + " found a better deco gas " + betterDecoGasName + ". Switching to better gas.");
             currentGasName = betterDecoGasName;
         }

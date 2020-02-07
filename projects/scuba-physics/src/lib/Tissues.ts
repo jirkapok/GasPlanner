@@ -134,12 +134,17 @@ export class Tissues {
         }
     }
 
-    public get length(): number {
-        return this.compartments.length;
+    public load(startDepth: number, endDepth: number, fO2: number, fHe: number, time: number, isFreshWater: boolean):number {
+        var loadChange = 0.0;
+        for (var index = 0; index < this.compartments.length; index++) {
+            const tissue = this.compartments[index];
+            const tissueChange = tissue.addDepthChange(startDepth, endDepth, fO2, fHe, time, isFreshWater);
+            loadChange = loadChange + tissueChange;
+        }
+        return loadChange;
     }
 
     public reset(origTissuesJSON: string): void {
-        //var origTissuesJSON = JSON.stringify(Compartments.Buhlmann_ZHL16C);
         let originalTissues = JSON.parse(origTissuesJSON);
         for (var i = 0; i < originalTissues.length; i++) {
             for (var p in originalTissues[i]) {

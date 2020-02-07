@@ -3,6 +3,7 @@ import { Gases, Gas } from "./Gases";
 import { Segment, Segments } from "./Segments";
 
 export class BuhlmannAlgorithm {
+    private static readonly ascentSpeed = 10;
     private tissues = new Tissues();
     private segments: Segment[] = [];
     private gases: Gases = new Gases();
@@ -70,19 +71,18 @@ export class BuhlmannAlgorithm {
     };
 
     private addDecoDepthChange(fromDepth, toDepth, maxppO2, maxEND, currentGas, isFreshWater) {
+        // TODO add multilevel dive where toDepth > fromDepth - since this expects ascend
         if (!currentGas) {
             currentGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
             if (!currentGas) {
-                throw "Unable to find starting gas to decompress at depth " + fromDepth + ". No segments provided with bottom mix, and no deco gas operational at this depth.";
+                throw "Unable to find starting gas to decompress at depth " + fromDepth + "..";
             }
         }
 
         while (toDepth < fromDepth) { //if ceiling is higher, move our diver up.
             //ensure we're on the best gas
             var bestGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
-            if (bestGas && bestGas != currentGas) {
-                currentGas = bestGas;
-            }
+            currentGas = this.switchGas(bestGas, currentGas);
 
             var ceiling = toDepth; //ceiling is toDepth, unless there's a better gas to switch to on the way up.
             for (var nextDepth=fromDepth-1; nextDepth >= ceiling; nextDepth--) {
@@ -95,14 +95,19 @@ export class BuhlmannAlgorithm {
 
             //take us to the ceiling at 30fpm or 10 mpm (the fastest ascent rate possible.)
             var depthdiff = fromDepth - ceiling;
-            var time = depthdiff/10;
+            var time = depthdiff / BuhlmannAlgorithm.ascentSpeed;
             this.addDepthChange(fromDepth, ceiling, currentGas, time, isFreshWater);
             fromDepth = ceiling; //move up from-depth
         }
 
         var bestGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
-        if (bestGas && bestGas != currentGas) {
-            currentGas = bestGas;
+        currentGas = this.switchGas(bestGas, currentGas);
+        return currentGas;
+    }
+
+    private switchGas(newGas: Gas, currentGas: Gas): Gas {
+        if (newGas && newGas !== currentGas) {
+            return newGas;
         }
 
         return currentGas;
@@ -155,18 +160,10 @@ export class BuhlmannAlgorithm {
         if (!this.gases.isRegistered(gas)) {
             throw "Gas must only be one of registered gasses. Please use plan.addBottomGas or plan.addDecoGas to register a gas.";
         }
-        var fO2 = gas.fO2;
-        var fHe = gas.fHe;
 
-        //store this as a stage
         let segment = new Segment(startDepth, endDepth, gas, time)
         this.segments.push(segment);
-
-        var loadChange = 0.0;
-        for (var index = 0; index < this.tissues.length; index++) {
-            var tissueChange = this.tissues.compartments[index].addDepthChange(startDepth, endDepth, fO2, fHe, time, isFreshWater);
-            loadChange = loadChange + tissueChange;
-        }
-        return loadChange;
+        const loaded = this.tissues.load(startDepth, endDepth, gas.fO2, gas.fHe, time, isFreshWater);
+        return loaded;
     };
 }

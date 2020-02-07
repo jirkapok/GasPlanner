@@ -1,6 +1,6 @@
 import { Tissues } from "./Tissues";
 import { Gases, Gas } from "./Gases";
-import { Segment } from "./Segments";
+import { Segment, Segments } from "./Segments";
 
 export class BuhlmannAlgorithm {
     private tissues = new Tissues();
@@ -66,34 +66,7 @@ export class BuhlmannAlgorithm {
             this.tissues.reset(origTissues);
         }
 
-         return this.collapseSegments(this.segments);
-    };
-
-    //In a single pass, collapses adjacent flat segments together.
-    private collapseSegments(segments: Segment[]) {
-        var collapsed = true;
-        while (collapsed) {
-            collapsed = false;
-            for (var i = 0; i < segments.length-1; i++) {
-                var segment1 = segments[i];
-                var segment2 = segments[i+1];
-                //if both are flat and match the same depth
-                if (segment1.startDepth == segment1.endDepth &&
-                    segment2.startDepth == segment2.endDepth &&
-                    segment1.endDepth == segment2.startDepth &&
-                    segment1.gas == segment2.gas) {
-
-                    segment1.time = segment1.time + segment2.time;
-                    segments.splice(i+1, 1); //remove segment i+1
-                    collapsed = true;
-                    break; //the indexes are all messed up now.
-
-                }
-            }
-
-        }
-
-        return segments;
+         return Segments.mergeFlat(this.segments);
     };
 
     private addDecoDepthChange(fromDepth, toDepth, maxppO2, maxEND, currentGas, isFreshWater) {

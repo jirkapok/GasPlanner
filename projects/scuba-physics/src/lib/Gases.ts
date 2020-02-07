@@ -1,11 +1,23 @@
 import { DepthConverter } from "./depth-converter";
+import { AltitudePressure } from "./pressure-converter";
 
+/**
+ * Returns list of messages if gases collection is incomplete to realize dive for required depth.
+ * I.e. we need to cover all depths by breatheable gas up to surface.
+ * Deco gases are prefeed for decompression, they dont have to be better.
+ */
 export class GasesValidator {
-    public validate(gases: Gases): string[] {
+    public static validate(bottomGases: Gas[], decoGases: Gas[], maxDepth: number): string[] {
         const messages = [];
+        if(!bottomGases || !decoGases) {
+           messages.push('Both bottom gases and deco gases have to befined, even empty.');
+           return messages;
+        }
 
+        if(bottomGases.length < 1)
+           messages.push('At least one bottom gas as to be defined.');
 
-
+        // for depth ensure you have gases for all ranges up to the surface
         return messages;
     }
 }
@@ -117,4 +129,18 @@ export class Gas {
         const equivalentBars = bars * narcIndex;
         return DepthConverter.fromBar(equivalentBars, isFreshWater);
     };
+
+    public ceiling(isFreshWater: boolean): number {
+        const minppO2 = 0.18;
+        const ration = minppO2 / this.fO2;
+        const bars = ration * AltitudePressure.current;
+
+        // hyperoxic gases have pressure bellow sea level, which cant be converted to depth
+        // simplyfied untill altitude diving is implemented
+        if(bars < AltitudePressure.current)
+            return 0;
+
+        const depth = DepthConverter.fromBar(bars, isFreshWater);
+        return depth; 
+    }
 }

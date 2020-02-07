@@ -5,12 +5,12 @@ describe('Gas', () => {
     const air = new Gas(0.21, 0);
     const ppO2 = 1.4;
 
-    it('is 67.49550 m in fresh water', () => {
+    it('is 57.78 m in fresh water', () => {
       const mod = air.mod(ppO2, true);
       expect(mod).toBeCloseTo(57.78392, 5);
     });
 
-    it('is 65.52961 m in salt water', () => {
+    it('is 56.1 m in salt water', () => {
       const mod = air.mod(ppO2, false);
       expect(mod).toBeCloseTo(56.10089, 5);
     });
@@ -45,20 +45,20 @@ describe('Gases', () => {
       expect(registered).toBeTrue();
     });
 
-    it('Gas as deco gas is registered', () => {
+    it('Gas as deco, gas is registered', () => {
       const gases = new Gases();
       gases.addDecoGas(air);
       let registered = gases.isRegistered(air);
       expect(registered).toBeTrue();
     });
 
-    it('No gases gas is not registered', () => {
+    it('No gases, gas is not registered', () => {
       const gases = new Gases();
       let registered = gases.isRegistered(air);
       expect(registered).toBeFalse();
     });
 
-    it('No gases gas is not registered', () => {
+    it('Gas is not registered', () => {
       const gases = new Gases();
       gases.addDecoGas(ean50);
       let registered = gases.isRegistered(air);
@@ -81,13 +81,11 @@ describe('Gases', () => {
       expect(found).toBe(ean50);
     });
 
-    // TODO no deco gas found, bottom gas is used
-
-    it('No deco gas, nothing is found', () => {
+    it('No deco gas, bottom gas is found', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
       let found = gases.bestDecoGas(20, options);
-      expect(found).toBeNull();
+      expect(found).toBe(air);
     });
     
     it('Muntilpe deco gases, best is found', () => {

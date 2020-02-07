@@ -34,7 +34,7 @@ describe('Pressure Converter', () => {
   });
 });
 
-fdescribe('Vapour pressure', () => {
+describe('Vapour pressure', () => {
   it('0°C results in out of range', () => {
     expect(() => VapourPressure.waterVapourPressureInBars(0)).toThrow();
   });

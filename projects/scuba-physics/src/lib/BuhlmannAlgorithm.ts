@@ -145,7 +145,7 @@ export class BuhlmannAlgorithm {
 
     public addDepthChange(startDepth: number, endDepth: number, gas: Gas, time: number, isFreshWater: boolean) {
         if (!this.gases.isRegistered(gas)) {
-            throw "Gas must only be one of registered gasses. Please use plan.addBottomGas or plan.addDecoGas to register a gas.";
+            throw "Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.";
         }
 
         let segment = new Segment(startDepth, endDepth, gas, time)

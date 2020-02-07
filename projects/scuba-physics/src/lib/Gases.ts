@@ -17,25 +17,33 @@ export interface GasOptions {
 }
 
 export class Gases {
-    private decoGasses: Gas[] = [];
-    private bottomGasses: Gas[] = [];
+    private decoGases: Gas[] = [];
+    private bottomGases: Gas[] = [];
 
     public addBottomGas(gas: Gas) {
-        this.bottomGasses.push(gas);
+        this.bottomGases.push(gas);
     }
 
     public addDecoGas(gas: Gas) {
-        this.decoGasses.push(gas);
+        this.decoGases.push(gas);
     }
 
     public isRegistered(gas: Gas): Boolean {
-        return this.bottomGasses.includes(gas) || this.decoGasses.includes(gas);
+        return this.bottomGases.includes(gas) || this.decoGases.includes(gas);
     }
 
     public bestDecoGas(depth: number, options: GasOptions): Gas {
+        let decoGas = Gases.bestGas(this.decoGases, depth, options);
+        if(decoGas)
+            return decoGas;
+        
+        return Gases.bestGas(this.bottomGases, depth, options);
+    }
+
+    private static bestGas(gases: Gas[], depth: number, options: GasOptions): Gas {
         let found = null;
-        for (let index in this.decoGasses) {
-            let candidate = this.decoGasses[index];
+        for (let index in gases) {
+            let candidate = gases[index];
             let mod = Math.round(candidate.mod(options.maxppO2, options.isFreshWater));
             let end = Math.round(candidate.end(depth, options.isFreshWater));
 

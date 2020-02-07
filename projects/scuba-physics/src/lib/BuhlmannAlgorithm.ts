@@ -39,14 +39,14 @@ export class BuhlmannAlgorithm {
             }
         }
 
-        var gfDiff = gfHigh-gfLow; //find variance in gradient factor
-        var distanceToSurface = fromDepth;
-        var gfChangePerMeter = gfDiff/distanceToSurface
+        const gfDiff = gfHigh-gfLow; //find variance in gradient factor
+        const distanceToSurface = fromDepth;
+        const gfChangePerMeter = gfDiff/distanceToSurface
         if (!maintainTissues) {
             var origTissues = JSON.stringify(this.tissues);
         }
 
-        var ceiling = this.tissues.ceiling(gfLow, isFreshWater);
+        let ceiling = this.tissues.ceiling(gfLow, isFreshWater);
 
         currentGas = this.addDecoDepthChange(fromDepth, ceiling, maxppO2, maxEND, currentGas, isFreshWater);
 
@@ -81,35 +81,19 @@ export class BuhlmannAlgorithm {
 
         while (toDepth < fromDepth) { //if ceiling is higher, move our diver up.
             //ensure we're on the best gas
-            var bestGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
-            currentGas = this.switchGas(bestGas, currentGas);
+            let bestGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
+            currentGas = Gases.switchGas(bestGas, currentGas);
+            let ceiling = this.gases.nextGasSwitch(currentGas, fromDepth, toDepth, maxppO2, maxEND, isFreshWater);
 
-            var ceiling = toDepth; //ceiling is toDepth, unless there's a better gas to switch to on the way up.
-            for (var nextDepth=fromDepth-1; nextDepth >= ceiling; nextDepth--) {
-                var nextDecoGas = this.gases.bestDecoGas(nextDepth, maxppO2, maxEND, isFreshWater);
-                if (nextDecoGas && nextDecoGas != currentGas) {
-                    ceiling = nextDepth; //Only carry us up to the point where we can use this better gas.
-                    break;
-                }
-            }
-
-            //take us to the ceiling at 30fpm or 10 mpm (the fastest ascent rate possible.)
-            var depthdiff = fromDepth - ceiling;
-            var time = depthdiff / BuhlmannAlgorithm.ascentSpeed;
+            //take us to the ceiling using ascent speed
+            const depthdiff = fromDepth - ceiling;
+            const time = depthdiff / BuhlmannAlgorithm.ascentSpeed;
             this.addDepthChange(fromDepth, ceiling, currentGas, time, isFreshWater);
             fromDepth = ceiling; //move up from-depth
         }
 
-        var bestGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
-        currentGas = this.switchGas(bestGas, currentGas);
-        return currentGas;
-    }
-
-    private switchGas(newGas: Gas, currentGas: Gas): Gas {
-        if (newGas && newGas !== currentGas) {
-            return newGas;
-        }
-
+        let bestGas = this.gases.bestDecoGas(fromDepth, maxppO2, maxEND, isFreshWater);
+        currentGas = Gases.switchGas(bestGas, currentGas);
         return currentGas;
     }
 
@@ -117,12 +101,12 @@ export class BuhlmannAlgorithm {
         gf = gf || 1.0;
         this.gases.addBottomGas(gas);
 
-        var ceiling = this.tissues.ceiling(gf, isFreshWater);
+        let ceiling = this.tissues.ceiling(gf, isFreshWater);
         // we can have already some loading, so backup the state to be able restore later
-        var origTissues = JSON.stringify(this.tissues);
+        const origTissues = JSON.stringify(this.tissues);
 
-        var time = 0;
-        var change = 1;
+        let time = 0;
+        let change = 1;
         while (ceiling <= 0 && change > 0) {
             change = this.addFlat(depth, gas, 1, isFreshWater);
             ceiling = this.tissues.ceiling(gf, isFreshWater);

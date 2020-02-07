@@ -2,11 +2,11 @@ import { DepthConverter } from "./depth-converter";
 
 export class GasesValidator {
     public validate(gases: Gases): string[] {
-      const messages = [];
+        const messages = [];
 
 
 
-      return messages;
+        return messages;
     }
 }
 
@@ -32,7 +32,7 @@ export class Gases {
             let candidate = this.decoGasses[index];
             let mod = Math.round(candidate.mod(maxppO2, isFreshWater));
             let end = Math.round(candidate.end(depth, isFreshWater));
-            
+
             if (depth <= mod && end <= maxEND) {
                 if (!found || found.fO2 < candidate.fO2) {
                     found = candidate;
@@ -41,6 +41,34 @@ export class Gases {
         }
         return found;
     }
+
+    /**
+     * Calculates depth of next gas switch in meters
+     */
+    public nextGasSwitch(currentGas: Gas, fromDepth: number, toDepth: number, maxppO2: number, 
+            maxEND: number, isFreshWater: boolean): number {
+        var ceiling = toDepth; //ceiling is toDepth, unless there's a better gas to switch to on the way up.
+        for (var nextDepth = fromDepth - 1; nextDepth >= ceiling; nextDepth--) {
+            var nextDecoGas = this.bestDecoGas(nextDepth, maxppO2, maxEND, isFreshWater);
+            if (Gases.canSwitch(nextDecoGas, currentGas)) {
+                ceiling = nextDepth; //Only carry us up to the point where we can use this better gas.
+                break;
+            }
+        }
+        return ceiling;
+    }
+
+    public static switchGas(newGas: Gas, current: Gas): Gas {
+        if (Gases.canSwitch(newGas, current)) {
+            return newGas;
+        }
+
+        return current;
+    }
+
+    public static canSwitch(newGas: Gas, current: Gas): boolean {
+        return newGas && newGas !== current;
+    }
 }
 
 export class Gas {
@@ -48,7 +76,7 @@ export class Gas {
         return 1 - this.fO2 - this.fHe;
     };
 
-    constructor(public fO2: number, public fHe: number) {}
+    constructor(public fO2: number, public fHe: number) { }
 
     /**
      * Calculates maximum operation depth.
@@ -74,6 +102,6 @@ export class Gas {
         const narcIndex = this.fO2 + this.fN2;
         const bars = DepthConverter.toBar(depth, isFreshWater);
         const equivalentBars = bars * narcIndex;
-        return  DepthConverter.fromBar(equivalentBars, isFreshWater);
+        return DepthConverter.fromBar(equivalentBars, isFreshWater);
     };
 }

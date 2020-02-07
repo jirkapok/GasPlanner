@@ -47,9 +47,9 @@ export class Gases {
      */
     public nextGasSwitch(currentGas: Gas, fromDepth: number, toDepth: number, maxppO2: number, 
             maxEND: number, isFreshWater: boolean): number {
-        var ceiling = toDepth; //ceiling is toDepth, unless there's a better gas to switch to on the way up.
-        for (var nextDepth = fromDepth - 1; nextDepth >= ceiling; nextDepth--) {
-            var nextDecoGas = this.bestDecoGas(nextDepth, maxppO2, maxEND, isFreshWater);
+        let ceiling = toDepth; //ceiling is toDepth, unless there's a better gas to switch to on the way up.
+        for (let nextDepth = fromDepth - 1; nextDepth >= ceiling; nextDepth--) {
+            let nextDecoGas = this.bestDecoGas(nextDepth, maxppO2, maxEND, isFreshWater);
             if (Gases.canSwitch(nextDecoGas, currentGas)) {
                 ceiling = nextDepth; //Only carry us up to the point where we can use this better gas.
                 break;

@@ -34,19 +34,12 @@ describe('Pressure Converter', () => {
   });
 });
 
-describe('Vapour pressure', () => {
+fdescribe('Vapour pressure', () => {
   it('0°C results in out of range', () => {
-    const result = VapourPressure.waterVapourPressureInBars(0);
-    expect(result).toBe(0.0013332238741500001);
+    expect(() => VapourPressure.waterVapourPressureInBars(0)).toThrow();
   });
 
-  it('32,5°C corresponds to NaN', () => {
-    // TODO fix algorithm
-    const result = VapourPressure.waterVapourPressureInBars(0);
-    expect(result).toBe(0.0013332238741500001);
-  });
-
-  it('1°C corresponds to 0.0065 bar', () => {
+  it('1°C corresponds to 0.00651 bar', () => {
     const result = VapourPressure.waterVapourPressureInBars(1);
     expect(result).toBeCloseTo(0.00651, 5);
   });
@@ -54,17 +47,24 @@ describe('Vapour pressure', () => {
   it('32,5°C corresponds to 0.04878 bar', () => {
     const result = VapourPressure.waterVapourPressureInBars(32.5);
     expect(result).toBeCloseTo(0.04878, 5);
-  }); 
+  });
+  
+  it('99°C corresponds to 0.97758 bar', () => {
+    const result = VapourPressure.waterVapourPressureInBars(99);
+    expect(result).toBeCloseTo(0.97758, 5);
+  });
 
-  it('100°C corresponds to 1.0190 bar', () => {
-    // TODO fix algorithm
+  it('100°C corresponds to 1.01334 bar', () => {
     const result = VapourPressure.waterVapourPressureInBars(100);
     expect(result).toBeCloseTo(1.013365, 5);
   });
 
-  it('376°C corresponds to NaN', () => {
-    // TODO fix algorithm
-    const result = VapourPressure.waterVapourPressureInBars(376);
-    expect(result).toBeCloseTo(0.001333, 6);
+  it('374°C corresponds to 217.3 bar', () => {
+    const result = VapourPressure.waterVapourPressureInBars(374);
+    expect(result).toBeCloseTo(217.30381, 5);
+  });
+
+  it('376°C corresponds to out of range', () => {
+    expect(() => VapourPressure.waterVapourPressureInBars(376)).toThrow();
   });
 });

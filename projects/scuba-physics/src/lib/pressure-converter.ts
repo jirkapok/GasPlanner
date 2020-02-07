@@ -53,6 +53,7 @@ export class VapourPressure {
 
   /**
    * The vapour pressure of water may be approximated as a function of temperature.
+   * Throws an exception, if temperature is outside of range 1-374°C.
    * 
    * @param degreesCelcius - The temperature to approximate the pressure of water vapour.
    * @returns Water vapour pressure in terms of bars.
@@ -92,7 +93,7 @@ export class VapourPressure {
     else if (degreesCelcius >= 99 && degreesCelcius <= 374)
       rangeConstants = VapourPressure.tempRange_99_374;
     else
-      return NaN;
+      throw 'Temperature is out of supported range 1-374°C';
 
     var logp = rangeConstants[0] - (rangeConstants[1] / (rangeConstants[2] + degreesCelcius));
     return Math.pow(10, logp);

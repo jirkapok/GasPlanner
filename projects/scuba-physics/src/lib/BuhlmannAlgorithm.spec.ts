@@ -1,4 +1,4 @@
-import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
 import { Gas } from './Gases';
 
 describe('Buhlmann Algorithm', () => {
@@ -77,7 +77,8 @@ describe('Buhlmann Algorithm', () => {
       algorithm.addDepthChange(0, 50, bottomGas, 5, isFreshWater);
       algorithm.addFlat(50, bottomGas, 25, isFreshWater);
       //gradientFactorLow = 0.2, gradientFactorHigh=0.8, deco ppO2 = 1.6, and max END allowed: 30 meters.
-      const decoPlan = algorithm.calculateDecompression(false, 0.2, 0.8, 1.6, 30, isFreshWater);
+      const options = new Options(true, 0.2, 0.8, 1.6, 30, isFreshWater);
+      const decoPlan = algorithm.calculateDecompression(options);
       let planText = "";
       decoPlan.forEach(segment => {
         planText += segment.startDepth + "," + segment.endDepth + "," + segment.time +";";

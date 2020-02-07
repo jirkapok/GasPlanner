@@ -33,7 +33,7 @@ export class Tissue extends Compartment {
         return this._pTotal;
     }
 
-    public calculateCeiling(gf: number, isFreshWater: boolean) {
+    public ceiling(gf: number, isFreshWater: boolean) {
         gf = gf || 1.0
         var a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
         var b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
@@ -133,6 +133,22 @@ export class Tissues {
             this.compartments.push(tissue);
         }
     }
+
+    public ceiling(gf: number, isFreshWater: boolean): number {
+        gf = gf || 1.0
+        var ceiling = 0;
+        for (var index = 0; index < this.compartments.length; index++) {
+            var tissueCeiling = this.compartments[index].ceiling(gf, isFreshWater);
+            if (!ceiling || tissueCeiling > ceiling) {
+                ceiling = tissueCeiling;
+            }
+        }
+
+        while (ceiling % 3 != 0) {
+            ceiling++;
+        }
+        return ceiling;
+    };
 
     public load(startDepth: number, endDepth: number, fO2: number, fHe: number, time: number, isFreshWater: boolean):number {
         var loadChange = 0.0;

@@ -46,7 +46,7 @@ export class BuhlmannAlgorithm {
             var origTissues = JSON.stringify(this.tissues);
         }
 
-        var ceiling = this.getCeiling(gfLow, isFreshWater);
+        var ceiling = this.tissues.ceiling(gfLow, isFreshWater);
 
         currentGas = this.addDecoDepthChange(fromDepth, ceiling, maxppO2, maxEND, currentGas, isFreshWater);
 
@@ -58,7 +58,7 @@ export class BuhlmannAlgorithm {
             while (ceiling > nextDecoDepth && time <= 10000) {
                 this.addFlat(currentDepth, currentGas, 1, isFreshWater);
                 time++;
-                ceiling = this.getCeiling(gf, isFreshWater);
+                ceiling = this.tissues.ceiling(gf, isFreshWater);
             }
 
             currentGas = this.addDecoDepthChange(currentDepth, ceiling, maxppO2, maxEND, currentGas, isFreshWater);
@@ -117,7 +117,7 @@ export class BuhlmannAlgorithm {
         gf = gf || 1.0;
         this.gases.addBottomGas(gas);
 
-        var ceiling = this.getCeiling(gf, isFreshWater);
+        var ceiling = this.tissues.ceiling(gf, isFreshWater);
         // we can have already some loading, so backup the state to be able restore later
         var origTissues = JSON.stringify(this.tissues);
 
@@ -125,7 +125,7 @@ export class BuhlmannAlgorithm {
         var change = 1;
         while (ceiling <= 0 && change > 0) {
             change = this.addFlat(depth, gas, 1, isFreshWater);
-            ceiling = this.getCeiling(gf, isFreshWater);
+            ceiling = this.tissues.ceiling(gf, isFreshWater);
             time++;
         }
 
@@ -135,21 +135,6 @@ export class BuhlmannAlgorithm {
             return Number.POSITIVE_INFINITY;
         }
         return time - 1; //We went one minute past a ceiling of "0"
-    };
-
-    private getCeiling(gf: number, isFreshWater: boolean): number {
-        gf = gf || 1.0
-        var ceiling = 0;
-        for (var index = 0; index < this.tissues.compartments.length; index++) {
-            var tissueCeiling = this.tissues.compartments[index].calculateCeiling(gf, isFreshWater);
-            if (!ceiling || tissueCeiling > ceiling) {
-                ceiling = tissueCeiling;
-            }
-        }
-        while (ceiling % 3 != 0) {
-            ceiling++;
-        }
-        return ceiling;
     };
 
     public addFlat(depth: number, gas: Gas, time: number, isFreshWater: boolean): number {

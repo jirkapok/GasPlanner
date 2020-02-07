@@ -67,11 +67,17 @@ describe('Gases', () => {
   });
 
   describe('Best gas', () => {
+    const options = {
+      maxppO2: 1.6,
+      maxEND: 30,
+      isFreshWater: false
+    };
+
     it('The only deco gas is found', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
       gases.addDecoGas(ean50);
-      let found = gases.bestDecoGas(20, 1.6, 30, false);
+      let found = gases.bestDecoGas(20, options);
       expect(found).toBe(ean50);
     });
 
@@ -80,7 +86,7 @@ describe('Gases', () => {
     it('No deco gas, nothing is found', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
-      let found = gases.bestDecoGas(20, 1.6, 30, false);
+      let found = gases.bestDecoGas(20, options);
       expect(found).toBeNull();
     });
     
@@ -89,7 +95,7 @@ describe('Gases', () => {
       gases.addBottomGas(air);
       gases.addDecoGas(ean50);
       gases.addDecoGas(trimix);
-      let found = gases.bestDecoGas(20, 1.6, 30, false);
+      let found = gases.bestDecoGas(20, options);
       expect(found).toBe(ean50);
     });
   });

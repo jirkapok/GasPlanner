@@ -1,8 +1,8 @@
 import { Tissues } from "./Tissues";
-import { Gases, Gas } from "./Gases";
+import { Gases, Gas, GasOptions } from "./Gases";
 import { Segment, Segments } from "./Segments";
 
-export class Options {
+export class Options implements GasOptions {
     constructor(
         public maintainTissues: boolean,
         public gfLow: number,
@@ -45,7 +45,7 @@ export class BuhlmannAlgorithm {
                 currentGas = this.segments[this.segments.length-1].gas;
             }
         } else {
-            currentGas = this.gases.bestDecoGas(fromDepth, options.maxppO2, options.maxEND, options.isFreshWater);
+            currentGas = this.gases.bestDecoGas(fromDepth, options);
             if (!currentGas) {
                 throw "No deco gas found to decompress from provided depth " + fromDepth;
             }
@@ -85,7 +85,7 @@ export class BuhlmannAlgorithm {
     private addDecoDepthChange(fromDepth: number, toDepth: number, currentGas: Gas, options: Options) {
         // TODO add multilevel dive where toDepth > fromDepth - since this expects ascend
         if (!currentGas) {
-            currentGas = this.gases.bestDecoGas(fromDepth, options.maxppO2, options.maxEND, options.isFreshWater);
+            currentGas = this.gases.bestDecoGas(fromDepth, options);
             if (!currentGas) {
                 throw "Unable to find starting gas to decompress at depth " + fromDepth + "..";
             }
@@ -93,9 +93,9 @@ export class BuhlmannAlgorithm {
 
         while (toDepth < fromDepth) { //if ceiling is higher, move our diver up.
             //ensure we're on the best gas
-            let bestGas = this.gases.bestDecoGas(fromDepth, options.maxppO2, options.maxEND, options.isFreshWater);
+            let bestGas = this.gases.bestDecoGas(fromDepth, options);
             currentGas = Gases.switchGas(bestGas, currentGas);
-            let ceiling = this.gases.nextGasSwitch(currentGas, fromDepth, toDepth, options.maxppO2, options.maxEND, options.isFreshWater);
+            let ceiling = this.gases.nextGasSwitch(currentGas, fromDepth, toDepth, options);
 
             //take us to the ceiling using ascent speed
             const depthdiff = fromDepth - ceiling;
@@ -104,7 +104,7 @@ export class BuhlmannAlgorithm {
             fromDepth = ceiling; //move up from-depth
         }
 
-        let bestGas = this.gases.bestDecoGas(fromDepth, options.maxppO2, options.maxEND, options.isFreshWater);
+        let bestGas = this.gases.bestDecoGas(fromDepth, options);
         currentGas = Gases.switchGas(bestGas, currentGas);
         return currentGas;
     }

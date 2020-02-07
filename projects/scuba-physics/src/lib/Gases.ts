@@ -10,6 +10,12 @@ export class GasesValidator {
     }
 }
 
+export interface GasOptions {
+    maxppO2: number;
+    maxEND: number;
+    isFreshWater: boolean;
+}
+
 export class Gases {
     private decoGasses: Gas[] = [];
     private bottomGasses: Gas[] = [];
@@ -26,14 +32,14 @@ export class Gases {
         return this.bottomGasses.includes(gas) || this.decoGasses.includes(gas);
     }
 
-    public bestDecoGas(depth: number, maxppO2: number, maxEND: number, isFreshWater: boolean): Gas {
+    public bestDecoGas(depth: number, options: GasOptions): Gas {
         let found = null;
         for (let index in this.decoGasses) {
             let candidate = this.decoGasses[index];
-            let mod = Math.round(candidate.mod(maxppO2, isFreshWater));
-            let end = Math.round(candidate.end(depth, isFreshWater));
+            let mod = Math.round(candidate.mod(options.maxppO2, options.isFreshWater));
+            let end = Math.round(candidate.end(depth, options.isFreshWater));
 
-            if (depth <= mod && end <= maxEND) {
+            if (depth <= mod && end <= options.maxEND) {
                 if (!found || found.fO2 < candidate.fO2) {
                     found = candidate;
                 }
@@ -45,11 +51,10 @@ export class Gases {
     /**
      * Calculates depth of next gas switch in meters
      */
-    public nextGasSwitch(currentGas: Gas, fromDepth: number, toDepth: number, maxppO2: number, 
-            maxEND: number, isFreshWater: boolean): number {
+    public nextGasSwitch(currentGas: Gas, fromDepth: number, toDepth: number, options: GasOptions): number {
         let ceiling = toDepth; //ceiling is toDepth, unless there's a better gas to switch to on the way up.
         for (let nextDepth = fromDepth - 1; nextDepth >= ceiling; nextDepth--) {
-            let nextDecoGas = this.bestDecoGas(nextDepth, maxppO2, maxEND, isFreshWater);
+            let nextDecoGas = this.bestDecoGas(nextDepth, options);
             if (Gases.canSwitch(nextDecoGas, currentGas)) {
                 ceiling = nextDepth; //Only carry us up to the point where we can use this better gas.
                 break;

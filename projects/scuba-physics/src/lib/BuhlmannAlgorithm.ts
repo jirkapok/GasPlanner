@@ -3,13 +3,19 @@ import { Gases, Gas, GasOptions } from "./Gases";
 import { Segment, Segments } from "./Segments";
 
 export class Options implements GasOptions {
+    private _ascentSpeed: number;
+
+    public get ascentSpeed(): number {
+        return this._ascentSpeed;
+    }
     constructor(
         public maintainTissues: boolean,
         public gfLow: number,
         public gfHigh: number,
         public maxppO2: number,
         public maxEND: number,
-        public isFreshWater: boolean
+        public isFreshWater: boolean,
+        ascentSpeed?: number
     ){
         maintainTissues = maintainTissues || false;
         gfLow = gfLow || 1.0;
@@ -17,11 +23,11 @@ export class Options implements GasOptions {
         maxppO2 = maxppO2 || 1.6;
         maxEND = maxEND || 30;
         isFreshWater = isFreshWater || false;
+        this._ascentSpeed = ascentSpeed || 10;
     }
 }
 
 export class BuhlmannAlgorithm {
-    private static readonly ascentSpeed = 10;
     private tissues = new Tissues();
     private segments: Segment[] = [];
     private gases: Gases = new Gases();
@@ -64,7 +70,7 @@ export class BuhlmannAlgorithm {
 
         while (ceiling > 0) {
             var currentDepth = ceiling;
-            var nextDecoDepth = (ceiling - 3);
+            var nextDecoDepth = (ceiling - Tissues.decoStopDistance);
             var time = 0;
             var gf = options.gfLow + (gfChangePerMeter * (distanceToSurface - ceiling));
             while (ceiling > nextDecoDepth && time <= 10000) {
@@ -99,7 +105,7 @@ export class BuhlmannAlgorithm {
 
             //take us to the ceiling using ascent speed
             const depthdiff = fromDepth - ceiling;
-            const time = depthdiff / BuhlmannAlgorithm.ascentSpeed;
+            const time = depthdiff / options.ascentSpeed;
             this.addDepthChange(fromDepth, ceiling, currentGas, time, options.isFreshWater);
             fromDepth = ceiling; //move up from-depth
         }

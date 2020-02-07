@@ -125,6 +125,10 @@ export class Tissue extends Compartment {
 }
 
 export class Tissues {
+    /**
+     * Depth difference between two deco stops in metres.
+     */
+    public static readonly decoStopDistance = 3;
     public compartments: Tissue[] = [];
 
     constructor() {
@@ -144,7 +148,7 @@ export class Tissues {
             }
         }
 
-        while (ceiling % 3 != 0) {
+        while (ceiling % Tissues.decoStopDistance != 0) {
             ceiling++;
         }
         return ceiling;

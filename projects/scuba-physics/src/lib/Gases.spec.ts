@@ -1,13 +1,21 @@
 import { Gases, Gas, GasesValidator } from './Gases';
 
 describe('Gases', () => {
-  const air = new Gas(0.21, 0);
-  const ean50 = new Gas(0.5, 0);
-  const trimix = new Gas(0.18, 0.35);
+  // for ppo2 1.6 test data (even not used all gases with these values)
+  const air = new Gas(0.21, 0); // 65.5m - 0m
+  const ean50 = new Gas(0.5, 0); // 21.8m - 0m
+  const trimix1835 = new Gas(0.18, 0.35); // 78.1m - 9.9m
+  const trimix1070 = new Gas(0.1, 0.7);  // 148.5m - 7.9m
+  const oxygen = new Gas(1, 0);  // 5.9m - 0m
+
+  const options = {
+    maxppO2: 1.6,
+    maxEND: 30,
+    isFreshWater: false
+  };
 
   describe('Gas', () => {
     describe('MOD of an Air for ppO 1.4', () => {
-      const air = new Gas(0.21, 0);
       const ppO2 = 1.4;
 
       it('is 57.78 m in fresh water', () => {
@@ -25,12 +33,12 @@ describe('Gases', () => {
       const depth = 60;
 
       it('is 35.43099 m in fresh water', () => {
-        const end = trimix.end(depth, true);
+        const end = trimix1835.end(depth, true);
         expect(end).toBeCloseTo(35.43099, 5);
       });
 
       it('is 35.53494 m in salt water', () => {
-        const end = trimix.end(depth, false);
+        const end = trimix1835.end(depth, false);
         expect(end).toBeCloseTo(35.53494, 5);
       });
     });
@@ -47,7 +55,6 @@ describe('Gases', () => {
       });
 
       it('Hypooxic Trimix 10/70 in fresh water to 8 m', () => {
-        const trimix1070 = new Gas(0.1, 0.7);
         const ceilnig = trimix1070.ceiling(true);
         expect(ceilnig).toBeCloseTo(8.158, 3);
       });
@@ -85,12 +92,6 @@ describe('Gases', () => {
     });
 
     describe('Best gas', () => {
-      const options = {
-        maxppO2: 1.6,
-        maxEND: 30,
-        isFreshWater: false
-      };
-
       it('The only deco gas is found', () => {
         const gases = new Gases();
         gases.addBottomGas(air);
@@ -110,7 +111,7 @@ describe('Gases', () => {
         const gases = new Gases();
         gases.addBottomGas(air);
         gases.addDecoGas(ean50);
-        gases.addDecoGas(trimix);
+        gases.addDecoGas(trimix1835);
         let found = gases.bestDecoGas(20, options);
         expect(found).toBe(ean50);
       });
@@ -119,23 +120,49 @@ describe('Gases', () => {
 
   describe('Gases validator', () => {
     it('Bottom gases undefined', () => {
-      const messages = GasesValidator.validate(null, [], 30);
+      const messages = GasesValidator.validate(null, [], options, 30);
       expect(messages.length).toBe(1);
     });
 
     it('Deco gases undefined', () => {
-      const messages = GasesValidator.validate([], null, 30);
+      const messages = GasesValidator.validate([], null, options, 30);
       expect(messages.length).toBe(1);
     });
 
-    it('No bottom gas', () => {
-      const messages = GasesValidator.validate([], [], 30);
+    it('No gas defined', () => {
+      const messages = GasesValidator.validate([], [], options, 30);
       expect(messages.length).toBe(1);
     });
 
-    it('Only one bottom gas', () => {
+    it('Only one gas', () => {
       const bottomGases = [air];
-      const messages = GasesValidator.validate(bottomGases, [], 30);
+      const messages = GasesValidator.validate(bottomGases, [], options, 30);
+      expect(messages.length).toBe(0);
+    });
+
+    it('No bottom gas for depth', () => {
+      const bottomGases = [air];
+      const messages = GasesValidator.validate(bottomGases, [], options, 100);
+      expect(messages.length).toBe(1);
+    });
+
+    it('No gas to surface', () => {
+      const bottomGases = [trimix1070];
+      const messages = GasesValidator.validate(bottomGases, [], options, 30);
+      expect(messages.length).toBe(1);
+    });
+
+    it('Gases don`t cover all depths', () => {
+      const bottomGases = [trimix1070];
+      const decoGases = [oxygen];
+      const messages = GasesValidator.validate(bottomGases, decoGases, options, 30);
+      expect(messages.length).toBe(1);
+    });
+
+    it('Multiple gases', () => {
+      const bottomGases = [air];
+      const decoGases = [ean50];
+      const messages = GasesValidator.validate(bottomGases, decoGases, options, 30);
       expect(messages.length).toBe(0);
     });
   });

@@ -7,18 +7,45 @@ import { AltitudePressure } from "./pressure-converter";
  * Deco gases are prefeed for decompression, they dont have to be better.
  */
 export class GasesValidator {
-    public static validate(bottomGases: Gas[], decoGases: Gas[], maxDepth: number): string[] {
+    public static validate(bottomGases: Gas[], decoGases: Gas[], options: GasOptions, maxDepth: number): string[] {
         const messages = [];
         if(!bottomGases || !decoGases) {
            messages.push('Both bottom gases and deco gases have to befined, even empty.');
            return messages;
         }
 
-        if(bottomGases.length < 1)
+        if(bottomGases.length < 1) {
            messages.push('At least one bottom gas as to be defined.');
+           return messages;
+        }
 
-        // for depth ensure you have gases for all ranges up to the surface
+        const gases = bottomGases.concat(decoGases);
+        this.validateByMod(gases, options, maxDepth, messages);
+        
+        gases.sort((a, b) => a.ceiling(options.isFreshWater) - b.ceiling(options.isFreshWater));
+        if(gases[0].ceiling(options.isFreshWater) > 0)
+           messages.push('No gas available to surface.');
+
         return messages;
+    }
+
+    private static validateByMod(gases: Gas[], options: GasOptions, maxDepth: number, messages: string[]) {
+        gases.sort((a, b) => b.mod(options.maxppO2, options.isFreshWater) - a.mod(options.maxppO2, options.isFreshWater));
+        
+        if(gases[0].mod(options.maxppO2, options.isFreshWater) < maxDepth)
+            messages.push('No gas available to maximum depth.'); 
+
+        for(let index = 0; index < gases.length - 1; index++) {
+            if(gases.length > index) {
+                const nextGas = gases[index + 1];
+                const ceiling = gases[index].ceiling(options.isFreshWater);
+                const nextMod = nextGas.mod(options.maxppO2, options.isFreshWater);
+                if(nextMod < ceiling) {
+                    messages.push('Gases don`t cover all depths.');
+                    break;
+                }
+            }
+        }
     }
 }
 

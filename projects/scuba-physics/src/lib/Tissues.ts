@@ -33,12 +33,19 @@ export class Tissue extends Compartment {
         return this._pTotal;
     }
 
-    public ceiling(gf: number, isFreshWater: boolean) {
+    public ceiling(gf: number, isFreshWater: boolean): number {
         gf = gf || 1.0
         const a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
         const b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
         const bars = (this.pTotal - (a * gf)) / ((gf / b) + 1.0 - gf);
         //var bars = (this.pTotal - a) * b;
+
+        // less than surface pressure means no ceiling, this aproximation is OK,
+        // because tissues are loaded only under water
+        if(bars < AltitudePressure.current) {
+            return 0;
+        } 
+
         const ceiling = DepthConverter.fromBar(bars, isFreshWater);
         return Math.round(ceiling);
     };
@@ -77,7 +84,7 @@ export class Tissue extends Compartment {
      * @param isFreshWater - True to calculate changes in depth while in fresh water, false for salt water.
      * @returns The gas loading rate in bars times the fraction of inert gas.
      */
-    private gasRateInBarsPerMinute(beginDepth: number, endDepth: number, time: number, fGas: number, isFreshWater: boolean) {
+    private gasRateInBarsPerMinute(beginDepth: number, endDepth: number, time: number, fGas: number, isFreshWater: boolean): number {
         return this.depthChangeInBarsPerMinute(beginDepth, endDepth, time, isFreshWater) * fGas;
     };
 
@@ -90,7 +97,7 @@ export class Tissue extends Compartment {
      * @param isFreshWater - True to calculate changes in depth while in fresh water, false for salt water.
      * @returns The depth change in bars per minute.
      */
-    private depthChangeInBarsPerMinute(beginDepth: number, endDepth: number, time: number, isFreshWater: boolean) {
+    private depthChangeInBarsPerMinute(beginDepth: number, endDepth: number, time: number, isFreshWater: boolean): number {
         const speed = (endDepth - beginDepth) / time;
         return DepthConverter.toBar(speed, isFreshWater) - AltitudePressure.current;
     };
@@ -106,7 +113,7 @@ export class Tissue extends Compartment {
      * @returns The end compartment inert gas pressure in bar.
      */
     private schreinerEquation(pBegin: number, pGas: number, time: number, halfTime: number, gasRate: number): number {
-        const timeConstant = Math.log(2)/halfTime
+        const timeConstant = Math.log(2) / halfTime;
         return (pGas + (gasRate * (time - (1.0/timeConstant))) - ((pGas - pBegin - (gasRate / timeConstant)) * Math.exp(-timeConstant * time)));
     };
 

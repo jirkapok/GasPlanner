@@ -81,6 +81,20 @@ describe('Buhlmann Algorithm', () => {
       return planText;
     };
     
+    it('5m for 30 minutes using ean32', () => {
+      const algorithm = new BuhlmannAlgorithm();
+      let bottomGas: Gas = new Gas(0.32, 0);
+      algorithm.addBottomGas(bottomGas);
+      algorithm.addDepthChange(0, 5, bottomGas, 1, isFreshWater);
+      algorithm.addFlat(5, bottomGas, 30, isFreshWater);
+
+      const decoPlan = algorithm.calculateDecompression(options);
+      const planText = concatenatePlan(decoPlan);
+
+      const epectedPlan = '0,5,1;5,5,30;5,0,0.5;';
+      expect(planText).toBe(epectedPlan);
+    });
+
     it('10m for 40 minutes using air', () => {
       const algorithm = new BuhlmannAlgorithm();
       let bottomGas: Gas = new Gas(0.21, 0);
@@ -142,6 +156,26 @@ describe('Buhlmann Algorithm', () => {
                            "30,22,0.8;22,21,0.1;21,21,1;21,18,0.3;" +
                            "18,18,1;18,15,0.3;15,15,1;15,12,0.3;12,12,3;" + 
                            "12,9,0.3;9,9,5;9,6,0.3;6,6,8;6,3,0.3;3,3,17;3,0,0.3;";
+      expect(planText).toBe(expectedPlan);
+    });
+
+    it('50m for 30 minutes using 21/35, 50% nitrox and oxygen', () => {
+      const algorithm = new BuhlmannAlgorithm(); // 1 abs pressure in fresh water
+      let bottomGas: Gas = new Gas(0.21, 0.35);
+      algorithm.addBottomGas(bottomGas);
+      let ean50: Gas = new Gas(0.5, 0.0);
+      algorithm.addDecoGas(ean50);
+      let oxygen: Gas = new Gas(1, 0.0);
+      algorithm.addDecoGas(oxygen);
+      algorithm.addDepthChange(0, 50, bottomGas, 5, isFreshWater);
+      algorithm.addFlat(50, bottomGas, 30, isFreshWater);
+      
+      const decoPlan = algorithm.calculateDecompression(options);
+      const planText = concatenatePlan(decoPlan);
+
+      const expectedPlan = "0,50,5;50,50,30;50,30,2;30,30,1;30,22,0.8;22,21,0.1;21,21,1;21,18,0.3;18,18,1;"+
+                           "18,15,0.3;15,15,2;15,12,0.3;12,12,4;12,9,0.3;9,9,6;"+
+                           "9,6,0.3;6,6,7;6,3,0.3;3,3,14;3,0,0.3;";
       expect(planText).toBe(expectedPlan);
     });
   }); 

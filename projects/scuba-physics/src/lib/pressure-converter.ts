@@ -159,15 +159,4 @@ export class PressureConverter {
   public static barToPascal(bars: number): number {
     return bars * (SurfacePressure.current * PressureConverter.coefficient);
   };
-
-  /**
-   * Calculates the partial pressure of a gas component from the volume gas fraction and total pressure.
-   * 
-   * @param absPressure - The total pressure P in bars (typically 1 bar of atmospheric pressure + x bars of water pressure).
-   * @param volumeFraction - The volume fraction of gas component (typically 0.79 for 79%) measured as percentage in decimal.
-   * @returns The partial pressure of gas component in bar absolute.
-   */
-  public static partialPressure(absPressure: number, volumeFraction: number): number {
-    return absPressure * volumeFraction;
-  };
 }

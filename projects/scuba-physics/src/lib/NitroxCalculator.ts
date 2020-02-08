@@ -1,4 +1,5 @@
 import { DepthConverter } from "./depth-converter";
+import { GasPressures } from "./Gases";
 
 export class NitroxCalculator {
     
@@ -31,13 +32,13 @@ export class NitroxCalculator {
   /**
    * Calculates Maximum operation depth for given mix.
    * 
-   * @param pO2 - Partial pressure constant.
-   * @param fO2 - Percents of Oxygen fraction in gas.
+   * @param ppO2 - Partial pressure constant.
+   * @param percentO2 - Percents of Oxygen fraction in gas.
    * @returns Depth in meters. 
    */
-  public static mod(pO2: number, fO2: number): number {
-    const bar = pO2 * 100 / fO2;
-    const result = DepthConverter.fromBar(bar, true);
+  public static mod(ppO2: number, percentO2: number): number {
+    const fO2 = percentO2 / 100;
+    const result = GasPressures.mod(ppO2, fO2, true);
     return Math.floor(result * 100) / 100;
   }
 
@@ -50,7 +51,7 @@ export class NitroxCalculator {
    */
   public static partialPressure(fO2: number, depth: number): number {
     const bar = DepthConverter.toBar(depth, true);
-    const result = fO2 * bar / 100;
+    const result = GasPressures.partialPressure(bar, fO2) / 100;
     return Math.ceil(result * 100) / 100;
   }
 }

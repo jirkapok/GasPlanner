@@ -1,4 +1,4 @@
-import { Gases, Gas, GasesValidator } from './Gases';
+import { Gases, Gas, GasesValidator, GasPressures } from './Gases';
 
 describe('Gases', () => {
   // for ppo2 1.6 test data (even not used all gases with these values)
@@ -164,6 +164,28 @@ describe('Gases', () => {
       const decoGases = [ean50];
       const messages = GasesValidator.validate(bottomGases, decoGases, options, 30);
       expect(messages.length).toBe(0);
+    });
+  });
+
+  describe('Gas pressures', () => {
+    it('At 1 bar 0.79 volume fraction converts to ', () => {
+      const result = GasPressures.partialPressure(1, 0.79);
+      expect(result).toBe(0.79);
+    });
+
+    it('At 3 bar 0.79 volume fraction converts to ', () => {
+      const result = GasPressures.partialPressure(6.667, 0.21);
+      expect(result).toBeCloseTo(1.40, 3);
+    });
+
+    it('At 0 bars any fraction results in 0 partial pressure', () => {
+      const result = GasPressures.partialPressure(0, 0.79);
+      expect(result).toBe(0);
+    });
+
+    it('At any bars 0 fraction results in 0 partial pressure', () => {
+      const result = GasPressures.partialPressure(3, 0);
+      expect(result).toBe(0);
     });
   });
 });

@@ -138,8 +138,7 @@ export class Gas {
      * @returns Depth in meters.
      */
     public mod(ppO2: number, isFreshWater: boolean): number {
-        const bars = ppO2 / this.fO2;
-        return DepthConverter.fromBar(bars, isFreshWater);
+        return GasPressures.mod(ppO2, this.fO2, isFreshWater);
     };
 
     /**
@@ -171,3 +170,28 @@ export class Gas {
         return depth; 
     }
 }
+
+export class GasPressures {
+    /**
+     * Calculates the partial pressure of a gas component from the volume gas fraction and total pressure.
+     * 
+     * @param absPressure - The total pressure P in bars (typically 1 bar of atmospheric pressure + x bars of water pressure).
+     * @param volumeFraction - The volume fraction of gas component (typically 0.79 for 79%) measured as percentage in decimal.
+     * @returns The partial pressure of gas component in bar absolute.
+     */
+    public static partialPressure(absPressure: number, volumeFraction: number): number {
+      return absPressure * volumeFraction;
+    };
+  
+    /**
+     * Calculates Maximum operation depth for given mix.
+     * 
+     * @param ppO2 - Partial pressure constant.
+     * @param fO2 - Fraction of Oxygen in gas.
+     * @returns Depth in meters. 
+     */
+      public static mod(ppO2: number, fO2: number, isFreshWater: boolean): number {
+        const bars = ppO2 / fO2;
+        return DepthConverter.fromBar(bars, isFreshWater);
+    }
+  }

@@ -1,6 +1,7 @@
 import { Compartments, Compartment } from "./Compartments";
-import { AltitudePressure, VapourPressure, PressureConverter } from "./pressure-converter";
+import { AltitudePressure, VapourPressure } from "./pressure-converter";
 import { DepthConverter } from './depth-converter';
+import { GasPressures } from "./Gases";
 
 export class Tissue extends Compartment {
     // initial tissue loading is needed
@@ -16,7 +17,7 @@ export class Tissue extends Compartment {
         const absPressure = AltitudePressure.current; // TODO altitude diving
         const bodyTemperature = 35.2; 
         const waterVapourPressure = VapourPressure.waterVapourPressureInBars(bodyTemperature);
-        this._pN2 = PressureConverter.partialPressure(absPressure, 0.79) - waterVapourPressure;
+        this._pN2 = GasPressures.partialPressure(absPressure, 0.79) - waterVapourPressure;
         this._pHe = 0;
         this._pTotal = this.pN2 + this.pHe;
     };

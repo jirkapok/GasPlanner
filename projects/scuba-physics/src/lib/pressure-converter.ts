@@ -26,9 +26,11 @@ export class Density {
   public static readonly mercury: number = Density.density(13595.1, 1);
 };
 
+// TODO add the Gravity function based on altitude
 export class Gravity {
   /**
    * current gravity sample rates in meters per second per second (m/s2)
+   * https://en.wikipedia.org/wiki/Gravity_of_Earth#Mathematical_models
    */
   public static readonly earth: number = 9.80665;
   public static readonly current: number = Gravity.earth;
@@ -100,6 +102,9 @@ export class VapourPressure {
   };
 }
 
+/**
+ * https://en.wikipedia.org/wiki/Pressure#Units
+ */
 export class PressureConverter {
   private static readonly coefficient: number = 100000;
 

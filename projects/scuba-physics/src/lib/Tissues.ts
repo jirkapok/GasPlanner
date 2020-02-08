@@ -7,16 +7,16 @@ export class Tissue extends Compartment {
     private _pN2: number = 0;
     private _pHe: number = 0;
     private _pTotal: number = 0;
-    private _waterVapourPressure: number;
 
     constructor(compartment: Compartment)
     {
        super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
         compartment.HeHalfTime, compartment.heA, compartment.heB);
         
-        let absPressure = 1;
-        this._waterVapourPressure = VapourPressure.waterVapourPressureInBars(35.2);
-        this._pN2 = PressureConverter.partialPressure(absPressure || 1, 0.79) - this._waterVapourPressure;
+        const absPressure = 1; // TODO altitude diving
+        const bodyTemperature = 35.2; 
+        const waterVapourPressure = VapourPressure.waterVapourPressureInBars(bodyTemperature);
+        this._pN2 = PressureConverter.partialPressure(absPressure, 0.79) - waterVapourPressure;
         this._pHe = 0;
         this._pTotal = this.pN2 + this.pHe;
     };

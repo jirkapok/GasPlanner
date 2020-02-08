@@ -44,9 +44,9 @@ describe('Vapour pressure', () => {
     expect(result).toBeCloseTo(0.00651, 5);
   });
  
-  it('32,5°C corresponds to 0.04878 bar', () => {
-    const result = VapourPressure.waterVapourPressureInBars(32.5);
-    expect(result).toBeCloseTo(0.04878, 5);
+  it('35.2°C corresponds to 0.056714 bar', () => {
+    const result = VapourPressure.waterVapourPressureInBars(35.2);
+    expect(result).toBeCloseTo(0.056714, 5);
   });
   
   it('99°C corresponds to 0.97758 bar', () => {

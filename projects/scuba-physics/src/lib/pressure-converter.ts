@@ -30,11 +30,18 @@ export class Density {
 export class Gravity {
   /**
    * current gravity sample rates in meters per second per second (m/s2)
-   * https://en.wikipedia.org/wiki/Gravity_of_Earth#Mathematical_models
    */
   public static readonly earth: number = 9.80665;
   public static readonly current: number = Gravity.earth;
 
+  /**
+   * Calculated gravity based on altitude.
+   * E.g. at 0 meters (sea level) it is the known value 9.80665 meters per square second.
+   * https://en.wikipedia.org/wiki/Gravity_of_Earth#Mathematical_models
+   * 
+   * @param altitude Altitude above sea level in meters, where seal level = 0 m.
+   * @returns Gravity value as number representing meters per square second.
+   */
   public static atAltitude(altitude: number): number {
     // https://en.wikipedia.org/wiki/Earth_radius
     const earthRadius = 6371000; // meters 

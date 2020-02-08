@@ -159,8 +159,8 @@ export class Gas {
 
     public ceiling(isFreshWater: boolean): number {
         const minppO2 = 0.18;
-        const ration = minppO2 / this.fO2;
-        const bars = ration * AltitudePressure.current;
+        const ratio = minppO2 / this.fO2;
+        const bars = ratio * AltitudePressure.current;
 
         // hyperoxic gases have pressure bellow sea level, which cant be converted to depth
         // simplyfied untill altitude diving is implemented

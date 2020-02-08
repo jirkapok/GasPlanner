@@ -120,10 +120,6 @@ export class PressureConverter {
    * @returns >Pascal derived unit of pressure from bars.
    */
   public static barToPascal(bars: number): number {
-    if (!bars) {
-      bars = 1;
-    }
-
     return bars * (SurfacePressure.current * PressureConverter.coefficient);
   };
 

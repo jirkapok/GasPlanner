@@ -9,9 +9,8 @@ describe('Depth Converter', () => {
     });
 
     it('1 bar converts to 0 m', () => {
-      // TODO fix barToPascal for 0 should return 0
       const result = DepthConverter.fromBar(1, true);
-      expect(result).toBeCloseTo(10.19716, 5);
+      expect(result).toBe(0);
     });
 
     it('22 m converts to 3.157 bar', () => {
@@ -25,7 +24,7 @@ describe('Depth Converter', () => {
     });
   });
 
-  describe('Salst water', () => {
+  describe('Salt water', () => {
 
     it('0 m converts to 1 bar', () => {
       const result = DepthConverter.toBar(0, false);
@@ -33,9 +32,8 @@ describe('Depth Converter', () => {
     });
 
     it('1 bar converts to 0 m', () => {
-      // TODO fix barToPascal for 0 should return 0
       const result = DepthConverter.fromBar(1, false);
-      expect(result).toBeCloseTo(9.90016, 5);
+      expect(result).toBe(0);
     });
 
     it('22 m converts to 3.222 bar', () => {

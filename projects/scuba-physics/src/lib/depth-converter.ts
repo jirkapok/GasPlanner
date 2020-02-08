@@ -9,14 +9,8 @@ export class DepthConverter {
    * @returns The absolute pressure (in bars) for the given depth (in meters) of 1 cubic meter volume of water below the surface.
    */
   public static toBar(depth: number, isFreshWater: boolean): number {
-    var liquidDensity;
-    if (isFreshWater) {
-      liquidDensity = Density.fresh;
-    } else {
-      liquidDensity = Density.salt;
-    }
-
-    var weightDensity = liquidDensity * Gravity.current;
+    const liquidDensity = DepthConverter.densityByWater(isFreshWater);
+    const weightDensity = liquidDensity * Gravity.current;
     return PressureConverter.pascalToBar((depth * weightDensity)) + AltitudePressure.current;
   }
 
@@ -28,19 +22,20 @@ export class DepthConverter {
    * @returns The depth (in meters) for the given number of atmospheres.
    */
   public static fromBar(bars: number, isFreshWater: boolean): number {
-    var liquidDensity;
-    if (isFreshWater) {
-      liquidDensity = Density.fresh;
-    } else {
-      liquidDensity = Density.salt;
-    }
+    if(bars < AltitudePressure.current)
+        throw 'Lower pressure than altidude isn`t convertible to depth.';
 
-    if (!bars) {
-      bars = 1;
-    }
-
-    var weightDensity = liquidDensity * Gravity.current;
-    var pressure = PressureConverter.barToPascal(bars - AltitudePressure.current);
+    const liquidDensity = DepthConverter.densityByWater(isFreshWater);
+    const weightDensity = liquidDensity * Gravity.current;
+    const pressure = PressureConverter.barToPascal(bars - AltitudePressure.current);
     return pressure / weightDensity;
+  }
+
+  private static densityByWater(isFreshWater: boolean): number {
+    if (isFreshWater) {
+      return Density.fresh;
+    }
+
+    return Density.salt;
   }
 }

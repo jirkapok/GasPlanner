@@ -34,6 +34,13 @@ export class Gravity {
    */
   public static readonly earth: number = 9.80665;
   public static readonly current: number = Gravity.earth;
+
+  public static atAltitude(altitude: number): number {
+    // https://en.wikipedia.org/wiki/Earth_radius
+    const earthRadius = 6371000; // meters 
+    const relativeRadius = earthRadius / (earthRadius + altitude);
+    return Gravity.earth * Math.pow(relativeRadius, 2);
+  }
 }
 
 export class AltitudePressure {

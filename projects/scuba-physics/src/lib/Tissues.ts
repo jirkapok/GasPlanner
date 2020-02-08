@@ -13,7 +13,7 @@ export class Tissue extends Compartment {
        super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
         compartment.HeHalfTime, compartment.heA, compartment.heB);
         
-        const absPressure = 1; // TODO altitude diving
+        const absPressure = AltitudePressure.current; // TODO altitude diving
         const bodyTemperature = 35.2; 
         const waterVapourPressure = VapourPressure.waterVapourPressureInBars(bodyTemperature);
         this._pN2 = PressureConverter.partialPressure(absPressure, 0.79) - waterVapourPressure;

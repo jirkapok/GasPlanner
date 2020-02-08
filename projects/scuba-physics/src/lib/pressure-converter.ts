@@ -26,7 +26,6 @@ export class Density {
   public static readonly mercury: number = Density.density(13595.1, 1);
 };
 
-// TODO add the Gravity function based on altitude
 export class Gravity {
   /**
    * current gravity sample rates in meters per second per second (m/s2)
@@ -50,9 +49,28 @@ export class Gravity {
   }
 }
 
+/**
+ * https://en.wikipedia.org/wiki/Barometric_formula#Derivation
+ */
 export class AltitudePressure {
+  public static readonly standard: number = 1.01325;
   public static readonly seaLevel: number = 1;
   public static readonly current: number = AltitudePressure.seaLevel;
+
+  // TODO add the Gravity function based on altitude
+  public static atAltitude(altitude: number): number {
+    // https://en.wikipedia.org/wiki/International_Standard_Atmosphere
+    const gasConstant = 8.31432; // J/(mol·K) for air
+    const temperature = 288.15; // kelvin = 15°C
+    const lapsRate = -0.0065;  // kelvin/meter
+    const molarMass = 0.0289644; // kg/mol
+
+    const standardPressure = PressureConverter.barToPascal(this.standard);
+    const gravity = Gravity.earth;
+    const base = temperature / (temperature + lapsRate * altitude);
+    const exponent = (gravity * molarMass) / (gasConstant * lapsRate);
+    return standardPressure * Math.pow(base, exponent);
+  }
 }
 
 /**

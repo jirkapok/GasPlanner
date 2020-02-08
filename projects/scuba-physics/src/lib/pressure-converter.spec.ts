@@ -1,4 +1,4 @@
-import { PressureConverter, VapourPressure, Gravity } from './pressure-converter';
+import { PressureConverter, VapourPressure, Gravity, AltitudePressure } from './pressure-converter';
 
 describe('Pressure Converter', () => {
   it('315700 pascals converts to 3.157 bar', () => {
@@ -85,5 +85,32 @@ describe('Altitude pressure', () => {
       const gravity = Gravity.atAltitude(3000);
       expect(gravity).toBeCloseTo(9.79742, 5);
     });
+  });
+});
+
+describe('Altitude pressure', () => {
+  it('At sea level is 10325 Pa', () => {
+    const gravity = AltitudePressure.atAltitude(0);
+    expect(gravity).toBeCloseTo(101325);
+  });
+
+  it('400 level is 96611 Pa', () => {
+    const gravity = AltitudePressure.atAltitude(400);
+    expect(gravity).toBeCloseTo(96611, 0);
+  });
+
+  it('1000 level is 89875 Pa', () => {
+    const gravity = AltitudePressure.atAltitude(1000);
+    expect(gravity).toBeCloseTo(89875, 0);
+  });
+
+  it('2000 level is 79495 Pa', () => {
+    const gravity = AltitudePressure.atAltitude(2000);
+    expect(gravity).toBeCloseTo(79495, 0);
+  });
+
+  it('3000 level is 70109 Pa', () => {
+    const gravity = AltitudePressure.atAltitude(3000);
+    expect(gravity).toBeCloseTo(70109, 0);
   });
 });

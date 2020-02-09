@@ -9,38 +9,38 @@ import { AltitudePressure } from "./pressure-converter";
 export class GasesValidator {
     public static validate(bottomGases: Gas[], decoGases: Gas[], options: GasOptions, maxDepth: number): string[] {
         const messages = [];
-        if(!bottomGases || !decoGases) {
-           messages.push('Both bottom gases and deco gases have to befined, even empty.');
-           return messages;
+        if (!bottomGases || !decoGases) {
+            messages.push('Both bottom gases and deco gases have to befined, even empty.');
+            return messages;
         }
 
-        if(bottomGases.length < 1) {
-           messages.push('At least one bottom gas as to be defined.');
-           return messages;
+        if (bottomGases.length < 1) {
+            messages.push('At least one bottom gas as to be defined.');
+            return messages;
         }
 
         const gases = bottomGases.concat(decoGases);
         this.validateByMod(gases, options, maxDepth, messages);
-        
+
         gases.sort((a, b) => a.ceiling(options.isFreshWater) - b.ceiling(options.isFreshWater));
-        if(gases[0].ceiling(options.isFreshWater) > 0)
-           messages.push('No gas available to surface.');
+        if (gases[0].ceiling(options.isFreshWater) > 0)
+            messages.push('No gas available to surface.');
 
         return messages;
     }
 
     private static validateByMod(gases: Gas[], options: GasOptions, maxDepth: number, messages: string[]) {
         gases.sort((a, b) => b.mod(options.maxppO2, options.isFreshWater) - a.mod(options.maxppO2, options.isFreshWater));
-        
-        if(gases[0].mod(options.maxppO2, options.isFreshWater) < maxDepth)
-            messages.push('No gas available to maximum depth.'); 
 
-        for(let index = 0; index < gases.length - 1; index++) {
-            if(gases.length > index) {
+        if (gases[0].mod(options.maxppO2, options.isFreshWater) < maxDepth)
+            messages.push('No gas available to maximum depth.');
+
+        for (let index = 0; index < gases.length - 1; index++) {
+            if (gases.length > index) {
                 const nextGas = gases[index + 1];
                 const ceiling = gases[index].ceiling(options.isFreshWater);
                 const nextMod = nextGas.mod(options.maxppO2, options.isFreshWater);
-                if(nextMod < ceiling) {
+                if (nextMod < ceiling) {
                     messages.push('Gases don`t cover all depths.');
                     break;
                 }
@@ -73,9 +73,9 @@ export class Gases {
 
     public bestDecoGas(depth: number, options: GasOptions): Gas {
         let decoGas = Gases.bestGas(this.decoGases, depth, options);
-        if(decoGas)
+        if (decoGas)
             return decoGas;
-        
+
         return Gases.bestGas(this.bottomGases, depth, options);
     }
 
@@ -138,7 +138,7 @@ export class Gas {
      * @returns Depth in meters.
      */
     public mod(ppO2: number, isFreshWater: boolean): number {
-        return GasPressures.mod(ppO2, this.fO2, isFreshWater);
+        return GasMixutures.mod(ppO2, this.fO2, isFreshWater);
     };
 
     /**
@@ -149,29 +149,15 @@ export class Gas {
      * @returns Depth in meters.
      */
     public end(depth: number, isFreshWater: boolean): number {
-        // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
-        const narcIndex = this.fO2 + this.fN2;
-        const bars = DepthConverter.toBar(depth, isFreshWater);
-        const equivalentBars = bars * narcIndex;
-        return DepthConverter.fromBar(equivalentBars, isFreshWater);
+        return GasMixutures.end(this.fO2, this.fN2, depth, isFreshWater);
     };
 
     public ceiling(isFreshWater: boolean): number {
-        const minppO2 = 0.18;
-        const ratio = minppO2 / this.fO2;
-        const bars = ratio * AltitudePressure.current;
-
-        // hyperoxic gases have pressure bellow sea level, which cant be converted to depth
-        // simplyfied untill altitude diving is implemented
-        if(bars < AltitudePressure.current)
-            return 0;
-
-        const depth = DepthConverter.fromBar(bars, isFreshWater);
-        return depth; 
+        return GasMixutures.ceiling(this.fO2, isFreshWater);
     }
 }
 
-export class GasPressures {
+export class GasMixutures {
     /**
      * Calculates the partial pressure of a gas component from the volume gas fraction and total pressure.
      * 
@@ -180,18 +166,82 @@ export class GasPressures {
      * @returns The partial pressure of gas component in bar absolute.
      */
     public static partialPressure(absPressure: number, volumeFraction: number): number {
-      return absPressure * volumeFraction;
+        return absPressure * volumeFraction;
     };
-  
+
     /**
      * Calculates Maximum operation depth for given mix.
      * 
      * @param ppO2 - Partial pressure constant.
      * @param fO2 - Fraction of Oxygen in gas.
+     * @param isFreshWater True, if fresh water should be used.
      * @returns Depth in meters. 
      */
-      public static mod(ppO2: number, fO2: number, isFreshWater: boolean): number {
+    public static mod(ppO2: number, fO2: number, isFreshWater: boolean): number {
         const bars = ppO2 / fO2;
         return DepthConverter.fromBar(bars, isFreshWater);
     }
-  }
+
+    /**
+     * Calculates best mix of nitrox gas for given depth.
+     * 
+     * @param pO2 - Partial pressure constant.
+     * @param depth - Current depth in meters.
+     * @param isFreshWater True, if fresh water should be used.
+     * @returns Fraction of oxygen in required gas (0-1).
+     */
+    public static bestMix(pO2: number, depth: number, isFreshWater): number {
+        const bar = DepthConverter.toBar(depth, isFreshWater);
+        return pO2 / bar;
+    }
+
+    /**
+    * Calculates equivalent air depth for given nitrox gas mix.
+    * 
+    * @param fO2 - Fraction of Oxygen in gas mix (0-1).
+    * @param depth - Current depth in meters.
+    * @returns Depth in meters.
+    */
+    public static ead(fO2: number, depth: number): number {
+        const fN2 = 1 - fO2;
+        return fN2 * (depth + 10) / 0.79 - 10;
+    }
+
+    /**
+     * Calculates equivalent narcotic depth.
+     * 
+     * @param fO2 Fraction of oxygen in gas mix (0-1).
+     * @param fN2 Fraction of nytrogen in gas mix (0-1).
+     * @param depth Depth in meters.
+     * @param isFreshWater True, if fresh water should be used.
+     * @returns Depth in meters.
+     */
+    public static end(fO2: number, fN2: number, depth: number, isFreshWater: boolean): number {
+        // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
+        const narcIndex = fO2 + fN2;
+        const bars = DepthConverter.toBar(depth, isFreshWater);
+        const equivalentBars = bars * narcIndex;
+        return DepthConverter.fromBar(equivalentBars, isFreshWater);
+    };
+
+    /**
+     * Calculates minimum depth at which the gas is breathe able.
+     * 
+     * @param fO2 Fraction of oxygen in gas mix (0-1).
+     * @param isFreshWater True, if fresh water should be used.
+     * @returns Depth in meters.  
+     */
+    public static ceiling(fO2: number, isFreshWater: boolean): number {
+        const minppO2 = 0.18;
+        const ratio = minppO2 / fO2;
+        const bars = ratio * AltitudePressure.current;
+
+        // hyperoxic gases have pressure bellow sea level, which cant be converted to depth
+        // simplyfied untill altitude diving is implemented
+        if (bars < AltitudePressure.current)
+            return 0;
+
+        const depth = DepthConverter.fromBar(bars, isFreshWater);
+        return depth;
+    }
+}

@@ -1,5 +1,5 @@
 import { DepthConverter } from "./depth-converter";
-import { GasPressures } from "./Gases";
+import { GasMixutures } from "./Gases";
 
 export class NitroxCalculator {
     
@@ -11,21 +11,20 @@ export class NitroxCalculator {
    * @returns Percents of oxygen fraction in required gas.
    */
   public static bestMix(pO2: number, depth: number): number {
-    const bar = DepthConverter.toBar(depth, true);
-    const result = pO2 * 100 / bar;
+    const result = GasMixutures.bestMix(pO2, depth, true) * 100 ;
     return Math.floor(result * 100) / 100;
   }
 
   /**
    * Calculates equivalent air depth for given nitrox gas mix.
    * 
-   * @param fO2 - Percents of Oxygen fraction in gas.
+   * @param percentO2 - Percents of Oxygen fraction in gas.
    * @param depth - Current depth in meters.
    * @returns Depth in meters.
    */
-  public static ead(fO2: number, depth: number): number {
-    const fN2 = 1 - fO2 / 100;
-    const result = fN2 * (depth + 10) / 0.79 - 10;
+  public static ead(percentO2: number, depth: number): number {
+    const fO2  = percentO2 / 100;
+    const result = GasMixutures.ead(fO2, depth);
     return Math.ceil(result * 100) / 100;
   }
 
@@ -38,7 +37,7 @@ export class NitroxCalculator {
    */
   public static mod(ppO2: number, percentO2: number): number {
     const fO2 = percentO2 / 100;
-    const result = GasPressures.mod(ppO2, fO2, true);
+    const result = GasMixutures.mod(ppO2, fO2, true);
     return Math.floor(result * 100) / 100;
   }
 
@@ -51,7 +50,7 @@ export class NitroxCalculator {
    */
   public static partialPressure(fO2: number, depth: number): number {
     const bar = DepthConverter.toBar(depth, true);
-    const result = GasPressures.partialPressure(bar, fO2) / 100;
+    const result = GasMixutures.partialPressure(bar, fO2) / 100;
     return Math.ceil(result * 100) / 100;
   }
 }

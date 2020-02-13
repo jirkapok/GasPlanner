@@ -1,6 +1,11 @@
 <form #f="ngForm" name="form" novalidate>
 <div class="container mt-5">
   <div class="row">
+    <ngb-alert type="warning" *ngIf="showDisclaimer" (close)="showDisclaimer = false" class="mt-4">
+      <fa-icon [icon]="exclamation" class="mr-2 fa-lg"></fa-icon>
+      <span><strong>Disclaimer:</strong> None of the authors, contributors, administrators, or anyone else connected with this project can be responsible
+        for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.</span>
+    </ngb-alert>
     <div class="col-lg-3 col-md-6 mt-4">
       <app-gases (validate)="f.form.updateValueAndValidity()"></app-gases>
     </div>

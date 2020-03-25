@@ -1,6 +1,6 @@
-import { Tissues } from "./Tissues";
-import { Gases, Gas, GasOptions } from "./Gases";
-import { Segment, Segments } from "./Segments";
+import { Tissues } from './Tissues';
+import { Gases, Gas, GasOptions } from './Gases';
+import { Segment, Segments } from './Segments';
 
 export class Options implements GasOptions {
     private _ascentSpeed: number;
@@ -16,7 +16,7 @@ export class Options implements GasOptions {
         public maxEND: number,
         public isFreshWater: boolean,
         ascentSpeed?: number
-    ){
+    ) {
         maintainTissues = maintainTissues || false;
         gfLow = gfLow || 1.0;
         gfHigh = gfHigh || 1.0;
@@ -57,11 +57,13 @@ export class BuhlmannAlgorithm {
             }
         }
 
-        const gfDiff = options.gfHigh - options.gfLow; //find variance in gradient factor
+        const gfDiff = options.gfHigh - options.gfLow; // find variance in gradient factor
         const distanceToSurface = fromDepth;
-        const gfChangePerMeter = gfDiff/distanceToSurface
+        const gfChangePerMeter = gfDiff / distanceToSurface;
+        let origTissues = '';
+
         if (!options.maintainTissues) {
-            var origTissues = JSON.stringify(this.tissues);
+            origTissues = JSON.stringify(this.tissues);
         }
 
         let ceiling = this.tissues.ceiling(options.gfLow, options.isFreshWater);
@@ -69,10 +71,10 @@ export class BuhlmannAlgorithm {
         currentGas = this.addDecoDepthChange(fromDepth, ceiling, currentGas, options);
 
         while (ceiling > 0) {
-            var currentDepth = ceiling;
-            var nextDecoDepth = (ceiling - Tissues.decoStopDistance);
-            var time = 0;
-            var gf = options.gfLow + (gfChangePerMeter * (distanceToSurface - ceiling));
+            const currentDepth = ceiling;
+            const nextDecoDepth = (ceiling - Tissues.decoStopDistance);
+            let time = 0;
+            const gf = options.gfLow + (gfChangePerMeter * (distanceToSurface - ceiling));
             while (ceiling > nextDecoDepth && time <= 10000) {
                 this.addFlat(currentDepth, currentGas, 1, options.isFreshWater);
                 time++;
@@ -86,7 +88,7 @@ export class BuhlmannAlgorithm {
         }
 
          return Segments.mergeFlat(this.segments);
-    };
+    }
 
     private addDecoDepthChange(fromDepth: number, toDepth: number, currentGas: Gas, options: Options) {
         // TODO add multilevel dive where toDepth > fromDepth - since this expects ascend
@@ -97,20 +99,20 @@ export class BuhlmannAlgorithm {
             }
         }
 
-        while (toDepth < fromDepth) { //if ceiling is higher, move our diver up.
-            //ensure we're on the best gas
-            let bestGas = this.gases.bestDecoGas(fromDepth, options);
+        while (toDepth < fromDepth) { // if ceiling is higher, move our diver up.
+            // ensure we're on the best gas
+            const bestGas = this.gases.bestDecoGas(fromDepth, options);
             currentGas = Gases.switchGas(bestGas, currentGas);
-            let ceiling = this.gases.nextGasSwitch(currentGas, fromDepth, toDepth, options);
+            const ceiling = this.gases.nextGasSwitch(currentGas, fromDepth, toDepth, options);
 
-            //take us to the ceiling using ascent speed
+            // take us to the ceiling using ascent speed
             const depthdiff = fromDepth - ceiling;
             const time = depthdiff / options.ascentSpeed;
             this.addDepthChange(fromDepth, ceiling, currentGas, time, options.isFreshWater);
-            fromDepth = ceiling; //move up from-depth
+            fromDepth = ceiling; // move up from-depth
         }
 
-        let bestGas = this.gases.bestDecoGas(fromDepth, options);
+        const bestGas = this.gases.bestDecoGas(fromDepth, options);
         currentGas = Gases.switchGas(bestGas, currentGas);
         return currentGas;
     }
@@ -132,25 +134,25 @@ export class BuhlmannAlgorithm {
         }
 
         this.tissues = JSON.parse(origTissues);
-        
-        if (change == 0) {
+
+        if (change === 0) {
             return Number.POSITIVE_INFINITY;
         }
-        return time - 1; //We went one minute past a ceiling of "0"
-    };
+        return time - 1; // We went one minute past a ceiling of "0"
+    }
 
     public addFlat(depth: number, gas: Gas, time: number, isFreshWater: boolean): number {
         return this.addDepthChange(depth, depth, gas, time, isFreshWater);
-    };
+    }
 
     public addDepthChange(startDepth: number, endDepth: number, gas: Gas, time: number, isFreshWater: boolean) {
         if (!this.gases.isRegistered(gas)) {
             throw "Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.";
         }
 
-        let segment = new Segment(startDepth, endDepth, gas, time)
+        const segment = new Segment(startDepth, endDepth, gas, time)
         this.segments.push(segment);
         const loaded = this.tissues.load(startDepth, endDepth, gas.fO2, gas.fHe, time, isFreshWater);
         return loaded;
-    };
+    }
 }

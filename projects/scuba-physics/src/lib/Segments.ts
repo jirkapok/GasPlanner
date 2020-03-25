@@ -4,7 +4,7 @@ export class SegmentsValidator {
     public static validate(segments: Segment[], maxPpo: number, isFreshWater: boolean): string[] {
         const messages: string[] = [];
 
-        if(segments.length < 1){
+        if (segments.length < 1) {
             messages.push('There needs to be at least one segment at depth.');
         }
 
@@ -24,9 +24,7 @@ export class SegmentsValidator {
         }
 
         const segmentCeiling = Math.min(segment.startDepth, segment.endDepth);
-        console.log(segment.gas.fO2 + ',' + segment.gas.fHe)
         const gasCeiling = segment.gas.ceiling(isFreshWater);
-        console.log(gasCeiling);
 
         if (gasCeiling > segmentCeiling) {
             messages.push('Gas is not breathable at segment ceiling.');

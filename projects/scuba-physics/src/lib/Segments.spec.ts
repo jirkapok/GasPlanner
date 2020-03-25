@@ -3,7 +3,7 @@ import { Gas } from './Gases';
 
 describe('Segments', () => {
     const air = new Gas(0.21, 0); // 65.5m - 0m
-    const trimix1835 = new Gas(0.18, 0.35); // 78.1m - 9.9m
+    const trimix1070 = new Gas(0.1, 0.7);  // 148.5m - 7.9m
     const maxPpo = 1.6;
 
     describe('Segments validator', () => {
@@ -30,7 +30,7 @@ describe('Segments', () => {
         });
 
         it('Gas isn`t breathable at ceiling depths of segment', () => {
-            const first = new Segment(0, 30, trimix1835, 5);
+            const first = new Segment(0, 30, trimix1070, 5);
             const source: Segment[] = [first];
             const  messages = SegmentsValidator.validate(source, maxPpo, true);
             console.log(messages.join(','));

@@ -33,7 +33,6 @@ describe('Segments', () => {
             const first = new Segment(0, 30, trimix1070, 5);
             const source: Segment[] = [first];
             const  messages = SegmentsValidator.validate(source, maxPpo, true);
-            console.log(messages.join(','));
             expect(messages.length).toBe(1);
         });
     });

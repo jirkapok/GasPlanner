@@ -4,7 +4,7 @@ describe('Gases', () => {
   // for ppo2 1.6 test data (even not used all gases with these values)
   const air = new Gas(0.21, 0); // 65.5m - 0m
   const ean50 = new Gas(0.5, 0); // 21.8m - 0m
-  const trimix1835 = new Gas(0.18, 0.35); // 78.1m - 9.9m
+  const trimix1835 = new Gas(0.18, 0.35); // 78.1m - 0m
   const trimix1070 = new Gas(0.1, 0.7);  // 148.5m - 7.9m
   const oxygen = new Gas(1, 0);  // 5.9m - 0m
 
@@ -66,27 +66,27 @@ describe('Gases', () => {
       it('Gas as bottom gas is registered', () => {
         const gases = new Gases();
         gases.addBottomGas(air);
-        let registered = gases.isRegistered(air);
+        const registered = gases.isRegistered(air);
         expect(registered).toBeTrue();
       });
 
       it('Gas as deco, gas is registered', () => {
         const gases = new Gases();
         gases.addDecoGas(air);
-        let registered = gases.isRegistered(air);
+        const registered = gases.isRegistered(air);
         expect(registered).toBeTrue();
       });
 
       it('No gases, gas is not registered', () => {
         const gases = new Gases();
-        let registered = gases.isRegistered(air);
+        const registered = gases.isRegistered(air);
         expect(registered).toBeFalse();
       });
 
       it('Gas is not registered', () => {
         const gases = new Gases();
         gases.addDecoGas(ean50);
-        let registered = gases.isRegistered(air);
+        const registered = gases.isRegistered(air);
         expect(registered).toBeFalse();
       });
     });
@@ -96,14 +96,14 @@ describe('Gases', () => {
         const gases = new Gases();
         gases.addBottomGas(air);
         gases.addDecoGas(ean50);
-        let found = gases.bestDecoGas(20, options);
+        const found = gases.bestDecoGas(20, options);
         expect(found).toBe(ean50);
       });
 
       it('No deco gas, bottom gas is found', () => {
         const gases = new Gases();
         gases.addBottomGas(air);
-        let found = gases.bestDecoGas(20, options);
+        const found = gases.bestDecoGas(20, options);
         expect(found).toBe(air);
       });
 
@@ -112,7 +112,7 @@ describe('Gases', () => {
         gases.addBottomGas(air);
         gases.addDecoGas(ean50);
         gases.addDecoGas(trimix1835);
-        let found = gases.bestDecoGas(20, options);
+        const found = gases.bestDecoGas(20, options);
         expect(found).toBe(ean50);
       });
     });

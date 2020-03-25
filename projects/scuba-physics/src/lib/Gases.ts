@@ -61,32 +61,12 @@ export class Gases {
     private decoGases: Gas[] = [];
     private bottomGases: Gas[] = [];
 
-    public addBottomGas(gas: Gas) {
-        this.bottomGases.push(gas);
-    }
-
-    public addDecoGas(gas: Gas) {
-        this.decoGases.push(gas);
-    }
-
-    public isRegistered(gas: Gas): Boolean {
-        return this.bottomGases.includes(gas) || this.decoGases.includes(gas);
-    }
-
-    public bestDecoGas(depth: number, options: GasOptions): Gas {
-        let decoGas = Gases.bestGas(this.decoGases, depth, options);
-        if (decoGas)
-            return decoGas;
-
-        return Gases.bestGas(this.bottomGases, depth, options);
-    }
-
     private static bestGas(gases: Gas[], depth: number, options: GasOptions): Gas {
         let found = null;
-        for (let index in gases) {
-            let candidate = gases[index];
-            let mod = Math.round(candidate.mod(options.maxppO2, options.isFreshWater));
-            let end = Math.round(candidate.end(depth, options.isFreshWater));
+        for (const index in gases) {
+            const candidate = gases[index];
+            const mod = Math.round(candidate.mod(options.maxppO2, options.isFreshWater));
+            const end = Math.round(candidate.end(depth, options.isFreshWater));
 
             if (depth <= mod && end <= options.maxEND) {
                 if (!found || found.fO2 < candidate.fO2) {
@@ -95,21 +75,6 @@ export class Gases {
             }
         }
         return found;
-    }
-
-    /**
-     * Calculates depth of next gas switch in meters
-     */
-    public nextGasSwitch(currentGas: Gas, fromDepth: number, toDepth: number, options: GasOptions): number {
-        let ceiling = toDepth; //ceiling is toDepth, unless there's a better gas to switch to on the way up.
-        for (let nextDepth = fromDepth - 1; nextDepth >= ceiling; nextDepth--) {
-            let nextDecoGas = this.bestDecoGas(nextDepth, options);
-            if (Gases.canSwitch(nextDecoGas, currentGas)) {
-                ceiling = nextDepth; //Only carry us up to the point where we can use this better gas.
-                break;
-            }
-        }
-        return ceiling;
     }
 
     public static switchGas(newGas: Gas, current: Gas): Gas {
@@ -123,36 +88,72 @@ export class Gases {
     public static canSwitch(newGas: Gas, current: Gas): boolean {
         return newGas && newGas !== current;
     }
+
+    public addBottomGas(gas: Gas) {
+        this.bottomGases.push(gas);
+    }
+
+    public addDecoGas(gas: Gas) {
+        this.decoGases.push(gas);
+    }
+
+    public isRegistered(gas: Gas): Boolean {
+        return this.bottomGases.includes(gas) || this.decoGases.includes(gas);
+    }
+
+    public bestDecoGas(depth: number, options: GasOptions): Gas {
+        const decoGas = Gases.bestGas(this.decoGases, depth, options);
+        if (decoGas) {
+            return decoGas;
+        }
+
+        return Gases.bestGas(this.bottomGases, depth, options);
+    }
+
+    /**
+     * Calculates depth of next gas switch in meters
+     */
+    public nextGasSwitch(currentGas: Gas, fromDepth: number, toDepth: number, options: GasOptions): number {
+        let ceiling = toDepth; // ceiling is toDepth, unless there's a better gas to switch to on the way up.
+        for (let nextDepth = fromDepth - 1; nextDepth >= ceiling; nextDepth--) {
+            const nextDecoGas = this.bestDecoGas(nextDepth, options);
+            if (Gases.canSwitch(nextDecoGas, currentGas)) {
+                ceiling = nextDepth; // Only carry us up to the point where we can use this better gas.
+                break;
+            }
+        }
+        return ceiling;
+    }
 }
 
 export class Gas {
     public get fN2(): number {
         return 1 - this.fO2 - this.fHe;
-    };
+    }
 
     constructor(public fO2: number, public fHe: number) { }
 
     /**
      * Calculates maximum operation depth.
-     * 
+     *
      * @param ppO2 Partial pressure of oxygen.
      * @param isFreshWater True, if fresh water should be used.
      * @returns Depth in meters.
      */
     public mod(ppO2: number, isFreshWater: boolean): number {
         return GasMixutures.mod(ppO2, this.fO2, isFreshWater);
-    };
+    }
 
     /**
      * Calculates equivalent narcotic depth.
-     * 
+     *
      * @param depth Depth in meters.
      * @param isFreshWater True, if fresh water should be used.
      * @returns Depth in meters.
      */
     public end(depth: number, isFreshWater: boolean): number {
         return GasMixutures.end(this.fO2, this.fN2, depth, isFreshWater);
-    };
+    }
 
     public ceiling(isFreshWater: boolean): number {
         return GasMixutures.ceiling(this.fO2, isFreshWater);
@@ -162,22 +163,22 @@ export class Gas {
 export class GasMixutures {
     /**
      * Calculates the partial pressure of a gas component from the volume gas fraction and total pressure.
-     * 
+     *
      * @param absPressure - The total pressure P in bars (typically 1 bar of atmospheric pressure + x bars of water pressure).
      * @param volumeFraction - The volume fraction of gas component (typically 0.79 for 79%) measured as percentage in decimal.
      * @returns The partial pressure of gas component in bar absolute.
      */
     public static partialPressure(absPressure: number, volumeFraction: number): number {
         return absPressure * volumeFraction;
-    };
+    }
 
     /**
      * Calculates Maximum operation depth for given mix.
-     * 
+     *
      * @param ppO2 - Partial pressure constant.
      * @param fO2 - Fraction of Oxygen in gas.
      * @param isFreshWater True, if fresh water should be used.
-     * @returns Depth in meters. 
+     * @returns Depth in meters.
      */
     public static mod(ppO2: number, fO2: number, isFreshWater: boolean): number {
         const bars = ppO2 / fO2;
@@ -186,7 +187,7 @@ export class GasMixutures {
 
     /**
      * Calculates best mix of nitrox gas for given depth.
-     * 
+     *
      * @param pO2 - Partial pressure constant.
      * @param depth - Current depth in meters.
      * @param isFreshWater True, if fresh water should be used.
@@ -199,7 +200,7 @@ export class GasMixutures {
 
     /**
     * Calculates equivalent air depth for given nitrox gas mix.
-    * 
+    *
     * @param fO2 - Fraction of Oxygen in gas mix (0-1).
     * @param depth - Current depth in meters.
     * @returns Depth in meters.
@@ -211,7 +212,7 @@ export class GasMixutures {
 
     /**
      * Calculates equivalent narcotic depth.
-     * 
+     *
      * @param fO2 Fraction of oxygen in gas mix (0-1).
      * @param fN2 Fraction of nytrogen in gas mix (0-1).
      * @param depth Depth in meters.
@@ -224,14 +225,14 @@ export class GasMixutures {
         const bars = DepthConverter.toBar(depth, isFreshWater);
         const equivalentBars = bars * narcIndex;
         return DepthConverter.fromBar(equivalentBars, isFreshWater);
-    };
+    }
 
     /**
      * Calculates minimum depth at which the gas is breathe able.
-     * 
+     *
      * @param fO2 Fraction of oxygen in gas mix (0-1).
      * @param isFreshWater True, if fresh water should be used.
-     * @returns Depth in meters.  
+     * @returns Depth in meters.
      */
     public static ceiling(fO2: number, isFreshWater: boolean): number {
         const minppO2 = 0.18;
@@ -240,8 +241,9 @@ export class GasMixutures {
 
         // hyperoxic gases have pressure bellow sea level, which cant be converted to depth
         // simplyfied untill altitude diving is implemented
-        if (bars < AltitudePressure.current)
+        if (bars < AltitudePressure.current) {
             return 0;
+        }
 
         const depth = DepthConverter.fromBar(bars, isFreshWater);
         return depth;

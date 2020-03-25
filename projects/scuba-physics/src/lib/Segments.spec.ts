@@ -1,9 +1,43 @@
-import { Segment, Segments } from "./Segments";
-import { Gas } from "./Gases";
+import { Segment, Segments, SegmentsValidator } from './Segments';
+import { Gas } from './Gases';
 
 describe('Segments', () => {
-    const air = new Gas(0.21, 0);
-    
+    const air = new Gas(0.21, 0); // 65.5m - 0m
+    const trimix1835 = new Gas(0.18, 0.35); // 78.1m - 9.9m
+    const maxPpo = 1.6;
+
+    describe('Segments validator', () => {
+        it('At least one is required', () => {
+            const source: Segment[] = [];
+            const  messages = SegmentsValidator.validate(source, maxPpo, true);
+            expect(messages.length).toBe(1);
+        });
+
+        it('No messages for valid segments.', () => {
+            const first = new Segment(0, 30, air, 5);
+            const next = new Segment(20, 20, air, 5);
+            const source: Segment[] = [first, next];
+            const  messages = SegmentsValidator.validate(source, maxPpo, true);
+            expect(messages.length).toBe(0);
+        });
+
+        it('Gas isn`t breathable at bottom depths of segment', () => {
+            const oxygen = new Gas(1, 0);
+            const first = new Segment(20, 40, oxygen, 5);
+            const source: Segment[] = [first];
+            const  messages = SegmentsValidator.validate(source, maxPpo, true);
+            expect(messages.length).toBe(1);
+        });
+
+        it('Gas isn`t breathable at ceiling depths of segment', () => {
+            const first = new Segment(0, 30, trimix1835, 5);
+            const source: Segment[] = [first];
+            const  messages = SegmentsValidator.validate(source, maxPpo, true);
+            console.log(messages.join(','));
+            expect(messages.length).toBe(1);
+        });
+    });
+
     describe('Segments', () => {
         it('Merge flat segments', () => {
             const s1 = new Segment(0, 20, air, 15);

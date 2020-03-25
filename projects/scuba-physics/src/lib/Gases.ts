@@ -1,10 +1,10 @@
-import { DepthConverter } from "./depth-converter";
-import { AltitudePressure } from "./pressure-converter";
+import { DepthConverter } from './depth-converter';
+import { AltitudePressure } from './pressure-converter';
 
 /**
  * Returns list of messages if gases collection is incomplete to realize dive for required depth.
- * I.e. we need to cover all depths by breatheable gas up to surface.
- * Deco gases are prefeed for decompression, they dont have to be better.
+ * I.e. we need to cover all depths by breathable gas up to surface.
+ * Deco gases are prefered for decompression, they don't have to be better.
  */
 export class GasesValidator {
     public static validate(bottomGases: Gas[], decoGases: Gas[], options: GasOptions, maxDepth: number): string[] {
@@ -23,8 +23,9 @@ export class GasesValidator {
         this.validateByMod(gases, options, maxDepth, messages);
 
         gases.sort((a, b) => a.ceiling(options.isFreshWater) - b.ceiling(options.isFreshWater));
-        if (gases[0].ceiling(options.isFreshWater) > 0)
+        if (gases[0].ceiling(options.isFreshWater) > 0) {
             messages.push('No gas available to surface.');
+        }
 
         return messages;
     }
@@ -32,8 +33,9 @@ export class GasesValidator {
     private static validateByMod(gases: Gas[], options: GasOptions, maxDepth: number, messages: string[]) {
         gases.sort((a, b) => b.mod(options.maxppO2, options.isFreshWater) - a.mod(options.maxppO2, options.isFreshWater));
 
-        if (gases[0].mod(options.maxppO2, options.isFreshWater) < maxDepth)
+        if (gases[0].mod(options.maxppO2, options.isFreshWater) < maxDepth) {
             messages.push('No gas available to maximum depth.');
+        }
 
         for (let index = 0; index < gases.length - 1; index++) {
             if (gases.length > index) {

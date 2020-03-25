@@ -174,11 +174,13 @@ export class WayPoint {
     }
 
     public get swimDirection(): SwimDirection {
-        if(this.startDepth < this.endDepth)
+        if (this.startDepth < this.endDepth) {
           return SwimDirection.descent;
+        }
 
-        if(this.startDepth > this.endDepth)
+        if (this.startDepth > this.endDepth) {
           return SwimDirection.ascent;
+        }
 
         return SwimDirection.hover;
     }
@@ -195,7 +197,7 @@ export class WayPoint {
 
     public get averagePressure(): number {
         const averageDepth = (this.startDepth + this.endDepth) / 2;
-        return DepthConverter.toBar(averageDepth);
+        return DepthConverter.toBar(averageDepth, true);
     }
 
     public toLevel(duration: number, newDepth: number): WayPoint {

@@ -16,8 +16,8 @@
                     <fa-icon [icon]="swimDirectionIcon(point)" [ngClass]="iconClasses(point)"></fa-icon>
                 </td>
                 <td>{{ point.endDepth }}</td>
-                <td>{{ point.duration }}</td>
-                <td>{{ point.endTime }}</td>
+                <td>{{ point.duration | number:'1.0-2'}}</td>
+                <td>{{ point.endTime | number:'1.0-2'}}</td>
             </tr>
         </table>
     </div>

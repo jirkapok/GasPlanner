@@ -18,7 +18,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { GaslabelComponent } from './gaslabel/gaslabel.component';
 import { SacComponent } from './sac/sac.component';
 import { NitroxComponent } from './nitrox/nitrox.component';
-import { WayPointsComponent } from './waypoints/waypoints';
+import { WayPointsComponent } from './waypoints/waypoints.component';
 import { DiveProfileComponent } from './diveprofile/diveprofile.component';
 import { AboutComponent } from './about/about.component';
 import { AppFooterComponent } from './footer/footer.component';

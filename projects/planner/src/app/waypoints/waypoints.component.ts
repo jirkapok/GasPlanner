@@ -22,7 +22,7 @@ export class WayPointsComponent implements OnInit {
   }
 
   public swimDirectionIcon(point: WayPoint): IconDefinition {
-    switch(point.swimDirection) {
+    switch (point.swimDirection) {
       case SwimDirection.ascent: return this.up;
       case SwimDirection.descent: return this.down;
       default: return this.hover;

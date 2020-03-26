@@ -101,6 +101,8 @@ export class SafetyStop {
 }
 
 export class Plan {
+    public noDecoTime: number;
+
     constructor(public duration: number, public depth: number, public strategy: Strategies) {
     }
 
@@ -114,10 +116,6 @@ export class Plan {
 
     public get needsSafetyStop(): boolean {
         return this.depth >= SafetyStop.mandatoryDepth;
-    }
-
-    public get noDecoTime(): number {
-        return Decompression.noDecoTime(this.depth);
     }
 
     public get noDecoExceeded(): boolean {

@@ -14,6 +14,10 @@ export class PlannerService {
     return NitroxCalculator.mod(this.diver.maxPpO2, this.gas.o2);
   }
 
+  public noDecoTime(): number {
+      return Decompression.noDecoTime(this.plan.depth);
+  }
+
   public calculate() {
     this.dive.wayPoints = WayPointsService.calculateWayPoints(this.plan, this.gas);
     this.dive.timeToSurface = this.calculateTimeToSurface();

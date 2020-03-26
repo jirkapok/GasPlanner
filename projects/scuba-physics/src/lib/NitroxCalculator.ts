@@ -1,11 +1,11 @@
-import { DepthConverter } from "./depth-converter";
-import { GasMixutures } from "./Gases";
+import { DepthConverter } from './depth-converter';
+import { GasMixutures } from './Gases';
 
 export class NitroxCalculator {
-    
+
   /**
    * Calculates best mix of nitrox gas for given depth.
-   * 
+   *
    * @param pO2 - Partial pressure constant.
    * @param depth - Current depth in meters.
    * @returns Percents of oxygen fraction in required gas.
@@ -17,7 +17,7 @@ export class NitroxCalculator {
 
   /**
    * Calculates equivalent air depth for given nitrox gas mix.
-   * 
+   *
    * @param percentO2 - Percents of Oxygen fraction in gas.
    * @param depth - Current depth in meters.
    * @returns Depth in meters.
@@ -30,10 +30,10 @@ export class NitroxCalculator {
 
   /**
    * Calculates Maximum operation depth for given mix.
-   * 
+   *
    * @param ppO2 - Partial pressure constant.
    * @param percentO2 - Percents of Oxygen fraction in gas.
-   * @returns Depth in meters. 
+   * @returns Depth in meters.
    */
   public static mod(ppO2: number, percentO2: number): number {
     const fO2 = percentO2 / 100;
@@ -43,7 +43,7 @@ export class NitroxCalculator {
 
   /**
    * Calculates partial pressure constant for given mix at depth.
-   * 
+   *
    * @param fO2 - Percents of Oxygen fraction in gas.
    * @param depth - Current depth in meters.
    * @returns Constant value.

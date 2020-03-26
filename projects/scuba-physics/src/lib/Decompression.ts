@@ -2,7 +2,7 @@ export class Limit {
     public get depth(): number {
         return this._depth;
     }
-    public get time(): number{
+    public get time(): number {
         return this._time;
     }
 

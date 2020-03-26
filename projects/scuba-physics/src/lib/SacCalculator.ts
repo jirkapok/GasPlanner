@@ -1,4 +1,4 @@
-import { DepthConverter } from "./depth-converter";
+import { DepthConverter } from './depth-converter';
 
 /**
  * Surface air consumption formulas
@@ -6,7 +6,7 @@ import { DepthConverter } from "./depth-converter";
 export class SacCalculator {
     /**
      * Calculate surface air consumption in liter/minute
-     * 
+     *
      * @param depth - average depth in meters
      * @param tank - tank size in liters
      * @param used - amount of gas consumed in bars
@@ -21,7 +21,7 @@ export class SacCalculator {
 
     /**
      * Calculates how long given gas can be used at given depth.
-     * 
+     *
      * @param depth - average depth in meters
      * @param tank - tank size in liters
      * @param used - amount of gas consumed in bars
@@ -36,7 +36,7 @@ export class SacCalculator {
 
     /**
      * Calculates how much gas is consumed from tank at given depth by diver with given air consumption.
-     * 
+     *
      * @param depth - average depth in meters
      * @param tank - tank size in liters
      * @param duration - duration of the dive at depth in minutes

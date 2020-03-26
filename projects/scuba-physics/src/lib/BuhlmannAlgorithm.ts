@@ -43,17 +43,17 @@ export class BuhlmannAlgorithm {
     public calculateDecompression(options: Options, fromDepth: number = undefined) {
         let currentGas: Gas;
 
-        if (typeof fromDepth == 'undefined') {
-            if (this.segments.length == 0) {
-                throw "No depth to decompress from has been specified, and neither have any dive stages been registered. Unable to decompress.";
+        if (typeof fromDepth === 'undefined') {
+            if (this.segments.length === 0) {
+                throw new Error('No depth to decompress from has been specified, and neither have any dive stages been registered. Unable to decompress.');
             } else {
-                fromDepth = this.segments[this.segments.length-1].endDepth;
-                currentGas = this.segments[this.segments.length-1].gas;
+                fromDepth = this.segments[this.segments.length - 1].endDepth;
+                currentGas = this.segments[this.segments.length - 1].gas;
             }
         } else {
             currentGas = this.gases.bestDecoGas(fromDepth, options);
             if (!currentGas) {
-                throw "No deco gas found to decompress from provided depth " + fromDepth;
+                throw new Error('No deco gas found to decompress from provided depth ' + fromDepth);
             }
         }
 
@@ -95,7 +95,7 @@ export class BuhlmannAlgorithm {
         if (!currentGas) {
             currentGas = this.gases.bestDecoGas(fromDepth, options);
             if (!currentGas) {
-                throw "Unable to find starting gas to decompress at depth " + fromDepth + "..";
+                throw new Error('Unable to find starting gas to decompress at depth ' + fromDepth + '..');
             }
         }
 
@@ -147,10 +147,10 @@ export class BuhlmannAlgorithm {
 
     public addDepthChange(startDepth: number, endDepth: number, gas: Gas, time: number, isFreshWater: boolean) {
         if (!this.gases.isRegistered(gas)) {
-            throw "Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.";
+            throw new Error('Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.');
         }
 
-        const segment = new Segment(startDepth, endDepth, gas, time)
+        const segment = new Segment(startDepth, endDepth, gas, time);
         this.segments.push(segment);
         const loaded = this.tissues.load(startDepth, endDepth, gas.fO2, gas.fHe, time, isFreshWater);
         return loaded;

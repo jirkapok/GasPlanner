@@ -63,7 +63,7 @@ export class Gases {
 
     private static bestGas(gases: Gas[], depth: number, options: GasOptions): Gas {
         let found = null;
-        for (const index in gases) {
+        gases.forEach((element, index, source) => {
             const candidate = gases[index];
             const mod = Math.round(candidate.mod(options.maxppO2, options.isFreshWater));
             const end = Math.round(candidate.end(depth, options.isFreshWater));
@@ -73,7 +73,7 @@ export class Gases {
                     found = candidate;
                 }
             }
-        }
+        });
         return found;
     }
 
@@ -123,40 +123,6 @@ export class Gases {
             }
         }
         return ceiling;
-    }
-}
-
-export class Gas {
-    public get fN2(): number {
-        return 1 - this.fO2 - this.fHe;
-    }
-
-    constructor(public fO2: number, public fHe: number) { }
-
-    /**
-     * Calculates maximum operation depth.
-     *
-     * @param ppO2 Partial pressure of oxygen.
-     * @param isFreshWater True, if fresh water should be used.
-     * @returns Depth in meters.
-     */
-    public mod(ppO2: number, isFreshWater: boolean): number {
-        return GasMixutures.mod(ppO2, this.fO2, isFreshWater);
-    }
-
-    /**
-     * Calculates equivalent narcotic depth.
-     *
-     * @param depth Depth in meters.
-     * @param isFreshWater True, if fresh water should be used.
-     * @returns Depth in meters.
-     */
-    public end(depth: number, isFreshWater: boolean): number {
-        return GasMixutures.end(this.fO2, this.fN2, depth, isFreshWater);
-    }
-
-    public ceiling(isFreshWater: boolean): number {
-        return GasMixutures.ceiling(this.fO2, isFreshWater);
     }
 }
 
@@ -247,5 +213,39 @@ export class GasMixutures {
 
         const depth = DepthConverter.fromBar(bars, isFreshWater);
         return depth;
+    }
+}
+
+export class Gas {
+    public get fN2(): number {
+        return 1 - this.fO2 - this.fHe;
+    }
+
+    constructor(public fO2: number, public fHe: number) { }
+
+    /**
+     * Calculates maximum operation depth.
+     *
+     * @param ppO2 Partial pressure of oxygen.
+     * @param isFreshWater True, if fresh water should be used.
+     * @returns Depth in meters.
+     */
+    public mod(ppO2: number, isFreshWater: boolean): number {
+        return GasMixutures.mod(ppO2, this.fO2, isFreshWater);
+    }
+
+    /**
+     * Calculates equivalent narcotic depth.
+     *
+     * @param depth Depth in meters.
+     * @param isFreshWater True, if fresh water should be used.
+     * @returns Depth in meters.
+     */
+    public end(depth: number, isFreshWater: boolean): number {
+        return GasMixutures.end(this.fO2, this.fN2, depth, isFreshWater);
+    }
+
+    public ceiling(isFreshWater: boolean): number {
+        return GasMixutures.ceiling(this.fO2, isFreshWater);
     }
 }

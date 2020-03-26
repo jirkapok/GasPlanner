@@ -1,31 +1,31 @@
 export class Compartment {
 
     constructor(private _n2HalfTime: number, private _n2A: number, private _n2B: number,
-         private _heHalfTime: number, private _heA: number, private _heB: number){};
+         private _heHalfTime: number, private _heA: number, private _heB: number) {}
 
     public get n2HalfTime(): number {
         return this._n2HalfTime;
-    };
+    }
 
     public get n2A(): number {
         return this._n2A;
-    };
+    }
 
     public get n2B(): number {
         return this._n2B;
-    };
+    }
 
     public get HeHalfTime(): number {
         return this._heHalfTime;
-    };
+    }
 
     public get heA(): number {
         return this._heA;
-    };
+    }
 
     public get heB(): number {
         return this._heB;
-    };
+    }
 }
 
 export class Compartments {

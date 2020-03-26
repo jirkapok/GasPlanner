@@ -23,7 +23,7 @@ export class DepthConverter {
    */
   public static fromBar(bars: number, isFreshWater: boolean): number {
     if (bars < AltitudePressure.current) {
-        throw 'Lower pressure than altidude isn`t convertible to depth.';
+        throw new Error('Lower pressure than altitude isn`t convertible to depth.');
     }
 
     const liquidDensity = DepthConverter.densityByWater(isFreshWater);

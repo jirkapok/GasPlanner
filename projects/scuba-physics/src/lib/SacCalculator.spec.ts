@@ -1,5 +1,3 @@
-import { TestBed, inject } from '@angular/core/testing';
-
 import { SacCalculator } from './SacCalculator';
 
 describe('Sac Calculator', () => {

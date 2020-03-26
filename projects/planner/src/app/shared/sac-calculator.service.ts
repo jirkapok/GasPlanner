@@ -19,14 +19,14 @@ export class SacCalculatorService {
   private _calculation = SacMode.sac;
   private calculate: () => void = this.calculateSac;
 
-  constructor (){
+  constructor () {
     this.calculate();
   }
 
   public get depth(): number {
     return this._depth;
   }
-  
+
   public set depth(newValue: number) {
     this._depth = newValue;
     this.calculate();
@@ -35,7 +35,7 @@ export class SacCalculatorService {
   public get tank(): number {
     return this._tank;
   }
-  
+
   public set tank(newValue: number) {
     this._tank = newValue;
     this.calculate();
@@ -44,7 +44,7 @@ export class SacCalculatorService {
   public get sac(): number {
     return this._sac;
   }
-  
+
   public set sac(newValue: number) {
     this._sac = newValue;
     this.calculate();

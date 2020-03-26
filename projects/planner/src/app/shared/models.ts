@@ -94,6 +94,12 @@ export enum Strategies {
     THIRD = 3
 }
 
+export class SafetyStop {
+    public static readonly depth = 5;
+    public static readonly duration = 3;
+    public static readonly mandatoryDepth = 20;
+}
+
 export class Plan {
     constructor(public duration: number, public depth: number, public strategy: Strategies) {
     }
@@ -135,7 +141,7 @@ export class Dive {
     public noDecoExeeded = false;
     public wayPoints: WayPoint[] = [];
 
-    public get totalDuration(): number{
+    public get totalDuration(): number {
         return this.wayPoints[this.wayPoints.length - 1].endTime;
     }
 
@@ -214,10 +220,4 @@ export class WayPoint {
         result.startDepth = this.endDepth;
         return result;
     }
-}
-
-export class SafetyStop {
-    public static readonly depth = 5;
-    public static readonly duration = 3;
-    public static readonly mandatoryDepth = 20;
 }

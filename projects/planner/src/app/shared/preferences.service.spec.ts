@@ -10,7 +10,7 @@ describe('PreferencesService', () => {
     });
   });
 
-  it('loads saved values', inject([PreferencesService, PlannerService], 
+  it('loads saved values', inject([PreferencesService, PlannerService],
     (service: PreferencesService, planner: PlannerService) => {
       const ExpectedSac = 10;
       const diver = planner.diver;

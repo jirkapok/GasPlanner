@@ -48,7 +48,7 @@ describe('PlannerService', () => {
     it('30m for 20 minutes no decompression time exceeded', inject([PlannerService], (planner: PlannerService) => {
       planner.plan.duration = 20;
       planner.calculate();
-      expect(planner.dive.noDecoExeeded).toBeTruthy();
+      expect(planner.dive.noDecoExceeded).toBeTruthy();
     }));
   });
 });

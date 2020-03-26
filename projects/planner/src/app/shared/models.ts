@@ -120,6 +120,10 @@ export class Plan {
         return Decompression.noDecoTime(this.depth);
     }
 
+    public get noDecoExceeded(): boolean {
+        return this.duration > this.noDecoTime;
+    }
+
     public loadFrom(other: Plan): void {
         this.depth = other.depth;
         this.duration = other.duration;
@@ -138,7 +142,7 @@ export class Dive {
     public notEnoughGas = false;
     public depthExceeded = false;
     public notEnoughTime = false;
-    public noDecoExeeded = false;
+    public noDecoExceeded = false;
     public wayPoints: WayPoint[] = [];
 
     public get totalDuration(): number {
@@ -164,7 +168,7 @@ export class Dive {
     }
 
     public get hasErrors(): boolean {
-        return this.calculated && (this.notEnoughGas || this.depthExceeded || this.notEnoughTime || this.noDecoExeeded);
+        return this.calculated && (this.notEnoughGas || this.depthExceeded || this.notEnoughTime || this.noDecoExceeded);
     }
 }
 

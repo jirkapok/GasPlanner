@@ -29,7 +29,7 @@ export class PlannerService {
     this.dive.notEnoughGas = this.gas.endPressure < this.dive.rockBottom;
     this.dive.depthExceeded = this.plan.depth > this.gasMod;
     this.dive.notEnoughTime = this.plan.duration <= this.dive.timeToSurface;
-    this.dive.noDecoExeeded = this.plan.duration > Decompression.noDecoTime(this.plan.depth);
+    this.dive.noDecoExceeded = this.plan.noDecoExceeded;
     this.dive.calculated = true;
   }
 

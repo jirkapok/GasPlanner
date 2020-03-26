@@ -14,15 +14,14 @@ export class WayPointsComponent implements OnInit {
   public up = faArrowUp;
   public hover = faArrowRight;
   public tasks = faTasks;
-  
+
   constructor(private planer: PlannerService) { }
 
   ngOnInit() {
     this.dive = this.planer.dive;
   }
 
-  public swimDirectionIcon(point: WayPoint) : IconDefinition {
-    console.log(point.swimDirection);
+  public swimDirectionIcon(point: WayPoint): IconDefinition {
     switch(point.swimDirection) {
       case SwimDirection.ascent: return this.up;
       case SwimDirection.descent: return this.down;
@@ -31,11 +30,11 @@ export class WayPointsComponent implements OnInit {
   }
 
   public iconClasses(point: WayPoint): any {
-    let classes = {
-      "mr-3": true,
-      "swim-down": point.swimDirection == SwimDirection.descent,
-      "swim-up": point.swimDirection == SwimDirection.ascent,
-      "swim-hover": point.swimDirection == SwimDirection.hover,
+    const classes = {
+      'mr-3': true,
+      'swim-down': point.swimDirection === SwimDirection.descent,
+      'swim-up': point.swimDirection === SwimDirection.ascent,
+      'swim-hover': point.swimDirection === SwimDirection.hover,
     };
 
     return classes;

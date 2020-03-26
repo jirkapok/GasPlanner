@@ -1,27 +1,32 @@
-import { WayPoint, Plan, Diver, SafetyStop } from './models';
+import { WayPoint, Plan, Diver, SafetyStop, Gas } from './models';
+import { BuhlmannAlgorithm, Gas as BGas, Options } from 'scuba-physics';
 
 export class WayPointsService {
-    public static calculateWayPoints(plan: Plan): WayPoint[] {
+    public static calculateWayPoints(plan: Plan, gas: Gas): WayPoint[] {
         const wayPoints = [];
-
         const descent = this.createDescent(plan);
         const bottomTime = plan.duration - descent.duration;
-        const bottom = this.createLevel(descent, bottomTime);
-        wayPoints.push(descent, bottom);
-        this.createAscentPoints(plan, bottom, wayPoints);
-        return wayPoints;
-    }
 
-    private static createAscentPoints(plan: Plan, bottom: WayPoint, current: WayPoint[]): void {
-        if (plan.needsSafetyStop) {
-            const asc1 = this.createAscent(bottom, SafetyStop.depth);
-            const stop = this.createLevel(asc1, SafetyStop.duration);
-            const asc2 = this.createAscent(stop, 0);
-            current.push(asc1, stop, asc2);
-        } else {
-            const asc = this.createAscent(bottom, 0);
-            current.push(asc);
-        }
+        const algorithm = new BuhlmannAlgorithm();
+        const o2 = gas.o2 / 100;
+        const bGas = new BGas(o2, 0);
+        algorithm.addBottomGas(bGas);
+        algorithm.addDepthChange(0, plan.depth, bGas, descent.duration, true);
+        algorithm.addFlat(plan.depth, bGas, bottomTime, true);
+        const options = new Options(true, 0.2, 0.8, 1.6, 30, true);
+        const segments = algorithm.calculateDecompression(options);
+
+        let lastWayPoint = descent;
+        wayPoints.push(descent);
+        const exceptDescend = segments.slice(1);
+
+        exceptDescend.forEach((segment, index, source) => {
+            const waypoint = lastWayPoint.toLevel(segment.time, segment.endDepth);
+            lastWayPoint = waypoint;
+            wayPoints.push(waypoint);
+        });
+
+        return wayPoints;
     }
 
     private static createDescent(plan: Plan): WayPoint {
@@ -29,15 +34,5 @@ export class WayPointsService {
         const endDepth = plan.depth;
         const startPoint = new WayPoint(endDescend, endDepth);
         return startPoint;
-    }
-
-    private static createLevel(previous: WayPoint, duration: number): WayPoint {
-        const bottomDuration = duration; // including descent
-        return previous.toLevel(bottomDuration, previous.endDepth);
-    }
-
-    private static createAscent(previous: WayPoint, nextDepth: number): WayPoint {
-        const ascDuration = (previous.endDepth - nextDepth) / Diver.ascSpeed;
-        return previous.toLevel(ascDuration, nextDepth);
     }
 }

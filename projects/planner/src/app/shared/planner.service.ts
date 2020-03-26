@@ -15,7 +15,7 @@ export class PlannerService {
   }
 
   public calculate() {
-    this.dive.wayPoints = WayPointsService.calculateWayPoints(this.plan);
+    this.dive.wayPoints = WayPointsService.calculateWayPoints(this.plan, this.gas);
     this.dive.timeToSurface = this.calculateTimeToSurface();
     this.dive.rockBottom = this.calculateRockBottom();
     this.dive.maxTime = this.calculateMaxBottomTime();

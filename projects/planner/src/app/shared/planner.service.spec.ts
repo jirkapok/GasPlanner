@@ -21,14 +21,14 @@ describe('PlannerService', () => {
       expect(planner.dive.maxTime).toBe(20);
     }));
 
-    it('80 bar rock bottom', inject([PlannerService], (planner: PlannerService) => {
+    it('82 bar rock bottom', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();
-      expect(planner.dive.rockBottom).toBe(80);
+      expect(planner.dive.rockBottom).toBe(82);
     }));
 
-    it('108 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
+    it('107 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();
-      expect(planner.gas.endPressure).toBe(108);
+      expect(planner.gas.endPressure).toBe(107);
     }));
   });
 

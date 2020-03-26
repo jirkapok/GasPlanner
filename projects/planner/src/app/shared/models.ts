@@ -19,6 +19,13 @@ export class Gases {
 export class Gas {
     public consumed = 0;
 
+    /**
+     * Creates new instance of the Gas.
+     *
+     * @param size Volume in liters
+     * @param o2 Percents of oxygen e.g. 20%
+     * @param startPressure Filled in bars of gas
+     */
     constructor(public size: number,
         public o2: number,
         public startPressure: number) {
@@ -168,7 +175,7 @@ export class WayPoint {
     public endDepth = 0;
 
     constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
-        this.endTime = Math.round(duration);
+        this.endTime = Math.round(duration * 100) / 100;
         this.endDepth = newDepth;
         this.startDepth = previousDepth;
     }
@@ -203,7 +210,7 @@ export class WayPoint {
     public toLevel(duration: number, newDepth: number): WayPoint {
         const result = new WayPoint(duration, newDepth);
         result.startTime = this.endTime;
-        result.endTime = this.endTime + Math.round(duration);
+        result.endTime = this.endTime + Math.round(duration * 100) / 100;
         result.startDepth = this.endDepth;
         return result;
     }

@@ -1,24 +1,15 @@
 import { WayPoint, Plan, Diver, SafetyStop, Gas } from './models';
-import { BuhlmannAlgorithm, Gas as BGas, Options } from 'scuba-physics';
+import { BuhlmannAlgorithm, Gas as BGas, Options, Gases, Segments, Segment } from 'scuba-physics';
 
 export class WayPointsService {
     public static calculateWayPoints(plan: Plan, gas: Gas): WayPoint[] {
         const wayPoints = [];
         const descent = this.createDescent(plan);
-        const bottomTime = plan.duration - descent.duration;
-
-        const algorithm = new BuhlmannAlgorithm();
-        const o2 = gas.o2 / 100;
-        const bGas = new BGas(o2, 0);
-        algorithm.addBottomGas(bGas);
-        algorithm.addDepthChange(0, plan.depth, bGas, descent.duration, true);
-        algorithm.addFlat(plan.depth, bGas, bottomTime, true);
-        const options = new Options(true, 0.2, 0.8, 1.6, 30, true);
-        const segments = algorithm.calculateDecompression(options);
+        const finalSegments = this.calculateDecompression(plan, gas, descent);
 
         let lastWayPoint = descent;
         wayPoints.push(descent);
-        const exceptDescend = segments.slice(1);
+        const exceptDescend = finalSegments.slice(1);
 
         exceptDescend.forEach((segment, index, source) => {
             const waypoint = lastWayPoint.toLevel(segment.time, segment.endDepth);
@@ -27,6 +18,26 @@ export class WayPointsService {
         });
 
         return wayPoints;
+    }
+    static calculateDecompression(plan: Plan, gas: Gas, descent: WayPoint): Segment[] {
+        const bGas = this.toAlgorithmGas(gas);
+        const gases = new Gases();
+        gases.addBottomGas(bGas);
+
+        const segments = new Segments();
+        segments.add(0, plan.depth, bGas, descent.duration);
+        const bottomTime = plan.duration - descent.duration;
+        segments.addFlat(plan.depth, bGas, bottomTime);
+
+        const options = new Options(true, 0.2, 0.8, 1.6, 30, true);
+        const algorithm = new BuhlmannAlgorithm();
+        const finalSegments = algorithm.calculateDecompression(options, gases, segments);
+        return finalSegments;
+    }
+
+    private static toAlgorithmGas(gas: Gas): BGas {
+        const o2 = gas.o2 / 100;
+        return new BGas(o2, 0);
     }
 
     private static createDescent(plan: Plan): WayPoint {

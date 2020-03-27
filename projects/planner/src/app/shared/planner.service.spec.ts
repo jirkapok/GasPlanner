@@ -45,7 +45,7 @@ describe('PlannerService', () => {
       expect(planner.dive.notEnoughGas).toBeTruthy();
     }));
 
-    fit('30m for 20 minutes no decompression time exceeded', inject([PlannerService], (planner: PlannerService) => {
+    it('30m for 20 minutes no decompression time exceeded', inject([PlannerService], (planner: PlannerService) => {
       planner.plan.duration = 20;
       planner.calculate();
       expect(planner.dive.noDecoExceeded).toBeTruthy();

@@ -144,11 +144,11 @@ export class BuhlmannAlgorithm {
         return time - 1; // We went one minute past a ceiling of "0"
     }
 
-    public addFlat(segments: Segments, depth: number, gas: Gas, time: number, isFreshWater: boolean): number {
+    private addFlat(segments: Segments, depth: number, gas: Gas, time: number, isFreshWater: boolean): number {
         return this.addDepthChange(segments, depth, depth, gas, time, isFreshWater);
     }
 
-    public addDepthChange(segments: Segments, startDepth: number, endDepth: number, gas: Gas, time: number, isFreshWater: boolean) {
+    private addDepthChange(segments: Segments, startDepth: number, endDepth: number, gas: Gas, time: number, isFreshWater: boolean) {
         segments.add(startDepth, endDepth, gas, time);
         const loaded = this.tissues.load(startDepth, endDepth, gas.fO2, gas.fHe, time, isFreshWater);
         return loaded;

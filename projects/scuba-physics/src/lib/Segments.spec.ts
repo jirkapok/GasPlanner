@@ -39,19 +39,20 @@ describe('Segments', () => {
 
     describe('Segments', () => {
         it('Merge flat segments', () => {
-            const s1 = new Segment(0, 20, air, 15);
-            const s2 = new Segment(20, 20, air, 15);
-            const s3 = new Segment(20, 20, air, 35);
-            const s4 = new Segment(20, 5, air, 35);
-            const s5 = new Segment(5, 5, air, 3);
-            const s6 = new Segment(5, 5, air, 3);
-            const source = [s1, s2, s3, s4, s5, s6];
-            const merged = Segments.mergeFlat(source);
+            const segments = new Segments();
+            segments.add(0, 20, air, 15);
+            segments.add(20, 20, air, 15);
+            segments.add(20, 20, air, 35);
+            segments.add(20, 5, air, 35);
+            segments.add(5, 5, air, 3);
+            segments.add(5, 5, air, 3);
+            const merged = segments.mergeFlat();
             expect(merged.length).toBe(4);
         });
 
         it('Empty segments return empty array', () => {
-            const merged = Segments.mergeFlat([]);
+            const segments = new Segments();
+            const merged = segments.mergeFlat();
             expect(merged.length).toBe(0);
         });
     });

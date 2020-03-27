@@ -32,22 +32,6 @@ export class SegmentsValidator {
     }
 }
 
-export class Segments {
-    public static mergeFlat(segments: Segment[]): Segment[] {
-        const toRemove = [];
-        for (let index = segments.length - 1; index > 0; index--) {
-            const segment1 = segments[index - 1];
-            const segment2 = segments[index];
-            if (segment1.levelEquals(segment2)) {
-                segment1.addTime(segment2);
-                toRemove.push(segment2);
-            }
-        }
-
-        return segments.filter(s => !toRemove.includes(s));
-    }
-}
-
 export class Segment {
     constructor (
         public startDepth: number,
@@ -68,5 +52,52 @@ export class Segment {
 
     public addTime(toAdd: Segment): void {
         this.time += toAdd.time;
+    }
+}
+
+export class Segments {
+    private segments: Segment[] = [];
+
+    public add(startDepth: number, endDepth: number, gas: Gas, time: number) {
+        // TODO move to validator
+        // if (!gases.isRegistered(gas)) {
+        //     throw new Error('Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.');
+        // }
+
+        const segment = new Segment(startDepth, endDepth, gas, time);
+        this.segments.push(segment);
+    }
+
+    public addFlat(depth: number, gas: Gas, time: number) {
+        this.add(depth, depth, gas, time);
+    }
+
+    public mergeFlat(): Segment[] {
+        const toRemove = [];
+        for (let index = this.segments.length - 1; index > 0; index--) {
+            const segment1 = this.segments[index - 1];
+            const segment2 = this.segments[index];
+            if (segment1.levelEquals(segment2)) {
+                segment1.addTime(segment2);
+                toRemove.push(segment2);
+            }
+        }
+
+        this.segments = this.segments.filter(s => !toRemove.includes(s));
+        return this.segments;
+    }
+
+    public foreach(callBack: (segment: Segment) => void) {
+        this.segments.forEach((segment, index, source) => {
+            callBack(segment);
+        });
+    }
+
+    public any(): boolean {
+        return this.segments.length !== 0;
+    }
+
+    public last(): Segment {
+        return this.segments[this.segments.length - 1];
     }
 }

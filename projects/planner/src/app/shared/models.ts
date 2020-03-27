@@ -1,4 +1,4 @@
-import { DepthConverter, Decompression } from 'scuba-physics';
+import { DepthConverter, Gas as BGas } from 'scuba-physics';
 
 export enum StandardGas {
     Air = 21,
@@ -60,6 +60,10 @@ export class Gas {
         this.startPressure = other.startPressure;
         this.size = other.size;
         this.o2 = other.o2;
+    }
+
+    toGas(): BGas {
+        return new BGas(this.o2 / 100, 0);
     }
 }
 

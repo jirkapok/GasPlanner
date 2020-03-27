@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Plan, Diver, Dive, Gas, SafetyStop, WayPoint } from './models';
 import { WayPointsService } from './waypoints.service';
-import { NitroxCalculator, Decompression } from 'scuba-physics';
+import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas } from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
@@ -15,7 +15,11 @@ export class PlannerService {
   }
 
   public noDecoTime(): number {
-      return Decompression.noDecoTime(this.plan.depth);
+    const algorithm = new BuhlmannAlgorithm();
+    const depth = this.plan.depth;
+    const gas = this.gas.toGas();
+    const noDecoLimit = algorithm.noDecoLimit(depth, gas, 1, true);
+    return noDecoLimit;
   }
 
   public calculate() {

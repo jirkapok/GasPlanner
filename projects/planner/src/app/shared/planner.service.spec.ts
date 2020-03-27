@@ -10,6 +10,13 @@ describe('PlannerService', () => {
     });
   });
 
+  describe('no deco limit', () => {
+    it('is calculated', inject([PlannerService], (planner: PlannerService) => {
+      const noDecoLimit = planner.noDecoTime();
+      expect(noDecoLimit).toBe(17);
+    }));
+  });
+
   describe('30m for 15 minutes Calculates (defaults)', () => {
     it('8 minutes time to surface', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();

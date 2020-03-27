@@ -19,8 +19,9 @@ export class WayPointsService {
 
         return wayPoints;
     }
-    static calculateDecompression(plan: Plan, gas: Gas, descent: WayPoint): Segment[] {
-        const bGas = this.toAlgorithmGas(gas);
+
+    private static calculateDecompression(plan: Plan, gas: Gas, descent: WayPoint): Segment[] {
+        const bGas = gas.toGas();
         const gases = new Gases();
         gases.addBottomGas(bGas);
 
@@ -33,11 +34,6 @@ export class WayPointsService {
         const algorithm = new BuhlmannAlgorithm();
         const finalSegments = algorithm.calculateDecompression(options, gases, segments);
         return finalSegments;
-    }
-
-    private static toAlgorithmGas(gas: Gas): BGas {
-        const o2 = gas.o2 / 100;
-        return new BGas(o2, 0);
     }
 
     private static createDescent(plan: Plan): WayPoint {

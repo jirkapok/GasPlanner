@@ -30,7 +30,11 @@ export class WayPointsService {
         const bottomTime = plan.duration - descent.duration;
         segments.addFlat(plan.depth, bGas, bottomTime);
 
-        const options = new Options(true, 0.2, 0.8, 1.6, 30, true);
+        // Gradient factors in Shaerwater Teric
+        // Low (45/95)
+        // Med (40/85)
+        // High (35/75)
+        const options = new Options(true, 0.4, 0.85, 1.6, 30, true);
         const algorithm = new BuhlmannAlgorithm();
         const finalSegments = algorithm.calculateDecompression(options, gases, segments);
         return finalSegments;

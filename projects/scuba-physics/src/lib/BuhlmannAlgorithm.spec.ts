@@ -1,5 +1,5 @@
 import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
-import { Gas } from './Gases';
+import { Gas, Gases } from './Gases';
 import { Segment } from './Segments';
 
 describe('Buhlmann Algorithm', () => {
@@ -82,13 +82,15 @@ describe('Buhlmann Algorithm', () => {
     };
 
     it('5m for 30 minutes using ean32', () => {
-      const algorithm = new BuhlmannAlgorithm();
       const bottomGas: Gas = new Gas(0.32, 0);
-      algorithm.addBottomGas(bottomGas);
-      algorithm.addDepthChange(0, 5, bottomGas, 1, isFreshWater);
-      algorithm.addFlat(5, bottomGas, 30, isFreshWater);
+      const gases: Gases = new Gases();
+      gases.addBottomGas(bottomGas);
 
-      const decoPlan = algorithm.calculateDecompression(options);
+      const algorithm = new BuhlmannAlgorithm();
+      algorithm.addDepthChange(gases, 0, 5, bottomGas, 1, isFreshWater);
+      algorithm.addFlat(gases, 5, bottomGas, 30, isFreshWater);
+
+      const decoPlan = algorithm.calculateDecompression(options, gases);
       const planText = concatenatePlan(decoPlan);
 
       const epectedPlan = '0,5,1;5,5,30;5,0,0.5;';
@@ -96,13 +98,15 @@ describe('Buhlmann Algorithm', () => {
     });
 
     it('10m for 40 minutes using air', () => {
-      const algorithm = new BuhlmannAlgorithm();
+      const gases = new Gases();
       const bottomGas: Gas = new Gas(0.21, 0);
-      algorithm.addBottomGas(bottomGas);
-      algorithm.addDepthChange(0, 10, bottomGas, 1, isFreshWater);
-      algorithm.addFlat(10, bottomGas, 40, isFreshWater);
+      gases.addBottomGas(bottomGas);
 
-      const decoPlan = algorithm.calculateDecompression(options);
+      const algorithm = new BuhlmannAlgorithm();
+      algorithm.addDepthChange(gases, 0, 10, bottomGas, 1, isFreshWater);
+      algorithm.addFlat(gases, 10, bottomGas, 40, isFreshWater);
+
+      const decoPlan = algorithm.calculateDecompression(options, gases);
       const planText = concatenatePlan(decoPlan);
 
       const epectedPlan = '0,10,1;10,10,40;10,3,0.7;3,3,1;3,0,0.3;';
@@ -110,13 +114,15 @@ describe('Buhlmann Algorithm', () => {
     });
 
     it('30m for 25 minutes using air', () => {
-      const algorithm = new BuhlmannAlgorithm();
+      const gases = new Gases();
       const bottomGas: Gas = new Gas(0.21, 0);
-      algorithm.addBottomGas(bottomGas);
-      algorithm.addDepthChange(0, 30, bottomGas, 2, isFreshWater);
-      algorithm.addFlat(30, bottomGas, 25, isFreshWater);
+      gases.addBottomGas(bottomGas);
 
-      const decoPlan = algorithm.calculateDecompression(options);
+      const algorithm = new BuhlmannAlgorithm();
+      algorithm.addDepthChange(gases, 0, 30, bottomGas, 2, isFreshWater);
+      algorithm.addFlat(gases, 30, bottomGas, 25, isFreshWater);
+
+      const decoPlan = algorithm.calculateDecompression(options, gases);
       const planText = concatenatePlan(decoPlan);
 
       const epectedPlan = '0,30,2;30,30,25;30,15,1.5;15,15,1;15,9,0.6;9,9,1;9,6,0.3;6,6,3;6,3,0.3;3,3,10;3,0,0.3;';
@@ -124,15 +130,17 @@ describe('Buhlmann Algorithm', () => {
     });
 
     it('40m for 30 minutes using air and ean50', () => {
-      const algorithm = new BuhlmannAlgorithm();
+      const gases = new Gases();
       const bottomGas: Gas = new Gas(0.21, 0);
-      algorithm.addBottomGas(bottomGas);
+      gases.addBottomGas(bottomGas);
       const decoGas: Gas = new Gas(0.5, 0);
-      algorithm.addBottomGas(decoGas);
-      algorithm.addDepthChange(0, 40, bottomGas, 3, isFreshWater);
-      algorithm.addFlat(40, bottomGas, 30, isFreshWater);
+      gases.addBottomGas(decoGas);
 
-      const decoPlan = algorithm.calculateDecompression(options);
+      const algorithm = new BuhlmannAlgorithm();
+      algorithm.addDepthChange(gases, 0, 40, bottomGas, 3, isFreshWater);
+      algorithm.addFlat(gases, 40, bottomGas, 30, isFreshWater);
+
+      const decoPlan = algorithm.calculateDecompression(options, gases);
       const planText = concatenatePlan(decoPlan);
 
       const epectedPlan = '0,40,3;40,40,30;40,24,1.6;24,24,1;24,22,0.2;22,18,0.4;18,18,1;18,15,0.3;' +
@@ -141,15 +149,17 @@ describe('Buhlmann Algorithm', () => {
     });
 
     it('50m for 25 minutes using 21/35 and 50% nitrox', () => {
-      const algorithm = new BuhlmannAlgorithm(); // 1 abs pressure in fresh water
+      const gases = new Gases();
       const bottomGas: Gas = new Gas(0.21, 0.35);
-      algorithm.addBottomGas(bottomGas);
+      gases.addBottomGas(bottomGas);
       const decoGas: Gas = new Gas(0.5, 0.0);
-      algorithm.addDecoGas(decoGas);
-      algorithm.addDepthChange(0, 50, bottomGas, 5, isFreshWater);
-      algorithm.addFlat(50, bottomGas, 25, isFreshWater);
+      gases.addDecoGas(decoGas);
 
-      const decoPlan = algorithm.calculateDecompression(options);
+      const algorithm = new BuhlmannAlgorithm(); // 1 abs pressure in fresh water
+      algorithm.addDepthChange(gases, 0, 50, bottomGas, 5, isFreshWater);
+      algorithm.addFlat(gases, 50, bottomGas, 25, isFreshWater);
+
+      const decoPlan = algorithm.calculateDecompression(options, gases);
       const planText = concatenatePlan(decoPlan);
 
       const expectedPlan = '0,50,5;50,50,25;50,30,2;30,30,1;' +
@@ -160,17 +170,19 @@ describe('Buhlmann Algorithm', () => {
     });
 
     it('50m for 30 minutes using 21/35, 50% nitrox and oxygen', () => {
-      const algorithm = new BuhlmannAlgorithm(); // 1 abs pressure in fresh water
       const bottomGas: Gas = new Gas(0.21, 0.35);
-      algorithm.addBottomGas(bottomGas);
+      const gases = new Gases();
+      gases.addBottomGas(bottomGas);
       const ean50: Gas = new Gas(0.5, 0.0);
-      algorithm.addDecoGas(ean50);
+      gases.addDecoGas(ean50);
       const oxygen: Gas = new Gas(1, 0.0);
-      algorithm.addDecoGas(oxygen);
-      algorithm.addDepthChange(0, 50, bottomGas, 5, isFreshWater);
-      algorithm.addFlat(50, bottomGas, 30, isFreshWater);
+      gases.addDecoGas(oxygen);
 
-      const decoPlan = algorithm.calculateDecompression(options);
+      const algorithm = new BuhlmannAlgorithm(); // 1 abs pressure in fresh water
+      algorithm.addDepthChange(gases, 0, 50, bottomGas, 5, isFreshWater);
+      algorithm.addFlat(gases, 50, bottomGas, 30, isFreshWater);
+
+      const decoPlan = algorithm.calculateDecompression(options, gases);
       const planText = concatenatePlan(decoPlan);
 
       const expectedPlan = '0,50,5;50,50,30;50,30,2;30,30,1;30,22,0.8;22,21,0.1;21,21,1;21,18,0.3;18,18,1;' +

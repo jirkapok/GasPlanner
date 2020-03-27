@@ -17,10 +17,24 @@ None of the authors, contributors, administrators, or anyone else connected with
 * Only one gas tank
 * No repetitive dives
 
+## Road map
+
+* Add Segments validation as an input for bulhmann algorithm
+* Fix precision of decompression algorithm
+* Add option to define gradient factors
+* Add option to define safety stop range
+* Add Fresh/Salt water option
+* Add altitude option
+* Add switch recreational/technical divers
+* Allow define multiple gases
+* Allow to define multiple levels
+* Add help to all variables
+* Add localization
+* Add trimix calculator
+* Add option to define repetitive dives
+
 ## Calculations Background
 
-* Only one safety stop 3min. in 5 meters is currently supported (No deep stops nor GUE ascent stops).
-* The safety stop is required for dives below 20 m
 * Ascent speed 10m/min. and 20m/min. descend speed is used
 * When calculating ascent time 2 minutes are always added, to resolve immediate issues in depth.
 
@@ -30,7 +44,8 @@ To work on the application install NodeJs, AngularCli 8.3 and TypeScript. Recomm
 
 ## Build
 
-To compile the application compile it by `npm run build` and deploy `dist` directory. To start the app use `npm run start`. For debugging purpose. To deploy the application to github pages use `angular-cli-ghpages` npm package.
+To compile the application compile, first you need to install the dependency from local directory. To do so run `npm run build-lib`.
+Than compile solution by `npm run build` to deploy `dist` directory. To start the app use `npm run start` for debugging purpose.
 
 ## Running the tests
 

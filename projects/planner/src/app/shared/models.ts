@@ -222,7 +222,8 @@ export class WayPoint {
     public toLevel(duration: number, newDepth: number): WayPoint {
         const result = new WayPoint(duration, newDepth);
         result.startTime = this.endTime;
-        result.endTime = this.endTime + Math.round(duration * 100) / 100;
+        const end = this.endTime + duration;
+        result.endTime = Math.round(end * 100) / 100;
         result.startDepth = this.endDepth;
         return result;
     }

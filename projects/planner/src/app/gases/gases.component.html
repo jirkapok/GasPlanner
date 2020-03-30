@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header ">
       <fa-icon [icon]="bottle" rotate="270" class="mr-3"></fa-icon>
-      <span>Bottom gas</span>
+      <span>Bottom gas tank</span>
   </div>
   <div class="card-body">
       <div class="form-group">
@@ -24,7 +24,7 @@
       <div class="form-group">
         <label for="ppO2">Percent O2:</label>
         <div class="input-group">
-          <input #ppO2="ngModel" name="ppO2" [(ngModel)]="gas.o2" class="form-control" type="number"
+          <input #ppO2="ngModel" name="ppO2" [(ngModel)]="o2" class="form-control" type="number"
            min="21" max="100" [range]="[21, 100]" required
            [class.is-invalid]="ppO2.invalid && (ppO2.dirty || ppO2.touched)"/>
           <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">

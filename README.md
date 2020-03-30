@@ -12,8 +12,6 @@ None of the authors, contributors, administrators, or anyone else connected with
 
 List of current features is part of [application help](./doc/help.md). Road map of planned features:
 
-* Fix update of no deco limit in case of gas changed
-* No longer show disclaimer, when confirmed
 * Fix way points to show start time as run time and format to time
 * Fix representation of stops duration in way points table
 * Add Fresh/Salt water option (fix its usage in depth converter)

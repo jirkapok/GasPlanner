@@ -24,6 +24,15 @@ export class GasesComponent implements OnInit {
     this.gasNames = Gases.gasNames();
   }
 
+  public get o2(): number {
+    return this.gas.o2;
+  }
+
+  public set o2(newValue) {
+    this.gas.o2 = newValue;
+    this.planer.updateNoDecoTime();
+  }
+
   public gasSac(gas: Gas): number {
     return this.diver.gasSac(gas);
   }

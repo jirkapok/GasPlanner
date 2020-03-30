@@ -23,7 +23,7 @@ export class PlanComponent implements OnInit {
   ngOnInit(): void {
     this.plan = this.planer.plan;
     this.reset();
-    this.updateNoDecoTime();
+    this.planer.updateNoDecoTime();
   }
 
   @Input()
@@ -33,11 +33,7 @@ export class PlanComponent implements OnInit {
 
   public set plannedDepth(depth: number) {
     this.plan.depth = depth;
-    this.updateNoDecoTime();
-  }
-
-  private updateNoDecoTime(): void {
-    this.plan.noDecoTime = this.planer.noDecoTime();
+    this.planer.updateNoDecoTime();
   }
 
   public calculate(): void {

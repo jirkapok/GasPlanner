@@ -33,7 +33,7 @@ export class PlannerService {
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
 
-    this.plan.noDecoTime = this.noDecoTime();
+    this.updateNoDecoTime();
 
     this.dive.needsReturn = this.plan.needsReturn;
     this.dive.notEnoughGas = this.gas.endPressure < this.dive.rockBottom;
@@ -41,6 +41,10 @@ export class PlannerService {
     this.dive.notEnoughTime = this.plan.duration <= this.dive.timeToSurface;
     this.dive.noDecoExceeded = this.plan.noDecoExceeded;
     this.dive.calculated = true;
+  }
+
+  public updateNoDecoTime(): void {
+    this.plan.noDecoTime = this.noDecoTime();
   }
 
   private calculateTurnPressure(): number {

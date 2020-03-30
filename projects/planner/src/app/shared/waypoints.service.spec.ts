@@ -23,6 +23,6 @@ describe('WayPointsService', () => {
     const plan = new Plan(30, 10, Strategies.ALL);
 
     const wayPoints = WayPointsService.calculateWayPoints(plan, air);
-    expect(wayPoints.length).toBe(5);
+    expect(wayPoints.length).toBe(3);
   }));
 });

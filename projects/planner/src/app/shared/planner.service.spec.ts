@@ -23,19 +23,19 @@ describe('PlannerService', () => {
       expect(planner.dive.timeToSurface).toBe(8);
     }));
 
-    it('20 minutes maximum dive time', inject([PlannerService], (planner: PlannerService) => {
+    it('22 minutes maximum dive time', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();
-      expect(planner.dive.maxTime).toBe(20);
+      expect(planner.dive.maxTime).toBe(22);
     }));
 
-    it('82 bar rock bottom', inject([PlannerService], (planner: PlannerService) => {
+    it('74 bar rock bottom', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();
-      expect(planner.dive.rockBottom).toBe(82);
+      expect(planner.dive.rockBottom).toBe(74);
     }));
 
-    it('107 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
+    it('109 bar remaining gas', inject([PlannerService], (planner: PlannerService) => {
       planner.calculate();
-      expect(planner.gas.endPressure).toBe(107);
+      expect(planner.gas.endPressure).toBe(109);
     }));
   });
 

@@ -5,12 +5,14 @@ import { PlannerService } from './planner.service';
   providedIn: 'root'
 })
 export class PreferencesService {
-  private storageKey = 'preferences';
+  private static readonly disclaimerValue = 'confirmed';
+  private static readonly storageKey = 'preferences';
+  private static readonly disclaimerKey = 'disclaimer';
 
   constructor(private planner: PlannerService) { }
 
   public loadDefaults(): void {
-    const toParse = localStorage.getItem(this.storageKey);
+    const toParse = localStorage.getItem(PreferencesService.storageKey);
     if (!toParse) {
       return;
     }
@@ -21,6 +23,15 @@ export class PreferencesService {
 
   public saveDefaults(): void {
     const serialized = JSON.stringify(this.planner);
-    localStorage.setItem(this.storageKey, serialized);
+    localStorage.setItem(PreferencesService.storageKey, serialized);
+  }
+
+  public disableDisclaimer(): void {
+    localStorage.setItem(PreferencesService.disclaimerKey, PreferencesService.disclaimerValue);
+  }
+
+  public disclaimerEnabled(): boolean {
+    const saved = localStorage.getItem(PreferencesService.disclaimerKey);
+    return saved !== PreferencesService.disclaimerValue;
   }
 }

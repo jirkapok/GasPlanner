@@ -10,7 +10,7 @@ describe('PreferencesService', () => {
     });
   });
 
-  it('loads saved values', inject([PreferencesService, PlannerService],
+  it('loads saved default values', inject([PreferencesService, PlannerService],
     (service: PreferencesService, planner: PlannerService) => {
       const ExpectedSac = 10;
       const diver = planner.diver;
@@ -19,5 +19,12 @@ describe('PreferencesService', () => {
       diver.sac = 20;
       service.loadDefaults();
       expect(diver.sac).toBe(ExpectedSac);
+  }));
+
+  it('loads saved disclaimer', inject([PreferencesService, PlannerService],
+    (service: PreferencesService, planner: PlannerService) => {
+      service.disableDisclaimer();
+      const enabled = service.disclaimerEnabled();
+      expect(enabled).toBeFalsy();
   }));
 });

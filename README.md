@@ -12,8 +12,6 @@ None of the authors, contributors, administrators, or anyone else connected with
 
 List of current features is part of [application help](./doc/help.md). Road map of planned features:
 
-* Fix way points to show start time as run time and format to time
-* Fix representation of stops duration in way points table
 * Add Fresh/Salt water option (fix its usage in depth converter)
 * Add Segments validation as an input for bulhmann algorithm
 * Fix precision of decompression algorithm

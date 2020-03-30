@@ -29,6 +29,25 @@ export class WayPointsComponent implements OnInit {
     }
   }
 
+  public iconTitle(point: WayPoint): String {
+    switch (point.swimDirection) {
+      case SwimDirection.ascent:
+        return 'ascent';
+      case SwimDirection.descent:
+        return 'descent';
+      default:
+        return 'hover';
+    }
+  }
+
+  public durationToString(timeStamp: number): String {
+    const minutes = Math.floor(timeStamp);
+    let seconds = timeStamp - minutes;
+    seconds = Math.round(seconds * 60);
+    const paddedSeconds = seconds.toString().padStart(2, '0');
+    return  minutes + ':' + paddedSeconds;
+  }
+
   public iconClasses(point: WayPoint): any {
     const classes = {
       'mr-3': true,

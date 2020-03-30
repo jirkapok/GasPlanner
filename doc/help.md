@@ -74,7 +74,7 @@ Table showing details about profile changes during the dive. Each row represents
   * Arrow up: Ascent (end depth is lower than start depth, ending with 0 at surface). This is always e.g. last row representing ascent to surface.
 * Depth [meters]: Target depth to which this lead to.
 * Duration [minutes]: Duration of this transition since previous row.
-* Run time [minutes]: Absolute time since the dive started till start of current row. Calculated as total sum of all previous lines.
+* Run time [minutes]: Absolute time since the dive started till end of current row. Calculated as total sum of all previous lines.
 
 ## Dive profile
 

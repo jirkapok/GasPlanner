@@ -13,11 +13,11 @@
             </tr>
             <tr *ngFor="let point of dive.wayPoints">
                 <td>
-                    <fa-icon [icon]="swimDirectionIcon(point)" [ngClass]="iconClasses(point)"></fa-icon>
+                    <fa-icon [icon]="swimDirectionIcon(point)" [ngClass]="iconClasses(point)" [title]="iconTitle(point)"></fa-icon>
                 </td>
                 <td>{{ point.endDepth }}</td>
-                <td>{{ point.duration | number:'1.0-2'}}</td>
-                <td>{{ point.endTime | number:'1.0-2'}}</td>
+                <td>{{ durationToString(point.duration) }}</td>
+                <td>{{ durationToString(point.endTime) }}</td>
             </tr>
         </table>
     </div>

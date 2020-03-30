@@ -10,21 +10,22 @@ None of the authors, contributors, administrators, or anyone else connected with
 
 ## Features
 
-* Only open circuit dives can be planned
-* No multilevel dive profiles are supported
-* No decompression dives
-* Only air and nitrox gases are available
-* Only one gas tank
-* No repetitive dives
+List of current features is part of [application help](./doc/help.md). Road map of planned features:
 
-## Road map
-
+* Fix update of no deco limit in case of gas changed
+* No longer show disclaimer, when confirmed
+* Fix way points to show start time as run time and format to time
+* Fix representation of stops duration in way points table
+* Add Fresh/Salt water option (fix its usage in depth converter)
 * Add Segments validation as an input for bulhmann algorithm
 * Fix precision of decompression algorithm
+  * No deco limit for depth < 10 m
+  * Check safety stop usage
+  * Check ceiling usage
 * Add option to define gradient factors
 * Add option to define safety stop range
-* Add Fresh/Salt water option
 * Add altitude option
+* Add imperial units option
 * Add switch recreational/technical divers
 * Allow define multiple gases
 * Allow to define multiple levels

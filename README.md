@@ -60,12 +60,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Based on following tools:
 
-* https://github.com/archisgore/online-deco-console
-* https://github.com/nyxtom/dive
-* http://www.lizardland.co.uk/DIYDeco.html
-* https://github.com/Subsurface-divelog
+* <https://github.com/archisgore/online-deco-console>
+* <https://github.com/nyxtom/dive>
+* <http://www.lizardland.co.uk/DIYDeco.html>
+* <https://github.com/Subsurface-divelog>
 
 At time of development also other implementations are available:
 
-* https://github.com/igaponov/deco-model
-* https://github.com/oliverjohnstone/npm-buhlmann-ZH-L16
+* <https://github.com/igaponov/deco-model>
+* <https://github.com/oliverjohnstone/npm-buhlmann-ZH-L16>

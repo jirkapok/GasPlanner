@@ -1,7 +1,8 @@
 import { Gas } from './Gases';
+import { DepthConverter } from './depth-converter';
 
 export class SegmentsValidator {
-    public static validate(segments: Segment[], maxPpo: number, isFreshWater: boolean): string[] {
+    public static validate(segments: Segment[], maxPpo: number, depthConverter: DepthConverter): string[] {
         const messages: string[] = [];
 
         if (segments.length < 1) {
@@ -9,22 +10,22 @@ export class SegmentsValidator {
         }
 
         segments.forEach((s, index, items) => {
-            this.validateGas(messages, items[index], maxPpo, isFreshWater);
+            this.validateGas(messages, items[index], maxPpo, depthConverter);
         });
 
         return messages;
     }
 
-    private static validateGas(messages: string[], segment: Segment, maxPpo: number, isFreshWater: boolean): void {
+    private static validateGas(messages: string[], segment: Segment, maxPpo: number, depthConverter: DepthConverter): void {
         const segmentMod = Math.max(segment.startDepth, segment.endDepth);
-        const gasMod = segment.gas.mod(maxPpo, isFreshWater);
+        const gasMod = segment.gas.mod(maxPpo, depthConverter);
 
         if (segmentMod > gasMod) {
             messages.push('Gas is not breathable at bottom segment depth.');
         }
 
         const segmentCeiling = Math.min(segment.startDepth, segment.endDepth);
-        const gasCeiling = segment.gas.ceiling(isFreshWater);
+        const gasCeiling = segment.gas.ceiling(depthConverter);
 
         if (gasCeiling > segmentCeiling) {
             messages.push('Gas is not breathable at segment ceiling.');

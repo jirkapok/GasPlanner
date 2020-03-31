@@ -1,5 +1,6 @@
 import { Segment, Segments, SegmentsValidator } from './Segments';
 import { Gas } from './Gases';
+import { DepthConverter } from './depth-converter';
 
 describe('Segments', () => {
     const air = new Gas(0.21, 0); // 65.5m - 0m
@@ -7,9 +8,11 @@ describe('Segments', () => {
     const maxPpo = 1.6;
 
     describe('Segments validator', () => {
+        const depthConverter = DepthConverter.forFreshWater();
+
         it('At least one is required', () => {
             const source: Segment[] = [];
-            const  messages = SegmentsValidator.validate(source, maxPpo, true);
+            const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
             expect(messages.length).toBe(1);
         });
 
@@ -17,7 +20,7 @@ describe('Segments', () => {
             const first = new Segment(0, 30, air, 5);
             const next = new Segment(20, 20, air, 5);
             const source: Segment[] = [first, next];
-            const  messages = SegmentsValidator.validate(source, maxPpo, true);
+            const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
             expect(messages.length).toBe(0);
         });
 
@@ -25,14 +28,14 @@ describe('Segments', () => {
             const oxygen = new Gas(1, 0);
             const first = new Segment(20, 40, oxygen, 5);
             const source: Segment[] = [first];
-            const  messages = SegmentsValidator.validate(source, maxPpo, true);
+            const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
             expect(messages.length).toBe(1);
         });
 
         it('Gas isn`t breathable at ceiling depths of segment', () => {
             const first = new Segment(0, 30, trimix1070, 5);
             const source: Segment[] = [first];
-            const  messages = SegmentsValidator.validate(source, maxPpo, true);
+            const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
             expect(messages.length).toBe(1);
         });
     });

@@ -2,6 +2,7 @@ import { DepthConverter } from './depth-converter';
 import { GasMixutures } from './Gases';
 
 export class NitroxCalculator {
+  private static readonly depthConverter: DepthConverter = DepthConverter.forFreshWater();
 
   /**
    * Calculates best mix of nitrox gas for given depth.
@@ -11,7 +12,7 @@ export class NitroxCalculator {
    * @returns Percents of oxygen fraction in required gas.
    */
   public static bestMix(pO2: number, depth: number): number {
-    const result = GasMixutures.bestMix(pO2, depth, true) * 100 ;
+    const result = GasMixutures.bestMix(pO2, depth, NitroxCalculator.depthConverter) * 100 ;
     return Math.floor(result * 100) / 100;
   }
 
@@ -37,7 +38,7 @@ export class NitroxCalculator {
    */
   public static mod(ppO2: number, percentO2: number): number {
     const fO2 = percentO2 / 100;
-    const result = GasMixutures.mod(ppO2, fO2, true);
+    const result = GasMixutures.mod(ppO2, fO2, NitroxCalculator.depthConverter);
     return Math.floor(result * 100) / 100;
   }
 
@@ -49,7 +50,7 @@ export class NitroxCalculator {
    * @returns Constant value.
    */
   public static partialPressure(fO2: number, depth: number): number {
-    const bar = DepthConverter.toBar(depth, true);
+    const bar = NitroxCalculator.depthConverter.toBar(depth);
     const result = GasMixutures.partialPressure(bar, fO2) / 100;
     return Math.ceil(result * 100) / 100;
   }

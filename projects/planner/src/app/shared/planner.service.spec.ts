@@ -6,7 +6,7 @@ import { DepthConverter } from 'scuba-physics';
 describe('PlannerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PlannerService, DepthConverter]
+      providers: [PlannerService]
     });
   });
 

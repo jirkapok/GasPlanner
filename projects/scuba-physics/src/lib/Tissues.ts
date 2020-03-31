@@ -34,7 +34,7 @@ export class Tissue extends Compartment {
         return this._pTotal;
     }
 
-    public ceiling(gf: number, isFreshWater: boolean): number {
+    public ceiling(gf: number, depthConverter: DepthConverter): number {
         gf = gf || 1.0
         const a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
         const b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
@@ -47,24 +47,24 @@ export class Tissue extends Compartment {
             return 0;
         } 
 
-        const ceiling = DepthConverter.fromBar(bars, isFreshWater);
+        const ceiling = depthConverter.fromBar(bars);
         return Math.round(ceiling);
     };
 
     public addDepthChange(startDepth: number, endDepth: number, 
-            fO2: number, fHe: number, time: number, isFreshWater: boolean): number {
+            fO2: number, fHe: number, time: number, depthConverter: DepthConverter): number {
         const fN2 = (1 - fO2) - fHe;
         // Calculate nitrogen loading
-        let gasRate = this.gasRateInBarsPerMinute(startDepth, endDepth, time, fN2, isFreshWater);
+        let gasRate = this.gasRateInBarsPerMinute(startDepth, endDepth, time, fN2, depthConverter);
         let halfTime = this.n2HalfTime; // half-time constant = log2/half-time in minutes
-        let pGas = this.gasPressureBreathingInBars(startDepth, fN2, isFreshWater); // initial ambient pressure
+        let pGas = this.gasPressureBreathingInBars(startDepth, fN2, depthConverter); // initial ambient pressure
         let pBegin = this.pN2; // initial compartment inert gas pressure in bar
         this._pN2 = this.schreinerEquation(pBegin, pGas, time, halfTime, gasRate);
 
         // Calculate helium loading
-        gasRate = this.gasRateInBarsPerMinute(startDepth, endDepth, time, fHe, isFreshWater);
+        gasRate = this.gasRateInBarsPerMinute(startDepth, endDepth, time, fHe, depthConverter);
         halfTime = this.HeHalfTime;
-        pGas = this.gasPressureBreathingInBars(startDepth, fHe, isFreshWater);
+        pGas = this.gasPressureBreathingInBars(startDepth, fHe, depthConverter);
         pBegin = this.pHe;
         this._pHe = this.schreinerEquation(pBegin, pGas, time, halfTime, gasRate);
 
@@ -82,11 +82,11 @@ export class Tissue extends Compartment {
      * @param endDepth - The end depth in meters.
      * @param time - The time in minutes that lapsed between the begin and end depths.
      * @param fGas - The fraction of gas to calculate for.
-     * @param isFreshWater - True to calculate changes in depth while in fresh water, false for salt water.
+     * @param depthConverter Converter used to translate the pressure.
      * @returns The gas loading rate in bars times the fraction of inert gas.
      */
-    private gasRateInBarsPerMinute(beginDepth: number, endDepth: number, time: number, fGas: number, isFreshWater: boolean): number {
-        return this.depthChangeInBarsPerMinute(beginDepth, endDepth, time, isFreshWater) * fGas;
+    private gasRateInBarsPerMinute(beginDepth: number, endDepth: number, time: number, fGas: number, depthConverter: DepthConverter): number {
+        return this.depthChangeInBarsPerMinute(beginDepth, endDepth, time, depthConverter) * fGas;
     };
 
     /**
@@ -95,12 +95,12 @@ export class Tissue extends Compartment {
      * @param beginDepth - The begin depth in meters.
      * @param endDepth - The end depth in meters.
      * @param time - The time that lapsed during the depth change in minutes.
-     * @param isFreshWater - True to calculate changes in depth while in fresh water, false for salt water.
+     * @param depthConverter Converter used to translate the pressure.
      * @returns The depth change in bars per minute.
      */
-    private depthChangeInBarsPerMinute(beginDepth: number, endDepth: number, time: number, isFreshWater: boolean): number {
+    private depthChangeInBarsPerMinute(beginDepth: number, endDepth: number, time: number, depthConverter: DepthConverter): number {
         const speed = (endDepth - beginDepth) / time;
-        return DepthConverter.toBar(speed, isFreshWater) - AltitudePressure.current;
+        return depthConverter.toBar(speed) - AltitudePressure.current;
     };
 
     /**
@@ -123,11 +123,11 @@ export class Tissue extends Compartment {
      * 
      * @param depth - The depth in meters.
      * @param fGas - The fraction of the gas taken in.
-     * @param isFreshWater - True to calculate changes while in fresh water, false for salt water.
+     * @param depthConverter Converter used to translate the pressure.
      * @returns The gas pressure in bars taken in with each breath (accounting for water vapour pressure in the lungs).
      */
-    private gasPressureBreathingInBars(depth: number, fGas: number, isFreshWater: boolean): number {
-        const bars = DepthConverter.toBar(depth, isFreshWater);
+    private gasPressureBreathingInBars(depth: number, fGas: number, depthConverter: DepthConverter): number {
+        const bars = depthConverter.toBar(depth);
         return bars * fGas;
     };
 }
@@ -146,11 +146,11 @@ export class Tissues {
         }
     }
 
-    public ceiling(gf: number, isFreshWater: boolean): number {
+    public ceiling(gf: number, depthConverter: DepthConverter): number {
         gf = gf || 1.0
         let ceiling = 0;
         for (let index = 0; index < this.compartments.length; index++) {
-            let tissueCeiling = this.compartments[index].ceiling(gf, isFreshWater);
+            let tissueCeiling = this.compartments[index].ceiling(gf, depthConverter);
             if (!ceiling || tissueCeiling > ceiling) {
                 ceiling = tissueCeiling;
             }
@@ -162,11 +162,11 @@ export class Tissues {
         return ceiling;
     };
 
-    public load(startDepth: number, endDepth: number, fO2: number, fHe: number, time: number, isFreshWater: boolean):number {
+    public load(startDepth: number, endDepth: number, fO2: number, fHe: number, time: number, depthConverter: DepthConverter):number {
         let loadChange = 0.0;
         for (let index = 0; index < this.compartments.length; index++) {
             const tissue = this.compartments[index];
-            const tissueChange = tissue.addDepthChange(startDepth, endDepth, fO2, fHe, time, isFreshWater);
+            const tissueChange = tissue.addDepthChange(startDepth, endDepth, fO2, fHe, time, depthConverter);
             loadChange = loadChange + tissueChange;
         }
         return loadChange;

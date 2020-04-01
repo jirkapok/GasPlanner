@@ -2,6 +2,7 @@ import { Compartments, Compartment } from './Compartments';
 import { AltitudePressure, VapourPressure } from './pressure-converter';
 import { DepthConverter } from './depth-converter';
 import { GasMixutures, Gas } from './Gases';
+import { Segment } from './Segments';
 
 export class Tissue extends Compartment {
     // initial tissue loading is needed
@@ -49,9 +50,9 @@ export class Tissue extends Compartment {
         return Math.round(ceiling);
     }
 
-    public load(startDepth: number, endDepth: number, gas: Gas, time: number, depthConverter: DepthConverter): number {
-        this._pN2 = this.loadGas(startDepth, endDepth, gas.fN2, this.pN2, this.n2HalfTime, time, depthConverter);
-        this._pHe = this.loadGas(startDepth, endDepth, gas.fHe, this.pHe, this.HeHalfTime, time, depthConverter);
+    public load(segment: Segment, gas: Gas, depthConverter: DepthConverter): number {
+        this._pN2 = this.loadGas(segment, gas.fN2, this.pN2, this.n2HalfTime, depthConverter);
+        this._pHe = this.loadGas(segment, gas.fHe, this.pHe, this.HeHalfTime, depthConverter);
         const prevTotal = this.pTotal;
         this._pTotal = this.pN2 + this.pHe;
 
@@ -59,40 +60,25 @@ export class Tissue extends Compartment {
         return this.pTotal - prevTotal;
     }
 
-    private loadGas(startDepth: number, endDepth: number, fGas: number, pBegin: number, halfTime: number,
-                    time: number, depthConverter: DepthConverter): number {
-        const gasRate = this.gasRateInBarsPerMinute(startDepth, endDepth, time, fGas, depthConverter);
-        const pGas = this.gasPressureBreathingInBars(startDepth, fGas, depthConverter); // initial ambient pressure
-        const newGasPressure = this.schreinerEquation(pBegin, pGas, time, halfTime, gasRate);
+    private loadGas(segment: Segment, fGas: number, pBegin: number, halfTime: number, depthConverter: DepthConverter): number {
+        const gasRate = this.gasRateInBarsPerMinute(segment, fGas, depthConverter);
+        // initial ambient pressure
+        const gasPressureBreathingInBars = depthConverter.toBar(segment.startDepth) * fGas;
+        const newGasPressure = this.schreinerEquation(pBegin, gasPressureBreathingInBars, segment.time, halfTime, gasRate);
         return newGasPressure;
     }
 
     /**
      * Calculates the gas loading rate for the given depth change in terms of bars inert gas.
      *
-     * @param beginDepth - The starting depth in meters.
-     * @param endDepth - The end depth in meters.
-     * @param time - The time in minutes that lapsed between the begin and end depths.
+     * @param segment - The definition of swim distance.
      * @param fGas - The fraction of gas to calculate for.
      * @param depthConverter Converter used to translate the pressure.
      * @returns The gas loading rate in bars times the fraction of inert gas.
      */
-    private gasRateInBarsPerMinute(beginDepth: number, endDepth: number, time: number, fGas: number, depthConverter: DepthConverter): number {
-        return this.depthChangeInBarsPerMinute(beginDepth, endDepth, time, depthConverter) * fGas;
-    }
-
-    /**
-     * Calculates the depth change speed in bars per minute.
-     *
-     * @param beginDepth - The begin depth in meters.
-     * @param endDepth - The end depth in meters.
-     * @param time - The time that lapsed during the depth change in minutes.
-     * @param depthConverter Converter used to translate the pressure.
-     * @returns The depth change in bars per minute.
-     */
-    private depthChangeInBarsPerMinute(beginDepth: number, endDepth: number, time: number, depthConverter: DepthConverter): number {
-        const speed = (endDepth - beginDepth) / time;
-        return depthConverter.toBar(speed) - AltitudePressure.current;
+    private gasRateInBarsPerMinute(segment: Segment, fGas: number, depthConverter: DepthConverter): number {
+        const depthChangeInBarsPerMinute = depthConverter.toBar(segment.speed) - AltitudePressure.current;
+        return depthChangeInBarsPerMinute * fGas;
     }
 
     /**
@@ -108,19 +94,6 @@ export class Tissue extends Compartment {
     private schreinerEquation(pBegin: number, pGas: number, time: number, halfTime: number, gasRate: number): number {
         const timeConstant = Math.log(2) / halfTime;
         return (pGas + (gasRate * (time - (1.0 / timeConstant))) - ((pGas - pBegin - (gasRate / timeConstant)) * Math.exp(-timeConstant * time)));
-    }
-
-    /**
-     * Calculates the approximate pressure of the fraction of gas for each breath taken.
-     *
-     * @param depth - The depth in meters.
-     * @param fGas - The fraction of the gas taken in.
-     * @param depthConverter Converter used to translate the pressure.
-     * @returns The gas pressure in bars taken in with each breath (accounting for water vapour pressure in the lungs).
-     */
-    private gasPressureBreathingInBars(depth: number, fGas: number, depthConverter: DepthConverter): number {
-        const bars = depthConverter.toBar(depth);
-        return bars * fGas;
     }
 }
 
@@ -154,11 +127,11 @@ export class Tissues {
         return ceiling;
     }
 
-    public load(startDepth: number, endDepth: number, gas: Gas, time: number, depthConverter: DepthConverter): number {
+    public load(segment: Segment, gas: Gas, depthConverter: DepthConverter): number {
         let loadChange = 0.0;
         for (let index = 0; index < this.compartments.length; index++) {
             const tissue = this.compartments[index];
-            const tissueChange = tissue.load(startDepth, endDepth, gas, time, depthConverter);
+            const tissueChange = tissue.load(segment, gas, depthConverter);
             loadChange = loadChange + tissueChange;
         }
         return loadChange;

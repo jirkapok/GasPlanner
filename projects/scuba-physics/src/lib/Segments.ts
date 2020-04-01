@@ -47,6 +47,10 @@ export class Segment {
             this.gas === toCompare.gas;
     }
 
+    public get speed(): number {
+        return (this.endDepth - this.startDepth) / this.time;
+    }
+
     public get isFlat(): boolean {
         return this.startDepth === this.endDepth;
     }
@@ -59,7 +63,7 @@ export class Segment {
 export class Segments {
     private segments: Segment[] = [];
 
-    public add(startDepth: number, endDepth: number, gas: Gas, time: number) {
+    public add(startDepth: number, endDepth: number, gas: Gas, time: number): Segment {
         // TODO move to validator
         // if (!gases.isRegistered(gas)) {
         //     throw new Error('Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.');
@@ -67,6 +71,7 @@ export class Segments {
 
         const segment = new Segment(startDepth, endDepth, gas, time);
         this.segments.push(segment);
+        return segment;
     }
 
     public addFlat(depth: number, gas: Gas, time: number) {

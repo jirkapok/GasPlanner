@@ -64,7 +64,7 @@ export class Tissue extends Compartment {
         const gasRate = this.gasRateInBarsPerMinute(segment, fGas, depthConverter);
         // initial ambient pressure
         const gasPressureBreathingInBars = depthConverter.toBar(segment.startDepth) * fGas;
-        const newGasPressure = this.schreinerEquation(pBegin, gasPressureBreathingInBars, segment.time, halfTime, gasRate);
+        const newGasPressure = this.schreinerEquation(pBegin, gasPressureBreathingInBars, segment.duration, halfTime, gasRate);
         return newGasPressure;
     }
 

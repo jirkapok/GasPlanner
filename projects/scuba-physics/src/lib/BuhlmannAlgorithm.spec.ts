@@ -75,7 +75,7 @@ describe('Buhlmann Algorithm', () => {
     const concatenatePlan = (decoPlan: Segment[]): string => {
       let planText = '';
       decoPlan.forEach(segment => {
-        planText += segment.startDepth + ',' + segment.endDepth + ',' + segment.time + ';';
+        planText += segment.startDepth + ',' + segment.endDepth + ',' + segment.duration + ';';
       });
 
       return planText;

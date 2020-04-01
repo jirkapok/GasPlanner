@@ -38,7 +38,7 @@ export class Segment {
         public startDepth: number,
         public endDepth: number,
         public gas: Gas,
-        public time: number) {}
+        public duration: number) {}
 
     public levelEquals(toCompare: Segment): boolean {
         return this.isFlat &&
@@ -48,7 +48,7 @@ export class Segment {
     }
 
     public get speed(): number {
-        return (this.endDepth - this.startDepth) / this.time;
+        return (this.endDepth - this.startDepth) / this.duration;
     }
 
     public get isFlat(): boolean {
@@ -56,26 +56,31 @@ export class Segment {
     }
 
     public addTime(toAdd: Segment): void {
-        this.time += toAdd.time;
+        this.duration += toAdd.duration;
     }
 }
 
 export class Segments {
     private segments: Segment[] = [];
 
-    public add(startDepth: number, endDepth: number, gas: Gas, time: number): Segment {
+    public add(startDepth: number, endDepth: number, gas: Gas, duration: number): Segment {
         // TODO move to validator
         // if (!gases.isRegistered(gas)) {
         //     throw new Error('Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.');
         // }
 
-        const segment = new Segment(startDepth, endDepth, gas, time);
+        const segment = new Segment(startDepth, endDepth, gas, duration);
         this.segments.push(segment);
         return segment;
     }
 
-    public addFlat(depth: number, gas: Gas, time: number) {
-        this.add(depth, depth, gas, time);
+    public enterWater(gas: Gas, speed: number, depth: number) {
+        const duration = depth / speed;
+        this.add(0, depth, gas, duration);
+    }
+
+    public addFlat(depth: number, gas: Gas, duration: number) {
+        this.add(depth, depth, gas, duration);
     }
 
     public mergeFlat(): Segment[] {

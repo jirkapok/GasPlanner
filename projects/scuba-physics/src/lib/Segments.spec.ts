@@ -65,7 +65,7 @@ describe('Segments', () => {
             const segment = new Segment(20, 20, air, 15);
             const segment2 = new Segment(20, 20, air, 35);
             segment.addTime(segment2);
-            expect(segment.time).toBe(50);
+            expect(segment.duration).toBe(50);
         });
 
         it('Level equals for flat segments', () => {

@@ -165,11 +165,11 @@ export class Tissues {
     }
 
     public reset(origTissuesJSON: string): void {
-        const originalTissues = JSON.parse(origTissuesJSON);
-        for (let i = 0; i < originalTissues.length; i++) {
-            for (const p in originalTissues[i]) {
-                this.compartments[i][p] = originalTissues[i][p];
-            }
+        const originalTissues: Tissues = JSON.parse(origTissuesJSON);
+        for (let index = 0; index < originalTissues.compartments.length; index++) {
+            const part = originalTissues.compartments[index];
+            // no need to create new, since it is done by deserialization
+            this.compartments[index] = part;
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Compartments, Compartment } from './Compartments';
 import { AltitudePressure, VapourPressure } from './pressure-converter';
 import { DepthConverter } from './depth-converter';
-import { GasMixutures } from './Gases';
+import { GasMixutures, Gas } from './Gases';
 
 export class Tissue extends Compartment {
     // initial tissue loading is needed
@@ -49,12 +49,9 @@ export class Tissue extends Compartment {
         return Math.round(ceiling);
     }
 
-    public addDepthChange(startDepth: number, endDepth: number,
-            fO2: number, fHe: number, time: number, depthConverter: DepthConverter): number {
-        const fN2 = (1 - fO2) - fHe;
-
-        this._pN2 = this.loadGas(startDepth, endDepth, fN2, this.pN2, this.n2HalfTime, time, depthConverter);
-        this._pHe = this.loadGas(startDepth, endDepth, fHe, this.pHe, this.HeHalfTime, time, depthConverter);
+    public load(startDepth: number, endDepth: number, gas: Gas, time: number, depthConverter: DepthConverter): number {
+        this._pN2 = this.loadGas(startDepth, endDepth, gas.fN2, this.pN2, this.n2HalfTime, time, depthConverter);
+        this._pHe = this.loadGas(startDepth, endDepth, gas.fHe, this.pHe, this.HeHalfTime, time, depthConverter);
         const prevTotal = this.pTotal;
         this._pTotal = this.pN2 + this.pHe;
 
@@ -157,11 +154,11 @@ export class Tissues {
         return ceiling;
     }
 
-    public load(startDepth: number, endDepth: number, fO2: number, fHe: number, time: number, depthConverter: DepthConverter): number {
+    public load(startDepth: number, endDepth: number, gas: Gas, time: number, depthConverter: DepthConverter): number {
         let loadChange = 0.0;
         for (let index = 0; index < this.compartments.length; index++) {
             const tissue = this.compartments[index];
-            const tissueChange = tissue.addDepthChange(startDepth, endDepth, fO2, fHe, time, depthConverter);
+            const tissueChange = tissue.load(startDepth, endDepth, gas, time, depthConverter);
             loadChange = loadChange + tissueChange;
         }
         return loadChange;

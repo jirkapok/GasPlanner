@@ -97,7 +97,7 @@ export class BuhlmannAlgorithm {
     private loadTissues(segments: Segments, isFreshWater: boolean) {
         segments.foreach(segment => {
             const gas = segment.gas;
-            this.tissues.load(segment.startDepth, segment.endDepth, gas.fO2, gas.fHe, segment.time, this.depthConverter);
+            this.tissues.load(segment.startDepth, segment.endDepth, gas, segment.time, this.depthConverter);
         });
     }
 
@@ -162,7 +162,7 @@ export class BuhlmannAlgorithm {
 
     private addDepthChange(segments: Segments, startDepth: number, endDepth: number, gas: Gas, time: number) {
         segments.add(startDepth, endDepth, gas, time);
-        const loaded = this.tissues.load(startDepth, endDepth, gas.fO2, gas.fHe, time, this.depthConverter);
+        const loaded = this.tissues.load(startDepth, endDepth, gas, time, this.depthConverter);
         return loaded;
     }
 }

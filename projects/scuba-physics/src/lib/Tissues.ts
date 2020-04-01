@@ -2,7 +2,7 @@ import { Compartments, Compartment } from './Compartments';
 import { AltitudePressure, VapourPressure } from './pressure-converter';
 import { DepthConverter } from './depth-converter';
 import { GasMixutures, Gas } from './Gases';
-import { Segment } from './Segments';
+import { Segment, Segments } from './Segments';
 
 export class Tissue extends Compartment {
     // initial tissue loading is needed
@@ -135,5 +135,12 @@ export class Tissues {
             loadChange = loadChange + tissueChange;
         }
         return loadChange;
+    }
+
+    public initialize(segments: Segments, depthConverter: DepthConverter) {
+        segments.foreach(segment => {
+            const gas = segment.gas;
+            this.load(segment, gas, depthConverter);
+        });
     }
 }

@@ -32,16 +32,14 @@ class AlgorithmContext {
     public tissues = new Tissues();
 
     // TODO reuse tissues for repetitive dives
-    constructor(public gases: Gases, public segments: Segments) {}
+    constructor(public gases: Gases, public segments: Segments, public depthConverter: DepthConverter) {}
 }
 
 export class BuhlmannAlgorithm {
-    private depthConverter: DepthConverter;
-
     public calculateDecompression(options: Options, gases: Gases, segments: Segments, fromDepth?: number) {
         let currentGas: Gas;
-        const context = new AlgorithmContext(gases, segments);
-        this.depthConverter = this.selectDepthConverter(options.isFreshWater);
+        const depthConverter = this.selectDepthConverter(options.isFreshWater);
+        const context = new AlgorithmContext(gases, segments, depthConverter);
 
         if (typeof fromDepth === 'undefined') {
             if (!segments.any()) {
@@ -52,17 +50,17 @@ export class BuhlmannAlgorithm {
                 currentGas = last.gas;
             }
         } else {
-            currentGas = gases.bestDecoGas(fromDepth, options, this.depthConverter);
+            currentGas = gases.bestDecoGas(fromDepth, options, depthConverter);
             if (!currentGas) {
                 throw new Error('No deco gas found to decompress from provided depth ' + fromDepth);
             }
         }
 
-        this.initializeTissues(segments, context.tissues);
+        context.tissues.initialize(segments, depthConverter);
 
         const gfDiff = options.gfHigh - options.gfLow; // find variance in gradient factor
         const gfChangePerMeter = gfDiff / fromDepth;
-        let ceiling = context.tissues.ceiling(options.gfLow, this.depthConverter);
+        let ceiling = context.tissues.ceiling(options.gfLow, depthConverter);
         currentGas = this.addDecoDepthChange(context, fromDepth, ceiling, currentGas, options);
 
         while (ceiling > 0) {
@@ -73,7 +71,7 @@ export class BuhlmannAlgorithm {
             while (ceiling > nextDecoDepth && time <= 10000) {
                 this.load(context, currentDepth, currentGas, 1);
                 time++;
-                ceiling = context.tissues.ceiling(gf, this.depthConverter);
+                ceiling = context.tissues.ceiling(gf, depthConverter);
             }
 
             currentGas = this.addDecoDepthChange(context, currentDepth, ceiling, currentGas, options);
@@ -90,17 +88,10 @@ export class BuhlmannAlgorithm {
         return DepthConverter.forSaltWater();
     }
 
-    private initializeTissues(segments: Segments, tissues: Tissues) {
-        segments.foreach(segment => {
-            const gas = segment.gas;
-            tissues.load(segment, gas, this.depthConverter);
-        });
-    }
-
     private addDecoDepthChange(context: AlgorithmContext, fromDepth: number, toDepth: number, currentGas: Gas, options: Options) {
         // TODO add multilevel dive where toDepth > fromDepth - since this expects ascend
         if (!currentGas) {
-            currentGas = context.gases.bestDecoGas(fromDepth, options, this.depthConverter);
+            currentGas = context.gases.bestDecoGas(fromDepth, options, context.depthConverter);
             if (!currentGas) {
                 throw new Error('Unable to find starting gas to decompress at depth ' + fromDepth + '..');
             }
@@ -108,9 +99,9 @@ export class BuhlmannAlgorithm {
 
         while (toDepth < fromDepth) { // if ceiling is higher, move our diver up.
             // ensure we're on the best gas
-            const bestGas = context.gases.bestDecoGas(fromDepth, options, this.depthConverter);
+            const bestGas = context.gases.bestDecoGas(fromDepth, options, context.depthConverter);
             currentGas = Gases.switchGas(bestGas, currentGas);
-            const ceiling = context.gases.nextGasSwitch(currentGas, fromDepth, toDepth, options, this.depthConverter);
+            const ceiling = context.gases.nextGasSwitch(currentGas, fromDepth, toDepth, options, context.depthConverter);
 
             // take us to the ceiling using ascent speed
             const depthdiff = fromDepth - ceiling;
@@ -119,26 +110,26 @@ export class BuhlmannAlgorithm {
             fromDepth = ceiling; // move up from-depth
         }
 
-        const bestGas = context.gases.bestDecoGas(fromDepth, options, this.depthConverter);
+        const bestGas = context.gases.bestDecoGas(fromDepth, options, context.depthConverter);
         currentGas = Gases.switchGas(bestGas, currentGas);
         return currentGas;
     }
 
     public noDecoLimit(depth: number, gas: Gas, gf: number, isFreshWater: boolean): number {
         gf = gf || 1.0;
-        this.depthConverter = this.selectDepthConverter(isFreshWater);
+        const depthConverter = this.selectDepthConverter(isFreshWater);
         const gases = new Gases();
         gases.addBottomGas(gas);
         const segments = new Segments();
-        const context = new AlgorithmContext(gases, segments);
+        const context = new AlgorithmContext(gases, segments, depthConverter);
 
-        let ceiling = context.tissues.ceiling(gf, this.depthConverter);
+        let ceiling = context.tissues.ceiling(gf, depthConverter);
 
         let time = 0;
         let change = 1;
         while (ceiling <= 0 && change > 0) {
             change = this.load(context, depth, gas, 1);
-            ceiling = context.tissues.ceiling(gf, this.depthConverter);
+            ceiling = context.tissues.ceiling(gf, depthConverter);
             time++;
         }
 
@@ -154,7 +145,7 @@ export class BuhlmannAlgorithm {
 
     private loadChange(context: AlgorithmContext, startDepth: number, endDepth: number, gas: Gas, time: number): number {
         const added = context.segments.add(startDepth, endDepth, gas, time);
-        const loaded = context.tissues.load(added, gas, this.depthConverter);
+        const loaded = context.tissues.load(added, gas, context.depthConverter);
         return loaded;
     }
 }

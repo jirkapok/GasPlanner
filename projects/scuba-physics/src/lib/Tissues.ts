@@ -38,7 +38,6 @@ export class Tissue extends Compartment {
         const a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
         const b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
         const bars = (this.pTotal - (a * gf)) / ((gf / b) + 1.0 - gf);
-        // var bars = (this.pTotal - a) * b;
 
         // less than surface pressure means no ceiling, this aproximation is OK,
         // because tissues are loaded only under water
@@ -53,25 +52,22 @@ export class Tissue extends Compartment {
     public addDepthChange(startDepth: number, endDepth: number,
             fO2: number, fHe: number, time: number, depthConverter: DepthConverter): number {
         const fN2 = (1 - fO2) - fHe;
-        // Calculate nitrogen loading
-        let gasRate = this.gasRateInBarsPerMinute(startDepth, endDepth, time, fN2, depthConverter);
-        let halfTime = this.n2HalfTime; // half-time constant = log2/half-time in minutes
-        let pGas = this.gasPressureBreathingInBars(startDepth, fN2, depthConverter); // initial ambient pressure
-        let pBegin = this.pN2; // initial compartment inert gas pressure in bar
-        this._pN2 = this.schreinerEquation(pBegin, pGas, time, halfTime, gasRate);
 
-        // Calculate helium loading
-        gasRate = this.gasRateInBarsPerMinute(startDepth, endDepth, time, fHe, depthConverter);
-        halfTime = this.HeHalfTime;
-        pGas = this.gasPressureBreathingInBars(startDepth, fHe, depthConverter);
-        pBegin = this.pHe;
-        this._pHe = this.schreinerEquation(pBegin, pGas, time, halfTime, gasRate);
-
+        this._pN2 = this.loadGas(startDepth, endDepth, fN2, this.pN2, this.n2HalfTime, time, depthConverter);
+        this._pHe = this.loadGas(startDepth, endDepth, fHe, this.pHe, this.HeHalfTime, time, depthConverter);
         const prevTotal = this.pTotal;
         this._pTotal = this.pN2 + this.pHe;
 
         // return difference - how much load was added
         return this.pTotal - prevTotal;
+    }
+
+    private loadGas(startDepth: number, endDepth: number, fGas: number, pBegin: number, halfTime: number,
+                    time: number, depthConverter: DepthConverter): number {
+        const gasRate = this.gasRateInBarsPerMinute(startDepth, endDepth, time, fGas, depthConverter);
+        const pGas = this.gasPressureBreathingInBars(startDepth, fGas, depthConverter); // initial ambient pressure
+        const newGasPressure = this.schreinerEquation(pBegin, pGas, time, halfTime, gasRate);
+        return newGasPressure;
     }
 
     /**

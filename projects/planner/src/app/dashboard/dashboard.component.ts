@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { PreferencesService } from '../shared/preferences.service';
+import { PlannerService } from '../shared/planner.service';
+import { Dive } from '../shared/models';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,8 +12,15 @@ import { PreferencesService } from '../shared/preferences.service';
 export class DashboardComponent implements OnInit  {
   public showDisclaimer = true;
   public exclamation = faExclamationTriangle;
+  private dive: Dive;
 
-  constructor(private preferences: PreferencesService) { }
+  public get showResults(): boolean {
+    return this.dive.calculated && !this.dive.hasErrors;
+  }
+
+  constructor(private preferences: PreferencesService, planner: PlannerService) {
+    this.dive = planner.dive;
+   }
 
   ngOnInit(): void {
     this.showDisclaimer = this.preferences.disclaimerEnabled();

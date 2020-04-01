@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, Gas } from '../shared/models';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
+import * as Plotly from 'plotly.js-dist';
 
 @Component({
   selector: 'app-diveprofile',
@@ -26,7 +27,52 @@ export class DiveProfileComponent implements OnInit {
 
   constructor(private planer: PlannerService) { }
 
+  private plotChart() {
+    const layout = {
+      autosize: true,
+      showlegend: false,
+      xaxis : {
+        fixedrange: true
+      },
+      yaxis: {
+        fixedrange: true,
+        autorange: 'reversed'
+      },
+      margin: { l: 30, r: 30, b: 30, t: 10 },
+    };
+
+    const options = {
+      displaylogo: false,
+      displayModeBar: false,
+      responsive: true,
+      // staticPlot: true,
+      autosize: true,
+      scrollZoom: false,
+      editable: false
+    };
+
+    const xValues = [];
+    const yValues = [];
+
+    const data = [{
+      x: xValues,
+      y: yValues,
+      type: 'scatter',
+      name: 'dive'
+    }];
+
+    this.dive.wayPoints.forEach((item, index, waypoints) => {
+        xValues.push(item.startTime);
+        yValues.push(item.startDepth);
+        xValues.push(item.endTime);
+        yValues.push(item.endDepth);
+      });
+
+    Plotly.react('diveplot', data, layout, options);
+  }
+
   ngOnInit() {
     this.dive = this.planer.dive;
+    this.plotChart();
   }
 }

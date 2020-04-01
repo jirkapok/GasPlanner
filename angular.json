@@ -24,7 +24,9 @@
               "projects/planner/src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/plotly.js-dist/plotly.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -70,7 +72,9 @@
             "karmaConfig": "projects/planner/karma.conf.js",
             "polyfills": "projects/planner/src/polyfills.ts",
             "tsConfig": "projects/planner/src/tsconfig.spec.json",
-            "scripts": [],
+            "scripts": [
+              "node_modules/plotly.js-dist/plotly.js"
+            ],
             "styles": [
               "projects/planner/src/styles.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css"

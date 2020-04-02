@@ -12,7 +12,7 @@ export class WayPointsService {
         const exceptDescend = finalSegments.slice(1);
 
         exceptDescend.forEach((segment, index, source) => {
-            const waypoint = lastWayPoint.toLevel(segment.time, segment.endDepth);
+            const waypoint = lastWayPoint.toLevel(segment.duration, segment.endDepth);
             lastWayPoint = waypoint;
             wayPoints.push(waypoint);
         });

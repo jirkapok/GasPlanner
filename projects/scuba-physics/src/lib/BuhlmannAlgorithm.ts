@@ -10,15 +10,36 @@ export class Options implements GasOptions {
         return this._ascentSpeed;
     }
     constructor(
-        public maintainTissues: boolean,
+        /**
+         * Low gradient factor  in range 0-1 (e.g 0-100%), default 1
+         */
         public gfLow: number,
+
+        /**
+         * Hight gradient factor in range 0-1 (e.g 0-100%), default 1
+         */
         public gfHigh: number,
+
+        /**
+         * Maximum pp02 to be used during decompression in rnage 0.21-1.6, default 1.6
+         */
         public maxppO2: number,
+
+        /**
+         * Maximum equivalent air narcotic depth in meters, default 30 meters
+         */
         public maxEND: number,
+
+        /**
+         * Select water salinity, default false (salt water)
+         */
         public isFreshWater: boolean,
+
+        /**
+         * Usual Ascent speed used by the diver in metres/minute, default 10 meters/minute.
+         */
         ascentSpeed?: number
     ) {
-        maintainTissues = maintainTissues || false;
         gfLow = gfLow || 1.0;
         gfHigh = gfHigh || 1.0;
         maxppO2 = maxppO2 || 1.6;
@@ -58,6 +79,24 @@ export class CalculatedProfile {
     public ceilings: Ceiling[];
 }
 
+class GradientFactors {
+    public gfChangePerMeter: number;
+
+    constructor(public gfHigh: number, public gfLow: number, private fromDepth: number) {
+        this.gfChangePerMeter = this.depthChangePerMeter(fromDepth);
+    }
+
+    private depthChangePerMeter(fromDepth: number): number {
+        // find variance in gradient factor
+        const gfDiff = this.gfHigh - this.gfLow;
+        return gfDiff / fromDepth;
+    }
+
+    public gradientForDepth(depth: number): number {
+        return this.gfLow + (this.gfChangePerMeter * (this.fromDepth - depth));
+    }
+}
+
 class AlgorithmContext {
     public tissues = new Tissues();
 
@@ -87,9 +126,8 @@ export class BuhlmannAlgorithm {
         }
 
         context.tissues.initialize(segments, depthConverter);
+        const gradients = new GradientFactors(options.gfHigh, options.gfLow, fromDepth);
 
-        const gfDiff = options.gfHigh - options.gfLow; // find variance in gradient factor
-        const gfChangePerMeter = gfDiff / fromDepth;
         let ceiling = context.tissues.ceiling(options.gfLow, depthConverter);
         currentGas = this.addDecoDepthChange(context, fromDepth, ceiling, currentGas, options);
 
@@ -97,7 +135,7 @@ export class BuhlmannAlgorithm {
             const currentDepth = ceiling;
             const nextDecoDepth = (ceiling - Tissues.decoStopDistance);
             let time = 0;
-            const gf = options.gfLow + (gfChangePerMeter * (fromDepth - ceiling));
+            const gf = gradients.gradientForDepth(ceiling);
             while (ceiling > nextDecoDepth && time <= 10000) {
                 this.load(context, currentDepth, currentGas, 1);
                 time++;

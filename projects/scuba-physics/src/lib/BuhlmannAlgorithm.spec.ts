@@ -92,7 +92,7 @@ describe('Buhlmann Algorithm', () => {
 
       const algorithm = new BuhlmannAlgorithm();
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan);
+      const planText = concatenatePlan(decoPlan.segments);
 
       const epectedPlan = '0,5,1;5,5,30;5,0,0.5;';
       expect(planText).toBe(epectedPlan);
@@ -109,7 +109,7 @@ describe('Buhlmann Algorithm', () => {
 
       const algorithm = new BuhlmannAlgorithm();
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan);
+      const planText = concatenatePlan(decoPlan.segments);
 
       const epectedPlan = '0,10,1;10,10,40;10,3,0.7;3,3,1;3,0,0.3;';
       expect(planText).toBe(epectedPlan);
@@ -126,7 +126,7 @@ describe('Buhlmann Algorithm', () => {
 
       const algorithm = new BuhlmannAlgorithm();
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan);
+      const planText = concatenatePlan(decoPlan.segments);
 
       const epectedPlan = '0,30,2;30,30,25;30,15,1.5;15,15,1;15,9,0.6;9,9,1;9,6,0.3;6,6,3;6,3,0.3;3,3,10;3,0,0.3;';
       expect(planText).toBe(epectedPlan);
@@ -145,7 +145,7 @@ describe('Buhlmann Algorithm', () => {
 
       const algorithm = new BuhlmannAlgorithm();
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan);
+      const planText = concatenatePlan(decoPlan.segments);
 
       const epectedPlan = '0,40,3;40,40,30;40,24,1.6;24,24,1;24,22,0.2;22,18,0.4;18,18,1;18,15,0.3;' +
                           '15,15,1;15,12,0.3;12,12,1;12,9,0.3;9,9,5;9,6,0.3;6,6,7;6,3,0.3;3,3,15;3,0,0.3;';
@@ -165,7 +165,7 @@ describe('Buhlmann Algorithm', () => {
 
       const algorithm = new BuhlmannAlgorithm(); // 1 abs pressure in fresh water
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan);
+      const planText = concatenatePlan(decoPlan.segments);
 
       const expectedPlan = '0,50,5;50,50,25;50,30,2;30,30,1;' +
                            '30,22,0.8;22,21,0.1;21,21,1;21,18,0.3;' +
@@ -189,7 +189,7 @@ describe('Buhlmann Algorithm', () => {
       segments.addFlat(50, bottomGas, 30);
 
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan);
+      const planText = concatenatePlan(decoPlan.segments);
 
       const expectedPlan = '0,50,5;50,50,30;50,30,2;30,30,1;30,22,0.8;22,21,0.1;21,21,1;21,18,0.3;18,18,1;' +
                            '18,15,0.3;15,15,2;15,12,0.3;12,12,4;12,9,0.3;9,9,6;' +

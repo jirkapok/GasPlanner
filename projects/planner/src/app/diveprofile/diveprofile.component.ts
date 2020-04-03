@@ -69,6 +69,23 @@ export class DiveProfileComponent implements OnInit {
       });
 
     Plotly.react('diveplot', data, layout, options);
+
+    const xCelingValues = [];
+    const yCelingValues = [];
+
+    this.dive.ceilings.forEach((item, index, ceilings) => {
+      xCelingValues.push(item.time);
+      yCelingValues.push(item.depth);
+    });
+
+    const dataCeilings = [{
+      x: xCelingValues,
+      y: yCelingValues,
+      type: 'scatter',
+      name: 'ceilings'
+    }];
+
+    Plotly.plot('diveplot', dataCeilings, layout, options);
   }
 
   ngOnInit() {

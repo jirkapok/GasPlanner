@@ -50,11 +50,19 @@ Used to save current settings to be able use them in later planning. This stores
   * Half usable: for environment (including both overhead and without overhead), where diver needs to return to point where he is able to ascent (swim back to boat from reef barrier).
   * Third usable: for overhead environment, like deep decompression dives or cave diving.
 
-## Gases
+### Gases
 
 * Size [Liters]: The volume of the tank used during the dive. Size of the tank impacts how long you can stay under water under the same conditions.
 * Percent O2 [Percents]: Select precise value when measured or pickup one of predefined standard gases.
 * Start pressure [bars]: The pressure the tanks is filled in with the gas as red on the pressure gauge. This value is usually represented as full tank. Keep in mind to subtract cca 10 bars in colds water, since temperature will reduce the pressure immediately after you enter the water.
+
+### Gradient Factors
+
+* TODO https://www.diverite.com/articles/gradient-factors/
+
+### Diver breathing rate
+
+* TODO SAC, RMV and impact on calculation
 
 ## Calculated results (Dive)
 

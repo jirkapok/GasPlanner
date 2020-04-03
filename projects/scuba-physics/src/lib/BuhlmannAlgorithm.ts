@@ -1,6 +1,6 @@
 import { Tissues } from './Tissues';
 import { Gases, Gas, GasOptions } from './Gases';
-import { Segments } from './Segments';
+import { Segments, Segment } from './Segments';
 import { DepthConverter } from './depth-converter';
 
 export class Options implements GasOptions {
@@ -28,6 +28,36 @@ export class Options implements GasOptions {
     }
 }
 
+/**
+ * Dive definition point in moment during the dive.
+ */
+export class Ceiling {
+    /**
+     * Gets or sets moment in minutes during the dive
+     */
+    public time: number;
+
+    /**
+     * Gets or sets the maximum safe depth to ascent to.
+     */
+    public depth: number;
+}
+
+/**
+ * Result of the Algorithm calculation
+ */
+export class CalculatedProfile {
+    /**
+     * Not null collection of segments filled whole dive profile.
+     */
+    public segments: Segment[];
+
+    /**
+     * Not null collection of ceilings.
+     */
+    public ceilings: Ceiling[];
+}
+
 class AlgorithmContext {
     public tissues = new Tissues();
 
@@ -36,7 +66,7 @@ class AlgorithmContext {
 }
 
 export class BuhlmannAlgorithm {
-    public calculateDecompression(options: Options, gases: Gases, segments: Segments, fromDepth?: number) {
+    public calculateDecompression(options: Options, gases: Gases, segments: Segments, fromDepth?: number): CalculatedProfile {
         let currentGas: Gas;
         const depthConverter = this.selectDepthConverter(options.isFreshWater);
         const context = new AlgorithmContext(gases, segments, depthConverter);
@@ -77,7 +107,10 @@ export class BuhlmannAlgorithm {
             currentGas = this.addDecoDepthChange(context, currentDepth, ceiling, currentGas, options);
         }
 
-        return segments.mergeFlat();
+        return  {
+            segments: segments.mergeFlat(),
+            ceilings: []
+        };
     }
 
     private selectDepthConverter(isFreshWater: boolean): DepthConverter {

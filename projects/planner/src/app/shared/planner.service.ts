@@ -23,7 +23,9 @@ export class PlannerService {
   }
 
   public calculate() {
-    this.dive.wayPoints = WayPointsService.calculateWayPoints(this.plan, this.gas);
+    const finalData = WayPointsService.calculateWayPoints(this.plan, this.gas);
+    this.dive.wayPoints = finalData.wayPoints;
+    this.dive.ceilings = finalData.ceilings;
     this.dive.timeToSurface = this.calculateTimeToSurface();
     this.dive.rockBottom = this.calculateRockBottom();
     this.dive.maxTime = this.calculateMaxBottomTime();

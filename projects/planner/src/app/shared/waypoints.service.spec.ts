@@ -16,13 +16,13 @@ describe('WayPointsService', () => {
     const plan = new Plan(30, 20, Strategies.ALL);
 
     const wayPoints = WayPointsService.calculateWayPoints(plan, air);
-    expect(wayPoints.length).toBe(7);
+    expect(wayPoints.wayPoints.length).toBe(7);
   }));
 
   it('10m for 30 min calculates all way points', inject([WayPointsService], (service: WayPointsService) => {
     const plan = new Plan(30, 10, Strategies.ALL);
 
     const wayPoints = WayPointsService.calculateWayPoints(plan, air);
-    expect(wayPoints.length).toBe(3);
+    expect(wayPoints.wayPoints.length).toBe(3);
   }));
 });

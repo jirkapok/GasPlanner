@@ -43,7 +43,7 @@ export class WayPointsService {
         // Low (45/95)
         // Med (40/85)
         // High (35/75)
-        const options = new Options(true, 0.4, 0.85, 1.6, 30, true);
+        const options = new Options(0.4, 0.85, 1.6, 30, true);
         const algorithm = new BuhlmannAlgorithm();
         const finalSegments = algorithm.calculateDecompression(options, gases, segments);
         return finalSegments;

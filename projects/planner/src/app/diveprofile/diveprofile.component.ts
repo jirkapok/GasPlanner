@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Dive, Gas } from '../shared/models';
+import { Dive } from '../shared/models';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-dist';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-diveprofile',
   templateUrl: './diveprofile.component.html',
   styleUrls: ['./diveprofile.component.css']
 })
-export class DiveProfileComponent implements OnInit {
+export class DiveProfileComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
   public dive: Dive;
   public tasks = faTasks;
 
@@ -25,7 +27,15 @@ export class DiveProfileComponent implements OnInit {
     return this.planer.plan.noDecoTime;
   }
 
-  constructor(private planer: PlannerService) { }
+  constructor(private planer: PlannerService) {
+    this.subscription = this.planer.calculated.subscribe(() => {
+        this.plotChart();
+    });
+   }
+
+   ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
   private plotChart() {
     const layout = {

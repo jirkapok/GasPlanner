@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Plan, Diver, Dive, Gas, SafetyStop, WayPoint } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas } from 'scuba-physics';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class PlannerService {
@@ -9,6 +10,8 @@ export class PlannerService {
   public diver: Diver = new Diver(20, 1.4);
   public gas: Gas = new Gas(15, 21, 200);
   public dive: Dive = new Dive();
+  private onCalculated = new Subject();
+  public calculated = this.onCalculated.asObservable();
 
   public get gasMod(): number {
     return NitroxCalculator.mod(this.diver.maxPpO2, this.gas.o2);
@@ -43,6 +46,8 @@ export class PlannerService {
     this.dive.notEnoughTime = this.plan.duration <= this.dive.timeToSurface;
     this.dive.noDecoExceeded = this.plan.noDecoExceeded;
     this.dive.calculated = true;
+
+    this.onCalculated.next();
   }
 
   public updateNoDecoTime(): void {

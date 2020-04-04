@@ -1,8 +1,8 @@
-import { Gas } from './Gases';
+import { Gas, Gases } from './Gases';
 import { DepthConverter } from './depth-converter';
 
 export class SegmentsValidator {
-    public static validate(segments: Segments, maxPpo: number, depthConverter: DepthConverter): string[] {
+    public static validate(segments: Segments, gases: Gases, maxPpo: number, depthConverter: DepthConverter): string[] {
         const messages: string[] = [];
 
         if (!segments.any()) {
@@ -10,17 +10,16 @@ export class SegmentsValidator {
         }
 
         segments.foreach(segment => {
-            this.validateGas(messages, segment, maxPpo, depthConverter);
+            this.validateGas(messages, gases, segment, maxPpo, depthConverter);
         });
 
         return messages;
     }
 
-    private static validateGas(messages: string[], segment: Segment, maxPpo: number, depthConverter: DepthConverter): void {
-        // TODO move to validator
-        // if (!gases.isRegistered(gas)) {
-        //     throw new Error('Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.');
-        // }
+    private static validateGas(messages: string[], gases: Gases, segment: Segment, maxPpo: number, depthConverter: DepthConverter): void {
+        if (!gases.isRegistered(segment.gas)) {
+          messages.push('Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.');
+        }
 
         const segmentMod = Math.max(segment.startDepth, segment.endDepth);
         const gasMod = segment.gas.mod(maxPpo, depthConverter);

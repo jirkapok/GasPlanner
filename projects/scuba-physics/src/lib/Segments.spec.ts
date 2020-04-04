@@ -1,5 +1,5 @@
 import { Segment, Segments, SegmentsValidator } from './Segments';
-import { Gas } from './Gases';
+import { Gas, Gases } from './Gases';
 import { DepthConverter } from './depth-converter';
 
 describe('Segments', () => {
@@ -9,10 +9,12 @@ describe('Segments', () => {
 
     describe('Segments validator', () => {
         const depthConverter = DepthConverter.forFreshWater();
+        const gases = new Gases();
+        gases.addBottomGas(air);
 
         it('At least one is required', () => {
             const source = new Segments();
-            const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
+            const  messages = SegmentsValidator.validate(source, gases, maxPpo, depthConverter);
             expect(messages.length).toBe(1);
         });
 
@@ -21,22 +23,35 @@ describe('Segments', () => {
             source.add(0, 30, air, 5);
             source.add(20, 20, air, 5);
 
-            const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
+            const  messages = SegmentsValidator.validate(source, gases, maxPpo, depthConverter);
             expect(messages.length).toBe(0);
         });
 
         it('Gas isn`t breathable at bottom depths of segment', () => {
             const oxygen = new Gas(1, 0);
+            const oxygenOnly = new Gases();
+            oxygenOnly.addBottomGas(oxygen);
             const source = new Segments();
             source.add(20, 40, oxygen, 5);
-            const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
+            const  messages = SegmentsValidator.validate(source, oxygenOnly, maxPpo, depthConverter);
             expect(messages.length).toBe(1);
         });
 
         it('Gas isn`t breathable at ceiling depths of segment', () => {
             const source = new Segments();
+            const trimixOnly = new Gases();
+            trimixOnly.addBottomGas(trimix1070);
             source.add(0, 30, trimix1070, 5);
-            const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
+            const  messages = SegmentsValidator.validate(source, trimixOnly, maxPpo, depthConverter);
+            expect(messages.length).toBe(1);
+        });
+
+        it('Segment contains unregistered gas', () => {
+            const source = new Segments();
+            source.add(0, 30, air, 5);
+            const noGases = new Gases();
+            const messages = SegmentsValidator.validate(source, noGases, maxPpo, depthConverter);
+            console.log(messages);
             expect(messages.length).toBe(1);
         });
     });

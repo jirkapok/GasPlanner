@@ -129,7 +129,7 @@ class AlgorithmContext {
 export class BuhlmannAlgorithm {
     public calculateDecompression(options: Options, gases: Gases, segments: Segments, fromDepth?: number): CalculatedProfile {
         const depthConverter = this.selectDepthConverter(options.isFreshWater);
-        const segmentMessages = SegmentsValidator.validate(segments, options.maxppO2, depthConverter);
+        const segmentMessages = SegmentsValidator.validate(segments, gases, options.maxppO2, depthConverter);
         if (segmentMessages.length > 0) {
             return CalculatedProfile.fromErrors(segmentMessages);
         }

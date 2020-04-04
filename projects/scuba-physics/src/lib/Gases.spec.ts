@@ -123,50 +123,47 @@ describe('Gases', () => {
   });
 
   describe('Gases validator', () => {
-    it('Bottom gases undefined', () => {
-      const messages = GasesValidator.validate(null, [], options, freshWaterConverter, 30);
-      expect(messages.length).toBe(1);
-    });
-
-    it('Deco gases undefined', () => {
-      const messages = GasesValidator.validate([], null, options, freshWaterConverter, 30);
-      expect(messages.length).toBe(1);
-    });
-
     it('No gas defined', () => {
-      const messages = GasesValidator.validate([], [], options, freshWaterConverter, 30);
+      const messages = GasesValidator.validate(new Gases(), options, freshWaterConverter, 30);
       expect(messages.length).toBe(1);
     });
 
     it('Only one gas', () => {
-      const bottomGases = [air];
-      const messages = GasesValidator.validate(bottomGases, [], options, freshWaterConverter, 30);
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      const messages = GasesValidator.validate(gases, options, freshWaterConverter, 30);
       expect(messages.length).toBe(0);
     });
 
     it('No bottom gas for depth', () => {
-      const bottomGases = [air];
-      const messages = GasesValidator.validate(bottomGases, [], options, freshWaterConverter, 100);
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      const messages = GasesValidator.validate(gases, options, freshWaterConverter, 100);
       expect(messages.length).toBe(1);
     });
 
     it('No gas to surface', () => {
-      const bottomGases = [trimix1070];
-      const messages = GasesValidator.validate(bottomGases, [], options, freshWaterConverter, 30);
+      const gases = new Gases();
+      gases.addBottomGas(trimix1070);
+      const messages = GasesValidator.validate(gases, options, freshWaterConverter, 30);
       expect(messages.length).toBe(1);
     });
 
     it('Gases don`t cover all depths', () => {
       const bottomGases = [trimix1070];
       const decoGases = [oxygen];
-      const messages = GasesValidator.validate(bottomGases, decoGases, options, freshWaterConverter, 30);
+      const gases = new Gases();
+      gases.addBottomGas(trimix1070);
+      gases.addDecoGas(oxygen);
+      const messages = GasesValidator.validate(gases, options, freshWaterConverter, 30);
       expect(messages.length).toBe(1);
     });
 
     it('Multiple gases', () => {
-      const bottomGases = [air];
-      const decoGases = [ean50];
-      const messages = GasesValidator.validate(bottomGases, decoGases, options, freshWaterConverter, 30);
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      gases.addDecoGas(ean50);
+      const messages = GasesValidator.validate(gases, options, freshWaterConverter, 30);
       expect(messages.length).toBe(0);
     });
   });

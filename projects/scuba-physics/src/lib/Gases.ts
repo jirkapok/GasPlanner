@@ -7,24 +7,20 @@ import { AltitudePressure } from './pressure-converter';
  * Deco gases are prefered for decompression, they don't have to be better.
  */
 export class GasesValidator {
-    public static validate(bottomGases: Gas[], decoGases: Gas[], options: GasOptions,
+    public static validate(gases: Gases, options: GasOptions,
         depthConverter: DepthConverter, maxDepth: number): string[] {
         const messages = [];
-        if (!bottomGases || !decoGases) {
-            messages.push('Both bottom gases and deco gases have to befined, even empty.');
-            return messages;
-        }
 
-        if (bottomGases.length < 1) {
+        if (!gases.hasBottomGas) {
             messages.push('At least one bottom gas as to be defined.');
             return messages;
         }
 
-        const gases = bottomGases.concat(decoGases);
-        this.validateByMod(gases, options, maxDepth, depthConverter, messages);
+        const allGases = gases.all;
+        this.validateByMod(allGases, options, maxDepth, depthConverter, messages);
 
-        gases.sort((a, b) => a.ceiling(depthConverter) - b.ceiling(depthConverter));
-        if (gases[0].ceiling(depthConverter) > 0) {
+        allGases.sort((a, b) => a.ceiling(depthConverter) - b.ceiling(depthConverter));
+        if (allGases[0].ceiling(depthConverter) > 0) {
             messages.push('No gas available to surface.');
         }
 
@@ -61,6 +57,14 @@ export interface GasOptions {
 export class Gases {
     private decoGases: Gas[] = [];
     private bottomGases: Gas[] = [];
+
+    public get all(): Gas[] {
+        return this.bottomGases.concat(this.decoGases);
+    }
+
+    public get hasBottomGas(): boolean {
+        return this.bottomGases.length >= 1;
+    }
 
     private static bestGas(gases: Gas[], depth: number, options: GasOptions, depthConverter: DepthConverter): Gas {
         let found = null;

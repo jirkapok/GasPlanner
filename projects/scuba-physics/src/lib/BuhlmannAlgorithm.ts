@@ -1,5 +1,5 @@
 import { Tissues } from './Tissues';
-import { Gases, Gas, GasOptions } from './Gases';
+import { Gases, Gas, GasOptions, GasesValidator } from './Gases';
 import { Segments, Segment } from './Segments';
 import { DepthConverter } from './depth-converter';
 
@@ -109,6 +109,8 @@ export class BuhlmannAlgorithm {
         let currentGas: Gas;
         const depthConverter = this.selectDepthConverter(options.isFreshWater);
         const context = new AlgorithmContext(gases, segments, depthConverter);
+        const messages = GasesValidator.validate(gases, options, depthConverter, fromDepth);
+
 
         if (typeof fromDepth === 'undefined') {
             if (!segments.any()) {

@@ -1,6 +1,6 @@
 import { Tissues } from './Tissues';
 import { Gases, Gas, GasOptions, GasesValidator } from './Gases';
-import { Segments, Segment } from './Segments';
+import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter } from './depth-converter';
 
 export class Options implements GasOptions {
@@ -71,12 +71,34 @@ export class CalculatedProfile {
     /**
      * Not null collection of segments filled whole dive profile.
      */
-    public segments: Segment[];
+    public get segments(): Segment[] {
+        return this.seg;
+    }
 
     /**
      * Not null collection of ceilings.
      */
-    public ceilings: Ceiling[];
+    public get ceilings(): Ceiling[] {
+       return this.ceil;
+    }
+
+    /**
+     * Not null collection of errors occurred during the profile calculation.
+     * If not empty, ceilings and segments are empty.
+     */
+    public get errorMessages(): string[] {
+        return this.errors;
+    }
+
+    private constructor(private seg: Segment[], private ceil: Ceiling[], private errors: string[]) { }
+
+    public static fromErrors(errors: string[]) {
+        return new CalculatedProfile([], [], errors);
+    }
+
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[]) {
+        return new CalculatedProfile(segments, ceilings, []);
+    }
 }
 
 class GradientFactors {
@@ -106,27 +128,28 @@ class AlgorithmContext {
 
 export class BuhlmannAlgorithm {
     public calculateDecompression(options: Options, gases: Gases, segments: Segments, fromDepth?: number): CalculatedProfile {
-        let currentGas: Gas;
         const depthConverter = this.selectDepthConverter(options.isFreshWater);
-        const context = new AlgorithmContext(gases, segments, depthConverter);
-        const messages = GasesValidator.validate(gases, options, depthConverter, fromDepth);
-
-
-        if (typeof fromDepth === 'undefined') {
-            if (!segments.any()) {
-                throw new Error('No depth to decompress from has been specified, and neither have any dive stages been registered. Unable to decompress.');
-            } else {
-                const last = segments.last();
-                fromDepth = last.endDepth;
-                currentGas = last.gas;
-            }
-        } else {
-            currentGas = gases.bestDecoGas(fromDepth, options, depthConverter);
-            if (!currentGas) {
-                throw new Error('No deco gas found to decompress from provided depth ' + fromDepth);
-            }
+        const segmentMessages = SegmentsValidator.validate(segments, options.maxppO2, depthConverter);
+        if (segmentMessages.length > 0) {
+            return CalculatedProfile.fromErrors(segmentMessages);
         }
 
+        const last = segments.last();
+        let currentGas: Gas = last.gas;
+
+        if (fromDepth) {
+            currentGas = gases.bestDecoGas(fromDepth, options, depthConverter);
+        } else {
+            fromDepth = last.endDepth;
+        }
+
+        const gasMessages = GasesValidator.validate(gases, options, depthConverter, fromDepth);
+        if (gasMessages.length > 0) {
+            return CalculatedProfile.fromErrors(gasMessages);
+        }
+
+
+        const context = new AlgorithmContext(gases, segments, depthConverter);
         context.tissues.initialize(segments, depthConverter);
         const gradients = new GradientFactors(options.gfHigh, options.gfLow, fromDepth);
 
@@ -147,10 +170,8 @@ export class BuhlmannAlgorithm {
             currentGas = this.addDecoDepthChange(context, currentDepth, ceiling, currentGas, options);
         }
 
-        return  {
-            segments: segments.mergeFlat(),
-            ceilings: []
-        };
+        const merged = segments.mergeFlat()
+        return CalculatedProfile.fromProfile(merged, []);
     }
 
     private selectDepthConverter(isFreshWater: boolean): DepthConverter {

@@ -11,30 +11,31 @@ describe('Segments', () => {
         const depthConverter = DepthConverter.forFreshWater();
 
         it('At least one is required', () => {
-            const source: Segment[] = [];
+            const source = new Segments();
             const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
             expect(messages.length).toBe(1);
         });
 
         it('No messages for valid segments.', () => {
-            const first = new Segment(0, 30, air, 5);
-            const next = new Segment(20, 20, air, 5);
-            const source: Segment[] = [first, next];
+            const source = new Segments();
+            source.add(0, 30, air, 5);
+            source.add(20, 20, air, 5);
+
             const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
             expect(messages.length).toBe(0);
         });
 
         it('Gas isn`t breathable at bottom depths of segment', () => {
             const oxygen = new Gas(1, 0);
-            const first = new Segment(20, 40, oxygen, 5);
-            const source: Segment[] = [first];
+            const source = new Segments();
+            source.add(20, 40, oxygen, 5);
             const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
             expect(messages.length).toBe(1);
         });
 
         it('Gas isn`t breathable at ceiling depths of segment', () => {
-            const first = new Segment(0, 30, trimix1070, 5);
-            const source: Segment[] = [first];
+            const source = new Segments();
+            source.add(0, 30, trimix1070, 5);
             const  messages = SegmentsValidator.validate(source, maxPpo, depthConverter);
             expect(messages.length).toBe(1);
         });

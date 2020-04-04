@@ -2,21 +2,26 @@ import { Gas } from './Gases';
 import { DepthConverter } from './depth-converter';
 
 export class SegmentsValidator {
-    public static validate(segments: Segment[], maxPpo: number, depthConverter: DepthConverter): string[] {
+    public static validate(segments: Segments, maxPpo: number, depthConverter: DepthConverter): string[] {
         const messages: string[] = [];
 
-        if (segments.length < 1) {
+        if (!segments.any()) {
             messages.push('There needs to be at least one segment at depth.');
         }
 
-        segments.forEach((s, index, items) => {
-            this.validateGas(messages, items[index], maxPpo, depthConverter);
+        segments.foreach(segment => {
+            this.validateGas(messages, segment, maxPpo, depthConverter);
         });
 
         return messages;
     }
 
     private static validateGas(messages: string[], segment: Segment, maxPpo: number, depthConverter: DepthConverter): void {
+        // TODO move to validator
+        // if (!gases.isRegistered(gas)) {
+        //     throw new Error('Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.');
+        // }
+
         const segmentMod = Math.max(segment.startDepth, segment.endDepth);
         const gasMod = segment.gas.mod(maxPpo, depthConverter);
 
@@ -64,11 +69,6 @@ export class Segments {
     private segments: Segment[] = [];
 
     public add(startDepth: number, endDepth: number, gas: Gas, duration: number): Segment {
-        // TODO move to validator
-        // if (!gases.isRegistered(gas)) {
-        //     throw new Error('Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.');
-        // }
-
         const segment = new Segment(startDepth, endDepth, gas, duration);
         this.segments.push(segment);
         return segment;
@@ -98,7 +98,7 @@ export class Segments {
         return this.segments;
     }
 
-    public foreach(callBack: (segment: Segment) => void) {
+    public foreach(callBack: (segment: Segment) => void): void {
         this.segments.forEach((segment, index, source) => {
             callBack(segment);
         });

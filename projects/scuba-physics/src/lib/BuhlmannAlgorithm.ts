@@ -121,9 +121,18 @@ class GradientFactors {
 
 class AlgorithmContext {
     public tissues = new Tissues();
+    public ceilings: Ceiling[] = [];
+    public runTime = 0;
 
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public depthConverter: DepthConverter) {}
+
+    public addCeiling(depth: number) {
+        this.ceilings.push({
+            time: this.runTime,
+            depth: depth
+        });
+    }
 }
 
 export class BuhlmannAlgorithm {
@@ -146,11 +155,8 @@ export class BuhlmannAlgorithm {
         }
 
         const context = new AlgorithmContext(gases, segments, depthConverter);
-        const ceilings: Ceiling[] = [];
-        const addedCeilings = this.dive(context, segments, depthConverter);
-        ceilings.push(...addedCeilings);
-
         const gradients = new GradientFactors(options.gfHigh, options.gfLow, fromDepth);
+        this.dive(context);
 
         let ceiling = context.tissues.ceiling(options.gfLow, depthConverter);
         currentGas = this.addDecoDepthChange(context, fromDepth, ceiling, currentGas, options);
@@ -170,7 +176,7 @@ export class BuhlmannAlgorithm {
         }
 
         const merged = segments.mergeFlat()
-        return CalculatedProfile.fromProfile(merged, ceilings);
+        return CalculatedProfile.fromProfile(merged, context.ceilings);
     }
 
     private selectDepthConverter(isFreshWater: boolean): DepthConverter {
@@ -181,16 +187,12 @@ export class BuhlmannAlgorithm {
         return DepthConverter.forSaltWater();
     }
 
-    public dive(context: AlgorithmContext, segments: Segments, depthConverter: DepthConverter): Ceiling[] {
-        const ceilings: Ceiling[] = [];
-        let runTime = 0;
-        let ceiling =  context.tissues.ceiling(1, depthConverter);
-        ceilings.push({
-            time: runTime,
-            depth: ceiling
-        });
+    public dive(context: AlgorithmContext): void {
+        // TODO fix gradient factors
+        let ceiling =  context.tissues.ceiling(1, context.depthConverter);
+        context.addCeiling(ceiling);
 
-        segments.withAll(segment => {
+        context.segments.withAll(segment => {
             const speed = segment.speed;
             let startDepth = segment.startDepth;
 
@@ -198,19 +200,14 @@ export class BuhlmannAlgorithm {
                 const interval = this.calculateInterval(segment.duration, elapsed);
                 const endDepth = segment.startDepth + interval * speed;
                 const part = new Segment(startDepth, endDepth, segment.gas, interval);
-                context.tissues.load(part, segment.gas, depthConverter);
-                runTime += interval;
+                context.tissues.load(part, segment.gas, context.depthConverter);
+                context.runTime += interval;
                 startDepth = endDepth;
 
-                ceiling =  context.tissues.ceiling(1, depthConverter);
-                ceilings.push({
-                    time: runTime,
-                    depth: ceiling
-                });
+                ceiling = context.tissues.ceiling(1, context.depthConverter);
+                context.addCeiling(ceiling);
             }
         });
-
-        return ceilings;
     }
 
     private calculateInterval(duration: number, elapsed: number): number {

@@ -127,7 +127,9 @@ class AlgorithmContext {
 }
 
 export class BuhlmannAlgorithm {
-    public calculateDecompression(options: Options, gases: Gases, segments: Segments, fromDepth?: number): CalculatedProfile {
+    private oneMinute = 1;
+
+    public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
         const depthConverter = this.selectDepthConverter(options.isFreshWater);
         const segmentMessages = SegmentsValidator.validate(segments, gases, options.maxppO2, depthConverter);
         if (segmentMessages.length > 0) {
@@ -136,21 +138,18 @@ export class BuhlmannAlgorithm {
 
         const last = segments.last();
         let currentGas: Gas = last.gas;
-
-        if (fromDepth) {
-            currentGas = gases.bestDecoGas(fromDepth, options, depthConverter);
-        } else {
-            fromDepth = last.endDepth;
-        }
+        const fromDepth = last.endDepth;
 
         const gasMessages = GasesValidator.validate(gases, options, depthConverter, fromDepth);
         if (gasMessages.length > 0) {
             return CalculatedProfile.fromErrors(gasMessages);
         }
 
-
         const context = new AlgorithmContext(gases, segments, depthConverter);
-        context.tissues.initialize(segments, depthConverter);
+        const ceilings: Ceiling[] = [];
+        const addedCeilings = this.dive(context, segments, depthConverter);
+        ceilings.push(...addedCeilings);
+
         const gradients = new GradientFactors(options.gfHigh, options.gfLow, fromDepth);
 
         let ceiling = context.tissues.ceiling(options.gfLow, depthConverter);
@@ -171,7 +170,7 @@ export class BuhlmannAlgorithm {
         }
 
         const merged = segments.mergeFlat()
-        return CalculatedProfile.fromProfile(merged, []);
+        return CalculatedProfile.fromProfile(merged, ceilings);
     }
 
     private selectDepthConverter(isFreshWater: boolean): DepthConverter {
@@ -182,15 +181,45 @@ export class BuhlmannAlgorithm {
         return DepthConverter.forSaltWater();
     }
 
-    private addDecoDepthChange(context: AlgorithmContext, fromDepth: number, toDepth: number, currentGas: Gas, options: Options) {
-        // TODO add multilevel dive where toDepth > fromDepth - since this expects ascend
-        if (!currentGas) {
-            currentGas = context.gases.bestDecoGas(fromDepth, options, context.depthConverter);
-            if (!currentGas) {
-                throw new Error('Unable to find starting gas to decompress at depth ' + fromDepth + '..');
-            }
-        }
+    public dive(context: AlgorithmContext, segments: Segments, depthConverter: DepthConverter): Ceiling[] {
+        const ceilings: Ceiling[] = [];
+        let runTime = 0;
+        let ceiling =  context.tissues.ceiling(1, depthConverter);
+        ceilings.push({
+            time: runTime,
+            depth: ceiling
+        });
 
+        segments.withAll(segment => {
+            const speed = segment.speed;
+            let startDepth = segment.startDepth;
+
+            for (let elapsed = 0; elapsed <= segment.duration; elapsed++) {
+                const interval = this.calculateInterval(segment.duration, elapsed);
+                const endDepth = segment.startDepth + interval * speed;
+                const part = new Segment(startDepth, endDepth, segment.gas, interval);
+                context.tissues.load(part, segment.gas, depthConverter);
+                runTime += interval;
+                startDepth = endDepth;
+
+                ceiling =  context.tissues.ceiling(1, depthConverter);
+                ceilings.push({
+                    time: runTime,
+                    depth: ceiling
+                });
+            }
+        });
+
+        return ceilings;
+    }
+
+    private calculateInterval(duration: number, elapsed: number): number {
+        const remaining = duration - elapsed;
+        const interval = remaining > this.oneMinute ? this.oneMinute : remaining % this.oneMinute;
+        return interval;
+    }
+
+    private addDecoDepthChange(context: AlgorithmContext, fromDepth: number, toDepth: number, currentGas: Gas, options: Options) {
         while (toDepth < fromDepth) { // if ceiling is higher, move our diver up.
             // ensure we're on the best gas
             const bestGas = context.gases.bestDecoGas(fromDepth, options, context.depthConverter);

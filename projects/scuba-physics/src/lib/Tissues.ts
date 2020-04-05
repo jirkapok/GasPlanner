@@ -136,11 +136,4 @@ export class Tissues {
         }
         return loadChange;
     }
-
-    public initialize(segments: Segments, depthConverter: DepthConverter) {
-        segments.foreach(segment => {
-            const gas = segment.gas;
-            this.load(segment, gas, depthConverter);
-        });
-    }
 }

@@ -51,7 +51,6 @@ describe('Segments', () => {
             source.add(0, 30, air, 5);
             const noGases = new Gases();
             const messages = SegmentsValidator.validate(source, noGases, maxPpo, depthConverter);
-            console.log(messages);
             expect(messages.length).toBe(1);
         });
     });

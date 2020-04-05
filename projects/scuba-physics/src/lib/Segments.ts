@@ -9,7 +9,7 @@ export class SegmentsValidator {
             messages.push('There needs to be at least one segment at depth.');
         }
 
-        segments.foreach(segment => {
+        segments.withAll(segment => {
             this.validateGas(messages, gases, segment, maxPpo, depthConverter);
         });
 
@@ -97,10 +97,10 @@ export class Segments {
         return this.segments;
     }
 
-    public foreach(callBack: (segment: Segment) => void): void {
-        this.segments.forEach((segment, index, source) => {
-            callBack(segment);
-        });
+    public withAll(callBack: (segment: Segment) => void): void {
+        for(let index = 0; index < this.segments.length; index++) {
+            callBack(this.segments[index]);
+        }
     }
 
     public any(): boolean {

@@ -12,12 +12,12 @@ None of the authors, contributors, administrators, or anyone else connected with
 
 List of current features is part of [application help](./doc/help.md). Road map of planned features:
 
-* Add Fresh/Salt water option (fix its usage in depth converter)
-* Add Segments validation as an input for bulhmann algorithm
 * Fix precision of decompression algorithm
   * No deco limit for depth < 10 m
   * Check safety stop usage
   * Check ceiling usage
+* Fix warning for nodeco dives in planner
+* Add Fresh/Salt water option (fix its usage in depth converter)
 * Add option to define gradient factors
 * Add option to define safety stop range
 * Add altitude option

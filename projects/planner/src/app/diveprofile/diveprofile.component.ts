@@ -85,7 +85,8 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
 
     this.dive.ceilings.forEach((item, index, ceilings) => {
       xCelingValues.push(item.time);
-      yCelingValues.push(item.depth);
+      const depth = Math.round(item.depth * 100) / 100;
+      yCelingValues.push(depth);
     });
 
     const dataCeilings = [{

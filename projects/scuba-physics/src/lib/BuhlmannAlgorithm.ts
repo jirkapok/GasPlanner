@@ -136,6 +136,10 @@ class AlgorithmContext {
 }
 
 export class BuhlmannAlgorithm {
+    /**
+     * Depth difference between two deco stops in metres.
+     */
+    private static readonly decoStopDistance = 3;
     private oneMinute = 1;
 
     public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
@@ -146,37 +150,71 @@ export class BuhlmannAlgorithm {
         }
 
         const last = segments.last();
-        let currentGas: Gas = last.gas;
-        const fromDepth = last.endDepth;
 
-        const gasMessages = GasesValidator.validate(gases, options, depthConverter, fromDepth);
+        // TODO fix max depth: last doesn't have to be max. depth in multilevel diving.
+        const gasMessages = GasesValidator.validate(gases, options, depthConverter, last.endDepth);
         if (gasMessages.length > 0) {
             return CalculatedProfile.fromErrors(gasMessages);
         }
 
+        let currentDepth = last.endDepth;
         const context = new AlgorithmContext(gases, segments, depthConverter);
-        const gradients = new GradientFactors(options.gfHigh, options.gfLow, fromDepth);
+        const gradients = new GradientFactors(options.gfHigh, options.gfLow, currentDepth);
         this.dive(context);
 
-        let ceiling = context.tissues.ceiling(options.gfLow, depthConverter);
-        currentGas = this.addDecoDepthChange(context, fromDepth, ceiling, currentGas, options);
+        const firstDecoStop = this.firstDecoStop(context);
+        let nextDecoStop = firstDecoStop;
+        let nextGasSwitch = context.gases.nextGasSwitch(last.gas, currentDepth, 0, options, context.depthConverter);
+        let nextStop = this.nextStop(firstDecoStop, nextGasSwitch, nextDecoStop);
+        let currentGas = last.gas;
 
-        while (ceiling > 0) {
-            const currentDepth = ceiling;
-            const nextDecoDepth = (ceiling - Tissues.decoStopDistance);
-            let time = 0;
-            const gf = gradients.gradientForDepth(ceiling);
-            while (ceiling > nextDecoDepth && time <= 10000) {
-                this.load(context, currentDepth, currentGas, 1);
-                time++;
-                ceiling = context.tissues.ceiling(gf, depthConverter);
+        while (nextStop >= 0) {
+            // ascent to the nextStop
+            const duration = (currentDepth - nextStop) / options.ascentSpeed;
+            const ascent = context.segments.add(currentDepth, nextStop, currentGas, duration);
+            this.swim(context, ascent);
+            currentDepth = ascent.endDepth;
+
+            if (currentDepth <= 0) {
+                break;
             }
 
-            currentGas = this.addDecoDepthChange(context, currentDepth, ceiling, currentGas, options);
+            // Deco stop
+            currentGas = context.gases.bestDecoGas(currentDepth, options, depthConverter);
+            nextDecoStop = this.nextDecoStop(nextStop);
+
+            while (nextDecoStop < context.tissues.ceiling(1, depthConverter)) {
+                const decoStop = context.segments.add(currentDepth, nextStop, currentGas, duration);
+                this.swim(context, decoStop);
+            }
+
+            // multiple gas switches may happen before first deco stop
+            nextGasSwitch = context.gases.nextGasSwitch(currentGas, currentDepth, 0, options, context.depthConverter);
+            nextStop = this.nextStop(firstDecoStop, nextGasSwitch, nextDecoStop);
         }
 
-        const merged = segments.mergeFlat()
+        const merged = segments.mergeFlat();
         return CalculatedProfile.fromProfile(merged, context.ceilings);
+    }
+
+    private nextStop(firstDecoStop: number, nextGasSwitch: number, nextDecoStop: number) {
+        return firstDecoStop > nextGasSwitch ? nextDecoStop : nextGasSwitch;
+    }
+
+    private nextDecoStop(lastStop: number): number {
+        return lastStop - BuhlmannAlgorithm.decoStopDistance;
+    }
+
+    private firstDecoStop(context: AlgorithmContext): number {
+        const ceiling = context.tissues.ceiling(1, context.depthConverter);
+        const rounded = Math.round(ceiling / BuhlmannAlgorithm.decoStopDistance) * BuhlmannAlgorithm.decoStopDistance;
+
+        const needsAdd = !!(ceiling % BuhlmannAlgorithm.decoStopDistance);
+        if (needsAdd) {
+            return rounded + BuhlmannAlgorithm.decoStopDistance;
+        }
+
+        return rounded;
     }
 
     private selectDepthConverter(isFreshWater: boolean): DepthConverter {
@@ -189,50 +227,41 @@ export class BuhlmannAlgorithm {
 
     public dive(context: AlgorithmContext): void {
         // TODO fix gradient factors
-        let ceiling =  context.tissues.ceiling(1, context.depthConverter);
+        const ceiling =  context.tissues.ceiling(1, context.depthConverter);
         context.addCeiling(ceiling);
 
         context.segments.withAll(segment => {
-            const speed = segment.speed;
-            let startDepth = segment.startDepth;
-
-            for (let elapsed = 0; elapsed <= segment.duration; elapsed++) {
-                const interval = this.calculateInterval(segment.duration, elapsed);
-                const endDepth = segment.startDepth + interval * speed;
-                const part = new Segment(startDepth, endDepth, segment.gas, interval);
-                context.tissues.load(part, segment.gas, context.depthConverter);
-                context.runTime += interval;
-                startDepth = endDepth;
-
-                ceiling = context.tissues.ceiling(1, context.depthConverter);
-                context.addCeiling(ceiling);
-            }
+            this.swim(context, segment);
         });
+    }
+
+    private swim(context: AlgorithmContext, segment: Segment){
+        let startDepth = segment.startDepth;
+
+        for (let elapsed = 0; elapsed <= segment.duration; elapsed++) {
+            const interval = this.calculateInterval(segment.duration, elapsed);
+            const endDepth = startDepth + interval * segment.speed;
+            const part = new Segment(startDepth, endDepth, segment.gas, interval);
+            this.swimPart(context, part);
+            startDepth = part.endDepth;
+        }
+    }
+
+    private swimPart(context: AlgorithmContext, segment: Segment) {
+        context.tissues.load(segment, segment.gas, context.depthConverter);
+        context.runTime += segment.duration;
+        const ceiling = context.tissues.ceiling(1, context.depthConverter);
+        context.addCeiling(ceiling);
     }
 
     private calculateInterval(duration: number, elapsed: number): number {
         const remaining = duration - elapsed;
-        const interval = remaining > this.oneMinute ? this.oneMinute : remaining % this.oneMinute;
-        return interval;
-    }
 
-    private addDecoDepthChange(context: AlgorithmContext, fromDepth: number, toDepth: number, currentGas: Gas, options: Options) {
-        while (toDepth < fromDepth) { // if ceiling is higher, move our diver up.
-            // ensure we're on the best gas
-            const bestGas = context.gases.bestDecoGas(fromDepth, options, context.depthConverter);
-            currentGas = Gases.switchGas(bestGas, currentGas);
-            const ceiling = context.gases.nextGasSwitch(currentGas, fromDepth, toDepth, options, context.depthConverter);
-
-            // take us to the ceiling using ascent speed
-            const depthdiff = fromDepth - ceiling;
-            const time = depthdiff / options.ascentSpeed;
-            this.loadChange(context, fromDepth, ceiling, currentGas, time);
-            fromDepth = ceiling; // move up from-depth
+        if (remaining >= this.oneMinute) {
+            return this.oneMinute;
         }
 
-        const bestGas = context.gases.bestDecoGas(fromDepth, options, context.depthConverter);
-        currentGas = Gases.switchGas(bestGas, currentGas);
-        return currentGas;
+        return remaining % this.oneMinute;
     }
 
     public noDecoLimit(depth: number, gas: Gas, gf: number, isFreshWater: boolean): number {

@@ -47,7 +47,7 @@ export class Tissue extends Compartment {
         }
 
         const ceiling = depthConverter.fromBar(bars);
-        return Math.round(ceiling);
+        return ceiling;
     }
 
     public load(segment: Segment, gas: Gas, depthConverter: DepthConverter): number {
@@ -98,10 +98,6 @@ export class Tissue extends Compartment {
 }
 
 export class Tissues {
-    /**
-     * Depth difference between two deco stops in metres.
-     */
-    public static readonly decoStopDistance = 3;
     public compartments: Tissue[] = [];
 
     constructor() {
@@ -112,7 +108,6 @@ export class Tissues {
     }
 
     public ceiling(gf: number, depthConverter: DepthConverter): number {
-        gf = gf || 1.0;
         let ceiling = 0;
         for (let index = 0; index < this.compartments.length; index++) {
             const tissueCeiling = this.compartments[index].ceiling(gf, depthConverter);
@@ -121,9 +116,6 @@ export class Tissues {
             }
         }
 
-        while (ceiling % Tissues.decoStopDistance !== 0) {
-            ceiling++;
-        }
         return ceiling;
     }
 

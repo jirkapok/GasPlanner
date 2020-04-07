@@ -238,7 +238,7 @@ export class BuhlmannAlgorithm {
     private swim(context: AlgorithmContext, segment: Segment){
         let startDepth = segment.startDepth;
 
-        for (let elapsed = 0; elapsed <= segment.duration; elapsed++) {
+        for (let elapsed = 0; elapsed < segment.duration; elapsed++) {
             const interval = this.calculateInterval(segment.duration, elapsed);
             const endDepth = startDepth + interval * segment.speed;
             const part = new Segment(startDepth, endDepth, segment.gas, interval);

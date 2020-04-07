@@ -35,7 +35,6 @@ export class Tissue extends Compartment {
     }
 
     public ceiling(gf: number, depthConverter: DepthConverter): number {
-        gf = gf || 1.0;
         const a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
         const b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
         const bars = (this.pTotal - (a * gf)) / ((gf / b) + 1.0 - gf);

@@ -120,18 +120,35 @@ class GradientFactors {
 }
 
 class AlgorithmContext {
+    private gradients: GradientFactors;
     public tissues = new Tissues();
     public ceilings: Ceiling[] = [];
     public runTime = 0;
 
     // TODO reuse tissues for repetitive dives
-    constructor(public gases: Gases, public segments: Segments, public depthConverter: DepthConverter) {}
+    constructor(public gases: Gases, public segments: Segments, public options: Options,
+                public depthConverter: DepthConverter, currentDepth:  number) {
+        this.gradients = new GradientFactors(options.gfHigh, options.gfLow, currentDepth);
+    }
+
+    public get currentDepth(): number {
+        if(this.segments.any()) {
+            return this.segments.last().endDepth;
+        }
+
+        return 0;
+    }
 
     public addCeiling(depth: number) {
         this.ceilings.push({
             time: this.runTime,
             depth: depth
         });
+    }
+
+    public ceiling(): number {
+        const gf = this.gradients.gradientForDepth(this.currentDepth);
+        return this.tissues.ceiling(gf, this.depthConverter);
     }
 }
 
@@ -157,39 +174,36 @@ export class BuhlmannAlgorithm {
             return CalculatedProfile.fromErrors(gasMessages);
         }
 
-        let currentDepth = last.endDepth;
-        const context = new AlgorithmContext(gases, segments, depthConverter);
-        const gradients = new GradientFactors(options.gfHigh, options.gfLow, currentDepth);
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, last.endDepth);
         this.dive(context);
 
         const firstDecoStop = this.firstDecoStop(context);
         let nextDecoStop = firstDecoStop;
-        let nextGasSwitch = context.gases.nextGasSwitch(last.gas, currentDepth, 0, options, context.depthConverter);
+        let nextGasSwitch = context.gases.nextGasSwitch(last.gas, context.currentDepth, 0, options, context.depthConverter);
         let nextStop = this.nextStop(firstDecoStop, nextGasSwitch, nextDecoStop);
         let currentGas = last.gas;
 
         while (nextStop >= 0) {
             // ascent to the nextStop
-            const duration = (currentDepth - nextStop) / options.ascentSpeed;
-            const ascent = context.segments.add(currentDepth, nextStop, currentGas, duration);
+            const duration = (context.currentDepth - nextStop) / options.ascentSpeed;
+            const ascent = context.segments.add(context.currentDepth, nextStop, currentGas, duration);
             this.swim(context, ascent);
-            currentDepth = ascent.endDepth;
 
-            if (currentDepth <= 0) {
+            if (context.currentDepth <= 0) {
                 break;
             }
 
             // Deco stop
-            currentGas = context.gases.bestDecoGas(currentDepth, options, depthConverter);
+            currentGas = context.gases.bestDecoGas(context.currentDepth, options, depthConverter);
             nextDecoStop = this.nextDecoStop(nextStop);
 
-            while (nextDecoStop < context.tissues.ceiling(1, depthConverter)) {
-                const decoStop = context.segments.add(currentDepth, nextStop, currentGas, duration);
+            while (nextDecoStop < context.ceiling()) {
+                const decoStop = context.segments.add(context.currentDepth, nextStop, currentGas, this.oneMinute);
                 this.swim(context, decoStop);
             }
 
             // multiple gas switches may happen before first deco stop
-            nextGasSwitch = context.gases.nextGasSwitch(currentGas, currentDepth, 0, options, context.depthConverter);
+            nextGasSwitch = context.gases.nextGasSwitch(currentGas, context.currentDepth, 0, options, context.depthConverter);
             nextStop = this.nextStop(firstDecoStop, nextGasSwitch, nextDecoStop);
         }
 
@@ -206,7 +220,7 @@ export class BuhlmannAlgorithm {
     }
 
     private firstDecoStop(context: AlgorithmContext): number {
-        const ceiling = context.tissues.ceiling(1, context.depthConverter);
+        const ceiling = context.ceiling();
         const rounded = Math.round(ceiling / BuhlmannAlgorithm.decoStopDistance) * BuhlmannAlgorithm.decoStopDistance;
 
         const needsAdd = !!(ceiling % BuhlmannAlgorithm.decoStopDistance);
@@ -226,8 +240,8 @@ export class BuhlmannAlgorithm {
     }
 
     private dive(context: AlgorithmContext): void {
-        // TODO fix gradient factors
-        const ceiling =  context.tissues.ceiling(1, context.depthConverter);
+        // initial ceiling doesn't have to be 0m, because of previous tissues loading.
+        const ceiling =  context.ceiling();
         context.addCeiling(ceiling);
 
         context.segments.withAll(segment => {
@@ -250,7 +264,7 @@ export class BuhlmannAlgorithm {
     private swimPart(context: AlgorithmContext, segment: Segment) {
         context.tissues.load(segment, segment.gas, context.depthConverter);
         context.runTime += segment.duration;
-        const ceiling = context.tissues.ceiling(1, context.depthConverter);
+        const ceiling = context.ceiling();
         context.addCeiling(ceiling);
     }
 
@@ -265,6 +279,7 @@ export class BuhlmannAlgorithm {
     }
 
     public noDecoLimit(depth: number, gas: Gas, gf: number, isFreshWater: boolean): number {
+        const options = new Options(gf, gf, 1.6, 30, isFreshWater, 10);
         const depthConverter = this.selectDepthConverter(isFreshWater);
         const gases = new Gases();
         gases.addBottomGas(gas);
@@ -273,15 +288,13 @@ export class BuhlmannAlgorithm {
         const descentSpeed = 20;
         const descent = segments.enterWater(gas, descentSpeed, depth);
 
-        const context = new AlgorithmContext(gases, segments, depthConverter);
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, depth);
         this.swim(context, descent);
-        let ceiling = context.tissues.ceiling(gf, depthConverter);
         const hover = new Segment(depth, depth, gas, this.oneMinute);
         let change = 1;
 
-        while (ceiling <= 0 && change > 0) {
+        while (context.ceiling() <= 0 && change > 0) {
             change = context.tissues.load(hover, gas, context.depthConverter);
-            ceiling = context.tissues.ceiling(gf, depthConverter);
             context.runTime += this.oneMinute;
         }
 

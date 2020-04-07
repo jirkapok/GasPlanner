@@ -73,9 +73,9 @@ export class Segments {
         return segment;
     }
 
-    public enterWater(gas: Gas, speed: number, depth: number) {
+    public enterWater(gas: Gas, speed: number, depth: number): Segment {
         const duration = depth / speed;
-        this.add(0, depth, gas, duration);
+        return this.add(0, depth, gas, duration);
     }
 
     public addFlat(depth: number, gas: Gas, duration: number) {

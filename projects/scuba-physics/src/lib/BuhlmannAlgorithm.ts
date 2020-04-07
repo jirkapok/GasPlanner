@@ -225,7 +225,7 @@ export class BuhlmannAlgorithm {
         return DepthConverter.forSaltWater();
     }
 
-    public dive(context: AlgorithmContext): void {
+    private dive(context: AlgorithmContext): void {
         // TODO fix gradient factors
         const ceiling =  context.tissues.ceiling(1, context.depthConverter);
         context.addCeiling(ceiling);
@@ -265,36 +265,29 @@ export class BuhlmannAlgorithm {
     }
 
     public noDecoLimit(depth: number, gas: Gas, gf: number, isFreshWater: boolean): number {
-        gf = gf || 1.0;
         const depthConverter = this.selectDepthConverter(isFreshWater);
         const gases = new Gases();
         gases.addBottomGas(gas);
+
         const segments = new Segments();
+        const descentSpeed = 20;
+        const descent = segments.enterWater(gas, descentSpeed, depth);
+
         const context = new AlgorithmContext(gases, segments, depthConverter);
-
+        this.swim(context, descent);
         let ceiling = context.tissues.ceiling(gf, depthConverter);
-
-        let time = 0;
+        const hover = new Segment(depth, depth, gas, this.oneMinute);
         let change = 1;
+
         while (ceiling <= 0 && change > 0) {
-            change = this.load(context, depth, gas, 1);
+            change = context.tissues.load(hover, gas, context.depthConverter);
             ceiling = context.tissues.ceiling(gf, depthConverter);
-            time++;
+            context.runTime += this.oneMinute;
         }
 
         if (change === 0) {
             return Number.POSITIVE_INFINITY;
         }
-        return time - 1; // We went one minute past a ceiling of "0"
-    }
-
-    private load(context: AlgorithmContext, depth: number, gas: Gas, time: number): number {
-        return this.loadChange(context, depth, depth, gas, time);
-    }
-
-    private loadChange(context: AlgorithmContext, startDepth: number, endDepth: number, gas: Gas, time: number): number {
-        const added = context.segments.add(startDepth, endDepth, gas, time);
-        const loaded = context.tissues.load(added, gas, context.depthConverter);
-        return loaded;
+        return context.runTime - 1; // We went one minute past a ceiling of "0"
     }
 }

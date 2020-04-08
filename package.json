@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng build scuba-physics && ng serve",
     "build": "ng build --prod",
     "build-lib": "ng build scuba-physics",
     "test": "ng test",
@@ -61,8 +61,5 @@
     "ts-node": "~8.5.4",
     "tslint": "~5.20.1",
     "typescript": "^3.8.3"
-  },
-  "optionalDependencies": {
-    "scuba-physics": "file:dist/scuba-physics"
   }
 }

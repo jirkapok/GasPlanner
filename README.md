@@ -13,9 +13,8 @@ None of the authors, contributors, administrators, or anyone else connected with
 List of current features is part of [application help](./doc/help.md). Road map of planned features:
 
 * Fix precision of decompression algorithm
-  * No deco limit for depth < 10 m
-  * Check safety stop usage
-  * Check ceiling usage
+  * Fix ceiling calculation during ascent
+  * Add safety stop 3 min. on last deco stop
 * Fix warning for nodeco dives in planner
 * Add Fresh/Salt water option (fix its usage in depth converter)
 * Add option to define gradient factors
@@ -42,10 +41,10 @@ To work on the application install NodeJs, AngularCli 8.3 and TypeScript. Recomm
 ## Build
 
 To compile the application compile, first you need to install the dependency from local directory. To do so run `npm run build-lib`.
-Than compile solution by `npm run build` to deploy `dist` directory. To start the app use `npm run start` for debugging purpose.
+Than compile solution by `npm run build` to deploy `dist` directory. To start the app use `npm run start` for debugging purpose. See also `build.ps1` build script.
 
 ## Running the tests
-
+ 
 Angular recommended testing environment is used, to run test use `npm run test` or `npm run e2e`
 
 ## Contributing
@@ -64,6 +63,9 @@ Based on following tools:
 * <https://github.com/nyxtom/dive>
 * <http://www.lizardland.co.uk/DIYDeco.html>
 * <https://github.com/Subsurface-divelog>
+* <https://www.frogkick.nl/files/understanding_m-values.pdf>
+* <https://diverclub.ru/File/literatur/Deep_Stops.pdf>
+* <https://thetheoreticaldiver.org/wordpress//var/lib/wordpress/wp-content/uploads/2017/11/dekotheorie1.pdf>
 
 At time of development also other implementations are available:
 

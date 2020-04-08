@@ -147,7 +147,11 @@ class AlgorithmContext {
     }
 
     public ceiling(): number {
-        const gf = this.gradients.gradientForDepth(this.currentDepth);
+        return this.ceilingForDepth(this.currentDepth);
+    }
+
+    public ceilingForDepth(depth: number): number {
+        const gf = this.gradients.gradientForDepth(depth);
         return this.tissues.ceiling(gf, this.depthConverter);
     }
 }
@@ -264,7 +268,7 @@ export class BuhlmannAlgorithm {
     private swimPart(context: AlgorithmContext, segment: Segment) {
         context.tissues.load(segment, segment.gas, context.depthConverter);
         context.runTime += segment.duration;
-        const ceiling = context.ceiling();
+        const ceiling = context.ceilingForDepth(segment.endDepth);
         context.addCeiling(ceiling);
     }
 

@@ -13,8 +13,4 @@ npm install -g @angular/cli@8.3
 npm install -g typescript@3.5.3
 
 # NPM Packages
-npm install --no-optional
-
-# Compile dependency
-npm run build-lib
-npm install scuba-physics
+.\build.ps1

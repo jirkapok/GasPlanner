@@ -44,10 +44,8 @@ export class Segment {
         public gas: Gas,
         public duration: number) {}
 
-    public levelEquals(toCompare: Segment): boolean {
-        return this.isFlat &&
-            toCompare.isFlat &&
-            this.startDepth === toCompare.startDepth &&
+    public speedEquals(toCompare: Segment): boolean {
+        return this.speed === toCompare.speed &&
             this.gas === toCompare.gas;
     }
 
@@ -59,8 +57,9 @@ export class Segment {
         return this.startDepth === this.endDepth;
     }
 
-    public addTime(toAdd: Segment): void {
+    public mergeFrom(toAdd: Segment): void {
         this.duration += toAdd.duration;
+        this.endDepth = toAdd.endDepth;
     }
 }
 
@@ -87,8 +86,8 @@ export class Segments {
         for (let index = this.segments.length - 1; index > 0; index--) {
             const segment1 = this.segments[index - 1];
             const segment2 = this.segments[index];
-            if (segment1.levelEquals(segment2)) {
-                segment1.addTime(segment2);
+            if (segment1.speedEquals(segment2)) {
+                segment1.mergeFrom(segment2);
                 toRemove.push(segment2);
             }
         }

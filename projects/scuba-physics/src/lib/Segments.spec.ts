@@ -75,41 +75,57 @@ describe('Segments', () => {
         });
     });
 
-    describe('Segment', () => {
+    describe('Segments merge', () => {
         it('Adds time from other segment', () => {
             const segment = new Segment(20, 20, air, 15);
             const segment2 = new Segment(20, 20, air, 35);
-            segment.addTime(segment2);
+            segment.mergeFrom(segment2);
             expect(segment.duration).toBe(50);
         });
 
-        it('Level equals for flat segments', () => {
-            const segment = new Segment(20, 20, air, 15);
-            const segment2 = new Segment(20, 20, air, 35);
-            const equals = segment.levelEquals(segment2);
-            expect(equals).toBeTrue();
-        });
+        describe('Speed equals', () => {
+            it('flat segments', () => {
+                const segment = new Segment(20, 20, air, 15);
+                const segment2 = new Segment(20, 20, air, 35);
+                const equals = segment.speedEquals(segment2);
+                expect(equals).toBeTrue();
+            });
 
-        describe('Doesn`t equal', () => {
             it('ascent segments', () => {
-                const segment = new Segment(10, 20, air, 15);
-                const segment2 = new Segment(10, 20, air, 35);
-                const equals = segment.levelEquals(segment2);
-                expect(equals).toBeFalse();
+                const segment = new Segment(20, 10, air, 15);
+                const segment2 = new Segment(10, 0, air, 15);
+                const equals = segment.speedEquals(segment2);
+                expect(equals).toBeTrue();
             });
 
             it('descent segments', () => {
-                const segment = new Segment(20, 10, air, 15);
-                const segment2 = new Segment(20, 10, air, 35);
-                const equals = segment.levelEquals(segment2);
+                const segment = new Segment(20, 30, air, 15);
+                const segment2 = new Segment(30, 40, air, 15);
+                const equals = segment.speedEquals(segment2);
+                expect(equals).toBeTrue();
+            });
+        });
+
+        describe('Speed Doesn`t equal', () => {
+            it('different ascent segments', () => {
+                const segment = new Segment(10, 20, air, 15);
+                const segment2 = new Segment(10, 20, air, 35);
+                const equals = segment.speedEquals(segment2);
                 expect(equals).toBeFalse();
             });
 
-            it(' different gas', () => {
+            it('different descent segments', () => {
+                const segment = new Segment(20, 10, air, 15);
+                const segment2 = new Segment(20, 10, air, 35);
+                const equals = segment.speedEquals(segment2);
+                expect(equals).toBeFalse();
+            });
+
+            it('different gas', () => {
                 const segment = new Segment(20, 10, air, 15);
                 const ean50 = new Gas(0.5, 0);
                 const segment2 = new Segment(20, 10, ean50, 35);
-                const equals = segment.levelEquals(segment2);
+                const equals = segment.speedEquals(segment2);
                 expect(equals).toBeFalse();
             });
         });

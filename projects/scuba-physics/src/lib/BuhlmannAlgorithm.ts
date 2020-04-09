@@ -101,34 +101,17 @@ export class CalculatedProfile {
     }
 }
 
-class GradientFactors {
-    public gfChangePerMeter: number;
-
-    constructor(public gfHigh: number, public gfLow: number, private fromDepth: number) {
-        this.gfChangePerMeter = this.depthChangePerMeter(fromDepth);
-    }
-
-    private depthChangePerMeter(fromDepth: number): number {
-        // find variance in gradient factor
-        const gfDiff = this.gfHigh - this.gfLow;
-        return gfDiff / fromDepth;
-    }
-
-    public gradientForDepth(depth: number): number {
-        return this.gfLow + (this.gfChangePerMeter * (this.fromDepth - depth));
-    }
-}
 
 class AlgorithmContext {
-    private gradients: GradientFactors;
+    private gfDiff: number;
     public tissues = new Tissues();
     public ceilings: Ceiling[] = [];
     public runTime = 0;
 
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options,
-                public depthConverter: DepthConverter, currentDepth:  number) {
-        this.gradients = new GradientFactors(options.gfHigh, options.gfLow, currentDepth);
+                public depthConverter: DepthConverter, private firstCelingDepth:  number) {
+        this.gfDiff = options.gfHigh - options.gfLow;
     }
 
     public get currentDepth(): number {
@@ -150,8 +133,12 @@ class AlgorithmContext {
         return this.ceilingForDepth(this.currentDepth);
     }
 
+    public gradientForDepth(depth: number): number {
+        return this.options.gfHigh - this.gfDiff * depth / this.firstCelingDepth;
+    }
+
     public ceilingForDepth(depth: number): number {
-        const gf = this.gradients.gradientForDepth(depth);
+        const gf = this.gradientForDepth(depth);
         return this.tissues.ceiling(gf, this.depthConverter);
     }
 }

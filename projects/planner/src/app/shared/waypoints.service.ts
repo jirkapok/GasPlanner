@@ -8,10 +8,10 @@ export class Profile {
 }
 
 export class WayPointsService {
-    public static calculateWayPoints(plan: Plan, gas: Gas): Profile {
+    public static calculateWayPoints(plan: Plan, gas: Gas, options: Options): Profile {
         const wayPoints = [];
         const descent = this.createDescent(plan);
-        const finalSegments = this.calculateDecompression(plan, gas, descent);
+        const finalSegments = this.calculateDecompression(plan, gas, options, descent);
 
         let lastWayPoint = descent;
         wayPoints.push(descent);
@@ -29,7 +29,7 @@ export class WayPointsService {
         };
     }
 
-    private static calculateDecompression(plan: Plan, gas: Gas, descent: WayPoint): CalculatedProfile {
+    private static calculateDecompression(plan: Plan, gas: Gas, options: Options, descent: WayPoint): CalculatedProfile {
         const bGas = gas.toGas();
         const gases = new Gases();
         gases.addBottomGas(bGas);
@@ -39,11 +39,6 @@ export class WayPointsService {
         const bottomTime = plan.duration - descent.duration;
         segments.addFlat(plan.depth, bGas, bottomTime);
 
-        // Gradient factors in Shaerwater Teric
-        // Low (45/95)
-        // Med (40/85)
-        // High (35/75)
-        const options = new Options(0.4, 0.85, 1.6, 30, true);
         const algorithm = new BuhlmannAlgorithm();
         const finalSegments = algorithm.calculateDecompression(options, gases, segments);
         return finalSegments;

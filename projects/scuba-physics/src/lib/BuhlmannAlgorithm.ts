@@ -10,6 +10,11 @@ export class Options implements GasOptions {
         return this._ascentSpeed;
     }
     constructor(
+        // Gradient factors in Shaerwater Teric
+        // Low (45/95)
+        // Med (40/85)
+        // High (35/75)
+
         /**
          * Low gradient factor  in range 0-1 (e.g 0-100%), default 1
          */
@@ -115,7 +120,7 @@ class AlgorithmContext {
     }
 
     public get currentDepth(): number {
-        if(this.segments.any()) {
+        if (this.segments.any()) {
             return this.segments.last().endDepth;
         }
 
@@ -240,7 +245,7 @@ export class BuhlmannAlgorithm {
         });
     }
 
-    private swim(context: AlgorithmContext, segment: Segment){
+    private swim(context: AlgorithmContext, segment: Segment) {
         let startDepth = segment.startDepth;
 
         for (let elapsed = 0; elapsed < segment.duration; elapsed++) {
@@ -269,9 +274,8 @@ export class BuhlmannAlgorithm {
         return remaining % this.oneMinute;
     }
 
-    public noDecoLimit(depth: number, gas: Gas, gf: number, isFreshWater: boolean): number {
-        const options = new Options(gf, gf, 1.6, 30, isFreshWater, 10);
-        const depthConverter = this.selectDepthConverter(isFreshWater);
+    public noDecoLimit(depth: number, gas: Gas, options: Options): number {
+        const depthConverter = this.selectDepthConverter(options.isFreshWater);
         const gases = new Gases();
         gases.addBottomGas(gas);
 

@@ -4,22 +4,25 @@ import { Segment, Segments } from './Segments';
 
 describe('Buhlmann Algorithm', () => {
   describe('No decompression times', () => {
-
     it('Calculate air No decompression limit at surface', () => {
-        const algorithm = new BuhlmannAlgorithm();
         const air: Gas = new Gas(0.21, 0);
         const depth = 0;
-        const ndl = algorithm.noDecoLimit(depth, air, 1, true);
+        const options = new Options(1, 1, 1.6, 30, true);
+        const algorithm = new BuhlmannAlgorithm();
+        const ndl = algorithm.noDecoLimit(depth, air, options);
         expect(ndl).toBe(Infinity);
     });
 
     describe('Calculate air No decompression limits at depth', () => {
+      const options = new Options(1, 1, 1.6, 30, true);
+
       const calculateNoDecompressionLimit = (testCases: number[][], isFreshWater: boolean) => {
         testCases.forEach(testCase => {
           const algorithm = new BuhlmannAlgorithm();
           const air: Gas = new Gas(0.21, 0);
           const depth = testCase[0];
-          const ndl = algorithm.noDecoLimit(depth, air, 1, isFreshWater);
+          options.isFreshWater = isFreshWater;
+          const ndl = algorithm.noDecoLimit(depth, air, options);
           expect(ndl).toBe(testCase[1], 'No deco limit for "' + depth + '" failed');
         });
       };

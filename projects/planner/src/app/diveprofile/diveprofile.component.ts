@@ -68,7 +68,10 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
       x: xValues,
       y: yValues,
       type: 'scatter',
-      name: 'dive'
+      name: 'dive',
+      marker: {
+        color: 'rgb(31, 119, 180)'
+      }
     }];
 
     this.dive.wayPoints.forEach((item, index, waypoints) => {
@@ -93,7 +96,11 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
       x: xCelingValues,
       y: yCelingValues,
       type: 'scatter',
-      name: 'ceilings'
+      fill: 'tozeroy',
+      name: 'ceilings',
+      marker: {
+        color: 'rgb(255, 160, 73)'
+      }
     }];
 
     Plotly.plot('diveplot', dataCeilings, layout, options);

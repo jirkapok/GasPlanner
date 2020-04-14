@@ -171,7 +171,7 @@ export class Dive {
     }
 
     public get hasErrors(): boolean {
-        return this.calculated && (this.notEnoughGas || this.depthExceeded || this.notEnoughTime || this.noDecoExceeded);
+        return this.calculated && (this.notEnoughGas || this.depthExceeded || this.notEnoughTime);
     }
 }
 

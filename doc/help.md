@@ -5,11 +5,16 @@
 Based on current features implementation some types of diving are not supported yet. Application is able to calculate only following type of dives:
 
 * Only open circuit dives can be planned
-* No decompression dives
 * Only one gas tank
 * No multilevel dive profiles are supported
 * Only air and nitrox gases are available
 * No repetitive dives
+
+## Calculations Background
+
+* Ascent speed 10m/min. and 20m/min. descend speed is used.
+* When calculating ascent time 2 minutes are always added, to resolve immediate issues in depth.
+* Safety stop in 3 meters for 3 minutes is always added as last stop.
 
 ## Theoretical model
 
@@ -58,6 +63,7 @@ Used to save current settings to be able use them in later planning. This stores
 
 ### Gradient Factors
 
+* All calculations currently count with gradients 100/100.
 * TODO https://www.diverite.com/articles/gradient-factors/
 
 ### Diver breathing rate

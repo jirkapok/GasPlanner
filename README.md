@@ -13,7 +13,7 @@ None of the authors, contributors, administrators, or anyone else connected with
 List of current features is part of [application help](./doc/help.md). Road map of planned features:
 
 * Fix precision of decompression algorithm
-  * Fix ceiling calculation during ascent
+  * Fix ceiling calculation during ascent based on gradient factors
 * Add Fresh/Salt water option (fix its usage in depth converter)
 * Add option to define gradient factors
 * Add option to define safety stop range
@@ -27,11 +27,6 @@ List of current features is part of [application help](./doc/help.md). Road map 
 * Add trimix calculator
 * Add option to define repetitive dives
 
-## Calculations Background
-
-* Ascent speed 10m/min. and 20m/min. descend speed is used
-* When calculating ascent time 2 minutes are always added, to resolve immediate issues in depth.
-
 ## Prerequisites
 
 To work on the application install NodeJs, AngularCli 8.3 and TypeScript. Recommended development environment is Visual Studio Code. Use `instalEnvironment.ps1` to get initial environment tools and packages.
@@ -42,7 +37,7 @@ To compile the application compile, first you need to install the dependency fro
 Than compile solution by `npm run build` to deploy `dist` directory. To start the app use `npm run start` for debugging purpose. See also `build.ps1` build script.
 
 ## Running the tests
- 
+
 Angular recommended testing environment is used, to run test use `npm run test` or `npm run e2e`
 
 ## Contributing

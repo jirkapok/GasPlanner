@@ -4,11 +4,6 @@ import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter } from './depth-converter';
 
 export class Options implements GasOptions {
-    private _ascentSpeed: number;
-
-    public get ascentSpeed(): number {
-        return this._ascentSpeed;
-    }
     constructor(
         // Gradient factors in Shaerwater Teric
         // Low (45/95)
@@ -43,14 +38,20 @@ export class Options implements GasOptions {
         /**
          * Usual Ascent speed used by the diver in metres/minute, default 10 meters/minute.
          */
-        ascentSpeed?: number
+        public ascentSpeed?: number,
+
+        /**
+         * Usual descent speed used by the diver in metres/minute, default 20 meters/minute.
+         */
+        public descentSpeed?: number
     ) {
-        gfLow = gfLow || 1.0;
-        gfHigh = gfHigh || 1.0;
-        maxppO2 = maxppO2 || 1.6;
-        maxEND = maxEND || 30;
+        this.gfLow = gfLow || 1.0;
+        this.gfHigh = gfHigh || 1.0;
+        this.maxppO2 = maxppO2 || 1.6;
+        this.maxEND = maxEND || 30;
         isFreshWater = isFreshWater || false;
-        this._ascentSpeed = ascentSpeed || 10;
+        this.ascentSpeed = ascentSpeed || 10;
+        this.descentSpeed = descentSpeed || 20;
     }
 }
 
@@ -181,7 +182,8 @@ export class BuhlmannAlgorithm {
 
         while (nextStop >= 0) {
             // ascent to the nextStop
-            const duration = (context.currentDepth - nextStop) / options.ascentSpeed;
+            const depthDifference = context.currentDepth - nextStop;
+            const duration = this.duration(depthDifference, options.ascentSpeed);
             const ascent = context.segments.add(context.currentDepth, nextStop, currentGas, duration);
             this.swim(context, ascent);
 
@@ -205,6 +207,10 @@ export class BuhlmannAlgorithm {
 
         const merged = segments.mergeFlat();
         return CalculatedProfile.fromProfile(merged, context.ceilings);
+    }
+
+    private duration(depthDifference: number, speed: number): number {
+        return depthDifference / speed;
     }
 
     private nextStop(firstDecoStop: number, nextGasSwitch: number, nextDecoStop: number) {
@@ -280,8 +286,8 @@ export class BuhlmannAlgorithm {
         gases.addBottomGas(gas);
 
         const segments = new Segments();
-        const descentSpeed = 20;
-        const descent = segments.enterWater(gas, descentSpeed, depth);
+        const duration = this.duration(depth, options.descentSpeed);
+        const descent = segments.add(0, depth, gas, duration);
 
         const context = new AlgorithmContext(gases, segments, options, depthConverter, depth);
         this.swim(context, descent);

@@ -23,7 +23,7 @@ export class PlannerService {
     const depth = this.plan.depth;
     const gas = this.gas.toGas();
     const noDecoLimit = algorithm.noDecoLimit(depth, gas, this.options);
-    return noDecoLimit;
+    return Math.floor(noDecoLimit);
   }
 
   public calculate() {

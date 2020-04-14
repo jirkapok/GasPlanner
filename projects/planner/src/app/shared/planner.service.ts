@@ -12,7 +12,7 @@ export class PlannerService {
   public dive: Dive = new Dive();
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
-  private options = new Options(1, 1, 1.6, 30, true);
+  private options = new Options(1, 1, 1.6, 30, true, true);
 
   public get gasMod(): number {
     return NitroxCalculator.mod(this.diver.maxPpO2, this.gas.o2);

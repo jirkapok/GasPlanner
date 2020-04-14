@@ -36,6 +36,11 @@ export class Options implements GasOptions {
         public isFreshWater: boolean,
 
         /**
+         * If true, adds 3 minutes to last stop in 3 meters
+         */
+        public addSafetyStop?: boolean,
+
+        /**
          * Usual Ascent speed used by the diver in metres/minute, default 10 meters/minute.
          */
         public ascentSpeed?: number,
@@ -49,7 +54,8 @@ export class Options implements GasOptions {
         this.gfHigh = gfHigh || 1.0;
         this.maxppO2 = maxppO2 || 1.6;
         this.maxEND = maxEND || 30;
-        isFreshWater = isFreshWater || false;
+        this.isFreshWater = isFreshWater || false;
+        this.addSafetyStop = addSafetyStop || false;
         this.ascentSpeed = ascentSpeed || 10;
         this.descentSpeed = descentSpeed || 20;
     }
@@ -200,6 +206,12 @@ export class BuhlmannAlgorithm {
                 this.swim(context, decoStop);
             }
 
+            if (options.addSafetyStop && context.currentDepth === BuhlmannAlgorithm.decoStopDistance) {
+                const safetyStopDuration = this.oneMinute * 3;
+                const decoStop = context.segments.add(context.currentDepth, nextStop, currentGas, safetyStopDuration);
+                this.swim(context, decoStop);
+            }
+
             // multiple gas switches may happen before first deco stop
             nextGasSwitch = context.gases.nextGasSwitch(currentGas, context.currentDepth, 0, options, context.depthConverter);
             nextStop = this.nextStop(firstDecoStop, nextGasSwitch, nextDecoStop);
@@ -213,7 +225,7 @@ export class BuhlmannAlgorithm {
         return depthDifference / speed;
     }
 
-    private nextStop(firstDecoStop: number, nextGasSwitch: number, nextDecoStop: number) {
+    private nextStop(firstDecoStop: number, nextGasSwitch: number, nextDecoStop: number): number {
         return firstDecoStop > nextGasSwitch ? nextDecoStop : nextGasSwitch;
     }
 
@@ -228,6 +240,10 @@ export class BuhlmannAlgorithm {
         const needsAdd = !!(ceiling % BuhlmannAlgorithm.decoStopDistance);
         if (needsAdd) {
             return rounded + BuhlmannAlgorithm.decoStopDistance;
+        }
+
+        if (context.options.addSafetyStop && rounded <= BuhlmannAlgorithm.decoStopDistance) {
+            return BuhlmannAlgorithm.decoStopDistance;
         }
 
         return rounded;

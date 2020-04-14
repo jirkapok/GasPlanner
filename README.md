@@ -14,8 +14,6 @@ List of current features is part of [application help](./doc/help.md). Road map 
 
 * Fix precision of decompression algorithm
   * Fix ceiling calculation during ascent
-  * Add safety stop 3 min. on last deco stop
-* Fix warning for nodeco dives in planner
 * Add Fresh/Salt water option (fix its usage in depth converter)
 * Add option to define gradient factors
 * Add option to define safety stop range

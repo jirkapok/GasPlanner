@@ -42,13 +42,19 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
       autosize: true,
       showlegend: false,
       xaxis : {
-        fixedrange: true
+        fixedrange: true,
+        title: {
+          text: 'Time [minutes]'
+        }
       },
       yaxis: {
         fixedrange: true,
-        autorange: 'reversed'
+        autorange: 'reversed',
+        title: {
+          text: 'Depth [meters]'
+        }
       },
-      margin: { l: 30, r: 30, b: 30, t: 10 },
+      margin: { l: 40, r: 10, b: 40, t: 10 },
     };
 
     const options = {
@@ -83,18 +89,18 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
 
     Plotly.react('diveplot', data, layout, options);
 
-    const xCelingValues = [];
-    const yCelingValues = [];
+    const xCeilingValues = [];
+    const yCeilingValues = [];
 
     this.dive.ceilings.forEach((item, index, ceilings) => {
-      xCelingValues.push(item.time);
+      xCeilingValues.push(item.time);
       const depth = Math.round(item.depth * 100) / 100;
-      yCelingValues.push(depth);
+      yCeilingValues.push(depth);
     });
 
     const dataCeilings = [{
-      x: xCelingValues,
-      y: yCelingValues,
+      x: xCeilingValues,
+      y: yCeilingValues,
       type: 'scatter',
       fill: 'tozeroy',
       name: 'ceilings',

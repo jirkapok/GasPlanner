@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Plan, Diver, Dive, Gas, SafetyStop, WayPoint } from './models';
+import { Plan, Diver, Dive, Gas, WayPoint } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options } from 'scuba-physics';
 import { Subject } from 'rxjs';
@@ -109,11 +109,14 @@ export class PlannerService {
   }
 
   private calculateTimeToSurface(): number {
-    // TODO fix by using calculated deco stops
     const solutionDuration = 2;
-    const safetyStop = this.plan.needsSafetyStop ? SafetyStop.duration : 0;
-    const swimTime = Math.ceil(this.plan.depth /  Diver.ascSpeed);
-    return solutionDuration + swimTime + safetyStop;
+    let ascentDuration = 0;
+
+    for (const wayPoint of this.dive.ascent) {
+      ascentDuration += wayPoint.duration;
+    }
+
+    return solutionDuration + ascentDuration;
   }
 
   public loadFrom(other: PlannerService): void {

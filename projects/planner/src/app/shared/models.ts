@@ -98,12 +98,6 @@ export enum Strategies {
     THIRD = 3
 }
 
-export class SafetyStop {
-    public static readonly depth = 5;
-    public static readonly duration = 3;
-    public static readonly mandatoryDepth = 20;
-}
-
 export class Plan {
     public noDecoTime: number;
 
@@ -116,10 +110,6 @@ export class Plan {
 
     public get needsReturn(): boolean {
         return this.strategy !== Strategies.ALL;
-    }
-
-    public get needsSafetyStop(): boolean {
-        return this.depth >= SafetyStop.mandatoryDepth;
     }
 
     public get noDecoExceeded(): boolean {

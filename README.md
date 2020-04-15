@@ -14,8 +14,9 @@ List of current features is part of [application help](./doc/help.md). Road map 
 
 * Fix precision of decompression algorithm
   * Fix ceiling calculation during ascent based on gradient factors
-  * Thirds rule calculates wrong bottom time (15min. 30m, default GAS)
-  * From previous example, change bottom time calculates results, even they exceed max. bottom time.
+* Fix gas consumption algorithm
+  * Fix max. dive time.
+  * Fix time to surface
 * Add Fresh/Salt water option (fix its usage in depth converter)
 * Add option to define gradient factors
 * Add option to define safety stop range

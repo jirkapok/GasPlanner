@@ -7,7 +7,7 @@
     <div *ngIf="dive.calculated" class="card-body">
         <div *ngIf="dive.notEnoughGas" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
-            <span>Not enough gas, Maximum dive time {{dive.maxTime}} min. exceeded!</span>
+            <span>Not enough gas to realize the dive!</span>
         </div>
         <div *ngIf="dive.depthExceeded" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
@@ -15,7 +15,7 @@
         </div>
         <div *ngIf="dive.notEnoughTime" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
-            <span>Not enough time to realize the dive (duration needs to at least {{dive.timeToSurface}} min.)!</span>
+            <span>Not enough time to realize the dive (duration needs to at least {{dive.descent.duration }} min.)!</span>
         </div>
         <div *ngIf="dive.noDecoExceeded" class="alert  alert-warning">
             <fa-icon [icon]="warning" class="mr-1"></fa-icon>
@@ -30,12 +30,12 @@
                         <strong>{{ dive.timeToSurface }}</strong>
                     </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td>Maximum bottom time [min.]:</td>
                     <td class="table-active">
                         <strong>{{ dive.maxTime }}</strong>
                     </td>
-                </tr>
+                </tr> -->
                 <tr>
                     <td>Rock bottom [bar]:</td>
                     <td class="table-active">

@@ -33,25 +33,26 @@ export class PlannerService {
   }
 
   public calculate() {
-    this.updatePpO2Options();
+    this.updateNoDecoTime();
     const finalData = WayPointsService.calculateWayPoints(this.plan, this.gas, this.options);
     this.dive.wayPoints = finalData.wayPoints;
     this.dive.ceilings = finalData.ceilings;
-    this.dive.timeToSurface = this.calculateTimeToSurface();
-    this.dive.rockBottom = this.calculateRockBottom();
-    this.dive.maxTime = this.calculateMaxBottomTime();
-    this.gas.consumed = this.calculateConsumedOnWay(this.dive.wayPoints, this.diver.sac);
+
+    if (this.dive.wayPoints.length > 2) {
+      this.dive.timeToSurface = this.calculateTimeToSurface();
+      this.dive.rockBottom = this.calculateRockBottom();
+      // TODO calculate max. dive time by incrementing duration by one minute till there is enough gas
+      this.dive.maxTime = this.calculateMaxBottomTime();
+      this.gas.consumed = this.calculateConsumedOnWay(this.dive.wayPoints, this.diver.sac);
+    }
 
     // even in case thirds rule, the last third is reserve, so we always divide by 2
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
-
-    this.updateNoDecoTime();
-
     this.dive.needsReturn = this.plan.needsReturn;
     this.dive.notEnoughGas = this.gas.endPressure < this.dive.rockBottom;
     this.dive.depthExceeded = this.plan.depth > this.gasMod;
-    this.dive.notEnoughTime = this.plan.duration <= this.dive.timeToSurface;
+    this.dive.notEnoughTime = this.plan.duration < this.dive.descent.duration;
     this.dive.noDecoExceeded = this.plan.noDecoExceeded;
     this.dive.calculated = true;
 
@@ -71,7 +72,7 @@ export class PlannerService {
     const availablePressure = this.availablePressure();
     const gasSac = this.diver.gasSac(this.gas);
     const descent = this.dive.descent;
-    const consumedByDescent = descent.duration * gasSac * descent.duration;
+    const consumedByDescent = descent.duration * gasSac * descent.averagePressure;
     const forBottom = availablePressure - consumedByDescent;
     const bottom = this.dive.bottom;
     const bottomTime = forBottom / bottom.averagePressure / gasSac;
@@ -108,6 +109,7 @@ export class PlannerService {
   }
 
   private calculateTimeToSurface(): number {
+    // TODO fix by using calculated deco stops
     const solutionDuration = 2;
     const safetyStop = this.plan.needsSafetyStop ? SafetyStop.duration : 0;
     const swimTime = Math.ceil(this.plan.depth /  Diver.ascSpeed);

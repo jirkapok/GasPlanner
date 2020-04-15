@@ -14,11 +14,17 @@ export class PlannerService {
   public calculated = this.onCalculated.asObservable();
   private options = new Options(1, 1, 1.6, 30, true, true);
 
+  private updatePpO2Options() {
+    this.options.maxppO2 = this.diver.maxPpO2;
+  }
+
   public get gasMod(): number {
+    this.updatePpO2Options();
     return NitroxCalculator.mod(this.diver.maxPpO2, this.gas.o2);
   }
 
   public noDecoTime(): number {
+    this.updatePpO2Options();
     const algorithm = new BuhlmannAlgorithm();
     const depth = this.plan.depth;
     const gas = this.gas.toGas();
@@ -27,6 +33,7 @@ export class PlannerService {
   }
 
   public calculate() {
+    this.updatePpO2Options();
     const finalData = WayPointsService.calculateWayPoints(this.plan, this.gas, this.options);
     this.dive.wayPoints = finalData.wayPoints;
     this.dive.ceilings = finalData.ceilings;

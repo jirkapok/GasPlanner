@@ -164,19 +164,12 @@ export class BuhlmannAlgorithm {
 
     public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
         const depthConverter = this.selectDepthConverter(options.isFreshWater);
-        const segmentMessages = SegmentsValidator.validate(segments, gases, options.maxppO2, depthConverter);
-        if (segmentMessages.length > 0) {
-            return CalculatedProfile.fromErrors(segmentMessages);
+        const errorMessages = this.validate(segments, gases, options, depthConverter);
+        if (errorMessages.length > 0) {
+            return CalculatedProfile.fromErrors(errorMessages);
         }
 
         const last = segments.last();
-
-        // TODO fix max depth: last doesn't have to be max. depth in multilevel diving.
-        const gasMessages = GasesValidator.validate(gases, options, depthConverter, last.endDepth);
-        if (gasMessages.length > 0) {
-            return CalculatedProfile.fromErrors(gasMessages);
-        }
-
         const context = new AlgorithmContext(gases, segments, options, depthConverter, last.endDepth);
         this.dive(context);
 
@@ -219,6 +212,23 @@ export class BuhlmannAlgorithm {
 
         const merged = segments.mergeFlat();
         return CalculatedProfile.fromProfile(merged, context.ceilings);
+    }
+
+    private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): string[] {
+        const segmentMessages = SegmentsValidator.validate(segments, gases, options.maxppO2, depthConverter);
+        if (segmentMessages.length > 0) {
+            return segmentMessages;
+        }
+
+        const last = segments.last();
+
+        // TODO fix max depth: last doesn't have to be max. depth in multilevel diving.
+        const gasMessages = GasesValidator.validate(gases, options, depthConverter, last.endDepth);
+        if (gasMessages.length > 0) {
+            return gasMessages;
+        }
+
+        return [];
     }
 
     private duration(depthDifference: number, speed: number): number {
@@ -305,6 +315,11 @@ export class BuhlmannAlgorithm {
         const duration = this.duration(depth, options.descentSpeed);
         const descent = segments.add(0, depth, gas, duration);
 
+        const errorMessages = this.validate(segments, gases, options, depthConverter);
+        if (errorMessages.length > 0) {
+            return 0;
+        }
+
         const context = new AlgorithmContext(gases, segments, options, depthConverter, depth);
         this.swim(context, descent);
         const hover = new Segment(depth, depth, gas, this.oneMinute);
@@ -315,7 +330,7 @@ export class BuhlmannAlgorithm {
             context.runTime += this.oneMinute;
         }
 
-        if (change === 0) {
+        if (change === 0 || depth === 0) {
             return Number.POSITIVE_INFINITY;
         }
         return context.runTime - 1; // We went one minute past a ceiling of "0"

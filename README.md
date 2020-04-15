@@ -16,9 +16,6 @@ List of current features is part of [application help](./doc/help.md). Road map 
   * Fix ceiling calculation during ascent based on gradient factors
   * Thirds rule calculates wrong bottom time (15min. 30m, default GAS)
   * From previous example, change bottom time calculates results, even they exceed max. bottom time.
-  * No deco time for not breathe-able gas, calculates meaning-less values in depth higher than 110m
-  * For large depths no deco time climbs, instead to be reduced
-  * There is no limit for Depth in planner, should be cca 500 m
 * Add Fresh/Salt water option (fix its usage in depth converter)
 * Add option to define gradient factors
 * Add option to define safety stop range

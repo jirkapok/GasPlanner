@@ -1,4 +1,4 @@
-import { WayPoint, Plan, Diver, SafetyStop, Gas } from './models';
+import { WayPoint, Plan, Diver, Gas } from './models';
 import { BuhlmannAlgorithm, Gas as BGas, Options, Gases, Segments, Segment, CalculatedProfile } from 'scuba-physics';
 import { Ceiling } from 'scuba-physics';
 

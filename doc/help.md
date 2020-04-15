@@ -25,7 +25,7 @@ Based on current features implementation some types of diving are not supported 
 
 For some calculations it is necessary to measure precise values. Earths physical model is simulated, but not to all details. In such cases some constants are used.
 Together with different rounding during the calculations, this is why diving software implementations differ and mainly also why some simplifications was used during your scuba diving courses.
-For example we count with sea level atmospheric pressure 1.032 bar, but usually everybody counts with 1 bar only, which makes 3.2% deviation.
+For example we count with sea level atmospheric pressure 1.01325 bar, but usually everybody counts with 1 bar only, which makes 1.325% deviation.
 
 * [Fahrenheit  scale](https://en.wikipedia.org/wiki/Fahrenheit) - temperature measure based on [brine](https://en.wikipedia.org/wiki/Brine) (salt water)
 * [Celsius scale](https://en.wikipedia.org/wiki/Celsius) temperature measure based on 0 °C for the freezing point of water and 100 °C for the boiling point of water at 1 atm pressure

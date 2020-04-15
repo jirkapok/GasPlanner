@@ -145,19 +145,19 @@ export class VapourPressure {
   * Based on the Antoine_equation http://en.wikipedia.org/wiki/Antoine_equation
   * http://en.wikipedia.org/wiki/Vapour_pressure_of_water
   *
-  * @param degreesCelcius - The temperature to approximate the pressure of water vapour.
+  * @param degreesCelsius - The temperature to approximate the pressure of water vapour.
   * @returns Water vapour pressure in terms of mmHg.
   */
-  private static waterVapourPressure(degreesCelcius: number): number {
+  private static waterVapourPressure(degreesCelsius: number): number {
     let rangeConstants;
-    if (degreesCelcius >= 1 && degreesCelcius <= 100) {
+    if (degreesCelsius >= 1 && degreesCelsius <= 100) {
       rangeConstants = VapourPressure.tempRange_1_100;
-    } else if (degreesCelcius >= 99 && degreesCelcius <= 374) {
+    } else if (degreesCelsius >= 99 && degreesCelsius <= 374) {
       rangeConstants = VapourPressure.tempRange_99_374;
     } else {
       throw new Error('Temperature is out of supported range 1-374°C');
     }
-    const logp = rangeConstants[0] - (rangeConstants[1] / (rangeConstants[2] + degreesCelcius));
+    const logp = rangeConstants[0] - (rangeConstants[1] / (rangeConstants[2] + degreesCelsius));
     return Math.pow(10, logp);
   }
 }

@@ -119,6 +119,7 @@ class AlgorithmContext {
     public tissues = new Tissues();
     public ceilings: Ceiling[] = [];
     public runTime = 0;
+    private firstStop = 0;
 
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options,
@@ -135,6 +136,10 @@ class AlgorithmContext {
     }
 
     public addCeiling(depth: number) {
+        if (depth > this.firstStop) {
+          this.firstStop = depth;
+        }
+
         this.ceilings.push({
             time: this.runTime,
             depth: depth
@@ -146,7 +151,12 @@ class AlgorithmContext {
     }
 
     public gradientForDepth(depth: number): number {
-        return this.options.gfHigh - this.gfDiff * depth / this.firstCelingDepth;
+        if (depth > this.firstStop) {
+            return this.options.gfLow;
+        }
+
+        const gfChangePerMeter = this.gfDiff /  this.firstStop;
+        return this.options.gfHigh - gfChangePerMeter * depth;
     }
 
     public ceilingForDepth(depth: number): number {

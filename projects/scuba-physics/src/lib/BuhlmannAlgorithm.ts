@@ -122,8 +122,7 @@ class AlgorithmContext {
     private firstStop = 0;
 
     // TODO reuse tissues for repetitive dives
-    constructor(public gases: Gases, public segments: Segments, public options: Options,
-                public depthConverter: DepthConverter, private firstCelingDepth:  number) {
+    constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
         this.gfDiff = options.gfHigh - options.gfLow;
     }
 
@@ -180,7 +179,7 @@ export class BuhlmannAlgorithm {
         }
 
         const last = segments.last();
-        const context = new AlgorithmContext(gases, segments, options, depthConverter, last.endDepth);
+        const context = new AlgorithmContext(gases, segments, options, depthConverter);
         this.dive(context);
 
         const firstDecoStop = this.firstDecoStop(context);
@@ -330,7 +329,7 @@ export class BuhlmannAlgorithm {
             return 0;
         }
 
-        const context = new AlgorithmContext(gases, segments, options, depthConverter, depth);
+        const context = new AlgorithmContext(gases, segments, options, depthConverter);
         this.swim(context, descent);
         const hover = new Segment(depth, depth, gas, this.oneMinute);
         let change = 1;

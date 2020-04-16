@@ -25,18 +25,18 @@
       <div class="input-group">
         <input id="strategy" [(ngModel)]="strategy" class="form-control" type="text" readonly/>
         <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-          <button class="btn btn-default" id="stragetyMenu" ngbDropdownToggle></button>
+          <button  type="button" class="btn btn-default" id="stragetyMenu" ngbDropdownToggle></button>
           <div ngbDropdownMenu aria-labelledby="stragetyMenu" aria-expanded="false">
-            <button class="dropdown-item" (click)="allUsable()">{{AllUsable}}</button>
-            <button class="dropdown-item" (click)="halfUsable()">{{HalfUsable}}</button>
-            <button class="dropdown-item" (click)="thirdUsable()">{{ThirdUsable}}</button>
+            <button  type="button" class="dropdown-item" (click)="allUsable()">{{AllUsable}}</button>
+            <button  type="button" class="dropdown-item" (click)="halfUsable()">{{HalfUsable}}</button>
+            <button  type="button" class="dropdown-item" (click)="thirdUsable()">{{ThirdUsable}}</button>
           </div>
         </div>
       </div>
     </div>
 
     <div class="form-group">
-      <button type="button" id="calculate" class="btn btn-primary" [(disabled)]="formValid" (click)="calculate()">Calculate</button>
+      <button type="submit" id="calculate" class="btn btn-primary" [(disabled)]="formValid" (click)="calculate()">Calculate</button>
     </div>
   </div>
 </div>

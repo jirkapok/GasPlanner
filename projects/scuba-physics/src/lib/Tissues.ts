@@ -34,7 +34,7 @@ export class Tissue extends Compartment {
         return this._pTotal;
     }
 
-    public ceiling(gf: number, depthConverter: DepthConverter): number {
+    public ceiling(gf: number): number {
         const a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
         const b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
         const bars = (this.pTotal - (a * gf)) / ((gf / b) + 1.0 - gf);
@@ -42,11 +42,10 @@ export class Tissue extends Compartment {
         // less than surface pressure means no ceiling, this aproximation is OK,
         // because tissues are loaded only under water
         if (bars < AltitudePressure.current) {
-            return 0;
+            return AltitudePressure.current;
         }
 
-        const ceiling = depthConverter.fromBar(bars);
-        return ceiling;
+        return bars;
     }
 
     public load(segment: Segment, gas: Gas, depthConverter: DepthConverter): number {
@@ -106,10 +105,10 @@ export class Tissues {
         }
     }
 
-    public ceiling(gf: number, depthConverter: DepthConverter): number {
+    public ceiling(gf: number): number {
         let ceiling = 0;
         for (let index = 0; index < this.compartments.length; index++) {
-            const tissueCeiling = this.compartments[index].ceiling(gf, depthConverter);
+            const tissueCeiling = this.compartments[index].ceiling(gf);
             if (!ceiling || tissueCeiling > ceiling) {
                 ceiling = tissueCeiling;
             }

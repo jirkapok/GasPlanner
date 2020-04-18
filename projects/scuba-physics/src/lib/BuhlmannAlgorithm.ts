@@ -160,7 +160,8 @@ class AlgorithmContext {
 
     public ceilingForDepth(depth: number): number {
         const gf = this.gradientForDepth(depth);
-        return this.tissues.ceiling(gf, this.depthConverter);
+        const bars = this.tissues.ceiling(gf);
+        return this.depthConverter.fromBar(bars);
     }
 }
 

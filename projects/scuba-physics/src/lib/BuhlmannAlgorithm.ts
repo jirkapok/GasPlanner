@@ -1,7 +1,8 @@
-import { Tissues } from './Tissues';
+import { Tissues, LoadSegment } from './Tissues';
 import { Gases, Gas, GasOptions, GasesValidator } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter } from './depth-converter';
+import { AltitudePressure } from './pressure-converter';
 
 export class Options implements GasOptions {
     constructor(
@@ -300,7 +301,8 @@ export class BuhlmannAlgorithm {
     }
 
     private swimPart(context: AlgorithmContext, segment: Segment) {
-        context.tissues.load(segment, segment.gas, context.depthConverter);
+        const loadSegment = this.toLoadSegment(context.depthConverter, segment);
+        context.tissues.load(loadSegment, segment.gas);
         context.runTime += segment.duration;
         const ceiling = context.ceilingForDepth(segment.endDepth);
         context.addCeiling(ceiling);
@@ -333,10 +335,11 @@ export class BuhlmannAlgorithm {
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
         this.swim(context, descent);
         const hover = new Segment(depth, depth, gas, this.oneMinute);
+        const hoverLoad = this.toLoadSegment(context.depthConverter, hover);
         let change = 1;
 
         while (context.ceiling() <= 0 && change > 0) {
-            change = context.tissues.load(hover, gas, context.depthConverter);
+            change = context.tissues.load(hoverLoad, gas);
             context.runTime += this.oneMinute;
         }
 
@@ -344,5 +347,13 @@ export class BuhlmannAlgorithm {
             return Number.POSITIVE_INFINITY;
         }
         return context.runTime - 1; // We went one minute past a ceiling of "0"
+    }
+
+    private toLoadSegment(depthConverter: DepthConverter, segment: Segment): LoadSegment {
+        return {
+            startPressure: depthConverter.toBar(segment.startDepth),
+            duration: segment.duration,
+            speed: depthConverter.toBar(segment.speed) - AltitudePressure.current
+        };
     }
 }

@@ -9,7 +9,7 @@ export class DepthConverter {
     return new DepthConverter(Density.fresh);
   }
 
-  private constructor(private density) { }
+  private constructor(private density: number) { }
 
   /**
    * Calculates the absolute pressure (in bars) for 1 cubic meter of water for the given depth (meters).

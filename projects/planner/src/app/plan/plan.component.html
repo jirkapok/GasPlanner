@@ -11,6 +11,7 @@
       </label>
       <div class="text-danger" *ngIf="duration.invalid && (duration.dirty || duration.touched)">Needs to be number > 0 min.</div>
     </div>
+
     <div class="form-group">
       <label for="depth">Depth [m]:
         <input id="depth" name="depth" #depth="ngModel" [(ngModel)]="plannedDepth" class="form-control" type="number"
@@ -18,6 +19,11 @@
         <small class="text-muted">No deco limit {{ plan.noDecoTime | number:'1.0-0' }} min.</small>
         <div class="text-danger" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number 1 - 500 m</div>
       </label>
+    </div>
+
+    <div class="custom-control custom-switch">
+      <input type="checkbox" class="custom-control-input" id="isFreshWater" [(ngModel)]="!isFreshWater" />
+      <label class="custom-control-label" for="isFreshWater">Salt water</label>
     </div>
 
     <div class="form-group">

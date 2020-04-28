@@ -12,7 +12,7 @@ export class PlannerService {
   public dive: Dive = new Dive();
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
-  private options = new Options(1, 1, 1.6, 30, true, true);
+  public options = new Options(1, 1, 1.6, 30, true, true);
 
   private updatePpO2Options() {
     this.options.maxppO2 = this.diver.maxPpO2;

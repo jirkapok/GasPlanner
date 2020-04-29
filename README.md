@@ -14,9 +14,6 @@ List of current features is part of [application help](./doc/help.md). Road map 
 
 * Fix precision of decompression algorithm
   * Fix ceiling calculation during ascent based on gradient factors
-* Fix gas consumption algorithm
-  * Fix max. dive time.
-* Add Fresh/Salt water option (fix its usage in depth converter)
 * Add option to define gradient factors
 * Add option to define safety stop range
 * Add altitude option

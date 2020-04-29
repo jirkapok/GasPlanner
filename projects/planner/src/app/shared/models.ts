@@ -143,21 +143,13 @@ export class Dive {
     }
 
     public get maxDepth(): number {
-        return this.bottom.startDepth;
+        const bottom = this.wayPoints[1]; // for single level dives second is always depth
+        return bottom.startDepth;
     }
 
+    // expecting single level dive
     public get descent(): WayPoint {
         return this.wayPoints[0];
-    }
-
-    public get bottom(): WayPoint {
-        // for single level dives second is always depth
-        return this.wayPoints[1];
-    }
-
-    public get ascent(): WayPoint[] {
-        // first two are descent and bottom
-        return this.wayPoints.slice(2, this.wayPoints.length);
     }
 
     public get hasErrors(): boolean {

@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Plan, Diver, Dive, Gas, WayPoint } from './models';
+import { Plan, Diver, Dive, Gas, WayPoint, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options } from 'scuba-physics';
 import { Subject } from 'rxjs';
 
 @Injectable()
 export class PlannerService {
-  public plan: Plan = new Plan(15, 30, 1);
+  public plan: Plan = new Plan(15, 30, Strategies.ALL);
   public diver: Diver = new Diver(20, 1.4);
   public gas: Gas = new Gas(15, 21, 200);
   public dive: Dive = new Dive();
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
   public options = new Options(1, 1, 1.6, 30, true, true);
+
+  private static ascent(wayPoints: WayPoint[]): WayPoint[] {
+    // first two are descent and bottom
+    return wayPoints.slice(2, wayPoints.length);
+  }
 
   private updatePpO2Options() {
     this.options.maxppO2 = this.diver.maxPpO2;
@@ -35,17 +40,17 @@ export class PlannerService {
   public calculate() {
     this.updateNoDecoTime();
     const finalData = WayPointsService.calculateWayPoints(this.plan, this.gas, this.options);
-    this.dive.wayPoints = finalData.wayPoints;
-    this.dive.ceilings = finalData.ceilings;
+    const ascent = PlannerService.ascent(finalData.wayPoints);
 
     if (this.dive.wayPoints.length > 2) {
-      this.dive.timeToSurface = this.calculateTimeToSurface();
-      this.dive.rockBottom = this.calculateRockBottom();
-      // TODO calculate max. dive time by incrementing duration by one minute till there is enough gas
       this.dive.maxTime = this.calculateMaxBottomTime();
-      this.gas.consumed = this.calculateConsumedOnWay(this.dive.wayPoints, this.diver.sac);
+      this.dive.timeToSurface = this.calculateTimeToSurface(ascent);
+      this.dive.rockBottom = this.calculateRockBottom(ascent);
+      this.gas.consumed = this.calculateConsumedOnWay(finalData.wayPoints, this.diver.sac);
     }
 
+    this.dive.wayPoints = finalData.wayPoints;
+    this.dive.ceilings = finalData.ceilings;
     // even in case thirds rule, the last third is reserve, so we always divide by 2
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
@@ -68,26 +73,29 @@ export class PlannerService {
     return this.gas.startPressure - Math.floor(consumed);
   }
 
+  /**
+   * We need to repeat the calculation by increasing duration, until there is enough gas
+   * because increase of duration means also change in the ascent plan.
+   */
   private calculateMaxBottomTime(): number {
-    const availablePressure = this.availablePressure();
-    const gasSac = this.diver.gasSac(this.gas);
-    const descent = this.dive.descent;
-    const consumedByDescent = descent.duration * gasSac * descent.averagePressure;
-    const forBottom = availablePressure - consumedByDescent;
-    const bottom = this.dive.bottom;
-    const bottomTime = forBottom / bottom.averagePressure / gasSac;
-    const result = descent.duration + bottomTime;
-    return Math.floor(result);
+    const testPlan = new Plan(1, this.plan.depth, this.plan.strategy);
+    let consumed = 0;
+    let rockBottom = 0;
+    let duration = 0;
+
+    while (this.gas.startPressure - consumed >= rockBottom) {
+      duration++;
+      testPlan.duration = duration;
+      const finalData = WayPointsService.calculateWayPoints(testPlan, this.gas, this.options);
+      const ascent = PlannerService.ascent(finalData.wayPoints);
+      rockBottom = this.calculateRockBottom(ascent);
+      consumed = this.calculateConsumedOnWay(finalData.wayPoints, this.diver.sac);
+    }
+
+    return testPlan.duration - 1; // we already passed the correct value
   }
 
-  private availablePressure(): number {
-    const surfacing = this.calculateConsumedOnWay(this.dive.ascent, this.diver.sac);
-    const reserve = surfacing + this.dive.rockBottom;
-    return (this.gas.startPressure - reserve) * this.plan.availablePressureRatio;
-  }
-
-  private calculateRockBottom(): number {
-    const ascent = this.dive.ascent;
+  private calculateRockBottom(ascent: WayPoint[]): number {
     const problemSolving = new WayPoint(2, ascent[0].startDepth, ascent[0].startDepth);
     ascent.unshift(problemSolving);
     const stressSac = this.diver.stressSac;
@@ -108,11 +116,11 @@ export class PlannerService {
     return rounded;
   }
 
-  private calculateTimeToSurface(): number {
+  private calculateTimeToSurface(ascent: WayPoint[]): number {
     const solutionDuration = 2;
     let ascentDuration = 0;
 
-    for (const wayPoint of this.dive.ascent) {
+    for (const wayPoint of ascent) {
       ascentDuration += wayPoint.duration;
     }
 

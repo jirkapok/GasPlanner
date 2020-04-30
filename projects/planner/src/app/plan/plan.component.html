@@ -22,7 +22,7 @@
     </div>
 
     <div class="custom-control custom-switch">
-      <input type="checkbox" class="custom-control-input" id="isFreshWater" [(ngModel)]="!isFreshWater" />
+      <input type="checkbox" class="custom-control-input" id="isFreshWater" [checked]="!isFreshWater"  (change)="isFreshWater = !isFreshWater"/>
       <label class="custom-control-label" for="isFreshWater">Salt water</label>
     </div>
 

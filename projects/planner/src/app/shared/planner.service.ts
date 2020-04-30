@@ -42,7 +42,7 @@ export class PlannerService {
     const finalData = WayPointsService.calculateWayPoints(this.plan, this.gas, this.options);
     const ascent = PlannerService.ascent(finalData.wayPoints);
 
-    if (this.dive.wayPoints.length > 2) {
+    if (finalData.wayPoints.length > 2) {
       this.dive.maxTime = this.calculateMaxBottomTime();
       this.dive.timeToSurface = this.calculateTimeToSurface(ascent);
       this.dive.rockBottom = this.calculateRockBottom(ascent);

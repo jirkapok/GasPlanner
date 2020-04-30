@@ -34,6 +34,8 @@ For example we count with sea level atmospheric pressure 1.01325 bar, but usuall
 
 ### Salinity
 
+Because salinity of water changes its density and it means also pressure of the water column at depth. In result it affects the tissues loading. See also wiki for [brine](https://en.wikipedia.org/wiki/Brine). Eg. 22 meters corresponds to 3.222 bar
+
 ### Depth
 
 ### No decompression time limit
@@ -50,6 +52,7 @@ Used to save current settings to be able use them in later planning. This stores
 
 * Bottom time [minutes]: The time diver stays under water until he starts to scent. This includes also decent.
 * Depth [meters]: The deepest depth reached during the dive.
+* Water type: Water can be switched in dive plan from fresh (default) to salt water (switched on). This affects salinity used for calculation.
 * Strategy: Allows to define, how much gas will be preserved for emergency. Available options are
   * All usable: for recreational dives without overhead environment. All remaining gas can be reserved.
   * Half usable: for environment (including both overhead and without overhead), where diver needs to return to point where he is able to ascent (swim back to boat from reef barrier).

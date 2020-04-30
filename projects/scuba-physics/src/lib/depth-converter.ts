@@ -2,14 +2,14 @@ import { Density, Gravity, AltitudePressure, PressureConverter } from './pressur
 
 export class DepthConverter {
   public static forSaltWater(): DepthConverter {
-    return new DepthConverter(Density.salt);
+    return new DepthConverter(Density.salt, AltitudePressure.current);
   }
 
   public static forFreshWater(): DepthConverter {
-    return new DepthConverter(Density.fresh);
+    return new DepthConverter(Density.fresh, AltitudePressure.current);
   }
 
-  private constructor(private density: number) { }
+  private constructor(private density: number, private altitudePressure: number) { }
 
   /**
    * Calculates the absolute pressure (in bars) for 1 cubic meter of water for the given depth (meters).
@@ -19,7 +19,7 @@ export class DepthConverter {
    */
   public toBar(depth: number): number {
     const weightDensity = this.density * Gravity.current;
-    return PressureConverter.pascalToBar((depth * weightDensity)) + AltitudePressure.current;
+    return PressureConverter.pascalToBar((depth * weightDensity)) + this.altitudePressure;
   }
 
   /**
@@ -29,12 +29,12 @@ export class DepthConverter {
    * @returns The depth (in meters) for the given number of atmospheres.
    */
   public fromBar(bars: number): number {
-    if (bars < AltitudePressure.current) {
+    if (bars < this.altitudePressure) {
         throw new Error('Lower pressure than altitude isn`t convertible to depth.');
     }
 
     const weightDensity = this.density * Gravity.current;
-    const pressure = PressureConverter.barToPascal(bars - AltitudePressure.current);
+    const pressure = PressureConverter.barToPascal(bars - this.altitudePressure);
     return pressure / weightDensity;
   }
 }

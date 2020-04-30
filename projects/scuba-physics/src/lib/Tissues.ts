@@ -1,6 +1,6 @@
 import { Compartments, Compartment } from './Compartments';
 import { AltitudePressure, VapourPressure } from './pressure-converter';
-import { GasMixutures, Gas } from './Gases';
+import { GasMixtures, Gas } from './Gases';
 
 /**
  * Represents transition between depths during dive
@@ -35,7 +35,7 @@ export class Tissue extends Compartment {
         const absPressure = AltitudePressure.current; // TODO altitude diving
         const bodyTemperature = 35.2;
         const waterVapourPressure = VapourPressure.waterVapourPressureInBars(bodyTemperature);
-        this._pN2 = GasMixutures.partialPressure(absPressure, 0.79) - waterVapourPressure;
+        this._pN2 = GasMixtures.partialPressure(absPressure, 0.79) - waterVapourPressure;
         this._pHe = 0;
         this._pTotal = this.pN2 + this.pHe;
     }

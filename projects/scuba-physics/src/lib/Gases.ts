@@ -131,7 +131,7 @@ export class Gases {
     }
 }
 
-export class GasMixutures {
+export class GasMixtures {
     /**
      * Calculates the partial pressure of a gas component from the volume gas fraction and total pressure.
      *
@@ -236,7 +236,7 @@ export class Gas {
      * @returns Depth in meters.
      */
     public mod(ppO2: number, depthConverter: DepthConverter): number {
-        return GasMixutures.mod(ppO2, this.fO2, depthConverter);
+        return GasMixtures.mod(ppO2, this.fO2, depthConverter);
     }
 
     /**
@@ -247,10 +247,10 @@ export class Gas {
      * @returns Depth in meters.
      */
     public end(depth: number, depthConverter: DepthConverter): number {
-        return GasMixutures.end(this.fO2, this.fN2, depth, depthConverter);
+        return GasMixtures.end(this.fO2, this.fN2, depth, depthConverter);
     }
 
     public ceiling(depthConverter: DepthConverter): number {
-        return GasMixutures.ceiling(this.fO2, depthConverter);
+        return GasMixtures.ceiling(this.fO2, depthConverter);
     }
 }

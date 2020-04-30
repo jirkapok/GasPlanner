@@ -51,14 +51,6 @@ export class Gravity {
 }
 
 /**
- *  current surface pressure measured in bar
- */
-export class SurfacePressure {
-  public static readonly earth: number = 1;
-  public static readonly current: number = SurfacePressure.earth;
-}
-
-/**
  * https://en.wikipedia.org/wiki/Pressure#Units
  */
 export class PressureConverter {
@@ -71,7 +63,7 @@ export class PressureConverter {
    * @returns Bar derived unit of pressure from pascal.
    */
   public static pascalToBar(pascals: number): number {
-    return pascals / (SurfacePressure.current * PressureConverter.coefficient);
+    return pascals / PressureConverter.coefficient;
   }
 
   /**
@@ -81,7 +73,7 @@ export class PressureConverter {
    * @returns >Pascal derived unit of pressure from bars.
    */
   public static barToPascal(bars: number): number {
-    return bars * (SurfacePressure.current * PressureConverter.coefficient);
+    return bars * PressureConverter.coefficient;
   }
 }
 
@@ -90,7 +82,7 @@ export class PressureConverter {
  */
 export class AltitudePressure {
   public static readonly standard: number = 1.01325;
-  public static readonly seaLevel: number = 1;
+  public static readonly seaLevel: number = AltitudePressure.standard;
   public static readonly current: number = AltitudePressure.seaLevel;
 
   // TODO add the Gravity function based on altitude

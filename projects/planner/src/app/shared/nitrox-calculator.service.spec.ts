@@ -28,11 +28,11 @@ describe('NitroxCalculatorService', () => {
   });
 
   describe('Best mix (fO2)', () => {
-    it('pO2 1.6 with MOD 22 m has fO2 50.67%', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
+    it('pO2 1.6 with MOD 22 m has fO2 50.46%', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
       service.calculation = NitroxMode.BestMix;
       service.mod = 22;
       service.pO2 = 1.6;
-      expect(service.fO2).toBe(50.67);
+      expect(service.fO2).toBe(50.46);
     }));
 
     it('pO2 1.3 with MOD 30.62 m has fO2 32.47%', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
@@ -44,10 +44,10 @@ describe('NitroxCalculatorService', () => {
   });
 
   describe('Partial O2 (pO2)', () => {
-    it('fO2 50.67% with MOD 22 m has pO2 1.6', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
+    it('fO2 50.46% with MOD 22 m has pO2 1.6', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
       service.calculation = NitroxMode.PO2;
       service.mod = 22;
-      service.fO2 = 50.67;
+      service.fO2 = 50.46;
       expect(service.pO2).toBe(1.6);
     }));
 

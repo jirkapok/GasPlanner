@@ -1,4 +1,4 @@
-import { Gases, Gas, GasesValidator, GasMixutures } from './Gases';
+import { Gases, Gas, GasesValidator, GasMixtures } from './Gases';
 import { DepthConverter } from './depth-converter';
 
 describe('Gases', () => {
@@ -22,28 +22,28 @@ describe('Gases', () => {
     describe('MOD of an Air for ppO 1.4', () => {
       const ppO2 = 1.4;
 
-      it('is 57.78 m in fresh water', () => {
+      it('is 57.65 m in fresh water', () => {
         const mod = air.mod(ppO2, freshWaterConverter);
-        expect(mod).toBeCloseTo(57.78392, 5);
+        expect(mod).toBeCloseTo(57.65, 2);
       });
 
-      it('is 56.1 m in salt water', () => {
+      it('is 56 m in salt water', () => {
         const mod = air.mod(ppO2, saltWaterConverter);
-        expect(mod).toBeCloseTo(56.10089, 5);
+        expect(mod).toBeCloseTo(55.97, 2);
       });
     });
 
     describe('Narcotic depth for 60 m with 18/35 trimix', () => {
       const depth = 60;
 
-      it('is 35.43099 m in fresh water', () => {
+      it('is 35.38 m in fresh water', () => {
         const end = trimix1835.end(depth, freshWaterConverter);
-        expect(end).toBeCloseTo(35.43099, 5);
+        expect(end).toBeCloseTo(35.38, 2);
       });
 
-      it('is 35.53494 m in salt water', () => {
+      it('is 35.49 m in salt water', () => {
         const end = trimix1835.end(depth, saltWaterConverter);
-        expect(end).toBeCloseTo(35.53494, 5);
+        expect(end).toBeCloseTo(35.49, 2);
       });
     });
 
@@ -60,7 +60,7 @@ describe('Gases', () => {
 
       it('Hypooxic Trimix 10/70 in fresh water to 8 m', () => {
         const ceilnig = trimix1070.ceiling(freshWaterConverter);
-        expect(ceilnig).toBeCloseTo(8.158, 3);
+        expect(ceilnig).toBeCloseTo(8.27, 2);
       });
     });
   });
@@ -170,22 +170,22 @@ describe('Gases', () => {
 
   describe('Gas pressures', () => {
     it('At 1 bar 0.79 volume fraction converts to ', () => {
-      const result = GasMixutures.partialPressure(1, 0.79);
+      const result = GasMixtures.partialPressure(1, 0.79);
       expect(result).toBe(0.79);
     });
 
     it('At 3 bar 0.79 volume fraction converts to ', () => {
-      const result = GasMixutures.partialPressure(6.667, 0.21);
+      const result = GasMixtures.partialPressure(6.667, 0.21);
       expect(result).toBeCloseTo(1.40, 3);
     });
 
     it('At 0 bars any fraction results in 0 partial pressure', () => {
-      const result = GasMixutures.partialPressure(0, 0.79);
+      const result = GasMixtures.partialPressure(0, 0.79);
       expect(result).toBe(0);
     });
 
     it('At any bars 0 fraction results in 0 partial pressure', () => {
-      const result = GasMixutures.partialPressure(3, 0);
+      const result = GasMixtures.partialPressure(3, 0);
       expect(result).toBe(0);
     });
   });

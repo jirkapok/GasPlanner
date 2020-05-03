@@ -12,9 +12,6 @@ None of the authors, contributors, administrators, or anyone else connected with
 
 List of current features is part of [application help](./doc/help.md). Road map of planned features:
 
-* Fix MOD shown in gas, when water type changes
-* Fix Fresh water calculates lower ndl than for salt water
-* Fix water type needs to refresh ndl
 * Add altitude option
 * Fix precision of decompression algorithm
   * Fix ceiling calculation during ascent based on gradient factors

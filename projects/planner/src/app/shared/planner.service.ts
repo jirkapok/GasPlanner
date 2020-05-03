@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Plan, Diver, Dive, Gas, WayPoint, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
-import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options } from 'scuba-physics';
+import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options, DepthConverter } from 'scuba-physics';
 import { Subject } from 'rxjs';
 
 @Injectable()
@@ -19,13 +19,26 @@ export class PlannerService {
     return wayPoints.slice(2, wayPoints.length);
   }
 
+  public changeWaterType(isFreshWater: boolean) {
+    this.options.isFreshWater = isFreshWater;
+    this.updateNoDecoTime();
+    this.onCalculated.next();
+  }
+
   private updatePpO2Options() {
     this.options.maxppO2 = this.diver.maxPpO2;
   }
 
   public get gasMod(): number {
     this.updatePpO2Options();
-    return NitroxCalculator.mod(this.diver.maxPpO2, this.gas.o2);
+
+    let depthConverter = DepthConverter.forSaltWater();
+    if (this.options.isFreshWater) {
+     depthConverter = DepthConverter.forFreshWater();
+    }
+
+    const nitroxCalculator = new NitroxCalculator(depthConverter);
+    return nitroxCalculator.mod(this.diver.maxPpO2, this.gas.o2);
   }
 
   public noDecoTime(): number {

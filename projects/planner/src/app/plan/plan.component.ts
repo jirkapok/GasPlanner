@@ -41,8 +41,7 @@ export class PlanComponent implements OnInit {
   }
 
   public set isFreshWater(newValue: boolean) {
-    this.planer.options.isFreshWater = newValue;
-    this.planer.updateNoDecoTime();
+    this.planer.changeWaterType(newValue);
   }
 
   public calculate(): void {

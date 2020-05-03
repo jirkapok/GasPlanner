@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NitroxCalculator } from 'scuba-physics';
+import { NitroxCalculator, DepthConverter } from 'scuba-physics';
 
 export enum NitroxMode {
   Mod,
@@ -68,7 +68,8 @@ export class NitroxCalculatorService {
   }
 
   private calculateCurrentMod() {
-    this._mod = NitroxCalculator.mod(this._pO2, this._fO2);
+    this._mod = new NitroxCalculator(DepthConverter.forFreshWater())
+                     .mod(this._pO2, this._fO2);
   }
 
   private calculateBestMix() {

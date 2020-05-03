@@ -1,14 +1,17 @@
 import { NitroxCalculator } from './NitroxCalculator';
+import { DepthConverter } from './depth-converter';
 
 describe('NitroxCalculatorService', () => {
   describe('Maximum operational depth (MOD)', () => {
+    const nitroxCalculator = new NitroxCalculator(DepthConverter.forFreshWater());
+
     it('pO2 1.6 with 50% fO2 has MOD 22.29 m (defaults)', () => {
-      const mod = NitroxCalculator.mod(1.6, 50);
+      const mod = nitroxCalculator.mod(1.6, 50);
       expect(mod).toBe(22.29);
     });
 
     it('pO2 1.3 with 32% fO2 has MOD 31.09 m', () => {
-      const mod = NitroxCalculator.mod(1.3, 32);
+      const mod = nitroxCalculator.mod(1.3, 32);
       expect(mod).toBe(31.09);
     });
   });

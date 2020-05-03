@@ -4,6 +4,9 @@ import { GasMixtures } from './Gases';
 export class NitroxCalculator {
   private static readonly depthConverter: DepthConverter = DepthConverter.forFreshWater();
 
+  constructor(private localConverter: DepthConverter) {
+  }
+
   /**
    * Calculates best mix of nitrox gas for given depth.
    *
@@ -36,9 +39,9 @@ export class NitroxCalculator {
    * @param percentO2 - Percents of Oxygen fraction in gas.
    * @returns Depth in meters.
    */
-  public static mod(ppO2: number, percentO2: number): number {
+  public mod(ppO2: number, percentO2: number): number {
     const fO2 = percentO2 / 100;
-    const result = GasMixtures.mod(ppO2, fO2, NitroxCalculator.depthConverter);
+    const result = GasMixtures.mod(ppO2, fO2, this.localConverter);
     return Math.floor(result * 100) / 100;
   }
 

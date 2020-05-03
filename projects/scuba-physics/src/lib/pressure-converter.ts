@@ -10,11 +10,6 @@ export class Density {
   public static readonly salt: number = Density.density(1030, 1);
 
   /**
-   * 13595.1 kg / m3 at 0C / 32F (standard conditions)).
-   */
-  public static readonly mercury: number = Density.density(13595.1, 1);
-
-    /**
     * Calculates the liquid density of the mass for the given volume.
     *
     * @param weight - The weight (in kilograms) of the given mass.
@@ -27,27 +22,15 @@ export class Density {
 
 }
 
+/**
+ * Using constant, since still 3000 meters above the see the gravity is 9.79742 m/s2
+ * https://en.wikipedia.org/wiki/Gravity_of_Earth#Mathematical_models
+ */
 export class Gravity {
   /**
-   * current gravity sample rates in meters per second per second (m/s2)
+   * Standard gravity sample rates in meters per second per second (m/s2)
    */
-  public static readonly earth: number = 9.80665;
-  public static readonly current: number = Gravity.earth;
-
-  /**
-   * Calculated gravity based on altitude.
-   * E.g. at 0 meters (sea level) it is the known value 9.80665 meters per square second.
-   * https://en.wikipedia.org/wiki/Gravity_of_Earth#Mathematical_models
-   *
-   * @param altitude Altitude above sea level in meters, where seal level = 0 m.
-   * @returns Gravity value as number representing meters per square second.
-   */
-  public static atAltitude(altitude: number): number {
-    // https://en.wikipedia.org/wiki/Earth_radius
-    const earthRadius = 6371000; // meters
-    const relativeRadius = earthRadius / (earthRadius + altitude);
-    return Gravity.earth * Math.pow(relativeRadius, 2);
-  }
+  public static readonly standard: number = 9.80665;
 }
 
 /**
@@ -85,8 +68,8 @@ export class AltitudePressure {
   public static readonly seaLevel: number = AltitudePressure.standard;
   public static readonly current: number = AltitudePressure.seaLevel;
 
-  // TODO add the Gravity function based on altitude
   public static atAltitude(altitude: number): number {
+    // https://en.wikipedia.org/wiki/Barometric_formula
     // https://en.wikipedia.org/wiki/International_Standard_Atmosphere
     const gasConstant = 8.31432; // J/(mol·K) for air
     const temperature = 288.15; // kelvin = 15°C
@@ -94,62 +77,9 @@ export class AltitudePressure {
     const molarMass = 0.0289644; // kg/mol
 
     const standardPressure = PressureConverter.barToPascal(this.standard);
-    const gravity = Gravity.earth;
+    const gravity = Gravity.standard;
     const base = temperature / (temperature + lapsRate * altitude);
     const exponent = (gravity * molarMass) / (gasConstant * lapsRate);
     return standardPressure * Math.pow(base, exponent);
-  }
-}
-
-export class VapourPressure {
-  private static readonly tempRange_1_100: number[] = [8.07131, 1730.63, 233.426];
-  private static readonly tempRange_99_374: number[] = [8.14019, 1810.94, 244.485];
-
-  /**
-   * The vapour pressure of water may be approximated as a function of temperature.
-   * Throws an exception, if temperature is outside of range 1-374°C.
-   *
-   * @param degreesCelcius - The temperature to approximate the pressure of water vapour.
-   * @returns Water vapour pressure in terms of bars.
-   */
-  public static waterVapourPressureInBars(degreesCelcius: number): number {
-    const mmHg = VapourPressure.waterVapourPressure(degreesCelcius);
-    const pascals = VapourPressure.mmHgToPascal(mmHg);
-    return PressureConverter.pascalToBar(pascals);
-  }
-
-  /**
-  * Returns the definition of mmHg (millimeters mercury) in terms of Pascal.
-  *
-  * @param mmHg - Millimeters high or depth.
-  * @returns Typically defined as weight density of mercury.
-  */
-  private static mmHgToPascal(mmHg: number): number {
-    if (!mmHg) {
-      mmHg = 1;
-    }
-
-    return (Density.mercury / 1000) * Gravity.current * mmHg;
-  }
-
-  /**
-  * The vapour pressure of water may be approximated as a function of temperature.
-  * Based on the Antoine_equation http://en.wikipedia.org/wiki/Antoine_equation
-  * http://en.wikipedia.org/wiki/Vapour_pressure_of_water
-  *
-  * @param degreesCelsius - The temperature to approximate the pressure of water vapour.
-  * @returns Water vapour pressure in terms of mmHg.
-  */
-  private static waterVapourPressure(degreesCelsius: number): number {
-    let rangeConstants;
-    if (degreesCelsius >= 1 && degreesCelsius <= 100) {
-      rangeConstants = VapourPressure.tempRange_1_100;
-    } else if (degreesCelsius >= 99 && degreesCelsius <= 374) {
-      rangeConstants = VapourPressure.tempRange_99_374;
-    } else {
-      throw new Error('Temperature is out of supported range 1-374°C');
-    }
-    const logp = rangeConstants[0] - (rangeConstants[1] / (rangeConstants[2] + degreesCelsius));
-    return Math.pow(10, logp);
   }
 }

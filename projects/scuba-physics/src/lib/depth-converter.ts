@@ -18,7 +18,7 @@ export class DepthConverter {
    * @returns The absolute pressure (in bars) for the given depth (in meters) of 1 cubic meter volume of water below the surface.
    */
   public toBar(depth: number): number {
-    const weightDensity = this.density * Gravity.current;
+    const weightDensity = this.density * Gravity.standard;
     return PressureConverter.pascalToBar((depth * weightDensity)) + this.altitudePressure;
   }
 
@@ -33,7 +33,7 @@ export class DepthConverter {
         throw new Error('Lower pressure than altitude isn`t convertible to depth.');
     }
 
-    const weightDensity = this.density * Gravity.current;
+    const weightDensity = this.density * Gravity.standard;
     const pressure = PressureConverter.barToPascal(bars - this.altitudePressure);
     return pressure / weightDensity;
   }

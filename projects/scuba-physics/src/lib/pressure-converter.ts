@@ -2,24 +2,12 @@ export class Density {
   /**
    * 1000kg / m3 at 0C / 32F (standard conditions for measurements).
    */
-  public static readonly fresh: number = Density.density(1000, 1);
+  public static readonly fresh: number = 1000;
 
   /**
    * 1030kg / m3 at 0C / 32F (standard conditions for measurements).
    */
-  public static readonly salt: number = Density.density(1030, 1);
-
-  /**
-    * Calculates the liquid density of the mass for the given volume.
-    *
-    * @param weight - The weight (in kilograms) of the given mass.
-    * @param volume - The volume of the given mass in (cubic meters m3).
-    * @returns Density of the mass
-    */
-  public static density(weight: number, volume: number): number {
-    return weight / volume;
-  }
-
+  public static readonly salt: number = 1030;
 }
 
 /**

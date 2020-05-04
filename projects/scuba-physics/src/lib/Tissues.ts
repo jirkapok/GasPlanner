@@ -28,13 +28,12 @@ export class Tissue extends Compartment {
     private _pHe = 0;
     private _pTotal = 0;
 
-    constructor(compartment: Compartment) {
+    constructor(compartment: Compartment, surfacePressure: number) {
        super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
-        compartment.HeHalfTime, compartment.heA, compartment.heB);
+             compartment.HeHalfTime, compartment.heA, compartment.heB);
 
-        const absPressure = AltitudePressure.current; // TODO altitude diving
         const waterVapourPressure = 0.0627; // as constant for body temperature 37°C
-        this._pN2 = GasMixtures.partialPressure(absPressure, 0.79) - waterVapourPressure;
+        this._pN2 = GasMixtures.partialPressure(surfacePressure, 0.79) - waterVapourPressure;
         this._pHe = 0;
         this._pTotal = this.pN2 + this.pHe;
     }
@@ -55,13 +54,6 @@ export class Tissue extends Compartment {
         const a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
         const b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
         const bars = (this.pTotal - (a * gf)) / ((gf / b) + 1.0 - gf);
-
-        // less than surface pressure means no ceiling, this aproximation is OK,
-        // because tissues are loaded only under water
-        if (bars < AltitudePressure.current) {
-            return AltitudePressure.current;
-        }
-
         return bars;
     }
 
@@ -103,9 +95,10 @@ export class Tissue extends Compartment {
 export class Tissues {
     public compartments: Tissue[] = [];
 
-    constructor() {
+    constructor(surfacePressure: number) {
         for (let index = 0; index < Compartments.Buhlmann_ZHL16C.length; index++) {
-            const tissue = new Tissue(Compartments.Buhlmann_ZHL16C[index]);
+            const compartment = Compartments.Buhlmann_ZHL16C[index];
+            const tissue = new Tissue(compartment, surfacePressure);
             this.compartments.push(tissue);
         }
     }

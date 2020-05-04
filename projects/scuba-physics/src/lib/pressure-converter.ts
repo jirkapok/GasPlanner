@@ -53,9 +53,12 @@ export class PressureConverter {
  */
 export class AltitudePressure {
   public static readonly standard: number = 1.01325;
-  public static readonly seaLevel: number = AltitudePressure.standard;
-  public static readonly current: number = AltitudePressure.seaLevel;
 
+  /**
+   * Calculates pressure at altitude in pascals
+   *
+   * @param altitude Positive number in meters representing the altitude
+   */
   public static atAltitude(altitude: number): number {
     // https://en.wikipedia.org/wiki/Barometric_formula
     // https://en.wikipedia.org/wiki/International_Standard_Atmosphere

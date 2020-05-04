@@ -117,7 +117,7 @@ export class CalculatedProfile {
 
 class AlgorithmContext {
     private gfDiff: number;
-    public tissues = new Tissues();
+    public tissues: Tissues;
     public ceilings: Ceiling[] = [];
     public runTime = 0;
     private firstStop = 0;
@@ -125,6 +125,7 @@ class AlgorithmContext {
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
         this.gfDiff = options.gfHigh - options.gfLow;
+        this.tissues = new Tissues(depthConverter.surfacePressure);
     }
 
     public get currentDepth(): number {
@@ -161,7 +162,15 @@ class AlgorithmContext {
 
     public ceilingForDepth(depth: number): number {
         const gf = this.gradientForDepth(depth);
-        const bars = this.tissues.ceiling(gf);
+        let bars = this.tissues.ceiling(gf);
+
+        // less than surface pressure means no ceiling, this aproximation is OK,
+        // because tissues are loaded only under water
+        // TODO altitude pressure
+        if (bars < this.depthConverter.surfacePressure) {
+            bars = this.depthConverter.surfacePressure;
+        }
+
         return this.depthConverter.fromBar(bars);
     }
 }
@@ -353,7 +362,7 @@ export class BuhlmannAlgorithm {
         return {
             startPressure: depthConverter.toBar(segment.startDepth),
             duration: segment.duration,
-            speed: depthConverter.toBar(segment.speed) - AltitudePressure.current
+            speed: depthConverter.toBar(segment.speed) - depthConverter.surfacePressure
         };
     }
 }

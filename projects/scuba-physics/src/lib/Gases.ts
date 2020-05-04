@@ -208,11 +208,11 @@ export class GasMixtures {
     public static ceiling(fO2: number, depthConverter: DepthConverter): number {
         const minppO2 = 0.18;
         const ratio = minppO2 / fO2;
-        const bars = ratio * AltitudePressure.current;
+        const bars = ratio * depthConverter.surfacePressure;
 
         // hyperoxic gases have pressure bellow sea level, which cant be converted to depth
         // simplyfied untill altitude diving is implemented
-        if (bars < AltitudePressure.current) {
+        if (bars < depthConverter.surfacePressure) {
             return 0;
         }
 

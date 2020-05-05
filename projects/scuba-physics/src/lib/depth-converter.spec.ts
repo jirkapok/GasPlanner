@@ -1,6 +1,25 @@
 import { DepthConverter } from './depth-converter';
 
 describe('Depth Converter', () => {
+  describe('Altitude 1000 meters', () => {
+    const freshWaterConverter = DepthConverter.forFreshWater(1000);
+
+    it('surface pressure is 0.89874 bar', () => {
+      const result = freshWaterConverter.surfacePressure;
+      expect(result).toBeCloseTo(0.89875, 5);
+    });
+
+    it('0 m depth converts to 0.89875 bar', () => {
+      const result = freshWaterConverter.toBar(0);
+      expect(result).toBeCloseTo(0.89875, 5);
+    });
+
+    it('20 m depth converts to 0.99811 bar', () => {
+      const result = freshWaterConverter.toBar(1.01325);
+      expect(result).toBeCloseTo(0.99811, 5);
+    });
+  });
+
   describe('Fresh water', () => {
     const freshWaterConverter = DepthConverter.forFreshWater();
 

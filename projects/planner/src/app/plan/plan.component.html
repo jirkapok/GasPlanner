@@ -21,6 +21,14 @@
       </label>
     </div>
 
+    <div class="form-group">
+      <label for="altitude">Altitude [m.a.s.l.]:
+        <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude" class="form-control" type="number"
+         min="0" [min]="0" max="4000" [range]="[0, 4000]" required [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)"/>
+        <div class="text-danger" *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">Needs to be number 0 - 4000 m</div>
+      </label>
+    </div>
+
     <div class="custom-control custom-switch">
       <input type="checkbox" class="custom-control-input" id="isFreshWater" [checked]="!isFreshWater"  (change)="isFreshWater = !isFreshWater"/>
       <label class="custom-control-label" for="isFreshWater">Salt water</label>

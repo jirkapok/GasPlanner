@@ -44,6 +44,14 @@ export class PlanComponent implements OnInit {
     this.planer.changeWaterType(newValue);
   }
 
+  public get plannedAltitude(): number {
+    return this.planer.options.altitude;
+  }
+
+  public set plannedAltitude(newValue: number) {
+    this.planer.options.altitude = newValue;
+  }
+
   public calculate(): void {
     this.planer.calculate();
   }

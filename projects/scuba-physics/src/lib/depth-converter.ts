@@ -3,12 +3,20 @@ import { Density, Gravity, AltitudePressure, PressureConverter } from './pressur
 export class DepthConverter {
   private _surfacePressure: number;
 
-  public static forSaltWater(): DepthConverter {
-    return new DepthConverter(Density.salt, 0);
+  /**
+   * Creates new instance of depth converter
+   * @param altitude Meters above see level, 0 for see level
+   */
+  public static forSaltWater(altitude: number = 0): DepthConverter {
+    return new DepthConverter(Density.salt, altitude);
   }
 
-  public static forFreshWater(): DepthConverter {
-    return new DepthConverter(Density.fresh, 0);
+  /**
+   * Creates new instance of depth converter
+   * @param altitude Meters above see level, 0 for see level
+   */
+  public static forFreshWater(altitude: number = 0): DepthConverter {
+    return new DepthConverter(Density.fresh, altitude);
   }
 
   public get surfacePressure(): number {

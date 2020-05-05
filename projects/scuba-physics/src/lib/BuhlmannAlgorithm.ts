@@ -2,7 +2,6 @@ import { Tissues, LoadSegment } from './Tissues';
 import { Gases, Gas, GasOptions, GasesValidator } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter } from './depth-converter';
-import { AltitudePressure } from './pressure-converter';
 
 export class Options implements GasOptions {
     constructor(
@@ -49,7 +48,12 @@ export class Options implements GasOptions {
         /**
          * Usual descent speed used by the diver in metres/minute, default 20 meters/minute.
          */
-        public descentSpeed?: number
+        public descentSpeed?: number,
+
+        /**
+         * meters above see level, 0 for see level (default)
+         */
+        public altitude?: number,
     ) {
         this.gfLow = gfLow || 1.0;
         this.gfHigh = gfHigh || 1.0;
@@ -59,6 +63,7 @@ export class Options implements GasOptions {
         this.addSafetyStop = addSafetyStop || false;
         this.ascentSpeed = ascentSpeed || 10;
         this.descentSpeed = descentSpeed || 20;
+        this.altitude = altitude || 0;
     }
 }
 
@@ -166,7 +171,6 @@ class AlgorithmContext {
 
         // less than surface pressure means no ceiling, this aproximation is OK,
         // because tissues are loaded only under water
-        // TODO altitude pressure
         if (bars < this.depthConverter.surfacePressure) {
             bars = this.depthConverter.surfacePressure;
         }
@@ -183,7 +187,7 @@ export class BuhlmannAlgorithm {
     private oneMinute = 1;
 
     public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
-        const depthConverter = this.selectDepthConverter(options.isFreshWater);
+        const depthConverter = this.selectDepthConverter(options.isFreshWater, options.altitude);
         const errorMessages = this.validate(segments, gases, options, depthConverter);
         if (errorMessages.length > 0) {
             return CalculatedProfile.fromErrors(errorMessages);
@@ -279,12 +283,12 @@ export class BuhlmannAlgorithm {
         return rounded;
     }
 
-    private selectDepthConverter(isFreshWater: boolean): DepthConverter {
+    private selectDepthConverter(isFreshWater: boolean, altitude: number): DepthConverter {
         if (isFreshWater) {
-          return DepthConverter.forFreshWater();
+          return DepthConverter.forFreshWater(altitude);
         }
 
-        return DepthConverter.forSaltWater();
+        return DepthConverter.forSaltWater(altitude);
     }
 
     private dive(context: AlgorithmContext): void {
@@ -328,7 +332,7 @@ export class BuhlmannAlgorithm {
     }
 
     public noDecoLimit(depth: number, gas: Gas, options: Options): number {
-        const depthConverter = this.selectDepthConverter(options.isFreshWater);
+        const depthConverter = this.selectDepthConverter(options.isFreshWater, options.altitude);
         const gases = new Gases();
         gases.addBottomGas(gas);
 

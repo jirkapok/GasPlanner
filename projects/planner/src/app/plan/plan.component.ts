@@ -49,6 +49,22 @@ export class PlanComponent implements OnInit {
     }
   }
 
+  public get plannedGfHigh(): number {
+    return this.planer.options.gfHigh * 100;
+  }
+
+  public set plannedGfHigh(newValue: number) {
+    this.planer.options.gfHigh = newValue / 100;
+  }
+
+  public get plannedGfLow(): number {
+    return this.planer.options.gfLow * 100;
+  }
+
+  public set plannedGfLow(newValue: number) {
+    this.planer.options.gfLow = newValue / 100;
+  }
+
   public get isFreshWater(): boolean {
     return this.planer.options.isFreshWater;
   }

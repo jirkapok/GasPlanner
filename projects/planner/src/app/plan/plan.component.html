@@ -12,6 +12,22 @@
     </div>
 
     <div class="form-group">
+      <label for="gfLow">Gradient low:
+        <input id="gfLow" name="gfLow" #gfLow="ngModel" [(ngModel)]="plannedGfLow" class="form-control" type="number"
+         min="10" [min]="10" max="100" [range]="[10, 100]" required [class.is-invalid]="gfLow.invalid && (gfLow.dirty || gfLow.touched)"/>
+        <div class="text-danger" *ngIf="gfLow.invalid && (gfLow.dirty || gfLow.touched)">Needs to be number 0 - 100 lower than gradient high</div>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label for="gfHigh">Gradient high:
+        <input id="gfHigh" name="gfHigh" #gfHigh="ngModel" [(ngModel)]="plannedGfHigh" class="form-control" type="number"
+         min="10" [min]="10" max="100" [range]="[10, 100]" required [class.is-invalid]="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)"/>
+        <div class="text-danger" *ngIf="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)">Needs to be number 0 - 100 higher than gradient low</div>
+      </label>
+    </div>
+
+    <div class="form-group">
       <label for="altitude">Altitude [m.a.s.l.]:
         <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude" class="form-control" type="number"
          min="0" [min]="0" max="4000" [range]="[0, 4000]" required [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)"/>

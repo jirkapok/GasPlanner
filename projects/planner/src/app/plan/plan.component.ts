@@ -17,6 +17,7 @@ export class PlanComponent implements OnInit {
   public strategy = this.AllUsable;
   public clock = faClock;
   @Input() public formValid: boolean;
+  private _isTechnical: boolean;
 
   constructor(private planer: PlannerService) { }
 
@@ -34,6 +35,18 @@ export class PlanComponent implements OnInit {
   public set plannedDepth(depth: number) {
     this.plan.depth = depth;
     this.planer.updateNoDecoTime();
+  }
+
+  public get isTechnical(): boolean {
+    return this._isTechnical;
+  }
+
+  public set isTechnical(newValue: boolean) {
+    this._isTechnical = newValue;
+
+    if (!this._isTechnical) {
+      this.allUsable();
+    }
   }
 
   public get isFreshWater(): boolean {

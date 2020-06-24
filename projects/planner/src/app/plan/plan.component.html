@@ -5,6 +5,13 @@
   </div>
   <div class="card-body">
     <div class="form-group">
+      <div class="custom-control custom-switch app-nav-switch ">
+        <input type="checkbox" class="custom-control-input btn-success" id="isTechnical" [checked]="isTechnical"  (change)="isTechnical = !isTechnical"/>
+        <label class="custom-control-label" for="isTechnical">Technical diver</label>
+      </div>
+    </div>
+
+    <div class="form-group">
       <label for="duration">Bottom time [min.]:
         <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="plan.duration" class="form-control" type="number"
          min="1" [min]="1" required [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"/>
@@ -29,12 +36,12 @@
       </label>
     </div>
 
-    <div class="custom-control custom-switch">
+    <div class="custom-control custom-switch form-group">
       <input type="checkbox" class="custom-control-input" id="isFreshWater" [checked]="!isFreshWater"  (change)="isFreshWater = !isFreshWater"/>
       <label class="custom-control-label" for="isFreshWater">Salt water</label>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="isTechnical" >
       <label for="strategy">Strategy:</label>
       <div class="input-group">
         <input id="strategy" [(ngModel)]="strategy" class="form-control" type="text" readonly/>

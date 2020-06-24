@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="card-header">
+      <fa-icon [icon]="clock" class="mr-3"></fa-icon>
+      <span>Profile</span>
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <label for="duration">Bottom time [min.]:
+        <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="plan.duration" class="form-control" type="number"
+         min="1" [min]="1" required [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"/>
+      </label>
+      <div class="text-danger" *ngIf="duration.invalid && (duration.dirty || duration.touched)">Needs to be number > 0 min.</div>
+    </div>
+
+    <div class="form-group">
+      <label for="depth">Depth [m]:
+        <input id="depth" name="depth" #depth="ngModel" [(ngModel)]="plannedDepth" class="form-control" type="number"
+         min="1" [min]="1" max="500" [range]="[1, 500]" required [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)"/>
+        <small class="text-muted">No deco limit {{ plan.noDecoTime | number:'1.0-0' }} min.</small>
+        <div class="text-danger" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number 1 - 500 m</div>
+      </label>
+    </div>
+  </div>
+</div>

@@ -22,6 +22,7 @@ import { WayPointsComponent } from './waypoints/waypoints.component';
 import { DiveProfileComponent } from './diveprofile/diveprofile.component';
 import { AboutComponent } from './about/about.component';
 import { AppFooterComponent } from './footer/footer.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { AppFooterComponent } from './footer/footer.component';
     WayPointsComponent,
     DiveProfileComponent,
     AboutComponent,
-    AppFooterComponent
+    AppFooterComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

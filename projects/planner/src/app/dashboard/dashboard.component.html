@@ -6,19 +6,22 @@
       <span><strong>Disclaimer:</strong> None of the authors, contributors, administrators, or anyone else connected with this project can be responsible
         for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.</span>
     </ngb-alert>
-    <div class="col-lg-3 col-md-6 mt-4">
+    <div class="col-lg-4 col-md-6 mt-4">
       <app-gases (validate)="f.form.updateValueAndValidity()"></app-gases>
     </div>
-    <div class="col-lg-3 col-md-6 mt-4">
+    <div class="col-lg-4 col-md-6 mt-4">
+      <app-profile ></app-profile>
+    </div>
+    <div class="col-lg-4 col-md-6 mt-4">
       <app-plan [(formValid)]="f.form.invalid"></app-plan>
     </div>
-    <div class="col-lg-6 col-md-12 mt-4">
+    <div class="col-lg-6 col-md-6 mt-4">
       <app-dive></app-dive>
     </div>
     <div *ngIf="showResults" class="col-lg-6 col-md-12 mt-4">
       <app-waypoints></app-waypoints>
     </div>
-    <div *ngIf="showResults" class="col-lg-6 col-md-12 mt-4">
+    <div *ngIf="showResults" class="col-lg-12 col-md-12 mt-4">
       <app-diveprofile></app-diveprofile>
     </div>
   </div>

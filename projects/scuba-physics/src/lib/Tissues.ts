@@ -27,6 +27,8 @@ export class Tissue extends Compartment {
     private _pN2 = 0;
     private _pHe = 0;
     private _pTotal = 0;
+    private _a = 0;
+    private _b = 0;
 
     constructor(compartment: Compartment, surfacePressure: number) {
        super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
@@ -50,10 +52,16 @@ export class Tissue extends Compartment {
         return this._pTotal;
     }
 
+    public get a(): number {
+        return this._a;
+    }
+
+    public get b(): number {
+        return this._b;
+    }
+
     public ceiling(gf: number): number {
-        const a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
-        const b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
-        const bars = (this.pTotal - (a * gf)) / ((gf / b) + 1.0 - gf);
+        const bars = (this.pTotal - (this.a * gf)) / ((gf / this.b) + 1.0 - gf);
         return bars;
     }
 
@@ -62,6 +70,9 @@ export class Tissue extends Compartment {
         this._pHe = this.loadGas(segment, gas.fHe, this.pHe, this.HeHalfTime);
         const prevTotal = this.pTotal;
         this._pTotal = this.pN2 + this.pHe;
+
+        this._a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
+        this._b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
 
         // return difference - how much load was added
         return this.pTotal - prevTotal;

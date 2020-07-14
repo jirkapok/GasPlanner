@@ -158,10 +158,10 @@ class AlgorithmContext {
 
         for (let ci = 0; ci < this.tissues.compartments.length; ci++) {
             const compartment = this.tissues.compartments[ci];
-            const a = ((compartment.n2A * compartment.pN2) + (compartment.heA * compartment.pHe)) / (compartment.pTotal);
-            const b = ((compartment.n2B * compartment.pN2) + (compartment.heB * compartment.pHe)) / (compartment.pTotal);
 
-            const tissueLowestCeiling = (b * compartment.pTotal - gfLow * a * b) / ((1.0 - b) * gfLow + b);
+            const tissueLowestCeiling = (compartment.b * compartment.pTotal - gfLow * compartment.a * compartment.b) /
+                                        ((1.0 - compartment.b) * gfLow + compartment.b);
+
             if (tissueLowestCeiling > currentLowestCeiling) {
                 currentLowestCeiling = tissueLowestCeiling;
             }
@@ -173,18 +173,16 @@ class AlgorithmContext {
         for (let ci = 0; ci < this.tissues.compartments.length; ci++) {
             let currentTolerated = tolerated;
             const compartment = this.tissues.compartments[ci];
-            const a = ((compartment.n2A * compartment.pN2) + (compartment.heA * compartment.pHe)) / (compartment.pTotal);
-            const b = ((compartment.n2B * compartment.pN2) + (compartment.heB * compartment.pHe)) / (compartment.pTotal);
 
             // reused from Subsurface
-            if ((surface / b + a - surface) * gfHigh + surface <
-                (this.lowestCeiling / b + a - this.lowestCeiling) * gfLow + this.lowestCeiling) {
-               currentTolerated = (-a * b * (gfHigh * this.lowestCeiling - gfLow * surface) -
-                        (1.0 - b) * (gfHigh - gfLow) * this.lowestCeiling * surface +
-                        b * (this.lowestCeiling - surface) * compartment.pTotal) /
-                        (-a * b * (gfHigh - gfLow) +
-                        (1.0 - b) * (gfLow * this.lowestCeiling - gfHigh * surface) +
-                        b * (this.lowestCeiling - surface));
+            if ((surface / compartment.b + compartment.a - surface) * gfHigh + surface <
+                (this.lowestCeiling / compartment.b + compartment.a - this.lowestCeiling) * gfLow + this.lowestCeiling) {
+               currentTolerated = (-compartment.a * compartment.b * (gfHigh * this.lowestCeiling - gfLow * surface) -
+                        (1.0 - compartment.b) * (gfHigh - gfLow) * this.lowestCeiling * surface +
+                        compartment.b * (this.lowestCeiling - surface) * compartment.pTotal) /
+                        (-compartment.a * compartment.b * (gfHigh - gfLow) +
+                        (1.0 - compartment.b) * (gfLow * this.lowestCeiling - gfHigh * surface) +
+                        compartment.b * (this.lowestCeiling - surface));
             }
 
             if (currentTolerated >= tolerated) {

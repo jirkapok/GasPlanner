@@ -126,8 +126,7 @@ class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
     public runTime = 0;
-    private firstStop = 0;
-    private gf_low_pressure_this_dive = 0;
+    private lowestCeiling = 0;
 
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
@@ -144,78 +143,59 @@ class AlgorithmContext {
     }
 
     public addCeiling(depth: number) {
-        if (depth > this.firstStop) {
-          this.firstStop = depth;
-        }
-
         this.ceilings.push({
             time: this.runTime,
             depth: depth
         });
     }
 
-    public ceiling(): number {
-        return this.ceilingForDepth(this.currentDepth);
-    }
-
-    public gradientForDepth(depth: number): number {
-        if (depth > this.firstStop) {
-            return this.options.gfLow;
-        }
-
-        const gfChangePerMeter = this.gfDiff /  this.firstStop;
-        return this.options.gfHigh - gfChangePerMeter * depth;
-    }
-
     private tolerated(): number {
-        const gf_low = this.options.gfLow;
-        const gf_high = this.options.gfHigh;
+        const gfLow = this.options.gfLow;
+        const gfHigh = this.options.gfHigh;
         const surface = AltitudePressure.standard;
-        let ret_tolerance_limit_ambient_pressure = 0;
-        let lowest_ceiling = 0;
+        let tolerated = 0;
+        let currentLowestCeiling = 0;
 
         for (let ci = 0; ci < this.tissues.compartments.length; ci++) {
             const compartment = this.tissues.compartments[ci];
-            const tissue_inertgas_saturation = compartment.pTotal;
             const a = ((compartment.n2A * compartment.pN2) + (compartment.heA * compartment.pHe)) / (compartment.pTotal);
             const b = ((compartment.n2B * compartment.pN2) + (compartment.heB * compartment.pHe)) / (compartment.pTotal);
 
-            const tissue_lowest_ceiling = (b * tissue_inertgas_saturation - gf_low * a * b) / ((1.0 - b) * gf_low + b);
-            if (tissue_lowest_ceiling > lowest_ceiling) {
-                lowest_ceiling = tissue_lowest_ceiling;
+            const tissueLowestCeiling = (b * compartment.pTotal - gfLow * a * b) / ((1.0 - b) * gfLow + b);
+            if (tissueLowestCeiling > currentLowestCeiling) {
+                currentLowestCeiling = tissueLowestCeiling;
             }
-            if (lowest_ceiling > this.gf_low_pressure_this_dive) {
-                this.gf_low_pressure_this_dive = lowest_ceiling;
+            if (currentLowestCeiling > this.lowestCeiling) {
+                this.lowestCeiling = currentLowestCeiling;
             }
         }
 
         for (let ci = 0; ci < this.tissues.compartments.length; ci++) {
-            let tolerated = ret_tolerance_limit_ambient_pressure;
+            let currentTolerated = tolerated;
             const compartment = this.tissues.compartments[ci];
-            const tissue_inertgas_saturation = compartment.pTotal;
             const a = ((compartment.n2A * compartment.pN2) + (compartment.heA * compartment.pHe)) / (compartment.pTotal);
             const b = ((compartment.n2B * compartment.pN2) + (compartment.heB * compartment.pHe)) / (compartment.pTotal);
 
-            if ((surface / b + a - surface) * gf_high + surface <
-                (this.gf_low_pressure_this_dive / b + a - this.gf_low_pressure_this_dive) * gf_low + this.gf_low_pressure_this_dive) {
-               tolerated = (-a * b * (gf_high * this.gf_low_pressure_this_dive - gf_low * surface) -
-                        (1.0 - b) * (gf_high - gf_low) * this.gf_low_pressure_this_dive * surface +
-                        b * (this.gf_low_pressure_this_dive - surface) * tissue_inertgas_saturation) /
-                        (-a * b * (gf_high - gf_low) +
-                        (1.0 - b) * (gf_low * this.gf_low_pressure_this_dive - gf_high * surface) +
-                        b * (this.gf_low_pressure_this_dive - surface));
+            // reused from Subsurface
+            if ((surface / b + a - surface) * gfHigh + surface <
+                (this.lowestCeiling / b + a - this.lowestCeiling) * gfLow + this.lowestCeiling) {
+               currentTolerated = (-a * b * (gfHigh * this.lowestCeiling - gfLow * surface) -
+                        (1.0 - b) * (gfHigh - gfLow) * this.lowestCeiling * surface +
+                        b * (this.lowestCeiling - surface) * compartment.pTotal) /
+                        (-a * b * (gfHigh - gfLow) +
+                        (1.0 - b) * (gfLow * this.lowestCeiling - gfHigh * surface) +
+                        b * (this.lowestCeiling - surface));
             }
 
-            if (tolerated >= ret_tolerance_limit_ambient_pressure) {
-                ret_tolerance_limit_ambient_pressure = tolerated;
+            if (currentTolerated >= tolerated) {
+                tolerated = currentTolerated;
             }
         }
 
-        return ret_tolerance_limit_ambient_pressure;
+        return tolerated;
     }
 
-    public ceilingForDepth(depth: number): number {
-        const gf = this.gradientForDepth(depth);
+    public ceiling(): number {
         let bars = this.tolerated();
 
         // less than surface pressure means no ceiling, this aproximation is OK,
@@ -367,7 +347,7 @@ export class BuhlmannAlgorithm {
         const loadSegment = this.toLoadSegment(context.depthConverter, segment);
         context.tissues.load(loadSegment, segment.gas);
         context.runTime += segment.duration;
-        const ceiling = context.ceilingForDepth(segment.endDepth);
+        const ceiling = context.ceiling();
         context.addCeiling(ceiling);
     }
 

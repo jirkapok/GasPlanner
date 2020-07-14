@@ -2,6 +2,7 @@ import { Tissues, LoadSegment } from './Tissues';
 import { Gases, Gas, GasOptions, GasesValidator } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter } from './depth-converter';
+import { AltitudePressure } from './pressure-converter';
 
 export class Options implements GasOptions {
     constructor(
@@ -126,6 +127,7 @@ class AlgorithmContext {
     public ceilings: Ceiling[] = [];
     public runTime = 0;
     private firstStop = 0;
+    private gf_low_pressure_this_dive = 0;
 
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
@@ -165,9 +167,56 @@ class AlgorithmContext {
         return this.options.gfHigh - gfChangePerMeter * depth;
     }
 
+    private tolerated(): number {
+        const gf_low = this.options.gfLow;
+        const gf_high = this.options.gfHigh;
+        const surface = AltitudePressure.standard;
+        let ret_tolerance_limit_ambient_pressure = 0;
+        let lowest_ceiling = 0;
+
+        for (let ci = 0; ci < this.tissues.compartments.length; ci++) {
+            const compartment = this.tissues.compartments[ci];
+            const tissue_inertgas_saturation = compartment.pTotal;
+            const a = ((compartment.n2A * compartment.pN2) + (compartment.heA * compartment.pHe)) / (compartment.pTotal);
+            const b = ((compartment.n2B * compartment.pN2) + (compartment.heB * compartment.pHe)) / (compartment.pTotal);
+
+            const tissue_lowest_ceiling = (b * tissue_inertgas_saturation - gf_low * a * b) / ((1.0 - b) * gf_low + b);
+            if (tissue_lowest_ceiling > lowest_ceiling) {
+                lowest_ceiling = tissue_lowest_ceiling;
+            }
+            if (lowest_ceiling > this.gf_low_pressure_this_dive) {
+                this.gf_low_pressure_this_dive = lowest_ceiling;
+            }
+        }
+
+        for (let ci = 0; ci < this.tissues.compartments.length; ci++) {
+            let tolerated = ret_tolerance_limit_ambient_pressure;
+            const compartment = this.tissues.compartments[ci];
+            const tissue_inertgas_saturation = compartment.pTotal;
+            const a = ((compartment.n2A * compartment.pN2) + (compartment.heA * compartment.pHe)) / (compartment.pTotal);
+            const b = ((compartment.n2B * compartment.pN2) + (compartment.heB * compartment.pHe)) / (compartment.pTotal);
+
+            if ((surface / b + a - surface) * gf_high + surface <
+                (this.gf_low_pressure_this_dive / b + a - this.gf_low_pressure_this_dive) * gf_low + this.gf_low_pressure_this_dive) {
+               tolerated = (-a * b * (gf_high * this.gf_low_pressure_this_dive - gf_low * surface) -
+                        (1.0 - b) * (gf_high - gf_low) * this.gf_low_pressure_this_dive * surface +
+                        b * (this.gf_low_pressure_this_dive - surface) * tissue_inertgas_saturation) /
+                        (-a * b * (gf_high - gf_low) +
+                        (1.0 - b) * (gf_low * this.gf_low_pressure_this_dive - gf_high * surface) +
+                        b * (this.gf_low_pressure_this_dive - surface));
+            }
+
+            if (tolerated >= ret_tolerance_limit_ambient_pressure) {
+                ret_tolerance_limit_ambient_pressure = tolerated;
+            }
+        }
+
+        return ret_tolerance_limit_ambient_pressure;
+    }
+
     public ceilingForDepth(depth: number): number {
         const gf = this.gradientForDepth(depth);
-        let bars = this.tissues.ceiling(gf);
+        let bars = this.tolerated();
 
         // less than surface pressure means no ceiling, this aproximation is OK,
         // because tissues are loaded only under water
@@ -195,7 +244,7 @@ export class BuhlmannAlgorithm {
 
         const last = segments.last();
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
-        this.dive(context);
+        this.descent(context);
 
         const firstDecoStop = this.firstDecoStop(context);
         let nextDecoStop = firstDecoStop;
@@ -205,6 +254,7 @@ export class BuhlmannAlgorithm {
 
         while (nextStop >= 0) {
             // ascent to the nextStop
+            // TODO we may still ongasing during ascent to next stop
             const depthDifference = context.currentDepth - nextStop;
             const duration = this.duration(depthDifference, options.ascentSpeed);
             const ascent = context.segments.add(context.currentDepth, nextStop, currentGas, duration);
@@ -291,7 +341,7 @@ export class BuhlmannAlgorithm {
         return DepthConverter.forSaltWater(altitude);
     }
 
-    private dive(context: AlgorithmContext): void {
+    private descent(context: AlgorithmContext): void {
         // initial ceiling doesn't have to be 0m, because of previous tissues loading.
         const ceiling =  context.ceiling();
         context.addCeiling(ceiling);

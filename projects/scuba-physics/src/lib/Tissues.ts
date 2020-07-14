@@ -60,8 +60,8 @@ export class Tissue extends Compartment {
         return this._b;
     }
 
-    public ceiling(gf: number): number {
-        const bars = (this.pTotal - (this.a * gf)) / ((gf / this.b) + 1.0 - gf);
+    public ceiling(gfLow: number): number {
+        const bars = (this.pTotal - (this.a * gfLow)) / ((gfLow / this.b) + 1.0 - gfLow);
         return bars;
     }
 
@@ -114,16 +114,43 @@ export class Tissues {
         }
     }
 
-    public ceiling(gf: number): number {
+    public ceiling(gfLow: number): number {
         let ceiling = 0;
+
         for (let index = 0; index < this.compartments.length; index++) {
-            const tissueCeiling = this.compartments[index].ceiling(gf);
-            if (!ceiling || tissueCeiling > ceiling) {
+            const tissueCeiling = this.compartments[index].ceiling(gfLow);
+            if (tissueCeiling > ceiling) {
                 ceiling = tissueCeiling;
             }
         }
 
         return ceiling;
+    }
+
+    public tolerated(surface: number, lowestCeiling: number, gfHigh: number, gfLow: number) {
+        let tolerated = 0;
+
+        for (let ci = 0; ci < this.compartments.length; ci++) {
+            const compartment = this.compartments[ci];
+            let currentTolerated = tolerated;
+
+            // reused from Subsurface
+            if ((surface / compartment.b + compartment.a - surface) * gfHigh + surface <
+                (lowestCeiling / compartment.b + compartment.a - lowestCeiling) * gfLow + lowestCeiling) {
+               currentTolerated = (-compartment.a * compartment.b * (gfHigh * lowestCeiling - gfLow * surface) -
+                        (1.0 - compartment.b) * (gfHigh - gfLow) * lowestCeiling * surface +
+                        compartment.b * (lowestCeiling - surface) * compartment.pTotal) /
+                        (-compartment.a * compartment.b * (gfHigh - gfLow) +
+                        (1.0 - compartment.b) * (gfLow * lowestCeiling - gfHigh * surface) +
+                        compartment.b * (lowestCeiling - surface));
+            }
+
+            if (currentTolerated >= tolerated) {
+                tolerated = currentTolerated;
+            }
+        }
+
+        return tolerated;
     }
 
     public load(segment: LoadSegment, gas: Gas): number {

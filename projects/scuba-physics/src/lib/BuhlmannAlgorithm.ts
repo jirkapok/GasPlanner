@@ -122,7 +122,6 @@ export class CalculatedProfile {
 
 
 class AlgorithmContext {
-    private gfDiff: number;
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
     public runTime = 0;
@@ -130,7 +129,6 @@ class AlgorithmContext {
 
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
-        this.gfDiff = options.gfHigh - options.gfLow;
         this.tissues = new Tissues(depthConverter.surfacePressure);
     }
 
@@ -152,44 +150,14 @@ class AlgorithmContext {
     private tolerated(): number {
         const gfLow = this.options.gfLow;
         const gfHigh = this.options.gfHigh;
-        const surface = AltitudePressure.standard;
-        let tolerated = 0;
-        let currentLowestCeiling = 0;
+        const surface = this.depthConverter.surfacePressure;
+        const currentLowestCeiling = this.tissues.ceiling(gfLow);
 
-        for (let ci = 0; ci < this.tissues.compartments.length; ci++) {
-            const compartment = this.tissues.compartments[ci];
-
-            const tissueLowestCeiling = (compartment.b * compartment.pTotal - gfLow * compartment.a * compartment.b) /
-                                        ((1.0 - compartment.b) * gfLow + compartment.b);
-
-            if (tissueLowestCeiling > currentLowestCeiling) {
-                currentLowestCeiling = tissueLowestCeiling;
-            }
-            if (currentLowestCeiling > this.lowestCeiling) {
-                this.lowestCeiling = currentLowestCeiling;
-            }
+        if (currentLowestCeiling > this.lowestCeiling) {
+            this.lowestCeiling = currentLowestCeiling;
         }
 
-        for (let ci = 0; ci < this.tissues.compartments.length; ci++) {
-            let currentTolerated = tolerated;
-            const compartment = this.tissues.compartments[ci];
-
-            // reused from Subsurface
-            if ((surface / compartment.b + compartment.a - surface) * gfHigh + surface <
-                (this.lowestCeiling / compartment.b + compartment.a - this.lowestCeiling) * gfLow + this.lowestCeiling) {
-               currentTolerated = (-compartment.a * compartment.b * (gfHigh * this.lowestCeiling - gfLow * surface) -
-                        (1.0 - compartment.b) * (gfHigh - gfLow) * this.lowestCeiling * surface +
-                        compartment.b * (this.lowestCeiling - surface) * compartment.pTotal) /
-                        (-compartment.a * compartment.b * (gfHigh - gfLow) +
-                        (1.0 - compartment.b) * (gfLow * this.lowestCeiling - gfHigh * surface) +
-                        compartment.b * (this.lowestCeiling - surface));
-            }
-
-            if (currentTolerated >= tolerated) {
-                tolerated = currentTolerated;
-            }
-        }
-
+        const tolerated = this.tissues.tolerated(surface, this.lowestCeiling, gfHigh, gfLow);
         return tolerated;
     }
 

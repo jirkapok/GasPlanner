@@ -2,7 +2,6 @@ import { Tissues, LoadSegment } from './Tissues';
 import { Gases, Gas, GasOptions, GasesValidator } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter } from './depth-converter';
-import { AltitudePressure } from './pressure-converter';
 
 export class Options implements GasOptions {
     constructor(
@@ -12,12 +11,12 @@ export class Options implements GasOptions {
         // High (35/75)
 
         /**
-         * Low gradient factor  in range 0-1 (e.g 0-100%), default 1
+         * Low gradient factor  in range 0-1 (e.g 0-100%), default 0.4
          */
         public gfLow: number,
 
         /**
-         * Hight gradient factor in range 0-1 (e.g 0-100%), default 1
+         * Hight gradient factor in range 0-1 (e.g 0-100%), default 0.85
          */
         public gfHigh: number,
 
@@ -56,8 +55,8 @@ export class Options implements GasOptions {
          */
         public altitude?: number,
     ) {
-        this.gfLow = gfLow || 1.0;
-        this.gfHigh = gfHigh || 1.0;
+        this.gfLow = gfLow || 0.4;
+        this.gfHigh = gfHigh || 0.85;
         this.maxppO2 = maxppO2 || 1.6;
         this.maxEND = maxEND || 30;
         this.isFreshWater = isFreshWater || false;

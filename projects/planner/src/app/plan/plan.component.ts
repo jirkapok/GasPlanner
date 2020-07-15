@@ -13,6 +13,10 @@ export class PlanComponent implements OnInit {
   public readonly AllUsable = 'All usable';
   public readonly HalfUsable = 'Half usable';
   public readonly ThirdUsable = 'Thirds usable';
+  public readonly Low = 'Low (45/95)';
+  public readonly Medium = 'Medium (40/85)';
+  public readonly High = 'High (30/75)';
+  public conservatism = this.Medium;
   public plan: Plan;
   public strategy = this.AllUsable;
   public clock = faClock;
@@ -46,7 +50,26 @@ export class PlanComponent implements OnInit {
 
     if (!this._isTechnical) {
       this.allUsable();
+      this.mediumConservatism();
     }
+  }
+
+  public lowConservatism() {
+    this.conservatism = this.Low;
+    this.plannedGfLow = 45;
+    this.plannedGfHigh = 95;
+  }
+
+  public mediumConservatism() {
+    this.conservatism = this.Medium;
+    this.plannedGfLow = 40;
+    this.plannedGfHigh = 85;
+  }
+
+  public highConservatism() {
+    this.conservatism = this.High;
+    this.plannedGfLow = 30;
+    this.plannedGfHigh = 75;
   }
 
   public get plannedGfHigh(): number {
@@ -55,6 +78,7 @@ export class PlanComponent implements OnInit {
 
   public set plannedGfHigh(newValue: number) {
     this.planer.options.gfHigh = newValue / 100;
+    this.planer.updateNoDecoTime();
   }
 
   public get plannedGfLow(): number {
@@ -63,6 +87,7 @@ export class PlanComponent implements OnInit {
 
   public set plannedGfLow(newValue: number) {
     this.planer.options.gfLow = newValue / 100;
+    this.planer.updateNoDecoTime();
   }
 
   public get isFreshWater(): boolean {
@@ -79,6 +104,7 @@ export class PlanComponent implements OnInit {
 
   public set plannedAltitude(newValue: number) {
     this.planer.options.altitude = newValue;
+    this.planer.updateNoDecoTime();
   }
 
   public calculate(): void {

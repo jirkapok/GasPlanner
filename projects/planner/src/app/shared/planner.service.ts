@@ -12,7 +12,7 @@ export class PlannerService {
   public dive: Dive = new Dive();
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
-  public options = new Options(1, 1, 1.6, 30, true, true);
+  public options = new Options(0.4, 0.85, 1.6, 30, true, true);
 
   private static ascent(wayPoints: WayPoint[]): WayPoint[] {
     // first two are descent and bottom

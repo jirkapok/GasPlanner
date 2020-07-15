@@ -11,7 +11,22 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="!isTechnical" >
+      <label for="conservatism">Conservatism (Gradient factors):</label>
+      <div class="input-group">
+        <input id="conservatism" [(ngModel)]="conservatism" class="form-control" type="text" readonly/>
+        <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
+          <button  type="button" class="btn btn-default" id="conservatismMenu" ngbDropdownToggle></button>
+          <div ngbDropdownMenu aria-labelledby="conservatismMenu" aria-expanded="false">
+            <button  type="button" class="dropdown-item" (click)="lowConservatism()">{{Low}}</button>
+            <button  type="button" class="dropdown-item" (click)="mediumConservatism()">{{Medium}}</button>
+            <button  type="button" class="dropdown-item" (click)="highConservatism()">{{High}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="isTechnical">
       <label for="gfLow">Gradient low:
         <input id="gfLow" name="gfLow" #gfLow="ngModel" [(ngModel)]="plannedGfLow" class="form-control" type="number"
          min="10" [min]="10" max="100" [range]="[10, 100]" required [class.is-invalid]="gfLow.invalid && (gfLow.dirty || gfLow.touched)"/>
@@ -19,25 +34,12 @@
       </label>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="isTechnical">
       <label for="gfHigh">Gradient high:
         <input id="gfHigh" name="gfHigh" #gfHigh="ngModel" [(ngModel)]="plannedGfHigh" class="form-control" type="number"
          min="10" [min]="10" max="100" [range]="[10, 100]" required [class.is-invalid]="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)"/>
         <div class="text-danger" *ngIf="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)">Needs to be number 0 - 100 higher than gradient low</div>
       </label>
-    </div>
-
-    <div class="form-group">
-      <label for="altitude">Altitude [m.a.s.l.]:
-        <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude" class="form-control" type="number"
-         min="0" [min]="0" max="4000" [range]="[0, 4000]" required [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)"/>
-        <div class="text-danger" *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">Needs to be number 0 - 4000 m</div>
-      </label>
-    </div>
-
-    <div class="custom-control custom-switch form-group">
-      <input type="checkbox" class="custom-control-input" id="isFreshWater" [checked]="!isFreshWater"  (change)="isFreshWater = !isFreshWater"/>
-      <label class="custom-control-label" for="isFreshWater">Salt water</label>
     </div>
 
     <div class="form-group" *ngIf="isTechnical" >
@@ -53,6 +55,19 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="form-group">
+      <label for="altitude">Altitude [m.a.s.l.]:
+        <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude" class="form-control" type="number"
+         min="0" [min]="0" max="4000" [range]="[0, 4000]" required [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)"/>
+        <div class="text-danger" *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">Needs to be number 0 - 4000 m</div>
+      </label>
+    </div>
+
+    <div class="custom-control custom-switch form-group">
+      <input type="checkbox" class="custom-control-input" id="isFreshWater" [checked]="!isFreshWater"  (change)="isFreshWater = !isFreshWater"/>
+      <label class="custom-control-label" for="isFreshWater">Salt water</label>
     </div>
 
     <div class="form-group">

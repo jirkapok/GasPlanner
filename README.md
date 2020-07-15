@@ -13,13 +13,11 @@ None of the authors, contributors, administrators, or anyone else connected with
 List of current features is part of [application help](./doc/help.md). Road map of planned features:
 
 * Fix precision of decompression algorithm
-  * Fix ceiling calculation during ascent based on gradient factors
-* Add option to define gradient factors
+  * Calculate deco stops in seconds instead of minutes
 * Add option to define safety stop range
-* Add imperial units option
-* Add switch recreational/technical divers
 * Allow define multiple gases
 * Allow to define multiple levels
+* Add imperial units option
 * Add help to all variables
 * Add localization
 * Add trimix calculator

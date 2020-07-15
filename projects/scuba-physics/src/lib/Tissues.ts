@@ -1,5 +1,4 @@
 import { Compartments, Compartment } from './Compartments';
-import { AltitudePressure } from './pressure-converter';
 import { GasMixtures, Gas } from './Gases';
 
 /**
@@ -79,11 +78,12 @@ export class Tissue extends Compartment {
     }
 
     private loadGas(segment: LoadSegment, fGas: number, pBegin: number, halfTime: number): number {
-        const gasRateInBarsPerMinute = segment.speed * fGas;
+        const gasRateInBarsPerSecond = segment.speed * fGas / 60;
+        const durationSeconds = segment.duration * 60;
         // initial ambient pressure
         const gasPressureBreathingInBars = segment.startPressure * fGas;
         const newGasPressure = this.schreinerEquation(pBegin, gasPressureBreathingInBars,
-             segment.duration, halfTime, gasRateInBarsPerMinute);
+            durationSeconds, halfTime, gasRateInBarsPerSecond);
         return newGasPressure;
     }
 
@@ -92,13 +92,13 @@ export class Tissue extends Compartment {
      *
      * @param pBegin - Initial compartment inert gas pressure.
      * @param pGas - Partial pressure of inert gas at CURRENT depth (not target depth - but starting depth where change begins.)
-     * @param time - Time of exposure or interval in minutes.
+     * @param time - Time of exposure or interval in seconds.
      * @param halfTime - Log2/half-time in minute.
      * @param gasRate - Rate of descent/ascent in bar times the fraction of inert gas.
      * @returns The end compartment inert gas pressure in bar.
      */
     private schreinerEquation(pBegin: number, pGas: number, time: number, halfTime: number, gasRate: number): number {
-        const timeConstant = Math.log(2) / halfTime;
+        const timeConstant = Math.log(2)  / (halfTime * 60 );
         return (pGas + (gasRate * (time - (1.0 / timeConstant))) - ((pGas - pBegin - (gasRate / timeConstant)) * Math.exp(-timeConstant * time)));
     }
 }

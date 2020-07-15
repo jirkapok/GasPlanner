@@ -39,9 +39,12 @@ export class SegmentsValidator {
 
 export class Segment {
     constructor (
+        /** in meters */
         public startDepth: number,
+        /** in meters */
         public endDepth: number,
         public gas: Gas,
+        /** in minutes */
         public duration: number) {}
 
     public speedEquals(toCompare: Segment): boolean {
@@ -49,6 +52,9 @@ export class Segment {
             this.gas === toCompare.gas;
     }
 
+    /**
+     * meters per minute
+     */
     public get speed(): number {
         return (this.endDepth - this.startDepth) / this.duration;
     }

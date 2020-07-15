@@ -358,10 +358,11 @@ export class BuhlmannAlgorithm {
     }
 
     private toLoadSegment(depthConverter: DepthConverter, segment: Segment): LoadSegment {
+        const speedMeterPerSecond = segment.speed / 60;
         return {
             startPressure: depthConverter.toBar(segment.startDepth),
-            duration: segment.duration,
-            speed: depthConverter.toBar(segment.speed) - depthConverter.surfacePressure
+            duration: segment.duration * 60,
+            speed: depthConverter.toBar(speedMeterPerSecond) - depthConverter.surfacePressure
         };
     }
 }

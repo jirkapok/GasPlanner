@@ -11,12 +11,12 @@ export class LoadSegment {
     public startPressure: number;
 
     /**
-     * Duration in minutes of the transition
+     * Duration in seconds of the transition
      */
     public duration: number;
 
     /**
-     * Direction of the swim in bars/minute
+     * Direction of the swim in bars/second
      */
     public speed: number;
 }
@@ -78,12 +78,11 @@ export class Tissue extends Compartment {
     }
 
     private loadGas(segment: LoadSegment, fGas: number, pBegin: number, halfTime: number): number {
-        const gasRateInBarsPerSecond = segment.speed * fGas / 60;
-        const durationSeconds = segment.duration * 60;
+        const gasRateInBarsPerSecond = segment.speed * fGas;
         // initial ambient pressure
         const gasPressureBreathingInBars = segment.startPressure * fGas;
         const newGasPressure = this.schreinerEquation(pBegin, gasPressureBreathingInBars,
-            durationSeconds, halfTime, gasRateInBarsPerSecond);
+            segment.duration, halfTime, gasRateInBarsPerSecond);
         return newGasPressure;
     }
 
@@ -98,7 +97,7 @@ export class Tissue extends Compartment {
      * @returns The end compartment inert gas pressure in bar.
      */
     private schreinerEquation(pBegin: number, pGas: number, time: number, halfTime: number, gasRate: number): number {
-        const timeConstant = Math.log(2)  / (halfTime * 60 );
+        const timeConstant = Math.log(2)  / (halfTime * 60);
         return (pGas + (gasRate * (time - (1.0 / timeConstant))) - ((pGas - pBegin - (gasRate / timeConstant)) * Math.exp(-timeConstant * time)));
     }
 }

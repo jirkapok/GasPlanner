@@ -44,7 +44,7 @@ export class Segment {
         /** in meters */
         public endDepth: number,
         public gas: Gas,
-        /** in minutes */
+        /** in seconds */
         public duration: number) {}
 
     public speedEquals(toCompare: Segment): boolean {
@@ -53,7 +53,7 @@ export class Segment {
     }
 
     /**
-     * meters per minute
+     * meters per second
      */
     public get speed(): number {
         return (this.endDepth - this.startDepth) / this.duration;

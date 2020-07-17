@@ -10,15 +10,16 @@ export class Profile {
 export class WayPointsService {
     public static calculateWayPoints(plan: Plan, gas: Gas, options: Options): Profile {
         const wayPoints = [];
-        const descent = this.createDescent(plan);
-        const finalSegments = this.calculateDecompression(plan, gas, options, descent);
+        const finalSegments = this.calculateDecompression(plan, gas, options);
 
-        let lastWayPoint = descent;
-        wayPoints.push(descent);
+        const descent = finalSegments.segments[0];
+        let lastWayPoint = new WayPoint(descent.duration, descent.endDepth);
+        wayPoints.push(lastWayPoint);
         const exceptDescend = finalSegments.segments.slice(1);
 
         exceptDescend.forEach((segment, index, source) => {
-            const waypoint = lastWayPoint.toLevel(segment.duration, segment.endDepth);
+            const durationMinutes = segment.duration;
+            const waypoint = lastWayPoint.toLevel(durationMinutes, segment.endDepth);
             lastWayPoint = waypoint;
             wayPoints.push(waypoint);
         });
@@ -29,25 +30,19 @@ export class WayPointsService {
         };
     }
 
-    private static calculateDecompression(plan: Plan, gas: Gas, options: Options, descent: WayPoint): CalculatedProfile {
+    private static calculateDecompression(plan: Plan, gas: Gas, options: Options): CalculatedProfile {
         const bGas = gas.toGas();
         const gases = new Gases();
         gases.addBottomGas(bGas);
 
         const segments = new Segments();
-        segments.add(0, plan.depth, bGas, descent.duration);
-        const bottomTime = plan.duration - descent.duration;
+        const descentDuration = plan.depth / Diver.descSpeed * 60;
+        segments.add(0, plan.depth, bGas, descentDuration);
+        const bottomTime = (plan.duration * 60) - descentDuration;
         segments.addFlat(plan.depth, bGas, bottomTime);
 
         const algorithm = new BuhlmannAlgorithm();
         const finalSegments = algorithm.calculateDecompression(options, gases, segments);
         return finalSegments;
-    }
-
-    private static createDescent(plan: Plan): WayPoint {
-        const endDescend = plan.depth / Diver.descSpeed;
-        const endDepth = plan.depth;
-        const startPoint = new WayPoint(endDescend, endDepth);
-        return startPoint;
     }
 }

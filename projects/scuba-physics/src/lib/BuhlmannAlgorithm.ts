@@ -123,6 +123,7 @@ export class CalculatedProfile {
 class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
+    /** in seconds */
     public runTime = 0;
     private lowestCeiling = 0;
 
@@ -139,7 +140,8 @@ class AlgorithmContext {
         return 0;
     }
 
-    public addCeiling(depth: number) {
+    public addCeiling() {
+        const depth = this.ceiling();
         this.ceilings.push({
             time: this.runTime,
             depth: depth
@@ -162,6 +164,7 @@ class AlgorithmContext {
 
     public ceiling(): number {
         let bars = this.tolerated();
+        let bars2 = this.tolerated();
 
         // less than surface pressure means no ceiling, this aproximation is OK,
         // because tissues are loaded only under water
@@ -178,7 +181,8 @@ export class BuhlmannAlgorithm {
      * Depth difference between two deco stops in metres.
      */
     private static readonly decoStopDistance = 3;
-    private oneMinute = 1;
+    /** 60 seconds */
+    private oneMinute = 60;
 
     public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
         const depthConverter = this.selectDepthConverter(options.isFreshWater, options.altitude);
@@ -201,7 +205,7 @@ export class BuhlmannAlgorithm {
             // ascent to the nextStop
             // TODO we may still ongasing during ascent to next stop
             const depthDifference = context.currentDepth - nextStop;
-            const duration = this.duration(depthDifference, options.ascentSpeed);
+            const duration = this.duration(depthDifference, options.ascentSpeed / this.oneMinute);
             const ascent = context.segments.add(context.currentDepth, nextStop, currentGas, duration);
             this.swim(context, ascent);
 
@@ -288,8 +292,7 @@ export class BuhlmannAlgorithm {
 
     private descent(context: AlgorithmContext): void {
         // initial ceiling doesn't have to be 0m, because of previous tissues loading.
-        const ceiling =  context.ceiling();
-        context.addCeiling(ceiling);
+        context.addCeiling();
 
         context.segments.withAll(segment => {
             this.swim(context, segment);
@@ -300,7 +303,7 @@ export class BuhlmannAlgorithm {
         let startDepth = segment.startDepth;
 
         for (let elapsed = 0; elapsed < segment.duration; elapsed++) {
-            const interval = this.calculateInterval(segment.duration, elapsed);
+            const interval = 1; // steps each one second // this.calculateInterval(segment.duration, elapsed);
             const endDepth = startDepth + interval * segment.speed;
             const part = new Segment(startDepth, endDepth, segment.gas, interval);
             this.swimPart(context, part);
@@ -312,8 +315,7 @@ export class BuhlmannAlgorithm {
         const loadSegment = this.toLoadSegment(context.depthConverter, segment);
         context.tissues.load(loadSegment, segment.gas);
         context.runTime += segment.duration;
-        const ceiling = context.ceiling();
-        context.addCeiling(ceiling);
+        context.addCeiling();
     }
 
     private calculateInterval(duration: number, elapsed: number): number {
@@ -332,7 +334,7 @@ export class BuhlmannAlgorithm {
         gases.addBottomGas(gas);
 
         const segments = new Segments();
-        const duration = this.duration(depth, options.descentSpeed);
+        const duration = this.duration(depth, options.descentSpeed / this.oneMinute);
         const descent = segments.add(0, depth, gas, duration);
 
         const errorMessages = this.validate(segments, gases, options, depthConverter);
@@ -354,15 +356,19 @@ export class BuhlmannAlgorithm {
         if (change === 0 || depth === 0) {
             return Number.POSITIVE_INFINITY;
         }
-        return context.runTime - 1; // We went one minute past a ceiling of "0"
+
+         // We went one minute past a ceiling of "0"
+        return (context.runTime - this.oneMinute) / this.oneMinute;
     }
 
     private toLoadSegment(depthConverter: DepthConverter, segment: Segment): LoadSegment {
-        const speedMeterPerSecond = segment.speed / 60;
+        // because surface pressure was added during the conversion
+        const speed = depthConverter.toBar(segment.speed) - depthConverter.surfacePressure;
+
         return {
             startPressure: depthConverter.toBar(segment.startDepth),
-            duration: segment.duration * 60,
-            speed: depthConverter.toBar(speedMeterPerSecond) - depthConverter.surfacePressure
+            duration: segment.duration,
+            speed: speed
         };
     }
 }

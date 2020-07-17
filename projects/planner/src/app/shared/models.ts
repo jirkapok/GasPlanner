@@ -99,8 +99,9 @@ export class Gas {
 }
 
 export class Diver {
-    // meter/min.
+    /** default descent speed value in meter/min. */
     public static readonly descSpeed = 20;
+    /** default ascent speed value in meter/min. */
     public static readonly ascSpeed = 10;
 
     constructor(public sac: number, public maxPpO2: number) {
@@ -195,9 +196,13 @@ export enum SwimDirection {
 }
 
 export class WayPoint {
+    /** in minutes */
     public startTime = 0;
+    /** in meters */
     public startDepth = 0;
+    /** in minutes */
     public endTime = 0;
+    /** in meters */
     public endDepth = 0;
 
     constructor(public duration: number, newDepth: number, previousDepth: number = 0) {

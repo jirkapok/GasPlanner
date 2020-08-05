@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint, SwimDirection } from '../shared/models';
 import { faArrowDown, faArrowUp, faArrowRight, faTasks, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { Time } from 'scuba-physics';
 
 @Component({
   selector: 'app-waypoints',
@@ -43,7 +44,7 @@ export class WayPointsComponent implements OnInit {
   public durationToString(timeStamp: number): String {
     const minutes = Math.floor(timeStamp);
     let seconds = timeStamp - minutes;
-    seconds = Math.round(seconds * 60);
+    seconds = Math.round(Time.toSeconds(seconds));
     const paddedSeconds = seconds.toString().padStart(2, '0');
     return  minutes + ':' + paddedSeconds;
   }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Plan, Diver, Dive, Gas, WayPoint, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
-import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options, DepthConverter } from 'scuba-physics';
+import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options, DepthConverter, Time } from 'scuba-physics';
 import { Subject } from 'rxjs';
 
 @Injectable()
@@ -68,10 +68,10 @@ export class PlannerService {
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
     this.dive.needsReturn = this.plan.needsReturn;
-    this.dive.notEnoughGas = this.gas.endPressure < this.gas.reserve;
-    this.dive.depthExceeded = this.plan.depth > this.gasMod;
-    this.dive.notEnoughTime = this.plan.duration < this.dive.descent.duration;
-    this.dive.noDecoExceeded = this.plan.noDecoExceeded;
+    // this.dive.notEnoughGas = this.gas.endPressure < this.gas.reserve;
+    // this.dive.depthExceeded = this.plan.depth > this.gasMod;
+    this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
+    // this.dive.noDecoExceeded = this.plan.noDecoExceeded;
     this.dive.calculated = true;
 
     this.onCalculated.next();

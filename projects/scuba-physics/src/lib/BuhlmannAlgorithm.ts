@@ -2,6 +2,7 @@ import { Tissues, LoadSegment } from './Tissues';
 import { Gases, Gas, GasOptions, GasesValidator } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter } from './depth-converter';
+import { Time } from './Time';
 
 export class Options implements GasOptions {
     constructor(
@@ -181,8 +182,6 @@ export class BuhlmannAlgorithm {
      * Depth difference between two deco stops in metres.
      */
     private static readonly decoStopDistance = 3;
-    /** 60 seconds */
-    private oneMinute = 60;
 
     public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
         const depthConverter = this.selectDepthConverter(options.isFreshWater, options.altitude);
@@ -205,7 +204,7 @@ export class BuhlmannAlgorithm {
             // ascent to the nextStop
             // TODO we may still ongasing during ascent to next stop
             const depthDifference = context.currentDepth - nextStop;
-            const duration = this.duration(depthDifference, options.ascentSpeed / this.oneMinute);
+            const duration = this.duration(depthDifference, options.ascentSpeed / Time.oneMinute);
             const ascent = context.segments.add(context.currentDepth, nextStop, currentGas, duration);
             this.swim(context, ascent);
 
@@ -218,12 +217,12 @@ export class BuhlmannAlgorithm {
             nextDecoStop = this.nextDecoStop(nextStop);
 
             while (nextDecoStop < context.ceiling()) {
-                const decoStop = context.segments.add(context.currentDepth, nextStop, currentGas, this.oneMinute);
+                const decoStop = context.segments.add(context.currentDepth, nextStop, currentGas, Time.oneMinute);
                 this.swim(context, decoStop);
             }
 
             if (options.addSafetyStop && context.currentDepth === BuhlmannAlgorithm.decoStopDistance) {
-                const safetyStopDuration = this.oneMinute * 3;
+                const safetyStopDuration = Time.oneMinute * 3;
                 const decoStop = context.segments.add(context.currentDepth, nextStop, currentGas, safetyStopDuration);
                 this.swim(context, decoStop);
             }
@@ -321,11 +320,11 @@ export class BuhlmannAlgorithm {
     private calculateInterval(duration: number, elapsed: number): number {
         const remaining = duration - elapsed;
 
-        if (remaining >= this.oneMinute) {
-            return this.oneMinute;
+        if (remaining >= Time.oneMinute) {
+            return Time.oneMinute;
         }
 
-        return remaining % this.oneMinute;
+        return remaining % Time.oneMinute;
     }
 
     public noDecoLimit(depth: number, gas: Gas, options: Options): number {
@@ -334,7 +333,7 @@ export class BuhlmannAlgorithm {
         gases.addBottomGas(gas);
 
         const segments = new Segments();
-        const duration = this.duration(depth, options.descentSpeed / this.oneMinute);
+        const duration = this.duration(depth, options.descentSpeed / Time.oneMinute);
         const descent = segments.add(0, depth, gas, duration);
 
         const errorMessages = this.validate(segments, gases, options, depthConverter);
@@ -344,13 +343,13 @@ export class BuhlmannAlgorithm {
 
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
         this.swim(context, descent);
-        const hover = new Segment(depth, depth, gas, this.oneMinute);
+        const hover = new Segment(depth, depth, gas, Time.oneMinute);
         const hoverLoad = this.toLoadSegment(context.depthConverter, hover);
         let change = 1;
 
         while (context.ceiling() <= 0 && change > 0) {
             change = context.tissues.load(hoverLoad, gas);
-            context.runTime += this.oneMinute;
+            context.runTime += Time.oneMinute;
         }
 
         if (change === 0 || depth === 0) {
@@ -358,7 +357,7 @@ export class BuhlmannAlgorithm {
         }
 
          // We went one minute past a ceiling of "0"
-        return (context.runTime - this.oneMinute) / this.oneMinute;
+        return (context.runTime - Time.oneMinute) / Time.oneMinute;
     }
 
     private toLoadSegment(depthConverter: DepthConverter, segment: Segment): LoadSegment {

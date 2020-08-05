@@ -1,6 +1,6 @@
 import { WayPoint, Plan, Diver, Gas } from './models';
 import { BuhlmannAlgorithm, Gas as BGas, Options, Gases, Segments, Segment, CalculatedProfile } from 'scuba-physics';
-import { Ceiling } from 'scuba-physics';
+import { Ceiling, Time } from 'scuba-physics';
 
 export class Profile {
     public wayPoints: WayPoint[];
@@ -36,9 +36,9 @@ export class WayPointsService {
         gases.addBottomGas(bGas);
 
         const segments = new Segments();
-        const descentDuration = plan.depth / Diver.descSpeed * 60;
+        const descentDuration = Time.toSeconds(plan.depth / Diver.descSpeed);
         segments.add(0, plan.depth, bGas, descentDuration);
-        const bottomTime = (plan.duration * 60) - descentDuration;
+        const bottomTime = Time.toSeconds(plan.duration) - descentDuration;
         segments.addFlat(plan.depth, bGas, bottomTime);
 
         const algorithm = new BuhlmannAlgorithm();

@@ -41,12 +41,8 @@ export class WayPointsComponent implements OnInit {
     }
   }
 
-  public durationToString(timeStamp: number): String {
-    const minutes = Math.floor(timeStamp);
-    let seconds = timeStamp - minutes;
-    seconds = Math.round(Time.toSeconds(seconds));
-    const paddedSeconds = seconds.toString().padStart(2, '0');
-    return  minutes + ':' + paddedSeconds;
+  public durationToString(seconds: number): Date {
+    return  Time.toDate(seconds);
   }
 
   public iconClasses(point: WayPoint): any {

@@ -4,6 +4,7 @@ import { Dive } from '../shared/models';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-dist';
 import { Subscription } from 'rxjs';
+import { Time } from 'scuba-physics';
 
 @Component({
   selector: 'app-diveprofile',
@@ -43,6 +44,7 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
       showlegend: false,
       xaxis : {
         fixedrange: true,
+        tickformat: '%M:%S',
         title: {
           text: 'Time [minutes]'
         }
@@ -81,9 +83,9 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
     }];
 
     this.dive.wayPoints.forEach((item, index, waypoints) => {
-        xValues.push(item.startTime);
+        xValues.push(Time.toDate(item.startTime));
         yValues.push(item.startDepth);
-        xValues.push(item.endTime);
+        xValues.push(Time.toDate(item.endTime));
         yValues.push(item.endDepth);
       });
 
@@ -93,7 +95,7 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
     const yCeilingValues = [];
 
     this.dive.ceilings.forEach((item, index, ceilings) => {
-      xCeilingValues.push(item.time);
+      xCeilingValues.push(Time.toDate(item.time));
       const depth = Math.round(item.depth * 100) / 100;
       yCeilingValues.push(depth);
     });

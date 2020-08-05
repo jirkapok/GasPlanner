@@ -109,7 +109,8 @@ export class PlannerService {
   }
 
   private calculateRockBottom(ascent: WayPoint[]): number {
-    const problemSolving = new WayPoint(2, ascent[0].startDepth, ascent[0].startDepth);
+    const solvingDuration = 2 * Time.oneMinute;
+    const problemSolving = new WayPoint(solvingDuration, ascent[0].startDepth, ascent[0].startDepth);
     ascent.unshift(problemSolving);
     const stressSac = this.diver.stressSac;
     const result = this.calculateConsumedOnWay(ascent, stressSac);
@@ -119,10 +120,11 @@ export class PlannerService {
 
   private calculateConsumedOnWay(wayPoints: WayPoint[], sac: number): number {
     let result = 0;
+    const sacSeconds = Time.toMinutes(sac);
 
     for (const wayPoint of wayPoints) {
       const averagePressure  = wayPoint.averagePressure;
-      result += wayPoint.duration * averagePressure * Diver.gasSac(sac, this.gas.size);
+      result += wayPoint.duration * averagePressure * Diver.gasSac(sacSeconds, this.gas.size);
     }
 
     const rounded = Math.ceil(result);
@@ -130,14 +132,15 @@ export class PlannerService {
   }
 
   private calculateTimeToSurface(ascent: WayPoint[]): number {
-    const solutionDuration = 2;
+    const solutionDuration = 2 * Time.oneMinute;
     let ascentDuration = 0;
 
     for (const wayPoint of ascent) {
       ascentDuration += wayPoint.duration;
     }
 
-    return solutionDuration + ascentDuration;
+    const seconds = solutionDuration + ascentDuration;
+    return Time.toMinutes(seconds);
   }
 
   public loadFrom(other: PlannerService): void {

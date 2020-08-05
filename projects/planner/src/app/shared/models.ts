@@ -18,6 +18,7 @@ export class Gases {
 
 export class Gas {
     public consumed = 0;
+    public reserve = 0;
 
     /**
      * Creates new instance of the Gas.
@@ -53,7 +54,37 @@ export class Gas {
     }
 
     public get endPressure(): number {
-        return this.startPressure - this.consumed;
+        const remaining = this.startPressure - this.consumed;
+
+        if (remaining > 0) {
+            return remaining;
+        }
+
+        return 0;
+    }
+
+    public get percentsRemaining(): number {
+        return this.endPressure / this.startPressure * 100;
+    }
+
+    public get percentsReserve(): number {
+        return this.reserve / this.startPressure * 100;
+    }
+
+    public get reserveRemaining(): number {
+        return this.endPressure - this.reserve;
+    }
+
+    public get reservePercentsRemaining(): number {
+        return this.reserveRemaining / this.startPressure * 100;
+    }
+
+    public get hasReserve(): boolean {
+        return this.reserveRemaining > 0;
+    }
+
+    public get isEmpty(): boolean {
+        return this.endPressure <= 0;
     }
 
     public loadFrom(other: Gas): void {
@@ -126,7 +157,6 @@ export class Plan {
 export class Dive {
     public calculated = false;
     public maxTime = 0;
-    public rockBottom = 0;
     public timeToSurface = 0;
     public turnPressure = 0;
     public turnTime = 0;
@@ -153,7 +183,8 @@ export class Dive {
     }
 
     public get hasErrors(): boolean {
-        return this.calculated && (this.notEnoughGas || this.depthExceeded || this.notEnoughTime);
+        // the only errors preventing draw chart
+        return this.calculated && (this.depthExceeded || this.notEnoughTime);
     }
 }
 
@@ -177,11 +208,11 @@ export class WayPoint {
 
     public get swimDirection(): SwimDirection {
         if (this.startDepth < this.endDepth) {
-          return SwimDirection.descent;
+            return SwimDirection.descent;
         }
 
         if (this.startDepth > this.endDepth) {
-          return SwimDirection.ascent;
+            return SwimDirection.ascent;
         }
 
         return SwimDirection.hover;

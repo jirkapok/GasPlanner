@@ -15,26 +15,6 @@ export class DiveComponent implements OnInit {
   public warning = faExclamationTriangle;
   public tasks = faTasks;
 
-  public get bottomGasMax() {
-    return this.bottomGas.startPressure;
-  }
-
-  public get bottomGasRockBottom() {
-    return this.dive.rockBottom;
-  }
-
-  public get bottomGasRemaining() {
-    return this.bottomGas.endPressure - this.bottomGasRockBottom;
-  }
-
-  public get percentsRockBottom() {
-    return this.dive.rockBottom / this.bottomGas.startPressure * 100;
-  }
-
-  public get bottomGasPercentsRemaining() {
-    return this.bottomGasRemaining / this.bottomGas.startPressure * 100;
-  }
-
   public get needsReturn(): boolean {
     return this.planer.plan.needsReturn;
   }

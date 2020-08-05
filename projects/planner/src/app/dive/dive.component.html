@@ -39,7 +39,7 @@
                 <tr>
                     <td>Rock bottom [bar]:</td>
                     <td class="table-active">
-                        <strong>{{ dive.rockBottom | number:'1.0-0' }}</strong>
+                        <strong>{{ bottomGas.reserve | number:'1.0-0' }}</strong>
                     </td>
                 </tr>
                 <tr *ngIf="dive.needsReturn">
@@ -56,12 +56,16 @@
                 </tr>
             </table>
             <div>
-                <div>Bottom gas: {{ bottomGas.endPressure }}/{{ bottomGas.startPressure }} bar</div>
+                <div>Gas remaining: {{ bottomGas.endPressure }}/{{ bottomGas.startPressure }} bar</div>
                 <div class="progress gas-bar">
-                    <div class="progress-bar bg-warning" role="progressbar" aria-valuemin="0" [attr.aria-valuenow]="bottomGasRockBottom"
-                        [attr.aria-valuemax]="bottomGasMax" [style.width]="percentsRockBottom + '%'">{{bottomGasRockBottom}}</div>
-                    <div class="progress-bar bg-success gas-bar" role="progressbar" aria-valuemin="0" [attr.aria-valuenow]="bottomGasRemaining"
-                        [attr.aria-valuemax]="bottomGasMax" [style.width]="bottomGasPercentsRemaining + '%'">{{bottomGasRemaining}}</div>
+                    <div *ngIf="!bottomGas.hasReserve" class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"
+                        [attr.aria-valuenow]="bottomGas.endPressure" [style.width]="bottomGas.percentsRemaining + '%'">{{bottomGas.endPressure}}</div>
+                    <div *ngIf="!bottomGas.hasReserve && !bottomGas.isEmpty" class="progress-bar bg-warning" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"
+                        [attr.aria-valuenow]="bottomGas.reserve" [style.width]="-bottomGas.reservePercentsRemaining + '%'">{{-bottomGas.reserveRemaining}}</div>
+                    <div *ngIf="bottomGas.hasReserve" class="progress-bar bg-warning" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"
+                        [attr.aria-valuenow]="bottomGas.reserve" [style.width]="bottomGas.percentsReserve + '%'">{{bottomGas.reserve}}</div>
+                    <div *ngIf="bottomGas.hasReserve" class="progress-bar bg-success gas-bar" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"
+                        [attr.aria-valuenow]="bottomGas.endPressure" [style.width]="bottomGas.reservePercentsRemaining + '%'">{{bottomGas.reserveRemaining}}</div>
                 </div>
                 <app-gaslabel></app-gaslabel>
             </div>

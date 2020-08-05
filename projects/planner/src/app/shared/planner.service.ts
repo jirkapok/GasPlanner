@@ -58,7 +58,7 @@ export class PlannerService {
     if (finalData.wayPoints.length > 2) {
       this.dive.maxTime = this.calculateMaxBottomTime();
       this.dive.timeToSurface = this.calculateTimeToSurface(ascent);
-      this.dive.rockBottom = this.calculateRockBottom(ascent);
+      this.gas.reserve = this.calculateRockBottom(ascent);
       this.gas.consumed = this.calculateConsumedOnWay(finalData.wayPoints, this.diver.sac);
     }
 
@@ -68,7 +68,7 @@ export class PlannerService {
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
     this.dive.needsReturn = this.plan.needsReturn;
-    this.dive.notEnoughGas = this.gas.endPressure < this.dive.rockBottom;
+    this.dive.notEnoughGas = this.gas.endPressure < this.gas.reserve;
     this.dive.depthExceeded = this.plan.depth > this.gasMod;
     this.dive.notEnoughTime = this.plan.duration < this.dive.descent.duration;
     this.dive.noDecoExceeded = this.plan.noDecoExceeded;

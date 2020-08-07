@@ -68,23 +68,17 @@ export class Gas {
     }
 
     public get percentsReserve(): number {
-        return this.reserve / this.startPressure * 100;
-    }
+        const result = this.reserve / this.startPressure * 100;
 
-    public get reserveRemaining(): number {
-        return this.endPressure - this.reserve;
-    }
+        if (result > 100) {
+            return 100;
+        }
 
-    public get reservePercentsRemaining(): number {
-        return this.reserveRemaining / this.startPressure * 100;
+        return result;
     }
 
     public get hasReserve(): boolean {
-        return this.reserveRemaining > 0;
-    }
-
-    public get isEmpty(): boolean {
-        return this.endPressure <= 0;
+        return this.endPressure - this.reserve > 0;
     }
 
     public loadFrom(other: Gas): void {

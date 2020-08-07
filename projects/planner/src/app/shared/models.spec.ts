@@ -23,24 +23,12 @@ describe('Gas', () => {
             expect(gas.hasReserve).toBeTruthy();
         });
 
-        it('is not empty', () => {
-            expect(gas.isEmpty).toBeFalsy();
-        });
-
         it('percent remaining is 100', () => {
             expect(gas.percentsRemaining).toBe(100);
         });
 
         it('percent rock bottom is 0', () => {
             expect(gas.percentsReserve).toBe(0);
-        });
-
-        it('reserve percent remaining is 100', () => {
-            expect(gas.reservePercentsRemaining).toBe(100);
-        });
-
-        it('reserve remaining is 200', () => {
-            expect(gas.reserveRemaining).toBe(200);
         });
     });
 
@@ -58,24 +46,12 @@ describe('Gas', () => {
             expect(gas.hasReserve).toBeFalsy();
         });
 
-        it('is empty', () => {
-            expect(gas.isEmpty).toBeTruthy();
-        });
-
         it('percent remaining is 0', () => {
             expect(gas.percentsRemaining).toBe(0);
         });
 
         it('percent rock bottom is 25', () => {
             expect(gas.percentsReserve).toBe(25);
-        });
-
-        it('reserve percent remaining is -25', () => {
-            expect(gas.reservePercentsRemaining).toBe(-25);
-        });
-
-        it('reserve remaining is -50', () => {
-            expect(gas.reserveRemaining).toBe(-50);
         });
     });
 
@@ -93,24 +69,12 @@ describe('Gas', () => {
             expect(gas.hasReserve).toBeTruthy();
         });
 
-        it('is not empty', () => {
-            expect(gas.isEmpty).toBeFalsy();
-        });
-
         it('percent remaining is 50', () => {
             expect(gas.percentsRemaining).toBe(50);
         });
 
         it('percent rock bottom is 25', () => {
             expect(gas.percentsReserve).toBe(25);
-        });
-
-        it('reserve percent remaining is 25', () => {
-            expect(gas.reservePercentsRemaining).toBe(25);
-        });
-
-        it('reserve remaining is 50', () => {
-            expect(gas.reserveRemaining).toBe(50);
         });
     });
 
@@ -128,24 +92,12 @@ describe('Gas', () => {
             expect(gas.hasReserve).toBeFalsy();
         });
 
-        it('is not empty', () => {
-            expect(gas.isEmpty).toBeFalsy();
-        });
-
         it('percent remaining is 25', () => {
             expect(gas.percentsRemaining).toBe(25);
         });
 
         it('percent rock bottom is 50', () => {
             expect(gas.percentsReserve).toBe(50);
-        });
-
-        it('reserve percent remaining is -25', () => {
-            expect(gas.reservePercentsRemaining).toBe(-25);
-        });
-
-        it('reserve remaining is -50', () => {
-            expect(gas.reserveRemaining).toBe(-50);
         });
     });
 });

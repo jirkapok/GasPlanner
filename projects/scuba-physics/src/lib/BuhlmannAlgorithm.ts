@@ -273,7 +273,8 @@ export class BuhlmannAlgorithm {
             return rounded + BuhlmannAlgorithm.decoStopDistance;
         }
 
-        if (context.options.addSafetyStop && rounded <= BuhlmannAlgorithm.decoStopDistance) {
+        if (context.options.addSafetyStop && rounded <= BuhlmannAlgorithm.decoStopDistance &&
+            context.currentDepth > BuhlmannAlgorithm.decoStopDistance) {
             return BuhlmannAlgorithm.decoStopDistance;
         }
 

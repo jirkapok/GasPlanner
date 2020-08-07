@@ -73,7 +73,7 @@ export class Options implements GasOptions {
  */
 export class Ceiling {
     /**
-     * Gets or sets moment in minutes during the dive
+     * Gets or sets moment in seconds during the dive
      */
     public time: number;
 
@@ -165,7 +165,6 @@ class AlgorithmContext {
 
     public ceiling(): number {
         let bars = this.tolerated();
-        let bars2 = this.tolerated();
 
         // less than surface pressure means no ceiling, this aproximation is OK,
         // because tissues are loaded only under water

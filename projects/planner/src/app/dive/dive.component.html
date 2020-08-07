@@ -7,7 +7,8 @@
     <div *ngIf="dive.calculated" class="card-body">
         <div *ngIf="dive.notEnoughGas" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
-            <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is {{ dive.maxTime }} min.</span>
+            <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
+                {{ dive.maxTime }} min.</span>
         </div>
         <div *ngIf="dive.depthExceeded" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
@@ -15,14 +16,16 @@
         </div>
         <div *ngIf="dive.notEnoughTime" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
-            <span>Not enough time to realize the dive (duration needs to be at least {{dive.descent.duration }} min.)!</span>
+            <span>Not enough time to realize the dive (duration needs to be at least {{dive.descent.duration }}
+                min.)!</span>
         </div>
         <div *ngIf="dive.noDecoExceeded" class="alert  alert-warning">
             <fa-icon [icon]="warning" class="mr-1"></fa-icon>
-            <span>No decompression time for current depth exceeded (Bottom time needs to be maximum {{ noDeco | number:'1.0-0' }} min.)!</span>
+            <span>No decompression time for current depth exceeded (Bottom time needs to be maximum
+                {{ noDeco | number:'1.0-0' }} min.)!</span>
         </div>
-        
-        <div  *ngIf="!dive.hasErrors">
+
+        <div *ngIf="!dive.hasErrors">
             <table class="table table-noheader">
                 <tr>
                     <td>Time to surface [min.]:</td>
@@ -56,18 +59,23 @@
                 </tr>
             </table>
             <div>
-                <div>Gas remaining: {{ bottomGas.endPressure }}/{{ bottomGas.startPressure }} bar</div>
-                <div class="progress gas-bar">
-                    <div *ngIf="!bottomGas.hasReserve" class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"
-                        [attr.aria-valuenow]="bottomGas.endPressure" [style.width]="bottomGas.percentsRemaining + '%'">{{bottomGas.endPressure}}</div>
-                    <div *ngIf="!bottomGas.hasReserve && !bottomGas.isEmpty" class="progress-bar bg-warning" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"
-                        [attr.aria-valuenow]="bottomGas.reserve" [style.width]="-bottomGas.reservePercentsRemaining + '%'">{{-bottomGas.reserveRemaining}}</div>
-                    <div *ngIf="bottomGas.hasReserve" class="progress-bar bg-warning" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"
-                        [attr.aria-valuenow]="bottomGas.reserve" [style.width]="bottomGas.percentsReserve + '%'">{{bottomGas.reserve}}</div>
-                    <div *ngIf="bottomGas.hasReserve" class="progress-bar bg-success gas-bar" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"
-                        [attr.aria-valuenow]="bottomGas.endPressure" [style.width]="bottomGas.reservePercentsRemaining + '%'">{{bottomGas.reserveRemaining}}</div>
+                <div class="row">
+                    <div class="col text-left">Gas remaining: {{ bottomGas.endPressure }}/{{ bottomGas.startPressure }} bar</div>
+                    <app-gaslabel class="col text-right"></app-gaslabel>
                 </div>
-                <app-gaslabel></app-gaslabel>
+                <div class="progress gas-bar mt-1 mb-2">
+                    <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"
+                        [attr.aria-valuenow]="bottomGas.reserve" [style.width]="bottomGas.percentsReserve + '%'" class="reserve-bar rounded-progress">
+                        <div class="reserve-overlay ">
+                            <div class="reserve-value">{{bottomGas.reserve}}</div>
+                        </div>
+                    </div>
+
+                    <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"
+                        [ngClass]="{'progress-bar rounded-progress': true, 'bg-success': bottomGas.hasReserve, 'bg-danger': !bottomGas.hasReserve }"
+                        [attr.aria-valuenow]="bottomGas.endPressure" [style.width]="bottomGas.percentsRemaining + '%'">
+                        {{bottomGas.endPressure}}</div>
+                </div>
             </div>
         </div>
     </div>

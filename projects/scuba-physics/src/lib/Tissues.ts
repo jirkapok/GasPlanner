@@ -59,6 +59,11 @@ export class Tissue extends Compartment {
         return this._b;
     }
 
+    /**
+     * Returns pressure in bars of the depth representing maximum ceiling.
+     *
+     * @param gfLow Gradient factor low in range 0-1
+     */
     public ceiling(gfLow: number): number {
         const bars = (this.pTotal - (this.a * gfLow)) / ((gfLow / this.b) + 1.0 - gfLow);
         return bars;
@@ -115,6 +120,12 @@ export class Tissues {
         }
     }
 
+     /**
+     * Returns pressure in bars of the depth representing maximum ceiling of all tissues.
+     *
+     * @param gfLow Gradient factor low in range 0-1
+     * @returns Zero in case there is no ceiling, otherwise ceiling pressure in bars
+     */
     public ceiling(gfLow: number): number {
         let ceiling = 0;
 
@@ -128,7 +139,15 @@ export class Tissues {
         return ceiling;
     }
 
-    public tolerated(surface: number, lowestCeiling: number, gfHigh: number, gfLow: number) {
+    /**
+     * Returns lowest value of tolerated pressure in bars
+     *
+     * @param surface surface pressure in bars
+     * @param lowestCeiling last known lowest ceiling in bars
+     * @param gfHigh gradient factor high in range 0-1
+     * @param gfLow gradient factor low in range 0-1
+     */
+    public tolerated(surface: number, lowestCeiling: number, gfHigh: number, gfLow: number): number {
         let tolerated = 0;
 
         for (let ci = 0; ci < this.compartments.length; ci++) {

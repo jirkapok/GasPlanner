@@ -1,5 +1,8 @@
 export class Time {
 
+    /** One seconds as base unit of decompression calculation. */
+    public static readonly oneSecond = 1;
+
     /* One minute is 60 seconds */
     public static readonly oneMinute = 60;
 

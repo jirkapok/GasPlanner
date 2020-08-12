@@ -300,9 +300,9 @@ export class BuhlmannAlgorithm {
 
     private swim(context: AlgorithmContext, segment: Segment) {
         let startDepth = segment.startDepth;
+        const interval = Time.oneSecond;
 
-        for (let elapsed = 0; elapsed < segment.duration; elapsed++) {
-            const interval = 1; // steps each one second // this.calculateInterval(segment.duration, elapsed);
+        for (let elapsed = 0; elapsed < segment.duration; elapsed += interval) {
             const endDepth = startDepth + interval * segment.speed;
             const part = new Segment(startDepth, endDepth, segment.gas, interval);
             this.swimPart(context, part);
@@ -315,16 +315,6 @@ export class BuhlmannAlgorithm {
         context.tissues.load(loadSegment, segment.gas);
         context.runTime += segment.duration;
         context.addCeiling();
-    }
-
-    private calculateInterval(duration: number, elapsed: number): number {
-        const remaining = duration - elapsed;
-
-        if (remaining >= Time.oneMinute) {
-            return Time.oneMinute;
-        }
-
-        return remaining % Time.oneMinute;
     }
 
     public noDecoLimit(depth: number, gas: Gas, options: Options): number {

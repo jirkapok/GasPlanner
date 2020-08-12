@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Dive } from '../shared/models';
+import { Dive, WayPoint } from '../shared/models';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-dist';
 import { Subscription } from 'rxjs';
@@ -83,10 +83,7 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
     }];
 
     this.dive.wayPoints.forEach((item, index, waypoints) => {
-        xValues.push(Time.toDate(item.startTime));
-        yValues.push(item.startDepth);
-        xValues.push(Time.toDate(item.endTime));
-        yValues.push(item.endDepth);
+        this.resampleToSeconds(xValues, yValues, item);
       });
 
     Plotly.react('diveplot', data, layout, options);
@@ -96,7 +93,7 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
 
     this.dive.ceilings.forEach((item, index, ceilings) => {
       xCeilingValues.push(Time.toDate(item.time));
-      const depth = Math.round(item.depth * 100) / 100;
+      const depth = this.roundDepth(item.depth);
       yCeilingValues.push(depth);
     });
 
@@ -112,6 +109,24 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
     }];
 
     Plotly.plot('diveplot', dataCeilings, layout, options);
+  }
+
+  private roundDepth(depth: number): number {
+    return Math.round(depth * 100) / 100;
+  }
+
+  private resampleToSeconds(xValues: Date[], yValues: number[], item: WayPoint) {
+    const speed = (item.endDepth - item.startDepth) / item.duration;
+    for (let timeStamp = item.startTime; timeStamp < item.endTime; timeStamp++) {
+      xValues.push(Time.toDate(timeStamp));
+      let depth = item.startDepth + (timeStamp - item.startTime) * speed;
+      depth = this.roundDepth(depth);
+      yValues.push(depth);
+    }
+
+    // fix end of the dive
+    xValues.push(Time.toDate(item.endTime));
+    yValues.push(item.endDepth);
   }
 
   ngOnInit() {

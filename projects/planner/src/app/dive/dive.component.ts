@@ -31,6 +31,6 @@ export class DiveComponent implements OnInit {
 
   ngOnInit() {
     this.dive = this.planer.dive;
-    this.bottomGas = this.planer.gas;
+    this.bottomGas = this.planer.firstGas;
   }
 }

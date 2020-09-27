@@ -17,7 +17,7 @@ export class GaslabelComponent implements OnInit {
   constructor(private planer: PlannerService) { }
 
   ngOnInit() {
-    this.bottomGas = this.planer.gas;
+    this.bottomGas = this.planer.firstGas;
   }
 
 }

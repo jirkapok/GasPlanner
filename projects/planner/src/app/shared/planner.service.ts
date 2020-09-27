@@ -9,11 +9,18 @@ export class PlannerService {
   public isTechnical = false;
   public plan: Plan = new Plan(12, 30, Strategies.ALL);
   public diver: Diver = new Diver(20, 1.4);
-  public gas: Gas = new Gas(15, 21, 200);
+  // there always needs to be at least one
+  public gas: Gas[] = [
+    new Gas(15, 21, 200)
+  ];
   public dive: Dive = new Dive();
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
   public options = new Options(0.4, 0.85, 1.6, 30, true, true);
+
+  public get firstGas(): Gas {
+    return this.gas[0];
+  }
 
   private static ascent(wayPoints: WayPoint[]): WayPoint[] {
     // first two are descent and bottom
@@ -39,28 +46,28 @@ export class PlannerService {
     }
 
     const nitroxCalculator = new NitroxCalculator(depthConverter);
-    return nitroxCalculator.mod(this.diver.maxPpO2, this.gas.o2);
+    return nitroxCalculator.mod(this.diver.maxPpO2, this.firstGas.o2);
   }
 
   public noDecoTime(): number {
     this.updatePpO2Options();
     const algorithm = new BuhlmannAlgorithm();
     const depth = this.plan.depth;
-    const gas = this.gas.toGas();
+    const gas = this.firstGas.toGas();
     const noDecoLimit = algorithm.noDecoLimit(depth, gas, this.options);
     return Math.floor(noDecoLimit);
   }
 
   public calculate() {
     this.updateNoDecoTime();
-    const finalData = WayPointsService.calculateWayPoints(this.plan, this.gas, this.options);
+    const finalData = WayPointsService.calculateWayPoints(this.plan, this.firstGas, this.options);
     const ascent = PlannerService.ascent(finalData.wayPoints);
 
     if (finalData.wayPoints.length > 2) {
       this.dive.maxTime = this.calculateMaxBottomTime();
       this.dive.timeToSurface = this.calculateTimeToSurface(ascent);
-      this.gas.reserve = this.calculateRockBottom(ascent);
-      this.gas.consumed = this.calculateConsumedOnWay(finalData.wayPoints, this.diver.sac);
+      this.firstGas.reserve = this.calculateRockBottom(ascent);
+      this.firstGas.consumed = this.calculateConsumedOnWay(finalData.wayPoints, this.diver.sac);
     }
 
     this.dive.wayPoints = finalData.wayPoints;
@@ -69,7 +76,7 @@ export class PlannerService {
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
     this.dive.needsReturn = this.plan.needsReturn;
-    this.dive.notEnoughGas = this.gas.endPressure < this.gas.reserve;
+    this.dive.notEnoughGas = this.firstGas.endPressure < this.firstGas.reserve;
     this.dive.depthExceeded = this.plan.depth > this.gasMod;
     this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
     this.dive.noDecoExceeded = this.plan.noDecoExceeded;
@@ -83,8 +90,8 @@ export class PlannerService {
   }
 
   private calculateTurnPressure(): number {
-    const consumed = this.gas.consumed / 2;
-    return this.gas.startPressure - Math.floor(consumed);
+    const consumed = this.firstGas.consumed / 2;
+    return this.firstGas.startPressure - Math.floor(consumed);
   }
 
   /**
@@ -97,10 +104,10 @@ export class PlannerService {
     let rockBottom = 0;
     let duration = 0;
 
-    while (this.gas.startPressure - consumed >= rockBottom) {
+    while (this.firstGas.startPressure - consumed >= rockBottom) {
       duration++;
       testPlan.duration = duration;
-      const finalData = WayPointsService.calculateWayPoints(testPlan, this.gas, this.options);
+      const finalData = WayPointsService.calculateWayPoints(testPlan, this.firstGas, this.options);
       const ascent = PlannerService.ascent(finalData.wayPoints);
       rockBottom = this.calculateRockBottom(ascent);
       consumed = this.calculateConsumedOnWay(finalData.wayPoints, this.diver.sac);
@@ -125,7 +132,7 @@ export class PlannerService {
 
     for (const wayPoint of wayPoints) {
       const averagePressure  = wayPoint.averagePressure;
-      result += wayPoint.duration * averagePressure * Diver.gasSac(sacSeconds, this.gas.size);
+      result += wayPoint.duration * averagePressure * Diver.gasSac(sacSeconds, this.firstGas.size);
     }
 
     const rounded = Math.ceil(result);
@@ -152,6 +159,6 @@ export class PlannerService {
     this.plan.loadFrom(other.plan);
     this.diver.loadFrom(other.diver);
     // cant use firstGas from the other, since it doesn't have to be deserialized
-    this.gas.loadFrom(other.gas);
+    this.firstGas.loadFrom(other.firstGas);
   }
 }

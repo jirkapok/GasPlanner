@@ -19,7 +19,7 @@ export class GasesComponent implements OnInit {
   @Output() validate: EventEmitter<any> = new EventEmitter();
 
   ngOnInit() {
-    this.gas = this.planer.gas;
+    this.gas = this.planer.firstGas;
     this.diver = this.planer.diver;
     this.gasNames = Gases.gasNames();
   }

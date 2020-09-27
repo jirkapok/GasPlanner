@@ -24,6 +24,10 @@ export class GasesComponent implements OnInit {
     this.gasNames = Gases.gasNames();
   }
 
+  public get isTechnical(): boolean {
+    return this.planer.isTechnical;
+  }
+
   public get o2(): number {
     return this.gas.o2;
   }

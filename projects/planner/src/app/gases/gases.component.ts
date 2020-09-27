@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { faBatteryEmpty } from '@fortawesome/free-solid-svg-icons';
+import { faBatteryEmpty, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
 import { Gases, Gas, Diver } from '../shared/models';
@@ -13,7 +13,9 @@ export class GasesComponent implements OnInit {
   private diver: Diver;
   public gas: Gas;
   public gasNames: string[];
-  public bottle = faBatteryEmpty;
+  public bottleIcon = faBatteryEmpty;
+  public plusIcon = faPlusSquare;
+  public trashIcon = faTrashAlt;
   constructor(private planner: PlannerService) { }
 
   @Output() validate: EventEmitter<any> = new EventEmitter();

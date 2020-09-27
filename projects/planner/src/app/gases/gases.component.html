@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-header ">
-      <fa-icon [icon]="bottle" rotate="270" class="mr-3"></fa-icon>
+      <fa-icon [icon]="bottleIcon" rotate="270" class="mr-3"></fa-icon>
       <span *ngIf="!isTechnical">Bottom gas tank</span>
       <span *ngIf="isTechnical">Gas tanks</span>
   </div>
@@ -10,7 +10,7 @@
         <th width="33%">Size [L]</th>
         <th width="33%">Pressure [bar]</th>
         <th width="*">Percent O2</th>
-        <th>+</th>
+        <th><button class="btn btn-secondary p-0 m-0"><fa-icon [icon]="plusIcon" class=""></fa-icon></button></th>
       </tr>
       <tr *ngFor="let gas of planner.gas">
         <td>
@@ -40,7 +40,7 @@
           <app-gaslabel></app-gaslabel>
           <div class="text-danger" *ngIf="ppO2.invalid && (ppO2.dirty || ppO2.touched)">Needs to be number 21-100%</div>
         </td>
-        <td><span *ngIf="planner.firstGas !== gas">R</span></td>
+        <td><button *ngIf="planner.firstGas !== gas" class="btn btn-secondary p-0 m-0"><fa-icon [icon]="trashIcon"></fa-icon></button></td>
       </tr>
   </table>
   </div>

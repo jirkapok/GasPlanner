@@ -14,18 +14,18 @@ export class GasesComponent implements OnInit {
   public gas: Gas;
   public gasNames: string[];
   public bottle = faBatteryEmpty;
-  constructor(private planer: PlannerService) { }
+  constructor(private planner: PlannerService) { }
 
   @Output() validate: EventEmitter<any> = new EventEmitter();
 
   ngOnInit() {
-    this.gas = this.planer.firstGas;
-    this.diver = this.planer.diver;
+    this.gas = this.planner.firstGas;
+    this.diver = this.planner.diver;
     this.gasNames = Gases.gasNames();
   }
 
   public get isTechnical(): boolean {
-    return this.planer.isTechnical;
+    return this.planner.isTechnical;
   }
 
   public get o2(): number {
@@ -34,7 +34,7 @@ export class GasesComponent implements OnInit {
 
   public set o2(newValue) {
     this.gas.o2 = newValue;
-    this.planer.updateNoDecoTime();
+    this.planner.updateNoDecoTime();
   }
 
   public gasSac(gas: Gas): number {

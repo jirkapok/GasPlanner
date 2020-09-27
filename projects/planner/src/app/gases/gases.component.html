@@ -7,11 +7,12 @@
   <div class="card-body" *ngIf="isTechnical">
     <table class="table table-noheader">
       <tr>
-        <th>Size [L]</th>
-        <th>Start pressure [bar]</th>
-        <th>Percent O2</th>
+        <th width="33%">Size [L]</th>
+        <th width="33%">Pressure [bar]</th>
+        <th width="*">Percent O2</th>
+        <th>+</th>
       </tr>
-      <tr *ngFor="let gas of planer.gas">
+      <tr *ngFor="let gas of planner.gas">
         <td>
           <input #size="ngModel" name="size" [(ngModel)]="gas.size" class="form-control" type="number" min="1" max="50"
             [range]="[1, 50]" required [class.is-invalid]="size.invalid && (size.dirty || size.touched)" />
@@ -39,6 +40,7 @@
           <app-gaslabel></app-gaslabel>
           <div class="text-danger" *ngIf="ppO2.invalid && (ppO2.dirty || ppO2.touched)">Needs to be number 21-100%</div>
         </td>
+        <td><span *ngIf="planner.firstGas !== gas">R</span></td>
       </tr>
   </table>
   </div>

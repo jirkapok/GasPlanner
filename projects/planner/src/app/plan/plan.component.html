@@ -20,7 +20,7 @@
           <div class="input-group">
             <input id="strategy" [(ngModel)]="strategy" class="form-control" type="text" readonly />
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-              <button type="button" class="btn btn-default" id="stragetyMenu" ngbDropdownToggle></button>
+              <button type="button" class="btn btn-default border" id="stragetyMenu" ngbDropdownToggle></button>
               <div ngbDropdownMenu aria-labelledby="stragetyMenu" aria-expanded="false">
                 <button type="button" class="dropdown-item" (click)="allUsable()">{{AllUsable}}</button>
                 <button type="button" class="dropdown-item" (click)="halfUsable()">{{HalfUsable}}</button>
@@ -34,7 +34,7 @@
           <div class="input-group">
             <input id="conservatism" [(ngModel)]="conservatism" class="form-control" type="text" readonly />
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-              <button type="button" class="btn btn-default" id="conservatismMenu" ngbDropdownToggle></button>
+              <button type="button" class="btn btn-default border" id="conservatismMenu" ngbDropdownToggle></button>
               <div ngbDropdownMenu aria-labelledby="conservatismMenu" aria-expanded="false">
                 <button type="button" class="dropdown-item" (click)="lowConservatism()">{{Low}}</button>
                 <button type="button" class="dropdown-item" (click)="mediumConservatism()">{{Medium}}</button>

@@ -28,7 +28,7 @@
            min="21" max="100" [range]="[21, 100]" required
            [class.is-invalid]="ppO2.invalid && (ppO2.dirty || ppO2.touched)"/>
           <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-            <button class="btn btn-default" id="o2Menu"  type="button" ngbDropdownToggle></button>
+            <button class="btn btn-default border" id="o2Menu"  type="button" ngbDropdownToggle></button>
             <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
               <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="gas.assignStandardGas(stgas)">{{stgas}}</button>
             </div>

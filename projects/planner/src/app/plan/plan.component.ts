@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 
-import { Plan, Strategies } from '../shared/models';
+import { Plan, Strategies, Diver } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 
 @Component({
@@ -51,6 +51,8 @@ export class PlanComponent implements OnInit {
     if (!this._isTechnical) {
       this.allUsable();
       this.mediumConservatism();
+      this.ascentSpeed = Diver.ascSpeed;
+      this.descentSpeed = Diver.descSpeed;
     }
   }
 
@@ -104,6 +106,24 @@ export class PlanComponent implements OnInit {
 
   public set plannedAltitude(newValue: number) {
     this.planer.options.altitude = newValue;
+    this.planer.updateNoDecoTime();
+  }
+
+  public get ascentSpeed(): number {
+    return this.planer.options.ascentSpeed;
+  }
+
+  public set ascentSpeed(newValue: number) {
+    this.planer.options.ascentSpeed = newValue;
+    this.planer.updateNoDecoTime();
+  }
+
+  public get descentSpeed(): number {
+    return this.planer.options.descentSpeed;
+  }
+
+  public set descentSpeed(newValue: number) {
+    this.planer.options.descentSpeed = newValue;
     this.planer.updateNoDecoTime();
   }
 

@@ -42,6 +42,22 @@
       </label>
     </div>
 
+    <div class="form-group" *ngIf="isTechnical">
+      <label for="descSpeed">Descent speed [m/min.]:
+        <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="descentSpeed" class="form-control" type="number"
+         min="1" [min]="1" max="100" [range]="[1, 100]" required [class.is-invalid]="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)"/>
+        <div class="text-danger" *ngIf="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)">Needs to be number 1 - 100</div>
+      </label>
+    </div>
+
+    <div class="form-group" *ngIf="isTechnical">
+      <label for="ascSpeed">Ascent speed [m/min.]:
+        <input id="ascSpeed" name="ascSpeed" #ascSpeed="ngModel" [(ngModel)]="ascentSpeed" class="form-control" type="number"
+         min="1" [min]="1" max="100" [range]="[1, 100]" required [class.is-invalid]="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)"/>
+        <div class="text-danger" *ngIf="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)">Needs to be number 1 - 100</div>
+      </label>
+    </div>
+
     <div class="form-group" *ngIf="isTechnical" >
       <label for="strategy">Strategy:</label>
       <div class="input-group">

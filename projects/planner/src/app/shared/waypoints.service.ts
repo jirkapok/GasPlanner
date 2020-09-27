@@ -36,7 +36,7 @@ export class WayPointsService {
         gases.addBottomGas(bGas);
 
         const segments = new Segments();
-        const descentDuration = Time.toSeconds(plan.depth / Diver.descSpeed);
+        const descentDuration = Time.toSeconds(plan.depth / options.descentSpeed);
         segments.add(0, plan.depth, bGas, descentDuration);
         const bottomTime = Time.toSeconds(plan.duration) - descentDuration;
         segments.addFlat(plan.depth, bGas, bottomTime);

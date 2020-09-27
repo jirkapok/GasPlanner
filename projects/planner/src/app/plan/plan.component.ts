@@ -21,7 +21,6 @@ export class PlanComponent implements OnInit {
   public strategy = this.AllUsable;
   public clock = faClock;
   @Input() public formValid: boolean;
-  private _isTechnical: boolean;
 
   constructor(private planer: PlannerService) { }
 
@@ -42,13 +41,13 @@ export class PlanComponent implements OnInit {
   }
 
   public get isTechnical(): boolean {
-    return this._isTechnical;
+    return this.planer.isTechnical;
   }
 
   public set isTechnical(newValue: boolean) {
-    this._isTechnical = newValue;
+    this.planer.isTechnical = newValue;
 
-    if (!this._isTechnical) {
+    if (!this.planer.isTechnical) {
       this.allUsable();
       this.mediumConservatism();
       this.ascentSpeed = Diver.ascSpeed;

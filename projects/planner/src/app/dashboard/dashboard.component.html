@@ -12,7 +12,10 @@
     <div class="col-lg-4 col-md-6 mt-4">
       <app-profile ></app-profile>
     </div>
-    <div class="col-lg-4 col-md-6 mt-4">
+    <div class="mt-4" [ngClass]="{
+      'col-lg-4': !isTechnical,
+      'col-md-6': !isTechnical, 
+      'col-12': isTechnical} ">
       <app-plan [(formValid)]="f.form.invalid"></app-plan>
     </div>
     <div class="col-lg-6 col-md-6 mt-4">

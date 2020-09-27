@@ -9,7 +9,7 @@
           <input #size="ngModel" name="size" [(ngModel)]="gas.size" class="form-control" type="number"
             min="1" max="50" [range]="[1, 50]" required 
             [class.is-invalid]="size.invalid && (size.dirty || size.touched)"/>
-          <small class="form-text text-muted">SAC: {{gasSac(gas) | number:'1.2'}} bar/min.</small>
+          <small class="form-text text-muted">SAC: {{gasSac(gas) | number:'1.0-2'}} bar/min.</small>
           <div class="text-danger" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 L</div>
         </label>
       </div>

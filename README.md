@@ -14,6 +14,9 @@ List of current features is part of [application help](./doc/help.md). Road map 
 
 * Fix precision of decompression algorithm
   * Calculate deco stops in seconds instead of minutes
+  * Check after ascent, if additional ascent is possible
+  * Fix ceiling calculation beginning of saturation
+  * Fix loading of tissues when tissues are still loaded during ascent
 * Add option to define safety stop range
 * Allow define multiple gases
 * Allow to define multiple levels
@@ -22,6 +25,7 @@ List of current features is part of [application help](./doc/help.md). Road map 
 * Add localization
 * Add trimix calculator
 * Add option to define repetitive dives
+* Add CNS and OTU calculations
 
 ## Prerequisites
 
@@ -55,6 +59,7 @@ Based on following tools:
 * <https://www.frogkick.nl/files/understanding_m-values.pdf>
 * <https://diverclub.ru/File/literatur/Deep_Stops.pdf>
 * <https://thetheoreticaldiver.org/wordpress//var/lib/wordpress/wp-content/uploads/2017/11/dekotheorie1.pdf>
+* <https://njscuba.net/gear/trng_10_deco.php>
 
 At time of development also other implementations are available:
 

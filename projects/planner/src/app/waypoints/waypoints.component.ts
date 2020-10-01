@@ -55,4 +55,13 @@ export class WayPointsComponent implements OnInit {
 
     return classes;
   }
+
+
+  private selectTimeFormat(): string {
+    if (this.dive.hasHoursRuntime) {
+       return 'H:m:ss';
+    }
+
+    return 'm:ss';
+  }
 }

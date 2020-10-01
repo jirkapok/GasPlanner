@@ -38,13 +38,21 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  private selectTimeFormat(): string {
+    if (this.dive.hasHoursRuntime) {
+       return '%H:%M:%S';
+    }
+
+    return '%M:%S';
+  }
+
   private plotChart() {
     const layout = {
       autosize: true,
       showlegend: false,
       xaxis : {
         fixedrange: true,
-        tickformat: '%M:%S',
+        tickformat: this.selectTimeFormat(),
         title: {
           text: 'Time [minutes]'
         }

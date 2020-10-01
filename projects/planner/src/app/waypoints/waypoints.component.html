@@ -16,8 +16,8 @@
                     <fa-icon [icon]="swimDirectionIcon(point)" [ngClass]="iconClasses(point)" [title]="iconTitle(point)"></fa-icon>
                 </td>
                 <td>{{ point.endDepth }}</td>
-                <td>{{ durationToString(point.duration) | date:'mm:ss' }}</td>
-                <td>{{ durationToString(point.endTime) | date:'mm:ss' }}</td>
+                <td>{{ durationToString(point.duration) | date:selectTimeFormat() }}</td>
+                <td>{{ durationToString(point.endTime) | date:selectTimeFormat() }}</td>
             </tr>
         </table>
     </div>

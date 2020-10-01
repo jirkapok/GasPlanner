@@ -1,4 +1,4 @@
-import { DepthConverter, Gas as BGas, Ceiling } from 'scuba-physics';
+import { DepthConverter, Gas as BGas, Ceiling, Time } from 'scuba-physics';
 
 export enum StandardGas {
     Air = 21,
@@ -180,6 +180,12 @@ export class Dive {
     public get hasErrors(): boolean {
         // the only errors preventing draw chart
         return this.calculated && (this.depthExceeded || this.notEnoughTime);
+    }
+
+    public get hasHoursRuntime(): boolean {
+       const duration = Time.toDate(this.totalDuration);
+       const hasHours = duration.getHours() > 0;
+       return hasHours;
     }
 }
 

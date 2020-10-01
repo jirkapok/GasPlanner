@@ -36,7 +36,7 @@ export class Time {
      * @returns amount seconds calculated from current duration
      */
     public static toDate(seconds: number): Date {
-        const miliseconds = seconds * 1000;
-        return new Date(miliseconds);
+        // we don't care about UTC, because we handle date, only relative time
+        return new Date(1970, 1, 1, 0, 0, seconds, 0);
     }
 }

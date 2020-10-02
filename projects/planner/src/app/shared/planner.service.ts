@@ -10,7 +10,7 @@ export class PlannerService {
   public plan: Plan = new Plan(12, 30, Strategies.ALL);
   public diver: Diver = new Diver(20, 1.4);
   // there always needs to be at least one
-  public gas: Gas[] = [
+  public gases: Gas[] = [
     new Gas(15, 21, 200)
   ];
   public dive: Dive = new Dive();
@@ -19,7 +19,16 @@ export class PlannerService {
   public options = new Options(0.4, 0.85, 1.6, 30, true, true);
 
   public get firstGas(): Gas {
-    return this.gas[0];
+    return this.gases[0];
+  }
+
+  public addGas(): void {
+    const newGas = new Gas(11, 21, 200);
+    this.gases.push(newGas);
+  }
+
+  public removeGas(gas: Gas): void {
+    this.gases = this.gases.filter(g => g !== gas);
   }
 
   private static ascent(wayPoints: WayPoint[]): WayPoint[] {

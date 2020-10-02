@@ -211,6 +211,8 @@ export class BuhlmannAlgorithm {
                 break;
             }
 
+            // TODO check, if ascent to next stop isn't already possible
+
             // Deco stop
             currentGas = context.gases.bestDecoGas(context.currentDepth, options, depthConverter);
             nextDecoStop = this.nextDecoStop(nextStop);

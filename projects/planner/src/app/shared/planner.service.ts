@@ -10,9 +10,7 @@ export class PlannerService {
   public plan: Plan = new Plan(12, 30, Strategies.ALL);
   public diver: Diver = new Diver(20, 1.4);
   // there always needs to be at least one
-  public gases: Gas[] = [
-    new Gas(15, 21, 200)
-  ];
+  public gases: Gas[];
   public dive: Dive = new Dive();
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
@@ -22,6 +20,21 @@ export class PlannerService {
     return this.gases[0];
   }
 
+  constructor() {
+    this.resetToDefaultGases();
+  }
+
+  private static ascent(wayPoints: WayPoint[]): WayPoint[] {
+    // first two are descent and bottom
+    return wayPoints.slice(2, wayPoints.length);
+  }
+
+  public resetToDefaultGases(): void {
+    this.gases = [
+      new Gas(15, 21, 200)
+    ];
+  }
+
   public addGas(): void {
     const newGas = new Gas(11, 21, 200);
     this.gases.push(newGas);
@@ -29,11 +42,6 @@ export class PlannerService {
 
   public removeGas(gas: Gas): void {
     this.gases = this.gases.filter(g => g !== gas);
-  }
-
-  private static ascent(wayPoints: WayPoint[]): WayPoint[] {
-    // first two are descent and bottom
-    return wayPoints.slice(2, wayPoints.length);
   }
 
   public changeWaterType(isFreshWater: boolean) {
@@ -69,7 +77,7 @@ export class PlannerService {
 
   public calculate() {
     this.updateNoDecoTime();
-    const finalData = WayPointsService.calculateWayPoints(this.plan, this.firstGas, this.options);
+    const finalData = WayPointsService.calculateWayPoints(this.plan, this.gases, this.options);
     const ascent = PlannerService.ascent(finalData.wayPoints);
 
     if (finalData.wayPoints.length > 2) {
@@ -116,7 +124,7 @@ export class PlannerService {
     while (this.firstGas.startPressure - consumed >= rockBottom) {
       duration++;
       testPlan.duration = duration;
-      const finalData = WayPointsService.calculateWayPoints(testPlan, this.firstGas, this.options);
+      const finalData = WayPointsService.calculateWayPoints(testPlan, this.gases, this.options);
       const ascent = PlannerService.ascent(finalData.wayPoints);
       rockBottom = this.calculateRockBottom(ascent);
       consumed = this.calculateConsumedOnWay(finalData.wayPoints, this.diver.sac);

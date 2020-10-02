@@ -8,9 +8,9 @@ export class Profile {
 }
 
 export class WayPointsService {
-    public static calculateWayPoints(plan: Plan, gas: Gas, options: Options): Profile {
+    public static calculateWayPoints(plan: Plan, gases: Gas[], options: Options): Profile {
         const wayPoints = [];
-        const finalSegments = this.calculateDecompression(plan, gas, options);
+        const finalSegments = this.calculateDecompression(plan, gases, options);
 
         const descent = finalSegments.segments[0];
         let lastWayPoint = new WayPoint(descent.duration, descent.endDepth);
@@ -30,10 +30,15 @@ export class WayPointsService {
         };
     }
 
-    private static calculateDecompression(plan: Plan, gas: Gas, options: Options): CalculatedProfile {
-        const bGas = gas.toGas();
-        const gases = new Gases();
-        gases.addBottomGas(bGas);
+    private static calculateDecompression(plan: Plan, gases: Gas[], options: Options): CalculatedProfile {
+        const bGas = gases[0].toGas();
+        const bGases = new Gases();
+        bGases.addBottomGas(bGas);
+
+        gases.slice(1, gases.length).forEach((gas, index, items) => {
+            const decoGas = gas.toGas();
+            bGases.addDecoGas(decoGas);
+        });
 
         const segments = new Segments();
         const descentDuration = Time.toSeconds(plan.depth / options.descentSpeed);
@@ -42,7 +47,7 @@ export class WayPointsService {
         segments.addFlat(plan.depth, bGas, bottomTime);
 
         const algorithm = new BuhlmannAlgorithm();
-        const finalSegments = algorithm.calculateDecompression(options, gases, segments);
+        const finalSegments = algorithm.calculateDecompression(options, bGases, segments);
         return finalSegments;
     }
 }

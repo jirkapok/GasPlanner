@@ -52,6 +52,7 @@ export class PlanComponent implements OnInit {
       this.mediumConservatism();
       this.ascentSpeed = Diver.ascSpeed;
       this.descentSpeed = Diver.descSpeed;
+      this.planer.resetToDefaultGases();
     }
   }
 

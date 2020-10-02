@@ -83,6 +83,14 @@ export class Ceiling {
     public depth: number;
 }
 
+export class Event{
+    /** The number of seconds since dive begin the event occurred */
+    public timeStamp: number;
+    /** depth in meters, at which the diver was, when the event occurred */
+    public depth: number;
+    public message: string;
+}
+
 /**
  * Result of the Algorithm calculation
  */
@@ -109,14 +117,22 @@ export class CalculatedProfile {
         return this.errors;
     }
 
-    private constructor(private seg: Segment[], private ceil: Ceiling[], private errors: string[]) { }
-
-    public static fromErrors(errors: string[]) {
-        return new CalculatedProfile([], [], errors);
+    /**
+     * Not null collection of errors occurred during the profile calculation.
+     * If not empty, ceilings and segments are empty.
+     */
+    public get events(): Event[] {
+        return this.evnt;
     }
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[]) {
-        return new CalculatedProfile(segments, ceilings, []);
+    private constructor(private seg: Segment[], private ceil: Ceiling[], private errors: string[], private evnt: Event[]) { }
+
+    public static fromErrors(errors: string[]) {
+        return new CalculatedProfile([], [], errors, []);
+    }
+
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[], events: Event[]) {
+        return new CalculatedProfile(segments, ceilings, [], events);
     }
 }
 
@@ -124,6 +140,8 @@ export class CalculatedProfile {
 class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
+    public events: Event[] = [];
+
     /** in seconds */
     public runTime = 0;
     private lowestCeiling = 0;
@@ -214,7 +232,21 @@ export class BuhlmannAlgorithm {
             // TODO check, if ascent to next stop isn't already possible
 
             // Deco stop
+            const lastGas = currentGas;
             currentGas = context.gases.bestDecoGas(context.currentDepth, options, depthConverter);
+            if (lastGas !== currentGas) {
+                const gasSwitch: Event =  {
+                    timeStamp: context.runTime,
+                    depth: context.currentDepth,
+                    message: 'switch to ' + currentGas.fO2
+                };
+
+                // TODO ensure and fix gas switch should occur at deco depths
+                context.events.push(gasSwitch);
+                const decoStop = context.segments.add(context.currentDepth, context.currentDepth, currentGas, Time.oneMinute);
+                this.swim(context, decoStop);
+            }
+
             nextDecoStop = this.nextDecoStop(nextStop);
 
             while (nextDecoStop < context.ceiling()) {
@@ -234,7 +266,7 @@ export class BuhlmannAlgorithm {
         }
 
         const merged = segments.mergeFlat();
-        return CalculatedProfile.fromProfile(merged, context.ceilings);
+        return CalculatedProfile.fromProfile(merged, context.ceilings, context.events);
     }
 
     private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): string[] {
@@ -263,7 +295,8 @@ export class BuhlmannAlgorithm {
     }
 
     private nextDecoStop(lastStop: number): number {
-        return lastStop - BuhlmannAlgorithm.decoStopDistance;
+        const candidate = lastStop - BuhlmannAlgorithm.decoStopDistance;
+        return candidate >= 0 ? candidate : 0;
     }
 
     private firstDecoStop(context: AlgorithmContext): number {

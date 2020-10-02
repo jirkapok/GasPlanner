@@ -89,6 +89,7 @@ export class PlannerService {
 
     this.dive.wayPoints = finalData.wayPoints;
     this.dive.ceilings = finalData.ceilings;
+    this.dive.events = finalData.events;
     // even in case thirds rule, the last third is reserve, so we always divide by 2
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);

@@ -1,4 +1,4 @@
-import { DepthConverter, Gas as BGas, Ceiling, Time } from 'scuba-physics';
+import { DepthConverter, Gas as BGas, Ceiling, Time, Event } from 'scuba-physics';
 
 export enum StandardGas {
     Air = 21,
@@ -162,6 +162,7 @@ export class Dive {
     public noDecoExceeded = false;
     public wayPoints: WayPoint[] = [];
     public ceilings: Ceiling[];
+    public events: Event[];
 
     public get totalDuration(): number {
         return this.wayPoints[this.wayPoints.length - 1].endTime;

@@ -117,6 +117,52 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
     }];
 
     Plotly.plot('diveplot', dataCeilings, layout, options);
+
+    this.plotEvents();
+  }
+
+  private plotEvents(): void {
+    const x = [];
+    const y = [];
+    const label = [];
+
+    const dataEvents = [{
+      x: x,
+      y: y,
+      label: label,
+      text: label,
+      type: 'scatter',
+      mode: 'markers+text',
+      fill: 'tozeroy',
+      name: 'events',
+      hovertemplate: '%{x}: %{text} at %{y}',
+      texttemplate: '%{x}: %{text} at %{y}',
+      textposition: 'bottom right',
+      fillcolor: 'rgba(0, 0, 0, 0)',
+      marker: {
+        color: 'navy',
+        size: 10,
+        symbol: 'bowtie-open' // https://plotly.com/javascript/reference/#box-marker-symbol
+      }
+    }];
+
+    const eventsLayout = {
+      xaxis: {
+        showgrid: false,
+        showline: false
+      },
+      fig_bgcolor: 'rgb(255, 255, 255)',
+      plot_bgcolor: 'rgba(0, 0, 0, 0)',
+      paper_bgcolor: 'rgba(0, 0, 0, 0)'
+      };
+
+      this.dive.events.forEach((event, index, events) => {
+        x.push(Time.toDate(event.timeStamp));
+        y.push(event.depth);
+        label.push(event.message);
+    });
+
+    Plotly.plot('diveplot', dataEvents);
   }
 
   private roundDepth(depth: number): number {

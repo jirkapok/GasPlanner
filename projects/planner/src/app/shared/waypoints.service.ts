@@ -1,10 +1,11 @@
 import { WayPoint, Plan, Diver, Gas } from './models';
-import { BuhlmannAlgorithm, Gas as BGas, Options, Gases, Segments, Segment, CalculatedProfile } from 'scuba-physics';
+import { BuhlmannAlgorithm, Gas as BGas, Options, Gases, Segments, Event, CalculatedProfile } from 'scuba-physics';
 import { Ceiling, Time } from 'scuba-physics';
 
 export class Profile {
     public wayPoints: WayPoint[];
     public ceilings: Ceiling[];
+    public events: Event[];
 }
 
 export class WayPointsService {
@@ -26,7 +27,8 @@ export class WayPointsService {
 
         return {
             wayPoints: wayPoints,
-            ceilings: finalSegments.ceilings
+            ceilings: finalSegments.ceilings,
+            events: finalSegments.events
         };
     }
 

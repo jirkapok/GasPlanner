@@ -50,7 +50,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Other tools resource
 
-Based on following tools:
+Based on following references:
 
 * <https://github.com/archisgore/online-deco-console>
 * <https://github.com/nyxtom/dive>
@@ -61,6 +61,7 @@ Based on following tools:
 * <https://thetheoreticaldiver.org/wordpress//var/lib/wordpress/wp-content/uploads/2017/11/dekotheorie1.pdf>
 * <https://njscuba.net/gear/trng_10_deco.php>
 * <https://thetheoreticaldiver.org/wordpress/index.php/2019/01/18/ndl-and-gradient-factors/>
+* <http://www.alertdiver.com/altitude_and_decompression_sickness?fbclid=IwAR2iDWh0ZwvB_oRMmkqQnlYaY3lc1W5NrWTX3DQvDR6N8B3lHXbG9aNFiTA>
 
 At time of development also other implementations are available:
 

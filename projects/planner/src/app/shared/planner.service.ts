@@ -77,26 +77,27 @@ export class PlannerService {
 
   public calculate() {
     this.updateNoDecoTime();
-    const finalData = WayPointsService.calculateWayPoints(this.plan, this.gases, this.options);
-    const ascent = PlannerService.ascent(finalData.wayPoints);
+    const profile = WayPointsService.calculateWayPoints(this.plan, this.gases, this.options);
+    // TODO multilevel diving: ascent cant be identified by first two segments
+    const ascent = PlannerService.ascent(profile.wayPoints);
+    this.dive.wayPoints = profile.wayPoints;
+    this.dive.ceilings = profile.ceilings;
+    this.dive.events = profile.events;
 
-    if (finalData.wayPoints.length > 2) {
+    if (profile.wayPoints.length > 2) {
       this.dive.maxTime = this.calculateMaxBottomTime();
       this.dive.timeToSurface = this.calculateTimeToSurface(ascent);
       this.firstGas.reserve = this.calculateRockBottom(ascent);
-      this.firstGas.consumed = this.calculateConsumedOnWay(finalData.wayPoints, this.diver.sac);
+      this.firstGas.consumed = this.calculateConsumedOnWay(profile.wayPoints, this.diver.sac);
+      this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
     }
 
-    this.dive.wayPoints = finalData.wayPoints;
-    this.dive.ceilings = finalData.ceilings;
-    this.dive.events = finalData.events;
     // even in case thirds rule, the last third is reserve, so we always divide by 2
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
     this.dive.needsReturn = this.plan.needsReturn;
     this.dive.notEnoughGas = this.firstGas.endPressure < this.firstGas.reserve;
     this.dive.depthExceeded = this.plan.depth > this.gasMod;
-    this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
     this.dive.noDecoExceeded = this.plan.noDecoExceeded;
     this.dive.calculated = true;
 

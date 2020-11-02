@@ -11,12 +11,20 @@ export class Profile {
 export class WayPointsService {
     public static calculateWayPoints(plan: Plan, gases: Gas[], options: Options): Profile {
         const wayPoints = [];
-        const finalSegments = this.calculateDecompression(plan, gases, options);
+        const profile = this.calculateDecompression(plan, gases, options);
 
-        const descent = finalSegments.segments[0];
+        if (profile.errorMessages.length > 0){
+            return {
+                wayPoints: [],
+                ceilings: [],
+                events: []
+            };
+        }
+
+        const descent = profile.segments[0];
         let lastWayPoint = new WayPoint(descent.duration, descent.endDepth);
         wayPoints.push(lastWayPoint);
-        const exceptDescend = finalSegments.segments.slice(1);
+        const exceptDescend = profile.segments.slice(1);
 
         exceptDescend.forEach((segment, index, source) => {
             const durationMinutes = segment.duration;
@@ -27,8 +35,8 @@ export class WayPointsService {
 
         return {
             wayPoints: wayPoints,
-            ceilings: finalSegments.ceilings,
-            events: finalSegments.events
+            ceilings: profile.ceilings,
+            events: profile.events
         };
     }
 
@@ -49,7 +57,7 @@ export class WayPointsService {
         segments.addFlat(plan.depth, bGas, bottomTime);
 
         const algorithm = new BuhlmannAlgorithm();
-        const finalSegments = algorithm.calculateDecompression(options, bGases, segments);
-        return finalSegments;
+        const profile = algorithm.calculateDecompression(options, bGases, segments);
+        return profile;
     }
 }

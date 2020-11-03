@@ -213,6 +213,7 @@ export class BuhlmannAlgorithm {
 
         const firstDecoStop = this.firstDecoStop(context);
         let nextDecoStop = firstDecoStop;
+        // TODO next gas switch depends on ppO2, we need to define different ppO2 for deco gases
         let nextGasSwitch = context.gases.nextGasSwitch(last.gas, context.currentDepth, 0, options, context.depthConverter);
         let nextStop = this.nextStop(firstDecoStop, nextGasSwitch, nextDecoStop);
         let currentGas = last.gas;

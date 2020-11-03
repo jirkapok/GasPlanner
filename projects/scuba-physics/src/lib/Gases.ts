@@ -70,8 +70,8 @@ export class Gases {
         let found = null;
         gases.forEach((element, index, source) => {
             const candidate = gases[index];
-            const mod = Math.round(candidate.mod(options.maxppO2, depthConverter));
-            const end = Math.round(candidate.end(depth, depthConverter));
+            const mod = candidate.mod(options.maxppO2, depthConverter);
+            const end = candidate.end(depth, depthConverter);
 
             if (depth <= mod && end <= options.maxEND) {
                 if (!found || found.fO2 < candidate.fO2) {

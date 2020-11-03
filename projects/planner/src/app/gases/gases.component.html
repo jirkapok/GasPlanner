@@ -37,7 +37,7 @@
               </div>
             </div>
           </div>
-          <app-gaslabel></app-gaslabel>
+          <app-gaslabel [gas]="gas"></app-gaslabel>
           <div class="text-danger" *ngIf="ppO2.invalid && (ppO2.dirty || ppO2.touched)">Needs to be number 21-100%</div>
         </td>
         <td><button *ngIf="planner.firstGas !== gas" class="btn btn-sm m-0 p-0" (click)="removeGas(gas)"><fa-icon [icon]="trashIcon"></fa-icon></button></td>
@@ -75,7 +75,7 @@
             </div>
           </div>
         </div>
-        <app-gaslabel></app-gaslabel>
+        <app-gaslabel [gas]="firstGas"></app-gaslabel>
         <div class="text-danger" *ngIf="ppO2.invalid && (ppO2.dirty || ppO2.touched)">Needs to be number 21-100%</div>
       </div>
   </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Gas } from '../shared/models';
 
@@ -7,17 +7,14 @@ import { Gas } from '../shared/models';
   templateUrl: './gaslabel.component.html',
   styleUrls: ['./gaslabel.component.css']
 })
-export class GaslabelComponent implements OnInit {
-  bottomGas: Gas;
+export class GaslabelComponent {
+
+  @Input()
+  public gas: Gas;
 
   public get gasMod(): number {
-    return this.planer.gasMod;
+    return this.planer.modForGas(this.gas);
   }
 
   constructor(private planer: PlannerService) { }
-
-  ngOnInit() {
-    this.bottomGas = this.planer.firstGas;
-  }
-
 }

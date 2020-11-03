@@ -61,7 +61,7 @@
             <div>
                 <div class="row">
                     <div class="col text-left">Gas remaining: {{ bottomGas.endPressure }}/{{ bottomGas.startPressure }} bar</div>
-                    <app-gaslabel class="col text-right"></app-gaslabel>
+                    <app-gaslabel [gas]="bottomGas" class="col text-right"></app-gaslabel>
                 </div>
                 <div class="progress gas-bar mt-1 mb-2">
                     <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomGas.startPressure"

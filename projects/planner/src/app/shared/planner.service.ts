@@ -16,6 +16,7 @@ export class PlannerService {
   public calculated = this.onCalculated.asObservable();
   public options = new Options(0.4, 0.85, 1.6, 30, true, true);
 
+  // TODO remove
   public get firstGas(): Gas {
     return this.gases[0];
   }
@@ -50,24 +51,22 @@ export class PlannerService {
     this.onCalculated.next();
   }
 
-  private updatePpO2Options() {
-    this.options.maxppO2 = this.diver.maxPpO2;
+  public get gasMod(): number {
+    return this.modForGas(this.firstGas);
   }
 
-  public get gasMod(): number {
-    this.updatePpO2Options();
-
+  public modForGas(gas: Gas): number {
     let depthConverter = DepthConverter.forSaltWater();
     if (this.options.isFreshWater) {
      depthConverter = DepthConverter.forFreshWater();
     }
 
     const nitroxCalculator = new NitroxCalculator(depthConverter);
-    return nitroxCalculator.mod(this.diver.maxPpO2, this.firstGas.o2);
+    return nitroxCalculator.mod(this.diver.maxPpO2, gas.o2);
   }
 
   public noDecoTime(): number {
-    this.updatePpO2Options();
+    this.options.maxppO2 = this.diver.maxPpO2;
     const algorithm = new BuhlmannAlgorithm();
     const depth = this.plan.depth;
     const gas = this.firstGas.toGas();

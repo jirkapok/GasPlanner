@@ -28,9 +28,9 @@ export class GasesValidator {
     }
 
     private static validateByMod(gases: Gas[], options: GasOptions, maxDepth: number, depthConverter: DepthConverter, messages: string[]) {
-        gases.sort((a, b) => b.mod(options.maxppO2, depthConverter) - a.mod(options.maxppO2, depthConverter));
+        gases.sort((a, b) => b.mod(options.maxPpO2, depthConverter) - a.mod(options.maxPpO2, depthConverter));
 
-        if (gases[0].mod(options.maxppO2, depthConverter) < maxDepth) {
+        if (gases[0].mod(options.maxPpO2, depthConverter) < maxDepth) {
             messages.push('No gas available to maximum depth.');
         }
 
@@ -38,7 +38,7 @@ export class GasesValidator {
             if (gases.length > index) {
                 const nextGas = gases[index + 1];
                 const ceiling = gases[index].ceiling(depthConverter);
-                const nextMod = nextGas.mod(options.maxppO2, depthConverter);
+                const nextMod = nextGas.mod(options.maxPpO2, depthConverter);
                 if (nextMod < ceiling) {
                     messages.push('Gases don`t cover all depths.');
                     break;
@@ -49,7 +49,7 @@ export class GasesValidator {
 }
 
 export interface GasOptions {
-    maxppO2: number;
+    maxPpO2: number;
     maxEND: number;
     isFreshWater: boolean;
 }
@@ -70,7 +70,7 @@ export class Gases {
         let found = null;
         gases.forEach((element, index, source) => {
             const candidate = gases[index];
-            const mod = candidate.mod(options.maxppO2, depthConverter);
+            const mod = candidate.mod(options.maxPpO2, depthConverter);
             const end = candidate.end(depth, depthConverter);
 
             if (depth <= mod && end <= options.maxEND) {

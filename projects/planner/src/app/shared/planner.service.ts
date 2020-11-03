@@ -14,7 +14,7 @@ export class PlannerService {
   public dive: Dive = new Dive();
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
-  public options = new Options(0.4, 0.85, 1.6, 30, true, true);
+  public options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
 
   // TODO remove
   public get firstGas(): Gas {
@@ -66,7 +66,8 @@ export class PlannerService {
   }
 
   public noDecoTime(): number {
-    this.options.maxppO2 = this.diver.maxPpO2;
+    this.options.maxPpO2 = this.diver.maxPpO2;
+    this.options.maxDecoPpO2 = this.diver.maxPpO2;
     const algorithm = new BuhlmannAlgorithm();
     const depth = this.plan.depth;
     const gas = this.firstGas.toGas();

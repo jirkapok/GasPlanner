@@ -10,7 +10,7 @@ describe('Gases', () => {
   const oxygen = new Gas(1, 0);  // 5.9m - 0m
 
   const options = {
-    maxppO2: 1.6,
+    maxPpO2: 1.6,
     maxEND: 30,
     isFreshWater: false
   };

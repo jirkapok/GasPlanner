@@ -6,7 +6,7 @@ import { Time } from './Time';
 
 export class Options implements GasOptions {
     constructor(
-        // Gradient factors in Shaerwater Teric
+        // Gradient factors in Shearwater
         // Low (45/95)
         // Med (40/85)
         // High (35/75)
@@ -22,9 +22,14 @@ export class Options implements GasOptions {
         public gfHigh: number,
 
         /**
-         * Maximum pp02 to be used during decompression in rnage 0.21-1.6, default 1.6
+         * Maximum pp02 to be used during the dive in range 0.21-1.6, default 1.4
          */
-        public maxppO2: number,
+        public maxPpO2: number,
+
+        /**
+         * Maximum pp02 to be used during decompression in range 0.21-1.6, default 1.6
+         */
+        public maxDecoPpO2: number,
 
         /**
          * Maximum equivalent air narcotic depth in meters, default 30 meters
@@ -58,7 +63,8 @@ export class Options implements GasOptions {
     ) {
         this.gfLow = gfLow || 0.4;
         this.gfHigh = gfHigh || 0.85;
-        this.maxppO2 = maxppO2 || 1.6;
+        this.maxPpO2 = maxPpO2 || 1.4;
+        this.maxDecoPpO2 = maxDecoPpO2 || 1.6;
         this.maxEND = maxEND || 30;
         this.isFreshWater = isFreshWater || false;
         this.addSafetyStop = addSafetyStop || false;
@@ -83,7 +89,7 @@ export class Ceiling {
     public depth: number;
 }
 
-export class Event{
+export class Event {
     /** The number of seconds since dive begin the event occurred */
     public timeStamp: number;
     /** depth in meters, at which the diver was, when the event occurred */
@@ -277,7 +283,7 @@ export class BuhlmannAlgorithm {
     }
 
     private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): string[] {
-        const segmentMessages = SegmentsValidator.validate(segments, gases, options.maxppO2, depthConverter);
+        const segmentMessages = SegmentsValidator.validate(segments, gases, options.maxPpO2, depthConverter);
         if (segmentMessages.length > 0) {
             return segmentMessages;
         }

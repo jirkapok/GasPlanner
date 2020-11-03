@@ -7,7 +7,7 @@ describe('Buhlmann Algorithm', () => {
     it('Calculate air No decompression limit at surface', () => {
         const air: Gas = new Gas(0.21, 0);
         const depth = 0;
-        const options = new Options(1, 1, 1.6, 30, true);
+        const options = new Options(1, 1, 1.6, 1.6, 30, true);
         const algorithm = new BuhlmannAlgorithm();
         const ndl = algorithm.noDecoLimit(depth, air, options);
         expect(ndl).toBe(Infinity);
@@ -16,14 +16,14 @@ describe('Buhlmann Algorithm', () => {
     it('Calculate 0m if gas isn`t breathe-able at 60 m', () => {
       const air: Gas = new Gas(0.21, 0);
       const depth = 60;
-      const options = new Options(1, 1, 1.4, 30, true);
+      const options = new Options(1, 1, 1.4, 1.4, 30, true);
       const algorithm = new BuhlmannAlgorithm();
       const ndl = algorithm.noDecoLimit(depth, air, options);
       expect(ndl).toBe(0);
   });
 
     describe('Calculate air No decompression limits at depth', () => {
-      const options = new Options(1, 1, 1.6, 30, true);
+      const options = new Options(1, 1, 1.6, 1.6, 30, true);
 
       const calculateNoDecompressionLimit = (testCases: number[][], isFreshWater: boolean) => {
         testCases.forEach(testCase => {
@@ -82,7 +82,7 @@ describe('Buhlmann Algorithm', () => {
   describe('Calculates Plan', () =>  {
     const isFreshWater = false;
     // gradientFactorLow = 0.2, gradientFactorHigh=0.8, deco ppO2 = 1.6, and max END allowed: 30 meters.
-    const options = new Options(0.2, 0.8, 1.6, 30, isFreshWater);
+    const options = new Options(0.2, 0.8, 1.6, 1.6, 30, isFreshWater);
 
     const concatenatePlan = (decoPlan: Segment[]): string => {
       let planText = '';

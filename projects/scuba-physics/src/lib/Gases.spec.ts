@@ -189,4 +189,24 @@ describe('Gases', () => {
       expect(result).toBe(0);
     });
   });
+
+  describe('Gas composition', () => {
+    it('Equals to null returns false', () => {
+      expect(air.compositionEquals(null)).toBeFalsy();
+    });
+
+    it('Equals to the same content of oxygen and helium returns true', () => {
+      const other = new Gas(.21, 0);
+      expect(air.compositionEquals(other)).toBeTruthy();
+    });
+
+    it('Equals to different helium content returns false', () => {
+      const other = new Gas(.21, .2);
+      expect(air.compositionEquals(other)).toBeFalsy();
+    });
+
+    it('Equals to different oxygen content returns false', () => {
+      expect(air.compositionEquals(ean50)).toBeFalsy();
+    });
+  });
 });

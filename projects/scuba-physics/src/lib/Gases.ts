@@ -253,4 +253,10 @@ export class Gas {
     public ceiling(depthConverter: DepthConverter): number {
         return GasMixtures.ceiling(this.fO2, depthConverter);
     }
+
+    public compositionEquals(other: Gas): boolean {
+        return !!other &&
+          other.fO2 === this.fO2 &&
+          other.fHe === this.fHe;
+    }
 }

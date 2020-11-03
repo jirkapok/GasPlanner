@@ -234,18 +234,7 @@ export class BuhlmannAlgorithm {
             // Deco stop
             const lastGas = currentGas;
             currentGas = context.gases.bestDecoGas(context.currentDepth, options, depthConverter);
-            if (lastGas !== currentGas) {
-                const gasSwitch: Event =  {
-                    timeStamp: context.runTime,
-                    depth: context.currentDepth,
-                    message: 'switch to ' + currentGas.fO2
-                };
-
-                // TODO ensure and fix gas switch should occur at deco depths
-                context.events.push(gasSwitch);
-                const decoStop = context.segments.add(context.currentDepth, context.currentDepth, currentGas, Time.oneMinute);
-                this.swim(context, decoStop);
-            }
+            this.addGasSwitch(context, lastGas, currentGas);
 
             nextDecoStop = this.nextDecoStop(nextStop);
 
@@ -267,6 +256,23 @@ export class BuhlmannAlgorithm {
 
         const merged = segments.mergeFlat();
         return CalculatedProfile.fromProfile(merged, context.ceilings, context.events);
+    }
+
+    private addGasSwitch(context: AlgorithmContext, lastGas: Gas, currentGas: Gas) {
+        if (lastGas.compositionEquals(currentGas)) {
+            return;
+        }
+
+        const gasSwitch: Event =  {
+            timeStamp: context.runTime,
+            depth: context.currentDepth,
+            message: 'switch to ' + currentGas.fO2
+        };
+
+        // TODO ensure and fix gas switch should occur at deco depths
+        context.events.push(gasSwitch);
+        const decoStop = context.segments.add(context.currentDepth, context.currentDepth, currentGas, Time.oneMinute);
+        this.swim(context, decoStop);
     }
 
     private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): string[] {

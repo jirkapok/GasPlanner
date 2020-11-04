@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Dive, WayPoint, SwimDirection } from '../shared/models';
-import { faArrowDown, faArrowUp, faArrowRight, faTasks, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { Dive, WayPoint, SwimAction } from '../shared/models';
+import { faArrowDown, faArrowUp, faArrowRight, faTasks, faRandom, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Time } from 'scuba-physics';
 
 @Component({
@@ -15,6 +15,7 @@ export class WayPointsComponent implements OnInit {
   public up = faArrowUp;
   public hover = faArrowRight;
   public tasks = faTasks;
+  public switch = faRandom;
 
   constructor(private planer: PlannerService) { }
 
@@ -22,20 +23,23 @@ export class WayPointsComponent implements OnInit {
     this.dive = this.planer.dive;
   }
 
-  public swimDirectionIcon(point: WayPoint): IconDefinition {
-    switch (point.swimDirection) {
-      case SwimDirection.ascent: return this.up;
-      case SwimDirection.descent: return this.down;
+  public swimActionIcon(point: WayPoint): IconDefinition {
+    switch (point.swimAction) {
+      case SwimAction.ascent: return this.up;
+      case SwimAction.descent: return this.down;
+      case SwimAction.switch: return this.switch;
       default: return this.hover;
     }
   }
 
   public iconTitle(point: WayPoint): String {
-    switch (point.swimDirection) {
-      case SwimDirection.ascent:
+    switch (point.swimAction) {
+      case SwimAction.ascent:
         return 'ascent';
-      case SwimDirection.descent:
+      case SwimAction.descent:
         return 'descent';
+      case SwimAction.switch:
+        return 'switch';
       default:
         return 'hover';
     }
@@ -48,9 +52,9 @@ export class WayPointsComponent implements OnInit {
   public iconClasses(point: WayPoint): any {
     const classes = {
       'mr-3': true,
-      'swim-down': point.swimDirection === SwimDirection.descent,
-      'swim-up': point.swimDirection === SwimDirection.ascent,
-      'swim-hover': point.swimDirection === SwimDirection.hover,
+      'swim-down': point.swimAction === SwimAction.descent,
+      'swim-up': point.swimAction === SwimAction.ascent,
+      'swim-hover': point.swimAction === SwimAction.hover || point.swimAction === SwimAction.switch,
     };
 
     return classes;

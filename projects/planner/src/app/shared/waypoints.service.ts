@@ -1,5 +1,6 @@
-import { WayPoint, Plan, Diver, Gas } from './models';
-import { BuhlmannAlgorithm, Gas as BGas, Options, Gases, Segments, Event, CalculatedProfile } from 'scuba-physics';
+import { WayPoint, Plan, Gas } from './models';
+import { BuhlmannAlgorithm, Gas as BGas, Options, Gases,
+     Segments, Event, CalculatedProfile, Segment } from 'scuba-physics';
 import { Ceiling, Time } from 'scuba-physics';
 
 export class Profile {
@@ -27,8 +28,7 @@ export class WayPointsService {
         const exceptDescend = profile.segments.slice(1);
 
         exceptDescend.forEach((segment, index, source) => {
-            const durationMinutes = segment.duration;
-            const waypoint = lastWayPoint.toLevel(durationMinutes, segment.endDepth);
+            const waypoint = this.toWayPoint(segment, lastWayPoint, profile.events);
             lastWayPoint = waypoint;
             wayPoints.push(waypoint);
         });
@@ -38,6 +38,17 @@ export class WayPointsService {
             ceilings: profile.ceilings,
             events: profile.events
         };
+    }
+
+    private static toWayPoint(segment: Segment, lastWayPoint: WayPoint, events: Event[]): WayPoint {
+        const waypoint = lastWayPoint.toLevel(segment.duration, segment.endDepth);
+        const event = events.find(x => waypoint.startTime <= x.timeStamp && x.timeStamp <= waypoint.startTime);
+
+        if (event) {
+            waypoint.asGasSwitch();
+        }
+
+        return waypoint;
     }
 
     private static calculateDecompression(plan: Plan, gases: Gas[], options: Options): CalculatedProfile {

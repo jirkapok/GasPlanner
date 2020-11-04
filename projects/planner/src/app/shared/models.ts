@@ -193,38 +193,60 @@ export class Dive {
     }
 }
 
-export enum SwimDirection {
+export enum SwimAction {
     hover = 0,
     ascent = 1,
-    descent = 2
+    descent = 2,
+    switch = 3
 }
 
 export class WayPoint {
     /** in minutes */
     public startTime = 0;
-    /** in meters */
-    public startDepth = 0;
     /** in minutes */
     public endTime = 0;
     /** in meters */
-    public endDepth = 0;
+    private _startDepth = 0;
+    /** in meters */
+    public _endDepth = 0;
+
+    private action: SwimAction;
 
     constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
         this.endTime = Math.round(duration * 100) / 100;
-        this.endDepth = newDepth;
-        this.startDepth = previousDepth;
+        this._endDepth = newDepth;
+        this._startDepth = previousDepth;
+        this.updateAction();
     }
 
-    public get swimDirection(): SwimDirection {
+    private updateAction(): void {
+        this.action = SwimAction.hover;
+
         if (this.startDepth < this.endDepth) {
-            return SwimDirection.descent;
+            this.action = SwimAction.descent;
         }
 
         if (this.startDepth > this.endDepth) {
-            return SwimDirection.ascent;
+            this.action = SwimAction.ascent;
         }
+    }
 
-        return SwimDirection.hover;
+    public asGasSwitch(): void {
+        this.action = SwimAction.switch;
+    }
+
+    /** in meters */
+    public get startDepth(): number {
+        return this._startDepth;
+    }
+
+    /** in meters */
+    public get endDepth(): number {
+        return this._endDepth;
+    }
+
+    public get swimAction(): SwimAction {
+        return this.action;
     }
 
     public get label(): string {
@@ -247,7 +269,8 @@ export class WayPoint {
         result.startTime = this.endTime;
         const end = this.endTime + duration;
         result.endTime = Math.round(end * 100) / 100;
-        result.startDepth = this.endDepth;
+        result._startDepth = this.endDepth;
+        result.updateAction();
         return result;
     }
 }

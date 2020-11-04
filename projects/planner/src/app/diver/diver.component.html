@@ -23,6 +23,14 @@
             </label>
             <div class="text-danger" *ngIf="maxPpO2.invalid && (maxPpO2.dirty || maxPpO2.touched)">Needs to be number 0.21-3</div>
           </div>
+          <div>
+            <label for="maxDecoPpO2">Maximum deco ppO2:
+              <input [(ngModel)]="diver.maxDecoPpO2" class="form-control" #maxDecoPpO2="ngModel" name="maxDecoPpO2" id="maxDecoPpO2"
+              type="number" min=".21" max="3" [range]="[.21,3]" required
+              [class.is-invalid]="maxDecoPpO2.invalid && (maxDecoPpO2.dirty || maxDecoPpO2.touched)"/>
+            </label>
+            <div class="text-danger" *ngIf="maxDecoPpO2.invalid && (maxDecoPpO2.dirty || maxDecoPpO2.touched)">Needs to be number 0.21-3</div>
+          </div>
         </div>
       </div>
       <div class="form-group mt-2">

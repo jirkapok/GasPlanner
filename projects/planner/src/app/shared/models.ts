@@ -98,6 +98,9 @@ export class Diver {
     /** default ascent speed value in meter/min. */
     public static readonly ascSpeed = 10;
 
+    /** Maximum ppO2 during decompression */
+    public maxDecoPpO2 = 1.6;
+
     constructor(public sac: number, public maxPpO2: number) {
     }
 

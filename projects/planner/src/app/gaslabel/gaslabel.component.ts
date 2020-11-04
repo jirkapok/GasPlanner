@@ -16,5 +16,9 @@ export class GaslabelComponent {
     return this.planer.modForGas(this.gas);
   }
 
+  public get gasDecoMod(): number {
+    return this.planer.modForDecoGas(this.gas);
+  }
+
   constructor(private planer: PlannerService) { }
 }

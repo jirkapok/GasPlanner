@@ -52,22 +52,30 @@ export class PlannerService {
   }
 
   public get gasMod(): number {
-    return this.modForGas(this.firstGas);
+    return this.gasModByPpO2(this.firstGas, this.diver.maxPpO2);
+  }
+
+  public modForDecoGas(gas: Gas): number {
+    return this.gasModByPpO2(gas, this.diver.maxDecoPpO2);
   }
 
   public modForGas(gas: Gas): number {
+    return this.gasModByPpO2(gas, this.diver.maxPpO2);
+  }
+
+  private gasModByPpO2(gas: Gas, ppO2: number): number {
     let depthConverter = DepthConverter.forSaltWater();
     if (this.options.isFreshWater) {
      depthConverter = DepthConverter.forFreshWater();
     }
 
     const nitroxCalculator = new NitroxCalculator(depthConverter);
-    return nitroxCalculator.mod(this.diver.maxPpO2, gas.o2);
+    return nitroxCalculator.mod(ppO2, gas.o2);
   }
 
   public noDecoTime(): number {
     this.options.maxPpO2 = this.diver.maxPpO2;
-    this.options.maxDecoPpO2 = this.diver.maxPpO2;
+    this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
     const algorithm = new BuhlmannAlgorithm();
     const depth = this.plan.depth;
     const gas = this.firstGas.toGas();

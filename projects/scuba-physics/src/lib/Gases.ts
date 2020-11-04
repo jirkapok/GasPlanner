@@ -50,6 +50,7 @@ export class GasesValidator {
 
 export interface GasOptions {
     maxPpO2: number;
+    maxDecoPpO2: number;
     maxEND: number;
     isFreshWater: boolean;
 }
@@ -70,7 +71,7 @@ export class Gases {
         let found = null;
         gases.forEach((element, index, source) => {
             const candidate = gases[index];
-            const mod = candidate.mod(options.maxPpO2, depthConverter);
+            const mod = candidate.mod(options.maxDecoPpO2, depthConverter);
             const end = candidate.end(depth, depthConverter);
 
             if (depth <= mod && end <= options.maxEND) {
@@ -91,7 +92,7 @@ export class Gases {
     }
 
     public static canSwitch(newGas: Gas, current: Gas): boolean {
-        return newGas && newGas !== current;
+        return newGas && !newGas.compositionEquals(current);
     }
 
     public addBottomGas(gas: Gas) {

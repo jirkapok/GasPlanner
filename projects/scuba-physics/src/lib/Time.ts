@@ -39,4 +39,17 @@ export class Time {
         // we don't care about UTC, because we handle date, only relative time
         return new Date(1970, 1, 1, 0, 0, seconds, 0);
     }
+
+    /**
+     * Extracts number of seconds from date parameter
+     *
+     * @param date text containing data value
+     */
+    public static secondsFromDate(date: string): number {
+        const newValue = new Date(date);
+        let result = newValue.getSeconds();
+        result += newValue.getMinutes() * Time.oneMinute;
+        result += newValue.getHours() * Math.pow(Time.oneMinute, 2);
+        return result;
+    }
 }

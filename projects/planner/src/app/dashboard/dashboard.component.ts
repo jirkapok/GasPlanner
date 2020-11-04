@@ -13,6 +13,7 @@ export class DashboardComponent implements OnInit  {
   public showDisclaimer = true;
   public exclamation = faExclamationTriangle;
   private dive: Dive;
+  public selectedTimeStamp: string;
 
   public get showResults(): boolean {
     return this.dive.calculated && !this.dive.hasErrors;
@@ -33,5 +34,9 @@ export class DashboardComponent implements OnInit  {
   public stopDisclaimer() {
     this.showDisclaimer = false;
     this.preferences.disableDisclaimer();
+  }
+
+  public chartHover(timeStampValue: string) {
+    this.selectedTimeStamp = timeStampValue;
   }
 }

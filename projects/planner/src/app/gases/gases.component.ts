@@ -18,8 +18,6 @@ export class GasesComponent implements OnInit {
   public trashIcon = faTrashAlt;
   constructor(private planner: PlannerService) { }
 
-  @Output() validate: EventEmitter<any> = new EventEmitter();
-
   ngOnInit() {
     this.firstGas = this.planner.firstGas;
     this.diver = this.planner.diver;

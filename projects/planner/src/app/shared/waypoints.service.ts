@@ -42,8 +42,7 @@ export class WayPointsService {
 
     private static toWayPoint(segment: Segment, lastWayPoint: WayPoint, events: Event[]): WayPoint {
         const waypoint = lastWayPoint.toLevel(segment.duration, segment.endDepth);
-        const hasSwitch = events.find(x => x.type === EventType.gasSwitch &&
-             waypoint.startTime <= x.timeStamp && x.timeStamp <= waypoint.startTime);
+        const hasSwitch = events.find(x => x.type === EventType.gasSwitch && waypoint.fits(x.timeStamp));
 
         if (hasSwitch) {
             waypoint.asGasSwitch();

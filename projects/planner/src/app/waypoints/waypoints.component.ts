@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint, SwimAction } from '../shared/models';
 import { faArrowDown, faArrowUp, faArrowRight, faTasks, faRandom, IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -16,11 +16,27 @@ export class WayPointsComponent implements OnInit {
   public hover = faArrowRight;
   public tasks = faTasks;
   public switch = faRandom;
+  private lastSelected: WayPoint;
 
   constructor(private planer: PlannerService) { }
 
   ngOnInit() {
     this.dive = this.planer.dive;
+  }
+
+  @Input()
+  public set selectedTimeStamp(newValue: string) {
+    if (this.lastSelected) {
+      this.lastSelected.selected = false;
+    }
+
+    if (newValue) {
+      const newTimeStamp = Time.secondsFromDate(newValue);
+      this.lastSelected = this.dive.wayPoints.find(p => p.fits(newTimeStamp));
+      if (this.lastSelected) {
+        this.lastSelected.selected = true;
+      }
+    }
   }
 
   public swimActionIcon(point: WayPoint): IconDefinition {
@@ -59,7 +75,6 @@ export class WayPointsComponent implements OnInit {
 
     return classes;
   }
-
 
   private selectTimeFormat(): string {
     if (this.dive.hasHoursRuntime) {

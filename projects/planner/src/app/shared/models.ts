@@ -210,6 +210,8 @@ export class WayPoint {
     /** in meters */
     public _endDepth = 0;
 
+    public selected = false;
+
     private action: SwimAction;
 
     constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
@@ -272,5 +274,9 @@ export class WayPoint {
         result._startDepth = this.endDepth;
         result.updateAction();
         return result;
+    }
+
+    public fits(timeStamp: number): boolean {
+        return this.startTime <= timeStamp && timeStamp < this.endTime;
     }
 }

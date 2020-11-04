@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint } from '../shared/models';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
@@ -15,6 +15,10 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   public dive: Dive;
   public tasks = faTasks;
+  private readonly elementName = 'diveplot';
+
+  @Output()
+  public chartHover: EventEmitter<string> = new EventEmitter<string>();
 
   public scaleWidth(x: number, graphWidth: number): number {
     return x * graphWidth / this.dive.totalDuration;
@@ -44,6 +48,12 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
     }
 
     return '%M:%S';
+  }
+
+  public plotlyHover(data: any)  {
+    // first data is the dive profile chart, x value is the timestamp as string
+    const timeStampValue: string = data.points[0].x;
+    this.chartHover.emit(timeStampValue);
   }
 
   private plotChart() {
@@ -94,7 +104,7 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
         this.resampleToSeconds(xValues, yValues, item);
       });
 
-    Plotly.react('diveplot', data, layout, options);
+    Plotly.react(this.elementName, data, layout, options);
 
     const xCeilingValues = [];
     const yCeilingValues = [];
@@ -116,7 +126,7 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
       }
     }];
 
-    Plotly.plot('diveplot', dataCeilings, layout, options);
+    Plotly.plot(this.elementName, dataCeilings, layout, options);
 
     this.plotEvents();
   }
@@ -135,15 +145,20 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
       mode: 'markers+text',
       fill: 'tozeroy',
       name: 'events',
-      hovertemplate: '%{x}: %{text} at %{y}',
-      texttemplate: '%{x}: %{text} at %{y}',
-      textposition: 'bottom right',
+      hovertemplate: '%{x}<br>%{text} at %{y}m',
+      texttemplate: '%{x}<br>%{text} at %{y}m',
+      textposition: 'top left',
       fillcolor: 'rgba(0, 0, 0, 0)',
       marker: {
-        color: 'navy',
-        size: 10,
-        symbol: 'bowtie-open' // https://plotly.com/javascript/reference/#box-marker-symbol
-      }
+        color: 'rgba(31, 119, 180, 0.5)',
+        size: 8,
+        // symbol: 'bowtie-open', // https://plotly.com/javascript/reference/#box-marker-symbol
+        line: {
+          color: 'rgba(31, 119, 180, 0.7)',
+          width: 2
+        }
+      },
+      showlegend: false
     }];
 
     const eventsLayout = {
@@ -154,15 +169,15 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
       fig_bgcolor: 'rgb(255, 255, 255)',
       plot_bgcolor: 'rgba(0, 0, 0, 0)',
       paper_bgcolor: 'rgba(0, 0, 0, 0)'
-      };
+    };
 
-      this.dive.events.forEach((event, index, events) => {
+    this.dive.events.forEach((event, index, events) => {
         x.push(Time.toDate(event.timeStamp));
         y.push(event.depth);
         label.push(event.message);
     });
 
-    Plotly.plot('diveplot', dataEvents);
+    Plotly.plot(this.elementName, dataEvents, eventsLayout);
   }
 
   private roundDepth(depth: number): number {
@@ -186,5 +201,8 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dive = this.planer.dive;
     this.plotChart();
+    const chartElement: any = document.getElementById(this.elementName);
+    chartElement.on('plotly_hover', (e) => this.plotlyHover(e));
+    chartElement.on('plotly_click', (e) => this.plotlyHover(e));
   }
 }

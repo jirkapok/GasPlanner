@@ -11,7 +11,7 @@
                 <th>Duration [min.]</th>
                 <th>Run [min.]</th>
             </tr>
-            <tr *ngFor="let point of dive.wayPoints">
+            <tr *ngFor="let point of dive.wayPoints" [ngClass]="{'table-active': point.selected }" >
                 <td>
                     <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)" [title]="iconTitle(point)"></fa-icon>
                 </td>

@@ -59,9 +59,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "planner:build",
-            "vendorSourceMap": true,
             "host": "0.0.0.0",
-            "port": 4200
+            "port": 4200,
+            "sourceMap": {
+              "styles": true,
+              "scripts": true,
+              "vendor": true
+            }
           },
           "configurations": {
             "production": {

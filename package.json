@@ -35,7 +35,7 @@
     "ngx-custom-validators": "^9.1.0",
     "plotly.js-dist": "^1.53.0",
     "popper.js": "^1.16.1",
-    "rxjs": "^6.5.4",
+    "rxjs": "^6.6.3",
     "scuba-physics": "file:dist/scuba-physics",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

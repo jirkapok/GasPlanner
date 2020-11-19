@@ -40,7 +40,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -59,9 +58,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "planner:build",
-            "vendorSourceMap": true,
             "host": "0.0.0.0",
-            "port": 4200
+            "port": 4200,
+            "sourceMap": {
+              "styles": true,
+              "scripts": true,
+              "vendor": true
+            }
           },
           "configurations": {
             "production": {
@@ -144,7 +147,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/scuba-physics/tsconfig.lib.json",
             "project": "projects/scuba-physics/ng-package.json"

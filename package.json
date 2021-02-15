@@ -3,7 +3,7 @@
   "version": "0.1.8",
   "license": "MIT",
   "scripts": {
-    "start": "ng serve",
+    "start": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve",
     "build": "ng build --prod",
     "build-lib": "ng build scuba-physics",
     "test": "ng test",

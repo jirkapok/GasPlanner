@@ -26,7 +26,7 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": [
-              "node_modules/plotly.js-dist/plotly.js"
+              "node_modules/plotly.js/dist/plotly.js"
             ]
           },
           "configurations": {
@@ -40,7 +40,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -87,7 +86,7 @@
             "polyfills": "projects/planner/src/polyfills.ts",
             "tsConfig": "projects/planner/src/tsconfig.spec.json",
             "scripts": [
-              "node_modules/plotly.js-dist/plotly.js"
+              "node_modules/plotly.js/dist/plotly.js"
             ],
             "styles": [
               "projects/planner/src/styles.css",
@@ -148,7 +147,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/scuba-physics/tsconfig.lib.json",
             "project": "projects/scuba-physics/ng-package.json"

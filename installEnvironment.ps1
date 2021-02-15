@@ -9,8 +9,8 @@ nvm use -lts
 choco install vscode -y
 # Optional
 # code --install-extension ms-vscode.powershell
-npm install -g @angular/cli@10.2
-npm install -g typescript@4.0.5
+npm install -g @angular/cli
+npm install -g typescript
 
 # NPM Packages
 .\build.ps1

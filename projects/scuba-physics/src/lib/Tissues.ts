@@ -65,6 +65,7 @@ export class Tissue extends Compartment {
      * @param gfLow Gradient factor low in range 0-1
      */
     public ceiling(gfLow: number): number {
+        // tolerated = (pTotal - a) * b  // Buhlmann
         const bars = (this.pTotal - (this.a * gfLow)) / ((gfLow / this.b) + 1.0 - gfLow);
         return bars;
     }

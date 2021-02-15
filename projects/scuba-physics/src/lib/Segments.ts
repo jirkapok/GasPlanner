@@ -110,4 +110,14 @@ export class Segments {
     public last(): Segment {
         return this.segments[this.segments.length - 1];
     }
+
+    public max(): number {
+       let maximum = 0; 
+       for(let index = 0; index < this.segments.length; index++) {
+           let current = this.segments[index].endDepth;
+        maximum = current >= maximum ? current : maximum;
+       }
+
+       return maximum;
+    }
 }

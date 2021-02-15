@@ -71,10 +71,20 @@ export class Segment {
 
 export class Segments {
     private segments: Segment[] = [];
+    private _max: number = 0;
+
+    public get max(): number {
+        return this._max;
+    }
 
     public add(startDepth: number, endDepth: number, gas: Gas, duration: number): Segment {
         const segment = new Segment(startDepth, endDepth, gas, duration);
         this.segments.push(segment);
+
+        if(segment.endDepth > this.max) {
+            this._max = segment.endDepth;
+        }
+        
         return segment;
     }
 
@@ -111,13 +121,13 @@ export class Segments {
         return this.segments[this.segments.length - 1];
     }
 
-    public max(): number {
-       let maximum = 0; 
-       for(let index = 0; index < this.segments.length; index++) {
-           let current = this.segments[index].endDepth;
-        maximum = current >= maximum ? current : maximum;
-       }
+    // public max(): number {
+    //    let maximum = 0; 
+    //    for(let index = 0; index < this.segments.length; index++) {
+    //        let current = this.segments[index].endDepth;
+    //     maximum = current >= maximum ? current : maximum;
+    //    }
 
-       return maximum;
-    }
+    //    return maximum;
+    // }
 }

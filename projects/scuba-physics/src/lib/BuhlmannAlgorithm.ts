@@ -95,7 +95,7 @@ class GradientFactors {
      * @param depth in meters
      */
     public gradientForDepth(depth: number): number {
-        const fromDepth = this.segmetns.max();
+        const fromDepth = this.segmetns.max;
         const gfChangePerMeter  = this.gfDiff / fromDepth;
         return this.gfLow + (gfChangePerMeter * (fromDepth - depth));
     }

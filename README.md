@@ -15,7 +15,6 @@ List of current features is part of [application help](./doc/help.md). Road map 
 * Fix precision of decompression algorithm
   * Calculate deco stops in seconds instead of minutes
   * Check after ascent, if additional ascent is possible
-  * Fix ceiling calculation beginning of saturation
   * Fix loading of tissues when tissues are still loaded during ascent
 * Add option to define safety stop range
 * Allow define multiple gases

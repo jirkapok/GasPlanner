@@ -75,37 +75,10 @@ export class Options implements GasOptions {
     }
 }
 
-class GradientFactors {
-    private gfDiff: number;
-
-    /**
-     * Calculation of gradient factor from particular depth
-     *
-     * @param gfHigh surface gradient factor in range 0-1
-     * @param gfLow depth gradient factor in range 0-1
-     * @param segmetns to get max depth in meters reached during the dive
-     */
-    constructor(public gfHigh: number, public gfLow: number, private segmetns: Segments) {
-        // find variance in gradient factor
-        this.gfDiff = this.gfHigh - this.gfLow;
-    }
-
-    /**
-     * calculate final gradient for current depth
-     * @param depth in meters
-     */
-    public gradientForDepth(depth: number): number {
-        const fromDepth = this.segmetns.max;
-        const gfChangePerMeter  = this.gfDiff / fromDepth;
-        return this.gfLow + (gfChangePerMeter * (fromDepth - depth));
-    }
-}
-
 class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
     public events: Event[] = [];
-    private gradients: GradientFactors;
 
     /** in seconds */
     public runTime = 0;
@@ -114,7 +87,8 @@ class AlgorithmContext {
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
         this.tissues = new Tissues(depthConverter.surfacePressure);
-        this.gradients = new GradientFactors(options.gfHigh, options.gfLow, segments);
+        // add 1 to compensate gradient low on start of the dive
+        this.lowestCeiling = this.depthConverter.surfacePressure + 1;
     }
 
     public get currentDepth(): number {
@@ -148,17 +122,7 @@ class AlgorithmContext {
     }
 
     public ceiling(): number {
-        let tolerated = this.tissues.ceiling(this.options.gfLow);
-        if (tolerated < this.depthConverter.surfacePressure) {
-            tolerated = this.depthConverter.surfacePressure;
-        }
-
-        const toleratedDepth = this.depthConverter.fromBar(tolerated);
-        const gf = this.gradients.gradientForDepth(toleratedDepth);
-        
-        let bars = this.tissues.ceiling(gf);
-
-        //let bars = this.tolerated();
+        let bars = this.tolerated();
 
         // less than surface pressure means no ceiling, this aproximation is OK,
         // because tissues are loaded only under water

@@ -16,7 +16,7 @@
         </div>
         <div *ngIf="dive.notEnoughTime" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
-            <span>Not enough time to realize the dive (duration needs to be at least {{dive.descent.duration }}
+            <span>Not enough time to realize the dive (duration needs to be at least {{ descentDuration  | number:'1.0' }}
                 min.)!</span>
         </div>
         <div *ngIf="dive.noDecoExceeded" class="alert  alert-warning">

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, Gas } from '../shared/models';
 import { faExclamationCircle, faExclamationTriangle, faTasks } from '@fortawesome/free-solid-svg-icons';
+import { Time } from 'scuba-physics';
 
 @Component({
   selector: 'app-dive',
@@ -25,6 +26,11 @@ export class DiveComponent implements OnInit {
 
   public get noDeco(): number {
     return this.planer.plan.noDecoTime;
+  }
+
+  public get descentDuration(): number {
+    const diveDescent = Time.toMinutes(this.dive.descent.duration)
+    return Math.ceil(diveDescent);
   }
 
   constructor(private planer: PlannerService) { }

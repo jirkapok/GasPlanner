@@ -65,7 +65,9 @@ export class WayPointsService {
         const segments = new Segments();
         const descentDuration = Time.toSeconds(plan.depth / options.descentSpeed);
         segments.add(0, plan.depth, bGas, descentDuration);
-        const bottomTime = Time.toSeconds(plan.duration) - descentDuration;
+        let bottomTime = Time.toSeconds(plan.duration) - descentDuration;
+        // not enough time to descent
+        bottomTime = bottomTime < 0 ? 0 : bottomTime;
         segments.addFlat(plan.depth, bGas, bottomTime);
 
         const algorithm = new BuhlmannAlgorithm();

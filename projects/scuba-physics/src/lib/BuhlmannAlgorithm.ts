@@ -137,6 +137,11 @@ class AlgorithmContext {
 
         return this.depthConverter.fromBar(bars);
     }
+
+    public nextGasSwitch(currentGas: Gas): number {
+        const nextGasSwitch = this.gases.nextGasSwitch(currentGas, this.currentDepth, this.options, this.depthConverter);
+        return DepthLevels.gasSwitch(nextGasSwitch);
+    }
 }
 
 class DepthLevels {
@@ -157,8 +162,8 @@ class DepthLevels {
         return rounded;
     }
 
-    public static nextStop(firstDecoStop: number, nextGasSwitch: number, nextDecoStop: number): number {
-        return firstDecoStop > nextGasSwitch ? nextDecoStop : nextGasSwitch;
+    public static nextStop(nextGasSwitch: number, nextDecoStop: number): number {
+        return Math.max(nextDecoStop, nextGasSwitch);
     }
     
     public static nextDecoStop(lastStop: number): number {
@@ -182,14 +187,12 @@ export class BuhlmannAlgorithm {
 
         const last = segments.last();
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
-        this.descent(context);
+        this.swimPlan(context);
 
-        const firstDecoStop = DepthLevels.firstDecoStop(context);
-        let nextDecoStop = firstDecoStop;
-        let nextGasSwitch = context.gases.nextGasSwitch(last.gas, context.currentDepth, options, context.depthConverter);
-        nextGasSwitch = DepthLevels.gasSwitch(nextGasSwitch);
-        let nextStop = DepthLevels.nextStop(nextDecoStop, nextGasSwitch, nextDecoStop);
         let currentGas = last.gas;
+        let nextDecoStop = DepthLevels.firstDecoStop(context);
+        let nextGasSwitch = context.nextGasSwitch(currentGas);
+        let nextStop = DepthLevels.nextStop(nextDecoStop, nextGasSwitch);
 
         while (nextStop >= 0) {
             // ascent to the nextStop
@@ -224,9 +227,8 @@ export class BuhlmannAlgorithm {
             }
 
             // multiple gas switches may happen before first deco stop
-            nextGasSwitch = context.gases.nextGasSwitch(currentGas, context.currentDepth, options, context.depthConverter);
-            nextGasSwitch = DepthLevels.gasSwitch(nextGasSwitch);
-            nextStop = DepthLevels.nextStop(firstDecoStop, nextGasSwitch, nextDecoStop);
+            nextGasSwitch = context.nextGasSwitch(currentGas);
+            nextStop = DepthLevels.nextStop(nextGasSwitch, nextDecoStop);
         }
 
         const merged = segments.mergeFlat();
@@ -271,7 +273,7 @@ export class BuhlmannAlgorithm {
         return depthDifference / speed;
     }
 
-    private descent(context: AlgorithmContext): void {
+    private swimPlan(context: AlgorithmContext): void {
         // initial ceiling doesn't have to be 0m, because of previous tissues loading.
         context.addCeiling();
 

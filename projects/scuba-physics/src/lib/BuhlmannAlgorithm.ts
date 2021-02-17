@@ -139,17 +139,18 @@ class AlgorithmContext {
     }
 }
 
-export class DepthLevels {
+class DepthLevels {
     /**
      * Depth difference between two deco stops in metres.
      */
     public static readonly decoStopDistance = 3;
 
-    public static firstDecoStop(addSafetyStop: boolean, ceiling: number, currentDepth: number): number {
+    public static firstDecoStop(context: AlgorithmContext): number {
+        const ceiling = context.ceiling();
         const rounded = Math.ceil(ceiling / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
 
-        if (addSafetyStop && rounded <= DepthLevels.decoStopDistance &&
-            currentDepth > DepthLevels.decoStopDistance) {
+        if (context.options.addSafetyStop && rounded <= DepthLevels.decoStopDistance &&
+            context.currentDepth > DepthLevels.decoStopDistance) {
             return DepthLevels.decoStopDistance;
         }
 
@@ -183,7 +184,7 @@ export class BuhlmannAlgorithm {
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
         this.descent(context);
 
-        const firstDecoStop = DepthLevels.firstDecoStop(context.options.addSafetyStop, context.ceiling(), context.currentDepth);
+        const firstDecoStop = DepthLevels.firstDecoStop(context);
         let nextDecoStop = firstDecoStop;
         let nextGasSwitch = context.gases.nextGasSwitch(last.gas, context.currentDepth, options, context.depthConverter);
         let nextStop = DepthLevels.nextStop(firstDecoStop, nextGasSwitch, nextDecoStop);

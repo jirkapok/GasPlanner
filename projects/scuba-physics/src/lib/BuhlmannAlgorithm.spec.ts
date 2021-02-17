@@ -22,7 +22,7 @@ describe('Buhlmann Algorithm', () => {
       expect(ndl).toBe(0);
   });
 
-    describe('Calculate air No decompression limits at depth', () => {
+   describe('Calculate air No decompression limits at depth', () => {
       const options = new Options(1, 1, 1.6, 1.6, 30, true);
 
       const calculateNoDecompressionLimit = (testCases: number[][], isFreshWater: boolean) => {
@@ -39,39 +39,63 @@ describe('Buhlmann Algorithm', () => {
       it('Fresh water', () => {
         // 0: depth, 1: ndl
         const noDecoLimitTestCases = [
-          [10, 494], // From which depth to start count with deco?
-          [12, 205],
-          [15, 98],
-          [18, 65],
-          [21, 44],
-          [24, 31],
-          [27, 23],
-          [30, 17],
-          [33, 14],
-          [36, 12],
-          [39, 10],
-          [42, 8],
-          [100, 2], // Where is the limit for no decompression depth?
-        ];
-
-        calculateNoDecompressionLimit(noDecoLimitTestCases, true);
-      });
-
-      it('Salt water', () => {
-        const noDecoLimitTestCasesSalt = [
-          [10, 424 ], // From which depth to start count with deco?
-          [12, 182],
-          [15, 92],
-          [18, 60],
-          [21, 41],
-          [24, 29],
+          [10, 343], // From which depth to start count with deco?
+          [12, 162],
+          [15, 85],
+          [18, 57],
+          [21, 40],
+          [24, 28],
           [27, 21],
           [30, 16],
           [33, 13],
           [36, 11],
           [39, 9],
+          [42, 9],
+          [100, 0], // Where is the limit for no decompression depth?
+        ];
+
+        calculateNoDecompressionLimit(noDecoLimitTestCases, true);
+      });
+
+      it('Fresh water with gradient factor 40/85', () => {
+        const noDecoLimitTestCases = [
+          [10, 209], // From which depth to start count with deco?
+          [12, 112],
+          [15, 65],
+          [18, 41],
+          [21, 28],
+          [24, 20],
+          [27, 15],
+          [30, 12],
+          [33, 10],
+          [36, 8],
+          [39, 7],
+          [42, 7],
+          [100, 0], // Where is the limit for no decompression depth?
+        ];
+
+        options.gfLow = .4;
+        options.gfHigh = .85;
+        calculateNoDecompressionLimit(noDecoLimitTestCases, true);
+        options.gfLow = 1;
+        options.gfHigh = 1;
+      });
+
+      it('Salt water', () => {
+        const noDecoLimitTestCasesSalt = [
+          [10, 293 ], // From which depth to start count with deco?
+          [12, 149],
+          [15, 80],
+          [18, 54],
+          [21, 38],
+          [24, 27],
+          [27, 20],
+          [30, 15],
+          [33, 13],
+          [36, 10],
+          [39, 8],
           [42, 8],
-          [100, 2], // Where is the limit for no decompression depth?
+          [100, 0], // Where is the limit for no decompression depth?
         ];
 
         calculateNoDecompressionLimit(noDecoLimitTestCasesSalt, false);

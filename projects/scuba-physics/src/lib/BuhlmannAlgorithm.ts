@@ -300,6 +300,12 @@ export class BuhlmannAlgorithm {
         context.addCeiling();
     }
 
+    /**
+     * Calculates no decompression limit in minutes
+     * @param depth depth below surface in meters
+     * @param gas gas to use as the only one during the plan
+     * @param options conservatism options to be used
+     */
     public noDecoLimit(depth: number, gas: Gas, options: Options): number {
         const depthConverter = this.selectDepthConverter(options.isFreshWater, options.altitude);
         const gases = new Gases();
@@ -330,7 +336,9 @@ export class BuhlmannAlgorithm {
         }
 
          // We went one minute past a ceiling of "0"
-        return (context.runTime - Time.oneMinute) / Time.oneMinute;
+        let result = Time.toMinutes(context.runTime);
+        result = Math.floor(result); 
+        return result - 1;
     }
 
     private toLoadSegment(depthConverter: DepthConverter, segment: Segment): LoadSegment {

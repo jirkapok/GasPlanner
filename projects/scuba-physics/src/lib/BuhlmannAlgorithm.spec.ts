@@ -1,4 +1,4 @@
-import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm, DepthLevels, Options } from './BuhlmannAlgorithm';
 import { Gas, Gases } from './Gases';
 import { Segment, Segments } from './Segments';
 
@@ -231,6 +231,63 @@ describe('Buhlmann Algorithm', () => {
                            '18,15,0.3;15,15,2;15,12,0.3;12,12,4;12,9,0.3;9,9,6;' +
                            '9,6,0.3;6,6,7;6,3,0.3;3,3,14;3,0,0.3;';
       expect(planText).toBe(expectedPlan);
+    });
+  });
+
+  describe('DepthLevels', () => {
+    it('A1', () => {
+      const result = DepthLevels.firstDecoStop(true, 21, 30);
+      expect(result).toBe(21);
+    });
+
+    it('A2', () => {
+      const result = DepthLevels.firstDecoStop(true, 20, 30);
+      expect(result).toBe(21);
+    });
+
+    it('A3', () => {
+      const result = DepthLevels.firstDecoStop(true, 19, 30);
+      expect(result).toBe(21);
+    });
+
+    it('A4', () => {
+      const result = DepthLevels.firstDecoStop(false, 20, 30);
+      expect(result).toBe(21);
+    });
+
+    it('C1', () => {
+      const result = DepthLevels.firstDecoStop(true, 3, 3);
+      expect(result).toBe(3);
+    });
+
+    it('C2', () => {
+      const result = DepthLevels.firstDecoStop(false, 3, 3);
+      expect(result).toBe(3);
+    });
+
+    it('C3', () => {
+      const result = DepthLevels.firstDecoStop(false, 0, 2);
+      expect(result).toBe(0);
+    });
+
+    it('C4', () => {
+      const result = DepthLevels.firstDecoStop(true, 0, 2);
+      expect(result).toBe(0);
+    });
+
+    it('D1', () => {
+      const result = DepthLevels.firstDecoStop(true, 0, 4);
+      expect(result).toBe(3);
+    });
+
+    it('D2', () => {
+      const result = DepthLevels.firstDecoStop(true, 0, 3);
+      expect(result).toBe(0);
+    });
+
+    it('D3', () => {
+      const result = DepthLevels.firstDecoStop(false, 0, 3);
+      expect(result).toBe(0);
     });
   });
 });

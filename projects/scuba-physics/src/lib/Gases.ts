@@ -117,8 +117,8 @@ export class Gases {
     /**
      * Calculates depth of next gas switch in meters
      */
-    public nextGasSwitch(currentGas: Gas, fromDepth: number, toDepth: number, options: GasOptions, depthConverter: DepthConverter): number {
-        let ceiling = toDepth; // ceiling is toDepth, unless there's a better gas to switch to on the way up.
+    public nextGasSwitch(currentGas: Gas, fromDepth: number, options: GasOptions, depthConverter: DepthConverter): number {
+        let ceiling = 0; // ceiling is toDepth, unless there's a better gas to switch to on the way up.
         for (let nextDepth = fromDepth - 1; nextDepth >= ceiling; nextDepth--) {
             const nextDecoGas = this.bestDecoGas(nextDepth, options, depthConverter);
             if (Gases.canSwitch(nextDecoGas, currentGas)) {

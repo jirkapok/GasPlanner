@@ -14,10 +14,10 @@ describe('NitroxCalculatorService', () => {
       expect(service.mod).toBe(22.43);
     }));
 
-    it('pO2 1.3 with 32% fO2 has MOD 31.22 m', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
+    it('pO2 1.3 with 32% fO2 has MOD 31.09 m', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
       service.fO2 = 32;
       service.pO2 = 1.3;
-      expect(service.mod).toBe(31.22);
+      expect(service.mod).toBe(31.09);
     }));
   });
 
@@ -35,11 +35,11 @@ describe('NitroxCalculatorService', () => {
       expect(service.fO2).toBe(50.46);
     }));
 
-    it('pO2 1.3 with MOD 30.62 m has fO2 32.47%', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
+    it('pO2 1.3 with MOD 30 m has fO2 32.86%', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
       service.calculation = NitroxMode.BestMix;
-      service.mod = 30.62;
+      service.mod = 30;
       service.pO2 = 1.3;
-      expect(service.fO2).toBe(32.47);
+      expect(service.fO2).toBe(32.86);
     }));
   });
 
@@ -51,10 +51,10 @@ describe('NitroxCalculatorService', () => {
       expect(service.pO2).toBe(1.6);
     }));
 
-    it('fO2 32.47% with MOD 30.62 m has pO2 1.3', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
+    it('fO2 32.86% with MOD 30 m has pO2 1.3', inject([NitroxCalculatorService], (service: NitroxCalculatorService) => {
       service.calculation = NitroxMode.PO2;
-      service.mod = 30.62;
-      service.fO2 = 32.47;
+      service.mod = 30;
+      service.fO2 = 32.86;
       expect(service.pO2).toBe(1.3);
     }));
   });

@@ -12,8 +12,7 @@ describe('Gases', () => {
   const options: GasOptions = {
     maxPpO2: 1.4,
     maxDecoPpO2: 1.6,
-    maxEND: 30,
-    isFreshWater: false
+    maxEND: 30
   };
 
   const saltWaterConverter = DepthConverter.forSaltWater();

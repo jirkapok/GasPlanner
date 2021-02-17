@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Plan, Diver, Dive, Gas, WayPoint, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
-import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options, DepthConverter, Time } from 'scuba-physics';
+import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options, DepthConverter, Time, DepthConverterFactory } from 'scuba-physics';
 import { Subject } from 'rxjs';
 
 @Injectable()
@@ -15,7 +15,8 @@ export class PlannerService {
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
   public options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
-
+  private depthConverterFactory = new DepthConverterFactory(this.options);
+  private depthConverter: DepthConverter;
   // TODO remove
   public get firstGas(): Gas {
     return this.gases[0];
@@ -64,11 +65,7 @@ export class PlannerService {
   }
 
   private gasModByPpO2(gas: Gas, ppO2: number): number {
-    let depthConverter = DepthConverter.forSaltWater();
-    if (this.options.isFreshWater) {
-     depthConverter = DepthConverter.forFreshWater();
-    }
-
+    let depthConverter = this.depthConverterFactory.create();
     const nitroxCalculator = new NitroxCalculator(depthConverter);
     return nitroxCalculator.mod(ppO2, gas.o2);
   }
@@ -84,6 +81,7 @@ export class PlannerService {
   }
 
   public calculate(): void {
+    this.depthConverter = this.depthConverterFactory.create();
     this.updateNoDecoTime();
     const profile = WayPointsService.calculateWayPoints(this.plan, this.gases, this.options);
     // TODO multilevel diving: ascent cant be identified by first two segments
@@ -218,7 +216,7 @@ export class PlannerService {
 
   /** bar/second */
   private waipointConsumptionPerSecond(wayPoint: WayPoint, sacSeconds: number): number {
-    const averagePressure  = wayPoint.averagePressure;
+    const averagePressure = this.depthConverter.toBar(wayPoint.averageDepth);
     const consumed = averagePressure * Diver.gasSac(sacSeconds, this.firstGas.size);
     return consumed;
   }

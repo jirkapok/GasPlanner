@@ -258,6 +258,11 @@ export class WayPoint {
         return this._endDepth;
     }
 
+    /** in meters */
+    public get averageDepth(): number {
+        return (this.startDepth + this.endDepth) / 2;
+    }
+
     public get swimAction(): SwimAction {
         return this.action;
     }
@@ -270,12 +275,6 @@ export class WayPoint {
         const depth = this.endDepth + ' m';
         const durationText = Math.round(this.duration) + ' min.';
         return depth + ',' + durationText;
-    }
-
-    public get averagePressure(): number {
-        const averageDepth = (this.startDepth + this.endDepth) / 2;
-        // TODO apply correct depth converter
-        return DepthConverter.forFreshWater().toBar(averageDepth);
     }
 
     public toLevel(duration: number, newDepth: number): WayPoint {

@@ -2,9 +2,7 @@ import { DepthConverter } from './depth-converter';
 import { GasMixtures } from './Gases';
 
 export class NitroxCalculator {
-  private static readonly depthConverter: DepthConverter = DepthConverter.forFreshWater();
-
-  constructor(private localConverter: DepthConverter) {
+  constructor(private depthConverter: DepthConverter) {
   }
 
   /**
@@ -14,8 +12,8 @@ export class NitroxCalculator {
    * @param depth - Current depth in meters.
    * @returns Percents of oxygen fraction in required gas.
    */
-  public static bestMix(pO2: number, depth: number): number {
-    const result = GasMixtures.bestMix(pO2, depth, NitroxCalculator.depthConverter) * 100 ;
+  public bestMix(pO2: number, depth: number): number {
+    const result = GasMixtures.bestMix(pO2, depth, this.depthConverter) * 100 ;
     return Math.floor(result * 100) / 100;
   }
 
@@ -41,7 +39,7 @@ export class NitroxCalculator {
    */
   public mod(ppO2: number, percentO2: number): number {
     const fO2 = percentO2 / 100;
-    const result = GasMixtures.mod(ppO2, fO2, this.localConverter);
+    const result = GasMixtures.mod(ppO2, fO2, this.depthConverter);
     return Math.floor(result * 100) / 100;
   }
 
@@ -52,8 +50,8 @@ export class NitroxCalculator {
    * @param depth - Current depth in meters.
    * @returns Constant value.
    */
-  public static partialPressure(fO2: number, depth: number): number {
-    const bar = NitroxCalculator.depthConverter.toBar(depth);
+  public partialPressure(fO2: number, depth: number): number {
+    const bar = this.depthConverter.toBar(depth);
     const result = GasMixtures.partialPressure(bar, fO2) / 100;
     return Math.ceil(result * 100) / 100;
   }

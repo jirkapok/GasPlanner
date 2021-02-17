@@ -16,6 +16,7 @@ export class NitroxCalculatorService {
   private _mod = 22.43;
   private _calculation = NitroxMode.Mod;
   private calculate: () => void = this.calculateCurrentMod;
+  private nitroxCalculator = new NitroxCalculator(DepthConverter.forFreshWater());
 
   public get calculation(): NitroxMode {
     return this._calculation;
@@ -68,15 +69,14 @@ export class NitroxCalculatorService {
   }
 
   private calculateCurrentMod() {
-    this._mod = new NitroxCalculator(DepthConverter.forFreshWater())
-                     .mod(this._pO2, this._fO2);
+    this._mod = this.nitroxCalculator.mod(this._pO2, this._fO2);
   }
 
   private calculateBestMix() {
-    this._fO2 = NitroxCalculator.bestMix(this._pO2, this._mod);
+    this._fO2 = this.nitroxCalculator.bestMix(this._pO2, this._mod);
   }
 
   private calculatePartial() {
-    this._pO2 = NitroxCalculator.partialPressure(this._fO2, this._mod);
+    this._pO2 = this.nitroxCalculator.partialPressure(this._fO2, this._mod);
   }
 }

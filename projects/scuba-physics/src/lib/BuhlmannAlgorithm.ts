@@ -187,7 +187,8 @@ export class BuhlmannAlgorithm {
         const firstDecoStop = DepthLevels.firstDecoStop(context);
         let nextDecoStop = firstDecoStop;
         let nextGasSwitch = context.gases.nextGasSwitch(last.gas, context.currentDepth, options, context.depthConverter);
-        let nextStop = DepthLevels.nextStop(firstDecoStop, nextGasSwitch, nextDecoStop);
+        nextGasSwitch = DepthLevels.gasSwitch(nextGasSwitch);
+        let nextStop = DepthLevels.nextStop(nextDecoStop, nextGasSwitch, nextDecoStop);
         let currentGas = last.gas;
 
         while (nextStop >= 0) {
@@ -224,6 +225,7 @@ export class BuhlmannAlgorithm {
 
             // multiple gas switches may happen before first deco stop
             nextGasSwitch = context.gases.nextGasSwitch(currentGas, context.currentDepth, options, context.depthConverter);
+            nextGasSwitch = DepthLevels.gasSwitch(nextGasSwitch);
             nextStop = DepthLevels.nextStop(firstDecoStop, nextGasSwitch, nextDecoStop);
         }
 
@@ -243,7 +245,6 @@ export class BuhlmannAlgorithm {
             message: 'switch to ' + currentGas.fO2
         };
 
-        // TODO ensure and fix gas switch should occur at deco depths
         context.events.push(gasSwitch);
         const decoStop = context.segments.add(context.currentDepth, context.currentDepth, currentGas, Time.oneMinute);
         this.swim(context, decoStop);

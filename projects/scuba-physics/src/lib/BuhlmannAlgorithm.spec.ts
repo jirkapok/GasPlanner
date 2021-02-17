@@ -232,5 +232,13 @@ describe('Buhlmann Algorithm', () => {
                            '9,6,0.3;6,6,7;6,3,0.3;3,3,14;3,0,0.3;';
       expect(planText).toBe(expectedPlan);
     });
+
+    //  TODO Add test case: 30m, 10min., gases: .21 .5 1.0; fresh, 0masl.
+    // - gas switch in 21m and 6m, i - even no deco
+
+    // TODO add test case: 30m, 10min., gases: .21 .32 .5; fresh, 0masl.
+    // - gas switch in 30m and 21m, even no deco
+
+    // TODO add test case: where deco is increased even during ascent
   });
 });

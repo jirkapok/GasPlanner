@@ -1,5 +1,4 @@
 import { DepthConverter } from './depth-converter';
-import { AltitudePressure } from './pressure-converter';
 
 /**
  * Returns list of messages if gases collection is incomplete to realize dive for required depth.

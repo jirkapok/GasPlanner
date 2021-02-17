@@ -4,9 +4,15 @@ import { BuhlmannAlgorithm, Gas as BGas, Options, Gases,
 import { Ceiling, Time } from 'scuba-physics';
 
 export class Profile {
-    public wayPoints: WayPoint[];
-    public ceilings: Ceiling[];
-    public events: Event[];
+    constructor(
+        public wayPoints: WayPoint[],
+        public ceilings: Ceiling[],
+        public events: Event[]
+        ) {}
+
+    public static newEmpty(): Profile {
+        return new Profile([], [], []);
+    }
 }
 
 export class WayPointsService {
@@ -15,11 +21,7 @@ export class WayPointsService {
         const profile = this.calculateDecompression(plan, gases, options);
 
         if (profile.errorMessages.length > 0) {
-            return {
-                wayPoints: [],
-                ceilings: [],
-                events: []
-            };
+            return Profile.newEmpty();
         }
 
         const descent = profile.segments[0];
@@ -33,11 +35,7 @@ export class WayPointsService {
             wayPoints.push(waypoint);
         });
 
-        return {
-            wayPoints: wayPoints,
-            ceilings: profile.ceilings,
-            events: profile.events
-        };
+        return new Profile(wayPoints, profile.ceilings, profile.events);
     }
 
     private static toWayPoint(segment: Segment, lastWayPoint: WayPoint, events: Event[]): WayPoint {
@@ -63,7 +61,7 @@ export class WayPointsService {
         });
 
         const segments = new Segments();
-        const descentDuration = Time.toSeconds(plan.depth / options.descentSpeed);
+        const descentDuration = WayPointsService.descentDuration(plan, options);
         segments.add(0, plan.depth, bGas, descentDuration);
         let bottomTime = Time.toSeconds(plan.duration) - descentDuration;
         // not enough time to descent
@@ -73,5 +71,10 @@ export class WayPointsService {
         const algorithm = new BuhlmannAlgorithm();
         const profile = algorithm.calculateDecompression(options, bGases, segments);
         return profile;
+    }
+
+    // TODO multilevel diving: fix minimum duration based on required descent/ascent time
+    public static descentDuration(plan: Plan, options: Options) {
+        return Time.toSeconds(plan.depth / options.descentSpeed);
     }
 }

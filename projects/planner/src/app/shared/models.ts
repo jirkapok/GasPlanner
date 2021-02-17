@@ -101,13 +101,19 @@ export class Diver {
     /** Maximum ppO2 during decompression */
     public maxDecoPpO2 = 1.6;
 
+    /**
+     * @param sac liter/min
+     * @param maxPpO2 [-]
+     */
     constructor(public sac: number, public maxPpO2: number) {
     }
 
+    /** liter/min */
     public get stressSac(): number {
         return this.sac * 3;
     }
 
+    /** bar/minute or bar/second based on sac */
     public static gasSac(sac: number, gasSize: number): number {
         return sac / gasSize;
     }
@@ -201,19 +207,24 @@ export enum SwimAction {
 }
 
 export class WayPoint {
-    /** in minutes */
+    /** in seconds */
     public startTime = 0;
-    /** in minutes */
+    /** in seconds */
     public endTime = 0;
     /** in meters */
     private _startDepth = 0;
     /** in meters */
-    public _endDepth = 0;
+    private _endDepth = 0;
 
     public selected = false;
 
     private action: SwimAction;
 
+    /**
+     * @param duration in seconds
+     * @param newDepth in meters
+     * @param previousDepth in meters
+     */
     constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
         this.endTime = Math.round(duration * 100) / 100;
         this._endDepth = newDepth;
@@ -263,6 +274,7 @@ export class WayPoint {
 
     public get averagePressure(): number {
         const averageDepth = (this.startDepth + this.endDepth) / 2;
+        // TODO apply correct depth converter
         return DepthConverter.forFreshWater().toBar(averageDepth);
     }
 

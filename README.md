@@ -13,6 +13,7 @@ None of the authors, contributors, administrators, or anyone else connected with
 List of current features is part of [application help](./doc/help.md). Road map of planned features:
 
 * Fix precision of decompression algorithm
+  * Fix max. depth exceeds gas ppO2
   * Calculate deco stops in seconds instead of minutes
   * Check after ascent, if additional ascent is possible
   * Fix loading of tissues when tissues are still loaded during ascent

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SacCalculator } from 'scuba-physics';
+import { SacCalculator, DepthConverterFactory, DepthOptions} from 'scuba-physics';
 
 export enum SacMode {
   sac = 0,
@@ -16,10 +16,19 @@ export class SacCalculatorService {
   private _used = 150;
   private _duration = 45;
   private _sac = 0;
+  private sacCalculator: SacCalculator;
   private _calculation = SacMode.sac;
   private calculate: () => void = this.calculateSac;
+  private options: DepthOptions = {
+    isFreshWater: true,
+    altitude: 0
+  };
+
+  private depthConverterFactory = new DepthConverterFactory(this.options);
 
   constructor () {
+    const depthConverter = this.depthConverterFactory.create();
+    this.sacCalculator = new SacCalculator(depthConverter);
     this.calculate();
   }
 
@@ -88,14 +97,14 @@ export class SacCalculatorService {
   }
 
   private calculateSac(): void {
-    this._sac = SacCalculator.calculateSac(this.depth, this.tank, this.used, this.duration);
+    this._sac = this.sacCalculator.calculateSac(this.depth, this.tank, this.used, this.duration);
   }
 
   private calculateDuration(): void {
-    this._duration = SacCalculator.calculateDuration(this.depth, this.tank, this.used, this.sac);
+    this._duration = this.sacCalculator.calculateDuration(this.depth, this.tank, this.used, this.sac);
   }
 
   private calculateUsed(): void {
-    this._used = SacCalculator.calculateUsed(this.depth, this.tank, this.duration, this.sac);
+    this._used = this.sacCalculator.calculateUsed(this.depth, this.tank, this.duration, this.sac);
   }
 }

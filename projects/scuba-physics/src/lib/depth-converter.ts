@@ -1,5 +1,24 @@
 import { Density, Gravity, AltitudePressure, PressureConverter } from './pressure-converter';
 
+export interface DepthOptions {
+  /** Meters above see level, 0 for see level */
+  altitude: number;
+  isFreshWater: boolean;
+}
+
+export class DepthConverterFactory {
+  constructor(private options: DepthOptions) {}
+
+  /** Creates new instance of depth converter based on provided options */
+  create(): DepthConverter {
+    if(this.options.isFreshWater) {
+      return DepthConverter.forFreshWater(this.options.altitude);
+    }
+
+    return DepthConverter.forSaltWater(this.options.altitude);
+  }
+}
+
 export class DepthConverter {
   private _surfacePressure: number;
 

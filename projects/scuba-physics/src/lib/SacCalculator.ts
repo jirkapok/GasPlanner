@@ -4,7 +4,9 @@ import { DepthConverter } from './depth-converter';
  * Surface air consumption formulas
  */
 export class SacCalculator {
-    private static readonly depthConverter: DepthConverter = DepthConverter.forFreshWater();
+
+    constructor(private depthConverter: DepthConverter) {
+    }
 
     /**
      * Calculate surface air consumption in liter/minute
@@ -15,8 +17,8 @@ export class SacCalculator {
      * @param duration - duration of the dive at depth in minutes
      * @returns Sac rounded to 0 digits in liter/minute.
      */
-    public static calculateSac(depth: number, tank: number, used: number, duration: number): number {
-        const bars = SacCalculator.depthConverter.toBar(depth);
+    public calculateSac(depth: number, tank: number, used: number, duration: number): number {
+        const bars = this.depthConverter.toBar(depth);
         const result = tank * used / duration / bars;
         return Math.ceil(result * 100) / 100;
     }
@@ -30,8 +32,8 @@ export class SacCalculator {
      * @param sac - surface air consumption in liter/minute
      * @returns Duration in minutes
      */
-    public static calculateDuration(depth: number, tank: number, used: number, sac: number): number {
-        const bars = SacCalculator.depthConverter.toBar(depth);
+    public calculateDuration(depth: number, tank: number, used: number, sac: number): number {
+        const bars = this.depthConverter.toBar(depth);
         const result = tank * used / sac / bars;
         return Math.ceil(result);
     }
@@ -45,8 +47,8 @@ export class SacCalculator {
      * @param sac - surface air consumption in liter/minute
      * @returns Used gas in bars
      */
-    public static calculateUsed(depth: number, tank: number, duration: number, sac: number): number {
-        const bars = SacCalculator.depthConverter.toBar(depth);
+    public calculateUsed(depth: number, tank: number, duration: number, sac: number): number {
+        const bars = this.depthConverter.toBar(depth);
         const result = duration * bars * sac / tank;
         return Math.ceil(result);
     }

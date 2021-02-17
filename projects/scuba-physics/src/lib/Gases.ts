@@ -51,7 +51,6 @@ export interface GasOptions {
     maxPpO2: number;
     maxDecoPpO2: number;
     maxEND: number;
-    isFreshWater: boolean;
 }
 
 export class Gases {

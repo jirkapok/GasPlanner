@@ -1,11 +1,16 @@
 import { Tissues, LoadSegment } from './Tissues';
 import { Gases, Gas, GasOptions, GasesValidator } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
-import { DepthConverter } from './depth-converter';
+import { DepthConverter, DepthConverterFactory, DepthOptions } from './depth-converter';
 import { Time } from './Time';
 import { CalculatedProfile, Ceiling, Event, EventType } from './Profile';
 
-export class Options implements GasOptions {
+export class Options implements GasOptions, DepthOptions {
+    /**
+     * meters above see level, 0 for see level (default)
+     */
+    public altitude: number
+
     constructor(
         // Gradient factors in Shearwater
         // Low (45/95)
@@ -60,7 +65,7 @@ export class Options implements GasOptions {
         /**
          * meters above see level, 0 for see level (default)
          */
-        public altitude?: number,
+        altitude?: number
     ) {
         this.gfLow = gfLow || 0.4;
         this.gfHigh = gfHigh || 0.85;
@@ -141,7 +146,7 @@ export class BuhlmannAlgorithm {
     private static readonly decoStopDistance = 3;
 
     public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
-        const depthConverter = this.selectDepthConverter(options.isFreshWater, options.altitude);
+        const depthConverter = new DepthConverterFactory(options).create();
         const errorMessages = this.validate(segments, gases, options, depthConverter);
         if (errorMessages.length > 0) {
             return CalculatedProfile.fromErrors(errorMessages);
@@ -264,14 +269,6 @@ export class BuhlmannAlgorithm {
         return rounded;
     }
 
-    private selectDepthConverter(isFreshWater: boolean, altitude: number): DepthConverter {
-        if (isFreshWater) {
-          return DepthConverter.forFreshWater(altitude);
-        }
-
-        return DepthConverter.forSaltWater(altitude);
-    }
-
     private descent(context: AlgorithmContext): void {
         // initial ceiling doesn't have to be 0m, because of previous tissues loading.
         context.addCeiling();
@@ -307,7 +304,7 @@ export class BuhlmannAlgorithm {
      * @param options conservatism options to be used
      */
     public noDecoLimit(depth: number, gas: Gas, options: Options): number {
-        const depthConverter = this.selectDepthConverter(options.isFreshWater, options.altitude);
+        const depthConverter = new DepthConverterFactory(options).create();
         const gases = new Gases();
         gases.addBottomGas(gas);
 

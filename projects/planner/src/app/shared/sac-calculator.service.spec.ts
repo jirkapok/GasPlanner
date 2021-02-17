@@ -1,8 +1,8 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { DepthConverter } from 'scuba-physics';
 
 import { SacCalculatorService, SacMode } from './sac-calculator.service';
 
-fdescribe('SacCalculatorService', () => {
+describe('SacCalculatorService', () => {
   let service: SacCalculatorService;
   beforeEach(() => {
     service = new SacCalculatorService();

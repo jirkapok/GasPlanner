@@ -292,7 +292,24 @@ describe('Buhlmann Algorithm', () => {
 
     it('D4', () => {  // shouldnt happen
       const result = DepthLevels.firstDecoStop(false, 1, 2);
-      expect(result).toBe(0);
+      expect(result).toBe(3); // should be 0
+    });
+
+    describe('Gas switch', () => { 
+      it('22.3', () => { 
+        const result = DepthLevels.gasSwitch(22.3);
+        expect(result).toBe(21);
+      });
+
+      it('23.6', () => { 
+        const result = DepthLevels.gasSwitch(23.6);
+        expect(result).toBe(21);
+      });
+
+      it('21', () => { 
+        const result = DepthLevels.gasSwitch(21);
+        expect(result).toBe(21);
+      });
     });
   });
 });

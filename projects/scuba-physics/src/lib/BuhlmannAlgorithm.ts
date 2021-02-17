@@ -164,6 +164,11 @@ export class DepthLevels {
         const candidate = lastStop - DepthLevels.decoStopDistance;
         return candidate >= 0 ? candidate : 0;
     }
+
+    public static gasSwitch(gasMod: number): number {
+        const rounded = Math.floor(gasMod / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
+        return rounded;
+    }
 }
 
 export class BuhlmannAlgorithm {

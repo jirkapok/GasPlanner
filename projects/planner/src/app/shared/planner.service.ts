@@ -243,6 +243,8 @@ export class PlannerService {
     this.plan.loadFrom(other.plan);
     this.diver.loadFrom(other.diver);
     // cant use firstGas from the other, since it doesn't have to be deserialized
-    this.firstGas.loadFrom(other.firstGas);
+    if(other.gases.length > 0) {
+        this.firstGas.loadFrom(other.gases[0]);
+    }
   }
 }

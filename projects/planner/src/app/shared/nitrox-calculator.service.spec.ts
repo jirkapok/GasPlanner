@@ -1,5 +1,3 @@
-import { TestBed, inject } from '@angular/core/testing';
-
 import { NitroxCalculatorService, NitroxMode } from './nitrox-calculator.service';
 
 describe('NitroxCalculatorService', () => {

@@ -80,10 +80,44 @@ export class Options implements GasOptions, DepthOptions {
     }
 }
 
+class DepthLevels {
+    /**
+     * Depth difference between two deco stops in metres.
+     */
+    public static readonly decoStopDistance = 3;
+
+    public static firstDecoStop(context: AlgorithmContext): number {
+        const ceiling = context.ceiling();
+        const rounded = Math.ceil(ceiling / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
+
+        if (context.options.addSafetyStop && rounded <= DepthLevels.decoStopDistance &&
+            context.currentDepth > DepthLevels.decoStopDistance) {
+            return DepthLevels.decoStopDistance;
+        }
+
+        return rounded;
+    }
+
+    public static nextStop(nextGasSwitch: number, nextDecoStop: number): number {
+        return Math.max(nextDecoStop, nextGasSwitch);
+    }
+    
+    public static nextDecoStop(lastStop: number): number {
+        const candidate = lastStop - DepthLevels.decoStopDistance;
+        return candidate >= 0 ? candidate : 0;
+    }
+
+    public static gasSwitch(gasMod: number): number {
+        const rounded = Math.floor(gasMod / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
+        return rounded;
+    }
+}
+
 class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
     public events: Event[] = [];
+    public currentGas: Gas;
 
     /** in seconds */
     public runTime = 0;
@@ -94,6 +128,9 @@ class AlgorithmContext {
         this.tissues = new Tissues(depthConverter.surfacePressure);
         // add 1 to compensate gradient low on start of the dive
         this.lowestCeiling = this.depthConverter.surfacePressure + 1;
+
+        const last = segments.last();
+        this.currentGas = last.gas;
     }
 
     public get currentDepth(): number {
@@ -144,39 +181,6 @@ class AlgorithmContext {
     }
 }
 
-class DepthLevels {
-    /**
-     * Depth difference between two deco stops in metres.
-     */
-    public static readonly decoStopDistance = 3;
-
-    public static firstDecoStop(context: AlgorithmContext): number {
-        const ceiling = context.ceiling();
-        const rounded = Math.ceil(ceiling / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
-
-        if (context.options.addSafetyStop && rounded <= DepthLevels.decoStopDistance &&
-            context.currentDepth > DepthLevels.decoStopDistance) {
-            return DepthLevels.decoStopDistance;
-        }
-
-        return rounded;
-    }
-
-    public static nextStop(nextGasSwitch: number, nextDecoStop: number): number {
-        return Math.max(nextDecoStop, nextGasSwitch);
-    }
-    
-    public static nextDecoStop(lastStop: number): number {
-        const candidate = lastStop - DepthLevels.decoStopDistance;
-        return candidate >= 0 ? candidate : 0;
-    }
-
-    public static gasSwitch(gasMod: number): number {
-        const rounded = Math.floor(gasMod / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
-        return rounded;
-    }
-}
-
 export class BuhlmannAlgorithm {
     public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
@@ -185,13 +189,11 @@ export class BuhlmannAlgorithm {
             return CalculatedProfile.fromErrors(errorMessages);
         }
 
-        const last = segments.last();
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
         this.swimPlan(context);
 
-        let currentGas = last.gas;
         let nextDecoStop = DepthLevels.firstDecoStop(context);
-        let nextGasSwitch = context.nextGasSwitch(currentGas);
+        let nextGasSwitch = context.nextGasSwitch(context.currentGas);
         let nextStop = DepthLevels.nextStop(nextDecoStop, nextGasSwitch);
 
         while (nextStop >= 0) {
@@ -199,7 +201,7 @@ export class BuhlmannAlgorithm {
             // TODO we may still ongasing during ascent to next stop
             const depthDifference = context.currentDepth - nextStop;
             const duration = this.duration(depthDifference, options.ascentSpeed / Time.oneMinute);
-            const ascent = context.segments.add(context.currentDepth, nextStop, currentGas, duration);
+            const ascent = context.segments.add(context.currentDepth, nextStop, context.currentGas, duration);
             this.swim(context, ascent);
 
             if (context.currentDepth <= 0) {
@@ -209,25 +211,25 @@ export class BuhlmannAlgorithm {
             // TODO check, if ascent to next stop isn't already possible
 
             // Deco stop
-            const lastGas = currentGas;
-            currentGas = context.gases.bestDecoGas(context.currentDepth, options, depthConverter);
-            this.addGasSwitch(context, lastGas, currentGas);
+            const lastGas = context.currentGas;
+            context.currentGas = context.gases.bestDecoGas(context.currentDepth, options, depthConverter);
+            this.addGasSwitch(context, lastGas, context.currentGas);
 
             nextDecoStop = DepthLevels.nextDecoStop(nextStop);
 
             while (nextDecoStop < context.ceiling()) {
-                const decoStop = context.segments.add(context.currentDepth, nextStop, currentGas, Time.oneMinute);
+                const decoStop = context.segments.add(context.currentDepth, nextStop, context.currentGas, Time.oneMinute);
                 this.swim(context, decoStop);
             }
 
             if (options.addSafetyStop && context.currentDepth === DepthLevels.decoStopDistance) {
                 const safetyStopDuration = Time.oneMinute * 3;
-                const decoStop = context.segments.add(context.currentDepth, nextStop, currentGas, safetyStopDuration);
+                const decoStop = context.segments.add(context.currentDepth, nextStop, context.currentGas, safetyStopDuration);
                 this.swim(context, decoStop);
             }
 
             // multiple gas switches may happen before first deco stop
-            nextGasSwitch = context.nextGasSwitch(currentGas);
+            nextGasSwitch = context.nextGasSwitch(context.currentGas);
             nextStop = DepthLevels.nextStop(nextGasSwitch, nextDecoStop);
         }
 

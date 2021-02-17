@@ -233,12 +233,17 @@ describe('Buhlmann Algorithm', () => {
       expect(planText).toBe(expectedPlan);
     });
 
-    //  TODO Add test case: 30m, 10min., gases: .21 .5 1.0; fresh, 0masl.
+    // TODO add algorithm test cases:
+    // A: 30m, 10min., gases: .21 .5 1.0; fresh, 0masl.
     // - gas switch in 21m and 6m, i - even no deco
 
-    // TODO add test case: 30m, 10min., gases: .21 .32 .5; fresh, 0masl.
-    // - gas switch in 30m and 21m, even no deco
+    // B: 30m, 10min., gases: .21 .32; fresh, 0masl.
+    // - gas switch in 30m, even no deco
 
-    // TODO add test case: where deco is increased even during ascent
+    // C: where deco is increased even during ascent
+
+    // D: Disabled safety stop is not added to the last stop
+
+    // E: Safety stop is correctly applied at expected depth
   });
 });

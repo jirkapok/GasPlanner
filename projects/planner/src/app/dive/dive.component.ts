@@ -29,7 +29,7 @@ export class DiveComponent implements OnInit {
   }
 
   public get descentDuration(): number {
-    const diveDescent = Time.toMinutes(this.dive.descent.duration)
+    const diveDescent = Time.toMinutes(this.dive.descent.duration);
     return Math.ceil(diveDescent);
   }
 

@@ -129,7 +129,8 @@ export class PlannerService {
        return this.estimateMaxDecotime();
     }
 
-    return recreDuration;
+    const minutes = Time.toMinutes(recreDuration);
+    return Math.floor(minutes);
   }
 
   private buildNoDecoProfile(): WayPoint[] {

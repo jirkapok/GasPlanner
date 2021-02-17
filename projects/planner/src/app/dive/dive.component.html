@@ -8,7 +8,7 @@
         <div *ngIf="dive.notEnoughGas" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
             <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
-                {{ dive.maxTime }} min.</span>
+                {{ dive.maxTime | number:'1.0-0' }} min.</span>
         </div>
         <div *ngIf="dive.depthExceeded" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
@@ -16,7 +16,7 @@
         </div>
         <div *ngIf="dive.notEnoughTime" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
-            <span>Not enough time to realize the dive (duration needs to be at least {{ descentDuration  | number:'1.0' }}
+            <span>Not enough time to realize the dive (duration needs to be at least {{ descentDuration | number:'1.0-0' }}
                 min.)!</span>
         </div>
         <div *ngIf="dive.noDecoExceeded" class="alert  alert-warning">

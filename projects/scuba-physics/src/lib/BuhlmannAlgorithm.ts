@@ -153,10 +153,6 @@ export class DepthLevels {
             return DepthLevels.decoStopDistance;
         }
 
-        // if(currentDepth < DepthLevels.decoStopDistance) {
-        //     return 0;
-        // }
-
         return rounded;
     }
 

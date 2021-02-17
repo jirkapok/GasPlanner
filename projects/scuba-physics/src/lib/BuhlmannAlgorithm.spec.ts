@@ -289,5 +289,10 @@ describe('Buhlmann Algorithm', () => {
       const result = DepthLevels.firstDecoStop(false, 0, 3);
       expect(result).toBe(0);
     });
+
+    it('D4', () => {  // shouldnt happen
+      const result = DepthLevels.firstDecoStop(false, 1, 2);
+      expect(result).toBe(0);
+    });
   });
 });

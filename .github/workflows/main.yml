@@ -22,7 +22,7 @@ jobs:
       # not using 'npm ci' because it fails
       - run: npm install
       - run: npm run test-lib-ci --configuration=ci
-      - run: npm install dist/scuba-physics --no-package-lock
+      - run: npm install ./dist/scuba-physics --no-package-lock
       - run: npm run test-ci --configuration=ci
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1

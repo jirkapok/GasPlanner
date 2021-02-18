@@ -2,15 +2,15 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ '*' ]
   pull_request:
-    branches: [ master ]
+    branches: [ '*' ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  build:
+  test:
     # Consider widnows-latest as the main development environment
     runs-on: ubuntu-latest
     steps:
@@ -19,10 +19,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
+      # not using 'npm ci' because it fails
       - run: npm install
       - run: npm run test-lib-ci --configuration=ci
+      - run: npm install dist/scuba-physics --no-package-lock
       - run: npm run test-ci --configuration=ci
-      - name: Publish Unit Test Results
+      - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:

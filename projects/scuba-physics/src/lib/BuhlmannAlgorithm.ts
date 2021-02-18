@@ -197,7 +197,11 @@ export class BuhlmannAlgorithm {
         let nextStop = DepthLevels.nextStop(nextDecoStop, nextGasSwitch);
 
         while (nextStop >= 0) {
-            // ascent to the nextStop
+            // 1. Gas switch
+            const newGas = context.gases.bestDecoGas(context.currentDepth, options, depthConverter);
+            this.addGasSwitch(context, newGas);
+
+            // 2.  ascent to the nextStop
             // TODO we may still ongasing during ascent to next stop
             const depthDifference = context.currentDepth - nextStop;
             const duration = this.duration(depthDifference, options.ascentSpeed / Time.oneMinute);
@@ -210,11 +214,7 @@ export class BuhlmannAlgorithm {
 
             // TODO check, if ascent to next stop isn't already possible
 
-            // Deco stop
-            const lastGas = context.currentGas;
-            context.currentGas = context.gases.bestDecoGas(context.currentDepth, options, depthConverter);
-            this.addGasSwitch(context, lastGas, context.currentGas);
-
+            // 3. Deco stop
             nextDecoStop = DepthLevels.nextDecoStop(nextStop);
 
             while (nextDecoStop < context.ceiling()) {
@@ -222,6 +222,7 @@ export class BuhlmannAlgorithm {
                 this.swim(context, decoStop);
             }
 
+            // 4. safety stop
             if (options.addSafetyStop && context.currentDepth === DepthLevels.decoStopDistance) {
                 const safetyStopDuration = Time.oneMinute * 3;
                 const decoStop = context.segments.add(context.currentDepth, nextStop, context.currentGas, safetyStopDuration);
@@ -237,21 +238,22 @@ export class BuhlmannAlgorithm {
         return CalculatedProfile.fromProfile(merged, context.ceilings, context.events);
     }
 
-    private addGasSwitch(context: AlgorithmContext, lastGas: Gas, currentGas: Gas) {
-        if (lastGas.compositionEquals(currentGas)) {
+    private addGasSwitch(context: AlgorithmContext, newGas: Gas) {
+        if ( !Gases.canSwitch(newGas, context.currentGas)) {
             return;
         }
 
+        context.currentGas = newGas;
         const gasSwitch: Event =  {
             timeStamp: context.runTime,
             depth: context.currentDepth,
             type: EventType.gasSwitch,
-            message: 'switch to ' + currentGas.fO2
+            message: 'switch to ' + context.currentGas.fO2
         };
 
         context.events.push(gasSwitch);
-        const decoStop = context.segments.add(context.currentDepth, context.currentDepth, currentGas, Time.oneMinute);
-        this.swim(context, decoStop);
+        const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, Time.oneMinute);
+        this.swim(context, stop);
     }
 
     private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): string[] {

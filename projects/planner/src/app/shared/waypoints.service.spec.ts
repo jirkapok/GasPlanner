@@ -6,7 +6,7 @@ import { Options } from 'scuba-physics';
 
 describe('WayPointsService', () => {
   const air = new Gas(12, 21, 200);
-  const options = new Options(0.4, 0.85, 1.6, 30, true);
+  const options = new Options(0.4, 0.85, 1.4, 1.6, 30, true);
 
   beforeEach(() => {
     TestBed.configureTestingModule({

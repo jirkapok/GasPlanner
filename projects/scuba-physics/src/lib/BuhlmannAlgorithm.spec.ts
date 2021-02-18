@@ -79,7 +79,7 @@ describe('Buhlmann Algorithm', () => {
     });
   });
 
-  describe('Calculates Plan', () =>  {
+  xdescribe('Calculates Plan', () =>  {
     const isFreshWater = false;
     // gradientFactorLow = 0.2, gradientFactorHigh=0.8, deco ppO2 = 1.6, and max END allowed: 30 meters.
     const options = new Options(0.2, 0.8, 1.6, 1.6, 30, isFreshWater);

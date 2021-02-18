@@ -1,4 +1,4 @@
-import { BuhlmannAlgorithm, DepthLevels, Options } from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
 import { Gas, Gases } from './Gases';
 import { Segment, Segments } from './Segments';
 
@@ -22,7 +22,7 @@ describe('Buhlmann Algorithm', () => {
       expect(ndl).toBe(0);
   });
 
-   describe('Calculate air No decompression limits at depth', () => {
+    xdescribe('Calculate air No decompression limits at depth', () => {
       const options = new Options(1, 1, 1.6, 1.6, 30, true);
 
       const calculateNoDecompressionLimit = (testCases: number[][], isFreshWater: boolean) => {
@@ -103,7 +103,7 @@ describe('Buhlmann Algorithm', () => {
     });
   });
 
-  describe('Calculates Plan', () =>  {
+  xdescribe('Calculates Plan', () =>  {
     const isFreshWater = false;
     // gradientFactorLow = 0.2, gradientFactorHigh=0.8, deco ppO2 = 1.6, and max END allowed: 30 meters.
     const options = new Options(0.2, 0.8, 1.6, 1.6, 30, isFreshWater);

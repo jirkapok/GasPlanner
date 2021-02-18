@@ -1,4 +1,4 @@
-import { Gases, Gas, GasesValidator, GasMixtures } from './Gases';
+import { Gases, Gas, GasesValidator, GasMixtures, GasOptions } from './Gases';
 import { DepthConverter } from './depth-converter';
 
 describe('Gases', () => {
@@ -9,10 +9,11 @@ describe('Gases', () => {
   const trimix1070 = new Gas(0.1, 0.7);  // 148.5m - 7.9m
   const oxygen = new Gas(1, 0);  // 5.9m - 0m
 
-  const options = {
-    maxPpO2: 1.6,
+  const options: GasOptions = {
+    maxPpO2: 1.4,
+    maxDecoPpO2: 1.6,
     maxEND: 30,
-    isFreshWater: false
+    isFreshWater: true
   };
 
   const saltWaterConverter = DepthConverter.forSaltWater();
@@ -168,7 +169,7 @@ describe('Gases', () => {
     });
   });
 
-  describe('Gas pressures', () => {
+  describe('Gas partial pressures', () => {
     it('At 1 bar 0.79 volume fraction converts to ', () => {
       const result = GasMixtures.partialPressure(1, 0.79);
       expect(result).toBe(0.79);
@@ -190,7 +191,7 @@ describe('Gases', () => {
     });
   });
 
-  describe('Gas composition', () => {
+  describe('Gas composition equality', () => {
     it('Equals to null returns false', () => {
       expect(air.compositionEquals(null)).toBeFalsy();
     });

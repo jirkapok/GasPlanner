@@ -8,6 +8,7 @@
     "build-lib": "ng build scuba-physics",
     "test": "ng test",
     "test-lib": "ng test --project scuba-physics",
+    "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

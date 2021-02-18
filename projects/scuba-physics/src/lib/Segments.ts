@@ -39,6 +39,7 @@ export class SegmentsValidator {
 
 export class Segment {
     constructor (
+        // TODO change to bars, so we can remove usages of depth converter
         /** in meters */
         public startDepth: number,
         /** in meters */

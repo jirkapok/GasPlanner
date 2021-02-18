@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
-      - run: npm install
-      - run: npm run build-lib
-      - run: npm run test-lib
+            - run: npm install
+      - run: npm run test-lib --configuration=ci
+      - run: npm run test --configuration=ci
 

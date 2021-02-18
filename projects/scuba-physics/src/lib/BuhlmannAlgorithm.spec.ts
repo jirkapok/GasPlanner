@@ -22,7 +22,7 @@ describe('Buhlmann Algorithm', () => {
       expect(ndl).toBe(0);
   });
 
-    describe('Calculate air No decompression limits at depth', () => {
+    xdescribe('Calculate air No decompression limits at depth', () => {
       const options = new Options(1, 1, 1.6, 1.6, 30, true);
 
       const calculateNoDecompressionLimit = (testCases: number[][], isFreshWater: boolean) => {

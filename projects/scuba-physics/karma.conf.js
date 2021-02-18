@@ -28,7 +28,7 @@ module.exports = function (config) {
     singleRun: false,
 
     junitReporter: {
-      outputDir: '../../test-results', // results will be saved as $outputDir/$browserName.xml
+      outputDir: '../../test-results/scuba-physics', // results will be saved as $outputDir/$browserName.xml
       suite: 'scuba-physics'
     }
   });

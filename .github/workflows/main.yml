@@ -22,6 +22,7 @@ jobs:
       # not using 'npm ci' because it fails
       - run: npm install
       - run: npm run test-lib-ci --configuration=ci
+      - run: ng build scuba-physics --prod
       - run: npm install ./dist/scuba-physics --no-package-lock
       - run: npm run test-ci --configuration=ci
       - name: Publish Test Results

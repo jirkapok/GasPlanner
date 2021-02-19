@@ -23,6 +23,8 @@ import { DiveProfileComponent } from './diveprofile/diveprofile.component';
 import { AboutComponent } from './about/about.component';
 import { AppFooterComponent } from './footer/footer.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { ProfileComponent } from './profile/profile.component';
     NgbModule,
     AppRoutingModule,
     CustomFormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   exports: [],
   providers: [ PlannerService, PreferencesService ],

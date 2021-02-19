@@ -26,6 +26,15 @@ export class ProfileComponent implements OnInit {
     return this.plan.depth;
   }
 
+  public get noDecoTime(): number {
+    const result = this.plan.noDecoTime;
+    if(result >= 1000) {
+      return Infinity;
+    }
+
+    return result;
+  }
+
   public set plannedDepth(depth: number) {
     this.plan.depth = depth;
     this.planer.updateNoDecoTime();

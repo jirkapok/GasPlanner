@@ -1,5 +1,5 @@
 import { Tissues, LoadSegment } from './Tissues';
-import { Gases, Gas, GasOptions, GasesValidator } from './Gases';
+import { Gases, Gas, GasOptions, GasesValidator, BestGasOptions } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory, DepthOptions } from './depth-converter';
 import { Time } from './Time';
@@ -129,6 +129,10 @@ class AlgorithmContext {
         return 0;
     }
 
+    public get ambientPressure(): number {
+        return this.depthConverter.toBar(this.currentDepth);
+    }
+
     public addCeiling() {
         const depth = this.ceiling();
         this.ceilings.push({
@@ -176,12 +180,16 @@ export class BuhlmannAlgorithm {
         this.swimPlan(context);
 
         let nextStop = DepthLevels.firstStop(context.currentDepth);
+        const bestGasOptions: BestGasOptions = {
+            maxDecoPpO2: options.maxDecoPpO2,
+            maxEndPressure: depthConverter.toBar(options.maxEND)
+        };
 
         // for performance reasons we dont want to iterate each second, instead we iterate by 3m steps where the changes happen.
         while (nextStop >= 0) {
             // 1. Gas switch
             // multiple gas switches may happen before first deco stop
-            const newGas = context.gases.bestDecoGas(context.currentDepth, options, depthConverter);
+            const newGas = context.gases.bestDecoGas(context.ambientPressure, bestGasOptions);
             this.addGasSwitch(context, newGas);
 
             // 2. Deco stop

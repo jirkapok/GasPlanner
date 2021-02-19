@@ -50,8 +50,14 @@ export class GasesValidator {
 export interface GasOptions {
     maxPpO2: number;
     maxDecoPpO2: number;
-    /** in meters */
+    /** Maximum narcotic depth in meters */
     maxEND: number;
+}
+
+export interface BestGasOptions {
+    maxDecoPpO2: number;
+    /** Maximum narcotic depth in bars */
+    maxEndPressure: number;
 }
 
 export class Gases {
@@ -59,17 +65,17 @@ export class Gases {
     private decoGases: Gas[] = [];
     private bottomGases: Gas[] = [];
 
-    private static bestGas(gases: Gas[], currentDepth: number, options: GasOptions, depthConverter: DepthConverter): Gas {
+    private static bestGas(gases: Gas[], currentDepth: number, options: BestGasOptions): Gas {
         let found = null;
         gases.forEach((element, index, source) => {
             const candidate = gases[index];
-            const mod = candidate.mod(options.maxDecoPpO2, depthConverter);
-            const end = candidate.end(currentDepth, depthConverter);
+            const mod = candidate.modBars(options.maxDecoPpO2);
+            const end = candidate.endBars(currentDepth);
 
             // TODO consider only switch to gas with lower nitrogen content
             // TODO move maxEND exceeded to validator as warning
             // TODO add option to enforce narcotic depth in the UI
-            if (currentDepth <= mod && end <= options.maxEND) {
+            if (currentDepth <= mod && end <= options.maxEndPressure) {
                 // We don't care about gas ceiling, because it is covered by higher O2 content
                 // only oxygen content is relevant for decompression => EAN50 is better than TRIMIX 25/25
                 if (!found || found.fO2 < candidate.fO2) {
@@ -84,15 +90,15 @@ export class Gases {
      * Finds better gas to switch to from current depth, returns null, if no better gas was found.
      * Better gas is breathable at current depth and with higher O2.
      * 
-     * @param currentDepth in meters
+     * @param currentDepth in bars
      */
-    public bestDecoGas(currentDepth: number, options: GasOptions, depthConverter: DepthConverter): Gas {
-        const decoGas = Gases.bestGas(this.decoGases, currentDepth, options, depthConverter);
+    public bestDecoGas(currentDepth: number, options: BestGasOptions): Gas {
+        const decoGas = Gases.bestGas(this.decoGases, currentDepth, options);
         if (!!decoGas) {
             return decoGas;
         }
 
-        return Gases.bestGas(this.bottomGases, currentDepth, options, depthConverter);
+        return Gases.bestGas(this.bottomGases, currentDepth, options);
     }
 
     public get all(): Gas[] {
@@ -137,8 +143,20 @@ export class GasMixtures {
      * @returns Depth in meters.
      */
     public static mod(ppO2: number, fO2: number, depthConverter: DepthConverter): number {
-        const bars = ppO2 / fO2;
+        const bars = GasMixtures.modBars(ppO2, fO2);
         return depthConverter.fromBar(bars);
+    }
+
+    /**
+     * Calculates Maximum operation depth for given mix.
+     *
+     * @param ppO2 - Partial pressure constant.
+     * @param fO2 - Fraction of Oxygen in gas.
+     * @returns Depth in bars.
+     */
+    public static modBars(ppO2: number, fO2: number): number {
+        const bars = ppO2 / fO2;
+        return bars;
     }
 
     /**
@@ -176,16 +194,28 @@ export class GasMixtures {
      * @returns Depth in meters.
      */
     public static end(fO2: number, fN2: number, depth: number, depthConverter: DepthConverter): number {
-        // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
-        const narcIndex = fO2 + fN2;
         const bars = depthConverter.toBar(depth);
-        const equivalentBars = bars * narcIndex;
+        const result = GasMixtures.endBars(fO2, fN2, bars);
 
-        if (equivalentBars < depthConverter.surfacePressure) {
+        if (result < depthConverter.surfacePressure) {
             return 0;
         }
 
-        return depthConverter.fromBar(equivalentBars);
+        return depthConverter.fromBar(result);
+    }
+
+    /**
+     * Calculates equivalent narcotic depth.
+     *
+     * @param fO2 Fraction of oxygen in gas mix (0-1).
+     * @param fN2 Fraction of nitrogen in gas mix (0-1).
+     * @param depth Depth in bars.
+     * @returns Depth in bars.
+     */
+    public static endBars(fO2: number, fN2: number, depth: number): number {
+        // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
+        const narcIndex = fO2 + fN2;
+        return depth * narcIndex;
     }
 
     /**
@@ -230,6 +260,16 @@ export class Gas {
     }
 
     /**
+     * Calculates maximum operation depth.
+     *
+     * @param ppO2 Partial pressure of oxygen.
+     * @returns Depth in bars.
+     */
+    public modBars(ppO2: number): number {
+        return GasMixtures.modBars(ppO2, this.fO2);
+    }
+
+    /**
      * Calculates equivalent narcotic depth.
      *
      * @param depth Depth in meters.
@@ -238,6 +278,16 @@ export class Gas {
      */
     public end(depth: number, depthConverter: DepthConverter): number {
         return GasMixtures.end(this.fO2, this.fN2, depth, depthConverter);
+    }
+    
+    /**
+     * Calculates equivalent narcotic depth.
+     *
+     * @param depth Depth in bars.
+     * @returns Depth in bars.
+     */
+    public endBars(depth: number): number {
+        return GasMixtures.endBars(this.fO2, this.fN2, depth);
     }
 
     public ceiling(depthConverter: DepthConverter): number {

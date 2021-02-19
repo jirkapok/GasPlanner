@@ -170,7 +170,7 @@ export class GasMixtures {
      * Calculates equivalent narcotic depth.
      *
      * @param fO2 Fraction of oxygen in gas mix (0-1).
-     * @param fN2 Fraction of nytrogen in gas mix (0-1).
+     * @param fN2 Fraction of nitrogen in gas mix (0-1).
      * @param depth Depth in meters.
      * @param depthConverter Converter used to translate the pressure.
      * @returns Depth in meters.

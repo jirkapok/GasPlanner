@@ -75,7 +75,7 @@ export class Gases {
         gases.forEach((element, index, source) => {
             const candidate = gases[index];
             const mod = candidate.mod(options.maxDecoPpO2);
-            const end = candidate.endBars(currentDepth);
+            const end = candidate.end(currentDepth);
 
             // TODO consider only switch to gas with lower nitrogen content
             // TODO move maxEND exceeded to validator as warning
@@ -181,55 +181,13 @@ export class GasMixtures {
      *
      * @param fO2 Fraction of oxygen in gas mix (0-1).
      * @param fN2 Fraction of nitrogen in gas mix (0-1).
-     * @param depth Depth in meters.
-     * @param depthConverter Converter used to translate the pressure.
-     * @returns Depth in meters.
-     */
-    public static end(fO2: number, fN2: number, depth: number, depthConverter: DepthConverter): number {
-        const bars = depthConverter.toBar(depth);
-        const result = GasMixtures.endBars(fO2, fN2, bars);
-
-        if (result < depthConverter.surfacePressure) {
-            return 0;
-        }
-
-        return depthConverter.fromBar(result);
-    }
-
-    /**
-     * Calculates equivalent narcotic depth.
-     *
-     * @param fO2 Fraction of oxygen in gas mix (0-1).
-     * @param fN2 Fraction of nitrogen in gas mix (0-1).
      * @param depth Depth in bars.
      * @returns Depth in bars.
      */
-    public static endBars(fO2: number, fN2: number, depth: number): number {
+    public static end(fO2: number, fN2: number, depth: number): number {
         // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
         const narcIndex = fO2 + fN2;
         return depth * narcIndex;
-    }
-
-    /**
-     * Calculates minimum depth at which the gas is breathe able.
-     *
-     * @param fO2 Fraction of oxygen in gas mix (0-1).
-     * @param depthConverter Converter used to translate the pressure.
-     * @returns Depth in meters.
-     */
-    public static ceiling(fO2: number, depthConverter: DepthConverter): number {
-        const minppO2 = 0.18;
-        const ratio = minppO2 / fO2;
-        const bars = ratio * depthConverter.surfacePressure;
-
-        // hyperoxic gases have pressure bellow sea level, which cant be converted to depth
-        // simplyfied untill altitude diving is implemented
-        if (bars < depthConverter.surfacePressure) {
-            return 0;
-        }
-
-        const depth = depthConverter.fromBar(bars);
-        return depth;
     }
 
      /**
@@ -239,7 +197,7 @@ export class GasMixtures {
      * @param surfacePressure surface pressure in bars.
      * @returns Depth in bars.
      */
-    public static ceilingBars(fO2: number, surfacePressure: number): number {
+    public static ceiling(fO2: number, surfacePressure: number): number {
         const minppO2 = 0.18;
         const ratio = minppO2 / fO2;
         const bars = ratio * surfacePressure;
@@ -274,26 +232,15 @@ export class Gas {
     /**
      * Calculates equivalent narcotic depth.
      *
-     * @param depth Depth in meters.
-     * @param depthConverter Converter used to translate the pressure.
-     * @returns Depth in meters.
-     */
-    public end(depth: number, depthConverter: DepthConverter): number {
-        return GasMixtures.end(this.fO2, this.fN2, depth, depthConverter);
-    }
-    
-    /**
-     * Calculates equivalent narcotic depth.
-     *
      * @param depth Depth in bars.
      * @returns Depth in bars.
      */
-    public endBars(depth: number): number {
-        return GasMixtures.endBars(this.fO2, this.fN2, depth);
+    public end(depth: number): number {
+        return GasMixtures.end(this.fO2, this.fN2, depth);
     }
 
     public ceiling(surfacePressure: number): number {
-        return GasMixtures.ceilingBars(this.fO2, surfacePressure);
+        return GasMixtures.ceiling(this.fO2, surfacePressure);
     }
 
     public compositionEquals(other: Gas): boolean {

@@ -36,22 +36,13 @@ describe('Gases', () => {
 
     describe('Narcotic depth', () => {
       it('0 m in fresh water for Trimix 10/70', () => {
-        const end = trimix1070.end(6, saltWaterConverter);
-        expect(end).toBe(0);
+        const end = trimix1070.end(1.6);
+        expect(end).toBeCloseTo(0.48, 2);
       });
 
-      describe('60 m with 18/35 trimix', () => {
-        const depth = 60;
-
-        it('is 35.38 m in fresh water', () => {
-          const end = trimix1835.end(depth, freshWaterConverter);
-          expect(end).toBeCloseTo(35.38, 2);
-        });
-
-        it('is 35.49 m in salt water', () => {
-          const end = trimix1835.end(depth, saltWaterConverter);
-          expect(end).toBeCloseTo(35.49, 2);
-        });
+      it('60 m with 18/35 trimix', () => {
+        const end = trimix1835.end(7);
+        expect(end).toBeCloseTo(4.55, 2);
       });
     });
 

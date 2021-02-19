@@ -243,10 +243,11 @@ export class BuhlmannAlgorithm {
             return segmentMessages;
         }
 
-        const last = segments.last();
-
         // TODO multilevel diving: fix max depth, last doesn't have to be max. depth.
-        const gasMessages = GasesValidator.validate(gases, options, depthConverter, last.endDepth);
+        const last = segments.last();
+        const maxDepth = depthConverter.toBar(last.endDepth);
+
+        const gasMessages = GasesValidator.validate(gases, options, depthConverter.surfacePressure, maxDepth);
         if (gasMessages.length > 0) {
             return gasMessages;
         }

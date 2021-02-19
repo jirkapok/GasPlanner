@@ -22,21 +22,15 @@ describe('Gases', () => {
     describe('Maximum operational depth', () => {
       const ppO2 = 1.4;
 
-      it('Oxygen in fresh water with ppO2 1.6 is 6m', () => {
-        const mod = oxygen.mod(1.6, freshWaterConverter);
-        expect(mod).toBeCloseTo(5.98, 2);
+      it('Oxygen with ppO2 1.6 is 6m', () => {
+        const mod = oxygen.modBars(1.6);
+        expect(mod).toBeCloseTo(1.6, 2);
       });
 
-      describe('Air for ppO 1.4', () => {
-        it('is 57.65 m in fresh water', () => {
-          const mod = air.mod(ppO2, freshWaterConverter);
-          expect(mod).toBeCloseTo(57.65, 2);
-        });
-
-        it('is 55.97 m in salt water', () => {
-          const mod = air.mod(ppO2, saltWaterConverter);
-          expect(mod).toBeCloseTo(55.97, 2);
-        });
+      it('Air for ppO 1.4 is 56.6 m', () => {
+        let mod = air.modBars(ppO2);
+        mod = Math.round(mod * 100) / 100;
+        expect(mod).toBeCloseTo(6.67, 2);
       });
     });
 
@@ -167,29 +161,30 @@ describe('Gases', () => {
   });
 
   describe('Gases validator', () => {
+    const surfacePressure = freshWaterConverter.surfacePressure;
     it('No gas defined', () => {
-      const messages = GasesValidator.validate(new Gases(), options, freshWaterConverter, 30);
+      const messages = GasesValidator.validate(new Gases(), options, surfacePressure, 4);
       expect(messages.length).toBe(1);
     });
 
     it('Only one gas', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
-      const messages = GasesValidator.validate(gases, options, freshWaterConverter, 30);
+      const messages = GasesValidator.validate(gases, options, surfacePressure, 4);
       expect(messages.length).toBe(0);
     });
 
     it('No bottom gas for depth', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
-      const messages = GasesValidator.validate(gases, options, freshWaterConverter, 100);
+      const messages = GasesValidator.validate(gases, options, surfacePressure, 11);
       expect(messages.length).toBe(1);
     });
 
     it('No gas to surface', () => {
       const gases = new Gases();
       gases.addBottomGas(trimix1070);
-      const messages = GasesValidator.validate(gases, options, freshWaterConverter, 30);
+      const messages = GasesValidator.validate(gases, options, surfacePressure, 4);
       expect(messages.length).toBe(1);
     });
 
@@ -199,7 +194,7 @@ describe('Gases', () => {
       const gases = new Gases();
       gases.addBottomGas(trimix1070);
       gases.addDecoGas(oxygen);
-      const messages = GasesValidator.validate(gases, options, freshWaterConverter, 30);
+      const messages = GasesValidator.validate(gases, options, surfacePressure, 4);
       expect(messages.length).toBe(1);
     });
 
@@ -207,7 +202,7 @@ describe('Gases', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
       gases.addDecoGas(ean50);
-      const messages = GasesValidator.validate(gases, options, freshWaterConverter, 30);
+      const messages = GasesValidator.validate(gases, options, surfacePressure, 4);
       expect(messages.length).toBe(0);
     });
   });

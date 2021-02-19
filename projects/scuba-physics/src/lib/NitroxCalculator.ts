@@ -39,7 +39,8 @@ export class NitroxCalculator {
    */
   public mod(ppO2: number, percentO2: number): number {
     const fO2 = percentO2 / 100;
-    const result = GasMixtures.mod(ppO2, fO2, this.depthConverter);
+    let result = GasMixtures.modBars(ppO2, fO2);
+    result = this.depthConverter.fromBar(result);
     return Math.floor(result * 100) / 100;
   }
 

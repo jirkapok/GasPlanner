@@ -6,8 +6,11 @@ import { DepthConverter } from './depth-converter';
  * Deco gases are prefered for decompression, they don't have to be better.
  */
 export class GasesValidator {
-    public static validate(gases: Gases, options: GasOptions,
-        depthConverter: DepthConverter, maxDepth: number): string[] {
+    /**
+     * @param gases not null list of gases to validate
+     * @param maxDepth maximum depth in bars
+     */
+    public static validate(gases: Gases, options: GasOptions, surfacePressure: number, maxDepth: number): string[] {
         const messages = [];
 
         if (!gases.hasBottomGas) {
@@ -16,28 +19,30 @@ export class GasesValidator {
         }
 
         const allGases = gases.all;
-        this.validateByMod(allGases, options, maxDepth, depthConverter, messages);
+        this.validateByMod(allGases, options, maxDepth, surfacePressure, messages);
 
-        allGases.sort((a, b) => a.ceiling(depthConverter) - b.ceiling(depthConverter));
-        if (allGases[0].ceiling(depthConverter) > 0) {
+        allGases.sort((a, b) => a.ceilingBars(surfacePressure) - b.ceilingBars(surfacePressure));
+        // TODO dont validate only first gas
+        if (allGases[0].ceilingBars(surfacePressure) > surfacePressure) {
             messages.push('No gas available to surface.');
         }
 
         return messages;
     }
 
-    private static validateByMod(gases: Gas[], options: GasOptions, maxDepth: number, depthConverter: DepthConverter, messages: string[]) {
-        gases.sort((a, b) => b.mod(options.maxPpO2, depthConverter) - a.mod(options.maxPpO2, depthConverter));
+    private static validateByMod(gases: Gas[], options: GasOptions, maxDepth: number, surfacePressure: number, messages: string[]) {
+        gases.sort((a, b) => b.modBars(options.maxPpO2) - a.modBars(options.maxPpO2));
+        
 
-        if (gases[0].mod(options.maxPpO2, depthConverter) < maxDepth) {
+        if (gases[0].modBars(options.maxPpO2) < maxDepth) {
             messages.push('No gas available to maximum depth.');
         }
 
         for (let index = 0; index < gases.length - 1; index++) {
             if (gases.length > index) {
                 const nextGas = gases[index + 1];
-                const ceiling = gases[index].ceiling(depthConverter);
-                const nextMod = nextGas.mod(options.maxPpO2, depthConverter);
+                const ceiling = gases[index].ceilingBars(surfacePressure);
+                const nextMod = nextGas.modBars(options.maxPpO2);
                 if (nextMod < ceiling) {
                     messages.push('Gases don`t cover all depths.');
                     break;
@@ -139,19 +144,6 @@ export class GasMixtures {
      *
      * @param ppO2 - Partial pressure constant.
      * @param fO2 - Fraction of Oxygen in gas.
-     * @param depthConverter Converter used to translate the pressure.
-     * @returns Depth in meters.
-     */
-    public static mod(ppO2: number, fO2: number, depthConverter: DepthConverter): number {
-        const bars = GasMixtures.modBars(ppO2, fO2);
-        return depthConverter.fromBar(bars);
-    }
-
-    /**
-     * Calculates Maximum operation depth for given mix.
-     *
-     * @param ppO2 - Partial pressure constant.
-     * @param fO2 - Fraction of Oxygen in gas.
      * @returns Depth in bars.
      */
     public static modBars(ppO2: number, fO2: number): number {
@@ -239,6 +231,27 @@ export class GasMixtures {
         const depth = depthConverter.fromBar(bars);
         return depth;
     }
+
+     /**
+     * Calculates minimum depth at which the gas is breathe able.
+     *
+     * @param fO2 Fraction of oxygen in gas mix (0-1).
+     * @param surfacePressure surface pressure in bars.
+     * @returns Depth in bars.
+     */
+    public static ceilingBars(fO2: number, surfacePressure: number): number {
+        const minppO2 = 0.18;
+        const ratio = minppO2 / fO2;
+        const bars = ratio * surfacePressure;
+
+        // hyperoxic gases have pressure bellow sea level, which cant be converted to depth
+        // simplyfied untill altitude diving is implemented
+        if (bars < surfacePressure) {
+            return surfacePressure;
+        }
+
+        return bars;
+    }
 }
 
 export class Gas {
@@ -247,17 +260,6 @@ export class Gas {
     }
 
     constructor(public fO2: number, public fHe: number) { }
-
-    /**
-     * Calculates maximum operation depth.
-     *
-     * @param ppO2 Partial pressure of oxygen.
-     * @param depthConverter Converter used to translate the pressure.
-     * @returns Depth in meters.
-     */
-    public mod(ppO2: number, depthConverter: DepthConverter): number {
-        return GasMixtures.mod(ppO2, this.fO2, depthConverter);
-    }
 
     /**
      * Calculates maximum operation depth.
@@ -292,6 +294,10 @@ export class Gas {
 
     public ceiling(depthConverter: DepthConverter): number {
         return GasMixtures.ceiling(this.fO2, depthConverter);
+    }
+
+    public ceilingBars(surfacePressure: number): number {
+        return GasMixtures.ceilingBars(this.fO2, surfacePressure);
     }
 
     public compositionEquals(other: Gas): boolean {

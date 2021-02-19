@@ -31,10 +31,10 @@ export class GasesValidator {
     }
 
     private static validateByMod(gases: Gas[], options: GasOptions, maxDepth: number, surfacePressure: number, messages: string[]) {
-        gases.sort((a, b) => b.modBars(options.maxPpO2) - a.modBars(options.maxPpO2));
+        gases.sort((a, b) => b.mod(options.maxPpO2) - a.mod(options.maxPpO2));
         
 
-        if (gases[0].modBars(options.maxPpO2) < maxDepth) {
+        if (gases[0].mod(options.maxPpO2) < maxDepth) {
             messages.push('No gas available to maximum depth.');
         }
 
@@ -42,7 +42,7 @@ export class GasesValidator {
             if (gases.length > index) {
                 const nextGas = gases[index + 1];
                 const ceiling = gases[index].ceiling(surfacePressure);
-                const nextMod = nextGas.modBars(options.maxPpO2);
+                const nextMod = nextGas.mod(options.maxPpO2);
                 if (nextMod < ceiling) {
                     messages.push('Gases don`t cover all depths.');
                     break;
@@ -74,7 +74,7 @@ export class Gases {
         let found = null;
         gases.forEach((element, index, source) => {
             const candidate = gases[index];
-            const mod = candidate.modBars(options.maxDecoPpO2);
+            const mod = candidate.mod(options.maxDecoPpO2);
             const end = candidate.endBars(currentDepth);
 
             // TODO consider only switch to gas with lower nitrogen content
@@ -267,7 +267,7 @@ export class Gas {
      * @param ppO2 Partial pressure of oxygen.
      * @returns Depth in bars.
      */
-    public modBars(ppO2: number): number {
+    public mod(ppO2: number): number {
         return GasMixtures.mod(ppO2, this.fO2);
     }
 

@@ -48,7 +48,7 @@ export class SegmentsValidator {
     }
 
     private static validateGas(messages: string[], segmentGas: Gas, pressureSegment: PressureSegment, maxPpo: number, surfacePressure: number): void {
-        const gasMod = segmentGas.modBars(maxPpo);
+        const gasMod = segmentGas.mod(maxPpo);
 
         if (pressureSegment.maxDepth > gasMod) {
             messages.push('Gas is not breathable at bottom segment depth.');

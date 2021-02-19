@@ -23,12 +23,12 @@ describe('Gases', () => {
       const ppO2 = 1.4;
 
       it('Oxygen with ppO2 1.6 is 6m', () => {
-        const mod = oxygen.modBars(1.6);
+        const mod = oxygen.mod(1.6);
         expect(mod).toBeCloseTo(1.6, 2);
       });
 
       it('Air for ppO 1.4 is 56.6 m', () => {
-        let mod = air.modBars(ppO2);
+        let mod = air.mod(ppO2);
         mod = Math.round(mod * 100) / 100;
         expect(mod).toBeCloseTo(6.67, 2);
       });

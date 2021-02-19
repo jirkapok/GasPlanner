@@ -146,7 +146,7 @@ export class GasMixtures {
      * @param fO2 - Fraction of Oxygen in gas.
      * @returns Depth in bars.
      */
-    public static modBars(ppO2: number, fO2: number): number {
+    public static mod(ppO2: number, fO2: number): number {
         const bars = ppO2 / fO2;
         return bars;
     }
@@ -268,7 +268,7 @@ export class Gas {
      * @returns Depth in bars.
      */
     public modBars(ppO2: number): number {
-        return GasMixtures.modBars(ppO2, this.fO2);
+        return GasMixtures.mod(ppO2, this.fO2);
     }
 
     /**

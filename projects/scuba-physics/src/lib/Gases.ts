@@ -50,59 +50,28 @@ export class GasesValidator {
 export interface GasOptions {
     maxPpO2: number;
     maxDecoPpO2: number;
+    /** in meters */
     maxEND: number;
 }
 
 export class Gases {
+    // TODO do we need to distinguish the gas usage?
     private decoGases: Gas[] = [];
     private bottomGases: Gas[] = [];
-    
-    public static canSwitch(newGas: Gas, current: Gas): boolean {
-        return newGas && !newGas.compositionEquals(current);
-    }
 
-    
-    // switch may be expected at current or lower depth
-    public static betterForSwitch(currentGas: Gas, candidate: Gas, currentDepth: number, depthConverter: DepthConverter, ppO2: number): boolean {
-        if(!candidate) {
-            return false;
-        }
-
-        // only oxygen content is relevant for decompression => EAN50 is better than TRIMIX 25/25
-        const candidateMod = candidate.mod(ppO2, depthConverter);
-        return candidate &&
-               (currentDepth > candidateMod || // future switch
-               (currentDepth < candidateMod &&  candidate.fO2 > currentGas.fO2)); // switch at current depth
-    }
-
-    private static nextGasSwitch(gases: Gas[], current: Gas, depth: number, options: GasOptions, depthConverter: DepthConverter): Gas {
+    private static bestGas(gases: Gas[], currentDepth: number, options: GasOptions, depthConverter: DepthConverter): Gas {
         let found = null;
         gases.forEach((element, index, source) => {
             const candidate = gases[index];
             const mod = candidate.mod(options.maxDecoPpO2, depthConverter);
-            const end = candidate.end(depth, depthConverter);
-
-            if (this.betterForSwitch(current, candidate, depth, depthConverter, options.maxDecoPpO2)) {
-                if (!found || found.fO2 < candidate.fO2) {
-                    found = candidate;
-                }
-            }
-        });
-        return found;
-    }
-
-    private static bestGas(gases: Gas[], depth: number, options: GasOptions, depthConverter: DepthConverter): Gas {
-        let found = null;
-        gases.forEach((element, index, source) => {
-            const candidate = gases[index];
-            const mod = candidate.mod(options.maxDecoPpO2, depthConverter);
-            const end = candidate.end(depth, depthConverter);
+            const end = candidate.end(currentDepth, depthConverter);
 
             // TODO consider only switch to gas with lower nitrogen content
-            // TODO add check for low ppO2 at requried depth
             // TODO move maxEND exceeded to validator as warning
             // TODO add option to enforce narcotic depth in the UI
-            if (depth <= mod && end <= options.maxEND) {
+            if (currentDepth <= mod && end <= options.maxEND) {
+                // We don't care about gas ceiling, because it is covered by higher O2 content
+                // only oxygen content is relevant for decompression => EAN50 is better than TRIMIX 25/25
                 if (!found || found.fO2 < candidate.fO2) {
                     found = candidate;
                 }
@@ -111,33 +80,19 @@ export class Gases {
         return found;
     }
     
-    /**
-     * returns null, if there is no better one, otherwise found item 
+     /**
+     * Finds better gas to switch to from current depth, returns null, if no better gas was found.
+     * Better gas is breathable at current depth and with higher O2.
+     * 
+     * @param currentDepth in meters
      */
-    public bestDecoGas(depth: number, options: GasOptions, depthConverter: DepthConverter): Gas {
-        const decoGas = Gases.bestGas(this.decoGases, depth, options, depthConverter);
-        if (decoGas) {
+    public bestDecoGas(currentDepth: number, options: GasOptions, depthConverter: DepthConverter): Gas {
+        const decoGas = Gases.bestGas(this.decoGases, currentDepth, options, depthConverter);
+        if (!!decoGas) {
             return decoGas;
         }
 
-        return Gases.bestGas(this.bottomGases, depth, options, depthConverter);
-    }
-
-    /**
-     * Calculates depth of next gas switch in meters
-     */
-    public nextGasSwitch(currentGas: Gas, fromDepth: number, options: GasOptions, depthConverter: DepthConverter): number {
-        // TODO find gas with better content, highest mod, breathable at current depth
-        // return its mod
-        let ceiling = 0; // ceiling is toDepth, unless there's a better gas to switch to on the way up.
-        for (let nextDepth = fromDepth - 1; nextDepth >= ceiling; nextDepth--) {
-            const nextDecoGas = this.bestDecoGas(nextDepth, options, depthConverter);
-            if (Gases.canSwitch(nextDecoGas, currentGas)) {
-                ceiling = nextDepth; // Only carry us up to the point where we can use this better gas.
-                break;
-            }
-        }
-        return ceiling;
+        return Gases.bestGas(this.bottomGases, currentDepth, options, depthConverter);
     }
 
     public get all(): Gas[] {
@@ -225,6 +180,11 @@ export class GasMixtures {
         const narcIndex = fO2 + fN2;
         const bars = depthConverter.toBar(depth);
         const equivalentBars = bars * narcIndex;
+
+        if (equivalentBars < depthConverter.surfacePressure) {
+            return 0;
+        }
+
         return depthConverter.fromBar(equivalentBars);
     }
 
@@ -286,7 +246,7 @@ export class Gas {
 
     public compositionEquals(other: Gas): boolean {
         return !!other &&
-          other.fO2 === this.fO2 &&
-          other.fHe === this.fHe;
+            this.fO2 === other.fO2 &&
+            this.fHe === other.fHe;
     }
 }

@@ -19,31 +19,46 @@ describe('Gases', () => {
   const freshWaterConverter = DepthConverter.forFreshWater();
 
   describe('Gas', () => {
-    describe('MOD of an Air for ppO 1.4', () => {
+    describe('Maximum operational depth', () => {
       const ppO2 = 1.4;
 
-      it('is 57.65 m in fresh water', () => {
-        const mod = air.mod(ppO2, freshWaterConverter);
-        expect(mod).toBeCloseTo(57.65, 2);
+      it('Oxygen in fresh water with ppO2 1.6 is 6m', () => {
+        // TODO solve mod precision to oxygen at 6m
+        const mod = oxygen.mod(1.6, freshWaterConverter);
+        expect(mod).toBeCloseTo(5.98, 2);
       });
 
-      it('is 56 m in salt water', () => {
-        const mod = air.mod(ppO2, saltWaterConverter);
-        expect(mod).toBeCloseTo(55.97, 2);
+      describe('Air for ppO 1.4', () => {
+        it('is 57.65 m in fresh water', () => {
+          const mod = air.mod(ppO2, freshWaterConverter);
+          expect(mod).toBeCloseTo(57.65, 2);
+        });
+
+        it('is 55.97 m in salt water', () => {
+          const mod = air.mod(ppO2, saltWaterConverter);
+          expect(mod).toBeCloseTo(55.97, 2);
+        });
       });
     });
 
-    describe('Narcotic depth for 60 m with 18/35 trimix', () => {
-      const depth = 60;
-
-      it('is 35.38 m in fresh water', () => {
-        const end = trimix1835.end(depth, freshWaterConverter);
-        expect(end).toBeCloseTo(35.38, 2);
+    describe('Narcotic depth', () => {
+      it('0 m in fresh water for Trimix 10/70', () => {
+        const end = trimix1070.end(6, saltWaterConverter);
+        expect(end).toBe(0);
       });
 
-      it('is 35.49 m in salt water', () => {
-        const end = trimix1835.end(depth, saltWaterConverter);
-        expect(end).toBeCloseTo(35.49, 2);
+      describe('60 m with 18/35 trimix', () => {
+        const depth = 60;
+
+        it('is 35.38 m in fresh water', () => {
+          const end = trimix1835.end(depth, freshWaterConverter);
+          expect(end).toBeCloseTo(35.38, 2);
+        });
+
+        it('is 35.49 m in salt water', () => {
+          const end = trimix1835.end(depth, saltWaterConverter);
+          expect(end).toBeCloseTo(35.49, 2);
+        });
       });
     });
 
@@ -111,13 +126,37 @@ describe('Gases', () => {
         expect(found).toBe(air);
       });
 
-      it('Muntilpe deco gases, best is found', () => {
+      it('Multiple deco gases, best is found', () => {
         const gases = new Gases();
         gases.addBottomGas(air);
         gases.addDecoGas(ean50);
         gases.addDecoGas(trimix1835);
         const found = gases.bestDecoGas(20, options, freshWaterConverter);
         expect(found).toBe(ean50);
+      });
+
+      describe('By content', () => {
+        const gases = new Gases();
+        gases.addBottomGas(air);
+        gases.addBottomGas(ean50);
+        gases.addBottomGas(trimix1835);
+        gases.addBottomGas(trimix1070);
+        gases.addBottomGas(oxygen);
+        
+        it('Air for 30m', () => {
+          const found = gases.bestDecoGas(30, options, freshWaterConverter);
+          expect(found).toBe(air);
+        });
+
+        it('Trimix 18/35 for 40m', () => {
+          const found = gases.bestDecoGas(40, options, freshWaterConverter);
+          expect(found).toBe(trimix1835);
+        });
+
+        it('Oxygen for 6m', () => {
+          const found = gases.bestDecoGas(6, options, freshWaterConverter);
+          expect(found).toBe(oxygen);
+        });
       });
     });
   });

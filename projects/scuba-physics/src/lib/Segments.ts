@@ -54,7 +54,7 @@ export class SegmentsValidator {
             messages.push('Gas is not breathable at bottom segment depth.');
         }
 
-        const gasCeiling = segmentGas.ceilingBars(surfacePressure);
+        const gasCeiling = segmentGas.ceiling(surfacePressure);
 
         if (gasCeiling > pressureSegment.minDepth) {
             messages.push('Gas is not breathable at segment ceiling.');

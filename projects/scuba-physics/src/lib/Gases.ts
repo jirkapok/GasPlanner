@@ -21,9 +21,9 @@ export class GasesValidator {
         const allGases = gases.all;
         this.validateByMod(allGases, options, maxDepth, surfacePressure, messages);
 
-        allGases.sort((a, b) => a.ceilingBars(surfacePressure) - b.ceilingBars(surfacePressure));
+        allGases.sort((a, b) => a.ceiling(surfacePressure) - b.ceiling(surfacePressure));
         // TODO dont validate only first gas
-        if (allGases[0].ceilingBars(surfacePressure) > surfacePressure) {
+        if (allGases[0].ceiling(surfacePressure) > surfacePressure) {
             messages.push('No gas available to surface.');
         }
 
@@ -41,7 +41,7 @@ export class GasesValidator {
         for (let index = 0; index < gases.length - 1; index++) {
             if (gases.length > index) {
                 const nextGas = gases[index + 1];
-                const ceiling = gases[index].ceilingBars(surfacePressure);
+                const ceiling = gases[index].ceiling(surfacePressure);
                 const nextMod = nextGas.modBars(options.maxPpO2);
                 if (nextMod < ceiling) {
                     messages.push('Gases don`t cover all depths.');
@@ -292,11 +292,7 @@ export class Gas {
         return GasMixtures.endBars(this.fO2, this.fN2, depth);
     }
 
-    public ceiling(depthConverter: DepthConverter): number {
-        return GasMixtures.ceiling(this.fO2, depthConverter);
-    }
-
-    public ceilingBars(surfacePressure: number): number {
+    public ceiling(surfacePressure: number): number {
         return GasMixtures.ceilingBars(this.fO2, surfacePressure);
     }
 

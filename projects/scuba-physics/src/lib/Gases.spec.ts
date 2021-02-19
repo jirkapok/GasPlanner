@@ -57,18 +57,19 @@ describe('Gases', () => {
 
     describe('Ceiling', () => {
       it('Hyperoxic nitrox 50% in fresh water to 0 m', () => {
-        const ceilnig = ean50.ceiling(freshWaterConverter);
-        expect(ceilnig).toBe(0);
+        const ceiling = ean50.ceiling(freshWaterConverter.surfacePressure);
+        expect(ceiling).toBe(freshWaterConverter.surfacePressure);
       });
 
       it('Air in fresh water to 0 m', () => {
-        const ceilnig = air.ceiling(freshWaterConverter);
-        expect(ceilnig).toBe(0);
+        const ceiling = air.ceiling(freshWaterConverter.surfacePressure);
+        expect(ceiling).toBe(freshWaterConverter.surfacePressure);
       });
 
       it('Hypooxic Trimix 10/70 in fresh water to 8 m', () => {
-        const ceilnig = trimix1070.ceiling(freshWaterConverter);
-        expect(ceilnig).toBeCloseTo(8.27, 2);
+        let ceiling = trimix1070.ceiling(freshWaterConverter.surfacePressure);
+        ceiling = Math.round(ceiling * 100) / 100;
+        expect(ceiling).toBeCloseTo(1.82, 2);
       });
     });
   });

@@ -245,5 +245,10 @@ describe('Buhlmann Algorithm', () => {
     // D: Disabled safety stop is not added to the last stop
 
     // E: Safety stop is correctly applied at expected depth
+
+    // F: 2m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
+    // G: 3m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
+    // H: Multilevel dive, where first segment gets deco and second segment breaks ceiling before we start ascent. Add this to warnings.
+    // during this dive on second level we are already decompressing anyway, so once the ceiling should be lower than current depth.
   });
 });

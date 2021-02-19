@@ -86,14 +86,12 @@ class DepthLevels {
      */
     public static readonly decoStopDistance = 3;
 
-    public static firstDecoStop(context: AlgorithmContext): number {
-        const rounded = Math.ceil(context.currentDepth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
-
-        if (context.options.addSafetyStop && rounded <= DepthLevels.decoStopDistance &&
-            context.currentDepth > DepthLevels.decoStopDistance) {
-            return DepthLevels.decoStopDistance;
+    public static firstStop(currentDepth: number): number {
+        if (currentDepth <= DepthLevels.decoStopDistance) {
+            return 0;
         }
 
+        const rounded = Math.floor(currentDepth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
         return rounded;
     }
     
@@ -177,7 +175,7 @@ export class BuhlmannAlgorithm {
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
         this.swimPlan(context);
 
-        let nextStop = DepthLevels.firstDecoStop(context);
+        let nextStop = DepthLevels.firstStop(context.currentDepth);
 
         // for performance reasons we dont want to iterate each second, instead we iterate by 3m steps where the changes happen.
         while (nextStop >= 0) {
@@ -187,6 +185,7 @@ export class BuhlmannAlgorithm {
             this.addGasSwitch(context, newGas);
 
             // 2. Deco stop
+            // TODO add check to don't wait infinitely
             while (nextStop < context.ceiling()) {
                 const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, Time.oneMinute);
                 this.swim(context, decoStop);

@@ -1,6 +1,6 @@
 {
-  "name": "planner",
-  "short_name": "planner",
+  "name": "Gas planner",
+  "short_name": "Gas planner",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",

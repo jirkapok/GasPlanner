@@ -7,17 +7,25 @@
     </button>
     <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
       <ul class="navbar-nav mr-auto">
-        <a class="nav-link" routerLink="/sac">Sac</a>
-        <a class="nav-link" routerLink="/nitrox">Nitrox</a>
         <li class="nav-item dropdown" ngbDropdown>
-          <a class="nav-link dropdown-toggle" id="id01" ngbDropdownToggle>Settings</a>
+          <a class="nav-link dropdown-toggle" id="id01" ngbDropdownToggle>Calculators</a>
           <div class="dropdown-menu" aria-labelledby="id01" ngbDropdownMenu>
+            <a class="dropdown-item" routerLink="/sac">Sac</a>
+            <a class="dropdown-item" routerLink="/nitrox">Nitrox</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown" ngbDropdown>
+          <a class="nav-link dropdown-toggle" id="id02" ngbDropdownToggle>Settings</a>
+          <div class="dropdown-menu" aria-labelledby="id02" ngbDropdownMenu>
             <a class="dropdown-item" routerLink="/diver">Diver</a>
-            <a class="dropdown-item" (click)="saveDefaults()">Save</a>
-            <a class="dropdown-item" (click)="loadDefaults()">Reload</a>
+            <a class="dropdown-item" (click)="saveDefaults()">Save defaults</a>
+            <a class="dropdown-item" (click)="loadDefaults()">Reload defaults</a>
           </div>
         </li>
         <a class="nav-link" routerLink="/about">About</a>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><button *ngIf="showInstallButton" (click)="addToHomeScreen()" class="btn btn-success btn-small mr-auto">Add to Home screen</button></li>
       </ul>
     </div>
   </nav>

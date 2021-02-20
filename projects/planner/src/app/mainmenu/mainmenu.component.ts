@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { PreferencesService } from '../shared/preferences.service';
 
 @Component({
@@ -6,8 +6,10 @@ import { PreferencesService } from '../shared/preferences.service';
   templateUrl: './mainmenu.component.html',
   styleUrls: ['./mainmenu.component.css']
 })
-export class MainMenuComponent implements OnInit {
+export class MainMenuComponent {
   public isNavbarCollapsed = true;
+  private deferredPrompt: any;
+  public showInstallButton = false;
 
   constructor(private preferences: PreferencesService) { }
 
@@ -19,6 +21,22 @@ export class MainMenuComponent implements OnInit {
     this.preferences.loadDefaults();
   }
 
-  ngOnInit() {
+  @HostListener('window:beforeinstallprompt', ['$event'])
+  public onbeforeinstallprompt(e) {
+    e.preventDefault();
+    this.deferredPrompt = e;
+    this.showInstallButton = true;
+  }
+
+  public addToHomeScreen(): void {
+    this.showInstallButton = false;
+
+    if(!!this.deferredPrompt) {
+      this.deferredPrompt.prompt();
+      this.deferredPrompt.userChoice
+        .then((choiceResult) => {
+          this.deferredPrompt = null;
+        });
+    }
   }
 }

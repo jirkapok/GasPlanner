@@ -6,6 +6,9 @@ export class Time {
     /* One minute is 60 seconds */
     public static readonly oneMinute = 60;
 
+    /** Maximum deco stop duration one day */
+    public static readonly oneDay = 24 * 60 * Time.oneMinute;
+
     /**
      * Converts duration in minutes to seconds
      *

@@ -185,7 +185,7 @@ export class BuhlmannAlgorithm {
             maxEndPressure: depthConverter.toBar(options.maxEND)
         };
 
-        // for performance reasons we dont want to iterate each second, instead we iterate by 3m steps where the changes happen.
+        // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.
         while (nextStop >= 0) {
             // 1. Gas switch
             // multiple gas switches may happen before first deco stop
@@ -193,11 +193,14 @@ export class BuhlmannAlgorithm {
             this.addGasSwitch(context, newGas);
 
             // 2. Deco stop
-            // TODO add check to don't wait infinitely
             // TODO we may still ongasing during ascent to next stop
-            while (nextStop < context.ceiling()) {
+            // TODO performance, we need to try faster algorithm, how to find the stop length
+            let stopElapsed = 0; // max stop duration was chosen as one day.
+            while (nextStop < context.ceiling() && stopElapsed < Time.oneDay) {
+                const stopDuration = Time.oneSecond;
                 const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, Time.oneSecond);
                 this.swim(context, decoStop);
+                stopElapsed += stopDuration;
             }
 
             // 3. safety stop

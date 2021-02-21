@@ -175,8 +175,8 @@ export class BuhlmannAlgorithm {
             // TODO performance, we need to try faster algorithm, how to find the stop length
             let stopElapsed = 0; // max stop duration was chosen as one day.
             while (nextStop < context.ceiling() && stopElapsed < Time.oneDay) {
-                const stopDuration = Time.oneSecond;
-                const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, Time.oneSecond);
+                const stopDuration = Time.oneMinute;
+                const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, stopDuration);
                 this.swim(context, decoStop);
                 stopElapsed += stopDuration;
             }

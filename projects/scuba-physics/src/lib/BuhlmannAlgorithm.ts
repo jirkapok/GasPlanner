@@ -101,44 +101,65 @@ class DepthLevels {
     }
 }
 
-class AlgorithmContext {
-    public tissues: Tissues;
-    public ceilings: Ceiling[] = [];
-    public events: Event[] = [];
-    public currentGas: Gas;
+interface GradientFactors {
+    /** Gets current highest ceiling of all tissues */
+    ceiling(): number;
+}
 
-    /** in seconds */
-    public runTime = 0;
-    private lowestCeiling = 0;
+/**
+ * Calculation of gradient factors from particular depth by simple implementation
+ * Lower stops, lower total time, lower over all ceiling
+ */
+class SimpleGradientFactors {
+    private gfDiff: number;
 
-    // TODO reuse tissues for repetitive dives
-    constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
-        this.tissues = new Tissues(depthConverter.surfacePressure);
-        // add 1 to compensate gradient low on start of the dive
-        this.lowestCeiling = this.depthConverter.surfacePressure + 1;
-
-        const last = segments.last();
-        this.currentGas = last.gas;
+    constructor(private depthConverter: DepthConverter, private options: Options, private tissues: Tissues, private segments: Segments) {
+        // find variance in gradient factor
+        this.gfDiff = options.gfHigh - options.gfLow;
     }
 
-    public get currentDepth(): number {
-        if (this.segments.any()) {
-            return this.segments.last().endDepth;
+    /**
+     * calculate final gradient for current depth
+     * @param depth in meters
+     */
+    private gradientForDepth(depth: number): number {
+        const fromDepth = this.segments.maxDepth;
+        const gfChangePerMeter  = this.gfDiff / fromDepth;
+        return this.options.gfLow + (gfChangePerMeter * (fromDepth - depth));
+    }
+
+
+    public ceiling(): number {
+        let tolerated = this.tissues.ceiling(this.options.gfLow);
+        if (tolerated < this.depthConverter.surfacePressure) {
+            tolerated = this.depthConverter.surfacePressure;
         }
 
-        return 0;
-    }
+        const toleratedDepth = this.depthConverter.fromBar(tolerated);
+        const gf = this.gradientForDepth(toleratedDepth);
+        
+        let bars = this.tissues.ceiling(gf);
 
-    public get ambientPressure(): number {
-        return this.depthConverter.toBar(this.currentDepth);
-    }
+        // less than surface pressure means no ceiling, this aproximation is OK,
+        // because tissues are loaded only under water
+        if (bars < this.depthConverter.surfacePressure) {
+            bars = this.depthConverter.surfacePressure;
+        }
 
-    public addCeiling() {
-        const depth = this.ceiling();
-        this.ceilings.push({
-            time: this.runTime,
-            depth: depth
-        });
+        return this.depthConverter.fromBar(bars);
+    }
+}
+
+/**
+ * Calculation of gradient factors inspired by SubSurface
+ * Stops deeper, faster ceiling increase, higher total time
+ */
+class SubSurfaceGradientFactors {
+    private lowestCeiling = 0;
+
+    constructor(private depthConverter: DepthConverter, private options: Options, private tissues: Tissues) {
+        // add 1 to compensate gradient low on start of the dive
+        this.lowestCeiling = this.depthConverter.surfacePressure + 1;
     }
 
     private tolerated(): number {
@@ -165,6 +186,50 @@ class AlgorithmContext {
         }
 
         return this.depthConverter.fromBar(bars);
+    } 
+}
+
+class AlgorithmContext {
+    public tissues: Tissues;
+    public ceilings: Ceiling[] = [];
+    public events: Event[] = [];
+    public currentGas: Gas;
+    /** in seconds */
+    public runTime = 0;
+    private gradients: GradientFactors;
+
+    // TODO reuse tissues for repetitive dives
+    constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
+        this.tissues = new Tissues(depthConverter.surfacePressure);
+        // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
+        this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
+
+        const last = segments.last();
+        this.currentGas = last.gas;
+    }
+
+    public get currentDepth(): number {
+        if (this.segments.any()) {
+            return this.segments.last().endDepth;
+        }
+
+        return 0;
+    }
+
+    public get ambientPressure(): number {
+        return this.depthConverter.toBar(this.currentDepth);
+    }
+
+    public addCeiling() {
+        const depth = this.ceiling();
+        this.ceilings.push({
+            time: this.runTime,
+            depth: depth
+        });
+    }
+
+    public ceiling(): number {
+        return this.gradients.ceiling();
     }
 }
 

@@ -96,18 +96,18 @@ export class Segment {
 
 export class Segments {
     private segments: Segment[] = [];
-    private _max: number = 0;
+    private _maxDepth: number = 0;
 
-    public get max(): number {
-        return this._max;
+    public get maxDepth(): number {
+        return this._maxDepth;
     }
 
     public add(startDepth: number, endDepth: number, gas: Gas, duration: number): Segment {
         const segment = new Segment(startDepth, endDepth, gas, duration);
         this.segments.push(segment);
 
-        if(segment.endDepth > this.max) {
-            this._max = segment.endDepth;
+        if(segment.endDepth > this._maxDepth) {
+            this._maxDepth = segment.endDepth;
         }
         
         return segment;

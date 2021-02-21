@@ -196,7 +196,7 @@ export class BuhlmannAlgorithm {
             // TODO add check to don't wait infinitely
             // TODO we may still ongasing during ascent to next stop
             while (nextStop < context.ceiling()) {
-                const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, Time.oneMinute);
+                const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, Time.oneSecond);
                 this.swim(context, decoStop);
             }
 

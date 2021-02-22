@@ -11,6 +11,8 @@ export interface GradientFactors {
 /**
  * Calculation of gradient factors inspired by SubSurface
  * Stops deeper, faster ceiling increase, higher total time
+ * Because inspired by https://github.com/subsurface/subsurface
+ * this part needs to be under GNU General Public License v2.0
  */
 export class SubSurfaceGradientFactors {
     private lowestCeiling = 0;
@@ -36,7 +38,6 @@ export class SubSurfaceGradientFactors {
             const compartment = compartments[ci];
             let currentTolerated = tolerated;
 
-            // reused from Subsurface
             if ((surface / compartment.b + compartment.a - surface) * gfHigh + surface <
                 (lowestCeiling / compartment.b + compartment.a - lowestCeiling) * gfLow + lowestCeiling) {
                currentTolerated = (-compartment.a * compartment.b * (gfHigh * lowestCeiling - gfLow * surface) -

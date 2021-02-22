@@ -188,7 +188,7 @@ export class BuhlmannAlgorithm {
                 this.swim(context, decoStop);
             }
 
-            // 3. ascent to the nextStop
+            // 4. ascent to the nextStop
             const depthDifference = context.currentDepth - nextStop;
             const duration = this.duration(depthDifference, options.ascentSpeed / Time.oneMinute);
             const ascent = context.segments.add(context.currentDepth, nextStop, context.currentGas, duration);

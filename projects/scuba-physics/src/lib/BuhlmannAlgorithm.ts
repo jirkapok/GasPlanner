@@ -10,7 +10,11 @@ export class Options implements GasOptions, DepthOptions {
     /**
      * meters above see level, 0 for see level (default)
      */
-    public altitude: number
+    public altitude: number = 0;
+
+    /** If true (default) deco stops are rounded up to whole minutes (I.e. longer ascent).
+     *  Otherwise, length of stops is not rounded and profile generates precise stops in seconds .  */
+    public roundStopsToMinutes: boolean = true;
 
     constructor(
         // Gradient factors in Shearwater
@@ -95,7 +99,7 @@ class DepthLevels {
         const rounded = Math.floor(currentDepth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
         return rounded;
     }
-    
+
     /** return negative number for ascent to surface */
     public static nextStop(lastStop: number): number {
         return lastStop - DepthLevels.decoStopDistance;
@@ -144,6 +148,10 @@ class AlgorithmContext {
     public ceiling(): number {
         return this.gradients.ceiling();
     }
+
+    public get decoStopDuration(): number {
+        return this.options.roundStopsToMinutes ? Time.oneMinute: Time.oneSecond;
+    }
 }
 
 export class BuhlmannAlgorithm {
@@ -175,7 +183,7 @@ export class BuhlmannAlgorithm {
             // TODO performance, we need to try faster algorithm, how to find the stop length
             let stopElapsed = 0; // max stop duration was chosen as one day.
             while (nextStop < context.ceiling() && stopElapsed < Time.oneDay) {
-                const stopDuration = Time.oneMinute;
+                const stopDuration = context.decoStopDuration;
                 const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, stopDuration);
                 this.swim(context, decoStop);
                 stopElapsed += stopDuration;
@@ -206,7 +214,7 @@ export class BuhlmannAlgorithm {
         }
 
         context.currentGas = newGas;
-        const gasSwitch: Event =  {
+        const gasSwitch: Event = {
             timeStamp: context.runTime,
             depth: context.currentDepth,
             type: EventType.gasSwitch,
@@ -303,9 +311,9 @@ export class BuhlmannAlgorithm {
             return Number.POSITIVE_INFINITY;
         }
 
-         // We went one minute past a ceiling of "0"
+        // We went one minute past a ceiling of "0"
         let result = Time.toMinutes(context.runTime);
-        result = Math.floor(result); 
+        result = Math.floor(result);
         return result - 1;
     }
 

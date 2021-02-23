@@ -56,6 +56,14 @@ export class PlanComponent implements OnInit {
     }
   }
 
+  public get roundDecoStops(): boolean {
+    return this.planer.options.roundStopsToMinutes;
+  }
+
+  public set roundDecoStops(newValue: boolean) {
+    this.planer.options.roundStopsToMinutes = newValue;
+  }
+
   public lowConservatism() {
     this.conservatism = this.Low;
     this.plannedGfLow = 45;

@@ -74,11 +74,6 @@ export class Gases {
     private decoGases: Gas[] = [];
     private bottomGases: Gas[] = [];
 
-    private static roundToDecoStop(depthConverter: DepthConverter, pressure:number): number {
-        const depth = depthConverter.fromBar(pressure);
-        return Math.round(depth / DepthConverter.decoStopDistance) * DepthConverter.decoStopDistance;
-    }
-
     private static bestGas(gases: Gas[], depthConverter: DepthConverter, options: BestGasOptions): Gas {
         const currentPressure = depthConverter.toBar(options.currentDepth);        
         let found = null;
@@ -87,7 +82,7 @@ export class Gases {
             const candidate = gases[index];
             const modPressure = candidate.mod(options.maxDecoPpO2);
             // e.g. oxygen at 6m wouldn't be best for 6m without rounding
-            const mod = this.roundToDecoStop(depthConverter, modPressure);
+            const mod = depthConverter.toDecoStop(modPressure);
             const end = candidate.end(currentPressure);
 
             // TODO consider only switch to gas with lower nitrogen content

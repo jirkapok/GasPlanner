@@ -78,4 +78,14 @@ export class DepthConverter {
     const pressure = PressureConverter.barToPascal(bars - this._surfacePressure);
     return pressure / weightDensity;
   }
+
+  /**
+   * Converts the pressure to depth in meters and round it to nearest deco stop
+   * 
+   * @param depthPressure depth in bars
+   */
+  public toDecoStop(depthPressure: number): number {
+    const depth = this.fromBar(depthPressure);
+    return Math.round(depth / DepthConverter.decoStopDistance) * DepthConverter.decoStopDistance;
+  }
 }

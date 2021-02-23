@@ -17,7 +17,7 @@ export class GaslabelComponent {
   }
 
   public get gasDecoMod(): number {
-    return this.planer.modForDecoGas(this.gas);
+    return this.planer.switchDepth(this.gas);
   }
 
   constructor(private planer: PlannerService) { }

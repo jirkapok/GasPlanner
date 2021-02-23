@@ -53,21 +53,22 @@ export class PlannerService {
   }
 
   public get gasMod(): number {
-    return this.gasModByPpO2(this.firstGas, this.diver.maxPpO2);
+    return this.modForGas(this.firstGas);
   }
 
-  public modForDecoGas(gas: Gas): number {
-    return this.gasModByPpO2(gas, this.diver.maxDecoPpO2);
+  public switchDepth(gas: Gas): number {
+    const nitroxCalculator = this.createNitroxCalculator();
+    return nitroxCalculator.gasSwitch(this.diver.maxDecoPpO2, gas.o2);
   }
 
   public modForGas(gas: Gas): number {
-    return this.gasModByPpO2(gas, this.diver.maxPpO2);
+    const nitroxCalculator = this.createNitroxCalculator();
+    return nitroxCalculator.mod(this.diver.maxPpO2, gas.o2);
   }
 
-  private gasModByPpO2(gas: Gas, ppO2: number): number {
+  private createNitroxCalculator(): NitroxCalculator {
     let depthConverter = this.depthConverterFactory.create();
-    const nitroxCalculator = new NitroxCalculator(depthConverter);
-    return nitroxCalculator.mod(ppO2, gas.o2);
+    return new NitroxCalculator(depthConverter);
   }
 
   public noDecoTime(): number {

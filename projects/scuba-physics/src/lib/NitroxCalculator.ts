@@ -45,6 +45,19 @@ export class NitroxCalculator {
   }
 
   /**
+   * Calculates recommended switch depth for given gas rounded to meters.
+   *
+   * @param ppO2 - Partial pressure constant.
+   * @param percentO2 - Percents of Oxygen fraction in gas.
+   * @returns Depth in meters.
+   */
+  public gasSwitch(ppO2: number, percentO2: number): number {
+    const fO2 = percentO2 / 100;
+    let result = GasMixtures.mod(ppO2, fO2);
+    return this.depthConverter.toDecoStop(result);
+  }
+
+  /**
    * Calculates partial pressure constant for given mix at depth.
    *
    * @param fO2 - Percents of Oxygen fraction in gas.

@@ -20,6 +20,11 @@ export class DepthConverterFactory {
 }
 
 export class DepthConverter {
+  /**
+   * Depth difference between two deco stops in metres.
+   */
+  public static readonly decoStopDistance = 3;
+
   private _surfacePressure: number;
 
   /**

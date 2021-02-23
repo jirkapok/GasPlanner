@@ -14,10 +14,9 @@ List of current features is part of [application help](./doc/help.md).
 Road map of planned features:
 
 * Fix precision of decompression algorithm
-  * Fix oxygen stop to happen in 6m
   * Allow max. depth exceeds gas ppO2
   * Fix loading of tissues when tissues are still loaded during ascent
-* Add option to define safety stop range
+* Add option to define safety stop range including no safetystop below 10m dives
 * Allow define multiple gases
 * Allow to define multiple levels
 * Add imperial units option

@@ -97,6 +97,7 @@ describe('Gases', () => {
 
     describe('Best gas', () => {
       const bestGasOptions: BestGasOptions = {
+        currentDepth: 0,
         maxDecoPpO2: options.maxDecoPpO2,
         maxEndPressure: 4
       };
@@ -105,14 +106,16 @@ describe('Gases', () => {
         const gases = new Gases();
         gases.addBottomGas(air);
         gases.addDecoGas(ean50);
-        const found = gases.bestDecoGas(3, bestGasOptions);
+        bestGasOptions.currentDepth = 20;
+        const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
         expect(found).toBe(ean50);
       });
 
       it('No deco gas, bottom gas is found', () => {
         const gases = new Gases();
         gases.addBottomGas(air);
-        const found = gases.bestDecoGas(3, bestGasOptions);
+        bestGasOptions.currentDepth = 20;
+        const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
         expect(found).toBe(air);
       });
 
@@ -121,7 +124,8 @@ describe('Gases', () => {
         gases.addBottomGas(air);
         gases.addDecoGas(ean50);
         gases.addDecoGas(trimix1835);
-        const found = gases.bestDecoGas(3, bestGasOptions);
+        bestGasOptions.currentDepth = 20;
+        const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
         expect(found).toBe(ean50);
       });
 
@@ -134,18 +138,20 @@ describe('Gases', () => {
         gases.addBottomGas(oxygen);
         
         it('Air for 30m', () => {
-          const found = gases.bestDecoGas(4, bestGasOptions);
+          bestGasOptions.currentDepth = 30;
+          const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
           expect(found).toBe(air);
         });
 
         it('Trimix 18/35 for 40m', () => {
-          const found = gases.bestDecoGas(4.9, bestGasOptions);
+          bestGasOptions.currentDepth = 40;
+          const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
           expect(found).toBe(trimix1835);
         });
 
-        xit('Oxygen for 6m', () => {
-          // TODO solve mod precision to oxygen at 6m
-          const found = gases.bestDecoGas(1.6, bestGasOptions);
+        it('Oxygen for 6m', () => {
+          bestGasOptions.currentDepth = 6;
+          const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
           expect(found).toBe(oxygen);
         });
       });

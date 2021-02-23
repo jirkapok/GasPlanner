@@ -86,23 +86,18 @@ export class Options implements GasOptions, DepthOptions {
 }
 
 class DepthLevels {
-    /**
-     * Depth difference between two deco stops in metres.
-     */
-    public static readonly decoStopDistance = 3;
-
     public static firstStop(currentDepth: number): number {
-        if (currentDepth <= DepthLevels.decoStopDistance) {
+        if (currentDepth <= DepthConverter.decoStopDistance) {
             return 0;
         }
 
-        const rounded = Math.floor(currentDepth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
+        const rounded = Math.floor(currentDepth / DepthConverter.decoStopDistance) * DepthConverter.decoStopDistance;
         return rounded;
     }
 
     /** return negative number for ascent to surface */
     public static nextStop(lastStop: number): number {
-        return lastStop - DepthLevels.decoStopDistance;
+        return lastStop - DepthConverter.decoStopDistance;
     }
 }
 
@@ -114,6 +109,7 @@ class AlgorithmContext {
     /** in seconds */
     public runTime = 0;
     private gradients: GradientFactors;
+    private bestGasOptions: BestGasOptions;
 
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
@@ -123,6 +119,12 @@ class AlgorithmContext {
 
         const last = segments.last();
         this.currentGas = last.gas;
+
+        this.bestGasOptions = {
+            currentDepth: this.currentDepth,
+            maxDecoPpO2: this.options.maxDecoPpO2,
+            maxEndPressure: this.depthConverter.toBar(this.options.maxEND)
+        };
     }
 
     public get currentDepth(): number {
@@ -152,6 +154,12 @@ class AlgorithmContext {
     public get decoStopDuration(): number {
         return this.options.roundStopsToMinutes ? Time.oneMinute: Time.oneSecond;
     }
+
+    public bestDecoGas(): Gas {
+        this.bestGasOptions.currentDepth = this.currentDepth;
+        const newGas = this.gases.bestDecoGas(this.depthConverter, this.bestGasOptions);
+        return newGas;
+    }
 }
 
 export class BuhlmannAlgorithm {
@@ -166,21 +174,17 @@ export class BuhlmannAlgorithm {
         this.swimPlan(context);
 
         let nextStop = DepthLevels.firstStop(context.currentDepth);
-        const bestGasOptions: BestGasOptions = {
-            maxDecoPpO2: options.maxDecoPpO2,
-            maxEndPressure: depthConverter.toBar(options.maxEND)
-        };
 
         // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.
         while (nextStop >= 0) {
             // 1. Gas switch
             // multiple gas switches may happen before first deco stop
-            const newGas = context.gases.bestDecoGas(context.ambientPressure, bestGasOptions);
-            this.addGasSwitch(context, newGas);
+            this.tryGasSwitch(context);
 
             // 2. Deco stop
             // TODO we may still ongasing during ascent to next stop
             // TODO performance, we need to try faster algorithm, how to find the stop length
+            // TODO add oxygen breaks
             let stopElapsed = 0; // max stop duration was chosen as one day.
             while (nextStop < context.ceiling() && stopElapsed < Time.oneDay) {
                 const stopDuration = context.decoStopDuration;
@@ -190,7 +194,8 @@ export class BuhlmannAlgorithm {
             }
 
             // 3. safety stop
-            if (options.addSafetyStop && context.currentDepth === DepthLevels.decoStopDistance) {
+            // TODO consider again safety stop to be added in case depths higher than 10 meters
+            if (options.addSafetyStop && context.currentDepth === DepthConverter.decoStopDistance) {
                 const safetyStopDuration = Time.oneMinute * 3;
                 const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, safetyStopDuration);
                 this.swim(context, decoStop);
@@ -208,7 +213,9 @@ export class BuhlmannAlgorithm {
         return CalculatedProfile.fromProfile(merged, context.ceilings, context.events);
     }
 
-    private addGasSwitch(context: AlgorithmContext, newGas: Gas) {
+    private tryGasSwitch(context: AlgorithmContext) {
+        const newGas: Gas = context.bestDecoGas();
+
         if (!newGas || context.currentGas.compositionEquals(newGas)) {
             return;
         }

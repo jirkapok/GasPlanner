@@ -60,7 +60,11 @@ export interface GasOptions {
 }
 
 export interface BestGasOptions {
+    /** depth in meters */
+    currentDepth: number;
+
     maxDecoPpO2: number;
+
     /** Maximum narcotic depth in bars */
     maxEndPressure: number;
 }
@@ -70,17 +74,26 @@ export class Gases {
     private decoGases: Gas[] = [];
     private bottomGases: Gas[] = [];
 
-    private static bestGas(gases: Gas[], currentDepth: number, options: BestGasOptions): Gas {
+    private static roundToDecoStop(depthConverter: DepthConverter, pressure:number): number {
+        const depth = depthConverter.fromBar(pressure);
+        return Math.round(depth / DepthConverter.decoStopDistance) * DepthConverter.decoStopDistance;
+    }
+
+    private static bestGas(gases: Gas[], depthConverter: DepthConverter, options: BestGasOptions): Gas {
+        const currentPressure = depthConverter.toBar(options.currentDepth);        
         let found = null;
+
         gases.forEach((element, index, source) => {
             const candidate = gases[index];
-            const mod = candidate.mod(options.maxDecoPpO2);
-            const end = candidate.end(currentDepth);
+            const modPressure = candidate.mod(options.maxDecoPpO2);
+            // e.g. oxygen at 6m wouldn't be best for 6m without rounding
+            const mod = this.roundToDecoStop(depthConverter, modPressure);
+            const end = candidate.end(currentPressure);
 
             // TODO consider only switch to gas with lower nitrogen content
             // TODO move maxEND exceeded to validator as warning
             // TODO add option to enforce narcotic depth in the UI
-            if (currentDepth <= mod && end <= options.maxEndPressure) {
+            if (options.currentDepth <= mod && end <= options.maxEndPressure) {
                 // We don't care about gas ceiling, because it is covered by higher O2 content
                 // only oxygen content is relevant for decompression => EAN50 is better than TRIMIX 25/25
                 if (!found || found.fO2 < candidate.fO2) {
@@ -94,16 +107,14 @@ export class Gases {
      /**
      * Finds better gas to switch to from current depth, returns null, if no better gas was found.
      * Better gas is breathable at current depth and with higher O2.
-     * 
-     * @param currentDepth in bars
      */
-    public bestDecoGas(currentDepth: number, options: BestGasOptions): Gas {
-        const decoGas = Gases.bestGas(this.decoGases, currentDepth, options);
+    public bestDecoGas(depthConverter: DepthConverter,  options: BestGasOptions): Gas {
+        const decoGas = Gases.bestGas(this.decoGases, depthConverter, options);
         if (!!decoGas) {
             return decoGas;
         }
 
-        return Gases.bestGas(this.bottomGases, currentDepth, options);
+        return Gases.bestGas(this.bottomGases, depthConverter, options);
     }
 
     public get all(): Gas[] {

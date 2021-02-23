@@ -132,7 +132,7 @@ export class PlannerService {
   }
 
   private buildNoDecoProfile(): WayPoint[] {
-    const safetyStopDepth = 3; // TODO customizable safetystop depth
+    const safetyStopDepth = DepthConverter.decoStopDistance; // TODO customizable safetystop depth
     const safetyStopDuration = 3 * Time.oneMinute;
 
     const maxDepth = this.plan.depth;

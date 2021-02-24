@@ -18,7 +18,16 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.plan = this.planer.plan;
-    this.planer.updateNoDecoTime();
+    this.planer.calculate();
+  }
+
+  public get planDuration(): number {
+    return this.plan.duration;
+  }
+
+  public set planDuration(newValue: number) {
+    this.plan.duration = newValue;
+    this.planer.calculate();
   }
 
   @Input()
@@ -28,7 +37,7 @@ export class ProfileComponent implements OnInit {
 
   public set plannedDepth(depth: number) {
     this.plan.depth = depth;
-    this.planer.updateNoDecoTime();
+    this.planer.calculate();
   }
 
   public get noDecoTime(): number {

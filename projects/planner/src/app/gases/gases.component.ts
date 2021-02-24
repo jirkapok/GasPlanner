@@ -38,7 +38,7 @@ export class GasesComponent implements OnInit {
 
   public set o2(newValue) {
     this.firstGas.o2 = newValue;
-    this.planner.updateNoDecoTime();
+    this.planner.calculate();
   }
 
   public gasSac(gas: Gas): number {

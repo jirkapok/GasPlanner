@@ -27,7 +27,7 @@ export class PlanComponent implements OnInit {
   ngOnInit(): void {
     this.plan = this.planer.plan;
     this.reset();
-    this.planer.updateNoDecoTime();
+    this.planer.calculate();
   }
 
   @Input()
@@ -37,7 +37,7 @@ export class PlanComponent implements OnInit {
 
   public set plannedDepth(depth: number) {
     this.plan.depth = depth;
-    this.planer.updateNoDecoTime();
+    this.planer.calculate();
   }
 
   public get isTechnical(): boolean {
@@ -55,6 +55,8 @@ export class PlanComponent implements OnInit {
       this.roundDecoStops = true;
       this.planer.resetToDefaultGases();
     }
+
+    this.planer.calculate();
   }
 
   public get roundDecoStops(): boolean {
@@ -63,6 +65,7 @@ export class PlanComponent implements OnInit {
 
   public set roundDecoStops(newValue: boolean) {
     this.planer.options.roundStopsToMinutes = newValue;
+    this.planer.calculate();
   }
 
   public get gasSwitchDuration(): number {
@@ -71,6 +74,7 @@ export class PlanComponent implements OnInit {
 
   public set gasSwitchDuration(newValue: number) {
     this.planer.options.gasSwitchDuration = newValue;
+    this.planer.calculate();
   }
 
   public lowConservatism() {
@@ -97,7 +101,7 @@ export class PlanComponent implements OnInit {
 
   public set plannedGfHigh(newValue: number) {
     this.planer.options.gfHigh = newValue / 100;
-    this.planer.updateNoDecoTime();
+    this.planer.calculate();
   }
 
   public get plannedGfLow(): number {
@@ -106,7 +110,7 @@ export class PlanComponent implements OnInit {
 
   public set plannedGfLow(newValue: number) {
     this.planer.options.gfLow = newValue / 100;
-    this.planer.updateNoDecoTime();
+    this.planer.calculate();
   }
 
   public get isFreshWater(): boolean {
@@ -123,7 +127,7 @@ export class PlanComponent implements OnInit {
 
   public set plannedAltitude(newValue: number) {
     this.planer.options.altitude = newValue;
-    this.planer.updateNoDecoTime();
+    this.planer.calculate();
   }
 
   public get ascentSpeed(): number {
@@ -132,7 +136,7 @@ export class PlanComponent implements OnInit {
 
   public set ascentSpeed(newValue: number) {
     this.planer.options.ascentSpeed = newValue;
-    this.planer.updateNoDecoTime();
+    this.planer.calculate();
   }
 
   public get descentSpeed(): number {
@@ -141,10 +145,6 @@ export class PlanComponent implements OnInit {
 
   public set descentSpeed(newValue: number) {
     this.planer.options.descentSpeed = newValue;
-    this.planer.updateNoDecoTime();
-  }
-
-  public calculate(): void {
     this.planer.calculate();
   }
 
@@ -163,6 +163,8 @@ export class PlanComponent implements OnInit {
         break;
       }
     }
+    
+    this.planer.calculate();
   }
 
   public allUsable(): void {

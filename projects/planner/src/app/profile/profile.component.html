@@ -6,7 +6,7 @@
   <div class="card-body">
     <div class="form-group">
       <label for="duration">Bottom time [min.]:
-        <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="plan.duration" class="form-control" type="number"
+        <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="planDuration" class="form-control" type="number"
          min="1" [min]="1" required [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"/>
       </label>
       <div class="text-danger" *ngIf="duration.invalid && (duration.dirty || duration.touched)">Needs to be number > 0 min.</div>

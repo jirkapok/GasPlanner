@@ -40,15 +40,17 @@ export class PlannerService {
   public addGas(): void {
     const newGas = new Gas(11, 21, 200);
     this.gases.push(newGas);
+    this.calculate();
   }
 
   public removeGas(gas: Gas): void {
     this.gases = this.gases.filter(g => g !== gas);
+    this.calculate();
   }
 
   public changeWaterType(isFreshWater: boolean) {
     this.options.isFreshWater = isFreshWater;
-    this.updateNoDecoTime();
+    this.calculate();
     this.onCalculated.next();
   }
 
@@ -90,7 +92,7 @@ export class PlannerService {
 
   public calculate(): void {
     this.depthConverter = this.depthConverterFactory.create();
-    this.updateNoDecoTime();
+    this.plan.noDecoTime = this.noDecoTime();
     const profile = WayPointsService.calculateWayPoints(this.plan, this.gases, this.options);
     // TODO multilevel diving: ascent cant be identified by first two segments
     const ascent = PlannerService.ascent(profile.wayPoints);
@@ -116,10 +118,6 @@ export class PlannerService {
     this.dive.calculated = true;
 
     this.onCalculated.next();
-  }
-
-  public updateNoDecoTime(): void {
-    this.plan.noDecoTime = this.noDecoTime();
   }
 
   private calculateTurnPressure(): number {

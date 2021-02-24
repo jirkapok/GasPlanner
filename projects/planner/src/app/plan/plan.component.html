@@ -124,6 +124,17 @@
             </div>
           </label>
         </div>
+
+        <div class="form-group">
+          <label for="switchDuration">Gas switch duration [min.]:
+            <input id="switchDuration" name="switchDuration" #switchDuration="ngModel" [(ngModel)]="gasSwitchDuration" class="form-control"
+              type="number" min="1" [min]="1" max="10" [range]="[1, 10]" required
+              [class.is-invalid]="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)" />
+            <div class="text-danger" *ngIf="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)">
+              Needs to be number 1 - 10
+            </div>
+          </label>
+        </div>
       </div>
 
     </div>

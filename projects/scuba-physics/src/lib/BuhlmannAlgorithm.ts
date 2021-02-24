@@ -16,6 +16,9 @@ export class Options implements GasOptions, DepthOptions {
      *  Otherwise, length of stops is not rounded and profile generates precise stops in seconds .  */
     public roundStopsToMinutes: boolean = true;
 
+    /** Gas switch stop length in minutes */
+    public gasSwitchDuration: number = 1;
+
     constructor(
         // Gradient factors in Shearwater
         // Low (45/95)
@@ -184,7 +187,7 @@ export class BuhlmannAlgorithm {
             // 2. Deco stop
             // TODO we may still ongasing during ascent to next stop
             // TODO performance, we need to try faster algorithm, how to find the stop length
-            // TODO add oxygen breaks
+            // TODO add air breaks - https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/
             let stopElapsed = 0; // max stop duration was chosen as one day.
             while (nextStop < context.ceiling() && stopElapsed < Time.oneDay) {
                 const stopDuration = context.decoStopDuration;
@@ -229,7 +232,8 @@ export class BuhlmannAlgorithm {
         };
 
         context.events.push(gasSwitch);
-        const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, Time.oneMinute);
+        const duration = context.options.gasSwitchDuration * Time.oneMinute;
+        const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, duration);
         this.swim(context, stop);
     }
 

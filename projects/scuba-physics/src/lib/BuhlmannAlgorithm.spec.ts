@@ -250,12 +250,14 @@ describe('Buhlmann Algorithm', () => {
     // G: 3m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
 
     // H: Multiple gases with identical content don't generate multiple gas switches at the same level
-
+   
+    // I: Gases: 18/45, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
+    
 
 
 
     // TODO multi level dives test cases:
-    // H:where first segment gets deco and second segment breaks ceiling before we start ascent. Add this to warnings.
+    // A: where first segment gets deco and second segment breaks ceiling before we start ascent. Add this to warnings.
     // during this dive on second level we are already decompressing anyway, so once the ceiling should be lower than current depth.
   });
 });

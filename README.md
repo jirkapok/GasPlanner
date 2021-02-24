@@ -31,6 +31,7 @@ Road map of planned features:
 * Add help to all variables
 * Add localization
 * Add trimix support and calculator
+  * Add air breaks
 * Add option to define repetitive dives
   * Unify dive settings and default settings
 * Add CNS and OTU calculations

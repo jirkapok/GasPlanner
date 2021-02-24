@@ -65,6 +65,14 @@ export class PlanComponent implements OnInit {
     this.planer.options.roundStopsToMinutes = newValue;
   }
 
+  public get gasSwitchDuration(): number {
+    return this.planer.options.gasSwitchDuration;
+  }
+
+  public set gasSwitchDuration(newValue: number) {
+    this.planer.options.gasSwitchDuration = newValue;
+  }
+
   public lowConservatism() {
     this.conservatism = this.Low;
     this.plannedGfLow = 45;

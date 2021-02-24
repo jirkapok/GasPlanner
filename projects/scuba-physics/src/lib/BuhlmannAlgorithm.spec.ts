@@ -1,11 +1,17 @@
+import { Time } from './Time';
 import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
 import { Gas, Gases } from './Gases';
 import { Segment, Segments } from './Segments';
 
 describe('Buhlmann Algorithm', () => {
+  const air: Gas = new Gas(0.21, 0); 
+  const ean32: Gas = new Gas(0.32, 0);
+  const ean50: Gas = new Gas(0.5, 0);
+  const oxygen: Gas = new Gas(1, 0);
+  const trimix2135: Gas = new Gas(0.21, 0.35);
+
   describe('No decompression times', () => {
     it('Calculate air No decompression limit at surface', () => {
-        const air: Gas = new Gas(0.21, 0);
         const depth = 0;
         const options = new Options(1, 1, 1.6, 1.6, 30, true);
         const algorithm = new BuhlmannAlgorithm();
@@ -14,7 +20,6 @@ describe('Buhlmann Algorithm', () => {
     });
 
     it('Calculate 0m if gas isn`t breathe-able at 60 m', () => {
-      const air: Gas = new Gas(0.21, 0);
       const depth = 60;
       const options = new Options(1, 1, 1.4, 1.4, 30, true);
       const algorithm = new BuhlmannAlgorithm();
@@ -22,13 +27,12 @@ describe('Buhlmann Algorithm', () => {
       expect(ndl).toBe(0);
   });
 
-    xdescribe('Calculate air No decompression limits at depth', () => {
+    describe('Calculate air No decompression limits at depth', () => {
       const options = new Options(1, 1, 1.6, 1.6, 30, true);
 
       const calculateNoDecompressionLimit = (testCases: number[][], isFreshWater: boolean) => {
         testCases.forEach(testCase => {
           const algorithm = new BuhlmannAlgorithm();
-          const air: Gas = new Gas(0.21, 0);
           const depth = testCase[0];
           options.isFreshWater = isFreshWater;
           const ndl = algorithm.noDecoLimit(depth, air, options);
@@ -103,133 +107,130 @@ describe('Buhlmann Algorithm', () => {
     });
   });
 
-  xdescribe('Calculates Plan', () =>  {
-    const isFreshWater = false;
-    // gradientFactorLow = 0.2, gradientFactorHigh=0.8, deco ppO2 = 1.6, and max END allowed: 30 meters.
-    const options = new Options(0.2, 0.8, 1.6, 1.6, 30, isFreshWater);
+  describe('Calculates Plan', () =>  {
+    // gradientFactorLow = 0.4, gradientFactorHigh=0.85, deco ppO2 = 1.6, and max END allowed: 30 meters.
+    // we don't need to change the gradient factors, because its application is already confirmed by the ascent times and no deco times
+    const options = new Options(0.4, 0.85, 1.4, 1.6, 30, false, true);
+
+    beforeEach(() => {
+        options.addSafetyStop = true;
+        options.roundStopsToMinutes = true;
+    });
 
     const concatenatePlan = (decoPlan: Segment[]): string => {
       let planText = '';
       decoPlan.forEach(segment => {
-        planText += segment.startDepth + ',' + segment.endDepth + ',' + segment.duration + ';';
+        planText += segment.startDepth + ',' + segment.endDepth + ',' + segment.duration + '; ';
       });
 
-      return planText;
+      return planText.trim();
     };
 
-    it('5m for 30 minutes using ean32', () => {
-      const bottomGas: Gas = new Gas(0.32, 0);
+    it('5m for 30 minutes using ean32 without safety stop', () => {
       const gases: Gases = new Gases();
-      gases.addBottomGas(bottomGas);
+      gases.addBottomGas(ean32);
 
       const segments = new Segments();
-      segments.add(0, 5, bottomGas, 1);
-      segments.addFlat(5, bottomGas, 30);
+      segments.add(0, 5, ean32, 15);
+      segments.addFlat(5, ean32, 29.75 * Time.oneMinute);
 
+      options.addSafetyStop = false;
       const algorithm = new BuhlmannAlgorithm();
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
       const planText = concatenatePlan(decoPlan.segments);
 
-      const epectedPlan = '0,5,1;5,5,30;5,0,0.5;';
-      expect(planText).toBe(epectedPlan);
+      const expectedPlan = '0,5,15; 5,5,1785; 5,0,30;';
+      expect(planText).toBe(expectedPlan);
     });
 
-    it('10m for 40 minutes using air', () => {
+    it('10m for 40 minutes using air with safety stop at 3m', () => {
       const gases = new Gases();
-      const bottomGas: Gas = new Gas(0.21, 0);
-      gases.addBottomGas(bottomGas);
+      gases.addBottomGas(air);
 
       const segments = new Segments();
-      segments.add(0, 10, bottomGas, 1);
-      segments.addFlat(10, bottomGas, 40);
+      segments.add(0, 10, air, 30);
+      segments.addFlat(10, air, 39.5 * Time.oneMinute);
 
       const algorithm = new BuhlmannAlgorithm();
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
       const planText = concatenatePlan(decoPlan.segments);
 
-      const epectedPlan = '0,10,1;10,10,40;10,3,0.7;3,3,1;3,0,0.3;';
-      expect(planText).toBe(epectedPlan);
+      const expectedPlan = '0,10,30; 10,10,2370; 10,3,42; 3,3,180; 3,0,18;';
+      expect(planText).toBe(expectedPlan);
     });
 
     it('30m for 25 minutes using air', () => {
       const gases = new Gases();
-      const bottomGas: Gas = new Gas(0.21, 0);
-      gases.addBottomGas(bottomGas);
+      gases.addBottomGas(air);
 
       const segments = new Segments();
-      segments.add(0, 30, bottomGas, 2);
-      segments.addFlat(30, bottomGas, 25);
+      segments.add(0, 30, air, 1.5 * Time.oneMinute);
+      segments.addFlat(30, air, 23.5 * Time.oneMinute);
 
       const algorithm = new BuhlmannAlgorithm();
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
       const planText = concatenatePlan(decoPlan.segments);
 
-      const epectedPlan = '0,30,2;30,30,25;30,15,1.5;15,15,1;15,9,0.6;9,9,1;9,6,0.3;6,6,3;6,3,0.3;3,3,10;3,0,0.3;';
-      expect(planText).toBe(epectedPlan);
+      const expectedPlan = '0,30,90; 30,30,1410; 30,30,0; 30,12,108; 12,12,60; 12,9,18; ' +
+                           '9,9,60; 9,6,18; 6,6,180; 6,3,18; 3,3,480; 3,0,18;';
+      expect(planText).toBe(expectedPlan);
     });
 
     it('40m for 30 minutes using air and ean50', () => {
       const gases = new Gases();
-      const bottomGas: Gas = new Gas(0.21, 0);
-      gases.addBottomGas(bottomGas);
-      const decoGas: Gas = new Gas(0.5, 0);
-      gases.addBottomGas(decoGas);
+      gases.addBottomGas(air);
+      gases.addBottomGas(ean50);
 
       const segments = new Segments();
-      segments.add(0, 40, bottomGas, 3);
-      segments.addFlat(40, bottomGas, 30);
+      segments.add(0, 40, air, 2 * Time.oneMinute);
+      segments.addFlat(40, air, 28 * Time.oneMinute);
 
       const algorithm = new BuhlmannAlgorithm();
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
       const planText = concatenatePlan(decoPlan.segments);
 
-      const epectedPlan = '0,40,3;40,40,30;40,24,1.6;24,24,1;24,22,0.2;22,18,0.4;18,18,1;18,15,0.3;' +
-                          '15,15,1;15,12,0.3;12,12,1;12,9,0.3;9,9,5;9,6,0.3;6,6,7;6,3,0.3;3,3,15;3,0,0.3;';
-      expect(planText).toBe(epectedPlan);
+      const expectedPlan = '0,40,120; 40,40,1680; 40,21,114; 21,21,60; 21,15,36; 15,15,60; 15,12,18; ' +
+                           '12,12,180; 12,9,18; 9,9,180; 9,6,18; 6,6,360; 6,3,18; 3,3,900; 3,0,18;';
+      expect(planText).toBe(expectedPlan);
     });
 
     it('50m for 25 minutes using 21/35 and 50% nitrox', () => {
       const gases = new Gases();
-      const bottomGas: Gas = new Gas(0.21, 0.35);
-      gases.addBottomGas(bottomGas);
-      const decoGas: Gas = new Gas(0.5, 0.0);
-      gases.addDecoGas(decoGas);
+      gases.addBottomGas(trimix2135);
+      gases.addDecoGas(ean50);
 
       const segments = new Segments();
-      segments.add(0, 50, bottomGas, 5);
-      segments.addFlat(50, bottomGas, 25);
+      segments.add(0, 50, trimix2135, 2.5 * Time.oneMinute);
+      segments.addFlat(50, trimix2135, 22.5 * Time.oneMinute);
 
-      const algorithm = new BuhlmannAlgorithm(); // 1 abs pressure in fresh water
+      const algorithm = new BuhlmannAlgorithm();
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
       const planText = concatenatePlan(decoPlan.segments);
-
-      const expectedPlan = '0,50,5;50,50,25;50,30,2;30,30,1;' +
-                           '30,22,0.8;22,21,0.1;21,21,1;21,18,0.3;' +
-                           '18,18,1;18,15,0.3;15,15,1;15,12,0.3;12,12,3;' +
-                           '12,9,0.3;9,9,5;9,6,0.3;6,6,8;6,3,0.3;3,3,17;3,0,0.3;';
+      
+      const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
+                           '18,18,60; 18,15,18; 15,15,120; 15,12,18; 12,12,120; 12,9,18; ' +
+                           '9,9,240; 9,6,18; 6,6,360; 6,3,18; 3,3,960; 3,0,18;';
       expect(planText).toBe(expectedPlan);
     });
 
-    it('50m for 30 minutes using 21/35, 50% nitrox and oxygen', () => {
-      const bottomGas: Gas = new Gas(0.21, 0.35);
+    it('50m for 30 minutes using 21/35, 50% nitrox and oxygen - no rounding', () => {
       const gases = new Gases();
-      gases.addBottomGas(bottomGas);
-      const ean50: Gas = new Gas(0.5, 0.0);
+      gases.addBottomGas(trimix2135);
       gases.addDecoGas(ean50);
-      const oxygen: Gas = new Gas(1, 0.0);
       gases.addDecoGas(oxygen);
 
       const segments = new Segments();
-      const algorithm = new BuhlmannAlgorithm(); // 1 abs pressure in fresh water
-      segments.add(0, 50, bottomGas, 5);
-      segments.addFlat(50, bottomGas, 30);
-
+      segments.add(0, 50, trimix2135, 2.5 * Time.oneMinute);
+      segments.addFlat(50, trimix2135, 22.5 * Time.oneMinute);
+      
+      options.roundStopsToMinutes = false;
+      const algorithm = new BuhlmannAlgorithm();
       const decoPlan = algorithm.calculateDecompression(options, gases, segments);
       const planText = concatenatePlan(decoPlan.segments);
 
-      const expectedPlan = '0,50,5;50,50,30;50,30,2;30,30,1;30,22,0.8;22,21,0.1;21,21,1;21,18,0.3;18,18,1;' +
-                           '18,15,0.3;15,15,2;15,12,0.3;12,12,4;12,9,0.3;9,9,6;' +
-                           '9,6,0.3;6,6,7;6,3,0.3;3,3,14;3,0,0.3;';
+      const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
+                           '18,18,35; 18,15,18; 15,15,86; 15,12,18; 12,12,137; 12,9,18; ' +
+                           '9,9,229; 9,6,18; 6,6,274; 6,3,18; 3,3,697; 3,0,18;';
       expect(planText).toBe(expectedPlan);
     });
 

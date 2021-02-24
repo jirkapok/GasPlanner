@@ -63,20 +63,21 @@
         </label>
       </div>
       <div class="form-group">
-        <label for="gasO2">Percent O2:</label>
-        <div class="input-group">
-          <input #gasO2="ngModel" name="gasO2" [(ngModel)]="o2" class="form-control" type="number"
-           min="21" max="100" [range]="[21, 100]" required
-           [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)"/>
-          <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-            <button class="btn btn-default border" id="o2Menu"  type="button" ngbDropdownToggle></button>
-            <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-              <button type="button" class="dropdown-item" (click)="assignBestMix()">Best mix</button>
-              <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="firstGas.assignStandardGas(stgas)">{{stgas}}</button>
+        <label for="gasO2">Percent O2:
+          <div class="input-group">
+            <input #gasO2="ngModel" name="gasO2" [(ngModel)]="o2" class="form-control" type="number"
+            min="21" max="100" [range]="[21, 100]" required
+            [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)"/>
+            <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
+              <button class="btn btn-default border" id="o2Menu"  type="button" ngbDropdownToggle></button>
+              <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
+                <button type="button" class="dropdown-item" (click)="assignBestMix()">Best mix</button>
+                <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="firstGas.assignStandardGas(stgas)">{{stgas}}</button>
+              </div>
             </div>
           </div>
-        </div>
-        <app-gaslabel [gas]="firstGas"></app-gaslabel>
+          <app-gaslabel [gas]="firstGas"></app-gaslabel>
+        </label>
         <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number 21-100%</div>
       </div>
   </div>

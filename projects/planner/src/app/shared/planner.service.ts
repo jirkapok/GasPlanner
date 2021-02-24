@@ -52,6 +52,13 @@ export class PlannerService {
     this.onCalculated.next();
   }
 
+  public bestNitroxMix(): number {
+    const calculator = this.createNitroxCalculator();
+    const maxPpO2 = this.options.maxPpO2;
+    let o2 = calculator.bestMix(maxPpO2, this.plan.depth);
+    return Math.floor(o2);
+  }
+
   public get gasMod(): number {
     return this.modForGas(this.firstGas);
   }
@@ -66,7 +73,7 @@ export class PlannerService {
     return nitroxCalculator.mod(this.diver.maxPpO2, gas.o2);
   }
 
-  public createNitroxCalculator(): NitroxCalculator {
+  private createNitroxCalculator(): NitroxCalculator {
     let depthConverter = this.depthConverterFactory.create();
     return new NitroxCalculator(depthConverter);
   }

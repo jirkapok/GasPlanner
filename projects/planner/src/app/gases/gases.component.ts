@@ -52,4 +52,8 @@ export class GasesComponent implements OnInit {
   public removeGas(gas: Gas): void {
     this.planner.removeGas(gas);
   }
+
+  public assignBestMix(): void {
+    this.o2 = this.planner.bestNitroxMix();
+  }
 }

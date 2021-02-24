@@ -41,10 +41,7 @@ export class ProfileComponent implements OnInit {
   }
 
   public get bestMix(): string {
-    const calculator = this.planer.createNitroxCalculator();
-    const maxPpO2 = this.planer.options.maxPpO2;
-    let o2 = calculator.bestMix(maxPpO2, this.plannedDepth);
-    o2 = Math.floor(o2);
+    const o2 = this.planer.bestNitroxMix();
     return Gas.nameFor(o2);
   }
 }

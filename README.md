@@ -22,6 +22,7 @@ Road map of planned features:
   * Fix consumed gas calculation
   * Move rock bottom per gas
   * Implement support of multiple tanks with the same gas
+  * Allow change gas switch duration
 * Add option to define safety stop range including no safetystop below 10m dives
 * Remove calculate button
 * Allow to define multiple levels

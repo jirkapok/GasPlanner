@@ -117,6 +117,13 @@ describe('Buhlmann Algorithm', () => {
         options.roundStopsToMinutes = true;
     });
 
+    const calculatePlan = (gases: Gases, source: Segments): string => {
+      const algorithm = new BuhlmannAlgorithm();
+      const decoPlan = algorithm.calculateDecompression(options, gases, source);
+      const planText = concatenatePlan(decoPlan.segments);
+      return planText;
+    };
+
     const concatenatePlan = (decoPlan: Segment[]): string => {
       let planText = '';
       decoPlan.forEach(segment => {
@@ -126,7 +133,7 @@ describe('Buhlmann Algorithm', () => {
       return planText.trim();
     };
 
-    it('5m for 30 minutes using ean32 without safety stop', () => {
+    it('5m for 30 minutes using ean32 - no safety stop', () => {
       const gases: Gases = new Gases();
       gases.addBottomGas(ean32);
 
@@ -135,15 +142,13 @@ describe('Buhlmann Algorithm', () => {
       segments.addFlat(5, ean32, 29.75 * Time.oneMinute);
 
       options.addSafetyStop = false;
-      const algorithm = new BuhlmannAlgorithm();
-      const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan.segments);
+      const planText = calculatePlan(gases, segments);
 
       const expectedPlan = '0,5,15; 5,5,1785; 5,0,30;';
       expect(planText).toBe(expectedPlan);
     });
 
-    it('10m for 40 minutes using air with safety stop at 3m', () => {
+    it('10m for 40 minutes using air with safety stop at 3m - no deco, safety stop added', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
 
@@ -151,9 +156,7 @@ describe('Buhlmann Algorithm', () => {
       segments.add(0, 10, air, 30);
       segments.addFlat(10, air, 39.5 * Time.oneMinute);
 
-      const algorithm = new BuhlmannAlgorithm();
-      const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan.segments);
+      const planText = calculatePlan(gases, segments);
 
       const expectedPlan = '0,10,30; 10,10,2370; 10,3,42; 3,3,180; 3,0,18;';
       expect(planText).toBe(expectedPlan);
@@ -167,9 +170,7 @@ describe('Buhlmann Algorithm', () => {
       segments.add(0, 30, air, 1.5 * Time.oneMinute);
       segments.addFlat(30, air, 23.5 * Time.oneMinute);
 
-      const algorithm = new BuhlmannAlgorithm();
-      const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan.segments);
+      const planText = calculatePlan(gases, segments);
 
       const expectedPlan = '0,30,90; 30,30,1410; 30,30,0; 30,12,108; 12,12,60; 12,9,18; ' +
                            '9,9,60; 9,6,18; 6,6,180; 6,3,18; 3,3,480; 3,0,18;';
@@ -185,9 +186,7 @@ describe('Buhlmann Algorithm', () => {
       segments.add(0, 40, air, 2 * Time.oneMinute);
       segments.addFlat(40, air, 28 * Time.oneMinute);
 
-      const algorithm = new BuhlmannAlgorithm();
-      const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan.segments);
+      const planText = calculatePlan(gases, segments);
 
       const expectedPlan = '0,40,120; 40,40,1680; 40,21,114; 21,21,60; 21,15,36; 15,15,60; 15,12,18; ' +
                            '12,12,180; 12,9,18; 9,9,180; 9,6,18; 6,6,360; 6,3,18; 3,3,900; 3,0,18;';
@@ -203,9 +202,7 @@ describe('Buhlmann Algorithm', () => {
       segments.add(0, 50, trimix2135, 2.5 * Time.oneMinute);
       segments.addFlat(50, trimix2135, 22.5 * Time.oneMinute);
 
-      const algorithm = new BuhlmannAlgorithm();
-      const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan.segments);
+      const planText = calculatePlan(gases, segments);
       
       const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
                            '18,18,60; 18,15,18; 15,15,120; 15,12,18; 12,12,120; 12,9,18; ' +
@@ -224,9 +221,7 @@ describe('Buhlmann Algorithm', () => {
       segments.addFlat(50, trimix2135, 22.5 * Time.oneMinute);
       
       options.roundStopsToMinutes = false;
-      const algorithm = new BuhlmannAlgorithm();
-      const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-      const planText = concatenatePlan(decoPlan.segments);
+      const planText = calculatePlan(gases, segments);
 
       const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
                            '18,18,35; 18,15,18; 15,15,86; 15,12,18; 12,12,137; 12,9,18; ' +
@@ -234,28 +229,64 @@ describe('Buhlmann Algorithm', () => {
       expect(planText).toBe(expectedPlan);
     });
 
-    // TODO add algorithm test cases:
-    // A: 30m, 10min., gases: .21 .5 1.0; fresh, 0masl.
-    // - gas switch in 21m and 6m, i - even no deco
+    it('30m for 10 minutes using air, ean50 and oxygen - gas switch in 21m and 6m, even no deco', () => {
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      gases.addDecoGas(ean50);
+      gases.addDecoGas(oxygen);
 
-    // B: 30m, 10min., gases: .21 .32; fresh, 0masl.
-    // - gas switch in 30m, even no deco
+      const segments = new Segments();
+      segments.add(0, 30, air, 1.5 * Time.oneMinute);
+      segments.addFlat(30, air, 8.5 * Time.oneMinute);
+      
+      const planText = calculatePlan(gases, segments);
 
-    // C: where deco is increased even during ascent
+      // TODO get rid of segments with 0 minutes duration
+      const expectedPlan = '0,30,90; 30,30,510; 30,30,0; 30,21,54; 21,21,60; 21,6,90; 6,6,60; 6,3,18; 3,3,180; 3,0,18;';
+      expect(planText).toBe(expectedPlan);
+    });
 
-    // D: Disabled safety stop is not added to the last stop, even for no decompression dives below 10 meters
+    it('30m for 10 minutes using air and ean32 - gas switch in 30m just before ascent', () => {
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      gases.addDecoGas(ean32);
 
-    // E: Safety stop is correctly applied at expected depth
+      const segments = new Segments();
+      segments.add(0, 30, air, 1.5 * Time.oneMinute);
+      segments.addFlat(30, air, 8.5 * Time.oneMinute);
+      
+      const planText = calculatePlan(gases, segments);
 
-    // F: 2m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
-    // G: 3m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
+      const expectedPlan = '0,30,90; 30,30,510; 30,30,60; 30,30,0; 30,3,162; 3,3,180; 3,0,18;';
+      expect(planText).toBe(expectedPlan);
+    });
 
-    // H: Multiple gases with identical content don't generate multiple gas switches at the same level
-   
-    // I: Gases: 18/45, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
+    it('30m for 10 minutes using air and two ean50 - only one gas switch is added', () => {
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      gases.addDecoGas(ean50);
+      const ean50b: Gas = new Gas(0.5, 0);
+      gases.addDecoGas(ean50b);
+
+      const segments = new Segments();
+      segments.add(0, 30, air, 1.5 * Time.oneMinute);
+      segments.addFlat(30, air, 8.5 * Time.oneMinute);
+      
+      const planText = calculatePlan(gases, segments);
+
+      const expectedPlan = '0,30,90; 30,30,510; 30,30,0; 30,21,54; 21,21,60; 21,3,108; 3,3,180; 3,0,18;';
+      expect(planText).toBe(expectedPlan);
+    });
     
+    // TODO add algorithm test cases:
+    // A: where deco is increased even during ascent <= do we have profile for this use case?
 
+    // B: Safety stop is correctly applied at expected depth
+    // C: 2m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
+    // D: 3m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
 
+    // E: Gases: 18/45, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
+    
 
     // TODO multi level dives test cases:
     // A: where first segment gets deco and second segment breaks ceiling before we start ascent. Add this to warnings.

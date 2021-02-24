@@ -182,6 +182,10 @@ export class Dive {
     public events: Event[];
 
     public get totalDuration(): number {
+        if (this.wayPoints.length === 0) {
+            return 0;
+        }
+
         return this.wayPoints[this.wayPoints.length - 1].endTime;
     }
 

@@ -66,9 +66,19 @@
       <div [ngClass]="{col: isTechnical}" *ngIf="isTechnical">
         <div class="form-group">
           <label for="gfLow">Gradient low:
-            <input id="gfLow" name="gfLow" #gfLow="ngModel" [(ngModel)]="plannedGfLow" class="form-control"
-              type="number" min="10" [min]="10" max="100" [range]="[10, 100]" required
-              [class.is-invalid]="gfLow.invalid && (gfLow.dirty || gfLow.touched)" />
+            <div class="input-group">
+              <input id="gfLow" name="gfLow" #gfLow="ngModel" [(ngModel)]="plannedGfLow" class="form-control"
+                type="number" min="10" [min]="10" max="100" [range]="[10, 100]" required
+                [class.is-invalid]="gfLow.invalid && (gfLow.dirty || gfLow.touched)" />
+              <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
+                <button type="button" class="btn btn-default border" id="conservatismMenu2" ngbDropdownToggle></button>
+                <div ngbDropdownMenu aria-labelledby="conservatismMenu2" aria-expanded="false">
+                  <button type="button" class="dropdown-item" (click)="lowConservatism()">{{Low}}</button>
+                  <button type="button" class="dropdown-item" (click)="mediumConservatism()">{{Medium}}</button>
+                  <button type="button" class="dropdown-item" (click)="highConservatism()">{{High}}</button>
+                </div>
+              </div>
+            </div>
             <div class="text-danger" *ngIf="gfLow.invalid && (gfLow.dirty || gfLow.touched)">
               Needs to be number 0 - 100 lower than gradient high</div>
           </label>

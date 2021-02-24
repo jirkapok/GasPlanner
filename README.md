@@ -15,10 +15,16 @@ Road map of planned features:
 
 * Fix precision of decompression algorithm
   * Allow max. depth exceeds gas ppO2
+  * Add event when algorithm is unable to stay bellow ceiling during long deco stops
   * Fix loading of tissues when tissues are still loaded during ascent
 * Add option to define safety stop range including no safetystop below 10m dives
 * Allow define multiple gases
+  * Fix gas switch event in chart
+  * Fix consumed gas calculation
+  * Move rock bottom per gas
+* Remove calculate button
 * Allow to define multiple levels
+  * Allow to define multiple ascent speeds
 * Add imperial units option
 * Add help to all variables
 * Add localization

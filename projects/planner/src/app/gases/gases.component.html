@@ -14,20 +14,20 @@
       </tr>
       <tr *ngFor="let gas of gases">
         <td>
-          <input #size="ngModel" name="size" [(ngModel)]="gas.size" class="form-control" type="number" min="1" max="50"
+          <input #size="ngModel" name="size" [(ngModel)]="gas.size" class="form-control" type="number" min="1" max="50" (change)="gasChanged()"
             [range]="[1, 50]" required [class.is-invalid]="size.invalid && (size.dirty || size.touched)" />
           <small class="form-text text-muted">SAC: {{gasSac(gas) | number:'1.0-2'}} bar/min.</small>
           <div class="text-danger" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 L</div>
         </td>
         <td>
-          <input #startPressure="ngModel" name="startPressure" [(ngModel)]="gas.startPressure" class="form-control" type="number"
+          <input #startPressure="ngModel" name="startPressure" [(ngModel)]="gas.startPressure" class="form-control" type="number" (change)="gasChanged()"
             min="30" max="350" [range]="[30, 350]" required
             [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)"/>
             <div class="text-danger" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number 30-300 bar</div>
         </td>
         <td>
           <div class="input-group">
-            <input #gasO2="ngModel" name="gasO2" [(ngModel)]="gas.o2" class="form-control" type="number"
+            <input #gasO2="ngModel" name="gasO2" [(ngModel)]="gas.o2" class="form-control" type="number" (change)="gasChanged()"
              min="21" max="100" [range]="[21, 100]" required
              [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)"/>
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
@@ -47,7 +47,7 @@
   <div class="card-body" *ngIf="!isTechnical">
       <div class="form-group">
         <label for="size">Size [L]:
-          <input #size="ngModel" name="size" [(ngModel)]="firstGas.size" class="form-control" type="number"
+          <input #size="ngModel" name="size" [(ngModel)]="firstGas.size" class="form-control" type="number" (change)="gasChanged()"
             min="1" max="50" [range]="[1, 50]" required 
             [class.is-invalid]="size.invalid && (size.dirty || size.touched)"/>
           <small class="form-text text-muted">SAC: {{gasSac(firstGas) | number:'1.0-2'}} bar/min.</small>
@@ -56,7 +56,7 @@
       </div>
       <div class="form-group">
         <label for="startPressure">Start pressure [bar]:
-          <input #startPressure="ngModel" name="startPressure" [(ngModel)]="firstGas.startPressure" class="form-control" type="number"
+          <input #startPressure="ngModel" name="startPressure" [(ngModel)]="firstGas.startPressure" class="form-control" type="number" (change)="gasChanged()"
             min="30" max="350" [range]="[30, 350]" required
             [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)"/>
             <div class="text-danger" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number 30-300 bar</div>
@@ -65,7 +65,7 @@
       <div class="form-group">
         <label for="gasO2">Percent O2:
           <div class="input-group">
-            <input #gasO2="ngModel" name="gasO2" [(ngModel)]="o2" class="form-control" type="number"
+            <input #gasO2="ngModel" name="gasO2" [(ngModel)]="o2" class="form-control" type="number" (change)="gasChanged()"
             min="21" max="100" [range]="[21, 100]" required
             [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)"/>
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">

@@ -38,7 +38,6 @@ export class GasesComponent implements OnInit {
 
   public set o2(newValue) {
     this.firstGas.o2 = newValue;
-    this.planner.calculate();
   }
 
   public gasSac(gas: Gas): number {
@@ -55,5 +54,9 @@ export class GasesComponent implements OnInit {
 
   public assignBestMix(): void {
     this.o2 = this.planner.bestNitroxMix();
+  }
+
+  public gasChanged(): void {
+    this.planner.calculate();
   }
 }

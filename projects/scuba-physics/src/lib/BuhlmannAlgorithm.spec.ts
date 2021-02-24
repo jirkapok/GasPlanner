@@ -114,7 +114,9 @@ describe('Buhlmann Algorithm', () => {
 
     beforeEach(() => {
         options.addSafetyStop = true;
+        options.isFreshWater = false;
         options.roundStopsToMinutes = true;
+        options.altitude = 0;
     });
 
     const calculatePlan = (gases: Gases, source: Segments): string => {
@@ -132,6 +134,38 @@ describe('Buhlmann Algorithm', () => {
 
       return planText.trim();
     };
+
+    describe('Environment 40m for 10 minutes on air with small deco', ()=> {
+      const gases = new Gases();
+      gases.addBottomGas(air);
+      let segments: Segments;
+
+      beforeEach(() => {
+        options.roundStopsToMinutes = false;
+        options.addSafetyStop = false;
+        options.isFreshWater = false;
+        options.altitude = 0;
+        segments = new Segments();
+        segments.add(0, 40, air, 2 * Time.oneMinute);
+        segments.addFlat(40, air, 8 * Time.oneMinute);
+      });
+
+      it('Salinity is applied', () => {
+        options.isFreshWater = true;
+        const planText = calculatePlan(gases, segments);
+  
+        const expectedPlan = '0,40,120; 40,40,480; 40,3,222; 3,3,57; 3,0,18;';
+        expect(planText).toBe(expectedPlan);
+      });
+
+      it('Altitude is applied', () => {
+        options.altitude = 1000;
+        const planText = calculatePlan(gases, segments);
+  
+        const expectedPlan = '0,40,120; 40,40,480; 40,9,186; 9,9,7; 9,6,18; 6,6,50; 6,3,18; 3,3,77; 3,0,18;';
+        expect(planText).toBe(expectedPlan);
+      });
+    });
 
     it('5m for 30 minutes using ean32 - no safety stop', () => {
       const gases: Gases = new Gases();
@@ -229,53 +263,53 @@ describe('Buhlmann Algorithm', () => {
       expect(planText).toBe(expectedPlan);
     });
 
-    it('30m for 10 minutes using air, ean50 and oxygen - gas switch in 21m and 6m, even no deco', () => {
-      const gases = new Gases();
-      gases.addBottomGas(air);
-      gases.addDecoGas(ean50);
-      gases.addDecoGas(oxygen);
+    describe('30m for 10 minutes', () => {
+      const createSegments = (): Segments =>{
+        const segments = new Segments();
+        segments.add(0, 30, air, 1.5 * Time.oneMinute);
+        segments.addFlat(30, air, 8.5 * Time.oneMinute);
+        return segments;
+      };
 
-      const segments = new Segments();
-      segments.add(0, 30, air, 1.5 * Time.oneMinute);
-      segments.addFlat(30, air, 8.5 * Time.oneMinute);
-      
-      const planText = calculatePlan(gases, segments);
+      it('using air, ean50 and oxygen - gas switch in 21m and 6m, even no deco', () => {
+        const gases = new Gases();
+        gases.addBottomGas(air);
+        gases.addDecoGas(ean50);
+        gases.addDecoGas(oxygen);
 
-      // TODO get rid of segments with 0 minutes duration
-      const expectedPlan = '0,30,90; 30,30,510; 30,30,0; 30,21,54; 21,21,60; 21,6,90; 6,6,60; 6,3,18; 3,3,180; 3,0,18;';
-      expect(planText).toBe(expectedPlan);
-    });
+        const segments = createSegments();
+        const planText = calculatePlan(gases, segments);
 
-    it('30m for 10 minutes using air and ean32 - gas switch in 30m just before ascent', () => {
-      const gases = new Gases();
-      gases.addBottomGas(air);
-      gases.addDecoGas(ean32);
+        // TODO get rid of segments with 0 minutes duration
+        const expectedPlan = '0,30,90; 30,30,510; 30,30,0; 30,21,54; 21,21,60; 21,6,90; 6,6,60; 6,3,18; 3,3,180; 3,0,18;';
+        expect(planText).toBe(expectedPlan);
+      });
 
-      const segments = new Segments();
-      segments.add(0, 30, air, 1.5 * Time.oneMinute);
-      segments.addFlat(30, air, 8.5 * Time.oneMinute);
-      
-      const planText = calculatePlan(gases, segments);
+      it('using air and ean32 - gas switch in 30m just before ascent', () => {
+        const gases = new Gases();
+        gases.addBottomGas(air);
+        gases.addDecoGas(ean32);
 
-      const expectedPlan = '0,30,90; 30,30,510; 30,30,60; 30,30,0; 30,3,162; 3,3,180; 3,0,18;';
-      expect(planText).toBe(expectedPlan);
-    });
+        const segments = createSegments();
+        const planText = calculatePlan(gases, segments);
 
-    it('30m for 10 minutes using air and two ean50 - only one gas switch is added', () => {
-      const gases = new Gases();
-      gases.addBottomGas(air);
-      gases.addDecoGas(ean50);
-      const ean50b: Gas = new Gas(0.5, 0);
-      gases.addDecoGas(ean50b);
+        const expectedPlan = '0,30,90; 30,30,510; 30,30,60; 30,30,0; 30,3,162; 3,3,180; 3,0,18;';
+        expect(planText).toBe(expectedPlan);
+      });
 
-      const segments = new Segments();
-      segments.add(0, 30, air, 1.5 * Time.oneMinute);
-      segments.addFlat(30, air, 8.5 * Time.oneMinute);
-      
-      const planText = calculatePlan(gases, segments);
+      it('using air and two ean50`s - only one gas switch is added', () => {
+        const gases = new Gases();
+        gases.addBottomGas(air);
+        gases.addDecoGas(ean50);
+        const ean50b: Gas = new Gas(0.5, 0);
+        gases.addDecoGas(ean50b);
 
-      const expectedPlan = '0,30,90; 30,30,510; 30,30,0; 30,21,54; 21,21,60; 21,3,108; 3,3,180; 3,0,18;';
-      expect(planText).toBe(expectedPlan);
+        const segments = createSegments();
+        const planText = calculatePlan(gases, segments);
+
+        const expectedPlan = '0,30,90; 30,30,510; 30,30,0; 30,21,54; 21,21,60; 21,3,108; 3,3,180; 3,0,18;';
+        expect(planText).toBe(expectedPlan);
+      });
     });
     
     // TODO add algorithm test cases:

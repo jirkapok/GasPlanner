@@ -22,12 +22,11 @@ export class PlanComponent implements OnInit {
   public clock = faClock;
   @Input() public formValid: boolean;
 
-  constructor(private planer: PlannerService) { }
+  constructor(private planner: PlannerService) { }
 
   ngOnInit(): void {
-    this.plan = this.planer.plan;
+    this.plan = this.planner.plan;
     this.reset();
-    this.planer.calculate();
   }
 
   @Input()
@@ -37,44 +36,53 @@ export class PlanComponent implements OnInit {
 
   public set plannedDepth(depth: number) {
     this.plan.depth = depth;
-    this.planer.calculate();
+    this.planner.calculate();
   }
 
   public get isTechnical(): boolean {
-    return this.planer.isTechnical;
+    return this.planner.isTechnical;
   }
 
   public set isTechnical(newValue: boolean) {
-    this.planer.isTechnical = newValue;
+    this.planner.isTechnical = newValue;
 
-    if (!this.planer.isTechnical) {
-      this.allUsable();
+    if (!this.planner.isTechnical) {
+      this.setAllUsable();
       this.mediumConservatism();
-      this.ascentSpeed = Diver.ascSpeed;
-      this.descentSpeed = Diver.descSpeed;
-      this.roundDecoStops = true;
-      this.planer.resetToDefaultGases();
+      this.setAscentSpeed(Diver.ascSpeed);
+      this.setDescentSpeed(Diver.descSpeed);
+      this.setRoundDecoStops(true);
+      this.setGasSwitchDuration(1);
+      this.planner.resetToDefaultGases();
     }
 
-    this.planer.calculate();
+    this.planner.calculate();
   }
 
   public get roundDecoStops(): boolean {
-    return this.planer.options.roundStopsToMinutes;
+    return this.planner.options.roundStopsToMinutes;
+  }
+
+  private setRoundDecoStops(newValue: boolean): void {
+    this.planner.options.roundStopsToMinutes = newValue;
   }
 
   public set roundDecoStops(newValue: boolean) {
-    this.planer.options.roundStopsToMinutes = newValue;
-    this.planer.calculate();
+    this.setRoundDecoStops(newValue);
+    this.planner.calculate();
   }
 
   public get gasSwitchDuration(): number {
-    return this.planer.options.gasSwitchDuration;
+    return this.planner.options.gasSwitchDuration;
+  }
+
+  private setGasSwitchDuration(newValue: number): void {
+    this.planner.options.gasSwitchDuration = newValue;
   }
 
   public set gasSwitchDuration(newValue: number) {
-    this.planer.options.gasSwitchDuration = newValue;
-    this.planer.calculate();
+    this.setGasSwitchDuration(newValue);
+    this.planner.calculate();
   }
 
   public lowConservatism() {
@@ -96,56 +104,64 @@ export class PlanComponent implements OnInit {
   }
 
   public get plannedGfHigh(): number {
-    return this.planer.options.gfHigh * 100;
+    return this.planner.options.gfHigh * 100;
   }
 
   public set plannedGfHigh(newValue: number) {
-    this.planer.options.gfHigh = newValue / 100;
-    this.planer.calculate();
+    this.planner.options.gfHigh = newValue / 100;
+    this.planner.calculate();
   }
 
   public get plannedGfLow(): number {
-    return this.planer.options.gfLow * 100;
+    return this.planner.options.gfLow * 100;
   }
 
   public set plannedGfLow(newValue: number) {
-    this.planer.options.gfLow = newValue / 100;
-    this.planer.calculate();
+    this.planner.options.gfLow = newValue / 100;
+    this.planner.calculate();
   }
 
   public get isFreshWater(): boolean {
-    return this.planer.options.isFreshWater;
+    return this.planner.options.isFreshWater;
   }
 
   public set isFreshWater(newValue: boolean) {
-    this.planer.changeWaterType(newValue);
+    this.planner.changeWaterType(newValue);
   }
 
   public get plannedAltitude(): number {
-    return this.planer.options.altitude;
+    return this.planner.options.altitude;
   }
 
   public set plannedAltitude(newValue: number) {
-    this.planer.options.altitude = newValue;
-    this.planer.calculate();
+    this.planner.options.altitude = newValue;
+    this.planner.calculate();
   }
 
   public get ascentSpeed(): number {
-    return this.planer.options.ascentSpeed;
+    return this.planner.options.ascentSpeed;
+  }
+
+  private setAscentSpeed(newValue: number) {
+    this.planner.options.ascentSpeed = newValue;
   }
 
   public set ascentSpeed(newValue: number) {
-    this.planer.options.ascentSpeed = newValue;
-    this.planer.calculate();
+    this.setAscentSpeed(newValue);
+    this.planner.calculate();
   }
 
   public get descentSpeed(): number {
-    return this.planer.options.descentSpeed;
+    return this.planner.options.descentSpeed;
+  }
+
+  private setDescentSpeed(newValue: number) {
+    this.planner.options.descentSpeed = newValue;
   }
 
   public set descentSpeed(newValue: number) {
-    this.planer.options.descentSpeed = newValue;
-    this.planer.calculate();
+    this.setDescentSpeed(newValue);
+    this.planner.calculate();
   }
 
   public reset(): void {
@@ -163,11 +179,14 @@ export class PlanComponent implements OnInit {
         break;
       }
     }
-    
-    this.planer.calculate();
   }
 
   public allUsable(): void {
+    this.setAllUsable();
+    this.planner.calculate();
+  }
+
+  private setAllUsable(): void {
     this.plan.strategy = Strategies.ALL;
     this.strategy = this.AllUsable;
   }
@@ -175,10 +194,12 @@ export class PlanComponent implements OnInit {
   public halfUsable(): void {
     this.plan.strategy = Strategies.HALF;
     this.strategy = this.HalfUsable;
+    this.planner.calculate();
   }
 
   public thirdUsable(): void {
     this.plan.strategy = Strategies.THIRD;
     this.strategy = this.ThirdUsable;
+    this.planner.calculate();
   }
 }

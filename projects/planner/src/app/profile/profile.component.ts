@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 
-import { Plan, Strategies } from '../shared/models';
+import { Plan, Gas } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 
 @Component({
@@ -26,6 +26,11 @@ export class ProfileComponent implements OnInit {
     return this.plan.depth;
   }
 
+  public set plannedDepth(depth: number) {
+    this.plan.depth = depth;
+    this.planer.updateNoDecoTime();
+  }
+
   public get noDecoTime(): number {
     const result = this.plan.noDecoTime;
     if(result >= 1000) {
@@ -35,8 +40,11 @@ export class ProfileComponent implements OnInit {
     return result;
   }
 
-  public set plannedDepth(depth: number) {
-    this.plan.depth = depth;
-    this.planer.updateNoDecoTime();
+  public get bestMix(): string {
+    const calculator = this.planer.createNitroxCalculator();
+    const maxPpO2 = this.planer.options.maxPpO2;
+    let o2 = calculator.bestMix(maxPpO2, this.plannedDepth);
+    o2 = Math.floor(o2);
+    return Gas.nameFor(o2);
   }
 }

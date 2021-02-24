@@ -13,23 +13,25 @@ None of the authors, contributors, administrators, or anyone else connected with
 List of current features is part of [application help](./doc/help.md). 
 Road map of planned features:
 
-* Fix precision of decompression algorithm
+* Fix precision of decompression algorithm - Im progress
   * Allow max. depth exceeds gas ppO2
   * Add event when algorithm is unable to stay bellow ceiling during long deco stops
   * Fix loading of tissues when tissues are still loaded during ascent
-* Add option to define safety stop range including no safetystop below 10m dives
-* Allow define multiple gases
+* Allow define multiple gases - Im progress
   * Fix gas switch event in chart
   * Fix consumed gas calculation
   * Move rock bottom per gas
+  * Implement support of multiple tanks with the same gas
+* Add option to define safety stop range including no safetystop below 10m dives
 * Remove calculate button
 * Allow to define multiple levels
   * Allow to define multiple ascent speeds
 * Add imperial units option
 * Add help to all variables
 * Add localization
-* Add trimix calculator
+* Add trimix support and calculator
 * Add option to define repetitive dives
+  * Unify dive settings and default settings
 * Add CNS and OTU calculations
 
 ## Prerequisites

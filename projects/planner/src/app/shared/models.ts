@@ -32,21 +32,29 @@ export class Gas {
         public startPressure: number) {
     }
 
+    /**
+     * Returns label of ths standard nitrox gas based on its O2 content
+     * @param o2 in percents
+     */
+    public static nameFor(o2: number): string {
+        const fromEnum = StandardGas[o2];
+        if (!!fromEnum) {
+            return fromEnum;
+        }
+
+        if (o2) {
+            return 'EAN' + o2.toString();
+        }
+
+        return '';
+    }
+
     public get volume(): number {
         return this.size * this.startPressure;
     }
 
     public get name(): string {
-        const fromEnum = StandardGas[this.o2];
-        if (fromEnum) {
-            return fromEnum;
-        }
-
-        if (this.o2) {
-            return 'EAN' + this.o2.toString();
-        }
-
-        return '';
+        return Gas.nameFor(this.o2);
     }
 
     public assignStandardGas(standard: string): void {

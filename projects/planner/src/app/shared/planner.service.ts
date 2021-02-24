@@ -66,7 +66,7 @@ export class PlannerService {
     return nitroxCalculator.mod(this.diver.maxPpO2, gas.o2);
   }
 
-  private createNitroxCalculator(): NitroxCalculator {
+  public createNitroxCalculator(): NitroxCalculator {
     let depthConverter = this.depthConverterFactory.create();
     return new NitroxCalculator(depthConverter);
   }

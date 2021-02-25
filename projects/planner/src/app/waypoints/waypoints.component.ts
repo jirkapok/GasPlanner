@@ -18,10 +18,10 @@ export class WayPointsComponent implements OnInit {
   public switch = faRandom;
   private lastSelected: WayPoint;
 
-  constructor(private planer: PlannerService) { }
+  constructor(private planner: PlannerService) { }
 
   ngOnInit() {
-    this.dive = this.planer.dive;
+    this.dive = this.planner.dive;
   }
 
   @Input()
@@ -67,10 +67,9 @@ export class WayPointsComponent implements OnInit {
 
   public iconClasses(point: WayPoint): any {
     const classes = {
-      'mr-3': true,
       'swim-down': point.swimAction === SwimAction.descent,
       'swim-up': point.swimAction === SwimAction.ascent,
-      'swim-hover': point.swimAction === SwimAction.hover || point.swimAction === SwimAction.switch,
+      'swim-hover': point.swimAction === SwimAction.hover || point.swimAction === SwimAction.switch
     };
 
     return classes;

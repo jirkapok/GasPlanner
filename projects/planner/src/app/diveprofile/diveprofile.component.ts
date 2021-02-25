@@ -109,6 +109,7 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
     const xCeilingValues = [];
     const yCeilingValues = [];
 
+    // possible performance optimization = remove all waypoints, where ceiling = 0 and depth didn't change
     this.dive.ceilings.forEach((item, index, ceilings) => {
       xCeilingValues.push(Time.toDate(item.time));
       const depth = this.roundDepth(item.depth);
@@ -185,7 +186,6 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
   }
 
   private resampleToSeconds(xValues: Date[], yValues: number[], item: WayPoint) {
-    // possible performance optimization = remove all waypoints, where ceiling = 0 and depth didnt change
     const speed = (item.endDepth - item.startDepth) / item.duration;
     for (let timeStamp = item.startTime; timeStamp < item.endTime; timeStamp++) {
       xValues.push(Time.toDate(timeStamp));

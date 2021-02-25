@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class PlannerService {
+  private irrelevantGas: string = '';
   public isTechnical = false;
   public plan: Plan = new Plan(12, 30, Strategies.ALL);
   public diver: Diver = new Diver(20, 1.4);
@@ -143,13 +144,13 @@ export class PlannerService {
 
     const maxDepth = this.plan.depth;
     const descentDuration = WayPointsService.descentDuration(this.plan, this.options);
-    const descent = new WayPoint(descentDuration, maxDepth);
-    const swim = new WayPoint(0, maxDepth, maxDepth);
+    const descent = new WayPoint(this.irrelevantGas, descentDuration, maxDepth); // gas name is irrelevant here
+    const swim = new WayPoint(this.irrelevantGas, 0, maxDepth, maxDepth);
     const ascentDuration = Time.toSeconds((maxDepth - safetyStopDepth) / this.options.ascentSpeed);
-    const ascentToSafety = new WayPoint(ascentDuration, safetyStopDepth, maxDepth);
-    const safetyStop = new WayPoint(safetyStopDuration, safetyStopDepth, safetyStopDepth);
+    const ascentToSafety = new WayPoint(this.irrelevantGas, ascentDuration, safetyStopDepth, maxDepth);
+    const safetyStop = new WayPoint(this.irrelevantGas, safetyStopDuration, safetyStopDepth, safetyStopDepth);
     const lastAscent = Time.toSeconds(safetyStopDepth / this.options.ascentSpeed);
-    const toSurface = new WayPoint(lastAscent, 0, safetyStopDepth);
+    const toSurface = new WayPoint(this.irrelevantGas, lastAscent, 0, safetyStopDepth);
     let recreProfile: WayPoint[] = [descent, swim, ascentToSafety, safetyStop, toSurface];
     return recreProfile;
   }
@@ -200,7 +201,7 @@ export class PlannerService {
 
   private calculateRockBottom(ascent: WayPoint[]): number {
     const solvingDuration = 2 * Time.oneMinute;
-    const problemSolving = new WayPoint(solvingDuration, ascent[0].startDepth, ascent[0].startDepth);
+    const problemSolving = new WayPoint(this.irrelevantGas, solvingDuration, ascent[0].startDepth, ascent[0].startDepth);
     ascent.unshift(problemSolving);
     const stressSac = this.diver.stressSac;
     const result = this.calculateConsumedOnWay(ascent, stressSac);

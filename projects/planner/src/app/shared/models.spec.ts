@@ -1,9 +1,9 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { NitroxCalculatorService } from './nitrox-calculator.service';
-import { Gas } from './models';
+import { Tank } from './models';
 
-describe('Gas', () => {
-    let gas: Gas;
+describe('Tank', () => {
+    let gas: Tank;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -11,7 +11,7 @@ describe('Gas', () => {
             providers: [NitroxCalculatorService]
         });
 
-        gas = new Gas(10, 21, 200);
+        gas = new Tank(10, 21, 200);
     });
 
     describe('Full', () => {

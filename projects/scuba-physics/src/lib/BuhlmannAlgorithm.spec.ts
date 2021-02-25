@@ -280,7 +280,6 @@ describe('Buhlmann Algorithm', () => {
         const segments = createSegments();
         const planText = calculatePlan(gases, segments);
 
-        // TODO get rid of segments with 0 minutes duration
         const expectedPlan = '0,30,90; 30,30,510; 30,21,54; 21,21,60; 21,6,90; 6,6,60; 6,3,18; 3,3,180; 3,0,18;';
         expect(planText).toBe(expectedPlan);
       });

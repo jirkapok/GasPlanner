@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { faBatteryEmpty, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
-import { Gases, Gas, Diver } from '../shared/models';
+import { Gases, Tank, Diver } from '../shared/models';
 
 @Component({
   selector: 'app-gases',
@@ -11,7 +11,7 @@ import { Gases, Gas, Diver } from '../shared/models';
 })
 export class GasesComponent implements OnInit {
   private diver: Diver;
-  public firstGas: Gas;
+  public firstGas: Tank;
   public gasNames: string[];
   public bottleIcon = faBatteryEmpty;
   public plusIcon = faPlusSquare;
@@ -24,7 +24,7 @@ export class GasesComponent implements OnInit {
     this.gasNames = Gases.gasNames();
   }
 
-  public get gases(): Gas[] {
+  public get gases(): Tank[] {
     return this.planner.gases;
   }
 
@@ -40,7 +40,7 @@ export class GasesComponent implements OnInit {
     this.firstGas.o2 = newValue;
   }
 
-  public gasSac(gas: Gas): number {
+  public gasSac(gas: Tank): number {
     return this.diver.gasSac(gas);
   }
 
@@ -48,7 +48,7 @@ export class GasesComponent implements OnInit {
     this.planner.addGas();
   }
 
-  public removeGas(gas: Gas): void {
+  public removeGas(gas: Tank): void {
     this.planner.removeGas(gas);
   }
 
@@ -60,7 +60,7 @@ export class GasesComponent implements OnInit {
     this.planner.calculate();
   }
 
-  public assignStandardGas(gas: Gas, gasName: string): void {
+  public assignStandardGas(gas: Tank, gasName: string): void {
     gas.assignStandardGas(gasName);
     this.gasChanged();
   }

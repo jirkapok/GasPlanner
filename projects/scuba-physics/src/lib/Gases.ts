@@ -88,7 +88,8 @@ export class Gases {
             const mod = depthConverter.toDecoStop(modPressure);
             const end = candidate.end(currentPressure);
 
-            // TODO consider only switch to gas with lower nitrogen content
+            // TODO add test case for 10/70 only at 3 m, together with 18/35
+            // TODO add warning about switch to gas with higher nitrogen content
             // TODO move maxEND exceeded to validator as warning
             // TODO add option to enforce narcotic depth in the UI
             if (options.currentDepth <= mod && end <= options.maxEndPressure) {

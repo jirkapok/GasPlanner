@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Plan, Diver, Dive, Gas, WayPoint, Strategies } from './models';
+import { Plan, Diver, Dive, Tank, WayPoint, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options, DepthConverter, Time, DepthConverterFactory } from 'scuba-physics';
 import { Subject } from 'rxjs';
@@ -10,7 +10,7 @@ export class PlannerService {
   public plan: Plan = new Plan(12, 30, Strategies.ALL);
   public diver: Diver = new Diver(20, 1.4);
   // there always needs to be at least one
-  public gases: Gas[];
+  public gases: Tank[];
   public dive: Dive = new Dive();
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
@@ -18,7 +18,7 @@ export class PlannerService {
   private depthConverterFactory = new DepthConverterFactory(this.options);
   private depthConverter: DepthConverter;
   // TODO remove
-  public get firstGas(): Gas {
+  public get firstGas(): Tank {
     return this.gases[0];
   }
 
@@ -33,17 +33,17 @@ export class PlannerService {
 
   public resetToDefaultGases(): void {
     this.gases = [
-      new Gas(15, 21, 200)
+      new Tank(15, 21, 200)
     ];
   }
 
   public addGas(): void {
-    const newGas = new Gas(11, 21, 200);
+    const newGas = new Tank(11, 21, 200);
     this.gases.push(newGas);
     this.calculate();
   }
 
-  public removeGas(gas: Gas): void {
+  public removeGas(gas: Tank): void {
     this.gases = this.gases.filter(g => g !== gas);
     this.calculate();
   }
@@ -65,12 +65,12 @@ export class PlannerService {
     return this.modForGas(this.firstGas);
   }
 
-  public switchDepth(gas: Gas): number {
+  public switchDepth(gas: Tank): number {
     const nitroxCalculator = this.createNitroxCalculator();
     return nitroxCalculator.gasSwitch(this.diver.maxDecoPpO2, gas.o2);
   }
 
-  public modForGas(gas: Gas): number {
+  public modForGas(gas: Tank): number {
     const nitroxCalculator = this.createNitroxCalculator();
     return nitroxCalculator.mod(this.diver.maxPpO2, gas.o2);
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Dive, Gas } from '../shared/models';
+import { Dive, Tank } from '../shared/models';
 import { faExclamationCircle, faExclamationTriangle, faTasks } from '@fortawesome/free-solid-svg-icons';
 import { Time } from 'scuba-physics';
 
@@ -11,7 +11,7 @@ import { Time } from 'scuba-physics';
 })
 export class DiveComponent implements OnInit {
   public dive: Dive;
-  public bottomGas: Gas;
+  public bottomGas: Tank;
   public exclamation = faExclamationCircle;
   public warning = faExclamationTriangle;
   public tasks = faTasks;

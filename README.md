@@ -18,7 +18,7 @@ Road map of planned features:
   * Add event when algorithm is unable to stay bellow ceiling during long deco stops
   * Fix loading of tissues when tissues are still loaded during ascent
 * Allow define multiple gases - Im progress
-  * Fix gas switch event in chart
+  * Fix gas switch event label in chart
   * Fix consumed gas calculation
   * Move rock bottom per gas
   * Implement support of multiple tanks with the same gas

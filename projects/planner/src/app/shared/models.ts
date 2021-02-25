@@ -16,7 +16,7 @@ export class Gases {
     }
 }
 
-export class Gas {
+export class Tank {
     public consumed = 0;
     public reserve = 0;
 
@@ -54,7 +54,7 @@ export class Gas {
     }
 
     public get name(): string {
-        return Gas.nameFor(this.o2);
+        return Tank.nameFor(this.o2);
     }
 
     public assignStandardGas(standard: string): void {
@@ -89,7 +89,7 @@ export class Gas {
         return this.endPressure - this.reserve > 0;
     }
 
-    public loadFrom(other: Gas): void {
+    public loadFrom(other: Tank): void {
         this.startPressure = other.startPressure;
         this.size = other.size;
         this.o2 = other.o2;
@@ -126,7 +126,7 @@ export class Diver {
         return sac / gasSize;
     }
 
-    public gasSac(gas: Gas): number {
+    public gasSac(gas: Tank): number {
         return Diver.gasSac(this.sac, gas.size);
     }
 

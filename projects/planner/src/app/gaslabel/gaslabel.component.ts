@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Gas } from '../shared/models';
+import { Tank } from '../shared/models';
 
 @Component({
   selector: 'app-gaslabel',
@@ -10,7 +10,7 @@ import { Gas } from '../shared/models';
 export class GaslabelComponent {
 
   @Input()
-  public gas: Gas;
+  public gas: Tank;
 
   public get gasMod(): number {
     return this.planer.modForGas(this.gas);

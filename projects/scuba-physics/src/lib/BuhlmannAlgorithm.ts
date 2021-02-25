@@ -95,6 +95,11 @@ class DepthLevels {
         }
 
         const rounded = Math.floor(currentDepth / DepthConverter.decoStopDistance) * DepthConverter.decoStopDistance;
+
+        if(rounded === currentDepth) {
+            return currentDepth - DepthConverter.decoStopDistance;
+        }
+        
         return rounded;
     }
 

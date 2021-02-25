@@ -235,7 +235,7 @@ export class BuhlmannAlgorithm {
             timeStamp: context.runTime,
             depth: context.currentDepth,
             type: EventType.gasSwitch,
-            message: 'switch to ' + context.currentGas.fO2
+            data: context.currentGas
         };
 
         context.events.push(gasSwitch);

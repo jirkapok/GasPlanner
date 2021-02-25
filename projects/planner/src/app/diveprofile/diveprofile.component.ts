@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Dive, WayPoint } from '../shared/models';
+import { Dive, Tank, WayPoint } from '../shared/models';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js/dist/plotly-basic.min.js';
 import { Subscription } from 'rxjs';
-import { Time } from 'scuba-physics';
+import { EventType, Time, Gas } from 'scuba-physics';
 
 @Component({
   selector: 'app-diveprofile',
@@ -133,21 +133,21 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
   }
 
   private plotEvents(): void {
-    const x = [];
-    const y = [];
-    const label = [];
+    const x: Date[] = [];
+    const y: number[] = [];
+    const labels:string[] = [];
 
     const dataEvents = [{
       x: x,
       y: y,
-      label: label,
-      text: label,
+      label: labels,
+      text: labels,
       type: 'scatter',
       mode: 'markers+text',
       fill: 'tozeroy',
       name: 'events',
       hovertemplate: '%{x}<br>%{text} at %{y}m',
-      texttemplate: '%{x}<br>%{text} at %{y}m',
+      texttemplate: '%{text}',
       textposition: 'top left',
       fillcolor: 'rgba(0, 0, 0, 0)',
       marker: {
@@ -172,13 +172,20 @@ export class DiveProfileComponent implements OnInit, OnDestroy {
       paper_bgcolor: 'rgba(0, 0, 0, 0)'
     };
 
+    this.convertEvents(x, y, labels);
+    Plotly.plot(this.elementName, dataEvents, eventsLayout);
+  }
+
+  private convertEvents(x: Date[], y: number[], labels: string[]): void {
     this.dive.events.forEach((event, index, events) => {
+      if(event.type === EventType.gasSwitch) {
         x.push(Time.toDate(event.timeStamp));
         y.push(event.depth);
-        label.push(event.message);
+        const gas = <Gas>event.data;
+        const gasName = Tank.nameFor(gas.fO2 * 100);
+        labels.push(`Switch to ${gasName}`);
+      }
     });
-
-    Plotly.plot(this.elementName, dataEvents, eventsLayout);
   }
 
   private roundDepth(depth: number): number {

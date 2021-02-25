@@ -15,8 +15,10 @@ export class Event {
     public depth: number;
     /** purpose of the event to happen */
     public type: EventType;
-    /** Explanation of the event or empty string */
-    public message: string;
+    /** Optional explanation of the event or empty string */
+    public message?: string;
+    /** Optional data associated with the event, e.g. Gas for gas switch */
+    public data?: any;
 }
 
 /**

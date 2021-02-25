@@ -7,25 +7,25 @@
   <div class="card-body" *ngIf="isTechnical">
     <table class="table table-noheader">
       <tr>
-        <th>Size [L]</th>
-        <th>Pressure [bar]</th>
-        <th>Percent O2</th>
-        <th><button class="btn btn-sm m-0 p-0" type="button" (click)="addGas()"><fa-icon [icon]="plusIcon"></fa-icon></button></th>
+        <th class="mx-0 px-1">Size [L]</th>
+        <th class="mx-0 px-1">Pressure [bar]</th>
+        <th class="mx-0 px-1">Percent O2</th>
+        <th class="mx-0 px-1"><button class="btn btn-sm m-0 p-0" type="button" (click)="addGas()"><fa-icon [icon]="plusIcon"></fa-icon></button></th>
       </tr>
       <tr *ngFor="let tank of tanks">
-        <td>
+        <td class="mx-0 px-1">
           <input #size="ngModel" name="size" [(ngModel)]="tank.size" class="form-control" type="number" min="1" max="50" (change)="gasChanged()"
             [range]="[1, 50]" required [class.is-invalid]="size.invalid && (size.dirty || size.touched)" />
           <small class="form-text text-muted">SAC: {{gasSac(tank) | number:'1.0-2'}} bar/min.</small>
           <div class="text-danger" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 L</div>
         </td>
-        <td>
+        <td class="mx-0 px-1">
           <input #startPressure="ngModel" name="startPressure" [(ngModel)]="tank.startPressure" class="form-control" type="number" (change)="gasChanged()"
             min="30" max="350" [range]="[30, 350]" required
             [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)"/>
             <div class="text-danger" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number 30-300 bar</div>
         </td>
-        <td>
+        <td class="mx-0 px-1">
           <div class="input-group">
             <input #gasO2="ngModel" name="gasO2" [(ngModel)]="tank.o2" class="form-control" type="number" (change)="gasChanged()"
              min="21" max="100" [range]="[21, 100]" required
@@ -40,7 +40,7 @@
           <app-gaslabel [gas]="tank"></app-gaslabel>
           <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number 21-100%</div>
         </td>
-        <td><button *ngIf="planner.firstTank !== tank" type="button" class="btn btn-sm m-0 p-0" (click)="removeGas(tank)"><fa-icon [icon]="trashIcon"></fa-icon></button></td>
+        <td class="mx-0 px-0"><button *ngIf="planner.firstTank !== tank" type="button" class="btn btn-sm m-0 p-0" (click)="removeGas(tank)"><fa-icon [icon]="trashIcon"></fa-icon></button></td>
       </tr>
   </table>
   </div>

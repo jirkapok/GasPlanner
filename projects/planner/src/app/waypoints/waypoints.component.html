@@ -10,7 +10,7 @@
                 <th class="mx-0 px-0">Depth [m]</th>
                 <th class="mx-0 px-0">Duration [min.]</th>
                 <th class="mx-0 px-0">Run [min.]</th>
-                <th class="mx-0 px-0" *ngIf="planner.isTechnical">Gas</th>
+                <th class="mx-0 px-0" *ngIf="isTechnical">Gas</th>
             </tr>
             <tr *ngFor="let point of dive.wayPoints" [ngClass]="{'table-active': point.selected }">
                 <td class="mx-0 pr-3">
@@ -19,7 +19,7 @@
                 <td class="mx-0 px-0">{{ point.endDepth }}</td>
                 <td class="mx-0 px-0">{{ durationToString(point.duration) | date:selectTimeFormat() }}</td>
                 <td class="mx-0 px-0">{{ durationToString(point.endTime) | date:selectTimeFormat() }}</td>
-                <td class="mx-0 px-0" *ngIf="planner.isTechnical">{{ point.gasName }}</td>
+                <td class="mx-0 px-0" *ngIf="isTechnical">{{ point.gasName }}</td>
             </tr>
         </table>
     </div>

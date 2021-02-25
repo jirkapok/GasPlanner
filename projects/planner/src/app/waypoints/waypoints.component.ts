@@ -24,6 +24,10 @@ export class WayPointsComponent implements OnInit {
     this.dive = this.planner.dive;
   }
 
+  public get isTechnical(): boolean {
+    return this.planner.isTechnical;
+  }
+
   @Input()
   public set selectedTimeStamp(newValue: string) {
     if (this.lastSelected) {

@@ -52,6 +52,7 @@ export class PlanComponent implements OnInit {
       this.setAscentSpeed(Diver.ascSpeed);
       this.setDescentSpeed(Diver.descSpeed);
       this.setRoundDecoStops(true);
+      this.setSafetyStopEnabled(true);
       this.setGasSwitchDuration(1);
       this.planner.resetToDefaultGases();
     }
@@ -133,8 +134,12 @@ export class PlanComponent implements OnInit {
     return this.planner.options.addSafetyStop;
   }
 
-  public set safetyStopEnabled(newValue: boolean) {
+  private setSafetyStopEnabled(newValue: boolean): void {
     this.planner.options.addSafetyStop = newValue;
+  }
+
+  public set safetyStopEnabled(newValue: boolean) {
+    this.setSafetyStopEnabled(newValue);
     this.planner.calculate();
   }
 

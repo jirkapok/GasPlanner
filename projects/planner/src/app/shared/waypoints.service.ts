@@ -25,8 +25,7 @@ export class WayPointsService {
         }
 
         const descent = profile.segments[0];
-        const gasName = Tank.nameFor(descent.gas.fO2 * 100);
-        let lastWayPoint = new WayPoint(gasName, descent.duration, descent.endDepth);
+        let lastWayPoint = WayPoint.fromSegment(descent);
         wayPoints.push(lastWayPoint);
         const exceptDescend = profile.segments.slice(1);
 
@@ -40,8 +39,7 @@ export class WayPointsService {
     }
 
     private static toWayPoint(segment: Segment, lastWayPoint: WayPoint, events: Event[]): WayPoint {
-        const gasName = Tank.nameFor(segment.gas.fO2 * 100);
-        const waypoint = lastWayPoint.toLevel(gasName, segment.duration, segment.endDepth);
+        const waypoint = lastWayPoint.toLevel(segment);
         const hasSwitch = events.find(x => x.type === EventType.gasSwitch && waypoint.fits(x.timeStamp));
 
         if (hasSwitch) {

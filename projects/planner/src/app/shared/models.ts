@@ -1,4 +1,4 @@
-import { Gas, Ceiling, Time, Event } from 'scuba-physics';
+import { Gas, Ceiling, Time, Event, Segment } from 'scuba-physics';
 
 export enum StandardGas {
     Air = 21,
@@ -244,6 +244,7 @@ export class WayPoint {
 
     private action: SwimAction;
 
+    // TODO fix unassgined gas name
     private _gasName: string;
 
     public get gasName(): string {
@@ -251,13 +252,11 @@ export class WayPoint {
     }
 
     /**
-     * @param gasName not empty name of the gas
      * @param duration in seconds
      * @param newDepth in meters
      * @param previousDepth in meters
      */
-    constructor(gasName: string, public duration: number, newDepth: number, previousDepth: number = 0) {
-        this._gasName = gasName;
+    constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
         this.endTime = Math.round(duration * 100) / 100;
         this._endDepth = newDepth;
         this._startDepth = previousDepth;
@@ -309,14 +308,21 @@ export class WayPoint {
         return depth + ',' + durationText;
     }
 
-    public toLevel(gasName: string, duration: number, newDepth: number): WayPoint {
-        const result = new WayPoint(gasName, duration, newDepth);
+    public toLevel(segment: Segment): WayPoint {
+        const result = WayPoint.fromSegment(segment);
         result.startTime = this.endTime;
-        const end = this.endTime + duration;
+        const end = this.endTime + segment.duration;
         result.endTime = Math.round(end * 100) / 100;
         result._startDepth = this.endDepth;
         result.updateAction();
         return result;
+    }
+
+    public static fromSegment(segment: Segment): WayPoint {
+        const gasName = Tank.nameFor(segment.gas.fO2 * 100);
+        let newWayPoint = new WayPoint(segment.duration, segment.endDepth);
+        newWayPoint._gasName = gasName;
+        return newWayPoint;
     }
 
     public fits(timeStamp: number): boolean {

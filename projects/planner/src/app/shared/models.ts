@@ -29,8 +29,8 @@ export class Tank {
      * @param startPressure Filled in bars of gas
      */
     constructor(public size: number,
-        o2Percent: number,
-        public startPressure: number) {
+        public startPressure: number,
+        o2Percent: number) {
         this.o2 = o2Percent;
     }
 

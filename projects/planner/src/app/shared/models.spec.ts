@@ -11,7 +11,7 @@ describe('Tank', () => {
             providers: [NitroxCalculatorService]
         });
 
-        gas = new Tank(10, 21, 200);
+        gas = new Tank(10, 200, 21);
     });
 
     describe('Full', () => {

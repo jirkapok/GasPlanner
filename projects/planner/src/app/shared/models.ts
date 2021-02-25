@@ -1,4 +1,4 @@
-import { DepthConverter, Gas as BGas, Ceiling, Time, Event } from 'scuba-physics';
+import { Gas, Ceiling, Time, Event } from 'scuba-physics';
 
 export enum StandardGas {
     Air = 21,
@@ -19,17 +19,33 @@ export class Gases {
 export class Tank {
     public consumed = 0;
     public reserve = 0;
+    private _gas:Gas = new Gas(0.21, 0);
 
     /**
      * Creates new instance of the Gas.
      *
      * @param size Volume in liters
-     * @param o2 Percents of oxygen e.g. 20%
+     * @param o2Percent Percents of oxygen e.g. 20%
      * @param startPressure Filled in bars of gas
      */
     constructor(public size: number,
-        public o2: number,
+        o2Percent: number,
         public startPressure: number) {
+        this.o2 = o2Percent;
+    }
+
+    public get gas(): Gas {
+        return this._gas;
+    }
+
+    /** o2 content in percent */
+    public get o2(): number {
+        return this._gas.fO2 * 100;
+    }
+
+    /** o2 content in percent */
+    public set o2(newValue) {
+        this._gas.fO2 = newValue / 100;
     }
 
     /**
@@ -93,10 +109,6 @@ export class Tank {
         this.startPressure = other.startPressure;
         this.size = other.size;
         this.o2 = other.o2;
-    }
-
-    toGas(): BGas {
-        return new BGas(this.o2 / 100, 0);
     }
 }
 

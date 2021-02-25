@@ -51,12 +51,12 @@ export class WayPointsService {
 
     private static calculateDecompression(plan: Plan, gases: Tank[], options: Options): CalculatedProfile {
         const bGases = new Gases();
-        const bGas = gases[0].toGas();
+        const bGas = gases[0].gas;
         bGases.addBottomGas(bGas);
 
         // everything except first gas is considered as deco gas
         gases.slice(1, gases.length).forEach((gas, index, items) => {
-            const decoGas = gas.toGas();
+            const decoGas = gas.gas;
             bGases.addDecoGas(decoGas);
         });
 

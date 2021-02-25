@@ -85,7 +85,7 @@ export class PlannerService {
     this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
     const algorithm = new BuhlmannAlgorithm();
     const depth = this.plan.depth;
-    const gas = this.firstGas.toGas();
+    const gas = this.firstGas.gas;
     const noDecoLimit = algorithm.noDecoLimit(depth, gas, this.options);
     return Math.floor(noDecoLimit);
   }

@@ -67,6 +67,9 @@ export interface BestGasOptions {
 
     /** Maximum narcotic depth in bars */
     maxEndPressure: number;
+
+    /** We are searching for better gas than the current */
+    currentGas: Gas;
 }
 
 export class Gases {
@@ -76,7 +79,7 @@ export class Gases {
 
     private static bestGas(gases: Gas[], depthConverter: DepthConverter, options: BestGasOptions): Gas {
         const currentPressure = depthConverter.toBar(options.currentDepth);        
-        let found = null;
+        let found = options.currentGas;
 
         gases.forEach((element, index, source) => {
             const candidate = gases[index];
@@ -100,12 +103,12 @@ export class Gases {
     }
     
      /**
-     * Finds better gas to switch to from current depth, returns null, if no better gas was found.
+     * Finds better gas to switch to from current depth, returns current gas, if no better gas was found.
      * Better gas is breathable at current depth and with higher O2.
      */
     public bestDecoGas(depthConverter: DepthConverter,  options: BestGasOptions): Gas {
         const decoGas = Gases.bestGas(this.decoGases, depthConverter, options);
-        if (!!decoGas) {
+        if (decoGas !== options.currentGas) {
             return decoGas;
         }
 

@@ -33,7 +33,7 @@
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
               <button class="btn btn-default border" id="o2Menu"  type="button" ngbDropdownToggle></button>
               <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-                <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="gas.assignStandardGas(stgas)">{{stgas}}</button>
+                <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="assignStandardGas(gas, stgas)">{{stgas}}</button>
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@
               <button class="btn btn-default border" id="o2Menu"  type="button" ngbDropdownToggle></button>
               <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
                 <button type="button" class="dropdown-item" (click)="assignBestMix()">Best mix</button>
-                <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="firstGas.assignStandardGas(stgas)">{{stgas}}</button>
+                <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="assignStandardGas(firstGas, stgas)">{{stgas}}</button>
               </div>
             </div>
           </div>

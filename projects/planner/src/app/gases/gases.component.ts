@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { faBatteryEmpty, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
@@ -58,5 +58,10 @@ export class GasesComponent implements OnInit {
 
   public gasChanged(): void {
     this.planner.calculate();
+  }
+
+  public assignStandardGas(gas: Gas, gasName: string): void {
+    gas.assignStandardGas(gasName);
+    this.gasChanged();
   }
 }

@@ -99,8 +99,13 @@ describe('Gases', () => {
       const bestGasOptions: BestGasOptions = {
         currentDepth: 0,
         maxDecoPpO2: options.maxDecoPpO2,
-        maxEndPressure: 4
+        maxEndPressure: 4,
+        currentGas: air
       };
+
+      beforeEach(() => {
+        bestGasOptions.currentGas = air
+      });
 
       it('The only deco gas is found', () => {
         const gases = new Gases();
@@ -137,6 +142,12 @@ describe('Gases', () => {
         gases.addBottomGas(trimix1070);
         gases.addBottomGas(oxygen);
         
+        it('Oxygen for 6m', () => {
+          bestGasOptions.currentDepth = 6;
+          const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
+          expect(found).toBe(oxygen);
+        });
+
         it('Air for 30m', () => {
           bestGasOptions.currentDepth = 30;
           const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
@@ -145,14 +156,25 @@ describe('Gases', () => {
 
         it('Trimix 18/35 for 40m', () => {
           bestGasOptions.currentDepth = 40;
+          bestGasOptions.currentGas = null;
           const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
           expect(found).toBe(trimix1835);
         });
 
-        it('Oxygen for 6m', () => {
-          bestGasOptions.currentDepth = 6;
+        it('Air is better than trimix 18/35 for 40m', () => {
+          bestGasOptions.currentDepth = 40;
           const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
-          expect(found).toBe(oxygen);
+          expect(found).toBe(air);
+        });
+
+        it('Current ean32 is better than best deco air for 30m', () => {
+          bestGasOptions.currentDepth = 30;
+          const gases = new Gases();
+          const ean32 = new Gas(.32, 0);
+          gases.addBottomGas(ean32);
+          gases.addDecoGas(air);
+          const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
+          expect(found).toBe(ean32);
         });
       });
     });

@@ -131,7 +131,8 @@ class AlgorithmContext {
         this.bestGasOptions = {
             currentDepth: this.currentDepth,
             maxDecoPpO2: this.options.maxDecoPpO2,
-            maxEndPressure: this.depthConverter.toBar(this.options.maxEND)
+            maxEndPressure: this.depthConverter.toBar(this.options.maxEND),
+            currentGas: this.currentGas
         };
     }
 
@@ -165,6 +166,7 @@ class AlgorithmContext {
 
     public bestDecoGas(): Gas {
         this.bestGasOptions.currentDepth = this.currentDepth;
+        this.bestGasOptions.currentGas = this.currentGas;
         const newGas = this.gases.bestDecoGas(this.depthConverter, this.bestGasOptions);
         return newGas;
     }

@@ -27,12 +27,12 @@ describe('PlannerService', () => {
 
     it('74 bar rock bottom', () => {
       planner.calculate();
-      expect(planner.firstGas.reserve).toBe(78);
+      expect(planner.firstTank.reserve).toBe(78);
     });
 
     it('109 bar remaining gas', () => {
       planner.calculate();
-      expect(planner.firstGas.endPressure).toBe(124);
+      expect(planner.firstTank.endPressure).toBe(124);
     });
   });
 

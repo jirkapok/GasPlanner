@@ -11,7 +11,7 @@ import { Time } from 'scuba-physics';
 })
 export class DiveComponent implements OnInit {
   public dive: Dive;
-  public bottomGas: Tank;
+  public bottomTank: Tank;
   public exclamation = faExclamationCircle;
   public warning = faExclamationTriangle;
   public tasks = faTasks;
@@ -37,6 +37,6 @@ export class DiveComponent implements OnInit {
 
   ngOnInit() {
     this.dive = this.planer.dive;
-    this.bottomGas = this.planer.firstGas;
+    this.bottomTank = this.planer.firstTank;
   }
 }

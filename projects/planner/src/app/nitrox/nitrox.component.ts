@@ -48,7 +48,7 @@ export class NitroxComponent implements OnInit {
   }
 
   public use(): void {
-    this.planer.firstGas.o2 = this.calc.fO2;
+    this.planer.firstTank.o2 = this.calc.fO2;
     this.planer.diver.maxPpO2 = this.calc.pO2;
     this.router.navigateByUrl('/');
   }

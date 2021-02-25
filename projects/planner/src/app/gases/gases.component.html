@@ -2,7 +2,7 @@
   <div class="card-header ">
       <fa-icon [icon]="bottleIcon" rotate="270" class="mr-3"></fa-icon>
       <span *ngIf="!isTechnical">Bottom gas tank</span>
-      <span *ngIf="isTechnical">Gas tanks</span>
+      <span *ngIf="isTechnical">Tank</span>
   </div>
   <div class="card-body" *ngIf="isTechnical">
     <table class="table table-noheader">
@@ -12,51 +12,51 @@
         <th>Percent O2</th>
         <th><button class="btn btn-sm m-0 p-0" type="button" (click)="addGas()"><fa-icon [icon]="plusIcon"></fa-icon></button></th>
       </tr>
-      <tr *ngFor="let gas of gases">
+      <tr *ngFor="let tank of tanks">
         <td>
-          <input #size="ngModel" name="size" [(ngModel)]="gas.size" class="form-control" type="number" min="1" max="50" (change)="gasChanged()"
+          <input #size="ngModel" name="size" [(ngModel)]="tank.size" class="form-control" type="number" min="1" max="50" (change)="gasChanged()"
             [range]="[1, 50]" required [class.is-invalid]="size.invalid && (size.dirty || size.touched)" />
-          <small class="form-text text-muted">SAC: {{gasSac(gas) | number:'1.0-2'}} bar/min.</small>
+          <small class="form-text text-muted">SAC: {{gasSac(tank) | number:'1.0-2'}} bar/min.</small>
           <div class="text-danger" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 L</div>
         </td>
         <td>
-          <input #startPressure="ngModel" name="startPressure" [(ngModel)]="gas.startPressure" class="form-control" type="number" (change)="gasChanged()"
+          <input #startPressure="ngModel" name="startPressure" [(ngModel)]="tank.startPressure" class="form-control" type="number" (change)="gasChanged()"
             min="30" max="350" [range]="[30, 350]" required
             [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)"/>
             <div class="text-danger" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number 30-300 bar</div>
         </td>
         <td>
           <div class="input-group">
-            <input #gasO2="ngModel" name="gasO2" [(ngModel)]="gas.o2" class="form-control" type="number" (change)="gasChanged()"
+            <input #gasO2="ngModel" name="gasO2" [(ngModel)]="tank.o2" class="form-control" type="number" (change)="gasChanged()"
              min="21" max="100" [range]="[21, 100]" required
              [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)"/>
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
               <button class="btn btn-default border" id="o2Menu"  type="button" ngbDropdownToggle></button>
               <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-                <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="assignStandardGas(gas, stgas)">{{stgas}}</button>
+                <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="assignStandardGas(tank, stgas)">{{stgas}}</button>
               </div>
             </div>
           </div>
-          <app-gaslabel [gas]="gas"></app-gaslabel>
+          <app-gaslabel [gas]="tank"></app-gaslabel>
           <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number 21-100%</div>
         </td>
-        <td><button *ngIf="planner.firstGas !== gas" type="button" class="btn btn-sm m-0 p-0" (click)="removeGas(gas)"><fa-icon [icon]="trashIcon"></fa-icon></button></td>
+        <td><button *ngIf="planner.firstTank !== tank" type="button" class="btn btn-sm m-0 p-0" (click)="removeGas(tank)"><fa-icon [icon]="trashIcon"></fa-icon></button></td>
       </tr>
   </table>
   </div>
   <div class="card-body" *ngIf="!isTechnical">
       <div class="form-group">
         <label for="size">Size [L]:
-          <input #size="ngModel" name="size" [(ngModel)]="firstGas.size" class="form-control" type="number" (change)="gasChanged()"
+          <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control" type="number" (change)="gasChanged()"
             min="1" max="50" [range]="[1, 50]" required 
             [class.is-invalid]="size.invalid && (size.dirty || size.touched)"/>
-          <small class="form-text text-muted">SAC: {{gasSac(firstGas) | number:'1.0-2'}} bar/min.</small>
+          <small class="form-text text-muted">SAC: {{gasSac(firstTank) | number:'1.0-2'}} bar/min.</small>
           <div class="text-danger" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 L</div>
         </label>
       </div>
       <div class="form-group">
         <label for="startPressure">Start pressure [bar]:
-          <input #startPressure="ngModel" name="startPressure" [(ngModel)]="firstGas.startPressure" class="form-control" type="number" (change)="gasChanged()"
+          <input #startPressure="ngModel" name="startPressure" [(ngModel)]="firstTank.startPressure" class="form-control" type="number" (change)="gasChanged()"
             min="30" max="350" [range]="[30, 350]" required
             [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)"/>
             <div class="text-danger" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number 30-300 bar</div>
@@ -72,11 +72,11 @@
               <button class="btn btn-default border" id="o2Menu"  type="button" ngbDropdownToggle></button>
               <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
                 <button type="button" class="dropdown-item" (click)="assignBestMix()">Best mix</button>
-                <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="assignStandardGas(firstGas, stgas)">{{stgas}}</button>
+                <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item" (click)="assignStandardGas(firstTank, stgas)">{{stgas}}</button>
               </div>
             </div>
           </div>
-          <app-gaslabel [gas]="firstGas"></app-gaslabel>
+          <app-gaslabel [gas]="firstTank"></app-gaslabel>
         </label>
         <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number 21-100%</div>
       </div>

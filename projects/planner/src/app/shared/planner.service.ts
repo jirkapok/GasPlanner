@@ -10,7 +10,7 @@ export class PlannerService {
   public plan: Plan = new Plan(12, 30, Strategies.ALL);
   public diver: Diver = new Diver(20, 1.4);
   // there always needs to be at least one
-  public gases: Tank[];
+  public tanks: Tank[];
   public dive: Dive = new Dive();
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
@@ -18,8 +18,8 @@ export class PlannerService {
   private depthConverterFactory = new DepthConverterFactory(this.options);
   private depthConverter: DepthConverter;
   // TODO remove
-  public get firstGas(): Tank {
-    return this.gases[0];
+  public get firstTank(): Tank {
+    return this.tanks[0];
   }
 
   constructor() {
@@ -32,19 +32,19 @@ export class PlannerService {
   }
 
   public resetToDefaultGases(): void {
-    this.gases = [
+    this.tanks = [
       new Tank(15, 200, 21)
     ];
   }
 
   public addGas(): void {
     const newGas = new Tank(11, 200, 21);
-    this.gases.push(newGas);
+    this.tanks.push(newGas);
     this.calculate();
   }
 
   public removeGas(gas: Tank): void {
-    this.gases = this.gases.filter(g => g !== gas);
+    this.tanks = this.tanks.filter(g => g !== gas);
     this.calculate();
   }
 
@@ -62,7 +62,7 @@ export class PlannerService {
   }
 
   public get gasMod(): number {
-    return this.modForGas(this.firstGas);
+    return this.modForGas(this.firstTank);
   }
 
   public switchDepth(gas: Tank): number {
@@ -85,7 +85,7 @@ export class PlannerService {
     this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
     const algorithm = new BuhlmannAlgorithm();
     const depth = this.plan.depth;
-    const gas = this.firstGas.gas;
+    const gas = this.firstTank.gas;
     const noDecoLimit = algorithm.noDecoLimit(depth, gas, this.options);
     return Math.floor(noDecoLimit);
   }
@@ -93,7 +93,7 @@ export class PlannerService {
   public calculate(): void {
     this.depthConverter = this.depthConverterFactory.create();
     this.plan.noDecoTime = this.noDecoTime();
-    const profile = WayPointsService.calculateWayPoints(this.plan, this.gases, this.options);
+    const profile = WayPointsService.calculateWayPoints(this.plan, this.tanks, this.options);
     // TODO multilevel diving: ascent cant be identified by first two segments
     const ascent = PlannerService.ascent(profile.wayPoints);
     this.dive.wayPoints = profile.wayPoints;
@@ -103,8 +103,8 @@ export class PlannerService {
     if (profile.wayPoints.length > 2) {
       this.dive.maxTime = this.calculateMaxBottomTime();
       this.dive.timeToSurface = this.calculateTimeToSurface(ascent);
-      this.firstGas.reserve = this.calculateRockBottom(ascent);
-      this.firstGas.consumed = this.calculateConsumedOnWay(profile.wayPoints, this.diver.sac);
+      this.firstTank.reserve = this.calculateRockBottom(ascent);
+      this.firstTank.consumed = this.calculateConsumedOnWay(profile.wayPoints, this.diver.sac);
       this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
     }
 
@@ -112,7 +112,7 @@ export class PlannerService {
     this.dive.turnPressure = this.calculateTurnPressure();
     this.dive.turnTime = Math.floor(this.plan.duration / 2);
     this.dive.needsReturn = this.plan.needsReturn;
-    this.dive.notEnoughGas = this.firstGas.endPressure < this.firstGas.reserve;
+    this.dive.notEnoughGas = this.firstTank.endPressure < this.firstTank.reserve;
     this.dive.depthExceeded = this.plan.depth > this.gasMod;
     this.dive.noDecoExceeded = this.plan.noDecoExceeded;
     this.dive.calculated = true;
@@ -121,8 +121,8 @@ export class PlannerService {
   }
 
   private calculateTurnPressure(): number {
-    const consumed = this.firstGas.consumed / 2;
-    return this.firstGas.startPressure - Math.floor(consumed);
+    const consumed = this.firstTank.consumed / 2;
+    return this.firstTank.startPressure - Math.floor(consumed);
   }
 
   private calculateMaxBottomTime(): number {
@@ -159,7 +159,7 @@ export class PlannerService {
     let ascent = PlannerService.ascent(recreProfile);
     let rockBottom = this.calculateRockBottom(ascent);
     let consumed = this.calculateConsumedOnWay(recreProfile, this.diver.sac);
-    const remaining = this.firstGas.startPressure - consumed - rockBottom;
+    const remaining = this.firstTank.startPressure - consumed - rockBottom;
 
     if(remaining > 0) {
       const sacSeconds = Time.toMinutes(this.diver.sac);
@@ -185,7 +185,7 @@ export class PlannerService {
 
     while (this.hasEnougGas(consumed, rockBottom)) {
       testPlan.duration++;
-      const profile = WayPointsService.calculateWayPoints(testPlan, this.gases, this.options);
+      const profile = WayPointsService.calculateWayPoints(testPlan, this.tanks, this.options);
       const ascent = PlannerService.ascent(profile.wayPoints);
       rockBottom = this.calculateRockBottom(ascent);
       consumed = this.calculateConsumedOnWay(profile.wayPoints, this.diver.sac);
@@ -195,7 +195,7 @@ export class PlannerService {
   }
   
   private hasEnougGas(consumed: number, rockBottom: number): boolean {
-    return this.firstGas.startPressure - consumed >= rockBottom;
+    return this.firstTank.startPressure - consumed >= rockBottom;
   }
 
   private calculateRockBottom(ascent: WayPoint[]): number {
@@ -223,7 +223,7 @@ export class PlannerService {
   /** bar/second */
   private waipointConsumptionPerSecond(wayPoint: WayPoint, sacSeconds: number): number {
     const averagePressure = this.depthConverter.toBar(wayPoint.averageDepth);
-    const consumed = averagePressure * Diver.gasSac(sacSeconds, this.firstGas.size);
+    const consumed = averagePressure * Diver.gasSac(sacSeconds, this.firstTank.size);
     return consumed;
   }
 
@@ -247,8 +247,8 @@ export class PlannerService {
     this.plan.loadFrom(other.plan);
     this.diver.loadFrom(other.diver);
     // cant use firstGas from the other, since it doesn't have to be deserialized
-    if(other.gases.length > 0) {
-        this.firstGas.loadFrom(other.gases[0]);
+    if(other.tanks.length > 0) {
+        this.firstTank.loadFrom(other.tanks[0]);
     }
   }
 }

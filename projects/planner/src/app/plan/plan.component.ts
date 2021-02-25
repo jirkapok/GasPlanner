@@ -129,6 +129,15 @@ export class PlanComponent implements OnInit {
     this.planner.changeWaterType(newValue);
   }
 
+  public get safetyStopEnabled(): boolean {
+    return this.planner.options.addSafetyStop;
+  }
+
+  public set safetyStopEnabled(newValue: boolean) {
+    this.planner.options.addSafetyStop = newValue;
+    this.planner.calculate();
+  }
+
   public get plannedAltitude(): number {
     return this.planner.options.altitude;
   }

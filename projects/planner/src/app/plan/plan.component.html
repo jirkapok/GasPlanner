@@ -94,7 +94,11 @@
           </label>
         </div>
 
-
+        <div class="custom-control custom-switch form-group" *ngIf="isTechnical">
+          <input type="checkbox" class="custom-control-input btn-success" id="safetyStop" [checked]="safetyStopEnabled"
+            (change)="safetyStopEnabled = !safetyStopEnabled" />
+          <label class="custom-control-label" for="safetyStop">Add safety stop 3 min.</label>
+        </div>
 
         <div class="custom-control custom-switch form-group" *ngIf="isTechnical">
           <input type="checkbox" class="custom-control-input btn-success" id="roundStops" [checked]="roundDecoStops"

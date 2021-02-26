@@ -268,6 +268,7 @@ export class BuhlmannAlgorithm {
     }
 
     private swim(context: AlgorithmContext, segment: Segment) {
+        SegmentsValidator.addSegmentEvents(context.depthConverter, context.options.maxPpO2, segment, context.events);
         let startDepth = segment.startDepth;
         const interval = Time.oneSecond;
 

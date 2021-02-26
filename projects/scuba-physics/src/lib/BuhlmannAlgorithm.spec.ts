@@ -2,6 +2,7 @@ import { Time } from './Time';
 import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
 import { Gas, Gases } from './Gases';
 import { Segment, Segments } from './Segments';
+import { EventType } from './Profile';
 
 describe('Buhlmann Algorithm', () => {
   const air: Gas = new Gas(0.21, 0); 
@@ -9,6 +10,7 @@ describe('Buhlmann Algorithm', () => {
   const ean50: Gas = new Gas(0.5, 0);
   const oxygen: Gas = new Gas(1, 0);
   const trimix2135: Gas = new Gas(0.21, 0.35);
+  const trimix1070: Gas = new Gas(0.1, 0.7);
 
   describe('No decompression times', () => {
     it('Calculate air No decompression limit at surface', () => {
@@ -308,6 +310,40 @@ describe('Buhlmann Algorithm', () => {
 
         const expectedPlan = '0,30,90; 30,30,510; 30,21,54; 21,21,60; 21,3,108; 3,3,180; 3,0,18;';
         expect(planText).toBe(expectedPlan);
+      });
+    });
+
+    describe('Events', () => {
+      it('Adds low ppO2 event when breathing 10/70 at beginning of dive', () => {
+        const gases = new Gases();
+        gases.addBottomGas(trimix1070);
+        const segments = new Segments();
+        segments.add(0, 30, trimix1070, 1.5 * Time.oneMinute);
+        const algorithm = new BuhlmannAlgorithm();
+        const decoPlan = algorithm.calculateDecompression(options, gases, segments);
+        expect(decoPlan.events[0].type).toBe(EventType.lowPpO2);
+      });
+
+
+      it('Adds high ppO2 event when breathing air at 70m', () => {
+        const gases = new Gases();
+        gases.addBottomGas(air);
+        const segments = new Segments();
+        segments.add(0, 70, air, 3.5 * Time.oneMinute);
+        const algorithm = new BuhlmannAlgorithm();
+        const decoPlan = algorithm.calculateDecompression(options, gases, segments);
+        expect(decoPlan.events[0].type).toBe(EventType.highPpO2);
+      });
+
+      it('Adds gas switch event', () => {
+        const gases = new Gases();
+        gases.addBottomGas(air);
+        gases.addDecoGas(ean50);
+        const segments = new Segments();
+        segments.add(0, 40, air, 2 * Time.oneMinute);
+        const algorithm = new BuhlmannAlgorithm();
+        const decoPlan = algorithm.calculateDecompression(options, gases, segments);
+        expect(decoPlan.events[0].type).toBe(EventType.gasSwitch);
       });
     });
     

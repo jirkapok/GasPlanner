@@ -20,6 +20,12 @@
             <span>No decompression time for current depth exceeded (Bottom time needs to be maximum
                 {{ noDeco | number:'1.0-0' }} min.)!</span>
         </div>
+        <div *ngFor="let event of dive.events">
+            <div *ngIf="isHighPpO2(event)" class="alert alert-warning">
+                <fa-icon [icon]="warning" class="mr-1"></fa-icon>
+                <span>High partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }} m exceeded!</span>
+            </div>
+        </div>
 
         <div *ngIf="!dive.hasErrors">
             <table class="table table-noheader">

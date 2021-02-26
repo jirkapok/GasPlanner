@@ -44,11 +44,11 @@ export class SegmentsValidator {
         }
     }
 
+    public static addSegmentEvents(depthConverter: DepthConverter, maxPpo: number, segment: Segment, events: Event[]): void {
+        const pressureSegment = this.toPressureSegment(segment, depthConverter);
+        this.validateGas(events, segment.gas, pressureSegment, maxPpo, depthConverter);
+    }
 
-    
-
-    // const pressureSegment = this.toPressureSegment(segment, depthConverter);
-    // this.validateGas(messages, segment.gas, pressureSegment, maxPpo, depthConverter.surfacePressure);
 
     private static toPressureSegment(segment: Segment, depthConverter: DepthConverter) {
         const startPressure = depthConverter.toBar(segment.startDepth);
@@ -57,17 +57,22 @@ export class SegmentsValidator {
     }
 
 
-    private static validateGas(messages: string[], segmentGas: Gas, pressureSegment: PressureSegment, maxPpo: number, surfacePressure: number): void {
+    private static validateGas(events: Event[], segmentGas: Gas, pressureSegment: PressureSegment, maxPpo: number, depthConverter: DepthConverter): void {
         const gasMod = segmentGas.mod(maxPpo);
+        // nice to have calculate exact time and depth of the events, it is enough it happened
 
         if (pressureSegment.maxDepth > gasMod) {
-            // TODO move to algorithm as high ppO2: messages.push('Gas is not breathable at bottom segment depth.');
+            const highDepth = depthConverter.fromBar(gasMod);
+            const highPpO2Event = EventsFactory.createHighPpO2(highDepth);
+            events.push(highPpO2Event);
         }
 
-        const gasCeiling = segmentGas.ceiling(surfacePressure);
+        const gasCeiling = segmentGas.ceiling(depthConverter.surfacePressure);
 
         if (gasCeiling > pressureSegment.minDepth) {
-            // TODO move to algorithm as low ppO2: messages.push('Gas is not breathable at segment ceiling.');
+            const lowDepth = depthConverter.fromBar(gasCeiling);
+            const lowPpO2Event = EventsFactory.createLowPpO2(lowDepth);
+            events.push(lowPpO2Event);
         }
     }
 }

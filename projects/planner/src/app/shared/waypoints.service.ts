@@ -20,9 +20,10 @@ export class WayPointsService {
         const wayPoints = [];
         const profile = this.calculateDecompression(plan, gases, options);
 
-        if (profile.errorMessages.length > 0) {
-            return Profile.newEmpty();
-        }
+        // TODO filter errors only
+        // if (profile.errorMessages.length > 0) {
+        //     return Profile.newEmpty();
+        // }
 
         const descent = profile.segments[0];
         let lastWayPoint = WayPoint.fromSegment(descent);

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, Tank } from '../shared/models';
 import { faExclamationCircle, faExclamationTriangle, faTasks } from '@fortawesome/free-solid-svg-icons';
-import { Time } from 'scuba-physics';
+import { EventType, Event, Time } from 'scuba-physics';
 
 @Component({
   selector: 'app-dive',
@@ -38,5 +38,9 @@ export class DiveComponent implements OnInit {
   ngOnInit() {
     this.dive = this.planer.dive;
     this.bottomTank = this.planer.firstTank;
+  }
+
+  public isHighPpO2(event: Event): boolean {
+    return event.type === EventType.highPpO2;
   }
 }

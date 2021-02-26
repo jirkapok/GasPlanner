@@ -15,7 +15,7 @@ Road map of planned features:
 
 * Fix precision of decompression algorithm - Im progress
   * Allow max. depth exceeds gas ppO2
-  * Add events as errors from algorithm: end of NDL, broken ceiling, exceeded stop, fast ascent or descent, safety stop, no breathable gas at depth, high pPO2, low pPO2, narcotic depth
+  * Add events as errors from algorithm: end of NDL, broken ceiling, exceeded max. stop duration, fast ascent or descent, safety stop, no breathable gas at depth, narcotic depth
   * Fix loading of tissues when tissues are still loaded during ascent
 * Allow define multiple gases - Im progress
   * Fix consumed gas calculation

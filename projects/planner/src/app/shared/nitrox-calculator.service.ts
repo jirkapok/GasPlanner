@@ -16,6 +16,7 @@ export class NitroxCalculatorService {
   private _mod = 22.43;
   private _calculation = NitroxMode.Mod;
   private calculate: () => void = this.calculateCurrentMod;
+  // consider usage of switch in the UI to change the depth converter
   private nitroxCalculator = new NitroxCalculator(DepthConverter.forFreshWater());
 
   public get calculation(): NitroxMode {

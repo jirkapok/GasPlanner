@@ -17,7 +17,8 @@ export class PlannerService {
   public options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
   private depthConverterFactory = new DepthConverterFactory(this.options);
   private depthConverter: DepthConverter;
-  // TODO remove
+
+  /** only for recreational diver use case */
   public get firstTank(): Tank {
     return this.tanks[0];
   }
@@ -58,7 +59,7 @@ export class PlannerService {
     const calculator = this.createNitroxCalculator();
     const maxPpO2 = this.options.maxPpO2;
     let o2 = calculator.bestMix(maxPpO2, this.plan.depth);
-    return Math.floor(o2);
+    return Math.round(o2);
   }
 
   public get gasMod(): number {

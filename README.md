@@ -21,6 +21,8 @@ Road map of planned features:
   * Fix consumed gas calculation
   * Move rock bottom per gas
   * Implement support of multiple tanks with the same gas
+  * Fix recommended gas to oxygen for depths lower than max. ppO2
+  * Fix minimum ppO2 by validation in Nitrox calculator by options
 * Add option to define safety stop range including no safetystop below 10m dives
 * Allow to define multiple levels
   * Allow to define multiple ascent speeds

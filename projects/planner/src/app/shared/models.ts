@@ -58,7 +58,11 @@ export class Tank {
             return fromEnum;
         }
 
-        if (o2) {
+        if (!!o2) {
+            if(o2 >= 100) {
+                return StandardGas[StandardGas.OXYGEN];
+            }
+
             return 'EAN' + o2.toString();
         }
 

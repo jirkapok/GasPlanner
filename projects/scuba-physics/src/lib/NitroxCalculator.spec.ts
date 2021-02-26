@@ -21,6 +21,11 @@ describe('NitroxCalculatorService', () => {
       const ead = NitroxCalculator.ead(50, 22);
       expect(ead).toBe(10.26);
     });
+
+    it('100% fO2 at 6 m has EAD 0m - no negative numbers', () => {
+      const ead = NitroxCalculator.ead(100, 6);
+      expect(ead).toBe(0);
+    });
   });
 
   describe('Best mix (fO2)', () => {
@@ -32,6 +37,11 @@ describe('NitroxCalculatorService', () => {
     it('pO2 1.3 with MOD 30 m has fO2 32.86%', () => {
       const fO2 = nitroxCalculator.bestMix(1.3, 30);
       expect(fO2).toBe(32.86);
+    });
+
+    it('pO2 1.6 with MOD 4 m has fO2 100% - no more than 100%', () => {
+      const fO2 = nitroxCalculator.bestMix(1.6, 4);
+      expect(fO2).toBe(100);
     });
   });
 

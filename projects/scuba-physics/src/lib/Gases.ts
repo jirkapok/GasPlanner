@@ -171,7 +171,13 @@ export class GasMixtures {
      */
     public static bestMix(pO2: number, depth: number, depthConverter: DepthConverter): number {
         const bar = depthConverter.toBar(depth);
-        return pO2 / bar;
+        const result = pO2 / bar;
+
+        if(result > 1) {
+            return 1;
+        }
+
+        return result;
     }
 
     /**
@@ -183,7 +189,13 @@ export class GasMixtures {
     */
     public static ead(fO2: number, depth: number): number {
         const fN2 = 1 - fO2;
-        return fN2 * (depth + 10) / 0.79 - 10;
+        const result = fN2 * (depth + 10) / 0.79 - 10;
+
+        if(result < 0) {
+            return 0;
+        }
+
+        return result;
     }
 
     /**

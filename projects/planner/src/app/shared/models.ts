@@ -217,7 +217,7 @@ export class Dive {
 
     public get hasErrors(): boolean {
         // the only errors preventing draw chart
-        return this.calculated && (this.depthExceeded || this.notEnoughTime);
+        return this.calculated && this.notEnoughTime;
     }
 
     public get hasHoursRuntime(): boolean {

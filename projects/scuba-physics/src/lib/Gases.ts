@@ -1,42 +1,33 @@
 import { DepthConverter } from './depth-converter';
+import { Event, EventsFactory } from './Profile';
 
 /**
- * Returns list of messages if gases collection is incomplete to realize dive for required depth.
+ * Returns list of messages if gases collection is covers all depths.
  * I.e. we need to cover all depths by breathable gas up to surface.
- * Deco gases are prefered for decompression, they don't have to be better.
+ * Deco gases are preferred for decompression, they don't have to be better.
  */
 export class GasesValidator {
     /**
      * @param gases not null list of gases to validate
-     * @param maxDepth maximum depth in bars
+     * @param surfacePressure surfaces pressure in bars
      */
-    public static validate(gases: Gases, options: GasOptions, surfacePressure: number, maxDepth: number): string[] {
-        const messages = [];
+    public static validate(gases: Gases, options: GasOptions, surfacePressure: number): Event[] {
+        const events: Event[] = [];
 
         if (!gases.hasBottomGas) {
-            messages.push('At least one bottom gas as to be defined.');
-            return messages;
+            const event: Event = EventsFactory.createError('At least one bottom gas has to be defined.');
+            events.push(event);
+            return events;
         }
 
         const allGases = gases.all;
-        this.validateByMod(allGases, options, maxDepth, surfacePressure, messages);
-
-        allGases.sort((a, b) => a.ceiling(surfacePressure) - b.ceiling(surfacePressure));
-        // TODO dont validate only first gas
-        if (allGases[0].ceiling(surfacePressure) > surfacePressure) {
-            messages.push('No gas available to surface.');
-        }
-
-        return messages;
+        this.validateAllDepths(allGases, options, surfacePressure, events);
+        return events;
     }
 
-    private static validateByMod(gases: Gas[], options: GasOptions, maxDepth: number, surfacePressure: number, messages: string[]) {
+    private static validateAllDepths(gases: Gas[], options: GasOptions, surfacePressure: number, events: Event[]) {
+        // we don't have to check gas with ceiling to surface, because it is covered by first descent segment.
         gases.sort((a, b) => b.mod(options.maxPpO2) - a.mod(options.maxPpO2));
-        
-
-        if (gases[0].mod(options.maxPpO2) < maxDepth) {
-            messages.push('No gas available to maximum depth.');
-        }
 
         for (let index = 0; index < gases.length - 1; index++) {
             if (gases.length > index) {
@@ -44,7 +35,8 @@ export class GasesValidator {
                 const ceiling = gases[index].ceiling(surfacePressure);
                 const nextMod = nextGas.mod(options.maxPpO2);
                 if (nextMod < ceiling) {
-                    messages.push('Gases don`t cover all depths.');
+                    const error = EventsFactory.createError('Gases don`t cover all depths.');
+                    events.push(error);
                     break;
                 }
             }

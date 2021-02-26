@@ -3,7 +3,7 @@ import { Gases, Gas, GasOptions, GasesValidator, BestGasOptions } from './Gases'
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory, DepthOptions } from './depth-converter';
 import { Time } from './Time';
-import { CalculatedProfile, Ceiling, Event, EventType } from './Profile';
+import { CalculatedProfile, Ceiling, Event, EventsFactory } from './Profile';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
 
 export class Options implements GasOptions, DepthOptions {
@@ -125,6 +125,7 @@ class AlgorithmContext {
         // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
 
+        // TODO multilevel diving: fix max depth, last doesn't have to be max. depth.
         const last = segments.last();
         this.currentGas = last.gas;
 
@@ -175,9 +176,9 @@ class AlgorithmContext {
 export class BuhlmannAlgorithm {
     public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
-        const errorMessages = this.validate(segments, gases, options, depthConverter);
-        if (errorMessages.length > 0) {
-            return CalculatedProfile.fromErrors(errorMessages);
+        const events = this.validate(segments, gases, options, depthConverter);
+        if (events.length > 0) {
+            return CalculatedProfile.fromErrors(events);
         }
 
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
@@ -229,32 +230,23 @@ export class BuhlmannAlgorithm {
         if (!newGas || context.currentGas.compositionEquals(newGas)) {
             return;
         }
+        
+        const gasSwitch = EventsFactory.createGasSwitch(context.runTime, context.currentDepth, newGas);
+        context.events.push(gasSwitch);
 
         context.currentGas = newGas;
-        const gasSwitch: Event = {
-            timeStamp: context.runTime,
-            depth: context.currentDepth,
-            type: EventType.gasSwitch,
-            data: context.currentGas
-        };
-
-        context.events.push(gasSwitch);
         const duration = context.options.gasSwitchDuration * Time.oneMinute;
         const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, duration);
         this.swim(context, stop);
     }
 
-    private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): string[] {
-        const segmentMessages = SegmentsValidator.validate(segments, gases, options.maxPpO2, depthConverter);
-        if (segmentMessages.length > 0) {
-            return segmentMessages;
+    private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): Event[] {
+        const segmentErrors = SegmentsValidator.validate(segments, gases, options.maxPpO2, depthConverter);
+        if (segmentErrors.length > 0) {
+            return segmentErrors;
         }
 
-        // TODO multilevel diving: fix max depth, last doesn't have to be max. depth.
-        const last = segments.last();
-        const maxDepth = depthConverter.toBar(last.endDepth);
-
-        const gasMessages = GasesValidator.validate(gases, options, depthConverter.surfacePressure, maxDepth);
+        const gasMessages = GasesValidator.validate(gases, options, depthConverter.surfacePressure);
         if (gasMessages.length > 0) {
             return gasMessages;
         }

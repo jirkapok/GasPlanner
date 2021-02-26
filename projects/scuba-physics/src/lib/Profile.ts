@@ -1,11 +1,14 @@
+import { Gas } from './Gases';
 import { Segment } from './Segments';
 
 export enum EventType {
     noAction = 0,
-    /** At this moment, diver reached end of no deco limit */
-    reachedNoDeco = 1,
+    /** Generic error which prevents algorithm calculation */
+    error = 1,
     /** Gas switch happened at this moment */
-    gasSwitch = 2
+    gasSwitch = 2,
+    /** At this moment, diver reached end of no deco limit */
+    reachedNoDeco = 3
 }
 
 export class Event {
@@ -19,6 +22,26 @@ export class Event {
     public message?: string;
     /** Optional data associated with the event, e.g. Gas for gas switch */
     public data?: any;
+}
+
+export class EventsFactory {
+    public static createGasSwitch(timeStamp: number, depth: number, gas: Gas): Event {
+        return {
+            timeStamp: timeStamp,
+            depth: depth,
+            type: EventType.gasSwitch,
+            data: gas
+        };
+    }
+
+    public static createError(message: string): Event {
+        return {
+            timeStamp: 0,
+            depth: 0,
+            type: EventType.error,
+            message: message
+        };
+    }
 }
 
 /**
@@ -58,25 +81,17 @@ export class CalculatedProfile {
      * Not null collection of errors occurred during the profile calculation.
      * If not empty, ceilings and segments are empty.
      */
-    public get errorMessages(): string[] {
-        return this.errors;
-    }
-
-    /**
-     * Not null collection of errors occurred during the profile calculation.
-     * If not empty, ceilings and segments are empty.
-     */
     public get events(): Event[] {
         return this.evnt;
     }
 
-    private constructor(private seg: Segment[], private ceil: Ceiling[], private errors: string[], private evnt: Event[]) { }
+    private constructor(private seg: Segment[], private ceil: Ceiling[], private evnt: Event[]) { }
 
-    public static fromErrors(errors: string[]) {
-        return new CalculatedProfile([], [], errors, []);
+    public static fromErrors(errors: Event[]) {
+        return new CalculatedProfile([], [], errors);
     }
 
     public static fromProfile(segments: Segment[], ceilings: Ceiling[], events: Event[]) {
-        return new CalculatedProfile(segments, ceilings, [], events);
+        return new CalculatedProfile(segments, ceilings, events);
     }
 }

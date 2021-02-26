@@ -183,46 +183,37 @@ describe('Gases', () => {
   describe('Gases validator', () => {
     const surfacePressure = freshWaterConverter.surfacePressure;
     it('No gas defined', () => {
-      const messages = GasesValidator.validate(new Gases(), options, surfacePressure, 4);
+      const messages = GasesValidator.validate(new Gases(), options, surfacePressure);
       expect(messages.length).toBe(1);
     });
 
     it('Only one gas', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
-      const messages = GasesValidator.validate(gases, options, surfacePressure, 4);
+      const messages = GasesValidator.validate(gases, options, surfacePressure);
       expect(messages.length).toBe(0);
-    });
-
-    it('No bottom gas for depth', () => {
-      const gases = new Gases();
-      gases.addBottomGas(air);
-      const messages = GasesValidator.validate(gases, options, surfacePressure, 11);
-      expect(messages.length).toBe(1);
     });
 
     it('No gas to surface', () => {
       const gases = new Gases();
       gases.addBottomGas(trimix1070);
-      const messages = GasesValidator.validate(gases, options, surfacePressure, 4);
-      expect(messages.length).toBe(1);
+      const messages = GasesValidator.validate(gases, options, surfacePressure);
+      expect(messages.length).toBe(0);
     });
 
     it('Gases don`t cover all depths', () => {
-      const bottomGases = [trimix1070];
-      const decoGases = [oxygen];
       const gases = new Gases();
       gases.addBottomGas(trimix1070);
       gases.addDecoGas(oxygen);
-      const messages = GasesValidator.validate(gases, options, surfacePressure, 4);
+      const messages = GasesValidator.validate(gases, options, surfacePressure);
       expect(messages.length).toBe(1);
     });
 
-    it('Multiple gases', () => {
+    it('Multiple gases for the same depth', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
       gases.addDecoGas(ean50);
-      const messages = GasesValidator.validate(gases, options, surfacePressure, 4);
+      const messages = GasesValidator.validate(gases, options, surfacePressure);
       expect(messages.length).toBe(0);
     });
   });

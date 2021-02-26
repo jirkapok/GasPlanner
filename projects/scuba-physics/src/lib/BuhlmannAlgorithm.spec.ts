@@ -19,12 +19,12 @@ describe('Buhlmann Algorithm', () => {
         expect(ndl).toBe(Infinity);
     });
 
-    it('Calculate 0m if gas isn`t breathe-able at 60 m', () => {
+    it('Calculates 6 m, even gas high ppO2 at 60 m', () => {
       const depth = 60;
       const options = new Options(1, 1, 1.4, 1.4, 30, true);
       const algorithm = new BuhlmannAlgorithm();
       const ndl = algorithm.noDecoLimit(depth, air, options);
-      expect(ndl).toBe(0);
+      expect(ndl).toBe(6);
   });
 
     describe('Calculate air No decompression limits at depth', () => {
@@ -55,7 +55,7 @@ describe('Buhlmann Algorithm', () => {
           [36, 11],
           [39, 9],
           [42, 9],
-          [100, 0], // Where is the limit for no decompression depth?
+          [100, 5], // Where is the limit for no decompression depth?
         ];
 
         calculateNoDecompressionLimit(noDecoLimitTestCases, true);
@@ -75,7 +75,7 @@ describe('Buhlmann Algorithm', () => {
           [36, 8],
           [39, 7],
           [42, 7],
-          [100, 0], // Where is the limit for no decompression depth?
+          [100, 4], // Where is the limit for no decompression depth?
         ];
 
         options.gfLow = .4;
@@ -99,7 +99,7 @@ describe('Buhlmann Algorithm', () => {
           [36, 10],
           [39, 8],
           [42, 8],
-          [100, 0], // Where is the limit for no decompression depth?
+          [100, 4], // Where is the limit for no decompression depth?
         ];
 
         calculateNoDecompressionLimit(noDecoLimitTestCasesSalt, false);

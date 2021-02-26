@@ -1,5 +1,6 @@
 import { Gas, Gases } from './Gases';
 import { DepthConverter } from './depth-converter';
+import { EventsFactory, Event } from './Profile';
 
 
 /** all values in bar */
@@ -19,21 +20,35 @@ class PressureSegment {
 }
 
 export class SegmentsValidator {
-    public static validate(segments: Segments, gases: Gases, maxPpo: number, depthConverter: DepthConverter): string[] {
-        const messages: string[] = [];
+    public static validate(segments: Segments, gases: Gases, maxPpo: number, depthConverter: DepthConverter): Event[] {
+        const events: Event[] = [];
 
         if (!segments.any()) {
-            messages.push('There needs to be at least one segment at depth.');
+            const error = EventsFactory.createError('There needs to be at least one segment at depth.');
+            events.push(error);
         }
 
         segments.withAll(segment => {
-            SegmentsValidator.validateRegisteredGas(messages, gases, segment.gas);
-            const pressureSegment = this.toPressureSegment(segment, depthConverter);
-            this.validateGas(messages, segment.gas, pressureSegment, maxPpo, depthConverter.surfacePressure);
+            SegmentsValidator.validateRegisteredGas(events, gases, segment);
         });
 
-        return messages;
+        return events;
     }
+
+    private static validateRegisteredGas(events: Event[], gases: Gases, segment: Segment): void {
+        if (!gases.isRegistered(segment.gas)) {
+          // no need to translate or convert units, this is development message.
+          const message = `Segment ${segment.startDepth}-${segment.endDepth} has gas not registered in gases.`;
+          const error = EventsFactory.createError(message);
+          events.push(error);
+        }
+    }
+
+
+    
+
+    // const pressureSegment = this.toPressureSegment(segment, depthConverter);
+    // this.validateGas(messages, segment.gas, pressureSegment, maxPpo, depthConverter.surfacePressure);
 
     private static toPressureSegment(segment: Segment, depthConverter: DepthConverter) {
         const startPressure = depthConverter.toBar(segment.startDepth);
@@ -41,23 +56,18 @@ export class SegmentsValidator {
         return new PressureSegment(startPressure, endPressure);
     }
 
-    private static validateRegisteredGas(messages: string[], gases: Gases, segmentGas: Gas): void {
-        if (!gases.isRegistered(segmentGas)) {
-          messages.push('Gas must only be one of registered gases. Please use plan.addBottomGas or plan.addDecoGas to register a gas.');
-        }
-    }
 
     private static validateGas(messages: string[], segmentGas: Gas, pressureSegment: PressureSegment, maxPpo: number, surfacePressure: number): void {
         const gasMod = segmentGas.mod(maxPpo);
 
         if (pressureSegment.maxDepth > gasMod) {
-            messages.push('Gas is not breathable at bottom segment depth.');
+            // TODO move to algorithm as high ppO2: messages.push('Gas is not breathable at bottom segment depth.');
         }
 
         const gasCeiling = segmentGas.ceiling(surfacePressure);
 
         if (gasCeiling > pressureSegment.minDepth) {
-            messages.push('Gas is not breathable at segment ceiling.');
+            // TODO move to algorithm as low ppO2: messages.push('Gas is not breathable at segment ceiling.');
         }
     }
 }

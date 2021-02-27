@@ -33,7 +33,7 @@
       <app-waypoints [selectedTimeStamp]="selectedTimeStamp"></app-waypoints>
     </div>
     <div *ngIf="showResults" class="col-lg-12 col-md-12 mt-4">
-      <app-diveprofile (chartHover)="chartHover($event)" ></app-diveprofile>
+      <app-profilechart (chartHover)="chartHover($event)" ></app-profilechart>
     </div>
   </div>
 </div>

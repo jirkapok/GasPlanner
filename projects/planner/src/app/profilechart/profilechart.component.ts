@@ -7,11 +7,11 @@ import { Subscription } from 'rxjs';
 import { EventType, Time, Gas } from 'scuba-physics';
 
 @Component({
-  selector: 'app-diveprofile',
-  templateUrl: './diveprofile.component.html',
-  styleUrls: ['./diveprofile.component.css']
+  selector: 'app-profilechart',
+  templateUrl: './profilechart.component.html',
+  styleUrls: ['./profilechart.component.css']
 })
-export class DiveProfileComponent implements OnInit, OnDestroy {
+export class ProfileChartComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   public dive: Dive;
   public tasks = faTasks;

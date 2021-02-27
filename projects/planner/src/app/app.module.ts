@@ -19,7 +19,7 @@ import { GaslabelComponent } from './gaslabel/gaslabel.component';
 import { SacComponent } from './sac/sac.component';
 import { NitroxComponent } from './nitrox/nitrox.component';
 import { WayPointsComponent } from './waypoints/waypoints.component';
-import { DiveProfileComponent } from './diveprofile/diveprofile.component';
+import { ProfileChartComponent } from './profilechart/profilechart.component';
 import { AboutComponent } from './about/about.component';
 import { AppFooterComponent } from './footer/footer.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -39,7 +39,7 @@ import { environment } from '../environments/environment';
     GaslabelComponent,
     NitroxComponent,
     WayPointsComponent,
-    DiveProfileComponent,
+    ProfileChartComponent,
     AboutComponent,
     AppFooterComponent,
     ProfileComponent

@@ -15,15 +15,15 @@ describe('Profile', () => {
   const trimix1070: Gas = new Gas(0.1, 0.7);
 
   describe('Events', () => {
-    it('Adds low ppO2 event when breathing 10/70 at beginning of dive', () => {
+    fit('Adds low ppO2 event when breathing 10/70 at beginning of dive', () => {
       const gases = new Gases();
       gases.addBottomGas(trimix1070);
       const segments = new Segments();
       segments.add(0, 30, trimix1070, 1.5 * Time.oneMinute);
 
-      // const events = ProfileEvents.createEvents()
-
-      //expect(events[0].type).toBe(EventType.lowPpO2);
+      const profile = CalculatedProfile.fromProfile(segments.mergeFlat(), [], []);;
+      const events = ProfileEvents.createEvents(profile, DepthConverter.forFreshWater(), options);
+      expect(events.items[0].type).toBe(EventType.lowPpO2);
     });
 
 
@@ -32,12 +32,13 @@ describe('Profile', () => {
       gases.addBottomGas(air);
       const segments = new Segments();
       segments.add(0, 70, air, 3.5 * Time.oneMinute);
-      
-      // const events = ProfileEvents.createEvents()
-     // expect(events[0].type).toBe(EventType.highPpO2);
+
+      const profile = CalculatedProfile.fromProfile(segments.mergeFlat(), [], []);;
+      const events = ProfileEvents.createEvents(profile, DepthConverter.forFreshWater(), options);
+      expect(events.items[0].type).toBe(EventType.highPpO2);
     });
 
-    fit('Adds gas switch event', () => {
+    it('Adds gas switch event', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
       gases.addDecoGas(ean50);

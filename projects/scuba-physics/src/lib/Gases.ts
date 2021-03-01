@@ -253,6 +253,12 @@ export class Gas {
         return GasMixtures.end(this.fO2, this.fN2, depth);
     }
 
+     /**
+     * Calculates minimum depth at which the gas is breathe able.
+     *
+     * @param surfacePressure surface pressure in bars.
+     * @returns Depth in bars.
+     */
     public ceiling(surfacePressure: number): number {
         return GasMixtures.ceiling(this.fO2, surfacePressure);
     }

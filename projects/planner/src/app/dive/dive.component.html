@@ -23,7 +23,7 @@
         <div *ngFor="let event of dive.events">
             <div *ngIf="isHighPpO2(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="mr-1"></fa-icon>
-                <span>High partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }} m exceeded!</span>
+                <span>High partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }} m!</span>
             </div>
         </div>
 

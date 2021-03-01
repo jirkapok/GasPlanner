@@ -10,8 +10,8 @@ export class Profile {
         public events: Event[]
         ) {}
 
-    public static newEmpty(): Profile {
-        return new Profile([], [], []);
+    public static newEmpty(errors: Event[]): Profile {
+        return new Profile([], [], errors);
     }
 }
 
@@ -19,12 +19,13 @@ export class WayPointsService {
     public static calculateWayPoints(plan: Plan, gases: Tank[], options: Options): Profile {
         const wayPoints = [];
         const profile = this.calculateDecompression(plan, gases, options);
-        const events = ProfileEvents.fromProfile(profile.segments, options);
 
-        // TODO filter errors only
-        // if (profile.errorMessages.length > 0) {
-        //     return Profile.newEmpty();
-        // }
+        // not propagated to the UI
+        if (profile.errors.length > 0) {
+            return Profile.newEmpty(profile.errors);
+        }
+
+        const events = ProfileEvents.fromProfile(profile.segments, options);
 
         const descent = profile.segments[0];
         let lastWayPoint = WayPoint.fromSegment(descent);
@@ -36,7 +37,6 @@ export class WayPointsService {
             lastWayPoint = waypoint;
             wayPoints.push(waypoint);
         });
-
 
         return new Profile(wayPoints, profile.ceilings, events.items);
     }

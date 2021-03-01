@@ -38,7 +38,7 @@ describe('Profile', () => {
       expect(events.items[0].type).toBe(EventType.highPpO2);
     });
     
-    fit('Use deco ppO2 limit during scent - no high PpO2 event is added', () => {
+    it('Use deco ppO2 limit during scent - no high PpO2 event is added', () => {
       const gases = new Gases();
       gases.addBottomGas(air);
       const segments = new Segments();

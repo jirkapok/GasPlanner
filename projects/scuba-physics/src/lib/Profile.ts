@@ -234,10 +234,21 @@ export class CalculatedProfile {
        return this.ceil;
     }
 
-    private constructor(private seg: Segment[], private ceil: Ceiling[]) { }
+    /**
+     * Not null collection of errors.
+     */
+    public get errors(): Event[] {
+        return this.err;
+     }
+
+    private constructor(private seg: Segment[], private ceil: Ceiling[], private err: Event[]) { }
+
+    public static fromErrors(segments: Segment[], errors: Event[]) {
+        return new CalculatedProfile(segments, [], errors);
+    }
 
 
     public static fromProfile(segments: Segment[], ceilings: Ceiling[]) {
-        return new CalculatedProfile(segments, ceilings);
+        return new CalculatedProfile(segments, ceilings, []);
     }
 }

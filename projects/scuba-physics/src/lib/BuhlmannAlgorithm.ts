@@ -175,9 +175,9 @@ class AlgorithmContext {
 export class BuhlmannAlgorithm {
     public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
-        const events = this.validate(segments, gases, options, depthConverter);
-        if (events.length > 0) {
-            return  CalculatedProfile.fromProfile([], []);
+        const errors = this.validate(segments, gases, options, depthConverter);
+        if (errors.length > 0) {
+            return  CalculatedProfile.fromErrors(segments.mergeFlat(), errors);
         }
 
         const context = new AlgorithmContext(gases, segments, options, depthConverter);

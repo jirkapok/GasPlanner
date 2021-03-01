@@ -2,25 +2,8 @@ import { Gas, Gases } from './Gases';
 import { DepthConverter } from './depth-converter';
 import { EventsFactory, Event } from './Profile';
 
-
-/** all values in bar */
-class PressureSegment {
-    constructor(
-        public startDepth: number,
-        public endDepth: number
-    ) {}
-    
-    public get minDepth(): number {
-        return Math.min(this.startDepth, this.endDepth)
-    }
-
-    public get maxDepth(): number {
-        return Math.max(this.startDepth, this.endDepth)
-    }
-}
-
 export class SegmentsValidator {
-    public static validate(segments: Segments, gases: Gases, maxPpo: number, depthConverter: DepthConverter): Event[] {
+    public static validate(segments: Segments, gases: Gases): Event[] {
         const events: Event[] = [];
 
         if (!segments.any()) {
@@ -41,38 +24,6 @@ export class SegmentsValidator {
           const message = `Segment ${segment.startDepth}-${segment.endDepth} has gas not registered in gases.`;
           const error = EventsFactory.createError(message);
           events.push(error);
-        }
-    }
-
-    public static addSegmentEvents(depthConverter: DepthConverter, maxPpo: number, segment: Segment, events: Event[]): void {
-        const pressureSegment = this.toPressureSegment(segment, depthConverter);
-        this.validateGas(events, segment.gas, pressureSegment, maxPpo, depthConverter);
-    }
-
-
-    private static toPressureSegment(segment: Segment, depthConverter: DepthConverter) {
-        const startPressure = depthConverter.toBar(segment.startDepth);
-        const endPressure = depthConverter.toBar(segment.endDepth);
-        return new PressureSegment(startPressure, endPressure);
-    }
-
-
-    private static validateGas(events: Event[], segmentGas: Gas, pressureSegment: PressureSegment, maxPpo: number, depthConverter: DepthConverter): void {
-        const gasMod = segmentGas.mod(maxPpo);
-        // nice to have calculate exact time and depth of the events, it is enough it happened
-
-        if (pressureSegment.maxDepth > gasMod) {
-            const highDepth = depthConverter.fromBar(gasMod);
-            const highPpO2Event = EventsFactory.createHighPpO2(highDepth);
-            events.push(highPpO2Event);
-        }
-
-        const gasCeiling = segmentGas.ceiling(depthConverter.surfacePressure);
-
-        if (gasCeiling > pressureSegment.minDepth) {
-            const lowDepth = depthConverter.fromBar(gasCeiling);
-            const lowPpO2Event = EventsFactory.createLowPpO2(lowDepth);
-            events.push(lowPpO2Event);
         }
     }
 }

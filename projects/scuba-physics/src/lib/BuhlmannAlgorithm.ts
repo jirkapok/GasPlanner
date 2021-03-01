@@ -112,7 +112,6 @@ class DepthLevels {
 class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
-    public events: Event[] = [];
     public currentGas: Gas;
     /** in seconds */
     public runTime = 0;
@@ -178,7 +177,7 @@ export class BuhlmannAlgorithm {
         const depthConverter = new DepthConverterFactory(options).create();
         const events = this.validate(segments, gases, options, depthConverter);
         if (events.length > 0) {
-            return CalculatedProfile.fromErrors(events);
+            return  CalculatedProfile.fromProfile([], []);
         }
 
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
@@ -221,7 +220,7 @@ export class BuhlmannAlgorithm {
         }
 
         const merged = segments.mergeFlat();
-        return CalculatedProfile.fromProfile(merged, context.ceilings, context.events);
+        return CalculatedProfile.fromProfile(merged, context.ceilings);
     }
 
     private tryGasSwitch(context: AlgorithmContext) {
@@ -231,9 +230,6 @@ export class BuhlmannAlgorithm {
             return;
         }
         
-        const gasSwitch = EventsFactory.createGasSwitch(context.runTime, context.currentDepth, newGas);
-        context.events.push(gasSwitch);
-
         context.currentGas = newGas;
         const duration = context.options.gasSwitchDuration * Time.oneMinute;
         const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, duration);
@@ -241,7 +237,7 @@ export class BuhlmannAlgorithm {
     }
 
     private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): Event[] {
-        const segmentErrors = SegmentsValidator.validate(segments, gases, options.maxPpO2, depthConverter);
+        const segmentErrors = SegmentsValidator.validate(segments, gases);
         if (segmentErrors.length > 0) {
             return segmentErrors;
         }
@@ -268,8 +264,6 @@ export class BuhlmannAlgorithm {
     }
 
     private swim(context: AlgorithmContext, segment: Segment) {
-        // TODO prevent the events to be added multiple times
-        SegmentsValidator.addSegmentEvents(context.depthConverter, context.options.maxPpO2, segment, context.events);
         let startDepth = segment.startDepth;
         const interval = Time.oneSecond;
 

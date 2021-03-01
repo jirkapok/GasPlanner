@@ -182,21 +182,10 @@ export class CalculatedProfile {
        return this.ceil;
     }
 
-    /**
-     * Not null collection of errors occurred during the profile calculation.
-     * If not empty, ceilings and segments are empty.
-     */
-    public get events(): Event[] {
-        return this.evnt;
-    }
+    private constructor(private seg: Segment[], private ceil: Ceiling[]) { }
 
-    private constructor(private seg: Segment[], private ceil: Ceiling[], private evnt: Event[]) { }
 
-    public static fromErrors(errors: Event[]) {
-        return new CalculatedProfile([], [], errors);
-    }
-
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[], events: Event[]) {
-        return new CalculatedProfile(segments, ceilings, events);
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[]) {
+        return new CalculatedProfile(segments, ceilings);
     }
 }

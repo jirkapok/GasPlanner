@@ -313,39 +313,6 @@ describe('Buhlmann Algorithm', () => {
       });
     });
 
-    describe('Events', () => {
-      it('Adds low ppO2 event when breathing 10/70 at beginning of dive', () => {
-        const gases = new Gases();
-        gases.addBottomGas(trimix1070);
-        const segments = new Segments();
-        segments.add(0, 30, trimix1070, 1.5 * Time.oneMinute);
-        const algorithm = new BuhlmannAlgorithm();
-        const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-        expect(decoPlan.events[0].type).toBe(EventType.lowPpO2);
-      });
-
-
-      it('Adds high ppO2 event when breathing air at 70m', () => {
-        const gases = new Gases();
-        gases.addBottomGas(air);
-        const segments = new Segments();
-        segments.add(0, 70, air, 3.5 * Time.oneMinute);
-        const algorithm = new BuhlmannAlgorithm();
-        const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-        expect(decoPlan.events[0].type).toBe(EventType.highPpO2);
-      });
-
-      it('Adds gas switch event', () => {
-        const gases = new Gases();
-        gases.addBottomGas(air);
-        gases.addDecoGas(ean50);
-        const segments = new Segments();
-        segments.add(0, 40, air, 2 * Time.oneMinute);
-        const algorithm = new BuhlmannAlgorithm();
-        const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-        expect(decoPlan.events[0].type).toBe(EventType.gasSwitch);
-      });
-    });
     
     // TODO add algorithm test cases:
     // A: where deco is increased even during ascent <= do we have profile for this use case?

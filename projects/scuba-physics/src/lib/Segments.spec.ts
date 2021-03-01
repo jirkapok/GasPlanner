@@ -14,7 +14,7 @@ describe('Segments', () => {
 
         it('At least one segment is required', () => {
             const source = new Segments();
-            const  events = SegmentsValidator.validate(source, gases, maxPpo, depthConverter);
+            const  events = SegmentsValidator.validate(source, gases);
             expect(events.length).toBe(1);
         });
 
@@ -24,7 +24,7 @@ describe('Segments', () => {
             // consider validation, that all segments are subsequent
             source.add(20, 20, air, 5); 
 
-            const  events = SegmentsValidator.validate(source, gases, maxPpo, depthConverter);
+            const  events = SegmentsValidator.validate(source, gases);
             expect(events.length).toBe(0);
         });
 
@@ -32,7 +32,7 @@ describe('Segments', () => {
             const source = new Segments();
             source.add(0, 30, air, 5);
             const noGases = new Gases();
-            const messages = SegmentsValidator.validate(source, noGases, maxPpo, depthConverter);
+            const messages = SegmentsValidator.validate(source, noGases);
             expect(messages.length).toBe(1);
         });
     });

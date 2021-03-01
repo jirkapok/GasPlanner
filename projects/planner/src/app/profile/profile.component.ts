@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 
-import { Plan, Tank } from '../shared/models';
+import { Plan } from '../shared/models';
+import { Tank } from 'scuba-physics';
 import { PlannerService } from '../shared/planner.service';
 
 @Component({

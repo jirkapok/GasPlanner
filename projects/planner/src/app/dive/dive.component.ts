@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Dive, Tank } from '../shared/models';
+import { Dive } from '../shared/models';
 import { faExclamationCircle, faExclamationTriangle, faTasks } from '@fortawesome/free-solid-svg-icons';
-import { EventType, Event, Time } from 'scuba-physics';
+import { EventType, Event, Time, Tank } from 'scuba-physics';
 
 @Component({
   selector: 'app-dive',

@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { faBatteryEmpty, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
-import { Gases, Tank, Diver } from '../shared/models';
+import { Diver } from '../shared/models';
+import { StandardGases, Tank } from 'scuba-physics';
 
 @Component({
   selector: 'app-gases',
@@ -21,7 +22,7 @@ export class GasesComponent implements OnInit {
   ngOnInit() {
     this.firstTank = this.planner.firstTank;
     this.diver = this.planner.diver;
-    this.gasNames = Gases.gasNames();
+    this.gasNames = StandardGases.gasNames();
   }
 
   public get tanks(): Tank[] {

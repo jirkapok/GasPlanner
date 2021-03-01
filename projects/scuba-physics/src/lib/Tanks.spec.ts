@@ -1,16 +1,9 @@
-import { TestBed, inject } from '@angular/core/testing';
-import { NitroxCalculatorService } from './nitrox-calculator.service';
-import { Tank } from './models';
+import { Tank } from './Tanks';
 
 describe('Tank', () => {
     let gas: Tank;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            // any service to satisfy angular compiler
-            providers: [NitroxCalculatorService]
-        });
-
         gas = new Tank(10, 200, 21);
     });
 

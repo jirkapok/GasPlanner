@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Dive, Tank, WayPoint } from '../shared/models';
+import { Dive, WayPoint } from '../shared/models';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js/dist/plotly-basic.min.js';
 import { Subscription } from 'rxjs';
-import { EventType, Time, Gas } from 'scuba-physics';
+import { EventType, Time, Gas, Tank } from 'scuba-physics';
 
 @Component({
   selector: 'app-profilechart',

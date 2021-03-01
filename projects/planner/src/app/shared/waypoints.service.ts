@@ -1,7 +1,7 @@
-import { WayPoint, Plan, Tank } from './models';
+import { WayPoint, Plan } from './models';
 import { BuhlmannAlgorithm, Gas as BGas, Options, Gases,
      Segments, Event, CalculatedProfile, Segment, EventType, ProfileEvents,
-     Ceiling, Time } from 'scuba-physics';
+     Ceiling, Time, Tank } from 'scuba-physics';
 
 export class Profile {
     constructor(

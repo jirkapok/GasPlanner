@@ -13,3 +13,4 @@ export * from './lib/SacCalculator';
 export * from './lib/NitroxCalculator';
 export * from './lib/Time';
 export * from './lib/Profile';
+export * from './lib/Tanks';

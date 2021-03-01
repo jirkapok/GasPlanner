@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Tank } from '../shared/models';
+import { Tank } from 'scuba-physics';
 
 @Component({
   selector: 'app-gaslabel',

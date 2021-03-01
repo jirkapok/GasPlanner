@@ -269,3 +269,19 @@ export class Gas {
             this.fHe === other.fHe;
     }
 }
+
+export enum StandardGas {
+    Air = 21,
+    EAN32 = 32,
+    EAN36 = 36,
+    EAN38 = 38,
+    EAN50 = 50,
+    OXYGEN = 100
+}
+
+export class StandardGases {
+    public static gasNames(): string[] {
+        return Object.keys(StandardGas)
+            .filter(k => typeof StandardGas[k] === 'number') as string[];
+    }
+}

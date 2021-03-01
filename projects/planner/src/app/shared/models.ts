@@ -1,20 +1,4 @@
-import { Gas, Ceiling, Time, Event, Segment } from 'scuba-physics';
-
-export enum StandardGas {
-    Air = 21,
-    EAN32 = 32,
-    EAN36 = 36,
-    EAN38 = 38,
-    EAN50 = 50,
-    OXYGEN = 100
-}
-
-export class Gases {
-    public static gasNames(): string[] {
-        return Object.keys(StandardGas)
-            .filter(k => typeof StandardGas[k] === 'number') as string[];
-    }
-}
+import { Gas, Ceiling, Time, Event, Segment, StandardGas } from 'scuba-physics';
 
 export class Tank {
     public consumed = 0;

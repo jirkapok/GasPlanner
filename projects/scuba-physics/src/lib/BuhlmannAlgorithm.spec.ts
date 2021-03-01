@@ -1,23 +1,18 @@
 import { Time } from './Time';
 import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
-import { Gas, Gases } from './Gases';
+import { Gas, Gases, StandardGases } from './Gases';
 import { Segment, Segments } from './Segments';
 import { EventType } from './Profile';
 
 describe('Buhlmann Algorithm', () => {
-  const air: Gas = new Gas(0.21, 0); 
-  const ean32: Gas = new Gas(0.32, 0);
-  const ean50: Gas = new Gas(0.5, 0);
-  const oxygen: Gas = new Gas(1, 0);
   const trimix2135: Gas = new Gas(0.21, 0.35);
-  const trimix1070: Gas = new Gas(0.1, 0.7);
 
   describe('No decompression times', () => {
     it('Calculate air No decompression limit at surface', () => {
         const depth = 0;
         const options = new Options(1, 1, 1.6, 1.6, 30, true);
         const algorithm = new BuhlmannAlgorithm();
-        const ndl = algorithm.noDecoLimit(depth, air, options);
+        const ndl = algorithm.noDecoLimit(depth, StandardGases.air, options);
         expect(ndl).toBe(Infinity);
     });
 
@@ -25,7 +20,7 @@ describe('Buhlmann Algorithm', () => {
       const depth = 60;
       const options = new Options(1, 1, 1.4, 1.4, 30, true);
       const algorithm = new BuhlmannAlgorithm();
-      const ndl = algorithm.noDecoLimit(depth, air, options);
+      const ndl = algorithm.noDecoLimit(depth, StandardGases.air, options);
       expect(ndl).toBe(6);
   });
 
@@ -37,7 +32,7 @@ describe('Buhlmann Algorithm', () => {
           const algorithm = new BuhlmannAlgorithm();
           const depth = testCase[0];
           options.isFreshWater = isFreshWater;
-          const ndl = algorithm.noDecoLimit(depth, air, options);
+          const ndl = algorithm.noDecoLimit(depth, StandardGases.air, options);
           expect(ndl).toBe(testCase[1], 'No deco limit for "' + depth + '" failed');
         });
       };
@@ -139,7 +134,7 @@ describe('Buhlmann Algorithm', () => {
 
     describe('Environment 40m for 10 minutes on air with small deco', ()=> {
       const gases = new Gases();
-      gases.addBottomGas(air);
+      gases.addBottomGas(StandardGases.air);
       let segments: Segments;
 
       beforeEach(() => {
@@ -148,8 +143,8 @@ describe('Buhlmann Algorithm', () => {
         options.isFreshWater = false;
         options.altitude = 0;
         segments = new Segments();
-        segments.add(0, 40, air, 2 * Time.oneMinute);
-        segments.addFlat(40, air, 8 * Time.oneMinute);
+        segments.add(0, 40, StandardGases.air, 2 * Time.oneMinute);
+        segments.addFlat(40, StandardGases.air, 8 * Time.oneMinute);
       });
 
       it('Salinity is applied', () => {
@@ -171,11 +166,11 @@ describe('Buhlmann Algorithm', () => {
 
     it('5m for 30 minutes using ean32 - no safety stop', () => {
       const gases: Gases = new Gases();
-      gases.addBottomGas(ean32);
+      gases.addBottomGas(StandardGases.ean32);
 
       const segments = new Segments();
-      segments.add(0, 5, ean32, 15);
-      segments.addFlat(5, ean32, 29.75 * Time.oneMinute);
+      segments.add(0, 5, StandardGases.ean32, 15);
+      segments.addFlat(5, StandardGases.ean32, 29.75 * Time.oneMinute);
 
       options.addSafetyStop = false;
       const planText = calculatePlan(gases, segments);
@@ -186,11 +181,11 @@ describe('Buhlmann Algorithm', () => {
 
     it('10m for 40 minutes using air with safety stop at 3m - no deco, safety stop added', () => {
       const gases = new Gases();
-      gases.addBottomGas(air);
+      gases.addBottomGas(StandardGases.air);
 
       const segments = new Segments();
-      segments.add(0, 10, air, 30);
-      segments.addFlat(10, air, 39.5 * Time.oneMinute);
+      segments.add(0, 10, StandardGases.air, 30);
+      segments.addFlat(10, StandardGases.air, 39.5 * Time.oneMinute);
 
       const planText = calculatePlan(gases, segments);
 
@@ -200,11 +195,11 @@ describe('Buhlmann Algorithm', () => {
 
     it('30m for 25 minutes using air', () => {
       const gases = new Gases();
-      gases.addBottomGas(air);
+      gases.addBottomGas(StandardGases.air);
 
       const segments = new Segments();
-      segments.add(0, 30, air, 1.5 * Time.oneMinute);
-      segments.addFlat(30, air, 23.5 * Time.oneMinute);
+      segments.add(0, 30, StandardGases.air, 1.5 * Time.oneMinute);
+      segments.addFlat(30, StandardGases.air, 23.5 * Time.oneMinute);
 
       const planText = calculatePlan(gases, segments);
 
@@ -215,12 +210,12 @@ describe('Buhlmann Algorithm', () => {
 
     it('40m for 30 minutes using air and ean50', () => {
       const gases = new Gases();
-      gases.addBottomGas(air);
-      gases.addBottomGas(ean50);
+      gases.addBottomGas(StandardGases.air);
+      gases.addBottomGas(StandardGases.ean50);
 
       const segments = new Segments();
-      segments.add(0, 40, air, 2 * Time.oneMinute);
-      segments.addFlat(40, air, 28 * Time.oneMinute);
+      segments.add(0, 40, StandardGases.air, 2 * Time.oneMinute);
+      segments.addFlat(40, StandardGases.air, 28 * Time.oneMinute);
 
       const planText = calculatePlan(gases, segments);
 
@@ -232,7 +227,7 @@ describe('Buhlmann Algorithm', () => {
     it('50m for 25 minutes using 21/35 and 50% nitrox', () => {
       const gases = new Gases();
       gases.addBottomGas(trimix2135);
-      gases.addDecoGas(ean50);
+      gases.addDecoGas(StandardGases.ean50);
 
       const segments = new Segments();
       segments.add(0, 50, trimix2135, 2.5 * Time.oneMinute);
@@ -249,8 +244,8 @@ describe('Buhlmann Algorithm', () => {
     it('50m for 30 minutes using 21/35, 50% nitrox and oxygen - no rounding', () => {
       const gases = new Gases();
       gases.addBottomGas(trimix2135);
-      gases.addDecoGas(ean50);
-      gases.addDecoGas(oxygen);
+      gases.addDecoGas(StandardGases.ean50);
+      gases.addDecoGas(StandardGases.oxygen);
 
       const segments = new Segments();
       segments.add(0, 50, trimix2135, 2.5 * Time.oneMinute);
@@ -268,16 +263,16 @@ describe('Buhlmann Algorithm', () => {
     describe('30m for 10 minutes', () => {
       const createSegments = (): Segments =>{
         const segments = new Segments();
-        segments.add(0, 30, air, 1.5 * Time.oneMinute);
-        segments.addFlat(30, air, 8.5 * Time.oneMinute);
+        segments.add(0, 30, StandardGases.air, 1.5 * Time.oneMinute);
+        segments.addFlat(30, StandardGases.air, 8.5 * Time.oneMinute);
         return segments;
       };
 
       it('using air, ean50 and oxygen - gas switch in 21m and 6m, even no deco', () => {
         const gases = new Gases();
-        gases.addBottomGas(air);
-        gases.addDecoGas(ean50);
-        gases.addDecoGas(oxygen);
+        gases.addBottomGas(StandardGases.air);
+        gases.addDecoGas(StandardGases.ean50);
+        gases.addDecoGas(StandardGases.oxygen);
 
         const segments = createSegments();
         const planText = calculatePlan(gases, segments);
@@ -288,8 +283,8 @@ describe('Buhlmann Algorithm', () => {
 
       it('using air and ean32 - gas switch in 30m just before ascent', () => {
         const gases = new Gases();
-        gases.addBottomGas(air);
-        gases.addDecoGas(ean32);
+        gases.addBottomGas(StandardGases.air);
+        gases.addDecoGas(StandardGases.ean32);
 
         const segments = createSegments();
         const planText = calculatePlan(gases, segments);
@@ -300,8 +295,8 @@ describe('Buhlmann Algorithm', () => {
 
       it('using air and two ean50`s - only one gas switch is added', () => {
         const gases = new Gases();
-        gases.addBottomGas(air);
-        gases.addDecoGas(ean50);
+        gases.addBottomGas(StandardGases.air);
+        gases.addDecoGas(StandardGases.ean50);
         const ean50b: Gas = new Gas(0.5, 0);
         gases.addDecoGas(ean50b);
 

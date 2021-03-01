@@ -233,6 +233,10 @@ export class Gas {
 
     constructor(public fO2: number, public fHe: number) { }
 
+    public copy(){
+        return new Gas(this.fO2, this.fHe);
+    }
+
     /**
      * Calculates maximum operation depth.
      *
@@ -280,6 +284,24 @@ export enum StandardGas {
 }
 
 export class StandardGases {
+    // for ppo2 1.6 test data (even not used all gases with these values)
+    /** 65.5m - 0m */
+    public static air = new Gas(0.21, 0);
+
+    public static ean32 = new Gas(0.32, 0);
+
+    /** 21.8m - 0m */
+    public static ean50 = new Gas(0.5, 0);
+
+    /** 78.1m - 0m */
+    public static trimix1835 = new Gas(0.18, 0.35);
+
+    /** 148.5m - 7.9m */
+    public static trimix1070 = new Gas(0.1, 0.7);
+
+    /** 5.9m - 0m */
+    public static oxygen = new Gas(1, 0);
+
     public static gasNames(): string[] {
         return Object.keys(StandardGas)
             .filter(k => typeof StandardGas[k] === 'number') as string[];

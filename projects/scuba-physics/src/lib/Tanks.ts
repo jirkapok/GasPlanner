@@ -1,9 +1,9 @@
-import { Gas, StandardGas } from "./Gases";
+import { Gas, StandardGas, StandardGases } from "./Gases";
 
 export class Tank {
     public consumed = 0;
     public reserve = 0;
-    private _gas:Gas = new Gas(0.21, 0);
+    private _gas: Gas = StandardGases.air.copy();
 
     /**
      * Creates new instance of the Gas.

@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { WayPointsService } from './waypoints.service';
 import { Plan, Strategies } from './models';
-import { Options, Tank } from 'scuba-physics';
+import { Options, StandardGases, Tank } from 'scuba-physics';
 
 describe('WayPointsService', () => {
   const air = new Tank(12, 200, 21);

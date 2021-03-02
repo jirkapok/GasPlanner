@@ -1,4 +1,4 @@
-import { Gas, Ceiling, Time, Event, Segment, StandardGas, Tank } from 'scuba-physics';
+import { Ceiling, Tank, Time, Event, Segment, StandardGases } from 'scuba-physics';
 
 export class Diver {
     /** default descent speed value in meter/min. */
@@ -207,7 +207,7 @@ export class WayPoint {
     }
 
     public static fromSegment(segment: Segment): WayPoint {
-        const gasName = Tank.nameFor(segment.gas.fO2 * 100);
+        const gasName = StandardGases.nameFor(segment.gas.fO2);
         let newWayPoint = new WayPoint(segment.duration, segment.endDepth);
         newWayPoint._gasName = gasName;
         return newWayPoint;

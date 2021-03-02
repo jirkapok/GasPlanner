@@ -1,4 +1,4 @@
-import { Gas, StandardGas, StandardGases } from "./Gases";
+import { Gas, StandardGases } from "./Gases";
 
 export class Tank {
     public consumed = 0;
@@ -32,37 +32,23 @@ export class Tank {
         this._gas.fO2 = newValue / 100;
     }
 
-    /**
-     * Returns label of ths standard nitrox gas based on its O2 content
-     * @param o2 in percents
-     */
-    public static nameFor(o2: number): string {
-        const fromEnum = StandardGas[o2];
-        if (!!fromEnum) {
-            return fromEnum;
-        }
-
-        if (!!o2) {
-            if(o2 >= 100) {
-                return StandardGas[StandardGas.OXYGEN];
-            }
-
-            return 'EAN' + o2.toString();
-        }
-
-        return '';
-    }
-
     public get volume(): number {
         return this.size * this.startPressure;
     }
 
     public get name(): string {
-        return Tank.nameFor(this.o2);
+        return StandardGases.nameFor(this._gas.fO2);
     }
 
     public assignStandardGas(standard: string): void {
-        this.o2 = StandardGas[standard];
+        const found = StandardGases.byName(standard);
+
+        if(!found) {
+            return;
+        }
+
+        this._gas.fO2 = found.fO2;
+        this._gas.fHe = found.fHe;
     }
 
     public get endPressure(): number {

@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 
 import { Plan } from '../shared/models';
-import { Tank } from 'scuba-physics';
+import { StandardGases } from 'scuba-physics';
 import { PlannerService } from '../shared/planner.service';
 
 @Component({
@@ -51,7 +51,7 @@ export class ProfileComponent implements OnInit {
   }
 
   public get bestMix(): string {
-    const o2 = this.planer.bestNitroxMix();
-    return Tank.nameFor(o2);
+    const o2 = this.planer.bestNitroxMix() / 100;
+    return StandardGases.nameFor(o2);
   }
 }

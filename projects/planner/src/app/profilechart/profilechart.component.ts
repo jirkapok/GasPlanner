@@ -4,7 +4,7 @@ import { Dive, WayPoint } from '../shared/models';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js/dist/plotly-basic.min.js';
 import { Subscription } from 'rxjs';
-import { EventType, Time, Gas, Tank } from 'scuba-physics';
+import { EventType, Time, Gas, StandardGases } from 'scuba-physics';
 
 @Component({
   selector: 'app-profilechart',
@@ -182,7 +182,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         x.push(Time.toDate(event.timeStamp));
         y.push(event.depth);
         const gas = <Gas>event.data;
-        const gasName = Tank.nameFor(gas.fO2 * 100);
+        const gasName = StandardGases.nameFor(gas.fO2);
         labels.push(`Switch to ${gasName}`);
       }
     });

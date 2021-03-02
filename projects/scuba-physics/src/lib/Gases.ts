@@ -70,7 +70,7 @@ export class Gases {
     private bottomGases: Gas[] = [];
 
     private static bestGas(gases: Gas[], depthConverter: DepthConverter, options: BestGasOptions): Gas {
-        const currentPressure = depthConverter.toBar(options.currentDepth);        
+        const currentPressure = depthConverter.toBar(options.currentDepth);
         let found = options.currentGas;
 
         gases.forEach((element, index, source) => {
@@ -94,12 +94,12 @@ export class Gases {
         });
         return found;
     }
-    
-     /**
-     * Finds better gas to switch to from current depth, returns current gas, if no better gas was found.
-     * Better gas is breathable at current depth and with higher O2.
-     */
-    public bestDecoGas(depthConverter: DepthConverter,  options: BestGasOptions): Gas {
+
+    /**
+    * Finds better gas to switch to from current depth, returns current gas, if no better gas was found.
+    * Better gas is breathable at current depth and with higher O2.
+    */
+    public bestDecoGas(depthConverter: DepthConverter, options: BestGasOptions): Gas {
         const decoGas = Gases.bestGas(this.decoGases, depthConverter, options);
         if (decoGas !== options.currentGas) {
             return decoGas;
@@ -165,7 +165,7 @@ export class GasMixtures {
         const bar = depthConverter.toBar(depth);
         const result = pO2 / bar;
 
-        if(result > 1) {
+        if (result > 1) {
             return 1;
         }
 
@@ -183,34 +183,45 @@ export class GasMixtures {
         const fN2 = 1 - fO2;
         const result = fN2 * (depth + 10) / 0.79 - 10;
 
-        if(result < 0) {
+        if (result < 0) {
             return 0;
         }
 
         return result;
     }
 
+    // TODO merge ead and end into one equation:
+    // const result = fN2 * (depth + 10) / 0.79 - 10;
+    // const result = fN2 * (depthBars) / 0.79;
+    // const result = fN2 / NitroxInAir * depthBars;
+    // const result = (fN2 + fO2) / 1 * depthBars; // Air = fN2 + fO2 = 1
+    // const result = (fN2 + fO2) * depthBars;
+    // const result = (1 - fHe) * depthBars;
+
+
     /**
-     * Calculates equivalent narcotic depth.
-     *
+     * Calculates equivalent narcotic depth, assuming both nitrogen and oxygen as narcotic.
+     * https://en.wikipedia.org/wiki/Equivalent_narcotic_depth
+     * 
      * @param fO2 Fraction of oxygen in gas mix (0-1).
      * @param fN2 Fraction of nitrogen in gas mix (0-1).
      * @param depth Depth in bars.
      * @returns Depth in bars.
      */
     public static end(fO2: number, fN2: number, depth: number): number {
+        // TODO Consider calculation only from helium fraction or add switch to ignore oxygen fraction
         // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
         const narcIndex = fO2 + fN2;
         return depth * narcIndex;
     }
 
-     /**
-     * Calculates minimum depth at which the gas is breathe able.
-     *
-     * @param fO2 Fraction of oxygen in gas mix (0-1).
-     * @param surfacePressure surface pressure in bars.
-     * @returns Depth in bars.
-     */
+    /**
+    * Calculates minimum depth at which the gas is breathe able.
+    *
+    * @param fO2 Fraction of oxygen in gas mix (0-1).
+    * @param surfacePressure surface pressure in bars.
+    * @returns Depth in bars.
+    */
     public static ceiling(fO2: number, surfacePressure: number): number {
         const minppO2 = 0.18;
         const ratio = minppO2 / fO2;
@@ -233,7 +244,7 @@ export class Gas {
 
     constructor(public fO2: number, public fHe: number) { }
 
-    public copy(){
+    public copy() {
         return new Gas(this.fO2, this.fHe);
     }
 
@@ -248,7 +259,7 @@ export class Gas {
     }
 
     /**
-     * Calculates equivalent narcotic depth.
+     * Calculates equivalent narcotic depth, assuming both nitrogen and oxygen as narcotic..
      *
      * @param depth Depth in bars.
      * @returns Depth in bars.
@@ -257,12 +268,12 @@ export class Gas {
         return GasMixtures.end(this.fO2, this.fN2, depth);
     }
 
-     /**
-     * Calculates minimum depth at which the gas is breathe able.
-     *
-     * @param surfacePressure surface pressure in bars.
-     * @returns Depth in bars.
-     */
+    /**
+    * Calculates minimum depth at which the gas is breathe able.
+    *
+    * @param surfacePressure surface pressure in bars.
+    * @returns Depth in bars.
+    */
     public ceiling(surfacePressure: number): number {
         return GasMixtures.ceiling(this.fO2, surfacePressure);
     }
@@ -274,36 +285,107 @@ export class Gas {
     }
 }
 
-export enum StandardGas {
-    Air = 21,
-    EAN32 = 32,
-    EAN36 = 36,
-    EAN38 = 38,
-    EAN50 = 50,
-    OXYGEN = 100
-}
-
 export class StandardGases {
+    private static readonly airName = 'Air';
+    private static readonly oxygenName = 'Oxygen';
+
+    /** Parse EanXX group as oxygen of nitrox (e.g. Ean50) or O2 and He fractions of trimix (e.g. 10/70) */
+    private static readonly namesRegEx = /[EAN](?<fO2>\d{2})|(?<fO2b>\d{2})\/(?<fHe>\d{2})/gi;
+    
     // for ppo2 1.6 test data (even not used all gases with these values)
+
+    // TODO consider Air precise values as 0.209,791
     /** 65.5m - 0m */
-    public static air = new Gas(0.21, 0);
+    public static readonly air = new Gas(0.21, 0);
 
-    public static ean32 = new Gas(0.32, 0);
+    public static readonly ean32 = new Gas(0.32, 0);
+    public static readonly ean36 = new Gas(0.36, 0);
+    public static readonly ean38 = new Gas(0.38, 0);
 
+    // Consider also: 21/35, 25/25, 18/45
     /** 21.8m - 0m */
-    public static ean50 = new Gas(0.5, 0);
+    public static readonly ean50 = new Gas(0.5, 0);
 
     /** 78.1m - 0m */
-    public static trimix1835 = new Gas(0.18, 0.35);
+    public static readonly trimix1835 = new Gas(0.18, 0.35);
+
+    public static readonly trimix1555 = new Gas(0.15, 0.55);
 
     /** 148.5m - 7.9m */
-    public static trimix1070 = new Gas(0.1, 0.7);
+    public static readonly trimix1070 = new Gas(0.1, 0.7);
 
     /** 5.9m - 0m */
-    public static oxygen = new Gas(1, 0);
+    public static readonly oxygen = new Gas(1, 0);
+
+    private static readonly map = new Map([
+        [StandardGases.airName, StandardGases.air],
+        ['EAN32', StandardGases.ean32],
+        ['EAN36', StandardGases.ean36],
+        ['EAN38', StandardGases.ean38],
+        ['EAN50', StandardGases.ean50],
+        // ['18/35', StandardGases.trimix1835],
+        // ['15/55', StandardGases.trimix1555],
+        // ['10/75', StandardGases.trimix1070],
+        [StandardGases.oxygenName, StandardGases.oxygen]
+    ]);
 
     public static gasNames(): string[] {
-        return Object.keys(StandardGas)
-            .filter(k => typeof StandardGas[k] === 'number') as string[];
+        return Array.from(StandardGases.map.keys());
+    }
+
+    /**
+     * Returns label of ths standard nitrox gas based on its O2 content
+     * @param fO2 partial pressure of O2 in range 0-1.
+     * @param fHe partial pressure of He in range 0-1.
+     */
+    public static nameFor(fO2: number, fHe: number = 0): string {
+        // not sure, if this rounding is acceptable for the UI
+        const percentO2 = Math.round(fO2 * 100);
+        const percentHe = Math.round(fHe * 100);
+
+        if(percentO2 <= 0) {
+            return '';
+        }
+
+        if(percentHe <= 0) {
+            // prevent best gas overflow
+            if(percentO2 >= 100) {
+                return StandardGases.oxygenName;
+            }
+
+            if(percentO2 === 21) {
+                return StandardGases.airName;
+            }
+
+            return 'EAN' + percentO2.toString();
+        }
+
+        return percentO2.toString() + '/' + percentHe.toString();;
+    }
+
+    /** Case sensitive search. If nothing found returns null */
+    public static byName(name: string): Gas {
+        if(StandardGases.map.has(name)) {
+            return StandardGases.map.get(name);
+        }
+
+        const match = StandardGases.namesRegEx.exec(name);
+
+        if(!!match) {
+            if(!!match[1]) {
+                const parsedO2 = Number(match[1]) / 100;
+                return new Gas(parsedO2, 0);
+            }
+
+            if(!!match[2] && !!match[3]) {
+                const trimO2 = Number(match[2]) / 100;
+                const trimHe = Number(match[3]) / 100;
+
+                if(trimO2 > 0 && trimHe > 0)
+                return new Gas(trimO2, trimHe);
+            }
+        }
+
+        return null;
     }
 }

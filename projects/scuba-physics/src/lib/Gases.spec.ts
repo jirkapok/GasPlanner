@@ -8,7 +8,6 @@ describe('Gases', () => {
     maxEND: 30
   };
 
-  const saltWaterConverter = DepthConverter.forSaltWater();
   const freshWaterConverter = DepthConverter.forFreshWater();
 
   describe('Gas', () => {
@@ -94,12 +93,12 @@ describe('Gases', () => {
     describe('By name', () => {
       it('Oxygen', () => {
         const found = StandardGases.byName('Oxygen');
-        expect(found).toBe(StandardGases.oxygen);
+        expect(found).toEqual(StandardGases.oxygen);
       });
 
       it('Ean32', () => {
         const found = StandardGases.byName('EAN32');
-        expect(found).toBe(StandardGases.ean32);
+        expect(found).toEqual(StandardGases.ean32);
       });
 
       it('Non standard Ean28', () => {
@@ -109,7 +108,7 @@ describe('Gases', () => {
 
       it('Air', () => {
           const found = StandardGases.byName('Air');
-          expect(found).toBe(StandardGases.air);
+          expect(found).toEqual(StandardGases.air);
       });
 
       it('Trimix 10/70', () => {

@@ -290,7 +290,7 @@ export class StandardGases {
     private static readonly oxygenName = 'Oxygen';
 
     /** Parse EanXX group as oxygen of nitrox (e.g. Ean50) or O2 and He fractions of trimix (e.g. 10/70) */
-    private static readonly namesRegEx = /[EAN](?<fO2>\d{2})|(?<fO2b>\d{2})\/(?<fHe>\d{2})/gi;
+    private static readonly namesRegEx = /[EAN](?<fO2>\d{2})|(?<fO2b>\d{2})\/(?<fHe>\d{2})/i;
     
     // for ppo2 1.6 test data (even not used all gases with these values)
 
@@ -360,7 +360,7 @@ export class StandardGases {
             return 'EAN' + percentO2.toString();
         }
 
-        return percentO2.toString() + '/' + percentHe.toString();;
+        return percentO2.toString() + '/' + percentHe.toString();
     }
 
     /** Case sensitive search. If nothing found returns null */
@@ -374,7 +374,10 @@ export class StandardGases {
         if(!!match) {
             if(!!match[1]) {
                 const parsedO2 = Number(match[1]) / 100;
-                return new Gas(parsedO2, 0);
+
+                if(parsedO2 > 0) {
+                    return new Gas(parsedO2, 0);
+                }
             }
 
             if(!!match[2] && !!match[3]) {

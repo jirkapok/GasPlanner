@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Plan, Diver, Dive, WayPoint, Strategies } from './models';
+import { Plan, Dive, WayPoint, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options,
-   DepthConverter, Time, DepthConverterFactory, Tank } from 'scuba-physics';
+   DepthConverter, Time, DepthConverterFactory, Tank, Diver } from 'scuba-physics';
 import { Subject } from 'rxjs';
 
 @Injectable()

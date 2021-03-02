@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { faBatteryEmpty, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
-import { Diver } from '../shared/models';
-import { StandardGases, Tank } from 'scuba-physics';
+import { StandardGases, Tank, Diver } from 'scuba-physics';
 
 @Component({
   selector: 'app-gases',

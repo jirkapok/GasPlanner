@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
-import { Diver } from '../shared/models';
+import { Diver } from 'scuba-physics';
 
 @Component({
   selector: 'app-diver',

@@ -67,21 +67,21 @@ describe('Segments', () => {
             it('flat segments', () => {
                 const segment = new Segment(20, 20, StandardGases.air, 15);
                 const segment2 = new Segment(20, 20, StandardGases.air, 35);
-                const equals = segment.speedEquals(segment2);
+                const equals = segment.contentEquals(segment2);
                 expect(equals).toBeTrue();
             });
 
             it('ascent segments', () => {
                 const segment = new Segment(20, 10, StandardGases.air, 15);
                 const segment2 = new Segment(10, 0, StandardGases.air, 15);
-                const equals = segment.speedEquals(segment2);
+                const equals = segment.contentEquals(segment2);
                 expect(equals).toBeTrue();
             });
 
             it('descent segments', () => {
                 const segment = new Segment(20, 30, StandardGases.air, 15);
                 const segment2 = new Segment(30, 40, StandardGases.air, 15);
-                const equals = segment.speedEquals(segment2);
+                const equals = segment.contentEquals(segment2);
                 expect(equals).toBeTrue();
             });
         });
@@ -90,22 +90,21 @@ describe('Segments', () => {
             it('different ascent segments', () => {
                 const segment = new Segment(10, 20, StandardGases.air, 15);
                 const segment2 = new Segment(10, 20, StandardGases.air, 35);
-                const equals = segment.speedEquals(segment2);
+                const equals = segment.contentEquals(segment2);
                 expect(equals).toBeFalse();
             });
 
             it('different descent segments', () => {
                 const segment = new Segment(20, 10, StandardGases.air, 15);
                 const segment2 = new Segment(20, 10, StandardGases.air, 35);
-                const equals = segment.speedEquals(segment2);
+                const equals = segment.contentEquals(segment2);
                 expect(equals).toBeFalse();
             });
 
             it('different gas', () => {
                 const segment = new Segment(20, 10, StandardGases.air, 15);
-                const ean50 = new Gas(0.5, 0);
-                const segment2 = new Segment(20, 10, ean50, 35);
-                const equals = segment.speedEquals(segment2);
+                const segment2 = new Segment(20, 10, StandardGases.ean50, 35);
+                const equals = segment.contentEquals(segment2);
                 expect(equals).toBeFalse();
             });
         });

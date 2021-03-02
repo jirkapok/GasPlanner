@@ -38,7 +38,7 @@ export class Segment {
         /** in seconds */
         public duration: number) {}
 
-    public speedEquals(toCompare: Segment): boolean {
+    public contentEquals(toCompare: Segment): boolean {
         return this.speed === toCompare.speed &&
             this.gas === toCompare.gas;
     }
@@ -88,7 +88,7 @@ export class Segments {
         for (let index = this.segments.length - 1; index > 0; index--) {
             const segment1 = this.segments[index - 1];
             const segment2 = this.segments[index];
-            if (segment1.speedEquals(segment2)) {
+            if (segment1.contentEquals(segment2)) {
                 segment1.mergeFrom(segment2);
                 toRemove.push(segment2);
             }

@@ -6,7 +6,6 @@ import { Time } from './Time';
 
 describe('Profile', () => {
   const options = new Options(1,1,1.4, 1.6, 30, true);
-  const trimix2135: Gas = new Gas(0.21, 0.35);
 
   describe('Events', () => {
     it('Adds low ppO2 event when breathing 10/70 at beginning of dive', () => {

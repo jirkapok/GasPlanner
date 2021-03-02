@@ -309,6 +309,8 @@ export class StandardGases {
     /** 78.1m - 0m */
     public static readonly trimix1835 = new Gas(0.18, 0.35);
 
+    public static readonly trimix2135 = new Gas(0.21, 0.35);
+
     public static readonly trimix1555 = new Gas(0.15, 0.55);
 
     /** 148.5m - 7.9m */

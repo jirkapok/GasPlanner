@@ -5,9 +5,7 @@ import { Segment, Segments } from './Segments';
 import { EventType } from './Profile';
 
 describe('Buhlmann Algorithm', () => {
-  const trimix2135: Gas = new Gas(0.21, 0.35);
-
-  describe('No decompression times', () => {
+   describe('No decompression times', () => {
     it('Calculate air No decompression limit at surface', () => {
         const depth = 0;
         const options = new Options(1, 1, 1.6, 1.6, 30, true);
@@ -226,12 +224,12 @@ describe('Buhlmann Algorithm', () => {
 
     it('50m for 25 minutes using 21/35 and 50% nitrox', () => {
       const gases = new Gases();
-      gases.addBottomGas(trimix2135);
+      gases.addBottomGas(StandardGases.trimix2135);
       gases.addDecoGas(StandardGases.ean50);
 
       const segments = new Segments();
-      segments.add(0, 50, trimix2135, 2.5 * Time.oneMinute);
-      segments.addFlat(50, trimix2135, 22.5 * Time.oneMinute);
+      segments.add(0, 50, StandardGases.trimix2135, 2.5 * Time.oneMinute);
+      segments.addFlat(50, StandardGases.trimix2135, 22.5 * Time.oneMinute);
 
       const planText = calculatePlan(gases, segments);
       
@@ -243,13 +241,13 @@ describe('Buhlmann Algorithm', () => {
 
     it('50m for 30 minutes using 21/35, 50% nitrox and oxygen - no rounding', () => {
       const gases = new Gases();
-      gases.addBottomGas(trimix2135);
+      gases.addBottomGas(StandardGases.trimix2135);
       gases.addDecoGas(StandardGases.ean50);
       gases.addDecoGas(StandardGases.oxygen);
 
       const segments = new Segments();
-      segments.add(0, 50, trimix2135, 2.5 * Time.oneMinute);
-      segments.addFlat(50, trimix2135, 22.5 * Time.oneMinute);
+      segments.add(0, 50, StandardGases.trimix2135, 2.5 * Time.oneMinute);
+      segments.addFlat(50, StandardGases.trimix2135, 22.5 * Time.oneMinute);
       
       options.roundStopsToMinutes = false;
       const planText = calculatePlan(gases, segments);
@@ -297,7 +295,7 @@ describe('Buhlmann Algorithm', () => {
         const gases = new Gases();
         gases.addBottomGas(StandardGases.air);
         gases.addDecoGas(StandardGases.ean50);
-        const ean50b: Gas = new Gas(0.5, 0);
+        const ean50b = new Gas(0.5, 0);
         gases.addDecoGas(ean50b);
 
         const segments = createSegments();

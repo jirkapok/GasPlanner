@@ -161,4 +161,22 @@ export class SegmentsFactory {
     public static descentDuration(targetDepth: number, options: Options) {
         return Time.toSeconds(targetDepth / options.descentSpeed);
     }
+
+    // TODO multilevel diving
+    public static ascent(segments: Segment[]): Segment[] {
+        // first two are descent and bottom
+        return segments.slice(2, segments.length);
+    }
+
+    public static timeToSurface(ascent: Segment[]): number {
+        const solutionDuration = 2 * Time.oneMinute;
+        let duration = 0;
+    
+        for (const segment of ascent) {
+          duration += segment.duration;
+        }
+    
+        const seconds = solutionDuration + duration;
+        return Time.toMinutes(seconds);
+      }
 }

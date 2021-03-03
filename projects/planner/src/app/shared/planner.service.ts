@@ -5,7 +5,7 @@ import { Plan, Dive, WayPoint, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Options,
    DepthConverter, Time, DepthConverterFactory, Tank, Diver,
-   SegmentsFactory, Consumption} from 'scuba-physics';
+   SegmentsFactory, Consumption, Segment} from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
@@ -28,11 +28,6 @@ export class PlannerService {
 
   constructor() {
     this.resetToDefaultGases();
-  }
-
-  private static ascent(wayPoints: WayPoint[]): WayPoint[] {
-    // first two are descent and bottom
-    return wayPoints.slice(2, wayPoints.length);
   }
 
   public resetToDefaultGases(): void {
@@ -107,10 +102,9 @@ export class PlannerService {
       this.dive.maxTime = consumption.calculateMaxBottomTime(this.plan.depth, this.firstTank, this.diver, this.options, this.plan.noDecoTime);
 
       // TODO multilevel diving: ascent cant be identified by first two segments
-      const ascent = PlannerService.ascent(profile.wayPoints);
-      this.dive.timeToSurface = this.calculateTimeToSurface(ascent);
-
-      const originAscent = Consumption.ascent(profile.origin);
+      const originAscent = SegmentsFactory.ascent(profile.origin);
+      this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
+      
       this.firstTank.reserve = consumption.calculateRockBottom(originAscent, this.firstTank, this.diver);
       this.firstTank.consumed = consumption.consumedOnWay(profile.origin, this.firstTank, this.diver.sac);
       this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
@@ -133,18 +127,6 @@ export class PlannerService {
     return this.firstTank.startPressure - Math.floor(consumed);
   }
   
-  private calculateTimeToSurface(ascent: WayPoint[]): number {
-    const solutionDuration = 2 * Time.oneMinute;
-    let ascentDuration = 0;
-
-    for (const wayPoint of ascent) {
-      ascentDuration += wayPoint.duration;
-    }
-
-    const seconds = solutionDuration + ascentDuration;
-    return Time.toMinutes(seconds);
-  }
-
   public loadFrom(other: PlannerService): void {
     if (!other) {
       return;

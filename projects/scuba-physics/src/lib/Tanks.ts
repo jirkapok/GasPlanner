@@ -153,7 +153,7 @@ export class Consumption {
     private nodecoProfileBottomTime(plannedDepth: number, tank: Tank, diver: Diver, options: Options): number {
         const template = SegmentsFactory.buildNoDecoProfile(plannedDepth, tank.gas, options);
         const recreProfile = Consumption.toSegments(template);
-        let ascent = Consumption.ascent(template);
+        let ascent = SegmentsFactory.ascent(template);
         let rockBottom = this.calculateRockBottom(ascent, tank, diver);
         let consumed = this.consumed(recreProfile, tank, diver.sac);
         const remaining = tank.startPressure - consumed - rockBottom;
@@ -183,7 +183,7 @@ export class Consumption {
             duration++;
             const profile = Consumption.calculateDecompression(plannedDepth, duration, [tank], options);
             const segments = Consumption.toSegments(profile.segments);
-            const ascent = Consumption.ascent(profile.segments);
+            const ascent = SegmentsFactory.ascent(profile.segments);
             rockBottom = this.calculateRockBottom(ascent, tank, diver);
             consumed = this.consumed(segments, tank, diver.sac);
         }
@@ -219,12 +219,6 @@ export class Consumption {
         return profile;
     }
     
-    // TODO multilevel diving
-    public static ascent(segments: Segment[]): Segment[] {
-        // first two are descent and bottom
-        return segments.slice(2, segments.length);
-    }
-
     private hasEnoughGas(tank: Tank, consumed: number, rockBottom: number): boolean {
         return tank.startPressure - consumed >= rockBottom;
     }

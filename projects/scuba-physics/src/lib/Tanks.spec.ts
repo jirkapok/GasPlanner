@@ -1,5 +1,8 @@
+import { Diver } from './Diver';
+import { DepthConverter } from './depth-converter';
 import { StandardGases } from './Gases';
-import { Tank } from './Tanks';
+import { Consumption, ConsumptionSegment, Tank } from './Tanks';
+import { Time } from './Time';
 
 describe('Tank', () => {
     let tank: Tank;
@@ -106,6 +109,31 @@ describe('Tank', () => {
             const modified = new Tank(10, 200, 21);
             modified.assignStandardGas('unknown');
             expect(modified.gas).toEqual(StandardGases.air);
+        });
+    });
+});
+
+describe('Consumption', () => {
+    describe('Rock bottom', () => {
+        const calculateRockBottom = (duration: number): number => {
+            const tank = new Tank(24, 200, 21);
+            const diver = new Diver(20, 1.6);
+            const consumption = new Consumption(DepthConverter.forFreshWater());
+            const ascent = [new ConsumptionSegment(duration, 0, 20)];
+            const rockBottom = consumption.calculateRockBottom(ascent, tank, diver);
+            return rockBottom;
+        };
+
+        it('Minimum rock bottom is 30 bar', () => {
+            const duration = 1 * Time.oneMinute;
+            const rockBottom = calculateRockBottom(duration);
+            expect(rockBottom).toEqual(30);
+        });
+
+        it('Adds two minutes for solution', () => {
+            const duration = 10 * Time.oneMinute;
+            const rockBottom = calculateRockBottom(duration);
+            expect(rockBottom).toEqual(65);
         });
     });
 });

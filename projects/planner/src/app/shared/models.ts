@@ -172,8 +172,8 @@ export class WayPoint {
     }
 
     public static fromSegment(segment: Segment): WayPoint {
-        const gasName = StandardGases.nameFor(segment.gas.fO2);
         let newWayPoint = new WayPoint(segment.duration, segment.endDepth);
+        const gasName = StandardGases.nameFor(segment.gas.fO2, segment.gas.fHe);
         newWayPoint._gasName = gasName;
         return newWayPoint;
     }

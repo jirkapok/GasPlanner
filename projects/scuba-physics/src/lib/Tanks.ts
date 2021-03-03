@@ -1,4 +1,7 @@
+import { DepthConverter } from "./depth-converter";
+import { Diver } from "./Diver";
 import { Gas, StandardGases } from "./Gases";
+import { Time } from "./Time";
 
 export class Tank {
     public consumed = 0;
@@ -85,3 +88,80 @@ export class Tank {
         this.o2 = other.o2;
     }
 }
+
+export class ConsumptionSegment {
+    /** in seconds */
+    public startTime = 0;
+    /** in seconds */
+    public endTime = 0;
+    /** in meters */
+    private _startDepth = 0;
+    /** in meters */
+    private _endDepth = 0;
+    
+    /**
+     * @param duration in seconds
+     * @param newDepth in meters
+     * @param previousDepth in meters
+     */
+    constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
+        this.endTime = Math.round(duration * 100) / 100;
+        this._endDepth = newDepth;
+        this._startDepth = previousDepth;
+    }
+    /** in meters */
+    public get startDepth(): number {
+        return this._startDepth;
+    }
+
+    /** in meters */
+    public get endDepth(): number {
+        return this._endDepth;
+    }
+
+    /** in meters */
+    public get averageDepth(): number {
+        return (this.startDepth + this.endDepth) / 2;
+    }
+}
+
+/** 
+ * Calculates tank consumptions during the dive and related variables
+ * (e.g. rock bottom, turn pressure, turn time)
+ */
+export class Consumption {
+    /** Minimum bars to keep in tank, even for shallow dives */
+    public static readonly minimumRockBottom = 30;
+
+    constructor(private depthConverter: DepthConverter) { }
+
+    public calculateRockBottom(ascent: ConsumptionSegment[], tank: Tank, diver: Diver): number {
+        const solvingDuration = 2 * Time.oneMinute;
+        const problemSolving = new ConsumptionSegment(solvingDuration, ascent[0].startDepth, ascent[0].startDepth);
+        ascent.unshift(problemSolving);
+        const stressSac = diver.stressSac;
+        const result = this.calculateConsumedOnWay(ascent, tank, stressSac);
+        
+        return result > Consumption.minimumRockBottom ? result : Consumption.minimumRockBottom;
+    }
+
+    private calculateConsumedOnWay(segment: ConsumptionSegment[], tank: Tank, sac: number): number {
+        let result = 0;
+        const sacSeconds = Time.toMinutes(sac);
+
+        for (const wayPoint of segment) {
+            result += wayPoint.duration * this.segmentConsumptionPerSecond(wayPoint, tank, sacSeconds);
+        }
+
+        const rounded = Math.ceil(result);
+        return rounded;
+    }
+
+    /** bar/second */
+    private segmentConsumptionPerSecond(wayPoint: ConsumptionSegment, tank: Tank, sacSeconds: number): number {
+        const averagePressure = this.depthConverter.toBar(wayPoint.averageDepth);
+        const consumed = averagePressure * Diver.gasSac(sacSeconds, tank.size);
+        return consumed;
+    }
+}
+

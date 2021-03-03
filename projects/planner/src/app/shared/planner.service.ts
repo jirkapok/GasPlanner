@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Plan, Dive, WayPoint, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
-import { NitroxCalculator, BuhlmannAlgorithm, Gas as BGas, Options,
-   DepthConverter, Time, DepthConverterFactory, Tank, Diver } from 'scuba-physics';
+import { NitroxCalculator, BuhlmannAlgorithm, Gas, Options,
+   DepthConverter, Time, DepthConverterFactory, Tank, Diver,
+   SegmentsFactory } from 'scuba-physics';
 import { Subject } from 'rxjs';
 
 @Injectable()
@@ -144,7 +145,7 @@ export class PlannerService {
     const safetyStopDuration = 3 * Time.oneMinute;
 
     const maxDepth = this.plan.depth;
-    const descentDuration = WayPointsService.descentDuration(this.plan, this.options);
+    const descentDuration = SegmentsFactory.descentDuration(this.plan.depth, this.options);
     const descent = new WayPoint(descentDuration, maxDepth);
     const swim = new WayPoint(0, maxDepth, maxDepth);
     const ascentDuration = Time.toSeconds((maxDepth - safetyStopDepth) / this.options.ascentSpeed);

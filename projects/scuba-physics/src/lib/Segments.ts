@@ -1,6 +1,7 @@
 import { Gas, Gases } from './Gases';
-import { DepthConverter } from './depth-converter';
 import { EventsFactory, Event } from './Profile';
+import { Options } from './BuhlmannAlgorithm';
+import { Time } from './Time';
 
 export class SegmentsValidator {
     public static validate(segments: Segments, gases: Gases): Event[] {
@@ -110,5 +111,35 @@ export class Segments {
 
     public last(): Segment {
         return this.segments[this.segments.length - 1];
+    }
+}
+
+
+/** Creates skeleton for dive profile */
+export class SegmentsFactory {
+
+    /**
+     * Generates descent and swim segments for one level profile and returns newly created segments.
+     * 
+     * @param targetDepth in meters
+     * @param duration in minutes
+     * @param gas gas to be assigned to the segments
+     * @param options Ascent/descent speeds
+     */
+    public static createForPlan(targetDepth: number, duration: number, gas: Gas, options: Options): Segments {
+        const segments = new Segments();
+        const descentDuration = SegmentsFactory.descentDuration(targetDepth, options);
+        segments.add(0, targetDepth, gas, descentDuration);
+        let bottomTime = Time.toSeconds(duration) - descentDuration;
+        // not enough time to descent
+        bottomTime = bottomTime < 0 ? 0 : bottomTime;
+        segments.addFlat(targetDepth, gas, bottomTime);
+        return segments;
+    }
+
+    // TODO multilevel diving: fix minimum duration based on required descent/ascent time
+    /** Calculates duration in seconds for descent from surface to target depth (meters) based on descent speed */
+    public static descentDuration(targetDepth: number, options: Options) {
+        return Time.toSeconds(targetDepth / options.descentSpeed);
     }
 }

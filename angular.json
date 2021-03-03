@@ -87,6 +87,7 @@
             "karmaConfig": "projects/planner/karma.conf.js",
             "polyfills": "projects/planner/src/polyfills.ts",
             "tsConfig": "projects/planner/src/tsconfig.spec.json",
+            "codeCoverage": true,
             "scripts": [     
             ],
             "styles": [
@@ -165,7 +166,8 @@
           "options": {
             "main": "projects/scuba-physics/src/test.ts",
             "tsConfig": "projects/scuba-physics/tsconfig.spec.json",
-            "karmaConfig": "projects/scuba-physics/karma.conf.js"
+            "karmaConfig": "projects/scuba-physics/karma.conf.js",
+            "codeCoverage": true
           }
         },
         "lint": {

@@ -97,7 +97,6 @@ export class WayPoint {
 
     private action: SwimAction;
 
-    // TODO fix unassgined gas name
     private _gasName: string;
 
     public get gasName(): string {

@@ -92,7 +92,7 @@ export class Tank {
     }
 }
 
-export class ConsumptionSegment {
+class ConsumptionSegment {
     /** in seconds */
     public startTime = 0;
     /** in seconds */

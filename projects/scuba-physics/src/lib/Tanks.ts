@@ -1,6 +1,9 @@
+import { BuhlmannAlgorithm, Options } from "./BuhlmannAlgorithm";
 import { DepthConverter } from "./depth-converter";
 import { Diver } from "./Diver";
-import { Gas, StandardGases } from "./Gases";
+import { Gas, Gases, StandardGases } from "./Gases";
+import { CalculatedProfile } from "./Profile";
+import { Segment, Segments, SegmentsFactory } from "./Segments";
 import { Time } from "./Time";
 
 export class Tank {
@@ -135,6 +138,97 @@ export class Consumption {
 
     constructor(private depthConverter: DepthConverter) { }
 
+    public calculateMaxBottomTime(plannedDepth: number, tank: Tank, diver: Diver, options: Options, noDecoTime: number): number {
+        const recreDuration = this.nodecoProfileBottomTime(plannedDepth, tank, diver, options);
+        const noDecoSeconds = Time.toSeconds(noDecoTime);
+    
+        if(recreDuration > noDecoSeconds) {
+           return this.estimateMaxDecotime(plannedDepth, tank, options, diver, noDecoTime);
+        }
+    
+        const minutes = Time.toMinutes(recreDuration);
+        return Math.floor(minutes);
+      }
+
+    private nodecoProfileBottomTime(plannedDepth: number, tank: Tank, diver: Diver, options: Options): number {
+        const template = SegmentsFactory.buildNoDecoProfile(plannedDepth, tank.gas, options);
+        const recreProfile = Consumption.toSegments(template);
+        let ascent = Consumption.ascent(recreProfile);
+        let rockBottom = this.calculateRockBottom(ascent, tank, diver);
+        let consumed = this.calculateConsumedOnWay(recreProfile, tank, diver.sac);
+        const remaining = tank.startPressure - consumed - rockBottom;
+
+        if (remaining > 0) {
+            const sacSeconds = Time.toMinutes(diver.sac);
+            const bottomConumption = this.segmentConsumptionPerSecond(recreProfile[1], tank, sacSeconds);
+            const swimDuration = remaining / bottomConumption;
+            const recreDuration = recreProfile[0].duration + swimDuration;
+            return recreDuration;
+        }
+
+        return recreProfile[0].duration; // descent only
+    }
+
+    /**
+     * We need to repeat the calculation by increasing duration, until there is enough gas
+     * because increase of duration means also change in the ascent plan.
+     * This method is performance hit, since it needs to calculate the profile.
+     */
+    private estimateMaxDecotime(plannedDepth: number, tank: Tank, options: Options, diver: Diver, noDecoTime: number): number {
+        let duration = noDecoTime;
+        let consumed = 0;
+        let rockBottom = 0;
+
+        while (this.hasEnoughGas(tank, consumed, rockBottom)) {
+            duration++;
+            const profile = Consumption.calculateDecompression(plannedDepth, duration, [tank], options);
+            const segments = Consumption.toSegments(profile.segments);
+            const ascent = Consumption.ascent(segments);
+            rockBottom = this.calculateRockBottom(ascent, tank, diver);
+            consumed = this.calculateConsumedOnWay(segments, tank, diver.sac);
+        }
+
+        return duration - 1; // we already passed the way
+    }
+
+    private static toSegments(segments: Segment[]): ConsumptionSegment[] {
+        const converted: ConsumptionSegment[] = [];
+
+        segments.forEach((segment, index, source) => {
+            const convertedSegment = new ConsumptionSegment(segment.duration, segment.endDepth, segment.startDepth);
+            converted.push(convertedSegment);
+        });
+
+        return converted;
+    }
+
+    private static calculateDecompression(planedDepth: number, duration: number, tanks: Tank[], options: Options): CalculatedProfile {
+        const bGases = new Gases();
+        const bGas = tanks[0].gas;
+        bGases.addBottomGas(bGas);
+
+        // everything except first gas is considered as deco gas
+        tanks.slice(1, tanks.length).forEach((gas, index, items) => {
+            const decoGas = gas.gas;
+            bGases.addDecoGas(decoGas);
+        });
+
+        const segments: Segments = SegmentsFactory.createForPlan(planedDepth, duration, bGas, options)
+        const algorithm = new BuhlmannAlgorithm();
+        const profile = algorithm.calculateDecompression(options, bGases, segments);
+        return profile;
+    }
+    
+    // TODO multilevel diving
+    private static ascent(segments: ConsumptionSegment[]): ConsumptionSegment[] {
+        // first two are descent and bottom
+        return segments.slice(2, segments.length);
+    }
+
+    private hasEnoughGas(tank: Tank, consumed: number, rockBottom: number): boolean {
+        return tank.startPressure - consumed >= rockBottom;
+    }
+
     public calculateRockBottom(ascent: ConsumptionSegment[], tank: Tank, diver: Diver): number {
         const solvingDuration = 2 * Time.oneMinute;
         const problemSolving = new ConsumptionSegment(solvingDuration, ascent[0].startDepth, ascent[0].startDepth);
@@ -158,8 +252,8 @@ export class Consumption {
     }
 
     /** bar/second */
-    private segmentConsumptionPerSecond(wayPoint: ConsumptionSegment, tank: Tank, sacSeconds: number): number {
-        const averagePressure = this.depthConverter.toBar(wayPoint.averageDepth);
+    private segmentConsumptionPerSecond(segment: ConsumptionSegment, tank: Tank, sacSeconds: number): number {
+        const averagePressure = this.depthConverter.toBar(segment.averageDepth);
         const consumed = averagePressure * Diver.gasSac(sacSeconds, tank.size);
         return consumed;
     }

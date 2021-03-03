@@ -2,6 +2,7 @@ import { Gas, Gases } from './Gases';
 import { EventsFactory, Event } from './Profile';
 import { Options } from './BuhlmannAlgorithm';
 import { Time } from './Time';
+import { DepthConverter } from './depth-converter';
 
 export class SegmentsValidator {
     public static validate(segments: Segments, gases: Gases): Event[] {
@@ -135,6 +136,24 @@ export class SegmentsFactory {
         bottomTime = bottomTime < 0 ? 0 : bottomTime;
         segments.addFlat(targetDepth, gas, bottomTime);
         return segments;
+    }
+
+    public static buildNoDecoProfile(plannedDepth: number, gas: Gas, options: Options): Segment[] {
+        const safetyStopDepth = DepthConverter.decoStopDistance; // TODO customizable safetystop depth
+        const safetyStopDuration = 3 * Time.oneMinute;
+        const segments = new Segments();
+        
+        const descentDuration = SegmentsFactory.descentDuration(plannedDepth, options);
+        segments.add(0, plannedDepth, gas, descentDuration); // required to be able cut first two segments as descent and swim
+        segments.addFlat(plannedDepth, gas, 0);
+
+        const ascentDuration = Time.toSeconds((plannedDepth - safetyStopDepth) / options.ascentSpeed);
+        segments.add(plannedDepth, safetyStopDepth, gas, ascentDuration);
+        segments.addFlat(safetyStopDepth, gas, safetyStopDuration);
+
+        const lastAscent = Time.toSeconds(safetyStopDepth / options.ascentSpeed);
+        segments.add(safetyStopDepth, 0, gas, lastAscent);
+        return segments.mergeFlat();
     }
 
     // TODO multilevel diving: fix minimum duration based on required descent/ascent time

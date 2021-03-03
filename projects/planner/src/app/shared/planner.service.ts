@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+
 import { Plan, Dive, WayPoint, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
-import { NitroxCalculator, BuhlmannAlgorithm, Gas, Options,
+import { NitroxCalculator, BuhlmannAlgorithm, Options,
    DepthConverter, Time, DepthConverterFactory, Tank, Diver,
-   SegmentsFactory } from 'scuba-physics';
-import { Subject } from 'rxjs';
+   SegmentsFactory, Consumption} from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
@@ -97,17 +98,21 @@ export class PlannerService {
     this.depthConverter = this.depthConverterFactory.create();
     this.plan.noDecoTime = this.noDecoTime();
     const profile = WayPointsService.calculateWayPoints(this.plan, this.tanks, this.options);
-    // TODO multilevel diving: ascent cant be identified by first two segments
-    const ascent = PlannerService.ascent(profile.wayPoints);
     this.dive.wayPoints = profile.wayPoints;
     this.dive.ceilings = profile.ceilings;
     this.dive.events = profile.events;
 
     if (profile.wayPoints.length > 2) {
-      this.dive.maxTime = this.calculateMaxBottomTime();
+      const consumption = new Consumption(this.depthConverter);
+      this.dive.maxTime = consumption.calculateMaxBottomTime(this.plan.depth, this.firstTank, this.diver, this.options, this.plan.noDecoTime);
+
+      // TODO multilevel diving: ascent cant be identified by first two segments
+      const ascent = PlannerService.ascent(profile.wayPoints);
       this.dive.timeToSurface = this.calculateTimeToSurface(ascent);
-      this.firstTank.reserve = this.calculateRockBottom(ascent);
-      this.firstTank.consumed = this.calculateConsumedOnWay(profile.wayPoints, this.diver.sac);
+
+      const originAscent = Consumption.ascent(profile.origin);
+      this.firstTank.reserve = consumption.calculateRockBottom(originAscent, this.firstTank, this.diver);
+      this.firstTank.consumed = consumption.consumedOnWay(profile.origin, this.firstTank, this.diver.sac);
       this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
     }
 
@@ -127,109 +132,7 @@ export class PlannerService {
     const consumed = this.firstTank.consumed / 2;
     return this.firstTank.startPressure - Math.floor(consumed);
   }
-
-  private calculateMaxBottomTime(): number {
-    const recreDuration = this.nodecoProfileBottomTime();
-    const noDecoSeconds = Time.toSeconds(this.plan.noDecoTime);
-
-    if(recreDuration > noDecoSeconds) {
-       return this.estimateMaxDecotime();
-    }
-
-    const minutes = Time.toMinutes(recreDuration);
-    return Math.floor(minutes);
-  }
-
-  private buildNoDecoProfile(): WayPoint[] {
-    const safetyStopDepth = DepthConverter.decoStopDistance; // TODO customizable safetystop depth
-    const safetyStopDuration = 3 * Time.oneMinute;
-
-    const maxDepth = this.plan.depth;
-    const descentDuration = SegmentsFactory.descentDuration(this.plan.depth, this.options);
-    const descent = new WayPoint(descentDuration, maxDepth);
-    const swim = new WayPoint(0, maxDepth, maxDepth);
-    const ascentDuration = Time.toSeconds((maxDepth - safetyStopDepth) / this.options.ascentSpeed);
-    const ascentToSafety = new WayPoint(ascentDuration, safetyStopDepth, maxDepth);
-    const safetyStop = new WayPoint(safetyStopDuration, safetyStopDepth, safetyStopDepth);
-    const lastAscent = Time.toSeconds(safetyStopDepth / this.options.ascentSpeed);
-    const toSurface = new WayPoint(lastAscent, 0, safetyStopDepth);
-    let recreProfile: WayPoint[] = [descent, swim, ascentToSafety, safetyStop, toSurface];
-    return recreProfile;
-  }
-
-  private nodecoProfileBottomTime(): number {
-    const recreProfile = this.buildNoDecoProfile();
-    let ascent = PlannerService.ascent(recreProfile);
-    let rockBottom = this.calculateRockBottom(ascent);
-    let consumed = this.calculateConsumedOnWay(recreProfile, this.diver.sac);
-    const remaining = this.firstTank.startPressure - consumed - rockBottom;
-
-    if(remaining > 0) {
-      const sacSeconds = Time.toMinutes(this.diver.sac);
-      const bottomConumption = this.waipointConsumptionPerSecond(recreProfile[1], sacSeconds);
-      const swimDuration = remaining / bottomConumption;
-      const recreDuration = recreProfile[0].duration + swimDuration;
-      return recreDuration;
-    }
-
-    return recreProfile[0].duration; // descent only
-  }
   
-  /**
-   * We need to repeat the calculation by increasing duration, until there is enough gas
-   * because increase of duration means also change in the ascent plan.
-   * This method is performance hit, since it needs to calculate the profile.
-   */
-  private estimateMaxDecotime(): number {
-    const maxRecreTime = this.plan.noDecoTime;
-    const testPlan = new Plan(maxRecreTime, this.plan.depth, this.plan.strategy);
-    let consumed = 0;
-    let rockBottom = 0;
-
-    while (this.hasEnougGas(consumed, rockBottom)) {
-      testPlan.duration++;
-      const profile = WayPointsService.calculateWayPoints(testPlan, this.tanks, this.options);
-      const ascent = PlannerService.ascent(profile.wayPoints);
-      rockBottom = this.calculateRockBottom(ascent);
-      consumed = this.calculateConsumedOnWay(profile.wayPoints, this.diver.sac);
-    }
-
-    return testPlan.duration - 1; // we already passed the way
-  }
-  
-  private hasEnougGas(consumed: number, rockBottom: number): boolean {
-    return this.firstTank.startPressure - consumed >= rockBottom;
-  }
-
-  private calculateRockBottom(ascent: WayPoint[]): number {
-    const solvingDuration = 2 * Time.oneMinute;
-    const problemSolving = new WayPoint(solvingDuration, ascent[0].startDepth, ascent[0].startDepth);
-    ascent.unshift(problemSolving);
-    const stressSac = this.diver.stressSac;
-    const result = this.calculateConsumedOnWay(ascent, stressSac);
-    const minimumRockBottom = 30;
-    return result > minimumRockBottom ? result : minimumRockBottom;
-  }
-
-  private calculateConsumedOnWay(wayPoints: WayPoint[], sac: number): number {
-    let result = 0;
-    const sacSeconds = Time.toMinutes(sac);
-
-    for (const wayPoint of wayPoints) {
-      result += wayPoint.duration * this.waipointConsumptionPerSecond(wayPoint, sacSeconds);
-    }
-
-    const rounded = Math.ceil(result);
-    return rounded;
-  }
-
-  /** bar/second */
-  private waipointConsumptionPerSecond(wayPoint: WayPoint, sacSeconds: number): number {
-    const averagePressure = this.depthConverter.toBar(wayPoint.averageDepth);
-    const consumed = averagePressure * Diver.gasSac(sacSeconds, this.firstTank.size);
-    return consumed;
-  }
-
   private calculateTimeToSurface(ascent: WayPoint[]): number {
     const solutionDuration = 2 * Time.oneMinute;
     let ascentDuration = 0;

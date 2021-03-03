@@ -1,8 +1,9 @@
 import { Diver } from './Diver';
 import { DepthConverter } from './depth-converter';
 import { StandardGases } from './Gases';
-import { Consumption, ConsumptionSegment, Tank } from './Tanks';
+import { Consumption, Tank } from './Tanks';
 import { Time } from './Time';
+import { Segment } from './Segments';
 
 describe('Tank', () => {
     let tank: Tank;
@@ -119,7 +120,7 @@ describe('Consumption', () => {
             const tank = new Tank(24, 200, 21);
             const diver = new Diver(20, 1.6);
             const consumption = new Consumption(DepthConverter.forFreshWater());
-            const ascent = [new ConsumptionSegment(duration, 0, 20)];
+            const ascent = [new Segment(20, 0, tank.gas, duration)];
             const rockBottom = consumption.calculateRockBottom(ascent, tank, diver);
             return rockBottom;
         };

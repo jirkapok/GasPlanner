@@ -153,9 +153,9 @@ export class Consumption {
     private nodecoProfileBottomTime(plannedDepth: number, tank: Tank, diver: Diver, options: Options): number {
         const template = SegmentsFactory.buildNoDecoProfile(plannedDepth, tank.gas, options);
         const recreProfile = Consumption.toSegments(template);
-        let ascent = Consumption.ascent(recreProfile);
+        let ascent = Consumption.ascent(template);
         let rockBottom = this.calculateRockBottom(ascent, tank, diver);
-        let consumed = this.calculateConsumedOnWay(recreProfile, tank, diver.sac);
+        let consumed = this.consumed(recreProfile, tank, diver.sac);
         const remaining = tank.startPressure - consumed - rockBottom;
 
         if (remaining > 0) {
@@ -183,9 +183,9 @@ export class Consumption {
             duration++;
             const profile = Consumption.calculateDecompression(plannedDepth, duration, [tank], options);
             const segments = Consumption.toSegments(profile.segments);
-            const ascent = Consumption.ascent(segments);
+            const ascent = Consumption.ascent(profile.segments);
             rockBottom = this.calculateRockBottom(ascent, tank, diver);
-            consumed = this.calculateConsumedOnWay(segments, tank, diver.sac);
+            consumed = this.consumed(segments, tank, diver.sac);
         }
 
         return duration - 1; // we already passed the way
@@ -220,7 +220,7 @@ export class Consumption {
     }
     
     // TODO multilevel diving
-    private static ascent(segments: ConsumptionSegment[]): ConsumptionSegment[] {
+    public static ascent(segments: Segment[]): Segment[] {
         // first two are descent and bottom
         return segments.slice(2, segments.length);
     }
@@ -229,21 +229,31 @@ export class Consumption {
         return tank.startPressure - consumed >= rockBottom;
     }
 
-    public calculateRockBottom(ascent: ConsumptionSegment[], tank: Tank, diver: Diver): number {
+    public calculateRockBottom(ascent: Segment[], tank: Tank, diver: Diver): number {
+      const conSegments = Consumption.toSegments(ascent);
+      return this.rockBottom(conSegments, tank, diver);
+    }
+
+    private rockBottom(ascent: ConsumptionSegment[], tank: Tank, diver: Diver): number {
         const solvingDuration = 2 * Time.oneMinute;
         const problemSolving = new ConsumptionSegment(solvingDuration, ascent[0].startDepth, ascent[0].startDepth);
         ascent.unshift(problemSolving);
         const stressSac = diver.stressSac;
-        const result = this.calculateConsumedOnWay(ascent, tank, stressSac);
+        const result = this.consumed(ascent, tank, stressSac);
         
         return result > Consumption.minimumRockBottom ? result : Consumption.minimumRockBottom;
     }
 
-    private calculateConsumedOnWay(segment: ConsumptionSegment[], tank: Tank, sac: number): number {
+    public consumedOnWay(segments: Segment[], tank: Tank, sac: number): number {
+        const conSegments = Consumption.toSegments(segments);
+        return this.consumed(conSegments, tank, sac);
+    }
+
+    private consumed(segments: ConsumptionSegment[], tank: Tank, sac: number): number {
         let result = 0;
         const sacSeconds = Time.toMinutes(sac);
 
-        for (const wayPoint of segment) {
+        for (const wayPoint of segments) {
             result += wayPoint.duration * this.segmentConsumptionPerSecond(wayPoint, tank, sacSeconds);
         }
 

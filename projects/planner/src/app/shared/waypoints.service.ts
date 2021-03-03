@@ -5,13 +5,14 @@ import { BuhlmannAlgorithm, Options, Gases,
 
 export class Profile {
     constructor(
+        public origin: Segment[],
         public wayPoints: WayPoint[],
         public ceilings: Ceiling[],
         public events: Event[]
         ) {}
 
     public static newEmpty(errors: Event[]): Profile {
-        return new Profile([], [], errors);
+        return new Profile([], [], [], errors);
     }
 }
 
@@ -38,7 +39,7 @@ export class WayPointsService {
             wayPoints.push(waypoint);
         });
 
-        return new Profile(wayPoints, profile.ceilings, events.items);
+        return new Profile(profile.segments, wayPoints, profile.ceilings, events.items);
     }
 
     private static toWayPoint(segment: Segment, lastWayPoint: WayPoint, events: Event[]): WayPoint {

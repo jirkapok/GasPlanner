@@ -5,6 +5,58 @@
     </div>
     <div *ngIf="!dive.calculated" class="card-body">Not calculated yet</div>
     <div *ngIf="dive.calculated" class="card-body">
+        <div *ngIf="!dive.hasErrors">
+            <table class="table table-noheader">
+                <tr>
+                    <td>Time to surface [min.]:</td>
+                    <td class="table-active">
+                        <strong>{{ dive.timeToSurface | number:'1.0-0' }}</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Maximum bottom time [min.]:</td>
+                    <td class="table-active">
+                        <strong>{{ dive.maxTime | number:'1.0-0' }}</strong>
+                    </td>
+                </tr>
+                <tr *ngIf="dive.needsReturn">
+                    <td>Turn time [min]:</td>
+                    <td class="table-active">
+                        <strong>{{ dive.turnTime | number:'1.0-0' }}</strong>
+                    </td>
+                </tr>
+                <tr *ngIf="dive.needsReturn">
+                    <td>Turn pressure [bar]:</td>
+                    <td class="table-active">
+                        <strong>{{ dive.turnPressure | number:'1.0-0' }}</strong>
+                    </td>
+                </tr>
+            </table>
+            <div *ngFor="let tank of tanks" class="my-4">
+                <div class="row">
+                    <div class="col text-left">{{ tank.name }}</div>
+                    <app-gaslabel [gas]="tank" class="col text-right"></app-gaslabel>
+                </div>
+                <div class="row">
+                    <div class="col text-left">Gas remaining: {{ tank.endPressure | number:'1.0-0'  }}/{{ tank.startPressure | number:'1.0-0'  }} bar</div>
+                    <div class="col text-right">Rock bottom: <strong>{{ tank.reserve | number:'1.0-0' }}</strong> bar</div>
+                </div>
+                <div class="progress gas-bar mt-1 mb-2">
+                    <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"
+                        [attr.aria-valuenow]="tank.reserve" [style.width]="tank.percentsReserve + '%'" class="reserve-bar rounded-progress">
+                        <div class="reserve-overlay ">
+                            <div class="reserve-value">{{tank.reserve | number:'1.0-0'  }}</div>
+                        </div>
+                    </div>
+
+                    <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"
+                        [ngClass]="{'progress-bar rounded-progress': true, 'bg-success': tank.hasReserve, 'bg-danger': !tank.hasReserve }"
+                        [attr.aria-valuenow]="tank.endPressure" [style.width]="tank.percentsRemaining + '%'">
+                        {{tank.endPressure | number:'1.0-0' }}</div>
+                </div>
+            </div>
+        </div>
+
         <div *ngIf="dive.notEnoughGas" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="mr-1"></fa-icon>
             <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
@@ -24,60 +76,6 @@
             <div *ngIf="isHighPpO2(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="mr-1"></fa-icon>
                 <span>High partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }} m!</span>
-            </div>
-        </div>
-
-        <div *ngIf="!dive.hasErrors">
-            <table class="table table-noheader">
-                <tr>
-                    <td>Time to surface [min.]:</td>
-                    <td class="table-active">
-                        <strong>{{ dive.timeToSurface | number:'1.0-0' }}</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Maximum bottom time [min.]:</td>
-                    <td class="table-active">
-                        <strong>{{ dive.maxTime | number:'1.0-0' }}</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Rock bottom [bar]:</td>
-                    <td class="table-active">
-                        <strong>{{ bottomTank.reserve | number:'1.0-0' }}</strong>
-                    </td>
-                </tr>
-                <tr *ngIf="dive.needsReturn">
-                    <td>Turn time [min]:</td>
-                    <td class="table-active">
-                        <strong>{{ dive.turnTime | number:'1.0-0' }}</strong>
-                    </td>
-                </tr>
-                <tr *ngIf="dive.needsReturn">
-                    <td>Turn pressure [bar]:</td>
-                    <td class="table-active">
-                        <strong>{{ dive.turnPressure | number:'1.0-0' }}</strong>
-                    </td>
-                </tr>
-            </table>
-            <div>
-                <div class="row">
-                    <div class="col text-left">Gas remaining: {{ bottomTank.endPressure }}/{{ bottomTank.startPressure }} bar</div>
-                    <app-gaslabel [gas]="bottomTank" class="col text-right"></app-gaslabel>
-                </div>
-                <div class="progress gas-bar mt-1 mb-2">
-                    <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomTank.startPressure"
-                        [attr.aria-valuenow]="bottomTank.reserve" [style.width]="bottomTank.percentsReserve + '%'" class="reserve-bar rounded-progress">
-                        <div class="reserve-overlay ">
-                            <div class="reserve-value">{{bottomTank.reserve}}</div>
-                        </div>
-                    </div>
-
-                    <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="bottomTank.startPressure"
-                        [ngClass]="{'progress-bar rounded-progress': true, 'bg-success': bottomTank.hasReserve, 'bg-danger': !bottomTank.hasReserve }"
-                        [attr.aria-valuenow]="bottomTank.endPressure" [style.width]="bottomTank.percentsRemaining + '%'">
-                        {{bottomTank.endPressure}}</div>
-                </div>
             </div>
         </div>
     </div>

@@ -1,29 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { faBatteryHalf, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
 import { StandardGases, Tank, Diver } from 'scuba-physics';
 
 @Component({
-    selector: 'app-gases',
-    templateUrl: './gases.component.html',
-    styleUrls: ['./gases.component.css']
+    selector: 'app-tanks',
+    templateUrl: './tanks.component.html',
+    styleUrls: ['./tanks.component.css']
 })
-export class GasesComponent implements OnInit {
-    private diver: Diver;
+export class TanksComponent {
     public firstTank: Tank;
     public gasNames: string[];
-    public bottleIcon = faBatteryHalf;
+    public icon = faBatteryHalf;
     public plusIcon = faPlusSquare;
     public trashIcon = faTrashAlt;
+    private diver: Diver;
 
     constructor(private planner: PlannerService) {
         this.firstTank = this.planner.firstTank;
         this.diver = this.planner.diver;
         this.gasNames = StandardGases.gasNames();
-    }
-
-    ngOnInit() {
     }
 
     public get tanks(): Tank[] {

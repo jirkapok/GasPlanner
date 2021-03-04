@@ -6,7 +6,7 @@ import { CustomFormsModule } from 'ngx-custom-validators';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app.component';
-import { GasesComponent } from './gases/gases.component';
+import { TanksComponent } from './tanks/tanks.component';
 import { DiverComponent } from './diver/diver.component';
 import { PlanComponent } from './plan/plan.component';
 import { ConsumptionComponent } from './consumption/consumption.component';
@@ -30,7 +30,7 @@ import { TankChartComponent } from './tank-chart/tank-chart.component';
 @NgModule({
     declarations: [
         AppComponent,
-        GasesComponent,
+        TanksComponent,
         DiverComponent,
         PlanComponent,
         ConsumptionComponent,

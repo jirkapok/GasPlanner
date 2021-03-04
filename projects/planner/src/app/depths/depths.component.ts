@@ -16,12 +16,15 @@ export class DepthsComponent implements OnInit {
     public plan: Plan;
     public icon = faLayerGroup;
 
-    constructor(private planer: PlannerService) {
-        this.plan = this.planer.plan;
+    constructor(private planner: PlannerService) {
+        this.plan = this.planner.plan;
     }
 
     ngOnInit(): void {
-        this.planer.calculate();
+        this.planner.calculate();
+    }
+    public get isTechnical(): boolean {
+        return this.planner.isTechnical;
     }
 
     public get planDuration(): number {
@@ -30,7 +33,7 @@ export class DepthsComponent implements OnInit {
 
     public set planDuration(newValue: number) {
         this.plan.duration = newValue;
-        this.planer.calculate();
+        this.planner.calculate();
     }
 
     @Input()
@@ -40,7 +43,7 @@ export class DepthsComponent implements OnInit {
 
     public set plannedDepth(depth: number) {
         this.plan.depth = depth;
-        this.planer.calculate();
+        this.planner.calculate();
     }
 
     public get noDecoTime(): number {
@@ -53,7 +56,7 @@ export class DepthsComponent implements OnInit {
     }
 
     public get bestMix(): string {
-        const o2 = this.planer.bestNitroxMix() / 100;
+        const o2 = this.planner.bestNitroxMix() / 100;
         return StandardGases.nameFor(o2);
     }
 }

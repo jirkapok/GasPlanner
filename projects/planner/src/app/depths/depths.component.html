@@ -1,7 +1,8 @@
 <div class="card">
   <div class="card-header">
       <fa-icon [icon]="icon" class="mr-3"></fa-icon>
-      <span>Depths</span>
+      <span *ngIf="!isTechnical">Depth</span>
+      <span *ngIf="isTechnical">Depths</span>
   </div>
   <div class="card-body">
     <div class="form-group">

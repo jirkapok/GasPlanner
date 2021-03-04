@@ -2,7 +2,7 @@
   <div class="card-header ">
       <fa-icon [icon]="bottleIcon" rotate="270" class="mr-3"></fa-icon>
       <span *ngIf="!isTechnical">Bottom gas tank</span>
-      <span *ngIf="isTechnical">Tank</span>
+      <span *ngIf="isTechnical">Tanks</span>
   </div>
   <div class="card-body" *ngIf="isTechnical">
     <table class="table table-noheader">
@@ -48,7 +48,7 @@
       <div class="form-group">
         <label for="size">Size [L]:
           <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control" type="number" (change)="gasChanged()"
-            min="1" max="50" [range]="[1, 50]" required 
+            min="1" max="50" [range]="[1, 50]" required
             [class.is-invalid]="size.invalid && (size.dirty || size.touched)"/>
           <small class="form-text text-muted">SAC: {{gasSac(firstTank) | number:'1.0-2'}} bar/min.</small>
           <div class="text-danger" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 L</div>

@@ -32,29 +32,7 @@
                     </td>
                 </tr>
             </table>
-            <div *ngFor="let tank of tanks" class="my-4">
-                <div class="row">
-                    <div class="col text-left">{{ tank.name }}</div>
-                    <app-gaslabel [gas]="tank" [showName]="false" class="col text-right"></app-gaslabel>
-                </div>
-                <div class="row">
-                    <small class="col text-left text-muted">Gas remaining: {{ tank.endPressure | number:'1.0-0'  }}/{{ tank.startPressure | number:'1.0-0'  }} bar</small>
-                    <small class="col text-right text-muted">Rock bottom: <strong>{{ tank.reserve | number:'1.0-0' }}</strong> bar</small>
-                </div>
-                <div class="progress gas-bar mt-1 mb-2">
-                    <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"
-                        [attr.aria-valuenow]="tank.reserve" [style.width]="tank.percentsReserve + '%'" class="reserve-bar rounded-progress">
-                        <div class="reserve-overlay ">
-                            <div class="reserve-value">{{tank.reserve | number:'1.0-0'  }}</div>
-                        </div>
-                    </div>
-
-                    <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"
-                        [ngClass]="{'progress-bar rounded-progress': true, 'bg-success': tank.hasReserve, 'bg-danger': !tank.hasReserve }"
-                        [attr.aria-valuenow]="tank.endPressure" [style.width]="tank.percentsRemaining + '%'">
-                        {{tank.endPressure | number:'1.0-0' }}</div>
-                </div>
-            </div>
+            <app-tankchart *ngFor="let tank of tanks" [tank]="tank"></app-tankchart>
         </div>
 
         <div *ngIf="dive.notEnoughGas" class="alert  alert-danger">

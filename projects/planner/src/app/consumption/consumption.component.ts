@@ -5,11 +5,11 @@ import { faExclamationCircle, faExclamationTriangle, faSlidersH } from '@fortawe
 import { EventType, Event, Time, Tank } from 'scuba-physics';
 
 @Component({
-    selector: 'app-dive',
-    templateUrl: './dive.component.html',
-    styleUrls: ['./dive.component.css']
+    selector: 'app-consumption',
+    templateUrl: './consumption.component.html',
+    styleUrls: ['./consumption.component.css']
 })
-export class DiveComponent {
+export class ConsumptionComponent {
     public dive: Dive;
     public exclamation = faExclamationCircle;
     public warning = faExclamationTriangle;

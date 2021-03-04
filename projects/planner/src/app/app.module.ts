@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { GasesComponent } from './gases/gases.component';
 import { DiverComponent } from './diver/diver.component';
 import { PlanComponent } from './plan/plan.component';
-import { DiveComponent } from './dive/dive.component';
+import { ConsumptionComponent } from './consumption/consumption.component';
 import { PlannerService } from './shared/planner.service';
 import { PreferencesService } from './shared/preferences.service';
 import { MainMenuComponent } from './mainmenu/mainmenu.component';
@@ -33,7 +33,7 @@ import { TankChartComponent } from './tank-chart/tank-chart.component';
         GasesComponent,
         DiverComponent,
         PlanComponent,
-        DiveComponent,
+        ConsumptionComponent,
         SacComponent,
         MainMenuComponent,
         DashboardComponent,

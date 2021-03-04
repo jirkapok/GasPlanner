@@ -22,19 +22,20 @@
     </div>
     <div class="mt-4" [ngClass]="{
       'col-lg-4': !isTechnical,
-      'col-md-6': !isTechnical, 
+      'col-md-6': !isTechnical,
       'col-12': isTechnical} ">
       <app-plan [(formValid)]="f.form.invalid"></app-plan>
     </div>
+    <div *ngIf="showResults" class="col-lg-12 col-md-12 mt-4">
+        <app-profilechart (chartHover)="chartHover($event)" ></app-profilechart>
+      </div>
     <div class="col-lg-6 col-md-6 mt-4">
       <app-dive></app-dive>
     </div>
     <div *ngIf="showResults" class="col-lg-6 col-md-12 mt-4">
       <app-waypoints [selectedTimeStamp]="selectedTimeStamp"></app-waypoints>
     </div>
-    <div *ngIf="showResults" class="col-lg-12 col-md-12 mt-4">
-      <app-profilechart (chartHover)="chartHover($event)" ></app-profilechart>
-    </div>
+
   </div>
 </div>
 </form>

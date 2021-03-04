@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { faClock } from '@fortawesome/free-regular-svg-icons';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
 
 import { Diver } from 'scuba-physics';
 import { Plan, Strategies } from '../shared/models';
@@ -23,7 +23,8 @@ export class PlanComponent implements OnInit {
     public conservatism = this.Medium;
     public plan: Plan;
     public strategy = this.AllUsable;
-    public clock = faClock;
+    public icon = faCog;
+
 
     constructor(private planner: PlannerService) {
         this.plan = this.planner.plan;

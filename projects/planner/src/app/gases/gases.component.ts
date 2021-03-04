@@ -1,69 +1,69 @@
 import { Component, OnInit } from '@angular/core';
-import { faBatteryEmpty, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faBatteryHalf, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
 import { StandardGases, Tank, Diver } from 'scuba-physics';
 
 @Component({
-  selector: 'app-gases',
-  templateUrl: './gases.component.html',
-  styleUrls: ['./gases.component.css']
+    selector: 'app-gases',
+    templateUrl: './gases.component.html',
+    styleUrls: ['./gases.component.css']
 })
 export class GasesComponent implements OnInit {
-  private diver: Diver;
-  public firstTank: Tank;
-  public gasNames: string[];
-  public bottleIcon = faBatteryEmpty;
-  public plusIcon = faPlusSquare;
-  public trashIcon = faTrashAlt;
-  
-  constructor(private planner: PlannerService) {
-    this.firstTank = this.planner.firstTank;
-    this.diver = this.planner.diver;
-    this.gasNames = StandardGases.gasNames();
-   }
+    private diver: Diver;
+    public firstTank: Tank;
+    public gasNames: string[];
+    public bottleIcon = faBatteryHalf;
+    public plusIcon = faPlusSquare;
+    public trashIcon = faTrashAlt;
 
-  ngOnInit() {
-  }
+    constructor(private planner: PlannerService) {
+        this.firstTank = this.planner.firstTank;
+        this.diver = this.planner.diver;
+        this.gasNames = StandardGases.gasNames();
+    }
 
-  public get tanks(): Tank[] {
-    return this.planner.tanks;
-  }
+    ngOnInit() {
+    }
 
-  public get isTechnical(): boolean {
-    return this.planner.isTechnical;
-  }
+    public get tanks(): Tank[] {
+        return this.planner.tanks;
+    }
 
-  public get o2(): number {
-    return this.firstTank.o2;
-  }
+    public get isTechnical(): boolean {
+        return this.planner.isTechnical;
+    }
 
-  public set o2(newValue) {
-    this.firstTank.o2 = newValue;
-  }
+    public get o2(): number {
+        return this.firstTank.o2;
+    }
 
-  public gasSac(gas: Tank): number {
-    return this.diver.gasSac(gas);
-  }
+    public set o2(newValue) {
+        this.firstTank.o2 = newValue;
+    }
 
-  public addGas(): void {
-    this.planner.addGas();
-  }
+    public gasSac(gas: Tank): number {
+        return this.diver.gasSac(gas);
+    }
 
-  public removeGas(gas: Tank): void {
-    this.planner.removeGas(gas);
-  }
+    public addGas(): void {
+        this.planner.addGas();
+    }
 
-  public assignBestMix(): void {
-    this.o2 = this.planner.bestNitroxMix();
-  }
+    public removeGas(gas: Tank): void {
+        this.planner.removeGas(gas);
+    }
 
-  public gasChanged(): void {
-    this.planner.calculate();
-  }
+    public assignBestMix(): void {
+        this.o2 = this.planner.bestNitroxMix();
+    }
 
-  public assignStandardGas(gas: Tank, gasName: string): void {
-    gas.assignStandardGas(gasName);
-    this.gasChanged();
-  }
+    public gasChanged(): void {
+        this.planner.calculate();
+    }
+
+    public assignStandardGas(gas: Tank, gasName: string): void {
+        gas.assignStandardGas(gasName);
+        this.gasChanged();
+    }
 }

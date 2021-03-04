@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive } from '../shared/models';
-import { faExclamationCircle, faExclamationTriangle, faTasks } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle, faExclamationTriangle, faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import { EventType, Event, Time, Tank } from 'scuba-physics';
 
 @Component({
@@ -13,7 +13,7 @@ export class DiveComponent {
     public dive: Dive;
     public exclamation = faExclamationCircle;
     public warning = faExclamationTriangle;
-    public tasks = faTasks;
+    public icon = faSlidersH;
 
     constructor(private planer: PlannerService) {
         this.dive = this.planer.dive;

@@ -104,13 +104,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/planner/src/tsconfig.app.json",
-              "projects/planner/src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "lintFilePatterns": ["projects/planner/**/*.ts", "projects/planner/**/*.html"]
           }
         }
       }
@@ -131,14 +125,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/planner/tsconfig.app.json",
-              "projects/planner/tsconfig.spec.json",
-              "projects/planner/e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "lintFilePatterns": ["e2e/**/*.ts", "e2e/**/*.html"]
           }
         }
       }
@@ -173,13 +160,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/scuba-physics/tsconfig.lib.json",
-              "projects/scuba-physics/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "lintFilePatterns": ["projects/scuba-physics/**/*.ts", "projects/scuba-physics/**/*.html"]
           }
         }
       }

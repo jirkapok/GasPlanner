@@ -17,11 +17,13 @@ module.exports = {
         "node": true
     },
     "extends": [
-        "prettier",
-        "prettier/@typescript-eslint"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
+        "project": [
+            "tsconfig.json",
+            "e2e/tsconfig.json"
+          ],
         "sourceType": "module"
     },
     "plugins": [

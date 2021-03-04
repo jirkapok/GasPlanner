@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 
@@ -10,7 +10,7 @@ import { Diver } from 'scuba-physics';
     templateUrl: './diver.component.html',
     styleUrls: ['./diver.component.css']
 })
-export class DiverComponent implements OnInit {
+export class DiverComponent{
     public diver: Diver;
     public icon = faUserCog;
 
@@ -20,9 +20,5 @@ export class DiverComponent implements OnInit {
 
     public goBack(): void {
         this.router.navigateByUrl('/');
-    }
-
-    ngOnInit() {
-
     }
 }

@@ -35,11 +35,11 @@
             <div *ngFor="let tank of tanks" class="my-4">
                 <div class="row">
                     <div class="col text-left">{{ tank.name }}</div>
-                    <app-gaslabel [gas]="tank" class="col text-right"></app-gaslabel>
+                    <app-gaslabel [gas]="tank" [showName]="false" class="col text-right"></app-gaslabel>
                 </div>
                 <div class="row">
-                    <div class="col text-left">Gas remaining: {{ tank.endPressure | number:'1.0-0'  }}/{{ tank.startPressure | number:'1.0-0'  }} bar</div>
-                    <div class="col text-right">Rock bottom: <strong>{{ tank.reserve | number:'1.0-0' }}</strong> bar</div>
+                    <small class="col text-left text-muted">Gas remaining: {{ tank.endPressure | number:'1.0-0'  }}/{{ tank.startPressure | number:'1.0-0'  }} bar</small>
+                    <small class="col text-right text-muted">Rock bottom: <strong>{{ tank.reserve | number:'1.0-0' }}</strong> bar</small>
                 </div>
                 <div class="progress gas-bar mt-1 mb-2">
                     <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"

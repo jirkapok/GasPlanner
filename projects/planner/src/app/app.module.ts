@@ -22,7 +22,7 @@ import { WayPointsComponent } from './waypoints/waypoints.component';
 import { ProfileChartComponent } from './profilechart/profilechart.component';
 import { AboutComponent } from './about/about.component';
 import { AppFooterComponent } from './footer/footer.component';
-import { ProfileComponent } from './profile/profile.component';
+import { DepthsComponent } from './depths/depths.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { TankChartComponent } from './tank-chart/tank-chart.component';
@@ -43,7 +43,7 @@ import { TankChartComponent } from './tank-chart/tank-chart.component';
         ProfileChartComponent,
         AboutComponent,
         AppFooterComponent,
-        ProfileComponent,
+        DepthsComponent,
         TankChartComponent
     ],
     imports: [

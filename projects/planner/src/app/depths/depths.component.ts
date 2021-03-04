@@ -6,11 +6,11 @@ import { StandardGases } from 'scuba-physics';
 import { PlannerService } from '../shared/planner.service';
 
 @Component({
-    selector: 'app-profile',
-    templateUrl: './profile.component.html',
-    styleUrls: ['./profile.component.css']
+    selector: 'app-depths',
+    templateUrl: './depths.component.html',
+    styleUrls: ['./depths.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class DepthsComponent implements OnInit {
     @Input()
     public formValid = true;
     public plan: Plan;

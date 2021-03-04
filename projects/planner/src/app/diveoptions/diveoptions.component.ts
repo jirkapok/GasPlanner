@@ -7,10 +7,10 @@ import { PlannerService } from '../shared/planner.service';
 
 @Component({
     selector: 'app-plan',
-    templateUrl: './plan.component.html',
-    styleUrls: ['./plan.component.css']
+    templateUrl: './diveoptions.component.html',
+    styleUrls: ['./diveoptions.component.css']
 })
-export class PlanComponent implements OnInit {
+export class DiveOptionsComponent implements OnInit {
     @Input()
     public formValid = true;
 

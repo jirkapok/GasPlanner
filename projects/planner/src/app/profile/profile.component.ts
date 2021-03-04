@@ -13,12 +13,13 @@ import { PlannerService } from '../shared/planner.service';
 export class ProfileComponent implements OnInit {
   public plan: Plan;
   public clock = faClock;
-  @Input() public formValid: boolean;
+  @Input() public formValid: boolean = true;
 
-  constructor(private planer: PlannerService) { }
+  constructor(private planer: PlannerService) { 
+    this.plan = this.planer.plan;
+  }
 
   ngOnInit(): void {
-    this.plan = this.planer.plan;
     this.planer.calculate();
   }
 

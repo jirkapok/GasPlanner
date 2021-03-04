@@ -16,12 +16,14 @@ export class GasesComponent implements OnInit {
   public bottleIcon = faBatteryEmpty;
   public plusIcon = faPlusSquare;
   public trashIcon = faTrashAlt;
-  constructor(private planner: PlannerService) { }
-
-  ngOnInit() {
+  
+  constructor(private planner: PlannerService) {
     this.firstTank = this.planner.firstTank;
     this.diver = this.planner.diver;
     this.gasNames = StandardGases.gasNames();
+   }
+
+  ngOnInit() {
   }
 
   public get tanks(): Tank[] {

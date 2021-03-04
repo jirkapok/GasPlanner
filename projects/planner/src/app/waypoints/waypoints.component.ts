@@ -16,12 +16,13 @@ export class WayPointsComponent implements OnInit {
   public hover = faArrowRight;
   public tasks = faTasks;
   public switch = faRandom;
-  private lastSelected: WayPoint;
+  private lastSelected: WayPoint | undefined;
 
-  constructor(private planner: PlannerService) { }
+  constructor(private planner: PlannerService) {
+    this.dive = this.planner.dive;
+   }
 
   ngOnInit() {
-    this.dive = this.planner.dive;
   }
 
   public get isTechnical(): boolean {

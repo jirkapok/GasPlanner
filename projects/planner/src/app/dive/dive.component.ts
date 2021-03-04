@@ -16,6 +16,14 @@ export class DiveComponent implements OnInit {
   public warning = faExclamationTriangle;
   public tasks = faTasks;
 
+  constructor(private planer: PlannerService) {
+    this.dive = this.planer.dive;
+    this.bottomTank = this.planer.firstTank;
+   }
+
+  ngOnInit() {
+  }
+
   public get needsReturn(): boolean {
     return this.planer.plan.needsReturn;
   }
@@ -31,13 +39,6 @@ export class DiveComponent implements OnInit {
   public get descentDuration(): number {
     const diveDescent = Time.toMinutes(this.dive.descent.duration);
     return Math.ceil(diveDescent);
-  }
-
-  constructor(private planer: PlannerService) { }
-
-  ngOnInit() {
-    this.dive = this.planer.dive;
-    this.bottomTank = this.planer.firstTank;
   }
 
   public isHighPpO2(event: Event): boolean {

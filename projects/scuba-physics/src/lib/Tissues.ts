@@ -8,17 +8,17 @@ export class LoadSegment {
     /**
      * Depth in pressure (bars) at beginning of the segment
      */
-    public startPressure: number;
+    public startPressure: number = 0;
 
     /**
      * Duration in seconds of the transition
      */
-    public duration: number;
+    public duration: number = 0;
 
     /**
      * Direction of the swim in bars/second
      */
-    public speed: number;
+    public speed: number = 0;
 }
 
 export class Tissue extends Compartment {

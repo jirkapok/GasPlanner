@@ -19,6 +19,21 @@ export class Options implements GasOptions, DepthOptions {
     /** Gas switch stop length in minutes */
     public gasSwitchDuration: number = 1;
 
+    /**
+     * If true, adds 3 minutes to last stop in 3 meters
+     */
+    public addSafetyStop: boolean;
+
+    /**
+     * Usual Ascent speed used by the diver in metres/minute, default 10 meters/minute.
+     */
+    public ascentSpeed: number;
+
+    /**
+     * Usual descent speed used by the diver in metres/minute, default 20 meters/minute.
+     */
+    public descentSpeed: number;
+
     constructor(
         // Gradient factors in Shearwater
         // Low (45/95)
@@ -58,17 +73,17 @@ export class Options implements GasOptions, DepthOptions {
         /**
          * If true, adds 3 minutes to last stop in 3 meters
          */
-        public addSafetyStop?: boolean,
+        addSafetyStop?: boolean,
 
         /**
          * Usual Ascent speed used by the diver in metres/minute, default 10 meters/minute.
          */
-        public ascentSpeed?: number,
+        ascentSpeed?: number,
 
         /**
          * Usual descent speed used by the diver in metres/minute, default 20 meters/minute.
          */
-        public descentSpeed?: number,
+        descentSpeed?: number,
 
         /**
          * meters above see level, 0 for see level (default)

@@ -13,13 +13,13 @@ export class PlannerService {
   public plan: Plan = new Plan(12, 30, Strategies.ALL);
   public diver: Diver = new Diver(20, 1.4);
   // there always needs to be at least one
-  public tanks: Tank[];
+  public tanks: Tank[] = [];
   public dive: Dive = new Dive();
   private onCalculated = new Subject();
   public calculated = this.onCalculated.asObservable();
   public options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
   private depthConverterFactory = new DepthConverterFactory(this.options);
-  private depthConverter: DepthConverter;
+  private depthConverter: DepthConverter = this.depthConverterFactory.create();
 
   /** only for recreational diver use case */
   public get firstTank(): Tank {

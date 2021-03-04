@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strict": true,
     "baseUrl": "./",
     "module": "es2020",
     "outDir": "./dist/out-tsc",
@@ -12,7 +13,11 @@
     "resolveJsonModule": true,
     "target": "es5",
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "projects/planner/types"
+    ],
+    "types": [
+      "projects/planner/types/plotly.js/index.d.ts"
     ],
     "lib": [
       "es2017",
@@ -27,4 +32,4 @@
       ]
     }
   }
-}
+} 

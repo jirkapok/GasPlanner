@@ -18,16 +18,18 @@ export enum EventType {
 }
 
 export class Event {
-    /** The number of seconds since dive begin the event occurred */
-    public timeStamp: number;
-    /** depth in meters, at which the diver was, when the event occurred */
-    public depth: number;
-    /** purpose of the event to happen */
-    public type: EventType;
-    /** Optional explanation of the event or empty string */
-    public message?: string;
-    /** Optional data associated with the event, e.g. Gas for gas switch */
-    public data?: any;
+    constructor(
+        /** The number of seconds since dive begin the event occurred */
+        public timeStamp: number,
+        /** depth in meters, at which the diver was, when the event occurred */
+        public depth: number,
+        /** purpose of the event to happen */
+        public type: EventType,
+        /** Optional explanation of the event or empty string */
+        public message?: string,
+        /** Optional data associated with the event, e.g. Gas for gas switch */
+        public data?: any
+    ) {}
 }
 
 export class EventsFactory {
@@ -100,7 +102,7 @@ class EventsContext {
 
     constructor(private profile: Segment[], public depthConverter: DepthConverter, private options: Options) {}
 
-    private get previous(): Segment {
+    private get previous(): Segment | null {
         if(this.index > 0) {
             return this.profile[this.index - 1];
         }
@@ -123,7 +125,7 @@ class EventsContext {
         return this.profile[this.index];
     }
 
-    public get next(): Segment {
+    public get next(): Segment | null {
         if(this.index < this.profile.length - 1) {
             return this.profile[this.index + 1];
         }
@@ -205,15 +207,17 @@ export class ProfileEvents {
  * Dive definition point in moment during the dive.
  */
 export class Ceiling {
-    /**
-     * Gets or sets moment in seconds during the dive
-     */
-    public time: number;
+    constructor(
+        /**
+         * Gets or sets moment in seconds during the dive
+         */    
+        public time: number,
 
-    /**
-     * Gets or sets the maximum safe depth to ascent to.
-     */
-    public depth: number;
+        /**
+         * Gets or sets the maximum safe depth to ascent to.
+         */
+        public depth: number
+    ) {}
 }
 
 /**

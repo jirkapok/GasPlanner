@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit  {
   public showDisclaimer = true;
   public exclamation = faExclamationTriangle;
   private dive: Dive;
-  public selectedTimeStamp: string;
+  public selectedTimeStamp: string = '';
 
   public get showResults(): boolean {
     return this.dive.calculated && !this.dive.hasErrors;

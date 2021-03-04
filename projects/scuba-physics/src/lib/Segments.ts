@@ -86,7 +86,7 @@ export class Segments {
     }
 
     public mergeFlat(): Segment[] {
-        const toRemove = [];
+        const toRemove: Segment[] = [];
         for (let index = this.segments.length - 1; index > 0; index--) {
             const segment1 = this.segments[index - 1];
             const segment2 = this.segments[index];

@@ -229,7 +229,7 @@ describe('Gases', () => {
 
         it('Trimix 18/35 for 40m', () => {
           bestGasOptions.currentDepth = 40;
-          bestGasOptions.currentGas = null;
+          bestGasOptions.currentGas = new Gas(0, 0);
           const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
           expect(found).toBe(StandardGases.trimix1835);
         });
@@ -314,10 +314,6 @@ describe('Gases', () => {
   });
 
   describe('Gas composition equality', () => {
-    it('Equals to null returns false', () => {
-      expect(StandardGases.air.compositionEquals(null)).toBeFalsy();
-    });
-
     it('Equals to the same content of oxygen and helium returns true', () => {
       const other = new Gas(.21, 0);
       expect(StandardGases.air.compositionEquals(other)).toBeTruthy();

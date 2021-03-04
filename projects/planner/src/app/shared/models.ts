@@ -7,7 +7,7 @@ export enum Strategies {
 }
 
 export class Plan {
-    public noDecoTime: number;
+    public noDecoTime: number = 0;
 
     constructor(public duration: number, public depth: number, public strategy: Strategies) {
     }
@@ -43,8 +43,8 @@ export class Dive {
     public notEnoughTime = false;
     public noDecoExceeded = false;
     public wayPoints: WayPoint[] = [];
-    public ceilings: Ceiling[];
-    public events: Event[];
+    public ceilings: Ceiling[] = [];
+    public events: Event[] = [];
 
     public get totalDuration(): number {
         if (this.wayPoints.length === 0) {
@@ -95,9 +95,9 @@ export class WayPoint {
 
     public selected = false;
 
-    private action: SwimAction;
+    private action: SwimAction = SwimAction.hover;
 
-    private _gasName: string;
+    private _gasName: string = '';
 
     public get gasName(): string {
       return this._gasName;
@@ -112,12 +112,12 @@ export class WayPoint {
         this.endTime = Math.round(duration * 100) / 100;
         this._endDepth = newDepth;
         this._startDepth = previousDepth;
-        this.updateAction();
+        this.updateSwimAction();
     }
 
-    private updateAction(): void {
+    private updateSwimAction(): void {
         this.action = SwimAction.hover;
-
+        
         if (this.startDepth < this.endDepth) {
             this.action = SwimAction.descent;
         }
@@ -166,7 +166,7 @@ export class WayPoint {
         const end = this.endTime + segment.duration;
         result.endTime = Math.round(end * 100) / 100;
         result._startDepth = this.endDepth;
-        result.updateAction();
+        result.updateSwimAction();
         return result;
     }
 

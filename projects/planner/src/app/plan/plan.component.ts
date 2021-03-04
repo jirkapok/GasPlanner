@@ -21,12 +21,13 @@ export class PlanComponent implements OnInit {
   public plan: Plan;
   public strategy = this.AllUsable;
   public clock = faClock;
-  @Input() public formValid: boolean;
+  @Input() public formValid: boolean = true;
 
-  constructor(private planner: PlannerService) { }
+  constructor(private planner: PlannerService) { 
+    this.plan = this.planner.plan;
+  }
 
   ngOnInit(): void {
-    this.plan = this.planner.plan;
     this.reset();
   }
 

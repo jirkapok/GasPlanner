@@ -7,7 +7,8 @@
   },
   "files": [
     "main.ts",
-    "polyfills.ts"
+    "polyfills.ts",
+    "types/plotly.js/index.d.ts"
   ],
   "include": [
     "projects/planner/src/**/*.d.ts"

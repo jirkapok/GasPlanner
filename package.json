@@ -34,7 +34,7 @@
     "core-js": "^3.6.4",
     "jquery": "^3.5.1",
     "ngx-custom-validators": "^8.0.0",
-    "plotly.js": "^1.57.1",
+    "plotly.js": "file:projects/planner/src/types/plotly.js",
     "popper.js": "^1.16.1",
     "rxjs": "^6.5.4",
     "scuba-physics": "file:dist/scuba-physics",

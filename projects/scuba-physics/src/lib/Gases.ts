@@ -366,9 +366,10 @@ export class StandardGases {
     }
 
     /** Case sensitive search. If nothing found returns null */
-    public static byName(name: string): Gas {
+    public static byName(name: string): Gas | null {
         if(StandardGases.map.has(name)) {
-            return StandardGases.map.get(name);
+            const found = StandardGases.map.get(name);
+            return found ?? null;
         }
 
         const match = StandardGases.namesRegEx.exec(name);

@@ -22,7 +22,7 @@ export class MainMenuComponent {
   }
 
   @HostListener('window:beforeinstallprompt', ['$event'])
-  public onbeforeinstallprompt(e) {
+  public onbeforeinstallprompt(e: Event) {
     e.preventDefault();
     this.deferredPrompt = e;
     this.showInstallButton = true;
@@ -34,7 +34,7 @@ export class MainMenuComponent {
     if(!!this.deferredPrompt) {
       this.deferredPrompt.prompt();
       this.deferredPrompt.userChoice
-        .then((choiceResult) => {
+        .then((choiceResult: any) => {
           this.deferredPrompt = null;
         });
     }

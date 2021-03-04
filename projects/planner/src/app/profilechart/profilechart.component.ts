@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/cor
 import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint } from '../shared/models';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
-import * as Plotly from 'plotly.js/dist/plotly-basic.min.js';
+import * as Plotly from 'plotly.js';
 import { Subscription } from 'rxjs';
 import { EventType, Time, Gas, StandardGases } from 'scuba-physics';
 
@@ -17,26 +17,22 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
   public tasks = faTasks;
   private readonly elementName = 'diveplot';
 
-  @Output()
-  public chartHover: EventEmitter<string> = new EventEmitter<string>();
-
-  public scaleWidth(x: number, graphWidth: number): number {
-    return x * graphWidth / this.dive.totalDuration;
-  }
-
-  public scaleHeight(y: number, graphHeight: number): number {
-    return y * (graphHeight - 10) / this.dive.maxDepth;
-  }
-
-  public get noDecoTime(): number {
-    return this.planer.plan.noDecoTime;
-  }
-
   constructor(private planer: PlannerService) {
+    this.dive = this.planer.dive;
     this.subscription = this.planer.calculated.subscribe(() => {
         this.plotChart();
     });
    }
+
+   @Output()
+   public chartHover: EventEmitter<string> = new EventEmitter<string>();
+ 
+   ngOnInit() {
+    this.plotChart();
+    const chartElement: any = document.getElementById(this.elementName);
+    chartElement.on('plotly_hover', (e: any) => this.plotlyHover(e));
+    chartElement.on('plotly_click', (e: any) => this.plotlyHover(e));
+  }
 
    ngOnDestroy() {
     this.subscription.unsubscribe();
@@ -48,6 +44,18 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     }
 
     return '%M:%S';
+  }
+
+  public scaleWidth(x: number, graphWidth: number): number {
+    return x * graphWidth / this.dive.totalDuration;
+  }
+
+  public scaleHeight(y: number, graphHeight: number): number {
+    return y * (graphHeight - 10) / this.dive.maxDepth;
+  }
+
+  public get noDecoTime(): number {
+    return this.planer.plan.noDecoTime;
   }
 
   public plotlyHover(data: any)  {
@@ -87,8 +95,8 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
       editable: false
     };
 
-    const xValues = [];
-    const yValues = [];
+    const xValues: Date[] = [];
+    const yValues: number[] = [];
 
     const data = [{
       x: xValues,
@@ -106,8 +114,8 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
 
     Plotly.react(this.elementName, data, layout, options);
 
-    const xCeilingValues = [];
-    const yCeilingValues = [];
+    const xCeilingValues:Date[] = [];
+    const yCeilingValues: number[] = [];
 
     // possible performance optimization = remove all waypoints, where ceiling = 0 and depth didn't change
     this.dive.ceilings.forEach((item, index, ceilings) => {
@@ -135,15 +143,15 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
   private plotEvents(): void {
     const x: Date[] = [];
     const y: number[] = [];
-    const labels:string[] = [];
+    const labels: string[] = [];
 
     const dataEvents = [{
       x: x,
       y: y,
-      label: labels,
+      labels: labels,
       text: labels,
       type: 'scatter',
-      mode: 'markers+text',
+      mode: 'text+markers',
       fill: 'tozeroy',
       name: 'events',
       hovertemplate: '%{x}<br>%{text} at %{y}m',
@@ -204,13 +212,5 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     // fix end of the dive
     xValues.push(Time.toDate(item.endTime));
     yValues.push(item.endDepth);
-  }
-
-  ngOnInit() {
-    this.dive = this.planer.dive;
-    this.plotChart();
-    const chartElement: any = document.getElementById(this.elementName);
-    chartElement.on('plotly_hover', (e) => this.plotlyHover(e));
-    chartElement.on('plotly_click', (e) => this.plotlyHover(e));
   }
 }

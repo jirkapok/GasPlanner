@@ -13,13 +13,16 @@ import { Diver } from 'scuba-physics';
 export class DiverComponent implements OnInit {
   public diver: Diver;
   public user = faUser;
-  constructor(private planer: PlannerService, private router: Router) { }
+  
+  constructor(private planer: PlannerService, private router: Router) {
+    this.diver = this.planer.diver;
+  }
 
   public goBack(): void {
     this.router.navigateByUrl('/');
   }
 
   ngOnInit() {
-    this.diver = this.planer.diver;
+
   }
 }

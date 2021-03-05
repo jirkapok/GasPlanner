@@ -10,7 +10,7 @@ export class TankChartComponent {
 
 
     @Input()
-    public tank: Tank = new Tank(0, 0, 0);
+    public tank: Tank = Tank.createDefault();
 
     constructor() { }
 

@@ -202,7 +202,7 @@ export class GasMixtures {
     /**
      * Calculates equivalent narcotic depth, assuming both nitrogen and oxygen as narcotic.
      * https://en.wikipedia.org/wiki/Equivalent_narcotic_depth
-     * 
+     *
      * @param fO2 Fraction of oxygen in gas mix (0-1).
      * @param fN2 Fraction of nitrogen in gas mix (0-1).
      * @param depth Depth in bars.
@@ -286,17 +286,12 @@ export class Gas {
 }
 
 export class StandardGases {
-    private static readonly airName = 'Air';
-    private static readonly oxygenName = 'Oxygen';
-
-    /** Parse EanXX group as oxygen of nitrox (e.g. Ean50) or O2 and He fractions of trimix (e.g. 10/70) */
-    private static readonly namesRegEx = /[EAN](?<fO2>\d{2})|(?<fO2b>\d{2})\/(?<fHe>\d{2})/i;
-    
+    /** Relative partial pressure of oxygen in air at surface */
+    public static readonly o2InAir = 0.209;
     // for ppo2 1.6 test data (even not used all gases with these values)
 
-    // TODO consider Air precise values as 0.209,791
     /** 65.5m - 0m */
-    public static readonly air = new Gas(0.21, 0);
+    public static readonly air = new Gas(StandardGases.o2InAir, 0);
 
     public static readonly ean32 = new Gas(0.32, 0);
     public static readonly ean36 = new Gas(0.36, 0);
@@ -318,6 +313,12 @@ export class StandardGases {
 
     /** 5.9m - 0m */
     public static readonly oxygen = new Gas(1, 0);
+
+    private static readonly airName = 'Air';
+    private static readonly oxygenName = 'Oxygen';
+
+    /** Parse EanXX group as oxygen of nitrox (e.g. Ean50) or O2 and He fractions of trimix (e.g. 10/70) */
+    private static readonly namesRegEx = /[EAN](?<fO2>\d{2})|(?<fO2b>\d{2})\/(?<fHe>\d{2})/i;
 
     private static readonly map = new Map([
         [StandardGases.airName, StandardGases.air],
@@ -387,8 +388,9 @@ export class StandardGases {
                 const trimO2 = Number(match[2]) / 100;
                 const trimHe = Number(match[3]) / 100;
 
-                if(trimO2 > 0 && trimHe > 0)
-                return new Gas(trimO2, trimHe);
+                if(trimO2 > 0 && trimHe > 0) {
+                    return new Gas(trimO2, trimHe);
+                }
             }
         }
 

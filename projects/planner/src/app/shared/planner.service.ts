@@ -33,13 +33,14 @@ export class PlannerService {
 
     public resetToDefaultGases(): void {
         this.tanks = [
-            new Tank(15, 200, 21)
+            Tank.createDefault()
         ];
     }
 
     public addGas(): void {
-        const newGas = new Tank(11, 200, 21);
-        this.tanks.push(newGas);
+        const newTank = Tank.createDefault();
+        newTank.size = 11;
+        this.tanks.push(newTank);
         this.calculate();
     }
 

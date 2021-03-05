@@ -9,7 +9,7 @@ describe('Tank', () => {
     let tank: Tank;
 
     beforeEach(() => {
-        tank = new Tank(10, 200, 21);
+        tank = Tank.createDefault();
     });
 
     describe('Full', () => {

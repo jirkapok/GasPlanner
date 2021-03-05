@@ -10,7 +10,7 @@ import { Tank } from 'scuba-physics';
 export class GaslabelComponent {
 
     @Input()
-    public gas: Tank = new Tank(0, 0, 0);
+    public gas: Tank = Tank.createDefault();
 
     @Input()
     public showName = true;

@@ -38,8 +38,8 @@ describe('Buhlmann Algorithm', () => {
       it('Fresh water', () => {
         // 0: depth, 1: ndl
         const noDecoLimitTestCases = [
-          [10, 343], // From which depth to start count with deco?
-          [12, 162],
+          [10, 337], // From which depth to start count with deco?
+          [12, 161],
           [15, 85],
           [18, 57],
           [21, 40],
@@ -58,8 +58,8 @@ describe('Buhlmann Algorithm', () => {
 
       it('Fresh water with gradient factor 40/85', () => {
         const noDecoLimitTestCases = [
-          [10, 209], // From which depth to start count with deco?
-          [12, 112],
+          [10, 206], // From which depth to start count with deco?
+          [12, 111],
           [15, 65],
           [18, 41],
           [21, 28],
@@ -82,12 +82,12 @@ describe('Buhlmann Algorithm', () => {
 
       it('Salt water', () => {
         const noDecoLimitTestCasesSalt = [
-          [10, 293 ], // From which depth to start count with deco?
-          [12, 149],
+          [10, 289 ], // From which depth to start count with deco?
+          [12, 148],
           [15, 80],
-          [18, 54],
-          [21, 38],
-          [24, 27],
+          [18, 53],
+          [21, 37],
+          [24, 26],
           [27, 20],
           [30, 15],
           [33, 13],
@@ -148,16 +148,16 @@ describe('Buhlmann Algorithm', () => {
       it('Salinity is applied', () => {
         options.isFreshWater = true;
         const planText = calculatePlan(gases, segments);
-  
-        const expectedPlan = '0,40,120; 40,40,480; 40,3,222; 3,3,57; 3,0,18;';
+
+        const expectedPlan = '0,40,120; 40,40,480; 40,3,222; 3,3,58; 3,0,18;';
         expect(planText).toBe(expectedPlan);
       });
 
       it('Altitude is applied', () => {
         options.altitude = 1000;
         const planText = calculatePlan(gases, segments);
-  
-        const expectedPlan = '0,40,120; 40,40,480; 40,9,186; 9,9,7; 9,6,18; 6,6,50; 6,3,18; 3,3,77; 3,0,18;';
+
+        const expectedPlan = '0,40,120; 40,40,480; 40,9,186; 9,9,8; 9,6,18; 6,6,50; 6,3,18; 3,3,78; 3,0,18;';
         expect(planText).toBe(expectedPlan);
       });
     });
@@ -202,7 +202,7 @@ describe('Buhlmann Algorithm', () => {
       const planText = calculatePlan(gases, segments);
 
       const expectedPlan = '0,30,90; 30,30,1410; 30,12,108; 12,12,60; 12,9,18; ' +
-                           '9,9,60; 9,6,18; 6,6,180; 6,3,18; 3,3,480; 3,0,18;';
+                           '9,9,60; 9,6,18; 6,6,180; 6,3,18; 3,3,540; 3,0,18;';
       expect(planText).toBe(expectedPlan);
     });
 
@@ -232,7 +232,7 @@ describe('Buhlmann Algorithm', () => {
       segments.addFlat(50, StandardGases.trimix2135, 22.5 * Time.oneMinute);
 
       const planText = calculatePlan(gases, segments);
-      
+
       const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
                            '18,18,60; 18,15,18; 15,15,120; 15,12,18; 12,12,120; 12,9,18; ' +
                            '9,9,240; 9,6,18; 6,6,360; 6,3,18; 3,3,960; 3,0,18;';
@@ -248,7 +248,7 @@ describe('Buhlmann Algorithm', () => {
       const segments = new Segments();
       segments.add(0, 50, StandardGases.trimix2135, 2.5 * Time.oneMinute);
       segments.addFlat(50, StandardGases.trimix2135, 22.5 * Time.oneMinute);
-      
+
       options.roundStopsToMinutes = false;
       const planText = calculatePlan(gases, segments);
 
@@ -306,7 +306,7 @@ describe('Buhlmann Algorithm', () => {
       });
     });
 
-    
+
     // TODO add algorithm test cases:
     // A: where deco is increased even during ascent <= do we have profile for this use case?
 
@@ -315,7 +315,7 @@ describe('Buhlmann Algorithm', () => {
     // D: 3m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
 
     // E: Gases: 18/45, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
-    
+
 
     // TODO multi level dives test cases:
     // A: where first segment gets deco and second segment breaks ceiling before we start ascent. Add this to warnings.

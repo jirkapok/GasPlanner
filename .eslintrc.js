@@ -6,7 +6,7 @@ It represents the closest reasonable ESLint configuration to this
 project's original TSLint configuration.
 
 We recommend eventually switching this configuration to extend from
-the recommended rulesets in typescript-eslint. 
+the recommended rulesets in typescript-eslint.
 https://github.com/typescript-eslint/tslint-to-eslint-config/blob/master/docs/FAQs.md
 
 Happy linting! 💖
@@ -14,9 +14,13 @@ Happy linting! 💖
 module.exports = {
     "env": {
         "browser": true,
-        "node": true
+        "node": true,
+        "jasmine": true
     },
     "extends": [
+        "angular",
+        "eslint:recommended",
+        'plugin:jasmine/recommended'
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -30,7 +34,8 @@ module.exports = {
         "eslint-plugin-import",
         "@angular-eslint/eslint-plugin",
         "@typescript-eslint",
-        "@typescript-eslint/tslint"
+        "@typescript-eslint/tslint",
+        "jasmine"
     ],
     "rules": {
         "@angular-eslint/component-class-suffix": "error",

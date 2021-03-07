@@ -69,7 +69,7 @@ describe('Gases', () => {
                 expect(found).toBe('EAN32');
             });
 
-            it('Oxygen', () => {
+            it('Name Oxygen', () => {
                 const found = StandardGases.nameFor(1);
                 expect(found).toBe('Oxygen');
             });
@@ -106,12 +106,12 @@ describe('Gases', () => {
                 expect(found).toEqual(new Gas(.28, 0));
             });
 
-            it('Air', () => {
+            it('Name Air', () => {
                 const found = StandardGases.byName('Air');
                 expect(found).toEqual(StandardGases.air);
             });
 
-            it('Trimix 10/70', () => {
+            it('Name Trimix 10/70', () => {
                 const found = StandardGases.byName('10/70');
                 expect(found).toEqual(StandardGases.trimix1070);
             });

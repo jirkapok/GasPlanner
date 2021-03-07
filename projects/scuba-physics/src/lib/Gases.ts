@@ -116,15 +116,15 @@ export class Gases {
         return this.bottomGases.length >= 1;
     }
 
-    public addBottomGas(gas: Gas) {
+    public addBottomGas(gas: Gas): void {
         this.bottomGases.push(gas);
     }
 
-    public addDecoGas(gas: Gas) {
+    public addDecoGas(gas: Gas): void {
         this.decoGases.push(gas);
     }
 
-    public isRegistered(gas: Gas): Boolean {
+    public isRegistered(gas: Gas): boolean {
         return this.bottomGases.includes(gas) || this.decoGases.includes(gas);
     }
 }
@@ -244,7 +244,7 @@ export class Gas {
 
     constructor(public fO2: number, public fHe: number) { }
 
-    public copy() {
+    public copy(): Gas {
         return new Gas(this.fO2, this.fHe);
     }
 
@@ -375,8 +375,8 @@ export class StandardGases {
 
         const match = StandardGases.namesRegEx.exec(name);
 
-        if(!!match) {
-            if(!!match[1]) {
+        if(match) {
+            if(match[1]) {
                 const parsedO2 = Number(match[1]) / 100;
 
                 if(parsedO2 > 0) {

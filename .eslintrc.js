@@ -18,9 +18,12 @@ module.exports = {
         "jasmine": true
     },
     "extends": [
-        "angular",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
         "eslint:recommended",
-        'plugin:jasmine/recommended'
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:jasmine/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -38,6 +41,7 @@ module.exports = {
         "jasmine"
     ],
     "rules": {
+        "jasmine/new-line-before-expect": "off",
         "@angular-eslint/component-class-suffix": "error",
         "@angular-eslint/component-selector": [
             "error",

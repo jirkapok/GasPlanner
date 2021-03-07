@@ -138,30 +138,32 @@ describe('Gases', () => {
         });
     });
 
-    describe('Gases', () => {
+    describe('Collection', () => {
+        let gases: Gases;
+
+        beforeEach(() => {
+            gases = new Gases();
+        });
+
         describe('Is Registered', () => {
             it('Gas as bottom gas is registered', () => {
-                const gases = new Gases();
                 gases.addBottomGas(StandardGases.air);
                 const registered = gases.isRegistered(StandardGases.air);
                 expect(registered).toBeTrue();
             });
 
             it('Gas as deco, gas is registered', () => {
-                const gases = new Gases();
                 gases.addDecoGas(StandardGases.air);
                 const registered = gases.isRegistered(StandardGases.air);
                 expect(registered).toBeTrue();
             });
 
             it('No gases, gas is not registered', () => {
-                const gases = new Gases();
                 const registered = gases.isRegistered(StandardGases.air);
                 expect(registered).toBeFalse();
             });
 
             it('Gas is not registered', () => {
-                const gases = new Gases();
                 gases.addDecoGas(StandardGases.ean50);
                 const registered = gases.isRegistered(StandardGases.air);
                 expect(registered).toBeFalse();
@@ -181,7 +183,6 @@ describe('Gases', () => {
             });
 
             it('The only deco gas is found', () => {
-                const gases = new Gases();
                 gases.addBottomGas(StandardGases.air);
                 gases.addDecoGas(StandardGases.ean50);
                 bestGasOptions.currentDepth = 20;
@@ -190,7 +191,6 @@ describe('Gases', () => {
             });
 
             it('No deco gas, bottom gas is found', () => {
-                const gases = new Gases();
                 gases.addBottomGas(StandardGases.air);
                 bestGasOptions.currentDepth = 20;
                 const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
@@ -198,7 +198,6 @@ describe('Gases', () => {
             });
 
             it('Multiple deco gases, best is found', () => {
-                const gases = new Gases();
                 gases.addBottomGas(StandardGases.air);
                 gases.addDecoGas(StandardGases.ean50);
                 gases.addDecoGas(StandardGases.trimix1835);
@@ -208,12 +207,13 @@ describe('Gases', () => {
             });
 
             describe('By content', () => {
-                const gases = new Gases();
-                gases.addBottomGas(StandardGases.air);
-                gases.addBottomGas(StandardGases.ean50);
-                gases.addBottomGas(StandardGases.trimix1835);
-                gases.addBottomGas(StandardGases.trimix1070);
-                gases.addBottomGas(StandardGases.oxygen);
+                beforeEach(() => {
+                    gases.addBottomGas(StandardGases.air);
+                    gases.addBottomGas(StandardGases.ean50);
+                    gases.addBottomGas(StandardGases.trimix1835);
+                    gases.addBottomGas(StandardGases.trimix1070);
+                    gases.addBottomGas(StandardGases.oxygen);
+                });
 
                 it('Oxygen for 6m', () => {
                     bestGasOptions.currentDepth = 6;
@@ -253,7 +253,7 @@ describe('Gases', () => {
         });
     });
 
-    describe('Gases validator', () => {
+    describe('Validator', () => {
         const surfacePressure = freshWaterConverter.surfacePressure;
         it('No gas defined', () => {
             const messages = GasesValidator.validate(new Gases(), options, surfacePressure);

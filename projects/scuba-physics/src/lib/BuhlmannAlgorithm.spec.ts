@@ -2,7 +2,7 @@ import { Time } from './Time';
 import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
 import { Gas, Gases, StandardGases } from './Gases';
 import { Segment, Segments } from './Segments';
-import * as j from "jasmine";
+import 'jasmine';
 
 describe('Buhlmann Algorithm', () => {
     describe('No decompression times', () => {
@@ -31,7 +31,7 @@ describe('Buhlmann Algorithm', () => {
                     const depth = testCase[0];
                     options.isFreshWater = isFreshWater;
                     const ndl = algorithm.noDecoLimit(depth, StandardGases.air, options);
-                    expect(ndl).toBe(testCase[1], 'No deco limit for "' + depth + '" failed');
+                    expect(ndl).toBe(testCase[1], `No deco limit for ${depth} failed`);
                 });
             };
 
@@ -124,7 +124,7 @@ describe('Buhlmann Algorithm', () => {
         const concatenatePlan = (decoPlan: Segment[]): string => {
             let planText = '';
             decoPlan.forEach(segment => {
-                planText += segment.startDepth + ',' + segment.endDepth + ',' + segment.duration + '; ';
+                planText += `${segment.startDepth},${segment.endDepth},${segment.duration}; `;
             });
 
             return planText.trim();

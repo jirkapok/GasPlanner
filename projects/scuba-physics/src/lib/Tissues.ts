@@ -8,17 +8,17 @@ export class LoadSegment {
     /**
      * Depth in pressure (bars) at beginning of the segment
      */
-    public startPressure: number = 0;
+    public startPressure = 0;
 
     /**
      * Duration in seconds of the transition
      */
-    public duration: number = 0;
+    public duration = 0;
 
     /**
      * Direction of the swim in bars/second
      */
-    public speed: number = 0;
+    public speed = 0;
 }
 
 export class Tissue extends Compartment {
@@ -30,8 +30,8 @@ export class Tissue extends Compartment {
     private _b = 0;
 
     constructor(compartment: Compartment, surfacePressure: number) {
-       super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
-             compartment.HeHalfTime, compartment.heA, compartment.heB);
+        super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
+            compartment.heHalfTime, compartment.heA, compartment.heB);
 
         const waterVapourPressure = 0.0627; // as constant for body temperature 37°C
         this._pN2 = GasMixtures.partialPressure(surfacePressure, 0.79) - waterVapourPressure;
@@ -72,7 +72,7 @@ export class Tissue extends Compartment {
 
     public load(segment: LoadSegment, gas: Gas): number {
         this._pN2 = this.loadGas(segment, gas.fN2, this.pN2, this.n2HalfTime);
-        this._pHe = this.loadGas(segment, gas.fHe, this.pHe, this.HeHalfTime);
+        this._pHe = this.loadGas(segment, gas.fHe, this.pHe, this.heHalfTime);
         const prevTotal = this.pTotal;
         this._pTotal = this.pN2 + this.pHe;
 
@@ -104,7 +104,7 @@ export class Tissue extends Compartment {
      */
     private schreinerEquation(pBegin: number, pGas: number, time: number, halfTime: number, gasRate: number): number {
         const Log2_60 = 1.155245301e-02; // Math.log(2) / 60
-        const timeConstant = Log2_60  / halfTime;
+        const timeConstant = Log2_60 / halfTime;
         const exp = Math.exp(-timeConstant * time);
         return (pGas + (gasRate * (time - (1.0 / timeConstant))) - ((pGas - pBegin - (gasRate / timeConstant)) * exp));
     }
@@ -121,12 +121,12 @@ export class Tissues {
         }
     }
 
-     /**
-     * Returns pressure in bars of the depth representing maximum ceiling of all tissues.
-     *
-     * @param gfLow Gradient factor low in range 0-1
-     * @returns Zero in case there is no ceiling, otherwise ceiling pressure in bars
-     */
+    /**
+    * Returns pressure in bars of the depth representing maximum ceiling of all tissues.
+    *
+    * @param gfLow Gradient factor low in range 0-1
+    * @returns Zero in case there is no ceiling, otherwise ceiling pressure in bars
+    */
     public ceiling(gfLow: number): number {
         let ceiling = 0;
 

@@ -1,10 +1,10 @@
-import { BuhlmannAlgorithm, Options } from "./BuhlmannAlgorithm";
-import { DepthConverter } from "./depth-converter";
-import { Diver } from "./Diver";
-import { Gas, Gases, StandardGases } from "./Gases";
-import { CalculatedProfile } from "./Profile";
-import { Segment, Segments, SegmentsFactory } from "./Segments";
-import { Time } from "./Time";
+import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
+import { DepthConverter } from './depth-converter';
+import { Diver } from './Diver';
+import { Gas, Gases, StandardGases } from './Gases';
+import { CalculatedProfile } from './Profile';
+import { Segment, Segments, SegmentsFactory } from './Segments';
+import { Time } from './Time';
 
 export class Tank {
     public consumed = 0;
@@ -37,7 +37,7 @@ export class Tank {
     public get o2(): number {
         const current = this._gas.fO2 * 100;
 
-        if(this.isInAirRange(current)) {
+        if (this.isInAirRange(current)) {
             return Math.round(this.gas.fO2 * 100);
         }
 
@@ -45,8 +45,8 @@ export class Tank {
     }
 
     /** o2 content in percent adjusted to iterate to Air*/
-    public set o2(newValue) {
-        if(this.isInAirRange(newValue)) {
+    public set o2(newValue: number) {
+        if (this.isInAirRange(newValue)) {
             this.gas.fO2 = StandardGases.o2InAir;
         } else {
             this._gas.fO2 = newValue / 100;
@@ -64,7 +64,7 @@ export class Tank {
     public assignStandardGas(standard: string): void {
         const found = StandardGases.byName(standard);
 
-        if(!found) {
+        if (!found) {
             return;
         }
 
@@ -157,24 +157,52 @@ export class Consumption {
 
     constructor(private depthConverter: DepthConverter) { }
 
+    private static toSegments(segments: Segment[]): ConsumptionSegment[] {
+        const converted: ConsumptionSegment[] = [];
+
+        segments.forEach((segment, index, source) => {
+            const convertedSegment = new ConsumptionSegment(segment.duration, segment.endDepth, segment.startDepth);
+            converted.push(convertedSegment);
+        });
+
+        return converted;
+    }
+
+    private static calculateDecompression(planedDepth: number, duration: number, tanks: Tank[], options: Options): CalculatedProfile {
+        const bGases = new Gases();
+        const bGas = tanks[0].gas;
+        bGases.addBottomGas(bGas);
+
+        // everything except first gas is considered as deco gas
+        tanks.slice(1, tanks.length).forEach((gas, index, items) => {
+            const decoGas = gas.gas;
+            bGases.addDecoGas(decoGas);
+        });
+
+        const segments: Segments = SegmentsFactory.createForPlan(planedDepth, duration, bGas, options);
+        const algorithm = new BuhlmannAlgorithm();
+        const profile = algorithm.calculateDecompression(options, bGases, segments);
+        return profile;
+    }
+
     public calculateMaxBottomTime(plannedDepth: number, tank: Tank, diver: Diver, options: Options, noDecoTime: number): number {
         const recreDuration = this.nodecoProfileBottomTime(plannedDepth, tank, diver, options);
         const noDecoSeconds = Time.toSeconds(noDecoTime);
 
-        if(recreDuration > noDecoSeconds) {
-           return this.estimateMaxDecotime(plannedDepth, tank, options, diver, noDecoTime);
+        if (recreDuration > noDecoSeconds) {
+            return this.estimateMaxDecotime(plannedDepth, tank, options, diver, noDecoTime);
         }
 
         const minutes = Time.toMinutes(recreDuration);
         return Math.floor(minutes);
-      }
+    }
 
     private nodecoProfileBottomTime(plannedDepth: number, tank: Tank, diver: Diver, options: Options): number {
         const template = SegmentsFactory.buildNoDecoProfile(plannedDepth, tank.gas, options);
         const recreProfile = Consumption.toSegments(template);
-        let ascent = SegmentsFactory.ascent(template);
-        let rockBottom = this.calculateRockBottom(ascent, tank, diver);
-        let consumed = this.consumed(recreProfile, tank, diver.sac);
+        const ascent = SegmentsFactory.ascent(template);
+        const rockBottom = this.calculateRockBottom(ascent, tank, diver);
+        const consumed = this.consumed(recreProfile, tank, diver.sac);
         const remaining = tank.startPressure - consumed - rockBottom;
 
         if (remaining > 0) {
@@ -210,41 +238,13 @@ export class Consumption {
         return duration - 1; // we already passed the way
     }
 
-    private static toSegments(segments: Segment[]): ConsumptionSegment[] {
-        const converted: ConsumptionSegment[] = [];
-
-        segments.forEach((segment, index, source) => {
-            const convertedSegment = new ConsumptionSegment(segment.duration, segment.endDepth, segment.startDepth);
-            converted.push(convertedSegment);
-        });
-
-        return converted;
-    }
-
-    private static calculateDecompression(planedDepth: number, duration: number, tanks: Tank[], options: Options): CalculatedProfile {
-        const bGases = new Gases();
-        const bGas = tanks[0].gas;
-        bGases.addBottomGas(bGas);
-
-        // everything except first gas is considered as deco gas
-        tanks.slice(1, tanks.length).forEach((gas, index, items) => {
-            const decoGas = gas.gas;
-            bGases.addDecoGas(decoGas);
-        });
-
-        const segments: Segments = SegmentsFactory.createForPlan(planedDepth, duration, bGas, options)
-        const algorithm = new BuhlmannAlgorithm();
-        const profile = algorithm.calculateDecompression(options, bGases, segments);
-        return profile;
-    }
-
     private hasEnoughGas(tank: Tank, consumed: number, rockBottom: number): boolean {
         return tank.startPressure - consumed >= rockBottom;
     }
 
     public calculateRockBottom(ascent: Segment[], tank: Tank, diver: Diver): number {
-      const conSegments = Consumption.toSegments(ascent);
-      return this.rockBottom(conSegments, tank, diver);
+        const conSegments = Consumption.toSegments(ascent);
+        return this.rockBottom(conSegments, tank, diver);
     }
 
     private rockBottom(ascent: ConsumptionSegment[], tank: Tank, diver: Diver): number {

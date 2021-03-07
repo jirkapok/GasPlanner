@@ -1,4 +1,4 @@
-import { Tank } from "./Tanks";
+import { Tank } from './Tanks';
 
 export class Diver {
     /** default descent speed value in meter/min. */

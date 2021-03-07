@@ -3,21 +3,21 @@ import { Gases, Gas, GasOptions, GasesValidator, BestGasOptions } from './Gases'
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory, DepthOptions } from './depth-converter';
 import { Time } from './Time';
-import { CalculatedProfile, Ceiling, Event, EventsFactory } from './Profile';
+import { CalculatedProfile, Ceiling, Event } from './Profile';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
 
 export class Options implements GasOptions, DepthOptions {
     /**
      * meters above see level, 0 for see level (default)
      */
-    public altitude: number = 0;
+    public altitude = 0;
 
     /** If true (default) deco stops are rounded up to whole minutes (I.e. longer ascent).
      *  Otherwise, length of stops is not rounded and profile generates precise stops in seconds .  */
-    public roundStopsToMinutes: boolean = true;
+    public roundStopsToMinutes = true;
 
     /** Gas switch stop length in minutes */
-    public gasSwitchDuration: number = 1;
+    public gasSwitchDuration = 1;
 
     /**
      * If true, adds 3 minutes to last stop in 3 meters
@@ -114,7 +114,7 @@ class DepthLevels {
         if(rounded === currentDepth) {
             return currentDepth - DepthConverter.decoStopDistance;
         }
-        
+
         return rounded;
     }
 
@@ -244,7 +244,7 @@ export class BuhlmannAlgorithm {
         if (!newGas || context.currentGas.compositionEquals(newGas)) {
             return;
         }
-        
+
         context.currentGas = newGas;
         const duration = context.options.gasSwitchDuration * Time.oneMinute;
         const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, duration);

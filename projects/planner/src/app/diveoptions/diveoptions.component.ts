@@ -14,15 +14,15 @@ export class DiveOptionsComponent implements OnInit {
     @Input()
     public formValid = true;
 
-    public readonly AllUsable = 'All usable';
-    public readonly HalfUsable = 'Half usable';
-    public readonly ThirdUsable = 'Thirds usable';
-    public readonly Low = 'Low (45/95)';
-    public readonly Medium = 'Medium (40/85)';
-    public readonly High = 'High (30/75)';
-    public conservatism = this.Medium;
+    public readonly allUsableName = 'All usable';
+    public readonly halfUsableName = 'Half usable';
+    public readonly thirdUsableName = 'Thirds usable';
+    public readonly lowName = 'Low (45/95)';
+    public readonly mediumName = 'Medium (40/85)';
+    public readonly highName = 'High (30/75)';
+    public conservatism = this.mediumName;
     public plan: Plan;
-    public strategy = this.AllUsable;
+    public strategy = this.allUsableName;
     public icon = faCog;
 
 
@@ -51,20 +51,20 @@ export class DiveOptionsComponent implements OnInit {
         }
     }
 
-    public lowConservatism() {
-        this.conservatism = this.Low;
+    public lowConservatism(): void {
+        this.conservatism = this.lowName;
         this.plannedGfLow = 45;
         this.plannedGfHigh = 95;
     }
 
-    public mediumConservatism() {
-        this.conservatism = this.Medium;
+    public mediumConservatism(): void {
+        this.conservatism = this.mediumName;
         this.plannedGfLow = 40;
         this.plannedGfHigh = 85;
     }
 
-    public highConservatism() {
-        this.conservatism = this.High;
+    public highConservatism(): void {
+        this.conservatism = this.highName;
         this.plannedGfLow = 30;
         this.plannedGfHigh = 75;
     }
@@ -76,18 +76,18 @@ export class DiveOptionsComponent implements OnInit {
 
     public setAllUsable(): void {
         this.plan.strategy = Strategies.ALL;
-        this.strategy = this.AllUsable;
+        this.strategy = this.allUsableName;
     }
 
     public halfUsable(): void {
         this.plan.strategy = Strategies.HALF;
-        this.strategy = this.HalfUsable;
+        this.strategy = this.halfUsableName;
         this.planner.calculate();
     }
 
     public thirdUsable(): void {
         this.plan.strategy = Strategies.THIRD;
-        this.strategy = this.ThirdUsable;
+        this.strategy = this.thirdUsableName;
         this.planner.calculate();
     }
 
@@ -122,12 +122,12 @@ export class DiveOptionsComponent implements OnInit {
         this.planner.calculate();
     }
 
-    public get roundDecoStops(): boolean {
-        return this.planner.options.roundStopsToMinutes;
-    }
-
     private setRoundDecoStops(newValue: boolean): void {
         this.planner.options.roundStopsToMinutes = newValue;
+    }
+
+    public get roundDecoStops(): boolean {
+        return this.planner.options.roundStopsToMinutes;
     }
 
     public set roundDecoStops(newValue: boolean) {
@@ -135,12 +135,12 @@ export class DiveOptionsComponent implements OnInit {
         this.planner.calculate();
     }
 
-    public get gasSwitchDuration(): number {
-        return this.planner.options.gasSwitchDuration;
-    }
-
     private setGasSwitchDuration(newValue: number): void {
         this.planner.options.gasSwitchDuration = newValue;
+    }
+
+    public get gasSwitchDuration(): number {
+        return this.planner.options.gasSwitchDuration;
     }
 
     public set gasSwitchDuration(newValue: number) {
@@ -174,12 +174,12 @@ export class DiveOptionsComponent implements OnInit {
         this.planner.changeWaterType(newValue);
     }
 
-    public get safetyStopEnabled(): boolean {
-        return this.planner.options.addSafetyStop;
-    }
-
     private setSafetyStopEnabled(newValue: boolean): void {
         this.planner.options.addSafetyStop = newValue;
+    }
+
+    public get safetyStopEnabled(): boolean {
+        return this.planner.options.addSafetyStop;
     }
 
     public set safetyStopEnabled(newValue: boolean) {
@@ -196,12 +196,12 @@ export class DiveOptionsComponent implements OnInit {
         this.planner.calculate();
     }
 
-    public get ascentSpeed(): number {
-        return this.planner.options.ascentSpeed;
-    }
-
     private setAscentSpeed(newValue: number) {
         this.planner.options.ascentSpeed = newValue;
+    }
+
+    public get ascentSpeed(): number {
+        return this.planner.options.ascentSpeed;
     }
 
     public set ascentSpeed(newValue: number) {
@@ -209,12 +209,12 @@ export class DiveOptionsComponent implements OnInit {
         this.planner.calculate();
     }
 
-    public get descentSpeed(): number {
-        return this.planner.options.descentSpeed;
-    }
-
     private setDescentSpeed(newValue: number) {
         this.planner.options.descentSpeed = newValue;
+    }
+
+    public get descentSpeed(): number {
+        return this.planner.options.descentSpeed;
     }
 
     public set descentSpeed(newValue: number) {

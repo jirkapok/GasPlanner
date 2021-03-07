@@ -35,7 +35,7 @@ export class TanksComponent {
         return this.firstTank.o2;
     }
 
-    public set o2(newValue) {
+    public set o2(newValue: number) {
         this.firstTank.o2 = newValue;
     }
 

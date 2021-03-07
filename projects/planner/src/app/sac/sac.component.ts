@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
@@ -10,7 +10,7 @@ import { PlannerService } from '../shared/planner.service';
     templateUrl: './sac.component.html',
     styleUrls: ['./sac.component.css']
 })
-export class SacComponent implements OnInit {
+export class SacComponent {
     public calcIcon = faCalculator;
 
     constructor(
@@ -42,15 +42,12 @@ export class SacComponent implements OnInit {
         this.calc.calculation = SacMode.sac;
     }
 
-    public goBack(): void {
-        this.router.navigateByUrl('/');
+    public async goBack(): Promise<boolean>  {
+        return await this.router.navigateByUrl('/');
     }
 
-    public use(): void {
+    public async use(): Promise<boolean>  {
         this.planer.diver.sac = this.calc.sac;
-        this.router.navigateByUrl('/');
-    }
-
-    ngOnInit() {
+        return await this.router.navigateByUrl('/');
     }
 }

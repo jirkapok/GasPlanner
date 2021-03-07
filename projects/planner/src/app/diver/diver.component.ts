@@ -18,7 +18,7 @@ export class DiverComponent{
         this.diver = this.planer.diver;
     }
 
-    public goBack(): void {
-        this.router.navigateByUrl('/');
+    public async goBack(): Promise<boolean> {
+        return await this.router.navigateByUrl('/');
     }
 }

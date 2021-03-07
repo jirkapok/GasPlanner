@@ -7,7 +7,7 @@ export enum Strategies {
 }
 
 export class Plan {
-    public noDecoTime: number = 0;
+    public noDecoTime = 0;
 
     constructor(public duration: number, public depth: number, public strategy: Strategies) {
     }
@@ -70,9 +70,9 @@ export class Dive {
     }
 
     public get hasHoursRuntime(): boolean {
-       const duration = Time.toDate(this.totalDuration);
-       const hasHours = duration.getHours() > 0;
-       return hasHours;
+        const duration = Time.toDate(this.totalDuration);
+        const hasHours = duration.getHours() > 0;
+        return hasHours;
     }
 }
 
@@ -97,10 +97,10 @@ export class WayPoint {
 
     private action: SwimAction = SwimAction.hover;
 
-    private _gasName: string = '';
+    private _gasName = '';
 
     public get gasName(): string {
-      return this._gasName;
+        return this._gasName;
     }
 
     /**
@@ -115,9 +115,16 @@ export class WayPoint {
         this.updateSwimAction();
     }
 
+    public static fromSegment(segment: Segment): WayPoint {
+        const newWayPoint = new WayPoint(segment.duration, segment.endDepth);
+        const gasName = StandardGases.nameFor(segment.gas.fO2, segment.gas.fHe);
+        newWayPoint._gasName = gasName;
+        return newWayPoint;
+    }
+
     private updateSwimAction(): void {
         this.action = SwimAction.hover;
-        
+
         if (this.startDepth < this.endDepth) {
             this.action = SwimAction.descent;
         }
@@ -155,9 +162,10 @@ export class WayPoint {
             return '';
         }
 
-        const depth = this.endDepth + ' m';
-        const durationText = Math.round(this.duration) + ' min.';
-        return depth + ',' + durationText;
+        const depth = `${this.endDepth} m`;
+        let durationText = Math.round(this.duration).toString();
+        durationText += ' min.';
+        return `${depth},${durationText}`;
     }
 
     public toLevel(segment: Segment): WayPoint {
@@ -168,13 +176,6 @@ export class WayPoint {
         result._startDepth = this.endDepth;
         result.updateSwimAction();
         return result;
-    }
-
-    public static fromSegment(segment: Segment): WayPoint {
-        let newWayPoint = new WayPoint(segment.duration, segment.endDepth);
-        const gasName = StandardGases.nameFor(segment.gas.fO2, segment.gas.fHe);
-        newWayPoint._gasName = gasName;
-        return newWayPoint;
     }
 
     public fits(timeStamp: number): boolean {

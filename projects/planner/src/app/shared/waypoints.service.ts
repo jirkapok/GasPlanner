@@ -1,7 +1,9 @@
 import { WayPoint, Plan } from './models';
-import { BuhlmannAlgorithm, Options, Gases,
-     Segments, SegmentsFactory, Segment, Event, CalculatedProfile, 
-     EventType, ProfileEvents, Ceiling, Tank } from 'scuba-physics';
+import {
+    BuhlmannAlgorithm, Options, Gases,
+    Segments, SegmentsFactory, Segment, Event, CalculatedProfile,
+    EventType, ProfileEvents, Ceiling, Tank
+} from 'scuba-physics';
 
 export class Profile {
     constructor(
@@ -9,7 +11,7 @@ export class Profile {
         public wayPoints: WayPoint[],
         public ceilings: Ceiling[],
         public events: Event[]
-        ) {}
+    ) { }
 
     public static newEmpty(errors: Event[]): Profile {
         return new Profile([], [], [], errors);

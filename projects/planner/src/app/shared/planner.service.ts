@@ -5,7 +5,7 @@ import { Plan, Dive, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, Time, DepthConverterFactory, Tank, Diver,
-    SegmentsFactory, Consumption, Segment} from 'scuba-physics';
+    SegmentsFactory, Consumption} from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
@@ -49,7 +49,7 @@ export class PlannerService {
         this.calculate();
     }
 
-    public changeWaterType(isFreshWater: boolean) {
+    public changeWaterType(isFreshWater: boolean): void {
         this.options.isFreshWater = isFreshWater;
         this.calculate();
         this.onCalculated.next();

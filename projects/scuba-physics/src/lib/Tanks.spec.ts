@@ -36,7 +36,7 @@ describe('Tank', () => {
             tank.reserve = 50;
         });
 
-        it('end pressure 100', () => {
+        it('empty end pressure 100', () => {
             expect(tank.endPressure).toBe(0);
         });
 
@@ -48,7 +48,7 @@ describe('Tank', () => {
             expect(tank.percentsRemaining).toBe(0);
         });
 
-        it('percent rock bottom is 25', () => {
+        it('empty percent rock bottom is 25', () => {
             expect(tank.percentsReserve).toBe(25);
         });
     });
@@ -63,7 +63,7 @@ describe('Tank', () => {
             expect(tank.endPressure).toBe(100);
         });
 
-        it('has reserve', () => {
+        it('consumed has reserve', () => {
             expect(tank.hasReserve).toBeTruthy();
         });
 
@@ -106,7 +106,7 @@ describe('Tank', () => {
             expect(modified.gas).toEqual(StandardGases.trimix1070);
         });
 
-        it('Nothing changed if, gas wasnt found', () => {
+        it('Nothing changed if, gas wasn\'t found', () => {
             const modified = new Tank(10, 200, 21);
             modified.assignStandardGas('unknown');
             expect(modified.gas).toEqual(StandardGases.air);

@@ -103,8 +103,8 @@ export class Tissue extends Compartment {
      * @returns The end compartment inert gas pressure in bar.
      */
     private schreinerEquation(pBegin: number, pGas: number, time: number, halfTime: number, gasRate: number): number {
-        const Log2_60 = 1.155245301e-02; // Math.log(2) / 60
-        const timeConstant = Log2_60 / halfTime;
+        const LOG2_60 = 1.155245301e-02; // Math.log(2) / 60
+        const timeConstant = LOG2_60 / halfTime;
         const exp = Math.exp(-timeConstant * time);
         return (pGas + (gasRate * (time - (1.0 / timeConstant))) - ((pGas - pBegin - (gasRate / timeConstant)) * exp));
     }

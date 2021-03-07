@@ -29,7 +29,7 @@ export class Event {
         public message?: string,
         /** Optional data associated with the event, e.g. Gas for gas switch */
         public data?: any
-    ) {}
+    ) { }
 }
 
 export class EventsFactory {
@@ -72,7 +72,7 @@ export class Events {
     public items: Event[] = [];
 
     public add(event: Event): void {
-       this.items.push(event);
+        this.items.push(event);
     }
 }
 
@@ -81,14 +81,14 @@ class PressureSegment {
     constructor(
         public startDepth: number,
         public endDepth: number
-    ) {}
-    
+    ) { }
+
     public get minDepth(): number {
-        return Math.min(this.startDepth, this.endDepth)
+        return Math.min(this.startDepth, this.endDepth);
     }
 
     public get maxDepth(): number {
-        return Math.max(this.startDepth, this.endDepth)
+        return Math.max(this.startDepth, this.endDepth);
     }
 }
 
@@ -100,10 +100,10 @@ class EventsContext {
     public addedLowPpO2 = false;
     public index = 0;
 
-    constructor(private profile: Segment[], public depthConverter: DepthConverter, private options: Options) {}
+    constructor(private profile: Segment[], public depthConverter: DepthConverter, private options: Options) { }
 
     private get previous(): Segment | null {
-        if(this.index > 0) {
+        if (this.index > 0) {
             return this.profile[this.index - 1];
         }
 
@@ -112,21 +112,21 @@ class EventsContext {
 
     public get maxPpo(): number {
         const previous = this.previous;
-        
+
         // TODO multilevel dives: for ascent use deco ppO2 limit instead - doesn't have to be enough
-        if(!!previous && previous.startDepth > this.current.startDepth) {
+        if (!!previous && previous.startDepth > this.current.startDepth) {
             return this.options.maxDecoPpO2;
         }
 
         return this.options.maxPpO2;
-    };
+    }
 
     public get current(): Segment {
         return this.profile[this.index];
     }
 
     public get next(): Segment | null {
-        if(this.index < this.profile.length - 1) {
+        if (this.index < this.profile.length - 1) {
             return this.profile[this.index + 1];
         }
 
@@ -140,8 +140,8 @@ export class ProfileEvents {
         const depthConverter = new DepthConverterFactory(options).create();
         const context = new EventsContext(profile, depthConverter, options);
 
-        for(context.index = 0; context.index < profile.length; context.index++){
-            
+        for (context.index = 0; context.index < profile.length; context.index++) {
+
             // nice to have calculate exact time and depth of the events, it is enough it happened
             const pressureSegment = this.toPressureSegment(context.current, depthConverter);
             this.addHighPpO2(context, pressureSegment);
@@ -150,15 +150,15 @@ export class ProfileEvents {
             context.elapsed += context.current.duration;
             // add after current, because it happens on beginning of next segment
             this.addGasSwitch(context);
-        }      
-        
+        }
+
         return context.events;
     }
 
     private static addGasSwitch(context: EventsContext): void {
         const nextSegment = context.next;
-        if(!!nextSegment) {
-            if(!context.current.gas.compositionEquals(nextSegment.gas)) {
+        if (nextSegment) {
+            if (!context.current.gas.compositionEquals(nextSegment.gas)) {
                 const gasSwitch = EventsFactory.createGasSwitch(context.elapsed, nextSegment.startDepth, nextSegment.gas);
                 context.events.add(gasSwitch);
             }
@@ -172,7 +172,7 @@ export class ProfileEvents {
     }
 
     private static addHighPpO2(context: EventsContext, pressureSegment: PressureSegment): void {
-        if(context.addedHighPpO2) {
+        if (context.addedHighPpO2) {
             return;
         }
 
@@ -187,10 +187,10 @@ export class ProfileEvents {
     }
 
     private static addLowPpO2(context: EventsContext, segment: PressureSegment): void {
-        if(context.addedLowPpO2) {
+        if (context.addedLowPpO2) {
             return;
         }
-        
+
         const gasCeiling = context.current.gas.ceiling(context.depthConverter.surfacePressure);
 
         if (gasCeiling > segment.minDepth) {
@@ -210,14 +210,14 @@ export class Ceiling {
     constructor(
         /**
          * Gets or sets moment in seconds during the dive
-         */    
+         */
         public time: number,
 
         /**
          * Gets or sets the maximum safe depth to ascent to.
          */
         public depth: number
-    ) {}
+    ) { }
 }
 
 /**
@@ -235,7 +235,7 @@ export class CalculatedProfile {
      * Not null collection of ceilings.
      */
     public get ceilings(): Ceiling[] {
-       return this.ceil;
+        return this.ceil;
     }
 
     /**
@@ -243,16 +243,16 @@ export class CalculatedProfile {
      */
     public get errors(): Event[] {
         return this.err;
-     }
+    }
 
     private constructor(private seg: Segment[], private ceil: Ceiling[], private err: Event[]) { }
 
-    public static fromErrors(segments: Segment[], errors: Event[]) {
+    public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
         return new CalculatedProfile(segments, [], errors);
     }
 
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[]) {
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[]): CalculatedProfile {
         return new CalculatedProfile(segments, ceilings, []);
     }
 }

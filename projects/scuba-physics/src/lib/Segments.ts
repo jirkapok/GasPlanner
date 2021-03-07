@@ -22,23 +22,23 @@ export class SegmentsValidator {
 
     private static validateRegisteredGas(events: Event[], gases: Gases, segment: Segment): void {
         if (!gases.isRegistered(segment.gas)) {
-          // no need to translate or convert units, this is development message.
-          const message = `Segment ${segment.startDepth}-${segment.endDepth} has gas not registered in gases.`;
-          const error = EventsFactory.createError(message);
-          events.push(error);
+            // no need to translate or convert units, this is development message.
+            const message = `Segment ${segment.startDepth}-${segment.endDepth} has gas not registered in gases.`;
+            const error = EventsFactory.createError(message);
+            events.push(error);
         }
     }
 }
 
 export class Segment {
-    constructor (
+    constructor(
         /** in meters */
         public startDepth: number,
         /** in meters */
         public endDepth: number,
         public gas: Gas,
         /** in seconds */
-        public duration: number) {}
+        public duration: number) { }
 
     public contentEquals(toCompare: Segment): boolean {
         return this.speed === toCompare.speed &&
@@ -64,7 +64,7 @@ export class Segment {
 
 export class Segments {
     private segments: Segment[] = [];
-    private _maxDepth: number = 0;
+    private _maxDepth = 0;
 
     public get maxDepth(): number {
         return this._maxDepth;
@@ -74,15 +74,15 @@ export class Segments {
         const segment = new Segment(startDepth, endDepth, gas, duration);
         this.segments.push(segment);
 
-        if(segment.endDepth > this._maxDepth) {
+        if (segment.endDepth > this._maxDepth) {
             this._maxDepth = segment.endDepth;
         }
-        
+
         return segment;
     }
 
-    public addFlat(depth: number, gas: Gas, duration: number) {
-        this.add(depth, depth, gas, duration);
+    public addFlat(depth: number, gas: Gas, duration: number): Segment {
+        return this.add(depth, depth, gas, duration);
     }
 
     public mergeFlat(): Segment[] {
@@ -101,7 +101,7 @@ export class Segments {
     }
 
     public withAll(callBack: (segment: Segment) => void): void {
-        for(let index = 0; index < this.segments.length; index++) {
+        for (let index = 0; index < this.segments.length; index++) {
             callBack(this.segments[index]);
         }
     }
@@ -121,7 +121,7 @@ export class SegmentsFactory {
 
     /**
      * Generates descent and swim segments for one level profile and returns newly created segments.
-     * 
+     *
      * @param targetDepth in meters
      * @param duration in minutes
      * @param gas gas to be assigned to the segments
@@ -139,10 +139,10 @@ export class SegmentsFactory {
     }
 
     public static buildNoDecoProfile(plannedDepth: number, gas: Gas, options: Options): Segment[] {
-        const safetyStopDepth = DepthConverter.decoStopDistance; // TODO customizable safetystop depth
+        const safetyStopDepth = DepthConverter.decoStopDistance; // TODO customizable safety stop depth
         const safetyStopDuration = 3 * Time.oneMinute;
         const segments = new Segments();
-        
+
         const descentDuration = SegmentsFactory.descentDuration(plannedDepth, options);
         segments.add(0, plannedDepth, gas, descentDuration); // required to be able cut first two segments as descent and swim
         segments.addFlat(plannedDepth, gas, 0);
@@ -158,7 +158,7 @@ export class SegmentsFactory {
 
     // TODO multilevel diving: fix minimum duration based on required descent/ascent time
     /** Calculates duration in seconds for descent from surface to target depth (meters) based on descent speed */
-    public static descentDuration(targetDepth: number, options: Options) {
+    public static descentDuration(targetDepth: number, options: Options): number {
         return Time.toSeconds(targetDepth / options.descentSpeed);
     }
 
@@ -171,12 +171,12 @@ export class SegmentsFactory {
     public static timeToSurface(ascent: Segment[]): number {
         const solutionDuration = 2 * Time.oneMinute;
         let duration = 0;
-    
+
         for (const segment of ascent) {
-          duration += segment.duration;
+            duration += segment.duration;
         }
-    
+
         const seconds = solutionDuration + duration;
         return Time.toMinutes(seconds);
-      }
+    }
 }

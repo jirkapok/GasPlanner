@@ -1,7 +1,7 @@
-import { Options } from "./BuhlmannAlgorithm";
-import { DepthConverter } from "./depth-converter";
-import { Segments } from "./Segments";
-import { Tissues } from "./Tissues";
+import { Options } from './BuhlmannAlgorithm';
+import { DepthConverter } from './depth-converter';
+import { Segments } from './Segments';
+import { Tissues } from './Tissues';
 
 export interface GradientFactors {
     /** Gets current highest ceiling of all tissues */
@@ -40,10 +40,10 @@ export class SubSurfaceGradientFactors {
 
             if ((surface / compartment.b + compartment.a - surface) * gfHigh + surface <
                 (lowestCeiling / compartment.b + compartment.a - lowestCeiling) * gfLow + lowestCeiling) {
-               currentTolerated = (-compartment.a * compartment.b * (gfHigh * lowestCeiling - gfLow * surface) -
-                        (1.0 - compartment.b) * (gfHigh - gfLow) * lowestCeiling * surface +
-                        compartment.b * (lowestCeiling - surface) * compartment.pTotal) /
-                        (-compartment.a * compartment.b * (gfHigh - gfLow) +
+                currentTolerated = (-compartment.a * compartment.b * (gfHigh * lowestCeiling - gfLow * surface) -
+                    (1.0 - compartment.b) * (gfHigh - gfLow) * lowestCeiling * surface +
+                    compartment.b * (lowestCeiling - surface) * compartment.pTotal) /
+                    (-compartment.a * compartment.b * (gfHigh - gfLow) +
                         (1.0 - compartment.b) * (gfLow * lowestCeiling - gfHigh * surface) +
                         compartment.b * (lowestCeiling - surface));
             }
@@ -73,14 +73,14 @@ export class SubSurfaceGradientFactors {
     public ceiling(): number {
         let bars = this.tolerated();
 
-        // less than surface pressure means no ceiling, this aproximation is OK,
+        // less than surface pressure means no ceiling, this approximation is OK,
         // because tissues are loaded only under water
         if (bars < this.depthConverter.surfacePressure) {
             bars = this.depthConverter.surfacePressure;
         }
 
         return this.depthConverter.fromBar(bars);
-    } 
+    }
 }
 
 
@@ -102,7 +102,7 @@ export class SimpleGradientFactors {
      */
     private gradientForDepth(depth: number): number {
         const fromDepth = this.segments.maxDepth;
-        const gfChangePerMeter  = this.gfDiff / fromDepth;
+        const gfChangePerMeter = this.gfDiff / fromDepth;
         return this.options.gfLow + (gfChangePerMeter * (fromDepth - depth));
     }
 
@@ -115,10 +115,10 @@ export class SimpleGradientFactors {
 
         const toleratedDepth = this.depthConverter.fromBar(tolerated);
         const gf = this.gradientForDepth(toleratedDepth);
-        
+
         let bars = this.tissues.ceiling(gf);
 
-        // less than surface pressure means no ceiling, this aproximation is OK,
+        // less than surface pressure means no ceiling, this approximation is OK,
         // because tissues are loaded only under water
         if (bars < this.depthConverter.surfacePressure) {
             bars = this.depthConverter.surfacePressure;

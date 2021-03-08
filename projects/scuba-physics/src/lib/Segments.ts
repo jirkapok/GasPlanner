@@ -52,6 +52,10 @@ export class Segment {
         return (this.endDepth - this.startDepth) / this.duration;
     }
 
+    public get isDescent(): boolean {
+        return this.endDepth > this.startDepth;
+    }
+
     public get isFlat(): boolean {
         return this.startDepth === this.endDepth;
     }

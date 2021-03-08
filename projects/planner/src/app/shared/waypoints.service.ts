@@ -28,7 +28,8 @@ export class WayPointsService {
             return Profile.newEmpty(profile.errors);
         }
 
-        const events = ProfileEvents.fromProfile(profile.segments, options);
+        // TODO multilevel diving: fix number of user segments
+        const events = ProfileEvents.fromProfile(2, profile.segments, options);
 
         const descent = profile.segments[0];
         let lastWayPoint = WayPoint.fromSegment(descent);

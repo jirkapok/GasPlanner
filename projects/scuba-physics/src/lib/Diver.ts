@@ -11,23 +11,30 @@ export class Diver {
 
     /**
      * @param sac liter/min
-     * @param maxPpO2 [-]
+     * @param maxPpO2 maximal partial pressure of o2 in range 0-3
      */
     constructor(public sac: number, public maxPpO2: number) {
     }
 
-    /** liter/min */
+    /** liter/min as 3x sac */
     public get stressSac(): number {
         return this.sac * 3;
     }
 
-    /** bar/minute or bar/second based on sac */
-    public static gasSac(sac: number, gasSize: number): number {
-        return sac / gasSize;
+    /**
+     * Returns Bar/minute or Bar/second based on sac for given tank
+     * @param sac in Liters/min or Liters/second
+     * @param tankSize in Liters
+     */
+    public static gasSac(sac: number, tankSize: number): number {
+        return sac / tankSize;
     }
 
-    public gasSac(gas: Tank): number {
-        return Diver.gasSac(this.sac, gas.size);
+    /**
+     * Returns Bar/minute or Bar/second based on sac for given tank
+     */
+    public gasSac(tank: Tank): number {
+        return Diver.gasSac(this.sac, tank.size);
     }
 
     public loadFrom(other: Diver): void {

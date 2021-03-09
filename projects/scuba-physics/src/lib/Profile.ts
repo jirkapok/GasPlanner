@@ -181,7 +181,7 @@ export class ProfileEvents {
 
     private static addHighPpO2(context: EventsContext, segment: PressureSegment): void {
         // non user defined gas switches are never to high ppO2 - see gases.bestGas
-        // otherwise we dont know which ppO2 level to use
+        // otherwise we don't know which ppO2 level to use
         if (segment.isDescent || (context.isUserSegment && context.switchingGas)) {
             const gasMod = context.current.gas.mod(context.maxPpo);
 

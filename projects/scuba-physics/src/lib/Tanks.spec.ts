@@ -115,26 +115,76 @@ describe('Tank', () => {
 });
 
 describe('Consumption', () => {
-    describe('Rock bottom', () => {
-        const calculateRockBottom = (duration: number): number => {
-            const tank = new Tank(24, 200, 21);
-            const diver = new Diver(20, 1.6);
-            const consumption = new Consumption(DepthConverter.forFreshWater());
-            const ascent = [new Segment(20, 0, tank.gas, duration)];
-            const rockBottom = consumption.calculateRockBottom(ascent, tank, diver);
-            return rockBottom;
-        };
+    const diver = new Diver(20, 1.6);
 
-        it('Minimum rock bottom is 30 bar', () => {
-            const duration = 1 * Time.oneMinute;
-            const rockBottom = calculateRockBottom(duration);
-            expect(rockBottom).toEqual(30);
+    describe('Single tank', () => {
+        const consumption = new Consumption(DepthConverter.forFreshWater());
+
+        describe('Rock bottom', () => {
+            const tenMinutes = 10 * Time.oneMinute;
+
+            const calculateRockBottom = (duration: number): number => {
+                const tank = new Tank(24, 200, 21);
+
+                const segments = [new Segment(20, 0, tank.gas, duration)];
+                const rockBottom = consumption.calculateRockBottom(segments, tank, diver);
+                return rockBottom;
+            };
+
+            it('Minimum rock bottom is 30 bar', () => {
+                const rockBottom = calculateRockBottom(Time.oneMinute);
+                expect(rockBottom).toEqual(30);
+            });
+
+            it('Adds two minutes for solution', () => {
+                const rockBottom = calculateRockBottom(tenMinutes);
+                expect(rockBottom).toEqual(65);
+            });
+
+            it('All levels are counted', () => {
+                // TODO add complex profile
+                const rockBottom = calculateRockBottom(tenMinutes);
+                expect(rockBottom).toEqual(65);
+            });
         });
 
-        it('Adds two minutes for solution', () => {
-            const duration = 10 * Time.oneMinute;
-            const rockBottom = calculateRockBottom(duration);
-            expect(rockBottom).toEqual(65);
+        describe('Consumed gas', () => {
+            it('Is subtracted from start pressure', () => {
+                const tank = new Tank(10, 200, 21);
+                const duration = 10 * Time.oneMinute;
+                const profile = [
+                    new Segment(0, 20, tank.gas, Time.oneMinute),
+                    new Segment(20, 20, tank.gas, duration),
+                    new Segment(20, 0, tank.gas, 2 * Time.oneMinute)
+                ];
+
+                // (2b avg depth * 2 bar/min * 1 minutes) + (3b * 2 bar/min * 10 minutes) + (2b * 2 bar/min * 2 minutes)
+                const consumed = consumption.consumedOnWay(profile, tank, diver.sac);
+                expect(consumed).toEqual(72);
+            });
         });
+    });
+
+    describe('Multiple tanks', () => {
+        // TODO add tests for complex profile with deco on EAN50:
+        // 1. tank air, 2. tank ean50
+        //   -> reserve is updated for both
+        //   -> consumed gas is extracted from both tanks
+
+        // 1. tank air, 2. tank air, 3. tank ean50 - consumed less than available in 2. tank
+        //   -> reserve is updated for all tanks, air first subtracted from second tank
+        //   -> consumed gas is extracted from all tanks, for air first from second tank
+
+        // 1. tank air, 2. tank air, 3. tank ean50 - consumed more than 2. tank
+        //   -> reserve is updated for all tanks, air first subtracted from second tank
+        //   -> consumed gas is extracted from all tanks, for air first from second tank
+
+        // 1. tank air, 2. tank ean50, 3. tank ean50 - consumed less than available in 3. tank
+        //   -> reserve is updated for all tanks, air first subtracted from second tank
+        //   -> consumed gas is extracted from all tanks, for air first from second tank
+
+        // 1. tank air, 2. tank ean50, 3. tank ean50 - consumed more than 3. tank
+        //   -> reserve is updated for all tanks, air first subtracted from second tank
+        //   -> consumed gas is extracted from all tanks, for air first from second tank
     });
 });

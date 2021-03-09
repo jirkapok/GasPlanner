@@ -257,6 +257,10 @@ export class Consumption {
         return result > Consumption.minimumRockBottom ? result : Consumption.minimumRockBottom;
     }
 
+    /**
+     * Returns bars consumed from the tank during the segments profile
+     * @param sac in Liter/min.
+     */
     public consumedOnWay(segments: Segment[], tank: Tank, sac: number): number {
         const conSegments = Consumption.toSegments(segments);
         return this.consumed(conSegments, tank, sac);
@@ -267,14 +271,18 @@ export class Consumption {
         const sacSeconds = Time.toMinutes(sac);
 
         for (const wayPoint of segments) {
-            result += wayPoint.duration * this.segmentConsumptionPerSecond(wayPoint, tank, sacSeconds);
+            const toAdd = wayPoint.duration * this.segmentConsumptionPerSecond(wayPoint, tank, sacSeconds);
+            result += toAdd;
         }
 
         const rounded = Math.ceil(result);
         return rounded;
     }
 
-    /** bar/second */
+    /**
+     * Returns consumption in bar/second at given segment average depth
+     * @param sacSeconds Liter/second
+     */
     private segmentConsumptionPerSecond(segment: ConsumptionSegment, tank: Tank, sacSeconds: number): number {
         const averagePressure = this.depthConverter.toBar(segment.averageDepth);
         const consumed = averagePressure * Diver.gasSac(sacSeconds, tank.size);

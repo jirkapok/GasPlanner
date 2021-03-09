@@ -90,6 +90,18 @@ class PressureSegment {
     public get maxDepth(): number {
         return Math.max(this.startDepth, this.endDepth);
     }
+
+    public get isDescent(): boolean {
+        return this.startDepth < this.endDepth;
+    }
+
+    public get isFlat(): boolean {
+        return this.startDepth === this.endDepth;
+    }
+
+    public get isAscent(): boolean {
+        return this.startDepth > this.endDepth;
+    }
 }
 
 class EventsContext {
@@ -167,12 +179,13 @@ export class ProfileEvents {
         return new PressureSegment(startPressure, endPressure);
     }
 
-    private static addHighPpO2(context: EventsContext, pressureSegment: PressureSegment): void {
+    private static addHighPpO2(context: EventsContext, segment: PressureSegment): void {
         // non user defined gas switches are never to high ppO2 - see gases.bestGas
-        if (context.current.isDescent || (context.isUserSegment && context.switchingGas)) {
+        // otherwise we dont know which ppO2 level to use
+        if (segment.isDescent || (context.isUserSegment && context.switchingGas)) {
             const gasMod = context.current.gas.mod(context.maxPpo);
 
-            if (pressureSegment.maxDepth > gasMod) {
+            if (segment.maxDepth > gasMod) {
                 const highDepth = context.depthConverter.fromBar(gasMod);
                 const highPpO2Event = EventsFactory.createHighPpO2(context.elapsed, highDepth);
                 context.events.add(highPpO2Event);
@@ -182,8 +195,13 @@ export class ProfileEvents {
 
     private static addLowPpO2(context: EventsContext, segment: PressureSegment): void {
         const gasCeiling = context.current.gas.ceiling(context.depthConverter.surfacePressure);
+        const shouldAdd = (segment.minDepth < gasCeiling && context.switchingGas) ||
+                          ( segment.startDepth > gasCeiling && gasCeiling > segment.endDepth && segment.isAscent) ||
+                          // only at beginning of a dive
+                          (context.current.startDepth === 0 && segment.startDepth < gasCeiling && segment.isDescent);
 
-        if (gasCeiling > segment.minDepth) {
+        // only crossing the line or gas switch
+        if (shouldAdd) {
             const lowDepth = context.depthConverter.fromBar(gasCeiling);
             const lowPpO2Event = EventsFactory.createLowPpO2(context.elapsed, lowDepth);
             context.events.add(lowPpO2Event);

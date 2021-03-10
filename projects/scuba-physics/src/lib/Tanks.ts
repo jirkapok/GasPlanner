@@ -202,12 +202,12 @@ export class Consumption {
         const recreProfile = Consumption.toSegments(template);
         const ascent = SegmentsFactory.ascent(template);
         const rockBottom = this.calculateRockBottom(ascent, tank, diver);
-        const consumed = this.consumed(recreProfile, tank, diver.sac);
+        const consumed = this.consumedFromTank(recreProfile, tank, diver.sac);
         const remaining = tank.startPressure - consumed - rockBottom;
 
         if (remaining > 0) {
-            const sacSeconds = Time.toMinutes(diver.sac);
-            const bottomConumption = this.segmentConsumptionPerSecond(recreProfile[1], tank, sacSeconds);
+            const bottomSegments = [recreProfile[1]];
+            const bottomConumption = this.consumedFromTank(bottomSegments, tank, diver.sac);
             const swimDuration = remaining / bottomConumption;
             const recreDuration = recreProfile[0].duration + swimDuration;
             return recreDuration;
@@ -232,7 +232,7 @@ export class Consumption {
             const segments = Consumption.toSegments(profile.segments);
             const ascent = SegmentsFactory.ascent(profile.segments);
             rockBottom = this.calculateRockBottom(ascent, tank, diver);
-            consumed = this.consumed(segments, tank, diver.sac);
+            consumed = this.consumedFromTank(segments, tank, diver.sac);
         }
 
         return duration - 1; // we already passed the way
@@ -252,40 +252,55 @@ export class Consumption {
         const problemSolving = new ConsumptionSegment(solvingDuration, ascent[0].startDepth, ascent[0].startDepth);
         ascent.unshift(problemSolving);
         const stressSac = diver.stressSac;
-        const result = this.consumed(ascent, tank, stressSac);
+        const result = this.consumedFromTank(ascent, tank, stressSac);
 
         return result > Consumption.minimumRockBottom ? result : Consumption.minimumRockBottom;
     }
 
+
+    /** Updates tanks consumption based on segments */
+    public consumeFromTanks(segments: Segment[], tanks: Tank[], sac: number): void {
+        const conSegments = Consumption.toSegments(segments);
+        const consumed =  this.consumedFromTank(conSegments, tanks[0], sac);
+        tanks[0].consumed = consumed;
+    }
+
+    // TODO remove Tanks.consumedOnWay from public API
     /**
      * Returns bars consumed from the tank during the segments profile
      * @param sac in Liter/min.
      */
     public consumedOnWay(segments: Segment[], tank: Tank, sac: number): number {
         const conSegments = Consumption.toSegments(segments);
-        return this.consumed(conSegments, tank, sac);
+        return this.consumedFromTank(conSegments, tank, sac);
     }
 
-    private consumed(segments: ConsumptionSegment[], tank: Tank, sac: number): number {
-        let result = 0;
+    private consumedFromTank(segments: ConsumptionSegment[], tank: Tank, sac: number): number {
+        const liters = this.consumed(segments, sac);
+        const bars = liters / tank.size;
+        return Math.ceil(bars);
+    }
+
+    /** Returns consumed amount in liters, given all segments for the same gas */
+    private consumed(segments: ConsumptionSegment[], sac: number): number {
+        let liters = 0;
         const sacSeconds = Time.toMinutes(sac);
 
         for (const wayPoint of segments) {
-            const toAdd = wayPoint.duration * this.segmentConsumptionPerSecond(wayPoint, tank, sacSeconds);
-            result += toAdd;
+            const toAdd = wayPoint.duration * this.consumedAtDepthPerSecond(wayPoint, sacSeconds);
+            liters += toAdd;
         }
 
-        const rounded = Math.ceil(result);
-        return rounded;
+        return liters;
     }
 
     /**
-     * Returns consumption in bar/second at given segment average depth
+     * Returns consumption in Liters/second at given segment average depth
      * @param sacSeconds Liter/second
      */
-    private segmentConsumptionPerSecond(segment: ConsumptionSegment, tank: Tank, sacSeconds: number): number {
+    private consumedAtDepthPerSecond(segment: ConsumptionSegment, sacSeconds: number): number {
         const averagePressure = this.depthConverter.toBar(segment.averageDepth);
-        const consumed = averagePressure * Diver.gasSac(sacSeconds, tank.size);
+        const consumed = averagePressure * sacSeconds;
         return consumed;
     }
 }

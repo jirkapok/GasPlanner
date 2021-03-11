@@ -166,9 +166,10 @@ describe('Consumption', () => {
     });
 
     describe('Multiple tanks', () => {
-        xit('Both tanks are consumed', () => {
+        it('Both tanks are consumed', () => {
             const airTank = new Tank(20, 200, 21);
             const ean50Tank = new Tank(10, 200, 50);
+            const tanks = [airTank, ean50Tank];
 
             const profile = [
                 new Segment(0, 30, airTank.gas, 2 * Time.oneMinute),     // 2.5b * 1 bar/min * 2 minutes = 5b
@@ -178,8 +179,9 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
-            const consumed = consumption.consumedOnWay(profile, airTank, diver.sac);
-            expect(consumed).toEqual(72);
+            consumption.consumeFromTanks(profile, tanks, diver.sac);
+            expect(airTank.consumed).toEqual(52);
+            expect(ean50Tank.consumed).toEqual(10);
         });
 
         // TODO add tests for complex profile with deco on EAN50:
@@ -202,5 +204,7 @@ describe('Consumption', () => {
         // 1. tank air, 2. tank ean50, 3. tank ean50 - consumed more than 3. tank
         //   -> reserve is updated for all tanks, air first subtracted from second tank
         //   -> consumed gas is extracted from all tanks, for air first from second tank
+
+        // Multiple tanks, one tank wasn't used within the profile - 0 bars is consumed in it
     });
 });

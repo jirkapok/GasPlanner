@@ -96,6 +96,7 @@ export class PlannerService {
 
         if (profile.wayPoints.length > 2) {
             const consumption = new Consumption(this.depthConverter);
+
             this.dive.maxTime = consumption.calculateMaxBottomTime(this.plan.depth, this.firstTank,
                 this.diver, this.options, this.plan.noDecoTime);
 
@@ -103,8 +104,10 @@ export class PlannerService {
             const originAscent = SegmentsFactory.ascent(profile.origin);
             this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
 
+            // TODO consumption remove
             this.firstTank.reserve = consumption.calculateRockBottom(originAscent, this.firstTank, this.diver);
             this.firstTank.consumed = consumption.consumedOnWay(profile.origin, this.firstTank, this.diver.sac);
+            consumption.consumeFromTanks(profile.origin, this.tanks, this.diver.sac);
             this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
         }
 

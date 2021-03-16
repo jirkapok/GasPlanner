@@ -119,31 +119,30 @@ describe('Consumption', () => {
     const consumption = new Consumption(DepthConverter.forFreshWater());
 
     describe('Single tank', () => {
-        describe('Rock bottom', () => {
+        fdescribe('Rock bottom', () => {
             const tenMinutes = 10 * Time.oneMinute;
 
-            const calculateRockBottom = (duration: number): number => {
+            const calculateRockBottom = (duration: number): Tank => {
                 const tank = new Tank(24, 200, 21);
-
                 const segments = [new Segment(20, 0, tank.gas, duration)];
-                const rockBottom = consumption.calculateRockBottom(segments, tank, diver);
-                return rockBottom;
+                consumption.updateReserve(segments, tank, diver);
+                return tank;
             };
 
             it('Minimum rock bottom is 30 bar', () => {
-                const rockBottom = calculateRockBottom(Time.oneMinute);
-                expect(rockBottom).toEqual(30);
+                const tank = calculateRockBottom(Time.oneMinute);
+                expect(tank.reserve).toEqual(30);
             });
 
             it('Adds two minutes for solution', () => {
-                const rockBottom = calculateRockBottom(tenMinutes);
-                expect(rockBottom).toEqual(65);
+                const tank = calculateRockBottom(tenMinutes);
+                expect(tank.reserve).toEqual(65);
             });
 
             it('All levels are counted', () => {
                 // TODO add test for rock bottom with complex profile
-                const rockBottom = calculateRockBottom(tenMinutes);
-                expect(rockBottom).toEqual(65);
+                const tank = calculateRockBottom(tenMinutes);
+                expect(tank.reserve).toEqual(65);
             });
         });
 

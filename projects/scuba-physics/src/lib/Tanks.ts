@@ -255,17 +255,27 @@ export class Consumption {
 
     public calculateRockBottom(ascent: Segment[], tank: Tank, diver: Diver): number {
         const conSegments = ConsumptionSegment.fromSegments(ascent);
-        return this.rockBottom(conSegments, tank, diver);
+        this.addSolvingSegment(conSegments);
+        const stressSac = diver.stressSac;
+        const result = this.consumedFromTank(conSegments, tank, stressSac);
+        return result > Consumption.minimumRockBottom ? result : Consumption.minimumRockBottom;
     }
 
-    private rockBottom(ascent: ConsumptionSegment[], tank: Tank, diver: Diver): number {
-        const solvingDuration = 2 * Time.oneMinute;
-        const problemSolving = new ConsumptionSegment(solvingDuration, ascent[0].startDepth, ascent[0].startDepth);
-        ascent.unshift(problemSolving);
+    public updateReserve(ascent: Segment[], tank: Tank, diver: Diver): void {
+        const conSegments = ConsumptionSegment.fromSegments(ascent);
+        this.addSolvingSegment(conSegments);
         const stressSac = diver.stressSac;
-        const result = this.consumedFromTank(ascent, tank, stressSac);
+        let result = this.consumedFromTank(conSegments, tank, stressSac);
+        console.log(`Reserve: ${result}`);
+        result = result > Consumption.minimumRockBottom ? result : Consumption.minimumRockBottom;
+        tank.reserve = result;
+    }
 
-        return result > Consumption.minimumRockBottom ? result : Consumption.minimumRockBottom;
+    private addSolvingSegment(ascent: ConsumptionSegment[],): void {
+        const solvingDuration = 2 * Time.oneMinute;
+        const ascentDepth = ascent[0].startDepth;
+        const problemSolving = new ConsumptionSegment(solvingDuration, ascentDepth, ascentDepth);
+        ascent.unshift(problemSolving);
     }
 
 

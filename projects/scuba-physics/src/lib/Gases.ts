@@ -73,7 +73,7 @@ export class Gases {
         const currentPressure = depthConverter.toBar(options.currentDepth);
         let found = options.currentGas;
 
-        gases.forEach((element, index, source) => {
+        gases.forEach((element, index) => {
             const candidate = gases[index];
             const modPressure = candidate.mod(options.maxDecoPpO2);
             // e.g. oxygen at 6m wouldn't be best for 6m without rounding
@@ -242,6 +242,10 @@ export class Gas {
         return 1 - this.fO2 - this.fHe;
     }
 
+    /**
+     * @param fO2 partial pressure of O2 in the mix, range 0-1
+     * @param fHe partial pressure of He in the mix, range 0-1
+     */
     constructor(public fO2: number, public fHe: number) { }
 
     public copy(): Gas {

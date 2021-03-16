@@ -141,7 +141,7 @@ describe('Consumption', () => {
             });
 
             it('All levels are counted', () => {
-                // TODO add complex profile
+                // TODO add test for rock bottom with complex profile
                 const rockBottom = calculateRockBottom(tenMinutes);
                 expect(rockBottom).toEqual(65);
             });
@@ -151,10 +151,9 @@ describe('Consumption', () => {
             it('Is subtracted from start pressure', () => {
                 const tank = new Tank(10, 200, 21);
                 const tanks = [ tank ];
-                const duration = 10 * Time.oneMinute;
                 const profile = [
                     new Segment(0, 20, tank.gas, Time.oneMinute),
-                    new Segment(20, 20, tank.gas, duration),
+                    new Segment(20, 20, tank.gas, 10 * Time.oneMinute),
                     new Segment(20, 0, tank.gas, 2 * Time.oneMinute)
                 ];
 
@@ -166,7 +165,7 @@ describe('Consumption', () => {
     });
 
     describe('Multiple tanks', () => {
-        it('Both tanks are consumed', () => {
+        describe('1. tank air, 2. tank ean50', () => {
             const airTank = new Tank(20, 200, 21);
             const ean50Tank = new Tank(10, 200, 50);
             const tanks = [airTank, ean50Tank];
@@ -180,31 +179,120 @@ describe('Consumption', () => {
             ];
 
             consumption.consumeFromTanks(profile, tanks, diver.sac);
-            expect(airTank.consumed).toEqual(52);
-            expect(ean50Tank.consumed).toEqual(10);
+
+            it('Both tanks are consumed', () => {
+                expect(airTank.consumed).toEqual(52);
+                expect(ean50Tank.consumed).toEqual(10);
+            });
+
+            xit('Reserve is updated for both', () => {
+                expect(airTank.reserve).toEqual(52);
+                expect(ean50Tank.reserve).toEqual(10);
+            });
         });
 
-        // TODO add tests for complex profile with deco on EAN50:
-        // 1. tank air, 2. tank ean50
-        //   -> reserve is updated for both
-        //   -> consumed gas is extracted from both tanks
+        describe('1. tank air, 2. ean50, 3. air - consumed less than from one tank', () => {
+            const airTank = new Tank(20, 200, 21);
+            const ean50Tank = new Tank(10, 200, 50);
+            const airTank2 = new Tank(10, 200, 21);
+            const tanks = [airTank, ean50Tank, airTank2];
 
-        // 1. tank air, 2. tank air, 3. tank ean50 - consumed less than available in 2. tank
-        //   -> reserve is updated for all tanks, air first subtracted from second tank
-        //   -> consumed gas is extracted from all tanks, for air first from second tank
+            const profile = [
+                new Segment(0, 30, airTank.gas, 2 * Time.oneMinute),     // 2.5b * 2 bar/min * 2 minutes = 10b
+                new Segment(30, 30, airTank.gas, 10 * Time.oneMinute),   // 4b * 2 bar/min * 10 minutes = 80b
+                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute),    // 3.5b * 2 bar/min * 2 minute = 14b
+                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute),  // 3b * 2 bar/min * 1 minutes = 6b
+                new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
+            ];
 
-        // 1. tank air, 2. tank air, 3. tank ean50 - consumed more than 2. tank
-        //   -> reserve is updated for all tanks, air first subtracted from second tank
-        //   -> consumed gas is extracted from all tanks, for air first from second tank
+            consumption.consumeFromTanks(profile, tanks, diver.sac);
 
-        // 1. tank air, 2. tank ean50, 3. tank ean50 - consumed less than available in 3. tank
-        //   -> reserve is updated for all tanks, air first subtracted from second tank
-        //   -> consumed gas is extracted from all tanks, for air first from second tank
+            it('Consumption is updated from second tank only', () => {
+                expect(airTank.consumed).toEqual(0);
+                expect(ean50Tank.consumed).toEqual(10);
+                expect(airTank2.consumed).toEqual(103); // rounding
+            });
 
-        // 1. tank air, 2. tank ean50, 3. tank ean50 - consumed more than 3. tank
-        //   -> reserve is updated for all tanks, air first subtracted from second tank
-        //   -> consumed gas is extracted from all tanks, for air first from second tank
+            xit('Reserve is updated for beginning of tanks array', () => {
+                expect(airTank.reserve).toEqual(52);
+                expect(ean50Tank.reserve).toEqual(10);
+            });
+        });
 
-        // Multiple tanks, one tank wasn't used within the profile - 0 bars is consumed in it
+        describe('1. tank air, 2. air, 3. ean50 - consumed from both tanks', () => {
+            const airTank = new Tank(20, 200, 21);
+            const airTank2 = new Tank(10, 130, 21);
+            const ean50Tank = new Tank(10, 100, 50);
+            const tanks = [airTank, airTank2, ean50Tank];
+
+            const profile = [
+                new Segment(0, 30, airTank.gas, 2 * Time.oneMinute),     // 2.5b * 2 bar/min * 2 minutes = 10b : 2.air
+                new Segment(30, 30, airTank.gas, 15 * Time.oneMinute),   // 4b * 2 bar/min * 15 minutes = 120b : 2.air
+                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute),    // 3.5b * 1 bar/min * 2 minute = 7b : 1. air
+                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute),  // 3b * 2 bar/min * 1 minutes = 6b
+                new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
+            ];
+
+            consumption.consumeFromTanks(profile, tanks, diver.sac);
+
+            it('Consumption is updated from both air tanks', () => {
+                expect(airTank.consumed).toEqual(7);
+                expect(ean50Tank.consumed).toEqual(10);
+                expect(airTank2.consumed).toEqual(130);
+            });
+
+            xit('Reserve is updated for beginning of tanks array 2', () => {
+                expect(airTank.reserve).toEqual(52);
+                expect(ean50Tank.reserve).toEqual(10);
+            });
+        });
+
+        describe('Tank not used during dive', () => {
+            const airTank = new Tank(10, 200, 21);
+            const ean50Tank = new Tank(10, 100, 50);
+            const tanks = [airTank, ean50Tank];
+
+            const profile = [
+                new Segment(0, 20, airTank.gas, Time.oneMinute),
+                new Segment(20, 20, airTank.gas, 10 * Time.oneMinute),
+                new Segment(20, 0, airTank.gas, 2 * Time.oneMinute)
+            ];
+
+            consumption.consumeFromTanks(profile, tanks, diver.sac);
+
+            it('Consumption is updated only from air', () => {
+                expect(airTank.consumed).toEqual(72);
+                expect(ean50Tank.consumed).toEqual(0);
+            });
+
+            xit('Reserve is updated for beginning of tanks array 2', () => {
+                expect(airTank.reserve).toEqual(52);
+                expect(ean50Tank.reserve).toEqual(10);
+            });
+        });
+
+        describe('Used tank wasn\'t provided to update consumption', () => {
+            const airTank = new Tank(10, 200, 21);
+            const ean50Tank = new Tank(10, 100, 50);
+            const tanks = [ean50Tank];
+
+            const profile = [
+                new Segment(0, 20, airTank.gas, Time.oneMinute),
+                new Segment(20, 20, airTank.gas, 10 * Time.oneMinute),
+                new Segment(20, 0, airTank.gas, 2 * Time.oneMinute)
+            ];
+
+            consumption.consumeFromTanks(profile, tanks, diver.sac);
+
+            it('No tank is updated', () => {
+                expect(airTank.consumed).toEqual(0);
+                expect(ean50Tank.consumed).toEqual(0);
+            });
+
+            xit('Reserve is updated for beginning of tanks array 2', () => {
+                expect(airTank.reserve).toEqual(52);
+                expect(ean50Tank.reserve).toEqual(10);
+            });
+        });
     });
 });

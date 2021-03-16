@@ -277,15 +277,16 @@ export class Consumption {
      */
     public consumeFromTanks(segments: Segment[], tanks: Tank[], sac: number): void {
         Tank.resetConsumption(tanks);
-        const gasesConsumed: Map<Gas, number> = this.consumedByGases(segments, sac);
+        const gasesConsumed: Map<number, number> = this.consumedByGases(segments, sac);
 
         // distribute the consumed liters across all tanks with that gas starting from last one
         // to consumed stages first. This simulates one of the back mounted system procedures.
         for (let index = tanks.length - 1; index >= 0; index--) {
             const tank = tanks[index];
-            let consumedLiters = gasesConsumed.get(tank.gas) || 0;
+            const gasCode = this.gasCode(tank.gas);
+            let consumedLiters = gasesConsumed.get(gasCode) || 0;
             consumedLiters = this.consumeFromTank(tank, index, consumedLiters);
-            gasesConsumed.set(tank.gas, consumedLiters);
+            gasesConsumed.set(gasCode, consumedLiters);
         }
 
         // TODO update reserve - consider separate method
@@ -308,20 +309,27 @@ export class Consumption {
         return consumedLiters;
     }
 
-    private consumedByGases(segments: Segment[], sac: number): Map<Gas, number> {
+    private consumedByGases(segments: Segment[], sac: number): Map<number, number> {
         const sacSeconds = Time.toMinutes(sac);
-        const gasesConsumed = new Map<Gas, number>();
+        const gasesConsumed = new Map<number, number>();
 
         segments.forEach((segment: Segment)  => {
             const gas = segment.gas;
+            const gasCode = this.gasCode(gas);
             const converted = ConsumptionSegment.fromSegment(segment);
             const consumedLiters = this.consumedBySegment(converted, sacSeconds);
-            let consumedByGas: number = gasesConsumed.get(gas) || 0;
+            let consumedByGas: number = gasesConsumed.get(gasCode) || 0;
             consumedByGas += consumedLiters;
-            gasesConsumed.set(gas, consumedByGas);
+            gasesConsumed.set(gasCode, consumedByGas);
         });
 
         return gasesConsumed;
+    }
+
+    private gasCode(gas: Gas): number {
+        const fourK = 10000;
+        // considered identical gas rounding on two decimal places
+        return Math.round(gas.fO2 * fourK) * fourK + Math.round(gas.fHe * fourK);
     }
 
     // TODO remove Tanks.consumedOnWay from public API

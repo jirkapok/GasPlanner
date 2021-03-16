@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="mt-5">
   <div class="row">
     <div class="col-lg-3 col-md-6 mt-3">
       <div class="card">
@@ -30,7 +30,7 @@
           </div>
           <div [hidden]="inDuration">
             <label for="duration">Dive time [min.]:
-              <input [(ngModel)]="calc.duration" class="form-control" #duration="ngModel" name="duration" id="duration" 
+              <input [(ngModel)]="calc.duration" class="form-control" #duration="ngModel" name="duration" id="duration"
               type="number" min="1" max="350"
               [range]="[1,350]" required [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"
               />

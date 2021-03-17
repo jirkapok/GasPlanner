@@ -27,10 +27,6 @@ export class ConsumptionComponent {
         return this.planer.plan.needsReturn;
     }
 
-    public get gasMod(): number {
-        return this.planer.gasMod;
-    }
-
     public get noDeco(): number {
         return this.planer.plan.noDecoTime;
     }

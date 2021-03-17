@@ -116,6 +116,10 @@ export class Tank {
     private isInAirRange(newO2: number): boolean {
         return 20.9 <= newO2 && newO2 <= 21 && this.gas.fHe === 0;
     }
+
+    public get hasEnoughGas(): boolean {
+        return this.endPressure >= this.reserve;
+    }
 }
 
 class ConsumptionSegment {

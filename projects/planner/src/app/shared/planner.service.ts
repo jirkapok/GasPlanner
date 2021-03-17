@@ -20,6 +20,7 @@ export class PlannerService {
     private onCalculated = new Subject();
     private depthConverterFactory = new DepthConverterFactory(this.options);
     private depthConverter: DepthConverter = this.depthConverterFactory.create();
+    private nitroxCalculator: NitroxCalculator = new NitroxCalculator(this.depthConverter);
 
     /** only for recreational diver use case */
     public get firstTank(): Tank {
@@ -56,9 +57,8 @@ export class PlannerService {
     }
 
     public bestNitroxMix(): number {
-        const calculator = this.createNitroxCalculator();
         const maxPpO2 = this.options.maxPpO2;
-        const o2 = calculator.bestMix(maxPpO2, this.plan.depth);
+        const o2 = this.nitroxCalculator.bestMix(maxPpO2, this.plan.depth);
         return Math.round(o2);
     }
 
@@ -67,13 +67,11 @@ export class PlannerService {
     }
 
     public switchDepth(gas: Tank): number {
-        const nitroxCalculator = this.createNitroxCalculator();
-        return nitroxCalculator.gasSwitch(this.diver.maxDecoPpO2, gas.o2);
+        return this.nitroxCalculator.gasSwitch(this.diver.maxDecoPpO2, gas.o2);
     }
 
     public modForGas(gas: Tank): number {
-        const nitroxCalculator = this.createNitroxCalculator();
-        return nitroxCalculator.mod(this.diver.maxPpO2, gas.o2);
+        return this.nitroxCalculator.mod(this.diver.maxPpO2, gas.o2);
     }
 
     public noDecoTime(): number {
@@ -88,6 +86,7 @@ export class PlannerService {
 
     public calculate(): void {
         this.depthConverter = this.depthConverterFactory.create();
+        this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
         this.plan.noDecoTime = this.noDecoTime();
         const profile = WayPointsService.calculateWayPoints(this.plan, this.tanks, this.options);
         this.dive.wayPoints = profile.wayPoints;
@@ -113,7 +112,7 @@ export class PlannerService {
         this.dive.turnTime = Math.floor(this.plan.duration / 2);
         this.dive.needsReturn = this.plan.needsReturn;
         // TODO all tanks end pressure needs to be higher or equal to reserve
-        this.dive.notEnoughGas = this.firstTank.endPressure < this.firstTank.reserve;
+        this.dive.notEnoughGas = !this.firstTank.hasEnoughGas;
         this.dive.depthExceeded = this.plan.depth > this.gasMod;
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.calculated = true;
@@ -137,10 +136,5 @@ export class PlannerService {
     private calculateTurnPressure(): number {
         const consumed = this.firstTank.consumed / 2;
         return this.firstTank.startPressure - Math.floor(consumed);
-    }
-
-    private createNitroxCalculator(): NitroxCalculator {
-        const depthConverter = this.depthConverterFactory.create();
-        return new NitroxCalculator(depthConverter);
     }
 }

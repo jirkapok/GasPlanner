@@ -111,13 +111,25 @@ export class PlannerService {
         this.dive.turnPressure = this.calculateTurnPressure();
         this.dive.turnTime = Math.floor(this.plan.duration / 2);
         this.dive.needsReturn = this.plan.needsReturn;
-        // TODO all tanks end pressure needs to be higher or equal to reserve
-        this.dive.notEnoughGas = !this.firstTank.hasEnoughGas;
+        this.dive.notEnoughGas = this.notEnoughGas();
+        // TODO multilevel diving fix validation by mod
         this.dive.depthExceeded = this.plan.depth > this.gasMod;
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.calculated = true;
 
         this.onCalculated.next();
+    }
+
+    private notEnoughGas(): boolean {
+        let result = false;
+
+        this.tanks.forEach((tank: Tank) => {
+            if(!tank.hasEnoughGas) {
+                result = true;
+            }
+        });
+
+        return result;
     }
 
     public loadFrom(other: PlannerService): void {

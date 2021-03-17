@@ -36,7 +36,7 @@ export class WayPointsService {
         wayPoints.push(lastWayPoint);
         const exceptDescend = profile.segments.slice(1);
 
-        exceptDescend.forEach((segment, index, source) => {
+        exceptDescend.forEach((segment) => {
             const waypoint = this.toWayPoint(segment, lastWayPoint, events.items);
             lastWayPoint = waypoint;
             wayPoints.push(waypoint);
@@ -62,12 +62,12 @@ export class WayPointsService {
         bGases.addBottomGas(bGas);
 
         // everything except first gas is considered as deco gas
-        tanks.slice(1, tanks.length).forEach((gas, index, items) => {
+        tanks.slice(1, tanks.length).forEach((gas) => {
             const decoGas = gas.gas;
             bGases.addDecoGas(decoGas);
         });
 
-        const segments: Segments = SegmentsFactory.createForPlan(plan.depth, plan.duration, bGas, options)
+        const segments: Segments = SegmentsFactory.createForPlan(plan.depth, plan.duration, bGas, options);
         const algorithm = new BuhlmannAlgorithm();
         const profile = algorithm.calculateDecompression(options, bGases, segments);
         return profile;

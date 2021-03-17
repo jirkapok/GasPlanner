@@ -103,18 +103,16 @@ export class PlannerService {
             // TODO multilevel diving: ascent cant be identified by first two segments
             const originAscent = SegmentsFactory.ascent(profile.origin);
             this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
-
-            // TODO consumption remove
-            this.firstTank.reserve = consumption.calculateRockBottom(originAscent, this.firstTank, this.diver);
-            this.firstTank.consumed = consumption.consumedOnWay(profile.origin, this.firstTank, this.diver.sac);
-            consumption.consumeFromTanks(profile.origin, this.tanks, this.diver.sac);
+            consumption.consumeFromTanks(profile.origin, this.tanks, this.diver);
             this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
         }
 
+        // TODO show next two values only in case one tank defined
         // even in case thirds rule, the last third is reserve, so we always divide by 2
         this.dive.turnPressure = this.calculateTurnPressure();
         this.dive.turnTime = Math.floor(this.plan.duration / 2);
         this.dive.needsReturn = this.plan.needsReturn;
+        // TODO all tanks end pressure needs to be higher or equal to reserve
         this.dive.notEnoughGas = this.firstTank.endPressure < this.firstTank.reserve;
         this.dive.depthExceeded = this.plan.depth > this.gasMod;
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;

@@ -6,7 +6,7 @@ import { Plan, Strategies } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 
 @Component({
-    selector: 'app-plan',
+    selector: 'app-diveoptions',
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.css']
 })

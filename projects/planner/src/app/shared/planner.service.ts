@@ -112,8 +112,6 @@ export class PlannerService {
         this.dive.turnTime = Math.floor(this.plan.duration / 2);
         this.dive.needsReturn = this.plan.needsReturn;
         this.dive.notEnoughGas = this.notEnoughGas();
-        // TODO multilevel diving fix validation by mod
-        this.dive.depthExceeded = this.plan.depth > this.gasMod;
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.calculated = true;
 

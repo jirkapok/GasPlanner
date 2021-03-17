@@ -39,7 +39,6 @@ export class Dive {
     public turnTime = 0;
     public needsReturn = false;
     public notEnoughGas = false;
-    public depthExceeded = false;
     public notEnoughTime = false;
     public noDecoExceeded = false;
     public wayPoints: WayPoint[] = [];

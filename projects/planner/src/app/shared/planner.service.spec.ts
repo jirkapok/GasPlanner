@@ -40,7 +40,8 @@ describe('PlannerService', () => {
         it('60m for 50 minutes maximum depth exceeded', () => {
             planner.plan.depth = 60;
             planner.calculate();
-            expect(planner.dive.depthExceeded).toBeTruthy();
+            const hasEvents = planner.dive.events.length > 0;
+            expect(hasEvents).toBeTruthy();
         });
 
         it('60m for 50 minutes not enough gas', () => {

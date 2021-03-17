@@ -2,42 +2,41 @@
 <div class="mt-5">
   <div class="row">
     <ngb-alert type="warning" *ngIf="showDisclaimer" (closed)="stopDisclaimer()" class="mt-4">
-      <fa-icon [icon]="exclamation" class="mr-2 fa-lg"></fa-icon>
-      <span><strong>Disclaimer:</strong> None of the authors, contributors, administrators, or anyone else connected with this project can be responsible
-        for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.</span>
+        <fa-icon [icon]="exclamation" class="mr-2 fa-lg"></fa-icon>
+        <span><strong>Disclaimer:</strong> None of the authors, contributors, administrators, or anyone else connected with this project can be responsible
+            for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.</span>
     </ngb-alert>
     <div class="col-sm-12 col-xs-12 mt-4" [ngClass]="{
-      'col-xxl-4': true,
-      'col-lg-4': !isTechnical,
-      'col-lg-6': isTechnical,
-      'col-md-6': !isTechnical,
-      'col-md-12': isTechnical }">
-      <app-tanks (validate)="f.form.updateValueAndValidity()"></app-tanks>
+          'col-xxl-4': true,
+          'col-lg-4': !isTechnical,
+          'col-lg-6': isTechnical,
+          'col-md-6': !isTechnical,
+          'col-md-12': isTechnical }">
+        <app-tanks (validate)="f.form.updateValueAndValidity()"></app-tanks>
     </div>
     <div class="col-sm-12 col-xs-12 mt-4" [ngClass]="{
-      'col-xxl-4': true,
-      'col-lg-4': !isTechnical,
-      'col-lg-6': isTechnical,
-      'col-md-6': !isTechnical,
-      'col-md-12': isTechnical }">
-      <app-depths ></app-depths>
+          'col-xxl-4': true,
+          'col-lg-4': !isTechnical,
+          'col-lg-6': isTechnical,
+          'col-md-6': !isTechnical,
+          'col-md-12': isTechnical }">
+        <app-depths></app-depths>
     </div>
     <div class="mt-4" [ngClass]="{
-      'col-xxl-4': true,
-      'col-lg-4': !isTechnical,
-      'col-12': true } ">
-      <app-plan></app-plan>
+          'col-xxl-4': true,
+          'col-lg-4': !isTechnical,
+          'col-12': true } ">
+        <app-plan></app-plan>
     </div>
     <div *ngIf="showResults" class="col-xl-6 col-md-12 mt-4">
-        <app-profilechart (chartHover)="chartHover($event)" ></app-profilechart>
-      </div>
-    <div class="col-xl-3 col-md-6 mt-4">
-      <app-consumption></app-consumption>
+        <app-profilechart (chartHover)="chartHover($event)"></app-profilechart>
     </div>
     <div *ngIf="showResults" class="col-xl-3 col-md-6 mt-4">
-      <app-waypoints [selectedTimeStamp]="selectedTimeStamp"></app-waypoints>
+        <app-waypoints [selectedTimeStamp]="selectedTimeStamp"></app-waypoints>
     </div>
-
-  </div>
-</div>
+    <div class="col-xl-3 col-md-6 mt-4">
+        <app-consumption></app-consumption>
+    </div>
+    </div>
+    </div>
 </form>

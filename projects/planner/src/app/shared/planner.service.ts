@@ -106,11 +106,11 @@ export class PlannerService {
             this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
         }
 
-        // TODO show next two values only in case one tank defined
         // even in case thirds rule, the last third is reserve, so we always divide by 2
         this.dive.turnPressure = this.calculateTurnPressure();
         this.dive.turnTime = Math.floor(this.plan.duration / 2);
-        this.dive.needsReturn = this.plan.needsReturn;
+        // this needs to be moved to each gas or do we have other option?
+        this.dive.needsReturn = this.plan.needsReturn && this.tanks.length === 1;
         this.dive.notEnoughGas = this.notEnoughGas();
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.calculated = true;

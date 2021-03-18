@@ -117,6 +117,10 @@ export class Tank {
         return 20.9 <= newO2 && newO2 <= 21 && this.gas.fHe === 0;
     }
 
+    /**
+     * Returns true, if remaining gas is greater or equal to reserve; otherwise false.
+     * See also Consumption.enoughGas()
+     */
     public get hasEnoughGas(): boolean {
         return this.endPressure >= this.reserve;
     }
@@ -184,6 +188,22 @@ export class Consumption {
 
     constructor(private depthConverter: DepthConverter) { }
 
+    /**
+     * Checks, if all tanks  have more remaining gas than their reserve.
+     * See also Tank.hasEnoughGas
+     */
+    public static enoughGas(tanks: Tank[]): boolean {
+        let result = true;
+
+        tanks.forEach((tank: Tank) => {
+            if(!tank.hasEnoughGas) {
+                result = false;
+            }
+        });
+
+        return result;
+    }
+
     private static calculateDecompression(planedDepth: number, duration: number, tanks: Tank[], options: Options): CalculatedProfile {
         const bGases = new Gases();
         const bGas = tanks[0].gas;
@@ -204,41 +224,43 @@ export class Consumption {
     /**
      * We cant provide this method for multilevel dives, because we don't know which segment to extend
      * @param plannedDepth Maximum depth reached during the dive
-     * @param tank The tank used during the dive to check available gas
+     * @param tanks The tanks used during the dive to check available gases
      * @param diver Consumption SAC definition
      * @param options ppO2 definitions needed to estimate ascent profile
-     * @param noDecoTime Known no decompression time for required depth to be able optimize the algorithm
+     * @param noDecoTime Known no decompression time in minutes for required depth
      * @returns Number of minutes representing maximum time we can spend as bottom time.
      */
-    public calculateMaxBottomTime(plannedDepth: number, tank: Tank, diver: Diver, options: Options, noDecoTime: number): number {
-        const recreDuration = this.nodecoProfileBottomTime(plannedDepth, tank, diver, options);
-        const noDecoSeconds = Time.toSeconds(noDecoTime);
+    public calculateMaxBottomTime(plannedDepth: number, tanks: Tank[], diver: Diver, options: Options, noDecoTime: number): number {
+        Tank.resetConsumption(tanks);
+        const recreDuration = this.nodecoProfileBottomTime(plannedDepth, tanks, diver, options);
 
-        if (recreDuration > noDecoSeconds) {
-            return this.estimateMaxDecotime(plannedDepth, tank, options, diver, noDecoTime);
+        if (recreDuration > noDecoTime) {
+            return this.estimateMaxDecotime(plannedDepth, tanks, options, diver, noDecoTime);
         }
 
-        const minutes = Time.toMinutes(recreDuration);
-        return Math.floor(minutes);
+        return Math.floor(recreDuration);
     }
 
-    private nodecoProfileBottomTime(plannedDepth: number, tank: Tank, diver: Diver, options: Options): number {
-        const template = SegmentsFactory.buildNoDecoProfile(plannedDepth, tank.gas, options);
-        const recreProfile = ConsumptionSegment.fromSegments(template);
-        const ascent = SegmentsFactory.ascent(template);
-        const rockBottom = this.calculateRockBottom(ascent, tank, diver);
-        const consumed = this.consumedFromTank(recreProfile, tank, diver.sac);
-        const remaining = tank.startPressure - consumed - rockBottom;
+    private nodecoProfileBottomTime(plannedDepth: number, tanks: Tank[], diver: Diver, options: Options): number {
+        const descentDuration = SegmentsFactory.descentDuration(plannedDepth, options);
+        const duration = Time.toMinutes(descentDuration); // to enforce swim (2.) segment to zero seconds duration.
+        const profile = Consumption.calculateDecompression(plannedDepth, duration, tanks, options);
+        const segments = profile.segments;
+        this.consumeFromTanks(segments, tanks, diver); // updates all tanks including reserve
+        const firstTank = tanks[0];
+        const remaining = firstTank.endPressure - firstTank.reserve;
 
         if (remaining > 0) {
-            const bottomSegments = [recreProfile[1]];
-            const bottomConumption = this.consumedFromTank(bottomSegments, tank, diver.sac);
-            const swimDuration = remaining / bottomConumption;
-            const recreDuration = recreProfile[0].duration + swimDuration;
+            // TODO multilevel dive: take the deepest segment and use its tank to prolong the duration
+            const bottomSegment = ConsumptionSegment.fromSegment(segments[1]);
+            bottomSegment.duration = Time.oneMinute;
+            const bottomConsumption = this.consumedFromTank(bottomSegment, firstTank, diver.sac);
+            const swimDuration = remaining / bottomConsumption;
+            const recreDuration = duration + swimDuration;
             return recreDuration;
         }
 
-        return recreProfile[0].duration; // descent only
+        return descentDuration;
     }
 
     /**
@@ -246,40 +268,16 @@ export class Consumption {
      * because increase of duration means also change in the ascent plan.
      * This method is performance hit, since it needs to calculate the profile.
      */
-    private estimateMaxDecotime(plannedDepth: number, tank: Tank, options: Options, diver: Diver, noDecoTime: number): number {
+    private estimateMaxDecotime(plannedDepth: number, tanks: Tank[], options: Options, diver: Diver, noDecoTime: number): number {
         let duration = noDecoTime;
-        let consumed = 0;
-        let rockBottom = 0;
 
-        while (this.hasEnoughGas(tank, consumed, rockBottom)) {
+        while (Consumption.enoughGas(tanks)) {
             duration++;
-            const profile = Consumption.calculateDecompression(plannedDepth, duration, [tank], options);
-            const segments = ConsumptionSegment.fromSegments(profile.segments);
-            const ascent = SegmentsFactory.ascent(profile.segments);
-            rockBottom = this.calculateRockBottom(ascent, tank, diver);
-            consumed = this.consumedFromTank(segments, tank, diver.sac);
+            const profile = Consumption.calculateDecompression(plannedDepth, duration, tanks, options);
+            this.consumeFromTanks(profile.segments, tanks, diver);
         }
 
         return duration - 1; // we already passed the way
-    }
-
-    private hasEnoughGas(tank: Tank, consumed: number, rockBottom: number): boolean {
-        return tank.startPressure - consumed >= rockBottom;
-    }
-
-    private calculateRockBottom(ascent: Segment[], tank: Tank, diver: Diver): number {
-        const conSegments = ConsumptionSegment.fromSegments(ascent);
-        this.addSolvingPressureSegment(conSegments);
-        const stressSac = diver.stressSac;
-        const result = this.consumedFromTank(conSegments, tank, stressSac);
-        return result > Consumption.minimumRockBottom ? result : Consumption.minimumRockBottom;
-    }
-
-    private addSolvingPressureSegment(ascent: ConsumptionSegment[]): void {
-        const solvingDuration = 2 * Time.oneMinute;
-        const ascentDepth = ascent[0].startDepth;
-        const problemSolving = new ConsumptionSegment(solvingDuration, ascentDepth, ascentDepth);
-        ascent.unshift(problemSolving);
     }
 
     /**
@@ -388,23 +386,11 @@ export class Consumption {
         return Math.round(gas.fO2 * fourK) * fourK + Math.round(gas.fHe * fourK);
     }
 
-    private consumedFromTank(segments: ConsumptionSegment[], tank: Tank, sac: number): number {
-        const liters = this.consumed(segments, sac);
-        const bars = liters / tank.size;
-        return Math.ceil(bars);
-    }
-
-    /** Returns consumed amount in liters, given all segments for the same gas */
-    private consumed(segments: ConsumptionSegment[], sac: number): number {
-        let liters = 0;
+    private consumedFromTank(segment: ConsumptionSegment, tank: Tank, sac: number): number {
         const sacSeconds = Time.toMinutes(sac);
-
-        for (const segment of segments) {
-            const toAdd = this.consumedBySegment(segment, sacSeconds);
-            liters += toAdd;
-        }
-
-        return liters;
+        const liters = this.consumedBySegment(segment, sacSeconds);
+        const bars = liters / tank.size;
+        return bars;
     }
 
     /**

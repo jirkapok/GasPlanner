@@ -4,6 +4,7 @@ import { StandardGases } from './Gases';
 import { Consumption, Tank } from './Tanks';
 import { Time } from './Time';
 import { Segment } from './Segments';
+import { Options } from './BuhlmannAlgorithm';
 
 describe('Tank', () => {
     let tank: Tank;
@@ -117,6 +118,33 @@ describe('Tank', () => {
 describe('Consumption', () => {
     const diver = new Diver(20, 1.6);
     const consumption = new Consumption(DepthConverter.forFreshWater());
+
+    describe('Max bottom time', () => {
+        const options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
+
+        it('Is calculated for default simple plan', () => {
+            const tank = new Tank(15, 200, 21);
+            const tanks = [tank];
+            const maxBottomTime = consumption.calculateMaxBottomTime(30, tanks, diver, options, 11);
+            expect(maxBottomTime).toEqual(17);
+        });
+
+        it('Decompression dive is calculated using all tanks', () => {
+            const airTank = new Tank(20, 200, 21);
+            const ean50Tank = new Tank(10, 200, 50);
+            const tanks = [airTank, ean50Tank];
+            const maxBottomTime = consumption.calculateMaxBottomTime(40, tanks, diver, options, 7);
+            expect(maxBottomTime).toEqual(19);
+        });
+
+        it('NO Deco dive is calculated using all tanks', () => {
+            const airTank = new Tank(20, 85, 21);
+            const ean50Tank = new Tank(10, 95, 50);
+            const tanks = [airTank, ean50Tank];
+            const maxBottomTime = consumption.calculateMaxBottomTime(40, tanks, diver, options, 7);
+            expect(maxBottomTime).toEqual(5);
+        });
+    });
 
     describe('Single tank', () => {
         describe('Rock bottom', () => {

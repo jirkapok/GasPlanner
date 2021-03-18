@@ -117,6 +117,8 @@ export class SegmentsFactory {
 
     /**
      * Generates descent and swim segments for one level profile and returns newly created segments.
+     * Returns always two segments.
+     * If there isn't enough time for swim at target depth, the second segment duration is zero seconds.
      *
      * @param targetDepth in meters
      * @param duration in minutes

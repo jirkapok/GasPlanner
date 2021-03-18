@@ -96,7 +96,7 @@ export class PlannerService {
         if (profile.wayPoints.length > 2) {
             const consumption = new Consumption(this.depthConverter);
 
-            this.dive.maxTime = consumption.calculateMaxBottomTime(this.plan.depth, this.firstTank,
+            this.dive.maxTime = consumption.calculateMaxBottomTime(this.plan.depth, this.tanks,
                 this.diver, this.options, this.plan.noDecoTime);
 
             // TODO multilevel diving: ascent cant be identified by first two segments
@@ -111,23 +111,11 @@ export class PlannerService {
         this.dive.turnTime = Math.floor(this.plan.duration / 2);
         // this needs to be moved to each gas or do we have other option?
         this.dive.needsReturn = this.plan.needsReturn && this.tanks.length === 1;
-        this.dive.notEnoughGas = this.notEnoughGas();
+        this.dive.notEnoughGas = !Consumption.enoughGas(this.tanks);
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.calculated = true;
 
         this.onCalculated.next();
-    }
-
-    private notEnoughGas(): boolean {
-        let result = false;
-
-        this.tanks.forEach((tank: Tank) => {
-            if(!tank.hasEnoughGas) {
-                result = true;
-            }
-        });
-
-        return result;
     }
 
     public loadFrom(other: PlannerService): void {

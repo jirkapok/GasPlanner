@@ -1,10 +1,10 @@
 <div class="card">
   <div class="card-header ">
       <fa-icon [icon]="icon" rotate="270" class="mr-3"></fa-icon>
-      <span *ngIf="!isTechnical">Bottom gas tank</span>
-      <span *ngIf="isTechnical">Tanks</span>
+      <span *ngIf="!isComplex">Bottom gas tank</span>
+      <span *ngIf="isComplex">Tanks</span>
   </div>
-  <div class="card-body" *ngIf="isTechnical">
+  <div class="card-body" *ngIf="isComplex">
     <table class="table table-noheader">
       <tr>
         <th class="mx-0 px-1">Size [L]</th>
@@ -44,7 +44,7 @@
       </tr>
   </table>
   </div>
-  <div class="card-body" *ngIf="!isTechnical">
+  <div class="card-body" *ngIf="!isComplex">
       <div class="form-group">
         <label for="size">Size [L]:
           <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control" type="number" (change)="gasChanged()"

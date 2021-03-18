@@ -101,14 +101,14 @@ export class DiveOptionsComponent implements OnInit {
         this.planner.calculate();
     }
 
-    public get isTechnical(): boolean {
-        return this.planner.isTechnical;
+    public get isComplex(): boolean {
+        return this.planner.isComplex;
     }
 
-    public set isTechnical(newValue: boolean) {
-        this.planner.isTechnical = newValue;
+    public set isComplex(newValue: boolean) {
+        this.planner.isComplex = newValue;
 
-        if (!this.planner.isTechnical) {
+        if (!this.planner.isComplex) {
             this.setAllUsable();
             this.mediumConservatism();
             this.setAscentSpeed(Diver.ascSpeed);

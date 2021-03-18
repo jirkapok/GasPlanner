@@ -27,8 +27,8 @@ export class TanksComponent {
         return this.planner.tanks;
     }
 
-    public get isTechnical(): boolean {
-        return this.planner.isTechnical;
+    public get isComplex(): boolean {
+        return this.planner.isComplex;
     }
 
     public get o2(): number {

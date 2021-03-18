@@ -22,8 +22,8 @@ export class WayPointsComponent {
         this.dive = this.planner.dive;
     }
 
-    public get isTechnical(): boolean {
-        return this.planner.isTechnical;
+    public get isComplex(): boolean {
+        return this.planner.isComplex;
     }
 
     @Input()

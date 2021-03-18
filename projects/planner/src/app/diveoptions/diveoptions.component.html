@@ -6,16 +6,16 @@
         </div>
         <div class="float-right">
             <div class="custom-control custom-switch app-nav-switch">
-                <input type="checkbox" class="custom-control-input btn-success" id="isTechnical" [checked]="isTechnical"
-                    (change)="isTechnical = !isTechnical" />
-                <label class="custom-control-label" for="isTechnical">Technical diver</label>
+                <input type="checkbox" class="custom-control-input btn-success" id="isComplex" [checked]="!isComplex"
+                    (change)="isComplex = !isComplex" />
+                <label class="custom-control-label" for="isComplex">Simple</label>
             </div>
         </div>
     </div>
     <div class="card-body">
-        <div [ngClass]="{row: isTechnical}">
-            <div [ngClass]="{col: isTechnical}">
-                <div class="form-group" *ngIf="isTechnical">
+        <div [ngClass]="{row: isComplex}">
+            <div [ngClass]="{col: isComplex}">
+                <div class="form-group" *ngIf="isComplex">
                     <label for="strategy">Strategy:
                         <div class="input-group">
                             <input id="strategy" [(ngModel)]="strategy" class="form-control" type="text" readonly />
@@ -34,7 +34,7 @@
                         </div>
                     </label>
                 </div>
-                <div class="form-group" *ngIf="!isTechnical">
+                <div class="form-group" *ngIf="!isComplex">
                     <label for="conservatism">Conservatism (Gradient factors):
                         <div class="input-group">
                             <input id="conservatism" [(ngModel)]="conservatism" class="form-control" type="text"
@@ -70,7 +70,7 @@
                     <label class="custom-control-label" for="isFreshWater">Salt water</label>
                 </div>
             </div>
-            <div class="col-sm" *ngIf="isTechnical">
+            <div class="col-sm" *ngIf="isComplex">
                 <div class="form-group">
                     <label for="gfLow">Gradient low:
                         <div class="input-group">
@@ -104,18 +104,18 @@
                         </div>
                     </label>
                 </div>
-                <div class="custom-control custom-switch form-group" *ngIf="isTechnical">
+                <div class="custom-control custom-switch form-group" *ngIf="isComplex">
                     <input type="checkbox" class="custom-control-input btn-success" id="safetyStop"
                         [checked]="safetyStopEnabled" (change)="safetyStopEnabled = !safetyStopEnabled" />
                     <label class="custom-control-label" for="safetyStop">Add safety stop 3 min.</label>
                 </div>
-                <div class="custom-control custom-switch form-group" *ngIf="isTechnical">
+                <div class="custom-control custom-switch form-group" *ngIf="isComplex">
                     <input type="checkbox" class="custom-control-input btn-success" id="roundStops"
                         [checked]="roundDecoStops" (change)="roundDecoStops = !roundDecoStops" />
                     <label class="custom-control-label" for="roundStops">Round deco stops to minutes</label>
                 </div>
             </div>
-            <div class="col-sm" *ngIf="isTechnical">
+            <div class="col-sm" *ngIf="isComplex">
                 <div class="form-group">
                     <label for="descSpeed">Descent speed [m/min.]:
                         <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="descentSpeed"

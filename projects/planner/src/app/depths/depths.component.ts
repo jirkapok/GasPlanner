@@ -23,8 +23,8 @@ export class DepthsComponent implements OnInit {
     ngOnInit(): void {
         this.planner.calculate();
     }
-    public get isTechnical(): boolean {
-        return this.planner.isTechnical;
+    public get isComplex(): boolean {
+        return this.planner.isComplex;
     }
 
     public get planDuration(): number {

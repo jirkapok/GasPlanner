@@ -8,28 +8,28 @@
     </ngb-alert>
     <div class="col-12 mt-4" [ngClass]="{
           'col-xxl-4': true,
-          'col-lg-4': !isTechnical,
-          'col-md-4': !isTechnical,
-          'col-sm-6': !isTechnical,
-          'col-md-6': isTechnical
+          'col-lg-4': !isComplex,
+          'col-md-4': !isComplex,
+          'col-sm-6': !isComplex,
+          'col-md-6': isComplex
          }">
         <app-tanks (validate)="f.form.updateValueAndValidity()"></app-tanks>
     </div>
     <div class="col-12 mt-4" [ngClass]="{
           'col-xxl-4': true,
-          'col-lg-4': !isTechnical,
-          'col-md-4': !isTechnical,
-          'col-sm-6': !isTechnical,
-          'col-md-6': isTechnical
+          'col-lg-4': !isComplex,
+          'col-md-4': !isComplex,
+          'col-sm-6': !isComplex,
+          'col-md-6': isComplex
         }">
         <app-depths></app-depths>
     </div>
     <div class="col-md-4 col-12 mt-4" [ngClass]="{
           'col-xxl-4': true,
-          'col-lg-4': !isTechnical,
-          'col-md-4': !isTechnical,
-          'col-sm-12': !isTechnical,
-          'col-lg-12': isTechnical
+          'col-lg-4': !isComplex,
+          'col-md-4': !isComplex,
+          'col-sm-12': !isComplex,
+          'col-lg-12': isComplex
            } ">
         <app-diveoptions></app-diveoptions>
     </div>

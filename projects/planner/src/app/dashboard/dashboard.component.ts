@@ -19,8 +19,8 @@ export class DashboardComponent implements OnInit {
         return this.dive.calculated && !this.dive.hasErrors;
     }
 
-    public get isTechnical(): boolean {
-        return this.planner.isTechnical;
+    public get isComplex(): boolean {
+        return this.planner.isComplex;
     }
 
     constructor(private preferences: PreferencesService, private planner: PlannerService) {

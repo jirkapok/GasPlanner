@@ -103,8 +103,12 @@ export class Tank {
         return result;
     }
 
+    /**
+     * Returns true, if remaining gas is greater or equal to reserve; otherwise false.
+     * See also Consumption.haveReserve()
+     */
     public get hasReserve(): boolean {
-        return this.endPressure - this.reserve > 0;
+        return this.endPressure >= this.reserve;
     }
 
     public loadFrom(other: Tank): void {
@@ -117,13 +121,6 @@ export class Tank {
         return 20.9 <= newO2 && newO2 <= 21 && this.gas.fHe === 0;
     }
 
-    /**
-     * Returns true, if remaining gas is greater or equal to reserve; otherwise false.
-     * See also Consumption.enoughGas()
-     */
-    public get hasEnoughGas(): boolean {
-        return this.endPressure >= this.reserve;
-    }
 }
 
 class ConsumptionSegment {
@@ -189,14 +186,14 @@ export class Consumption {
     constructor(private depthConverter: DepthConverter) { }
 
     /**
-     * Checks, if all tanks  have more remaining gas than their reserve.
-     * See also Tank.hasEnoughGas
+     * Checks, if all tanks have more remaining gas than their reserve.
+     * See also Tank.hasReserve
      */
-    public static enoughGas(tanks: Tank[]): boolean {
+    public static haveReserve(tanks: Tank[]): boolean {
         let result = true;
 
         tanks.forEach((tank: Tank) => {
-            if(!tank.hasEnoughGas) {
+            if(!tank.hasReserve) {
                 result = false;
             }
         });
@@ -271,7 +268,7 @@ export class Consumption {
     private estimateMaxDecotime(plannedDepth: number, tanks: Tank[], options: Options, diver: Diver, noDecoTime: number): number {
         let duration = noDecoTime;
 
-        while (Consumption.enoughGas(tanks)) {
+        while (Consumption.haveReserve(tanks)) {
             duration++;
             const profile = Consumption.calculateDecompression(plannedDepth, duration, tanks, options);
             this.consumeFromTanks(profile.segments, tanks, diver);

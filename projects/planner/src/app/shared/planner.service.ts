@@ -111,7 +111,7 @@ export class PlannerService {
         this.dive.turnTime = Math.floor(this.plan.duration / 2);
         // this needs to be moved to each gas or do we have other option?
         this.dive.needsReturn = this.plan.needsReturn && this.tanks.length === 1;
-        this.dive.notEnoughGas = !Consumption.enoughGas(this.tanks);
+        this.dive.notEnoughGas = !Consumption.haveReserve(this.tanks);
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.calculated = true;
 

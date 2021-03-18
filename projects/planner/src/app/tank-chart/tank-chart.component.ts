@@ -7,11 +7,8 @@ import { Tank } from 'scuba-physics';
     styleUrls: ['./tank-chart.component.css']
 })
 export class TankChartComponent {
-
-
     @Input()
     public tank: Tank = Tank.createDefault();
 
     constructor() { }
-
 }

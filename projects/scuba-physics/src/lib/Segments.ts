@@ -136,24 +136,6 @@ export class SegmentsFactory {
         return segments;
     }
 
-    public static buildNoDecoProfile(plannedDepth: number, gas: Gas, options: Options): Segment[] {
-        const safetyStopDepth = DepthConverter.decoStopDistance; // TODO customizable safety stop depth
-        const safetyStopDuration = 3 * Time.oneMinute;
-        const segments = new Segments();
-
-        const descentDuration = SegmentsFactory.descentDuration(plannedDepth, options);
-        segments.add(0, plannedDepth, gas, descentDuration); // required to be able cut first two segments as descent and swim
-        segments.addFlat(plannedDepth, gas, 0);
-
-        const ascentDuration = Time.toSeconds((plannedDepth - safetyStopDepth) / options.ascentSpeed);
-        segments.add(plannedDepth, safetyStopDepth, gas, ascentDuration);
-        segments.addFlat(safetyStopDepth, gas, safetyStopDuration);
-
-        const lastAscent = Time.toSeconds(safetyStopDepth / options.ascentSpeed);
-        segments.add(safetyStopDepth, 0, gas, lastAscent);
-        return segments.mergeFlat();
-    }
-
     // TODO multilevel diving: fix minimum duration based on required descent/ascent time
     /** Calculates duration in seconds for descent from surface to target depth (meters) based on descent speed */
     public static descentDuration(targetDepth: number, options: Options): number {

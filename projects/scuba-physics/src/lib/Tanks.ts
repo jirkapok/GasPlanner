@@ -148,17 +148,6 @@ class ConsumptionSegment {
         return new ConsumptionSegment(segment.duration, segment.endDepth, segment.startDepth);
     }
 
-    public static fromSegments(segments: Segment[]): ConsumptionSegment[] {
-        const converted: ConsumptionSegment[] = [];
-
-        segments.forEach((segment) => {
-            const convertedSegment = ConsumptionSegment.fromSegment(segment);
-            converted.push(convertedSegment);
-        });
-
-        return converted;
-    }
-
     /** in meters */
     public get startDepth(): number {
         return this._startDepth;

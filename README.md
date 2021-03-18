@@ -13,21 +13,18 @@ None of the authors, contributors, administrators, or anyone else connected with
 List of current features is part of [application help](./doc/help.md). 
 Road map of planned features:
 
-* Fix precision of decompression algorithm - Im progress
-  * Allow max. depth exceeds gas ppO2
-  * Add events as errors from algorithm: end of NDL, exceeded max. stop duration, fast ascent or descent, safety stop, no breathable gas at depth, narcotic depth
-  * Fix loading of tissues when tissues are still loaded during ascent
-* Allow define multiple gases - Im progress
-  * Fix consumed gas calculation
-  * Implement support of multiple tanks with the same gas
-* Add option to define safety stop range including no safetystop below 10m dives
+* Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, fast ascent or descent, safety stop, narcotic depth
 * Allow to define multiple levels
   * Allow to define multiple ascent speeds
+  * Add option to define safety stop range including no safety stop below 10m dives
+  * Add option to define last stop depth
+* Add trimix support and calculator
+  * Add option to define maximum narcotic depth
+  * Add option to count oxygen in narcotic gas in narcotic depth calculation
+  * Add air breaks
 * Add imperial units option
 * Add help to all variables
 * Add localization
-* Add trimix support and calculator
-  * Add air breaks
 * Add option to define repetitive dives
   * Unify dive settings and default settings
 * Add CNS and OTU calculations

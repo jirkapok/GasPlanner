@@ -8,9 +8,10 @@ This is a web based application, which allows **recreational** scuba divers to d
 
 None of the authors, contributors, administrators, or anyone else connected with this project can be responsible for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.
 
-## Features
+## Features - Road map
 
-List of current features is part of [application help](./doc/help.md). 
+List of current features is part of [application help](./doc/help.md).
+
 Road map of planned features:
 
 * Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, fast ascent or descent, safety stop, narcotic depth
@@ -31,7 +32,7 @@ Road map of planned features:
 
 ## Prerequisites
 
-To work on the application install NodeJs, AngularCli 8.3 and TypeScript. Recommended development environment is Visual Studio Code. Use `instalEnvironment.ps1` to get initial environment tools and packages.
+To work on the application install NodeJs, AngularCli 11.0 and TypeScript. Recommended development environment is Visual Studio Code. Use `instalEnvironment.ps1` to get initial environment tools and packages.
 
 ## Build
 

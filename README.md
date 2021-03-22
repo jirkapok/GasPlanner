@@ -30,6 +30,12 @@ Road map of planned features:
   * Unify dive settings and default settings
 * Add CNS and OTU calculations
 
+## Donate
+
+Keep the project Alive!
+
+[![$25](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=X28G9FEYUN6CJ)
+
 ## Prerequisites
 
 To work on the application install NodeJs, AngularCli 11.0 and TypeScript. Recommended development environment is Visual Studio Code. Use `instalEnvironment.ps1` to get initial environment tools and packages.

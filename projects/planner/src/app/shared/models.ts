@@ -1,4 +1,5 @@
-import { Ceiling, Time, Event, Segment, StandardGases } from 'scuba-physics';
+import { GuardsCheckStart } from '@angular/router';
+import { Ceiling, Time, Event, Segment, StandardGases, Segments, SegmentsFactory, Gas, Options } from 'scuba-physics';
 
 export enum Strategies {
     ALL = 1,
@@ -8,8 +9,37 @@ export enum Strategies {
 
 export class Plan {
     public noDecoTime = 0;
+    public segments: Segments = new Segments();
+    private _depth = 0;
+    private _duration = 0;
 
-    constructor(public duration: number, public depth: number, public strategy: Strategies) {
+    /** provide the not necessary gas and options only to start from simple valid profile */
+    constructor(public strategy: Strategies, depth: number, duration: number, gas: Gas, options: Options) {
+        this.initialize(depth, duration, gas, options);
+    }
+
+    private initialize(depth: number, duration: number, gas: Gas, options: Options): void {
+        this._depth = depth;
+        this._duration = duration;
+        this.segments = SegmentsFactory.createForPlan(depth, duration, gas, options);
+    }
+
+    public get maxDepth(): number {
+        return this._depth;
+    }
+
+    public assignDepth(newDepth: number, gas: Gas, options: Options): void {
+        this._depth = newDepth;
+        this.segments = SegmentsFactory.createForPlan(newDepth, this._duration, gas, options);
+    }
+
+    public get duration(): number {
+        return this._duration;
+    }
+
+    public assignDuration(newDuration: number, gas: Gas, options: Options): void {
+        this._duration = newDuration;
+        this.segments = SegmentsFactory.createForPlan(this._depth, this.duration, gas, options);
     }
 
     public get availablePressureRatio(): number {
@@ -25,9 +55,8 @@ export class Plan {
     }
 
     public loadFrom(other: Plan): void {
-        this.depth = other.depth;
-        this.duration = other.duration;
         this.strategy = other.strategy;
+        this.segments = other.segments.copy();
     }
 }
 

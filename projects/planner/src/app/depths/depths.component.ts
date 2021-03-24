@@ -32,18 +32,16 @@ export class DepthsComponent implements OnInit {
     }
 
     public set planDuration(newValue: number) {
-        this.plan.duration = newValue;
-        this.planner.calculate();
+        this.planner.assignDuration(newValue);
     }
 
     @Input()
     public get plannedDepth(): number {
-        return this.plan.depth;
+        return this.plan.maxDepth;
     }
 
     public set plannedDepth(depth: number) {
-        this.plan.depth = depth;
-        this.planner.calculate();
+        this.planner.assignDepth(depth);
     }
 
     public get noDecoTime(): number {

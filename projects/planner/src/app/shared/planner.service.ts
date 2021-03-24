@@ -10,7 +10,7 @@ import { NitroxCalculator, BuhlmannAlgorithm, Options,
 @Injectable()
 export class PlannerService {
     public isComplex = false;
-    public plan: Plan = new Plan(12, 30, Strategies.ALL);
+    public plan: Plan;
     public diver: Diver = new Diver(20, 1.4);
     // there always needs to be at least one
     public tanks: Tank[] = [];
@@ -30,6 +30,8 @@ export class PlannerService {
     constructor() {
         this.calculated = this.onCalculated.asObservable();
         this.resetToDefaultGases();
+        const firstGas = this.firstTank.gas;
+        this.plan = new Plan(Strategies.ALL, 30, 12, firstGas, this.options);
     }
 
     public resetToDefaultGases(): void {
@@ -58,7 +60,7 @@ export class PlannerService {
 
     public bestNitroxMix(): number {
         const maxPpO2 = this.options.maxPpO2;
-        const o2 = this.nitroxCalculator.bestMix(maxPpO2, this.plan.depth);
+        const o2 = this.nitroxCalculator.bestMix(maxPpO2, this.plan.maxDepth);
         return Math.round(o2);
     }
 
@@ -78,10 +80,22 @@ export class PlannerService {
         this.options.maxPpO2 = this.diver.maxPpO2;
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         const algorithm = new BuhlmannAlgorithm();
-        const depth = this.plan.depth;
+        const depth = this.plan.maxDepth;
         const gas = this.firstTank.gas;
         const noDecoLimit = algorithm.noDecoLimit(depth, gas, this.options);
         return Math.floor(noDecoLimit);
+    }
+
+    public assignDuration(newDuration: number): void {
+        const firstGas = this.firstTank.gas;
+        this.plan.assignDuration(newDuration, firstGas, this.options);
+        this.calculate();
+    }
+
+    public assignDepth(newDepth: number): void {
+        const firstGas = this.firstTank.gas;
+        this.plan.assignDepth(newDepth, firstGas, this.options);
+        this.calculate();
     }
 
     public calculate(): void {
@@ -96,7 +110,7 @@ export class PlannerService {
         if (profile.wayPoints.length > 2) {
             const consumption = new Consumption(this.depthConverter);
 
-            this.dive.maxTime = consumption.calculateMaxBottomTime(this.plan.depth, this.tanks,
+            this.dive.maxTime = consumption.calculateMaxBottomTime(this.plan.maxDepth, this.tanks,
                 this.diver, this.options, this.plan.noDecoTime);
 
             // TODO multilevel diving: ascent cant be identified by first two segments

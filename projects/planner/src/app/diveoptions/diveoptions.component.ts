@@ -93,12 +93,11 @@ export class DiveOptionsComponent implements OnInit {
 
     @Input()
     public get plannedDepth(): number {
-        return this.plan.depth;
+        return this.plan.maxDepth;
     }
 
     public set plannedDepth(depth: number) {
-        this.plan.depth = depth;
-        this.planner.calculate();
+        this.planner.assignDepth(depth);
     }
 
     public get isComplex(): boolean {

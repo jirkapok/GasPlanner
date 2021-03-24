@@ -109,6 +109,14 @@ export class Segments {
     public last(): Segment {
         return this.segments[this.segments.length - 1];
     }
+
+    public copy(): Segments {
+        const target = new Segments();
+        target._maxDepth = this._maxDepth;
+        // TODO do we need deep copy?
+        target.segments = this.segments.slice();
+        return target;
+    }
 }
 
 

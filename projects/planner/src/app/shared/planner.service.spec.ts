@@ -38,20 +38,20 @@ describe('PlannerService', () => {
 
     describe('Shows errors', () => {
         it('60m for 50 minutes maximum depth exceeded', () => {
-            planner.plan.depth = 60;
+            planner.assignDepth(60);
             planner.calculate();
             const hasEvents = planner.dive.events.length > 0;
             expect(hasEvents).toBeTruthy();
         });
 
         it('60m for 50 minutes not enough gas', () => {
-            planner.plan.duration = 50;
+            planner.assignDuration(50);
             planner.calculate();
             expect(planner.dive.notEnoughGas).toBeTruthy();
         });
 
         it('30m for 20 minutes no decompression time exceeded', () => {
-            planner.plan.duration = 20;
+            planner.assignDuration(20);
             planner.calculate();
             expect(planner.dive.noDecoExceeded).toBeTruthy();
         });

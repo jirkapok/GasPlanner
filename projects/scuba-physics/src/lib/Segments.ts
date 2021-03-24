@@ -2,7 +2,6 @@ import { Gas, Gases } from './Gases';
 import { EventsFactory, Event } from './Profile';
 import { Options } from './BuhlmannAlgorithm';
 import { Time } from './Time';
-import { DepthConverter } from './depth-converter';
 
 export class SegmentsValidator {
     public static validate(segments: Segments, gases: Gases): Event[] {

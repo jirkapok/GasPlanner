@@ -67,7 +67,7 @@ export class WayPointsService {
             bGases.addDecoGas(decoGas);
         });
 
-        const segments: Segments = SegmentsFactory.createForPlan(plan.maxDepth, plan.duration, bGas, options);
+        const segments: Segments = plan.segments.copy();
         const algorithm = new BuhlmannAlgorithm();
         const profile = algorithm.calculateDecompression(options, bGases, segments);
         return profile;

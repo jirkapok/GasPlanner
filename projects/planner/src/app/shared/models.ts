@@ -1,4 +1,3 @@
-import { GuardsCheckStart } from '@angular/router';
 import { Ceiling, Time, Event, Segment, StandardGases, Segments, SegmentsFactory, Gas, Options } from 'scuba-physics';
 
 export enum Strategies {
@@ -56,6 +55,8 @@ export class Plan {
 
     public loadFrom(other: Plan): void {
         this.strategy = other.strategy;
+        this._depth = other._depth;
+        this._duration = other._duration;
         this.segments = other.segments.copy();
     }
 }

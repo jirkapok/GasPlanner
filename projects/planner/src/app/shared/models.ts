@@ -14,10 +14,10 @@ export class Plan {
 
     /** provide the not necessary gas and options only to start from simple valid profile */
     constructor(public strategy: Strategies, depth: number, duration: number, gas: Gas, options: Options) {
-        this.initialize(depth, duration, gas, options);
+        this.reset(depth, duration, gas, options);
     }
 
-    private initialize(depth: number, duration: number, gas: Gas, options: Options): void {
+    public reset(depth: number, duration: number, gas: Gas, options: Options): void {
         this._depth = depth;
         this._duration = duration;
         this.segments = SegmentsFactory.createForPlan(depth, duration, gas, options);
@@ -57,7 +57,8 @@ export class Plan {
         this.strategy = other.strategy;
         this._depth = other._depth;
         this._duration = other._duration;
-        this.segments = other.segments.copy();
+        // cant use copy, since deserialized objects wouldn't have one.
+        this.segments = Segments.from(other.segments);
     }
 }
 

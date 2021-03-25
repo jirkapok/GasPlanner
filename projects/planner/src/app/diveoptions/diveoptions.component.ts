@@ -115,7 +115,7 @@ export class DiveOptionsComponent implements OnInit {
             this.setRoundDecoStops(true);
             this.setSafetyStopEnabled(true);
             this.setGasSwitchDuration(1);
-            this.planner.resetToDefaultGases();
+            this.planner.resetToSimple();
         }
 
         this.planner.calculate();

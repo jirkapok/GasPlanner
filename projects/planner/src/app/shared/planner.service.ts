@@ -13,7 +13,9 @@ export class PlannerService {
     public plan: Plan;
     public diver: Diver = new Diver(20, 1.4);
     // there always needs to be at least one
-    public tanks: Tank[] = [];
+    public tanks: Tank[] = [
+        Tank.createDefault()
+    ];
     public dive: Dive = new Dive();
     public calculated;
     public options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
@@ -29,15 +31,14 @@ export class PlannerService {
 
     constructor() {
         this.calculated = this.onCalculated.asObservable();
-        this.resetToDefaultGases();
         const firstGas = this.firstTank.gas;
         this.plan = new Plan(Strategies.ALL, 30, 12, firstGas, this.options);
     }
 
-    public resetToDefaultGases(): void {
-        this.tanks = [
-            Tank.createDefault()
-        ];
+    public resetToSimple(): void {
+        this.tanks = this.tanks.slice(0, 1);
+        const firstGas = this.firstTank.gas;
+        this.plan.reset(this.plan.maxDepth, this.plan.duration, firstGas, this.options);
     }
 
     public addGas(): void {

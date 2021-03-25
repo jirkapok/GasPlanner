@@ -39,6 +39,10 @@ export class Segment {
         /** in seconds */
         public duration: number) { }
 
+    public static from(other: Segment): Segment {
+        return new Segment(other.startDepth, other.endDepth, other.gas, other.duration);
+    }
+
     public contentEquals(toCompare: Segment): boolean {
         return this.speed === toCompare.speed &&
             this.gas === toCompare.gas;
@@ -60,6 +64,20 @@ export class Segment {
 export class Segments {
     private segments: Segment[] = [];
     private _maxDepth = 0;
+
+    public static from(other: Segments): Segments {
+        const result = new Segments();
+        result._maxDepth = other._maxDepth;
+
+        result.segments = [];
+        other.segments.forEach(source => {
+            // ignore gas for now
+            const newSegment = Segment.from(source);
+            result.segments.push(newSegment);
+        });
+
+        return result;
+    }
 
     public get maxDepth(): number {
         return this._maxDepth;
@@ -110,11 +128,7 @@ export class Segments {
     }
 
     public copy(): Segments {
-        const target = new Segments();
-        target._maxDepth = this._maxDepth;
-        // TODO do we need deep copy?
-        target.segments = this.segments.slice();
-        return target;
+        return Segments.from(this);
     }
 }
 

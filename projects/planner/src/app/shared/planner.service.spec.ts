@@ -56,4 +56,29 @@ describe('PlannerService', () => {
             expect(planner.dive.noDecoExceeded).toBeTruthy();
         });
     });
+
+    describe('Switch between simple and complex', () => {
+        const o2Expected = 50;
+
+        beforeEach(() => {
+            console.log(planner);
+            planner.firstTank.o2 = o2Expected;
+            planner.addGas();
+            // TODO make segments private otherwise duration and max. depth will be out of sync.
+            planner.plan.segments.addFlat(10, planner.firstTank.gas, 10);
+            planner.resetToSimple();
+        });
+
+        it('Sets simple profile', () => {
+            expect(planner.plan.duration).toBe(12);
+        });
+
+        it('Resets gases to one only', () => {
+            expect(planner.tanks.length).toBe(1);
+        });
+
+        it('Keeps first gas content', () => {
+            expect(planner.firstTank.o2).toBe(o2Expected);
+        });
+    });
 });

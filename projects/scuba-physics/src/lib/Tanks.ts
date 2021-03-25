@@ -290,7 +290,6 @@ export class Consumption {
 
         // here the consumed during emergency ascent means reserve
         const gasesConsumed: Map<number, number> = this.consumedByGases(segments, stressSac);
-        // console.log(gasesConsumed);
 
         // add the reserve from opposite order than consumed gas
         for (let index = 0 ; index <= tanks.length - 1; index++) {

@@ -41,6 +41,10 @@ export class Plan {
         this.segments = SegmentsFactory.createForPlan(this._depth, this.duration, gas, options);
     }
 
+    public addSegment(newDepth: number, gas: Gas, duration: number): void {
+        this.segments.addChangeTo(newDepth, gas, duration);
+    }
+
     public get availablePressureRatio(): number {
         return this.strategy === Strategies.THIRD ? 2 / 3 : 1;
     }

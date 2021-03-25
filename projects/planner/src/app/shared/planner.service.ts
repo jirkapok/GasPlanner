@@ -50,6 +50,10 @@ export class PlannerService {
         this.calculate();
     }
 
+    public addSegment(targetDepth: number, duration: number): void {
+        this.plan.addSegment(targetDepth, this.firstGas, duration);
+    }
+
     public removeGas(gas: Tank): void {
         this.tanks = this.tanks.filter(g => g !== gas);
         this.calculate();

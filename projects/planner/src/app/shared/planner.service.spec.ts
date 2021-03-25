@@ -64,8 +64,7 @@ describe('PlannerService', () => {
             console.log(planner);
             planner.firstTank.o2 = o2Expected;
             planner.addGas();
-            // TODO make segments private otherwise duration and max. depth will be out of sync.
-            planner.plan.segments.addFlat(10, planner.firstTank.gas, 10);
+            planner.addSegment(10, 10);
             planner.resetToSimple();
         });
 

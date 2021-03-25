@@ -83,6 +83,15 @@ export class Segments {
         return this._maxDepth;
     }
 
+    /** Gets end depth of last segment as current depth in meters during profile generation */
+    public get currentDepth(): number {
+        if (this.any()) {
+            return this.last().endDepth;
+        }
+
+        return 0;
+    }
+
     public add(startDepth: number, endDepth: number, gas: Gas, duration: number): Segment {
         const segment = new Segment(startDepth, endDepth, gas, duration);
         this.segments.push(segment);

@@ -152,11 +152,7 @@ class AlgorithmContext {
     }
 
     public get currentDepth(): number {
-        if (this.segments.any()) {
-            return this.segments.last().endDepth;
-        }
-
-        return 0;
+        return this.segments.currentDepth;
     }
 
     public get ambientPressure(): number {

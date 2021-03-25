@@ -5,7 +5,7 @@ import { Plan, Dive, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, Time, DepthConverterFactory, Tank, Diver,
-    SegmentsFactory, Consumption} from 'scuba-physics';
+    SegmentsFactory, Consumption, Gas} from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
@@ -29,16 +29,18 @@ export class PlannerService {
         return this.tanks[0];
     }
 
+    private get firstGas(): Gas {
+        return this.firstTank.gas;
+    }
+
     constructor() {
         this.calculated = this.onCalculated.asObservable();
-        const firstGas = this.firstTank.gas;
-        this.plan = new Plan(Strategies.ALL, 30, 12, firstGas, this.options);
+        this.plan = new Plan(Strategies.ALL, 30, 12, this.firstGas, this.options);
     }
 
     public resetToSimple(): void {
         this.tanks = this.tanks.slice(0, 1);
-        const firstGas = this.firstTank.gas;
-        this.plan.reset(this.plan.maxDepth, this.plan.duration, firstGas, this.options);
+        this.plan.reset(this.plan.maxDepth, this.plan.duration, this.firstGas, this.options);
     }
 
     public addGas(): void {
@@ -82,20 +84,17 @@ export class PlannerService {
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         const algorithm = new BuhlmannAlgorithm();
         const depth = this.plan.maxDepth;
-        const gas = this.firstTank.gas;
-        const noDecoLimit = algorithm.noDecoLimit(depth, gas, this.options);
+        const noDecoLimit = algorithm.noDecoLimit(depth, this.firstGas, this.options);
         return Math.floor(noDecoLimit);
     }
 
     public assignDuration(newDuration: number): void {
-        const firstGas = this.firstTank.gas;
-        this.plan.assignDuration(newDuration, firstGas, this.options);
+        this.plan.assignDuration(newDuration, this.firstGas, this.options);
         this.calculate();
     }
 
     public assignDepth(newDepth: number): void {
-        const firstGas = this.firstTank.gas;
-        this.plan.assignDepth(newDepth, firstGas, this.options);
+        this.plan.assignDepth(newDepth, this.firstGas, this.options);
         this.calculate();
     }
 

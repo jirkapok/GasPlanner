@@ -107,6 +107,11 @@ export class Segments {
         return this.add(depth, depth, gas, duration);
     }
 
+    /** Adds transition to newDepth in meters, from last segment end depth using given gas for given duration in seconds */
+    public addChangeTo(newDepth: number, gas: Gas, duration: number): Segment {
+        return this.add(this.currentDepth, newDepth, gas, duration);
+    }
+
     public mergeFlat(): Segment[] {
         const toRemove: Segment[] = [];
         for (let index = this.segments.length - 1; index > 0; index--) {

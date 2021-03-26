@@ -8,13 +8,21 @@ export enum Strategies {
 
 export class Plan {
     public noDecoTime = 0;
-    public segments: Segments = new Segments();
+    private segments: Segments = new Segments();
     private _depth = 0;
     private _duration = 0;
 
     /** provide the not necessary gas and options only to start from simple valid profile */
     constructor(public strategy: Strategies, depth: number, duration: number, gas: Gas, options: Options) {
         this.reset(depth, duration, gas, options);
+    }
+
+    public get segmentsCount(): number {
+        return 0; // TODO this.segments.length;
+    }
+
+    public toSegments(): Segments {
+        return this.segments.copy();
     }
 
     public reset(depth: number, duration: number, gas: Gas, options: Options): void {

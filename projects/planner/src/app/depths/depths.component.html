@@ -4,7 +4,7 @@
       <span *ngIf="!isComplex">Depth</span>
       <span *ngIf="isComplex">Depths</span>
   </div>
-  <div class="card-body">
+  <div class="card-body" *ngIf="!isComplex">
     <div class="form-group">
       <label for="duration">Bottom time [min.]:
         <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="planDuration" class="form-control" type="number"
@@ -22,5 +22,23 @@
         <div class="text-danger" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number 1 - 500 m</div>
       </label>
     </div>
+  </div>
+  <div class="card-body" *ngIf="isComplex">
+    <table class="table table-noheader">
+        <tr>
+          <th class="mx-0 px-1">From [m]</th>
+          <th class="mx-0 px-1">To [m]</th>
+          <th class="mx-0 px-1">Duration [min]</th>
+          <th class="mx-0 px-1">Tank</th>
+          <th class="mx-0 px-1"><button class="btn btn-sm m-0 p-0" type="button" (click)="addSegment()"><fa-icon [icon]="addIcon"></fa-icon></button></th>
+        </tr>
+        <tr *ngFor="let segment of segments">
+            <td class="mx-0 px-1">{{ segment.startDepth }}</td>
+            <td class="mx-0 px-1">{{ segment.endDepth }}</td>
+            <td class="mx-0 px-1">{{ segment.duration }}</td>
+            <td class="mx-0 px-1">Tank</td>
+            <td class="mx-0 px-0"><button *ngIf="minimumSegments" type="button" class="btn btn-sm m-0 p-0" (click)="removeSegment(segment)"><fa-icon [icon]="removeIcon"></fa-icon></button></td>
+          </tr>
+    </table>
   </div>
 </div>

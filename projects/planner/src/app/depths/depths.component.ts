@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
+import { faLayerGroup, faTrashAlt, faPlusSquare, faTshirt  } from '@fortawesome/free-solid-svg-icons';
 
 import { Plan } from '../shared/models';
-import { StandardGases } from 'scuba-physics';
+import { Segment, StandardGases } from 'scuba-physics';
 import { PlannerService } from '../shared/planner.service';
 
 @Component({
@@ -15,14 +15,20 @@ export class DepthsComponent implements OnInit {
     public formValid = true;
     public plan: Plan;
     public icon = faLayerGroup;
+    public addIcon = faPlusSquare;
+    public removeIcon = faTrashAlt;
+    public segments: Segment[] = [
+        new Segment(0, 30, StandardGases.air, 10)
+    ];
 
-    constructor(private planner: PlannerService) {
+    constructor(public planner: PlannerService) {
         this.plan = this.planner.plan;
     }
 
     ngOnInit(): void {
         this.planner.calculate();
     }
+
     public get isComplex(): boolean {
         return this.planner.isComplex;
     }
@@ -33,6 +39,22 @@ export class DepthsComponent implements OnInit {
 
     public set planDuration(newValue: number) {
         this.planner.assignDuration(newValue);
+    }
+
+    public get minimumSegments(): boolean {
+        return this.segments.length > 1;
+    }
+
+    private counter = 10;
+
+    public addSegment(): void {
+        this.counter++;
+        const newSegment = new Segment(0, 30, StandardGases.air, this.counter);
+        this.segments.push(newSegment);
+    }
+
+    public removeSegment(segment: Segment): void {
+        this.segments = this.segments.filter(s => s !== segment);
     }
 
     @Input()

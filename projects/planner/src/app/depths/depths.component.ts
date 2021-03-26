@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { faLayerGroup, faTrashAlt, faPlusSquare, faTshirt  } from '@fortawesome/free-solid-svg-icons';
+import { faLayerGroup, faTrashAlt, faPlusSquare  } from '@fortawesome/free-solid-svg-icons';
 
 import { Plan } from '../shared/models';
 import { Segment, StandardGases } from 'scuba-physics';
@@ -14,7 +14,7 @@ export class DepthsComponent implements OnInit {
     @Input()
     public formValid = true;
     public plan: Plan;
-    public icon = faLayerGroup;
+    public cardIcon = faLayerGroup;
     public addIcon = faPlusSquare;
     public removeIcon = faTrashAlt;
     public segments: Segment[] = [
@@ -55,6 +55,14 @@ export class DepthsComponent implements OnInit {
 
     public removeSegment(segment: Segment): void {
         this.segments = this.segments.filter(s => s !== segment);
+    }
+
+    public depthChanged(segment: Segment): void {
+        // TODO depthChanged
+    }
+
+    public durationChanged(segment: Segment): void {
+        // TODO durationChanged
     }
 
     @Input()

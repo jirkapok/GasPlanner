@@ -79,6 +79,16 @@ export class Segments {
         return result;
     }
 
+    /** Gets count stored items */
+    public get length(): number {
+        return this.segments.length;
+    }
+
+    /** Gets copy of managed items */
+    public get items(): Segment[] {
+        return this.segments.slice();
+    }
+
     public get maxDepth(): number {
         return this._maxDepth;
     }
@@ -112,6 +122,7 @@ export class Segments {
         return this.add(this.currentDepth, newDepth, gas, duration);
     }
 
+    /** Returns not null collection managed items after all neighbor elements with identical speed are merged into one */
     public mergeFlat(): Segment[] {
         const toRemove: Segment[] = [];
         for (let index = this.segments.length - 1; index > 0; index--) {
@@ -125,6 +136,11 @@ export class Segments {
 
         this.segments = this.segments.filter(s => !toRemove.includes(s));
         return this.segments;
+    }
+
+    /** Removes the given segment from managed collection */
+    public remove(segment: Segment): void {
+        this.segments = this.segments.filter(s => s !== segment);
     }
 
     public withAll(callBack: (segment: Segment) => void): void {

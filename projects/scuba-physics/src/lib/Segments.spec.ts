@@ -108,4 +108,30 @@ describe('Segments', () => {
             });
         });
     });
+
+    describe('Items manipulation', () => {
+        it('Items returns always new collection', () => {
+            const segments = new Segments();
+            segments.add(0, 20, StandardGases.air, 2);
+            segments.add(20, 20, StandardGases.air, 18);
+            expect(segments.items).not.toBe(segments.items);
+        });
+
+        it('Length returns managed collection items count', () => {
+            const segments = new Segments();
+            segments.add(0, 20, StandardGases.air, 2);
+            segments.add(20, 20, StandardGases.air, 18);
+            expect(segments.items.length).toBe(segments.length);
+        });
+
+        it('Remove items removes its item from managed collection', () => {
+            const segments = new Segments();
+            segments.add(0, 20, StandardGases.air, 2);
+            const middle = segments.add(20, 20, StandardGases.air, 18);
+            segments.add(20, 0, StandardGases.air, 10);
+            segments.remove(middle);
+
+            expect(segments.items.length).toBe(2);
+        });
+    });
 });

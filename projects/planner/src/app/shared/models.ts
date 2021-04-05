@@ -37,7 +37,7 @@ export class Level {
 export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     public noDecoTime = 0;
-    private segments: Segments = new Segments();
+    private _segments: Segments = new Segments();
     private _depth = 0;
     private _duration = 0;
     private onChanged = new Subject();
@@ -54,11 +54,11 @@ export class Plan {
     }
 
     public toSegments(): Segments {
-        return this.segments.copy();
+        return this._segments.copy();
     }
 
-    public get items(): Segment[] {
-        return this.segments.items;
+    public get segments(): Segment[] {
+        return this._segments.items;
     }
 
     public setSimple(depth: number, duration: number, gas: Gas, options: Options): void {
@@ -69,7 +69,7 @@ export class Plan {
     private reset(depth: number, duration: number, gas: Gas, options: Options): void {
         this._depth = depth;
         this._duration = duration;
-        this.segments = SegmentsFactory.createForPlan(depth, duration, gas, options);
+        this._segments = SegmentsFactory.createForPlan(depth, duration, gas, options);
     }
 
     public get maxDepth(): number {
@@ -78,7 +78,7 @@ export class Plan {
 
     public assignDepth(newDepth: number, gas: Gas, options: Options): void {
         this._depth = newDepth;
-        this.segments = SegmentsFactory.createForPlan(newDepth, this._duration, gas, options);
+        this._segments = SegmentsFactory.createForPlan(newDepth, this._duration, gas, options);
         this.onChanged.next();
     }
 
@@ -88,18 +88,20 @@ export class Plan {
 
     public assignDuration(newDuration: number, gas: Gas, options: Options): void {
         this._duration = newDuration;
-        this.segments = SegmentsFactory.createForPlan(this._depth, this.duration, gas, options);
+        this._segments = SegmentsFactory.createForPlan(this._depth, this.duration, gas, options);
         this.onChanged.next();
     }
 
     public addSegment(gas: Gas): void {
-        const last = this.segments.last();
-        this.segments.addChangeTo(last.endDepth, gas, Plan.defaultDuration);
+        const last = this._segments.last();
+        this._segments.addChangeTo(last.endDepth, gas, Plan.defaultDuration);
         this.onChanged.next();
     }
 
     public removeSegment(segment: Segment): void {
-        this.segments.remove(segment);
+        this._segments.remove(segment);
+        // in case of remove first segment, we enforce start from surface (0m).
+        this.segments[0].startDepth = 0;
         this.onChanged.next();
     }
 
@@ -120,7 +122,7 @@ export class Plan {
         this._depth = other._depth;
         this._duration = other._duration;
         // cant use copy, since deserialized objects wouldn't have one.
-        this.segments = Segments.from(other.segments);
+        this._segments = Segments.from(other._segments);
         this.onChanged.next();
     }
 }

@@ -35,7 +35,7 @@ export class DepthsComponent implements OnDestroy {
     }
 
     private updateLevels(): void {
-        const segments: Segment[] = this.plan.items;
+        const segments: Segment[] = this.plan.segments;
         const converted: Level[] = [];
         segments.forEach(segment => {
             const level = new Level(segment);
@@ -70,7 +70,6 @@ export class DepthsComponent implements OnDestroy {
     }
 
     public removeSegment(level: Level): void {
-        // TODO multilevel: prevent remove of first segment starting from 0m.
         this.planner.removeSegment(level.segment);
     }
 

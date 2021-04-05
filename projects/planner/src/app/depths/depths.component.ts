@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { faLayerGroup, faTrashAlt, faPlusSquare  } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
-import { Segment, StandardGases } from 'scuba-physics';
+import { Segment, StandardGases, Tank } from 'scuba-physics';
 import { Plan, Level } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 
@@ -12,7 +12,7 @@ import { PlannerService } from '../shared/planner.service';
     styleUrls: ['./depths.component.css']
 })
 export class DepthsComponent implements OnDestroy {
-    private levels: Level[] = [];
+    private _levels: Level[] = [];
     private subscription: Subscription;
     @Input()
     public formValid = true;
@@ -42,7 +42,7 @@ export class DepthsComponent implements OnDestroy {
             converted.push(level);
         });
 
-        this.levels = converted;
+        this._levels = converted;
     }
 
     public get isComplex(): boolean {
@@ -61,8 +61,16 @@ export class DepthsComponent implements OnDestroy {
         return this.plan.minimumSegments;
     }
 
-    public get segments(): Level[] {
-        return this.levels;
+    public get levels(): Level[] {
+        return this._levels;
+    }
+
+    public get tanks(): Tank[] {
+        return this.planner.tanks;
+    }
+
+    public tankLabel(tank: Tank): string {
+        return Level.tankLabel(tank);
     }
 
     public addSegment(): void {

@@ -1,7 +1,7 @@
 import { WayPoint, Plan } from './models';
 import {
     BuhlmannAlgorithm, Options, Gases,
-    Segments, SegmentsFactory, Segment, Event, CalculatedProfile,
+    Segments, Segment, Event, CalculatedProfile,
     EventType, ProfileEvents, Ceiling, Tank
 } from 'scuba-physics';
 

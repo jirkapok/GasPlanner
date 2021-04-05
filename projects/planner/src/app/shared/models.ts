@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs';
-import { Ceiling, Time, Event, Segment, StandardGases, Segments, SegmentsFactory, Gas, Options } from 'scuba-physics';
+import { Ceiling, Time, Event, Segment, Segments, SegmentsFactory,
+    StandardGases, Gas, Options, Tank } from 'scuba-physics';
 
 export enum Strategies {
     ALL = 1,
@@ -8,9 +9,20 @@ export enum Strategies {
 }
 
 export class Level {
+    public tank: Tank = Tank.createDefault();
+
     constructor(
         public segment: Segment,
     ){}
+
+
+    public static tankLabel(tank: Tank): string {
+        if(!tank) {
+            return '';
+        }
+
+        return `${tank.startPressure}/${tank.size}/${tank.name}`;
+    }
 
     public get duration(): number {
         return Time.toMinutes(this.segment.duration);
@@ -31,6 +43,10 @@ export class Level {
 
     public set endDepth(newValue: number) {
         this.segment.endDepth = newValue;
+    }
+
+    public get tankLabel(): string {
+        return Level.tankLabel(this.tank);
     }
 }
 

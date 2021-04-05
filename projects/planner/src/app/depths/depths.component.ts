@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { faLayerGroup, faTrashAlt, faPlusSquare  } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 
-import { Plan } from '../shared/models';
 import { Segment, StandardGases } from 'scuba-physics';
+import { Plan, Level } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 
 @Component({
@@ -10,23 +11,38 @@ import { PlannerService } from '../shared/planner.service';
     templateUrl: './depths.component.html',
     styleUrls: ['./depths.component.css']
 })
-export class DepthsComponent implements OnInit {
+export class DepthsComponent implements OnDestroy {
+    private levels: Level[] = [];
+    private subscription: Subscription;
     @Input()
     public formValid = true;
     public plan: Plan;
     public cardIcon = faLayerGroup;
     public addIcon = faPlusSquare;
     public removeIcon = faTrashAlt;
-    public segments: Segment[] = [
-        new Segment(0, 30, StandardGases.air, 10)
-    ];
 
     constructor(public planner: PlannerService) {
         this.plan = this.planner.plan;
+        this.updateLevels();
+
+        this.subscription = this.planner.calculated.subscribe(() => {
+            this.updateLevels();
+        });
     }
 
-    ngOnInit(): void {
-        this.planner.calculate();
+    public ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
+
+    private updateLevels(): void {
+        const segments: Segment[] = this.plan.items;
+        const converted: Level[] = [];
+        segments.forEach(segment => {
+            const level = new Level(segment);
+            converted.push(level);
+        });
+
+        this.levels = converted;
     }
 
     public get isComplex(): boolean {
@@ -42,27 +58,28 @@ export class DepthsComponent implements OnInit {
     }
 
     public get minimumSegments(): boolean {
-        return this.segments.length > 1;
+        return this.plan.minimumSegments;
     }
 
-    private counter = 10;
+    public get segments(): Level[] {
+        return this.levels;
+    }
 
     public addSegment(): void {
-        this.counter++;
-        const newSegment = new Segment(0, 30, StandardGases.air, this.counter);
-        this.segments.push(newSegment);
+        this.planner.addSegment();
     }
 
-    public removeSegment(segment: Segment): void {
-        this.segments = this.segments.filter(s => s !== segment);
+    public removeSegment(level: Level): void {
+        // TODO multilevel: prevent remove of first segment starting from 0m.
+        this.planner.removeSegment(level.segment);
     }
 
-    public depthChanged(segment: Segment): void {
-        // TODO depthChanged
+    public depthChanged(level: Level): void {
+        this.planner.calculate();
     }
 
-    public durationChanged(segment: Segment): void {
-        // TODO durationChanged
+    public durationChanged(level: Level): void {
+        this.planner.calculate();
     }
 
     @Input()

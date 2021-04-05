@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
+import { PlannerService } from './shared/planner.service';
 
 @Component({
     selector: 'app-root',
@@ -7,7 +8,9 @@ import { SwUpdate } from '@angular/service-worker';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-    constructor(updates: SwUpdate) {
+    constructor(updates: SwUpdate, planner: PlannerService) {
+        planner.calculate();
+
         updates.available.subscribe(event => {
             updates.activateUpdate().then(() => {
                 document.location.reload();

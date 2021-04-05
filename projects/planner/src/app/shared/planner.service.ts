@@ -5,11 +5,11 @@ import { Plan, Dive, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, Time, DepthConverterFactory, Tank, Diver,
-    SegmentsFactory, Consumption, Gas} from 'scuba-physics';
+    SegmentsFactory, Consumption, Gas, Segment} from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
-    public isComplex = false;
+    public isComplex = true;
     public plan: Plan;
     public diver: Diver = new Diver(20, 1.4);
     // there always needs to be at least one
@@ -40,7 +40,7 @@ export class PlannerService {
 
     public resetToSimple(): void {
         this.tanks = this.tanks.slice(0, 1);
-        this.plan.reset(this.plan.maxDepth, this.plan.duration, this.firstGas, this.options);
+        this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstGas, this.options);
     }
 
     public addGas(): void {
@@ -50,19 +50,24 @@ export class PlannerService {
         this.calculate();
     }
 
-    public addSegment(targetDepth: number, duration: number): void {
-        this.plan.addSegment(targetDepth, this.firstGas, duration);
-    }
-
     public removeGas(gas: Tank): void {
         this.tanks = this.tanks.filter(g => g !== gas);
+        this.calculate();
+    }
+
+    public addSegment(): void {
+        this.plan.addSegment(this.firstGas);
+        this.calculate();
+    }
+
+    public removeSegment(segment: Segment): void {
+        this.plan.removeSegment(segment);
         this.calculate();
     }
 
     public changeWaterType(isFreshWater: boolean): void {
         this.options.isFreshWater = isFreshWater;
         this.calculate();
-        this.onCalculated.next();
     }
 
     public bestNitroxMix(): number {

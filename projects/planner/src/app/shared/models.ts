@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { Ceiling, Time, Event, Segment, StandardGases, Segments, SegmentsFactory, Gas, Options } from 'scuba-physics';
 
 export enum Strategies {
@@ -6,26 +7,66 @@ export enum Strategies {
     THIRD = 3
 }
 
+export class Level {
+    constructor(
+        public segment: Segment,
+    ){}
+
+    public get duration(): number {
+        return Time.toMinutes(this.segment.duration);
+    }
+
+    /** in minutes */
+    public set duration(newValue: number) {
+        this.segment.duration = Time.toSeconds(newValue);
+    }
+
+    public get startDepth(): number {
+        return this.segment.startDepth;
+    }
+
+    public get endDepth(): number {
+        return this.segment.endDepth;
+    }
+
+    public set endDepth(newValue: number) {
+        this.segment.endDepth = newValue;
+    }
+}
+
 export class Plan {
+    private static readonly defaultDuration = Time.oneMinute * 10;
     public noDecoTime = 0;
     private segments: Segments = new Segments();
     private _depth = 0;
     private _duration = 0;
+    private onChanged = new Subject();
+    public changed;
 
     /** provide the not necessary gas and options only to start from simple valid profile */
     constructor(public strategy: Strategies, depth: number, duration: number, gas: Gas, options: Options) {
         this.reset(depth, duration, gas, options);
+        this.changed = this.onChanged.asObservable();
     }
 
-    public get segmentsCount(): number {
-        return 0; // TODO this.segments.length;
+    public get minimumSegments(): boolean {
+        return this.segments.length > 1;
     }
 
     public toSegments(): Segments {
         return this.segments.copy();
     }
 
-    public reset(depth: number, duration: number, gas: Gas, options: Options): void {
+    public get items(): Segment[] {
+        return this.segments.items;
+    }
+
+    public setSimple(depth: number, duration: number, gas: Gas, options: Options): void {
+        this.reset(depth, duration, gas, options);
+        this.onChanged.next();
+    }
+
+    private reset(depth: number, duration: number, gas: Gas, options: Options): void {
         this._depth = depth;
         this._duration = duration;
         this.segments = SegmentsFactory.createForPlan(depth, duration, gas, options);
@@ -38,6 +79,7 @@ export class Plan {
     public assignDepth(newDepth: number, gas: Gas, options: Options): void {
         this._depth = newDepth;
         this.segments = SegmentsFactory.createForPlan(newDepth, this._duration, gas, options);
+        this.onChanged.next();
     }
 
     public get duration(): number {
@@ -47,10 +89,18 @@ export class Plan {
     public assignDuration(newDuration: number, gas: Gas, options: Options): void {
         this._duration = newDuration;
         this.segments = SegmentsFactory.createForPlan(this._depth, this.duration, gas, options);
+        this.onChanged.next();
     }
 
-    public addSegment(newDepth: number, gas: Gas, duration: number): void {
-        this.segments.addChangeTo(newDepth, gas, duration);
+    public addSegment(gas: Gas): void {
+        const last = this.segments.last();
+        this.segments.addChangeTo(last.endDepth, gas, Plan.defaultDuration);
+        this.onChanged.next();
+    }
+
+    public removeSegment(segment: Segment): void {
+        this.segments.remove(segment);
+        this.onChanged.next();
     }
 
     public get availablePressureRatio(): number {
@@ -71,6 +121,7 @@ export class Plan {
         this._duration = other._duration;
         // cant use copy, since deserialized objects wouldn't have one.
         this.segments = Segments.from(other.segments);
+        this.onChanged.next();
     }
 }
 

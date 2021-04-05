@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 
 import { Diver } from 'scuba-physics';
@@ -10,7 +10,7 @@ import { PlannerService } from '../shared/planner.service';
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.css']
 })
-export class DiveOptionsComponent implements OnInit {
+export class DiveOptionsComponent {
     @Input()
     public formValid = true;
 
@@ -28,10 +28,6 @@ export class DiveOptionsComponent implements OnInit {
 
     constructor(private planner: PlannerService) {
         this.plan = this.planner.plan;
-    }
-
-    ngOnInit(): void {
-        this.reset();
     }
 
     public reset(): void {

@@ -7,11 +7,11 @@
     background: transparent;
     box-shadow: none;
     overflow: visible;
-    position: relative;
+    position: static;
  }
 
  .rounded-progress {
-     border-radius: .25em 0em 0em .25em;
+    height: 100%;
  }
 
  .reserve-overlay {
@@ -20,14 +20,14 @@
 
  .reserve-value {
      position: absolute;
-     bottom: -4em;
-     right: 0px;
+     bottom: -3.25em;
+     right: 3px;
      text-align: right;
  }
 
  .reserve-bar {
      position: absolute;
-     padding: 0px 3px 0px 0px;
+     padding: 0px;
      height: 4em;
      top: -.1em;
      left: 0px;
@@ -35,3 +35,8 @@
      font-size: .75em;
      border-right: 2px solid darkorange;
  }
+
+ .combined_wrapper {
+    position: relative;
+    width: 100%;
+}

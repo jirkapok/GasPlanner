@@ -138,8 +138,6 @@ class AlgorithmContext {
         this.tissues = new Tissues(depthConverter.surfacePressure);
         // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
-
-        // TODO multilevel diving: fix max depth, last doesn't have to be max. depth.
         const last = segments.last();
         this.currentGas = last.gas;
 

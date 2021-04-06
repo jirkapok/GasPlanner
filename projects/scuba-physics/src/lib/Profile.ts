@@ -152,6 +152,8 @@ export class ProfileEvents {
         const depthConverter = new DepthConverterFactory(options).create();
         const context = new EventsContext(userSegments, profile, depthConverter, options);
 
+        // TODO add event about faster speed of any segment than speed in options
+
         for (context.index = 0; context.index < profile.length; context.index++) {
 
             // nice to have calculate exact time and depth of the events, it is enough it happened

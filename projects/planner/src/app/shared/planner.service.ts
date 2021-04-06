@@ -5,7 +5,7 @@ import { Plan, Dive, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, Time, DepthConverterFactory, Tank, Diver,
-    SegmentsFactory, Consumption, Gas, Segment} from 'scuba-physics';
+    SegmentsFactory, Consumption, Segment} from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
@@ -112,17 +112,18 @@ export class PlannerService {
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;
         this.dive.events = profile.events;
+        const userSegments = this.plan.length;
 
-        if (profile.wayPoints.length > 2) {
+        // e.g. anything was added as calculated ascent
+        if (profile.wayPoints.length > userSegments) {
             const consumption = new Consumption(this.depthConverter);
 
             this.dive.maxTime = consumption.calculateMaxBottomTime(this.plan.maxDepth, this.tanks,
                 this.diver, this.options, this.plan.noDecoTime);
 
-            // TODO multilevel diving: ascent cant be identified by first two segments
-            const originAscent = SegmentsFactory.ascent(profile.origin);
+            const originAscent = SegmentsFactory.ascent(profile.origin, userSegments);
             this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
-            consumption.consumeFromTanks(profile.origin, this.tanks, this.diver);
+            consumption.consumeFromTanks(profile.origin, userSegments, this.tanks, this.diver);
             this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
         }
 

@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { Ceiling, Time, Event, Segment, Segments, SegmentsFactory,
-    StandardGases, Gas, Options, Tank } from 'scuba-physics';
+    StandardGases, Options, Tank } from 'scuba-physics';
 
 export enum Strategies {
     ALL = 1,
@@ -73,6 +73,10 @@ export class Plan {
 
     public get minimumSegments(): boolean {
         return this.segments.length > 1;
+    }
+
+    public get length(): number {
+        return this._segments.length;
     }
 
     public copySegments(): Segments {

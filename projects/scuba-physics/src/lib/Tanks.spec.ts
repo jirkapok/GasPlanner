@@ -158,7 +158,7 @@ describe('Consumption', () => {
                     new Segment(20, 20, tank.gas,  Time.oneMinute),
                     new Segment(20, 0, tank.gas, duration)
                 ];
-                consumption.consumeFromTanks(segments, tanks, diver);
+                consumption.consumeFromTanks(segments, 2, tanks, diver);
                 return tank;
             };
 
@@ -184,7 +184,7 @@ describe('Consumption', () => {
                 ];
 
                 // (2b avg depth * 2 bar/min * 1 minutes) + (3b * 2 bar/min * 10 minutes) + (2b * 2 bar/min * 2 minutes)
-                consumption.consumeFromTanks(profile, tanks, diver);
+                consumption.consumeFromTanks(profile, 2, tanks, diver);
                 expect(tank.consumed).toEqual(72);
             });
         });
@@ -204,7 +204,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
-            consumption.consumeFromTanks(profile, tanks, diver);
+            consumption.consumeFromTanks(profile, 2, tanks, diver);
 
             it('Both tanks are consumed', () => {
                 expect(airTank.consumed).toEqual(52);
@@ -231,7 +231,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
-            consumption.consumeFromTanks(profile, tanks, diver);
+            consumption.consumeFromTanks(profile, 2, tanks, diver);
 
             it('Consumption is updated from second tank only', () => {
                 expect(airTank.consumed).toEqual(0);
@@ -254,7 +254,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
-            consumption.consumeFromTanks(profile, tanks, diver);
+            consumption.consumeFromTanks(profile, 2, tanks, diver);
 
             it('Consumption is updated from both air tanks', () => {
                 expect(airTank.consumed).toEqual(7);
@@ -274,7 +274,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, airTank.gas, 2 * Time.oneMinute)
             ];
 
-            consumption.consumeFromTanks(profile, tanks, diver);
+            consumption.consumeFromTanks(profile, 2, tanks, diver);
 
             it('Consumption is updated only from air', () => {
                 expect(airTank.consumed).toEqual(72);
@@ -300,7 +300,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, airTank.gas, 2 * Time.oneMinute)
             ];
 
-            consumption.consumeFromTanks(profile, tanks, diver);
+            consumption.consumeFromTanks(profile, 2, tanks, diver);
 
             it('No tank is updated', () => {
                 expect(airTank.consumed).toEqual(0);
@@ -327,7 +327,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 10 * Time.oneMinute)  // 2b * 2 bar/min * 10 minutes = 40b
             ];
 
-            consumption.consumeFromTanks(profile, tanks, diver);
+            consumption.consumeFromTanks(profile, 2, tanks, diver);
 
             it('Reserve is updated from both air tanks', () => {
                 expect(airTank.reserve).toEqual(45);     // (7b + 4b * 1 b/min. * 2 min) * 3

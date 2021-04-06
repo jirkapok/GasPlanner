@@ -238,10 +238,12 @@ export class SegmentsFactory {
         return Time.toSeconds(targetDepth / options.descentSpeed);
     }
 
-    // TODO multilevel diving
-    public static ascent(segments: Segment[]): Segment[] {
-        // first two are descent and bottom
-        return segments.slice(2, segments.length);
+    /**
+     * Returns remaining segments after count of user defined as automatically calculated ascent.
+     * @param userSegments Number of segments from the start of the segments array to count as defined by user.
+     */
+    public static ascent(segments: Segment[], userSegments: number): Segment[] {
+        return segments.slice(userSegments, segments.length);
     }
 
     public static timeToSurface(ascent: Segment[]): number {

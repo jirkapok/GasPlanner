@@ -134,4 +134,37 @@ describe('Segments', () => {
             expect(segments.items.length).toBe(2);
         });
     });
+
+    describe('Fix start depths', () => {
+        let segments: Segments;
+        let first: Segment;
+        let middle: Segment;
+
+        beforeEach(() => {
+            segments = new Segments();
+            first = segments.add(0, 20, StandardGases.air, 2);
+            middle = segments.add(20, 30, StandardGases.air, 20);
+            segments.add(30, 0, StandardGases.air, 10);
+        });
+
+        it('It is called for remove', () => {
+            segments.remove(middle);
+
+            expect(segments.last().startDepth).toBe(20);
+        });
+
+        it('Fixes element in middle', () => {
+            middle.endDepth = 10;
+            segments.fixStartDepths();
+
+            expect(segments.last().startDepth).toBe(10);
+        });
+
+        it('Sets first element start depth to 0m', () => {
+            first.startDepth = 30;
+            segments.fixStartDepths();
+
+            expect(first.startDepth).toBe(0);
+        });
+    });
 });

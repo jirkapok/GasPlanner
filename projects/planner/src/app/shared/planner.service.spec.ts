@@ -71,12 +71,46 @@ describe('PlannerService', () => {
             expect(planner.plan.duration).toBe(12);
         });
 
+        it('Plan has correct depths', () => {
+            const segments = planner.plan.segments;
+            expect(segments.length).toBe(2);
+            expect(segments[0].endDepth).toBe(30);
+            expect(segments[1].endDepth).toBe(30);
+        });
+
         it('Resets gases to one only', () => {
             expect(planner.tanks.length).toBe(1);
         });
 
         it('Keeps first gas content', () => {
             expect(planner.firstTank.o2).toBe(o2Expected);
+        });
+    });
+
+    describe('Depths', () => {
+        it('Add correct segment to the end', () => {
+            planner.addSegment();
+            const added = planner.plan.segments[2];
+            expect(added.endDepth).toBe(30);
+            expect(added.duration).toBe(600);
+            expect(added.tank).toBe(planner.firstTank);
+        });
+
+        it('Remove first segment sets initial depth to 0m', () => {
+            planner.addSegment();
+            let first = planner.plan.segments[0];
+            planner.removeSegment(first);
+            first = planner.plan.segments[0];
+            expect(first.startDepth).toBe(0);
+        });
+
+        it('Remove middle segment corrects start depths', () => {
+            planner.plan.segments[1].endDepth = 40;
+            planner.addSegment();
+            let middle = planner.plan.segments[1];
+            planner.removeSegment(middle);
+            middle = planner.plan.segments[1];
+            expect(middle.startDepth).toBe(30);
         });
     });
 });

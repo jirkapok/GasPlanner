@@ -75,7 +75,7 @@ export class Plan {
         return this.segments.length > 1;
     }
 
-    public toSegments(): Segments {
+    public copySegments(): Segments {
         return this._segments.copy();
     }
 
@@ -123,9 +123,11 @@ export class Plan {
 
     public removeSegment(segment: Segment): void {
         this._segments.remove(segment);
-        // in case of remove first segment, we enforce start from surface (0m).
-        this.segments[0].startDepth = 0;
         this.onChanged.next();
+    }
+
+    public fixDepths(): void {
+        this._segments.fixStartDepths();
     }
 
     public get availablePressureRatio(): number {

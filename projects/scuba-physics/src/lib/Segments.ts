@@ -169,6 +169,7 @@ export class Segments {
     /** Removes the given segment from managed collection */
     public remove(segment: Segment): void {
         this.segments = this.segments.filter(s => s !== segment);
+        this.fixStartDepths();
     }
 
     public withAll(callBack: (segment: Segment) => void): void {
@@ -187,6 +188,20 @@ export class Segments {
 
     public copy(): Segments {
         return Segments.from(this);
+    }
+
+    /** This helps keep the list linked by setting all start depths to previous segment endDepth. */
+    public fixStartDepths(): void {
+        // in case of remove first segment, we enforce start from surface (0m).
+        if (this.any()) {
+            this.segments[0].startDepth = 0;
+        }
+
+        for (let index = 0; index < this.segments.length - 1; index++) {
+            const previous = this.segments[index];
+            const current = this.segments[index + 1];
+            current.startDepth = previous.endDepth;
+        }
     }
 }
 

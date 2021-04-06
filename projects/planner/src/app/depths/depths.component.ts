@@ -81,11 +81,12 @@ export class DepthsComponent implements OnDestroy {
         this.planner.removeSegment(level.segment);
     }
 
-    public depthChanged(level: Level): void {
+    public depthChanged(): void {
+        this.plan.fixDepths();
         this.planner.calculate();
     }
 
-    public durationChanged(level: Level): void {
+    public durationChanged(): void {
         this.planner.calculate();
     }
 

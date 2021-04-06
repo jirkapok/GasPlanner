@@ -89,6 +89,11 @@ export class DepthsComponent implements OnDestroy {
         this.planner.calculate();
     }
 
+    public assignTank(level: Level, tank: Tank): void {
+        level.tank = tank;
+        this.planner.calculate();
+    }
+
     @Input()
     public get plannedDepth(): number {
         return this.plan.maxDepth;

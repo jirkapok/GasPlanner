@@ -62,7 +62,7 @@ describe('PlannerService', () => {
 
         beforeEach(() => {
             planner.firstTank.o2 = o2Expected;
-            planner.addGas();
+            planner.addTank();
             planner.addSegment();
             planner.resetToSimple();
         });

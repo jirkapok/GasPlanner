@@ -192,7 +192,8 @@ export class Consumption {
 
     private static calculateDecompression(planedDepth: number, duration: number, tanks: Tank[], options: Options): CalculatedProfile {
         const bGases = new Gases();
-        const bGas = tanks[0].gas;
+        const firstTank = tanks[0];
+        const bGas = firstTank.gas;
         bGases.addBottomGas(bGas);
 
         // everything except first gas is considered as deco gas
@@ -201,7 +202,7 @@ export class Consumption {
             bGases.addDecoGas(decoGas);
         });
 
-        const segments: Segments = SegmentsFactory.createForPlan(planedDepth, duration, bGas, options);
+        const segments: Segments = SegmentsFactory.createForPlan(planedDepth, duration, firstTank, options);
         const algorithm = new BuhlmannAlgorithm();
         const profile = algorithm.calculateDecompression(options, bGases, segments);
         return profile;

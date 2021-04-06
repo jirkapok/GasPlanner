@@ -29,34 +29,30 @@ export class PlannerService {
         return this.tanks[0];
     }
 
-    private get firstGas(): Gas {
-        return this.firstTank.gas;
-    }
-
     constructor() {
         this.calculated = this.onCalculated.asObservable();
-        this.plan = new Plan(Strategies.ALL, 30, 12, this.firstGas, this.options);
+        this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
     }
 
     public resetToSimple(): void {
         this.tanks = this.tanks.slice(0, 1);
-        this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstGas, this.options);
+        this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
     }
 
-    public addGas(): void {
+    public addTank(): void {
         const newTank = Tank.createDefault();
         newTank.size = 11;
         this.tanks.push(newTank);
         this.calculate();
     }
 
-    public removeGas(gas: Tank): void {
-        this.tanks = this.tanks.filter(g => g !== gas);
+    public removeTank(tank: Tank): void {
+        this.tanks = this.tanks.filter(g => g !== tank);
         this.calculate();
     }
 
     public addSegment(): void {
-        this.plan.addSegment(this.firstGas);
+        this.plan.addSegment(this.firstTank);
         this.calculate();
     }
 
@@ -93,17 +89,18 @@ export class PlannerService {
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         const algorithm = new BuhlmannAlgorithm();
         const depth = this.plan.maxDepth;
-        const noDecoLimit = algorithm.noDecoLimit(depth, this.firstGas, this.options);
+        const firstGas = this.firstTank.gas;
+        const noDecoLimit = algorithm.noDecoLimit(depth, firstGas, this.options);
         return Math.floor(noDecoLimit);
     }
 
     public assignDuration(newDuration: number): void {
-        this.plan.assignDuration(newDuration, this.firstGas, this.options);
+        this.plan.assignDuration(newDuration, this.firstTank, this.options);
         this.calculate();
     }
 
     public assignDepth(newDepth: number): void {
-        this.plan.assignDepth(newDepth, this.firstGas, this.options);
+        this.plan.assignDepth(newDepth, this.firstTank, this.options);
         this.calculate();
     }
 

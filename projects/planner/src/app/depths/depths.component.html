@@ -52,7 +52,7 @@
                     <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                         <button class="btn btn-default border" id="tankMenu" type="button" ngbDropdownToggle></button>
                         <div ngbDropdownMenu aria-labelledby="tankMenu" aria-expanded="false">
-                        <button *ngFor="let tank of tanks" type="button" class="dropdown-item" (click)="level.tank = tank">{{ tankLabel(tank) }}</button>
+                        <button *ngFor="let tank of tanks" type="button" class="dropdown-item" (click)="assignTank(level, tank)">{{ tankLabel(tank) }}</button>
                         </div>
                     </div>
                 </div>

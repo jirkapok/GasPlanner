@@ -9,14 +9,12 @@ export enum Strategies {
 }
 
 export class Level {
-    public tank: Tank = Tank.createDefault();
-
     constructor(
-        public segment: Segment,
-    ){}
+        public segment: Segment
+    ){
+    }
 
-
-    public static tankLabel(tank: Tank): string {
+    public static tankLabel(tank: Tank | undefined): string {
         if(!tank) {
             return '';
         }
@@ -45,8 +43,16 @@ export class Level {
         this.segment.endDepth = newValue;
     }
 
+    public get tank(): Tank | undefined {
+        return this.segment.tank;
+    }
+
+    public set tank(newValue: Tank | undefined) {
+        this.segment.tank = newValue;
+    }
+
     public get tankLabel(): string {
-        return Level.tankLabel(this.tank);
+        return Level.tankLabel(this.segment.tank);
     }
 }
 
@@ -59,9 +65,9 @@ export class Plan {
     private onChanged = new Subject();
     public changed;
 
-    /** provide the not necessary gas and options only to start from simple valid profile */
-    constructor(public strategy: Strategies, depth: number, duration: number, gas: Gas, options: Options) {
-        this.reset(depth, duration, gas, options);
+    /** provide the not necessary tank and options only to start from simple valid profile */
+    constructor(public strategy: Strategies, depth: number, duration: number, tank: Tank, options: Options) {
+        this.reset(depth, duration, tank, options);
         this.changed = this.onChanged.asObservable();
     }
 
@@ -77,24 +83,24 @@ export class Plan {
         return this._segments.items;
     }
 
-    public setSimple(depth: number, duration: number, gas: Gas, options: Options): void {
-        this.reset(depth, duration, gas, options);
+    public setSimple(depth: number, duration: number, tank: Tank, options: Options): void {
+        this.reset(depth, duration, tank, options);
         this.onChanged.next();
     }
 
-    private reset(depth: number, duration: number, gas: Gas, options: Options): void {
+    private reset(depth: number, duration: number, tank: Tank, options: Options): void {
         this._depth = depth;
         this._duration = duration;
-        this._segments = SegmentsFactory.createForPlan(depth, duration, gas, options);
+        this._segments = SegmentsFactory.createForPlan(depth, duration, tank, options);
     }
 
     public get maxDepth(): number {
         return this._depth;
     }
 
-    public assignDepth(newDepth: number, gas: Gas, options: Options): void {
+    public assignDepth(newDepth: number, tank: Tank, options: Options): void {
         this._depth = newDepth;
-        this._segments = SegmentsFactory.createForPlan(newDepth, this._duration, gas, options);
+        this._segments = SegmentsFactory.createForPlan(newDepth, this.duration, tank, options);
         this.onChanged.next();
     }
 
@@ -102,15 +108,16 @@ export class Plan {
         return this._duration;
     }
 
-    public assignDuration(newDuration: number, gas: Gas, options: Options): void {
+    public assignDuration(newDuration: number, tank: Tank, options: Options): void {
         this._duration = newDuration;
-        this._segments = SegmentsFactory.createForPlan(this._depth, this.duration, gas, options);
+        this._segments = SegmentsFactory.createForPlan(this._depth, this.duration, tank, options);
         this.onChanged.next();
     }
 
-    public addSegment(gas: Gas): void {
+    public addSegment(tank: Tank): void {
         const last = this._segments.last();
-        this._segments.addChangeTo(last.endDepth, gas, Plan.defaultDuration);
+        const created = this._segments.addChangeTo(last.endDepth, tank.gas, Plan.defaultDuration);
+        created.tank = tank;
         this.onChanged.next();
     }
 

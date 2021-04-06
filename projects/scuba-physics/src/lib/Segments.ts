@@ -2,6 +2,7 @@ import { Gas, Gases } from './Gases';
 import { EventsFactory, Event } from './Profile';
 import { Options } from './BuhlmannAlgorithm';
 import { Time } from './Time';
+import { Tank } from './Tanks';
 
 export class SegmentsValidator {
     public static validate(segments: Segments, gases: Gases): Event[] {
@@ -30,22 +31,49 @@ export class SegmentsValidator {
 }
 
 export class Segment {
+    private _tank?: Tank;
+
     constructor(
         /** in meters */
         public startDepth: number,
         /** in meters */
         public endDepth: number,
-        public gas: Gas,
+        private _gas: Gas,
         /** in seconds */
         public duration: number) { }
 
     public static from(other: Segment): Segment {
-        return new Segment(other.startDepth, other.endDepth, other.gas, other.duration);
+        return new Segment(other.startDepth, other.endDepth, other._gas, other.duration);
+    }
+
+    /** See tank, you can change gas only by assigning tank,
+     * gas doesn't change for calculated segments.
+     */
+    public get gas(): Gas {
+        return this._gas;
+    }
+
+    public get tank(): Tank | undefined {
+        return this._tank;
+    }
+
+    /**
+     * Gets or sets optional tank assignment.
+     * If defined, user prefers to use this tank for consumption.
+     * Assigning the tank overrides the gas also by gas from the tank.
+     * This property should be used only for user defined segments.
+    */
+    public set tank(newValue: Tank | undefined) {
+        this._tank = newValue;
+
+        if (newValue) {
+            this._gas = newValue.gas;
+        }
     }
 
     public contentEquals(toCompare: Segment): boolean {
         return this.speed === toCompare.speed &&
-            this.gas === toCompare.gas;
+            this._gas === toCompare._gas;
     }
 
     /**
@@ -173,17 +201,19 @@ export class SegmentsFactory {
      *
      * @param targetDepth in meters
      * @param duration in minutes
-     * @param gas gas to be assigned to the segments
+     * @param tank to be assigned to the segments
      * @param options Ascent/descent speeds
      */
-    public static createForPlan(targetDepth: number, duration: number, gas: Gas, options: Options): Segments {
+    public static createForPlan(targetDepth: number, duration: number, tank: Tank, options: Options): Segments {
         const segments = new Segments();
         const descentDuration = SegmentsFactory.descentDuration(targetDepth, options);
-        segments.add(0, targetDepth, gas, descentDuration);
+        const descent = segments.add(0, targetDepth, tank.gas, descentDuration);
+        descent.tank = tank;
         let bottomTime = Time.toSeconds(duration) - descentDuration;
         // not enough time to descent
         bottomTime = bottomTime < 0 ? 0 : bottomTime;
-        segments.addFlat(targetDepth, gas, bottomTime);
+        const swim = segments.addFlat(targetDepth, tank.gas, bottomTime);
+        swim.tank = tank;
         return segments;
     }
 

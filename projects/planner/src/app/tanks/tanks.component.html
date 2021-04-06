@@ -10,7 +10,7 @@
         <th class="mx-0 px-1">Size [L]</th>
         <th class="mx-0 px-1">Pressure [bar]</th>
         <th class="mx-0 px-1">Percent O2</th>
-        <th class="mx-0 px-1"><button class="btn btn-sm m-0 p-0" type="button" (click)="addGas()"><fa-icon [icon]="plusIcon"></fa-icon></button></th>
+        <th class="mx-0 px-1"><button class="btn btn-sm m-0 p-0" type="button" (click)="addTank()"><fa-icon [icon]="plusIcon"></fa-icon></button></th>
       </tr>
       <tr *ngFor="let tank of tanks">
         <td class="mx-0 px-1">
@@ -40,7 +40,7 @@
           <app-gaslabel [gas]="tank"></app-gaslabel>
           <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number 21-100%</div>
         </td>
-        <td class="mx-0 px-0"><button *ngIf="planner.firstTank !== tank" type="button" class="btn btn-sm m-0 p-0" (click)="removeGas(tank)"><fa-icon [icon]="trashIcon"></fa-icon></button></td>
+        <td class="mx-0 px-0"><button *ngIf="planner.firstTank !== tank" type="button" class="btn btn-sm m-0 p-0" (click)="removeTank(tank)"><fa-icon [icon]="trashIcon"></fa-icon></button></td>
       </tr>
   </table>
   </div>

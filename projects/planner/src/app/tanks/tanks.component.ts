@@ -43,12 +43,12 @@ export class TanksComponent {
         return this.diver.gasSac(gas);
     }
 
-    public addGas(): void {
-        this.planner.addGas();
+    public addTank(): void {
+        this.planner.addTank();
     }
 
-    public removeGas(gas: Tank): void {
-        this.planner.removeGas(gas);
+    public removeTank(gas: Tank): void {
+        this.planner.removeTank(gas);
     }
 
     public assignBestMix(): void {

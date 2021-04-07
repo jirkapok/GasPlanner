@@ -181,15 +181,13 @@ export class Consumption {
      * See also Tank.hasReserve
      */
     public static haveReserve(tanks: Tank[]): boolean {
-        let result = true;
-
-        tanks.forEach((tank: Tank) => {
-            if(!tank.hasReserve) {
-                result = false;
+        for (let index = 0; index < tanks.length; index++) {
+            if(!tanks[index].hasReserve) {
+                return false;
             }
-        });
+        }
 
-        return result;
+        return true;
     }
 
     private static calculateDecompression(planedDepth: number, duration: number, tanks: Tank[], options: Options): CalculatedProfile {
@@ -240,8 +238,8 @@ export class Consumption {
         const remaining = firstTank.endPressure - firstTank.reserve;
 
         if (remaining > 0) {
-            // TODO multilevel dive: take the deepest segment and use its tank to prolong the duration
-            const bottomSegment = ConsumptionSegment.fromSegment(segments[1]);
+            const swimSegment = segments[1]; // first descent, we extend always the second segment only.
+            const bottomSegment = ConsumptionSegment.fromSegment(swimSegment);
             bottomSegment.duration = Time.oneMinute;
             const bottomConsumption = this.consumedFromTank(bottomSegment, firstTank, diver.sac);
             const swimDuration = remaining / bottomConsumption;

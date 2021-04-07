@@ -17,8 +17,8 @@ Road map of planned features:
 * Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, fast ascent or descent, safety stop, narcotic depth
 * Allow to define multiple levels
   * Allow to define multiple ascent speeds
-  * Add option to define safety stop range including no safety stop below 10m dives
-  * Add option to define last stop depth
+  * Add option to define  last stop/safety stop range
+  * Allow no safety stop below 10m dives in simple mode
 * Add trimix support and calculator
   * Add option to define maximum narcotic depth
   * Add option to count oxygen in narcotic gas in narcotic depth calculation

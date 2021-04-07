@@ -232,7 +232,6 @@ export class SegmentsFactory {
         return segments;
     }
 
-    // TODO multilevel diving: fix minimum duration based on required descent/ascent time
     /** Calculates duration in seconds for descent from surface to target depth (meters) based on descent speed */
     public static descentDuration(targetDepth: number, options: Options): number {
         return Time.toSeconds(targetDepth / options.descentSpeed);

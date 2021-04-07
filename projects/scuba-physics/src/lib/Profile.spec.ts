@@ -140,5 +140,36 @@ describe('Profile', () => {
                 data: StandardGases.ean50
             });
         });
+
+        describe('High speeds', () => {
+            it('Adds high ascent speed', () => {
+                const segments = new Segments();
+                segments.add(0, 20, StandardGases.air, Time.oneMinute * 2);
+                segments.add(20, 0, StandardGases.air, Time.oneMinute);
+
+                const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), options);
+
+                expect(events.items[0]).toEqual({
+                    type: EventType.highAscentSpeed,
+                    timeStamp: 120,
+                    depth: 20
+                });
+            });
+
+            it('Adds high descent speed', () => {
+                const segments = new Segments();
+                segments.add(0, 10, StandardGases.air, Time.oneMinute);
+                segments.add(10, 40, StandardGases.air, Time.oneMinute);
+                segments.add(40, 0, StandardGases.air, Time.oneMinute * 20);
+
+                const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), options);
+
+                expect(events.items[0]).toEqual({
+                    type: EventType.highDescentSpeed,
+                    timeStamp: 60,
+                    depth: 10
+                });
+            });
+        });
     });
 });

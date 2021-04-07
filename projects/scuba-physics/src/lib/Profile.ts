@@ -2,6 +2,7 @@ import { Options } from './BuhlmannAlgorithm';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Gas } from './Gases';
 import { Segment } from './Segments';
+import { Time } from './Time';
 
 export enum EventType {
     noAction = 0,
@@ -14,7 +15,14 @@ export enum EventType {
     /** when breathing gas at this depth, it leads to Hypoxia */
     lowPpO2 = 3,
     /** breathing gas with high ppO2 can lead to oxygen toxicity */
-    highPpO2 = 4
+    highPpO2 = 4,
+    /** high ascent speed can lead to decompression sickness */
+    highAscentSpeed = 5,
+    /**
+     * high descent speed can lead to uncontrolled falls to the bottom
+     * or reaching higher depth than expected
+     */
+    highDescentSpeed = 6
 }
 
 export class Event {
@@ -66,6 +74,22 @@ export class EventsFactory {
             type: EventType.highPpO2
         };
     }
+
+    public static createHighAscentSpeed(timestamp: number, depth: number): Event {
+        return {
+            timeStamp: timestamp,
+            depth: depth,
+            type: EventType.highAscentSpeed
+        };
+    }
+
+    public static createHighDescentSpeed(timestamp: number, depth: number): Event {
+        return {
+            timeStamp: timestamp,
+            depth: depth,
+            type: EventType.highDescentSpeed
+        };
+    }
 }
 
 export class Events {
@@ -110,7 +134,7 @@ class EventsContext {
     public index = 0;
 
     constructor(private userSegments: number, private profile: Segment[],
-        public depthConverter: DepthConverter, private options: Options) { }
+        public depthConverter: DepthConverter, public options: Options) { }
 
     public get previous(): Segment | null {
         if (this.index > 0) {
@@ -152,26 +176,46 @@ export class ProfileEvents {
         const depthConverter = new DepthConverterFactory(options).create();
         const context = new EventsContext(userSegments, profile, depthConverter, options);
 
-        // TODO add event about faster speed of any segment than speed in options
-
         for (context.index = 0; context.index < profile.length; context.index++) {
-
             // nice to have calculate exact time and depth of the events, it is enough it happened
             const pressureSegment = this.toPressureSegment(context.current, depthConverter);
             this.addHighPpO2(context, pressureSegment);
             this.addLowPpO2(context, pressureSegment);
             this.addGasSwitch(context);
+            this.addHighDescentSpeed(context);
+            this.addHighAscentSpeed(context);
             context.elapsed += context.current.duration;
         }
 
         return context.events;
     }
 
+    private static addHighAscentSpeed(context: EventsContext) {
+        const current = context.current;
+        const speed = Time.toSeconds(current.speed);
+
+        // ascent speed is negative number
+        if (-speed > context.options.ascentSpeed) {
+            const event = EventsFactory.createHighAscentSpeed(context.elapsed, current.startDepth);
+            context.events.add(event);
+        }
+    }
+
+    private static addHighDescentSpeed(context: EventsContext) {
+        const current = context.current;
+        const speed = Time.toSeconds(current.speed);
+
+        if (speed > context.options.descentSpeed) {
+            const event = EventsFactory.createHighDescentSpeed(context.elapsed, current.startDepth);
+            context.events.add(event);
+        }
+    }
+
     private static addGasSwitch(context: EventsContext): void {
         if (context.switchingGas) {
             const current = context.current;
-            const gasSwitch = EventsFactory.createGasSwitch(context.elapsed, current.startDepth, current.gas);
-            context.events.add(gasSwitch);
+            const event = EventsFactory.createGasSwitch(context.elapsed, current.startDepth, current.gas);
+            context.events.add(event);
         }
     }
 
@@ -189,8 +233,8 @@ export class ProfileEvents {
 
             if (segment.maxDepth > gasMod) {
                 const highDepth = context.depthConverter.fromBar(gasMod);
-                const highPpO2Event = EventsFactory.createHighPpO2(context.elapsed, highDepth);
-                context.events.add(highPpO2Event);
+                const event = EventsFactory.createHighPpO2(context.elapsed, highDepth);
+                context.events.add(event);
             }
         }
     }
@@ -205,8 +249,8 @@ export class ProfileEvents {
         // only crossing the line or gas switch
         if (shouldAdd) {
             const lowDepth = context.depthConverter.fromBar(gasCeiling);
-            const lowPpO2Event = EventsFactory.createLowPpO2(context.elapsed, lowDepth);
-            context.events.add(lowPpO2Event);
+            const event = EventsFactory.createLowPpO2(context.elapsed, lowDepth);
+            context.events.add(event);
         }
     }
 

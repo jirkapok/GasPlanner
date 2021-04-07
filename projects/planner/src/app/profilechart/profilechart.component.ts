@@ -5,6 +5,7 @@ import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js';
 import { Subscription } from 'rxjs';
 import { EventType, Time, Gas, StandardGases } from 'scuba-physics';
+import { DateFormats } from '../shared/formaters';
 
 @Component({
     selector: 'app-profilechart',
@@ -38,14 +39,6 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    private selectTimeFormat(): string {
-        if (this.dive.hasHoursRuntime) {
-            return '%H:%M:%S';
-        }
-
-        return '%M:%S';
-    }
-
     public scaleWidth(x: number, graphWidth: number): number {
         return x * graphWidth / this.dive.totalDuration;
     }
@@ -70,7 +63,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             showlegend: false,
             xaxis: {
                 fixedrange: true,
-                tickformat: this.selectTimeFormat(),
+                tickformat: DateFormats.selectChartTimeFormat(this.dive.totalDuration),
                 title: {
                     text: 'Time [minutes]'
                 }

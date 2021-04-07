@@ -3,6 +3,7 @@ import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint, SwimAction } from '../shared/models';
 import { faArrowDown, faArrowUp, faArrowRight, faTasks, faRandom, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Time } from 'scuba-physics';
+import { DateFormats } from '../shared/formaters';
 
 @Component({
     selector: 'app-waypoints',
@@ -24,6 +25,10 @@ export class WayPointsComponent {
 
     public get isComplex(): boolean {
         return this.planner.isComplex;
+    }
+
+    public durationFormat(): string {
+        return DateFormats.selectTimeFormat(this.dive.totalDuration);
     }
 
     @Input()
@@ -75,13 +80,5 @@ export class WayPointsComponent {
         };
 
         return classes;
-    }
-
-    public selectTimeFormat(): string {
-        if (this.dive.hasHoursRuntime) {
-            return 'H:m:ss';
-        }
-
-        return 'm:ss';
     }
 }

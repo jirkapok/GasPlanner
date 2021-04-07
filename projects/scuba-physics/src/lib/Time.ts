@@ -39,7 +39,7 @@ export class Time {
      * @returns amount seconds calculated from current duration
      */
     public static toDate(seconds: number): Date {
-        // we don't care about UTC, because we handle date, only relative time
+        // we don't care about UTC, because we don't handle date, only relative time
         return new Date(1970, 1, 1, 0, 0, seconds, 0);
     }
 

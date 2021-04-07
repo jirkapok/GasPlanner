@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive } from '../shared/models';
+import { DateFormats } from '../shared/formaters';
 import { faExclamationCircle, faExclamationTriangle, faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import { EventType, Event, Time, Tank } from 'scuba-physics';
 
@@ -40,7 +41,23 @@ export class ConsumptionComponent {
         return Math.ceil(diveDescent);
     }
 
+    public timeStampToString(seconds: number): Date{
+        return Time.toDate(seconds);
+    }
+
+    public durationFormat(seconds: number): string {
+        return DateFormats.selectTimeFormat(seconds);
+    }
+
     public isHighPpO2(event: Event): boolean {
         return event.type === EventType.highPpO2;
+    }
+
+    public isHighAscentSpeed(event: Event): boolean {
+        return event.type === EventType.highAscentSpeed;
+    }
+
+    public isHighDescentSpeed(event: Event): boolean {
+        return event.type === EventType.highDescentSpeed;
     }
 }

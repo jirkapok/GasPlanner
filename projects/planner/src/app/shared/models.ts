@@ -196,12 +196,6 @@ export class Dive {
         // the only errors preventing draw chart
         return this.calculated && this.notEnoughTime;
     }
-
-    public get hasHoursRuntime(): boolean {
-        const duration = Time.toDate(this.totalDuration);
-        const hasHours = duration.getHours() > 0;
-        return hasHours;
-    }
 }
 
 export enum SwimAction {

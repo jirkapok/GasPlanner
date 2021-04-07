@@ -79,6 +79,10 @@ export class Plan {
         return this._segments.length;
     }
 
+    public get isMultiLevel(): boolean {
+        return this.length > 2;
+    }
+
     public copySegments(): Segments {
         return this._segments.copy();
     }

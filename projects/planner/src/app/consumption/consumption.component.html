@@ -13,7 +13,7 @@
                         <strong>{{ dive.timeToSurface | number:'1.0-0' }}</strong>
                     </td>
                 </tr>
-                <tr>
+                <tr *ngIf="!isMultiLevel">
                     <td>Maximum bottom time [min.]:</td>
                     <td class="table-active">
                         <strong>{{ dive.maxTime | number:'1.0-0' }}</strong>

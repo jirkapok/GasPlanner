@@ -31,6 +31,10 @@ export class ConsumptionComponent {
         return this.planer.plan.noDecoTime;
     }
 
+    public get isMultiLevel(): boolean {
+        return this.planer.plan.isMultiLevel;
+    }
+
     public get descentDuration(): number {
         const diveDescent = Time.toMinutes(this.dive.descent.duration);
         return Math.ceil(diveDescent);

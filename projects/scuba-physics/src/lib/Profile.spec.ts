@@ -27,8 +27,8 @@ describe('Profile', () => {
 
             it('Multilevel dive with 10/70', () => {
                 const segments = new Segments();
-                segments.add(0, 30, StandardGases.air, Time.oneMinute);
-                segments.add(30, 3, StandardGases.trimix1070, Time.oneMinute);
+                segments.add(0, 30, StandardGases.air, Time.oneMinute * 2);
+                segments.add(30, 3, StandardGases.trimix1070, Time.oneMinute * 3);
                 segments.add(3, 3, StandardGases.trimix1070, Time.oneMinute);
                 segments.add(3, 10, StandardGases.trimix1070, Time.oneMinute);
                 segments.add(10, 0, StandardGases.trimix1070, Time.oneMinute);
@@ -61,9 +61,9 @@ describe('Profile', () => {
         describe('High ppO2', () => {
             it('Adds high ppO2 event during decent only once', () => {
                 const segments = new Segments();
-                segments.add(0, 70, StandardGases.air, 3.5 * Time.oneMinute);
-                segments.add(70, 70, StandardGases.air, 2 * Time.oneMinute);
-                segments.add(70, 21, StandardGases.air, 2 * Time.oneMinute);
+                segments.add(0, 70, StandardGases.air, Time.oneMinute * 3.5);
+                segments.add(70, 70, StandardGases.air, Time.oneMinute * 2);
+                segments.add(70, 21, StandardGases.air, Time.oneMinute * 5);
 
                 // Profile:
                 //   \   /
@@ -75,11 +75,11 @@ describe('Profile', () => {
 
             it('NO high PpO2 event is added, when deco ppO2 limit is used during automatically created ascent', () => {
                 const segments = new Segments();
-                segments.add(0, 40, StandardGases.air, 2 * Time.oneMinute);
+                segments.add(0, 40, StandardGases.air, Time.oneMinute * 2);
                 segments.add(40, 40, StandardGases.air, Time.oneMinute);
-                segments.add(40, 21, StandardGases.air, Time.oneMinute);
+                segments.add(40, 21, StandardGases.air, Time.oneMinute * 2);
                 segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
-                segments.add(21, 3, StandardGases.ean50, Time.oneMinute);
+                segments.add(21, 3, StandardGases.ean50, Time.oneMinute * 3);
                 segments.add(3, 3, StandardGases.ean50, Time.oneMinute);
                 segments.add(3, 0, StandardGases.ean50, Time.oneMinute);
 
@@ -97,7 +97,7 @@ describe('Profile', () => {
                 segments.add(0, 20, StandardGases.air, Time.oneMinute);
                 segments.add(20, 20, StandardGases.air, Time.oneMinute);
                 segments.add(20, 20, StandardGases.ean50, Time.oneMinute);
-                segments.add(20, 3, StandardGases.ean50, Time.oneMinute);
+                segments.add(20, 3, StandardGases.ean50, Time.oneMinute * 2);
 
                 // Profile:
                 //    \_s_/
@@ -112,7 +112,7 @@ describe('Profile', () => {
                 segments.add(20, 20, StandardGases.ean50, Time.oneMinute);
                 segments.add(20, 15, StandardGases.ean50, Time.oneMinute);
                 segments.add(15, 20, StandardGases.ean50, Time.oneMinute);
-                segments.add(20, 3, StandardGases.ean50, Time.oneMinute);
+                segments.add(20, 3, StandardGases.ean50, Time.oneMinute * 2);
 
                 // Profile: high ppO2 reached during the descents
                 //    \_/\_/
@@ -125,17 +125,17 @@ describe('Profile', () => {
 
         it('Adds gas switch event', () => {
             const segments = new Segments();
-            segments.add(0, 40, StandardGases.air, Time.oneMinute);
+            segments.add(0, 40, StandardGases.air, Time.oneMinute * 4);
             segments.add(40, 40, StandardGases.air, Time.oneMinute);
-            segments.add(40, 21, StandardGases.air, Time.oneMinute);
+            segments.add(40, 21, StandardGases.air, Time.oneMinute * 3);
             segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
-            segments.add(21, 6, StandardGases.ean50, Time.oneMinute);
+            segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
 
             const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), options);
 
             expect(events.items[0]).toEqual({
                 type: EventType.gasSwitch,
-                timeStamp: 180,
+                timeStamp: 480,
                 depth: 21,
                 data: StandardGases.ean50
             });

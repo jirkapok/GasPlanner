@@ -281,6 +281,7 @@ export class Consumption {
         }
 
         Tank.resetConsumption(tanks);
+        // TODO update consumption from concrete tank for user defined segments
         this.updateConsumption(segments, tanks, diver.sac);
         const ascent = SegmentsFactory.ascent(segments, userSegments);
         this.updateReserve(ascent, tanks, diver.stressSac);

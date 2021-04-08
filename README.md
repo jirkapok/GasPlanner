@@ -47,7 +47,7 @@ Than compile solution by `npm run build` to deploy `dist` directory. To start th
 
 ## Running the tests
 
-Angular recommended testing environment is used, to run test use `npm run test` or `npm run e2e`
+Angular recommended testing environment is used, to run test use `npm run test-lib`, `npm run test` or `npm run e2e`
 
 ## Contributing
 

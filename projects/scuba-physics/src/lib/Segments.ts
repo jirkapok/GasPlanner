@@ -130,14 +130,16 @@ export class Segments {
         return 0;
     }
 
-    public add(startDepth: number, endDepth: number, gas: Gas, duration: number): Segment {
-        const segment = new Segment(startDepth, endDepth, gas, duration);
-        this.segments.push(segment);
-
+    private updateMaxDepth(segment: Segment): void {
         if (segment.endDepth > this._maxDepth) {
             this._maxDepth = segment.endDepth;
         }
+    }
 
+    public add(startDepth: number, endDepth: number, gas: Gas, duration: number): Segment {
+        const segment = new Segment(startDepth, endDepth, gas, duration);
+        this.segments.push(segment);
+        this.updateMaxDepth(segment);
         return segment;
     }
 
@@ -201,6 +203,7 @@ export class Segments {
             const previous = this.segments[index];
             const current = this.segments[index + 1];
             current.startDepth = previous.endDepth;
+            this.updateMaxDepth(current);
         }
     }
 }

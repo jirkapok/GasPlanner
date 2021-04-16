@@ -165,6 +165,14 @@ describe('Segments', () => {
             segments.fixStartDepths();
 
             expect(first.startDepth).toBe(0);
+
+        });
+
+        it('Fixes max. depth', () => {
+            middle.endDepth = 40;
+            segments.fixStartDepths();
+
+            expect(segments.maxDepth).toBe(40);
         });
     });
 });

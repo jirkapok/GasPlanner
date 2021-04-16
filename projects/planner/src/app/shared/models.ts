@@ -60,7 +60,6 @@ export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     public noDecoTime = 0;
     private _segments: Segments = new Segments();
-    private _duration = 0;
     private onChanged = new Subject();
     public changed;
 
@@ -96,7 +95,6 @@ export class Plan {
     }
 
     private reset(depth: number, duration: number, tank: Tank, options: Options): void {
-        this._duration = duration;
         this._segments = SegmentsFactory.createForPlan(depth, duration, tank, options);
     }
 
@@ -110,12 +108,12 @@ export class Plan {
     }
 
     public get duration(): number {
-        return this._duration;
+        const seconds = this._segments.duration;
+        return Time.toMinutes(seconds);
     }
 
     public assignDuration(newDuration: number, tank: Tank, options: Options): void {
-        this._duration = newDuration;
-        this._segments = SegmentsFactory.createForPlan(this.maxDepth, this.duration, tank, options);
+        this._segments = SegmentsFactory.createForPlan(this.maxDepth, newDuration, tank, options);
         this.onChanged.next();
     }
 
@@ -149,7 +147,6 @@ export class Plan {
 
     public loadFrom(other: Plan): void {
         this.strategy = other.strategy;
-        this._duration = other._duration;
         // cant use copy, since deserialized objects wouldn't have one.
         this._segments = Segments.from(other._segments);
         this.onChanged.next();

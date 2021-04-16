@@ -117,6 +117,7 @@ export class Segments {
         return this.segments.slice();
     }
 
+    /** in meters */
     public get maxDepth(): number {
         return this._maxDepth;
     }
@@ -128,6 +129,18 @@ export class Segments {
         }
 
         return 0;
+    }
+
+    /** in seconds */
+    public get duration(): number {
+        let total = 0;
+
+        for (let index = 0; index < this.segments.length; index++) {
+            const current = this.segments[index];
+            total += current.duration;
+        }
+
+        return total;
     }
 
     private updateMaxDepth(segment: Segment): void {

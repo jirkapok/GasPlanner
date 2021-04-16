@@ -71,7 +71,7 @@ describe('PlannerService', () => {
         });
 
         it('Sets simple profile', () => {
-            expect(planner.plan.duration).toBe(12);
+            expect(planner.plan.duration).toBe(22);
         });
 
         it('Plan has correct depths', () => {

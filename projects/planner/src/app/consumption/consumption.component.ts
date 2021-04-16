@@ -36,9 +36,8 @@ export class ConsumptionComponent {
         return this.planer.plan.isMultiLevel;
     }
 
-    public get descentDuration(): number {
-        const diveDescent = Time.toMinutes(this.dive.descent.duration);
-        return Math.ceil(diveDescent);
+    public get minimumDuration(): number {
+        return this.planer.plan.duration + 1;
     }
 
     public timeStampToString(seconds: number): Date{

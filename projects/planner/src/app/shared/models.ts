@@ -107,6 +107,7 @@ export class Plan {
         this.onChanged.next();
     }
 
+    /** in minutes */
     public get duration(): number {
         const seconds = this._segments.duration;
         return Time.toMinutes(seconds);
@@ -167,22 +168,13 @@ export class Dive {
     public ceilings: Ceiling[] = [];
     public events: Event[] = [];
 
+    /** can't use plan duration, because it doesn't contain ascent */
     public get totalDuration(): number {
         if (this.wayPoints.length === 0) {
             return 0;
         }
 
         return this.wayPoints[this.wayPoints.length - 1].endTime;
-    }
-
-    public get maxDepth(): number {
-        const bottom = this.wayPoints[1]; // for single level dives second is always depth
-        return bottom.startDepth;
-    }
-
-    // expecting single level dive
-    public get descent(): WayPoint {
-        return this.wayPoints[0];
     }
 
     public get hasErrors(): boolean {

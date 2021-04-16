@@ -44,7 +44,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     }
 
     public scaleHeight(y: number, graphHeight: number): number {
-        return y * (graphHeight - 10) / this.dive.maxDepth;
+        return y * (graphHeight - 10) / this.planer.plan.maxDepth;
     }
 
     public get noDecoTime(): number {

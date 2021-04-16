@@ -127,7 +127,7 @@ export class PlannerService {
             const originAscent = SegmentsFactory.ascent(profile.origin, userSegments);
             this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
             consumption.consumeFromTanks(profile.origin, userSegments, this.tanks, this.diver);
-            this.dive.notEnoughTime = Time.toSeconds(this.plan.duration) < this.dive.descent.duration;
+            this.dive.notEnoughTime = !this.plan.isMultiLevel && this.plan.segments[1].duration === 0;
         }
 
         // even in case thirds rule, the last third is reserve, so we always divide by 2

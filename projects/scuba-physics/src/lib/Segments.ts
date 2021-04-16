@@ -248,7 +248,6 @@ export class SegmentsFactory {
         return segments;
     }
 
-    // TODO check units of this method
     /** Calculates duration in seconds for descent from surface to target depth (meters) based on descent speed */
     public static descentDuration(targetDepth: number, options: Options): number {
         return Time.toSeconds(targetDepth / options.descentSpeed);

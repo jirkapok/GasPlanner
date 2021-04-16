@@ -88,6 +88,9 @@ export class PlannerService {
         this.options.maxPpO2 = this.diver.maxPpO2;
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         const algorithm = new BuhlmannAlgorithm();
+        // TODO Fix noDeco time for multilevel dives - add third segment not changing level or changing level
+        // the noDecoTime in such case can be derived from calculated profile as first non zero ceiling.
+        // we cant use the maxDepth, because its purpose is only for single level dives
         const depth = this.plan.maxDepth;
         const firstGas = this.firstTank.gas;
         const noDecoLimit = algorithm.noDecoLimit(depth, firstGas, this.options);

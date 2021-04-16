@@ -64,6 +64,9 @@ describe('PlannerService', () => {
             planner.firstTank.o2 = o2Expected;
             planner.addTank();
             planner.addSegment();
+            const last = planner.plan.segments[planner.plan.length - 1];
+            last.endDepth = 40;
+            planner.plan.fixDepths();
             planner.resetToSimple();
         });
 
@@ -74,8 +77,8 @@ describe('PlannerService', () => {
         it('Plan has correct depths', () => {
             const segments = planner.plan.segments;
             expect(segments.length).toBe(2);
-            expect(segments[0].endDepth).toBe(30);
-            expect(segments[1].endDepth).toBe(30);
+            expect(segments[0].endDepth).toBe(40);
+            expect(segments[1].endDepth).toBe(40);
         });
 
         it('Resets gases to one only', () => {

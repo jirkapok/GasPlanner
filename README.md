@@ -29,6 +29,7 @@ Road map of planned features:
 * Add option to define repetitive dives
   * Unify dive settings and default settings
 * Add CNS and OTU calculations
+* Add option to define deep stops
 
 ## Donate
 

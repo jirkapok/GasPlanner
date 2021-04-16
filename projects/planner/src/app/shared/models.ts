@@ -60,7 +60,6 @@ export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     public noDecoTime = 0;
     private _segments: Segments = new Segments();
-    private _depth = 0;
     private _duration = 0;
     private onChanged = new Subject();
     public changed;
@@ -71,12 +70,12 @@ export class Plan {
         this.changed = this.onChanged.asObservable();
     }
 
-    public get minimumSegments(): boolean {
-        return this.segments.length > 1;
-    }
-
     public get length(): number {
         return this._segments.length;
+    }
+
+    public get minimumSegments(): boolean {
+        return this.length > 1;
     }
 
     public get isMultiLevel(): boolean {
@@ -97,17 +96,15 @@ export class Plan {
     }
 
     private reset(depth: number, duration: number, tank: Tank, options: Options): void {
-        this._depth = depth;
         this._duration = duration;
         this._segments = SegmentsFactory.createForPlan(depth, duration, tank, options);
     }
 
     public get maxDepth(): number {
-        return this._depth;
+        return this._segments.maxDepth;
     }
 
     public assignDepth(newDepth: number, tank: Tank, options: Options): void {
-        this._depth = newDepth;
         this._segments = SegmentsFactory.createForPlan(newDepth, this.duration, tank, options);
         this.onChanged.next();
     }
@@ -118,7 +115,7 @@ export class Plan {
 
     public assignDuration(newDuration: number, tank: Tank, options: Options): void {
         this._duration = newDuration;
-        this._segments = SegmentsFactory.createForPlan(this._depth, this.duration, tank, options);
+        this._segments = SegmentsFactory.createForPlan(this.maxDepth, this.duration, tank, options);
         this.onChanged.next();
     }
 
@@ -152,7 +149,6 @@ export class Plan {
 
     public loadFrom(other: Plan): void {
         this.strategy = other.strategy;
-        this._depth = other._depth;
         this._duration = other._duration;
         // cant use copy, since deserialized objects wouldn't have one.
         this._segments = Segments.from(other._segments);

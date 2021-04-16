@@ -17,7 +17,7 @@ export class DateFormats {
 
     public static selectTimeFormat(seconds: number): string {
         if (DateFormats.hasHoursRuntime(seconds)) {
-            return 'H:m:ss';
+            return 'H:mm:ss';
         }
 
         return 'm:ss';

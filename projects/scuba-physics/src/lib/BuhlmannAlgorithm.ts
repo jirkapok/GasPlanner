@@ -298,27 +298,57 @@ export class BuhlmannAlgorithm {
      * @param options conservatism options to be used
      */
     public noDecoLimit(depth: number, gas: Gas, options: Options): number {
-        const depthConverter = new DepthConverterFactory(options).create();
         const gases = new Gases();
         gases.addBottomGas(gas);
 
         const segments = new Segments();
         const duration = this.duration(depth, options.descentSpeed / Time.oneMinute);
-        const descent = segments.add(0, depth, gas, duration);
+        segments.add(0, depth, gas, duration);
 
-        const errorMessages = this.validate(segments, gases, options, depthConverter);
+        const depthConverter = new DepthConverterFactory(options).create();
+        const context = new AlgorithmContext(gases, segments, options, depthConverter);
+        return this.swimNoDecoLimit(segments, gases, context, options);
+    }
+
+    /**
+     * Calculates no decompression limit in minutes
+     * @param segments Already realized part of the dive
+     * @param options conservatism options to be used
+     */
+    public noDecoLimitMultiLevel(segments: Segments, gases: Gases, options: Options): number {
+        const depthConverter = new DepthConverterFactory(options).create();
+        const context = new AlgorithmContext(gases, segments, options, depthConverter);
+        return this.swimNoDecoLimit(segments, gases, context, options);
+    }
+
+    /**
+     * Simply continue from currently planned segments, expecting diver stays in the same depth breathing the same gas.
+     */
+    private swimNoDecoLimit(segments: Segments, gases: Gases, context: AlgorithmContext, options: Options): number {
+        const errorMessages = this.validate(segments, gases, options, context.depthConverter);
         if (errorMessages.length > 0) {
             return 0;
         }
 
-        const context = new AlgorithmContext(gases, segments, options, depthConverter);
-        this.swim(context, descent);
-        const hover = new Segment(depth, depth, gas, Time.oneMinute);
+        this.swimPlan(context);
+        // We may already passed the Ndl during descent or user defined profile
+        const currentNdl = this.currentNdl(context.ceilings);
+        if(currentNdl !== Number.POSITIVE_INFINITY) {
+            return currentNdl;
+        }
+
+        return this.predictNoDecoLimit(segments, context);
+    }
+
+    private predictNoDecoLimit(segments: Segments, context: AlgorithmContext): number {
+        const last = segments.last();
+        const depth = last.endDepth;
+        const hover = new Segment(depth, depth, last.gas, Time.oneMinute);
         const hoverLoad = this.toLoadSegment(context.depthConverter, hover);
         let change = 1;
 
         while (context.ceiling() <= 0 && change > 0) {
-            change = context.tissues.load(hoverLoad, gas);
+            change = context.tissues.load(hoverLoad, last.gas);
             context.runTime += Time.oneMinute;
         }
 
@@ -326,10 +356,27 @@ export class BuhlmannAlgorithm {
             return Number.POSITIVE_INFINITY;
         }
 
-        // We went one minute past a ceiling of "0"
-        let result = Time.toMinutes(context.runTime);
+        const result = this.floorNdl(context.runTime);
+        return result;
+    }
+
+    private floorNdl(ndlSeconds: number): number {
+        let result = Time.toMinutes(ndlSeconds);
         result = Math.floor(result);
+        // We went one minute past a ceiling of "0"
         return result - 1;
+    }
+
+    private currentNdl(ceilings: Ceiling[]): number {
+        for (let index = 0; index < ceilings.length; index += Time.oneMinute) {
+            const ceiling = ceilings[index];
+            if(ceiling.depth > 0) {
+                const minutes = this.floorNdl(ceiling.time);
+                return minutes;
+            }
+        }
+
+        return Number.POSITIVE_INFINITY;
     }
 
     private toLoadSegment(depthConverter: DepthConverter, segment: Segment): LoadSegment {

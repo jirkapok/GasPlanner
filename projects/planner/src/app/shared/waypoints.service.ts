@@ -54,20 +54,13 @@ export class WayPointsService {
         return waypoint;
     }
 
-    private static calculateDecompression(plan: Plan, tanks: Tank[], options: Options): CalculatedProfile {
-        const bGases = new Gases();
-        const bGas = tanks[0].gas;
-        bGases.addBottomGas(bGas);
 
-        // everything except first gas is considered as deco gas
-        tanks.slice(1, tanks.length).forEach((gas) => {
-            const decoGas = gas.gas;
-            bGases.addDecoGas(decoGas);
-        });
+    private static calculateDecompression(plan: Plan, tanks: Tank[], options: Options): CalculatedProfile {
+        const gases = Gases.fromTanks(tanks);
 
         const segments: Segments = plan.copySegments();
         const algorithm = new BuhlmannAlgorithm();
-        const profile = algorithm.calculateDecompression(options, bGases, segments);
+        const profile = algorithm.calculateDecompression(options, gases, segments);
         return profile;
     }
 }

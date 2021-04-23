@@ -149,6 +149,11 @@ export class Segments {
         }
     }
 
+    /**
+     * @param startDepth in meters
+     * @param endDepth in meters
+     * @param duration in seconds
+     */
     public add(startDepth: number, endDepth: number, gas: Gas, duration: number): Segment {
         const segment = new Segment(startDepth, endDepth, gas, duration);
         this.segments.push(segment);
@@ -156,6 +161,10 @@ export class Segments {
         return segment;
     }
 
+    /**
+    * @param depth in meters
+    * @param duration in seconds
+    */
     public addFlat(depth: number, gas: Gas, duration: number): Segment {
         return this.add(depth, depth, gas, duration);
     }

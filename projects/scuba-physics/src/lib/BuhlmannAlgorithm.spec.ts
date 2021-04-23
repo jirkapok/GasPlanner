@@ -22,7 +22,49 @@ describe('Buhlmann Algorithm', () => {
             expect(ndl).toBe(6);
         });
 
-        describe('Calculate air No decompression limits at depth', () => {
+        describe('No decompression limits for multilevel dives', () => {
+            const gases = new Gases();
+            const air = StandardGases.air;
+            gases.addBottomGas(air);
+            const options = new Options(1, 1, 1.4, 1.4, 30, true);
+
+            it('No decompression limit for multilevel dive equals simple dive Ndl', () => {
+                const segments = new Segments();
+                segments.add(0, 30, air, Time.oneMinute * 1.5);
+                segments.addFlat(30, air, Time.oneMinute);
+
+                const algorithm = new BuhlmannAlgorithm();
+                const multiLevelNdl = algorithm.noDecoLimitMultiLevel(segments, gases, options);
+                const ndl = algorithm.noDecoLimit(30, air, options);
+                expect(ndl).toBe(multiLevelNdl);
+            });
+
+            it('Segments already reached NDL', () => {
+                const segments = new Segments();
+                segments.add(0, 40, air, Time.oneMinute * 2);
+                segments.addFlat(40, air, Time.oneMinute * 5);
+                segments.add(40, 20, air, Time.oneMinute * 2);
+                segments.addFlat(20, air, Time.oneMinute * 40);
+
+                const algorithm = new BuhlmannAlgorithm();
+                const ndl = algorithm.noDecoLimitMultiLevel(segments, gases, options);
+                expect(ndl).toBe(36);
+            });
+
+            it('Initial levels have remaining NDL', () => {
+                const segments = new Segments();
+                segments.add(0, 40, air, Time.oneMinute * 2);
+                segments.addFlat(40, air, Time.oneMinute * 5);
+                segments.add(40, 20, air, Time.oneMinute * 2);
+                segments.addFlat(20, air, Time.oneMinute * 5);
+
+                const algorithm = new BuhlmannAlgorithm();
+                const ndl = algorithm.noDecoLimitMultiLevel(segments, gases, options);
+                expect(ndl).toBe(36);
+            });
+        });
+
+        describe(' No decompression limits for air at depth', () => {
             const options = new Options(1, 1, 1.6, 1.6, 30, true);
 
             const calculateNoDecompressionLimit = (testCases: number[][], isFreshWater: boolean) => {

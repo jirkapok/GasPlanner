@@ -1,5 +1,6 @@
 import { DepthConverter } from './depth-converter';
 import { Event, EventsFactory } from './Profile';
+import { Tank } from './Tanks';
 
 /**
  * Returns list of messages if gases collection is covers all depths.
@@ -68,6 +69,20 @@ export class Gases {
     // TODO do we need to distinguish the gas usage?
     private decoGases: Gas[] = [];
     private bottomGases: Gas[] = [];
+
+    public static fromTanks(tanks: Tank[]): Gases {
+        const gases = new Gases();
+        const bGas = tanks[0].gas;
+        gases.addBottomGas(bGas);
+
+        // everything except first gas is considered as deco gas
+        tanks.slice(1, tanks.length).forEach((tank) => {
+            const decoTank = tank.gas;
+            gases.addDecoGas(decoTank);
+        });
+
+        return gases;
+    }
 
     private static bestGas(gases: Gas[], depthConverter: DepthConverter, options: BestGasOptions): Gas {
         const currentPressure = depthConverter.toBar(options.currentDepth);

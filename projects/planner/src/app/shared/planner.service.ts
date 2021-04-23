@@ -4,8 +4,8 @@ import { Subject } from 'rxjs';
 import { Plan, Dive, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Options,
-    DepthConverter, Time, DepthConverterFactory, Tank, Diver,
-    SegmentsFactory, Consumption, Segment} from 'scuba-physics';
+    DepthConverter, DepthConverterFactory, Tank, Diver,
+    SegmentsFactory, Consumption, Segment, Gases } from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
@@ -88,12 +88,11 @@ export class PlannerService {
         this.options.maxPpO2 = this.diver.maxPpO2;
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         const algorithm = new BuhlmannAlgorithm();
-        // TODO Fix noDeco time for multilevel dives - add third segment not changing level or changing level
-        // the noDecoTime in such case can be derived from calculated profile as first non zero ceiling.
+        // TODO consider to calculate noDecoTime from already calculated profile
         // we cant use the maxDepth, because its purpose is only for single level dives
-        const depth = this.plan.maxDepth;
-        const firstGas = this.firstTank.gas;
-        const noDecoLimit = algorithm.noDecoLimit(depth, firstGas, this.options);
+        const gases = Gases.fromTanks(this.tanks);
+        const segments =  this.plan.copySegments();
+        const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, this.options);
         return Math.floor(noDecoLimit);
     }
 

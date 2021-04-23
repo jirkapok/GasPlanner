@@ -267,7 +267,7 @@ export class Ceiling {
         public time: number,
 
         /**
-         * Gets or sets the maximum safe depth to ascent to.
+         * Gets or sets the maximum safe depth to ascent to in meters.
          */
         public depth: number
     ) { }

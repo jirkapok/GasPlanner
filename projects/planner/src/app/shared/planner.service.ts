@@ -85,15 +85,14 @@ export class PlannerService {
     }
 
     public noDecoTime(): number {
-        this.options.maxPpO2 = this.diver.maxPpO2;
-        this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         const algorithm = new BuhlmannAlgorithm();
-        // TODO consider to calculate noDecoTime from already calculated profile
+        // we can't speedup the prediction from already obtained profile,
+        // since it may happen, the deco starts during ascent.
         // we cant use the maxDepth, because its purpose is only for single level dives
         const gases = Gases.fromTanks(this.tanks);
         const segments =  this.plan.copySegments();
         const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, this.options);
-        return Math.floor(noDecoLimit);
+        return noDecoLimit;
     }
 
     public assignDuration(newDuration: number): void {
@@ -107,9 +106,10 @@ export class PlannerService {
     }
 
     public calculate(): void {
+        this.options.maxPpO2 = this.diver.maxPpO2;
+        this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         this.depthConverter = this.depthConverterFactory.create();
         this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
-        this.plan.noDecoTime = this.noDecoTime();
         const profile = WayPointsService.calculateWayPoints(this.plan, this.tanks, this.options);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;
@@ -127,6 +127,7 @@ export class PlannerService {
             this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
             consumption.consumeFromTanks(profile.origin, userSegments, this.tanks, this.diver);
             this.dive.notEnoughTime = !this.plan.isMultiLevel && this.plan.segments[1].duration === 0;
+            this.plan.noDecoTime = this.noDecoTime();
         }
 
         // even in case thirds rule, the last third is reserve, so we always divide by 2

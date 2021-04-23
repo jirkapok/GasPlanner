@@ -367,6 +367,8 @@ export class BuhlmannAlgorithm {
         return result - 1;
     }
 
+    /** Fastest way to get Ndl from current Decompression profile.
+     * Returns infinity, if the profile isn't decompression. */
     private currentNdl(ceilings: Ceiling[]): number {
         for (let index = 0; index < ceilings.length; index += Time.oneMinute) {
             const ceiling = ceilings[index];

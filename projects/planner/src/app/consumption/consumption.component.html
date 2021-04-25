@@ -13,6 +13,12 @@
                         <strong>{{ dive.timeToSurface | number:'1.0-0' }}</strong>
                     </td>
                 </tr>
+                <tr>
+                    <td>No decompression time [min.]:</td>
+                    <td class="table-active">
+                        <strong>{{ noDeco | number:'1.0-0' }}</strong>
+                    </td>
+                </tr>
                 <tr *ngIf="!isMultiLevel">
                     <td>Maximum bottom time [min.]:</td>
                     <td class="table-active">

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Plan, Dive, Strategies } from './models';
-import { WayPointsService } from './waypoints.service';
+import { Profile, WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, DepthConverterFactory, Tank, Diver,
     SegmentsFactory, Consumption, Segment, Gases } from 'scuba-physics';
@@ -106,40 +106,56 @@ export class PlannerService {
     }
 
     public calculate(): void {
-        this.options.maxPpO2 = this.diver.maxPpO2;
-        this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
-        this.depthConverter = this.depthConverterFactory.create();
-        this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
-        const profile = WayPointsService.calculateWayPoints(this.plan, this.tanks, this.options);
-        this.dive.wayPoints = profile.wayPoints;
-        this.dive.ceilings = profile.ceilings;
-        this.dive.events = profile.events;
-        const userSegments = this.plan.length;
+        this.measureMethod('Planner calculate', () => {
+            this.options.maxPpO2 = this.diver.maxPpO2;
+            this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
+            this.depthConverter = this.depthConverterFactory.create();
+            this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
+            let profile: Profile;
+            this.measureMethod('Calculate waypoints', () => {
+                profile = WayPointsService.calculateWayPoints(this.plan, this.tanks, this.options);
+            });
+            this.dive.wayPoints = profile.wayPoints;
+            this.dive.ceilings = profile.ceilings;
+            this.dive.events = profile.events;
+            const userSegments = this.plan.length;
 
-        // e.g. anything was added as calculated ascent
-        if (profile.wayPoints.length > userSegments) {
-            const consumption = new Consumption(this.depthConverter);
+            // e.g. anything was added as calculated ascent
+            if (profile.wayPoints.length > userSegments) {
+                const consumption = new Consumption(this.depthConverter);
 
-            this.dive.maxTime = consumption.calculateMaxBottomTime(this.plan.maxDepth, this.tanks,
-                this.diver, this.options, this.plan.noDecoTime);
+                this.measureMethod('Max bottom time', () => {
+                    this.dive.maxTime = consumption.calculateMaxBottomTime(this.plan.maxDepth, this.tanks,
+                        this.diver, this.options, this.plan.noDecoTime);
+                });
 
-            const originAscent = SegmentsFactory.ascent(profile.origin, userSegments);
-            this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
-            consumption.consumeFromTanks(profile.origin, userSegments, this.tanks, this.diver);
-            this.dive.notEnoughTime = !this.plan.isMultiLevel && this.plan.segments[1].duration === 0;
-            this.plan.noDecoTime = this.noDecoTime();
-        }
+                this.measureMethod('Consumption', () => {
+                    const originAscent = SegmentsFactory.ascent(profile.origin, userSegments);
+                    this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
+                    consumption.consumeFromTanks(profile.origin, userSegments, this.tanks, this.diver);
+                    this.dive.notEnoughTime = !this.plan.isMultiLevel && this.plan.segments[1].duration === 0;
+                    this.plan.noDecoTime = this.noDecoTime();
+                });
+            }
 
-        // even in case thirds rule, the last third is reserve, so we always divide by 2
-        this.dive.turnPressure = this.calculateTurnPressure();
-        this.dive.turnTime = Math.floor(this.plan.duration / 2);
-        // this needs to be moved to each gas or do we have other option?
-        this.dive.needsReturn = this.plan.needsReturn && this.tanks.length === 1;
-        this.dive.notEnoughGas = !Consumption.haveReserve(this.tanks);
-        this.dive.noDecoExceeded = this.plan.noDecoExceeded;
-        this.dive.calculated = true;
-
+            // even in case thirds rule, the last third is reserve, so we always divide by 2
+            this.dive.turnPressure = this.calculateTurnPressure();
+            this.dive.turnTime = Math.floor(this.plan.duration / 2);
+            // this needs to be moved to each gas or do we have other option?
+            this.dive.needsReturn = this.plan.needsReturn && this.tanks.length === 1;
+            this.dive.notEnoughGas = !Consumption.haveReserve(this.tanks);
+            this.dive.noDecoExceeded = this.plan.noDecoExceeded;
+            this.dive.calculated = true;
+        });
         this.onCalculated.next();
+    }
+
+    private measureMethod(message: string, delegate: () => void): void {
+        const startTime = performance.now();
+        delegate();
+        const endTime = performance.now();
+        const methodDuration = Math.round(endTime - startTime);
+        console.log(message +  `: ${methodDuration} ms`);
     }
 
     public loadFrom(other: PlannerService): void {

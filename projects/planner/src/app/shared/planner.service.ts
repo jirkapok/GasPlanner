@@ -111,10 +111,10 @@ export class PlannerService {
             this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
             this.depthConverter = this.depthConverterFactory.create();
             this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
-            let profile: Profile;
-            this.measureMethod('Calculate waypoints', () => {
-                profile = WayPointsService.calculateWayPoints(this.plan, this.tanks, this.options);
-            });
+            // let profile: Profile;
+            // this.measureMethod('Calculate waypoints', () => {
+            const profile = WayPointsService.calculateWayPoints(this.plan, this.tanks, this.options);
+            // });
             this.dive.wayPoints = profile.wayPoints;
             this.dive.ceilings = profile.ceilings;
             this.dive.events = profile.events;

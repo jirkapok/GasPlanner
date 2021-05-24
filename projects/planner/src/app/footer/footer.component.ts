@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { version } from '../../../../../package.json';
+import pkg from '../../../../../package.json';
 
 @Component({
     selector: 'app-footer',
@@ -7,5 +7,5 @@ import { version } from '../../../../../package.json';
     styleUrls: ['./footer.component.css']
 })
 export class AppFooterComponent {
-    public appVersion: string = version;
+    public appVersion: string = pkg.version;
 }

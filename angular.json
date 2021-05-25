@@ -25,7 +25,7 @@
               "projects/planner/src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": [              
+            "scripts": [
             ],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -64,13 +64,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "planner:build",
-            "host": "0.0.0.0",
-            "port": 4200,
-            "sourceMap": {
-              "styles": true,
-              "scripts": true,
-              "vendor": true
-            }
+            "port": 4200
           },
           "configurations": {
             "production": {
@@ -92,7 +86,7 @@
             "polyfills": "projects/planner/src/polyfills.ts",
             "tsConfig": "projects/planner/src/tsconfig.spec.json",
             "codeCoverage": true,
-            "scripts": [     
+            "scripts": [
             ],
             "styles": [
               "projects/planner/src/styles.css",

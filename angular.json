@@ -4,9 +4,15 @@
   "newProjectRoot": "projects",
   "projects": {
     "planner": {
+      "projectType": "application",
       "root": "projects/planner",
       "sourceRoot": "projects/planner/src",
-      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -14,63 +20,63 @@
             "outputPath": "dist/planner",
             "index": "projects/planner/src/index.html",
             "main": "projects/planner/src/main.ts",
-            "tsConfig": "projects/planner/src/tsconfig.app.json",
             "polyfills": "projects/planner/src/polyfills.ts",
+            "tsConfig": "projects/planner/tsconfig.app.json",
             "assets": [
               "projects/planner/src/assets",
               "projects/planner/src/favicon.ico",
               "projects/planner/src/manifest.webmanifest"
             ],
             "styles": [
-              "projects/planner/src/styles.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "projects/planner/src/styles.css"
             ],
-            "scripts": [
-            ],
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
+            "scripts": []
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "2mb"
+                },
+                {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "projects/planner/src/environments/environment.ts",
                   "with": "projects/planner/src/environments/environment.prod.ts"
                 }
               ],
-              "serviceWorker": true,
-              "ngswConfigPath": "projects/planner/ngsw-config.json"
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "planner:build",
-            "port": 4200
-          },
           "configurations": {
             "production": {
               "browserTarget": "planner:build:production"
+            },
+            "development": {
+              "browserTarget": "planner:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -82,48 +88,17 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "projects/planner/src/test.ts",
-            "karmaConfig": "projects/planner/karma.conf.js",
             "polyfills": "projects/planner/src/polyfills.ts",
-            "tsConfig": "projects/planner/src/tsconfig.spec.json",
-            "codeCoverage": true,
-            "scripts": [
+            "tsConfig": "projects/planner/tsconfig.spec.json",
+            "karmaConfig": "projects/planner/karma.conf.js",
+            "assets": [
+              "projects/planner/src/favicon.ico",
+              "projects/planner/src/assets"
             ],
             "styles": [
-              "projects/planner/src/styles.css",
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "projects/planner/src/styles.css"
             ],
-            "assets": [
-              "projects/planner/src/assets",
-              "projects/planner/src/favicon.ico",
-              "projects/planner/src/manifest.webmanifest"
-            ]
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": ["projects/planner/**/*.ts", "projects/planner/**/*.html"]
-          }
-        }
-      }
-    },
-    "planner-e2e": {
-      "root": "projects/planner/",
-      "sourceRoot": "projects/planner/e2e",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "projects/planner/protractor.conf.js",
-            "devServerTarget": "planner:serve",
-            "port": 4201
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": ["e2e/**/*.ts", "e2e/**/*.html"]
+            "scripts": []
           }
         }
       }
@@ -137,44 +112,28 @@
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/scuba-physics/tsconfig.lib.json",
             "project": "projects/scuba-physics/ng-package.json"
           },
           "configurations": {
             "production": {
               "tsConfig": "projects/scuba-physics/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/scuba-physics/tsconfig.lib.json"
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "projects/scuba-physics/src/test.ts",
             "tsConfig": "projects/scuba-physics/tsconfig.spec.json",
-            "karmaConfig": "projects/scuba-physics/karma.conf.js",
-            "codeCoverage": true
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": ["projects/scuba-physics/**/*.ts", "projects/scuba-physics/**/*.html"]
+            "karmaConfig": "projects/scuba-physics/karma.conf.js"
           }
         }
       }
     }
   },
-  "defaultProject": "planner",
-  "schematics": {
-    "@schematics/angular:component": {
-      "prefix": "app",
-      "style": "css"
-    },
-    "@schematics/angular:directive": {
-      "prefix": "app"
-    }
-  },
-  "cli": {
-    "analytics": false
-  }
+  "defaultProject": "planner"
 }

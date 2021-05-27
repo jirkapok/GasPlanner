@@ -2,7 +2,6 @@ import { Time } from './Time';
 import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
 import { Gas, Gases, StandardGases } from './Gases';
 import { Segment, Segments } from './Segments';
-import 'jasmine';
 
 describe('Buhlmann Algorithm', () => {
     describe('No decompression times', () => {

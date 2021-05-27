@@ -17,7 +17,7 @@ export class TanksComponent {
     public trashIcon = faTrashAlt;
     private diver: Diver;
 
-    constructor(private planner: PlannerService) {
+    constructor(public planner: PlannerService) {
         this.firstTank = this.planner.firstTank;
         this.diver = this.planner.diver;
         this.gasNames = StandardGases.gasNames();

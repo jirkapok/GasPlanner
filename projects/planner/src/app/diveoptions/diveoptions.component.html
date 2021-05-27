@@ -57,7 +57,7 @@
                 <div class="form-group">
                     <label for="altitude">Altitude [m.a.s.l.]:
                         <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude"
-                            class="form-control" type="number" min="0" [min]="0" max="4000" [range]="[0, 4000]" required
+                            class="form-control" type="number" required
                             [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)" />
                         <div class="text-danger" *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">
                             Needs to be number 0 - 4000 m
@@ -75,7 +75,7 @@
                     <label for="gfLow">Gradient low:
                         <div class="input-group">
                             <input id="gfLow" name="gfLow" #gfLow="ngModel" [(ngModel)]="plannedGfLow"
-                                class="form-control" type="number" min="10" [min]="10" max="100" [range]="[10, 100]"
+                                class="form-control" type="number"
                                 required [class.is-invalid]="gfLow.invalid && (gfLow.dirty || gfLow.touched)" />
                             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                                 <button type="button" class="btn btn-default border" id="conservatismMenu2"
@@ -97,7 +97,7 @@
                 <div class="form-group">
                     <label for="gfHigh">Gradient high:
                         <input id="gfHigh" name="gfHigh" #gfHigh="ngModel" [(ngModel)]="plannedGfHigh"
-                            class="form-control" type="number" min="10" [min]="10" max="100" [range]="[10, 100]"
+                            class="form-control" type="number"
                             required [class.is-invalid]="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)" />
                         <div class="text-danger" *ngIf="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)">
                             Needs to be number 0 - 100 higher than gradient low
@@ -119,7 +119,7 @@
                 <div class="form-group">
                     <label for="descSpeed">Descent speed [m/min.]:
                         <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="descentSpeed"
-                            class="form-control" type="number" min="1" [min]="1" max="100" [range]="[1, 100]" required
+                            class="form-control" type="number" required
                             [class.is-invalid]="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)" />
                         <div class="text-danger" *ngIf="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)">
                             Needs to be number 1 - 100
@@ -129,7 +129,7 @@
                 <div class="form-group">
                     <label for="ascSpeed">Ascent speed [m/min.]:
                         <input id="ascSpeed" name="ascSpeed" #ascSpeed="ngModel" [(ngModel)]="ascentSpeed"
-                            class="form-control" type="number" min="1" [min]="1" max="100" [range]="[1, 100]" required
+                            class="form-control" type="number" required
                             [class.is-invalid]="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)" />
                         <div class="text-danger" *ngIf="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)">
                             Needs to be number 1 - 100
@@ -139,8 +139,7 @@
                 <div class="form-group">
                     <label for="switchDuration">Gas switch duration [min.]:
                         <input id="switchDuration" name="switchDuration" #switchDuration="ngModel"
-                            [(ngModel)]="gasSwitchDuration" class="form-control" type="number" min="1" [min]="1"
-                            max="10" [range]="[1, 10]" required
+                            [(ngModel)]="gasSwitchDuration" class="form-control" type="number" required
                             [class.is-invalid]="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)" />
                         <div class="text-danger"
                             *ngIf="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)">

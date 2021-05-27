@@ -1,36 +1,38 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "strict": true,
     "baseUrl": "./",
-    "module": "es2020",
     "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es5",
-    "typeRoots": [
-      "node_modules/@types",
-      "projects/planner/types"
-    ],
-    "types": [
-      "projects/planner/types/plotly.js/index.d.ts"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
     "paths": {
       "scuba-physics": [
+        "dist/scuba-physics/scuba-physics",
         "dist/scuba-physics"
-      ],
-      "scuba-physics/*": [
-        "dist/scuba-physics/*"
       ]
-    }
+    },
+    "target": "es2017",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
   }
 }

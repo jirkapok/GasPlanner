@@ -1,6 +1,6 @@
 # ScubaPhysics
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.14.
+This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.2.
 
 ## Code scaffolding
 
@@ -21,4 +21,4 @@ Run `ng test scuba-physics` to execute the unit tests via [Karma](https://karma-
 
 ## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

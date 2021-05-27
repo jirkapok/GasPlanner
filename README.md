@@ -30,6 +30,11 @@ Road map of planned features:
   * Unify dive settings and default settings
 * Add CNS and OTU calculations
 * Add option to define deep stops
+* UI tweaks
+  * Add average depth to the dive info
+  * Add max. nodeco limit to the dive info table
+  * Add option to reduce plan table only to list of stops
+  * Add button to apply max dive time and max depth in to simple depths
 
 ## Donate
 

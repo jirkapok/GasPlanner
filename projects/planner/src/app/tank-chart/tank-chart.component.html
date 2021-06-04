@@ -1,18 +1,18 @@
 <div class="my-4">
-    <div class="row">
-        <div class="col text-left">{{ tank.name }}</div>
-        <app-gaslabel [gas]="tank" [showName]="false" class="col text-right"></app-gaslabel>
+    <div class="d-flex flex-row justify-content-between">
+        <strong class="text-start">{{ tank.name }}</strong>
+        <app-gaslabel [gas]="tank" [showName]="false" class="text-end"></app-gaslabel>
     </div>
-    <div class="row">
-        <small class="col text-left text-muted">Gas remaining: {{ tank.endPressure | number:'1.0-0'  }}/{{ tank.startPressure | number:'1.0-0'  }} bar</small>
-        <small class="col text-right text-muted">Rock bottom: <strong>{{ tank.reserve | number:'1.0-0' }}</strong> bar</small>
+    <div class="d-flex flex-row justify-content-between">
+        <small class="text-start text-muted">Gas remaining: {{ tank.endPressure | number:'1.0-0'  }}/{{ tank.startPressure | number:'1.0-0'  }} bar</small>
+        <small class="text-end text-muted">Rock bottom: <strong>{{ tank.reserve | number:'1.0-0' }}</strong> bar</small>
     </div>
     <div class="progress gas-bar mt-1 mb-2">
         <div class="combined_wrapper">
             <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"
                 [attr.aria-valuenow]="tank.reserve" [style.width]="tank.percentsReserve + '%'" class="reserve-bar rounded-progress">
-                <div class="reserve-overlay ">
-                    <div class="reserve-value">{{tank.reserve | number:'1.0-0'  }}</div>
+                <div class="reserve-overlay">
+                    <div class="reserve-value">{{tank.reserve | number:'1.0-0' }}</div>
                 </div>
             </div>
 

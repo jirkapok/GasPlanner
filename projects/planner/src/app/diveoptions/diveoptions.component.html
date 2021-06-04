@@ -35,24 +35,23 @@
                     </label>
                 </div>
                 <div class="mb-3" *ngIf="!isComplex">
-                    <label for="conservatism">Conservatism (Gradient factors):
-                        <div class="input-group">
-                            <input id="conservatism" [(ngModel)]="conservatism" class="form-control" type="text"
-                                readonly />
-                            <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                                <button type="button" class="btn btn-default border" id="conservatismMenu"
-                                    ngbDropdownToggle></button>
-                                <div ngbDropdownMenu aria-labelledby="conservatismMenu" aria-expanded="false">
-                                    <button type="button" class="dropdown-item"
-                                        (click)="lowConservatism()">{{lowName}}</button>
-                                    <button type="button" class="dropdown-item"
-                                        (click)="mediumConservatism()">{{mediumName}}</button>
-                                    <button type="button" class="dropdown-item"
-                                        (click)="highConservatism()">{{highName}}</button>
-                                </div>
+                    <label for="conservatism" class="form-label">Conservatism (Gradient factors):</label>
+                    <div class="input-group">
+                        <input id="conservatism" [(ngModel)]="conservatism" class="form-control" type="text"
+                            readonly />
+                        <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
+                            <button type="button" class="btn btn-default border" id="conservatismMenu"
+                                ngbDropdownToggle></button>
+                            <div ngbDropdownMenu aria-labelledby="conservatismMenu" aria-expanded="false">
+                                <button type="button" class="dropdown-item"
+                                    (click)="lowConservatism()">{{lowName}}</button>
+                                <button type="button" class="dropdown-item"
+                                    (click)="mediumConservatism()">{{mediumName}}</button>
+                                <button type="button" class="dropdown-item"
+                                    (click)="highConservatism()">{{highName}}</button>
                             </div>
                         </div>
-                    </label>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="altitude" class="form-label">Altitude [m.a.s.l.]:</label>

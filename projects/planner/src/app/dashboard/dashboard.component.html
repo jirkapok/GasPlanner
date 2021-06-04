@@ -6,8 +6,7 @@
         <span><strong>Disclaimer:</strong> None of the authors, contributors, administrators, or anyone else connected with this project can be responsible
             for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.</span>
     </ngb-alert>
-    <div class="col-12 mt-4" [ngClass]="{
-          'col-xxl-4': true,
+    <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
           'col-lg-4': !isComplex,
           'col-md-4': !isComplex,
           'col-sm-6': !isComplex,
@@ -15,8 +14,7 @@
          }">
         <app-tanks (validate)="f.form.updateValueAndValidity()"></app-tanks>
     </div>
-    <div class="col-12 mt-4" [ngClass]="{
-          'col-xxl-4': true,
+    <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
           'col-lg-4': !isComplex,
           'col-md-4': !isComplex,
           'col-sm-6': !isComplex,
@@ -24,8 +22,7 @@
         }">
         <app-depths></app-depths>
     </div>
-    <div class="col-md-4 col-12 mt-4" [ngClass]="{
-          'col-xxl-4': true,
+    <div class="col-12 col-md-4 col-xxl-4 mt-4" [ngClass]="{
           'col-lg-4': !isComplex,
           'col-md-4': !isComplex,
           'col-sm-12': !isComplex,
@@ -33,13 +30,13 @@
            } ">
         <app-diveoptions></app-diveoptions>
     </div>
-    <div *ngIf="showResults" class="col-12 mt-4">
+    <div *ngIf="showResults" class="col-12 col-xxl-6 mt-4">
         <app-profilechart (chartHover)="chartHover($event)"></app-profilechart>
     </div>
-    <div *ngIf="showResults" class="col-md-6 mt-4">
+    <div *ngIf="showResults" class="col-md-6 col-xxl-3 mt-4">
         <app-waypoints [selectedTimeStamp]="selectedTimeStamp"></app-waypoints>
     </div>
-    <div class="col-md-6 mt-4">
+    <div class="col-md-6 col-xxl-3 mt-4">
         <app-consumption></app-consumption>
     </div>
     </div>

@@ -100,12 +100,24 @@
                         Needs to be number 0 - 100 higher than gradient low
                     </div>
                 </div>
-                <div class="form-check pb-1" *ngIf="isComplex">
+            </div>
+            <div class="col" *ngIf="isComplex">
+                <div class="mb-3">
+                    <label for="switchDuration" class="form-label">Gas switch duration [min.]:</label>
+                    <input id="switchDuration" name="switchDuration" #switchDuration="ngModel"
+                    [(ngModel)]="gasSwitchDuration" class="form-control col-auto" type="number" required
+                    [class.is-invalid]="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)" />
+                    <div class="text-danger form-text"
+                        *ngIf="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)">
+                        Needs to be number 1 - 10
+                    </div>
+                </div>
+                <div class="form-check pb-1">
                     <input type="checkbox" class="form-check-input" id="safetyStop"
                         [checked]="safetyStopEnabled" (change)="safetyStopEnabled = !safetyStopEnabled" />
                     <label class="form-check-label" for="safetyStop">Add safety stop 3 min.</label>
                 </div>
-                <div class="form-check pb-1" *ngIf="isComplex">
+                <div class="form-check pb-1">
                     <input type="checkbox" class="form-check-input" id="roundStops"
                         [checked]="roundDecoStops" (change)="roundDecoStops = !roundDecoStops" />
                     <label class="form-check-label" for="roundStops">Round deco stops to minutes</label>
@@ -128,16 +140,6 @@
                         [class.is-invalid]="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)" />
                     <div class="text-danger form-text" *ngIf="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)">
                         Needs to be number 1 - 100
-                    </div>
-                </div>
-                <div>
-                    <label for="switchDuration" class="form-label">Gas switch duration [min.]:</label>
-                    <input id="switchDuration" name="switchDuration" #switchDuration="ngModel"
-                    [(ngModel)]="gasSwitchDuration" class="form-control col-auto" type="number" required
-                    [class.is-invalid]="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)" />
-                    <div class="text-danger form-text"
-                        *ngIf="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)">
-                        Needs to be number 1 - 10
                     </div>
                 </div>
             </div>

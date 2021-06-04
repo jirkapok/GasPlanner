@@ -34,7 +34,7 @@
                         </div>
                     </label>
                 </div>
-                <div class="form-group" *ngIf="!isComplex">
+                <div class="mb-3" *ngIf="!isComplex">
                     <label for="conservatism">Conservatism (Gradient factors):
                         <div class="input-group">
                             <input id="conservatism" [(ngModel)]="conservatism" class="form-control" type="text"
@@ -54,98 +54,92 @@
                         </div>
                     </label>
                 </div>
-                <div class="form-group">
-                    <label for="altitude">Altitude [m.a.s.l.]:
-                        <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude"
-                            class="form-control" type="number" required
-                            [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)" />
-                        <div class="text-danger" *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">
-                            Needs to be number 0 - 4000 m
-                        </div>
-                    </label>
+                <div class="mb-3">
+                    <label for="altitude" class="form-label">Altitude [m.a.s.l.]:</label>
+                    <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude"
+                       class="form-control col-auto"  type="number" required
+                        [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)" />
+                    <div class="text-danger form-text" *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">
+                        Needs to be number 0 - 4000 m
+                    </div>
                 </div>
-                <div class="custom-control custom-switch form-group">
-                    <input type="checkbox" class="custom-control-input" id="isFreshWater" [checked]="!isFreshWater"
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="isFreshWater" [checked]="!isFreshWater"
                         (change)="isFreshWater = !isFreshWater" />
-                    <label class="custom-control-label" for="isFreshWater">Salt water</label>
+                    <label class="form-label" for="isFreshWater">Salt water</label>
                 </div>
             </div>
             <div class="col-sm" *ngIf="isComplex">
-                <div class="form-group">
-                    <label for="gfLow">Gradient low:
-                        <div class="input-group">
-                            <input id="gfLow" name="gfLow" #gfLow="ngModel" [(ngModel)]="plannedGfLow"
-                                class="form-control" type="number"
-                                required [class.is-invalid]="gfLow.invalid && (gfLow.dirty || gfLow.touched)" />
-                            <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                                <button type="button" class="btn btn-default border" id="conservatismMenu2"
-                                    ngbDropdownToggle></button>
-                                <div ngbDropdownMenu aria-labelledby="conservatismMenu2" aria-expanded="false">
-                                    <button type="button" class="dropdown-item"
-                                        (click)="lowConservatism()">{{lowName}}</button>
-                                    <button type="button" class="dropdown-item"
-                                        (click)="mediumConservatism()">{{mediumName}}</button>
-                                    <button type="button" class="dropdown-item"
-                                        (click)="highConservatism()">{{highName}}</button>
-                                </div>
+                <div class="mb-3">
+                    <label for="gfLow" class="form-label">Gradient low: </label>
+                    <div class="input-group">
+                        <input id="gfLow" name="gfLow" #gfLow="ngModel" [(ngModel)]="plannedGfLow"
+                            class="form-control col-auto" type="number"
+                            required [class.is-invalid]="gfLow.invalid && (gfLow.dirty || gfLow.touched)" />
+                        <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
+                            <button type="button" class="btn btn-default border" id="conservatismMenu2"
+                                ngbDropdownToggle></button>
+                            <div ngbDropdownMenu aria-labelledby="conservatismMenu2" aria-expanded="false">
+                                <button type="button" class="dropdown-item"
+                                    (click)="lowConservatism()">{{lowName}}</button>
+                                <button type="button" class="dropdown-item"
+                                    (click)="mediumConservatism()">{{mediumName}}</button>
+                                <button type="button" class="dropdown-item"
+                                    (click)="highConservatism()">{{highName}}</button>
                             </div>
                         </div>
-                        <div class="text-danger" *ngIf="gfLow.invalid && (gfLow.dirty || gfLow.touched)">
-                            Needs to be number 0 - 100 lower than gradient high</div>
-                    </label>
+                    </div>
+                    <div class="text-danger form-text" *ngIf="gfLow.invalid && (gfLow.dirty || gfLow.touched)">
+                        Needs to be number 0 - 100 lower than gradient high</div>
                 </div>
-                <div class="form-group">
-                    <label for="gfHigh">Gradient high:
-                        <input id="gfHigh" name="gfHigh" #gfHigh="ngModel" [(ngModel)]="plannedGfHigh"
-                            class="form-control" type="number"
-                            required [class.is-invalid]="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)" />
-                        <div class="text-danger" *ngIf="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)">
-                            Needs to be number 0 - 100 higher than gradient low
-                        </div>
-                    </label>
+                <div class="mb-3">
+                    <label for="gfHigh" class="form-label">Gradient high:</label>
+                    <input id="gfHigh" name="gfHigh" #gfHigh="ngModel" [(ngModel)]="plannedGfHigh"
+                        class="form-control col-auto" type="number"
+                        required [class.is-invalid]="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)" />
+                    <div class="text-danger form-text" *ngIf="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)">
+                        Needs to be number 0 - 100 higher than gradient low
+                    </div>
                 </div>
-                <div class="custom-control custom-switch form-group" *ngIf="isComplex">
-                    <input type="checkbox" class="custom-control-input btn-success" id="safetyStop"
+                <div class="form-check pb-1" *ngIf="isComplex">
+                    <input type="checkbox" class="form-check-input" id="safetyStop"
                         [checked]="safetyStopEnabled" (change)="safetyStopEnabled = !safetyStopEnabled" />
-                    <label class="custom-control-label" for="safetyStop">Add safety stop 3 min.</label>
+                    <label class="form-check-label" for="safetyStop">Add safety stop 3 min.</label>
                 </div>
-                <div class="custom-control custom-switch form-group" *ngIf="isComplex">
-                    <input type="checkbox" class="custom-control-input btn-success" id="roundStops"
+                <div class="form-check pb-1" *ngIf="isComplex">
+                    <input type="checkbox" class="form-check-input" id="roundStops"
                         [checked]="roundDecoStops" (change)="roundDecoStops = !roundDecoStops" />
-                    <label class="custom-control-label" for="roundStops">Round deco stops to minutes</label>
+                    <label class="form-check-label" for="roundStops">Round deco stops to minutes</label>
                 </div>
             </div>
             <div class="col-sm" *ngIf="isComplex">
-                <div class="form-group">
-                    <label for="descSpeed">Descent speed [m/min.]:
-                        <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="descentSpeed"
-                            class="form-control" type="number" required
-                            [class.is-invalid]="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)" />
-                        <div class="text-danger" *ngIf="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)">
-                            Needs to be number 1 - 100
-                        </div>
-                    </label>
+                <div class="mb-3">
+                    <label for="descSpeed" class="form-label">Descent speed [m/min.]:</label>
+                    <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="descentSpeed"
+                        class="form-control col-auto" type="number" required
+                        [class.is-invalid]="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)" />
+                    <div class="text-danger form-text" *ngIf="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)">
+                        Needs to be number 1 - 100
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="ascSpeed">Ascent speed [m/min.]:
-                        <input id="ascSpeed" name="ascSpeed" #ascSpeed="ngModel" [(ngModel)]="ascentSpeed"
-                            class="form-control" type="number" required
-                            [class.is-invalid]="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)" />
-                        <div class="text-danger" *ngIf="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)">
-                            Needs to be number 1 - 100
-                        </div>
-                    </label>
+                <div class="mb-3">
+                    <label for="ascSpeed" class="form-label">Ascent speed [m/min.]:</label>
+                    <input id="ascSpeed" name="ascSpeed" #ascSpeed="ngModel" [(ngModel)]="ascentSpeed"
+                        class="form-control col-auto" type="number" required
+                        [class.is-invalid]="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)" />
+                    <div class="text-danger form-text" *ngIf="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)">
+                        Needs to be number 1 - 100
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="switchDuration">Gas switch duration [min.]:
-                        <input id="switchDuration" name="switchDuration" #switchDuration="ngModel"
-                            [(ngModel)]="gasSwitchDuration" class="form-control" type="number" required
-                            [class.is-invalid]="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)" />
-                        <div class="text-danger"
-                            *ngIf="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)">
-                            Needs to be number 1 - 10
-                        </div>
-                    </label>
+                <div>
+                    <label for="switchDuration" class="form-label">Gas switch duration [min.]:</label>
+                    <input id="switchDuration" name="switchDuration" #switchDuration="ngModel"
+                    [(ngModel)]="gasSwitchDuration" class="form-control col-auto" type="number" required
+                    [class.is-invalid]="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)" />
+                    <div class="text-danger form-text"
+                        *ngIf="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)">
+                        Needs to be number 1 - 10
+                    </div>
                 </div>
             </div>
         </div>

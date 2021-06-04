@@ -14,6 +14,9 @@ List of current features is part of [application help](./doc/help.md).
 
 Road map of planned features:
 
+* Fix angular update
+  * Restore eslint
+  * Fix boostrap UI
 * Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, fast ascent or descent, safety stop, narcotic depth
 * Allow to define multiple levels
   * Allow to define multiple ascent speeds
@@ -31,8 +34,7 @@ Road map of planned features:
 * Add CNS and OTU calculations
 * Add option to define deep stops
 * UI tweaks
-  * Add average depth to the dive info
-  * Add max. nodeco limit to the dive info table
+  * Add to dive info: average depth, nodeco limit and total deco, if any
   * Add option to reduce plan table only to list of stops
   * Add button to apply max dive time and max depth in to simple depths
 
@@ -53,7 +55,7 @@ Than compile solution by `npm run build` to deploy `dist` directory. To start th
 
 ## Running the tests
 
-Angular recommended testing environment is used, to run test use `npm run test-lib`, `npm run test` or `npm run e2e`
+Angular recommended testing environment is used, to run test use `npm run test-lib`, `npm run test`
 
 ## Contributing
 

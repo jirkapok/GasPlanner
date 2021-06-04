@@ -100,6 +100,15 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/planner/**/*.ts",
+              "projects/planner/**/*.html"
+            ]
+          }
         }
       }
     },
@@ -131,9 +140,21 @@
             "tsConfig": "projects/scuba-physics/tsconfig.spec.json",
             "karmaConfig": "projects/scuba-physics/karma.conf.js"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/scuba-physics/**/*.ts",
+              "projects/scuba-physics/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "planner"
+  "defaultProject": "planner",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }

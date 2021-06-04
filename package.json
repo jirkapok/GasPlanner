@@ -10,8 +10,7 @@
     "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch",
     "test-lib": "ng test --project scuba-physics",
     "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -39,10 +38,22 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.0.2",
+    "@angular-eslint/builder": "12.0.0",
+    "@angular-eslint/eslint-plugin": "12.0.0",
+    "@angular-eslint/eslint-plugin-template": "12.0.0",
+    "@angular-eslint/schematics": "12.0.0",
+    "@angular-eslint/template-parser": "12.0.0",
     "@angular/cli": "~12.0.2",
     "@angular/compiler-cli": "~12.0.2",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
+    "@typescript-eslint/eslint-plugin": "4.23.0",
+    "@typescript-eslint/eslint-plugin-tslint": "^4.25.0",
+    "@typescript-eslint/parser": "4.23.0",
+    "eslint": "^7.26.0",
+    "eslint-plugin-html": "^6.1.2",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-jasmine": "^4.1.2",
     "jasmine-core": "~3.7.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",

@@ -1,13 +1,13 @@
 <div class="card">
     <div class="card-header">
-        <div class="float-left">
+        <div class="float-start">
             <fa-icon [icon]="icon" class="me-3"></fa-icon>
             <span>Options</span>
         </div>
-        <div class="float-right">
-            <div class="custom-control custom-switch app-nav-switch">
-                <input type="checkbox" class="custom-control-input btn-success" id="isComplex" [checked]="!isComplex"
-                    (change)="isComplex = !isComplex" />
+        <div class="float-end">
+            <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="isComplex" [checked]="!isComplex"
+                    (change)="isComplex = !isComplex" mdbCheckbox/>
                 <label class="custom-control-label" for="isComplex">Simple</label>
             </div>
         </div>
@@ -62,8 +62,8 @@
                         Needs to be number 0 - 4000 m
                     </div>
                 </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="isFreshWater" [checked]="!isFreshWater"
+                <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input" id="isFreshWater" [checked]="!isFreshWater" mdbCheckbox
                         (change)="isFreshWater = !isFreshWater" />
                     <label class="form-label" for="isFreshWater">Salt water</label>
                 </div>
@@ -112,13 +112,13 @@
                         Needs to be number 1 - 10
                     </div>
                 </div>
-                <div class="form-check pb-1">
-                    <input type="checkbox" class="form-check-input" id="safetyStop"
+                <div class="form-check form-switch pb-1">
+                    <input type="checkbox" class="form-check-input" id="safetyStop" mdbCheckbox
                         [checked]="safetyStopEnabled" (change)="safetyStopEnabled = !safetyStopEnabled" />
                     <label class="form-check-label" for="safetyStop">Add safety stop 3 min.</label>
                 </div>
-                <div class="form-check pb-1">
-                    <input type="checkbox" class="form-check-input" id="roundStops"
+                <div class="form-check form-switch pb-1">
+                    <input type="checkbox" class="form-check-input" id="roundStops" mdbCheckbox
                         [checked]="roundDecoStops" (change)="roundDecoStops = !roundDecoStops" />
                     <label class="form-check-label" for="roundStops">Round deco stops to minutes</label>
                 </div>

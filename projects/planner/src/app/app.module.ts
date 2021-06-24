@@ -2,9 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CustomFormsModule } from 'ngx-custom-validators';
+import { CustomFormsModule } from './validators/custom-forms.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
 import { AppComponent } from './app.component';
 import { TanksComponent } from './tanks/tanks.component';
 import { DiverComponent } from './diver/diver.component';

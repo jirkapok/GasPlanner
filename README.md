@@ -15,8 +15,13 @@ List of current features is part of [application help](./doc/help.md).
 Road map of planned features:
 
 * Fix angular update
-  * Restore eslint
-  * Fix boostrap UI
+  * Restore validators
+  * Fix import of test results in Github actions
+* UI tweaks
+  * Add to dive info: average depth, nodeco limit and total deco, if any
+  * Add option to reduce plan table only to list of stops
+  * Add button to apply max dive time and max depth in to simple depths
+  * Delay the calculation of Max bottom time
 * Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, fast ascent or descent, safety stop, narcotic depth
 * Allow to define multiple levels
   * Allow to define multiple ascent speeds
@@ -33,10 +38,6 @@ Road map of planned features:
   * Unify dive settings and default settings
 * Add CNS and OTU calculations
 * Add option to define deep stops
-* UI tweaks
-  * Add to dive info: average depth, nodeco limit and total deco, if any
-  * Add option to reduce plan table only to list of stops
-  * Add button to apply max dive time and max depth in to simple depths
 
 ## Donate
 

@@ -25,7 +25,7 @@
                 <div class="d-flex flex-row justify-content-between py-0">
                     <div class="me-1">
                         <input #size="ngModel" name="size" [(ngModel)]="tank.size" class="form-control" type="number"
-                            (change)="gasChanged()" required [range]="[1, 50]"
+                            (change)="gasChanged()" required [range]="[1, 50]" [min]="1" [max]="50" step="1"
                             [class.is-invalid]="size.invalid && (size.dirty || size.touched)" />
 
                         <div class="text-danger" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number
@@ -35,7 +35,7 @@
 
                     <div class="mx-1">
                         <input #startPressure="ngModel" name="startPressure" [(ngModel)]="tank.startPressure"
-                            class="form-control" type="number" (change)="gasChanged()" required [range]="[30, 350]"
+                            class="form-control" type="number" (change)="gasChanged()" required [range]="[30, 350]" [min]="30" [max]="350" step="1"
                             [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)" />
                         <div class="text-danger"
                             *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be
@@ -45,7 +45,7 @@
                     <div class="ms-1">
                         <div class="input-group">
                             <input #gasO2="ngModel" name="gasO2" [(ngModel)]="tank.o2" class="form-control" type="number"
-                                (change)="gasChanged()" required [range]="[21, 100]"
+                                (change)="gasChanged()" required [range]="[21, 100]" [min]="21" [max]="100" step="1"
                                 [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />
                             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                                 <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
@@ -78,7 +78,7 @@
       <div class="mb-3">
         <label for="size" class="form-label">Size [L]:</label>
         <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control col-auto" type="number" (change)="gasChanged()"
-        required [range]="[1, 50]"
+        required [range]="[1, 50]" [min]="1" [max]="50" step="1"
         [class.is-invalid]="size.invalid && (size.dirty || size.touched)"/>
         <small class="form-text text-muted">SAC: {{gasSac(firstTank) | number:'1.0-2'}} bar/min.</small>
         <div class="text-danger form-text" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 L</div>
@@ -87,7 +87,7 @@
       <div class="mb-3">
         <label for="startPressure" class="form-label">Start pressure [bar]:</label>
         <input #startPressure="ngModel" name="startPressure" [(ngModel)]="firstTank.startPressure" class="form-control col-auto" type="number" (change)="gasChanged()"
-        required [range]="[30, 350]"
+        required [range]="[30, 350]" [min]="30" [max]="350" step="1"
         [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)"/>
         <div class="text-danger form-text" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number 30-350 bar</div>
       </div>
@@ -95,7 +95,7 @@
         <label for="gasO2" class="form-label">Percent O2:</label>
         <div class="input-group col-auto">
             <input #gasO2="ngModel" name="gasO2" [(ngModel)]="o2" class="form-control" type="number" (change)="gasChanged()"
-                required [range]="[21, 100]"
+                required [range]="[21, 100]" [min]="21" [max]="100" step="1"
                 [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                 <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>

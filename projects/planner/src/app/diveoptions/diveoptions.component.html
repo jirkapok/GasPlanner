@@ -56,7 +56,7 @@
                 <div class="mb-3">
                     <label for="altitude" class="form-label">Altitude [m.a.s.l.]:</label>
                     <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude"
-                       class="form-control col-auto"  type="number" required [range]="[0, 4000]" [min]="0" [max]="400" step="1"
+                       class="form-control col-auto"  type="number" required [range]="[0, 4000]" [min]="0" [max]="4000" step="1"
                         [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)" />
                     <div class="text-danger form-text" *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">
                         Needs to be number 0 - 4000 m

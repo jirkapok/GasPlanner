@@ -8,14 +8,14 @@
     <div class="mb-3">
       <label for="duration" class="form-label">Bottom time [min.]:</label>
       <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="planDuration" class="form-control col-auto" type="number"
-        required [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"/>
+        required [min]="1" [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"/>
       <div class="text-danger form-text" *ngIf="duration.invalid && (duration.dirty || duration.touched)">Needs to be number > 0 min.</div>
     </div>
 
     <div class="mb-3">
       <label for="depth" class="form-label">Depth [m]:</label>
         <input id="depth" name="depth" #depth="ngModel" [(ngModel)]="plannedDepth" class="form-control col-auto" type="number"
-          required [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)"/>
+          required  [range]="[1, 500]" [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)"/>
         <div><small class="text-muted form-text">No deco limit {{ noDecoTime | number:'1.0-0' }} min.</small></div>
         <div><small class="text-muted form-text">Best mix is {{ bestMix }}</small></div>
         <div class="text-danger form-text" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number 1 - 500 m</div>
@@ -34,13 +34,13 @@
             <td class="mx-0 px-1">{{ level.startDepth | number:'1.0-0' }}</td>
             <td class="mx-0 px-1">
                 <input #endDepth="ngModel" name="endDepth" [(ngModel)]="level.endDepth" class="form-control" type="number" (change)="depthChanged()"
-                required step="1"
+                required [range]="[0, 500]" step="1"
                 [class.is-invalid]="endDepth.invalid && (endDepth.dirty || endDepth.touched)"/>
-                <div class="text-danger" *ngIf="endDepth.invalid && (endDepth.dirty || endDepth.touched)">Needs to be number 0-300 m</div>
+                <div class="text-danger" *ngIf="endDepth.invalid && (endDepth.dirty || endDepth.touched)">Needs to be number 0-500 m</div>
             </td>
             <td class="mx-0 px-1">
                 <input #duration2="ngModel" name="duration2" [(ngModel)]="level.duration" class="form-control" type="number" (change)="durationChanged()"
-                 required step="1"
+                 required [range]="[0, 1440]" step="1"
                 [class.is-invalid]="duration2.invalid && (duration2.dirty || duration2.touched)"/>
                 <div class="text-danger" *ngIf="duration2.invalid && (duration2.dirty || duration2.touched)">Needs to be number 0-1440 min</div>
             </td>

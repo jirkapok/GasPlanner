@@ -16,21 +16,21 @@
             <label for="pO2">ppO2 [bar]:
               <input [(ngModel)]="calc.pO2" class="form-control" #pO2="ngModel" name="pO2" id="pO2" type="number"
                step="0.1"
-                required [class.is-invalid]="pO2.invalid && (pO2.dirty || pO2.touched)" />
+                required [range]="[0.21,3]" [class.is-invalid]="pO2.invalid && (pO2.dirty || pO2.touched)" />
             </label>
             <div class="text-danger" *ngIf="pO2.invalid && (pO2.dirty || pO2.touched)">Needs to be number 0.21-3 bar</div>
           </div>
           <div [hidden]="inBestMix">
             <label for="fO2">Percent O2:
               <input [(ngModel)]="calc.fO2" class="form-control" #fO2="ngModel" name="fO2" id="fO2" type="number"
-                 required [class.is-invalid]="fO2.invalid && (fO2.dirty || fO2.touched)" />
+                 required [range]="[21,100]" [class.is-invalid]="fO2.invalid && (fO2.dirty || fO2.touched)" />
             </label>
             <div class="text-danger" *ngIf="fO2.invalid && (fO2.dirty || fO2.touched)">Needs to be number 21-100 %</div>
           </div>
           <div [hidden]="inMod">
             <label for="mod">MOD [m]:
               <input [(ngModel)]="calc.mod" class="form-control" #mod="ngModel" name="mod" id="mod" type="number"
-                 required [class.is-invalid]="mod.invalid && (mod.dirty || mod.touched)" />
+                 required [range]="[1,350]" [class.is-invalid]="mod.invalid && (mod.dirty || mod.touched)" />
                 <small class="form-text text-muted">EAD: {{calc.ead}} m</small>
             </label>
             <div class="text-danger" *ngIf="mod.invalid && (mod.dirty || mod.touched)">Needs to be number 3-350 m</div>

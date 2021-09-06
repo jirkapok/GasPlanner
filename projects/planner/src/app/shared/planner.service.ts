@@ -150,14 +150,6 @@ export class PlannerService {
         this.onCalculated.next();
     }
 
-    private measureMethod(message: string, delegate: () => void): void {
-        const startTime = performance.now();
-        delegate();
-        const endTime = performance.now();
-        const methodDuration = Math.round(endTime - startTime);
-        console.log(message +  `: ${methodDuration} ms`);
-    }
-
     public loadFrom(other: PlannerService): void {
         if (!other) {
             return;
@@ -169,6 +161,14 @@ export class PlannerService {
         if(other.tanks.length > 0) {
             this.firstTank.loadFrom(other.tanks[0]);
         }
+    }
+
+    private measureMethod(message: string, delegate: () => void): void {
+        const startTime = performance.now();
+        delegate();
+        const endTime = performance.now();
+        const methodDuration = Math.round(endTime - startTime);
+        console.log(message +  `: ${methodDuration} ms`);
     }
 
     private calculateTurnPressure(): number {

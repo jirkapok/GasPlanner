@@ -290,5 +290,37 @@ describe('Consumption', () => {
                 expect(airTank.consumed).toEqual(100); // up to the limit
             });
         });
+
+        describe('Only user defined segments', () => {
+            const airTank = new Tank(20, 100, 21);
+            const tanks = [airTank];
+
+            const descent = new Segment(0, 20, airTank.gas, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
+            descent.tank = airTank;
+            const swim = new Segment(20, 20, airTank.gas, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
+            swim.tank = airTank;
+            const ascent = new Segment(20, 0, airTank.gas, 4 * Time.oneMinute);   // 2 b * 1 bar/min * 4 minute = 8b
+            ascent.tank = airTank;
+
+            const profile = [descent, swim, ascent];
+
+            // TODO how to identify the worst point during the dive?
+            // take last segment as ascent - obviously not enough
+            // take deepest segment - doesn't have to be the ascent to end the dive
+            // take segment with highest ceiling, for no deco take deepest
+            // Is the deepest also with the minimum gas? Doesn't have to be.
+            // Take all segments from end till first descent - doenst cover multilevel dives
+            // Calculate this only in case user defined segments up to the surface
+            // \              _/
+            //  \   _        /
+            //   \_/ \_  Asc/
+            consumption.consumeFromTanks(profile, 3, tanks, diver);
+
+            it('Tank is updated as with calculated segments', () => {
+                expect(airTank.reserve).toEqual(30); // the minimum since there is no ascent identified
+                expect(airTank.consumed).toEqual(100); // up to the limit
+            });
+        });
+
     });
 });

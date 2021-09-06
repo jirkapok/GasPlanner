@@ -207,6 +207,11 @@ export class Consumption {
 
     // in case of user defined gas switch without stay at depth (in ascent segment), we prolong the duration at depth
     private addSolvingSegment(ascent: Segment[]): void {
+        // as segments are user defined
+        if(ascent.length === 0){
+            return;
+        }
+
         const solvingDuration = 2 * Time.oneMinute;
         const ascentDepth = ascent[0].startDepth;
         const problemSolving = new Segment(ascentDepth, ascentDepth, ascent[0].gas, solvingDuration);
@@ -251,7 +256,6 @@ export class Consumption {
 
     private consumeFromTank(tank: Tank, consumedLiters: number): number {
         const consumedBars =  Math.ceil(consumedLiters / tank.size);
-        // TODO ensure we dont exceed minimum zero bars
         const tankConsumedBars = consumedBars > tank.endPressure ? tank.endPressure : consumedBars;
         tank.consumed += tankConsumedBars;
         return this.extractRemaining(consumedLiters, tankConsumedBars, tank.size);

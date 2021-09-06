@@ -303,17 +303,6 @@ describe('Consumption', () => {
             ascent.tank = airTank;
 
             const profile = [descent, swim, ascent];
-
-            // TODO how to identify the worst point during the dive?
-            // take last segment as ascent - obviously not enough
-            // take deepest segment - doesn't have to be the ascent to end the dive
-            // take segment with highest ceiling, for no deco take deepest
-            // Is the deepest also with the minimum gas? Doesn't have to be.
-            // Take all segments from end till first descent - doenst cover multilevel dives
-            // Calculate this only in case user defined segments up to the surface
-            // \              _/
-            //  \   _        /
-            //   \_/ \_  Asc/
             consumption.consumeFromTanks(profile, 3, tanks, diver);
 
             it('Tank is updated as with calculated segments', () => {

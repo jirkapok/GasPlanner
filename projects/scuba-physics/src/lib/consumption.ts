@@ -109,8 +109,6 @@ export class Consumption {
         Tank.resetConsumption(tanks);
         const remainToConsume = this.consumeByTanks(segments, diver.sac);
         this.consumeByGases(segments, tanks, diver.sac, remainToConsume);
-        // TODO test scenario: user defined segment is also part of the emergency ascent (e.g. deepest point),
-        // we should identify the ascent another way than from last user defined segments
         const ascent = SegmentsFactory.ascent(segments, userSegments);
         this.updateReserve(ascent, tanks, diver.stressSac);
     }
@@ -207,7 +205,7 @@ export class Consumption {
 
     // in case of user defined gas switch without stay at depth (in ascent segment), we prolong the duration at depth
     private addSolvingSegment(ascent: Segment[]): void {
-        // as segments are user defined
+        // all segments are user defined
         if(ascent.length === 0){
             return;
         }

@@ -56,8 +56,6 @@ class ConsumptionSegment {
 export class Consumption {
     /** Minimum bars to keep in tank, even for shallow dives */
     public static readonly minimumRockBottom = 30;
-    /** we know the profile uses one depth level => 2 user segments */
-    private static readonly userNoDecoSegments = 2;
 
     constructor(private depthConverter: DepthConverter) { }
 
@@ -122,36 +120,34 @@ export class Consumption {
      * @returns Number of minutes representing maximum time we can spend as bottom time.
      */
     public calculateMaxBottomTime(segments: Segments, tanks: Tank[], diver: Diver, options: Options, noDecoTime: number): number {
-        Tank.resetConsumption(tanks);
-        const recreDuration = this.nodecoProfileBottomTime(segments, tanks, diver, options);
+        const noDecoSeconds = Time.toSeconds(noDecoTime);
+        // TODO test case: what if the user defined profile is already decompression - we cant shorten the profile
+        // TODO check, if we are empty at no deco time and than decide the range
 
-        if (recreDuration > noDecoTime) {
-            return this.estimateMaxDecotime(segments, tanks, options, diver, noDecoTime);
+        if (noDecoSeconds > segments.duration) {
+            this.nodecoProfileBottomTime(segments, tanks, diver, options, noDecoTime);
         }
 
-        return Math.floor(recreDuration);
+        return this.estimateMaxDecotime(segments, tanks, options, diver, noDecoTime);
     }
 
-    private nodecoProfileBottomTime(sourceSegments: Segments, tanks: Tank[], diver: Diver, options: Options): number {
-        // const descentDuration = SegmentsFactory.descentDuration(plannedDepth, options);
-        // const duration = Time.toMinutes(descentDuration); // to enforce swim (2.) segment to zero seconds duration.
-        const profile = Consumption.calculateDecompression(sourceSegments, tanks, options);
-        const segments = profile.segments;
-        this.consumeFromTanks(segments, Consumption.userNoDecoSegments, tanks, diver); // updates all tanks including reserve
-        const firstTank = tanks[0]; // TODO check all tanks
+    private nodecoProfileBottomTime(sourceSegments: Segments, tanks: Tank[], diver: Diver,
+        options: Options, noDecoSeconds: number): number {
 
-        if (Consumption.haveReserve(tanks)) {
-            const swimSegment = segments[1]; // first descent, we extend always the second segment only.
-            const bottomSegment = ConsumptionSegment.fromSegment(swimSegment);
-            bottomSegment.duration = Time.oneMinute;
-            // TODO this.consumeFromTanks
-            // const bottomConsumption = this.consumedTankBars(bottomSegment, firstTank, diver.sac);
-            // const swimDuration = remaining / bottomConsumption;
-            // const recreDuration = duration + swimDuration; // TODO extend duration of last segment
-            // return recreDuration;
+        // we can calculate decompression here, because the ascent is always the same up to nodeco limit
+        const testSegments = this.createTestProfile(sourceSegments, noDecoSeconds);
+        const addedSegment = testSegments.last();
+        const profile = Consumption.calculateDecompression(testSegments, tanks, options);
+        const segments = profile.segments;
+        this.consumeFromTanks(segments, testSegments.length, tanks, diver);
+
+        while (Consumption.haveReserve(tanks) || addedSegment.duration >= Time.oneMinute) {
+            addedSegment.duration -= Time.oneMinute;
+            this.consumeFromTanks(segments, testSegments.length, tanks, diver);
         }
 
-        return 0; // there is no nodeco time or we even don't have enough gas for no deco dive
+        // there is no nodeco time or we even don't have enough gas for no deco dive
+        return Time.toMinutes(testSegments.duration);
     }
 
     /**
@@ -159,19 +155,26 @@ export class Consumption {
      * because increase of duration means also change in the ascent plan.
      * This method is performance hit, since it needs to calculate the profile.
      */
-    private estimateMaxDecotime(segments: Segments, tanks: Tank[], options: Options, diver: Diver, noDecoTime: number): number {
-        let duration = noDecoTime;
-        const testSegments = segments.copy();
-        const lastSegment = segments.last();
+    private estimateMaxDecotime(sourceSegments: Segments, tanks: Tank[], options: Options, diver: Diver, noDecoSeconds: number): number {
+        const testSegments = this.createTestProfile(sourceSegments, noDecoSeconds);
+        const addedSegment = testSegments.last();
 
         while (Consumption.haveReserve(tanks)) {
-            duration++;
-            segments.addFlat(lastSegment.endDepth, lastSegment.gas, 1);
+            addedSegment.duration += Time.oneMinute;
+            // the profile always changes based on deco time
             const profile = Consumption.calculateDecompression(testSegments, tanks, options);
-            this.consumeFromTanks(profile.segments, Consumption.userNoDecoSegments, tanks, diver);
+            this.consumeFromTanks(profile.segments, testSegments.length, tanks, diver);
         }
 
-        return duration - 1; // we already passed the way
+        return Time.toMinutes(testSegments.duration) - 1; // we already passed the way
+    }
+
+    private createTestProfile(sourceSegments: Segments, noDecoSeconds: number): Segments {
+        let addedDuration = noDecoSeconds - sourceSegments.duration;
+        const testSegments = sourceSegments.copy();
+        const lastUserSegment = sourceSegments.last();
+        testSegments.addFlat(lastUserSegment.endDepth, lastUserSegment.gas, addedDuration);
+        return testSegments;
     }
 
     private updateReserve(ascent: Segment[], tanks: Tank[], stressSac: number): void {

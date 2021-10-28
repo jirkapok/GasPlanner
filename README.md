@@ -21,12 +21,12 @@ List of current features is part of [application help](./doc/help.md).
   * Delay the calculation of Max bottom time
   * Improve validation of altitude bellow 0 m.a.s.l.
   * Improve validation of speeds, because low speed may cause never ending calculation
-* Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, fast ascent or descent, safety stop, narcotic depth
-* Add no deco table
 * Allow to define multiple levels
   * Allow to define multiple ascent speeds
-  * Add option to define  last stop/safety stop range
+  * Add option to define last stop/safety stop range
   * Allow no safety stop below 10m dives in simple mode
+* Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, fast ascent or descent, safety stop, narcotic depth
+* Add no deco table
 * Add trimix support and calculator
   * Add option to define maximum narcotic depth
   * Add option to count oxygen in narcotic gas in narcotic depth calculation

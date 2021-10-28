@@ -27,6 +27,11 @@ export class DepthConverter {
 
     private _surfacePressure: number;
 
+    private constructor(private density: number, altitude: number) {
+        const pressureInPascals = AltitudePressure.atAltitude(altitude);
+        this._surfacePressure = PressureConverter.pascalToBar(pressureInPascals);
+    }
+
     /**
      * Creates new instance of depth converter
      * @param altitude Meters above see level, 0 for see level
@@ -45,11 +50,6 @@ export class DepthConverter {
 
     public get surfacePressure(): number {
         return this._surfacePressure;
-    }
-
-    private constructor(private density: number, altitude: number) {
-        const pressureInPascals = AltitudePressure.atAltitude(altitude);
-        this._surfacePressure = PressureConverter.pascalToBar(pressureInPascals);
     }
 
     /**

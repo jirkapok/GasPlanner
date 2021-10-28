@@ -143,12 +143,6 @@ export class Segments {
         return total;
     }
 
-    private updateMaxDepth(segment: Segment): void {
-        if (segment.endDepth > this._maxDepth) {
-            this._maxDepth = segment.endDepth;
-        }
-    }
-
     /**
      * @param startDepth in meters
      * @param endDepth in meters
@@ -226,6 +220,12 @@ export class Segments {
             const current = this.segments[index + 1];
             current.startDepth = previous.endDepth;
             this.updateMaxDepth(current);
+        }
+    }
+
+    private updateMaxDepth(segment: Segment): void {
+        if (segment.endDepth > this._maxDepth) {
+            this._maxDepth = segment.endDepth;
         }
     }
 }

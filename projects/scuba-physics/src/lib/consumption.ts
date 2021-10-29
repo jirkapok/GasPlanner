@@ -86,7 +86,8 @@ export class Consumption {
         });
 
         const algorithm = new BuhlmannAlgorithm();
-        const profile = algorithm.calculateDecompression(options, bGases, segments);
+        const segmentsCopy = segments.copy();
+        const profile = algorithm.calculateDecompression(options, bGases, segmentsCopy);
         return profile;
     }
 
@@ -123,31 +124,37 @@ export class Consumption {
         const noDecoSeconds = Time.toSeconds(noDecoTime);
         // TODO test case: what if the user defined profile is already decompression - we cant shorten the profile
         // TODO check, if we are empty at no deco time and than decide the range
+        // TODO for small depth this algorithm fails calculating till infinity
+        // TODO improvement: use 40 min intervals to find the right limit faster
+        //  and than use half interval algorithm to find concrete minute
 
-        if (noDecoSeconds > segments.duration) {
-            this.nodecoProfileBottomTime(segments, tanks, diver, options, noDecoTime);
+        if (noDecoSeconds >= segments.duration) {
+            return this.nodecoProfileBottomTime(segments, tanks, diver, options, noDecoSeconds);
         }
 
-        return this.estimateMaxDecotime(segments, tanks, options, diver, noDecoTime);
+        return this.estimateMaxDecotime(segments, tanks, options, diver, noDecoSeconds);
     }
 
     private nodecoProfileBottomTime(sourceSegments: Segments, tanks: Tank[], diver: Diver,
         options: Options, noDecoSeconds: number): number {
-
-        // we can calculate decompression here, because the ascent is always the same up to nodeco limit
         const testSegments = this.createTestProfile(sourceSegments, noDecoSeconds);
-        const addedSegment = testSegments.last();
+        // we don't recalculate decompression here, because the ascent is always the same up to nodeco limit
         const profile = Consumption.calculateDecompression(testSegments, tanks, options);
         const segments = profile.segments;
+        const lastOriginal = sourceSegments.last();
+        const addedSegment = segments[sourceSegments.length - 1]; // merged added segment and last original
         this.consumeFromTanks(segments, testSegments.length, tanks, diver);
 
-        while (Consumption.haveReserve(tanks) || addedSegment.duration >= Time.oneMinute) {
+        while (!Consumption.haveReserve(tanks) && addedSegment.duration >= lastOriginal.duration) {
             addedSegment.duration -= Time.oneMinute;
             this.consumeFromTanks(segments, testSegments.length, tanks, diver);
+            const hasReserve = Consumption.haveReserve(tanks);
+            console.log(`has reserve ${addedSegment.duration }: ${hasReserve.toString()}, ${tanks[0].consumed}`);
         }
 
         // there is no nodeco time or we even don't have enough gas for no deco dive
-        return Time.toMinutes(testSegments.duration);
+        const totalDuration = sourceSegments.duration + addedSegment.duration;
+        return Time.toMinutes(totalDuration);
     }
 
     /**
@@ -171,6 +178,7 @@ export class Consumption {
 
     private createTestProfile(sourceSegments: Segments, noDecoSeconds: number): Segments {
         let addedDuration = noDecoSeconds - sourceSegments.duration;
+        addedDuration = addedDuration > 0 ? addedDuration: 0;
         const testSegments = sourceSegments.copy();
         const lastUserSegment = sourceSegments.last();
         testSegments.addFlat(lastUserSegment.endDepth, lastUserSegment.gas, addedDuration);

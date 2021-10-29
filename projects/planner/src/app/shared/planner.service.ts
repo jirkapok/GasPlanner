@@ -123,19 +123,20 @@ export class PlannerService {
             // e.g. anything was added as calculated ascent
             if (profile.wayPoints.length > userSegments) {
                 const consumption = new Consumption(this.depthConverter);
+                this.plan.noDecoTime = this.noDecoTime();
+
+                // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
+                this.measureMethod('Max bottom time', () => {
+                    const segments = this.plan.copySegments();
+                    this.dive.maxTime = consumption.calculateMaxBottomTime(segments, this.tanks,
+                        this.diver, this.options, this.plan.noDecoTime);
+                });
 
                 this.measureMethod('Consumption', () => {
                     const originAscent = SegmentsFactory.ascent(profile.origin, userSegments);
                     this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
                     consumption.consumeFromTanks(profile.origin, userSegments, this.tanks, this.diver);
                     this.dive.notEnoughTime = !this.plan.isMultiLevel && this.plan.segments[1].duration === 0;
-                    this.plan.noDecoTime = this.noDecoTime();
-                });
-
-                this.measureMethod('Max bottom time', () => {
-                    const segments = this.plan.copySegments();
-                    this.dive.maxTime = consumption.calculateMaxBottomTime(segments, this.tanks,
-                        this.diver, this.options, this.plan.noDecoTime);
                 });
             }
 

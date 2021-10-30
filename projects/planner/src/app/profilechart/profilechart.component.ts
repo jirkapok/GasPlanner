@@ -18,10 +18,43 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
 
+    private options = {
+        displaylogo: false,
+        displayModeBar: false,
+        responsive: true,
+        // staticPlot: true,
+        autosize: true,
+        scrollZoom: false,
+        editable: false
+    };
+
+    private layout: any;
+
     constructor(private planer: PlannerService) {
         this.dive = this.planer.dive;
+
+        this.layout = {
+            autosize: true,
+            showlegend: false,
+            xaxis: {
+                fixedrange: true,
+                title: {
+                    text: 'Time [minutes]'
+                }
+            },
+            yaxis: {
+                fixedrange: true,
+                autorange: 'reversed',
+                title: {
+                    text: 'Depth [meters]'
+                }
+            },
+            margin: { l: 40, r: 10, b: 40, t: 10 },
+        };
+
+        this.updateLayoutThickFormat();
         this.subscription = this.planer.calculated.subscribe(() => {
-            this.plotChart();
+            this.plotCharts();
         });
     }
 
@@ -29,7 +62,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     public chartHover: EventEmitter<string> = new EventEmitter<string>();
 
     ngOnInit() {
-        this.plotChart();
+        this.plotCharts();
         const chartElement: any = document.getElementById(this.elementName);
         chartElement.on('plotly_hover', (e: any) => this.plotlyHover(e));
         chartElement.on('plotly_click', (e: any) => this.plotlyHover(e));
@@ -51,43 +84,24 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         return this.planer.plan.noDecoTime;
     }
 
-    public plotlyHover(data: any) {
+    public plotlyHover(data: any): void {
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x;
         this.chartHover.emit(timeStampValue);
     }
 
-    private plotChart() {
-        const layout = {
-            autosize: true,
-            showlegend: false,
-            xaxis: {
-                fixedrange: true,
-                tickformat: DateFormats.selectChartTimeFormat(this.dive.totalDuration),
-                title: {
-                    text: 'Time [minutes]'
-                }
-            },
-            yaxis: {
-                fixedrange: true,
-                autorange: 'reversed',
-                title: {
-                    text: 'Depth [meters]'
-                }
-            },
-            margin: { l: 40, r: 10, b: 40, t: 10 },
-        };
+    private plotCharts(): void {
+        this.updateLayoutThickFormat();
+        this.plotDepths();
+        this.plotCeilings();
+        this.plotEvents();
+    }
 
-        const options = {
-            displaylogo: false,
-            displayModeBar: false,
-            responsive: true,
-            // staticPlot: true,
-            autosize: true,
-            scrollZoom: false,
-            editable: false
-        };
+    private updateLayoutThickFormat(): void {
+        this.layout.xaxis.tickformat = DateFormats.selectChartTimeFormat(this.dive.totalDuration);
+    }
 
+    private plotDepths(): void {
         const xValues: Date[] = [];
         const yValues: number[] = [];
 
@@ -105,8 +119,10 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             this.resampleToSeconds(xValues, yValues, item);
         });
 
-        Plotly.react(this.elementName, data, layout, options);
+        Plotly.react(this.elementName, data, this.layout, this.options);
+    }
 
+    private plotCeilings(): void {
         const xCeilingValues: Date[] = [];
         const yCeilingValues: number[] = [];
 
@@ -128,9 +144,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             }
         }];
 
-        Plotly.plot(this.elementName, dataCeilings, layout, options);
-
-        this.plotEvents();
+        Plotly.plot(this.elementName, dataCeilings, this.layout, this.options);
     }
 
     private plotEvents(): void {

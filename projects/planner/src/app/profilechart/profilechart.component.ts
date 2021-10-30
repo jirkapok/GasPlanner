@@ -92,6 +92,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
 
     private plotCharts(): void {
         this.updateLayoutThickFormat();
+        this.plotAverageDepth();
         this.plotDepths();
         this.plotCeilings();
         this.plotEvents();
@@ -99,6 +100,36 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
 
     private updateLayoutThickFormat(): void {
         this.layout.xaxis.tickformat = DateFormats.selectChartTimeFormat(this.dive.totalDuration);
+    }
+
+    private plotAverageDepth(): void {
+        const lastWayPoint = this.dive.wayPoints[this.dive.wayPoints.length - 1];
+        const averageDepth = this.dive.averageDepth;
+        const xDepthValues: Date[] = [];
+        const yDepthValues: number[] = [];
+        const wayPoints = [
+            new WayPoint(0, averageDepth, averageDepth),
+            new WayPoint(lastWayPoint.endTime, averageDepth, averageDepth)
+        ];
+
+        wayPoints.forEach((item, index, waypoints) => {
+            this.resampleToSeconds(xDepthValues, yDepthValues, item);
+        });
+
+        const dataAverageDepths = [{
+            x: xDepthValues,
+            y: yDepthValues,
+            type: 'scatter',
+            line: {
+                dash: 'dot'
+            },
+            name: 'Average depth',
+            marker: {
+                color: 'rgb(62, 157, 223)'
+            }
+        }];
+
+        Plotly.react(this.elementName, dataAverageDepths, this.layout, this.options);
     }
 
     private plotDepths(): void {
@@ -109,7 +140,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             x: xValues,
             y: yValues,
             type: 'scatter',
-            name: 'dive',
+            name: 'Dive',
             marker: {
                 color: 'rgb(31, 119, 180)'
             }
@@ -119,7 +150,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             this.resampleToSeconds(xValues, yValues, item);
         });
 
-        Plotly.react(this.elementName, data, this.layout, this.options);
+        Plotly.plot(this.elementName, data, this.layout, this.options);
     }
 
     private plotCeilings(): void {
@@ -138,7 +169,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             y: yCeilingValues,
             type: 'scatter',
             fill: 'tozeroy',
-            name: 'ceilings',
+            name: 'Ceilings',
             marker: {
                 color: 'rgb(255, 160, 73)'
             }

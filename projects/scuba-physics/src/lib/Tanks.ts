@@ -1,5 +1,21 @@
 import { Gas, StandardGases } from './Gases';
 
+export class Tanks {
+    /**
+     * Checks, if all tanks have more remaining gas than their reserve.
+     * See also Tank.hasReserve
+     */
+    public static haveReserve(tanks: Tank[]): boolean {
+        for (let index = 0; index < tanks.length; index++) {
+            if (!tanks[index].hasReserve) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
 export class Tank {
     public consumed = 0;
     public reserve = 0;

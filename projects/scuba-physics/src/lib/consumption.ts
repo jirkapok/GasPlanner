@@ -4,7 +4,7 @@ import { Diver } from './Diver';
 import { Gas, Gases } from './Gases';
 import { CalculatedProfile } from './Profile';
 import { Segment, Segments, SegmentsFactory } from './Segments';
-import { Tank } from './Tanks';
+import { Tank, Tanks } from './Tanks';
 import { Time } from './Time';
 
 
@@ -66,20 +66,6 @@ export class Consumption {
     public static readonly minimumRockBottom = 30;
 
     constructor(private depthConverter: DepthConverter) { }
-
-    /**
-     * Checks, if all tanks have more remaining gas than their reserve.
-     * See also Tank.hasReserve
-     */
-    public static haveReserve(tanks: Tank[]): boolean {
-        for (let index = 0; index < tanks.length; index++) {
-            if (!tanks[index].hasReserve) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 
     private static calculateDecompression(segments: Segments, tanks: Tank[], options: Options): CalculatedProfile {
         const bGases = new Gases();
@@ -150,7 +136,7 @@ export class Consumption {
         const stepDuration = Time.oneMinute * 40;
         this.consumeFromProfile(testSegments, tanks, diver, options);
 
-        while (Consumption.haveReserve(tanks)) {
+        while (Tanks.haveReserve(tanks)) {
             addedSegment.duration += stepDuration;
             // This is performance hit, we dont know the no decompression profile, so we need to create always new one.
             // and initial profile, can be already decompression.
@@ -176,7 +162,7 @@ export class Consumption {
             addedSegment.duration = middle;
             this.consumeFromProfile(testSegments, tanks, diver, options);
 
-            if(Consumption.haveReserve(tanks)) {
+            if(Tanks.haveReserve(tanks)) {
                 limits.left = middle;
             } else {
                 limits.right = middle;

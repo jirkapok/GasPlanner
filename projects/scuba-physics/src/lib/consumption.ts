@@ -129,10 +129,6 @@ export class Consumption {
      * Returns 0 in case the duration is shorter than user defined segments.
      */
     public calculateMaxBottomTime(sourceSegments: Segments, tanks: Tank[], diver: Diver, options: Options): number {
-        // TODO test case: what if the user defined profile is already decompression - we cant shorten the profile
-        // TODO check, if we are empty at no deco time and than decide the range
-        // TODO for small depth this algorithm fails calculating till infinity
-
         const testSegments = this.createTestProfile(sourceSegments);
         const addedSegment = testSegments.last();
         const limits = this.findRightUpperInterval(testSegments, addedSegment, tanks, diver, options);
@@ -192,7 +188,7 @@ export class Consumption {
 
     private consumeFromProfile(testSegments: Segments, tanks: Tank[], diver: Diver, options: Options){
         const profile = Consumption.calculateDecompression(testSegments, tanks, options);
-        // TODO what if multiple flat segments are merged?
+        // TODO what if multiple user defined flat segments are merged?
         const userSegments = testSegments.length - 1; // The added will be merged
         this.consumeFromTanks(profile.segments, userSegments, tanks, diver);
     }

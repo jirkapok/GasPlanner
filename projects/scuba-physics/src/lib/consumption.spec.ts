@@ -13,13 +13,13 @@ describe('Consumption', () => {
     describe('Max bottom time', () => {
         const options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
 
-        fit('Is calculated for default simple plan', () => {
+        it('Is calculated for default simple plan', () => {
             const tank = new Tank(15, 200, 21);
             const tanks = [tank];
 
             const segments = new Segments();
-            segments.add(0, 30, tank.gas, 0.5);
-            segments.addFlat(30, tank.gas, 10.5);
+            segments.add(0, 30, tank.gas, Time.oneMinute * 0.5);
+            segments.addFlat(30, tank.gas, Time.oneMinute * 10.5);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(17);
@@ -31,8 +31,8 @@ describe('Consumption', () => {
             const tanks = [airTank, ean50Tank];
 
             const segments = new Segments();
-            segments.add(0, 40, airTank.gas, 2);
-            segments.addFlat(40, airTank.gas, 1);
+            segments.add(0, 40, airTank.gas, Time.oneMinute * 2);
+            segments.addFlat(40, airTank.gas, Time.oneMinute);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(19);
@@ -44,11 +44,39 @@ describe('Consumption', () => {
             const tanks = [airTank, ean50Tank];
 
             const segments = new Segments();
-            segments.add(0, 40, airTank.gas, 2);
-            segments.addFlat(40, airTank.gas, 1);
+            segments.add(0, 40, airTank.gas, Time.oneMinute * 2);
+            segments.addFlat(40, airTank.gas, Time.oneMinute);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(5);
+        });
+
+        it('0 max time is calculated for plan where defined longer dive than possible', () => {
+            const tank = new Tank(15, 200, 21);
+            const tanks = [tank];
+
+            const segments = new Segments();
+            segments.add(0, 30, tank.gas, Time.oneMinute * 0.5);
+            segments.addFlat(30, tank.gas, Time.oneMinute * 23);
+
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
+            expect(maxBottomTime).toEqual(0);
+        });
+
+        it('Long dives dont calculate till infinity', () => {
+            const tank = new Tank(24, 200, 21);
+            const tanks = [tank];
+
+            const segments = new Segments();
+            segments.add(0, 5, tank.gas, Time.oneMinute);
+            segments.addFlat(5, tank.gas, Time.oneMinute * 10);
+
+            const startTime = performance.now();
+            consumption.calculateMaxBottomTime(segments, tanks, diver, options);
+            const endTime = performance.now();
+            const methodDuration = Math.round(endTime - startTime);
+
+            expect(methodDuration).toBeLessThan(200);
         });
     });
 

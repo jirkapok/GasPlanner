@@ -193,6 +193,16 @@ describe('Segments', () => {
             expect(averageDepth).toBe(20);
         });
 
+        it('0 duration is not added', () => {
+            const segments: Segment[] = [
+                new Segment(40, 40, StandardGases.air, 0),
+                new Segment(40, 40, StandardGases.air, 60)
+            ];
+
+            const averageDepth = Segments.averageDepth(segments);
+            expect(averageDepth).toBe(40);
+        });
+
         it('Multiple elements count all elements', () => {
             const segments: Segment[] = [
                 new Segment(0, 40, StandardGases.air, 60),

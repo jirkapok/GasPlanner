@@ -107,23 +107,26 @@ export class Segments {
         return result;
     }
 
+    /** Calculates average depth in meters from provided segments */
     public static averageDepth(segments: Segment[]): number {
         if (segments.length <= 0) {
             return 0;
         }
 
-        let weightAverage = 0;
+        let cumulativeAverage = 0;
         let totalDuration = 0;
-        // avg: (slangTermInfo.popularity + n * avg) / (n + 1),
-        // n:   n + 1,
 
+        // Uses cumulative average to prevent number overflow for large segment durations
         segments.forEach(segment => {
-            const segmentAverage = (segment.endDepth + segment.startDepth) / 2;
-            const segmentWeight = segmentAverage * segment.duration;
-            weightAverage += segmentWeight;
-            totalDuration += segment.duration;
+            if(segment.duration > 0) {
+                const segmentAverage = (segment.endDepth + segment.startDepth) / 2;
+                const cumulativeWeight = segmentAverage * segment.duration + totalDuration * cumulativeAverage;
+                totalDuration += segment.duration;
+                cumulativeAverage = cumulativeWeight / totalDuration;
+            }
         });
-        return weightAverage / totalDuration;
+
+        return cumulativeAverage;
     }
 
     /** Gets count stored items */

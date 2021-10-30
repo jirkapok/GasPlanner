@@ -115,9 +115,7 @@ export class PlannerService {
             this.dive.wayPoints = profile.wayPoints;
             this.dive.ceilings = profile.ceilings;
             this.dive.events = profile.events;
-            this.measureMethod('Average depth', () => {
-                this.dive.averageDepth = Segments.averageDepth(profile.origin);
-            });
+            this.dive.averageDepth = Segments.averageDepth(profile.origin);
 
             const userSegments = this.plan.length;
 

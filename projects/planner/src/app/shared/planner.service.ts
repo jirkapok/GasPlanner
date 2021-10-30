@@ -128,8 +128,7 @@ export class PlannerService {
                 // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
                 this.measureMethod('Max bottom time', () => {
                     const segments = this.plan.copySegments();
-                    this.dive.maxTime = consumption.calculateMaxBottomTime(segments, this.tanks,
-                        this.diver, this.options, this.plan.noDecoTime);
+                    this.dive.maxTime = consumption.calculateMaxBottomTime(segments, this.tanks, this.diver, this.options);
                 });
 
                 this.measureMethod('Consumption', () => {

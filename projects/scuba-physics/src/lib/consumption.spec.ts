@@ -21,7 +21,7 @@ describe('Consumption', () => {
             segments.add(0, 30, tank.gas, 0.5);
             segments.addFlat(30, tank.gas, 10.5);
 
-            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options, 11);
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(17);
         });
 
@@ -34,7 +34,7 @@ describe('Consumption', () => {
             segments.add(0, 40, airTank.gas, 2);
             segments.addFlat(40, airTank.gas, 1);
 
-            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options, 7);
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(19);
         });
 
@@ -47,7 +47,7 @@ describe('Consumption', () => {
             segments.add(0, 40, airTank.gas, 2);
             segments.addFlat(40, airTank.gas, 1);
 
-            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options, 7);
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(5);
         });
     });

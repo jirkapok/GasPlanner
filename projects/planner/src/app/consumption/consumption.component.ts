@@ -24,6 +24,10 @@ export class ConsumptionComponent {
         return this.planer.tanks;
     }
 
+    public get showMaxBottomTime(): boolean {
+        return this.dive.maxTime > 0;
+    }
+
     public get needsReturn(): boolean {
         return this.planer.plan.needsReturn;
     }

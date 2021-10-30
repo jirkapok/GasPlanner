@@ -302,6 +302,13 @@ export class Gas {
             this.fO2 === other.fO2 &&
             this.fHe === other.fHe;
     }
+
+    /** Unique identifier of content */
+    public contentCode(): number {
+        const fourK = 10000;
+        // considered identical gas rounding on two decimal places
+        return Math.round(this.fO2 * fourK) * fourK + Math.round(this.fHe * fourK);
+    }
 }
 
 export class StandardGases {

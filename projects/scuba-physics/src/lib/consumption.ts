@@ -1,7 +1,7 @@
 import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
 import { DepthConverter } from './depth-converter';
 import { Diver } from './Diver';
-import { Gas, Gases } from './Gases';
+import { Gases } from './Gases';
 import { CalculatedProfile } from './Profile';
 import { Segment, Segments, SegmentsFactory } from './Segments';
 import { Tank, Tanks } from './Tanks';
@@ -197,7 +197,7 @@ export class Consumption {
         // add the reserve from opposite order than consumed gas
         for (let index = 0; index <= tanks.length - 1; index++) {
             const tank = tanks[index];
-            const gasCode = this.gasCode(tank.gas);
+            const gasCode = tank.gas.contentCode();
             let consumedLiters = gasesConsumed.get(gasCode) || 0;
             consumedLiters = this.addReserveToTank(tank, consumedLiters);
             gasesConsumed.set(gasCode, consumedLiters);
@@ -238,7 +238,7 @@ export class Consumption {
         // to consumed stages first. This simulates one of the back mounted system procedures.
         for (let index = tanks.length - 1; index >= 0; index--) {
             const tank = tanks[index];
-            const gasCode = this.gasCode(tank.gas);
+            const gasCode = tank.gas.contentCode();
             let consumedLiters = gasesConsumed.get(gasCode) || 0;
             consumedLiters = this.consumeFromTank(tank, consumedLiters);
             gasesConsumed.set(gasCode, consumedLiters);
@@ -252,7 +252,7 @@ export class Consumption {
         segments.forEach((segment: Segment) => {
             if (segment.tank) {
                 const tank = segment.tank;
-                const gasCode = this.gasCode(segment.gas);
+                const gasCode = segment.gas.contentCode();
                 const consumptionSegment = ConsumptionSegment.fromSegment(segment);
                 const consumedLiters = this.consumedBySegment(consumptionSegment, sacSeconds);
                 const remainingLiters = this.consumeFromTank(tank, consumedLiters);
@@ -295,7 +295,7 @@ export class Consumption {
 
             if (includeSegment(segment)) {
                 const gas = segment.gas;
-                const gasCode = this.gasCode(gas);
+                const gasCode = gas.contentCode();
                 const converted = ConsumptionSegment.fromSegment(segment);
                 const consumedLiters = this.consumedBySegment(converted, sacSeconds);
                 let consumedByGas: number = remainToConsume.get(gasCode) || 0;
@@ -305,20 +305,6 @@ export class Consumption {
         }
 
         return remainToConsume;
-    }
-
-    private gasCode(gas: Gas): number {
-        const fourK = 10000;
-        // considered identical gas rounding on two decimal places
-        return Math.round(gas.fO2 * fourK) * fourK + Math.round(gas.fHe * fourK);
-    }
-
-    /** returns bar consumed by segment based on tank size and sac */
-    private consumedTankBars(segment: ConsumptionSegment, tank: Tank, sac: number): number {
-        const sacSeconds = Time.toMinutes(sac);
-        const liters = this.consumedBySegment(segment, sacSeconds);
-        const bars = liters / tank.size;
-        return bars;
     }
 
     /**

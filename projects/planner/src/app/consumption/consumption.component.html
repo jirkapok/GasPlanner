@@ -20,6 +20,12 @@
                             <strong>{{ noDeco | number:'1.0-0' }}</strong>
                         </td>
                     </tr>
+                    <tr>
+                        <td>Average depth [m]:</td>
+                        <td class="table-active">
+                            <strong>{{ dive.averageDepth | number:'1.0-1' }}</strong>
+                        </td>
+                    </tr>
                     <tr *ngIf="!isMultiLevel && showMaxBottomTime">
                         <td>Maximum bottom time [min.]:</td>
                         <td class="table-active">

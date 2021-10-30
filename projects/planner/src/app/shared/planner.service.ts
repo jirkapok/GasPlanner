@@ -5,7 +5,7 @@ import { Plan, Dive, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
-    Diver, SegmentsFactory, Consumption, Segment, Gases } from 'scuba-physics';
+    Diver, SegmentsFactory, Consumption, Segment, Gases, Segments } from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
@@ -111,13 +111,14 @@ export class PlannerService {
             this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
             this.depthConverter = this.depthConverterFactory.create();
             this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
-            // let profile: Profile;
-            // this.measureMethod('Calculate waypoints', () => {
             const profile = WayPointsService.calculateWayPoints(this.plan, this.tanks, this.options);
-            // });
             this.dive.wayPoints = profile.wayPoints;
             this.dive.ceilings = profile.ceilings;
             this.dive.events = profile.events;
+            this.measureMethod('Average depth', () => {
+                this.dive.averageDepth = Segments.averageDepth(profile.origin);
+            });
+
             const userSegments = this.plan.length;
 
             // e.g. anything was added as calculated ascent

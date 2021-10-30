@@ -164,6 +164,7 @@ export class Dive {
     public notEnoughGas = false;
     public notEnoughTime = false;
     public noDecoExceeded = false;
+    public averageDepth = 0;
     public wayPoints: WayPoint[] = [];
     public ceilings: Ceiling[] = [];
     public events: Event[] = [];

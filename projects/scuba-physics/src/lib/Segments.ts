@@ -107,6 +107,25 @@ export class Segments {
         return result;
     }
 
+    public static averageDepth(segments: Segment[]): number {
+        if (segments.length <= 0) {
+            return 0;
+        }
+
+        let weightAverage = 0;
+        let totalDuration = 0;
+        // avg: (slangTermInfo.popularity + n * avg) / (n + 1),
+        // n:   n + 1,
+
+        segments.forEach(segment => {
+            const segmentAverage = (segment.endDepth + segment.startDepth) / 2;
+            const segmentWeight = segmentAverage * segment.duration;
+            weightAverage += segmentWeight;
+            totalDuration += segment.duration;
+        });
+        return weightAverage / totalDuration;
+    }
+
     /** Gets count stored items */
     public get length(): number {
         return this.segments.length;

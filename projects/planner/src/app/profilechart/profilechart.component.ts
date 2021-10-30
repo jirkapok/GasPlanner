@@ -103,18 +103,21 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     }
 
     private plotAverageDepth(): void {
-        const lastWayPoint = this.dive.wayPoints[this.dive.wayPoints.length - 1];
-        const averageDepth = this.dive.averageDepth;
         const xDepthValues: Date[] = [];
         const yDepthValues: number[] = [];
-        const wayPoints = [
-            new WayPoint(0, averageDepth, averageDepth),
-            new WayPoint(lastWayPoint.endTime, averageDepth, averageDepth)
-        ];
 
-        wayPoints.forEach((item, index, waypoints) => {
-            this.resampleToSeconds(xDepthValues, yDepthValues, item);
-        });
+        if(this.dive.wayPoints.length > 0) {
+            const lastWayPoint = this.dive.wayPoints[this.dive.wayPoints.length - 1];
+            const averageDepth = this.dive.averageDepth;
+            const wayPoints = [
+                new WayPoint(0, averageDepth, averageDepth),
+                new WayPoint(lastWayPoint.endTime, averageDepth, averageDepth)
+            ];
+
+            wayPoints.forEach((item, index, waypoints) => {
+                this.resampleToSeconds(xDepthValues, yDepthValues, item);
+            });
+        }
 
         const dataAverageDepths = [{
             x: xDepthValues,

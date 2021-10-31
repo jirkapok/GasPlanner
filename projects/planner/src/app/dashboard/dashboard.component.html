@@ -10,7 +10,6 @@
         </div>
     </div>
     <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
-          'col-lg-4': !isComplex,
           'col-md-4': !isComplex,
           'col-sm-6': !isComplex,
           'col-md-6': isComplex
@@ -18,22 +17,22 @@
         <app-tanks (validate)="f.form.updateValueAndValidity()"></app-tanks>
     </div>
     <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
-          'col-lg-4': !isComplex,
           'col-md-4': !isComplex,
           'col-sm-6': !isComplex,
           'col-md-6': isComplex
         }">
         <app-depths></app-depths>
     </div>
-    <div class="col-12 col-md-4 col-xxl-4 mt-4" [ngClass]="{
-          'col-lg-4': !isComplex,
+    <div class="col-12 col-lg-4 mt-4" [ngClass]="{
           'col-md-4': !isComplex,
-          'col-sm-12': !isComplex,
-          'col-lg-12': isComplex
+          'col-sm-12': !isComplex
            } ">
         <app-diveoptions></app-diveoptions>
     </div>
-    <div *ngIf="showResults" class="col-12 col-xxl-6 mt-4">
+    <div *ngIf="showResults" class="col-12 col-xxl-6 mt-4" [ngClass]="{
+        'col-lg-12': !isComplex,
+        'col-lg-8': isComplex
+         } ">
         <app-profilechart (chartHover)="chartHover($event)"></app-profilechart>
     </div>
     <div *ngIf="showResults" class="col-md-6 col-xxl-3 mt-4">

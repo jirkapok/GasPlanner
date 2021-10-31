@@ -10,34 +10,15 @@ None of the authors, contributors, administrators, or anyone else connected with
 
 ## Features - Road map
 
-List of current features is part of [application help](./doc/help.md).
-
-## Road map of planned features
-
-* UI tweaks
-  * Add to dive info: average depth, nodeco limit and total deco, if any
-  * Add option to reduce plan table only to list of stops
-  * Add button to apply max dive time and max depth in to simple depths
-  * Delay the calculation of Max bottom time
-  * Improve validation of altitude bellow 0 m.a.s.l.
-  * Improve validation of speeds, because low speed may cause never ending calculation
-* Allow to define multiple levels
-  * Allow to define multiple ascent speeds
-  * Add option to define last stop/safety stop range
-  * Allow no safety stop below 10m dives in simple mode
-* Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, fast ascent or descent, safety stop, narcotic depth
-* Add no deco table
-* Add trimix support and calculator
-  * Add option to define maximum narcotic depth
-  * Add option to count oxygen in narcotic gas in narcotic depth calculation
-  * Add air breaks
-* Add imperial units option
-* Add help to all variables
-* Add localization
-* Add option to define repetitive dives
-  * Unify dive settings and default settings
-* Add CNS and OTU calculations
-* Add option to define deep stops
+* Multiple nitrox gases
+* Multi-level dives
+* Decompression calculated using Bühlmann ZHL-16C algorithm
+* Conservatism using Gradient factors
+* Calculation of consumed gas and rock bottom for each tank
+* Environment using water salinity and altitude options
+* Ascent plan using table and chart with list of warnings
+* Or see more in **[Application help](./doc/help.md)**
+* See also [Road map of planned features](./doc/roadmap.md)
 
 ## Donate
 
@@ -66,24 +47,4 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
-## Other tools resource
-
-Based on following references:
-
-* <https://github.com/archisgore/online-deco-console>
-* <https://github.com/nyxtom/dive>
-* <http://www.lizardland.co.uk/DIYDeco.html>
-* <https://github.com/Subsurface-divelog>
-* <https://www.frogkick.nl/files/understanding_m-values.pdf>
-* <https://diverclub.ru/File/literatur/Deep_Stops.pdf>
-* <https://thetheoreticaldiver.org/wordpress//var/lib/wordpress/wp-content/uploads/2017/11/dekotheorie1.pdf>
-* <https://njscuba.net/gear/trng_10_deco.php>
-* <https://thetheoreticaldiver.org/wordpress/index.php/2019/01/18/ndl-and-gradient-factors/>
-* <http://www.alertdiver.com/altitude_and_decompression_sickness?fbclid=IwAR2iDWh0ZwvB_oRMmkqQnlYaY3lc1W5NrWTX3DQvDR6N8B3lHXbG9aNFiTA>
-* <https://gue.com/blog/calculated-confusion-can-o2-get-you-high/?fbclid=IwAR0qxKp2Jt7rrN6YFA9g0QxZLtENi1TjGZQ8pkxSMY5q4VQuaBUZwn5-u0Q>
-* <https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf>
-
-At time of development also other implementations are available:
-
-* <https://github.com/igaponov/deco-model>
-* <https://github.com/oliverjohnstone/npm-buhlmann-ZH-L16>
+## [Links](./doc/links.md)

@@ -93,7 +93,7 @@
       </div>
       <div class="mb-3 col-auto">
         <label for="gasO2" class="form-label">Percent O2:</label>
-        <div class="input-group col-auto">
+        <div class="input-group col-auto o2-max-width">
             <input #gasO2="ngModel" name="gasO2" [(ngModel)]="o2" class="form-control" type="number" (change)="gasChanged()"
                 required [range]="[21, 100]" [min]="21" [max]="100" step="1"
                 [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />

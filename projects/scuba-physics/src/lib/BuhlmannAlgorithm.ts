@@ -182,11 +182,13 @@ class AlgorithmContext {
 }
 
 export class BuhlmannAlgorithm {
-    public calculateDecompression(options: Options, gases: Gases, segments: Segments): CalculatedProfile {
+    public calculateDecompression(options: Options, gases: Gases, originSegments: Segments): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
+        const segments = originSegments.copy();
         const errors = this.validate(segments, gases, options, depthConverter);
         if (errors.length > 0) {
-            return  CalculatedProfile.fromErrors(segments.mergeFlat(), errors);
+            const origProfile = segments.mergeFlat(originSegments.length);
+            return  CalculatedProfile.fromErrors(origProfile, errors);
         }
 
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
@@ -228,7 +230,7 @@ export class BuhlmannAlgorithm {
             nextStop = DepthLevels.nextStop(nextStop);
         }
 
-        const merged = segments.mergeFlat();
+        const merged = segments.mergeFlat(originSegments.length);
         return CalculatedProfile.fromProfile(merged, context.ceilings);
     }
 

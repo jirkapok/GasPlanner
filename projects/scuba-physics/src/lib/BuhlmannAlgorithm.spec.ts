@@ -63,7 +63,7 @@ describe('Buhlmann Algorithm', () => {
             });
         });
 
-        describe(' No decompression limits for air at depth', () => {
+        describe('No decompression limits for air at depth', () => {
             const options = new Options(1, 1, 1.6, 1.6, 30, true);
 
             const calculateNoDecompressionLimit = (testCases: number[][], isFreshWater: boolean) => {

@@ -78,6 +78,19 @@ describe('Consumption', () => {
 
             expect(methodDuration).toBeLessThan(200);
         });
+
+        it('Multilevel dived accept multiple continuing levels', () => {
+            const tank = new Tank(24, 200, 21);
+            const tanks = [tank];
+
+            const segments = new Segments();
+            segments.add(0, 20, tank.gas, Time.oneMinute);
+            segments.addFlat(20, tank.gas, Time.oneMinute * 10);
+            segments.addFlat(20, tank.gas, Time.oneMinute * 10);
+
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
+            expect(maxBottomTime).toEqual(49);
+        });
     });
 
     describe('Single tank', () => {

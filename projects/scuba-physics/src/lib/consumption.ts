@@ -133,6 +133,7 @@ export class Consumption {
     private findRightUpperInterval(testSegments: Segments, addedSegment: Segment,
         tanks: Tank[], diver: Diver, options: Options): Interval {
 
+        // Choosing this as estimated typical middle length of the dive
         const stepDuration = Time.oneMinute * 40;
         this.consumeFromProfile(testSegments, tanks, diver, options);
 
@@ -174,9 +175,7 @@ export class Consumption {
 
     private consumeFromProfile(testSegments: Segments, tanks: Tank[], diver: Diver, options: Options){
         const profile = Consumption.calculateDecompression(testSegments, tanks, options);
-        // TODO what if multiple user defined flat segments are merged?
-        const userSegments = testSegments.length - 1; // The added will be merged
-        this.consumeFromTanks(profile.segments, userSegments, tanks, diver);
+        this.consumeFromTanks(profile.segments, testSegments.length, tanks, diver);
     }
 
     private createTestProfile(sourceSegments: Segments): Segments {

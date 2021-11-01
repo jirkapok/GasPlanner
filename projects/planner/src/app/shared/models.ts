@@ -59,9 +59,9 @@ export class Level {
 export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     public noDecoTime = 0;
+    public changed;
     private _segments: Segments = new Segments();
     private onChanged = new Subject();
-    public changed;
 
     /** provide the not necessary tank and options only to start from simple valid profile */
     constructor(public strategy: Strategies, depth: number, duration: number, tank: Tank, options: Options) {
@@ -92,10 +92,6 @@ export class Plan {
     public setSimple(depth: number, duration: number, tank: Tank, options: Options): void {
         this.reset(depth, duration, tank, options);
         this.onChanged.next();
-    }
-
-    private reset(depth: number, duration: number, tank: Tank, options: Options): void {
-        this._segments = SegmentsFactory.createForPlan(depth, duration, tank, options);
     }
 
     public get maxDepth(): number {
@@ -152,6 +148,10 @@ export class Plan {
         this._segments = Segments.from(other._segments);
         this.onChanged.next();
     }
+
+    private reset(depth: number, duration: number, tank: Tank, options: Options): void {
+        this._segments = SegmentsFactory.createForPlan(depth, duration, tank, options);
+    }
 }
 
 export class Dive {
@@ -192,6 +192,8 @@ export enum SwimAction {
 }
 
 export class WayPoint {
+    public selected = false;
+
     /** in seconds */
     public startTime = 0;
     /** in seconds */
@@ -200,8 +202,6 @@ export class WayPoint {
     private _startDepth = 0;
     /** in meters */
     private _endDepth = 0;
-
-    public selected = false;
 
     private action: SwimAction = SwimAction.hover;
 
@@ -228,18 +228,6 @@ export class WayPoint {
         const gasName = StandardGases.nameFor(segment.gas.fO2, segment.gas.fHe);
         newWayPoint._gasName = gasName;
         return newWayPoint;
-    }
-
-    private updateSwimAction(): void {
-        this.action = SwimAction.hover;
-
-        if (this.startDepth < this.endDepth) {
-            this.action = SwimAction.descent;
-        }
-
-        if (this.startDepth > this.endDepth) {
-            this.action = SwimAction.ascent;
-        }
     }
 
     public asGasSwitch(): void {
@@ -288,5 +276,17 @@ export class WayPoint {
 
     public fits(timeStamp: number): boolean {
         return this.startTime <= timeStamp && timeStamp < this.endTime;
+    }
+
+    private updateSwimAction(): void {
+        this.action = SwimAction.hover;
+
+        if (this.startDepth < this.endDepth) {
+            this.action = SwimAction.descent;
+        }
+
+        if (this.startDepth > this.endDepth) {
+            this.action = SwimAction.ascent;
+        }
     }
 }

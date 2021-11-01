@@ -116,12 +116,9 @@ export class PlannerService {
             this.dive.ceilings = profile.ceilings;
             this.dive.events = profile.events;
             this.dive.averageDepth = Segments.averageDepth(profile.origin);
-
             const userSegments = this.plan.length;
 
-            // e.g. anything was added as calculated ascent
-            // TODO what if user defined complete profile and nothing needs to be added by calculation?
-            if (profile.wayPoints.length > userSegments) {
+            if (profile.endsOnSurface) {
                 const consumption = new Consumption(this.depthConverter);
                 this.plan.noDecoTime = this.noDecoTime();
 

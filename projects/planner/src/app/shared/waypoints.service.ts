@@ -16,6 +16,11 @@ export class Profile {
     public static newEmpty(errors: Event[]): Profile {
         return new Profile([], [], [], errors);
     }
+
+    public get endsOnSurface(): boolean {
+        const count = this.wayPoints.length;
+        return count > 0 && this.wayPoints[count - 1].endDepth === 0;
+    }
 }
 
 export class WayPointsService {

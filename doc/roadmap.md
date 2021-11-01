@@ -4,7 +4,7 @@ Following list of features and improvements ordered by priority is under develop
 
 Known issues:
 
-* Fix calculation of max. bottom time in case of two flat user defined levels
+* Reserve counts only non user defined segments as emergency ascent (Doesn't handle all multilevel scenarios)
 * Fix validation of duration and depth in depths table
 * Improve validation of altitude bellow 0 m.a.s.l.
 * Improve validation of speeds, because low speed may cause never ending calculation

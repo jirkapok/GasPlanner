@@ -91,6 +91,19 @@ describe('Consumption', () => {
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(49);
         });
+
+        it('Profile ending on surface can consume gas also on surface', () => {
+            const tank = new Tank(24, 200, 21);
+            const tanks = [tank];
+
+            const segments = new Segments();
+            segments.add(0, 10, tank.gas, Time.oneMinute * 10);
+            segments.addFlat(10, tank.gas, Time.oneMinute * 10);
+            segments.add(10, 0, tank.gas, Time.oneMinute * 10);
+
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
+            expect(maxBottomTime).toEqual(181);
+        });
     });
 
     describe('Single tank', () => {

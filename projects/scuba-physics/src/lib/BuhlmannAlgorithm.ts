@@ -197,7 +197,7 @@ export class BuhlmannAlgorithm {
         let nextStop = DepthLevels.firstStop(context.currentDepth);
 
         // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.
-        while (nextStop >= 0) {
+        while (nextStop >= 0 && segments.last().endDepth !== 0) {
             // 1. Gas switch
             // multiple gas switches may happen before first deco stop
             this.tryGasSwitch(context);

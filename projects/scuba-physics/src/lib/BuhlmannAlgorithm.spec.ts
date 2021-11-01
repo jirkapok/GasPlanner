@@ -232,6 +232,21 @@ describe('Buhlmann Algorithm', () => {
             expect(planText).toBe(expectedPlan);
         });
 
+        it('User already included ascent adds no segment', () => {
+            const gases = new Gases();
+            gases.addBottomGas(StandardGases.air);
+
+            const segments = new Segments();
+            segments.add(0, 10, StandardGases.air, 1 * Time.oneMinute);
+            segments.addFlat(10, StandardGases.air, 10 * Time.oneMinute);
+            segments.add(10, 0, StandardGases.air, 1 * Time.oneMinute);
+
+            const planText = calculatePlan(gases, segments);
+
+            const expectedPlan = '0,10,60; 10,10,600; 10,0,60;';
+            expect(planText).toBe(expectedPlan);
+        });
+
         it('30m for 25 minutes using air', () => {
             const gases = new Gases();
             gases.addBottomGas(StandardGases.air);

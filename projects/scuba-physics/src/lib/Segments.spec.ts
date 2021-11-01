@@ -33,24 +33,38 @@ describe('Segments', () => {
     });
 
     describe('Merge flat', () => {
-        let segments: Segments;
+        let filledSegments: Segments;
+
+        beforeEach(() => {
+            filledSegments = new Segments();
+            filledSegments.add(0, 20, StandardGases.air, 15);
+            filledSegments.add(20, 20, StandardGases.air, 15);
+            filledSegments.add(20, 20, StandardGases.air, 35);
+            filledSegments.add(20, 5, StandardGases.air, 35);
+            filledSegments.add(5, 5, StandardGases.air, 3);
+            filledSegments.add(5, 5, StandardGases.air, 3);
+        });
+
 
         it('are merged', () => {
-            segments = new Segments();
-            segments.add(0, 20, StandardGases.air, 15);
-            segments.add(20, 20, StandardGases.air, 15);
-            segments.add(20, 20, StandardGases.air, 35);
-            segments.add(20, 5, StandardGases.air, 35);
-            segments.add(5, 5, StandardGases.air, 3);
-            segments.add(5, 5, StandardGases.air, 3);
-            const merged = segments.mergeFlat();
+            const merged = filledSegments.mergeFlat();
             expect(merged.length).toBe(4);
         });
 
         it('Empty segments return empty array', () => {
-            segments = new Segments();
-            const merged = segments.mergeFlat();
+            const emptySegments = new Segments();
+            const merged = emptySegments.mergeFlat();
             expect(merged.length).toBe(0);
+        });
+
+        it('Merge only segments after starting index', () => {
+            const merged = filledSegments.mergeFlat(2);
+            expect(merged.length).toBe(5);
+        });
+
+        it('Nothing is merged in case negative number of items to skip', () => {
+            const merged = filledSegments.mergeFlat(-2);
+            expect(merged.length).toBe(6);
         });
     });
 

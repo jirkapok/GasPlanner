@@ -190,10 +190,17 @@ export class Segments {
         return this.add(this.currentDepth, newDepth, gas, duration);
     }
 
-    /** Returns not null collection managed items after all neighbor elements with identical speed are merged into one */
-    public mergeFlat(): Segment[] {
+    /**
+     * @param skipItems Positive number of items from start of this collection to don't merge.
+     * @returns not null collection managed items after all neighbor elements with identical speed are merged into one
+     * */
+    public mergeFlat(skipItems = 0): Segment[] {
+        if(skipItems < 0) {
+            return this.segments;
+        }
+
         const toRemove: Segment[] = [];
-        for (let index = this.segments.length - 1; index > 0; index--) {
+        for (let index = this.segments.length - 1; index > skipItems; index--) {
             const segment1 = this.segments[index - 1];
             const segment2 = this.segments[index];
             if (segment1.contentEquals(segment2)) {

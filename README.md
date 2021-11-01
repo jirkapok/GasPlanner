@@ -10,14 +10,14 @@ None of the authors, contributors, administrators, or anyone else connected with
 
 ## Features - Road map
 
-* Multiple nitrox gases
-* Multi-level dives
+* Open circuit only multi-level dives
+* Multiple nitrox gases/tanks
 * Decompression calculated using Bühlmann ZHL-16C algorithm
 * Conservatism using Gradient factors
 * Calculation of consumed gas and rock bottom for each tank
 * Environment using water salinity and altitude options
 * Ascent plan using table and chart with list of warnings
-* Or see more in **[Application help](./doc/help.md)**
+* See more in **[Application help](./doc/help.md)**
 * See also [Road map of planned features](./doc/roadmap.md)
 
 ## Donate

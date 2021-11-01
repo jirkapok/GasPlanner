@@ -36,10 +36,6 @@ export class ConsumptionComponent {
         return this.planer.plan.noDecoTime;
     }
 
-    public get isMultiLevel(): boolean {
-        return this.planer.plan.isMultiLevel;
-    }
-
     public get minimumDuration(): number {
         return this.planer.plan.duration + 1;
     }

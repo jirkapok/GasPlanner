@@ -77,8 +77,8 @@ export class Plan {
         return this.length > 1;
     }
 
-    public get isMultiLevel(): boolean {
-        return this.length > 2;
+    public get notEnoughTime(): boolean {
+        return this.length === 2 && this.segments[1].duration === 0;
     }
 
     public copySegments(): Segments {

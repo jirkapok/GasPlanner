@@ -120,6 +120,7 @@ export class PlannerService {
             const userSegments = this.plan.length;
 
             // e.g. anything was added as calculated ascent
+            // TODO what if user defined complete profile and nothing needs to be added by calculation?
             if (profile.wayPoints.length > userSegments) {
                 const consumption = new Consumption(this.depthConverter);
                 this.plan.noDecoTime = this.noDecoTime();
@@ -134,7 +135,7 @@ export class PlannerService {
                     const originAscent = SegmentsFactory.ascent(profile.origin, userSegments);
                     this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
                     consumption.consumeFromTanks(profile.origin, userSegments, this.tanks, this.diver);
-                    this.dive.notEnoughTime = !this.plan.isMultiLevel && this.plan.segments[1].duration === 0;
+                    this.dive.notEnoughTime = this.plan.notEnoughTime;
                 });
             }
 

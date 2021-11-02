@@ -16,13 +16,14 @@ Improvements:
   * Add button to apply max dive time
   * Add button to apply max depth in to simple depths
   * Add option to reduce plan table only to list of stops
+  * Add other events to profile chart like gas switch
 * Allow to define multiple levels
   * Allow to define multiple ascent speeds
   * Add option to define last stop/safety stop range
   * Allow no safety stop below 10m dives in simple mode
 * Events:
   * Add time to the events warning/error messages
-  * Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, fast ascent or descent, safety stop, narcotic depth
+  * Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, safety stop, narcotic depth
 * Add imperial units option
 * Add no deco table
 * Add trimix support and calculator

@@ -22,7 +22,9 @@ export enum EventType {
      * high descent speed can lead to uncontrolled falls to the bottom
      * or reaching higher depth than expected
      */
-    highDescentSpeed = 6
+    highDescentSpeed = 6,
+    /** User defined segments may cross the ceiling */
+    brokenCeiling = 7
 }
 
 export class Event {
@@ -88,6 +90,14 @@ export class EventsFactory {
             timeStamp: timestamp,
             depth: depth,
             type: EventType.highDescentSpeed
+        };
+    }
+
+    public static createBrokenCeiling(timeStamp: number, depth: number): Event {
+        return {
+            timeStamp: timeStamp,
+            depth: depth,
+            type: EventType.brokenCeiling
         };
     }
 }
@@ -262,7 +272,7 @@ export class ProfileEvents {
 export class Ceiling {
     constructor(
         /**
-         * Gets or sets moment in seconds during the dive
+         * Gets or sets absolute number of seconds since start of the dive
          */
         public time: number,
 
@@ -305,7 +315,7 @@ export class CalculatedProfile {
     }
 
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[]): CalculatedProfile {
-        return new CalculatedProfile(segments, ceilings, []);
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[], errors: Event[]): CalculatedProfile {
+        return new CalculatedProfile(segments, ceilings, errors);
     }
 }

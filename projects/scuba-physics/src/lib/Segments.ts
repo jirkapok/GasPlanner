@@ -46,6 +46,10 @@ export class Segment {
         return new Segment(other.startDepth, other.endDepth, other._gas, other.duration);
     }
 
+    public static depthAt(startDepth: number, speed: number, duration: number): number {
+        return startDepth + speed * duration;
+    }
+
     /** See tank, you can change gas only by assigning tank,
      * gas doesn't change for calculated segments.
      */
@@ -81,6 +85,14 @@ export class Segment {
      */
     public get speed(): number {
         return (this.endDepth - this.startDepth) / this.duration;
+    }
+
+    /**
+     * @param duration Seconds since start of this segment
+     * @returns current depth in meters where the diver was at the moment
+     */
+    public depthAt(duration: number): number {
+        return  Segment.depthAt(this.startDepth, this.speed, duration);
     }
 
     public mergeFrom(toAdd: Segment): void {

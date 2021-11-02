@@ -1,6 +1,6 @@
-import { Options } from './BuhlmannAlgorithm';
+import { Options } from './Options';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
-import { Ceiling, EventsFactory, Event, Events } from './Profile';
+import { Ceiling, EventsFactory, Events } from './Profile';
 import { Segment } from './Segments';
 import { Time } from './Time';
 

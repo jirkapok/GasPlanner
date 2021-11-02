@@ -1,5 +1,6 @@
-import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gases, StandardGases } from './Gases';
+import { Options } from './Options';
 import { Ceiling, EventType } from './Profile';
 import { ProfileEvents } from './ProfileEvents';
 import { Segments } from './Segments';

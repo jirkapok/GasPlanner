@@ -1,8 +1,8 @@
 import { Time } from './Time';
-import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gas, Gases, StandardGases } from './Gases';
 import { Segment, Segments } from './Segments';
-import { EventType } from './Profile';
+import { Options } from './Options';
 
 describe('Buhlmann Algorithm', () => {
     describe('No decompression times', () => {

@@ -1,4 +1,4 @@
-import { Options } from './BuhlmannAlgorithm';
+import { Options } from './Options';
 import { DepthConverter } from './depth-converter';
 import { Segments } from './Segments';
 import { Tissues } from './Tissues';

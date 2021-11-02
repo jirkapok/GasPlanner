@@ -1,6 +1,6 @@
 import { Gas, Gases } from './Gases';
 import { EventsFactory, Event } from './Profile';
-import { Options } from './BuhlmannAlgorithm';
+import { Options } from './Options';
 import { Time } from './Time';
 import { Tank } from './Tanks';
 

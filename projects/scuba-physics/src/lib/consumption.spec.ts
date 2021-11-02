@@ -4,7 +4,7 @@ import { Tank } from './Tanks';
 import { Consumption } from './consumption';
 import { Time } from './Time';
 import { Segment, Segments } from './Segments';
-import { Options } from './BuhlmannAlgorithm';
+import { Options } from './Options';
 
 describe('Consumption', () => {
     const diver = new Diver(20, 1.6);

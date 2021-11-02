@@ -5,7 +5,6 @@ Following list of features and improvements ordered by priority is under develop
 Known issues:
 
 * Reserve counts only non user defined segments as emergency ascent (Doesn't handle all multilevel scenarios)
-* Improve validation of speeds, because low speed may cause never ending calculation
 
 Improvements:
 

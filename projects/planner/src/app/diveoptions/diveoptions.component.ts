@@ -200,6 +200,11 @@ export class DiveOptionsComponent {
     }
 
     public set ascentSpeed(newValue: number) {
+        // somehow noticed frozen UI in case copy/paste 0 into the asc/desc fields
+        if(newValue < 1) {
+            return;
+        }
+
         this.setAscentSpeed(newValue);
         this.planner.calculate();
     }
@@ -213,6 +218,10 @@ export class DiveOptionsComponent {
     }
 
     public set descentSpeed(newValue: number) {
+        if(newValue < 1) {
+            return;
+        }
+
         this.setDescentSpeed(newValue);
         this.planner.calculate();
     }

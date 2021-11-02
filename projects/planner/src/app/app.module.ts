@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { TanksComponent } from './tanks/tanks.component';
 import { DiverComponent } from './diver/diver.component';
 import { DiveOptionsComponent } from './diveoptions/diveoptions.component';
-import { ConsumptionComponent } from './consumption/consumption.component';
+import { DiveInfoComponent } from './diveinfo/diveinfo.component';
 import { PlannerService } from './shared/planner.service';
 import { PreferencesService } from './shared/preferences.service';
 import { MainMenuComponent } from './mainmenu/mainmenu.component';
@@ -32,7 +32,7 @@ import { TankChartComponent } from './tank-chart/tank-chart.component';
         TanksComponent,
         DiverComponent,
         DiveOptionsComponent,
-        ConsumptionComponent,
+        DiveInfoComponent,
         SacComponent,
         MainMenuComponent,
         DashboardComponent,

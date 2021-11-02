@@ -7,10 +7,10 @@ import { EventType, Event, Time, Tank } from 'scuba-physics';
 
 @Component({
     selector: 'app-consumption',
-    templateUrl: './consumption.component.html',
-    styleUrls: ['./consumption.component.css']
+    templateUrl: './diveinfo.component.html',
+    styleUrls: ['./diveinfo.component.css']
 })
-export class ConsumptionComponent {
+export class DiveInfoComponent {
     public dive: Dive;
     public exclamation = faExclamationCircle;
     public warning = faExclamationTriangle;

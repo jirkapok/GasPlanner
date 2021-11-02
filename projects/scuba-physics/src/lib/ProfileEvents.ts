@@ -1,6 +1,6 @@
 import { Options } from './Options';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
-import { Ceiling, EventsFactory, Events } from './Profile';
+import { Ceiling, EventsFactory, Events, Event } from './Profile';
 import { Segment } from './Segments';
 import { Time } from './Time';
 
@@ -165,12 +165,13 @@ export class ProfileEvents {
 
     /** Check only user defined segments break ceiling, because we trust the algorithm never breaks ceiling */
     private static validateBrokenCeiling(context: BrokenCeilingContext, ceilings: Ceiling[], segment: Segment): void {
-        for (context.lastCeilingIndex; context.lastCeilingIndex < ceilings.length - 1; context.lastCeilingIndex++) {
+        while (context.lastCeilingIndex < ceilings.length - 1) {
             const ceiling = ceilings[context.lastCeilingIndex];
+            context.lastCeilingIndex++;
 
             if (context.ceilingIsBroken(ceiling, segment)) {
                 const event = EventsFactory.createBrokenCeiling(ceiling.time, ceiling.depth);
-                context.events.add(event);
+                context.add(event);
                 break;
             }
 
@@ -185,8 +186,9 @@ class BrokenCeilingContext {
     public lastCeilingIndex = 0; // prevents search in past ceilings
     public currentSegmentStartTime = 0;
     public currentSegmentEndTime = 0;
+    public added = false;
 
-    constructor(public events: Events) {
+    constructor(private events: Events) {
     }
 
     public assignSegment(newSegment: Segment): void {
@@ -198,5 +200,14 @@ class BrokenCeilingContext {
         const duration = ceiling.time - this.currentSegmentStartTime;
         const diverDepth = segment.depthAt(duration);
         return ceiling.depth > diverDepth;
+    }
+
+    public add(event: Event): void {
+        if(this.added) {
+            return;
+        }
+
+        this.events.add(event);
+        this.added = true;
     }
 }

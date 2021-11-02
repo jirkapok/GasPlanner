@@ -192,6 +192,7 @@ describe('Profile Events', () => {
 
             // during this dive on second level we are already decompressing anyway,
             // so once the ceiling should be lower than current depth.
+            expect(events.items.length).toBe(1);
             expect(firstError.type).toBe(EventType.brokenCeiling);
         });
     });

@@ -1,3 +1,4 @@
+import { AlgorithmValidations } from './AlgorithmValidations';
 import { Options } from './BuhlmannAlgorithm';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Gas } from './Gases';
@@ -105,8 +106,8 @@ export class EventsFactory {
 export class Events {
     public items: Event[] = [];
 
-    public add(event: Event): void {
-        this.items.push(event);
+    public add(...events: Event[]): void {
+        this.items.push(...events);
     }
 }
 
@@ -182,7 +183,7 @@ export class ProfileEvents {
      * @param profile Complete list profile segments as user defined + calculated ascent
      * @param options User options used to create the profile
      */
-    public static fromProfile(userSegments: number, profile: Segment[], options: Options): Events {
+    public static fromProfile(userSegments: number, profile: Segment[], ceilings: Ceiling[], options: Options): Events {
         const depthConverter = new DepthConverterFactory(options).create();
         const context = new EventsContext(userSegments, profile, depthConverter, options);
 
@@ -197,6 +198,8 @@ export class ProfileEvents {
             context.elapsed += context.current.duration;
         }
 
+        const brokenCeilings = AlgorithmValidations.validateBrokenCeiling(profile, ceilings);
+        context.events.add(...brokenCeilings);
         return context.events;
     }
 

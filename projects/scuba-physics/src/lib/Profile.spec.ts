@@ -1,12 +1,12 @@
-import { AlgorithmValidations } from './AlgorithmValidations';
 import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
 import { Gases, StandardGases } from './Gases';
-import { EventType, ProfileEvents } from './Profile';
+import { Ceiling, EventType, ProfileEvents } from './Profile';
 import { Segments } from './Segments';
 import { Time } from './Time';
 
 describe('Profile', () => {
     const options = new Options(1, 1, 1.4, 1.6, 30, true);
+    const emptyCeilings: Ceiling[] = [];
 
     describe('Events', () => {
         describe('Low ppO2', () => {
@@ -14,7 +14,7 @@ describe('Profile', () => {
                 const segments = new Segments();
                 segments.add(0, 30, StandardGases.trimix1070, Time.oneMinute);
 
-                const events = ProfileEvents.fromProfile(1, segments.mergeFlat(), options);
+                const events = ProfileEvents.fromProfile(1, segments.mergeFlat(), emptyCeilings, options);
                 expect(events.items[0].type).toBe(EventType.lowPpO2);
             });
 
@@ -22,7 +22,7 @@ describe('Profile', () => {
                 const segments = new Segments();
                 segments.add(30, 0, StandardGases.trimix1070, 1 * Time.oneMinute);
 
-                const events = ProfileEvents.fromProfile(0, segments.mergeFlat(), options);
+                const events = ProfileEvents.fromProfile(0, segments.mergeFlat(), emptyCeilings, options);
                 expect(events.items[0].type).toBe(EventType.lowPpO2);
             });
 
@@ -37,7 +37,7 @@ describe('Profile', () => {
                 // Profile:
                 // \   _  /
                 //  \s/ \/
-                const events = ProfileEvents.fromProfile(4, segments.mergeFlat(), options);
+                const events = ProfileEvents.fromProfile(4, segments.mergeFlat(), emptyCeilings, options);
                 // two assent crossings and gas switch
                 expect(events.items.length).toBe(3);
                 expect(events.items[0].type).toBe(EventType.lowPpO2);
@@ -53,7 +53,7 @@ describe('Profile', () => {
 
                 // Profile:
                 // \_ s_ /
-                const events = ProfileEvents.fromProfile(3, segments.mergeFlat(), options);
+                const events = ProfileEvents.fromProfile(3, segments.mergeFlat(), emptyCeilings, options);
                 expect(events.items.length).toBe(2); // second is gas switch
                 expect(events.items[0].type).toBe(EventType.lowPpO2);
             });
@@ -69,7 +69,7 @@ describe('Profile', () => {
                 // Profile:
                 //   \   /
                 //    \_/
-                const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), options);
+                const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
                 expect(events.items.length).toBe(1);
                 expect(events.items[0].type).toBe(EventType.highPpO2);
             });
@@ -88,7 +88,7 @@ describe('Profile', () => {
                 //  \       _/ safety stop
                 //   \   s_/   switch
                 //    \_/
-                const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), options);
+                const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
                 expect(events.items.length).toBe(1);
                 expect(events.items[0].type).toBe(EventType.gasSwitch);
             });
@@ -102,7 +102,7 @@ describe('Profile', () => {
 
                 // Profile:
                 //    \_s_/
-                const events = ProfileEvents.fromProfile(3, segments.mergeFlat(), options);
+                const events = ProfileEvents.fromProfile(3, segments.mergeFlat(), emptyCeilings, options);
                 expect(events.items.length).toBe(2); // last one is gas switch
                 expect(events.items[0].type).toBe(EventType.highPpO2);
             });
@@ -117,7 +117,7 @@ describe('Profile', () => {
 
                 // Profile: high ppO2 reached during the descents
                 //    \_/\_/
-                const events = ProfileEvents.fromProfile(4, segments.mergeFlat(), options);
+                const events = ProfileEvents.fromProfile(4, segments.mergeFlat(), emptyCeilings, options);
                 expect(events.items.length).toBe(2);
                 expect(events.items[0].type).toBe(EventType.highPpO2);
                 expect(events.items[1].type).toBe(EventType.highPpO2);
@@ -132,7 +132,7 @@ describe('Profile', () => {
             segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
             segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
 
-            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), options);
+            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
 
             expect(events.items[0]).toEqual({
                 type: EventType.gasSwitch,
@@ -148,7 +148,7 @@ describe('Profile', () => {
                 segments.add(0, 20, StandardGases.air, Time.oneMinute * 2);
                 segments.add(20, 0, StandardGases.air, Time.oneMinute);
 
-                const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), options);
+                const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
 
                 expect(events.items[0]).toEqual({
                     type: EventType.highAscentSpeed,
@@ -163,7 +163,7 @@ describe('Profile', () => {
                 segments.add(10, 40, StandardGases.air, Time.oneMinute);
                 segments.add(40, 0, StandardGases.air, Time.oneMinute * 20);
 
-                const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), options);
+                const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
 
                 expect(events.items[0]).toEqual({
                     type: EventType.highDescentSpeed,
@@ -174,7 +174,7 @@ describe('Profile', () => {
         });
 
         describe('Broken ceiling', () => {
-            it('User defined segment break ceiling', () => {
+            fit('User defined segment break ceiling', () => {
                 const gases = new Gases();
                 gases.addBottomGas(StandardGases.air);
 
@@ -186,8 +186,8 @@ describe('Profile', () => {
                 const algorithm = new BuhlmannAlgorithm();
                 const defaultOptions = new Options(0.4, 0.85, 1.4, 1.6, 30, false, true);
                 const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
-                const events = AlgorithmValidations.validateBrokenCeiling(decoPlan.segments, decoPlan.ceilings);
-                const firstError = events[0];
+                const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+                const firstError = events.items[0];
 
                 // during this dive on second level we are already decompressing anyway,
                 // so once the ceiling should be lower than current depth.

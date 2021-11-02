@@ -15,7 +15,7 @@
           <div>
             <label for="depth">Average depth [m]:
               <input [(ngModel)]="calc.depth" class="form-control" #depth="ngModel" name="depth" id="depth" type="number"
-                required [range]="[1,350]" [min]="1" [max]="350" step="1"
+                required [rangeVal]="[1,350]" [minVal]="1" [maxVal]="350" min="1" max="350" step="1"
                 [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)" />
             </label>
             <div class="text-danger" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number 1-350 m</div>
@@ -23,7 +23,7 @@
           <div>
             <label for="tank">Tank size [L]:
               <input [(ngModel)]="calc.tank" class="form-control" #tank="ngModel" name="tank" id="tank" type="number"
-                required [range]="[1,350]" [min]="1" [max]="350" step="1"
+                required [rangeVal]="[1,350]" [minVal]="1" [maxVal]="350"  min="1" max="350" step="1"
                 [class.is-invalid]="tank.invalid && (tank.dirty || tank.touched)" />
             </label>
             <div class="text-danger" *ngIf="tank.invalid && (tank.dirty || tank.touched)">Needs to be number 1-350 L</div>
@@ -31,7 +31,7 @@
           <div [hidden]="inDuration">
             <label for="duration">Dive time [min.]:
               <input [(ngModel)]="calc.duration" class="form-control" #duration="ngModel" name="duration" id="duration"
-              type="number" required  [range]="[1,350]" [min]="1" [max]="350" step="1"
+              type="number" required  [rangeVal]="[1,350]" [minVal]="1" [maxVal]="350"  min="1" max="350" step="1"
               [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"
               />
             </label>
@@ -41,7 +41,7 @@
           <div [hidden]="inUsed">
             <label for="used">Gas consumed [bar]:
               <input [(ngModel)]="calc.used" class="form-control" #used="ngModel" name="used" id="used" type="number"
-                required [range]="[1,350]" [min]="1" [max]="350" step="1"
+                required [rangeVal]="[1,350]" [minVal]="1" [maxVal]="350" min="1" max="350" sstep="1"
                 [class.is-invalid]="used.invalid && (used.dirty || used.touched)" />
             </label>
             <div class="text-danger" *ngIf="used.invalid && (used.dirty || used.touched)">Needs to be number 1-350 bar</div>
@@ -49,7 +49,7 @@
           <div [hidden]="inSac">
             <label for="sac">Sac [L/min.]:
               <input [(ngModel)]="calc.sac" class="form-control" #sac="ngModel" name="sac" id="sac" type="number"
-                 required [range]="[5,90]" [min]="5" [max]="90" step="1"
+                 required [rangeVal]="[5,90]" [minVal]="5" [maxVal]="90" min="5" max="90" sstep="1"
                  [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)" />
             </label>
             <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number 5-90 L/min.</div>

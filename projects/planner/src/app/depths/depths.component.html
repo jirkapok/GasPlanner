@@ -8,7 +8,7 @@
     <div class="mb-3">
       <label for="duration" class="form-label">Bottom time [min.]:</label>
       <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="planDuration" class="form-control col-auto" type="number"
-        required [range]="[0, 1440]" [min]="0" [max]="1440" step="1"
+        required [rangeVal]="[1, 1440]" [minVal]="1" [maxVal]="1440" min="1" max="1440" step="1"
         [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"/>
       <div class="text-danger form-text" *ngIf="duration.invalid && (duration.dirty || duration.touched)">Needs to be number > 0 min.</div>
     </div>
@@ -16,7 +16,7 @@
     <div class="mb-3">
       <label for="depth" class="form-label">Depth [m]:</label>
         <input id="depth" name="depth" #depth="ngModel" [(ngModel)]="plannedDepth" class="form-control col-auto" type="number"
-          required  [range]="[1, 350]" [min]="1" [max]="350" step="1"
+          required  [rangeVal]="[1, 350]" [minVal]="1" [maxVal]="350" min="1" max="350" step="1"
           [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)"/>
         <div><small class="text-muted form-text">No deco limit {{ noDecoTime | number:'1.0-0' }} min.</small></div>
         <div><small class="text-muted form-text">Best mix is {{ bestMix }}</small></div>
@@ -37,7 +37,7 @@
             <td>
                 <div class="input-group">
                     <input #endDepth="ngModel" name="endDepth" [(ngModel)]="level.endDepth" class="form-control" type="number" (change)="depthChanged()"
-                    required [range]="[0, 350]" [min]="0" [max]="350" step="1"
+                    required [rangeVal]="[0, 350]" [minVal]="0" [maxVal]="350" min="0" max="350" step="1"
                     [class.is-invalid]="endDepth.invalid && (endDepth.dirty || endDepth.touched)"/>
                     <div class="text-danger" *ngIf="endDepth.invalid && (endDepth.dirty || endDepth.touched)">Needs to be number 0-350 m</div>
                </div>
@@ -45,14 +45,14 @@
             <td>
                 <div class="input-group">
                     <input #duration2="ngModel" name="duration2" [(ngModel)]="level.duration" class="form-control" type="number" (change)="durationChanged()"
-                    required [range]="[0, 1440]" [min]="0" [max]="1440" step="1"
+                    required [rangeVal]="[1, 1440]" [minVal]="1" [maxVal]="1440" min="1" max="1440" step="1"
                     [class.is-invalid]="duration2.invalid && (duration2.dirty || duration2.touched)"/>
                     <div class="text-danger" *ngIf="duration2.invalid && (duration2.dirty || duration2.touched)">Needs to be number 0-1440 min</div>
                 </div>
             </td>
             <td>
                 <div class="input-group">
-                    <input id="strategy" [ngModel]="level.tankLabel" class="form-control" type="text" readonly />
+                    <input id="tanks" [ngModel]="level.tankLabel" class="form-control" type="text" readonly />
                     <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                         <button class="btn btn-default border" id="tankMenu" type="button" ngbDropdownToggle></button>
                         <div ngbDropdownMenu aria-labelledby="tankMenu" aria-expanded="false">

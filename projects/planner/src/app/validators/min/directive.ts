@@ -10,23 +10,23 @@ const MIN_VALIDATOR: any = {
 };
 
 @Directive({
-    selector: '[min][formControlName],[min][formControl],[min][ngModel]',
+    selector: '[minVal][formControlName],[minVal][formControl],[minVal][ngModel]',
     providers: [MIN_VALIDATOR]
 })
 export class MinValidator implements Validator, OnInit, OnChanges {
     @Input()
-    min!: number;
+    minVal!: number;
 
     private validator!: ValidatorFn;
     private onChange!: () => void;
 
     public ngOnInit(): void {
-        this.validator = min(this.min);
+        this.validator = min(this.minVal);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
         for (const key in changes) {
-            if (key === 'min') {
+            if (key === 'minVal') {
                 this.validator = min(changes[key].currentValue);
                 if (this.onChange) {
                     this.onChange();

@@ -15,22 +15,24 @@
           <div [hidden]="inPO2">
             <label for="pO2">ppO2 [bar]:
               <input [(ngModel)]="calc.pO2" class="form-control" #pO2="ngModel" name="pO2" id="pO2" type="number"
-               step="0.1"
-                required [range]="[0.21,3]" [class.is-invalid]="pO2.invalid && (pO2.dirty || pO2.touched)" />
+                required [rangeVal]="[0.21,3]"  [minVal]="0.21" [maxVal]="3" min="0.21" max="3" step="0.1"
+                [class.is-invalid]="pO2.invalid && (pO2.dirty || pO2.touched)" />
             </label>
             <div class="text-danger" *ngIf="pO2.invalid && (pO2.dirty || pO2.touched)">Needs to be number 0.21-3 bar</div>
           </div>
           <div [hidden]="inBestMix">
             <label for="fO2">Percent O2:
               <input [(ngModel)]="calc.fO2" class="form-control" #fO2="ngModel" name="fO2" id="fO2" type="number"
-                 required [range]="[21,100]" [class.is-invalid]="fO2.invalid && (fO2.dirty || fO2.touched)" />
+                 required [rangeVal]="[21,100]" [minVal]="21" [maxVal]="100" min="21" max="100" step="1"
+                 [class.is-invalid]="fO2.invalid && (fO2.dirty || fO2.touched)" />
             </label>
             <div class="text-danger" *ngIf="fO2.invalid && (fO2.dirty || fO2.touched)">Needs to be number 21-100 %</div>
           </div>
           <div [hidden]="inMod">
             <label for="mod">MOD [m]:
               <input [(ngModel)]="calc.mod" class="form-control" #mod="ngModel" name="mod" id="mod" type="number"
-                 required [range]="[1,350]" [class.is-invalid]="mod.invalid && (mod.dirty || mod.touched)" />
+                 required [rangeVal]="[1,350]" [minVal]="1" [maxVal]="350" min="1" max="350" step="1"
+                 [class.is-invalid]="mod.invalid && (mod.dirty || mod.touched)" />
                 <small class="form-text text-muted">EAD: {{calc.ead}} m</small>
             </label>
             <div class="text-danger" *ngIf="mod.invalid && (mod.dirty || mod.touched)">Needs to be number 3-350 m</div>

@@ -10,18 +10,18 @@ const MAX_VALIDATOR: any = {
 };
 
 @Directive({
-    selector: '[max][formControlName],[max][formControl],[max][ngModel]',
+    selector: '[maxVal][formControlName],[maxVal][formControl],[maxVal][ngModel]',
     providers: [MAX_VALIDATOR]
 })
 export class MaxValidator implements Validator, OnInit, OnChanges {
     @Input()
-    max!: number;
+    maxVal!: number;
 
     private validator!: ValidatorFn;
     private onChange!: () => void;
 
     public ngOnInit(): void {
-        this.validator = max(this.max);
+        this.validator = max(this.maxVal);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {

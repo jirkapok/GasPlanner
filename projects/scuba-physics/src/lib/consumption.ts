@@ -96,6 +96,7 @@ export class Consumption {
      */
     public consumeFromTanks(segments: Segment[], userSegments: number, tanks: Tank[], diver: Diver): void {
         if (segments.length < 3) {
+            // TODO add test case, in complex mode, you are able to define only two valid user defined segments (0,10,20; 10,0,20)
             throw new Error('Profile needs to contain at least three segments.');
         }
 

@@ -82,5 +82,11 @@
                 <span>High ascent speed at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min.!</span>
             </div>
         </div>
+        <div *ngFor="let event of dive.events">
+            <div *ngIf="isBrokenCeiling(event)" class="alert alert-warning">
+                <fa-icon [icon]="warning" class="me-1"></fa-icon>
+                <span>Ceiling depth {{ event.depth | number:'1.0-0' }} m broken at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min.!</span>
+            </div>
+        </div>
     </div>
 </div>

@@ -92,8 +92,10 @@ export class ProfileEvents {
             this.addHighAscentSpeed(context);
             context.elapsed += context.current.duration;
 
-            ceilingContext.assignSegment(context.current);
-            ProfileEvents.validateBrokenCeiling(ceilingContext, ceilings, context.current);
+            if(!ceilingContext.added) {
+                ceilingContext.assignSegment(context.current);
+                ProfileEvents.validateBrokenCeiling(ceilingContext, ceilings, context.current);
+            }
         }
 
         return context.events;
@@ -203,10 +205,6 @@ class BrokenCeilingContext {
     }
 
     public add(event: Event): void {
-        if(this.added) {
-            return;
-        }
-
         this.events.add(event);
         this.added = true;
     }

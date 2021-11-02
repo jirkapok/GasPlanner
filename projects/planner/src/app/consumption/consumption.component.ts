@@ -59,4 +59,8 @@ export class ConsumptionComponent {
     public isHighDescentSpeed(event: Event): boolean {
         return event.type === EventType.highDescentSpeed;
     }
+
+    public isBrokenCeiling(event: Event): boolean {
+        return event.type === EventType.brokenCeiling;
+    }
 }

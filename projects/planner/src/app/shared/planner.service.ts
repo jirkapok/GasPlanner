@@ -9,7 +9,7 @@ import { NitroxCalculator, BuhlmannAlgorithm, Options,
 
 @Injectable()
 export class PlannerService {
-    public isComplex = true;
+    public isComplex = false;
     public plan: Plan;
     public diver: Diver = new Diver(20, 1.4);
     // there always needs to be at least one

@@ -363,26 +363,6 @@ describe('Buhlmann Algorithm', () => {
             });
         });
 
-        describe('Profile Errors', () => {
-            it('User defined segment break ceiling', () => {
-                const gases = new Gases();
-                gases.addBottomGas(StandardGases.air);
-
-                const segments = new Segments();
-                segments.add(0, 40, StandardGases.air, 2 * Time.oneMinute);
-                segments.addFlat(40, StandardGases.air, 20 * Time.oneMinute);
-                segments.add(40, 10, StandardGases.air, 3 * Time.oneMinute);
-
-                const algorithm = new BuhlmannAlgorithm();
-                const decoPlan = algorithm.calculateDecompression(options, gases, segments);
-                const firstError = decoPlan.errors[0];
-
-                // during this dive on second level we are already decompressing anyway,
-                // so once the ceiling should be lower than current depth.
-                expect(firstError.type).toBe(EventType.brokenCeiling);
-            });
-        });
-
         // TODO add algorithm test cases:
         // A: where deco is increased even during ascent <= do we have profile for this use case?
 

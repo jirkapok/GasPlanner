@@ -1,11 +1,10 @@
 import { Tissues, LoadSegment } from './Tissues';
-import { Gases, Gas, GasOptions, BestGasOptions } from './Gases';
-import { Segments, Segment } from './Segments';
+import { Gases, Gas, GasOptions, BestGasOptions, GasesValidator } from './Gases';
+import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory, DepthOptions } from './depth-converter';
 import { Time } from './Time';
-import { CalculatedProfile, Ceiling} from './Profile';
+import { CalculatedProfile, Ceiling, Event} from './Profile';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
-import { AlgorithmValidations } from './AlgorithmValidations';
 
 export class Options implements GasOptions, DepthOptions {
     /**
@@ -187,7 +186,7 @@ export class BuhlmannAlgorithm {
     public calculateDecompression(options: Options, gases: Gases, originSegments: Segments): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
         const segments = originSegments.copy();
-        const errors = AlgorithmValidations.validate(segments, gases, options, depthConverter);
+        const errors = this.validate(segments, gases, options, depthConverter);
         if (errors.length > 0) {
             const origProfile = segments.mergeFlat(originSegments.length);
             return CalculatedProfile.fromErrors(origProfile, errors);
@@ -233,8 +232,21 @@ export class BuhlmannAlgorithm {
         }
 
         const merged = segments.mergeFlat(originSegments.length);
-        const events = AlgorithmValidations.validatePost(merged, context.ceilings);
-        return CalculatedProfile.fromProfile(merged, context.ceilings, events);
+        return CalculatedProfile.fromProfile(merged, context.ceilings);
+    }
+
+    private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): Event[] {
+        const segmentErrors = SegmentsValidator.validate(segments, gases);
+        if (segmentErrors.length > 0) {
+            return segmentErrors;
+        }
+
+        const gasMessages = GasesValidator.validate(gases, options, depthConverter.surfacePressure);
+        if (gasMessages.length > 0) {
+            return gasMessages;
+        }
+
+        return [];
     }
 
     private tryGasSwitch(context: AlgorithmContext) {
@@ -316,7 +328,7 @@ export class BuhlmannAlgorithm {
      * Simply continue from currently planned segments, expecting diver stays in the same depth breathing the same gas.
      */
     private swimNoDecoLimit(segments: Segments, gases: Gases, context: AlgorithmContext, options: Options): number {
-        const errorMessages = AlgorithmValidations.validate(segments, gases, options, context.depthConverter);
+        const errorMessages = this.validate(segments, gases, options, context.depthConverter);
         if (errorMessages.length > 0) {
             return 0;
         }

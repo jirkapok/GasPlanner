@@ -1,5 +1,6 @@
-import { Options } from './BuhlmannAlgorithm';
-import { StandardGases } from './Gases';
+import { AlgorithmValidations } from './AlgorithmValidations';
+import { BuhlmannAlgorithm, Options } from './BuhlmannAlgorithm';
+import { Gases, StandardGases } from './Gases';
 import { EventType, ProfileEvents } from './Profile';
 import { Segments } from './Segments';
 import { Time } from './Time';
@@ -169,6 +170,28 @@ describe('Profile', () => {
                     timeStamp: 60,
                     depth: 10
                 });
+            });
+        });
+
+        describe('Broken ceiling', () => {
+            it('User defined segment break ceiling', () => {
+                const gases = new Gases();
+                gases.addBottomGas(StandardGases.air);
+
+                const segments = new Segments();
+                segments.add(0, 40, StandardGases.air, 2 * Time.oneMinute);
+                segments.addFlat(40, StandardGases.air, 20 * Time.oneMinute);
+                segments.add(40, 10, StandardGases.air, 3 * Time.oneMinute);
+
+                const algorithm = new BuhlmannAlgorithm();
+                const defaultOptions = new Options(0.4, 0.85, 1.4, 1.6, 30, false, true);
+                const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
+                const events = AlgorithmValidations.validateBrokenCeiling(decoPlan.segments, decoPlan.ceilings);
+                const firstError = events[0];
+
+                // during this dive on second level we are already decompressing anyway,
+                // so once the ceiling should be lower than current depth.
+                expect(firstError.type).toBe(EventType.brokenCeiling);
             });
         });
     });

@@ -314,8 +314,7 @@ export class CalculatedProfile {
         return new CalculatedProfile(segments, [], errors);
     }
 
-
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[], errors: Event[]): CalculatedProfile {
-        return new CalculatedProfile(segments, ceilings, errors);
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[]): CalculatedProfile {
+        return new CalculatedProfile(segments, ceilings, []);
     }
 }

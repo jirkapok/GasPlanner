@@ -13,7 +13,6 @@ import { PlannerService } from '../shared/planner.service';
     styleUrls: ['./depths.component.css']
 })
 export class DepthsComponent implements OnDestroy {
-    private static maxAcceptableNdl = 1000;
     @Input()
     public formValid = true;
     public plan: Plan;
@@ -100,7 +99,7 @@ export class DepthsComponent implements OnDestroy {
 
     public get noDecoTime(): number {
         const result = this.plan.noDecoTime;
-        if (result >= DepthsComponent.maxAcceptableNdl) {
+        if (result >= PlannerService.maxAcceptableNdl) {
             return Infinity;
         }
 
@@ -114,10 +113,6 @@ export class DepthsComponent implements OnDestroy {
 
     public get showMaxDuration(): boolean {
         return this.dive.calculated && this.dive.maxTime > 0;
-    }
-
-    public get showMaxNdl(): boolean {
-        return this.dive.calculated && this.plan.noDecoTime < DepthsComponent.maxAcceptableNdl;
     }
 
     public applyMaxDuration(): void {

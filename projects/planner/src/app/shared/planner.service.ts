@@ -9,6 +9,7 @@ import { NitroxCalculator, BuhlmannAlgorithm, Options,
 
 @Injectable()
 export class PlannerService {
+    public static readonly maxAcceptableNdl = 1000;
     public isComplex = false;
     public plan: Plan;
     public diver: Diver = new Diver(20, 1.4);
@@ -27,6 +28,10 @@ export class PlannerService {
     /** only for recreational diver use case */
     public get firstTank(): Tank {
         return this.tanks[0];
+    }
+
+    public get ndlValid(): boolean {
+        return this.dive.calculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
     }
 
     constructor() {

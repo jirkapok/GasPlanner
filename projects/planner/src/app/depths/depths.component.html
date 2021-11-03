@@ -12,7 +12,7 @@
                 type="number" required [rangeVal]="[1, 1440]" [minVal]="1" [maxVal]="1440" min="1" max="1440" step="1"
                 [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)" />
             <button type="button" class="btn btn-secondary ms-2" (click)="applyMaxDuration()" *ngIf="showMaxDuration">Max</button>
-            <button type="button" class="btn btn-secondary ms-2" (click)="applyNdlDuration()" *ngIf="showMaxNdl">No deco</button>
+            <button type="button" class="btn btn-secondary ms-2" (click)="applyNdlDuration()" *ngIf="planner.ndlValid">No deco</button>
         </div>
         <div><small class="text-muted form-text">No deco limit {{ noDecoTime | number:'1.0-0' }} min.</small></div>
         <div class="text-danger form-text" *ngIf="duration.invalid && (duration.dirty || duration.touched)">Needs to be number > 0 min.</div>

@@ -6,19 +6,27 @@
   </div>
   <div class="card-body" *ngIf="!isComplex">
     <div class="mb-3">
-      <label for="duration" class="form-label">Bottom time [min.]:</label>
-      <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="planDuration" class="form-control col-auto" type="number"
-        required [rangeVal]="[1, 1440]" [minVal]="1" [maxVal]="1440" min="1" max="1440" step="1"
-        [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"/>
-      <div class="text-danger form-text" *ngIf="duration.invalid && (duration.dirty || duration.touched)">Needs to be number > 0 min.</div>
+        <label for="duration" class="form-label">Bottom time [min.]:</label>
+        <div class="row row-cols-auto">
+            <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="planDuration" class="form-control ms-3"
+                type="number" required [rangeVal]="[1, 1440]" [minVal]="1" [maxVal]="1440" min="1" max="1440" step="1"
+                [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)" />
+            <button type="button" class="btn btn-secondary ms-2" (click)="applyMaxDuration()" *ngIf="showMaxDuration">Max</button>
+            <button type="button" class="btn btn-secondary ms-2" (click)="applyNdlDuration()" *ngIf="showMaxNdl">No deco</button>
+        </div>
+        <div><small class="text-muted form-text">No deco limit {{ noDecoTime | number:'1.0-0' }} min.</small></div>
+        <div class="text-danger form-text" *ngIf="duration.invalid && (duration.dirty || duration.touched)">Needs to be number > 0 min.</div>
     </div>
 
     <div class="mb-3">
       <label for="depth" class="form-label">Depth [m]:</label>
-        <input id="depth" name="depth" #depth="ngModel" [(ngModel)]="plannedDepth" class="form-control col-auto" type="number"
-          required  [rangeVal]="[1, 350]" [minVal]="1" [maxVal]="350" min="1" max="350" step="1"
-          [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)"/>
-        <div><small class="text-muted form-text">No deco limit {{ noDecoTime | number:'1.0-0' }} min.</small></div>
+        <div class="row row-cols-auto">
+            <input id="depth" name="depth" #depth="ngModel" [(ngModel)]="plannedDepth" class="form-control col-auto ms-3" type="number"
+                required  [rangeVal]="[1, 350]" [minVal]="1" [maxVal]="350" min="1" max="350" step="1"
+                [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)"/>
+            <button type="button" class="btn btn-secondary ms-2" (click)="applyMaxDepth()">Max</button>
+        </div>
+
         <div><small class="text-muted form-text">Best mix is {{ bestMix }}</small></div>
         <div class="text-danger form-text" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number 1 - 350 m</div>
     </div>

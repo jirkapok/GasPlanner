@@ -3,7 +3,8 @@ import { faLayerGroup, faTrashAlt, faPlusSquare  } from '@fortawesome/free-solid
 import { Subscription } from 'rxjs';
 
 import { Segment, StandardGases, Tank } from 'scuba-physics';
-import { Plan, Level } from '../shared/models';
+import { transpileModule } from 'typescript';
+import { Plan, Level, Dive } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 
 @Component({
@@ -12,17 +13,21 @@ import { PlannerService } from '../shared/planner.service';
     styleUrls: ['./depths.component.css']
 })
 export class DepthsComponent implements OnDestroy {
-    private _levels: Level[] = [];
-    private subscription: Subscription;
+    private static maxAcceptableNdl = 1000;
     @Input()
     public formValid = true;
     public plan: Plan;
     public cardIcon = faLayerGroup;
     public addIcon = faPlusSquare;
     public removeIcon = faTrashAlt;
+    private _levels: Level[] = [];
+    private subscription: Subscription;
+    private dive: Dive;
+
 
     constructor(public planner: PlannerService) {
         this.plan = this.planner.plan;
+        this.dive = this.planner.dive;
         this.updateLevels();
 
         this.subscription = this.planner.calculated.subscribe(() => {
@@ -32,17 +37,6 @@ export class DepthsComponent implements OnDestroy {
 
     public ngOnDestroy(): void {
         this.subscription.unsubscribe();
-    }
-
-    private updateLevels(): void {
-        const segments: Segment[] = this.plan.segments;
-        const converted: Level[] = [];
-        segments.forEach(segment => {
-            const level = new Level(segment);
-            converted.push(level);
-        });
-
-        this._levels = converted;
     }
 
     public get isComplex(): boolean {
@@ -106,7 +100,7 @@ export class DepthsComponent implements OnDestroy {
 
     public get noDecoTime(): number {
         const result = this.plan.noDecoTime;
-        if (result >= 1000) {
+        if (result >= DepthsComponent.maxAcceptableNdl) {
             return Infinity;
         }
 
@@ -116,5 +110,39 @@ export class DepthsComponent implements OnDestroy {
     public get bestMix(): string {
         const o2 = this.planner.bestNitroxMix() / 100;
         return StandardGases.nameFor(o2);
+    }
+
+    public get showMaxDuration(): boolean {
+        return this.dive.calculated && this.dive.maxTime > 0;
+    }
+
+    public get showMaxNdl(): boolean {
+        return this.dive.calculated && this.plan.noDecoTime < DepthsComponent.maxAcceptableNdl;
+    }
+
+    public applyMaxDuration(): void {
+        const newValue = this.dive.maxTime;
+        this.planner.assignDuration(newValue);
+    }
+
+    public applyNdlDuration(): void {
+        const newValue = this.plan.noDecoTime;
+        this.planner.assignDuration(newValue);
+    }
+
+    public applyMaxDepth(): void {
+        const newDepth = this.planner.maxNarcDepth;
+        this.planner.assignDepth(newDepth);
+    }
+
+    private updateLevels(): void {
+        const segments: Segment[] = this.plan.segments;
+        const converted: Level[] = [];
+        segments.forEach(segment => {
+            const level = new Level(segment);
+            converted.push(level);
+        });
+
+        this._levels = converted;
     }
 }

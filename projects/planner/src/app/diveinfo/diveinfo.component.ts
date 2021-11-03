@@ -16,12 +16,12 @@ export class DiveInfoComponent {
     public warning = faExclamationTriangle;
     public icon = faSlidersH;
 
-    constructor(private planer: PlannerService) {
-        this.dive = this.planer.dive;
+    constructor(public planner: PlannerService) {
+        this.dive = this.planner.dive;
     }
 
     public get tanks(): Tank[] {
-        return this.planer.tanks;
+        return this.planner.tanks;
     }
 
     public get showMaxBottomTime(): boolean {
@@ -29,15 +29,15 @@ export class DiveInfoComponent {
     }
 
     public get needsReturn(): boolean {
-        return this.planer.plan.needsReturn;
+        return this.planner.plan.needsReturn;
     }
 
     public get noDeco(): number {
-        return this.planer.plan.noDecoTime;
+        return this.planner.plan.noDecoTime;
     }
 
     public get minimumDuration(): number {
-        return this.planer.plan.duration + 1;
+        return this.planner.plan.duration + 1;
     }
 
     public timeStampToString(seconds: number): Date{
@@ -62,5 +62,9 @@ export class DiveInfoComponent {
 
     public isBrokenCeiling(event: Event): boolean {
         return event.type === EventType.brokenCeiling;
+    }
+
+    public get showApply(): boolean {
+        return !this.planner.isComplex;
     }
 }

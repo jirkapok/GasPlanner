@@ -71,6 +71,20 @@ export class PlannerService {
         this.calculate();
     }
 
+    public applyMaxDepth(): void {
+        this.assignDepth(this.maxNarcDepth);
+    }
+
+    public applyMaxDuration(): void {
+        const newValue = this.dive.maxTime;
+        this.assignDuration(newValue);
+    }
+
+    public applyNdlDuration(): void {
+        const newValue = this.plan.noDecoTime;
+        this.assignDuration(newValue);
+    }
+
     public bestNitroxMix(): number {
         const maxPpO2 = this.options.maxPpO2;
         const o2 = this.nitroxCalculator.bestMix(maxPpO2, this.plan.maxDepth);

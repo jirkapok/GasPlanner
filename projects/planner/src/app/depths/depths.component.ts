@@ -115,21 +115,6 @@ export class DepthsComponent implements OnDestroy {
         return this.dive.calculated && this.dive.maxTime > 0;
     }
 
-    public applyMaxDuration(): void {
-        const newValue = this.dive.maxTime;
-        this.planner.assignDuration(newValue);
-    }
-
-    public applyNdlDuration(): void {
-        const newValue = this.plan.noDecoTime;
-        this.planner.assignDuration(newValue);
-    }
-
-    public applyMaxDepth(): void {
-        const newDepth = this.planner.maxNarcDepth;
-        this.planner.assignDepth(newDepth);
-    }
-
     private updateLevels(): void {
         const segments: Segment[] = this.plan.segments;
         const converted: Level[] = [];

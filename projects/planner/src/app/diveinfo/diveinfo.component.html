@@ -15,19 +15,23 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>No decompression time [min.]:</td>
-                        <td class="table-active">
-                            <strong>{{ noDeco | number:'1.0-0' }}</strong>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Average depth [m]:</td>
                         <td class="table-active">
                             <strong>{{ dive.averageDepth | number:'1.0-1' }}</strong>
                         </td>
                     </tr>
+                    <tr>
+                        <td>No decompression time [min.]:
+                            <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="planner.applyNdlDuration()" *ngIf="showApply">Use</button>
+                        </td>
+                        <td class="table-active">
+                            <strong>{{ noDeco | number:'1.0-0' }}</strong>
+                        </td>
+                    </tr>
                     <tr *ngIf="showMaxBottomTime">
-                        <td>Maximum bottom time [min.]:</td>
+                        <td>Maximum bottom time [min.]:
+                            <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="planner.applyMaxDuration()" *ngIf="showApply">Use</button>
+                        </td>
                         <td class="table-active">
                             <strong>{{ dive.maxTime | number:'1.0-0' }}</strong>
                         </td>

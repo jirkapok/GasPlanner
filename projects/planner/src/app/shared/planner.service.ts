@@ -72,6 +72,17 @@ export class PlannerService {
         return Math.round(o2);
     }
 
+    public get maxNarcDepth(): number {
+        // TODO add UI for maxEND
+        const depthInBars = this.depthConverter.toBar(this.options.maxEND);
+        const maxNarcBar = this.firstTank.gas.end(depthInBars);
+        const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
+        // because of javascript numbers precision we need to help our self
+        // TOTO test case: for air and 30 m maxEND should return 30 meters
+        const rounded = Math.round(maxNarcDepth * 100) / 100;
+        return Math.floor(rounded);
+    }
+
     public get gasMod(): number {
         return this.modForGas(this.firstTank);
     }

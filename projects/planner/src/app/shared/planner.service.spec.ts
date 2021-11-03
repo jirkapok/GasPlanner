@@ -116,4 +116,11 @@ describe('PlannerService', () => {
             expect(middle.startDepth).toBe(30);
         });
     });
+
+    describe('Max narcotic depth', ()=>{
+        it('Is calculated 30 m for Air with 30m max. narcotic depth option', ()=> {
+            const result = planner.maxNarcDepth;
+            expect(result).toBe(30);
+        });
+    });
 });

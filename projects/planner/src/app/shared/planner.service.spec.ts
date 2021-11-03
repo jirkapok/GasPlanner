@@ -129,4 +129,43 @@ describe('PlannerService', () => {
             expect(result).toBe(18);
         });
     });
+
+    describe('Apply plan limits', ()=>{
+        // Needs to be already calculated because NDL is needed
+        describe('When NOT yet calculated', () => {
+            // this value is used as minimum for simple profiles to be able descent
+            // with default speed to default depth 30m.
+            const descentOnly = 1.5;
+
+            it('Max bottom time is NOT applied', ()=> {
+                planner.applyMaxDuration();
+                expect(planner.plan.duration).toBe(descentOnly);
+            });
+
+            it('No deco limit is NOT applied', ()=> {
+                planner.applyNdlDuration();
+                expect(planner.plan.duration).toBe(descentOnly);
+            });
+        });
+
+        describe('When Calculated', () => {
+            it('Max bottom time is applied', ()=> {
+                planner.calculate();
+                planner.applyMaxDuration();
+                expect(planner.plan.duration).toBe(17);
+            });
+
+            it('No deco limit is applied', ()=> {
+                planner.calculate();
+                planner.applyNdlDuration();
+                expect(planner.plan.duration).toBe(12);
+            });
+        });
+
+        it('Max narcotic depth is applied', ()=> {
+            planner.firstTank.gas.fO2 = 0.5;
+            planner.applyMaxDepth();
+            expect(planner.plan.maxDepth).toBe(18);
+        });
+    });
 });

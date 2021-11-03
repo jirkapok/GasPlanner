@@ -216,11 +216,12 @@ export class GasMixtures {
 
     /**
      * Calculates equivalent narcotic depth, assuming both nitrogen and oxygen as narcotic.
+     * Also called maximum narcotic depth.
      * https://en.wikipedia.org/wiki/Equivalent_narcotic_depth
      *
      * @param fO2 Fraction of oxygen in gas mix (0-1).
      * @param fN2 Fraction of nitrogen in gas mix (0-1).
-     * @param depth Depth in bars.
+     * @param depth Depth in bars, can be also used as maximum narcotic depth as air.
      * @returns Depth in bars.
      */
     public static end(fO2: number, fN2: number, depth: number): number {
@@ -278,7 +279,7 @@ export class Gas {
     }
 
     /**
-     * Calculates equivalent narcotic depth, assuming both nitrogen and oxygen as narcotic..
+     * Calculates equivalent narcotic depth, assuming both nitrogen and oxygen as narcotic.
      *
      * @param depth Depth in bars.
      * @returns Depth in bars.

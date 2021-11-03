@@ -97,8 +97,9 @@ export class PlannerService {
         const maxNarcBar = this.firstTank.gas.end(depthInBars);
         const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
         // because of javascript numbers precision we need to help our self
-        // TOTO test case: for air and 30 m maxEND should return 30 meters
         const roundedNarc = Math.round(maxNarcDepth * 100) / 100;
+        // Narcotic depth it self makes no sense without helium,
+        // because its narcotic coefficient is 1 for all Nitrox mixes
         const minFound = Math.min(roundedNarc, this.gasMod);
         return  Math.floor(minFound);
     }

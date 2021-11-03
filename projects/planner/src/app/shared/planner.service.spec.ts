@@ -122,5 +122,11 @@ describe('PlannerService', () => {
             const result = planner.maxNarcDepth;
             expect(result).toBe(30);
         });
+
+        it('Is calculated as MOD for EAN50', ()=> {
+            planner.firstTank.gas.fO2 = 0.5;
+            const result = planner.maxNarcDepth;
+            expect(result).toBe(18);
+        });
     });
 });

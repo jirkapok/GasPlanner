@@ -79,8 +79,9 @@ export class PlannerService {
         const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
         // because of javascript numbers precision we need to help our self
         // TOTO test case: for air and 30 m maxEND should return 30 meters
-        const rounded = Math.round(maxNarcDepth * 100) / 100;
-        return Math.floor(rounded);
+        const roundedNarc = Math.round(maxNarcDepth * 100) / 100;
+        const minFound = Math.min(roundedNarc, this.gasMod);
+        return  Math.floor(minFound);
     }
 
     public get gasMod(): number {

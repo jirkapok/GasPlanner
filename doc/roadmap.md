@@ -5,19 +5,18 @@ Following list of features and improvements ordered by priority is under develop
 Known issues:
 
 * Reserve counts only non user defined segments as emergency ascent (Doesn't handle all multilevel scenarios)
+* Fix Save/Reload of default settings
 
 Improvements:
 
-* UI tweaks
-  * Add to dive info: total deco, if any
-  * Add button to apply max dive time
-  * Add button to apply max depth in to simple depths
-  * Add option to reduce plan table only to list of stops
-  * Add other events to profile chart like gas switch
 * Allow to define multiple levels
   * Allow to define multiple ascent speeds
   * Add option to define last stop/safety stop range
   * Allow no safety stop below 10m dives in simple mode
+* UI tweaks
+  * Add to dive info: total deco, if any
+  * Add option to reduce plan table only to list of stops
+  * Add other events to profile chart like gas switch
 * Events:
   * Add time to the events warning/error messages
   * Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, safety stop, narcotic depth
@@ -27,6 +26,9 @@ Improvements:
   * Add option to define maximum narcotic depth
   * Add option to count oxygen in narcotic gas in narcotic depth calculation
   * Add air breaks
+* UI tweaks
+  * Add max. narc. depth to the Gas label
+  * Add button to apply best mix for selected depth
 * Add help to all variables
 * Add localization
 * Add option to define repetitive dives

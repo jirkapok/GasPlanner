@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { Plan, Dive, Strategies } from './models';
+import { Plan, Dive, Strategies, AppPreferences } from './models';
 import { WayPointsService } from './waypoints.service';
 import { NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
@@ -19,11 +19,15 @@ export class PlannerService {
     ];
     public dive: Dive = new Dive();
     public calculated;
-    public options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
+    private _options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
     private onCalculated = new Subject();
     private depthConverterFactory = new DepthConverterFactory(this.options);
     private depthConverter: DepthConverter = this.depthConverterFactory.create();
     private nitroxCalculator: NitroxCalculator = new NitroxCalculator(this.depthConverter);
+
+    public get options(): Options {
+        return this._options;
+    }
 
     /** only for recreational diver use case */
     public get firstTank(): Tank {
@@ -139,6 +143,7 @@ export class PlannerService {
 
     public calculate(): void {
         this.measureMethod('Planner calculate', () => {
+            // TODO copy options to diver only on app startup, let it customize per dive
             this.options.maxPpO2 = this.diver.maxPpO2;
             this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
             this.depthConverter = this.depthConverterFactory.create();
@@ -180,17 +185,38 @@ export class PlannerService {
         this.onCalculated.next();
     }
 
-    public loadFrom(other: PlannerService): void {
+    public loadFrom(other: AppPreferences): void {
         if (!other) {
             return;
         }
 
-        this.plan.loadFrom(other.plan);
+        this.isComplex = other.isComplex;
+        this.assignOptions(other.options);
         this.diver.loadFrom(other.diver);
         // cant use firstGas from the other, since it doesn't have to be deserialized
         if(other.tanks.length > 0) {
+            // TODO copy all tanks
             this.firstTank.loadFrom(other.tanks[0]);
         }
+
+        // TODO fix references to tanks from segments
+        this.plan.loadFrom(other.plan);
+        this.calculate();
+    }
+
+    public toPreferences(): AppPreferences {
+        return {
+            isComplex: this.isComplex,
+            options: this.options,
+            diver: this.diver,
+            tanks: this.tanks,
+            plan: this.plan.copySegments()
+        } as AppPreferences;
+    }
+
+    private assignOptions(newOptions: Options): void {
+        this._options = newOptions;
+        this.depthConverterFactory = new DepthConverterFactory(newOptions);
     }
 
     private measureMethod(message: string, delegate: () => void): void {

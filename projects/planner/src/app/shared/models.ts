@@ -1,6 +1,14 @@
 import { Subject } from 'rxjs';
 import { Ceiling, Time, Event, Segment, Segments, SegmentsFactory,
-    StandardGases, Options, Tank } from 'scuba-physics';
+    StandardGases, Options, Tank, Diver } from 'scuba-physics';
+
+export interface AppPreferences  {
+    isComplex: boolean;
+    options: Options;
+    diver: Diver;
+    tanks: Tank[];
+    plan: Segments;
+}
 
 export enum Strategies {
     ALL = 1,
@@ -142,10 +150,11 @@ export class Plan {
         return this.duration > this.noDecoTime;
     }
 
-    public loadFrom(other: Plan): void {
-        this.strategy = other.strategy;
+    public loadFrom(other: Segments): void {
+        // TODO restore Strategy
+        // this.strategy = other.strategy;
         // cant use copy, since deserialized objects wouldn't have one.
-        this._segments = Segments.from(other._segments);
+        this._segments = Segments.from(other);
         this.onChanged.next();
     }
 

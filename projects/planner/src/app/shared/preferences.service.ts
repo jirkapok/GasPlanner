@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AppPreferences } from './models';
 import { PlannerService } from './planner.service';
 
 @Injectable({
@@ -17,12 +18,13 @@ export class PreferencesService {
             return;
         }
 
-        const loaded = JSON.parse(toParse);
+        const loaded = JSON.parse(toParse) as AppPreferences;
         this.planner.loadFrom(loaded);
     }
 
     public saveDefaults(): void {
-        const serialized = JSON.stringify(this.planner);
+        const toSave = this.planner.toPreferences();
+        const serialized = JSON.stringify(toSave);
         localStorage.setItem(PreferencesService.storageKey, serialized);
     }
 

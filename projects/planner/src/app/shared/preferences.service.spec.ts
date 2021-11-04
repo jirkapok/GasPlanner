@@ -13,11 +13,13 @@ describe('PreferencesService', () => {
     it('loads saved default values', inject([PreferencesService, PlannerService],
         (service: PreferencesService, planner: PlannerService) => {
             const expectedSac = 10;
+            planner.calculate();
             const diver = planner.diver;
             diver.sac = expectedSac;
             service.saveDefaults();
             diver.sac = 20;
             service.loadDefaults();
+            // TODO add more validation of restored data
             expect(diver.sac).toBe(expectedSac);
         }));
 

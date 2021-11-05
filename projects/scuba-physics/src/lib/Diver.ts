@@ -39,5 +39,7 @@ export class Diver {
 
     public loadFrom(other: Diver): void {
         this.sac = other.sac;
+        this.maxPpO2 = other.maxPpO2;
+        this.maxDecoPpO2 = other.maxDecoPpO2;
     }
 }

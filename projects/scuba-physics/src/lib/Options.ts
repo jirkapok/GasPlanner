@@ -96,4 +96,17 @@ export class Options implements GasOptions, DepthOptions {
         this.descentSpeed = descentSpeed || 20;
         this.altitude = altitude || 0;
     }
+
+    public loadFrom(other: Options): void {
+        this.gfLow = other.gfLow || this.gfLow;
+        this.gfHigh = other.gfHigh || this.gfHigh;
+        this.maxPpO2 = other.maxPpO2 || this.maxPpO2;
+        this.maxDecoPpO2 = other.maxDecoPpO2 || this.maxDecoPpO2;
+        this.maxEND = other.maxEND || this.maxEND;
+        this.isFreshWater = other.isFreshWater || this.isFreshWater;
+        this.addSafetyStop = other.addSafetyStop || this.addSafetyStop;
+        this.ascentSpeed = other.ascentSpeed ||  this.ascentSpeed;
+        this.descentSpeed = other.descentSpeed || this.descentSpeed;
+        this.altitude = other.altitude || this.altitude;
+    }
 }

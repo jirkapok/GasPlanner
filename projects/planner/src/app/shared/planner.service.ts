@@ -3,9 +3,11 @@ import { Subject } from 'rxjs';
 
 import { Plan, Dive, Strategies, AppPreferences } from './models';
 import { WayPointsService } from './waypoints.service';
-import { NitroxCalculator, BuhlmannAlgorithm, Options,
+import {
+    NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
-    Diver, SegmentsFactory, Consumption, Segment, Gases, Segments } from 'scuba-physics';
+    Diver, SegmentsFactory, Consumption, Segment, Gases, Segments
+} from 'scuba-physics';
 
 @Injectable()
 export class PlannerService {
@@ -105,7 +107,7 @@ export class PlannerService {
         // Narcotic depth it self makes no sense without helium,
         // because its narcotic coefficient is 1 for all Nitrox mixes
         const minFound = Math.min(roundedNarc, this.gasMod);
-        return  Math.floor(minFound);
+        return Math.floor(minFound);
     }
 
     public get gasMod(): number {
@@ -126,7 +128,7 @@ export class PlannerService {
         // since it may happen, the deco starts during ascent.
         // we cant use the maxDepth, because its purpose is only for single level dives
         const gases = Gases.fromTanks(this.tanks);
-        const segments =  this.plan.copySegments();
+        const segments = this.plan.copySegments();
         const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, this.options);
         return noDecoLimit;
     }
@@ -193,10 +195,9 @@ export class PlannerService {
         this.isComplex = other.isComplex;
         this.assignOptions(other.options);
         this.diver.loadFrom(other.diver);
-        // cant use firstGas from the other, since it doesn't have to be deserialized
-        if(other.tanks.length > 0) {
-            // TODO copy all tanks
-            this.firstTank.loadFrom(other.tanks[0]);
+        const newTanks = this.loadTanks(other.tanks);
+        if (newTanks.length > 0) {
+            this.tanks = newTanks;
         }
 
         // TODO fix references to tanks from segments
@@ -214,8 +215,23 @@ export class PlannerService {
         } as AppPreferences;
     }
 
+    private loadTanks(tanks: Tank[]): Tank[] {
+        const newTanks: Tank[] = [];
+
+        if (tanks && tanks.length > 0) {
+            for (let index = 0; index < tanks.length; index++) {
+                const currentTank = tanks[index];
+                const newTank = new Tank(currentTank.size, currentTank.startPressure, currentTank.o2);
+                newTank.loadFrom(currentTank); // rest not handled by constructor
+                newTanks.push(newTank);
+            }
+        }
+
+        return newTanks;
+    }
+
     private assignOptions(newOptions: Options): void {
-        this._options = newOptions;
+        this._options.loadFrom(newOptions);
         this.depthConverterFactory = new DepthConverterFactory(newOptions);
     }
 
@@ -224,7 +240,7 @@ export class PlannerService {
         delegate();
         const endTime = performance.now();
         const methodDuration = Math.round(endTime - startTime);
-        console.log(message +  `: ${methodDuration} ms`);
+        console.log(message + `: ${methodDuration} ms`);
     }
 
     private calculateTurnPressure(): number {

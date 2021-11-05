@@ -17,7 +17,9 @@ export class Tanks {
 }
 
 export class Tank {
+    /** Gets or sets the consumed liters of gas */
     public consumed = 0;
+    /** Gets or sets the reserve which should remain in the tank in liters */
     public reserve = 0;
 
     private _gas: Gas = StandardGases.air.copy();
@@ -35,10 +37,12 @@ export class Tank {
         this.o2 = o2Percent;
     }
 
+    /** Creates 15 L, filled with 200 bar Air */
     public static createDefault(): Tank {
         return new Tank(15, 200, StandardGases.o2InAir * 100);
     }
 
+    // TODO move to tanks
     public static resetConsumption(tanks: Tank[]): void {
         tanks.forEach(tank => {
             tank.consumed = 0;
@@ -70,10 +74,13 @@ export class Tank {
         }
     }
 
+    /** Gets total volume at start pressure in liters */
     public get volume(): number {
         return this.size * this.startPressure;
     }
 
+    // TODO count also with He fraction
+    /** Gets not null name of the content gas based on O2 fraction */
     public get name(): string {
         return StandardGases.nameFor(this._gas.fO2);
     }
@@ -89,6 +96,7 @@ export class Tank {
         this._gas.fHe = found.fHe;
     }
 
+    /** calculated value in range 0 - start pressure in bars  */
     public get endPressure(): number {
         const remaining = this.startPressure - this.consumed;
 
@@ -122,13 +130,16 @@ export class Tank {
     }
 
     public loadFrom(other: Tank): void {
-        this.startPressure = other.startPressure;
         this.size = other.size;
-        this.o2 = other.o2;
+        this.startPressure = other.startPressure;
+        this.consumed = other.consumed;
+        this.reserve = other.reserve;
+        // copy private fields as serialized
+        this.gas.fO2 = other._gas.fO2;
+        this.gas.fHe = other._gas.fHe;
     }
 
     private isInAirRange(newO2: number): boolean {
         return 20.9 <= newO2 && newO2 <= 21 && this.gas.fHe === 0;
     }
-
 }

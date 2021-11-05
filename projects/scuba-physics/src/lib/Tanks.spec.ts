@@ -108,4 +108,15 @@ describe('Tank', () => {
             expect(modified.gas).toEqual(StandardGases.air);
         });
     });
+
+
+    describe('Load From', () => {
+        it('Copy all properties', () => {
+            const modified = new Tank(24, 100, 18);
+            modified.gas.fHe = 0.35;
+            modified.reserve = 60;
+            modified.loadFrom(tank);
+            expect(tank).toEqual(Tank.createDefault());
+        });
+    });
 });

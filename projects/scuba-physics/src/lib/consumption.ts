@@ -100,7 +100,7 @@ export class Consumption {
             throw new Error('Profile needs to contain at least three segments.');
         }
 
-        Tank.resetConsumption(tanks);
+        Tanks.resetConsumption(tanks);
         const remainToConsume = this.consumeByTanks(segments, diver.sac);
         this.consumeByGases(segments, tanks, diver.sac, remainToConsume);
         const ascent = SegmentsFactory.ascent(segments, userSegments);

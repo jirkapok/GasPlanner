@@ -14,6 +14,30 @@ export class Tanks {
 
         return true;
     }
+
+    /** Creates new instances of tanks from loaded/deserialized collection. Returns not null collection of tanks copies */
+    public static loadTanks(tanks: Tank[]): Tank[] {
+        const newTanks: Tank[] = [];
+
+        if (tanks && tanks.length > 0) {
+            for (let index = 0; index < tanks.length; index++) {
+                const currentTank = tanks[index];
+                const newTank = new Tank(currentTank.size, currentTank.startPressure, currentTank.o2);
+                newTank.loadFrom(currentTank); // rest not handled by constructor
+                newTanks.push(newTank);
+            }
+        }
+
+        return newTanks;
+    }
+
+    /** sets consumed and reserve for all tanks to 0 */
+    public static resetConsumption(tanks: Tank[]): void {
+        tanks.forEach(tank => {
+            tank.consumed = 0;
+            tank.reserve = 0;
+        });
+    }
 }
 
 export class Tank {
@@ -40,14 +64,6 @@ export class Tank {
     /** Creates 15 L, filled with 200 bar Air */
     public static createDefault(): Tank {
         return new Tank(15, 200, StandardGases.o2InAir * 100);
-    }
-
-    // TODO move to tanks
-    public static resetConsumption(tanks: Tank[]): void {
-        tanks.forEach(tank => {
-            tank.consumed = 0;
-            tank.reserve = 0;
-        });
     }
 
     public get gas(): Gas {

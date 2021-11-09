@@ -195,12 +195,17 @@ export class PlannerService {
         this.isComplex = other.isComplex;
         this.assignOptions(other.options);
         this.diver.loadFrom(other.diver);
-        const newTanks = this.loadTanks(other.tanks);
+        const newTanks = Tanks.loadTanks(other.tanks);
         if (newTanks.length > 0) {
             this.tanks = newTanks;
         }
 
         // TODO fix references to tanks from segments
+        // BUG: Fix segment references to tank when tank is removed, add test case
+        // Add number to tank
+        // reset the numbers when ever the tanks list changes
+        // New tanks are empty - keep only first tank, reset all segment references to first tank only
+        // Multiple new tanks - Set tank reference to first tank in case tank index is now out of range
         this.plan.loadFrom(other.plan);
         this.calculate();
     }
@@ -213,21 +218,6 @@ export class PlannerService {
             tanks: this.tanks,
             plan: this.plan.copySegments()
         } as AppPreferences;
-    }
-
-    private loadTanks(tanks: Tank[]): Tank[] {
-        const newTanks: Tank[] = [];
-
-        if (tanks && tanks.length > 0) {
-            for (let index = 0; index < tanks.length; index++) {
-                const currentTank = tanks[index];
-                const newTank = new Tank(currentTank.size, currentTank.startPressure, currentTank.o2);
-                newTank.loadFrom(currentTank); // rest not handled by constructor
-                newTanks.push(newTank);
-            }
-        }
-
-        return newTanks;
     }
 
     private assignOptions(newOptions: Options): void {

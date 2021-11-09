@@ -5,7 +5,7 @@ Following list of features and improvements ordered by priority is under develop
 Known issues:
 
 * Reserve counts only non user defined segments as emergency ascent (Doesn't handle all multilevel scenarios)
-* Fix Save/Reload of default settings
+* Fix Save/Reload of default settings of segments
 
 Improvements:
 
@@ -18,9 +18,11 @@ Improvements:
   * Add option to reduce plan table only to list of stops
   * Add other events to profile chart like gas switch
   * Replace final average depth by continuous average depth in graph
+  * Gas oxygen content spinner shows not rounded number, where it shouldn't
 * Events:
   * Add time to the events warning/error messages
-  * Add more events as errors from algorithm: end of NDL, exceeded max. stop duration, safety stop, narcotic depth
+  * Add narcotic depth exceeded warning event
+  * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * Add imperial units option
 * Add no deco table
 * Add TRIMIX support and calculator
@@ -30,8 +32,14 @@ Improvements:
 * UI tweaks
   * Add max. narc. depth to the Gas label
   * Add button to apply best mix for selected depth
-* Add help to all variables
+* Help
+  * Update the documentation to latest state of the application
+  * Add help to the UI as side bar 
+    * <https://ej2.syncfusion.com/angular/documentation/sidebar/getting-started/>
+    * <https://www.npmjs.com/package/ngx-markdown>
+    * <https://stackblitz.com/edit/angular-azjfgh?file=src%2Fapp%2Fapp.component.html>
 * Add localization
+* Add all settings as url parameters so user can share the profile using an url (<https://angular.io/guide/router#link-parameters-array>)
 * Add option to define repetitive dives
   * Unify dive settings and default settings
 * Add CNS and OTU calculations

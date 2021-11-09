@@ -38,6 +38,20 @@ export class Tanks {
             tank.reserve = 0;
         });
     }
+
+    /**
+     * Removed item from collection and resets remaining items ID attribute
+     * @returns New collection without removed element.
+     */
+    public static removeTank(tanks: Tank[], tank: Tank): Tank[] {
+        const result = tanks.filter(g => g !== tank);
+        for (let index = 0; index < result.length; index++) {
+            const current = result[index];
+            current.id = index + 1;
+        }
+
+        return result;
+    }
 }
 
 export class Tank {

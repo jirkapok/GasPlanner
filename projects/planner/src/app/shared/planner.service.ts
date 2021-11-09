@@ -62,12 +62,7 @@ export class PlannerService {
     }
 
     public removeTank(tank: Tank): void {
-        this._tanks = this._tanks.filter(g => g !== tank);
-        for (let index = 0; index < this._tanks.length; index++) {
-            const current = this._tanks[index];
-            current.id = index + 1;
-        }
-
+        this._tanks = Tanks.removeTank(this._tanks, tank);
         this.plan.resetSegments(tank, this.firstTank);
         this.calculate();
     }
@@ -211,9 +206,6 @@ export class PlannerService {
         }
 
         // TODO fix references to tanks from segments
-        // BUG: Fix segment references to tank when tank is removed, add test case
-        // Add number to tank
-        // reset the numbers when ever the tanks list changes
         // New tanks are empty - keep only first tank, reset all segment references to first tank only
         // Multiple new tanks - Set tank reference to first tank in case tank index is now out of range
         this.plan.loadFrom(other.plan);

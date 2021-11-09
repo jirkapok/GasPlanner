@@ -16,11 +16,11 @@ export class PlannerService {
     public plan: Plan;
     public diver: Diver = new Diver(20, 1.4);
     // there always needs to be at least one
-    public tanks: Tank[] = [
-        Tank.createDefault()
-    ];
     public dive: Dive = new Dive();
     public calculated;
+    private _tanks: Tank[] = [
+        Tank.createDefault()
+    ];
     private _options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
     private onCalculated = new Subject();
     private depthConverterFactory = new DepthConverterFactory(this.options);
@@ -30,10 +30,13 @@ export class PlannerService {
     public get options(): Options {
         return this._options;
     }
+    public get tanks(): Tank[] {
+        return this._tanks;
+    }
 
     /** only for recreational diver use case */
     public get firstTank(): Tank {
-        return this.tanks[0];
+        return this._tanks[0];
     }
 
     public get ndlValid(): boolean {
@@ -46,19 +49,26 @@ export class PlannerService {
     }
 
     public resetToSimple(): void {
-        this.tanks = this.tanks.slice(0, 1);
+        this._tanks = this._tanks.slice(0, 1);
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
     }
 
     public addTank(): void {
         const newTank = Tank.createDefault();
         newTank.size = 11;
-        this.tanks.push(newTank);
+        this._tanks.push(newTank);
+        newTank.id = this._tanks.length;
         this.calculate();
     }
 
     public removeTank(tank: Tank): void {
-        this.tanks = this.tanks.filter(g => g !== tank);
+        this._tanks = this._tanks.filter(g => g !== tank);
+        for (let index = 0; index < this._tanks.length; index++) {
+            const current = this._tanks[index];
+            current.id = index + 1;
+        }
+
+        this.plan.resetSegments(tank, this.firstTank);
         this.calculate();
     }
 
@@ -127,7 +137,7 @@ export class PlannerService {
         // we can't speedup the prediction from already obtained profile,
         // since it may happen, the deco starts during ascent.
         // we cant use the maxDepth, because its purpose is only for single level dives
-        const gases = Gases.fromTanks(this.tanks);
+        const gases = Gases.fromTanks(this._tanks);
         const segments = this.plan.copySegments();
         const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, this.options);
         return noDecoLimit;
@@ -150,7 +160,7 @@ export class PlannerService {
             this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
             this.depthConverter = this.depthConverterFactory.create();
             this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
-            const profile = WayPointsService.calculateWayPoints(this.plan, this.tanks, this.options);
+            const profile = WayPointsService.calculateWayPoints(this.plan, this._tanks, this.options);
             this.dive.wayPoints = profile.wayPoints;
             this.dive.ceilings = profile.ceilings;
             this.dive.events = profile.events;
@@ -164,13 +174,13 @@ export class PlannerService {
                 // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
                 this.measureMethod('Max bottom time', () => {
                     const segments = this.plan.copySegments();
-                    this.dive.maxTime = consumption.calculateMaxBottomTime(segments, this.tanks, this.diver, this.options);
+                    this.dive.maxTime = consumption.calculateMaxBottomTime(segments, this._tanks, this.diver, this.options);
                 });
 
                 this.measureMethod('Consumption', () => {
                     const originAscent = SegmentsFactory.ascent(profile.origin, userSegments);
                     this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
-                    consumption.consumeFromTanks(profile.origin, userSegments, this.tanks, this.diver);
+                    consumption.consumeFromTanks(profile.origin, userSegments, this._tanks, this.diver);
                     this.dive.notEnoughTime = this.plan.notEnoughTime;
                 });
             }
@@ -179,8 +189,8 @@ export class PlannerService {
             this.dive.turnPressure = this.calculateTurnPressure();
             this.dive.turnTime = Math.floor(this.plan.duration / 2);
             // this needs to be moved to each gas or do we have other option?
-            this.dive.needsReturn = this.plan.needsReturn && this.tanks.length === 1;
-            this.dive.notEnoughGas = !Tanks.haveReserve(this.tanks);
+            this.dive.needsReturn = this.plan.needsReturn && this._tanks.length === 1;
+            this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
             this.dive.noDecoExceeded = this.plan.noDecoExceeded;
             this.dive.calculated = true;
         });
@@ -197,7 +207,7 @@ export class PlannerService {
         this.diver.loadFrom(other.diver);
         const newTanks = Tanks.loadTanks(other.tanks);
         if (newTanks.length > 0) {
-            this.tanks = newTanks;
+            this._tanks = newTanks;
         }
 
         // TODO fix references to tanks from segments
@@ -215,7 +225,7 @@ export class PlannerService {
             isComplex: this.isComplex,
             options: this.options,
             diver: this.diver,
-            tanks: this.tanks,
+            tanks: this._tanks,
             plan: this.plan.copySegments()
         } as AppPreferences;
     }

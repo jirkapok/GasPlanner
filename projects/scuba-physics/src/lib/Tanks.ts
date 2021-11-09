@@ -41,6 +41,8 @@ export class Tanks {
 }
 
 export class Tank {
+    /** Gets or sets a unique identifier of the tank in its collection */
+    public id = 0;
     /** Gets or sets the consumed liters of gas */
     public consumed = 0;
     /** Gets or sets the reserve which should remain in the tank in liters */

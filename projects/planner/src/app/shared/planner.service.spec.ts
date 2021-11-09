@@ -1,3 +1,4 @@
+import { Segment } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 
 describe('PlannerService', () => {
@@ -127,6 +128,41 @@ describe('PlannerService', () => {
             planner.firstTank.gas.fO2 = 0.5;
             const result = planner.maxNarcDepth;
             expect(result).toBe(18);
+        });
+    });
+
+    describe('Manage tanks', ()=> {
+        it('Added tank receives ID', ()=> {
+            planner.addTank();
+            const count = planner.tanks.length;
+            const added = planner.tanks[count - 1];
+
+            expect(added.id).toEqual(2);
+        });
+
+        describe('Remove', ()=> {
+            let lastSegment: Segment;
+
+            beforeEach(() => {
+                planner.addTank();
+                planner.addTank();
+                const secondTank = planner.tanks[1];
+                planner.addSegment();
+                const segments = planner.plan.segments;
+                lastSegment = segments[1];
+                lastSegment.tank = secondTank;
+                planner.removeTank(secondTank);
+            });
+
+
+            it('Updates segment reference to first tank', ()=> {
+                expect(lastSegment.tank).toEqual(planner.firstTank);
+            });
+
+            it('Tank ids are updated', ()=> {
+                const secondTank = planner.tanks[1];
+                expect(secondTank.id).toEqual(2);
+            });
         });
     });
 

@@ -158,6 +158,14 @@ export class Plan {
         this.onChanged.next();
     }
 
+    public resetSegments(removed: Tank, replacement: Tank): void {
+        this.segments.forEach(segment => {
+            if (segment.tank === removed) {
+                segment.tank = replacement;
+            }
+        });
+    }
+
     private reset(depth: number, duration: number, tank: Tank, options: Options): void {
         this._segments = SegmentsFactory.createForPlan(depth, duration, tank, options);
     }

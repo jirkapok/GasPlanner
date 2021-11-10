@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { Plan, Dive, Strategies, AppPreferences } from './models';
+import { Plan, Dive, Strategies } from './models';
 import { WayPointsService } from './waypoints.service';
 import {
     NitroxCalculator, BuhlmannAlgorithm, Options,
@@ -18,9 +18,7 @@ export class PlannerService {
     // there always needs to be at least one
     public dive: Dive = new Dive();
     public calculated;
-    private _tanks: Tank[] = [
-        Tank.createDefault()
-    ];
+    private _tanks: Tank[] = [];
     private _options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
     private onCalculated = new Subject();
     private depthConverterFactory = new DepthConverterFactory(this.options);
@@ -44,6 +42,9 @@ export class PlannerService {
     }
 
     constructor() {
+        const tank = Tank.createDefault();
+        tank.id = 1;
+        this._tanks.push(tank);
         this.calculated = this.onCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
     }
@@ -192,34 +193,20 @@ export class PlannerService {
         this.onCalculated.next();
     }
 
-    public loadFrom(other: AppPreferences): void {
-        if (!other) {
-            return;
+    public loadFrom(isComplex: boolean, options: Options, diver: Diver, tanks: Tank[], segments: Segment[]): void {
+        this.isComplex = isComplex;
+        this.assignOptions(options);
+        this.diver.loadFrom(diver);
+
+        if (tanks.length > 0) {
+            this._tanks = tanks;
         }
 
-        this.isComplex = other.isComplex;
-        this.assignOptions(other.options);
-        this.diver.loadFrom(other.diver);
-        const newTanks = Tanks.loadTanks(other.tanks);
-        if (newTanks.length > 0) {
-            this._tanks = newTanks;
+        if(segments.length > 1) {
+            this.plan.loadFrom(segments);
         }
 
-        // TODO fix references to tanks from segments
-        // New tanks are empty - keep only first tank, reset all segment references to first tank only
-        // Multiple new tanks - Set tank reference to first tank in case tank index is now out of range
-        this.plan.loadFrom(other.plan);
         this.calculate();
-    }
-
-    public toPreferences(): AppPreferences {
-        return {
-            isComplex: this.isComplex,
-            options: this.options,
-            diver: this.diver,
-            tanks: this._tanks,
-            plan: this.plan.copySegments()
-        } as AppPreferences;
     }
 
     private assignOptions(newOptions: Options): void {

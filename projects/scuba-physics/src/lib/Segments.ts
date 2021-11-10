@@ -43,7 +43,9 @@ export class Segment {
         public duration: number) { }
 
     public static from(other: Segment): Segment {
-        return new Segment(other.startDepth, other.endDepth, other._gas, other.duration);
+        const copy = new Segment(other.startDepth, other.endDepth, other._gas, other.duration);
+        copy.tank = other.tank;
+        return copy;
     }
 
     public static depthAt(startDepth: number, speed: number, duration: number): number {
@@ -106,16 +108,18 @@ export class Segments {
     private _maxDepth = 0;
 
     public static from(other: Segments): Segments {
-        const result = new Segments();
-        result._maxDepth = other._maxDepth;
+        const result = Segments.fromCollection(other.segments);
+        return result;
+    }
 
-        result.segments = [];
-        other.segments.forEach(source => {
-            // ignore gas for now
+    public static fromCollection(segments: Segment[]): Segments {
+        const result = new Segments();
+
+        segments.forEach(source => {
             const newSegment = Segment.from(source);
             result.segments.push(newSegment);
+            result.updateMaxDepth(newSegment);
         });
-
         return result;
     }
 
@@ -165,7 +169,7 @@ export class Segments {
         return 0;
     }
 
-    /** in seconds */
+    /** Gets total duration of all segments in seconds */
     public get duration(): number {
         let total = 0;
 

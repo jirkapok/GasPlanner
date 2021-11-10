@@ -15,22 +15,6 @@ export class Tanks {
         return true;
     }
 
-    /** Creates new instances of tanks from loaded/deserialized collection. Returns not null collection of tanks copies */
-    public static loadTanks(tanks: Tank[]): Tank[] {
-        const newTanks: Tank[] = [];
-
-        if (tanks && tanks.length > 0) {
-            for (let index = 0; index < tanks.length; index++) {
-                const currentTank = tanks[index];
-                const newTank = new Tank(currentTank.size, currentTank.startPressure, currentTank.o2);
-                newTank.loadFrom(currentTank); // rest not handled by constructor
-                newTanks.push(newTank);
-            }
-        }
-
-        return newTanks;
-    }
-
     /** sets consumed and reserve for all tanks to 0 */
     public static resetConsumption(tanks: Tank[]): void {
         tanks.forEach(tank => {
@@ -45,12 +29,16 @@ export class Tanks {
      */
     public static removeTank(tanks: Tank[], tank: Tank): Tank[] {
         const result = tanks.filter(g => g !== tank);
-        for (let index = 0; index < result.length; index++) {
-            const current = result[index];
+        Tanks.renumberIds(result);
+        return result;
+    }
+
+    /** Fixes IDs of all tanks */
+    public static renumberIds(tanks: Tank[]): void {
+        for (let index = 0; index < tanks.length; index++) {
+            const current = tanks[index];
             current.id = index + 1;
         }
-
-        return result;
     }
 }
 

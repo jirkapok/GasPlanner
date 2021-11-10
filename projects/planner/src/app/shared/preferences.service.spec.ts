@@ -2,7 +2,6 @@ import { TestBed, inject } from '@angular/core/testing';
 import { PreferencesService } from './preferences.service';
 import { PlannerService } from './planner.service';
 import { Diver, Options, Tank } from 'scuba-physics';
-import { Plan } from './models';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -71,9 +70,11 @@ describe('PreferencesService', () => {
                 service.loadDefaults();
 
                 const expected1 = new Tank(15, 150, 21);
+                expected1.id = 1;
                 expected1.consumed = 65;
                 expected1.reserve = 45;
                 const expected2 = new Tank(11, 200, 50);
+                expected2.id = 2;
                 expected2.consumed = 21;
                 expected2.reserve = 62;
                 // JSON serialization prevents order of items in an array
@@ -81,12 +82,25 @@ describe('PreferencesService', () => {
                 expect(planner.tanks).toEqual(expected);
             }));
 
-        xit('Plan is loaded after save', inject([PreferencesService, PlannerService],
+        it('Plan is loaded after save', inject([PreferencesService, PlannerService],
             (service: PreferencesService, planner: PlannerService) => {
                 const plan = planner.plan;
-                // TODO all segments fit
-                // TODO all segments are pointing to correct tank, if any
-                expect(plan).toBeFalsy();
+                planner.addTank();
+                planner.addTank();
+                planner.addSegment();
+                const lastSegment = plan.segments[2];
+                const secondTank = planner.tanks[1];
+                lastSegment.tank =secondTank;
+                planner.calculate();
+                service.saveDefaults();
+
+                planner.removeSegment(lastSegment);
+                planner.removeTank(secondTank);
+                service.loadDefaults();
+
+                expect(planner.tanks.length).toEqual(3);
+                expect(planner.plan.length).toEqual(3);
+                expect(planner.plan.segments[2].tank?.id).toEqual(2);
             }));
     });
 });

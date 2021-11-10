@@ -1,15 +1,5 @@
 # Help
 
-## Limitations
-
-Based on current features implementation some types of diving are not supported yet. Application is able to calculate only following type of dives:
-
-* Only open circuit dives can be planned
-* Only one gas tank
-* No multilevel dive profiles are supported
-* Only air and nitrox gases are available
-* No repetitive dives
-
 ## Calculations Background
 
 * Ascent speed 10m/min. and 20m/min. descend speed is used.

@@ -104,7 +104,6 @@ export class PlannerService {
     }
 
     public get maxNarcDepth(): number {
-        // TODO add UI for maxEND
         const depthInBars = this.depthConverter.toBar(this.options.maxEND);
         const maxNarcBar = this.firstTank.gas.end(depthInBars);
         const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);

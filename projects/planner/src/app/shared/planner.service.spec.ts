@@ -33,7 +33,7 @@ describe('PlannerService', () => {
 
         it('109 bar remaining gas', () => {
             planner.calculate();
-            expect(planner.firstTank.endPressure).toBe(124);
+            expect(planner.firstTank.endPressure).toBe(123);
         });
     });
 

@@ -44,6 +44,7 @@ export class Segment {
 
     public static from(other: Segment): Segment {
         const copy = new Segment(other.startDepth, other.endDepth, other._gas, other.duration);
+        // this assignment causes some rounding issues, which are ignored
         copy.tank = other.tank;
         return copy;
     }

@@ -71,7 +71,7 @@ describe('PreferencesService', () => {
 
                 const expected1 = new Tank(15, 150, 21);
                 expected1.id = 1;
-                expected1.consumed = 65;
+                expected1.consumed = 66;
                 expected1.reserve = 45;
                 const expected2 = new Tank(11, 200, 50);
                 expected2.id = 2;

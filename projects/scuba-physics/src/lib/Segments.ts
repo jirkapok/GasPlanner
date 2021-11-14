@@ -90,6 +90,11 @@ export class Segment {
         return (this.endDepth - this.startDepth) / this.duration;
     }
 
+    /** in meters */
+    public get averageDepth(): number {
+        return (this.startDepth + this.endDepth) / 2;
+    }
+
     /**
      * @param duration Seconds since start of this segment
      * @returns current depth in meters where the diver was at the moment
@@ -136,8 +141,7 @@ export class Segments {
         // Uses cumulative average to prevent number overflow for large segment durations
         segments.forEach(segment => {
             if(segment.duration > 0) {
-                const segmentAverage = (segment.endDepth + segment.startDepth) / 2;
-                const cumulativeWeight = segmentAverage * segment.duration + totalDuration * cumulativeAverage;
+                const cumulativeWeight = segment.averageDepth * segment.duration + totalDuration * cumulativeAverage;
                 totalDuration += segment.duration;
                 cumulativeAverage = cumulativeWeight / totalDuration;
             }

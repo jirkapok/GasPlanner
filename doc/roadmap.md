@@ -5,7 +5,6 @@ Following list of features and improvements ordered by priority is under develop
 Known issues:
 
 * Reserve counts only non user defined segments as emergency ascent (Doesn't handle all multilevel scenarios)
-* Fix Save/Reload of default settings of segments
 
 Improvements:
 
@@ -34,7 +33,7 @@ Improvements:
   * Add button to apply best mix for selected depth
 * Help
   * Update the documentation to latest state of the application
-  * Add help to the UI as side bar 
+  * Add help to the UI as side bar
     * <https://ej2.syncfusion.com/angular/documentation/sidebar/getting-started/>
     * <https://www.npmjs.com/package/ngx-markdown>
     * <https://stackblitz.com/edit/angular-azjfgh?file=src%2Fapp%2Fapp.component.html>

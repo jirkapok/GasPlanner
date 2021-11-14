@@ -15,23 +15,28 @@ class ConsumptionSegment {
     /** in seconds */
     public endTime = 0;
     /** in meters */
+    public averageDepth = 0;
+    /** in meters */
     private _startDepth = 0;
     /** in meters */
     private _endDepth = 0;
+
+
 
     /**
      * @param duration in seconds
      * @param newDepth in meters
      * @param previousDepth in meters
      */
-    constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
+    private constructor(public duration: number, newDepth: number, previousDepth: number, averageDepth: number) {
         this.endTime = Math.round(duration * 100) / 100;
         this._endDepth = newDepth;
         this._startDepth = previousDepth;
+        this.averageDepth = averageDepth;
     }
 
     public static fromSegment(segment: Segment): ConsumptionSegment {
-        return new ConsumptionSegment(segment.duration, segment.endDepth, segment.startDepth);
+        return new ConsumptionSegment(segment.duration, segment.endDepth, segment.startDepth, segment.averageDepth);
     }
 
     /** in meters */
@@ -42,11 +47,6 @@ class ConsumptionSegment {
     /** in meters */
     public get endDepth(): number {
         return this._endDepth;
-    }
-
-    /** in meters */
-    public get averageDepth(): number {
-        return (this.startDepth + this.endDepth) / 2;
     }
 }
 

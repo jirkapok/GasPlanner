@@ -379,6 +379,20 @@ describe('Consumption', () => {
                 expect(airTank.consumed).toEqual(100); // up to the limit
             });
         });
+    });
 
+    describe('User defined segments', () => {
+        it('Plan ends at surface', () => {
+            const tank = new Tank(10, 200, 21);
+            const tanks = [tank];
+
+            const first = new Segment(0, 10, tank.gas, Time.oneMinute * 10);
+            const second = new Segment(10, 0, tank.gas, Time.oneMinute * 10);
+            const segments = [first, second];
+            // 1.5 * 20 * 2 = 60
+
+            consumption.consumeFromTanks(segments, 2, tanks, diver);
+            expect(tank.consumed).toEqual(61); //  because of pressure conversion
+        });
     });
 });

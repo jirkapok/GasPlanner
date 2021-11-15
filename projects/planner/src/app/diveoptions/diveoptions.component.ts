@@ -169,11 +169,15 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    public get ascentSpeed(): number {
+    // Speeds
+    public ascentSpeed50perc = 11;
+    public ascentSpeed75perc = 21;
+
+    public get ascentSpeed6m(): number {
         return this.planner.options.ascentSpeed;
     }
 
-    public set ascentSpeed(newValue: number) {
+    public set ascentSpeed6m(newValue: number) {
         // somehow noticed frozen UI in case copy/paste 0 into the asc/desc fields
         if(newValue < 1) {
             return;

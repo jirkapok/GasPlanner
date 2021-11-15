@@ -211,6 +211,8 @@ export class WayPoint {
     private _startDepth = 0;
     /** in meters */
     private _endDepth = 0;
+    /** meters per sec */
+    private speed = 0;
 
     private action: SwimAction = SwimAction.hover;
 
@@ -225,7 +227,7 @@ export class WayPoint {
      * @param newDepth in meters
      * @param previousDepth in meters
      */
-    constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
+    private constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
         this.endTime = Math.round(duration * 100) / 100;
         this._endDepth = newDepth;
         this._startDepth = previousDepth;
@@ -236,6 +238,7 @@ export class WayPoint {
         const newWayPoint = new WayPoint(segment.duration, segment.endDepth);
         const gasName = StandardGases.nameFor(segment.gas.fO2, segment.gas.fHe);
         newWayPoint._gasName = gasName;
+        newWayPoint.speed = segment.speed;
         return newWayPoint;
     }
 
@@ -285,6 +288,10 @@ export class WayPoint {
 
     public fits(timeStamp: number): boolean {
         return this.startTime <= timeStamp && timeStamp < this.endTime;
+    }
+
+    public depthAt(duration: number): number {
+        return Segment.depthAt(this.startDepth, this.speed, duration);
     }
 
     private updateSwimAction(): void {

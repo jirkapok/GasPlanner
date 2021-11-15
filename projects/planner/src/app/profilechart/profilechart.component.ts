@@ -4,7 +4,7 @@ import { Dive, WayPoint } from '../shared/models';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js';
 import { Subscription } from 'rxjs';
-import { EventType, Time, Gas, StandardGases } from 'scuba-physics';
+import { EventType, Time, Gas, StandardGases, Segment } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
 
 @Component({
@@ -107,16 +107,8 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         const yDepthValues: number[] = [];
 
         if(this.dive.wayPoints.length > 0) {
-            const lastWayPoint = this.dive.wayPoints[this.dive.wayPoints.length - 1];
-            const averageDepth = this.dive.averageDepth;
-            const wayPoints = [
-                new WayPoint(0, averageDepth, averageDepth),
-                new WayPoint(lastWayPoint.endTime, averageDepth, averageDepth)
-            ];
-
-            wayPoints.forEach((item, index, waypoints) => {
-                this.resampleToSeconds(xDepthValues, yDepthValues, item);
-            });
+            const wayPoints = this.dive.wayPoints;
+            this.transformAverageDepth(wayPoints, xDepthValues, yDepthValues);
         }
 
         const dataAverageDepths = [{
@@ -135,6 +127,32 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         Plotly.react(this.elementName, dataAverageDepths, this.layout, this.options);
     }
 
+    private transformAverageDepth(waiPoints: WayPoint[], xDepthValues: Date[], yDepthValues: number[]): number {
+        if (waiPoints.length <= 0) {
+            return 0;
+        }
+
+        let cumulativeAverage = 0;
+        let totalDuration = 0;
+
+        // Uses cumulative average to prevent number overflow for large segment durations
+        waiPoints.forEach(wayPoint => {
+            if(wayPoint.duration > 0) {
+                for (let seconds = 0; seconds < wayPoint.duration; seconds++) {
+                    xDepthValues.push(Time.toDate(totalDuration));
+                    const depth = wayPoint.depthAt(seconds);
+                    const cumulativeWeight = depth + totalDuration * cumulativeAverage;
+                    totalDuration++;
+                    cumulativeAverage = cumulativeWeight / totalDuration;
+                    const rounded = Math.round(cumulativeAverage * 10) / 10;
+                    yDepthValues.push(rounded);
+                }
+            }
+        });
+
+        return cumulativeAverage;
+    }
+
     private plotDepths(): void {
         const xValues: Date[] = [];
         const yValues: number[] = [];
@@ -150,7 +168,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         }];
 
         this.dive.wayPoints.forEach((item, index, waypoints) => {
-            this.resampleToSeconds(xValues, yValues, item);
+            this.resampleDepthsToSeconds(xValues, yValues, item);
         });
 
         Plotly.plot(this.elementName, data, this.layout, this.options);
@@ -241,7 +259,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         return Math.round(depth * 100) / 100;
     }
 
-    private resampleToSeconds(xValues: Date[], yValues: number[], item: WayPoint) {
+    private resampleDepthsToSeconds(xValues: Date[], yValues: number[], item: WayPoint) {
         const speed = (item.endDepth - item.startDepth) / item.duration;
         for (let timeStamp = item.startTime; timeStamp < item.endTime; timeStamp++) {
             xValues.push(Time.toDate(timeStamp));

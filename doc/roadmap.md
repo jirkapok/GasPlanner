@@ -16,7 +16,6 @@ Improvements:
   * Add to dive info: total deco, if any
   * Add option to reduce plan table only to list of stops
   * Add other events to profile chart like gas switch
-  * Replace final average depth by continuous average depth in graph
   * Gas oxygen content spinner shows not rounded number, where it shouldn't
 * Events:
   * Add time to the events warning/error messages

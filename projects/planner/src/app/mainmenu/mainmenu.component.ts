@@ -8,10 +8,17 @@ import { PreferencesService } from '../shared/preferences.service';
 })
 export class MainMenuComponent {
     public isNavbarCollapsed = true;
-    private deferredPrompt: any;
     public showInstallButton = false;
+    private deferredPrompt: any;
 
     constructor(private preferences: PreferencesService) { }
+
+    @HostListener('window:beforeinstallprompt', ['$event'])
+    public onbeforeinstallprompt(e: Event): void {
+        e.preventDefault();
+        this.deferredPrompt = e;
+        this.showInstallButton = true;
+    }
 
     public saveDefaults(): void {
         this.preferences.saveDefaults();
@@ -19,13 +26,6 @@ export class MainMenuComponent {
 
     public loadDefaults(): void {
         this.preferences.loadDefaults();
-    }
-
-    @HostListener('window:beforeinstallprompt', ['$event'])
-    public onbeforeinstallprompt(e: Event): void {
-        e.preventDefault();
-        this.deferredPrompt = e;
-        this.showInstallButton = true;
     }
 
     public addToHomeScreen(): void {

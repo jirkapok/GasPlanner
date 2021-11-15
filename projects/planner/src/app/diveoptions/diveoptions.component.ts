@@ -54,9 +54,9 @@ export class DiveOptionsComponent {
     }
 
     public mediumConservatism(): void {
-        this.conservatism = this.mediumName;
-        this.plannedGfLow = 40;
-        this.plannedGfHigh = 85;
+        this.setMediumConservatism();
+        this.planner.setMediumConservatism();
+        this.planner.calculate();
     }
 
     public highConservatism(): void {
@@ -87,15 +87,6 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    @Input()
-    public get plannedDepth(): number {
-        return this.plan.maxDepth;
-    }
-
-    public set plannedDepth(depth: number) {
-        this.planner.assignDepth(depth);
-    }
-
     public get isComplex(): boolean {
         return this.planner.isComplex;
     }
@@ -105,20 +96,15 @@ export class DiveOptionsComponent {
 
         if (!this.planner.isComplex) {
             this.setAllUsable();
-            this.mediumConservatism();
-            this.setAscentSpeed(Diver.ascSpeed);
-            this.setDescentSpeed(Diver.descSpeed);
-            this.setRoundDecoStops(true);
-            this.setSafetyStopEnabled(true);
-            this.setGasSwitchDuration(1);
+            this.setMediumConservatism();
             this.planner.resetToSimple();
         }
 
         this.planner.calculate();
     }
 
-    private setRoundDecoStops(newValue: boolean): void {
-        this.planner.options.roundStopsToMinutes = newValue;
+    private setMediumConservatism(): void {
+        this.conservatism = this.mediumName;
     }
 
     public get roundDecoStops(): boolean {
@@ -126,12 +112,8 @@ export class DiveOptionsComponent {
     }
 
     public set roundDecoStops(newValue: boolean) {
-        this.setRoundDecoStops(newValue);
+        this.planner.options.roundStopsToMinutes = newValue;
         this.planner.calculate();
-    }
-
-    private setGasSwitchDuration(newValue: number): void {
-        this.planner.options.gasSwitchDuration = newValue;
     }
 
     public get gasSwitchDuration(): number {
@@ -139,7 +121,7 @@ export class DiveOptionsComponent {
     }
 
     public set gasSwitchDuration(newValue: number) {
-        this.setGasSwitchDuration(newValue);
+        this.planner.options.gasSwitchDuration = newValue;
         this.planner.calculate();
     }
 
@@ -169,16 +151,12 @@ export class DiveOptionsComponent {
         this.planner.changeWaterType(newValue);
     }
 
-    private setSafetyStopEnabled(newValue: boolean): void {
-        this.planner.options.addSafetyStop = newValue;
-    }
-
     public get safetyStopEnabled(): boolean {
         return this.planner.options.addSafetyStop;
     }
 
     public set safetyStopEnabled(newValue: boolean) {
-        this.setSafetyStopEnabled(newValue);
+        this.planner.options.addSafetyStop = newValue;
         this.planner.calculate();
     }
 
@@ -191,10 +169,6 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    private setAscentSpeed(newValue: number) {
-        this.planner.options.ascentSpeed = newValue;
-    }
-
     public get ascentSpeed(): number {
         return this.planner.options.ascentSpeed;
     }
@@ -205,12 +179,8 @@ export class DiveOptionsComponent {
             return;
         }
 
-        this.setAscentSpeed(newValue);
+        this.planner.options.ascentSpeed = newValue;
         this.planner.calculate();
-    }
-
-    private setDescentSpeed(newValue: number) {
-        this.planner.options.descentSpeed = newValue;
     }
 
     public get descentSpeed(): number {
@@ -222,9 +192,7 @@ export class DiveOptionsComponent {
             return;
         }
 
-        this.setDescentSpeed(newValue);
+        this.planner.options.descentSpeed = newValue;
         this.planner.calculate();
     }
-
-
 }

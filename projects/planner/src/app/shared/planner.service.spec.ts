@@ -1,4 +1,4 @@
-import { Segment } from 'scuba-physics';
+import { Options, Segment } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 
 describe('PlannerService', () => {
@@ -64,10 +64,10 @@ describe('PlannerService', () => {
         beforeEach(() => {
             planner.firstTank.o2 = o2Expected;
             planner.addTank();
+            planner.assignDepth(7);
+            planner.plan.segments[1].endDepth = 5;
             planner.addSegment();
-            const last = planner.plan.segments[planner.plan.length - 1];
-            last.endDepth = 40;
-            planner.plan.fixDepths();
+            planner.plan.fixDepths(); // to simplify setup
             planner.resetToSimple();
         });
 
@@ -78,8 +78,8 @@ describe('PlannerService', () => {
         it('Plan has correct depths', () => {
             const segments = planner.plan.segments;
             expect(segments.length).toBe(2);
-            expect(segments[0].endDepth).toBe(40);
-            expect(segments[1].endDepth).toBe(40);
+            expect(segments[0].endDepth).toBe(7);
+            expect(segments[1].endDepth).toBe(7);
         });
 
         it('Resets gases to one only', () => {
@@ -88,6 +88,10 @@ describe('PlannerService', () => {
 
         it('Keeps first gas content', () => {
             expect(planner.firstTank.o2).toBe(o2Expected);
+        });
+
+        it('Resets safety stop option', () => {
+            expect(planner.options.addSafetyStop).toBeFalsy();
         });
     });
 
@@ -202,6 +206,51 @@ describe('PlannerService', () => {
             planner.firstTank.gas.fO2 = 0.5;
             planner.applyMaxDepth();
             expect(planner.plan.maxDepth).toBe(18);
+        });
+    });
+
+    describe('Planned depth', () => {
+        let options: Options;
+
+        beforeEach(() => {
+            options = planner.options;
+        });
+
+        describe('Simple mode', () => {
+            beforeEach(() => {
+                planner.isComplex = false;
+            });
+
+            it('20 m enforces safety stop', () => {
+                options.addSafetyStop = false;
+                planner.assignDepth(20);
+                expect(options.addSafetyStop).toBeTruthy();
+            });
+
+            it('10 m removes safety stop', () => {
+                options.addSafetyStop = true;
+                planner.assignDepth(6);
+                expect(options.addSafetyStop).toBeFalsy();
+            });
+        });
+
+        describe('Complex mode', () => {
+            beforeEach(() => {
+                planner.isComplex = true;
+            });
+
+            it('20 m safety stop option isn`t changed', () => {
+                options.addSafetyStop = false;
+                planner.assignDepth(20);
+
+                expect(options.addSafetyStop).toBeFalsy();
+            });
+
+            it('10 m safety stop option isn`t changed', () => {
+                options.addSafetyStop = true;
+                planner.assignDepth(6);
+                expect(options.addSafetyStop).toBeTruthy();
+            });
         });
     });
 });

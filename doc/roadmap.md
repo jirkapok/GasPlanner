@@ -1,4 +1,4 @@
-# Raoad map
+# Road map
 
 Following list of features and improvements ordered by priority is under development or consideration.
 
@@ -9,9 +9,8 @@ Known issues:
 Improvements:
 
 * Allow to define multiple levels
-  * Allow to define multiple ascent speeds
   * Add option to define last stop/safety stop range
-  * Don't include safety stop below 10m dives in simple mode, because user has no option to choose
+  * Allow to define multiple ascent speeds - will break all Algorithm tests
 * UI tweaks
   * Add to dive info: total deco, if any
   * Add option to reduce plan table only to list of stops

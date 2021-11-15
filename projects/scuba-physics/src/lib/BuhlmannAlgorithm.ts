@@ -120,7 +120,6 @@ export class BuhlmannAlgorithm {
             }
 
             // 3. safety stop
-            // TODO consider again safety stop to be added in case depths higher than 10 meters
             if (options.addSafetyStop && context.currentDepth === DepthConverter.decoStopDistance) {
                 const safetyStopDuration = Time.oneMinute * 3;
                 const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, safetyStopDuration);

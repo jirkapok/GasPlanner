@@ -52,6 +52,17 @@ export class PlannerService {
     public resetToSimple(): void {
         this._tanks = this._tanks.slice(0, 1);
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
+        this.setMediumConservatism();
+        this.options.ascentSpeed = Diver.ascSpeed;
+        this.options.descentSpeed = Diver.descSpeed;
+        this.options.roundStopsToMinutes = true;
+        this.options.gasSwitchDuration = 1;
+        this.safetyStopByDepth();
+    }
+
+    public setMediumConservatism(): void {
+        this.options.gfLow = 0.4;
+        this.options.gfHigh = 0.85;
     }
 
     public addTank(): void {
@@ -145,6 +156,7 @@ export class PlannerService {
 
     public assignDepth(newDepth: number): void {
         this.plan.assignDepth(newDepth, this.firstTank, this.options);
+        this.safetyStopByDepth();
         this.calculate();
     }
 
@@ -224,5 +236,11 @@ export class PlannerService {
     private calculateTurnPressure(): number {
         const consumed = this.firstTank.consumed / 2;
         return this.firstTank.startPressure - Math.floor(consumed);
+    }
+
+    private safetyStopByDepth(): void {
+        if (!this.isComplex) {
+            this.options.addSafetyStop = this.plan.maxDepth > 10;
+        }
     }
 }

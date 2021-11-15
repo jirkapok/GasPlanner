@@ -1,6 +1,6 @@
 {
   "name": "planner",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "license": "MIT",
   "scripts": {
     "start": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve",

@@ -3,7 +3,6 @@ import { faLayerGroup, faTrashAlt, faPlusSquare  } from '@fortawesome/free-solid
 import { Subscription } from 'rxjs';
 
 import { Segment, StandardGases, Tank } from 'scuba-physics';
-import { transpileModule } from 'typescript';
 import { Plan, Level, Dive } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 

@@ -16,6 +16,7 @@ Based on following references:
 * <https://thetheoreticaldiver.org/wordpress//var/lib/wordpress/wp-content/uploads/2017/11/dekotheorie1.pdf>
 * <https://njscuba.net/gear/trng_10_deco.php>
 * <https://thetheoreticaldiver.org/wordpress/index.php/2019/01/18/ndl-and-gradient-factors/>
+* <https://www.diverite.com/articles/gradient-factors/?fbclid=IwAR2PnZ6IUzTzYJM9GhDdeS8HdSiGpqUBRPanSvibybAakAQXDbq_DK57MnA>
 * <http://www.alertdiver.com/altitude_and_decompression_sickness?fbclid=IwAR2iDWh0ZwvB_oRMmkqQnlYaY3lc1W5NrWTX3DQvDR6N8B3lHXbG9aNFiTA>
 * <https://gue.com/blog/calculated-confusion-can-o2-get-you-high/?fbclid=IwAR0qxKp2Jt7rrN6YFA9g0QxZLtENi1TjGZQ8pkxSMY5q4VQuaBUZwn5-u0Q>
 * <https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf>

@@ -5,6 +5,7 @@ Following list of features and improvements ordered by priority is under develop
 Known issues:
 
 * Reserve counts only non user defined segments as emergency ascent (Doesn't handle all multilevel scenarios)
+* Gas oxygen content spinner shows not rounded number, where it shouldn't
 
 Improvements:
 
@@ -15,12 +16,16 @@ Improvements:
   * Add to dive info: total deco, if any
   * Add option to reduce plan table only to list of stops
   * Add other events to profile chart like gas switch
-  * Gas oxygen content spinner shows not rounded number, where it shouldn't
 * Events:
   * Add time to the events warning/error messages
   * Add narcotic depth exceeded warning event
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * Add imperial units option
+  * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
+    * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
+    * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
+  * Meter: <https://en.wikipedia.org/wiki/Metre_sea_water>
+  * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
 * Add no deco table
 * Add TRIMIX support and calculator
   * Add option to define maximum narcotic depth

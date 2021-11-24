@@ -22,6 +22,18 @@ export class SubSurfaceGradientFactors {
         this.lowestCeiling = this.depthConverter.surfacePressure + 1;
     }
 
+    public ceiling(): number {
+        let bars = this.tolerated();
+
+        // less than surface pressure means no ceiling, this approximation is OK,
+        // because tissues are loaded only under water
+        if (bars < this.depthConverter.surfacePressure) {
+            bars = this.depthConverter.surfacePressure;
+        }
+
+        return this.depthConverter.fromBar(bars);
+    }
+
     /**
      * Returns lowest value of tolerated pressure in bars
      *
@@ -34,8 +46,8 @@ export class SubSurfaceGradientFactors {
         const compartments = this.tissues.compartments;
         let tolerated = 0;
 
-        for (let ci = 0; ci < compartments.length; ci++) {
-            const compartment = compartments[ci];
+        for (let index = 0; index < compartments.length; index++) {
+            const compartment = compartments[index];
             let currentTolerated = tolerated;
 
             if ((surface / compartment.b + compartment.a - surface) * gfHigh + surface <
@@ -69,24 +81,13 @@ export class SubSurfaceGradientFactors {
         const tolerated = this.toleratedTissues(surface, this.lowestCeiling, gfHigh, gfLow);
         return tolerated;
     }
-
-    public ceiling(): number {
-        let bars = this.tolerated();
-
-        // less than surface pressure means no ceiling, this approximation is OK,
-        // because tissues are loaded only under water
-        if (bars < this.depthConverter.surfacePressure) {
-            bars = this.depthConverter.surfacePressure;
-        }
-
-        return this.depthConverter.fromBar(bars);
-    }
 }
 
 
 /**
  * Calculation of gradient factors from particular depth by simple implementation
  * Lower stops, lower total time, lower over all ceiling
+ * Generates not linear transition from GFlow to GFHigh
  */
 export class SimpleGradientFactors {
     private gfDiff: number;
@@ -95,17 +96,6 @@ export class SimpleGradientFactors {
         // find variance in gradient factor
         this.gfDiff = options.gfHigh - options.gfLow;
     }
-
-    /**
-     * calculate final gradient for current depth
-     * @param depth in meters
-     */
-    private gradientForDepth(depth: number): number {
-        const fromDepth = this.segments.maxDepth;
-        const gfChangePerMeter = this.gfDiff / fromDepth;
-        return this.options.gfLow + (gfChangePerMeter * (fromDepth - depth));
-    }
-
 
     public ceiling(): number {
         let tolerated = this.tissues.ceiling(this.options.gfLow);
@@ -125,5 +115,15 @@ export class SimpleGradientFactors {
         }
 
         return this.depthConverter.fromBar(bars);
+    }
+
+    /**
+     * calculate final gradient for current depth
+     * @param depth in meters
+     */
+    private gradientForDepth(depth: number): number {
+        const fromDepth = this.segments.maxDepth;
+        const gfChangePerMeter = this.gfDiff / fromDepth;
+        return this.options.gfLow + (gfChangePerMeter * (fromDepth - depth));
     }
 }

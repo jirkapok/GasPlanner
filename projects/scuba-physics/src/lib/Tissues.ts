@@ -60,13 +60,14 @@ export class Tissue extends Compartment {
     }
 
     /**
-     * Returns pressure in bars of the depth representing maximum ceiling.
+     * Returns pressure in bars of the depth representing maximum ceiling
+     * reduced by the provided gradient.
      *
-     * @param gfLow Gradient factor low in range 0-1
+     * @param gradient Gradient factor constant in range 0-1
      */
-    public ceiling(gfLow: number): number {
+    public ceiling(gradient: number): number {
         // tolerated = (pTotal - a) * b  // Buhlmann
-        const bars = (this.pTotal - (this.a * gfLow)) / ((gfLow / this.b) + 1.0 - gfLow);
+        const bars = (this.pTotal - (this.a * gradient)) / ((gradient / this.b) + 1.0 - gradient);
         return bars;
     }
 
@@ -122,16 +123,17 @@ export class Tissues {
     }
 
     /**
-    * Returns pressure in bars of the depth representing maximum ceiling of all tissues.
+    * Returns pressure in bars of the depth representing maximum ceiling of all tissues
+    * reduced by the provided gradient.
     *
-    * @param gfLow Gradient factor low in range 0-1
+    * @param gradient Gradient factor constant in range 0-1
     * @returns Zero in case there is no ceiling, otherwise ceiling pressure in bars
     */
-    public ceiling(gfLow: number): number {
+    public ceiling(gradient: number): number {
         let ceiling = 0;
 
         for (let index = 0; index < this.compartments.length; index++) {
-            const tissueCeiling = this.compartments[index].ceiling(gfLow);
+            const tissueCeiling = this.compartments[index].ceiling(gradient);
             if (tissueCeiling > ceiling) {
                 ceiling = tissueCeiling;
             }

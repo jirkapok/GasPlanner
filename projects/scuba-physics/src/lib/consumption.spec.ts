@@ -11,7 +11,8 @@ describe('Consumption', () => {
     const consumption = new Consumption(DepthConverter.forFreshWater());
 
     describe('Max bottom time', () => {
-        const options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
+        const options = new Options(0.4, 0.85, 1.4, 1.6, true);
+        options.addSafetyStop = true;
 
         it('Is calculated for default simple plan', () => {
             const tank = new Tank(15, 200, 21);

@@ -7,7 +7,7 @@ import { Segments } from './Segments';
 import { Time } from './Time';
 
 describe('Profile Events', () => {
-    const options = new Options(1, 1, 1.4, 1.6, 30, true);
+    const options = new Options(1, 1, 1.4, 1.6, true);
     const emptyCeilings: Ceiling[] = [];
 
     describe('Low ppO2', () => {
@@ -185,7 +185,8 @@ describe('Profile Events', () => {
             segments.add(40, 10, StandardGases.air, 3 * Time.oneMinute);
 
             const algorithm = new BuhlmannAlgorithm();
-            const defaultOptions = new Options(0.4, 0.85, 1.4, 1.6, 30, false, true);
+            const defaultOptions = new Options(0.4, 0.85, 1.4, 1.6, false);
+            defaultOptions.addSafetyStop = true;
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             const firstError = events.items[0];

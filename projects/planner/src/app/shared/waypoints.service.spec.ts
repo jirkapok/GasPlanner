@@ -5,7 +5,7 @@ import { Options, Tank } from 'scuba-physics';
 describe('WayPointsService', () => {
     const airTank = new Tank(12, 200, 21);
     const gases = [airTank];
-    const options = new Options(0.4, 0.85, 1.4, 1.6, 30, true);
+    const options = new Options(0.4, 0.85, 1.4, 1.6, true);
 
     it('40m for 20 min calculates all way points', () => {
         const plan = new Plan(Strategies.ALL, 40, 20, airTank, options);

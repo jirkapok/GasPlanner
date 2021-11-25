@@ -52,7 +52,9 @@ describe('PreferencesService', () => {
                 options.descentSpeed = 17;
                 service.loadDefaults();
 
-                const expected = new Options(0.3, 0.85, 1.4, 1.6, 30, true, true, 10, 15, 0);
+                const expected = new Options(0.3, 0.85, 1.4, 1.6, true);
+                expected.descentSpeed = 15;
+                expected.addSafetyStop = true;
                 expect(planner.options).toEqual(expected);
             }));
 

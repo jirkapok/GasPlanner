@@ -17,17 +17,22 @@ export class Options implements GasOptions, DepthOptions {
     /**
      * If true, adds 3 minutes to last stop in 3 meters
      */
-    public addSafetyStop: boolean;
+    public addSafetyStop = false;
+
+    /**
+     * Maximum equivalent air narcotic depth in meters, default 30 meters
+     */
+    public maxEND = 30;
 
     /**
      * Usual Ascent speed used by the diver in metres/minute, default 10 meters/minute.
      */
-    public ascentSpeed: number;
+    public ascentSpeed = 10;
 
     /**
      * Usual descent speed used by the diver in metres/minute, default 20 meters/minute.
      */
-    public descentSpeed: number;
+    public descentSpeed = 20;
 
     constructor(
         // Gradient factors in Shearwater
@@ -56,45 +61,15 @@ export class Options implements GasOptions, DepthOptions {
         public maxDecoPpO2: number,
 
         /**
-         * Maximum equivalent air narcotic depth in meters, default 30 meters
-         */
-        public maxEND: number,
-
-        /**
          * Select water salinity, default false (salt water)
          */
-        public isFreshWater: boolean,
-
-        /**
-         * If true, adds 3 minutes to last stop in 3 meters
-         */
-        addSafetyStop?: boolean,
-
-        /**
-         * Usual Ascent speed used by the diver in metres/minute, default 10 meters/minute.
-         */
-        ascentSpeed?: number,
-
-        /**
-         * Usual descent speed used by the diver in metres/minute, default 20 meters/minute.
-         */
-        descentSpeed?: number,
-
-        /**
-         * meters above see level, 0 for see level (default)
-         */
-        altitude?: number
+        public isFreshWater: boolean
     ) {
         this.gfLow = gfLow || 0.4;
         this.gfHigh = gfHigh || 0.85;
         this.maxPpO2 = maxPpO2 || 1.4;
         this.maxDecoPpO2 = maxDecoPpO2 || 1.6;
-        this.maxEND = maxEND || 30;
         this.isFreshWater = isFreshWater || false;
-        this.addSafetyStop = addSafetyStop || false;
-        this.ascentSpeed = ascentSpeed || 10;
-        this.descentSpeed = descentSpeed || 20;
-        this.altitude = altitude || 0;
     }
 
     public loadFrom(other: Options): void {
@@ -102,11 +77,15 @@ export class Options implements GasOptions, DepthOptions {
         this.gfHigh = other.gfHigh || this.gfHigh;
         this.maxPpO2 = other.maxPpO2 || this.maxPpO2;
         this.maxDecoPpO2 = other.maxDecoPpO2 || this.maxDecoPpO2;
-        this.maxEND = other.maxEND || this.maxEND;
         this.isFreshWater = other.isFreshWater || this.isFreshWater;
-        this.addSafetyStop = other.addSafetyStop || this.addSafetyStop;
-        this.ascentSpeed = other.ascentSpeed ||  this.ascentSpeed;
-        this.descentSpeed = other.descentSpeed || this.descentSpeed;
+
         this.altitude = other.altitude || this.altitude;
+        this.roundStopsToMinutes = other.roundStopsToMinutes || this.roundStopsToMinutes;
+        this.gasSwitchDuration = other.gasSwitchDuration || this.gasSwitchDuration;
+        this.addSafetyStop = other.addSafetyStop || this.addSafetyStop;
+        this.maxEND = other.maxEND || this.maxEND;
+
+        this.ascentSpeed = other.ascentSpeed || this.ascentSpeed;
+        this.descentSpeed = other.descentSpeed || this.descentSpeed;
     }
 }

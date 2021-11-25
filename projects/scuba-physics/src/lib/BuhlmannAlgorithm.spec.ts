@@ -8,7 +8,7 @@ describe('Buhlmann Algorithm', () => {
     describe('No decompression times', () => {
         it('Calculate air No decompression limit at surface', () => {
             const depth = 0;
-            const options = new Options(1, 1, 1.6, 1.6, 30, true);
+            const options = new Options(1, 1, 1.6, 1.6, true);
             const algorithm = new BuhlmannAlgorithm();
             const ndl = algorithm.noDecoLimit(depth, StandardGases.air, options);
             expect(ndl).toBe(Infinity);
@@ -16,7 +16,7 @@ describe('Buhlmann Algorithm', () => {
 
         it('Calculates 6 m, even gas high ppO2 at 60 m', () => {
             const depth = 60;
-            const options = new Options(1, 1, 1.4, 1.4, 30, true);
+            const options = new Options(1, 1, 1.4, 1.4, true);
             const algorithm = new BuhlmannAlgorithm();
             const ndl = algorithm.noDecoLimit(depth, StandardGases.air, options);
             expect(ndl).toBe(6);
@@ -26,7 +26,7 @@ describe('Buhlmann Algorithm', () => {
             const gases = new Gases();
             const air = StandardGases.air;
             gases.addBottomGas(air);
-            const options = new Options(1, 1, 1.4, 1.4, 30, true);
+            const options = new Options(1, 1, 1.4, 1.4, true);
 
             it('No decompression limit for multilevel dive equals simple dive Ndl', () => {
                 const segments = new Segments();
@@ -65,7 +65,7 @@ describe('Buhlmann Algorithm', () => {
         });
 
         describe('No decompression limits for air at depth', () => {
-            const options = new Options(1, 1, 1.6, 1.6, 30, true);
+            const options = new Options(1, 1, 1.6, 1.6, true);
 
             const calculateNoDecompressionLimit = (testCases: number[][], isFreshWater: boolean) => {
                 testCases.forEach(testCase => {
@@ -147,7 +147,8 @@ describe('Buhlmann Algorithm', () => {
     describe('Calculates Plan', () => {
         // gradientFactorLow = 0.4, gradientFactorHigh=0.85, deco ppO2 = 1.6, and max END allowed: 30 meters.
         // we don't need to change the gradient factors, because its application is already confirmed by the ascent times and no deco times
-        const options = new Options(0.4, 0.85, 1.4, 1.6, 30, false, true);
+        const options = new Options(0.4, 0.85, 1.4, 1.6, false);
+        options.addSafetyStop = true;
 
         beforeEach(() => {
             options.addSafetyStop = true;

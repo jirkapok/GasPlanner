@@ -19,11 +19,11 @@ export class PlannerService {
     public dive: Dive = new Dive();
     public calculated;
     private _tanks: Tank[] = [];
-    private _options = new Options(0.4, 0.85, 1.4, 1.6, 30, true, true);
+    private _options: Options;
     private onCalculated = new Subject();
-    private depthConverterFactory = new DepthConverterFactory(this.options);
-    private depthConverter: DepthConverter = this.depthConverterFactory.create();
-    private nitroxCalculator: NitroxCalculator = new NitroxCalculator(this.depthConverter);
+    private depthConverterFactory: DepthConverterFactory;
+    private depthConverter: DepthConverter;
+    private nitroxCalculator: NitroxCalculator;
 
     public get options(): Options {
         return this._options;
@@ -42,6 +42,11 @@ export class PlannerService {
     }
 
     constructor() {
+        this._options = new Options(0.4, 0.85, 1.4, 1.6, true);
+        this._options.addSafetyStop = true;
+        this.depthConverterFactory = new DepthConverterFactory(this.options);
+        this.depthConverter = this.depthConverterFactory.create();
+        this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
         const tank = Tank.createDefault();
         tank.id = 1;
         this._tanks.push(tank);

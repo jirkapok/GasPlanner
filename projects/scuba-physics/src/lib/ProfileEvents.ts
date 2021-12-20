@@ -106,7 +106,7 @@ export class ProfileEvents {
         const speed = Time.toSeconds(current.speed);
 
         // ascent speed is negative number
-        if (-speed > context.options.ascentSpeed) {
+        if (-speed > context.options.ascentSpeed6m) {
             const event = EventsFactory.createHighAscentSpeed(context.elapsed, current.startDepth);
             context.events.add(event);
         }

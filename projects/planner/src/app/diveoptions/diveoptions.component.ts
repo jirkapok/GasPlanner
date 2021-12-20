@@ -174,7 +174,7 @@ export class DiveOptionsComponent {
     public ascentSpeed75perc = 21;
 
     public get ascentSpeed6m(): number {
-        return this.planner.options.ascentSpeed;
+        return this.planner.options.ascentSpeed6m;
     }
 
     public set ascentSpeed6m(newValue: number) {
@@ -183,7 +183,7 @@ export class DiveOptionsComponent {
             return;
         }
 
-        this.planner.options.ascentSpeed = newValue;
+        this.planner.options.ascentSpeed6m = newValue;
         this.planner.calculate();
     }
 

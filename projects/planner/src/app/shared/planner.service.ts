@@ -58,7 +58,7 @@ export class PlannerService {
         this._tanks = this._tanks.slice(0, 1);
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
         this.setMediumConservatism();
-        this.options.ascentSpeed = Diver.ascSpeed;
+        this.options.ascentSpeed6m = Diver.ascSpeed;
         this.options.descentSpeed = Diver.descSpeed;
         this.options.roundStopsToMinutes = true;
         this.options.gasSwitchDuration = 1;

@@ -32,14 +32,14 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
     // TODO apply default values
 
     /**
-     * Usual Ascent speed of diver swim in depths from 75% of maximum depth in metres/minute up to 6 meters, default 6 meters/minute.
+     * Usual Ascent speed of diver swim in depths from 50% of average depth in metres/minute up to 6 meters, default 6 meters/minute.
      */
-    public ascentSpeed75percTo6m = 10;
+    public ascentSpeed50percTo6m = 10;
 
     /**
-     * Usual Ascent speed of diver swim in depths between 50% and 6 meters in metres/minute, default 9  meters/minute.
+     * Usual Ascent speed of diver swim in depths between 50% average depth and 6 meters in metres/minute, default 9  meters/minute.
      */
-    public ascentSpeed75perc = 10;
+    public ascentSpeed50perc = 10;
 
     /**
      * Usual descent speed used by the diver in metres/minute, default 20 meters/minute.
@@ -98,8 +98,8 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
         this.maxEND = other.maxEND || this.maxEND;
 
         this.ascentSpeed6m = other.ascentSpeed6m || this.ascentSpeed6m;
-        this.ascentSpeed75percTo6m = other.ascentSpeed75percTo6m || this.ascentSpeed75percTo6m;
-        this.ascentSpeed75perc = other.ascentSpeed75perc || this.ascentSpeed75perc;
+        this.ascentSpeed50percTo6m = other.ascentSpeed50percTo6m || this.ascentSpeed50percTo6m;
+        this.ascentSpeed50perc = other.ascentSpeed50perc || this.ascentSpeed50perc;
         this.descentSpeed = other.descentSpeed || this.descentSpeed;
     }
 }

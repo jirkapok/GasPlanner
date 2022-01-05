@@ -4,8 +4,8 @@ import { AscentSpeeds } from './speeds';
 describe('Speeds', () => {
     const sut = new AscentSpeeds({
         ascentSpeed6m: 3,
-        ascentSpeed75percTo6m: 6,
-        ascentSpeed75perc: 9
+        ascentSpeed50percTo6m: 6,
+        ascentSpeed50perc: 9
     });
 
     describe('Ascent', () => {

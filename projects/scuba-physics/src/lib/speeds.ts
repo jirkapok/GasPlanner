@@ -7,12 +7,12 @@ export interface SpeedOptions {
     /**
      * Usual Ascent speed of diver swim in depths from 75% of maximum depth in metres/minute up to 6 meters, default 6 meters/minute.
      */
-    ascentSpeed75percTo6m: number;
+    ascentSpeed50percTo6m: number;
 
     /**
      * Usual Ascent speed of diver swim in depths between 50% and 6 meters in metres/minute, default 9  meters/minute.
      */
-    ascentSpeed75perc: number;
+    ascentSpeed50perc: number;
 }
 
 export class AscentSpeeds {

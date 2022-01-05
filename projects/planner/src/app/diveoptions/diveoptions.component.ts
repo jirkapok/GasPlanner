@@ -169,7 +169,7 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    // Speeds
+    // TODO apply speeds from options
     public ascentSpeed50perc = 11;
     public ascentSpeed75perc = 21;
 

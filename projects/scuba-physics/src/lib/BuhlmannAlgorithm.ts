@@ -6,6 +6,7 @@ import { Time } from './Time';
 import { CalculatedProfile, Ceiling, Event} from './Profile';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
 import { Options } from './Options';
+import { AscentSpeeds } from './speeds';
 
 class DepthLevels {
     public static firstStop(currentDepth: number): number {
@@ -36,6 +37,7 @@ class AlgorithmContext {
     public runTime = 0;
     private gradients: GradientFactors;
     private bestGasOptions: BestGasOptions;
+    private speeds: AscentSpeeds;
 
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
@@ -51,6 +53,12 @@ class AlgorithmContext {
             maxEndPressure: this.depthConverter.toBar(this.options.maxEND),
             currentGas: this.currentGas
         };
+
+        this.speeds = new AscentSpeeds(this.options);
+    }
+
+    public get ascentSpeed(): number {
+        return this.speeds.ascent(this.currentDepth, this.segments.maxDepth);
     }
 
     public get currentDepth(): number {
@@ -128,7 +136,7 @@ export class BuhlmannAlgorithm {
 
             // 4. ascent to the nextStop
             const depthDifference = context.currentDepth - nextStop;
-            const duration = this.duration(depthDifference, options.ascentSpeed6m / Time.oneMinute);
+            const duration = this.duration(depthDifference, context.ascentSpeed / Time.oneMinute);
             const ascent = context.segments.add(context.currentDepth, nextStop, context.currentGas, duration);
             this.swim(context, ascent);
             nextStop = DepthLevels.nextStop(nextStop);

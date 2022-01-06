@@ -169,9 +169,31 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    // TODO apply speeds from options
-    public ascentSpeed50perc = 11;
-    public ascentSpeed75perc = 21;
+    public get ascentSpeed50perc(): number {
+        return this.planner.options.ascentSpeed50perc;
+    }
+
+    public set ascentSpeed50perc(newValue: number) {
+        if(newValue < 1) {
+            return;
+        }
+
+        this.planner.options.ascentSpeed50perc = newValue;
+        this.planner.calculate();
+    }
+
+    public get ascentSpeed50percTo6m(): number {
+        return this.planner.options.ascentSpeed50percTo6m;
+    }
+
+    public set ascentSpeed50percTo6m(newValue: number) {
+        if(newValue < 1) {
+            return;
+        }
+
+        this.planner.options.ascentSpeed50percTo6m = newValue;
+        this.planner.calculate();
+    }
 
     public get ascentSpeed6m(): number {
         return this.planner.options.ascentSpeed6m;

@@ -187,8 +187,8 @@
                     </div>
                     <div class="row mt-3">
                         <div class="mb-3 col-auto">
-                            <label for="ascSpeed2" class="form-label">Ascent up to 75% depth [m/min.]:</label>
-                            <input id="ascSpeed2" name="ascSpeed2" #ascSpeed2="ngModel" [(ngModel)]="ascentSpeed75perc"
+                            <label for="ascSpeed2" class="form-label">Ascent up to 6 m depth [m/min.]:</label>
+                            <input id="ascSpeed2" name="ascSpeed2" #ascSpeed2="ngModel" [(ngModel)]="ascentSpeed50percTo6m"
                                 class="form-control col-auto" type="number" required [rangeVal]="[1, 100]"
                                 [minVal]="1" [maxVal]="100" step="1" min="1" max="100"
                                 [class.is-invalid]="ascSpeed2.invalid && (ascSpeed2.dirty || ascSpeed2.touched)" />

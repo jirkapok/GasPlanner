@@ -3,7 +3,7 @@ import { Gases, Gas, BestGasOptions, GasesValidator } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Time } from './Time';
-import { CalculatedProfile, Ceiling, Event} from './Profile';
+import { CalculatedProfile, Ceiling, Event } from './Profile';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
 import { Options } from './Options';
 import { AscentSpeeds } from './speeds';
@@ -96,6 +96,36 @@ class AlgorithmContext {
 
 
 export class BuhlmannAlgorithm {
+    /**
+     * Calculates no decompression limit in minutes
+     * @param depth depth below surface in meters
+     * @param gas gas to use as the only one during the plan
+     * @param options conservatism options to be used
+     */
+    public noDecoLimit(depth: number, gas: Gas, options: Options): number {
+        const gases = new Gases();
+        gases.addBottomGas(gas);
+
+        const segments = new Segments();
+        const duration = this.duration(depth, options.descentSpeed);
+        segments.add(0, depth, gas, duration);
+
+        const depthConverter = new DepthConverterFactory(options).create();
+        const context = new AlgorithmContext(gases, segments, options, depthConverter);
+        return this.swimNoDecoLimit(segments, gases, context, options);
+    }
+
+    /**
+     * Calculates no decompression limit in minutes
+     * @param segments Already realized part of the dive
+     * @param options conservatism options to be used
+     */
+    public noDecoLimitMultiLevel(segments: Segments, gases: Gases, options: Options): number {
+        const depthConverter = new DepthConverterFactory(options).create();
+        const context = new AlgorithmContext(gases, segments, options, depthConverter);
+        return this.swimNoDecoLimit(segments, gases, context, options);
+    }
+
     public calculateDecompression(options: Options, gases: Gases, originSegments: Segments): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
         const segments = originSegments.copy();
@@ -207,36 +237,6 @@ export class BuhlmannAlgorithm {
         context.tissues.load(loadSegment, segment.gas);
         context.runTime += segment.duration;
         context.addCeiling();
-    }
-
-    /**
-     * Calculates no decompression limit in minutes
-     * @param depth depth below surface in meters
-     * @param gas gas to use as the only one during the plan
-     * @param options conservatism options to be used
-     */
-    public noDecoLimit(depth: number, gas: Gas, options: Options): number {
-        const gases = new Gases();
-        gases.addBottomGas(gas);
-
-        const segments = new Segments();
-        const duration = this.duration(depth, options.descentSpeed);
-        segments.add(0, depth, gas, duration);
-
-        const depthConverter = new DepthConverterFactory(options).create();
-        const context = new AlgorithmContext(gases, segments, options, depthConverter);
-        return this.swimNoDecoLimit(segments, gases, context, options);
-    }
-
-    /**
-     * Calculates no decompression limit in minutes
-     * @param segments Already realized part of the dive
-     * @param options conservatism options to be used
-     */
-    public noDecoLimitMultiLevel(segments: Segments, gases: Gases, options: Options): number {
-        const depthConverter = new DepthConverterFactory(options).create();
-        const context = new AlgorithmContext(gases, segments, options, depthConverter);
-        return this.swimNoDecoLimit(segments, gases, context, options);
     }
 
     /**

@@ -16,10 +16,16 @@ export interface SpeedOptions {
 }
 
 export class AscentSpeeds {
+    // in meters
+    public averageDepth = 0;
+
     constructor(private options: SpeedOptions) { }
 
-    /** current and max depth in meters */
-    public ascent(currentDepth: number, maxDepth: number): number {
+    /** current depth in meters */
+    public ascent(currentDepth: number): number {
+        // TODO fix the calculation of current ascent speed
+        // get average depth from current segment at start of ascent
+        // calculate 50percent of depth from average depth as first checkpoint
         return this.options.ascentSpeed6m;
     }
 }

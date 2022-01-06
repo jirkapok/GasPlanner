@@ -58,8 +58,13 @@ class AlgorithmContext {
         this.speeds = new AscentSpeeds(this.options);
     }
 
+    // use this just before calculating ascent to be able calculate correct speeds
+    public markAverageDepth(): void {
+        this.speeds.averageDepth = Segments.averageDepth(this.segments.items);
+    }
+
     public get ascentSpeed(): number {
-        return this.speeds.ascent(this.currentDepth, this.segments.maxDepth);
+        return this.speeds.ascent(this.currentDepth);
     }
 
     public get currentDepth(): number {
@@ -137,6 +142,7 @@ export class BuhlmannAlgorithm {
 
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
         this.swimPlan(context);
+        context.markAverageDepth();
 
         let nextStop = DepthLevels.firstStop(context.currentDepth);
 

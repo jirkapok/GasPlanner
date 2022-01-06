@@ -106,6 +106,7 @@ export class ProfileEvents {
         const speed = Time.toSeconds(current.speed);
 
         // ascent speed is negative number
+        // TODO fix ascent speed for current depth
         if (-speed > context.options.ascentSpeed6m) {
             const event = EventsFactory.createHighAscentSpeed(context.elapsed, current.startDepth);
             context.events.add(event);

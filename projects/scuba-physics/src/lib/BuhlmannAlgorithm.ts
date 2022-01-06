@@ -10,6 +10,7 @@ import { AscentSpeeds } from './speeds';
 
 class DepthLevels {
     public static firstStop(currentDepth: number): number {
+        // TODO consider move the decoStopDistance out of the depth converter
         if (currentDepth <= DepthConverter.decoStopDistance) {
             return 0;
         }
@@ -135,8 +136,9 @@ export class BuhlmannAlgorithm {
             }
 
             // 4. ascent to the nextStop
+            // TODO Next stop can be speed change
             const depthDifference = context.currentDepth - nextStop;
-            const duration = this.duration(depthDifference, context.ascentSpeed / Time.oneMinute);
+            const duration = this.duration(depthDifference, context.ascentSpeed);
             const ascent = context.segments.add(context.currentDepth, nextStop, context.currentGas, duration);
             this.swim(context, ascent);
             nextStop = DepthLevels.nextStop(nextStop);
@@ -173,8 +175,10 @@ export class BuhlmannAlgorithm {
         this.swim(context, stop);
     }
 
+    // Speed in meters / min.
     private duration(depthDifference: number, speed: number): number {
-        return depthDifference / speed;
+        const meterPerSec = speed / Time.oneMinute;
+        return depthDifference / meterPerSec;
     }
 
     private swimPlan(context: AlgorithmContext): void {
@@ -216,7 +220,7 @@ export class BuhlmannAlgorithm {
         gases.addBottomGas(gas);
 
         const segments = new Segments();
-        const duration = this.duration(depth, options.descentSpeed / Time.oneMinute);
+        const duration = this.duration(depth, options.descentSpeed);
         segments.add(0, depth, gas, duration);
 
         const depthConverter = new DepthConverterFactory(options).create();

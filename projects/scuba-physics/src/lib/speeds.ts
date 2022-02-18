@@ -25,7 +25,6 @@ export class AscentSpeeds {
 
     /** current depth in meters */
     public ascent(currentDepth: number): number {
-        // TODO average depth from current segment at start of ascent
         const halfTo6m = this.averageDepth / 2;
 
         if (currentDepth > AscentSpeeds.sixMeters) {

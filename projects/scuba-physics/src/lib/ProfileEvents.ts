@@ -3,6 +3,7 @@ import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Ceiling, EventsFactory, Events, Event } from './Profile';
 import { Segment } from './Segments';
 import { Time } from './Time';
+import { AscentSpeeds } from './speeds';
 
 
 /** all values in bar */
@@ -35,11 +36,15 @@ class PressureSegment {
 
 class EventsContext {
     public events: Events = new Events();
+    public speeds: AscentSpeeds;
     public elapsed = 0;
     public index = 0;
 
     constructor(private userSegments: number, private profile: Segment[],
-        public depthConverter: DepthConverter, public options: Options) { }
+        public depthConverter: DepthConverter, public options: Options) {
+        this.speeds = new AscentSpeeds(options);
+        // TODO update average depth
+    }
 
     public get previous(): Segment | null {
         if (this.index > 0) {
@@ -50,7 +55,7 @@ class EventsContext {
     }
 
     public get isUserSegment(): boolean {
-        return  this.index < this.userSegments;
+        return this.index < this.userSegments;
     }
 
     public get maxPpo(): number {
@@ -92,7 +97,7 @@ export class ProfileEvents {
             this.addHighAscentSpeed(context);
             context.elapsed += context.current.duration;
 
-            if(!ceilingContext.eventAdded) {
+            if (!ceilingContext.eventAdded) {
                 ceilingContext.assignSegment(context.current);
                 ProfileEvents.validateBrokenCeiling(ceilingContext, ceilings, context.current);
             }
@@ -154,9 +159,9 @@ export class ProfileEvents {
     private static addLowPpO2(context: EventsContext, segment: PressureSegment): void {
         const gasCeiling = context.current.gas.ceiling(context.depthConverter.surfacePressure);
         const shouldAdd = (segment.minDepth < gasCeiling && context.switchingGas) ||
-                          ( segment.startDepth > gasCeiling && gasCeiling > segment.endDepth && segment.isAscent) ||
-                          // only at beginning of a dive
-                          (context.current.startDepth === 0 && segment.startDepth < gasCeiling && segment.isDescent);
+            (segment.startDepth > gasCeiling && gasCeiling > segment.endDepth && segment.isAscent) ||
+            // only at beginning of a dive
+            (context.current.startDepth === 0 && segment.startDepth < gasCeiling && segment.isDescent);
 
         // only crossing the line or gas switch
         if (shouldAdd) {

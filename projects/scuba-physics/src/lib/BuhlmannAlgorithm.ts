@@ -151,7 +151,6 @@ export class BuhlmannAlgorithm {
             }
 
             // 4. ascent to the nextStop
-            // TODO Next stop can be speed change
             const depthDifference = context.currentDepth - nextStop;
             const duration = this.duration(depthDifference, context.ascentSpeed);
             const ascent = context.segments.add(context.currentDepth, nextStop, context.currentGas, duration);

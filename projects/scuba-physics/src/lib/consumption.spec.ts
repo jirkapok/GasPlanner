@@ -4,14 +4,14 @@ import { Tank } from './Tanks';
 import { Consumption } from './consumption';
 import { Time } from './Time';
 import { Segment, Segments } from './Segments';
-import { Options } from './Options';
+import { OptionExtensions } from './Options.spec';
 
 describe('Consumption', () => {
     const diver = new Diver(20, 1.6);
     const consumption = new Consumption(DepthConverter.forFreshWater());
 
     describe('Max bottom time', () => {
-        const options = new Options(0.4, 0.85, 1.4, 1.6, true);
+        const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, true);
         options.addSafetyStop = true;
 
         it('Is calculated for default simple plan', () => {

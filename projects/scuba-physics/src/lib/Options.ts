@@ -10,11 +10,12 @@ export class OptionDefaults {
     public static readonly gasSwitchDuration = 1;
     public static readonly addSafetyStop = false;
     public static readonly maxEND = 30;
-    // TODO fix speed default values
-    public static readonly ascentSpeed6m = 10;
-    public static readonly ascentSpeed50percTo6m = 10;
-    public static readonly ascentSpeed50perc = 10;
-    public static readonly descentSpeed = 20;
+
+    public static readonly ascentSpeed6m = 3;
+    public static readonly ascentSpeed50percTo6m = 6;
+    public static readonly ascentSpeed50perc = 9;
+    public static readonly descentSpeed = 18;
+
     public static readonly gfLow = 0.4;
     public static readonly gfHigh = 0.85;
     public static readonly maxPpO2 = 1.4;

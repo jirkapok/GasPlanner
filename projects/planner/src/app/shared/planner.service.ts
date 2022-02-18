@@ -6,7 +6,7 @@ import { WayPointsService } from './waypoints.service';
 import {
     NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
-    Diver, SegmentsFactory, Consumption, Segment, Gases, Segments
+    Diver, SegmentsFactory, Consumption, Segment, Gases, Segments, OptionDefaults
 } from 'scuba-physics';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class PlannerService {
     public static readonly maxAcceptableNdl = 1000;
     public isComplex = false;
     public plan: Plan;
-    public diver: Diver = new Diver(20, 1.4);
+    public diver: Diver = new Diver();
     // there always needs to be at least one
     public dive: Dive = new Dive();
     public calculated;
@@ -42,7 +42,8 @@ export class PlannerService {
     }
 
     constructor() {
-        this._options = new Options(0.4, 0.85, 1.4, 1.6, true);
+        this._options = new Options();
+        this._options.isFreshWater = true;
         this._options.addSafetyStop = true;
         this.depthConverterFactory = new DepthConverterFactory(this.options);
         this.depthConverter = this.depthConverterFactory.create();
@@ -58,8 +59,10 @@ export class PlannerService {
         this._tanks = this._tanks.slice(0, 1);
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
         this.setMediumConservatism();
-        this.options.ascentSpeed6m = Diver.ascSpeed;
-        this.options.descentSpeed = Diver.descSpeed;
+        this.options.ascentSpeed6m = OptionDefaults.ascentSpeed6m;
+        this.options.ascentSpeed50percTo6m = OptionDefaults.ascentSpeed50percTo6m;
+        this.options.ascentSpeed50perc = OptionDefaults.ascentSpeed50perc;
+        this.options.descentSpeed = OptionDefaults.descentSpeed;
         this.options.roundStopsToMinutes = true;
         this.options.gasSwitchDuration = 1;
         this.safetyStopByDepth();

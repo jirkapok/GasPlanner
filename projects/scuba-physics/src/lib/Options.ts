@@ -2,49 +2,68 @@ import { DepthOptions } from './depth-converter';
 import { GasOptions } from './Gases';
 import { SpeedOptions } from './speeds';
 
+
+// See Options for values meaning
+export class OptionDefaults {
+    public static readonly altitude = 0;
+    public static readonly roundStopsToMinutes = true;
+    public static readonly gasSwitchDuration = 1;
+    public static readonly addSafetyStop = false;
+    public static readonly maxEND = 30;
+    // TODO fix speed default values
+    public static readonly ascentSpeed6m = 10;
+    public static readonly ascentSpeed50percTo6m = 10;
+    public static readonly ascentSpeed50perc = 10;
+    public static readonly descentSpeed = 20;
+    public static readonly gfLow = 0.4;
+    public static readonly gfHigh = 0.85;
+    public static readonly maxPpO2 = 1.4;
+    public static readonly maxDecoPpO2 = 1.6;
+    public static readonly isFreshWater = false;
+}
+
 export class Options implements GasOptions, DepthOptions, SpeedOptions {
     /**
      * meters above see level, 0 for see level (default)
      */
-    public altitude = 0;
+    public altitude = OptionDefaults.altitude;
 
     /** If true (default) deco stops are rounded up to whole minutes (I.e. longer ascent).
      *  Otherwise, length of stops is not rounded and profile generates precise stops in seconds .  */
-    public roundStopsToMinutes = true;
+    public roundStopsToMinutes = OptionDefaults.roundStopsToMinutes;
 
     /** Gas switch stop length in minutes */
-    public gasSwitchDuration = 1;
+    public gasSwitchDuration = OptionDefaults.gasSwitchDuration;
 
     /**
      * If true, adds 3 minutes to last stop in 3 meters
      */
-    public addSafetyStop = false;
+    public addSafetyStop = OptionDefaults.addSafetyStop;
 
     /**
      * Maximum equivalent air narcotic depth in meters, default 30 meters
      */
-    public maxEND = 30;
+    public maxEND = OptionDefaults.maxEND;
 
     /**
      * Usual Ascent speed of diver swim in depths below 6 meters in metres/minute, default 3 meters/minute.
      */
-    public ascentSpeed6m = 10;
-    // TODO apply default values
+    public ascentSpeed6m = OptionDefaults.ascentSpeed6m;
 
     /**
      * Usual Ascent speed of diver swim in depths from 50% of average depth in metres/minute up to 6 meters, default 6 meters/minute.
      */
-    public ascentSpeed50percTo6m = 10;
+    public ascentSpeed50percTo6m = OptionDefaults.ascentSpeed50percTo6m;
 
     /**
      * Usual Ascent speed of diver swim in depths between 50% average depth and 6 meters in metres/minute, default 9  meters/minute.
      */
-    public ascentSpeed50perc = 10;
+    public ascentSpeed50perc = OptionDefaults.ascentSpeed50perc;
 
     /**
-     * Usual descent speed used by the diver in metres/minute, default 20 meters/minute.
+     * Usual descent speed used by the diver in metres/minute, default 18 meters/minute.
      */
-    public descentSpeed = 20;
+    public descentSpeed = OptionDefaults.descentSpeed;
 
     constructor(
         // Gradient factors in Shearwater
@@ -55,33 +74,33 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
         /**
          * Low gradient factor  in range 0-1 (e.g 0-100%), default 0.4
          */
-        public gfLow: number,
+        public gfLow: number = OptionDefaults.gfLow,
 
         /**
          * Hight gradient factor in range 0-1 (e.g 0-100%), default 0.85
          */
-        public gfHigh: number,
+        public gfHigh: number = OptionDefaults.gfHigh,
 
         /**
          * Maximum pp02 to be used during the dive in range 0.21-1.6, default 1.4
          */
-        public maxPpO2: number,
+        public maxPpO2: number = OptionDefaults.maxPpO2,
 
         /**
          * Maximum pp02 to be used during decompression in range 0.21-1.6, default 1.6
          */
-        public maxDecoPpO2: number,
+        public maxDecoPpO2: number = OptionDefaults.maxDecoPpO2,
 
         /**
          * Select water salinity, default false (salt water)
          */
-        public isFreshWater: boolean
+        public isFreshWater: boolean = OptionDefaults.isFreshWater
     ) {
-        this.gfLow = gfLow || 0.4;
-        this.gfHigh = gfHigh || 0.85;
-        this.maxPpO2 = maxPpO2 || 1.4;
-        this.maxDecoPpO2 = maxDecoPpO2 || 1.6;
-        this.isFreshWater = isFreshWater || false;
+        this.gfLow = gfLow || OptionDefaults.gfLow;
+        this.gfHigh = gfHigh || OptionDefaults.gfHigh;
+        this.maxPpO2 = maxPpO2 || OptionDefaults.maxPpO2;
+        this.maxDecoPpO2 = maxDecoPpO2 || OptionDefaults.maxDecoPpO2;
+        this.isFreshWater = isFreshWater || OptionDefaults.isFreshWater;
     }
 
     public loadFrom(other: Options): void {

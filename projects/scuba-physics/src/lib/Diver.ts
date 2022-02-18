@@ -1,19 +1,17 @@
+import { OptionDefaults } from './Options';
 import { Tank } from './Tanks';
 
 export class Diver {
-    /** default descent speed value in meter/min. */
-    public static readonly descSpeed = 20;
-    /** default ascent speed value in meter/min. */
-    public static readonly ascSpeed = 10;
-
+    // liters/min
+    public static readonly defaultSac = 20;
     /** Maximum ppO2 during decompression */
-    public maxDecoPpO2 = 1.6;
+    public maxDecoPpO2 = OptionDefaults.maxDecoPpO2;
 
     /**
      * @param sac liter/min
      * @param maxPpO2 maximal partial pressure of o2 in range 0-3
      */
-    constructor(public sac: number, public maxPpO2: number) {
+    constructor(public sac: number = Diver.defaultSac, public maxPpO2: number = OptionDefaults.maxPpO2) {
     }
 
     /** liter/min as 3x sac */

@@ -196,5 +196,23 @@ describe('Profile Events', () => {
             expect(events.items.length).toBe(1);
             expect(firstError.type).toBe(EventType.brokenCeiling);
         });
+
+        it('Doesn`t break ceiling', () => {
+            const gases = new Gases();
+            gases.addBottomGas(StandardGases.air);
+
+            const segments = new Segments();
+            segments.add(0, 16, StandardGases.air, 1.25 * Time.oneMinute);
+            segments.addFlat(16, StandardGases.air, 118.75 * Time.oneMinute);
+
+            const algorithm = new BuhlmannAlgorithm();
+            const defaultOptions = new Options(0.4, 0.85, 1.4, 1.6, true);
+            defaultOptions.addSafetyStop = true;
+            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
+            const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+            const firstError = events.items[0];
+            // timeStamp: 7639
+            expect(events.items.length).toBe(0);
+        });
     });
 });

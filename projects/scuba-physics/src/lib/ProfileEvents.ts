@@ -92,7 +92,7 @@ export class ProfileEvents {
             this.addHighAscentSpeed(context);
             context.elapsed += context.current.duration;
 
-            if(!ceilingContext.added) {
+            if(!ceilingContext.eventAdded) {
                 ceilingContext.assignSegment(context.current);
                 ProfileEvents.validateBrokenCeiling(ceilingContext, ceilings, context.current);
             }
@@ -168,7 +168,7 @@ export class ProfileEvents {
 
     /** Check only user defined segments break ceiling, because we trust the algorithm never breaks ceiling */
     private static validateBrokenCeiling(context: BrokenCeilingContext, ceilings: Ceiling[], segment: Segment): void {
-        while (context.lastCeilingIndex < ceilings.length - 1) {
+        while (context.lastCeilingIndex < context.currentSegmentEndTime && context.lastCeilingIndex < ceilings.length - 1) {
             const ceiling = ceilings[context.lastCeilingIndex];
             context.lastCeilingIndex++;
 
@@ -189,7 +189,7 @@ class BrokenCeilingContext {
     public lastCeilingIndex = 0; // prevents search in past ceilings
     public currentSegmentStartTime = 0;
     public currentSegmentEndTime = 0;
-    public added = false;
+    public eventAdded = false;
 
     constructor(private events: Events) {
     }
@@ -207,6 +207,6 @@ class BrokenCeilingContext {
 
     public add(event: Event): void {
         this.events.add(event);
-        this.added = true;
+        this.eventAdded = true;
     }
 }

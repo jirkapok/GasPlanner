@@ -309,7 +309,12 @@ export class SegmentsFactory {
 
     /** Calculates duration in seconds for descent from surface to target depth (meters) based on descent speed */
     public static descentDuration(targetDepth: number, options: Options): number {
-        return Time.toSeconds(targetDepth / options.descentSpeed);
+        // to avoid precise numbers lik 1.6666 minutes when using speed 18 meters/min
+        let estimate = targetDepth / options.descentSpeed;
+        // loosing precision +-6 seconds acceptable rounding
+        estimate = Math.ceil(estimate * 10) / 10;
+        estimate =Time.toSeconds(estimate);
+        return  Math.ceil(estimate);
     }
 
     /**

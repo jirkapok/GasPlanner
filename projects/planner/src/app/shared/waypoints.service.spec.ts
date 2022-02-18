@@ -1,11 +1,12 @@
 import { WayPointsService } from './waypoints.service';
 import { Plan, Strategies } from './models';
-import { Options, Tank } from 'scuba-physics';
+import { Tank } from 'scuba-physics';
+import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 
 describe('WayPointsService', () => {
     const airTank = new Tank(12, 200, 21);
     const gases = [airTank];
-    const options = new Options(0.4, 0.85, 1.4, 1.6, true);
+    const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, true);
 
     it('40m for 20 min calculates all way points', () => {
         const plan = new Plan(Strategies.ALL, 40, 20, airTank, options);

@@ -2,6 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { PreferencesService } from './preferences.service';
 import { PlannerService } from './planner.service';
 import { Diver, Options, Tank } from 'scuba-physics';
+import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -60,6 +61,7 @@ describe('PreferencesService', () => {
 
         it('Tanks are loaded after save', inject([PreferencesService, PlannerService],
             (service: PreferencesService, planner: PlannerService) => {
+                OptionExtensions.applySimpleSpeeds(planner.options);
                 const tanks = planner.tanks;
                 planner.addTank();
                 tanks[0].startPressure = 150;

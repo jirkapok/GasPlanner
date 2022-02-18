@@ -1,11 +1,14 @@
 import { Options, Segment } from 'scuba-physics';
 import { PlannerService } from './planner.service';
+import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
 
     beforeEach(() => {
         planner = new PlannerService();
+        OptionExtensions.applySimpleSpeeds(planner.options);
+        planner.assignDepth(30); // to enforce plan to be updated
     });
 
     describe('no deco limit', () => {
@@ -17,6 +20,7 @@ describe('PlannerService', () => {
 
     describe('30m for 15 minutes Calculates (defaults)', () => {
         it('8 minutes time to surface', () => {
+
             planner.calculate();
             expect(planner.dive.timeToSurface).toBe(8);
         });
@@ -175,14 +179,16 @@ describe('PlannerService', () => {
         describe('When NOT yet calculated', () => {
             // this value is used as minimum for simple profiles to be able descent
             // with default speed to default depth 30m.
-            const descentOnly = 1.5;
+            const descentOnly = 1.7;
 
             it('Max bottom time is NOT applied', ()=> {
+                planner = new PlannerService();
                 planner.applyMaxDuration();
                 expect(planner.plan.duration).toBe(descentOnly);
             });
 
             it('No deco limit is NOT applied', ()=> {
+                planner = new PlannerService();
                 planner.applyNdlDuration();
                 expect(planner.plan.duration).toBe(descentOnly);
             });

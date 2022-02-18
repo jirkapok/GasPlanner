@@ -66,7 +66,7 @@ export interface BestGasOptions {
 }
 
 export class Gases {
-    // TODO do we need to distinguish the gas usage?
+    // TODO do we need to distinguish the gas usage? - no by assigning ppO2 per each gas
     private decoGases: Gas[] = [];
     private bottomGases: Gas[] = [];
 

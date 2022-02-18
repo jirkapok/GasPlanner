@@ -1,3 +1,4 @@
+import { DepthLevels } from './DepthLevels';
 import { Density, Gravity, AltitudePressure, PressureConverter } from './pressure-converter';
 
 export interface DepthOptions {
@@ -20,11 +21,6 @@ export class DepthConverterFactory {
 }
 
 export class DepthConverter {
-    /**
-     * Depth difference between two deco stops in metres.
-     */
-    public static readonly decoStopDistance = 3;
-
     private _surfacePressure: number;
 
     private constructor(private density: number, altitude: number) {
@@ -86,6 +82,6 @@ export class DepthConverter {
      */
     public toDecoStop(depthPressure: number): number {
         const depth = this.fromBar(depthPressure);
-        return Math.round(depth / DepthConverter.decoStopDistance) * DepthConverter.decoStopDistance;
+        return DepthLevels.roundToDeco(depth);
     }
 }

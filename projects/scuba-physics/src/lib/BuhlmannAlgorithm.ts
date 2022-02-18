@@ -7,28 +7,7 @@ import { CalculatedProfile, Ceiling, Event } from './Profile';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
 import { Options } from './Options';
 import { AscentSpeeds } from './speeds';
-
-class DepthLevels {
-    public static firstStop(currentDepth: number): number {
-        // TODO consider move the decoStopDistance out of the depth converter
-        if (currentDepth <= DepthConverter.decoStopDistance) {
-            return 0;
-        }
-
-        const rounded = Math.floor(currentDepth / DepthConverter.decoStopDistance) * DepthConverter.decoStopDistance;
-
-        if (rounded === currentDepth) {
-            return currentDepth - DepthConverter.decoStopDistance;
-        }
-
-        return rounded;
-    }
-
-    /** return negative number for ascent to surface */
-    public static nextStop(lastStop: number): number {
-        return lastStop - DepthConverter.decoStopDistance;
-    }
-}
+import { DepthLevels } from './DepthLevels';
 
 class AlgorithmContext {
     public tissues: Tissues;
@@ -165,7 +144,7 @@ export class BuhlmannAlgorithm {
             }
 
             // 3. safety stop
-            if (options.addSafetyStop && context.currentDepth === DepthConverter.decoStopDistance) {
+            if (options.addSafetyStop && context.currentDepth === DepthLevels.decoStopDistance) {
                 const safetyStopDuration = Time.oneMinute * 3;
                 const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, safetyStopDuration);
                 this.swim(context, decoStop);

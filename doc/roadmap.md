@@ -4,7 +4,6 @@ Following list of features and improvements ordered by priority is under develop
 
 Known issues:
 
-* Don't reset any value except depth and speeds in case switching to simple mode
 * Reserve counts only non user defined segments as emergency ascent (Doesn't handle all multilevel scenarios)
 * Gas oxygen content spinner shows not rounded number, where it shouldn't
 * Fix rock bottom calculation case where part of the ascent is user defined: air 24L/200bar, S80 EAN50, 18m/120 min. +ascent to 6m on air. The rock bottom ISNT 200bar for EAN50.
@@ -14,14 +13,15 @@ Improvements:
 * Allow to define multiple levels
   * Add option to define last stop/safety stop range
   * Allow to define multiple ascent speeds - will break all Algorithm tests
-* UI tweaks
-  * Add to dive info: total deco, if any
-  * Add option to reduce plan table only to list of stops
-  * Add other events to profile chart like gas switch
 * Events:
   * Add time to the events warning/error messages
   * Add narcotic depth exceeded warning event
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
+* Add TRIMIX support and calculator
+  * Add option to define maximum narcotic depth
+  * Add option to count oxygen in narcotic gas in narcotic depth calculation
+  * Add air breaks
+  * Don't switch to gas with higher content of Nitrox warning - <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
 * Add imperial units option
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
     * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
@@ -29,14 +29,15 @@ Improvements:
   * Meter: <https://en.wikipedia.org/wiki/Metre_sea_water>
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
 * Add no deco table
-* Add TRIMIX support and calculator
-  * Add option to define maximum narcotic depth
-  * Add option to count oxygen in narcotic gas in narcotic depth calculation
-  * Add air breaks
-  * Don't switch to gas with higher content of Nitrox warning - <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
 * UI tweaks
+  * Add gas index to the depths dropdown in extended mode
+  * Add to dive info: total deco, if any
+  * Add option to reduce plan table only to list of stops
+  * Add other events to profile chart like gas switch
   * Add max. narc. depth to the Gas label
-  * Add button to apply best mix for selected depth
+  * Don't reset any value except depth and speeds in case switching to simple mode
+    * Add "Apply recreational" button to options
+    * Add "Apply recommended" button to speed options
 * Help
   * Update the documentation to latest state of the application
   * Add help to the UI as side bar
@@ -47,9 +48,9 @@ Improvements:
 * Add all settings as url parameters so user can share the profile using an url (<https://angular.io/guide/router#link-parameters-array>)
 * Add option to define repetitive dives
   * Unify dive settings and default settings
+* Extend salinity by adding Brackish water (EN13319)
 * Add CNS and OTU calculations
   * <https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf>
   * <https://gue.com/blog/pulmonary-oxygen-toxicity-expanding-our-understanding-with-two-new-models/>
   * <https://thetheoreticaldiver.org/wordpress/index.php/tag/oxygen/>
-* Add option to define deep stops
 * Allow user to compare multiple plans side by side

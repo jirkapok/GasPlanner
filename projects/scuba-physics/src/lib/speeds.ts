@@ -5,7 +5,8 @@ export interface SpeedOptions {
     ascentSpeed6m: number;
 
     /**
-     * Usual Ascent speed of diver swim in depths from 75% of maximum depth in metres/minute up to 6 meters, default 6 meters/minute.
+     * Usual Ascent speed of diver swim in depths from 75% of maximum depth (50% of average depth)
+     * in metres/minute up to 6 meters, default 6 meters/minute.
      */
     ascentSpeed50percTo6m: number;
 
@@ -16,6 +17,7 @@ export interface SpeedOptions {
 }
 
 export class AscentSpeeds {
+    private static readonly sixMeters = 6;
     // in meters
     public averageDepth = 0;
 
@@ -23,9 +25,17 @@ export class AscentSpeeds {
 
     /** current depth in meters */
     public ascent(currentDepth: number): number {
-        // TODO fix the calculation of current ascent speed
-        // get average depth from current segment at start of ascent
-        // calculate 50percent of depth from average depth as first checkpoint
+        // TODO average depth from current segment at start of ascent
+        const halfTo6m = this.averageDepth / 2;
+
+        if (currentDepth > AscentSpeeds.sixMeters) {
+            if (currentDepth > halfTo6m) {
+                return this.options.ascentSpeed50perc;
+            }
+
+            return this.options.ascentSpeed50percTo6m;
+        }
+
         return this.options.ascentSpeed6m;
     }
 }

@@ -4,8 +4,10 @@ Following list of features and improvements ordered by priority is under develop
 
 Known issues:
 
+* Don't reset any value except depth and speeds in case switching to simple mode
 * Reserve counts only non user defined segments as emergency ascent (Doesn't handle all multilevel scenarios)
 * Gas oxygen content spinner shows not rounded number, where it shouldn't
+* Fix rock bottom calculation case where part of the ascent is user defined: air 24L/200bar, S80 EAN50, 18m/120 min. +ascent to 6m on air. The rock bottom ISNT 200bar for EAN50.
 
 Improvements:
 
@@ -31,6 +33,7 @@ Improvements:
   * Add option to define maximum narcotic depth
   * Add option to count oxygen in narcotic gas in narcotic depth calculation
   * Add air breaks
+  * Don't switch to gas with higher content of Nitrox warning - <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
 * UI tweaks
   * Add max. narc. depth to the Gas label
   * Add button to apply best mix for selected depth
@@ -45,5 +48,8 @@ Improvements:
 * Add option to define repetitive dives
   * Unify dive settings and default settings
 * Add CNS and OTU calculations
+  * <https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf>
+  * <https://gue.com/blog/pulmonary-oxygen-toxicity-expanding-our-understanding-with-two-new-models/>
+  * <https://thetheoreticaldiver.org/wordpress/index.php/tag/oxygen/>
 * Add option to define deep stops
 * Allow user to compare multiple plans side by side

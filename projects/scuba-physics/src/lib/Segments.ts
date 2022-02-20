@@ -273,6 +273,22 @@ export class Segments {
         }
     }
 
+    /**
+    * Returns all segments up to the first deepest point.
+    * In case of multiple depths the average on the second occurrence wil be smaller.
+    */
+    public deepestPart(): Segment[] {
+        for (let index = 0; index < this.segments.length; index++) {
+            if(this.segments[index].endDepth === this.maxDepth &&
+               // following isn't flat, otherwise we also need that
+               (index + 1 === this.segments.length || this.segments[index + 1].endDepth !== this.maxDepth)) {
+                return this.items.slice(0, index + 1);
+            }
+        }
+
+        return [];
+    }
+
     private updateMaxDepth(segment: Segment): void {
         if (segment.endDepth > this._maxDepth) {
             this._maxDepth = segment.endDepth;

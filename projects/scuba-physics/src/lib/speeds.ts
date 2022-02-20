@@ -1,3 +1,5 @@
+import { Segments } from './Segments';
+
 export interface SpeedOptions {
     /**
      * Usual Ascent speed of diver swim in depths below 6 meters in metres/minute, default 3 meters/minute.
@@ -22,6 +24,11 @@ export class AscentSpeeds {
     public averageDepth = 0;
 
     constructor(private options: SpeedOptions) { }
+
+    public markAverageDepth(profile: Segments): void {
+        const deepestPart = profile.deepestPart();
+        this.averageDepth = Segments.averageDepth(deepestPart);
+    }
 
     /** current depth in meters */
     public ascent(currentDepth: number): number {

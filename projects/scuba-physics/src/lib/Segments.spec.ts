@@ -228,4 +228,47 @@ describe('Segments', () => {
             expect(averageDepth).toBe(30);
         });
     });
+
+    describe('Deepest part', () => {
+        it('No elements = empty result', () => {
+            const segments = new Segments();
+            const deepestPart = segments.deepestPart();
+            expect(deepestPart.length).toBe(0);
+        });
+
+        it('Last segment is deepest', () => {
+            const segments = new Segments();
+            segments.addChangeTo(20, StandardGases.air, 1);
+            segments.addChangeTo(40, StandardGases.air, 1);
+            const deepestPart = segments.deepestPart();
+            expect(deepestPart.length).toBe(2);
+        });
+
+        it('First segment is deepest', () => {
+            const segments = new Segments();
+            segments.addChangeTo(40, StandardGases.air, 1);
+            segments.addChangeTo(20, StandardGases.air, 1);
+            const deepestPart = segments.deepestPart();
+            expect(deepestPart.length).toBe(1);
+        });
+
+        it('Flat after deepest', () => {
+            const segments = new Segments();
+            segments.addChangeTo(40, StandardGases.air, 1);
+            segments.addFlat(40, StandardGases.air, 1);
+            const deepestPart = segments.deepestPart();
+            expect(deepestPart.length).toBe(2);
+        });
+
+        it('First deepest segments in Multi level', () => {
+            const segments = new Segments();
+            segments.addChangeTo(20, StandardGases.air, 1);
+            segments.addChangeTo(40, StandardGases.air, 1);
+            segments.addChangeTo(20, StandardGases.air, 1);
+            segments.addChangeTo(40, StandardGases.air, 1);
+            segments.addChangeTo(20, StandardGases.air, 1);
+            const deepestPart = segments.deepestPart();
+            expect(deepestPart.length).toBe(2);
+        });
+    });
 });

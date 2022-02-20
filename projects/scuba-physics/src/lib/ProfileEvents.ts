@@ -1,7 +1,7 @@
 import { Options } from './Options';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Ceiling, EventsFactory, Events, Event } from './Profile';
-import { Segment } from './Segments';
+import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { AscentSpeeds } from './speeds';
 
@@ -43,7 +43,8 @@ class EventsContext {
     constructor(private userSegments: number, private profile: Segment[],
         public depthConverter: DepthConverter, public options: Options) {
         this.speeds = new AscentSpeeds(options);
-        // TODO update average depth
+        const segments = Segments.fromCollection(profile);
+        this.speeds.markAverageDepth(segments);
     }
 
     public get previous(): Segment | null {
@@ -111,8 +112,7 @@ export class ProfileEvents {
         const speed = Time.toSeconds(current.speed);
 
         // ascent speed is negative number
-        // TODO fix ascent speed for current depth
-        if (-speed > context.options.ascentSpeed6m) {
+        if (-speed > context.speeds.ascent(current.startDepth)) {
             const event = EventsFactory.createHighAscentSpeed(context.elapsed, current.startDepth);
             context.events.add(event);
         }

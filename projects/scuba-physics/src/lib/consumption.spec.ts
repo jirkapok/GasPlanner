@@ -36,7 +36,7 @@ describe('Consumption', () => {
             segments.addFlat(40, airTank.gas, Time.oneMinute);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
-            expect(maxBottomTime).toEqual(19);
+            expect(maxBottomTime).toEqual(20);
         });
 
         it('NO Deco dive is calculated using all tanks', () => {

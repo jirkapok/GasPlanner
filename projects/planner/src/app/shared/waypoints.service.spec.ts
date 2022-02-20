@@ -19,6 +19,6 @@ describe('WayPointsService', () => {
         const plan = new Plan(Strategies.ALL, 30, 10, airTank, options);
 
         const wayPoints = WayPointsService.calculateWayPoints(plan, gases, options);
-        expect(wayPoints.wayPoints.length).toBe(3);
+        expect(wayPoints.wayPoints.length).toBe(5);
     });
 });

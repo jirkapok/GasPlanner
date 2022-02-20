@@ -25,9 +25,9 @@ describe('PlannerService', () => {
             expect(planner.dive.timeToSurface).toBe(8);
         });
 
-        it('22 minutes maximum dive time', () => {
+        it('18 minutes maximum dive time', () => {
             planner.calculate();
-            expect(planner.dive.maxTime).toBe(17);
+            expect(planner.dive.maxTime).toBe(18);
         });
 
         it('74 bar rock bottom', () => {
@@ -198,7 +198,7 @@ describe('PlannerService', () => {
             it('Max bottom time is applied', ()=> {
                 planner.calculate();
                 planner.applyMaxDuration();
-                expect(planner.plan.duration).toBe(17);
+                expect(planner.plan.duration).toBe(18);
             });
 
             it('No deco limit is applied', ()=> {

@@ -4,6 +4,7 @@ import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService, SacMode } from '../shared/sac-calculator.service';
 import { PlannerService } from '../shared/planner.service';
+import { Diver } from 'scuba-physics';
 
 @Component({
     selector: 'app-sac',
@@ -49,5 +50,9 @@ export class SacComponent {
     public async use(): Promise<boolean>  {
         this.planer.diver.sac = this.calc.sac;
         return await this.router.navigateByUrl('/');
+    }
+
+    public gasSac(): number {
+        return Diver.gasSac(this.calc.sac, this.calc.tank);
     }
 }

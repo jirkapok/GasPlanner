@@ -4,11 +4,11 @@
       <div class="card">
         <div class="card-header">
           <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
-          <span>Surface air consumption</span>
+          <span>Respiratory minute volume</span>
         </div>
         <div class="card-body">
           <div class="btn-group" role="group">
-            <button type="button" class="btn" [class.btn-primary]="inSac" (click)="toSac()">SAC</button>
+            <button type="button" class="btn" [class.btn-primary]="inSac" (click)="toSac()">RMV</button>
             <button type="button" class="btn" [class.btn-primary]="inUsed" (click)="toUsed()">Used</button>
             <button type="button" class="btn" [class.btn-primary]="inDuration" (click)="toDuration()">Duration</button>
           </div>
@@ -51,14 +51,15 @@
               <input [(ngModel)]="calc.sac" class="form-control" #sac="ngModel" name="sac" id="sac" type="number"
                  required [rangeVal]="[5,90]" [minVal]="5" [maxVal]="90" min="5" max="90" sstep="1"
                  [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)" />
+              <small class="form-text text-muted">SAC: {{gasSac() | number:'1.0-2'}} bar/min</small>
             </label>
             <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number 5-90 L/min</div>
           </div>
           <div [hidden]="!inSac" class="my-2">
             <label for="sac">RMV [L/min]:
               <input [ngModel]="calc.sac" class="form-control" readonly/>
+              <small class="form-text text-muted">SAC: {{gasSac() | number:'1.0-2'}} bar/min</small>
             </label>
-            <label for="sac">SAC [bar/min]:
           </div>
           <div [hidden]="!inUsed" class="my-2">
             <label for="sac">Gas consumed [bar]:

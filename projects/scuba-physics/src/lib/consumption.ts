@@ -92,9 +92,10 @@ export class Consumption {
      *                 the array needs have at least 3 items (descent, swim, ascent).
      * @param userSegments The number of segments from the profile defined by user, the rest is counted as calculated ascent.
      * @param tanks: All tanks used to generate the profile, their gases need to fit all used in segments param
-     * @param sac diver surface air consumption in Liters/minute.
+     * @param diver diver respiratory minute volumes in Liters/minute.
+     * @param problemSolvingDuration in minutes
      */
-    public consumeFromTanks(segments: Segment[], userSegments: number, tanks: Tank[], diver: Diver): void {
+    public consumeFromTanks(segments: Segment[], userSegments: number, tanks: Tank[], diver: Diver, problemSolvingDuration: number): void {
         if (segments.length < 2) {
             throw new Error('Profile needs to contain at least three segments.');
         }
@@ -103,7 +104,7 @@ export class Consumption {
         const remainToConsume = this.consumeByTanks(segments, diver.rmv);
         this.consumeByGases(segments, tanks, diver.rmv, remainToConsume);
         const ascent = SegmentsFactory.ascent(segments, userSegments);
-        this.updateReserve(ascent, tanks, diver.stressRmv);
+        this.updateReserve(ascent, tanks, diver.stressRmv, problemSolvingDuration);
     }
 
     /**
@@ -176,7 +177,7 @@ export class Consumption {
 
     private consumeFromProfile(testSegments: Segments, tanks: Tank[], diver: Diver, options: Options){
         const profile = Consumption.calculateDecompression(testSegments, tanks, options);
-        this.consumeFromTanks(profile.segments, testSegments.length, tanks, diver);
+        this.consumeFromTanks(profile.segments, testSegments.length, tanks, diver, options.problemSolvingDuration);
     }
 
     private createTestProfile(sourceSegments: Segments): Segments {
@@ -186,9 +187,9 @@ export class Consumption {
         return testSegments;
     }
 
-    private updateReserve(ascent: Segment[], tanks: Tank[], stressSac: number): void {
+    private updateReserve(ascent: Segment[], tanks: Tank[], stressSac: number, problemSolvingDuration: number): void {
         const segments = ascent.slice();
-        this.addSolvingSegment(segments);
+        this.addSolvingSegment(segments, problemSolvingDuration);
 
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
@@ -217,13 +218,13 @@ export class Consumption {
     }
 
     // in case of user defined gas switch without stay at depth (in ascent segment), we prolong the duration at depth
-    private addSolvingSegment(ascent: Segment[]): void {
+    private addSolvingSegment(ascent: Segment[], problemSolvingDuration: number): void {
         // all segments are user defined
         if (ascent.length === 0) {
             return;
         }
 
-        const solvingDuration = 2 * Time.oneMinute;
+        const solvingDuration = problemSolvingDuration * Time.oneMinute;
         const ascentDepth = ascent[0].startDepth;
         const problemSolving = new Segment(ascentDepth, ascentDepth, ascent[0].gas, solvingDuration);
         ascent.unshift(problemSolving);

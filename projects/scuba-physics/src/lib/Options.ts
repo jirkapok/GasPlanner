@@ -8,6 +8,7 @@ export class OptionDefaults {
     public static readonly saltWater = Salinity.salt;
     public static readonly roundStopsToMinutes = false;
     public static readonly gasSwitchDuration = 2;
+    public static readonly problemSolvingDuration = 1;
     public static readonly addSafetyStop = true;
     public static readonly maxEND = 30;
 
@@ -91,6 +92,10 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
      */
     public descentSpeed = OptionDefaults.descentSpeed;
 
+    /** In case of problem how long does it take to solve the problem in minutes.
+     * This time is added to consumption on bottom when calculating rock bottom */
+    public problemSolvingDuration = OptionDefaults.problemSolvingDuration;
+
     constructor(
         // Gradient factors in Shearwater
         // Low (45/95)
@@ -139,6 +144,7 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
         this.altitude = other.altitude || this.altitude;
         this.roundStopsToMinutes = other.roundStopsToMinutes || this.roundStopsToMinutes;
         this.gasSwitchDuration = other.gasSwitchDuration || this.gasSwitchDuration;
+        this.problemSolvingDuration = other.problemSolvingDuration || this.problemSolvingDuration;
         this.addSafetyStop = other.addSafetyStop || this.addSafetyStop;
         this.maxEND = other.maxEND || this.maxEND;
 

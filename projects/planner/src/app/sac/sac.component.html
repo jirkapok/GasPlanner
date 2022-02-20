@@ -29,7 +29,7 @@
             <div class="text-danger" *ngIf="tank.invalid && (tank.dirty || tank.touched)">Needs to be number 1-350 L</div>
           </div>
           <div [hidden]="inDuration">
-            <label for="duration">Dive time [min.]:
+            <label for="duration">Dive time [min]:
               <input [(ngModel)]="calc.duration" class="form-control" #duration="ngModel" name="duration" id="duration"
               type="number" required  [rangeVal]="[1,350]" [minVal]="1" [maxVal]="350"  min="1" max="350" step="1"
               [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"
@@ -65,7 +65,7 @@
             </label>
           </div>
           <div [hidden]="!inDuration">
-            <label for="sac">Dive time [min.]:
+            <label for="sac">Dive time [min]:
               <input [ngModel]="calc.duration" class="form-control" readonly/>
             </label>
           </div>

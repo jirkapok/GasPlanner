@@ -9,7 +9,7 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <td>Time to surface [min.]:</td>
+                        <td>Time to surface [min]:</td>
                         <td class="table-active">
                             <strong>{{ dive.timeToSurface | number:'1.0-0' }}</strong>
                         </td>
@@ -21,7 +21,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>No decompression time [min.]:
+                        <td>No decompression time [min]:
                             <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="planner.applyNdlDuration()" *ngIf="showApply">Use</button>
                         </td>
                         <td class="table-active">
@@ -29,7 +29,7 @@
                         </td>
                     </tr>
                     <tr *ngIf="showMaxBottomTime">
-                        <td>Maximum bottom time [min.]:
+                        <td>Maximum bottom time [min]:
                             <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="planner.applyMaxDuration()" *ngIf="showApply">Use</button>
                         </td>
                         <td class="table-active">

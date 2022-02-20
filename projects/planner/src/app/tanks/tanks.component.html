@@ -77,8 +77,8 @@
         </tr>
     </table>
   </div>
-  <div class="card-body" *ngIf="!isComplex">
-      <div class="mb-3">
+  <div class="card-body row" *ngIf="!isComplex">
+      <div class="mb-3 col-auto">
         <label for="size" class="form-label">Size [L]:</label>
         <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control col-auto" type="number" (change)="gasChanged()"
         required [rangeVal]="[1, 50]" [minVal]="1" [maxVal]="50" min="1" max="50" step="1"
@@ -87,7 +87,7 @@
         <div class="text-danger form-text" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 L</div>
 
       </div>
-      <div class="mb-3">
+      <div class="mb-3 col-auto">
         <label for="startPressure" class="form-label">Start pressure [bar]:</label>
         <input #startPressure="ngModel" name="startPressure" [(ngModel)]="firstTank.startPressure" class="form-control col-auto" type="number" (change)="gasChanged()"
         required [rangeVal]="[30, 350]" [minVal]="30" [maxVal]="350" min="30" max="350" step="1"

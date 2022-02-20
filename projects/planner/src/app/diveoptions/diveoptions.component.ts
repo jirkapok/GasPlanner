@@ -19,6 +19,9 @@ export class DiveOptionsComponent {
     public readonly lowName = 'Low (45/95)';
     public readonly mediumName = 'Medium (40/85)';
     public readonly highName = 'High (30/75)';
+    public readonly freshName = 'Fresh';
+    public readonly brackishName = 'Brackish (EN13319)';
+    public readonly saltName = 'Salt';
     public conservatism = this.mediumName;
     public plan: Plan;
     public strategy = this.allUsableName;
@@ -96,6 +99,21 @@ export class DiveOptionsComponent {
         this.mediumConservatism();
         OptionDefaults.useRecommended(this.planner.options);
         this.planner.calculate();
+    }
+
+    public salinityOption: string = "Fresh";
+
+    public useFresh(): void {
+        // TODO switch the underlying value
+        this.salinityOption = this.freshName;
+    }
+
+    public useBrackish(): void {
+        this.salinityOption = this.brackishName;
+    }
+
+    public useSalt(): void {
+        this.salinityOption = this.saltName;
     }
 
     public get isComplex(): boolean {

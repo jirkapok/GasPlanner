@@ -16,8 +16,6 @@ Improvements:
     * Add gas index to the depths dropdown in extended mode
   * Dive info: Add total deco, if any - sum of all stops where ceiling is not 0 m
   * Settings
-    * Extend salinity by adding Brackish water (EN13319)
-    * Add Problem solving duration (default 2 min)
     * Change safety stop to dropdown (Never, Propose, Always) to be able disable automatic safety stop in simple mode
     * Add option to define last stop/safety stop range
 * Events:

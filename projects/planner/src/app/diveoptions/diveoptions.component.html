@@ -168,6 +168,17 @@
                 <div class="tab-pane fade" id="stops" role="tabpanel" aria-labelledby="stops-tab">
                     <div class="col mt-3">
                         <div class="mb-3">
+                            <label for="problem" class="form-label">Problem solving duration [min]:</label>
+                            <input id="problem" name="problem" #problem="ngModel" [(ngModel)]="problemSolvingDuration"
+                                class="form-control col-auto" type="number" required [rangeVal]="[1, 100]" [minVal]="1"
+                                [maxVal]="100" step="1" min="1" max="100"
+                                [class.is-invalid]="problem.invalid && (problem.dirty || problem.touched)" />
+                            <div class="text-danger form-text"
+                                *ngIf="problem.invalid && (problem.dirty || problem.touched)">
+                                Needs to be number 1 - 100 mim
+                            </div>
+                        </div>
+                        <div class="mb-3">
                             <label for="switchDuration" class="form-label">Gas switch duration [min]:</label>
                             <input id="switchDuration" name="switchDuration" #switchDuration="ngModel"
                                 [(ngModel)]="gasSwitchDuration" class="form-control col-auto" type="number" required

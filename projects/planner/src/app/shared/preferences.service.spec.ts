@@ -62,6 +62,8 @@ describe('PreferencesService', () => {
         it('Tanks are loaded after save', inject([PreferencesService, PlannerService],
             (service: PreferencesService, planner: PlannerService) => {
                 OptionExtensions.applySimpleSpeeds(planner.options);
+                planner.options.gasSwitchDuration = 1;
+                planner.options.problemSolvingDuration = 2;
                 const tanks = planner.tanks;
                 planner.addTank();
                 tanks[0].startPressure = 150;

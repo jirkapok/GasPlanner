@@ -185,7 +185,7 @@ export class PlannerService {
 
             const originAscent = SegmentsFactory.ascent(profile.origin, userSegments);
             this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
-            consumption.consumeFromTanks(profile.origin, userSegments, this._tanks, this.diver);
+            consumption.consumeFromTanks(profile.origin, userSegments, this._tanks, this.diver, this.options.problemSolvingDuration);
             this.dive.notEnoughTime = this.plan.notEnoughTime;
         }
 

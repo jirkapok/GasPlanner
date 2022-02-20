@@ -142,6 +142,15 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
+    public get problemSolvingDuration(): number {
+        return this.planner.options.problemSolvingDuration;
+    }
+
+    public set problemSolvingDuration(newValue: number) {
+        this.planner.options.problemSolvingDuration = newValue;
+        this.planner.calculate();
+    }
+
     public get gasSwitchDuration(): number {
         return this.planner.options.gasSwitchDuration;
     }

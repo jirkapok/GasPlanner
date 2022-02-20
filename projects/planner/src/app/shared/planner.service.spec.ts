@@ -8,6 +8,7 @@ describe('PlannerService', () => {
     beforeEach(() => {
         planner = new PlannerService();
         OptionExtensions.applySimpleSpeeds(planner.options);
+        planner.options.problemSolvingDuration = 2;
         planner.assignDepth(30); // to enforce plan to be updated
     });
 

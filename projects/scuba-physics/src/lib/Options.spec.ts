@@ -5,6 +5,7 @@ export class OptionExtensions {
     public static createOptions(gfLow: number, gfHigh?: number, maxPpO2?: number, maxDecoPpO2?: number, salinity?: Salinity): Options {
         const options = new Options(gfLow, gfHigh, maxPpO2, maxDecoPpO2, salinity);
         OptionExtensions.applySimpleSpeeds(options);
+        options.gasSwitchDuration = 1;
         return options;
     }
 

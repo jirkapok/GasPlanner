@@ -7,7 +7,7 @@ export class OptionDefaults {
     public static readonly altitude = 0;
     public static readonly saltWater = Salinity.salt;
     public static readonly roundStopsToMinutes = false;
-    public static readonly gasSwitchDuration = 1;
+    public static readonly gasSwitchDuration = 2;
     public static readonly addSafetyStop = true;
     public static readonly maxEND = 30;
 

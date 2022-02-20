@@ -14,7 +14,6 @@ export enum Salinity {
 export interface DepthOptions {
     /** Meters above see level, 0 for see level */
     altitude: number;
-    isFreshWater: boolean;
     salinity: Salinity;
 }
 

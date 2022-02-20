@@ -1,4 +1,5 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import { Salinity } from './depth-converter';
 import { Gases, StandardGases } from './Gases';
 import { OptionExtensions } from './Options.spec';
 import { Ceiling, EventType } from './Profile';
@@ -7,7 +8,7 @@ import { Segments } from './Segments';
 import { Time } from './Time';
 
 describe('Profile Events', () => {
-    const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6, true);
+    const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
     const emptyCeilings: Ceiling[] = [];
 
     describe('Low ppO2', () => {
@@ -185,7 +186,7 @@ describe('Profile Events', () => {
             segments.add(40, 10, StandardGases.air, 3 * Time.oneMinute);
 
             const algorithm = new BuhlmannAlgorithm();
-            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, false);
+            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
             defaultOptions.addSafetyStop = true;
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
@@ -206,12 +207,10 @@ describe('Profile Events', () => {
             segments.addFlat(16, StandardGases.air, 118.75 * Time.oneMinute);
 
             const algorithm = new BuhlmannAlgorithm();
-            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, true);
+            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
             defaultOptions.addSafetyStop = true;
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
-            const firstError = events.items[0];
-            // timeStamp: 7639
             expect(events.items.length).toBe(0);
         });
     });

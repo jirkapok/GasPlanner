@@ -1,8 +1,9 @@
+import { Salinity } from './depth-converter';
 import { Options } from './Options';
 
 export class OptionExtensions {
-    public static createOptions(gfLow: number, gfHigh?: number, maxPpO2?: number, maxDecoPpO2?: number, isFreshWater?: boolean): Options {
-        const options = new Options(gfLow, gfHigh, maxPpO2, maxDecoPpO2, isFreshWater);
+    public static createOptions(gfLow: number, gfHigh?: number, maxPpO2?: number, maxDecoPpO2?: number, salinity?: Salinity): Options {
+        const options = new Options(gfLow, gfHigh, maxPpO2, maxDecoPpO2, salinity);
         OptionExtensions.applySimpleSpeeds(options);
         return options;
     }

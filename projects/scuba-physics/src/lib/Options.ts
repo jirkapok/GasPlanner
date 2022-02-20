@@ -5,6 +5,7 @@ import { SpeedOptions } from './speeds';
 // See Options for values meaning
 export class OptionDefaults {
     public static readonly altitude = 0;
+    public static readonly saltWater = Salinity.salt;
     public static readonly roundStopsToMinutes = false;
     public static readonly gasSwitchDuration = 1;
     public static readonly addSafetyStop = true;
@@ -19,7 +20,6 @@ export class OptionDefaults {
     public static readonly gfHigh = 0.85;
     public static readonly maxPpO2 = 1.4;
     public static readonly maxDecoPpO2 = 1.6;
-    public static readonly isFreshWater = false;
 
     public static setMediumConservatism(options: Options): void {
         options.gfLow = OptionDefaults.gfLow;
@@ -91,11 +91,6 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
      */
     public descentSpeed = OptionDefaults.descentSpeed;
 
-    /**
-     * Water type used to distinguish depth converter based on density, default fresh.
-     */
-    public salinity = Salinity.fresh;
-
     constructor(
         // Gradient factors in Shearwater
         // Low (45/95)
@@ -123,15 +118,15 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
         public maxDecoPpO2: number = OptionDefaults.maxDecoPpO2,
 
         /**
-         * Select water salinity, default false (salt water)
+         * Water type used to distinguish depth converter based on density, default salt.
          */
-        public isFreshWater: boolean = OptionDefaults.isFreshWater
+        public salinity = OptionDefaults.saltWater
     ) {
         this.gfLow = gfLow || OptionDefaults.gfLow;
         this.gfHigh = gfHigh || OptionDefaults.gfHigh;
         this.maxPpO2 = maxPpO2 || OptionDefaults.maxPpO2;
         this.maxDecoPpO2 = maxDecoPpO2 || OptionDefaults.maxDecoPpO2;
-        this.isFreshWater = isFreshWater || OptionDefaults.isFreshWater;
+        this.salinity = salinity || OptionDefaults.saltWater;
     }
 
     public loadFrom(other: Options): void {
@@ -139,7 +134,6 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
         this.gfHigh = other.gfHigh || this.gfHigh;
         this.maxPpO2 = other.maxPpO2 || this.maxPpO2;
         this.maxDecoPpO2 = other.maxDecoPpO2 || this.maxDecoPpO2;
-        this.isFreshWater = other.isFreshWater || this.isFreshWater;
         this.salinity = other.salinity || this.salinity;
 
         this.altitude = other.altitude || this.altitude;

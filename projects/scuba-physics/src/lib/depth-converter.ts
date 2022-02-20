@@ -1,22 +1,36 @@
 import { DepthLevels } from './DepthLevels';
 import { Density, Gravity, AltitudePressure, PressureConverter } from './pressure-converter';
 
+// Supported types of salt density of water used to distinguish depth converters
+export enum Salinity {
+    // 1000 kg/m3
+    fresh = 0,
+    // EN13319 - 1020 kg/m3
+    brackish = 1,
+    // 1030 kg/m3
+    salt = 2
+}
+
 export interface DepthOptions {
     /** Meters above see level, 0 for see level */
     altitude: number;
     isFreshWater: boolean;
+    salinity: Salinity;
 }
 
 export class DepthConverterFactory {
     constructor(private options: DepthOptions) { }
 
-    /** Creates new instance of depth converter based on provided options */
+    /** Creates new instance of depth converter based on provided salinity */
     create(): DepthConverter {
-        if (this.options.isFreshWater) {
-            return DepthConverter.forFreshWater(this.options.altitude);
+        switch(this.options.salinity) {
+            case Salinity.salt:
+                return DepthConverter.forSaltWater(this.options.altitude);
+            case Salinity.brackish:
+                return DepthConverter.forBrackishWater(this.options.altitude);
+            default:
+                return DepthConverter.forFreshWater(this.options.altitude);
         }
-
-        return DepthConverter.forSaltWater(this.options.altitude);
     }
 }
 
@@ -34,6 +48,14 @@ export class DepthConverter {
      */
     public static forSaltWater(altitude: number = 0): DepthConverter {
         return new DepthConverter(Density.salt, altitude);
+    }
+
+    /**
+     * Creates new instance of depth converter
+     * @param altitude Meters above see level, 0 for see level
+     */
+    public static forBrackishWater(altitude: number = 0): DepthConverter {
+        return new DepthConverter(Density.brackish, altitude);
     }
 
     /**

@@ -5,6 +5,11 @@ export class Density {
     public static readonly fresh: number = 1000;
 
     /**
+     * Brackish water density EN13319 - 1020kg / m3 at 0C / 32F (standard conditions for measurements).
+     */
+    public static readonly brackish: number = 1020;
+
+    /**
      * 1030kg / m3 at 0C / 32F (standard conditions for measurements).
      */
     public static readonly salt: number = 1030;

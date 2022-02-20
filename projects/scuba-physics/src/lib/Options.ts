@@ -1,7 +1,6 @@
-import { DepthOptions } from './depth-converter';
+import { DepthOptions, Salinity } from './depth-converter';
 import { GasOptions } from './Gases';
 import { SpeedOptions } from './speeds';
-
 
 // See Options for values meaning
 export class OptionDefaults {
@@ -92,6 +91,11 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
      */
     public descentSpeed = OptionDefaults.descentSpeed;
 
+    /**
+     * Water type used to distinguish depth converter based on density, default fresh.
+     */
+    public salinity = Salinity.fresh;
+
     constructor(
         // Gradient factors in Shearwater
         // Low (45/95)
@@ -136,6 +140,7 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
         this.maxPpO2 = other.maxPpO2 || this.maxPpO2;
         this.maxDecoPpO2 = other.maxDecoPpO2 || this.maxDecoPpO2;
         this.isFreshWater = other.isFreshWater || this.isFreshWater;
+        this.salinity = other.salinity || this.salinity;
 
         this.altitude = other.altitude || this.altitude;
         this.roundStopsToMinutes = other.roundStopsToMinutes || this.roundStopsToMinutes;

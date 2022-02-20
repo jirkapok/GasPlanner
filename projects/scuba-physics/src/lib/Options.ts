@@ -120,7 +120,7 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
         /**
          * Water type used to distinguish depth converter based on density, default salt.
          */
-        public salinity = OptionDefaults.saltWater
+        public salinity: Salinity = OptionDefaults.saltWater
     ) {
         this.gfLow = gfLow || OptionDefaults.gfLow;
         this.gfHigh = gfHigh || OptionDefaults.gfHigh;

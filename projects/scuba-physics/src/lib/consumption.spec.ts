@@ -26,7 +26,7 @@ describe('Consumption', () => {
             expect(maxBottomTime).toEqual(17);
         });
 
-        xit('Decompression dive is calculated using all tanks', () => {
+        it('Decompression dive is calculated using all tanks', () => {
             const airTank = new Tank(20, 200, 21);
             const ean50Tank = new Tank(10, 200, 50);
             const tanks = [airTank, ean50Tank];
@@ -80,7 +80,7 @@ describe('Consumption', () => {
             expect(methodDuration).toBeLessThan(200);
         });
 
-        xit('Multilevel dived accept multiple continuing levels', () => {
+        it('Multilevel dived accept multiple continuing levels', () => {
             const tank = new Tank(24, 200, 21);
             const tanks = [tank];
 

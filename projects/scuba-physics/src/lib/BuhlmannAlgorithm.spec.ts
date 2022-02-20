@@ -40,7 +40,7 @@ describe('Buhlmann Algorithm', () => {
                 expect(ndl).toBe(multiLevelNdl);
             });
 
-            xit('Segments already reached NDL', () => {
+            it('Segments already reached NDL', () => {
                 const segments = new Segments();
                 segments.add(0, 40, air, Time.oneMinute * 2);
                 segments.addFlat(40, air, Time.oneMinute * 5);
@@ -52,7 +52,7 @@ describe('Buhlmann Algorithm', () => {
                 expect(ndl).toBe(36);
             });
 
-            xit('Initial levels have remaining NDL', () => {
+            it('Initial levels have remaining NDL', () => {
                 const segments = new Segments();
                 segments.add(0, 40, air, Time.oneMinute * 2);
                 segments.addFlat(40, air, Time.oneMinute * 5);

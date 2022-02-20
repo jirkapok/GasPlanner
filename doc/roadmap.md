@@ -11,8 +11,15 @@ Known issues:
 
 Improvements:
 
-* Allow to define multiple levels
-  * Add option to define last stop/safety stop range
+* UI tweaks
+  * Tanks
+    * Add gas index to the depths dropdown in extended mode
+  * Dive info: Add total deco, if any - sum of all stops where ceiling is not 0 m
+  * Settings
+    * Extend salinity by adding Brackish water (EN13319)
+    * Add Problem solving duration (default 2 min)
+    * Change safety stop to dropdown (Never, Propose, Always) to be able disable automatic safety stop in simple mode
+    * Add option to define last stop/safety stop range
 * Events:
   * Add time to the events warning/error messages
   * Add narcotic depth exceeded warning event
@@ -30,20 +37,15 @@ Improvements:
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
   * Meter: <https://en.wikipedia.org/wiki/Metre_sea_water>
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
-* UI tweaks
+* UI Tweaks
   * Tanks
-    * Add gas index to the depths dropdown in extended mode
     * Add Dropdown for well known tank sizes
     * Add max. narc. depth to the Gas label
-  * Dive info: Add total deco, if any - sum of all stops where ceiling is not 0 m
-  * Settings
-    * Extend salinity by adding Brackish water (EN13319)
-    * Add Problem solving duration (default 2 min)
-    * Unify dive settings and default settings
-    * Change safety stop to dropdown (Never, Propose, Always) to be able disable automatic safety stop in simple mode
   * Profile
     * Add option to reduce plan table only to list of stops
     * Add other events to profile chart like gas switch
+  * Settings
+    * Unify dive settings and default settings
 * Help
   * Update the documentation to latest state of the application
   * Add help to the UI as side bar

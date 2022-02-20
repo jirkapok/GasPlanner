@@ -12,7 +12,6 @@ Improvements:
 
 * Allow to define multiple levels
   * Add option to define last stop/safety stop range
-  * Allow to define multiple ascent speeds - will break all Algorithm tests
 * Events:
   * Add time to the events warning/error messages
   * Add narcotic depth exceeded warning event
@@ -40,12 +39,10 @@ Improvements:
     * Extend salinity by adding Brackish water (EN13319)
     * Add Problem solving duration (default 2 min)
     * Unify dive settings and default settings
+    * Change safety stop to dropdown (Never, Propose, Always) to be able disable automatic safety stop in simple mode
   * Profile
     * Add option to reduce plan table only to list of stops
     * Add other events to profile chart like gas switch
-  * Don't reset any value except depth and speeds in case switching to simple mode
-    * Add "Apply recreational" button to options
-    * Add "Apply recommended" button to speed options
 * Help
   * Update the documentation to latest state of the application
   * Add help to the UI as side bar

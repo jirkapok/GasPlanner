@@ -100,10 +100,10 @@ export class Consumption {
         }
 
         Tanks.resetConsumption(tanks);
-        const remainToConsume = this.consumeByTanks(segments, diver.sac);
-        this.consumeByGases(segments, tanks, diver.sac, remainToConsume);
+        const remainToConsume = this.consumeByTanks(segments, diver.rmv);
+        this.consumeByGases(segments, tanks, diver.rmv, remainToConsume);
         const ascent = SegmentsFactory.ascent(segments, userSegments);
-        this.updateReserve(ascent, tanks, diver.stressSac);
+        this.updateReserve(ascent, tanks, diver.stressRmv);
     }
 
     /**

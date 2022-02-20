@@ -48,11 +48,11 @@ export class SacComponent {
     }
 
     public async use(): Promise<boolean>  {
-        this.planer.diver.sac = this.calc.sac;
+        this.planer.diver.rmv = this.calc.rmv;
         return await this.router.navigateByUrl('/');
     }
 
     public gasSac(): number {
-        return Diver.gasSac(this.calc.sac, this.calc.tank);
+        return Diver.gasSac(this.calc.rmv, this.calc.tank);
     }
 }

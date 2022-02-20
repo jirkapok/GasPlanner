@@ -35,10 +35,6 @@ Improvements:
     * Add gas index to the depths dropdown in extended mode
     * Add Dropdown for well known tank sizes
     * Add max. narc. depth to the Gas label
-  * Calculators
-    * Distinguish SAC to RMV
-    * Add SAC bellow the RMV text box
-    * Add use as deco to MOD calculator
   * Dive info: Add total deco, if any - sum of all stops where ceiling is not 0 m
   * Settings
     * Extend salinity by adding Brackish water (EN13319)

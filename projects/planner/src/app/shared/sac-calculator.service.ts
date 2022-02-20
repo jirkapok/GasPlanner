@@ -15,7 +15,7 @@ export class SacCalculatorService {
     private _tank = 15;
     private _used = 150;
     private _duration = 45;
-    private _sac = 0;
+    private _rmv = 0;
     private sacCalculator: SacCalculator;
     private _calculation = SacMode.sac;
     private calculate: () => void = this.calculateSac;
@@ -50,12 +50,12 @@ export class SacCalculatorService {
         this.calculate();
     }
 
-    public get sac(): number {
-        return this._sac;
+    public get rmv(): number {
+        return this._rmv;
     }
 
-    public set sac(newValue: number) {
-        this._sac = newValue;
+    public set rmv(newValue: number) {
+        this._rmv = newValue;
         this.calculate();
     }
 
@@ -97,14 +97,14 @@ export class SacCalculatorService {
     }
 
     private calculateSac(): void {
-        this._sac = this.sacCalculator.calculateSac(this.depth, this.tank, this.used, this.duration);
+        this._rmv = this.sacCalculator.calculateSac(this.depth, this.tank, this.used, this.duration);
     }
 
     private calculateDuration(): void {
-        this._duration = this.sacCalculator.calculateDuration(this.depth, this.tank, this.used, this.sac);
+        this._duration = this.sacCalculator.calculateDuration(this.depth, this.tank, this.used, this.rmv);
     }
 
     private calculateUsed(): void {
-        this._used = this.sacCalculator.calculateUsed(this.depth, this.tank, this.duration, this.sac);
+        this._used = this.sacCalculator.calculateUsed(this.depth, this.tank, this.duration, this.rmv);
     }
 }

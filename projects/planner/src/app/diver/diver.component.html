@@ -9,7 +9,7 @@
         <div class="card-body">
           <div>
             <label for="sac">Surface air consumption [L/min]:
-              <input [(ngModel)]="diver.sac" class="form-control" #sac="ngModel" name="sac" id="sac"
+              <input [(ngModel)]="diver.rmv" class="form-control" #sac="ngModel" name="sac" id="sac"
                type="number" required [rangeVal]="[5,90]" [minVal]="5" [maxVal]="90" min="5" max="90" step="1"
                [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)"/>
             </label>

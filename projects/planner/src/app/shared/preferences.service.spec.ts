@@ -24,13 +24,13 @@ describe('PreferencesService', () => {
         it('Diver values are loaded after save', inject([PreferencesService, PlannerService],
             (service: PreferencesService, planner: PlannerService) => {
                 const diver = planner.diver;
-                diver.sac = 10;
+                diver.rmv = 10;
                 diver.maxPpO2 = 1.1;
                 diver.maxDecoPpO2 = 1.5;
                 planner.calculate();
                 service.saveDefaults();
 
-                diver.sac = 10;
+                diver.rmv = 10;
                 diver.maxPpO2 = 1.3;
                 diver.maxDecoPpO2 = 1.4;
                 service.loadDefaults();

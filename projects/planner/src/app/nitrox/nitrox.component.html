@@ -12,7 +12,7 @@
             <button type="button" class="btn" [class.btn-primary]="inBestMix" (click)="toBestMix()">Best mix</button>
             <button type="button" class="btn" [class.btn-primary]="inPO2" (click)="toPO2()">ppO2</button>
           </div>
-          <div [hidden]="inPO2">
+          <div [hidden]="inPO2" class="my-2">
             <label for="pO2">ppO2 [bar]:
               <input [(ngModel)]="calc.pO2" class="form-control" #pO2="ngModel" name="pO2" id="pO2" type="number"
                 required [rangeVal]="[0.21,3]"  [minVal]="0.21" [maxVal]="3" min="0.21" max="3" step="0.1"
@@ -20,7 +20,7 @@
             </label>
             <div class="text-danger" *ngIf="pO2.invalid && (pO2.dirty || pO2.touched)">Needs to be number 0.21-3 bar</div>
           </div>
-          <div [hidden]="inBestMix">
+          <div [hidden]="inBestMix" class="my-2">
             <label for="fO2">Percent O2:
               <input [(ngModel)]="calc.fO2" class="form-control" #fO2="ngModel" name="fO2" id="fO2" type="number"
                  required [rangeVal]="[21,100]" [minVal]="21" [maxVal]="100" min="21" max="100" step="1"
@@ -28,7 +28,7 @@
             </label>
             <div class="text-danger" *ngIf="fO2.invalid && (fO2.dirty || fO2.touched)">Needs to be number 21-100 %</div>
           </div>
-          <div [hidden]="inMod">
+          <div [hidden]="inMod" class="my-2">
             <label for="mod">MOD [m]:
               <input [(ngModel)]="calc.mod" class="form-control" #mod="ngModel" name="mod" id="mod" type="number"
                  required [rangeVal]="[1,350]" [minVal]="1" [maxVal]="350" min="1" max="350" step="1"
@@ -37,18 +37,18 @@
             </label>
             <div class="text-danger" *ngIf="mod.invalid && (mod.dirty || mod.touched)">Needs to be number 3-350 m</div>
           </div>
-          <div [hidden]="!inMod">
+          <div [hidden]="!inMod" class="my-2">
             <label for="mod">MOD [m]:
               <input [ngModel]="calc.mod" class="form-control" readonly/>
               <small class="form-text text-muted">EAD: {{calc.ead}} m</small>
             </label>
           </div>
-          <div [hidden]="!inBestMix">
+          <div [hidden]="!inBestMix" class="my-2">
               <label for="mod">Percent O2:
                 <input [ngModel]="calc.fO2" class="form-control" readonly/>
               </label>
           </div>
-          <div [hidden]="!inPO2">
+          <div [hidden]="!inPO2" class="my-2">
               <label for="mod">ppO2 [bar]:
                 <input [ngModel]="calc.pO2" class="form-control" readonly/>
               </label>

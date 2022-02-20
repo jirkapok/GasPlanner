@@ -39,7 +39,6 @@ Improvements:
     * Distinguish SAC to RMV
     * Add SAC bellow the RMV text box
     * Add use as deco to MOD calculator
-    * Add spacing to controls
   * Dive info: Add total deco, if any - sum of all stops where ceiling is not 0 m
   * Settings
     * Extend salinity by adding Brackish water (EN13319)

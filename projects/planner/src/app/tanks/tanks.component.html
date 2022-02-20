@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="pt-0">
-                    <small class="form-text text-muted">SAC: {{gasSac(tank) | number:'1.0-2'}} bar/min.</small>
+                    <small class="form-text text-muted">SAC: {{gasSac(tank) | number:'1.0-2'}} bar/min</small>
                     <app-gaslabel [gas]="tank" class="text-nowrap float-end"></app-gaslabel>
                 </div>
             </td>
@@ -83,7 +83,7 @@
         <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control col-auto" type="number" (change)="gasChanged()"
         required [rangeVal]="[1, 50]" [minVal]="1" [maxVal]="50" min="1" max="50" step="1"
         [class.is-invalid]="size.invalid && (size.dirty || size.touched)"/>
-        <small class="form-text text-muted">SAC: {{gasSac(firstTank) | number:'1.0-2'}} bar/min.</small>
+        <small class="form-text text-muted">SAC: {{gasSac(firstTank) | number:'1.0-2'}} bar/min</small>
         <div class="text-danger form-text" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 L</div>
 
       </div>

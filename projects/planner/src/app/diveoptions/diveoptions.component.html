@@ -151,7 +151,7 @@
                         <div class="form-check form-switch pb-1">
                             <input type="checkbox" class="form-check-input" id="safetyStop" mdbCheckbox
                                 [checked]="safetyStopEnabled" (change)="safetyStopEnabled = !safetyStopEnabled" />
-                            <label class="form-check-label" for="safetyStop">Add safety stop 3 min.</label>
+                            <label class="form-check-label" for="safetyStop">Add safety stop 3 min</label>
                         </div>
                         <div class="form-check form-switch pb-1">
                             <input type="checkbox" class="form-check-input" id="roundStops" mdbCheckbox
@@ -163,7 +163,7 @@
                 <div class="tab-pane fade container" id="speeds" role="tabpanel" aria-labelledby="speeds-tab">
                     <div class="row mt-3">
                         <div class="mb-3 col-auto">
-                            <label for="descSpeed" class="form-label">Descent speed [m/min.]:</label>
+                            <label for="descSpeed" class="form-label">Descent speed [m/min]:</label>
                             <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="descentSpeed"
                                 class="form-control col-auto" type="number" required [rangeVal]="[1, 100]"
                                 [minVal]="1" [maxVal]="100" step="1" min="1" max="100"
@@ -174,7 +174,7 @@
                             </div>
                         </div>
                         <div class="mb-3 col-auto">
-                            <label for="ascSpeed" class="form-label">Ascent 6 m to surface [m/min.]:</label>
+                            <label for="ascSpeed" class="form-label">Ascent 6 m to surface [m/min]:</label>
                             <input id="ascSpeed" name="ascSpeed" #ascSpeed="ngModel" [(ngModel)]="ascentSpeed6m"
                                 class="form-control col-auto" type="number" required [rangeVal]="[1, 100]"
                                 [minVal]="1" [maxVal]="100" step="1" min="1" max="100"
@@ -187,7 +187,7 @@
                     </div>
                     <div class="row mt-3">
                         <div class="mb-3 col-auto">
-                            <label for="ascSpeed2" class="form-label">Ascent up to 6 m depth [m/min.]:</label>
+                            <label for="ascSpeed2" class="form-label">Ascent up to 6 m depth [m/min]:</label>
                             <input id="ascSpeed2" name="ascSpeed2" #ascSpeed2="ngModel" [(ngModel)]="ascentSpeed50percTo6m"
                                 class="form-control col-auto" type="number" required [rangeVal]="[1, 100]"
                                 [minVal]="1" [maxVal]="100" step="1" min="1" max="100"
@@ -198,7 +198,7 @@
                             </div>
                         </div>
                         <div class="mb-3 col-auto">
-                            <label for="ascSpeed3" class="form-label">Ascent up to 50% depth [m/min.]:</label>
+                            <label for="ascSpeed3" class="form-label">Ascent up to 50% depth [m/min]:</label>
                             <input id="ascSpeed3" name="ascSpeed3" #ascSpeed3="ngModel" [(ngModel)]="ascentSpeed50perc"
                                 class="form-control col-auto" type="number" required [rangeVal]="[1, 100]"
                                 [minVal]="1"[maxVal]="100" step="1" min="1" max="100"

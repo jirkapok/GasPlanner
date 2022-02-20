@@ -56,17 +56,17 @@
         <div *ngIf="dive.notEnoughGas" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="me-1"></fa-icon>
             <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
-                {{ dive.maxTime | number:'1.0-0' }} min.</span>
+                {{ dive.maxTime | number:'1.0-0' }} min</span>
         </div>
         <div *ngIf="dive.notEnoughTime" class="alert  alert-danger">
             <fa-icon [icon]="exclamation" class="me-1"></fa-icon>
             <span>Not enough time to realize the dive (duration needs to be at least {{ minimumDuration | number:'1.0-0' }}
-                min.)!</span>
+                min)!</span>
         </div>
         <div *ngIf="dive.noDecoExceeded" class="alert  alert-warning">
             <fa-icon [icon]="warning" class="me-1"></fa-icon>
             <span>No decompression time for current depth exceeded (Bottom time needs to be maximum
-                {{ noDeco | number:'1.0-0' }} min.)!</span>
+                {{ noDeco | number:'1.0-0' }} min)!</span>
         </div>
         <div *ngFor="let event of dive.events">
             <div *ngIf="isHighPpO2(event)" class="alert alert-warning">
@@ -77,19 +77,19 @@
         <div *ngFor="let event of dive.events">
             <div *ngIf="isHighDescentSpeed(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="me-1"></fa-icon>
-                <span>High descent speed at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min.!</span>
+                <span>High descent speed at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
             </div>
         </div>
         <div *ngFor="let event of dive.events">
             <div *ngIf="isHighAscentSpeed(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="me-1"></fa-icon>
-                <span>High ascent speed at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min.!</span>
+                <span>High ascent speed at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
             </div>
         </div>
         <div *ngFor="let event of dive.events">
             <div *ngIf="isBrokenCeiling(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="me-1"></fa-icon>
-                <span>Ceiling depth {{ event.depth | number:'1.0-0' }} m broken at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min.!</span>
+                <span>Ceiling depth {{ event.depth | number:'1.0-0' }} m broken at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
             </div>
         </div>
     </div>

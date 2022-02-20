@@ -59,18 +59,11 @@ export class PlannerService {
         this._tanks = this._tanks.slice(0, 1);
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
         this.setMediumConservatism();
-        this.options.ascentSpeed6m = OptionDefaults.ascentSpeed6m;
-        this.options.ascentSpeed50percTo6m = OptionDefaults.ascentSpeed50percTo6m;
-        this.options.ascentSpeed50perc = OptionDefaults.ascentSpeed50perc;
-        this.options.descentSpeed = OptionDefaults.descentSpeed;
-        this.options.roundStopsToMinutes = true;
-        this.options.gasSwitchDuration = 1;
         this.safetyStopByDepth();
     }
 
     public setMediumConservatism(): void {
-        this.options.gfLow = 0.4;
-        this.options.gfHigh = 0.85;
+        OptionDefaults.setMediumConservatism(this.options);
     }
 
     public addTank(): void {

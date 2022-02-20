@@ -6,9 +6,9 @@ import { SpeedOptions } from './speeds';
 // See Options for values meaning
 export class OptionDefaults {
     public static readonly altitude = 0;
-    public static readonly roundStopsToMinutes = true;
+    public static readonly roundStopsToMinutes = false;
     public static readonly gasSwitchDuration = 1;
-    public static readonly addSafetyStop = false;
+    public static readonly addSafetyStop = true;
     public static readonly maxEND = 30;
 
     public static readonly ascentSpeed6m = 3;
@@ -21,6 +21,32 @@ export class OptionDefaults {
     public static readonly maxPpO2 = 1.4;
     public static readonly maxDecoPpO2 = 1.6;
     public static readonly isFreshWater = false;
+
+    public static setMediumConservatism(options: Options): void {
+        options.gfLow = OptionDefaults.gfLow;
+        options.gfHigh = OptionDefaults.gfHigh;
+    }
+
+    public static useRecreational(options: Options): void {
+        OptionDefaults.useGeneralRecommended(options);
+        options.ascentSpeed50perc = OptionDefaults.ascentSpeed50perc;
+        options.ascentSpeed50percTo6m = OptionDefaults.ascentSpeed50perc;
+        options.ascentSpeed6m = OptionDefaults.ascentSpeed50perc;
+    }
+
+    public static useRecommended(options: Options): void {
+        OptionDefaults.useGeneralRecommended(options);
+        options.ascentSpeed50perc = OptionDefaults.ascentSpeed50perc;
+        options.ascentSpeed50percTo6m = OptionDefaults.ascentSpeed50percTo6m;
+        options.ascentSpeed6m = OptionDefaults.ascentSpeed6m;
+    }
+
+    private static useGeneralRecommended(options: Options): void {
+        options.addSafetyStop = OptionDefaults.addSafetyStop;
+        options.roundStopsToMinutes = OptionDefaults.roundStopsToMinutes;
+        options.gasSwitchDuration = OptionDefaults.gasSwitchDuration;
+        options.descentSpeed = OptionDefaults.descentSpeed;
+    }
 }
 
 export class Options implements GasOptions, DepthOptions, SpeedOptions {

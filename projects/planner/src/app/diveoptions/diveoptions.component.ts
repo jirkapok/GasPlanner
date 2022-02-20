@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-
-import { Diver } from 'scuba-physics';
+import { OptionDefaults } from 'scuba-physics';
 import { Plan, Strategies } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 
@@ -84,6 +83,18 @@ export class DiveOptionsComponent {
     public thirdUsable(): void {
         this.plan.strategy = Strategies.THIRD;
         this.strategy = this.thirdUsableName;
+        this.planner.calculate();
+    }
+
+    public useRecreational(): void {
+        this.mediumConservatism();
+        OptionDefaults.useRecreational(this.planner.options);
+        this.planner.calculate();
+    }
+
+    public useRecommended(): void {
+        this.mediumConservatism();
+        OptionDefaults.useRecommended(this.planner.options);
         this.planner.calculate();
     }
 
@@ -174,7 +185,7 @@ export class DiveOptionsComponent {
     }
 
     public set ascentSpeed50perc(newValue: number) {
-        if(newValue < 1) {
+        if (newValue < 1) {
             return;
         }
 
@@ -187,7 +198,7 @@ export class DiveOptionsComponent {
     }
 
     public set ascentSpeed50percTo6m(newValue: number) {
-        if(newValue < 1) {
+        if (newValue < 1) {
             return;
         }
 
@@ -201,7 +212,7 @@ export class DiveOptionsComponent {
 
     public set ascentSpeed6m(newValue: number) {
         // somehow noticed frozen UI in case copy/paste 0 into the asc/desc fields
-        if(newValue < 1) {
+        if (newValue < 1) {
             return;
         }
 
@@ -214,7 +225,7 @@ export class DiveOptionsComponent {
     }
 
     public set descentSpeed(newValue: number) {
-        if(newValue < 1) {
+        if (newValue < 1) {
             return;
         }
 

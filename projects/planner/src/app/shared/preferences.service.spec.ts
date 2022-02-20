@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { PreferencesService } from './preferences.service';
 import { PlannerService } from './planner.service';
-import { Diver, Options, Tank } from 'scuba-physics';
+import { Diver, Options, Tank, Salinity } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 
 describe('PreferencesService', () => {
@@ -53,7 +53,7 @@ describe('PreferencesService', () => {
                 options.descentSpeed = 17;
                 service.loadDefaults();
 
-                const expected = new Options(0.3, 0.85, 1.4, 1.6, true);
+                const expected = new Options(0.3, 0.85, 1.4, 1.6, Salinity.fresh);
                 expected.descentSpeed = 15;
                 expected.addSafetyStop = true;
                 expect(planner.options).toEqual(expected);

@@ -22,7 +22,7 @@ export class DepthConverterFactory {
 
     /** Creates new instance of depth converter based on provided salinity */
     create(): DepthConverter {
-        switch(this.options.salinity) {
+        switch (this.options.salinity) {
             case Salinity.salt:
                 return DepthConverter.forSaltWater(this.options.altitude);
             case Salinity.brackish:

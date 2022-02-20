@@ -6,7 +6,8 @@ import { WayPointsService } from './waypoints.service';
 import {
     NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
-    Diver, SegmentsFactory, Consumption, Segment, Gases, Segments, OptionDefaults
+    Diver, SegmentsFactory, Consumption, Segment, Gases,
+    Segments, OptionDefaults, Salinity
 } from 'scuba-physics';
 
 @Injectable()
@@ -43,7 +44,7 @@ export class PlannerService {
 
     constructor() {
         this._options = new Options();
-        this._options.isFreshWater = true;
+        this._options.salinity = Salinity.fresh;
         this._options.addSafetyStop = true;
         this.depthConverterFactory = new DepthConverterFactory(this.options);
         this.depthConverter = this.depthConverterFactory.create();
@@ -90,8 +91,8 @@ export class PlannerService {
         this.calculate();
     }
 
-    public changeWaterType(isFreshWater: boolean): void {
-        this.options.isFreshWater = isFreshWater;
+    public changeWaterType(salinity: Salinity): void {
+        this.options.salinity = salinity;
         this.calculate();
     }
 

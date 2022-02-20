@@ -36,7 +36,7 @@
                 <div class="mb-3 col-auto">
                     <label for="gfLow" class="form-label">Water salinity:</label>
                     <div class="input-group gradients-max-width">
-                        <input id="salinity" name="salinity" #salinity="ngModel" [(ngModel)]="salinityOption"
+                        <input id="salinity" name="salinity" #salinity="ngModel" [ngModel]="salinityOption"
                             class="form-control col-auto" type="text" readonly
                             [class.is-invalid]="salinity.invalid && (salinity.dirty || salinity.touched)" />
                         <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
@@ -108,7 +108,7 @@
                         <div class="mb-3">
                             <label for="gfLow" class="form-label">Water salinity:</label>
                             <div class="input-group gradients-max-width">
-                                <input id="salinity" name="salinity" #salinity="ngModel" [(ngModel)]="salinityOption"
+                                <input id="salinity" name="salinity" #salinity="ngModel" [ngModel]="salinityOption"
                                     class="form-control col-auto" type="text" readonly
                                     [class.is-invalid]="salinity.invalid && (salinity.dirty || salinity.touched)" />
                                 <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">

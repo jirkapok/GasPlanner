@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SacCalculator, DepthConverterFactory, DepthOptions } from 'scuba-physics';
+import { SacCalculator, DepthConverterFactory, DepthOptions, Salinity } from 'scuba-physics';
 
 export enum SacMode {
     sac = 0,
@@ -20,7 +20,7 @@ export class SacCalculatorService {
     private _calculation = SacMode.sac;
     private calculate: () => void = this.calculateSac;
     private options: DepthOptions = {
-        isFreshWater: true,
+        salinity: Salinity.fresh,
         altitude: 0
     };
 

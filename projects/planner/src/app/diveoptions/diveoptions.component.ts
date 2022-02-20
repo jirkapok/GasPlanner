@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { OptionDefaults } from 'scuba-physics';
+import { OptionDefaults, Salinity } from 'scuba-physics';
 import { Plan, Strategies } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 
@@ -101,19 +101,16 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    public salinityOption: string = "Fresh";
-
     public useFresh(): void {
-        // TODO switch the underlying value
-        this.salinityOption = this.freshName;
+        this.planner.changeWaterType(Salinity.fresh);
     }
 
     public useBrackish(): void {
-        this.salinityOption = this.brackishName;
+        this.planner.changeWaterType(Salinity.brackish);
     }
 
     public useSalt(): void {
-        this.salinityOption = this.saltName;
+        this.planner.changeWaterType(Salinity.salt);
     }
 
     public get isComplex(): boolean {
@@ -172,12 +169,15 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    public get isFreshWater(): boolean {
-        return this.planner.options.isFreshWater;
-    }
-
-    public set isFreshWater(newValue: boolean) {
-        this.planner.changeWaterType(newValue);
+    public get salinityOption(): string {
+        switch(this.planner.options.salinity){
+            case Salinity.salt:
+                return this.saltName;
+            case Salinity.brackish:
+                return this.brackishName;
+            default:
+                return this.freshName;
+        }
     }
 
     public get safetyStopEnabled(): boolean {

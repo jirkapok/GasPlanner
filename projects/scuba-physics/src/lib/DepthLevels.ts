@@ -7,9 +7,11 @@ export class DepthLevels {
      */
     public static readonly decoStopDistance = 3;
 
+    public static lastStopDepth = 3;
+
     // current depth in meters
     public static firstStop(currentDepth: number): number {
-        if (currentDepth <= DepthLevels.decoStopDistance) {
+        if (currentDepth <= DepthLevels.lastStopDepth) {
             return 0;
         }
 
@@ -24,6 +26,10 @@ export class DepthLevels {
 
     /** return negative number for ascent to surface */
     public static nextStop(currentDepth: number): number {
+        if(currentDepth < DepthLevels.lastStopDepth) {
+            return currentDepth - DepthLevels.lastStopDepth;
+        }
+
         return currentDepth - DepthLevels.decoStopDistance;
     }
 

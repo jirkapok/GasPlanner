@@ -16,17 +16,31 @@ describe('Depth Levels', () => {
             const result = DepthLevels.firstStop(2);
             expect(result).toBe(0);
         });
+
+        it('Is 0 meters at 5 meters in case last stop 6 m', () => {
+            DepthLevels.lastStopDepth = 6;
+            const result = DepthLevels.firstStop(5);
+            DepthLevels.lastStopDepth = 3;
+            expect(result).toBe(0);
+        });
     });
 
     describe('Next stop', () => {
         it('At 12 m returns next stop at 9 meters', () => {
-            const result = DepthLevels.nextStop(12);
-            expect(result).toBe(9);
+            const result = DepthLevels.nextStop(9);
+            expect(result).toBe(6);
         });
 
-        it('Returns negative number bellow 3 m', () => {
+        it('Returns negative number bellow 3 m last stop', () => {
             const result = DepthLevels.nextStop(2);
-            expect(result).toBe(-1);
+            expect(result).toBeLessThan(0);
+        });
+
+        it('Is negative number at 4 meters in case last stop 6 m', () => {
+            DepthLevels.lastStopDepth = 6;
+            const result = DepthLevels.nextStop(4);
+            DepthLevels.lastStopDepth = 3;
+            expect(result).toBeLessThan(0);
         });
     });
 });

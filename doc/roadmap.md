@@ -14,12 +14,8 @@ Improvements:
 * UI tweaks
   * Dive info: Add total deco, if any - sum of all stops where ceiling is not 0 m
   * Settings
-    * Change safety stop to dropdown (Never, Propose, Always) to be able disable automatic safety stop in simple mode
-    * Add option to define last stop/safety stop range
-* Events:
-  * Add time to the events warning/error messages
-  * Add narcotic depth exceeded warning event
-  * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
+    * Add option to define last stop/safety stop range (algorithm tests)
+* Update the documentation to latest state of the application
 * Add TRIMIX support and calculator
   * Add general option to enable/disable Nitrox or Trimix
   * Add option to define maximum narcotic depth
@@ -27,6 +23,10 @@ Improvements:
   * Add air breaks
   * Don't switch to gas with higher content of Nitrox warning - <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
   * Add END calculator
+* Events:
+  * Add time to the events warning/error messages
+  * Add narcotic depth exceeded warning event
+  * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * Add imperial units option
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
     * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
@@ -43,7 +43,6 @@ Improvements:
   * Settings
     * Unify dive settings and default settings
 * Help
-  * Update the documentation to latest state of the application
   * Add help to the UI as side bar
     * <https://ej2.syncfusion.com/angular/documentation/sidebar/getting-started/>
     * <https://www.npmjs.com/package/ngx-markdown>

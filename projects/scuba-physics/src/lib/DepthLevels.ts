@@ -1,3 +1,6 @@
+// TODO add last stop option as field
+// add tests
+// Move safety stop decision here
 export class DepthLevels {
     /**
      * Depth difference between two deco stops in metres.

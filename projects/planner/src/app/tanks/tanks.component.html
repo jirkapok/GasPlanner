@@ -7,6 +7,7 @@
   <div class="card-body" *ngIf="isComplex">
     <table class="table table-borderless">
         <tr>
+            <th></th>
             <th colspan="3">
                 <div class="d-flex flex-row justify-content-around">
                     <div class="me-1">Size [L]</div>
@@ -21,6 +22,7 @@
             </th>
         </tr>
         <tr *ngFor="let tank of tanks">
+            <td class="align-top"><span>{{tank.id}}.</span></td>
             <td class="align-top" colspan="3">
                 <div class="d-flex flex-row justify-content-between py-0">
                     <div class="me-1">

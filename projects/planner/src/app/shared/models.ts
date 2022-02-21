@@ -19,7 +19,7 @@ export class Level {
             return '';
         }
 
-        return `${tank.startPressure}/${tank.size}/${tank.name}`;
+        return `${tank.id}. ${tank.name}/${tank.size}/${tank.startPressure}`;
     }
 
     public get duration(): number {

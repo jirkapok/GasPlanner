@@ -12,8 +12,6 @@ Known issues:
 Improvements:
 
 * UI tweaks
-  * Tanks
-    * Add gas index to the depths dropdown in extended mode
   * Dive info: Add total deco, if any - sum of all stops where ceiling is not 0 m
   * Settings
     * Change safety stop to dropdown (Never, Propose, Always) to be able disable automatic safety stop in simple mode

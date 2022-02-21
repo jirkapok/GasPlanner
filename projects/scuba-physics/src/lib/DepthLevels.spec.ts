@@ -33,14 +33,14 @@ describe('Depth Levels', () => {
 
         it('Returns negative number bellow 3 m last stop', () => {
             const result = DepthLevels.nextStop(2);
-            expect(result).toBeLessThan(0);
+            expect(result).toBe(0);
         });
 
         it('Is negative number at 4 meters in case last stop 6 m', () => {
             DepthLevels.lastStopDepth = 6;
-            const result = DepthLevels.nextStop(4);
+            const result = DepthLevels.nextStop(6);
             DepthLevels.lastStopDepth = 3;
-            expect(result).toBeLessThan(0);
+            expect(result).toBe(0);
         });
     });
 });

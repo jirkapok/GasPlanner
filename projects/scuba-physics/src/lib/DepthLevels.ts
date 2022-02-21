@@ -16,15 +16,15 @@ export class DepthLevels {
         const rounded = Math.floor(currentDepth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
 
         if (rounded === currentDepth) {
-            return currentDepth - DepthLevels.decoStopDistance;
+            return DepthLevels.nextStop(currentDepth);
         }
 
         return rounded;
     }
 
     /** return negative number for ascent to surface */
-    public static nextStop(lastStop: number): number {
-        return lastStop - DepthLevels.decoStopDistance;
+    public static nextStop(currentDepth: number): number {
+        return currentDepth - DepthLevels.decoStopDistance;
     }
 
     // depth in meters, returns also meters

@@ -166,8 +166,8 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="stops" role="tabpanel" aria-labelledby="stops-tab">
-                    <div class="col mt-3">
-                        <div class="mb-3">
+                    <div class="row mt-3">
+                        <div class="mb-3 col-auto">
                             <label for="problem" class="form-label">Problem solving duration [min]:</label>
                             <input id="problem" name="problem" #problem="ngModel" [(ngModel)]="problemSolvingDuration"
                                 class="form-control col-auto" type="number" required [rangeVal]="[1, 100]" [minVal]="1"
@@ -178,7 +178,7 @@
                                 Needs to be number 1 - 100 mim
                             </div>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 col-auto">
                             <label for="switchDuration" class="form-label">Gas switch duration [min]:</label>
                             <input id="switchDuration" name="switchDuration" #switchDuration="ngModel"
                                 [(ngModel)]="gasSwitchDuration" class="form-control col-auto" type="number" required
@@ -189,15 +189,17 @@
                                 Needs to be number 1 - 10
                             </div>
                         </div>
-                        <div class="form-check form-switch pb-1">
-                            <input type="checkbox" class="form-check-input" id="safetyStop" mdbCheckbox
-                                [checked]="safetyStopEnabled" (change)="safetyStopEnabled = !safetyStopEnabled" />
-                            <label class="form-check-label" for="safetyStop">Add safety stop 3 min</label>
-                        </div>
-                        <div class="form-check form-switch pb-1">
-                            <input type="checkbox" class="form-check-input" id="roundStops" mdbCheckbox
-                                [checked]="roundDecoStops" (change)="roundDecoStops = !roundDecoStops" />
-                            <label class="form-check-label" for="roundStops">Round deco stops to minutes</label>
+                        <div class="row ms-4">
+                            <div class="form-check form-switch pb-1">
+                                <input type="checkbox" class="form-check-input" id="safetyStop" mdbCheckbox
+                                    [checked]="safetyStopEnabled" (change)="safetyStopEnabled = !safetyStopEnabled" />
+                                <label class="form-check-label" for="safetyStop">Add safety stop 3 min</label>
+                            </div>
+                            <div class="form-check form-switch pb-1">
+                                <input type="checkbox" class="form-check-input" id="roundStops" mdbCheckbox
+                                    [checked]="roundDecoStops" (change)="roundDecoStops = !roundDecoStops" />
+                                <label class="form-check-label" for="roundStops">Round deco stops to minutes</label>
+                            </div>
                         </div>
                     </div>
                 </div>

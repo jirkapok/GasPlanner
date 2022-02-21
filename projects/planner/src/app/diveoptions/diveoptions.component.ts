@@ -156,6 +156,15 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
+    public get lastStopDepth(): number {
+        return this.planner.options.lastStopDepth;
+    }
+
+    public set lastStopDepth(newValue: number) {
+        this.planner.options.lastStopDepth = newValue;
+        this.planner.calculate();
+    }
+
     public get problemSolvingDuration(): number {
         return this.planner.options.problemSolvingDuration;
     }

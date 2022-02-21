@@ -16,6 +16,8 @@ export class OptionDefaults {
     public static readonly roundStopsToMinutes = false;
     public static readonly gasSwitchDuration = 2;
     public static readonly problemSolvingDuration = 1;
+    public static readonly lastStopDepth = 3;
+    public static readonly lastStopDepthRecre = 5;
     public static readonly safetyStopRecre = SafetyStop.auto;
     public static readonly addSafetyStop = true;
     public static readonly maxEND = 30;
@@ -40,6 +42,7 @@ export class OptionDefaults {
         options.ascentSpeed50perc = OptionDefaults.ascentSpeed50perc;
         options.ascentSpeed50percTo6m = OptionDefaults.ascentSpeed50perc;
         options.ascentSpeed6m = OptionDefaults.ascentSpeed50perc;
+        options.lastStopDepth = OptionDefaults.lastStopDepthRecre;
     }
 
     public static useRecommended(options: Options): void {
@@ -47,6 +50,7 @@ export class OptionDefaults {
         options.ascentSpeed50perc = OptionDefaults.ascentSpeed50perc;
         options.ascentSpeed50percTo6m = OptionDefaults.ascentSpeed50percTo6m;
         options.ascentSpeed6m = OptionDefaults.ascentSpeed6m;
+        options.lastStopDepth = OptionDefaults.lastStopDepth;
     }
 
     private static useGeneralRecommended(options: Options): void {
@@ -75,6 +79,11 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
      * In case Auto, adds the stop, only if the maximum depth exceeds 10 meters (default).
      */
     public safetyStop = OptionDefaults.safetyStopRecre;
+
+    /**
+     * Depth in meters where to execute the last stop, should be 3-6 m (default 3 m).
+     */
+    public lastStopDepth = OptionDefaults.lastStopDepth;
 
     /**
      * Maximum equivalent air narcotic depth in meters, default 30 meters
@@ -154,6 +163,7 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
         this.roundStopsToMinutes = other.roundStopsToMinutes || this.roundStopsToMinutes;
         this.gasSwitchDuration = other.gasSwitchDuration || this.gasSwitchDuration;
         this.problemSolvingDuration = other.problemSolvingDuration || this.problemSolvingDuration;
+        this.lastStopDepth = other.lastStopDepth || this.lastStopDepth;
         this.safetyStop = other.safetyStop || this.safetyStop;
         this.maxEND = other.maxEND || this.maxEND;
 

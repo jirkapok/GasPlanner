@@ -189,8 +189,8 @@
                                 Needs to be number 1 - 10
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="gfLow" class="form-label">Add 3 min safety stop:</label>
+                        <div class="mb-3 col-auto">
+                            <label for="safetyStop" class="form-label">Add 3 min safety stop:</label>
                             <div class="input-group gradients-max-width">
                                 <input id="safetyStop" name="safetyStop" #safetyStop="ngModel" [ngModel]="safetyStopOption"
                                     class="form-control col-auto" type="text" readonly
@@ -207,6 +207,17 @@
                                             (click)="useSafetyOn()">{{safetyOnName}}</button>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 col-auto">
+                            <label for="lastStop" class="form-label">Last stop depth [m]:</label>
+                            <input id="lastStop" name="lastStop" #lastStop="ngModel"
+                                [(ngModel)]="lastStopDepth" class="form-control col-auto" type="number" required
+                                [rangeVal]="[3, 6]" [minVal]="3" [maxVal]="6" step="1" min="3" max="6"
+                                [class.is-invalid]="lastStop.invalid && (lastStop.dirty || lastStop.touched)" />
+                            <div class="text-danger form-text"
+                                *ngIf="lastStop.invalid && (lastStop.dirty || lastStop.touched)">
+                                Needs to be number 3 - 6
                             </div>
                         </div>
                         <div class="row ms-4">

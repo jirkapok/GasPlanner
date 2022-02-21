@@ -100,9 +100,7 @@ export class BuhlmannAlgorithm {
         const duration = this.duration(depth, options.descentSpeed);
         segments.add(0, depth, gas, duration);
 
-        const depthConverter = new DepthConverterFactory(options).create();
-        const context = new AlgorithmContext(gases, segments, options, depthConverter);
-        return this.swimNoDecoLimit(segments, gases, context, options);
+        return this.noDecoLimitMultiLevel(segments, gases, options);
     }
 
     /**

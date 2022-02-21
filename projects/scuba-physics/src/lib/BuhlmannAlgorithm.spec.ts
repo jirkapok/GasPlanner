@@ -443,6 +443,7 @@ describe('Buhlmann Algorithm', () => {
         // C: 2m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
         // D: 3m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
 
-        // E: Gases: 18/45, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
+        // E: Hypooxic trimix usage
+        // F: Gases: 18/45, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
     });
 });

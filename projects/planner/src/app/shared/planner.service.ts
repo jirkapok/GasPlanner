@@ -7,7 +7,7 @@ import {
     NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
     Diver, SegmentsFactory, Consumption, Segment, Gases,
-    Segments, OptionDefaults, Salinity
+    Segments, OptionDefaults, Salinity, SafetyStop
 } from 'scuba-physics';
 
 @Injectable()
@@ -45,7 +45,7 @@ export class PlannerService {
     constructor() {
         this._options = new Options();
         this._options.salinity = Salinity.fresh;
-        this._options.addSafetyStop = true;
+        this._options.safetyStop = SafetyStop.auto;
         this.depthConverterFactory = new DepthConverterFactory(this.options);
         this.depthConverter = this.depthConverterFactory.create();
         this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
@@ -60,7 +60,6 @@ export class PlannerService {
         this._tanks = this._tanks.slice(0, 1);
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
         this.setMediumConservatism();
-        this.safetyStopByDepth();
     }
 
     public setMediumConservatism(): void {
@@ -93,6 +92,11 @@ export class PlannerService {
 
     public changeWaterType(salinity: Salinity): void {
         this.options.salinity = salinity;
+        this.calculate();
+    }
+
+    public changeSafetyStop(safetyStop: SafetyStop): void {
+        this.options.safetyStop = safetyStop;
         this.calculate();
     }
 
@@ -158,7 +162,6 @@ export class PlannerService {
 
     public assignDepth(newDepth: number): void {
         this.plan.assignDepth(newDepth, this.firstTank, this.options);
-        this.safetyStopByDepth();
         this.calculate();
     }
 
@@ -224,11 +227,5 @@ export class PlannerService {
     private calculateTurnPressure(): number {
         const consumed = this.firstTank.consumed / 2;
         return this.firstTank.startPressure - Math.floor(consumed);
-    }
-
-    private safetyStopByDepth(): void {
-        if (!this.isComplex) {
-            this.options.addSafetyStop = this.plan.maxDepth > 10;
-        }
     }
 }

@@ -1,6 +1,7 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Salinity } from './depth-converter';
 import { Gases, StandardGases } from './Gases';
+import { SafetyStop } from './Options';
 import { OptionExtensions } from './Options.spec';
 import { Ceiling, EventType } from './Profile';
 import { ProfileEvents } from './ProfileEvents';
@@ -187,7 +188,7 @@ describe('Profile Events', () => {
 
             const algorithm = new BuhlmannAlgorithm();
             const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
-            defaultOptions.addSafetyStop = true;
+            defaultOptions.safetyStop = SafetyStop.always;
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             const firstError = events.items[0];
@@ -208,7 +209,7 @@ describe('Profile Events', () => {
 
             const algorithm = new BuhlmannAlgorithm();
             const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
-            defaultOptions.addSafetyStop = true;
+            defaultOptions.safetyStop = SafetyStop.always;
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             expect(events.items.length).toBe(0);

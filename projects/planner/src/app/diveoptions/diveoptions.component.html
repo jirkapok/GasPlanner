@@ -189,12 +189,27 @@
                                 Needs to be number 1 - 10
                             </div>
                         </div>
-                        <div class="row ms-4">
-                            <div class="form-check form-switch pb-1">
-                                <input type="checkbox" class="form-check-input" id="safetyStop" mdbCheckbox
-                                    [checked]="safetyStopEnabled" (change)="safetyStopEnabled = !safetyStopEnabled" />
-                                <label class="form-check-label" for="safetyStop">Add safety stop 3 min</label>
+                        <div class="mb-3">
+                            <label for="gfLow" class="form-label">Add 3 min safety stop:</label>
+                            <div class="input-group gradients-max-width">
+                                <input id="safetyStop" name="safetyStop" #safetyStop="ngModel" [ngModel]="safetyStopOption"
+                                    class="form-control col-auto" type="text" readonly
+                                    [class.is-invalid]="safetyStop.invalid && (safetyStop.dirty || safetyStop.touched)" />
+                                <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
+                                    <button type="button" class="btn btn-default border" id="safetyStopMenu"
+                                        ngbDropdownToggle></button>
+                                    <div ngbDropdownMenu aria-labelledby="safetyStopMenu" aria-expanded="false">
+                                        <button type="button" class="dropdown-item"
+                                            (click)="useSafetyOff()">{{safetyOffName}}</button>
+                                        <button type="button" class="dropdown-item"
+                                            (click)="useSafetyAuto()">{{safetyAutoName}}</button>
+                                        <button type="button" class="dropdown-item"
+                                            (click)="useSafetyOn()">{{safetyOnName}}</button>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                        <div class="row ms-4">
                             <div class="form-check form-switch pb-1">
                                 <input type="checkbox" class="form-check-input" id="roundStops" mdbCheckbox
                                     [checked]="roundDecoStops" (change)="roundDecoStops = !roundDecoStops" />

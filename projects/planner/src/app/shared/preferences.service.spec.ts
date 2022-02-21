@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { PreferencesService } from './preferences.service';
 import { PlannerService } from './planner.service';
-import { Diver, Options, Tank, Salinity } from 'scuba-physics';
+import { Diver, Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 
 describe('PreferencesService', () => {
@@ -55,13 +55,14 @@ describe('PreferencesService', () => {
 
                 const expected = new Options(0.3, 0.85, 1.4, 1.6, Salinity.fresh);
                 expected.descentSpeed = 15;
-                expected.addSafetyStop = true;
+                expected.safetyStop = SafetyStop.auto;
                 expect(planner.options).toEqual(expected);
             }));
 
         it('Tanks are loaded after save', inject([PreferencesService, PlannerService],
             (service: PreferencesService, planner: PlannerService) => {
                 OptionExtensions.applySimpleSpeeds(planner.options);
+                planner.options.safetyStop = SafetyStop.always;
                 planner.options.gasSwitchDuration = 1;
                 planner.options.problemSolvingDuration = 2;
                 const tanks = planner.tanks;

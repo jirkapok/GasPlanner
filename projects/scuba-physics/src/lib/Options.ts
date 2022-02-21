@@ -2,6 +2,13 @@ import { DepthOptions, Salinity } from './depth-converter';
 import { GasOptions } from './Gases';
 import { SpeedOptions } from './speeds';
 
+
+export enum SafetyStop {
+    never = 1,
+    auto = 2,
+    always = 3
+}
+
 // See Options for values meaning
 export class OptionDefaults {
     public static readonly altitude = 0;
@@ -9,6 +16,7 @@ export class OptionDefaults {
     public static readonly roundStopsToMinutes = false;
     public static readonly gasSwitchDuration = 2;
     public static readonly problemSolvingDuration = 1;
+    public static readonly safetyStopRecre = SafetyStop.auto;
     public static readonly addSafetyStop = true;
     public static readonly maxEND = 30;
 
@@ -42,7 +50,7 @@ export class OptionDefaults {
     }
 
     private static useGeneralRecommended(options: Options): void {
-        options.addSafetyStop = OptionDefaults.addSafetyStop;
+        options.safetyStop = OptionDefaults.safetyStopRecre;
         options.roundStopsToMinutes = OptionDefaults.roundStopsToMinutes;
         options.gasSwitchDuration = OptionDefaults.gasSwitchDuration;
         options.descentSpeed = OptionDefaults.descentSpeed;
@@ -63,9 +71,10 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
     public gasSwitchDuration = OptionDefaults.gasSwitchDuration;
 
     /**
-     * If true, adds 3 minutes to last stop in 3 meters
+     * If configured, adds 3 minutes to last stop in 3 meters.
+     * In case Auto, adds the stop, only if the maximum depth exceeds 10 meters (default).
      */
-    public addSafetyStop = OptionDefaults.addSafetyStop;
+    public safetyStop = OptionDefaults.safetyStopRecre;
 
     /**
      * Maximum equivalent air narcotic depth in meters, default 30 meters
@@ -145,7 +154,7 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
         this.roundStopsToMinutes = other.roundStopsToMinutes || this.roundStopsToMinutes;
         this.gasSwitchDuration = other.gasSwitchDuration || this.gasSwitchDuration;
         this.problemSolvingDuration = other.problemSolvingDuration || this.problemSolvingDuration;
-        this.addSafetyStop = other.addSafetyStop || this.addSafetyStop;
+        this.safetyStop = other.safetyStop || this.safetyStop;
         this.maxEND = other.maxEND || this.maxEND;
 
         this.ascentSpeed6m = other.ascentSpeed6m || this.ascentSpeed6m;

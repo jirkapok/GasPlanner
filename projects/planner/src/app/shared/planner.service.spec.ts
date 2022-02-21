@@ -1,4 +1,4 @@
-import { Options, Segment } from 'scuba-physics';
+import { Options, SafetyStop, Segment } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 
@@ -9,6 +9,7 @@ describe('PlannerService', () => {
         planner = new PlannerService();
         OptionExtensions.applySimpleSpeeds(planner.options);
         planner.options.problemSolvingDuration = 2;
+        planner.options.safetyStop = SafetyStop.always;
         planner.assignDepth(30); // to enforce plan to be updated
     });
 
@@ -93,10 +94,6 @@ describe('PlannerService', () => {
 
         it('Keeps first gas content', () => {
             expect(planner.firstTank.o2).toBe(o2Expected);
-        });
-
-        it('Resets safety stop option', () => {
-            expect(planner.options.addSafetyStop).toBeFalsy();
         });
     });
 
@@ -213,51 +210,6 @@ describe('PlannerService', () => {
             planner.firstTank.gas.fO2 = 0.5;
             planner.applyMaxDepth();
             expect(planner.plan.maxDepth).toBe(18);
-        });
-    });
-
-    describe('Planned depth', () => {
-        let options: Options;
-
-        beforeEach(() => {
-            options = planner.options;
-        });
-
-        describe('Simple mode', () => {
-            beforeEach(() => {
-                planner.isComplex = false;
-            });
-
-            it('20 m enforces safety stop', () => {
-                options.addSafetyStop = false;
-                planner.assignDepth(20);
-                expect(options.addSafetyStop).toBeTruthy();
-            });
-
-            it('10 m removes safety stop', () => {
-                options.addSafetyStop = true;
-                planner.assignDepth(6);
-                expect(options.addSafetyStop).toBeFalsy();
-            });
-        });
-
-        describe('Complex mode', () => {
-            beforeEach(() => {
-                planner.isComplex = true;
-            });
-
-            it('20 m safety stop option isn`t changed', () => {
-                options.addSafetyStop = false;
-                planner.assignDepth(20);
-
-                expect(options.addSafetyStop).toBeFalsy();
-            });
-
-            it('10 m safety stop option isn`t changed', () => {
-                options.addSafetyStop = true;
-                planner.assignDepth(6);
-                expect(options.addSafetyStop).toBeTruthy();
-            });
         });
     });
 });

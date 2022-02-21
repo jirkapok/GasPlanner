@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { OptionDefaults, Salinity } from 'scuba-physics';
+import { OptionDefaults, SafetyStop, Salinity } from 'scuba-physics';
 import { Plan, Strategies } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 
@@ -22,11 +22,13 @@ export class DiveOptionsComponent {
     public readonly freshName = 'Fresh';
     public readonly brackishName = 'Brackish (EN13319)';
     public readonly saltName = 'Salt';
+    public readonly safetyOffName = 'Never';
+    public readonly safetyAutoName = 'Auto (> 10 m)';
+    public readonly safetyOnName = 'Always';
     public conservatism = this.mediumName;
     public plan: Plan;
     public strategy = this.allUsableName;
     public icon = faCog;
-
 
     constructor(private planner: PlannerService) {
         this.plan = this.planner.plan;
@@ -113,6 +115,18 @@ export class DiveOptionsComponent {
         this.planner.changeWaterType(Salinity.salt);
     }
 
+    public useSafetyOff(): void {
+        this.planner.changeSafetyStop(SafetyStop.never);
+    }
+
+    public useSafetyAuto(): void {
+        this.planner.changeSafetyStop(SafetyStop.auto);
+    }
+
+    public useSafetyOn(): void {
+        this.planner.changeSafetyStop(SafetyStop.always);
+    }
+
     public get isComplex(): boolean {
         return this.planner.isComplex;
     }
@@ -189,13 +203,15 @@ export class DiveOptionsComponent {
         }
     }
 
-    public get safetyStopEnabled(): boolean {
-        return this.planner.options.addSafetyStop;
-    }
-
-    public set safetyStopEnabled(newValue: boolean) {
-        this.planner.options.addSafetyStop = newValue;
-        this.planner.calculate();
+    public get safetyStopOption(): string {
+        switch(this.planner.options.safetyStop){
+            case SafetyStop.never:
+                return this.safetyOffName;
+            case SafetyStop.always:
+                return this.safetyOnName;
+            default:
+                return this.safetyAutoName;
+        }
     }
 
     public get plannedAltitude(): number {

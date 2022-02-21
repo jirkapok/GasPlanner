@@ -5,6 +5,7 @@ import { Consumption } from './consumption';
 import { Time } from './Time';
 import { Segment, Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
+import { SafetyStop } from './Options';
 
 describe('Consumption', () => {
     const diver = new Diver(20, 1.6);
@@ -12,7 +13,7 @@ describe('Consumption', () => {
 
     describe('Max bottom time', () => {
         const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
-        options.addSafetyStop = true;
+        options.safetyStop = SafetyStop.always;
         options.problemSolvingDuration = 2;
 
         it('Is calculated for default simple plan', () => {

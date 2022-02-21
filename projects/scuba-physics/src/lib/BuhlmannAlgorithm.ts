@@ -5,7 +5,7 @@ import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Time } from './Time';
 import { CalculatedProfile, Ceiling, Event } from './Profile';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
-import { Options } from './Options';
+import { Options, SafetyStop } from './Options';
 import { AscentSpeeds } from './speeds';
 import { DepthLevels } from './DepthLevels';
 
@@ -76,6 +76,12 @@ class AlgorithmContext {
         const newGas = this.gases.bestDecoGas(this.depthConverter, this.bestGasOptions);
         return newGas;
     }
+
+    public get addSafetyStop(): boolean {
+        return (this.options.safetyStop === SafetyStop.always ||
+                (this.options.safetyStop === SafetyStop.auto && this.segments.maxDepth > 10)) &&
+                this.currentDepth === DepthLevels.decoStopDistance;
+    }
 }
 
 
@@ -144,7 +150,7 @@ export class BuhlmannAlgorithm {
             }
 
             // 3. safety stop
-            if (options.addSafetyStop && context.currentDepth === DepthLevels.decoStopDistance) {
+            if (context.addSafetyStop) {
                 const safetyStopDuration = Time.oneMinute * 3;
                 const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, safetyStopDuration);
                 this.swim(context, decoStop);

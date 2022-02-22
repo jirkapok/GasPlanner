@@ -1,10 +1,10 @@
 import { DepthConverter } from './depth-converter';
 import { SacCalculator } from './SacCalculator';
 
-describe('Sac Calculator', () => {
+describe('RMV/Sac Calculator', () => {
     const sut = new SacCalculator(DepthConverter.forFreshWater());
 
-    describe('Sac calculations', () => {
+    describe('RMV/Sac calculations', () => {
         it('15m for 45 min with 15L tank (defaults) has sac 20.13 L/min.', () => {
             const result = sut.calculateSac(15, 15, 150, 45);
             expect(result).toBe(20.13);

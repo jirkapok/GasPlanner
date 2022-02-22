@@ -6,7 +6,7 @@ describe('SacCalculatorService', () => {
         service = new SacCalculatorService();
     });
 
-    describe('Sac calculations', () => {
+    describe('RMV/Sac calculations', () => {
         it('15m for 45 min with 15L tank (defaults) has sac 20.13 L/min.', () => {
             expect(service.rmv).toBe(20.13);
         });

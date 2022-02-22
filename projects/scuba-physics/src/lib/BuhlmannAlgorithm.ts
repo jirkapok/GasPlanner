@@ -5,7 +5,7 @@ import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Time } from './Time';
 import { CalculatedProfile, Ceiling, Event } from './Profile';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
-import { Options, SafetyStop } from './Options';
+import { Options } from './Options';
 import { AscentSpeeds } from './speeds';
 import { DepthLevels } from './DepthLevels';
 
@@ -18,6 +18,7 @@ class AlgorithmContext {
     private gradients: GradientFactors;
     private bestGasOptions: BestGasOptions;
     private speeds: AscentSpeeds;
+    private levels: DepthLevels;
 
     // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
@@ -35,6 +36,7 @@ class AlgorithmContext {
         };
 
         this.speeds = new AscentSpeeds(this.options);
+        this.levels = new DepthLevels(options.lastStopDepth, options.safetyStop);
     }
 
     // use this just before calculating ascent to be able calculate correct speeds
@@ -77,13 +79,18 @@ class AlgorithmContext {
         return newGas;
     }
 
+    public firstStop(): number {
+        return this.levels.firstStop(this.currentDepth);
+    }
+
+    public nextStop(currentStop: number): number {
+        return this.levels.nextStop(currentStop);
+    }
+
     public get addSafetyStop(): boolean {
-        return (this.options.safetyStop === SafetyStop.always ||
-                (this.options.safetyStop === SafetyStop.auto && this.segments.maxDepth > 10)) &&
-                this.currentDepth === DepthLevels.decoStopDistance;
+        return this.levels.addSafetyStop(this.currentDepth, this.segments.maxDepth);
     }
 }
-
 
 export class BuhlmannAlgorithm {
     /**
@@ -126,8 +133,7 @@ export class BuhlmannAlgorithm {
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
         this.swimPlan(context);
         context.markAverageDepth();
-
-        let nextStop = DepthLevels.firstStop(context.currentDepth);
+        let nextStop = context.firstStop();
 
         // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.
         while (nextStop >= 0 && segments.last().endDepth !== 0) {
@@ -159,7 +165,7 @@ export class BuhlmannAlgorithm {
             const duration = this.duration(depthDifference, context.ascentSpeed);
             const ascent = context.segments.add(context.currentDepth, nextStop, context.currentGas, duration);
             this.swim(context, ascent);
-            nextStop = DepthLevels.nextStop(nextStop);
+            nextStop = context.nextStop(nextStop);
         }
 
         const merged = segments.mergeFlat(originSegments.length);

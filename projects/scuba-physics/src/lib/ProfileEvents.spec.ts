@@ -1,5 +1,5 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
-import { Salinity } from './depth-converter';
+import { Salinity } from './pressure-converter';
 import { Gases, StandardGases } from './Gases';
 import { SafetyStop } from './Options';
 import { OptionExtensions } from './Options.spec';

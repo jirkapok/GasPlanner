@@ -1,11 +1,12 @@
 import { Diver } from './Diver';
-import { DepthConverter, Salinity } from './depth-converter';
+import { DepthConverter } from './depth-converter';
 import { Tank } from './Tanks';
 import { Consumption } from './consumption';
 import { Time } from './Time';
 import { Segment, Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
 import { SafetyStop } from './Options';
+import { Salinity } from './pressure-converter';
 
 describe('Consumption', () => {
     const diver = new Diver(20, 1.6);

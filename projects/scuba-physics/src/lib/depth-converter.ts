@@ -1,15 +1,5 @@
 import { DepthLevels } from './DepthLevels';
-import { Density, Gravity, AltitudePressure, PressureConverter } from './pressure-converter';
-
-// Supported types of salt density of water used to distinguish depth converters
-export enum Salinity {
-    // 1000 kg/m3
-    fresh = 1,
-    // EN13319 - 1020 kg/m3
-    brackish = 2,
-    // 1030 kg/m3
-    salt = 3
-}
+import { Density, Gravity, AltitudePressure, PressureConverter, Salinity } from './pressure-converter';
 
 export interface DepthOptions {
     /** Meters above see level, 0 for see level */

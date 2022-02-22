@@ -1,5 +1,6 @@
-import { DepthOptions, Salinity } from './depth-converter';
+import { DepthOptions } from './depth-converter';
 import { GasOptions } from './Gases';
+import { Salinity } from './pressure-converter';
 import { SpeedOptions } from './speeds';
 
 

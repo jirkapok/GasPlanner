@@ -3,7 +3,7 @@ import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gas, Gases, StandardGases } from './Gases';
 import { Segment, Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
-import { Salinity } from './depth-converter';
+import { Salinity } from './pressure-converter';
 import { SafetyStop } from './Options';
 
 describe('Buhlmann Algorithm', () => {
@@ -223,6 +223,24 @@ describe('Buhlmann Algorithm', () => {
         });
 
         describe('Safety Stop', () => {
+            describe('Last stop depth', () => {
+                it('5m for 30 minutes, last stop depth at 6 m - no safety stop', () => {
+                    options.lastStopDepth = 6;
+                    const planText = createPlan5meters30minutes();
+                    options.lastStopDepth = 3;
+                    const expectedPlan = '0,5,15; 5,5,1785; 5,0,30;';
+                    expect(planText).toBe(expectedPlan);
+                });
+
+                it('5m for 30 minutes, last stop depth at 5 m - added safety stop', () => {
+                    options.lastStopDepth = 5;
+                    const planText = createPlan5meters30minutes();
+                    options.lastStopDepth = 3;
+                    const expectedPlan = '0,5,15; 5,5,1785; 5,5,180; 5,0,30;';
+                    expect(planText).toBe(expectedPlan);
+                });
+            });
+
             it('5m for 30 minutes using ean32 - no safety stop', () => {
                 options.safetyStop = SafetyStop.never;
                 const planText = createPlan5meters30minutes();
@@ -438,11 +456,7 @@ describe('Buhlmann Algorithm', () => {
 
         // TODO add algorithm test cases:
         // A: where deco is increased even during ascent <= do we have profile for this use case?
-
-        // B: Safety stop is correctly applied at expected depth
-        // C: 2m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
-        // D: 3m, 60min, gases: .21; fresh, 0masl. No safety stop and direct ascent to surface.
-
+        // Trimix
         // E: Hypooxic trimix usage
         // F: Gases: 18/45, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
     });

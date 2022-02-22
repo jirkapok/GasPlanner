@@ -1,3 +1,13 @@
+// Supported types of salt density of water used to distinguish depth converters
+export enum Salinity {
+    // 1000 kg/m3
+    fresh = 1,
+    // EN13319 - 1020 kg/m3
+    brackish = 2,
+    // 1030 kg/m3
+    salt = 3
+}
+
 export class Density {
     /**
      * 1000kg / m3 at 0C / 32F (standard conditions for measurements).

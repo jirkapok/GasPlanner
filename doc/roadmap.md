@@ -13,8 +13,6 @@ Improvements:
 
 * UI tweaks
   * Dive info: Add total deco, if any - sum of all stops where ceiling is not 0 m
-  * Settings
-    * Add option to define last stop/safety stop range (algorithm tests)
 * Update the documentation to latest state of the application
 * Add TRIMIX support and calculator
   * Add general option to enable/disable Nitrox or Trimix

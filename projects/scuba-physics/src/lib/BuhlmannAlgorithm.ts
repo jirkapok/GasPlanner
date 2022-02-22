@@ -79,10 +79,6 @@ class AlgorithmContext {
         return newGas;
     }
 
-    public firstStop(): number {
-        return this.levels.firstStop(this.currentDepth);
-    }
-
     public nextStop(currentStop: number): number {
         return this.levels.nextStop(currentStop);
     }
@@ -133,7 +129,7 @@ export class BuhlmannAlgorithm {
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
         this.swimPlan(context);
         context.markAverageDepth();
-        let nextStop = context.firstStop();
+        let nextStop = context.nextStop(context.currentDepth);
 
         // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.
         while (nextStop >= 0 && segments.last().endDepth !== 0) {

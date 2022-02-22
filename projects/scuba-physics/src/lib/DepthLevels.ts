@@ -15,32 +15,29 @@ export class DepthLevels {
         return Math.round(depth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
     }
 
-    // current and return depth in meters
-    public firstStop(currentDepth: number): number {
-        if (currentDepth <= this.lastStopDepth) {
-            return 0;
-        }
-
-        const rounded = Math.floor(currentDepth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
-
-        if (rounded === currentDepth) {
-            return this.nextStop(currentDepth);
-        }
-
-        return rounded;
-    }
-
     /**
      * returns 0 m for ascent to surface
      * currentDepth and return value in meters
      * this creates ascent using 3 meter increments
     */
     public nextStop(currentDepth: number): number {
-        if(currentDepth <= this.lastStopDepth) {
+        if (currentDepth <= this.lastStopDepth) {
             return 0;
         }
 
-        return currentDepth - DepthLevels.decoStopDistance;
+        const rounded = Math.floor(currentDepth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
+
+        if (rounded !== currentDepth) {
+            return rounded;
+        }
+
+        const result = currentDepth - DepthLevels.decoStopDistance;
+
+        if(result <= this.lastStopDepth) {
+            return this.lastStopDepth;
+        }
+
+        return result;
     }
 
     public addSafetyStop(currentDepth: number, maxDepth: number): boolean {

@@ -2,43 +2,42 @@ import { DepthLevels } from './DepthLevels';
 import { SafetyStop } from './Options';
 
 describe('Depth Levels', () => {
-    describe('First stop', () => {
+    describe('Next stop', () => {
+        const irrelevantSafety = SafetyStop.always;
+
         it('Rounds to 3 meter increments', () => {
-            const result = new DepthLevels(3, SafetyStop.always).firstStop(17.6);
+            const levels = new DepthLevels(3, irrelevantSafety);
+            const result = levels.nextStop(17.6);
             expect(result).toBe(15);
         });
 
         it('At 12 m returns first stop at 9 meters', () => {
-            const result = new DepthLevels(3, SafetyStop.always).firstStop(12);
+            const levels = new DepthLevels(3, irrelevantSafety);
+            const result = levels.nextStop(12);
             expect(result).toBe(9);
         });
 
-        it('Is 0 meters bellow last stop option', () => {
-            const result = new DepthLevels(3, SafetyStop.always).firstStop(2);
-            expect(result).toBe(0);
-        });
-
-        it('Is 0 meters at 5 meters in case last stop 6 m', () => {
-            const levels = new DepthLevels(6, SafetyStop.always);
-            const result = levels.firstStop(5);
-            expect(result).toBe(0);
-        });
-    });
-
-    describe('Next stop', () => {
         it('At 12 m returns next stop at 9 meters', () => {
-            const result = new DepthLevels(3, SafetyStop.always).nextStop(9);
+            const levels = new DepthLevels(3, irrelevantSafety);
+            const result = levels.nextStop(9);
             expect(result).toBe(6);
         });
 
-        it('Returns negative number bellow 3 m last stop', () => {
-            const result = new DepthLevels(3, SafetyStop.always).nextStop(2);
+        it('Returns 0 m bellow 3 m last stop', () => {
+            const levels = new DepthLevels(6, irrelevantSafety);
+            const result = levels.nextStop(5);
             expect(result).toBe(0);
         });
 
-        it('Is negative number at 4 meters in case last stop 6 m', () => {
-            const levels = new DepthLevels(6, SafetyStop.always);
-            const result = levels.nextStop(5);
+        it('Is 5 m from 6 m in case last stop 5 m', () => {
+            const levels = new DepthLevels(5, irrelevantSafety);
+            const result = levels.nextStop(6);
+            expect(result).toBe(5);
+        });
+
+        it('Is 0 meters at 6 meters in case last stop 6 m', () => {
+            const levels = new DepthLevels(6, irrelevantSafety);
+            const result = levels.nextStop(6);
             expect(result).toBe(0);
         });
     });

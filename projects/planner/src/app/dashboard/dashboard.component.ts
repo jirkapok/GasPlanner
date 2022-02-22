@@ -12,8 +12,8 @@ import { Dive } from '../shared/models';
 export class DashboardComponent implements OnInit {
     public showDisclaimer = true;
     public exclamation = faExclamationTriangle;
-    private dive: Dive;
     public selectedTimeStamp = '';
+    private dive: Dive;
 
     public get showResults(): boolean {
         return this.dive.calculated && !this.dive.hasErrors;
@@ -29,6 +29,7 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit(): void {
         this.showDisclaimer = this.preferences.disclaimerEnabled();
+        this.planner.calculate();
     }
 
     public stopDisclaimer(): void {

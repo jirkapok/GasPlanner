@@ -160,6 +160,18 @@ describe('Profile Events', () => {
             });
         });
 
+        it('High ascent speed rounds precision', () => {
+            const segments = new Segments();
+            // using this formula javascript creates precise number 166.66666666666666 periodical
+            const duration = (40 - 15) / 9 * Time.oneMinute;
+            segments.add(40, 15, StandardGases.air, duration);
+
+            const recommendedOptions = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
+            recommendedOptions.ascentSpeed50perc = 9;
+            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, recommendedOptions);
+            expect(events.items.length).toBe(0);
+        });
+
         it('Adds high descent speed', () => {
             const segments = new Segments();
             segments.add(0, 10, StandardGases.air, Time.oneMinute);

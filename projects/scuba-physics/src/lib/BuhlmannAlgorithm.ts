@@ -197,7 +197,7 @@ export class BuhlmannAlgorithm {
 
     // Speed in meters / min.
     private duration(depthDifference: number, speed: number): number {
-        const meterPerSec = speed / Time.oneMinute;
+        const meterPerSec = Time.toMinutes(speed);
         return depthDifference / meterPerSec;
     }
 

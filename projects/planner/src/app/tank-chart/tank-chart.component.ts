@@ -10,5 +10,8 @@ export class TankChartComponent {
     @Input()
     public tank: Tank = Tank.createDefault();
 
+    @Input()
+    public showId = false;
+
     constructor() { }
 }

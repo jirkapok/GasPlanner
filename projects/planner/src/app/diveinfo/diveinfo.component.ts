@@ -24,6 +24,10 @@ export class DiveInfoComponent {
         return this.planner.tanks;
     }
 
+    public get showTankId(): boolean {
+        return this.planner.isComplex;
+    }
+
     public get showMaxBottomTime(): boolean {
         return this.dive.maxTime > 0;
     }

@@ -50,7 +50,7 @@
                     </tr>
                 </tbody>
             </table>
-            <app-tankchart *ngFor="let tank of tanks" [tank]="tank"></app-tankchart>
+            <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="showTankId"></app-tankchart>
         </div>
 
         <div *ngIf="dive.notEnoughGas" class="alert  alert-danger">

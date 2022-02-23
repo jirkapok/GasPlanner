@@ -1,6 +1,6 @@
 <div class="my-4">
     <div class="d-flex flex-row justify-content-between">
-        <strong class="text-start">{{ tank.name }}</strong>
+        <strong class="text-start"><span *ngIf="showId"> {{ tank.id }}.</span> {{ tank.name }}</strong>
         <app-gaslabel [gas]="tank" [showName]="false" class="text-end"></app-gaslabel>
     </div>
     <div class="d-flex flex-row justify-content-between">

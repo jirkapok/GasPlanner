@@ -397,6 +397,35 @@ describe('Consumption', () => {
 
             consumption.consumeFromTanks(segments, 2, tanks, diver, 2);
             expect(tank.consumed).toEqual(61); //  because of pressure conversion
+            // should be (1.5 * 10 * 2 * 3) + (2 * 2 * 3) = 102
+            expect(tank.reserve).toEqual(102);
         });
+
+        it('As part of ascent counts to rock bottom', () => {
+            const tank1 = new Tank(20, 200, 21);
+            const tank2 = new Tank(10, 200, 50);
+            const tanks = [tank1, tank2];
+
+            const first = new Segment(0, 40, tank1.gas, Time.oneMinute * 4); // 3 * 4 * 1 = 12
+            first.tank = tank1;
+            const second = new Segment(40, 40, tank1.gas, Time.oneMinute * 13); // 5 * 13 * 1 = 65
+            second.tank = tank1;
+            const third = new Segment(40, 6, tank1.gas, Time.oneMinute * 10); // 3,3 * 10 * 1 = 33
+            third.tank = tank1;
+            const safety = new Segment(6, 6, tank2.gas, Time.oneMinute * 8); // 1,6 * 8 * 2 = 25,6
+            const ascent = new Segment(6, 0, tank2.gas, Time.oneMinute * 2); // 1,3 * 2 * 2 = 5,2
+            const segments = [first, second, third, safety, ascent];
+
+            // currently tank1 30/90,  tank2 112/169 (reserve/remaining)
+            // should be tank1 129/90, tank2 94/169
+            consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+            expect(tank1.reserve).toEqual(129);
+            expect(tank2.reserve).toEqual(94);
+        });
+
+        // TODO add multilevel dives reserve calculations: all use maximum depth as point where ascent starts
+        // 1. deeper, shallower, deeper than at beginning
+        // 2. both depths identical, shallower between them
+        // 3. deeper, shallower, shallower at beginning
     });
 });

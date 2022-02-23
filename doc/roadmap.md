@@ -5,8 +5,6 @@ Following list of features and improvements ordered by priority is under develop
 Known issues:
 
 * Gas oxygen content spinner shows not rounded number, where it shouldn't
-* Reserve counts only non user defined segments as emergency ascent (Doesn't handle all multilevel scenarios): Fix rock bottom calculation case where part of the ascent is user defined: air 24L/200bar, S80 EAN50, 18m/120 min. +ascent to 6m on air. The rock bottom ISNT 200bar for EAN50.
-* Profile is not recalculated after diver SAC is updated
 * Fix Nitrox calculator to use Simple depth converter
 
 Improvements:

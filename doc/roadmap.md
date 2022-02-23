@@ -6,11 +6,10 @@ Known issues:
 
 * Gas oxygen content spinner shows not rounded number, where it shouldn't
 * Fix Nitrox calculator to use Simple depth converter
+* Fix the reserve calculations
 
 Improvements:
 
-* UI tweaks
-  * Dive info: Add total deco, if any - sum of all stops where ceiling is not 0 m
 * Update the documentation to latest state of the application
 * Add TRIMIX support and calculator
   * Add general option to enable/disable Nitrox or Trimix
@@ -33,8 +32,9 @@ Improvements:
   * Tanks
     * Add Dropdown for well known tank sizes
     * Add max. narc. depth to the Gas label
-  * Profile
-    * Add option to reduce plan table only to list of stops
+  * Profile:
+    * Add option to reduce waypoints table only to list of stops
+    * Waypoints table: add switch in case user is switching to tank with the same gas
     * Add other events to profile chart like gas switch
   * Settings
     * Unify dive settings and default settings

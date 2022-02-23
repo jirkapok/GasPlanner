@@ -427,5 +427,11 @@ describe('Consumption', () => {
         // 1. deeper, shallower, deeper than at beginning
         // 2. both depths identical, shallower between them
         // 3. deeper, shallower, shallower at beginning
+        // 4. Multiple tanks of the same gas, reserve is counted form first bellow reserve and second tank is not utilized
+        // TODO Add to documentation: this is correct scenario, user is informed, that he needs to switch
+        //  and therefore needs to use new segment and enforce usage of different gas
+        // TODO Add test to events, that we need show also user defined gas switch to other tank even with the same gas
+        // 40 m/20 minutes on first tank only. Tanks: 24/200/.21, 11/200/.21
+        // 5. Previous dive, but First two user defined segments use second tank - ensure consumption is calculated correctly
     });
 });

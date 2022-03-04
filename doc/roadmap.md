@@ -24,6 +24,7 @@ Improvements:
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * Add imperial units option
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
+    * Fix RMV/SAC calculator based on Nominal volume
     * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
   * Meter: <https://en.wikipedia.org/wiki/Metre_sea_water>

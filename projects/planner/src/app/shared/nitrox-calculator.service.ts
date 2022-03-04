@@ -13,11 +13,11 @@ export enum NitroxMode {
 export class NitroxCalculatorService {
     private _pO2 = 1.6;
     private _fO2 = 50;
-    private _mod = 22.43;
+    private _mod = 22;
     private _calculation = NitroxMode.Mod;
     private calculate: () => void = this.calculateCurrentMod;
     // consider usage of switch in the UI to change the depth converter
-    private nitroxCalculator = new NitroxCalculator(DepthConverter.forFreshWater());
+    private nitroxCalculator = new NitroxCalculator(DepthConverter.simple());
 
     public get calculation(): NitroxMode {
         return this._calculation;

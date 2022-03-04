@@ -71,4 +71,32 @@ describe('Depth Converter', () => {
             expect(result).toBeCloseTo(22);
         });
     });
+
+    describe('Simple', () => {
+        const simpleConverter = DepthConverter.simple();
+
+        it('0 bars throws simple exception', () => {
+            expect(() => simpleConverter.fromBar(0)).toThrow();
+        });
+
+        it('0 m converts to 1.0 bar', () => {
+            const result = simpleConverter.toBar(0);
+            expect(result).toBe(1.00000);
+        });
+
+        it('1.0 bar converts to 0 m', () => {
+            const result = simpleConverter.fromBar(1.00000);
+            expect(result).toBe(0);
+        });
+
+        it('22 m converts to 3.200 bar', () => {
+            const result = simpleConverter.toBar(22);
+            expect(result).toBeCloseTo(3.200, 3);
+        });
+
+        it('3.200 converts to 22m', () => {
+            const result = simpleConverter.fromBar(3.200);
+            expect(result).toBeCloseTo(22);
+        });
+    });
 });

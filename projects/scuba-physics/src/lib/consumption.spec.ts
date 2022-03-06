@@ -423,15 +423,113 @@ describe('Consumption', () => {
             expect(tank2.reserve).toEqual(94);
         });
 
-        // TODO add multilevel dives reserve calculations: all use maximum depth as point where ascent starts
-        // 1. deeper, shallower, deeper than at beginning
-        // 2. both depths identical, shallower between them
-        // 3. deeper, shallower, shallower at beginning
-        // 4. Multiple tanks of the same gas, reserve is counted form first bellow reserve and second tank is not utilized
-        // TODO Add to documentation: this is correct scenario, user is informed, that he needs to switch
-        //  and therefore needs to use new segment and enforce usage of different gas
         // TODO Add test to events, that we need show also user defined gas switch to other tank even with the same gas
         // 40 m/20 minutes on first tank only. Tanks: 24/200/.21, 11/200/.21
-        // 5. Previous dive, but First two user defined segments use second tank - ensure consumption is calculated correctly
+        // TODO add multilevel dives reserve calculations: all use maximum depth as point where ascent starts
+
+        it('Shallower, than deeper - last segment is used for reserve', () => {
+            const tank1 = new Tank(20, 200, 21);
+            const tanks = [tank1];
+
+            const s1 = new Segment(0, 20, tank1.gas, Time.oneMinute * 2);
+            const s2 = new Segment(20, 20, tank1.gas, Time.oneMinute * 10);
+            const s3 = new Segment(20, 10, tank1.gas, Time.oneMinute * 1);
+            const s4 = new Segment(10, 10, tank1.gas, Time.oneMinute * 10);
+            const s5 = new Segment(10, 30, tank1.gas, Time.oneMinute * 2);
+            const s6 = new Segment(30, 30, tank1.gas, Time.oneMinute * 2);
+            const s7 = new Segment(30, 10, tank1.gas, Time.oneMinute * 2); // 3 * 1 * 2 = 6
+            const s8 = new Segment(10, 10, tank1.gas, Time.oneMinute * 10); // 2 * 1 * 10 = 20
+            const s9 = new Segment(10, 0, tank1.gas, Time.oneMinute * 1);  // 1.5 * 1 * 1 = 1.5
+            const segments = [s1, s2, s3, s4, s5, s6, s7, s8, s9];
+
+            // reserve - ascent from s6 segment = 27.5 * 3 = 82.5
+            consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+            expect(tank1.reserve).toEqual(83);
+        });
+
+        it('The same deep depths - last segment is used for reserve', () => {
+            const tank1 = new Tank(20, 200, 21);
+            const tanks = [tank1];
+
+            const s1 = new Segment(0, 20, tank1.gas, Time.oneMinute * 2);
+            const s2 = new Segment(20, 20, tank1.gas, Time.oneMinute * 10);
+            const s3 = new Segment(20, 10, tank1.gas, Time.oneMinute * 1);
+            const s4 = new Segment(10, 10, tank1.gas, Time.oneMinute * 10);
+            const s5 = new Segment(10, 20, tank1.gas, Time.oneMinute * 1);
+            const s6 = new Segment(20, 20, tank1.gas, Time.oneMinute * 10);
+            const s7 = new Segment(20, 10, tank1.gas, Time.oneMinute * 1); // 2.5 * 1 * 1 =2.5
+            const s8 = new Segment(10, 10, tank1.gas, Time.oneMinute * 10);// 2 * 1 * 10 = 20
+            const s9 = new Segment(10, 0, tank1.gas, Time.oneMinute * 1);  // 1.5 * 1 * 1 = 1.5
+            const segments = [s1, s2, s3, s4, s5, s6, s7, s8, s9];
+
+            // reserve - ascent from s6 segment = 24 * 3 = 72
+            consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+            expect(tank1.reserve).toEqual(72);
+        });
+
+        it('Deeper, than shallower - last segment in depth is used for reserve', () => {
+            const tank1 = new Tank(20, 200, 21);
+            const tanks = [tank1];
+
+            const s1 = new Segment(0, 30, tank1.gas, Time.oneMinute * 3);
+            const s2 = new Segment(30, 30, tank1.gas, Time.oneMinute * 10); // reserve count from emergency ascent here
+            const s3 = new Segment(30, 10, tank1.gas, Time.oneMinute * 1);
+            const s4 = new Segment(10, 10, tank1.gas, Time.oneMinute * 10);
+            const s5 = new Segment(10, 20, tank1.gas, Time.oneMinute * 1);
+            const s6 = new Segment(20, 20, tank1.gas, Time.oneMinute * 10);
+            const s7 = new Segment(20, 0, tank1.gas, Time.oneMinute * 3);
+            const segments = [s1, s2, s3, s4, s5, s6, s7];
+
+            // reserve - ascent from s2 segment
+            // TODO What is the emergency ascent here - fix expected value
+            consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+            expect(tank1.reserve).toEqual(129);
+        });
+
+        // TODO finish these test cases
+        describe('Multiple tanks with the same gas', () => {
+            // 4. Multiple tanks of the same gas, reserve is counted form first bellow reserve and second tank is not utilized
+            // TODO Add to documentation: this is correct scenario, user is informed, that he needs to switch
+            //  and therefore needs to use new segment and enforce usage of different gas
+            it('reserve counts alway from first', () => {
+                const tank1 = new Tank(20, 200, 21);
+                const tank2 = new Tank(10, 200, 21);
+                const tanks = [tank1, tank2];
+
+                const first = new Segment(0, 40, tank1.gas, Time.oneMinute * 4); //
+                first.tank = tank1;
+                const second = new Segment(40, 40, tank1.gas, Time.oneMinute * 13); //
+                second.tank = tank1;
+                const third = new Segment(40, 6, tank1.gas, Time.oneMinute * 10); //
+                third.tank = tank1;
+                const safety = new Segment(6, 6, tank1.gas, Time.oneMinute * 8); //
+                const ascent = new Segment(6, 0, tank1.gas, Time.oneMinute * 2); //
+                const segments = [first, second, third, safety, ascent];
+
+                consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+                expect(tank1.reserve).toEqual(129);
+                expect(tank2.reserve).toEqual(94);
+            });
+
+            it('user defined tanks is used to count the consumption', () => {
+                const tank1 = new Tank(20, 200, 21);
+                const tank2 = new Tank(10, 200, 21);
+                const tanks = [tank1, tank2];
+
+                const first = new Segment(0, 40, tank1.gas, Time.oneMinute * 4); //
+                first.tank = tank1;
+                const second = new Segment(40, 40, tank1.gas, Time.oneMinute * 13); //
+                second.tank = tank1;
+                const third = new Segment(40, 6, tank1.gas, Time.oneMinute * 10); //
+                third.tank = tank1;
+                const safety = new Segment(6, 6, tank1.gas, Time.oneMinute * 8); //
+                const ascent = new Segment(6, 0, tank1.gas, Time.oneMinute * 2); //
+                const segments = [first, second, third, safety, ascent];
+
+                consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+                expect(tank1.reserve).toEqual(129);
+                expect(tank2.reserve).toEqual(94);
+            });
+        });
     });
 });

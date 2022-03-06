@@ -5,7 +5,6 @@ Following list of features and improvements ordered by priority is under develop
 Known issues:
 
 * Gas oxygen content spinner shows not rounded number, where it shouldn't
-* Fix Nitrox calculator to use Simple depth converter
 * Fix the reserve calculations
 
 Improvements:

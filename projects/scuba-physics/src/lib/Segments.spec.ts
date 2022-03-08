@@ -256,8 +256,11 @@ describe('Segments', () => {
             const segments = new Segments();
             segments.addChangeTo(40, StandardGases.air, 1);
             segments.addFlat(40, StandardGases.air, 1);
+            segments.addFlat(40, StandardGases.air, 1);
+            segments.addFlat(40, StandardGases.air, 1);
+            segments.addFlat(20, StandardGases.air, 1);
             const deepestPart = segments.deepestPart();
-            expect(deepestPart.length).toBe(2);
+            expect(deepestPart.length).toBe(4);
         });
 
         it('First deepest segments in Multi level', () => {
@@ -268,7 +271,7 @@ describe('Segments', () => {
             segments.addChangeTo(40, StandardGases.air, 1);
             segments.addChangeTo(20, StandardGases.air, 1);
             const deepestPart = segments.deepestPart();
-            expect(deepestPart.length).toBe(2);
+            expect(deepestPart.length).toBe(4);
         });
     });
 });

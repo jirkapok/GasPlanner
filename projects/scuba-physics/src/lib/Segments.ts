@@ -274,14 +274,13 @@ export class Segments {
     }
 
     /**
-    * Returns all segments up to the first deepest point.
-    * In case of multiple depths the average on the second occurrence wil be smaller.
+    * Returns all segments up to the last deepest point.
+    * In case of multiple depths the average on the last occurrence wil be smaller.
+    * But it is Ok, since the last segment is the one, where decompression ascent is calculated.
     */
     public deepestPart(): Segment[] {
-        for (let index = 0; index < this.segments.length; index++) {
-            if(this.segments[index].endDepth === this.maxDepth &&
-               // following isn't flat, otherwise we also need that
-               (index + 1 === this.segments.length || this.segments[index + 1].endDepth !== this.maxDepth)) {
+        for (let index = this.segments.length - 1; index >= 0; index--) {
+            if(this.segments[index].endDepth === this.maxDepth) {
                 return this.items.slice(0, index + 1);
             }
         }

@@ -431,19 +431,20 @@ describe('Consumption', () => {
             const tank1 = new Tank(20, 200, 21);
             const tanks = [tank1];
 
-            const s1 = new Segment(0, 20, tank1.gas, Time.oneMinute * 2);
-            const s2 = new Segment(20, 20, tank1.gas, Time.oneMinute * 10);
-            const s3 = new Segment(20, 10, tank1.gas, Time.oneMinute * 1);
-            const s4 = new Segment(10, 10, tank1.gas, Time.oneMinute * 10);
-            const s5 = new Segment(10, 30, tank1.gas, Time.oneMinute * 2);
-            const s6 = new Segment(30, 30, tank1.gas, Time.oneMinute * 2);
-            const s7 = new Segment(30, 10, tank1.gas, Time.oneMinute * 2); // 3 * 1 * 2 = 6
-            const s8 = new Segment(10, 10, tank1.gas, Time.oneMinute * 10); // 2 * 1 * 10 = 20
-            const s9 = new Segment(10, 0, tank1.gas, Time.oneMinute * 1);  // 1.5 * 1 * 1 = 1.5
-            const segments = [s1, s2, s3, s4, s5, s6, s7, s8, s9];
+            const profile = [
+                new Segment(0, 20, tank1.gas, Time.oneMinute * 2),
+                new Segment(20, 20, tank1.gas, Time.oneMinute * 10),
+                new Segment(20, 10, tank1.gas, Time.oneMinute * 1),
+                new Segment(10, 10, tank1.gas, Time.oneMinute * 10),
+                new Segment(10, 30, tank1.gas, Time.oneMinute * 2),
+                new Segment(30, 30, tank1.gas, Time.oneMinute * 2),
+                new Segment(30, 10, tank1.gas, Time.oneMinute * 2),  // 3 * 1 * 2 = 6
+                new Segment(10, 10, tank1.gas, Time.oneMinute * 10), // 2 * 1 * 10 = 20
+                new Segment(10, 0, tank1.gas, Time.oneMinute * 1)    // 1.5 * 1 * 1 = 1.5
+            ];
 
             // reserve - ascent from s6 segment = 27.5 * 3 = 82.5
-            consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, 3, tanks, diver, 2);
             expect(tank1.reserve).toEqual(83);
         });
 
@@ -451,19 +452,20 @@ describe('Consumption', () => {
             const tank1 = new Tank(20, 200, 21);
             const tanks = [tank1];
 
-            const s1 = new Segment(0, 20, tank1.gas, Time.oneMinute * 2);
-            const s2 = new Segment(20, 20, tank1.gas, Time.oneMinute * 10);
-            const s3 = new Segment(20, 10, tank1.gas, Time.oneMinute * 1);
-            const s4 = new Segment(10, 10, tank1.gas, Time.oneMinute * 10);
-            const s5 = new Segment(10, 20, tank1.gas, Time.oneMinute * 1);
-            const s6 = new Segment(20, 20, tank1.gas, Time.oneMinute * 10);
-            const s7 = new Segment(20, 10, tank1.gas, Time.oneMinute * 1); // 2.5 * 1 * 1 =2.5
-            const s8 = new Segment(10, 10, tank1.gas, Time.oneMinute * 10);// 2 * 1 * 10 = 20
-            const s9 = new Segment(10, 0, tank1.gas, Time.oneMinute * 1);  // 1.5 * 1 * 1 = 1.5
-            const segments = [s1, s2, s3, s4, s5, s6, s7, s8, s9];
+            const profile = [
+                new Segment(0, 20, tank1.gas, Time.oneMinute * 2),
+                new Segment(20, 20, tank1.gas, Time.oneMinute * 10),
+                new Segment(20, 10, tank1.gas, Time.oneMinute * 1),
+                new Segment(10, 10, tank1.gas, Time.oneMinute * 10),
+                new Segment(10, 20, tank1.gas, Time.oneMinute * 1),
+                new Segment(20, 20, tank1.gas, Time.oneMinute * 10),
+                new Segment(20, 10, tank1.gas, Time.oneMinute * 1),  // 2.5 * 1 * 1 =2.5
+                new Segment(10, 10, tank1.gas, Time.oneMinute * 10), // 2 * 1 * 10 = 20
+                new Segment(10, 0, tank1.gas, Time.oneMinute * 1)   // 1.5 * 1 * 1 = 1.5
+            ];
 
             // reserve - ascent from s6 segment = 24 * 3 = 72
-            consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, 3, tanks, diver, 2);
             expect(tank1.reserve).toEqual(72);
         });
 
@@ -471,64 +473,76 @@ describe('Consumption', () => {
             const tank1 = new Tank(20, 200, 21);
             const tanks = [tank1];
 
-            const s1 = new Segment(0, 30, tank1.gas, Time.oneMinute * 3);
-            const s2 = new Segment(30, 30, tank1.gas, Time.oneMinute * 10); // reserve count from emergency ascent here
-            const s3 = new Segment(30, 10, tank1.gas, Time.oneMinute * 1);
-            const s4 = new Segment(10, 10, tank1.gas, Time.oneMinute * 10);
-            const s5 = new Segment(10, 20, tank1.gas, Time.oneMinute * 1);
-            const s6 = new Segment(20, 20, tank1.gas, Time.oneMinute * 10);
-            const s7 = new Segment(20, 0, tank1.gas, Time.oneMinute * 3);
-            const segments = [s1, s2, s3, s4, s5, s6, s7];
+            const profile = [
+                new Segment(0, 30, tank1.gas, Time.oneMinute * 3),
+                new Segment(30, 30, tank1.gas, Time.oneMinute * 10), // reserve count from emergency ascent here
+                new Segment(30, 10, tank1.gas, Time.oneMinute * 1),
+                new Segment(10, 10, tank1.gas, Time.oneMinute * 10),
+                new Segment(10, 20, tank1.gas, Time.oneMinute * 1),
+                new Segment(20, 20, tank1.gas, Time.oneMinute * 10),
+                new Segment(20, 0, tank1.gas, Time.oneMinute * 3)
+            ];
 
             // reserve - ascent from s2 segment
             // TODO What is the emergency ascent here - fix expected value
-            consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, 3, tanks, diver, 2);
             expect(tank1.reserve).toEqual(129);
         });
 
-        // TODO finish these test cases
         describe('Multiple tanks with the same gas', () => {
             // 4. Multiple tanks of the same gas, reserve is counted form first bellow reserve and second tank is not utilized
             // TODO Add to documentation: this is correct scenario, user is informed, that he needs to switch
-            //  and therefore needs to use new segment and enforce usage of different gas
-            it('reserve counts alway from first', () => {
+            //  and therefore needs to use new segment and enforce usage of different tank
+            it('reserve counts always from first tank', () => {
+                // The same as 'As part of ascent counts to rock bottom', but different 02 content in second tank
                 const tank1 = new Tank(20, 200, 21);
                 const tank2 = new Tank(10, 200, 21);
                 const tanks = [tank1, tank2];
 
-                const first = new Segment(0, 40, tank1.gas, Time.oneMinute * 4); //
-                first.tank = tank1;
-                const second = new Segment(40, 40, tank1.gas, Time.oneMinute * 13); //
-                second.tank = tank1;
-                const third = new Segment(40, 6, tank1.gas, Time.oneMinute * 10); //
-                third.tank = tank1;
-                const safety = new Segment(6, 6, tank1.gas, Time.oneMinute * 8); //
-                const ascent = new Segment(6, 0, tank1.gas, Time.oneMinute * 2); //
-                const segments = [first, second, third, safety, ascent];
+                const s1 = new Segment(0, 40, tank1.gas, Time.oneMinute * 4);
+                s1.tank = tank1;
+                const s2 = new Segment(40, 40, tank1.gas, Time.oneMinute * 13);
+                s2.tank = tank1;
+                const s3 = new Segment(40, 6, tank1.gas, Time.oneMinute * 10); // 3,3 * 10 * 1 = 33
+                s3.tank = tank1;
+                // next segments dont have tank assigned, so the first one still will be used
+                const s4 = new Segment(6, 6, tank1.gas, Time.oneMinute * 8); // 1,6 * 8 * 1 = 12.8
+                const s5 = new Segment(6, 0, tank1.gas, Time.oneMinute * 2); // 1,3 * 2 * 1 = 2.6
+                const profile = [s1, s2, s3, s4, s5];
 
-                consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
-                expect(tank1.reserve).toEqual(129);
-                expect(tank2.reserve).toEqual(94);
+                consumption.consumeFromTanks(profile, 3, tanks, diver, 2);
+                expect(tank1.reserve).toEqual(146); // = 48.4 * 3
+                expect(tank2.reserve).toEqual(0);
             });
 
-            it('user defined tanks is used to count the consumption', () => {
+            describe('user defined tanks', () => {
                 const tank1 = new Tank(20, 200, 21);
                 const tank2 = new Tank(10, 200, 21);
                 const tanks = [tank1, tank2];
 
-                const first = new Segment(0, 40, tank1.gas, Time.oneMinute * 4); //
-                first.tank = tank1;
-                const second = new Segment(40, 40, tank1.gas, Time.oneMinute * 13); //
-                second.tank = tank1;
-                const third = new Segment(40, 6, tank1.gas, Time.oneMinute * 10); //
-                third.tank = tank1;
-                const safety = new Segment(6, 6, tank1.gas, Time.oneMinute * 8); //
-                const ascent = new Segment(6, 0, tank1.gas, Time.oneMinute * 2); //
-                const segments = [first, second, third, safety, ascent];
+                const s1 = new Segment(0, 40, tank1.gas, Time.oneMinute * 4); // 3 * 4 * 1 = 12
+                s1.tank = tank1;
+                const s2 = new Segment(40, 40, tank1.gas, Time.oneMinute * 13); // 5 * 13 * 1 = 65
+                s2.tank = tank1;
+                const s3 = new Segment(40, 6, tank1.gas, Time.oneMinute * 10); // 3,3 * 10 * 1 = 33
+                s3.tank = tank1;
+                const s4 = new Segment(6, 6, tank1.gas, Time.oneMinute * 8); // 1.6 * 8 * 2 = 25.6
+                s4.tank = tank2;
+                const s5 = new Segment(6, 0, tank1.gas, Time.oneMinute * 2); // 1.3 * 2 * 2 = 5.2
+                s5.tank = tank2;
+                const segments = [s1, s2, s3, s4, s5];
 
                 consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
-                expect(tank1.reserve).toEqual(129);
-                expect(tank2.reserve).toEqual(94);
+
+                it('counts the consumption', () => {
+                    expect(tank1.consumed).toEqual(110);
+                    expect(tank2.consumed).toEqual(32); // depth rounding
+                });
+
+                it('counts the reserve', () => {
+                    expect(tank1.reserve).toEqual(99); // = 33 * 3
+                    expect(tank2.reserve).toEqual(96); // = 32 * 3
+                });
             });
         });
     });

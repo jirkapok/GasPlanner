@@ -11,6 +11,7 @@ import { Salinity } from './pressure-converter';
 describe('Consumption', () => {
     const diver = new Diver(20, 1.6);
     const consumption = new Consumption(DepthConverter.forFreshWater());
+    const options2 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
 
     describe('Max bottom time', () => {
         const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
@@ -123,7 +124,7 @@ describe('Consumption', () => {
                     new Segment(20, 0, tank.gas, duration)
                 ];
 
-                consumption.consumeFromTanks(segments, 2, tanks, diver, 2);
+                consumption.consumeFromTanks(segments, options2, tanks, diver);
                 return tank;
             };
 
@@ -149,7 +150,7 @@ describe('Consumption', () => {
                 ];
 
                 // (2b avg depth * 2 bar/min * 1 minutes) + (3b * 2 bar/min * 10 minutes) + (2b * 2 bar/min * 2 minutes)
-                consumption.consumeFromTanks(profile, 2, tanks, diver, 2);
+                consumption.consumeFromTanks(profile, options2, tanks, diver);
                 expect(tank.consumed).toEqual(72);
             });
         });
@@ -169,7 +170,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
-            consumption.consumeFromTanks(profile, 2, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
 
             it('Both tanks are consumed', () => {
                 expect(airTank.consumed).toEqual(52);
@@ -196,7 +197,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
-            consumption.consumeFromTanks(profile, 2, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
 
             it('Consumption is updated from second tank only', () => {
                 expect(airTank.consumed).toEqual(0);
@@ -219,7 +220,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
-            consumption.consumeFromTanks(profile, 2, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
 
             it('Consumption is updated from both air tanks', () => {
                 expect(airTank.consumed).toEqual(7);
@@ -239,7 +240,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, airTank.gas, 2 * Time.oneMinute)
             ];
 
-            consumption.consumeFromTanks(profile, 2, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
 
             it('Consumption is updated only from air', () => {
                 expect(airTank.consumed).toEqual(72);
@@ -265,7 +266,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, airTank.gas, 2 * Time.oneMinute)
             ];
 
-            consumption.consumeFromTanks(profile, 2, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
 
             it('No tank is updated', () => {
                 expect(airTank.consumed).toEqual(0);
@@ -292,7 +293,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 10 * Time.oneMinute)  // 2b * 2 bar/min * 10 minutes = 40b
             ];
 
-            consumption.consumeFromTanks(profile, 2, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
 
             it('Reserve is updated from both air tanks', () => {
                 expect(airTank.reserve).toEqual(45);     // (7b + 4b * 1 b/min. * 2 min) * 3
@@ -323,7 +324,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank2.gas, 4 * Time.oneMinute),   // 2 b * 2 bar/min * 4 minute = 16b
             ];
 
-            consumption.consumeFromTanks(profile, 2, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
 
             it('Gas is Consumed from required tank', () => {
                 expect(airTank.consumed).toEqual(60); // user defined by swim segment
@@ -356,7 +357,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, airTank.gas, 4 * Time.oneMinute),   // 2 b * 1 bar/min * 4 minute = 8b
             ];
 
-            consumption.consumeFromTanks(profile, 2, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
 
             it('Reserve is more than consumed by one segment', () => {
                 expect(airTank.reserve).toEqual(42); // user defined by swim segment
@@ -376,7 +377,7 @@ describe('Consumption', () => {
             ascent.tank = airTank;
 
             const profile = [descent, swim, ascent];
-            consumption.consumeFromTanks(profile, 3, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
 
             it('Tank is updated as with calculated segments', () => {
                 expect(airTank.reserve).toEqual(30); // the minimum since there is no ascent identified
@@ -395,7 +396,7 @@ describe('Consumption', () => {
             const segments = [first, second];
             // 1.5 * 20 * 2 = 60
 
-            consumption.consumeFromTanks(segments, 2, tanks, diver, 2);
+            consumption.consumeFromTanks(segments, options2, tanks, diver);
             expect(tank.consumed).toEqual(61); //  because of pressure conversion
             // should be (1.5 * 10 * 2 * 3) + (2 * 2 * 3) = 102
             expect(tank.reserve).toEqual(102);
@@ -418,7 +419,7 @@ describe('Consumption', () => {
 
             // currently tank1 30/90,  tank2 112/169 (reserve/remaining)
             // should be tank1 129/90, tank2 94/169
-            consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+            consumption.consumeFromTanks(segments, options2, tanks, diver);
             expect(tank1.reserve).toEqual(129);
             expect(tank2.reserve).toEqual(94);
         });
@@ -444,7 +445,7 @@ describe('Consumption', () => {
             ];
 
             // reserve - ascent from s6 segment = 27.5 * 3 = 82.5
-            consumption.consumeFromTanks(profile, 3, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
             expect(tank1.reserve).toEqual(83);
         });
 
@@ -465,7 +466,7 @@ describe('Consumption', () => {
             ];
 
             // reserve - ascent from s6 segment = 24 * 3 = 72
-            consumption.consumeFromTanks(profile, 3, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
             expect(tank1.reserve).toEqual(72);
         });
 
@@ -485,7 +486,7 @@ describe('Consumption', () => {
 
             // reserve - ascent from s2 segment
             // TODO What is the emergency ascent here - fix expected value
-            consumption.consumeFromTanks(profile, 3, tanks, diver, 2);
+            consumption.consumeFromTanks(profile, options2, tanks, diver);
             expect(tank1.reserve).toEqual(129);
         });
 
@@ -510,7 +511,7 @@ describe('Consumption', () => {
                 const s5 = new Segment(6, 0, tank1.gas, Time.oneMinute * 2); // 1,3 * 2 * 1 = 2.6
                 const profile = [s1, s2, s3, s4, s5];
 
-                consumption.consumeFromTanks(profile, 3, tanks, diver, 2);
+                consumption.consumeFromTanks(profile, options2, tanks, diver);
                 expect(tank1.reserve).toEqual(146); // = 48.4 * 3
                 expect(tank2.reserve).toEqual(0);
             });
@@ -532,7 +533,7 @@ describe('Consumption', () => {
                 s5.tank = tank2;
                 const segments = [s1, s2, s3, s4, s5];
 
-                consumption.consumeFromTanks(segments, 3, tanks, diver, 2);
+                consumption.consumeFromTanks(segments, options2, tanks, diver);
 
                 it('counts the consumption', () => {
                     expect(tank1.consumed).toEqual(110);

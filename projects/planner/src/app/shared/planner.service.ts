@@ -178,6 +178,7 @@ export class PlannerService {
         this.dive.averageDepth = Segments.averageDepth(profile.origin);
         const userSegments = this.plan.length;
 
+        // TODO consider to schedule the consumption related stuff to delayed calculation
         if (profile.endsOnSurface) {
             const consumption = new Consumption(this.depthConverter);
             this.plan.noDecoTime = this.noDecoTime();
@@ -186,6 +187,7 @@ export class PlannerService {
             const segments = this.plan.copySegments();
             this.dive.maxTime = consumption.calculateMaxBottomTime(segments, this._tanks, this.diver, this.options);
 
+            // TODO replace the ascent method by emergency ascent
             const originAscent = SegmentsFactory.ascent(profile.origin, userSegments);
             this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
             consumption.consumeFromTanks(profile.origin, this.options, this._tanks, this.diver);

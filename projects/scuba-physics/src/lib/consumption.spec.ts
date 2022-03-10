@@ -12,6 +12,8 @@ describe('Consumption', () => {
     const diver = new Diver(20, 1.6);
     const consumption = new Consumption(DepthConverter.forFreshWater());
     const options2 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
+    options2.safetyStop = SafetyStop.never;
+    options2.problemSolvingDuration = 2;
 
     describe('Max bottom time', () => {
         const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
@@ -68,7 +70,7 @@ describe('Consumption', () => {
             expect(maxBottomTime).toEqual(0);
         });
 
-        it('Long dives dont calculate till infinity', () => {
+        it('for long dives is calculated within 200 ms', () => {
             const tank = new Tank(24, 200, 21);
             const tanks = [tank];
 
@@ -81,6 +83,7 @@ describe('Consumption', () => {
             const endTime = performance.now();
             const methodDuration = Math.round(endTime - startTime);
 
+            console.log(`Max bottom time duration: ${methodDuration} ms`);
             expect(methodDuration).toBeLessThan(200);
         });
 
@@ -113,29 +116,33 @@ describe('Consumption', () => {
 
     describe('Single tank', () => {
         describe('Rock bottom', () => {
-            const tenMinutes = 10 * Time.oneMinute;
-
-            const callConsumption = (duration: number): Tank => {
-                const tank = new Tank(24, 200, 21);
+            const callConsumption = (tankSize: number, duration: number): Tank => {
+                const tank = new Tank(tankSize, 200, 21);
                 const tanks = [tank];
                 const segments = [
                     new Segment(0, 20, tank.gas, Time.oneMinute),
-                    new Segment(20, 20, tank.gas, Time.oneMinute),
-                    new Segment(20, 0, tank.gas, duration)
+                    new Segment(20, 20, tank.gas, duration),
+                    new Segment(20, 0, tank.gas, 4 * Time.oneMinute)
                 ];
 
-                consumption.consumeFromTanks(segments, options2, tanks, diver);
+                const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
+                options.safetyStop = SafetyStop.always;
+                options.problemSolvingDuration = 2;
+                consumption.consumeFromTanks(segments, options, tanks, diver);
                 return tank;
             };
 
             it('Minimum rock bottom is 30 bar', () => {
-                const tank = callConsumption(Time.oneMinute);
-                expect(tank.reserve).toEqual(30);
+                const tank = callConsumption(36, Time.oneMinute);
+                expect(tank.reserve).toEqual(30); // should be 24 bar
             });
 
             it('Adds two minutes for solution', () => {
-                const tank = callConsumption(tenMinutes);
-                expect(tank.reserve).toEqual(65);
+                const tenMinutes = 10 * Time.oneMinute;
+                const tank = callConsumption(20, tenMinutes);
+                // (3 * 2 * 1) + (2.2 * 1.5 * 1) + (1.3 * 3 * 1) + (1.15 * 0.3 * 1) =
+                // (6 + 3.3 + 3.9 + 0.3) * 3 = 42
+                expect(tank.reserve).toEqual(42);
             });
         });
 
@@ -178,8 +185,8 @@ describe('Consumption', () => {
             });
 
             it('Reserve is updated for both tanks', () => {
-                expect(airTank.reserve).toEqual(45);   // (7b  + 2 * 4b * 1 b/min) * 3
-                expect(ean50Tank.reserve).toEqual(30); // 10b * 3
+                expect(airTank.reserve).toEqual(34); // ((4 b * 1 barm/min * 2 min) + (2.5 b * 1 b/min * 1 min)) * 3
+                expect(ean50Tank.reserve).toEqual(45); // ((3 b * 2 barm/min * 1 min) + (2 b * 2 b/min * 2 min)) * 3
             });
         });
 
@@ -242,14 +249,17 @@ describe('Consumption', () => {
 
             consumption.consumeFromTanks(profile, options2, tanks, diver);
 
-            it('Consumption is updated only from air', () => {
+            it('Consumes only user defined tank', () => {
                 expect(airTank.consumed).toEqual(72);
                 expect(ean50Tank.consumed).toEqual(0);
             });
 
-            it('Reserve is reset only', () => {
-                expect(airTank.reserve).toEqual(60); // (3 b * 2 b/min. * 2 min + 2b * 2 b/min. * 2 min) * 3
-                expect(ean50Tank.reserve).toEqual(0);
+            // TODO Consider usage only for user defined tanks
+            it('Emergency ascent uses all tanks', () => {
+                expect(airTank.reserve).toEqual(30); // minimum
+                // 1 min. switch, 2 min. problem solving
+                // ((3 * 2 * 3) + (2 * 2 * 2)) * 3
+                expect(ean50Tank.reserve).toEqual(78);
             });
         });
 
@@ -281,25 +291,26 @@ describe('Consumption', () => {
 
         describe('1. tank air, 2. ean50, 3. ean50 - reserve from both tanks', () => {
             const airTank = new Tank(20, 200, 21);
-            const ean50Tank = new Tank(10, 100, 50);
-            const ean50Tank2 = new Tank(10, 130, 50);
+            const ean50Tank = new Tank(5, 70, 50);
+            const ean50Tank2 = new Tank(5, 50, 50);
             const tanks = [airTank, ean50Tank, ean50Tank2];
 
             const profile = [
                 new Segment(0, 30, airTank.gas, 2 * Time.oneMinute),
                 new Segment(30, 30, airTank.gas, 15 * Time.oneMinute),  // air relevant only during ascent
                 new Segment(30, 20, airTank.gas, 2 * Time.oneMinute),   // 3.5b * 1 bar/min * 2 minute = 7b
-                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute), // 3b * 2 bar/min * 1 minutes = 6b
-                new Segment(20, 0, ean50Tank.gas, 10 * Time.oneMinute)  // 2b * 2 bar/min * 10 minutes = 40b
+                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute), // 3b * 4 bar/min * 1 minutes = 12b
+                new Segment(20, 0, ean50Tank.gas, 10 * Time.oneMinute)  // 2b * 4 bar/min * 10 minutes = 80b
             ];
 
             consumption.consumeFromTanks(profile, options2, tanks, diver);
 
-            it('Reserve is updated from both air tanks', () => {
-                expect(airTank.reserve).toEqual(45);     // (7b + 4b * 1 b/min. * 2 min) * 3
-                // total: (6b  + 40 b) * 3 = 138 b
-                expect(ean50Tank.reserve).toEqual(100);   // full tank as first in order
-                expect(ean50Tank2.reserve).toEqual(38);
+            it('Reserve is updated from both EAN50 tanks', () => {
+                // ((4b * 2 * 1) + (3.5b * 1 min * 1 b/min.)) * 3
+                expect(airTank.reserve).toEqual(34);
+                // total: ((3b * 4 bar/min * 1 min) + (2 b * 4 bar/min * 2 min)) * 3 = 89 b
+                expect(ean50Tank.reserve).toEqual(70);   // full tank as first in order
+                expect(ean50Tank2.reserve).toEqual(19);
             });
         });
 
@@ -336,13 +347,14 @@ describe('Consumption', () => {
             it('Reserve is not relevant to assigned tanks', () => {
                 expect(airTank.reserve).toEqual(30); // minimum reserve always present for first tank
                 expect(airTank2.reserve).toEqual(0); // not used
-                // 3 b * 2 bar/min * 2 minute * 3 = 36 b, 2 b * 2 bar/min * 4 minute * 3 = 48b => 84 b
-                expect(ean50Tank.reserve).toEqual(84); // used during ascent as rock bottom
+                // 1 minute gas switch to the Ean50 + 2 min. problem solving
+                // ((3 * 2 * 3) + (2 * 2 * 2)) * 3 => 78
+                expect(ean50Tank.reserve).toEqual(78); // used during ascent as rock bottom
                 expect(ean50Tank2.reserve).toEqual(0); // not used
             });
         });
 
-        describe('Single user defined tanks', () => {
+        describe('Single user defined tank', () => {
             const airTank = new Tank(20, 100, 21);
             const tanks = [airTank];
 
@@ -359,13 +371,16 @@ describe('Consumption', () => {
 
             consumption.consumeFromTanks(profile, options2, tanks, diver);
 
-            it('Reserve is more than consumed by one segment', () => {
-                expect(airTank.reserve).toEqual(42); // user defined by swim segment
+            it('Reserve is more than remaining', () => {
+                expect(airTank.reserve).toEqual(30); // ((3 * 2 * 1) + (2.5 * 2 * 1)) * 3
                 expect(airTank.consumed).toEqual(100); // up to the limit
             });
         });
 
         describe('Only user defined segments', () => {
+            const options3 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
+            options3.problemSolvingDuration = 2;
+
             const airTank = new Tank(20, 100, 21);
             const tanks = [airTank];
 
@@ -377,10 +392,10 @@ describe('Consumption', () => {
             ascent.tank = airTank;
 
             const profile = [descent, swim, ascent];
-            consumption.consumeFromTanks(profile, options2, tanks, diver);
+            consumption.consumeFromTanks(profile, options3, tanks, diver);
 
             it('Tank is updated as with calculated segments', () => {
-                expect(airTank.reserve).toEqual(30); // the minimum since there is no ascent identified
+                expect(airTank.reserve).toEqual(42); // 3 min at 3 m + 2 min. solving
                 expect(airTank.consumed).toEqual(100); // up to the limit
             });
         });
@@ -398,8 +413,8 @@ describe('Consumption', () => {
 
             consumption.consumeFromTanks(segments, options2, tanks, diver);
             expect(tank.consumed).toEqual(61); //  because of pressure conversion
-            // should be (1.5 * 10 * 2 * 3) + (2 * 2 * 3) = 102
-            expect(tank.reserve).toEqual(102);
+            // emergency ascent: ((2 * 2 * 2) + (1.5 * 1 * 2)) * 3 = 33
+            expect(tank.reserve).toEqual(33);
         });
 
         it('As part of ascent counts to rock bottom', () => {
@@ -420,15 +435,16 @@ describe('Consumption', () => {
             // currently tank1 30/90,  tank2 112/169 (reserve/remaining)
             // should be tank1 129/90, tank2 94/169
             consumption.consumeFromTanks(segments, options2, tanks, diver);
-            expect(tank1.reserve).toEqual(129);
-            expect(tank2.reserve).toEqual(94);
+            // ((5 * 2 * 1) + (4 * 1.9 * 1)) * 3
+            expect(tank1.reserve).toEqual(53);
+            // ((3 * 1 * 2) + (2.15 * 1.8 * 2) + (1.3 * 1.4 * 2) + (1.15 * .3 * 2)) * 3
+            expect(tank2.reserve).toEqual(56);
         });
 
         // TODO Add test to events, that we need show also user defined gas switch to other tank even with the same gas
         // 40 m/20 minutes on first tank only. Tanks: 24/200/.21, 11/200/.21
-        // TODO add multilevel dives reserve calculations: all use maximum depth as point where ascent starts
 
-        it('Shallower, than deeper - last segment is used for reserve', () => {
+        it('Shallower, than deeper - last deepest point used for emergency ascent', () => {
             const tank1 = new Tank(20, 200, 21);
             const tanks = [tank1];
 
@@ -444,12 +460,12 @@ describe('Consumption', () => {
                 new Segment(10, 0, tank1.gas, Time.oneMinute * 1)    // 1.5 * 1 * 1 = 1.5
             ];
 
-            // reserve - ascent from s6 segment = 27.5 * 3 = 82.5
+            // reserve - ascent from 6. segment = ((4 bar * 1 bar/min * 2 min) + (2.5 b * 1 bar/min * 3 min)) * 3
             consumption.consumeFromTanks(profile, options2, tanks, diver);
-            expect(tank1.reserve).toEqual(83);
+            expect(tank1.reserve).toEqual(47);
         });
 
-        it('The same deep depths - last segment is used for reserve', () => {
+        it('The same deep depths - last deepest point used for emergency ascent', () => {
             const tank1 = new Tank(20, 200, 21);
             const tanks = [tank1];
 
@@ -465,9 +481,9 @@ describe('Consumption', () => {
                 new Segment(10, 0, tank1.gas, Time.oneMinute * 1)   // 1.5 * 1 * 1 = 1.5
             ];
 
-            // reserve - ascent from s6 segment = 24 * 3 = 72
+            // reserve - ascent from 6. segment = ((3 b * 1 bar/min * 2 min) + (2 b * 1 bar/min * 2 min)) * 3
             consumption.consumeFromTanks(profile, options2, tanks, diver);
-            expect(tank1.reserve).toEqual(72);
+            expect(tank1.reserve).toEqual(30);
         });
 
         it('Deeper, than shallower - last segment in depth is used for reserve', () => {
@@ -484,11 +500,21 @@ describe('Consumption', () => {
                 new Segment(20, 0, tank1.gas, Time.oneMinute * 3)
             ];
 
-            // reserve - ascent from s2 segment
-            // TODO What is the emergency ascent here - fix expected value
+            // reserve - ascent from 2. segment
+            // ((4 b * 2 min * 1 bar/min) + (2.5 b * 3 min * 1 bar/min)) * 3
             consumption.consumeFromTanks(profile, options2, tanks, diver);
-            expect(tank1.reserve).toEqual(129);
+            expect(tank1.reserve).toEqual(47);
         });
+
+        // TODO documentation: How reserve for all usable is calculated
+        // 1. Simple UI - Ascent is calculated and is from deepest point - we can count with it
+        // 2. Complex multilevel dive with or without user segments up to the surface
+        //    - based on deco and all available gases, even the gases aren't used in
+        //      any user defined segment - emergency ascent from last deepest point
+        // TODO Consider use user defined segments for emergency ascent
+        // Hidden to user: From which point to calculate rock bottom and subtract it before strategy is calculated?
+        //    - 1/2 usable strategy
+        //    - 1/3 usable strategy
 
         describe('Multiple tanks with the same gas', () => {
             // 4. Multiple tanks of the same gas, reserve is counted form first bellow reserve and second tank is not utilized
@@ -506,13 +532,16 @@ describe('Consumption', () => {
                 s2.tank = tank1;
                 const s3 = new Segment(40, 6, tank1.gas, Time.oneMinute * 10); // 3,3 * 10 * 1 = 33
                 s3.tank = tank1;
-                // next segments dont have tank assigned, so the first one still will be used
+                // next segments don't have tank assigned, so the first one still will be used
+                // ascent counts with stop at 3m even user defined in 6 m
                 const s4 = new Segment(6, 6, tank1.gas, Time.oneMinute * 8); // 1,6 * 8 * 1 = 12.8
                 const s5 = new Segment(6, 0, tank1.gas, Time.oneMinute * 2); // 1,3 * 2 * 1 = 2.6
                 const profile = [s1, s2, s3, s4, s5];
 
                 consumption.consumeFromTanks(profile, options2, tanks, diver);
-                expect(tank1.reserve).toEqual(146); // = 48.4 * 3
+                // ((5 b * 2 min * 1 bar/min) + (3.15 b * 3.7 min * 1) + (1.3 b * 3.25 min * 1) + (1.15 b * .3 min * 1)) * 3
+                // (10 + 11.7 + 4.3 + .4) * 3
+                expect(tank1.reserve).toEqual(79);
                 expect(tank2.reserve).toEqual(0);
             });
 
@@ -541,8 +570,9 @@ describe('Consumption', () => {
                 });
 
                 it('counts the reserve', () => {
-                    expect(tank1.reserve).toEqual(99); // = 33 * 3
-                    expect(tank2.reserve).toEqual(96); // = 32 * 3
+                    // see 'reserve counts always from first tank'. the user defined segments aren't used
+                    expect(tank1.reserve).toEqual(79);
+                    expect(tank2.reserve).toEqual(0);
                 });
             });
         });

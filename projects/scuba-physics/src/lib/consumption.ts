@@ -103,14 +103,22 @@ export class Consumption {
         Tanks.resetConsumption(tanks);
         const remainToConsume = this.consumeByTanks(segments, diver.rmv);
         this.consumeByGases(segments, tanks, diver.rmv, remainToConsume);
+        const ascent = this.emergencyAscent(segments, options, tanks);
+        this.updateReserve(ascent, tanks, diver.stressRmv);
+    }
+
+    // TODO for performance reasons move this calculation to parameter of consumeFromTanks
+    public emergencyAscent(segments: Segment[], options: Options, tanks: Tank[]): Segment[] {
         const profile = Segments.fromCollection(segments);
         const deepestPart = profile.deepestPart();
         const deepestProfile = Segments.fromCollection(deepestPart);
         const gases = Gases.fromTanks(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const emergencyProfile = algorithm.calculateDecompression(options, gases, deepestProfile);
-        const ascent = SegmentsFactory.ascent(emergencyProfile.segments, deepestPart.length);
-        this.updateReserve(ascent, tanks, diver.stressRmv, options.problemSolvingDuration);
+        const emergencySegments = emergencyProfile.segments;
+        const ascent = emergencySegments.slice(deepestPart.length, emergencySegments.length);
+        this.addSolvingSegment(ascent, options.problemSolvingDuration);
+        return ascent;
     }
 
     /**
@@ -193,13 +201,10 @@ export class Consumption {
         return testSegments;
     }
 
-    private updateReserve(ascent: Segment[], tanks: Tank[], stressSac: number, problemSolvingDuration: number): void {
-        const segments = ascent.slice();
-        this.addSolvingSegment(segments, problemSolvingDuration);
-
+    private updateReserve(ascent: Segment[], tanks: Tank[], stressSac: number): void {
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
-        const gasesConsumed: Map<number, number> = this.toBeConsumed(segments, stressSac, (s) => true);
+        const gasesConsumed: Map<number, number> = this.toBeConsumed(ascent, stressSac, (s) => true);
 
         // add the reserve from opposite order than consumed gas
         for (let index = 0; index <= tanks.length - 1; index++) {

@@ -332,35 +332,13 @@ export class SegmentsFactory {
         return  Math.ceil(estimate);
     }
 
-    /**
-     * Returns remaining segments after count of user defined as automatically calculated ascent.
-     * @param userSegments Number of segments from the start of the segments array to count as defined by user.
-     */
-    public static ascent(segments: Segment[], userSegments: number): Segment[] {
-        // TODO test scenario: user defined segment is also part of the emergency ascent (e.g. deepest point),
-        // we should identify the ascent another way than from last user defined segments
-        // How to identify the worst point during the dive?
-        // - take last segment as ascent - obviously not enough
-        // - take deepest segment - doesn't have to be the ascent to end the dive, but is place where you need most of the gas
-        // - take segment with highest ceiling, for no deco take deepest
-        // - Is the deepest also with the minimum gas? Doesn't have to be.
-        // - Take all segments from end till first descent - doesn't cover multilevel dives
-        // Calculate this only in case user defined segments up to the surface
-        // \              _/
-        //  \   _        /
-        //   \_/ \_  Asc/
-        return segments.slice(userSegments, segments.length);
-    }
-
     public static timeToSurface(ascent: Segment[]): number {
-        const solutionDuration = 2 * Time.oneMinute;
         let duration = 0;
 
         for (const segment of ascent) {
             duration += segment.duration;
         }
 
-        const seconds = solutionDuration + duration;
-        return Time.toMinutes(seconds);
+        return Time.toMinutes(duration);
     }
 }

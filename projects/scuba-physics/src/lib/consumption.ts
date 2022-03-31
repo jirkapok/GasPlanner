@@ -4,7 +4,7 @@ import { Diver } from './Diver';
 import { Gases } from './Gases';
 import { Options } from './Options';
 import { CalculatedProfile } from './Profile';
-import { Segment, Segments, SegmentsFactory } from './Segments';
+import { Segment, Segments } from './Segments';
 import { Tank, Tanks } from './Tanks';
 import { Time } from './Time';
 

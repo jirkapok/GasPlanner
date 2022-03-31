@@ -6,7 +6,7 @@ import { WayPointsService } from './waypoints.service';
 import {
     NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
-    Diver, SegmentsFactory, Consumption, Segment, Gases,
+    Diver, Time, Consumption, Segment, Gases,
     Segments, OptionDefaults, Salinity, SafetyStop
 } from 'scuba-physics';
 
@@ -188,8 +188,9 @@ export class PlannerService {
 
             // TODO Add to UI the time at which the emergency ascent is calculated
             // TODO check, if plan.length is still needed
-            const originAscent = consumption.emergencyAscent(profile.origin, this.options, this.tanks);
-            this.dive.timeToSurface = SegmentsFactory.timeToSurface(originAscent);
+            const emergencyAscent = consumption.emergencyAscent(profile.origin, this.options, this.tanks);
+            const timeToSurface = Segments.duration(emergencyAscent);
+            this.dive.timeToSurface = Time.toMinutes(timeToSurface);
             consumption.consumeFromTanks(profile.origin, this.options, this._tanks, this.diver);
             this.dive.notEnoughTime = this.plan.notEnoughTime;
         }

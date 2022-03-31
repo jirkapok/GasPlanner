@@ -129,6 +129,21 @@ export class Segments {
         return result;
     }
 
+    /**
+     * Sum of all profile segments duration
+     * @param profile Not null collection of segments to count with
+     * @returns Total sum of all elements duration in seconds
+     */
+    public static duration(profile: Segment[]): number {
+        let total = 0;
+
+        for (const segment of profile) {
+            total += segment.duration;
+        }
+
+        return total;
+    }
+
     /** Calculates average depth in meters from provided segments */
     public static averageDepth(segments: Segment[]): number {
         if (segments.length <= 0) {
@@ -176,14 +191,7 @@ export class Segments {
 
     /** Gets total duration of all segments in seconds */
     public get duration(): number {
-        let total = 0;
-
-        for (let index = 0; index < this.segments.length; index++) {
-            const current = this.segments[index];
-            total += current.duration;
-        }
-
-        return total;
+        return Segments.duration(this.segments);
     }
 
     /**
@@ -330,15 +338,5 @@ export class SegmentsFactory {
         estimate = Math.ceil(estimate * 10) / 10;
         estimate =Time.toSeconds(estimate);
         return  Math.ceil(estimate);
-    }
-
-    public static timeToSurface(ascent: Segment[]): number {
-        let duration = 0;
-
-        for (const segment of ascent) {
-            duration += segment.duration;
-        }
-
-        return Time.toMinutes(duration);
     }
 }

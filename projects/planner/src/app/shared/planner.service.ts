@@ -185,8 +185,6 @@ export class PlannerService {
             // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
             const segments = this.plan.copySegments();
             this.dive.maxTime = consumption.calculateMaxBottomTime(segments, this._tanks, this.diver, this.options);
-
-            // TODO Add to UI the time at which the emergency ascent is calculated
             const emergencyAscent = consumption.emergencyAscent(profile.origin, this.options, this.tanks);
             const timeToSurface = Segments.duration(emergencyAscent);
             this.dive.timeToSurface = Time.toMinutes(timeToSurface);

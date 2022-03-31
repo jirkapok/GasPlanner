@@ -33,7 +33,8 @@ export class WayPointsService {
             return Profile.newEmpty(profile.errors);
         }
 
-        const events = ProfileEvents.fromProfile(plan.length, profile.segments, profile.ceilings, options);
+        const startAscentIndex = plan.startAscentIndex;
+        const events = ProfileEvents.fromProfile(startAscentIndex, profile.segments, profile.ceilings, options);
         const descent = profile.segments[0];
         let lastWayPoint = WayPoint.fromSegment(descent);
         wayPoints.push(lastWayPoint);

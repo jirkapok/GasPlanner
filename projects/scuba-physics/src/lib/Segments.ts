@@ -283,7 +283,7 @@ export class Segments {
 
     /**
     * Returns all segments up to the last deepest point.
-    * In case of multiple depths the average on the last occurrence wil be smaller.
+    * In case of multiple depths the average on the last occurrence will be smaller.
     * But it is Ok, since the last segment is the one, where decompression ascent is calculated.
     */
     public deepestPart(): Segment[] {

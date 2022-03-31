@@ -98,6 +98,10 @@ export class Plan {
         return this._segments.maxDepth;
     }
 
+    public get startAscentIndex(): number {
+        return this._segments.deepestPart().length;
+    }
+
     public assignDepth(newDepth: number, tank: Tank, options: Options): void {
         this._segments = SegmentsFactory.createForPlan(newDepth, this.duration, tank, options);
         this.onChanged.next();

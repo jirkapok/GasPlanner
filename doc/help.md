@@ -80,6 +80,8 @@ TODO
 
 > **Emergency ascent may differ from calculated ascent**, because it is calculated at different time during the dive.
 
+TODO events
+
 ### Consumed gas charts
 
 * `Rock bottom` [bars]: Minimum amount of gas (reserve) required for safe ascent in case of emergency for two divers under stress. This counts with 60 liters/minute breathing rate for both divers. It is shown for each defined tank. These values are calculated at "Rock bottom at" time.
@@ -90,6 +92,7 @@ TODO: How reserve for all usable is calculated
   - based on deco and all available gases, even the gases aren't used in
   any user defined segment - emergency ascent from last deepest point
 - describe how reserve is distributed across multiple tanks
+
 ### Dive way points
 
 Table showing details about profile changes during the dive. Each row represents one event.
@@ -106,6 +109,8 @@ Table showing details about profile changes during the dive. Each row represents
 ## Dive profile
 
 Graphical representation how the calculated depth changes in time. This corresponds to precise values shown in the way points table. Move mouse over the chart to focus related row in the waypoints table.
+
+TODO Why is deco show in the chart, if profile is still considered a no deco
 
 ## Application settings
 

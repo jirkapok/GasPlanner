@@ -181,7 +181,7 @@ export class Dive {
     public notEnoughGas = false;
     public notEnoughTime = false;
     public noDecoExceeded = false;
-    public emergencyAscentStart = new Date();
+    public emergencyAscentStart = 0;
     public averageDepth = 0;
     public wayPoints: WayPoint[] = [];
     public ceilings: Ceiling[] = [];

@@ -192,7 +192,7 @@ export class PlannerService {
             this.dive.timeToSurface = Time.toMinutes(timeToSurface);
             consumption.consumeFromTanks2(profile.origin, emergencyAscent, this.options, this._tanks, this.diver);
             this.dive.notEnoughTime = this.plan.notEnoughTime;
-            this.dive.emergencyAscentStart = Time.toDate(this.plan.startAscentTime);
+            this.dive.emergencyAscentStart = this.plan.startAscentTime;
         }
 
         // even in case thirds rule, the last third is reserve, so we always divide by 2

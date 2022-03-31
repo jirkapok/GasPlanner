@@ -222,8 +222,7 @@ describe('PlannerService', () => {
         it('Start ascent is updated', ()=> {
             planner.calculate();
             planner.applyNdlDuration();
-            const expected = Time.toDate(Time.oneMinute * 12);
-            expect(planner.dive.emergencyAscentStart).toEqual(expected);
+            expect(planner.dive.emergencyAscentStart).toEqual(Time.oneMinute * 12);
         });
     });
 });

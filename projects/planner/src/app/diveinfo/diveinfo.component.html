@@ -21,6 +21,12 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>Rock bottom at:</td>
+                        <td class="table-active">
+                            <strong>{{ timeStampToString(dive.emergencyAscentStart) | date:durationFormat(dive.emergencyAscentStart) }} </strong>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>No decompression time [min]:
                             <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="planner.applyNdlDuration()" *ngIf="showApply">Use</button>
                         </td>

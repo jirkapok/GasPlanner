@@ -191,7 +191,7 @@ export class PlannerService {
             const emergencyAscent = consumption.emergencyAscent(profile.origin, this.options, this.tanks);
             const timeToSurface = Segments.duration(emergencyAscent);
             this.dive.timeToSurface = Time.toMinutes(timeToSurface);
-            consumption.consumeFromTanks(profile.origin, this.options, this._tanks, this.diver);
+            consumption.consumeFromTanks2(profile.origin, emergencyAscent, this.options, this._tanks, this.diver);
             this.dive.notEnoughTime = this.plan.notEnoughTime;
         }
 

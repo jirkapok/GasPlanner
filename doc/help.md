@@ -19,7 +19,10 @@ To be able calculate dive profile you need to enter Gases used during the dive, 
 ### Depth
 
 * `Bottom time` [minutes]: The time diver stays under water until he starts to scent. This includes also decent.
+  * `Max`: TODO
+  * `No deco`: TODO
 * `Depth` [meters]: The deepest depth reached during the dive.
+  * `Max`: TODO
 
 ### Gases
 
@@ -46,7 +49,7 @@ For faster customization or to be able reset options to default values, you can 
 | Brackish (EN13319) | Black sea, Baltic sea | 28 | 1020 |
 | Fresh | Lakes | 0.1 | 1000 |
 
-* `Altitude`: Similar effect on decompression like salinity has diving at higher altitude. The higher you are, the lower is the atmospheric pressure around you. 0 m.a.s.l. means sea level, e.g. 1.032 bar. Diving at higher altitude results in higher decompression (e.g. shorten no decompression limit).
+* `Altitude`: Similar effect on decompression like salinity has diving at higher altitude. The higher you are, the lower is the atmospheric pressure around you. 0 m.a.s.l. means sea level, e.g. 1.0132 bar. Diving at higher altitude results in higher decompression (e.g. shorten no decompression limit).
 
 | Altitude [m.a.s.l.] | Air pressure [bar] |
 | --- | --- |
@@ -75,14 +78,18 @@ TODO
 * `Maximum bottom time` [minutes]: The longest time diver can stay at required depth considering provided gases
 * `Rock bottom at` time: Moment at which the emergency ascent is calculated used to calculate the rock bottom. It is the last moment at highest depth.
 
-> Emergency ascent may differ from calculated ascent, because it is calculated at different time during the dive.
+> **Emergency ascent may differ from calculated ascent**, because it is calculated at different time during the dive.
 
 ### Consumed gas charts
 
 * `Rock bottom` [bars]: Minimum amount of gas (reserve) required for safe ascent in case of emergency for two divers under stress. This counts with 60 liters/minute breathing rate for both divers. It is shown for each defined tank. These values are calculated at "Rock bottom at" time.
 
-TODO describe how reserve is distributed across multiple tanks
-
+TODO: How reserve for all usable is calculated
+1. Simple UI - Ascent is calculated and is from deepest point - we can count with it
+2. Complex multilevel dive with or without user segments up to the surface
+  - based on deco and all available gases, even the gases aren't used in
+  any user defined segment - emergency ascent from last deepest point
+- describe how reserve is distributed across multiple tanks
 ### Dive way points
 
 Table showing details about profile changes during the dive. Each row represents one event.

@@ -2,14 +2,12 @@
 
 Following list of features and improvements ordered by priority is under development or consideration.
 
-Known issues:
+## Known issues
 
 * Gas oxygen content spinner shows not rounded number, where it shouldn't
-* Fix the reserve calculations
 
-Improvements:
+## Improvements / Features
 
-* Update the documentation to latest state of the application
 * Add TRIMIX support and calculator
   * Add general option to enable/disable Nitrox or Trimix
   * Add option to define maximum narcotic depth
@@ -17,10 +15,6 @@ Improvements:
   * Add air breaks
   * Don't switch to gas with higher content of Nitrox warning - <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
   * Add END calculator
-* Events:
-  * Add time to the events warning/error messages
-  * Add narcotic depth exceeded warning event
-  * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * Add imperial units option
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
     * Fix RMV/SAC calculator based on Nominal volume
@@ -28,6 +22,10 @@ Improvements:
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
   * Meter: <https://en.wikipedia.org/wiki/Metre_sea_water>
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
+* Events:
+  * Add time to the events warning/error messages
+  * Add narcotic depth exceeded warning event
+  * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * UI Tweaks
   * Tanks
     * Add Dropdown for well known tank sizes

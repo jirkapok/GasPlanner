@@ -507,11 +507,6 @@ describe('Consumption', () => {
             expect(tank1.reserve).toEqual(47);
         });
 
-        // TODO documentation: How reserve for all usable is calculated
-        // 1. Simple UI - Ascent is calculated and is from deepest point - we can count with it
-        // 2. Complex multilevel dive with or without user segments up to the surface
-        //    - based on deco and all available gases, even the gases aren't used in
-        //      any user defined segment - emergency ascent from last deepest point
         // TODO Consider use user defined segments for emergency ascent
         // Hidden to user: From which point to calculate rock bottom and subtract it before strategy is calculated?
         //    - 1/2 usable strategy

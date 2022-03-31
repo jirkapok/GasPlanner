@@ -187,12 +187,12 @@ export class PlannerService {
             this.dive.maxTime = consumption.calculateMaxBottomTime(segments, this._tanks, this.diver, this.options);
 
             // TODO Add to UI the time at which the emergency ascent is calculated
-            // TODO check, if plan.length is still needed
             const emergencyAscent = consumption.emergencyAscent(profile.origin, this.options, this.tanks);
             const timeToSurface = Segments.duration(emergencyAscent);
             this.dive.timeToSurface = Time.toMinutes(timeToSurface);
             consumption.consumeFromTanks2(profile.origin, emergencyAscent, this.options, this._tanks, this.diver);
             this.dive.notEnoughTime = this.plan.notEnoughTime;
+            this.dive.emergencyAscentStart = Time.toDate(this.plan.startAscentTime);
         }
 
         // even in case thirds rule, the last third is reserve, so we always divide by 2

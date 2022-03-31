@@ -130,7 +130,7 @@ export class Segments {
     }
 
     /**
-     * Sum of all profile segments duration
+     * Sum of all profile segments duration in seconds
      * @param profile Not null collection of segments to count with
      * @returns Total sum of all elements duration in seconds
      */
@@ -294,6 +294,19 @@ export class Segments {
         }
 
         return [];
+    }
+
+    /** Index of the first segment, where the ascent starts */
+    public get startAscentIndex(): number {
+        return this.deepestPart().length;
+    }
+
+    /**
+     * Duration of dive up to the ascent start in seconds.
+     */
+    public get startAscentTime(): number {
+        const toCount = this.deepestPart();
+        return Segments.duration(toCount);
     }
 
     private updateMaxDepth(segment: Segment): void {

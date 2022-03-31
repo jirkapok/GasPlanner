@@ -1,4 +1,4 @@
-import { Options, SafetyStop, Segment } from 'scuba-physics';
+import { Time, SafetyStop, Segment } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 
@@ -210,6 +210,20 @@ describe('PlannerService', () => {
             planner.firstTank.gas.fO2 = 0.5;
             planner.applyMaxDepth();
             expect(planner.plan.maxDepth).toBe(18);
+        });
+    });
+
+    describe('Updates dive', () => {
+        it('Average depth is calculated', ()=> {
+            planner.calculate();
+            expect(planner.dive.averageDepth).toBe(21.75);
+        });
+
+        it('Start ascent is updated', ()=> {
+            planner.calculate();
+            planner.applyNdlDuration();
+            const expected = Time.toDate(Time.oneMinute * 12);
+            expect(planner.dive.emergencyAscentStart).toEqual(expected);
         });
     });
 });

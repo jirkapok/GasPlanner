@@ -99,7 +99,11 @@ export class Plan {
     }
 
     public get startAscentIndex(): number {
-        return this._segments.deepestPart().length;
+        return this._segments.startAscentIndex;
+    }
+
+    public get startAscentTime(): number {
+        return this._segments.startAscentTime;
     }
 
     public assignDepth(newDepth: number, tank: Tank, options: Options): void {
@@ -177,6 +181,7 @@ export class Dive {
     public notEnoughGas = false;
     public notEnoughTime = false;
     public noDecoExceeded = false;
+    public emergencyAscentStart = new Date();
     public averageDepth = 0;
     public wayPoints: WayPoint[] = [];
     public ceilings: Ceiling[] = [];

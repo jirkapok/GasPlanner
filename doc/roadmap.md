@@ -36,11 +36,18 @@ Following list of features and improvements ordered by priority is under develop
     * Add other events to profile chart like gas switch
   * Settings
     * Unify dive settings and default settings
+  * UX
+    * fix layout, so the fields aren't moving when validation error appears
+    * add vertical line to chart to highlight current moment
+    * align fields to consume full space
+    * Hover row in Dive info should focus chart
+    * Profile errors should contain explanation how to fix it
 * Help
   * Add help to the UI as side bar
     * <https://ej2.syncfusion.com/angular/documentation/sidebar/getting-started/>
     * <https://www.npmjs.com/package/ngx-markdown>
     * <https://stackblitz.com/edit/angular-azjfgh?file=src%2Fapp%2Fapp.component.html>
+    * <https://stackoverflow.com/questions/53416871/routing-to-static-html-page-in-angular-6>
 * Add option to define repetitive dives
 * Add no deco table
 * Add localization

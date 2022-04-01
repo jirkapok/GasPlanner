@@ -13,14 +13,14 @@ For some calculations it is necessary to measure precise values. Earths physical
 
 To be able calculate dive profile you need to enter Gases used during the dive, depth and calculation options, each of these is placed within its own box. Every time you change any option new profile is calculated. We distinguish two kinds of view.
 
-TODO screenshot mode switch
+![Extended view switch](./extended_view_switch.png)
 
 * `Simple`: For simple dives, faster to get results. Only one target depth and time with only one tank is available. Som options aren't visible and are simplified (e.g. you are unable to set precise gradient factors). If it is not enough use Extended view.
 * `Extended`: Allows you define unlimited number of tanks and depth levels. You are free to customize details of the profile calculations. Switch back to simple resets some values, mainly depth levels and gases.
 
 ### Depth
 
-TODO depth box screenshot
+![Target depth](./target_depth_properties.png)
 
 * `Bottom time` [minutes]: The time diver stays under water until he starts to scent. This includes also decent.
   * `Max`: Applies the maximum estimated bottom time to the plan
@@ -37,7 +37,7 @@ TODO depth box screenshot
   * `Switch`: Shows maximum depth in meters at which you can switch to this gas for decompression purposes. It is calculated from configured maximum decompression ppO2
 * `Start pressure` [bars]: The pressure the tanks is filled in with the gas as red on the pressure gauge. This value is usually represented as full tank. Keep in mind to subtract cca 10 bars in colds water, since temperature will reduce the pressure immediately after you enter the water.
 
-TODO screenshot Percent O2 for Ean50
+![Tank properties](./tank_properties.png)
 
 > Why is switch always deeper than MOD? Because maximum ppO2 for deco gas is usually higher than for bottom gas.
 
@@ -102,9 +102,7 @@ Which values to apply? Here are recommended value explained:
   * `Always` : Even you train in shallow pool without decompression stops, you may want to add the safety stop as additional safety margin. This enforces the safety stop at end of the ascent
 
 > Configuration of safety stop always applies also to rock bottom calculation in case of emergency ascent.
-
 > When the algorithm allows ascent to next decompression or safety stop? Currently the easiest solution is implemented (not optimal). You wait at the stop, until the ceiling is shallower than next stop. Than you can start ascent to next stop.
-
 
 ### Speeds
 
@@ -158,7 +156,7 @@ Read more about
 
 ### Consumed gas charts
 
-TODO: Screenshot of a tank
+![Tank consumed and reserve](./tank_consumption_reserve.png)
 
 * `Gas remaining`: The consumed gas is extracted from tank Start pressure. Example shows not enough gas to realize the dive. Only 97 bars are remaining from 200 bars. But the reserve is 104 bars, which should be still present in the tank after you reach the surface from dive without any issue.
 * `Rock bottom` [bars]: Minimum amount of gas (reserve) required for safe ascent in case of emergency for two divers under stress. It is shown for each defined tank. These values are calculated at "Rock bottom at" time.

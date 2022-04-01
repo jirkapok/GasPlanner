@@ -2,7 +2,7 @@
 
 ## Calculations Background
 
-For some calculations it is necessary to measure precise values. Earths physical model is simulated, but not to all details. In such cases some constants are used. Together with different rounding during the calculations, this is why diving software implementations differ and mainly also why some simplifications was used during your scuba diving courses. For example we count with sea level atmospheric pressure 1.01325 bar, but usually everybody counts with 1 bar only, which makes 1.325% deviation. We use such simplifications only in Nitrox calculator. Similar results you se in this application you should see in other applications or dive computers.
+For some calculations it is necessary to measure precise values. Earths physical model is simulated, but not to all details. In such cases some constants are used. Together with different rounding during the calculations, this is why diving software implementations differ and mainly also why some simplifications was used during your scuba diving courses. For example we count with sea level atmospheric pressure 1.01325 bar, but usually everybody counts with 1 bar only, which makes 1.325% deviation. We use such simplifications only in Nitrox calculator. Similar results you see in this application you should see in other applications or dive computers.
 
 ## Theoretical model
 
@@ -11,11 +11,11 @@ For some calculations it is necessary to measure precise values. Earths physical
 
 ## Screen structure
 
-To be able calculate dive profile you need to enter Gases used during the dive, depth and calculation options, each of these is placed within its own box. Every time you change any option new profile is calculated. We distinguish two kinds of view.
+To be able calculate dive profile you need to enter Gases used during the dive, depth and calculation options, each of these is placed within its own box. Every time you change any option new profile is calculated. We distinguish two kind of views.
 
 ![Extended view switch](./extended_view_switch.png)
 
-* `Simple`: For simple dives, faster to get results. Only one target depth and time with only one tank is available. Som options aren't visible and are simplified (e.g. you are unable to set precise gradient factors). If it is not enough use Extended view.
+* `Simple`: For simple dives, faster to get results. Only one target depth and time with only one tank is available. Some options aren't visible and are simplified (e.g. you are unable to set precise gradient factors). If it is not enough use Extended view.
 * `Extended`: Allows you define unlimited number of tanks and depth levels. You are free to customize details of the profile calculations. Switch back to simple resets some values, mainly depth levels and gases.
 
 ### Depth
@@ -72,7 +72,7 @@ For faster customization or to be able reset options to default values, you can 
 ### Conservatism - Gradient Factors
 
 This is the key options which defines the generated profile curve. For more details about this option see [Gradient factors article](https://www.diverite.com/articles/gradient-factors/) by Dive rite.
-You can use predefined group of values, which correspond with values used by Shearwater dive computers. Both values are in range 10-100 %. Where 100 % means pure Bühlmann with no gradient factors. Today it is generally considered as not safe enough. The lower the value is, the more safety you get by reducing allowed maximum tissue pressure (supersaturation level). Nut the price is longer ascent. So the correct behavior is to find sme compromise. Here is simple explanation how it works.
+You can use predefined group of values, which correspond with values used by Shearwater dive computers. Both values are in range 10-100 %. Where 100 % means pure Bühlmann with no gradient factors. Today it is generally considered as not safe enough. The lower the value is, the more safety you get by reducing allowed maximum tissue pressure (supersaturation level). But the price is longer ascent. So the correct behavior is to find sme compromise. Here is simple explanation how it works.
 
 * `Gradient factor Low` (GF Low): Is applied on depths range. It defines moment at which we first time reach the maximum supersaturation level. I.e. it defines depth of first stop. Low value means the first stop will be at higher depth. More about deep stops in [this article](https://thetheoreticaldiver.org/wordpress/index.php/2019/06/16/short-comment-on-doolettes-gradient-factors-in-a-post-deep-stops-world/)
 
@@ -82,7 +82,7 @@ Following chart shows how different gradient factors apply to ascent profile. Le
 
 ![Gradient factors comparison chart](./gf_profile_comparison.png)
 
-Which values to apply? Here are recommended value explained:
+Which values to apply? Here are recommended values explained:
 
 | Gradient factors | Recommendation |
 | --- | --- |
@@ -113,9 +113,10 @@ Which values to apply? Here are recommended value explained:
 
 > All the ascent speeds are used for both planned ascent and emergency ascent used to calculate the rock bottom.
 
-All the speeds are used also in user defined ascents or descents by checking, if the plan withing the speeds range.
-Change of ascent speeds apply at 3 m intervals, the same applies to decompression stops. It is recommended to use lower values closer to the surface. Use Recommended button to apply default values 9, 6 and 3 meters/min. For recreational dives used by most agencies, all set to 9 meters/min.
-Example dive to 30 meters with average depth 28.6 meters and recommended speeds. 50 % of average depth is rounded to 12 meters.
+All the speeds are used also in user defined ascents or descents by checking, if the plan is within the speeds range.
+Change of ascent speeds apply at 3 m intervals, the same applies to decompression stops. It is recommended to use lower values closer to the surface. Use Recommended button to apply default values 9, 6 and 3 meters/min. For recreational dives used by most agencies, all are set to 9 meters/min.
+
+Following table shows example dive to 30 meters with average depth 28.6 meters and recommended speeds at moment the diver starts ascent. 50 % of average depth is rounded to 12 meters.
 
 | Depth range [m] | Ascent speed [m/min] |
 | --- | --- |
@@ -125,10 +126,10 @@ Example dive to 30 meters with average depth 28.6 meters and recommended speeds.
 
 ## Calculated results (Dive info)
 
-* `Time to surface (TTS)` [minutes]: Total duration of ascent from critical point of dive in case of emergency. Two minutes are added to ascent duration to be able respond to situation at depth as recommended during scuba trainings.
+* `Time to surface (TTS)` [minutes]: Total duration of ascent from critical point of dive in case of emergency. Problem solving duration minutes are added to ascent duration to be able respond to situation at depth as recommended during scuba trainings.
 * `No decompression time` [minutes]: The longes time diver can stay at required depth where direct ascent to the surface is considered to be safe.
 * `Maximum bottom time` [minutes]: The longest time diver can stay at required depth considering provided gases
-* `Rock bottom at` time: Moment at which the emergency ascent is calculated used to calculate the rock bottom. It is the last moment at highest depth.
+* `Rock bottom at` time: The moment at which the emergency ascent is calculated used to calculate the rock bottom. It is the last moment at highest depth.
 
 > **Emergency ascent may differ from calculated ascent**, because it is calculated at different time during the dive.
 
@@ -145,7 +146,7 @@ In case of any issue with the plan, Notification messages are shown bellow the d
 | High descent speed | Higher risk of ear (or other cavities) barotrauma | Enlarge the descent duration |
 | Broken ceiling | In user defined part of the dive profile you reach lower depth than current ceiling, which increases risk of DCS | Fix the profile, so always stay bellow the ceiling |
 
-> That is purpose of this application to reduce these risks!
+> This is the main purpose of this application: to reduce these risks!
 
 Read more about
 
@@ -165,11 +166,14 @@ Read more about
 
 How reserve is calculated? Currently only all usable strategy is implemented.
 
-1. Simple view: Ascent is automatically calculated and is from deepest point. In this case the rock bottom is gas needed for proper ascent to the surface.
-2. TODO Complex multilevel dive with or without user segments up to the surface
-  - based on deco and all available gases, even the gases aren't used in
-  any user defined segment - emergency ascent from last deepest point
-- describe how reserve is distributed across multiple tanks
+1. Simple view: Ascent is automatically calculated from deepest point at end of the planned time. In this case the rock bottom is gas needed for proper ascent to the surface.
+2. Complex multilevel dive with or without user defined parts of the profile up to the surface. Again we use all available tanks even they aren't used by user. Emergency ascent is calculated at end of deepest point, since rest of the profile is considered as decompression ascent.
+
+In case of multiple tanks
+
+* Consumed gas is extracted in reverse order from last tank up to the first tank
+* Reserve for first tak remains always at least 30 bars
+* For all other tanks, there is no reserve required as technical minimum, until the reserve isn't larger than capacity of the first tank.
 
 ### Dive way points
 
@@ -180,7 +184,7 @@ Table showing details about profile changes during the dive. Each row represents
   * `Arrow right`: Swim at current depth
   * `Arrow up`: Ascent (end depth is lower than start depth, ending with 0 at surface). This is always e.g. last row representing ascent to surface.
   * `Switch`: Gas switch, showing level at which you stay to change tank with different mix
-* `Depth` [meters]: Target depth to which this lead to.
+* `Depth` [meters]: Target depth to which current action leads to.
 * `Duration` [minutes]: Duration of this transition since previous row.
 * `Run time` [minutes]: Absolute time since the dive started till end of current row. Calculated as total sum of all previous lines.
 
@@ -188,12 +192,12 @@ Table showing details about profile changes during the dive. Each row represents
 
 Graphical representation how the calculated depth changes in time. This corresponds to precise values shown in the way points table. Move mouse over the chart to focus related row in the waypoints table.
 
-* `Dive profile`: Blue lins showing diver depth at each moment during the dive.
-* `Ceiling`: Orange line showing minimum depth at which diver needs to stay to decompress before continues with ascent.
+* `Dive profile`: Blue line showing diver depth at each moment during the dive.
+* `Ceiling`: Orange line showing minimum depth at which diver needs to stay to decompress before he continues with ascent.
 * `Average depth`: Dotted line showing average depth at each moment of the dive. This is useful for consumption calculations.
 
-Why is deco shown in the chart if profile is still considered a no deco?
-In some plans you already reach small amount of ceiling, which disappears during the ascent event without any decompression stop. So you are still free to ascent directly to the surface. These kind of dives are still considered as no decompression.
+Why is deco shown in the chart, if profile is still considered a no deco?
+In some plans you already reach small amount of ceiling, which disappears during the ascent even without any decompression stop. So you are still free to ascent directly to the surface. These kind of dives are still considered as no decompression.
 
 > In the chart profile, the blue line should never cross the orange line!
 
@@ -204,9 +208,10 @@ In some plans you already reach small amount of ceiling, which disappears during
 Here you can find default options used when you open the application and plan new dive. Changing the values apply them immediately to the current plan.
 
 * `SAC`: Provide your own observed average consumption. If you don't know use RMV/SAC calculator to get this value. Defaults to 20 liters/minute. See rock bottom calculation to see how this value is used for emergency ascent.
-* `Maximum ppO2`: Used for bottom time of the profile.
-* `Maximum deco ppO2`: Used only in case of calculated ascent or in case of rock bottom calculation to choose best decompression mix.
+* `Maximum ppO2`: Used for bottom time of the profile. Most recreational agencies recommend 1.4, but even lower value should be considered.
+* `Maximum deco ppO2`: Used only in case of calculated ascent or in case of rock bottom calculation to choose best decompression mix. For decompression 1.6 is common recommended value.
 
+> In both cases the ppO2 value should never be higher than 1.6 for recreational divers.
 
 ### Load/Save defaults
 
@@ -214,11 +219,52 @@ Used to save current settings to be able use them in later planning. This stores
 
 ## Calculators
 
-### Nitrox
-
-TODO
-
 ### RMV/SAC
 
-Hit Apply button 
-TODO
+To be able calculate remaining gas and reserve for planned dive, you need to know your consumption, where this calculator steps into the game. Read more on [Gas planning wiki](https://en.wikipedia.org/wiki/Scuba_gas_planning) or on [Diving cylinder wiki](https://en.wikipedia.org/wiki/Diving_cylinder). We are talking about two measures with different meaning:
+
+* `Respiratory minute volume` (RMV): as volume of gas consumed by diver at surface per minute. This value is not dependent on tank size, so you can use it later to update your consumption when using different tank size. So its unit is Liter/minute or cubic feet/minute. See also [RMV on wiki](https://en.wikipedia.org/wiki/Minute_ventilation)
+* `Surface air consumption` (SAC): Amount of gas consumed by diver at surface from given tank. Instead of RMV here the unit is bar/minute (or psi/minute), which is more suitable for diver during the dive, since pressure gauges usually show gas in bars or psi.
+
+These calculations can help you to answer following questions:
+
+* `RMV`: What was my RMV or SAC during last dive?
+* `Duration`: How long can i stay at given depth with this tank available gas?
+* `Used`: How much gas will be consumed during planned dive?
+
+Formulas used to calculate RMV and SAC:
+
+```
+SAC = consumed gas / (average depth in bars * duration)
+RMV = SAC * tank size
+
+Example: During dive where average depth was 15 meters for 45 minutes i consumed 150 bars from 15 liter tank. What is my SAC and RMV?
+depth in bars =  15 / 10 + 1 = 2.5 bar (simplified depth conversion)
+SAC = 150 / (2.5 * 45) = 1.333 bar/minute
+RMV = 1.333 * 15 = 20 liters/minute
+```
+
+> Hit `Use` button to apply current RMV to the diver application settings
+
+### Nitrox
+
+Use Nitrox calculator to select correct gas for required dive. This calculator is the example where we use simplified depth conversion considering air pressure at sea level is 1 bar. Nitrox calculations triangle is as follows:
+
+```
+partial pressure O2 = pressure at depth * O2 fraction in mix
+
+Example: What is the partial pressure O2 for Ean50 at 22 meters?
+O2 fraction in Ean50 => 50 % O2 => 0.5 bar at surface
+22 meters => 22 / 10 + 1 = 3.2 bar
+ppO2 = 3.2 * 0.5 = 1.6 bar
+```
+
+You can calculate one fo these values by providing the remaining two to answer following questions:
+
+* `MOD`: What is the maximum operational depth (MOD) for given gas? This question considers only oxygen toxicity. Exceeding the MOD means there is higher risk of oxygen toxicity. It doesn't take into the account the nitrogen narcotic effect.
+* `Best mix`: What is the best mix at given depth? To able use as much as oxygen to given ppO2 limit at planned depth.
+* `ppO2`: What is the current partial pressure when breathing the gas at given depth? Always know your partial pressure, so you know limits of your gas. This calculation can be ommited in case of using standard gases, which are defined for each depth range in safe ppO2 limit. Standard gases are used by training agencies like GUE, UTD or ISE.
+
+> Even you can use Air at depths higher than 30 meters, there is still narcotic effect which increases for most people in depths bellow 30 meters. For such depths gases replacing nitrogen by helium like Trimix should be used.
+
+> Hit the `Use` button to apply current ppO2 to diver application settings.

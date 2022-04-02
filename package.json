@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve",
+    "start-pwa": "ng build && http-server -p 9090 -c-1 dist/planner",
     "build": "ng build --configuration production",
     "build-lib": "ng build scuba-physics",
     "test": "ng test",

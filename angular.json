@@ -33,7 +33,9 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ]
+            ],
+            "serviceWorker": true,
+            "ngswConfigPath": "projects/planner/ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -95,7 +97,8 @@
             "karmaConfig": "projects/planner/karma.conf.js",
             "assets": [
               "projects/planner/src/favicon.ico",
-              "projects/planner/src/assets"
+              "projects/planner/src/assets",
+              "projects/planner/src/manifest.webmanifest"
             ],
             "styles": [
               "projects/planner/src/styles.css"

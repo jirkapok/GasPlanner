@@ -201,7 +201,7 @@ export class PlannerService {
         this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.calculated = true;
-        this.onCalculated.next();
+        this.onCalculated.next({});
     }
 
     public loadFrom(isComplex: boolean, options: Options, diver: Diver, tanks: Tank[], segments: Segment[]): void {

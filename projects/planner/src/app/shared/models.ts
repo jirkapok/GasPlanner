@@ -91,7 +91,7 @@ export class Plan {
 
     public setSimple(depth: number, duration: number, tank: Tank, options: Options): void {
         this.reset(depth, duration, tank, options);
-        this.onChanged.next();
+        this.onChanged.next({});
     }
 
     public get maxDepth(): number {
@@ -108,7 +108,7 @@ export class Plan {
 
     public assignDepth(newDepth: number, tank: Tank, options: Options): void {
         this._segments = SegmentsFactory.createForPlan(newDepth, this.duration, tank, options);
-        this.onChanged.next();
+        this.onChanged.next({});
     }
 
     /** in minutes */
@@ -119,19 +119,19 @@ export class Plan {
 
     public assignDuration(newDuration: number, tank: Tank, options: Options): void {
         this._segments = SegmentsFactory.createForPlan(this.maxDepth, newDuration, tank, options);
-        this.onChanged.next();
+        this.onChanged.next({});
     }
 
     public addSegment(tank: Tank): void {
         const last = this._segments.last();
         const created = this._segments.addChangeTo(last.endDepth, tank.gas, Plan.defaultDuration);
         created.tank = tank;
-        this.onChanged.next();
+        this.onChanged.next({});
     }
 
     public removeSegment(segment: Segment): void {
         this._segments.remove(segment);
-        this.onChanged.next();
+        this.onChanged.next({});
     }
 
     public fixDepths(): void {
@@ -155,7 +155,7 @@ export class Plan {
         // this.strategy = other.strategy;
         // cant use copy, since deserialized objects wouldn't have one.
         this._segments = Segments.fromCollection(other);
-        this.onChanged.next();
+        this.onChanged.next({});
     }
 
     public resetSegments(removed: Tank, replacement: Tank): void {

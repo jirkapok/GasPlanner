@@ -30,6 +30,15 @@ import { PlannerService } from './shared/planner.service';
 import { PreferencesService } from './shared/preferences.service';
 import { UnitConversion } from './shared/UnitConversion';
 
+import * as PlotlyJS from 'plotly.js';
+import { PlotlyModule, PlotlyViaCDNModule } from 'angular-plotly.js';
+
+// fix based on this: https://stackoverflow.com/questions/70461872/plotly-js-not-working-after-upgrading-to-angular-13
+PlotlyModule.plotlyjs = PlotlyJS;
+PlotlyViaCDNModule.setPlotlyVersion('1.58.4');
+PlotlyViaCDNModule.setPlotlyBundle('basic');
+
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -57,6 +66,7 @@ import { UnitConversion } from './shared/UnitConversion';
         AppRoutingModule,
         CustomFormsModule,
         FontAwesomeModule,
+        PlotlyModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,
             // Register the ServiceWorker as soon as the application is stable

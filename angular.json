@@ -32,7 +32,8 @@
               "projects/planner/src/styles.css"
             ],
             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "projects/planner/src/types/plotly.js/plotly-basic.min.js"
             ],
             "serviceWorker": true,
             "ngswConfigPath": "projects/planner/ngsw-config.json"
@@ -42,8 +43,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "2mb"
+                  "maximumWarning": "1Mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",

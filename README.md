@@ -38,7 +38,7 @@ State of the art can also be checked using [Github Actions](https://github.com/j
 
 ## Running the tests
 
-Angular recommended testing environment is used, to run test use `npm run test-lib`, `npm run test`
+Angular recommended testing environment is used, to run test use `npm run test-lib`, `npm run test`. To test the progressive web application behavior use `npm run start-pwa`.
 
 ## Contributing
 

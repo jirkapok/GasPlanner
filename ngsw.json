@@ -1,7 +1,7 @@
 {
   "configVersion": 1,
-  "timestamp": 1616111441295,
-  "index": "/index.html",
+  "timestamp": 1649115708015,
+  "index": "'https://jirkapok.github.io/GasPlanner/'/index.html",
   "assetGroups": [
     {
       "name": "app",
@@ -11,14 +11,14 @@
         "ignoreVary": true
       },
       "urls": [
-        "/favicon.ico",
-        "/index.html",
-        "/main.f598218a2f0c56e0235a.js",
-        "/manifest.webmanifest",
-        "/polyfills-es5.8e008e706f2c06967f86.js",
-        "/polyfills.8f629bd7426802c46571.js",
-        "/runtime.cad733cf18c74cfef638.js",
-        "/styles.c4d9279faed0c08e0a55.css"
+        "'https://jirkapok.github.io/GasPlanner/'/favicon.ico",
+        "'https://jirkapok.github.io/GasPlanner/'/index.html",
+        "'https://jirkapok.github.io/GasPlanner/'/main.9458f835573dc16b7165.js",
+        "'https://jirkapok.github.io/GasPlanner/'/manifest.webmanifest",
+        "'https://jirkapok.github.io/GasPlanner/'/polyfills.1accfe834e12730f50dc.js",
+        "'https://jirkapok.github.io/GasPlanner/'/runtime.9cdd13016da0406a5550.js",
+        "'https://jirkapok.github.io/GasPlanner/'/scripts.206995907876a2c78426.js",
+        "'https://jirkapok.github.io/GasPlanner/'/styles.f5983360f566fe95cb01.css"
       ],
       "patterns": []
     },
@@ -30,36 +30,36 @@
         "ignoreVary": true
       },
       "urls": [
-        "/assets/icons/icon-128x128.png",
-        "/assets/icons/icon-144x144.png",
-        "/assets/icons/icon-152x152.png",
-        "/assets/icons/icon-192x192.png",
-        "/assets/icons/icon-384x384.png",
-        "/assets/icons/icon-512x512.png",
-        "/assets/icons/icon-72x72.png",
-        "/assets/icons/icon-96x96.png"
+        "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-128x128.png",
+        "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-144x144.png",
+        "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-152x152.png",
+        "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-192x192.png",
+        "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-384x384.png",
+        "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-512x512.png",
+        "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-72x72.png",
+        "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-96x96.png"
       ],
       "patterns": []
     }
   ],
   "dataGroups": [],
   "hashTable": {
-    "/assets/icons/icon-128x128.png": "ff40289d8a8f61e85436fd7f5f42c7c5d9e55589",
-    "/assets/icons/icon-144x144.png": "5e3d0cc7d9a497058e6f87c817c821b7fb4a5bc3",
-    "/assets/icons/icon-152x152.png": "d36c00962cfc95ce49600cfd281b421f1d944ccd",
-    "/assets/icons/icon-192x192.png": "d90cb5d4bfe0612312223dfbffe6cdf069c41b31",
-    "/assets/icons/icon-384x384.png": "58e8dc7b805acedb1babd833d7ac8bd984661266",
-    "/assets/icons/icon-512x512.png": "530406abd9309c3d3e08bcbc91eb9bdf180faac4",
-    "/assets/icons/icon-72x72.png": "bbf3a0e1d4a961f7360746df724533232813649a",
-    "/assets/icons/icon-96x96.png": "2c1540d7bb572d2178c2ded3f45adc0cf19fbc6a",
-    "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "3a96839ff9985f4c845cf68c6a15bce7f3e08763",
-    "/main.f598218a2f0c56e0235a.js": "06c31876d7efff79f870a03527c11654f2050765",
-    "/manifest.webmanifest": "ce9ef54b65085b5d34535ff76db99848ae49bf58",
-    "/polyfills-es5.8e008e706f2c06967f86.js": "a101ad3791bf985a8e159c28ad7dbe3f451d9af1",
-    "/polyfills.8f629bd7426802c46571.js": "77e31c20063d7a4f4582bddfde4ef11f4c1a89bd",
-    "/runtime.cad733cf18c74cfef638.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
-    "/styles.c4d9279faed0c08e0a55.css": "85e4833008762f2cc56e662049080e0b6f565786"
+    "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-128x128.png": "ff40289d8a8f61e85436fd7f5f42c7c5d9e55589",
+    "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-144x144.png": "5e3d0cc7d9a497058e6f87c817c821b7fb4a5bc3",
+    "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-152x152.png": "d36c00962cfc95ce49600cfd281b421f1d944ccd",
+    "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-192x192.png": "d90cb5d4bfe0612312223dfbffe6cdf069c41b31",
+    "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-384x384.png": "58e8dc7b805acedb1babd833d7ac8bd984661266",
+    "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-512x512.png": "530406abd9309c3d3e08bcbc91eb9bdf180faac4",
+    "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-72x72.png": "bbf3a0e1d4a961f7360746df724533232813649a",
+    "'https://jirkapok.github.io/GasPlanner/'/assets/icons/icon-96x96.png": "2c1540d7bb572d2178c2ded3f45adc0cf19fbc6a",
+    "'https://jirkapok.github.io/GasPlanner/'/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
+    "'https://jirkapok.github.io/GasPlanner/'/index.html": "d881dcbe335ad239f77260f963ae62d6689b63b0",
+    "'https://jirkapok.github.io/GasPlanner/'/main.9458f835573dc16b7165.js": "6a80afd8a674eb2b192cf1ba479ad2453a22506f",
+    "'https://jirkapok.github.io/GasPlanner/'/manifest.webmanifest": "8e6296cf5d7bd1aadaef5e749f1ed9f6b461dc62",
+    "'https://jirkapok.github.io/GasPlanner/'/polyfills.1accfe834e12730f50dc.js": "9d56084b2142f701853583621f5071dc68d9bc38",
+    "'https://jirkapok.github.io/GasPlanner/'/runtime.9cdd13016da0406a5550.js": "c818ba1a48cccb36c641b77276a327124aaf2f24",
+    "'https://jirkapok.github.io/GasPlanner/'/scripts.206995907876a2c78426.js": "1470e2e12d81c6474358a2499ac0daef514d2ac8",
+    "'https://jirkapok.github.io/GasPlanner/'/styles.f5983360f566fe95cb01.css": "9503b325962d24af4f67e2e5a1b096ec0ab67eac"
   },
   "navigationUrls": [
     {

@@ -22,6 +22,7 @@ export class OptionDefaults {
     public static readonly safetyStopRecre = SafetyStop.auto;
     public static readonly addSafetyStop = true;
     public static readonly maxEND = 30;
+    public static readonly oxygenNarcotic = true;
 
     public static readonly ascentSpeed6m = 3;
     public static readonly ascentSpeed50percTo6m = 6;
@@ -59,6 +60,8 @@ export class OptionDefaults {
         options.roundStopsToMinutes = OptionDefaults.roundStopsToMinutes;
         options.gasSwitchDuration = OptionDefaults.gasSwitchDuration;
         options.descentSpeed = OptionDefaults.descentSpeed;
+        options.oxygenNarcotic = OptionDefaults.oxygenNarcotic;
+        options.maxEND = OptionDefaults.maxEND;
     }
 }
 

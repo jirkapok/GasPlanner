@@ -122,7 +122,7 @@ export class PlannerService {
 
     public get maxNarcDepth(): number {
         const depthInBars = this.depthConverter.toBar(this.options.maxEND);
-        const maxNarcBar = this.firstTank.gas.end(depthInBars);
+        const maxNarcBar = this.firstTank.gas.end(depthInBars, this.options.oxygenNarcotic);
         const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
         // because of javascript numbers precision we need to help our self
         const roundedNarc = Math.round(maxNarcDepth * 100) / 100;

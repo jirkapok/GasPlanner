@@ -32,9 +32,9 @@ describe('Gases', () => {
                 expect(end).toBeCloseTo(0.8, 2);
             });
 
-            it('8.8 m with 18/35 trimix', () => {
-                const end = StandardGases.trimix1835.end(4, false);
-                expect(end).toBeCloseTo(1.88, 2);
+            it('4.8 m with 18/45 trimix', () => {
+                const end = StandardGases.trimix1845.end(4, false);
+                expect(end).toBeCloseTo(1.48, 2);
             });
 
             it('10 m with Ean50', () => {
@@ -48,9 +48,9 @@ describe('Gases', () => {
                     expect(end).toBeCloseTo(1.2, 2);
                 });
 
-                it('16 m with 18/35 trimix', () => {
-                    const end = StandardGases.trimix1835.end(4, true);
-                    expect(end).toBeCloseTo(2.6, 2);
+                it('12 m with 18/45 trimix', () => {
+                    const end = StandardGases.trimix1845.end(4, true);
+                    expect(end).toBeCloseTo(2.2, 2);
                 });
 
                 it('30 m with Ean50', () => {
@@ -211,17 +211,26 @@ describe('Gases', () => {
             it('Multiple deco gases, best is found', () => {
                 gases.add(StandardGases.air);
                 gases.add(StandardGases.ean50);
-                gases.add(StandardGases.trimix1835);
+                gases.add(StandardGases.trimix1845);
                 bestGasOptions.currentDepth = 20;
                 const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
                 expect(found).toBe(StandardGases.ean50);
+            });
+
+            it('Finds non hypoxic mixture', () => {
+                gases.add(StandardGases.trimix1070);
+                gases.add(StandardGases.trimix1845);
+                bestGasOptions.currentDepth = 3;
+                bestGasOptions.currentGas = StandardGases.trimix1070;
+                const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
+                expect(found).toBe(StandardGases.trimix1845);
             });
 
             describe('By content', () => {
                 beforeEach(() => {
                     gases.add(StandardGases.air);
                     gases.add(StandardGases.ean50);
-                    gases.add(StandardGases.trimix1835);
+                    gases.add(StandardGases.trimix1845);
                     gases.add(StandardGases.trimix1070);
                     gases.add(StandardGases.oxygen);
                 });
@@ -238,20 +247,21 @@ describe('Gases', () => {
                     expect(found).toBe(StandardGases.air);
                 });
 
-                it('Trimix 18/35 for 40m', () => {
+                it('Trimix 18/45 for 40m', () => {
                     bestGasOptions.currentDepth = 40;
                     bestGasOptions.currentGas = new Gas(0, 0);
                     const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
-                    expect(found).toBe(StandardGases.trimix1835);
+                    expect(found).toBe(StandardGases.trimix1845);
                 });
 
-                it('Air is better than trimix 18/35 for 40m', () => {
+                // TODO really?
+                it('Air is better than trimix 18/45 for 40m', () => {
                     bestGasOptions.currentDepth = 40;
                     const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
                     expect(found).toBe(StandardGases.air);
                 });
 
-                it('Current ean32 is better than best deco air for 30m', () => {
+                it('Current ean32 is better than air for 30m', () => {
                     bestGasOptions.currentDepth = 30;
                     const gases2 = new Gases();
                     const ean32 = new Gas(.32, 0);

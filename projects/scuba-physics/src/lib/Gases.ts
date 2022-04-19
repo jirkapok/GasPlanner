@@ -93,7 +93,6 @@ export class Gases {
             const mod = depthConverter.toDecoStop(modPressure);
             const end = candidate.end(currentPressure, options.oxygenNarcotic);
 
-            // TODO add test case for 10/70 only at 3 m, together with 18/35
             // TODO add warning about switch to gas with higher nitrogen content
             // TODO move maxEND exceeded to validator as warning
             if (options.currentDepth <= mod && end <= options.maxEndPressure) {
@@ -190,7 +189,7 @@ export class GasMixtures {
     public static ead(fO2: number, depth: number): number {
         const nitroxInAir = 0.79; // TODO do we need to be more precise here?
         const fN2 = 1 - fO2; // here we are interested only in nitrogen toxicity
-        const result =  GasMixtures.end(depth, fN2) / nitroxInAir;
+        const result = GasMixtures.end(depth, fN2) / nitroxInAir;
         return result;
     }
 
@@ -223,7 +222,6 @@ export class GasMixtures {
         const bars = ratio * surfacePressure;
 
         // hyperoxic gases have pressure bellow sea level, which cant be converted to depth
-        // simplyfied untill altitude diving is implemented
         if (bars < surfacePressure) {
             return surfacePressure;
         }
@@ -296,31 +294,41 @@ export class Gas {
 export class StandardGases {
     /** Relative partial pressure of oxygen in air at surface */
     public static readonly o2InAir = 0.209;
-    // for ppo2 1.6 test data (even not used all gases with these values)
 
-    /** 65.5m - 0m */
+    // teorethical range for ppo2 1.3 test data (even not used all gases with these values)
+    /** 0 m - 52.2 m */
     public static readonly air = new Gas(StandardGases.o2InAir, 0);
 
+    /** 0 m - 30.6 m */
     public static readonly ean32 = new Gas(0.32, 0);
+
+    /** 0 m - 26.1 m */
     public static readonly ean36 = new Gas(0.36, 0);
+
+    /** 0 m - 24.2 m */
     public static readonly ean38 = new Gas(0.38, 0);
 
-    // Consider also: 21/35, 25/25, 18/45
-    /** 21.8m - 0m */
+    /** deco 0 m - 21 m */
     public static readonly ean50 = new Gas(0.5, 0);
 
-    /** 78.1m - 0m */
-    public static readonly trimix1835 = new Gas(0.18, 0.35);
+    /** deco 0 m - 6 m */
+    public static readonly oxygen = new Gas(1, 0);
 
+    /** 0 m - 42 m */
+    public static readonly trimix2525 = new Gas(0.25, 0.25);
+
+    /** 0 m - 51.9 m */
     public static readonly trimix2135 = new Gas(0.21, 0.35);
 
+    /** 0 m - 62.2 m */
+    public static readonly trimix1845 = new Gas(0.18, 0.45);
+
+    /** 2m - 76.6 m */
     public static readonly trimix1555 = new Gas(0.15, 0.55);
 
-    /** 148.5m - 7.9m */
+    /** 8 m - 120 m */
     public static readonly trimix1070 = new Gas(0.1, 0.7);
 
-    /** 5.9m - 0m */
-    public static readonly oxygen = new Gas(1, 0);
 
     private static readonly airName = 'Air';
     private static readonly oxygenName = 'Oxygen';
@@ -334,10 +342,12 @@ export class StandardGases {
         ['EAN36', StandardGases.ean36],
         ['EAN38', StandardGases.ean38],
         ['EAN50', StandardGases.ean50],
-        // ['18/35', StandardGases.trimix1835],
+        [StandardGases.oxygenName, StandardGases.oxygen],
+        // ['25/25', StandardGases.trimix2525],
+        // ['21/35', StandardGases.trimix2135],
+        // ['18/45', StandardGases.trimix1845],
         // ['15/55', StandardGases.trimix1555],
         // ['10/75', StandardGases.trimix1070],
-        [StandardGases.oxygenName, StandardGases.oxygen]
     ]);
 
     public static gasNames(): string[] {
@@ -354,17 +364,17 @@ export class StandardGases {
         const percentO2 = Math.round(fO2 * 100);
         const percentHe = Math.round(fHe * 100);
 
-        if(percentO2 <= 0) {
+        if (percentO2 <= 0) {
             return '';
         }
 
-        if(percentHe <= 0) {
+        if (percentHe <= 0) {
             // prevent best gas overflow
-            if(percentO2 >= 100) {
+            if (percentO2 >= 100) {
                 return StandardGases.oxygenName;
             }
 
-            if(percentO2 === 21) {
+            if (percentO2 === 21) {
                 return StandardGases.airName;
             }
 
@@ -376,27 +386,27 @@ export class StandardGases {
 
     /** Case sensitive search. If nothing found returns null */
     public static byName(name: string): Gas | null {
-        if(StandardGases.map.has(name)) {
+        if (StandardGases.map.has(name)) {
             const found = StandardGases.map.get(name);
             return found ?? null;
         }
 
         const match = StandardGases.namesRegEx.exec(name);
 
-        if(match) {
-            if(match[1]) {
+        if (match) {
+            if (match[1]) {
                 const parsedO2 = Number(match[1]) / 100;
 
-                if(parsedO2 > 0) {
+                if (parsedO2 > 0) {
                     return new Gas(parsedO2, 0);
                 }
             }
 
-            if(!!match[2] && !!match[3]) {
+            if (!!match[2] && !!match[3]) {
                 const trimO2 = Number(match[2]) / 100;
                 const trimHe = Number(match[3]) / 100;
 
-                if(trimO2 > 0 && trimHe > 0) {
+                if (trimO2 > 0 && trimHe > 0) {
                     return new Gas(trimO2, trimHe);
                 }
             }

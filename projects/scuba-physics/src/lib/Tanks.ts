@@ -99,10 +99,9 @@ export class Tank {
         return this.size * this.startPressure;
     }
 
-    // TODO count also with He fraction
     /** Gets not null name of the content gas based on O2 fraction */
     public get name(): string {
-        return StandardGases.nameFor(this._gas.fO2);
+        return StandardGases.nameFor(this._gas.fO2, this._gas.fHe);
     }
 
     public assignStandardGas(standard: string): void {

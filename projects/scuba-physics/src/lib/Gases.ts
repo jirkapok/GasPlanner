@@ -187,9 +187,8 @@ export class GasMixtures {
     * @returns Depth in bars.
     */
     public static ead(fO2: number, depth: number): number {
-        const nitroxInAir = 0.79; // TODO do we need to be more precise here?
         const fN2 = 1 - fO2; // here we are interested only in nitrogen toxicity
-        const result = GasMixtures.end(depth, fN2) / nitroxInAir;
+        const result = GasMixtures.end(depth, fN2) / StandardGases.nitroxInAir;
         return result;
     }
 
@@ -294,6 +293,7 @@ export class Gas {
 export class StandardGases {
     /** Relative partial pressure of oxygen in air at surface */
     public static readonly o2InAir = 0.209;
+    public static readonly nitroxInAir = 1 - StandardGases.o2InAir;
 
     // teorethical range for ppo2 1.3 test data (even not used all gases with these values)
     /** 0 m - 52.2 m */

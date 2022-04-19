@@ -97,7 +97,7 @@ export class BuhlmannAlgorithm {
      */
     public noDecoLimit(depth: number, gas: Gas, options: Options): number {
         const gases = new Gases();
-        gases.addBottomGas(gas);
+        gases.add(gas);
 
         const segments = new Segments();
         const duration = this.duration(depth, options.descentSpeed);

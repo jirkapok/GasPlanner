@@ -191,7 +191,7 @@ describe('Profile Events', () => {
     describe('Broken ceiling', () => {
         it('User defined segment break ceiling', () => {
             const gases = new Gases();
-            gases.addBottomGas(StandardGases.air);
+            gases.add(StandardGases.air);
 
             const segments = new Segments();
             segments.add(0, 40, StandardGases.air, 2 * Time.oneMinute);
@@ -213,7 +213,7 @@ describe('Profile Events', () => {
 
         it('Doesn`t break ceiling', () => {
             const gases = new Gases();
-            gases.addBottomGas(StandardGases.air);
+            gases.add(StandardGases.air);
 
             const segments = new Segments();
             segments.add(0, 16, StandardGases.air, 1.25 * Time.oneMinute);

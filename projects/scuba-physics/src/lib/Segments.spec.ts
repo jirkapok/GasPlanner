@@ -5,7 +5,7 @@ describe('Segments', () => {
 
     describe('Segments validator', () => {
         const gases = new Gases();
-        gases.addBottomGas(StandardGases.air);
+        gases.add(StandardGases.air);
 
         it('At least one segment is required', () => {
             const source = new Segments();

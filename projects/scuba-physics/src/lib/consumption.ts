@@ -69,16 +69,7 @@ export class Consumption {
     constructor(private depthConverter: DepthConverter) { }
 
     private static calculateDecompression(segments: Segments, tanks: Tank[], options: Options): CalculatedProfile {
-        const bGases = new Gases();
-        const firstTank = tanks[0];
-        const bGas = firstTank.gas;
-        bGases.addBottomGas(bGas);
-
-        // everything except first gas is considered as deco gas
-        tanks.slice(1, tanks.length).forEach((gas) => {
-            const decoGas = gas.gas;
-            bGases.addDecoGas(decoGas);
-        });
+        const bGases = Gases.fromTanks(tanks);
 
         const algorithm = new BuhlmannAlgorithm();
         const segmentsCopy = segments.copy();

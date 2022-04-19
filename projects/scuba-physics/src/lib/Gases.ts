@@ -66,19 +66,14 @@ export interface BestGasOptions {
 }
 
 export class Gases {
-    // TODO do we need to distinguish the gas usage? - no by assigning ppO2 per each gas
-    private decoGases: Gas[] = [];
     private bottomGases: Gas[] = [];
 
     public static fromTanks(tanks: Tank[]): Gases {
         const gases = new Gases();
-        const bGas = tanks[0].gas;
-        gases.addBottomGas(bGas);
 
         // everything except first gas is considered as deco gas
-        tanks.slice(1, tanks.length).forEach((tank) => {
-            const decoTank = tank.gas;
-            gases.addDecoGas(decoTank);
+        tanks.forEach((tank) => {
+            gases.add(tank.gas);
         });
 
         return gases;
@@ -115,7 +110,7 @@ export class Gases {
     * Better gas is breathable at current depth and with higher O2.
     */
     public bestDecoGas(depthConverter: DepthConverter, options: BestGasOptions): Gas {
-        const decoGas = Gases.bestGas(this.decoGases, depthConverter, options);
+        const decoGas = Gases.bestGas(this.bottomGases, depthConverter, options);
         if (decoGas !== options.currentGas) {
             return decoGas;
         }
@@ -124,23 +119,19 @@ export class Gases {
     }
 
     public get all(): Gas[] {
-        return this.bottomGases.concat(this.decoGases);
+        return this.bottomGases.slice();
     }
 
     public get hasBottomGas(): boolean {
         return this.bottomGases.length >= 1;
     }
 
-    public addBottomGas(gas: Gas): void {
+    public add(gas: Gas): void {
         this.bottomGases.push(gas);
     }
 
-    public addDecoGas(gas: Gas): void {
-        this.decoGases.push(gas);
-    }
-
     public isRegistered(gas: Gas): boolean {
-        return this.bottomGases.includes(gas) || this.decoGases.includes(gas);
+        return this.bottomGases.includes(gas);
     }
 }
 

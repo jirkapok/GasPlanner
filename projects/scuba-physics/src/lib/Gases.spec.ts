@@ -147,24 +147,12 @@ describe('Gases', () => {
 
         describe('Is Registered', () => {
             it('Gas as bottom gas is registered', () => {
-                gases.addBottomGas(StandardGases.air);
-                const registered = gases.isRegistered(StandardGases.air);
-                expect(registered).toBeTrue();
-            });
-
-            it('Gas as deco, gas is registered', () => {
-                gases.addDecoGas(StandardGases.air);
+                gases.add(StandardGases.air);
                 const registered = gases.isRegistered(StandardGases.air);
                 expect(registered).toBeTrue();
             });
 
             it('No gases, gas is not registered', () => {
-                const registered = gases.isRegistered(StandardGases.air);
-                expect(registered).toBeFalse();
-            });
-
-            it('Gas is not registered', () => {
-                gases.addDecoGas(StandardGases.ean50);
                 const registered = gases.isRegistered(StandardGases.air);
                 expect(registered).toBeFalse();
             });
@@ -183,24 +171,24 @@ describe('Gases', () => {
             });
 
             it('The only deco gas is found', () => {
-                gases.addBottomGas(StandardGases.air);
-                gases.addDecoGas(StandardGases.ean50);
+                gases.add(StandardGases.air);
+                gases.add(StandardGases.ean50);
                 bestGasOptions.currentDepth = 20;
                 const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
                 expect(found).toBe(StandardGases.ean50);
             });
 
             it('No deco gas, bottom gas is found', () => {
-                gases.addBottomGas(StandardGases.air);
+                gases.add(StandardGases.air);
                 bestGasOptions.currentDepth = 20;
                 const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
                 expect(found).toBe(StandardGases.air);
             });
 
             it('Multiple deco gases, best is found', () => {
-                gases.addBottomGas(StandardGases.air);
-                gases.addDecoGas(StandardGases.ean50);
-                gases.addDecoGas(StandardGases.trimix1835);
+                gases.add(StandardGases.air);
+                gases.add(StandardGases.ean50);
+                gases.add(StandardGases.trimix1835);
                 bestGasOptions.currentDepth = 20;
                 const found = gases.bestDecoGas(freshWaterConverter, bestGasOptions);
                 expect(found).toBe(StandardGases.ean50);
@@ -208,11 +196,11 @@ describe('Gases', () => {
 
             describe('By content', () => {
                 beforeEach(() => {
-                    gases.addBottomGas(StandardGases.air);
-                    gases.addBottomGas(StandardGases.ean50);
-                    gases.addBottomGas(StandardGases.trimix1835);
-                    gases.addBottomGas(StandardGases.trimix1070);
-                    gases.addBottomGas(StandardGases.oxygen);
+                    gases.add(StandardGases.air);
+                    gases.add(StandardGases.ean50);
+                    gases.add(StandardGases.trimix1835);
+                    gases.add(StandardGases.trimix1070);
+                    gases.add(StandardGases.oxygen);
                 });
 
                 it('Oxygen for 6m', () => {
@@ -244,8 +232,8 @@ describe('Gases', () => {
                     bestGasOptions.currentDepth = 30;
                     const gases2 = new Gases();
                     const ean32 = new Gas(.32, 0);
-                    gases2.addBottomGas(ean32);
-                    gases2.addDecoGas(StandardGases.air);
+                    gases2.add(ean32);
+                    gases2.add(StandardGases.air);
                     const found = gases2.bestDecoGas(freshWaterConverter, bestGasOptions);
                     expect(found).toBe(ean32);
                 });
@@ -262,30 +250,30 @@ describe('Gases', () => {
 
         it('Only one gas', () => {
             const gases = new Gases();
-            gases.addBottomGas(StandardGases.air);
+            gases.add(StandardGases.air);
             const messages = GasesValidator.validate(gases, options, surfacePressure);
             expect(messages.length).toBe(0);
         });
 
         it('No gas to surface', () => {
             const gases = new Gases();
-            gases.addBottomGas(StandardGases.trimix1070);
+            gases.add(StandardGases.trimix1070);
             const messages = GasesValidator.validate(gases, options, surfacePressure);
             expect(messages.length).toBe(0);
         });
 
         it('Gases don`t cover all depths', () => {
             const gases = new Gases();
-            gases.addBottomGas(StandardGases.trimix1070);
-            gases.addDecoGas(StandardGases.oxygen);
+            gases.add(StandardGases.trimix1070);
+            gases.add(StandardGases.oxygen);
             const messages = GasesValidator.validate(gases, options, surfacePressure);
             expect(messages.length).toBe(1);
         });
 
         it('Multiple gases for the same depth', () => {
             const gases = new Gases();
-            gases.addBottomGas(StandardGases.air);
-            gases.addDecoGas(StandardGases.ean50);
+            gases.add(StandardGases.air);
+            gases.add(StandardGases.ean50);
             const messages = GasesValidator.validate(gases, options, surfacePressure);
             expect(messages.length).toBe(0);
         });

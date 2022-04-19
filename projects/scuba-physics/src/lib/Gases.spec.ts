@@ -163,6 +163,7 @@ describe('Gases', () => {
                 currentDepth: 0,
                 maxDecoPpO2: options.maxDecoPpO2,
                 maxEndPressure: 4,
+                oxygenNarcotic: true,
                 currentGas: StandardGases.air
             };
 

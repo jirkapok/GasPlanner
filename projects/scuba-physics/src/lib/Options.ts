@@ -91,6 +91,9 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
      */
     public maxEND = OptionDefaults.maxEND;
 
+    /** True, if oxygen fraction should be considered narcotic, otherwise false */
+    public oxygenNarcotic = true;
+
     /**
      * Usual Ascent speed of diver swim in depths below 6 meters in metres/minute, default 3 meters/minute.
      */

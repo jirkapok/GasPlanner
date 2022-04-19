@@ -61,6 +61,9 @@ export interface BestGasOptions {
     /** Maximum narcotic depth in bars */
     maxEndPressure: number;
 
+    /** True, if oxygen fraction should be considered narcotic, otherwise false */
+    oxygenNarcotic: boolean;
+
     /** We are searching for better gas than the current */
     currentGas: Gas;
 }
@@ -188,7 +191,7 @@ export class GasMixtures {
     public static ead(fO2: number, depth: number): number {
         const nitroxInAir = 0.79; // TODO do we need to be more precise here?
         const fN2 = 1 - fO2; // here we are interested only in nitrogen toxicity
-        const result =  GasMixtures.end(0, fN2, depth) / nitroxInAir;
+        const result =  GasMixtures.end(depth, fN2) / nitroxInAir;
         return result;
     }
 
@@ -197,12 +200,12 @@ export class GasMixtures {
      * Also called maximum narcotic depth.
      * https://en.wikipedia.org/wiki/Equivalent_narcotic_depth
      *
-     * @param fO2 Fraction of oxygen in gas mix (0-1).
-     * @param fN2 Fraction of nitrogen in gas mix (0-1).
      * @param depth Depth in bars, can be also used as maximum narcotic depth as air.
+     * @param fN2 Fraction of nitrogen in gas mix (0-1).
+     * @param fO2 Fraction of oxygen in gas mix (0-1).
      * @returns Depth in bars.
      */
-    public static end(fO2: number, fN2: number, depth: number): number {
+    public static end(depth: number, fN2: number, fO2: number = 0): number {
         // TODO Consider calculation only from helium fraction or add switch to ignore oxygen fraction
         // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
         const narcIndex = fO2 + fN2;
@@ -263,7 +266,7 @@ export class Gas {
      * @returns Depth in bars.
      */
     public end(depth: number): number {
-        return GasMixtures.end(this.fO2, this.fN2, depth);
+        return GasMixtures.end(depth, this.fN2, this.fO2);
     }
 
     /**

@@ -71,14 +71,16 @@
         <div *ngIf="isComplex">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="environment-tab" data-bs-toggle="tab"
-                        data-bs-target="#environment" type="button" role="tab" aria-controls="environment"
-                        aria-selected="true">Environment</button>
+                    <button class="nav-link active" id="environment-tab" data-bs-toggle="tab" data-bs-target="#environment"
+                        type="button" role="tab" aria-controls="environment" aria-selected="true">Environment</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="conservatism-tab" data-bs-toggle="tab" data-bs-target="#conservatism"
-                        type="button" role="tab" aria-controls="conservatism"
-                        aria-selected="false">Conservatism</button>
+                        type="button" role="tab" aria-controls="conservatism" aria-selected="false">Conservatism</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="gases-tab" data-bs-toggle="tab" data-bs-target="#gases"
+                        type="button" role="tab" aria-controls="gases" aria-selected="false">Gases</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="stops-tab" data-bs-toggle="tab" data-bs-target="#stops" type="button"
@@ -161,6 +163,28 @@
                             <div class="text-danger form-text"
                                 *ngIf="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)">
                                 Needs to be number 10 - 100 higher than gradient low
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="gases" role="tabpanel" aria-labelledby="gases-tab">
+                    <div class="row mt-3">
+                        <div class="mb-3 col-auto">
+                            <label for="maxNarcoticDepth" class="form-label">Maximum narcotic depth [m]:</label>
+                            <input id="maxNarcoticDepth" name="maxNarcoticDepth" #maxNarcoticDepth="ngModel"
+                                [(ngModel)]="gasMaxNarcoticDepth" class="form-control col-auto" type="number" required
+                                [rangeVal]="[1, 100]" [minVal]="1" [maxVal]="100" step="1" min="1" max="100"
+                                [class.is-invalid]="maxNarcoticDepth.invalid && (maxNarcoticDepth.dirty || maxNarcoticDepth.touched)" />
+                            <div class="text-danger form-text"
+                                *ngIf="maxNarcoticDepth.invalid && (maxNarcoticDepth.dirty || maxNarcoticDepth.touched)">
+                                Needs to be number 1 - 100
+                            </div>
+                        </div>
+                        <div class="row ms-4">
+                            <div class="form-check form-switch pb-1">
+                                <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
+                                    [checked]="gasOxygenNarcotic" (change)="gasOxygenNarcotic = !gasOxygenNarcotic" />
+                                <label class="form-check-label" for="roundStops">Oxygen is narcotic</label>
                             </div>
                         </div>
                     </div>

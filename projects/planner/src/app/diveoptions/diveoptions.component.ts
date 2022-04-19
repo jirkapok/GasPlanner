@@ -183,6 +183,24 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
+    public get gasMaxNarcoticDepth(): number {
+        return this.planner.options.maxEND;
+    }
+
+    public set gasMaxNarcoticDepth(newValue: number) {
+        this.planner.options.maxEND = newValue;
+        this.planner.calculate();
+    }
+
+    public get gasOxygenNarcotic(): boolean {
+        return this.planner.options.oxygenNarcotic;
+    }
+
+    public set gasOxygenNarcotic(newValue: boolean) {
+        this.planner.options.oxygenNarcotic = newValue;
+        this.planner.calculate();
+    }
+
     public get plannedGfHigh(): number {
         return this.planner.options.gfHigh * 100;
     }

@@ -182,28 +182,15 @@ export class GasMixtures {
     * Calculates equivalent air depth for given nitrox gas mix.
     *
     * @param fO2 - Fraction of Oxygen in gas mix (0-1).
-    * @param depth - Current depth in meters.
-    * @returns Depth in meters.
+    * @param depth - Current depth in bars.
+    * @returns Depth in bars.
     */
     public static ead(fO2: number, depth: number): number {
-        const fN2 = 1 - fO2;
-        const result = fN2 * (depth + 10) / 0.79 - 10;
-
-        if (result < 0) {
-            return 0;
-        }
-
+        const nitroxInAir = 0.79; // TODO do we need to be more precise here?
+        const fN2 = 1 - fO2; // here we are interested only in nitrogen toxicity
+        const result =  GasMixtures.end(0, fN2, depth) / nitroxInAir;
         return result;
     }
-
-    // TODO merge ead and end into one equation:
-    // const result = fN2 * (depth + 10) / 0.79 - 10;
-    // const result = fN2 * (depthBars) / 0.79;
-    // const result = fN2 / NitroxInAir * depthBars;
-    // const result = (fN2 + fO2) / 1 * depthBars; // Air = fN2 + fO2 = 1
-    // const result = (fN2 + fO2) * depthBars;
-    // const result = (1 - fHe) * depthBars;
-
 
     /**
      * Calculates equivalent narcotic depth, assuming both nitrogen and oxygen as narcotic.

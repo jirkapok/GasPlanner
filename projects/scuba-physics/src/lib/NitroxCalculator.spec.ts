@@ -18,12 +18,12 @@ describe('NitroxCalculatorService', () => {
 
     describe('Equivalent Air depth (EAD)', () => {
         it('50% fO2 at 22 m has EAD 10.26 (defaults)', () => {
-            const ead = NitroxCalculator.ead(50, 22);
-            expect(ead).toBe(10.26);
+            const ead = nitroxCalculator.ead(50, 22);
+            expect(ead).toBe(10.14);
         });
 
         it('100% fO2 at 6 m has EAD 0m - no negative numbers', () => {
-            const ead = NitroxCalculator.ead(100, 6);
+            const ead = nitroxCalculator.ead(100, 6);
             expect(ead).toBe(0);
         });
     });

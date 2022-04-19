@@ -57,7 +57,7 @@ export class NitroxCalculatorService {
     }
 
     public get ead(): number {
-        return NitroxCalculator.ead(this._fO2, this._mod);
+        return this.nitroxCalculator.ead(this._fO2, this._mod);
     }
 
     public get mod(): number {

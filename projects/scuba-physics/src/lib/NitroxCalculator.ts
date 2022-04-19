@@ -12,10 +12,17 @@ export class NitroxCalculator {
      * @param depth - Current depth in meters.
      * @returns Depth in meters.
      */
-    public static ead(percentO2: number, depth: number): number {
+    public ead(percentO2: number, depth: number): number {
         const fO2 = percentO2 / 100;
-        const result = GasMixtures.ead(fO2, depth);
-        return Math.ceil(result * 100) / 100;
+        const bars = this.depthConverter.toBar(depth);
+        const result = GasMixtures.ead(fO2, bars);
+
+        if(result <= this.depthConverter.surfacePressure) {
+            return 0;
+        }
+
+        const resultMeters = this.depthConverter.fromBar(result);
+        return Math.ceil(resultMeters * 100) / 100;
     }
 
     /**

@@ -91,12 +91,11 @@ export class Gases {
             const modPressure = candidate.mod(options.maxDecoPpO2);
             // e.g. oxygen at 6m wouldn't be best for 6m without rounding
             const mod = depthConverter.toDecoStop(modPressure);
-            const end = candidate.end(currentPressure);
+            const end = candidate.end(currentPressure, options.oxygenNarcotic);
 
             // TODO add test case for 10/70 only at 3 m, together with 18/35
             // TODO add warning about switch to gas with higher nitrogen content
             // TODO move maxEND exceeded to validator as warning
-            // TODO add option to enforce narcotic depth in the UI
             if (options.currentDepth <= mod && end <= options.maxEndPressure) {
                 // We don't care about gas ceiling, because it is covered by higher O2 content
                 // only oxygen content is relevant for decompression => EAN50 is better than TRIMIX 25/25
@@ -206,7 +205,6 @@ export class GasMixtures {
      * @returns Depth in bars.
      */
     public static end(depth: number, fN2: number, fO2: number = 0): number {
-        // TODO Consider calculation only from helium fraction or add switch to ignore oxygen fraction
         // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
         const narcIndex = fO2 + fN2;
         return depth * narcIndex;
@@ -260,13 +258,15 @@ export class Gas {
     }
 
     /**
-     * Calculates equivalent narcotic depth, assuming both nitrogen and oxygen as narcotic.
+     * Calculates equivalent narcotic depth.
      *
      * @param depth Depth in bars.
+     * @param oxygenNarcotic True, if oxygen is considered narcotic, otherwise false.
      * @returns Depth in bars.
      */
-    public end(depth: number): number {
-        return GasMixtures.end(depth, this.fN2, this.fO2);
+    public end(depth: number, oxygenNarcotic: boolean): number {
+        const fO2 = oxygenNarcotic ? this.fO2 : 0;
+        return GasMixtures.end(depth, this.fN2, fO2);
     }
 
     /**

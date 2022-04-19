@@ -28,13 +28,35 @@ describe('Gases', () => {
 
         describe('Narcotic depth', () => {
             it('0 m in fresh water for Trimix 10/70', () => {
-                const end = StandardGases.trimix1070.end(1.6);
-                expect(end).toBeCloseTo(0.48, 2);
+                const end = StandardGases.trimix1070.end(4, false);
+                expect(end).toBeCloseTo(0.8, 2);
             });
 
-            it('60 m with 18/35 trimix', () => {
-                const end = StandardGases.trimix1835.end(7);
-                expect(end).toBeCloseTo(4.55, 2);
+            it('8.8 m with 18/35 trimix', () => {
+                const end = StandardGases.trimix1835.end(4, false);
+                expect(end).toBeCloseTo(1.88, 2);
+            });
+
+            it('10 m with Ean50', () => {
+                const end = StandardGases.ean50.end(4, false);
+                expect(end).toBeCloseTo(2, 2);
+            });
+
+            describe('Oxygen narcotic', () => {
+                it('2 m in fresh water for Trimix 10/70', () => {
+                    const end = StandardGases.trimix1070.end(4, true);
+                    expect(end).toBeCloseTo(1.2, 2);
+                });
+
+                it('16 m with 18/35 trimix', () => {
+                    const end = StandardGases.trimix1835.end(4, true);
+                    expect(end).toBeCloseTo(2.6, 2);
+                });
+
+                it('30 m with Ean50', () => {
+                    const end = StandardGases.ean50.end(4, true);
+                    expect(end).toBeCloseTo(4, 2);
+                });
             });
         });
 

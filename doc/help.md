@@ -29,7 +29,7 @@ To be able calculate dive profile you need to enter Gases used during the dive, 
   * `Max`: Based on selected options applies maxim depth based on narcotic depth selected gas (for nitrox mixes always 30 meters)
   * `Best mix`: Shows best content of nitrox mix for selected depth based on maximum partial pressure of oxygen (ppO2)
 
-### Gases
+### Tanks
 
 * `Size` [Liters]: The volume of the tank used during the dive. Size of the tank impacts how long you can stay under water under the same conditions. See also SAC/RMV calculations.
 * `Percent O2` [Percents]: Select precise value when measured or pickup one of predefined standard gases. Always provide value rounded up the precisely measured value.
@@ -89,6 +89,11 @@ Which values to apply? Here are recommended values explained:
 | Low (45/95) | Shallow dive, good conditions, fit and healthy diver |
 | Medium (40/85) | Repetitive dive, average conditions |
 | High (30/75) | Deep dives, decompression dives, hard conditions |
+
+### Gases
+
+* `Maximum narcotic depth` [m]: Limits, at which depth gas mixture is considered to be narcotic. Exceeding this depth means the risk of narcosis significantly increases. See also [Equivalent narcotic depth](https://en.wikipedia.org/wiki/Equivalent_narcotic_depth)
+* `Is oxygen narcotic`: If true, counts also oxygen as narcotic gas, otherwise only nitrogen is considered to be narcotic
 
 ### Stops
 

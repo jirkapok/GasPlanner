@@ -43,6 +43,39 @@ To be able calculate dive profile you need to enter Gases used during the dive, 
 
 Example: Maxim deco ppO2 is 1.6, for bottom gas is maximum ppO2 only 1.4. For Ean50 (50 % oxygen) MOD is calculated as 18 meters for bottom gas max. ppO2, but 22 meters for max. deco ppO2. On real dive, you don't want to push your oxygen toxicity stress to high value for long time. But when switching to decompression gas during the ascent you want to open oxygen window at higher ppO2, but only for short period of time, expecting that you continue ascending after the switch (See also gas switch duration option).
 
+> To access **TRIMIX** gases switch to Extended view!
+
+### Trimix/Helitrox
+
+[Trimix or Helitrox](https://en.wikipedia.org/wiki/Trimix_(breathing_gas)) are gas mixtures, which add Helium as third significant component into the mixture. So the gas typically consist of oxygen, helium and nitrogen.  These gases are usually expensive because of helium price. It is the reason why usually deeper dives are done nowadays using closed circuit (CCR). Our planner currently supports planning only for open circuit (OC). We distinguish all the gases by amount of oxygen. Because you can choose from lot of combinations, we provide list of common gases. Some agencies (GUE, UTD) limit their mixes to list called Standard gases (see e.g. [GUE standard gases](https://gue.com/blog/standard-gases-the-advantages-of-having-everyone-singing-the-same-song/)).
+
+| Category | Oxygen content | Example |
+| --- | --- | --- |
+| Hypoxic | < 18 % | Trimix 18/45 |
+| Normooxic | 18 - 21 % | Air |
+| Hyperoxic | > 21 % | EAN50 |
+
+To be able distinguish the content we call the gases using only is oxygen and helium parts. E.g. Trimix 18/48 consists of 18 % oxygen, 45% of helium and the rest is nitrogen. Even you are able to define your custom mixture, because of practical reasons it is preferred to use the same gases within the team over custom gases or different gases for each diver.
+
+> We recommend to choose from one of the commonly used gases and use the same gases for all team members!
+
+TODO
+
+* Depth range of selected gas
+* Don't switch to gas with higher nitrogen content
+* Use separate argon bottle for drysuit inflation. This is not calculated in to the gases consumption
+* Equivalent narcotic depth, equivalent air depth
+* HPNS <https://en.wikipedia.org/wiki/High-pressure_nervous_syndrome>
+* [Oxygen toxicity](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater) (CNS/OTU)
+* See also Options - Gases to define maximum narcotic depth and oxygen toxicity
+
+#### Decompression gas selection
+
+TODO
+
+* Why we don't recommend to select gas with higher nitrogen content? <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
+* Why we always select gas with higher oxygen content?
+
 ## Options
 
 For faster customization or to be able reset options to default values, you can use two buttons.
@@ -52,7 +85,7 @@ For faster customization or to be able reset options to default values, you can 
 
 ### Environment
 
-* `Salinity`: Because salinity of water changes its density and it means also pressure of the water column at depth. In result it affects the tissues loading. See also wiki for [brine](https://en.wikipedia.org/wiki/Brine). Eg. 22 meters corresponds to 3.222 bar in salt water. You can choose from fresh water, salt (sea) water and Brackish water. Brackish water is somewhere between salt and fresh. It is used by some computers as the only one option (Suunto). In case your dive computer doesn't contain Brackish water use salt water or value with higher content of salt.
+* `Salinity`: Because salinity of water changes its density and it means also pressure of the water column at depth. In result it affects the tissues loading. See also wiki for [brine](https://en.wikipedia.org/wiki/Brine). Eg. 22 meters corresponds to 3.222 bar in salt water. You can choose from fresh water, salt (sea) water and Brackish (EN13319) water. Brackish water is somewhere between salt and fresh. It is used by some computers as the only one option (Suunto). In case your dive computer doesn't contain Brackish water use salt water (value with higher content of salt).
 
 | Salinity | Location | Salinity [gram/liter] | Density [kg/m3] |
 | --- | --- | --- | --- |
@@ -92,8 +125,8 @@ Which values to apply? Here are recommended values explained:
 
 ### Gases
 
-* `Maximum narcotic depth` [m]: Limits, at which depth gas mixture is considered to be narcotic. Exceeding this depth means the risk of narcosis significantly increases. See also [Equivalent narcotic depth](https://en.wikipedia.org/wiki/Equivalent_narcotic_depth)
-* `Is oxygen narcotic`: If true, counts also oxygen as narcotic gas, otherwise only nitrogen is considered to be narcotic
+* `Maximum narcotic depth` [m]: Limits, at which depth gas mixture is considered to be narcotic. Exceeding this depth means the risk of narcosis significantly increases. Default value is 30 meters. Increasing this values allows you to use also nitrox mixes to higher depth, which is not recommended. See also [Equivalent narcotic depth](https://en.wikipedia.org/wiki/Equivalent_narcotic_depth)
+* `Is oxygen narcotic`: If enabled (default), counts also oxygen as narcotic gas, otherwise only nitrogen is considered to be narcotic. Most agencies count both oxygen and nitrogen as narcotic gases. Disabling this option allows to you to use gases deeper, but is less safer.
 
 ### Stops
 

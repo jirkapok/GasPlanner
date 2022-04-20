@@ -10,11 +10,12 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add TRIMIX support and calculator
   * Add general option to enable/disable Nitrox or Trimix
-  * Add option to define maximum narcotic depth
-  * Add option to count oxygen in narcotic gas in narcotic depth calculation
-  * Add air breaks
+  * Add narcotic depth exceeded warning event
   * Don't switch to gas with higher content of Nitrox warning - <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
   * Add END calculator
+  * Finish Trimix chapter in the documentation
+  * Add standard gases table
+  * Add air breaks
 * Add imperial units option
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
     * Fix RMV/SAC calculator based on Nominal volume
@@ -24,7 +25,6 @@ Following list of features and improvements ordered by priority is under develop
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
 * Events:
   * Add time to the events warning/error messages
-  * Add narcotic depth exceeded warning event
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * UI Tweaks
   * Tanks

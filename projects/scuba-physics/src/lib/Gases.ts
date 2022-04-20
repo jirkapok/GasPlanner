@@ -82,12 +82,16 @@ export class Gases {
         return gases;
     }
 
-    private static bestGas(gases: Gas[], depthConverter: DepthConverter, options: BestGasOptions): Gas {
+    /**
+    * Finds better gas to switch to from current depth, returns current gas, if no better gas was found.
+    * Better gas is breathable at current depth and with higher O2.
+    */
+    public bestGas(depthConverter: DepthConverter, options: BestGasOptions): Gas {
         const currentPressure = depthConverter.toBar(options.currentDepth);
         let found = options.currentGas;
 
-        gases.forEach((element, index) => {
-            const candidate = gases[index];
+        this.bottomGases.forEach((element, index) => {
+            const candidate = this.bottomGases[index];
             const modPressure = candidate.mod(options.maxDecoPpO2);
             // e.g. oxygen at 6m wouldn't be best for 6m without rounding
             const mod = depthConverter.toDecoStop(modPressure);
@@ -104,19 +108,6 @@ export class Gases {
             }
         });
         return found;
-    }
-
-    /**
-    * Finds better gas to switch to from current depth, returns current gas, if no better gas was found.
-    * Better gas is breathable at current depth and with higher O2.
-    */
-    public bestDecoGas(depthConverter: DepthConverter, options: BestGasOptions): Gas {
-        const decoGas = Gases.bestGas(this.bottomGases, depthConverter, options);
-        if (decoGas !== options.currentGas) {
-            return decoGas;
-        }
-
-        return Gases.bestGas(this.bottomGases, depthConverter, options);
     }
 
     public get all(): Gas[] {

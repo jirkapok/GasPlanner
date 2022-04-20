@@ -76,7 +76,7 @@ class AlgorithmContext {
     public bestDecoGas(): Gas {
         this.bestGasOptions.currentDepth = this.currentDepth;
         this.bestGasOptions.currentGas = this.currentGas;
-        const newGas = this.gases.bestDecoGas(this.depthConverter, this.bestGasOptions);
+        const newGas = this.gases.bestGas(this.depthConverter, this.bestGasOptions);
         return newGas;
     }
 

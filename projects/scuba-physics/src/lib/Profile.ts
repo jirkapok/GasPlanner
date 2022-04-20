@@ -8,20 +8,24 @@ export enum EventType {
     /** Gas switch happened at this moment */
     gasSwitch = 2,
     /** At this moment, diver reached end of no deco limit */
-    reachedNoDeco = 3,
+    reachedNoDeco = 3, // TODO add usage of event reached no deco limit
     /** when breathing gas at this depth, it leads to Hypoxia */
-    lowPpO2 = 3,
+    lowPpO2 = 4,
     /** breathing gas with high ppO2 can lead to oxygen toxicity */
-    highPpO2 = 4,
+    highPpO2 = 5,
     /** high ascent speed can lead to decompression sickness */
-    highAscentSpeed = 5,
+    highAscentSpeed = 6,
     /**
      * high descent speed can lead to uncontrolled falls to the bottom
      * or reaching higher depth than expected
      */
-    highDescentSpeed = 6,
+    highDescentSpeed = 7,
     /** User defined segments may cross the ceiling */
-    brokenCeiling = 7
+    brokenCeiling = 8,
+    /** Gas used at the depth exceeds the maximum narcotic depth */
+    maxEndExceeded = 9,
+    /** User switched to gas with higher N2 content */
+    switchToHigherN2 = 10
 }
 
 export class Event {
@@ -95,6 +99,22 @@ export class EventsFactory {
             timeStamp: timeStamp,
             depth: depth,
             type: EventType.brokenCeiling
+        };
+    }
+
+    public static createMaxEndExceeded(timeStamp: number, depth: number): Event {
+        return {
+            timeStamp: timeStamp,
+            depth: depth,
+            type: EventType.maxEndExceeded
+        };
+    }
+
+    public static createSwitchToHigherN2(timeStamp: number, depth: number): Event {
+        return {
+            timeStamp: timeStamp,
+            depth: depth,
+            type: EventType.switchToHigherN2
         };
     }
 }

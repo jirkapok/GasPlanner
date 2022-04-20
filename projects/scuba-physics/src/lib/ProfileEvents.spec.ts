@@ -127,21 +127,41 @@ describe('Profile Events', () => {
         });
     });
 
-    it('Adds gas switch event', () => {
-        const segments = new Segments();
-        segments.add(0, 40, StandardGases.air, Time.oneMinute * 4);
-        segments.add(40, 40, StandardGases.air, Time.oneMinute);
-        segments.add(40, 21, StandardGases.air, Time.oneMinute * 3);
-        segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
-        segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
+    describe('Gas switch', () => {
+        it('Adds event on deco stop', () => {
+            const segments = new Segments();
+            segments.add(0, 40, StandardGases.air, Time.oneMinute * 4);
+            segments.add(40, 40, StandardGases.air, Time.oneMinute);
+            segments.add(40, 21, StandardGases.air, Time.oneMinute * 3);
+            segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
+            segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
 
-        const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
 
-        expect(events.items[0]).toEqual({
-            type: EventType.gasSwitch,
-            timeStamp: 480,
-            depth: 21,
-            data: StandardGases.ean50
+            expect(events.items[0]).toEqual({
+                type: EventType.gasSwitch,
+                timeStamp: 480,
+                depth: 21,
+                data: StandardGases.ean50
+            });
+        });
+
+        it('Adds event user defined switch at bottom', () => {
+            const segments = new Segments();
+            segments.add(0, 15, StandardGases.air, Time.oneMinute * 4);
+            segments.add(15, 15, StandardGases.air, Time.oneMinute);
+            segments.add(15, 15, StandardGases.ean50, Time.oneMinute * 1);
+            segments.add(15, 15, StandardGases.ean50, Time.oneMinute);
+            segments.add(15, 0, StandardGases.ean50, Time.oneMinute * 2);
+
+            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
+
+            expect(events.items[0]).toEqual({
+                type: EventType.gasSwitch,
+                timeStamp: 300,
+                depth: 15,
+                data: StandardGases.ean50
+            });
         });
     });
 
@@ -225,6 +245,81 @@ describe('Profile Events', () => {
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             expect(events.items.length).toBe(0);
+        });
+    });
+
+    describe('Switch to higher N2 on deco dive', () => {
+        it('from 18/45 to Ean50', () => {
+            const segments = new Segments();
+            segments.add(0, 40, StandardGases.trimix1845, Time.oneMinute * 4);
+            segments.add(40, 40, StandardGases.trimix1845, Time.oneMinute);
+            segments.add(40, 21, StandardGases.trimix1845, Time.oneMinute * 3);
+            segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
+            segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
+
+            const ceilings: Ceiling[] = [
+                new Ceiling(0, 0),
+                new Ceiling(Time.oneMinute * 4, 0),
+                new Ceiling(Time.oneMinute * 5, 10),
+                new Ceiling(Time.oneMinute * 8, 10),
+                new Ceiling(Time.oneMinute * 9, 0),
+                new Ceiling(Time.oneMinute * 11, 0),
+            ];
+
+            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), ceilings, options);
+
+            expect(events.items[1]).toEqual({
+                type: EventType.switchToHigherN2,
+                timeStamp: 300,
+                depth: 40,
+                data: StandardGases.ean50
+            });
+        });
+
+        it('doesn\'t add the event in case no deco dive', () => {
+            const segments = new Segments();
+            segments.add(0, 15, StandardGases.ean50, Time.oneMinute * 4);
+            segments.add(15, 15, StandardGases.ean50, Time.oneMinute);
+            segments.add(15, 0, StandardGases.air, Time.oneMinute * 6);
+
+            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
+
+            expect(events.items.length).toEqual(1); // only the gas switch event
+            expect(events.items[0].type).not.toEqual(EventType.switchToHigherN2);
+        });
+    });
+
+    describe('Maximum narcotic depth exceeded', () => {
+        it('Switch to narcotic gas', () => {
+            const segments = new Segments();
+            segments.add(0, 40, StandardGases.trimix1845, Time.oneMinute * 4);
+            segments.add(40, 40, StandardGases.air, Time.oneMinute);
+            segments.add(40, 0, StandardGases.air, Time.oneMinute * 20);
+
+            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
+
+            expect(events.items[1]).toEqual({
+                type: EventType.maxEndExceeded,
+                timeStamp: 480,
+                depth: 40,
+                data: StandardGases.air
+            });
+        });
+
+        it('Swim deeper than gas narcotic depth', () => {
+            const segments = new Segments();
+            segments.add(0, 40, StandardGases.air, Time.oneMinute * 4);
+            segments.add(40, 40, StandardGases.air, Time.oneMinute);
+            segments.add(40, 0, StandardGases.air, Time.oneMinute * 20);
+
+            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
+
+            expect(events.items[0]).toEqual({
+                type: EventType.gasSwitch,
+                timeStamp: 240,
+                depth: 40,
+                data: StandardGases.air
+            });
         });
     });
 });

@@ -83,8 +83,9 @@ export class Gases {
     }
 
     /**
-    * Finds better gas to switch to from current depth, returns current gas, if no better gas was found.
-    * Better gas is breathable at current depth and with higher O2.
+    * Finds better gas to switch to from current depth. Returns current gas, if no better gas was found.
+    * Better gas is breathable at current depth and with higher O2, because during decompression we need to offgass both He and N2.
+    * Use this method to find decompression gas during ascent.
     */
     public bestGas(depthConverter: DepthConverter, options: BestGasOptions): Gas {
         const currentPressure = depthConverter.toBar(options.currentDepth);
@@ -286,38 +287,52 @@ export class StandardGases {
     public static readonly o2InAir = 0.209;
     public static readonly nitroxInAir = 1 - StandardGases.o2InAir;
 
-    // teorethical range for ppo2 1.3 test data (even not used all gases with these values)
-    /** 0 m - 52.2 m */
-    public static readonly air = new Gas(StandardGases.o2InAir, 0);
+    // theoretical range for ppo2 1.3 test data (even not used all gases with these values)
+    // Standard gases inspired by UTD standard gases
 
-    /** 0 m - 30.6 m */
-    public static readonly ean32 = new Gas(0.32, 0);
+    // Hyperoxic
 
-    /** 0 m - 26.1 m */
-    public static readonly ean36 = new Gas(0.36, 0);
-
-    /** 0 m - 24.2 m */
-    public static readonly ean38 = new Gas(0.38, 0);
-
-    /** deco 0 m - 21 m */
-    public static readonly ean50 = new Gas(0.5, 0);
-
-    /** deco 0 m - 6 m */
+    /** 0 - 6 m, deco only */
     public static readonly oxygen = new Gas(1, 0);
 
-    /** 0 m - 42 m */
+    /** 0 - 21 m, deco only */
+    public static readonly ean50 = new Gas(0.5, 0);
+
+    /** 0 - 24.2 m */
+    public static readonly ean38 = new Gas(0.38, 0);
+
+    /** 0 - 26.1 m */
+    public static readonly ean36 = new Gas(0.36, 0);
+
+    /** 0 - 30.6 m */
+    public static readonly ean32 = new Gas(0.32, 0);
+
+    /** 0 - 27.1 m, deco only */
+    public static readonly trimix3525 = new Gas(0.35, 0.25);
+
+    /** 0 - 42 m */
     public static readonly trimix2525 = new Gas(0.25, 0.25);
 
-    /** 0 m - 51.9 m */
+    // Normooxic
+
+    /** 0 - 52.2 m */
+    public static readonly air = new Gas(StandardGases.o2InAir, 0);
+
+    /** 0 - 51.9 m */
     public static readonly trimix2135 = new Gas(0.21, 0.35);
 
-    /** 0 m - 62.2 m */
+    /** 0 - 62.2 m */
     public static readonly trimix1845 = new Gas(0.18, 0.45);
 
-    /** 2m - 76.6 m */
+    // Hypooxic
+
+    /** 2 - 76.6 m */
     public static readonly trimix1555 = new Gas(0.15, 0.55);
 
-    /** 8 m - 120 m */
+    /** 5 - 98.3 m */
+    public static readonly trimix1260 = new Gas(0.12, 0.6);
+
+    /** 8 - 120 m */
     public static readonly trimix1070 = new Gas(0.1, 0.7);
 
 
@@ -334,10 +349,12 @@ export class StandardGases {
         ['EAN38', StandardGases.ean38],
         ['EAN50', StandardGases.ean50],
         [StandardGases.oxygenName, StandardGases.oxygen],
+        // ['35/25', StandardGases.trimix3525],
         // ['25/25', StandardGases.trimix2525],
         // ['21/35', StandardGases.trimix2135],
         // ['18/45', StandardGases.trimix1845],
         // ['15/55', StandardGases.trimix1555],
+        // ['12/60', StandardGases.trimix1260],
         // ['10/75', StandardGases.trimix1070],
     ]);
 

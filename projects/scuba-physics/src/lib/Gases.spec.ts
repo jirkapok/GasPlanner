@@ -10,6 +10,18 @@ describe('Gases', () => {
 
     const freshWaterConverter = DepthConverter.forFreshWater();
 
+
+    fit('MND', () => {
+        const gas = StandardGases.trimix3525;
+        const converter = DepthConverter.simple();
+        const modBar = gas.mod(1.3);
+        const mod = converter.fromBar(modBar);
+        const min =  converter.fromBar(gas.ceiling(1));
+        const narc = converter.fromBar(gas.end(modBar, true));
+        const result = `${min} - ${mod}, narc:${narc}`;
+        expect(result).toBe('');
+    });
+
     describe('Gas', () => {
         describe('Maximum operational depth', () => {
             const ppO2 = 1.4;
@@ -254,7 +266,7 @@ describe('Gases', () => {
                     expect(found).toBe(StandardGases.trimix1845);
                 });
 
-                // TODO really?
+                // Yes, because we want to offgas both He and N2 fractions, so only oxygen matters
                 it('Air is better than trimix 18/45 for 40m', () => {
                     bestGasOptions.currentDepth = 40;
                     const found = gases.bestGas(freshWaterConverter, bestGasOptions);

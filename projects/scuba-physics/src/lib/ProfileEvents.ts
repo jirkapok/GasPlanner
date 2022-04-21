@@ -57,13 +57,12 @@ class EventsContext {
         return null;
     }
 
-    public get isUserSegment(): boolean {
+    public get isBeforeDecoAscent(): boolean {
         return this.index < this.startAscentIndex;
     }
 
-    // TODO what if user defines his own deco ascent and wants to use deco ppO2?
     public get maxPpo(): number {
-        if (this.isUserSegment) {
+        if (this.isBeforeDecoAscent) {
             return this.options.maxPpO2;
         }
 
@@ -166,7 +165,7 @@ export class ProfileEvents {
     private static addHighPpO2(context: EventsContext, segment: PressureSegment): void {
         // non user defined gas switches are never to high ppO2 - see gases.bestGas
         // otherwise we don't know which ppO2 level to use
-        if (segment.isDescent || (context.isUserSegment && context.switchingGas)) {
+        if (segment.isDescent || (context.isBeforeDecoAscent && context.switchingGas)) {
             const gasMod = context.current.gas.mod(context.maxPpo);
 
             if (segment.maxDepth > gasMod) {

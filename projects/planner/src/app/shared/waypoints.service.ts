@@ -51,6 +51,7 @@ export class WayPointsService {
 
     private static toWayPoint(segment: Segment, lastWayPoint: WayPoint, events: Event[]): WayPoint {
         const waypoint = lastWayPoint.toLevel(segment);
+        // TODO performance improvement: don't search the events, compare the gas with previous segment/waypoint
         const hasSwitch = events.find(x => x.type === EventType.gasSwitch && waypoint.fits(x.timeStamp));
 
         if (hasSwitch) {

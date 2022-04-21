@@ -68,6 +68,14 @@ export class DiveInfoComponent {
         return event.type === EventType.brokenCeiling;
     }
 
+    public isHighN2Switch(event: Event): boolean {
+        return event.type === EventType.switchToHigherN2;
+    }
+
+    public isMndExceeded(event: Event): boolean {
+        return event.type === EventType.maxEndExceeded;
+    }
+
     public get showApply(): boolean {
         return !this.planner.isComplex;
     }

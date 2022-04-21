@@ -37,22 +37,23 @@ export class WayPointsService {
         const events = ProfileEvents.fromProfile(startAscentIndex, profile.segments, profile.ceilings, options);
         const descent = profile.segments[0];
         let lastWayPoint = WayPoint.fromSegment(descent);
+        let lastSegment = descent;
         wayPoints.push(lastWayPoint);
         const exceptDescend = profile.segments.slice(1);
 
         exceptDescend.forEach((segment) => {
-            const waypoint = this.toWayPoint(segment, lastWayPoint, events.items);
+            const waypoint = this.toWayPoint(segment, lastWayPoint, lastSegment);
             lastWayPoint = waypoint;
+            lastSegment = segment;
             wayPoints.push(waypoint);
         });
 
         return new Profile(profile.segments, wayPoints, profile.ceilings, events.items);
     }
 
-    private static toWayPoint(segment: Segment, lastWayPoint: WayPoint, events: Event[]): WayPoint {
+    private static toWayPoint(segment: Segment, lastWayPoint: WayPoint, lastSegment: Segment): WayPoint {
         const waypoint = lastWayPoint.toLevel(segment);
-        // TODO performance improvement: don't search the events, compare the gas with previous segment/waypoint
-        const hasSwitch = events.find(x => x.type === EventType.gasSwitch && waypoint.fits(x.timeStamp));
+        const hasSwitch = !segment.gas.compositionEquals(lastSegment.gas);
 
         if (hasSwitch) {
             waypoint.asGasSwitch();

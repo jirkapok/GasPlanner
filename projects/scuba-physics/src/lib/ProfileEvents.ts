@@ -223,24 +223,22 @@ export class ProfileEvents {
         }
     }
 
-
-
     private static addMndExceeded(context: EventsContext, pressureSegment: PressureSegment): void {
         const current = context.current;
         // we need to check both start and end, because next segment may use another gas
         const startMnd = context.gasMnd(pressureSegment.startDepth);
 
         // checking the last event prevents adding the event for both start and end
-        if (context.maxMnd < startMnd && !context.events.lastIsBrokenMnd) {
+        if (context.maxMnd < startMnd) {
             const event = EventsFactory.createMaxEndExceeded(context.elapsed, current.startDepth, current.gas);
             context.events.add(event);
-        } else { // add only one event per segment
-            const endMnd = context.gasMnd(pressureSegment.endDepth);
-            if (context.maxMnd < endMnd) {
-                const timeStamp = context.elapsed + current.duration;
-                const event = EventsFactory.createMaxEndExceeded(timeStamp, current.endDepth, current.gas);
-                context.events.add(event);
-            }
+        }
+
+        const endMnd = context.gasMnd(pressureSegment.endDepth);
+        if (context.maxMnd < endMnd) {
+            const timeStamp = context.elapsed + current.duration;
+            const event = EventsFactory.createMaxEndExceeded(timeStamp, current.endDepth, current.gas);
+            context.events.add(event);
         }
     }
 }

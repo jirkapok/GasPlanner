@@ -294,8 +294,6 @@ describe('Profile Events', () => {
             options.maxEND = 30; // only for these tests
         });
 
-        // TODO fix, that the event isn't added multiple times
-
         it('Switch to narcotic gas', () => {
             const segments = new Segments();
             segments.add(0, 30, StandardGases.trimix1845, Time.oneMinute * 4);
@@ -321,6 +319,7 @@ describe('Profile Events', () => {
 
             const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
 
+            expect(events.items.length).toEqual(1);// only one event for multiple segments
             expect(events.items[0]).toEqual({
                 type: EventType.maxEndExceeded,
                 timeStamp: 240,

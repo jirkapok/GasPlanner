@@ -129,7 +129,7 @@ export class Events {
         return this.brokenCeiling;
     }
 
-    public lastIsBrokenMnd(): boolean {
+    private get lastIsBrokenMnd(): boolean {
         const lastIndex = this.items.length - 1;
         if(lastIndex < 0) {
             return false;
@@ -146,6 +146,10 @@ export class Events {
             }
 
             this.brokenCeiling = true;
+        }
+
+        if(event.type === EventType.maxEndExceeded && this.lastIsBrokenMnd) {
+            return;
         }
 
         this.items.push(event);

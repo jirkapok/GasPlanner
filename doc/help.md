@@ -65,9 +65,13 @@ TODO
 * Don't switch to gas with higher nitrogen content
 * Use separate argon bottle for drysuit inflation. This is not calculated in to the gases consumption
 * Equivalent narcotic depth, equivalent air depth
+* Equivalent narcotic depth for nitrox is always the same as air (counting oxygen as toxic). The only way how to reduce is by adding helium, i.e. use trimix instead of nitrox.
 * HPNS <https://en.wikipedia.org/wiki/High-pressure_nervous_syndrome>
 * [Oxygen toxicity](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater) (CNS/OTU)
 * See also Options - Gases to define maximum narcotic depth and oxygen toxicity
+
+
+> You should always use Trimix for depths bellow maximum narcotic depth!
 
 #### Decompression gas selection
 

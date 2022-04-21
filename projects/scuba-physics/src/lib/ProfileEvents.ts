@@ -5,7 +5,6 @@ import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { AscentSpeeds } from './speeds';
 
-
 /** all values in bar */
 class PressureSegment {
     constructor(
@@ -37,14 +36,17 @@ class PressureSegment {
 class EventsContext {
     public events: Events = new Events();
     public speeds: AscentSpeeds;
+    /** total duration in seconds at beginning of current segment */
     public elapsed = 0;
     public index = 0;
+    private _mndBars = 0;
 
     constructor(private startAscentIndex: number, private profile: Segment[],
         public depthConverter: DepthConverter, public options: Options) {
         this.speeds = new AscentSpeeds(options);
         const segments = Segments.fromCollection(profile);
         this.speeds.markAverageDepth(segments);
+        this._mndBars = depthConverter.toBar(options.maxEND);
     }
 
     public get previous(): Segment | null {
@@ -59,6 +61,7 @@ class EventsContext {
         return this.index < this.startAscentIndex;
     }
 
+    // TODO what if user defines his own deco ascent and wants to use deco ppO2?
     public get maxPpo(): number {
         if (this.isUserSegment) {
             return this.options.maxPpO2;
@@ -73,6 +76,18 @@ class EventsContext {
 
     public get switchingGas(): boolean {
         return !!this.previous && !this.current.gas.compositionEquals(this.previous.gas);
+    }
+
+    /** Gets maximum narcotic depth in bars */
+    public get maxMnd(): number {
+        return this._mndBars;
+    }
+
+    /** For depth in bars calculates the current equivalent narcotic depth in bars */
+    public gasMnd(depth: number): number {
+        const gas = this.current.gas;
+        const oxygenNarcotic = this.options.oxygenNarcotic;
+        return gas.end(depth, oxygenNarcotic);
     }
 }
 
@@ -97,6 +112,8 @@ export class ProfileEvents {
             this.addGasSwitch(context);
             this.addHighDescentSpeed(context);
             this.addHighAscentSpeed(context);
+            this.addSwitchHighN2(context, ceilings);
+            this.addMndExceeded(context, pressureSegment);
             context.elapsed += context.current.duration;
 
             if (!ceilingContext.eventAdded) {
@@ -192,20 +209,57 @@ export class ProfileEvents {
             }
         }
     }
+
+    private static addSwitchHighN2(context: EventsContext, ceilings: Ceiling[]): void {
+        const current = context.current;
+        const previous = context.previous;
+
+        if (context.switchingGas && previous) {
+            // TODO consider identify deco dive from deco stops, instead from ceilings.
+            if (previous.gas.fN2 < current.gas.fN2 && Ceiling.isDecoDive(ceilings)) {
+                const event = EventsFactory.createSwitchToHigherN2(context.elapsed, current.startDepth, current.gas);
+                context.events.add(event);
+            }
+        }
+    }
+
+
+
+    private static addMndExceeded(context: EventsContext, pressureSegment: PressureSegment): void {
+        const current = context.current;
+        // we need to check both start and end, because next segment may use another gas
+        const startMnd = context.gasMnd(pressureSegment.startDepth);
+
+        // checking the last event prevents adding the event for both start and end
+        if (context.maxMnd < startMnd && !context.events.lastIsBrokenMnd) {
+            const event = EventsFactory.createMaxEndExceeded(context.elapsed, current.startDepth, current.gas);
+            context.events.add(event);
+        } else { // add only one event per segment
+            const endMnd = context.gasMnd(pressureSegment.endDepth);
+            if (context.maxMnd < endMnd) {
+                const timeStamp = context.elapsed + current.duration;
+                const event = EventsFactory.createMaxEndExceeded(timeStamp, current.endDepth, current.gas);
+                context.events.add(event);
+            }
+        }
+    }
 }
 
 class BrokenCeilingContext {
     public lastCeilingIndex = 0; // prevents search in past ceilings
     public currentSegmentStartTime = 0;
     public currentSegmentEndTime = 0;
-    public eventAdded = false;
+
+    public get eventAdded(): boolean {
+        return this.events.hasBrokenCeiling;
+    }
 
     constructor(private events: Events) {
     }
 
     public assignSegment(newSegment: Segment): void {
         this.currentSegmentStartTime = this.currentSegmentEndTime;
-        this.currentSegmentEndTime += newSegment.duration;
+        this.currentSegmentEndTime = this.currentSegmentStartTime + newSegment.duration;
     }
 
     public ceilingIsBroken(ceiling: Ceiling, segment: Segment): boolean {
@@ -216,6 +270,5 @@ class BrokenCeilingContext {
 
     public add(event: Event): void {
         this.events.add(event);
-        this.eventAdded = true;
     }
 }

@@ -59,10 +59,8 @@ class AlgorithmContext {
 
     public addCeiling() {
         const depth = this.ceiling();
-        this.ceilings.push({
-            time: this.runTime,
-            depth: depth
-        });
+        const newCeiling = new Ceiling(this.runTime, depth);
+        this.ceilings.push(newCeiling);
     }
 
     public ceiling(): number {
@@ -281,7 +279,7 @@ export class BuhlmannAlgorithm {
     private currentNdl(ceilings: Ceiling[]): number {
         for (let index = 0; index < ceilings.length; index += Time.oneMinute) {
             const ceiling = ceilings[index];
-            if (ceiling.depth > 0) {
+            if (ceiling.notAtSurface) {
                 const minutes = this.floorNdl(ceiling.time);
                 return minutes;
             }

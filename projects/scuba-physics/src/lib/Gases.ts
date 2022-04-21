@@ -98,8 +98,7 @@ export class Gases {
             const mod = depthConverter.toDecoStop(modPressure);
             const end = candidate.end(currentPressure, options.oxygenNarcotic);
 
-            // TODO add warning about switch to gas with higher nitrogen content
-            // TODO move maxEND exceeded to validator as warning
+            // TODO consider prevention of switch to gas with higher nitrogen content
             if (options.currentDepth <= mod && end <= options.maxEndPressure) {
                 // We don't care about gas ceiling, because it is covered by higher O2 content
                 // only oxygen content is relevant for decompression => EAN50 is better than TRIMIX 25/25

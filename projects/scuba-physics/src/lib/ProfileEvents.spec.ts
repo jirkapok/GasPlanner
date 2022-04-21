@@ -11,6 +11,9 @@ import { Time } from './Time';
 describe('Profile Events', () => {
     const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
     const emptyCeilings: Ceiling[] = [];
+    beforeEach(()=>{
+        options.maxEND = 100; // to eliminate all other events
+    });
 
     describe('Low ppO2', () => {
         it('User defines 10/70 at beginning of dive', () => {
@@ -183,8 +186,8 @@ describe('Profile Events', () => {
         it('High ascent speed rounds precision', () => {
             const segments = new Segments();
             // using this formula javascript creates precise number 166.66666666666666 periodical
-            const duration = (40 - 15) / 9 * Time.oneMinute;
-            segments.add(40, 15, StandardGases.air, duration);
+            const duration = (30 - 5) / 9 * Time.oneMinute;
+            segments.add(30, 5, StandardGases.air, duration);
 
             const recommendedOptions = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
             recommendedOptions.ascentSpeed50perc = 9;
@@ -214,9 +217,9 @@ describe('Profile Events', () => {
             gases.add(StandardGases.air);
 
             const segments = new Segments();
-            segments.add(0, 40, StandardGases.air, 2 * Time.oneMinute);
-            segments.addFlat(40, StandardGases.air, 20 * Time.oneMinute);
-            segments.add(40, 10, StandardGases.air, 3 * Time.oneMinute);
+            segments.add(0, 30, StandardGases.air, 2 * Time.oneMinute);
+            segments.addFlat(30, StandardGases.air, 20 * Time.oneMinute);
+            segments.add(30, 3, StandardGases.air, 4 * Time.oneMinute);
 
             const algorithm = new BuhlmannAlgorithm();
             const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
@@ -251,27 +254,24 @@ describe('Profile Events', () => {
     describe('Switch to higher N2 on deco dive', () => {
         it('from 18/45 to Ean50', () => {
             const segments = new Segments();
-            segments.add(0, 40, StandardGases.trimix1845, Time.oneMinute * 4);
-            segments.add(40, 40, StandardGases.trimix1845, Time.oneMinute);
-            segments.add(40, 21, StandardGases.trimix1845, Time.oneMinute * 3);
+            segments.add(30, 21, StandardGases.trimix1845, Time.oneMinute * 3);
             segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
             segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
 
             const ceilings: Ceiling[] = [
                 new Ceiling(0, 0),
-                new Ceiling(Time.oneMinute * 4, 0),
-                new Ceiling(Time.oneMinute * 5, 10),
-                new Ceiling(Time.oneMinute * 8, 10),
-                new Ceiling(Time.oneMinute * 9, 0),
-                new Ceiling(Time.oneMinute * 11, 0),
+                new Ceiling(Time.oneMinute * 3, 0),
+                new Ceiling(Time.oneMinute * 4, 1), // not a real dive we only need the ceiling
+                new Ceiling(Time.oneMinute * 6, 0)
             ];
 
-            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), ceilings, options);
+            const events = ProfileEvents.fromProfile(1, segments.mergeFlat(), ceilings, options);
 
+            expect(events.items.length).toEqual(2); // first event is gas switch
             expect(events.items[1]).toEqual({
                 type: EventType.switchToHigherN2,
-                timeStamp: 300,
-                depth: 40,
+                timeStamp: Time.oneMinute * 3,
+                depth: 21,
                 data: StandardGases.ean50
             });
         });
@@ -290,17 +290,24 @@ describe('Profile Events', () => {
     });
 
     describe('Maximum narcotic depth exceeded', () => {
+        beforeEach(()=>{
+            options.maxEND = 30; // only for these tests
+        });
+
+        // TODO fix, that the event isn't added multiple times
+
         it('Switch to narcotic gas', () => {
             const segments = new Segments();
-            segments.add(0, 40, StandardGases.trimix1845, Time.oneMinute * 4);
-            segments.add(40, 40, StandardGases.air, Time.oneMinute);
+            segments.add(0, 30, StandardGases.trimix1845, Time.oneMinute * 4);
+            segments.add(30, 40, StandardGases.air, Time.oneMinute);
             segments.add(40, 0, StandardGases.air, Time.oneMinute * 20);
 
             const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
 
+            expect(events.items.length).toEqual(2); // first event is gas switch
             expect(events.items[1]).toEqual({
                 type: EventType.maxEndExceeded,
-                timeStamp: 480,
+                timeStamp: 300,
                 depth: 40,
                 data: StandardGases.air
             });
@@ -315,7 +322,7 @@ describe('Profile Events', () => {
             const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
 
             expect(events.items[0]).toEqual({
-                type: EventType.gasSwitch,
+                type: EventType.maxEndExceeded,
                 timeStamp: 240,
                 depth: 40,
                 data: StandardGases.air

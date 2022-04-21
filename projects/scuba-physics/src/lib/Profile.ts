@@ -102,27 +102,52 @@ export class EventsFactory {
         };
     }
 
-    public static createMaxEndExceeded(timeStamp: number, depth: number): Event {
+    public static createMaxEndExceeded(timeStamp: number, depth: number, gas: Gas): Event {
         return {
             timeStamp: timeStamp,
             depth: depth,
-            type: EventType.maxEndExceeded
+            type: EventType.maxEndExceeded,
+            data: gas
         };
     }
 
-    public static createSwitchToHigherN2(timeStamp: number, depth: number): Event {
+    public static createSwitchToHigherN2(timeStamp: number, depth: number, gas: Gas): Event {
         return {
             timeStamp: timeStamp,
             depth: depth,
-            type: EventType.switchToHigherN2
+            type: EventType.switchToHigherN2,
+            data: gas
         };
     }
 }
 
 export class Events {
     public items: Event[] = [];
+    private brokenCeiling = false;
+
+    public get hasBrokenCeiling(): boolean {
+        return this.brokenCeiling;
+    }
+
+    public lastIsBrokenMnd(): boolean {
+        const lastIndex = this.items.length - 1;
+        if(lastIndex < 0) {
+            return false;
+        }
+
+        const last = this.items[lastIndex];
+        return last.type === EventType.maxEndExceeded;
+    }
 
     public add(event: Event): void {
+        if(event.type === EventType.brokenCeiling) {
+            if(this.brokenCeiling) {
+                return;
+            }
+
+            this.brokenCeiling = true;
+        }
+
         this.items.push(event);
     }
 }
@@ -142,6 +167,23 @@ export class Ceiling {
          */
         public depth: number
     ) { }
+
+    public get notAtSurface(): boolean {
+        return this.depth > 0;
+    }
+
+    /**
+     *  This is only estimated from ceilings, better prediction is if there is any deco stop needed
+     */
+    public static isDecoDive(ceilings: Ceiling[]): boolean {
+        for (const ceiling of ceilings) {
+            if (ceiling.notAtSurface) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 /**

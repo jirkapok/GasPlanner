@@ -10,10 +10,8 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add TRIMIX support and calculator
   * Add general option to enable/disable Nitrox or Trimix
-  * Add narcotic depth exceeded warning event
-  * Don't switch to gas with higher content of Nitrox warning - <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
-  * Add END calculator
   * Finish Trimix chapter in the documentation
+  * Add END calculator
   * Add standard gases table
   * Add air breaks
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l)
@@ -27,6 +25,7 @@ Following list of features and improvements ordered by priority is under develop
 * Events:
   * Add time to the events warning/error messages
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
+  * Add explanation how to fix the events
 * UI Tweaks
   * Tanks
     * Add Dropdown for well known tank sizes

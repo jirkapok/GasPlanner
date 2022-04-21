@@ -148,6 +148,9 @@ export class ProfileEvents {
         }
     }
 
+    // TODO Add test to events, that we need show also user defined gas switch to other tank even with the same gas
+    // 40 m/20 minutes on first tank only. Tanks: 24/200/.21, 11/200/.21
+
     private static addGasSwitch(context: EventsContext): void {
         if (context.switchingGas) {
             const current = context.current;

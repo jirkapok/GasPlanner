@@ -67,6 +67,7 @@ TODO
 * Equivalent narcotic depth, equivalent air depth
 * Equivalent narcotic depth for nitrox is always the same as air (counting oxygen as toxic). The only way how to reduce is by adding helium, i.e. use trimix instead of nitrox.
 * HPNS <https://en.wikipedia.org/wiki/High-pressure_nervous_syndrome>
+* Don't switch to gas with higher content of Nitrox warning - <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
 * [Oxygen toxicity](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater) (CNS/OTU)
 * See also Options - Gases to define maximum narcotic depth and oxygen toxicity
 

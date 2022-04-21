@@ -442,9 +442,6 @@ describe('Consumption', () => {
             expect(tank2.reserve).toEqual(56);
         });
 
-        // TODO Add test to events, that we need show also user defined gas switch to other tank even with the same gas
-        // 40 m/20 minutes on first tank only. Tanks: 24/200/.21, 11/200/.21
-
         it('Shallower, than deeper - last deepest point used for emergency ascent', () => {
             const tank1 = new Tank(20, 200, 21);
             const tanks = [tank1];

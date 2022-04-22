@@ -12,7 +12,8 @@
                 <div class="d-flex flex-row justify-content-around">
                     <div class="me-1">Size [L]</div>
                     <div class="mx-1">Pressure [bar]</div>
-                    <div class="ms-1">Percent O2</div>
+                    <div class="ms-1">% O2</div>
+                    <div class="ms-1">% He</div>
                 </div>
             </th>
             <th>
@@ -49,20 +50,30 @@
                     <div class="ms-1">
                         <div class="input-group">
                             <input #gasO2="ngModel" name="gasO2" [(ngModel)]="tank.o2" class="form-control" type="number"
-                                (change)="gasChanged()" required [rangeVal]="[21, 100]"
-                                [minVal]="21" [maxVal]="100" min="21" max="100" step="1"
+                                (change)="gasChanged()" required [rangeVal]="[1, 100]"
+                                [minVal]="1" [maxVal]="100" min="1" max="100" step="1"
                                 [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />
                             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                                 <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
                                 <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-                                    <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item"
+                                    <button *ngFor="let stgas of this.allNames" type="button" class="dropdown-item"
                                         (click)="assignStandardGas(tank, stgas)">{{stgas}}</button>
                                 </div>
                             </div>
                         </div>
 
                         <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number
-                            21-100%</div>
+                            1-100%</div>
+                    </div>
+
+                    <div class="mx-1">
+                        <input #gasHe="ngModel" name="gasHe" [(ngModel)]="tank.he"
+                            class="form-control" type="number" (change)="gasChanged()" required
+                            [rangeVal]="[0, 99]" [minVal]="0" [maxVal]="99" min="0" max="99" step="1"
+                            [class.is-invalid]="gasHe.invalid && (gasHe.dirty || gasHe.touched)" />
+                        <div class="text-danger"
+                            *ngIf="gasHe.invalid && (gasHe.dirty || gasHe.touched)">Needs to be
+                            number 0-99 %</div>
                     </div>
                 </div>
                 <div class="pt-0">
@@ -106,7 +117,7 @@
                 <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
                 <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
                     <button type="button" class="dropdown-item" (click)="assignBestMix()">Best mix</button>
-                    <button *ngFor="let stgas of this.gasNames" type="button" class="dropdown-item"
+                    <button *ngFor="let stgas of this.nitroxNames" type="button" class="dropdown-item"
                         (click)="assignStandardGas(firstTank, stgas)">{{stgas}}</button>
                 </div>
             </div>

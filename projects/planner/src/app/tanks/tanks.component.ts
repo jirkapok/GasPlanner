@@ -11,7 +11,8 @@ import { StandardGases, Tank, Diver } from 'scuba-physics';
 })
 export class TanksComponent {
     public firstTank: Tank;
-    public gasNames: string[];
+    public allNames: string[];
+    public nitroxNames: string[];
     public icon = faBatteryHalf;
     public plusIcon = faPlusSquare;
     public trashIcon = faTrashAlt;
@@ -20,7 +21,9 @@ export class TanksComponent {
     constructor(public planner: PlannerService) {
         this.firstTank = this.planner.firstTank;
         this.diver = this.planner.diver;
-        this.gasNames = StandardGases.gasNames();
+        this.allNames = StandardGases.allNames();
+        this.nitroxNames = StandardGases.nitroxNames();
+        // TODO adding two gases oxygen and 12/60 causes the calculation to fail
     }
 
     public get tanks(): Tank[] {

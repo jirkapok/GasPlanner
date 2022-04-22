@@ -123,7 +123,7 @@ export class ProfileEvents {
             this.addMndExceeded(context, pressureSegment);
             context.elapsed += context.current.duration;
 
-            if (!ceilingContext.eventAdded) {
+            if (ceilingContext.fixedBrokenCeiling) {
                 ceilingContext.assignSegment(context.current);
                 ProfileEvents.validateBrokenCeiling(ceilingContext, ceilings, context.current);
             }
@@ -213,15 +213,19 @@ export class ProfileEvents {
             const ceiling = ceilings[context.lastCeilingIndex];
             context.lastCeilingIndex++;
 
-            if (context.ceilingIsBroken(ceiling, segment)) {
+            const ceilingOk = context.belowCeiling(ceiling, segment);
+            if (!ceilingOk && context.fixedBrokenCeiling) {
                 const event = EventsFactory.createBrokenCeiling(ceiling.time, ceiling.depth);
-                context.add(event);
+                context.events.add(event);
+                context.fixedBrokenCeiling = false;
                 break;
             }
 
             if (ceiling.time > context.currentSegmentEndTime) {
                 break;
             }
+
+            context.fixedBrokenCeiling = !context.fixedBrokenCeiling && ceilingOk;
         }
     }
 
@@ -269,12 +273,9 @@ class BrokenCeilingContext {
     public lastCeilingIndex = 0; // prevents search in past ceilings
     public currentSegmentStartTime = 0;
     public currentSegmentEndTime = 0;
+    public fixedBrokenCeiling = true;
 
-    public get eventAdded(): boolean {
-        return this.events.hasBrokenCeiling;
-    }
-
-    constructor(private events: Events) {
+    constructor(public events: Events) {
     }
 
     public assignSegment(newSegment: Segment): void {
@@ -282,13 +283,9 @@ class BrokenCeilingContext {
         this.currentSegmentEndTime = this.currentSegmentStartTime + newSegment.duration;
     }
 
-    public ceilingIsBroken(ceiling: Ceiling, segment: Segment): boolean {
+    public belowCeiling(ceiling: Ceiling, segment: Segment): boolean {
         const duration = ceiling.time - this.currentSegmentStartTime;
         const diverDepth = segment.depthAt(duration);
-        return ceiling.depth > diverDepth;
-    }
-
-    public add(event: Event): void {
-        this.events.add(event);
+        return diverDepth >= ceiling.depth;
     }
 }

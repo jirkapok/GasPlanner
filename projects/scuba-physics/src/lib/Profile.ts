@@ -123,17 +123,8 @@ export class EventsFactory {
 
 export class Events {
     public items: Event[] = [];
-    private brokenCeiling = false;
-
-    public get hasBrokenCeiling(): boolean {
-        return this.brokenCeiling;
-    }
 
     public add(event: Event): void {
-        if(event.type === EventType.brokenCeiling) {
-            this.brokenCeiling = true;
-        }
-
         this.items.push(event);
     }
 }

@@ -237,7 +237,7 @@ describe('Profile Events', () => {
     });
 
     describe('Broken ceiling', () => {
-        it('User defined segment break ceiling', () => {
+        it('User defined segment breaks ceiling', () => {
             const gases = new Gases();
             gases.add(StandardGases.air);
 
@@ -259,7 +259,7 @@ describe('Profile Events', () => {
             expect(firstError.type).toBe(EventType.brokenCeiling);
         });
 
-        it('Doesn`t break ceiling', () => {
+        it('Long shallow dive doesn\'t break ceiling', () => {
             const gases = new Gases();
             gases.add(StandardGases.air);
 

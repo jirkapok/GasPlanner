@@ -7,6 +7,7 @@ import { Ceiling, EventType } from './Profile';
 import { ProfileEvents } from './ProfileEvents';
 import { Segments } from './Segments';
 import { Time } from './Time';
+import { Tank } from './Tanks';
 
 describe('Profile Events', () => {
     const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
@@ -164,6 +165,30 @@ describe('Profile Events', () => {
                 timeStamp: 300,
                 depth: 15,
                 data: StandardGases.ean50
+            });
+        });
+
+        it('User defined switch to another tank with the same gas', () => {
+            const tank1 = Tank.createDefault();
+            const tank2 = Tank.createDefault();
+
+            const segments = new Segments();
+            const s1 = segments.add(0, 15, StandardGases.air, Time.oneMinute * 4);
+            s1.tank = tank1;
+            const s2 = segments.add(15, 15, StandardGases.air, Time.oneMinute);
+            s2.tank = tank1;
+            const s3 = segments.add(15, 15, StandardGases.air, Time.oneMinute * 1);
+            s3.tank = tank2;
+            segments.add(15, 15, StandardGases.air, Time.oneMinute);
+            segments.add(15, 0, StandardGases.air, Time.oneMinute * 2);
+
+            const events = ProfileEvents.fromProfile(3, segments.mergeFlat(), emptyCeilings, options);
+
+            expect(events.items[0]).toEqual({
+                type: EventType.gasSwitch,
+                timeStamp: 300,
+                depth: 15,
+                data: StandardGases.air
             });
         });
     });

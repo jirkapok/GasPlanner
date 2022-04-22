@@ -77,6 +77,12 @@ class EventsContext {
         return !!this.previous && !this.current.gas.compositionEquals(this.previous.gas);
     }
 
+    /** Tank is only assigned by user */
+    public get switchingTank(): boolean {
+        return !!this.previous && !!this.previous.tank && !!this.current.tank &&
+               this.previous.tank !== this.current.tank;
+    }
+
     /** Gets maximum narcotic depth in bars */
     public get maxMnd(): number {
         return this._mndBars;
@@ -109,6 +115,7 @@ export class ProfileEvents {
             this.addHighPpO2(context, pressureSegment);
             this.addLowPpO2(context, pressureSegment);
             this.addGasSwitch(context);
+            this.addUserTankSwitch(context);
             this.addHighDescentSpeed(context);
             this.addHighAscentSpeed(context);
             this.addSwitchHighN2(context, ceilings);
@@ -153,6 +160,14 @@ export class ProfileEvents {
 
     private static addGasSwitch(context: EventsContext): void {
         if (context.switchingGas) {
+            const current = context.current;
+            const event = EventsFactory.createGasSwitch(context.elapsed, current.startDepth, current.gas);
+            context.events.add(event);
+        }
+    }
+
+    private static addUserTankSwitch(context: EventsContext): void {
+        if (context.switchingTank) {
             const current = context.current;
             const event = EventsFactory.createGasSwitch(context.elapsed, current.startDepth, current.gas);
             context.events.add(event);
@@ -217,7 +232,7 @@ export class ProfileEvents {
         const previous = context.previous;
 
         if (context.switchingGas && previous) {
-            // TODO consider identify deco dive from deco stops, instead from ceilings.
+            // consider identify deco dive from deco stops, instead from ceilings.
             if (previous.gas.fN2 < current.gas.fN2 && Ceiling.isDecoDive(ceilings)) {
                 const event = EventsFactory.createSwitchToHigherN2(context.elapsed, current.startDepth, current.gas);
                 context.events.add(event);

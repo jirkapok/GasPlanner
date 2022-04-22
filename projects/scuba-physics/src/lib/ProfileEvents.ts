@@ -39,6 +39,7 @@ class EventsContext {
     /** total duration in seconds at beginning of current segment */
     public elapsed = 0;
     public index = 0;
+    public fixedMnd = true;
     private _mndBars = 0;
 
     constructor(private startAscentIndex: number, private profile: Segment[],
@@ -242,18 +243,25 @@ export class ProfileEvents {
         // we need to check both start and end, because next segment may use another gas
         const startMnd = context.gasMnd(pressureSegment.startDepth);
 
-        // checking the last event prevents adding the event for both start and end
-        if (context.maxMnd < startMnd) {
-            const event = EventsFactory.createMaxEndExceeded(context.elapsed, current.startDepth, current.gas);
-            context.events.add(event);
+        if (context.maxMnd < startMnd  && context.fixedMnd) {
+            this.addMndEvent(context, context.elapsed, current.startDepth);
         }
 
         const endMnd = context.gasMnd(pressureSegment.endDepth);
-        if (context.maxMnd < endMnd) {
+        if (context.maxMnd < endMnd && context.fixedMnd) {
             const timeStamp = context.elapsed + current.duration;
-            const event = EventsFactory.createMaxEndExceeded(timeStamp, current.endDepth, current.gas);
-            context.events.add(event);
+            this.addMndEvent(context, timeStamp, current.endDepth);
         }
+
+        // we can add the event multiple times, only after it is fixed
+        context.fixedMnd = endMnd <= context.maxMnd;
+    }
+
+    private static addMndEvent(context: EventsContext, timeStamp: number, depth: number): void {
+        const gas = context.current.gas;
+        const event = EventsFactory.createMaxEndExceeded(timeStamp, depth, gas);
+        context.events.add(event);
+        context.fixedMnd = true;
     }
 }
 

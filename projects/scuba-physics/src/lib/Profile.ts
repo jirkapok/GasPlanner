@@ -129,28 +129,9 @@ export class Events {
         return this.brokenCeiling;
     }
 
-    private get lastIsBrokenMnd(): boolean {
-        const lastIndex = this.items.length - 1;
-        if(lastIndex < 0) {
-            return false;
-        }
-
-        const last = this.items[lastIndex];
-        return last.type === EventType.maxEndExceeded;
-    }
-
     public add(event: Event): void {
-        // TODO simply prevent all events to be added multiple times
         if(event.type === EventType.brokenCeiling) {
-            if(this.brokenCeiling) {
-                return;
-            }
-
             this.brokenCeiling = true;
-        }
-
-        if(event.type === EventType.maxEndExceeded && this.lastIsBrokenMnd) {
-            return;
         }
 
         this.items.push(event);

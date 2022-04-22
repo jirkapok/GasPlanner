@@ -77,6 +77,24 @@ describe('Gases', () => {
                 expect(ceiling).toBeCloseTo(1.82, 2);
             });
         });
+
+        describe('Content O2 + He can\'t exceed 100 %', () => {
+            it('Throws exception, when crating new instance', () => {
+                expect(() => new Gas(0.8, 0.5)).toThrowError();
+            });
+
+            it('When changing O2', () => {
+                const sut = new Gas(0.5, 0.5);
+                sut.fO2 = 0.8;
+                expect(sut.fHe).toBe(0.2);
+            });
+
+            it('When changing He', () => {
+                const sut = new Gas(0.5, 0.5);
+                sut.fHe = 0.8;
+                expect(sut.fO2).toBe(0.2);
+            });
+        });
     });
 
     describe('Standard gases', () => {

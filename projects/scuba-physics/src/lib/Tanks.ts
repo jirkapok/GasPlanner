@@ -94,8 +94,6 @@ export class Tank {
         }
     }
 
-    // TODO sum of He+O2 can't exceed 100 %
-
     /** The helium part of tank gas in percents */
     public get he(): number {
         return this.gas.fHe * 100;

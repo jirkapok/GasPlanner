@@ -222,17 +222,45 @@ export class GasMixtures {
 
 export class Gas {
     public get fN2(): number {
-        return 1 - this.fO2 - this.fHe;
+        return 1 - this._fO2 - this._fHe;
     }
 
     /**
-     * @param fO2 partial pressure of O2 in the mix, range 0-1
-     * @param fHe partial pressure of He in the mix, range 0-1
+     * @param _fO2 partial pressure of O2 in the mix, range 0-1
+     * @param _fHe partial pressure of He in the mix, range 0-1
      */
-    constructor(public fO2: number, public fHe: number) { }
+    constructor(private _fO2: number, private _fHe: number) {
+        if(this.contentExceeds100percent()) {
+            throw new Error('O2 + He can\'t exceed 100 %');
+        }
+    }
+
+    public get fO2(): number {
+        return this._fO2;
+    }
+
+    public set fO2(newValue: number) {
+        this._fO2 = newValue;
+
+        if(this.contentExceeds100percent()) {
+            this._fHe = this.countRemaining(this._fO2);
+        }
+    }
+
+    public get fHe(): number {
+        return this._fHe;
+    }
+
+    public set fHe(newValue: number) {
+        this._fHe = newValue;
+
+        if(this.contentExceeds100percent()) {
+            this._fO2 = this.countRemaining(this._fHe);
+        }
+    }
 
     public copy(): Gas {
-        return new Gas(this.fO2, this.fHe);
+        return new Gas(this._fO2, this._fHe);
     }
 
     /**
@@ -242,7 +270,7 @@ export class Gas {
      * @returns Depth in bars.
      */
     public mod(ppO2: number): number {
-        return GasMixtures.mod(ppO2, this.fO2);
+        return GasMixtures.mod(ppO2, this._fO2);
     }
 
     /**
@@ -253,7 +281,7 @@ export class Gas {
      * @returns Depth in bars.
      */
     public end(depth: number, oxygenNarcotic: boolean): number {
-        const fO2 = oxygenNarcotic ? this.fO2 : 0;
+        const fO2 = oxygenNarcotic ? this._fO2 : 0;
         return GasMixtures.end(depth, this.fN2, fO2);
     }
 
@@ -264,20 +292,29 @@ export class Gas {
     * @returns Depth in bars.
     */
     public ceiling(surfacePressure: number): number {
-        return GasMixtures.ceiling(this.fO2, surfacePressure);
+        return GasMixtures.ceiling(this._fO2, surfacePressure);
     }
 
     public compositionEquals(other: Gas): boolean {
         return !!other &&
-            this.fO2 === other.fO2 &&
-            this.fHe === other.fHe;
+            this._fO2 === other._fO2 &&
+            this._fHe === other._fHe;
     }
 
     /** Unique identifier of content */
     public contentCode(): number {
         const fourK = 10000;
         // considered identical gas rounding on two decimal places
-        return Math.round(this.fO2 * fourK) * fourK + Math.round(this.fHe * fourK);
+        return Math.round(this._fO2 * fourK) * fourK + Math.round(this._fHe * fourK);
+    }
+
+    private contentExceeds100percent(): boolean {
+        return this._fO2 + this._fHe > 1;
+    }
+
+    private countRemaining(part: number): number {
+        const rest = 1 - part;
+        return Math.round(rest * 100000) / 100000;
     }
 }
 

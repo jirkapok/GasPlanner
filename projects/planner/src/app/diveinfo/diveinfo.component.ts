@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive } from '../shared/models';
 import { DateFormats } from '../shared/formaters';
-import { faExclamationCircle, faExclamationTriangle, faSlidersH } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle, faExclamationTriangle, faSlidersH, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { EventType, Event, Time, Tank } from 'scuba-physics';
 
 @Component({
@@ -14,6 +14,7 @@ export class DiveInfoComponent {
     public dive: Dive;
     public exclamation = faExclamationCircle;
     public warning = faExclamationTriangle;
+    public info = faInfoCircle;
     public icon = faSlidersH;
 
     constructor(public planner: PlannerService) {
@@ -50,6 +51,10 @@ export class DiveInfoComponent {
 
     public durationFormat(seconds: number): string {
         return DateFormats.selectTimeFormat(seconds);
+    }
+
+    public isLowPpO2(event: Event): boolean {
+        return event.type === EventType.lowPpO2;
     }
 
     public isHighPpO2(event: Event): boolean {

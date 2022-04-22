@@ -60,44 +60,48 @@
         </div>
 
         <div *ngIf="dive.notEnoughGas" class="alert  alert-danger">
-            <fa-icon [icon]="exclamation" class="me-1"></fa-icon>
+            <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
             <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
                 {{ dive.maxTime | number:'1.0-0' }} min</span>
         </div>
         <div *ngIf="dive.notEnoughTime" class="alert  alert-danger">
-            <fa-icon [icon]="exclamation" class="me-1"></fa-icon>
+            <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
             <span>Not enough time to realize the dive (duration needs to be at least {{ minimumDuration | number:'1.0-0' }}
                 min)!</span>
         </div>
         <div *ngIf="dive.noDecoExceeded" class="alert  alert-info">
-            <fa-icon [icon]="warning" class="me-1"></fa-icon>
+            <fa-icon [icon]="info" class="me-2"></fa-icon>
             <span>No decompression time for current depth exceeded (Bottom time needs to be maximum
                 {{ noDeco | number:'1.0-0' }} min)!</span>
         </div>
 
         <div *ngFor="let event of dive.events">
+            <div *ngIf="isLowPpO2(event)" class="alert alert-warning">
+                <fa-icon [icon]="warning" class="me-2"></fa-icon>
+                <span>Low partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }} m (minimum depth exceeded)!</span>
+            </div>
             <div *ngIf="isHighPpO2(event)" class="alert alert-warning">
-                <fa-icon [icon]="warning" class="me-1"></fa-icon>
+                <fa-icon [icon]="warning" class="me-2"></fa-icon>
                 <span>High partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }} m (maximum depth exceeded)!</span>
             </div>
             <div *ngIf="isHighDescentSpeed(event)" class="alert alert-warning">
-                <fa-icon [icon]="warning" class="me-1"></fa-icon>
+                <fa-icon [icon]="warning" class="me-2"></fa-icon>
                 <span>High descent speed at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
             </div>
             <div *ngIf="isHighAscentSpeed(event)" class="alert alert-warning">
-                <fa-icon [icon]="warning" class="me-1"></fa-icon>
+                <fa-icon [icon]="warning" class="me-2"></fa-icon>
                 <span>High ascent speed at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
             </div>
             <div *ngIf="isBrokenCeiling(event)" class="alert alert-warning">
-                <fa-icon [icon]="warning" class="me-1"></fa-icon>
+                <fa-icon [icon]="warning" class="me-2"></fa-icon>
                 <span>Ceiling depth {{ event.depth | number:'1.0-0' }} m broken at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
             </div>
             <div *ngIf="isHighN2Switch(event)" class="alert alert-warning">
-                <fa-icon [icon]="warning" class="me-1"></fa-icon>
+                <fa-icon [icon]="warning" class="me-2"></fa-icon>
                 <span>Gas switch to gas with higher nitrogen content in {{ event.depth | number:'1.0-0' }} m at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min is not recommended!</span>
             </div>
             <div *ngIf="isMndExceeded(event)" class="alert alert-warning">
-                <fa-icon [icon]="warning" class="me-1"></fa-icon>
+                <fa-icon [icon]="warning" class="me-2"></fa-icon>
                 <span>Exceeded maximum narcotic depth for selected gas in {{ event.depth | number:'1.0-0' }} m at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
             </div>
 

@@ -31,6 +31,7 @@ export class WayPointsService {
         // not propagated to the UI
         if (profile.errors.length > 0) {
             return Profile.newEmpty(profile.errors);
+            console.table(profile.errors);
         }
 
         const startAscentIndex = plan.startAscentIndex;

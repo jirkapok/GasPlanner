@@ -94,6 +94,18 @@ export class Tank {
         }
     }
 
+    // TODO sum of He+O2 can't exceed 100 %
+
+    /** The helium part of tank gas in percents */
+    public get he(): number {
+        return this.gas.fHe * 100;
+    }
+
+    /** The helium part of tank gas in percents */
+    public set he(newValue: number) {
+        this.gas.fHe = newValue / 100;
+    }
+
     /** Gets total volume at start pressure in liters */
     public get volume(): number {
         return this.size * this.startPressure;

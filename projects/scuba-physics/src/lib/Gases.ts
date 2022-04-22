@@ -348,16 +348,26 @@ export class StandardGases {
         ['EAN38', StandardGases.ean38],
         ['EAN50', StandardGases.ean50],
         [StandardGases.oxygenName, StandardGases.oxygen],
-        // ['35/25', StandardGases.trimix3525],
-        // ['25/25', StandardGases.trimix2525],
-        // ['21/35', StandardGases.trimix2135],
-        // ['18/45', StandardGases.trimix1845],
-        // ['15/55', StandardGases.trimix1555],
-        // ['12/60', StandardGases.trimix1260],
-        // ['10/75', StandardGases.trimix1070],
+        ['35/25', StandardGases.trimix3525],
+        ['25/25', StandardGases.trimix2525],
+        ['21/35', StandardGases.trimix2135],
+        ['18/45', StandardGases.trimix1845],
+        ['15/55', StandardGases.trimix1555],
+        ['12/60', StandardGases.trimix1260],
+        ['10/75', StandardGases.trimix1070],
     ]);
 
-    public static gasNames(): string[] {
+    /**
+     * Gets names of all predefined gases with 0 % helium (nitrox) only.
+     * This is subset of allNames
+     */
+    public static nitroxNames(): string[] {
+        return StandardGases.allNames()
+            .slice(0, 6);
+    }
+
+    /** Gets names of all predefined gases including both nitrox and trimix gases */
+    public static allNames(): string[] {
         return Array.from(StandardGases.map.keys());
     }
 

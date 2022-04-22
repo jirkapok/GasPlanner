@@ -140,6 +140,7 @@ export class Events {
     }
 
     public add(event: Event): void {
+        // TODO simply prevent all events to be added multiple times
         if(event.type === EventType.brokenCeiling) {
             if(this.brokenCeiling) {
                 return;

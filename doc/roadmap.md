@@ -14,7 +14,7 @@ Following list of features and improvements ordered by priority is under develop
   * Add END calculator
   * Add standard gases table
   * Add air breaks
-* Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l)
+* Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Add imperial units option
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
     * Fix RMV/SAC calculator based on Nominal volume

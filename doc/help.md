@@ -63,7 +63,7 @@ TODO
 
 * Depth range of selected gas
 * Don't switch to gas with higher nitrogen content
-* Use separate argon bottle for drysuit inflation. This is not calculated in to the gases consumption
+* Use separate argon bottle for dry suit inflation. This is not calculated in to the gases consumption
 * Equivalent narcotic depth, equivalent air depth
 * Equivalent narcotic depth for nitrox is always the same as air (counting oxygen as toxic). The only way how to reduce is by adding helium, i.e. use trimix instead of nitrox.
 * HPNS <https://en.wikipedia.org/wiki/High-pressure_nervous_syndrome>
@@ -71,7 +71,8 @@ TODO
 * [Oxygen toxicity](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater) (CNS/OTU)
 * See also Options - Gases to define maximum narcotic depth and oxygen toxicity
 
-
+TODO example of air deep dive!
+> We don't recommend deep dives on AIR!
 > You should always use Trimix for depths bellow maximum narcotic depth!
 
 #### Decompression gas selection
@@ -188,6 +189,8 @@ In case of any issue with the plan, Notification messages are shown bellow the d
 | High ascent speed | User defined part of the dive with high risk of micro-bubbles which cause higher risk of DCS | Enlarge the ascent duration |
 | High descent speed | Higher risk of ear (or other cavities) barotrauma | Enlarge the descent duration |
 | Broken ceiling | In user defined part of the dive profile you reach lower depth than current ceiling, which increases risk of DCS | Fix the profile, so always stay bellow the ceiling |
+| Switch to gas with higher N2 content | There is a risk of Isobaric counter diffusion | Choose another decompression gas with lower nitrogen content |
+| Narcotic depth exceeded | Even the gas is breathe able at this depth, there is higher risk of gas narcotic effects. Usually this applies to deep air dives | Plan shallower dive or use gas for higher depths (Trimix) |
 
 > This is the main purpose of this application: to reduce these risks!
 

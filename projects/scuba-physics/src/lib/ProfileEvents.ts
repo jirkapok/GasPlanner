@@ -121,12 +121,11 @@ export class ProfileEvents {
             this.addHighAscentSpeed(context);
             this.addSwitchHighN2(context, ceilings);
             this.addMndExceeded(context, pressureSegment);
-            context.elapsed += context.current.duration;
 
-            if (ceilingContext.fixedBrokenCeiling) {
-                ceilingContext.assignSegment(context.current);
-                ProfileEvents.validateBrokenCeiling(ceilingContext, ceilings, context.current);
-            }
+            ceilingContext.assignSegment(context.current);
+            ProfileEvents.addBrokenCeiling(ceilingContext, ceilings, context.current);
+
+            context.elapsed += context.current.duration;
         }
 
         return context.events;
@@ -208,7 +207,7 @@ export class ProfileEvents {
     }
 
     /** Check only user defined segments break ceiling, because we trust the algorithm never breaks ceiling */
-    private static validateBrokenCeiling(context: BrokenCeilingContext, ceilings: Ceiling[], segment: Segment): void {
+    private static addBrokenCeiling(context: BrokenCeilingContext, ceilings: Ceiling[], segment: Segment): void {
         while (context.lastCeilingIndex < context.currentSegmentEndTime && context.lastCeilingIndex < ceilings.length - 1) {
             const ceiling = ceilings[context.lastCeilingIndex];
             context.lastCeilingIndex++;
@@ -221,11 +220,13 @@ export class ProfileEvents {
                 break;
             }
 
+            if(ceilingOk && !context.fixedBrokenCeiling) {
+                context.fixedBrokenCeiling = true;
+            }
+
             if (ceiling.time > context.currentSegmentEndTime) {
                 break;
             }
-
-            context.fixedBrokenCeiling = !context.fixedBrokenCeiling && ceilingOk;
         }
     }
 

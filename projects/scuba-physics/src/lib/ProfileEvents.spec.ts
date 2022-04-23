@@ -274,6 +274,25 @@ describe('Profile Events', () => {
             const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             expect(events.items.length).toBe(0);
         });
+
+        it('Broken ceiling is added multiple times', () => {
+            const gases = new Gases();
+            gases.add(StandardGases.air);
+
+            const segments = new Segments();
+            segments.add(0, 30, StandardGases.air, 2 * Time.oneMinute);
+            segments.addFlat(30, StandardGases.air, 25 * Time.oneMinute);
+            segments.add(30, 6, StandardGases.air, 4 * Time.oneMinute);
+            segments.addFlat(6, StandardGases.air, 2 * Time.oneMinute);
+            segments.add(6, 2, StandardGases.air, 1.5 * Time.oneMinute);
+
+            const algorithm = new BuhlmannAlgorithm();
+            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
+            defaultOptions.safetyStop = SafetyStop.always;
+            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
+            const events = ProfileEvents.fromProfile(5, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+            expect(events.items.length).toBe(2);
+        });
     });
 
     describe('Switch to higher N2 on deco dive', () => {

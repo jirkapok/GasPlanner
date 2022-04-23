@@ -5,6 +5,7 @@ Following list of features and improvements ordered by priority is under develop
 ## Known issues
 
 * Gas oxygen content spinner shows not rounded number, where it shouldn't
+* Setting 15/55 trimix sets the helium to unexpected precise value
 
 ## Improvements / Features
 

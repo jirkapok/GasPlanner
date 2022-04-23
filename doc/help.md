@@ -220,6 +220,7 @@ In case of multiple tanks
 * Consumed gas is extracted in reverse order from last tank up to the first tank
 * Reserve for first tak remains always at least 30 bars
 * For all other tanks, there is no reserve required as technical minimum, until the reserve isn't larger than capacity of the first tank.
+* In case of multiple tanks with the same bottom gas, to consume from both tanks and distribute the reserve, you need manually create segments and assing the tanks in Extended view.
 
 ### Dive way points
 

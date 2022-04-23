@@ -510,9 +510,7 @@ describe('Consumption', () => {
         //    - 1/3 usable strategy
 
         describe('Multiple tanks with the same gas', () => {
-            // 4. Multiple tanks of the same gas, reserve is counted form first bellow reserve and second tank is not utilized
-            // TODO Add to documentation: this is correct scenario, user is informed, that he needs to switch
-            //  and therefore needs to use new segment and enforce usage of different tank
+            // Multiple tanks of the same gas, reserve is counted form first bellow reserve and second tank is not utilized
             it('reserve counts always from first tank', () => {
                 // The same as 'As part of ascent counts to rock bottom', but different 02 content in second tank
                 const tank1 = new Tank(20, 200, 21);

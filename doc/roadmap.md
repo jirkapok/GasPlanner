@@ -10,8 +10,8 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add TRIMIX support and calculator
-  * Add general option to enable/disable Nitrox or Trimix
-  * Finish Trimix chapter in the documentation
+  * Fix layout broken by adding Helium field
+  * Add max. narc. depth to the Gas label
   * Add END calculator
   * Add standard gases table
   * Add air breaks
@@ -30,7 +30,6 @@ Following list of features and improvements ordered by priority is under develop
 * UI Tweaks
   * Tanks
     * Add Dropdown for well known tank sizes
-    * Add max. narc. depth to the Gas label
   * Profile:
     * Add option to reduce waypoints table only to list of stops
     * Waypoints table: add switch in case user is switching to tank with the same gas

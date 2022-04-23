@@ -47,7 +47,7 @@ Example: Maxim deco ppO2 is 1.6, for bottom gas is maximum ppO2 only 1.4. For Ea
 
 ### Trimix/Helitrox
 
-[Trimix or Helitrox](https://en.wikipedia.org/wiki/Trimix_(breathing_gas)) are gas mixtures, which add Helium as third significant component into the mixture. So the gas typically consist of oxygen, helium and nitrogen.  These gases are usually expensive because of helium price. It is the reason why usually deeper dives are done nowadays using closed circuit (CCR). Our planner currently supports planning only for open circuit (OC). We distinguish all the gases by amount of oxygen. Because you can choose from lot of combinations, we provide list of common gases. Some agencies (GUE, UTD) limit their mixes to list called Standard gases (see e.g. [GUE standard gases](https://gue.com/blog/standard-gases-the-advantages-of-having-everyone-singing-the-same-song/)).
+[Trimix or Helitrox](https://en.wikipedia.org/wiki/Trimix_(breathing_gas)) are gas mixtures, which add Helium as third significant component into the mixture. So the gas typically consist of oxygen, helium and nitrogen. These gases are usually expensive because of helium price. It is the reason why usually deeper dives are done nowadays using closed circuit (CCR). Our planner currently supports planning only for open circuit (OC). We distinguish all the gases by amount of oxygen.
 
 | Category | Oxygen content | Example |
 | --- | --- | --- |
@@ -55,32 +55,32 @@ Example: Maxim deco ppO2 is 1.6, for bottom gas is maximum ppO2 only 1.4. For Ea
 | Normooxic | 18 - 21 % | Air |
 | Hyperoxic | > 21 % | EAN50 |
 
-To be able distinguish the content we call the gases using only is oxygen and helium parts. E.g. Trimix 18/48 consists of 18 % oxygen, 45% of helium and the rest is nitrogen. Even you are able to define your custom mixture, because of practical reasons it is preferred to use the same gases within the team over custom gases or different gases for each diver.
+Because you can choose from lot of combinations, we provide list of common gases. Some agencies (GUE, UTD) limit  number of used gases and promote their list of mixes called Standard gases (see e.g. [GUE standard gases](https://gue.com/blog/standard-gases-the-advantages-of-having-everyone-singing-the-same-song/)). Standardization of gases simplifies logistic, team planning and prevents mistakes during dive. Even you are able to define your custom mixture, because of practical reasons it is preferred to use the same gases within the team over custom gases or different gases for each diver.
 
 > We recommend to choose from one of the commonly used gases and use the same gases for all team members!
 
-TODO
+To be able distinguish the content, we call the gases using only its oxygen and helium parts. E.g. Trimix 18/48 consists of 18 % oxygen, 45% of helium and the rest is nitrogen. To be able select correct mix, we need to know depth range at which the gas can be used. The range is limited by:
 
-* Depth range of selected gas
-* Don't switch to gas with higher nitrogen content
+* `MOD`: Maximum depth defined by it oxygen toxicity. Exceeding this depth increases risks, which may cause drowning or dead. Usually this is given by maximum partial pressure of oxygen (See nitrox calculator). E.g. 25/25 has MOD 46 meters for ppO2 1.4.
+* `Minimum ppO2`: If the partial pressure of O2 is low there is not enough oxygen for the body. We call such gas hypoxic. This happens usually at low depths 0 - 10 meters. Therefore we generate low ppO2 warning. It is usually true for gases targeting highest depths with low oxygen content and high helium content like 12/60 etc. In such case you need add travel gas to your plan to cover low depths. This depth is calculated the same way as MOD. E.g. 15/55 has minimum usable depth 2 meters defined by minimal ppO2 .18.
+* `Equivalent narcotic depth` (END): Depth at which the gas mixture is equivalent to breath air. The narcosis has similar effect like drinking alcohol. Nitrox mixtures contain always only oxygen and nitrogen and both are usually considered as narcotic. Exceeding the END increases risk of the narcosis and therefore it is recommended to replace some part of the mix with helium. Recommended value is 30 meters. These value can be affected by Gases section in Options. See also wiki [Equivalent narcotic depth](https://en.wikipedia.org/wiki/Equivalent_narcotic_depth)
+
+```
+Example: You plan dive to 45 meters and consider Air narcotic for depths below 30 meters and usable gas in range 0.18 - 1.4 ppO2. Team selects Trimix 21/35 as an option.
+Minimum depth = Minimum ppO2 / oxygen fraction = 0.18 / 0.21 = 0.86 < 1 bar i.e. up to the surface
+Maximum depth = Maximum ppO2 / oxygen fraction = 1.4 / 0.21 = 6.6 bar => 56 meters
+Equivalent narcotic depth = (1 - Helium fraction) * depth = 0.65 * 5.5 = 2.58 bar => 25.6 meters
+Result selected gas is good choice for target depth 45 meters.
+```
+
+General recommendations when planning deep dives:
+
+* We don't recommend deep dives on AIR!
+* You should always use Trimix for depths bellow maximum narcotic depth!
+* Don't switch to gas with higher nitrogen content because of [Isobaric counter diffusion](https://en.wikipedia.org/wiki/Isobaric_counterdiffusion)
 * Use separate argon bottle for dry suit inflation. This is not calculated in to the gases consumption
-* Equivalent narcotic depth, equivalent air depth
-* Equivalent narcotic depth for nitrox is always the same as air (counting oxygen as toxic). The only way how to reduce is by adding helium, i.e. use trimix instead of nitrox.
-* HPNS <https://en.wikipedia.org/wiki/High-pressure_nervous_syndrome>
-* Don't switch to gas with higher content of Nitrox warning - <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
-* [Oxygen toxicity](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater) (CNS/OTU)
-* See also Options - Gases to define maximum narcotic depth and oxygen toxicity
-
-TODO example of air deep dive!
-> We don't recommend deep dives on AIR!
-> You should always use Trimix for depths bellow maximum narcotic depth!
-
-#### Decompression gas selection
-
-TODO
-
-* Why we don't recommend to select gas with higher nitrogen content? <https://en.wikipedia.org/wiki/Isobaric_counterdiffusion>
-* Why we always select gas with higher oxygen content?
+* Keep in mind also [High pressure nervous syndrome](https://en.wikipedia.org/wiki/High-pressure_nervous_syndrome) (HPNS)
+* Because of high amount of oxygen consumed during deep dives, watch your [Oxygen toxicity](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater) (CNS/OTU)
 
 ## Options
 
@@ -131,7 +131,7 @@ Which values to apply? Here are recommended values explained:
 
 ### Gases
 
-* `Maximum narcotic depth` [m]: Limits, at which depth gas mixture is considered to be narcotic. Exceeding this depth means the risk of narcosis significantly increases. Default value is 30 meters. Increasing this values allows you to use also nitrox mixes to higher depth, which is not recommended. See also [Equivalent narcotic depth](https://en.wikipedia.org/wiki/Equivalent_narcotic_depth)
+* `Maximum narcotic depth` [m]: Limits, at which depth gas mixture is considered to be narcotic. Exceeding this depth means the risk of narcosis significantly increases. Default value is 30 meters. Increasing this values allows you to use also nitrox mixes to higher depth, which is not recommended.
 * `Is oxygen narcotic`: If enabled (default), counts also oxygen as narcotic gas, otherwise only nitrogen is considered to be narcotic. Most agencies count both oxygen and nitrogen as narcotic gases. Disabling this option allows to you to use gases deeper, but is less safer.
 
 ### Stops
@@ -185,7 +185,7 @@ In case of any issue with the plan, Notification messages are shown bellow the d
 | --- | --- | --- |
 | Not enough gas | Easy, right? | Provide more tanks, use larger tank or reduce planned depth or duration |
 | High ppO2 | High content of oxygen increase risk of oxygen toxicity which may cause convulsions, drowning or dead | Use gas with lower oxygen content or reduce planned depth |
-| Low ppO2 | At that point the gas is hypoxic and may cause drowning or dead | Use gas with higher oxygen content |
+| Low ppO2 | At that point the gas is hypoxic and may cause drowning or dead, in case partial pressure of oxygen is bellow 0.18 | Use gas with higher oxygen content at these depths |
 | High ascent speed | User defined part of the dive with high risk of micro-bubbles which cause higher risk of DCS | Enlarge the ascent duration |
 | High descent speed | Higher risk of ear (or other cavities) barotrauma | Enlarge the descent duration |
 | Broken ceiling | In user defined part of the dive profile you reach lower depth than current ceiling, which increases risk of DCS | Fix the profile, so always stay bellow the ceiling |
@@ -309,8 +309,8 @@ ppO2 = 3.2 * 0.5 = 1.6 bar
 You can calculate one fo these values by providing the remaining two to answer following questions:
 
 * `MOD`: What is the maximum operational depth (MOD) for given gas? This question considers only oxygen toxicity. Exceeding the MOD means there is higher risk of oxygen toxicity. It doesn't take into the account the nitrogen narcotic effect.
-* `Best mix`: What is the best mix at given depth? To able use as much as oxygen to given ppO2 limit at planned depth.
-* `ppO2`: What is the current partial pressure when breathing the gas at given depth? Always know your partial pressure, so you know limits of your gas. This calculation can be ommited in case of using standard gases, which are defined for each depth range in safe ppO2 limit. Standard gases are used by training agencies like GUE, UTD or ISE.
+* `Best mix`: What is the best mix at given depth? To able use as much as oxygen to given ppO2 limit at planned depth by reducing the narcotic effect of nitrogen. This value applies only to nitrox mixture in simple view.
+* `ppO2`: What is the current partial pressure when breathing the gas at given depth? Always know your partial pressure, so you know limits of your gas. This calculation can be omitted in case of using standard gases, which are defined for each depth range in safe ppO2 limit. Standard gases are used by training agencies like GUE, UTD or ISE.
 
 > Even you can use Air at depths higher than 30 meters, there is still narcotic effect which increases for most people in depths bellow 30 meters. For such depths gases replacing nitrogen by helium like Trimix should be used.
 

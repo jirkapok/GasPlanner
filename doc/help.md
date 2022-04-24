@@ -63,14 +63,18 @@ To be able distinguish the content, we call the gases using only its oxygen and 
 
 * `MOD`: Maximum depth defined by its oxygen toxicity. Exceeding this depth increases risks, which may cause drowning or dead. The value is usually limited by maximum partial pressure of oxygen (See nitrox calculator). E.g. 25/25 has MOD 46 meters for ppO2 1.4.
 * `Minimum ppO2`: If the partial pressure of O2 is low there is not enough oxygen for the body. We call such gas hypoxic. This happens usually at low depths 0 - 10 meters. Therefore we generate low ppO2 warning. It is usually true for gases targeting highest depths with low oxygen content and high helium content like 12/60 etc. In such case you need add travel gas to your plan to cover low depths. This depth is calculated the same way as MOD. E.g. 15/55 has minimum usable depth 2 meters defined by minimal ppO2 .18. This value can't be configured.
-* `Equivalent narcotic depth` (END): Depth at which the gas mixture is equivalent to breathing air. The narcosis has similar effect like drinking alcohol. Nitrox mixtures contain always only oxygen and nitrogen and both are usually considered as narcotic. Exceeding the END increases risk of the narcosis and therefore it is recommended to replace some part of the mix with helium. Recommended maximum value is 30 meters. This value can be configured in Gases section in Options. See also wiki [Equivalent narcotic depth](https://en.wikipedia.org/wiki/Equivalent_narcotic_depth)
+* `Equivalent narcotic depth` (END): Depth at which the gas mixture is equivalent to breathing air. The narcosis has similar effect like drinking alcohol. Nitrox mixtures contain always only oxygen and nitrogen and both are usually considered as narcotic. Exceeding the END increases risk of the narcosis and therefore it is recommended to replace some part of the mix with helium. Recommended maximum value is 30 meters. This value can be configured in Gases section in Options. See also wiki [Equivalent narcotic depth](https://en.wikipedia.org/wiki/Equivalent_narcotic_depth).
+* `Maximum narcotic depth` (MND): Is calculated as a depth at which you reach your limit for equivalent narcotic depth. Usually you want to keep your planned depth below this value.
+
+We choose lower depth from MND and MOD as maximum depth for the gas mixture.
 
 ```
-Example: You plan dive to 45 meters and consider Air narcotic for depths below 30 meters and usable gas in range 0.18 - 1.4 ppO2. Team selects Trimix 21/35 as an option.
+Example: You plan a dive to 45 meters (5.5 bar) and consider Air narcotic for depths below 30 meters (4 bar) and usable gas in range 0.18 - 1.4 ppO2. Team selects Trimix 21/35 as an option.
 Minimum depth = Minimum ppO2 / oxygen fraction = 0.18 / 0.21 = 0.86 < 1 bar i.e. up to the surface
-Maximum depth = Maximum ppO2 / oxygen fraction = 1.4 / 0.21 = 6.6 bar => 56 meters
-Equivalent narcotic depth = (1 - Helium fraction) * depth = 0.65 * 5.5 = 2.58 bar => 25.6 meters
-Result selected gas is good choice for target depth 45 meters.
+MOD = Maximum ppO2 / oxygen fraction = 1.4 / 0.21 = 6.6 bar => 56 meters
+Equivalent narcotic depth = (1 - Helium fraction) * depth = 0.65 * 5.5 = 3.58 bar => 25.8 meters
+Maximum narcotic depth = depth limit / (1 - Helium fraction) = 4 / 0.65 = 6.15 bar => 51.5 meters
+Result: Selected gas is good choice for target depth 45 meters, because its range is 0 - 51.5 m.
 ```
 
 General recommendations when planning deep dives:

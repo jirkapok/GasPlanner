@@ -26,8 +26,8 @@ describe('Gases', () => {
             });
         });
 
-        describe('Narcotic depth', () => {
-            it('0 m in fresh water for Trimix 10/70', () => {
+        describe('END - Only Nitrogen narcotic', () => {
+            it('8 m in fresh water for Trimix 10/70', () => {
                 const end = StandardGases.trimix1070.end(4, false);
                 expect(end).toBeCloseTo(0.8, 2);
             });
@@ -41,22 +41,56 @@ describe('Gases', () => {
                 const end = StandardGases.ean50.end(4, false);
                 expect(end).toBeCloseTo(2, 2);
             });
+        });
 
-            describe('Oxygen narcotic', () => {
-                it('2 m in fresh water for Trimix 10/70', () => {
-                    const end = StandardGases.trimix1070.end(4, true);
-                    expect(end).toBeCloseTo(1.2, 2);
-                });
+        describe('END - Oxygen narcotic', () => {
+            it('2 m in fresh water for Trimix 10/70', () => {
+                const end = StandardGases.trimix1070.end(4, true);
+                expect(end).toBeCloseTo(1.2, 2);
+            });
 
-                it('12 m with 18/45 trimix', () => {
-                    const end = StandardGases.trimix1845.end(4, true);
-                    expect(end).toBeCloseTo(2.2, 2);
-                });
+            it('12 m with 18/45 trimix', () => {
+                const end = StandardGases.trimix1845.end(4, true);
+                expect(end).toBeCloseTo(2.2, 2);
+            });
 
-                it('30 m with Ean50', () => {
-                    const end = StandardGases.ean50.end(4, true);
-                    expect(end).toBeCloseTo(4, 2);
-                });
+            it('30 m with Ean50', () => {
+                const end = StandardGases.ean50.end(4, true);
+                expect(end).toBeCloseTo(4, 2);
+            });
+        });
+
+        describe('MND - Only Nitrogen narcotic', () => {
+            it('30 m in fresh water for Trimix 10/70', () => {
+                const end = StandardGases.trimix1070.mnd(0.8, false);
+                expect(end).toBeCloseTo(4, 2);
+            });
+
+            it('30 m with 18/45 trimix', () => {
+                const end = StandardGases.trimix1845.mnd(1.48, false);
+                expect(end).toBeCloseTo(4, 2);
+            });
+
+            it('21 m with Ean50', () => {
+                const end = StandardGases.ean50.mnd(2, false);
+                expect(end).toBeCloseTo(4, 2);
+            });
+        });
+
+        describe('MND - Oxygen narcotic', () => {
+            it('30 m for 2 m in fresh water for Trimix 10/70', () => {
+                const end = StandardGases.trimix1070.mnd(1.2, true);
+                expect(end).toBeCloseTo(4, 2);
+            });
+
+            it('30m for 12 m with 18/45 trimix', () => {
+                const end = StandardGases.trimix1845.mnd(2.2, true);
+                expect(end).toBeCloseTo(4, 2);
+            });
+
+            it('30 m for 30 m with Ean50', () => {
+                const end = StandardGases.ean50.mnd(4, true);
+                expect(end).toBeCloseTo(4, 2);
             });
         });
 

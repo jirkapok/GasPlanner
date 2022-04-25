@@ -172,6 +172,7 @@ export class GasMixtures {
 
     /**
     * Calculates equivalent air depth for given nitrox gas mix.
+    * https://en.wikipedia.org/wiki/Equivalent_air_depth
     *
     * @param fO2 - Fraction of Oxygen in gas mix (0-1).
     * @param depth - Current depth in bars.
@@ -184,19 +185,37 @@ export class GasMixtures {
     }
 
     /**
-     * Calculates equivalent narcotic depth, assuming both nitrogen and oxygen as narcotic.
-     * Also called maximum narcotic depth.
+     * Calculates equivalent narcotic depth as the depth which would produce the same narcotic effect when breathing air.
+     * Define which gas (nitrogen or oxygen) is narcotic by setting is part to 0.
      * https://en.wikipedia.org/wiki/Equivalent_narcotic_depth
+     * See also MND.
      *
-     * @param depth Depth in bars, can be also used as maximum narcotic depth as air.
+     * @param currentDepth Current depth in bars for which you want to calculate the end.
      * @param fN2 Fraction of nitrogen in gas mix (0-1).
      * @param fO2 Fraction of oxygen in gas mix (0-1).
      * @returns Depth in bars.
      */
-    public static end(depth: number, fN2: number, fO2: number = 0): number {
+    public static end(currentDepth: number, fN2: number, fO2: number = 0): number {
         // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
-        const narcIndex = fO2 + fN2;
-        return depth * narcIndex;
+        const narcIndex = this.narcoticIndex(fO2, fN2);
+        return currentDepth * narcIndex;
+    }
+
+    /**
+     * Calculates maximum depth, at which the narcotic effect corresponds to the given narcotic depth.
+     * Define which gas (nitrogen or oxygen) is narcotic by setting is part to 0.
+     * Also called maximum narcotic depth.
+     * Sea also END.
+     *
+     * @param narcoticDepth END in bars for which you want to calculate the mnd.
+     * @param fN2 Fraction of nitrogen in gas mix (0-1).
+     * @param fO2 Fraction of oxygen in gas mix (0-1).
+     * @returns Depth in bars.
+     */
+    public static mnd(narcoticDepth: number, fN2: number, fO2: number = 0): number {
+        // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
+        const narcIndex = this.narcoticIndex(fO2, fN2);
+        return narcoticDepth / narcIndex;
     }
 
     /**
@@ -217,6 +236,10 @@ export class GasMixtures {
         }
 
         return bars;
+    }
+
+    private static narcoticIndex(fN2: number, fO2: number = 0): number {
+        return fO2 + fN2;
     }
 }
 
@@ -274,15 +297,27 @@ export class Gas {
     }
 
     /**
-     * Calculates equivalent narcotic depth.
+     * Calculates equivalent narcotic depth as the depth which would produce the same narcotic effect when breathing air.
      *
-     * @param depth Depth in bars.
+     * @param currentDepth Current depth in bars for which you want to calculate the end.
      * @param oxygenNarcotic True, if oxygen is considered narcotic, otherwise false.
      * @returns Depth in bars.
      */
-    public end(depth: number, oxygenNarcotic: boolean): number {
+    public end(currentDepth: number, oxygenNarcotic: boolean): number {
         const fO2 = oxygenNarcotic ? this._fO2 : 0;
-        return GasMixtures.end(depth, this.fN2, fO2);
+        return GasMixtures.end(currentDepth, this.fN2, fO2);
+    }
+
+    /**
+     * Calculates maximum depth, at which the narcotic effect corresponds to the given narcotic depth.
+     *
+     * @param narcoticDepth END in bars for which you want to calculate the mnd.
+     * @param oxygenNarcotic True, if oxygen is considered narcotic, otherwise false.
+     * @returns Depth in bars.
+     */
+    public mnd(narcoticDepth: number, oxygenNarcotic: boolean): number {
+        const fO2 = oxygenNarcotic ? this._fO2 : 0;
+        return GasMixtures.mnd(narcoticDepth, this.fN2, fO2);
     }
 
     /**

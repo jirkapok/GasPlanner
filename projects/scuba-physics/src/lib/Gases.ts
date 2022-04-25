@@ -426,7 +426,7 @@ export class StandardGases {
         ['18/45', StandardGases.trimix1845],
         ['15/55', StandardGases.trimix1555],
         ['12/60', StandardGases.trimix1260],
-        ['10/75', StandardGases.trimix1070],
+        ['10/70', StandardGases.trimix1070],
     ]);
 
     /**

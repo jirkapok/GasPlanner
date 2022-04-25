@@ -90,7 +90,7 @@ class EventsContext {
     }
 
     /** For depth in bars calculates the current equivalent narcotic depth in bars */
-    public gasMnd(depth: number): number {
+    public gasEnd(depth: number): number {
         const gas = this.current.gas;
         const oxygenNarcotic = this.options.oxygenNarcotic;
         return gas.end(depth, oxygenNarcotic);
@@ -246,20 +246,20 @@ export class ProfileEvents {
     private static addMndExceeded(context: EventsContext, pressureSegment: PressureSegment): void {
         const current = context.current;
         // we need to check both start and end, because next segment may use another gas
-        const startMnd = context.gasMnd(pressureSegment.startDepth);
+        const startEnd = context.gasEnd(pressureSegment.startDepth);
 
-        if (context.maxMnd < startMnd  && context.fixedMnd) {
+        if (context.maxMnd < startEnd  && context.fixedMnd) {
             this.addMndEvent(context, context.elapsed, current.startDepth);
         }
 
-        const endMnd = context.gasMnd(pressureSegment.endDepth);
-        if (context.maxMnd < endMnd && context.fixedMnd) {
+        const endEnd = context.gasEnd(pressureSegment.endDepth);
+        if (context.maxMnd < endEnd && context.fixedMnd) {
             const timeStamp = context.elapsed + current.duration;
             this.addMndEvent(context, timeStamp, current.endDepth);
         }
 
         // we can add the event multiple times, only after it is fixed
-        context.fixedMnd = endMnd <= context.maxMnd;
+        context.fixedMnd = endEnd <= context.maxMnd;
     }
 
     private static addMndEvent(context: EventsContext, timeStamp: number, depth: number): void {

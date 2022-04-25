@@ -375,7 +375,7 @@ export class StandardGases {
     /** 0 - 62.2 m */
     public static readonly trimix1845 = new Gas(0.18, 0.45);
 
-    // Hypooxic
+    // Hypoxic
 
     /** 2 - 76.6 m */
     public static readonly trimix1555 = new Gas(0.15, 0.55);

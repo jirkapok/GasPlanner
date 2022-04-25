@@ -454,10 +454,49 @@ describe('Buhlmann Algorithm', () => {
             });
         });
 
+        describe('Trimix hypoxic', () => {
+            it('12/60 is used up to the surface, if no better gas is found', () => {
+                const gases = new Gases();
+                gases.add(StandardGases.trimix1260);
+
+                const segments = new Segments();
+                segments.add(0, 75, StandardGases.trimix1260, 5 * Time.oneMinute);
+                segments.addFlat(75, StandardGases.trimix1260, 5 * Time.oneMinute);
+
+                options.roundStopsToMinutes = true;
+                const planText = calculatePlan(gases, segments);
+
+                const expectedPlan = '0,75,300; 75,75,300; 75,27,288; 27,27,60; 27,24,18; 24,24,60; 24,21,18; ' +
+                    '21,21,120; 21,18,18; 18,18,180; 18,15,18; 15,15,180; 15,12,18; 12,12,360; ' +
+                    '12,9,18; 9,9,660; 9,6,18; 6,6,1440; 6,3,18; 3,3,4020; 3,0,18;';
+                expect(planText).toBe(expectedPlan);
+            });
+
+            it('75 m deep dive with multiple deco gases', () => {
+                const gases = new Gases();
+                gases.add(StandardGases.trimix1260);
+                gases.add(StandardGases.trimix3525);
+                gases.add(new Gas(0.5, 0.2));
+                gases.add(StandardGases.oxygen);
+
+                const segments = new Segments();
+                segments.add(0, 10, StandardGases.trimix3525, 1 * Time.oneMinute);
+                segments.add(10, 75, StandardGases.trimix1260, 5 * Time.oneMinute);
+                segments.addFlat(75, StandardGases.trimix1260, 5 * Time.oneMinute);
+
+                options.roundStopsToMinutes = true;
+                const planText = calculatePlan(gases, segments);
+
+                const expectedPlan = '0,10,60; 10,75,300; 75,75,300; 75,36,234; 36,36,60; 36,21,90; 21,21,60; ' +
+                    '21,18,18; 18,18,60; 18,15,18; 15,15,60; 15,12,18; 12,12,120; ' +
+                    '12,9,18; 9,9,240; 9,6,18; 6,6,240; 6,3,18; 3,3,600; 3,0,18;';
+                expect(planText).toBe(expectedPlan);
+            });
+        });
+
         // TODO add algorithm test cases:
         // A: where deco is increased even during ascent <= do we have profile for this use case?
         // Trimix
-        // E: Hypooxic trimix usage
-        // F: Gases: 18/45, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
+        // F: Gases: 12/60, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
     });
 });

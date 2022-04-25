@@ -105,7 +105,7 @@ describe('Gases', () => {
                 expect(ceiling).toBe(freshWaterConverter.surfacePressure);
             });
 
-            it('Hypooxic Trimix 10/70 in fresh water to 8 m', () => {
+            it('Hypoxic Trimix 10/70 in fresh water to 8 m', () => {
                 let ceiling = StandardGases.trimix1070.ceiling(freshWaterConverter.surfacePressure);
                 ceiling = Math.round(ceiling * 100) / 100;
                 expect(ceiling).toBeCloseTo(1.82, 2);

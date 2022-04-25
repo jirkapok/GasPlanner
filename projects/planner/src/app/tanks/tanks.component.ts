@@ -23,7 +23,6 @@ export class TanksComponent {
         this.diver = this.planner.diver;
         this.allNames = StandardGases.allNames();
         this.nitroxNames = StandardGases.nitroxNames();
-        // TODO adding two gases oxygen and 12/60 causes the calculation to fail
     }
 
     public get tanks(): Tank[] {

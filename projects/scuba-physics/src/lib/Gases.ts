@@ -3,8 +3,8 @@ import { Event, EventsFactory } from './Profile';
 import { Tank } from './Tanks';
 
 /**
- * Returns list of messages if gases collection is covers all depths.
- * I.e. we need to cover all depths by breathable gas up to surface.
+ * The only issue with gases is, that there is no gas.
+ * If the depths aren't covered by gases, than the last selected gas is used, even it results in other events.
  * Deco gases are preferred for decompression, they don't have to be better.
  */
 export class GasesValidator {
@@ -21,27 +21,7 @@ export class GasesValidator {
             return events;
         }
 
-        const allGases = gases.all;
-        this.validateAllDepths(allGases, options, surfacePressure, events);
         return events;
-    }
-
-    private static validateAllDepths(gases: Gas[], options: GasOptions, surfacePressure: number, events: Event[]) {
-        // we don't have to check gas with ceiling to surface, because it is covered by first descent segment.
-        gases.sort((a, b) => b.mod(options.maxPpO2) - a.mod(options.maxPpO2));
-
-        for (let index = 0; index < gases.length - 1; index++) {
-            if (gases.length > index) {
-                const nextGas = gases[index + 1];
-                const ceiling = gases[index].ceiling(surfacePressure);
-                const nextMod = nextGas.mod(options.maxPpO2);
-                if (nextMod < ceiling) {
-                    const error = EventsFactory.createError('Gases don`t cover all depths.');
-                    events.push(error);
-                    break;
-                }
-            }
-        }
     }
 }
 

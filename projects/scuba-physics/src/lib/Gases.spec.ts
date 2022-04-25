@@ -332,36 +332,6 @@ describe('Gases', () => {
             const messages = GasesValidator.validate(new Gases(), options, surfacePressure);
             expect(messages.length).toBe(1);
         });
-
-        it('Only one gas', () => {
-            const gases = new Gases();
-            gases.add(StandardGases.air);
-            const messages = GasesValidator.validate(gases, options, surfacePressure);
-            expect(messages.length).toBe(0);
-        });
-
-        it('No gas to surface', () => {
-            const gases = new Gases();
-            gases.add(StandardGases.trimix1070);
-            const messages = GasesValidator.validate(gases, options, surfacePressure);
-            expect(messages.length).toBe(0);
-        });
-
-        it('Gases don`t cover all depths', () => {
-            const gases = new Gases();
-            gases.add(StandardGases.trimix1070);
-            gases.add(StandardGases.oxygen);
-            const messages = GasesValidator.validate(gases, options, surfacePressure);
-            expect(messages.length).toBe(1);
-        });
-
-        it('Multiple gases for the same depth', () => {
-            const gases = new Gases();
-            gases.add(StandardGases.air);
-            gases.add(StandardGases.ean50);
-            const messages = GasesValidator.validate(gases, options, surfacePressure);
-            expect(messages.length).toBe(0);
-        });
     });
 
     describe('Gas partial pressures', () => {

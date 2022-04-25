@@ -1,0 +1,15 @@
+# Application settings
+
+## Load/Save defaults
+
+Used to save current settings to be able use them in later planning. This stores the content of dive planning including settings to your browser cookies in your local computer.
+
+## Edit
+
+Here you can find default options used when you open the application and plan new dive. Changing the values apply them immediately to the current plan.
+
+* `SAC`: Provide your own observed average consumption. If you don't know use RMV/SAC calculator to get this value. Defaults to 20 liters/minute. See rock bottom calculation to see how this value is used for emergency ascent.
+* `Maximum ppO2`: Used for bottom time of the profile. Most recreational agencies recommend 1.4, but even lower value should be considered.
+* `Maximum deco ppO2`: Used only in case of calculated ascent or in case of rock bottom calculation to choose best decompression mix. For decompression 1.6 is common recommended value.
+
+> In both cases the ppO2 value should never be higher than 1.6 for recreational divers.

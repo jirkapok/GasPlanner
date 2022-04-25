@@ -78,7 +78,7 @@
                 </div>
                 <div class="pt-0">
                     <small class="form-text text-muted">SAC: {{gasSac(tank) | number:'1.0-2'}} bar/min</small>
-                    <app-gaslabel [gas]="tank" class="text-nowrap float-end"></app-gaslabel>
+                    <app-gaslabel [tank]="tank" class="text-nowrap float-end"></app-gaslabel>
                 </div>
             </td>
             <td class="align-top">
@@ -122,7 +122,7 @@
                 </div>
             </div>
         </div>
-        <app-gaslabel [gas]="firstTank"></app-gaslabel>
+        <app-gaslabel [tank]="firstTank"></app-gaslabel>
         <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number 21-100%</div>
       </div>
   </div>

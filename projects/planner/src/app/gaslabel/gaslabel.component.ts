@@ -10,17 +10,28 @@ import { Tank } from 'scuba-physics';
 export class GaslabelComponent {
 
     @Input()
-    public gas: Tank = Tank.createDefault();
+    public tank: Tank = Tank.createDefault();
 
     @Input()
     public showName = true;
 
     public get gasMod(): number {
-        return this.planer.modForGas(this.gas);
+        return this.planer.modForGas(this.tank);
+    }
+
+    public get gasMnd(): number {
+        const maxEnd = this.planer.options.maxEND;
+        const oxygenNarcotic = this.planer.options.oxygenNarcotic;
+        const mnd = this.tank.gas.mnd(maxEnd, oxygenNarcotic);
+        return mnd;
+    }
+
+    public get isTrimix(): boolean {
+        return this.tank.he > 0;
     }
 
     public get gasDecoMod(): number {
-        return this.planer.switchDepth(this.gas);
+        return this.planer.switchDepth(this.tank);
     }
 
     constructor(private planer: PlannerService) { }

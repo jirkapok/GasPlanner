@@ -400,13 +400,13 @@ export class StandardGases {
         ['EAN38', StandardGases.ean38],
         ['EAN50', StandardGases.ean50],
         [StandardGases.oxygenName, StandardGases.oxygen],
-        ['35/25', StandardGases.trimix3525],
-        ['25/25', StandardGases.trimix2525],
-        ['21/35', StandardGases.trimix2135],
-        ['18/45', StandardGases.trimix1845],
-        ['15/55', StandardGases.trimix1555],
-        ['12/60', StandardGases.trimix1260],
-        ['10/70', StandardGases.trimix1070],
+        ['Trimix 35/25', StandardGases.trimix3525],
+        ['Trimix 25/25', StandardGases.trimix2525],
+        ['Trimix 21/35', StandardGases.trimix2135],
+        ['Trimix 18/45', StandardGases.trimix1845],
+        ['Trimix 15/55', StandardGases.trimix1555],
+        ['Trimix 12/60', StandardGases.trimix1260],
+        ['Trimix 10/70', StandardGases.trimix1070],
     ]);
 
     /**
@@ -450,7 +450,7 @@ export class StandardGases {
             return 'EAN' + percentO2.toString();
         }
 
-        return percentO2.toString() + '/' + percentHe.toString();
+        return 'Trimix ' + percentO2.toString() + '/' + percentHe.toString();
     }
 
     /** Case sensitive search. If nothing found returns null */

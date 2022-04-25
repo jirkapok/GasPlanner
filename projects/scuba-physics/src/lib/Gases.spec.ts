@@ -150,7 +150,7 @@ describe('Gases', () => {
 
             it('Trimix 10/70', () => {
                 const found = StandardGases.nameFor(0.1, 0.7);
-                expect(found).toBe('10/70');
+                expect(found).toBe('Trimix 10/70');
             });
 
             it('0% oxygen = empty name', () => {
@@ -186,6 +186,11 @@ describe('Gases', () => {
             });
 
             it('Name Trimix 10/70', () => {
+                const found = StandardGases.byName('10/70');
+                expect(found).toEqual(StandardGases.trimix1070);
+            });
+
+            it('Name 10/70', () => {
                 const found = StandardGases.byName('10/70');
                 expect(found).toEqual(StandardGases.trimix1070);
             });

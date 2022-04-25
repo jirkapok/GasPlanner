@@ -296,7 +296,7 @@ describe('Profile Events', () => {
     });
 
     describe('Switch to higher N2 on deco dive', () => {
-        it('from 18/45 to Ean50', () => {
+        xit('from 18/45 to Ean50', () => {
             const segments = new Segments();
             segments.add(30, 21, StandardGases.trimix1845, Time.oneMinute * 3);
             segments.add(21, 21, StandardGases.ean50, Time.oneMinute);

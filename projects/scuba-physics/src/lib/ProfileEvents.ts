@@ -234,11 +234,16 @@ export class ProfileEvents {
         const current = context.current;
         const previous = context.previous;
 
+        // Consider implement/fix wrong IDC calculation:
+        // see https://scubaengineer.com/isobaric_counter_diffusion.htm
+        // https://gue.com/blog/isobaric-counterdiffusion-in-the-real-world/
+        // http://www.advanceddivermagazine.com/articles/icd/icd.html
+        // https://thetheoreticaldiver.org/wordpress/index.php/2018/01/24/isobaric-counter-diffusion-criteria/
         if (context.switchingGas && previous) {
             // consider identify deco dive from deco stops, instead from ceilings.
             if (previous.gas.fN2 < current.gas.fN2 && Ceiling.isDecoDive(ceilings)) {
-                const event = EventsFactory.createSwitchToHigherN2(context.elapsed, current.startDepth, current.gas);
-                context.events.add(event);
+                // const event = EventsFactory.createSwitchToHigherN2(context.elapsed, current.startDepth, current.gas);
+                // context.events.add(event);
             }
         }
     }

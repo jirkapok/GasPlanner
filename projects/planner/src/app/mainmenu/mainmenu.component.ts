@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { Urls } from '../shared/navigation.service';
 import { PreferencesService } from '../shared/preferences.service';
 
 @Component({
@@ -12,6 +13,10 @@ export class MainMenuComponent {
     private deferredPrompt: any;
 
     constructor(private preferences: PreferencesService) { }
+
+    public get mainHelpUrl(): string {
+        return Urls.mainHelpUrl;
+    }
 
     @HostListener('window:beforeinstallprompt', ['$event'])
     public onbeforeinstallprompt(e: Event): void {

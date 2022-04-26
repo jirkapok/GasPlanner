@@ -400,9 +400,9 @@ export class StandardGases {
         ['EAN38', StandardGases.ean38],
         ['EAN50', StandardGases.ean50],
         [StandardGases.oxygenName, StandardGases.oxygen],
-        ['Trimix 35/25', StandardGases.trimix3525],
-        ['Trimix 25/25', StandardGases.trimix2525],
-        ['Trimix 21/35', StandardGases.trimix2135],
+        ['Helitrox 35/25', StandardGases.trimix3525],
+        ['Helitrox 25/25', StandardGases.trimix2525],
+        ['Helitrox 21/35', StandardGases.trimix2135],
         ['Trimix 18/45', StandardGases.trimix1845],
         ['Trimix 15/55', StandardGases.trimix1555],
         ['Trimix 12/60', StandardGases.trimix1260],
@@ -429,6 +429,7 @@ export class StandardGases {
      * @param fHe partial pressure of He in range 0-1.
      */
     public static nameFor(fO2: number, fHe: number = 0): string {
+        const simpleO2InAir = 21;
         // not sure, if this rounding is acceptable for the UI
         const percentO2 = Math.round(fO2 * 100);
         const percentHe = Math.round(fHe * 100);
@@ -443,14 +444,15 @@ export class StandardGases {
                 return StandardGases.oxygenName;
             }
 
-            if (percentO2 === 21) {
+            if (percentO2 === simpleO2InAir) {
                 return StandardGases.airName;
             }
 
             return 'EAN' + percentO2.toString();
         }
 
-        return 'Trimix ' + percentO2.toString() + '/' + percentHe.toString();
+        const prefix = percentO2 >= simpleO2InAir ? 'Helitrox' : 'Trimix';
+        return `${prefix} ${percentO2.toString()}/${percentHe.toString()}`;
     }
 
     /** Case sensitive search. If nothing found returns null */

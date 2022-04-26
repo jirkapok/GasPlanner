@@ -153,6 +153,11 @@ describe('Gases', () => {
                 expect(found).toBe('Trimix 10/70');
             });
 
+            it('Helitrox 21/35', () => {
+                const found = StandardGases.nameFor(0.21, 0.35);
+                expect(found).toBe('Helitrox 21/35');
+            });
+
             it('0% oxygen = empty name', () => {
                 const found = StandardGases.nameFor(0);
                 expect(found).toBe('');

@@ -236,7 +236,9 @@ export class ProfileEvents {
 
         // Consider implement/fix wrong IDC calculation:
         // see https://scubaengineer.com/isobaric_counter_diffusion.htm
+        // https://gue.com/blog/how-two-tech-agencies-address-isobaric-counterdiffusion/
         // https://gue.com/blog/isobaric-counterdiffusion-in-the-real-world/
+        // https://gue.com/blog/wp-content/uploads/2020/05/WienkeICD-2004-08SourcesCDI-1.pdf
         // http://www.advanceddivermagazine.com/articles/icd/icd.html
         // https://thetheoreticaldiver.org/wordpress/index.php/2018/01/24/isobaric-counter-diffusion-criteria/
         if (context.switchingGas && previous) {

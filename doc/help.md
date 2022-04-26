@@ -22,6 +22,7 @@ To be able calculate dive profile you need to enter Gases used during the dive, 
 
 * Plan
   * [Tanks and depths](./plan.md)
+  * [Standard gases](./standard_gases.md)
   * [Options](./plan_options.md)
   * [Results](./results.md)
 * [Application settings](./settings.md)

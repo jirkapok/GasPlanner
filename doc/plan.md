@@ -37,8 +37,6 @@ Example: Maxim deco ppO2 is 1.6, for bottom gas is maximum ppO2 only 1.4. For Ea
 | Normooxic | 18 - 21 % | Air |
 | Hyperoxic | > 21 % | EAN50 |
 
-Because you can choose from lot of combinations, we provide list of common gases. Some agencies (GUE, UTD) limit  number of used gases and promote their list of mixes called See [Standard gases](./standard_gases.md). Standardization of gases simplifies logistic, team planning and prevents mistakes during dive. Even you are able to define your custom mixture, because of practical reasons it is preferred to use the same gases within the team over custom gases or different gases for each diver.
-
 > We recommend to choose from one of the commonly used gases and use the same gases for all team members! See [Standard gases](./standard_gases.md)
 
 To be able distinguish the content, we call the gases using only its oxygen and helium parts. E.g. Trimix 18/48 consists of 18 % oxygen, 45% of helium and the rest is nitrogen. To be able select correct mix, we need to know depth range at which the gas can be used. The range is limited by:

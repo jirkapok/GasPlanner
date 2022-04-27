@@ -14,9 +14,13 @@ Following list of features and improvements ordered by priority is under develop
     * Fix RMV/SAC calculator based on Nominal volume
     * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
-  * Meter: <https://en.wikipedia.org/wiki/Metre_sea_water>
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
+* Add no deco table
 * Add gas depth range calculator
+* Add CNS and OTU calculations
+  * <https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf>
+  * <https://gue.com/blog/pulmonary-oxygen-toxicity-expanding-our-understanding-with-two-new-models/>
+  * <https://thetheoreticaldiver.org/wordpress/index.php/tag/oxygen/>
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Events:
   * Add time to the events warning/error messages
@@ -44,13 +48,8 @@ Following list of features and improvements ordered by priority is under develop
     * <https://stackblitz.com/edit/angular-azjfgh?file=src%2Fapp%2Fapp.component.html>
     * <https://stackoverflow.com/questions/53416871/routing-to-static-html-page-in-angular-6>
 * Add option to define repetitive dives
-* Add no deco table
 * Add localization
 * Add all settings as url parameters so user can share the profile using an url (<https://angular.io/guide/router#link-parameters-array>)
-* Add CNS and OTU calculations
-  * <https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf>
-  * <https://gue.com/blog/pulmonary-oxygen-toxicity-expanding-our-understanding-with-two-new-models/>
-  * <https://thetheoreticaldiver.org/wordpress/index.php/tag/oxygen/>
 * Allow user to compare multiple plans side by side
 * Add TRIMIX support and calculator
   * Add air breaks

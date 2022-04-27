@@ -8,7 +8,7 @@
             <div class="form-check form-switch">
                 <input type="checkbox" class="form-check-input" id="isComplex" [checked]="isComplex"
                     (change)="isComplex = !isComplex" mdbCheckbox />
-                <label class="custom-control-label" for="isComplex">Extended</label>
+                <label class="custom-control-label" for="isComplex">Extended (Trimix)</label>
             </div>
         </div>
     </div>
@@ -132,7 +132,7 @@
                 <div class="tab-pane fade" id="conservatism" role="tabpanel" aria-labelledby="conservatism-tab">
                     <div class="col-sm mt-3">
                         <div class="mb-3">
-                            <label for="gfLow" class="form-label">Gradient low: </label>
+                            <label for="gfLow" class="form-label">Gradient low [%]:</label>
                             <div class="input-group gradients-max-width">
                                 <input id="gfLow" name="gfLow" #gfLow="ngModel" [(ngModel)]="plannedGfLow"
                                     class="form-control col-auto" type="number" required [rangeVal]="[10, 100]"
@@ -155,7 +155,7 @@
                                 Needs to be number 10 - 100 lower than gradient high</div>
                         </div>
                         <div class="mb-3">
-                            <label for="gfHigh" class="form-label">Gradient high:</label>
+                            <label for="gfHigh" class="form-label">Gradient high [%]:</label>
                             <input id="gfHigh" name="gfHigh" #gfHigh="ngModel" [(ngModel)]="plannedGfHigh"
                                 class="form-control col-auto" type="number" required [rangeVal]="[10, 100]"
                                 [minVal]="10" [maxVal]="100" step="1" min="10" max="100"

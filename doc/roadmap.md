@@ -9,10 +9,6 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Add TRIMIX support and calculator
-  * Fix layout broken by adding Helium field
-  * Add air breaks
-* Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Add imperial units option
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
     * Fix RMV/SAC calculator based on Nominal volume
@@ -20,6 +16,8 @@ Following list of features and improvements ordered by priority is under develop
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
   * Meter: <https://en.wikipedia.org/wiki/Metre_sea_water>
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
+* Add gas depth range calculator
+* Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Events:
   * Add time to the events warning/error messages
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
@@ -54,3 +52,5 @@ Following list of features and improvements ordered by priority is under develop
   * <https://gue.com/blog/pulmonary-oxygen-toxicity-expanding-our-understanding-with-two-new-models/>
   * <https://thetheoreticaldiver.org/wordpress/index.php/tag/oxygen/>
 * Allow user to compare multiple plans side by side
+* Add TRIMIX support and calculator
+  * Add air breaks

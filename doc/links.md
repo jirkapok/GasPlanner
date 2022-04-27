@@ -26,3 +26,11 @@ At time of development also other implementations are available:
 * <https://github.com/igaponov/deco-model>
 * <https://github.com/oliverjohnstone/npm-buhlmann-ZH-L16>
 * Gas mixture calculator: <https://github.com/eianlei/pydplan>
+
+* Add air breaks
+    * <https://dan.org/alert-diver/article/understanding-oxygen-toxicity/>
+    * Subsurface 12min/6 min. to back gas (first tank), not checking its content
+    * <https://decodoppler.wordpress.com/2012/08/02/air-breaks-what-are-they-and-do-people-take-them-for-the-wrong-reason/>
+    * <https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/>
+    * <https://www.diverite.com/articles/oxygen-toxicity-signs-and-symptoms/>
+    * Diverite and decodopler: 20min./5 min.

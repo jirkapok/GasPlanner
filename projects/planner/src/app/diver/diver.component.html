@@ -1,41 +1,34 @@
-<div class="mt-5">
-  <div class="row">
-    <div class="col-lg-3 col-md-6 mt-3">
-      <div class="card">
-        <div class="card-header">
-            <fa-icon [icon]="icon" class="me-3"></fa-icon>
-            <span>Diver</span>
+<div class="col-lg-3 col-md-6 mt-3">
+    <div class="card">
+    <div class="card-header">
+        <fa-icon [icon]="icon" class="me-3"></fa-icon>
+        <span>Diver</span>
+    </div>
+    <div class="card-body">
+        <div>
+        <label for="sac">Surface air consumption [L/min]:
+            <input [(ngModel)]="diver.rmv" class="form-control" #sac="ngModel" name="sac" id="sac"
+            type="number" required [rangeVal]="[5,90]" [minVal]="5" [maxVal]="90" min="5" max="90" step="1"
+            [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)"/>
+        </label>
+        <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number 5-90 L/min</div>
         </div>
-        <div class="card-body">
-          <div>
-            <label for="sac">Surface air consumption [L/min]:
-              <input [(ngModel)]="diver.rmv" class="form-control" #sac="ngModel" name="sac" id="sac"
-               type="number" required [rangeVal]="[5,90]" [minVal]="5" [maxVal]="90" min="5" max="90" step="1"
-               [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)"/>
-            </label>
-            <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number 5-90 L/min</div>
-          </div>
-          <div>
-            <label for="maxPpO2">Maximum ppO2:
-              <input [(ngModel)]="diver.maxPpO2" class="form-control" #maxPpO2="ngModel" name="maxPpO2" id="maxPpO2"
-              type="number" required [rangeVal]="[.21,3]" [minVal]=".21" [maxVal]="3" min=".21" max="3" step=".1"
-              [class.is-invalid]="maxPpO2.invalid && (maxPpO2.dirty || maxPpO2.touched)"/>
-            </label>
-            <div class="text-danger" *ngIf="maxPpO2.invalid && (maxPpO2.dirty || maxPpO2.touched)">Needs to be number 0.21-3</div>
-          </div>
-          <div>
-            <label for="maxDecoPpO2">Maximum deco ppO2:
-              <input [(ngModel)]="diver.maxDecoPpO2" class="form-control" #maxDecoPpO2="ngModel" name="maxDecoPpO2" id="maxDecoPpO2"
-              type="number" required [rangeVal]="[.21,3]" [minVal]=".21" [maxVal]="3" step=".1" min=".21" max="3"
-              [class.is-invalid]="maxDecoPpO2.invalid && (maxDecoPpO2.dirty || maxDecoPpO2.touched)"/>
-            </label>
-            <div class="text-danger" *ngIf="maxDecoPpO2.invalid && (maxDecoPpO2.dirty || maxDecoPpO2.touched)">Needs to be number 0.21-3</div>
-          </div>
+        <div>
+        <label for="maxPpO2">Maximum ppO2:
+            <input [(ngModel)]="diver.maxPpO2" class="form-control" #maxPpO2="ngModel" name="maxPpO2" id="maxPpO2"
+            type="number" required [rangeVal]="[.21,3]" [minVal]=".21" [maxVal]="3" min=".21" max="3" step=".1"
+            [class.is-invalid]="maxPpO2.invalid && (maxPpO2.dirty || maxPpO2.touched)"/>
+        </label>
+        <div class="text-danger" *ngIf="maxPpO2.invalid && (maxPpO2.dirty || maxPpO2.touched)">Needs to be number 0.21-3</div>
         </div>
-      </div>
-      <div class="form-group mt-2">
-          <button  type="button" class="btn btn-primary" (click)="goBack()">Back</button>
+        <div>
+        <label for="maxDecoPpO2">Maximum deco ppO2:
+            <input [(ngModel)]="diver.maxDecoPpO2" class="form-control" #maxDecoPpO2="ngModel" name="maxDecoPpO2" id="maxDecoPpO2"
+            type="number" required [rangeVal]="[.21,3]" [minVal]=".21" [maxVal]="3" step=".1" min=".21" max="3"
+            [class.is-invalid]="maxDecoPpO2.invalid && (maxDecoPpO2.dirty || maxDecoPpO2.touched)"/>
+        </label>
+        <div class="text-danger" *ngIf="maxDecoPpO2.invalid && (maxDecoPpO2.dirty || maxDecoPpO2.touched)">Needs to be number 0.21-3</div>
         </div>
     </div>
-  </div>
+    </div>
 </div>

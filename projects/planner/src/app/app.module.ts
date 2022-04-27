@@ -25,6 +25,7 @@ import { DepthsComponent } from './depths/depths.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { TankChartComponent } from './tank-chart/tank-chart.component';
+import { AppSettingsComponent } from './app-settings/app-settings.component';
 
 @NgModule({
     declarations: [
@@ -43,7 +44,8 @@ import { TankChartComponent } from './tank-chart/tank-chart.component';
         AboutComponent,
         AppFooterComponent,
         DepthsComponent,
-        TankChartComponent
+        TankChartComponent,
+        AppSettingsComponent
     ],
     imports: [
         BrowserModule,

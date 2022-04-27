@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
-
 import { PlannerService } from '../shared/planner.service';
 import { Diver } from 'scuba-physics';
 
@@ -14,11 +12,7 @@ export class DiverComponent{
     public diver: Diver;
     public icon = faUserCog;
 
-    constructor(private planer: PlannerService, private router: Router) {
+    constructor(private planer: PlannerService) {
         this.diver = this.planer.diver;
-    }
-
-    public async goBack(): Promise<boolean> {
-        return await this.router.navigateByUrl('/');
     }
 }

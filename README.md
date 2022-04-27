@@ -11,7 +11,7 @@ None of the authors, contributors, administrators, or anyone else connected with
 ## Features - Road map
 
 * Open circuit only multi-level dives
-* Multiple nitrox gases/tanks
+* Multiple nitrox and Trimix/Helitrox gases/tanks
 * Decompression calculated using Bühlmann ZHL-16C algorithm
 * Conservatism using Gradient factors
 * Calculation of consumed gas and rock bottom for each tank
@@ -47,5 +47,3 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
-
-## [Links](./doc/links.md)

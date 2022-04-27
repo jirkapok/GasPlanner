@@ -1,5 +1,8 @@
 export interface Units {
     name: string;
+    lengthShortcut: string;
+    pressureShortcut: string;
+    volumeShortcut: string;
     toMeters(length: number): number;
     fromMeters(meters: number): number;
     toBar(pressure: number): number;
@@ -15,6 +18,18 @@ export interface Units {
 export class MetricUnits implements Units {
     public get name(): string {
         return 'Metric';
+    }
+
+    public get lengthShortcut(): string{
+        return 'm';
+    }
+
+    public get pressureShortcut(): string {
+        return 'bar';
+    }
+
+    public get volumeShortcut(): string{
+        return 'l';
     }
 
     public toMeters(length: number): number {
@@ -63,6 +78,18 @@ export class ImperialUnits implements Units {
 
     public get name(): string{
         return 'Imperial';
+    }
+
+    public get lengthShortcut(): string{
+        return 'ft';
+    }
+
+    public get pressureShortcut(): string {
+        return 'psi';
+    }
+
+    public get volumeShortcut(): string{
+        return 'cuft';
     }
 
     public toMeters(length: number): number {

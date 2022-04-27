@@ -4,6 +4,20 @@ import { ImperialUnits, MetricUnits } from './units';
 describe('Metric units', () => {
     const units = new MetricUnits();
 
+    describe('Metric - shortcuts', () => {
+        it('Length is meter', () => {
+            expect(units.lengthShortcut).toBe('m');
+        });
+
+        it('Pressure is bar', () => {
+            expect(units.pressureShortcut).toBe('bar');
+        });
+
+        it('Volume is liter', () => {
+            expect(units.volumeShortcut).toBe('l');
+        });
+    });
+
     describe('Metric - Meters', () => {
         it('To/from meters is precise enough', () => {
             let result = units.toMeters(1);
@@ -91,6 +105,20 @@ describe('Metric units', () => {
 
 describe('Imperial units', () => {
     const units = new ImperialUnits();
+
+    describe('Imperial - shortcuts', () => {
+        it('Length is foot', () => {
+            expect(units.lengthShortcut).toBe('ft');
+        });
+
+        it('Pressure is psi', () => {
+            expect(units.pressureShortcut).toBe('psi');
+        });
+
+        it('Volume is cubic feet', () => {
+            expect(units.volumeShortcut).toBe('cuft');
+        });
+    });
 
     describe('Imperial - feet', () => {
         it('Feet to/from meters is precise enough', () => {

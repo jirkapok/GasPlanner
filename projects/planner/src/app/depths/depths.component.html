@@ -8,11 +8,11 @@
     <div class="mb-3">
         <label for="duration" class="form-label">Bottom time [min]:</label>
         <div class="row row-cols-auto">
-            <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="planDuration" class="form-control ms-3"
+            <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="planDuration" class="form-control ms-3 mt-2"
                 type="number" required [rangeVal]="[1, 1440]" [minVal]="1" [maxVal]="1440" min="1" max="1440" step="1"
                 [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)" />
-            <button type="button" class="btn btn-secondary ms-2" (click)="planner.applyMaxDuration()" *ngIf="showMaxDuration">Max</button>
-            <button type="button" class="btn btn-secondary ms-2" (click)="planner.applyNdlDuration()" *ngIf="planner.ndlValid">No deco</button>
+            <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="planner.applyMaxDuration()" *ngIf="showMaxDuration">Max</button>
+            <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="planner.applyNdlDuration()" *ngIf="planner.ndlValid">No deco</button>
         </div>
         <div><small class="text-muted form-text">No deco limit {{ noDecoTime | number:'1.0-0' }} min</small></div>
         <div class="text-danger form-text" *ngIf="duration.invalid && (duration.dirty || duration.touched)">Needs to be number > 0 min</div>

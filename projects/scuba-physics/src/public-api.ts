@@ -18,3 +18,4 @@ export * from './lib/Tanks';
 export * from './lib/consumption';
 export * from './lib/Diver';
 export * from './lib/Options';
+export * from './lib/units';

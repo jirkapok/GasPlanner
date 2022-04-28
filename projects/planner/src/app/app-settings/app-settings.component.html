@@ -1,8 +1,23 @@
-<div class="mt-5">
-    <div class="row">
-        <app-diver></app-diver>
+<div class="row mt-5">
+    <app-diver class="col col-auto"></app-diver>
+    <div class="col col-auto mt-3">
+        <div class="card">
+            <div class="card-header">
+                <fa-icon [icon]="flagIcon" class="me-3"></fa-icon>
+                <span>Localization</span>
+            </div>
+            <div class="card-body">
+                <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input" id="units" [checked]="units.imperialUnits"
+                        (change)="units.imperialUnits = !units.imperialUnits" mdbCheckbox />
+                    <label class="custom-control-label" for="units" style="width: 200px">{{units.label}} units</label>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+<div class="row">
     <div class="form-group mt-2">
-        <button  type="button" class="btn btn-primary" (click)="goBack()">Back</button>
+        <button type="button" class="btn btn-primary" (click)="goBack()">Back</button>
     </div>
 </div>

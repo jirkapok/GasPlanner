@@ -3,6 +3,7 @@ import { faBatteryHalf, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid
 
 import { PlannerService } from '../shared/planner.service';
 import { StandardGases, Tank, Diver } from 'scuba-physics';
+import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-tanks',
@@ -18,7 +19,7 @@ export class TanksComponent {
     public trashIcon = faTrashAlt;
     private diver: Diver;
 
-    constructor(public planner: PlannerService) {
+    constructor(public planner: PlannerService, public units: UnitConversion) {
         this.firstTank = this.planner.firstTank;
         this.diver = this.planner.diver;
         this.allNames = StandardGases.allNames();

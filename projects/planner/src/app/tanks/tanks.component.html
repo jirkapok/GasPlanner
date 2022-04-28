@@ -10,8 +10,8 @@
             <th></th>
             <th colspan="3">
                 <div class="d-flex flex-row justify-content-around">
-                    <div class="me-1">Size [L]</div>
-                    <div class="mx-1">Pressure [bar]</div>
+                    <div class="me-1">Size [{{units.volume}}]</div>
+                    <div class="mx-1">Pressure [{{units.pressure}}]</div>
                     <div class="ms-1">O2 [%]</div>
                     <div class="ms-1">He [%]</div>
                 </div>
@@ -33,7 +33,7 @@
                             [class.is-invalid]="size.invalid && (size.dirty || size.touched)" />
 
                         <div class="text-danger" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number
-                            1-50 L
+                            1-50 {{units.pressure}}
                         </div>
                     </div>
 
@@ -44,7 +44,7 @@
                             [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)" />
                         <div class="text-danger"
                             *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be
-                            number 30-350 bar</div>
+                            number 30-350 {{units.pressure}}</div>
                     </div>
 
                     <div class="ms-1">
@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number
-                            1-100%</div>
+                            1-100 %</div>
                     </div>
 
                     <div class="mx-1">
@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div class="pt-0">
-                    <small class="form-text text-muted">SAC: {{gasSac(tank) | number:'1.0-2'}} bar/min</small>
+                    <small class="form-text text-muted">SAC: {{gasSac(tank) | number:'1.0-2'}} {{units.pressure}}/min</small>
                     <app-gaslabel [tank]="tank" class="float-end"></app-gaslabel>
                 </div>
             </td>
@@ -92,20 +92,20 @@
   </div>
   <div class="card-body row" *ngIf="!isComplex">
       <div class="mb-3 col-auto">
-        <label for="size" class="form-label">Size [L]:</label>
+        <label for="size" class="form-label">Size [{{units.volume}}]:</label>
         <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control col-auto" type="number" (change)="gasChanged()"
         required [rangeVal]="[1, 50]" [minVal]="1" [maxVal]="50" min="1" max="50" step="1"
         [class.is-invalid]="size.invalid && (size.dirty || size.touched)"/>
-        <small class="form-text text-muted">SAC: {{gasSac(firstTank) | number:'1.0-2'}} bar/min</small>
-        <div class="text-danger form-text" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 L</div>
+        <small class="form-text text-muted">SAC: {{gasSac(firstTank) | number:'1.0-2'}} {{units.pressure}}/min</small>
+        <div class="text-danger form-text" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number 1-50 {{units.pressure}}</div>
 
       </div>
       <div class="mb-3 col-auto">
-        <label for="startPressure" class="form-label">Start pressure [bar]:</label>
+        <label for="startPressure" class="form-label">Start pressure [{{units.pressure}}]:</label>
         <input #startPressure="ngModel" name="startPressure" [(ngModel)]="firstTank.startPressure" class="form-control col-auto" type="number" (change)="gasChanged()"
         required [rangeVal]="[30, 350]" [minVal]="30" [maxVal]="350" min="30" max="350" step="1"
         [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)"/>
-        <div class="text-danger form-text" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number 30-350 bar</div>
+        <div class="text-danger form-text" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number 30-350 {{units.pressure}}</div>
       </div>
       <div class="mb-3 col-auto">
         <label for="gasO2" class="form-label">Percent O2:</label>
@@ -123,7 +123,7 @@
             </div>
         </div>
         <app-gaslabel [tank]="firstTank"></app-gaslabel>
-        <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number 21-100%</div>
+        <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number 21-100 %</div>
       </div>
   </div>
 </div>

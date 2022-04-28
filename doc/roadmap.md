@@ -11,6 +11,7 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add imperial units option
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
+    * Fix range validator messages
     * Fix RMV/SAC calculator based on Nominal volume
     * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)

@@ -10,8 +10,12 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add imperial units option
+  * Fix validator ranges and messages (Nitrox calc, SAC, depths, options, profile, profile chart, dive info)
+  * Fix all value bindings (Nitrox calc, SAC, tanks, depths, options, profile, profile chart, dive info)
+  * Fix depth range inside the algorithm and add test to keep the stops per 10 feet
+  * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
+  * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
-    * Fix range validator messages
     * Fix RMV/SAC calculator based on Nominal volume
     * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
@@ -24,7 +28,7 @@ Following list of features and improvements ordered by priority is under develop
   * <https://thetheoreticaldiver.org/wordpress/index.php/tag/oxygen/>
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Events:
-  * Add time to the events warning/error messages
+  * Add time to all events warning/error messages where it makes sense
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
   * Add explanation how to fix the events
 * UI Tweaks
@@ -49,8 +53,13 @@ Following list of features and improvements ordered by priority is under develop
     * <https://stackblitz.com/edit/angular-azjfgh?file=src%2Fapp%2Fapp.component.html>
     * <https://stackoverflow.com/questions/53416871/routing-to-static-html-page-in-angular-6>
 * Add option to define repetitive dives
-* Add localization
+* Add localizations
 * Add all settings as url parameters so user can share the profile using an url (<https://angular.io/guide/router#link-parameters-array>)
 * Allow user to compare multiple plans side by side
-* Add TRIMIX support and calculator
+* Algorithm
+  * Improve ascent to next stop by estimated offgasing during the ascent to reduce the stop length
+  * Improve performance when estimating stop length
+* Gas consumption: Restore 1/2 and 1/3 reserve strategies
+* TRIMIX support
   * Add air breaks
+  * Finish isobaric counter diffusion warning

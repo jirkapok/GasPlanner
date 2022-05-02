@@ -241,6 +241,7 @@ export class ProfileEvents {
         // https://gue.com/blog/wp-content/uploads/2020/05/WienkeICD-2004-08SourcesCDI-1.pdf
         // http://www.advanceddivermagazine.com/articles/icd/icd.html
         // https://thetheoreticaldiver.org/wordpress/index.php/2018/01/24/isobaric-counter-diffusion-criteria/
+        // TODO Finish the ICD 1/5 rule: previous.gas.He > 0 && deltaN2 * 5 > -deltaHe
         if (context.switchingGas && previous) {
             // consider identify deco dive from deco stops, instead from ceilings.
             if (previous.gas.fN2 < current.gas.fN2 && Ceiling.isDecoDive(ceilings)) {

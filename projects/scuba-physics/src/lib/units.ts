@@ -61,6 +61,7 @@ export class MetricUnits implements Units {
  * length: meter/foot
  * https://en.wikipedia.org/wiki/Foot_(unit)
  * 1 foot = 0.3048 meter - derived international foot
+ * Altitude m.a.s.l. to f.a.s.l. is only conversion from meters to feet
  *
  * volume: cubic foot (cft)/liter
  * https://en.wikipedia.org/wiki/Standard_cubic_foot

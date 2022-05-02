@@ -35,10 +35,28 @@
       },
       {
         "type": "npm",
-        "script": "lint",
-        "problemMatcher": ["$eslint-stylish"],
-        "label": "npm: lint",
-        "detail": "ng lint"
+        "script": "test-lib",
+        "label": "npm: test-lib",
+        "detail": "ng test --project scuba-physics",
+        "problemMatcher": {
+            "owner": "typescript",
+            "source": "ts",
+            "applyTo": "closedDocuments",
+            "fileLocation": [
+              "relative",
+              "${cwd}"
+            ],
+            "pattern": "$tsc",
+            "background": {
+              "activeOnStart": true,
+              "beginsPattern": {
+                "regexp": "(.*?)"
+              },
+              "endsPattern": {
+                "regexp": "Compiled |Failed to compile."
+              }
+            }
+          }
       }
     ]
   }

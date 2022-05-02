@@ -2,11 +2,11 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "ng serve",
+        "name": "Start",
         "type": "chrome",
         "request": "launch",
         "preLaunchTask": "npm: start",
-        "url": "http://localhost:4200/#",
+        "url": "http://localhost:4200/",
         "webRoot": "${workspaceFolder}",
         "sourceMapPathOverrides": {
           "webpack:/*": "${webRoot}/*",
@@ -17,10 +17,10 @@
         }
       },
       {
-        "name": "ng test",
+        "name": "Test lib",
         "type": "chrome",
         "request": "launch",
-        "preLaunchTask": "npm: test",
+        "preLaunchTask": "npm: test-lib",
         "url": "http://localhost:9876/debug.html",
         "webRoot": "${workspaceFolder}",
         "sourceMaps": true,

@@ -3,7 +3,7 @@ import { faBatteryHalf, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid
 
 import { PlannerService } from '../shared/planner.service';
 import { StandardGases, Tank, Diver } from 'scuba-physics';
-import { UnitConversion } from '../shared/UnitConversion';
+import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-tanks',
@@ -24,6 +24,10 @@ export class TanksComponent {
         this.diver = this.planner.diver;
         this.allNames = StandardGases.allNames();
         this.nitroxNames = StandardGases.nitroxNames();
+    }
+
+    public get ranges(): RangeConstants {
+        return this.units.ranges;
     }
 
     public get tanks(): Tank[] {

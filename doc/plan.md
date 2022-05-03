@@ -61,7 +61,7 @@ General recommendations when planning deep dives:
 
 * We don't recommend deep dives on AIR!
 * You should always use Trimix for depths bellow maximum narcotic depth!
-* Consider not switching to gas with higher nitrogen content because of [Isobaric counter diffusion](https://en.wikipedia.org/wiki/Isobaric_counterdiffusion) (we currently don't generate warning event for it)
+* Consider not switching to gas with higher nitrogen content because of [Isobaric counter diffusion](https://en.wikipedia.org/wiki/Isobaric_counterdiffusion). We generate warning following the 1/5 rule: Any increase in gas fraction of nitrogen in the decompression gas should be limited to 1/5 of the decrease in gas fraction of helium.
 * Use separate argon bottle for dry suit inflation. This is not calculated in to the gases consumption
 * Keep in mind also [High pressure nervous syndrome](https://en.wikipedia.org/wiki/High-pressure_nervous_syndrome) (HPNS)
 * Because of high amount of oxygen consumed during deep dives, watch your [Oxygen toxicity](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater) (CNS/OTU)

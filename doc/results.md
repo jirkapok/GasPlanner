@@ -20,6 +20,7 @@ In case of any issue with the plan, Notification messages are shown bellow the d
 | High descent speed | Higher risk of ear (or other cavities) barotrauma | Enlarge the descent duration |
 | Broken ceiling | In user defined part of the dive profile you reach lower depth than current ceiling, which increases risk of DCS | Fix the profile, so always stay bellow the ceiling |
 | Narcotic depth exceeded | Even the gas is breathe able at this depth, there is higher risk of gas narcotic effects. Usually this applies to deep air dives | Plan shallower dive or use gas for higher depths (Trimix) |
+| Switch to gas with higher N2 content | There is a risk of Isobaric counter diffusion | Choose another decompression gas with lower nitrogen content |
 
 > This is the main purpose of this application: to reduce these risks!
 
@@ -29,6 +30,7 @@ Read more about
 * [Cavities bartrauma](https://en.wikipedia.org/wiki/Barotrauma)
 * [Oxygen toxicity](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater)
 * [Hypooxia](https://en.wikipedia.org/wiki/Hypoxia_(medical))
+* [Isobaric counter diffusion](https://en.wikipedia.org/wiki/Isobaric_counterdiffusion)
 
 ## Consumed gas charts
 

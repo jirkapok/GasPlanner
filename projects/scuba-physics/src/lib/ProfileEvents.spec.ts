@@ -1,6 +1,6 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Salinity } from './pressure-converter';
-import { Gases, StandardGases } from './Gases';
+import { Gases, StandardGases, Gas } from './Gases';
 import { SafetyStop } from './Options';
 import { OptionExtensions } from './Options.spec';
 import { Ceiling, EventType } from './Profile';
@@ -296,7 +296,7 @@ describe('Profile Events', () => {
     });
 
     describe('Switch to higher N2 on deco dive', () => {
-        xit('from 18/45 to Ean50', () => {
+        it('from 18/45 to Ean50', () => {
             const segments = new Segments();
             segments.add(30, 21, StandardGases.trimix1845, Time.oneMinute * 3);
             segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
@@ -320,7 +320,19 @@ describe('Profile Events', () => {
             });
         });
 
-        it('doesn\'t add the event in case no deco dive', () => {
+        it('21/35 to 35/25 doesn\'t add the event', () => {
+            const segments = new Segments();
+            segments.add(0, 15, StandardGases.trimix2135, Time.oneMinute * 4);
+            segments.add(15, 15, StandardGases.trimix2135, Time.oneMinute);
+            segments.add(15, 0, StandardGases.trimix3525, Time.oneMinute * 6);
+
+            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
+
+            expect(events.items.length).toEqual(1); // only the gas switch event
+            expect(events.items[0].type).not.toEqual(EventType.switchToHigherN2);
+        });
+
+        it('doesn\'t add the event in case no helium in mixtures', () => {
             const segments = new Segments();
             segments.add(0, 15, StandardGases.ean50, Time.oneMinute * 4);
             segments.add(15, 15, StandardGases.ean50, Time.oneMinute);
@@ -340,18 +352,18 @@ describe('Profile Events', () => {
 
         it('Switch to narcotic gas', () => {
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.trimix1845, Time.oneMinute * 4);
-            segments.add(30, 40, StandardGases.air, Time.oneMinute);
-            segments.add(40, 0, StandardGases.air, Time.oneMinute * 20);
+            segments.add(0, 45, StandardGases.trimix1845, Time.oneMinute * 4);
+            segments.add(45, 45, StandardGases.trimix1845, Time.oneMinute);
+            segments.add(45, 0, StandardGases.trimix3525, Time.oneMinute * 20);
 
-            const events = ProfileEvents.fromProfile(2, segments.mergeFlat(), emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(1, segments.mergeFlat(), emptyCeilings, options);
 
-            expect(events.items.length).toEqual(2); // first event is gas switch
+            expect(events.items.length).toEqual(2);  // first event is gas switch
             expect(events.items[1]).toEqual({
                 type: EventType.maxEndExceeded,
                 timeStamp: 300,
-                depth: 40,
-                data: StandardGases.air
+                depth: 45,
+                data: StandardGases.trimix3525
             });
         });
 

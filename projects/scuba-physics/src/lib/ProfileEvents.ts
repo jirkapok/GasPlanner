@@ -234,19 +234,20 @@ export class ProfileEvents {
         const current = context.current;
         const previous = context.previous;
 
-        // Consider implement/fix wrong IDC calculation:
+        // ICD calculation:
         // see https://scubaengineer.com/isobaric_counter_diffusion.htm
         // https://gue.com/blog/how-two-tech-agencies-address-isobaric-counterdiffusion/
         // https://gue.com/blog/isobaric-counterdiffusion-in-the-real-world/
         // https://gue.com/blog/wp-content/uploads/2020/05/WienkeICD-2004-08SourcesCDI-1.pdf
         // http://www.advanceddivermagazine.com/articles/icd/icd.html
         // https://thetheoreticaldiver.org/wordpress/index.php/2018/01/24/isobaric-counter-diffusion-criteria/
-        // TODO Finish the ICD 1/5 rule: previous.gas.He > 0 && deltaN2 * 5 > -deltaHe
         if (context.switchingGas && previous) {
-            // consider identify deco dive from deco stops, instead from ceilings.
-            if (previous.gas.fN2 < current.gas.fN2 && Ceiling.isDecoDive(ceilings)) {
-                // const event = EventsFactory.createSwitchToHigherN2(context.elapsed, current.startDepth, current.gas);
-                // context.events.add(event);
+            const deltaN2 = current.gas.fN2 - previous.gas.fN2;
+            const deltaHe = current.gas.fHe - previous.gas.fHe;
+
+            if (previous.gas.fHe > 0 && deltaN2 * 5 > -deltaHe) {
+                const event = EventsFactory.createSwitchToHigherN2(context.elapsed, current.startDepth, current.gas);
+                context.events.add(event);
             }
         }
     }

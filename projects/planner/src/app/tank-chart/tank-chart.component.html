@@ -4,8 +4,8 @@
         <app-gaslabel [tank]="tank" [showName]="false" class="text-end"></app-gaslabel>
     </div>
     <div class="d-flex flex-row justify-content-between">
-        <small class="text-start text-muted">Gas remaining: {{ tank.endPressure | number:'1.0-0'  }}/{{ tank.startPressure | number:'1.0-0'  }} bar</small>
-        <small class="text-end text-muted">Rock bottom: <strong>{{ tank.reserve | number:'1.0-0' }}</strong> bar</small>
+        <small class="text-start text-muted">Gas remaining: {{ tank.endPressure | number:'1.0-0'  }}/{{ tank.startPressure | number:'1.0-0'  }} {{units.pressure}}</small>
+        <small class="text-end text-muted">Rock bottom: <strong>{{ tank.reserve | number:'1.0-0' }}</strong> {{units.pressure}}</small>
     </div>
     <div class="progress gas-bar mt-1 mb-2">
         <div class="combined_wrapper">

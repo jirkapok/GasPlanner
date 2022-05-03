@@ -28,4 +28,12 @@ export class UnitConversion {
     public get volume(): string {
         return this.current.volumeShortcut;
     }
+
+    public get lastSpeedLevel(): number {
+        return this._imperialUnits ? 20 : 6;
+    }
+
+    public get autoStopLevel(): number {
+        return this._imperialUnits ? 33 : 10;
+    }
 }

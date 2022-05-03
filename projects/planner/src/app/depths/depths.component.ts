@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { Segment, StandardGases, Tank } from 'scuba-physics';
 import { Plan, Level, Dive } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
+import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-depths',
@@ -23,7 +24,7 @@ export class DepthsComponent implements OnDestroy {
     private dive: Dive;
 
 
-    constructor(public planner: PlannerService) {
+    constructor(public planner: PlannerService, public units: UnitConversion) {
         this.plan = this.planner.plan;
         this.dive = this.planner.dive;
         this.updateLevels();

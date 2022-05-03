@@ -4,6 +4,7 @@ import { Dive, WayPoint, SwimAction } from '../shared/models';
 import { faArrowDown, faArrowUp, faArrowRight, faTasks, faRandom, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Time } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
+import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-waypoints',
@@ -19,7 +20,7 @@ export class WayPointsComponent {
     public switch = faRandom;
     private lastSelected: WayPoint | undefined;
 
-    constructor(private planner: PlannerService) {
+    constructor(private planner: PlannerService, public units: UnitConversion) {
         this.dive = this.planner.dive;
     }
 

@@ -10,9 +10,10 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add imperial units option
-  * Fix validator ranges and messages (Nitrox calc, SAC, depths, options, profile, profile chart, dive info)
-  * Fix all value bindings (Nitrox calc, SAC, tanks, depths, options, profile, profile chart, dive info)
+  * Fix all validator ranges (Settings, Nitrox calc, SAC, tanks, depths, options)
+  * Fix all value bindings (Settings, Nitrox calc, SAC, tanks, depths, options, profile, profile chart, dive info)
   * Fix depth range inside the algorithm and add test to keep the stops per 10 feet
+  * Fix last stop depth values
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>

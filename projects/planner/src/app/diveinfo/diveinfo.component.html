@@ -15,7 +15,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Average depth [m]:</td>
+                        <td>Average depth [{{units.length}}]:</td>
                         <td class="table-active">
                             <strong>{{ dive.averageDepth | number:'1.0-1' }}</strong>
                         </td>
@@ -49,7 +49,7 @@
                         </td>
                     </tr>
                     <tr *ngIf="dive.needsReturn">
-                        <td>Turn pressure [bar]:</td>
+                        <td>Turn pressure [{{units.pressure}]:</td>
                         <td class="table-active">
                             <strong>{{ dive.turnPressure | number:'1.0-0' }}</strong>
                         </td>
@@ -78,11 +78,11 @@
         <div *ngFor="let event of dive.events">
             <div *ngIf="isLowPpO2(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="me-2"></fa-icon>
-                <span>Low partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }} m (minimum depth exceeded)!</span>
+                <span>Low partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }} {{units.length}} (minimum depth exceeded)!</span>
             </div>
             <div *ngIf="isHighPpO2(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="me-2"></fa-icon>
-                <span>High partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }} m (maximum depth exceeded)!</span>
+                <span>High partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }} {{units.length}} (maximum depth exceeded)!</span>
             </div>
             <div *ngIf="isHighDescentSpeed(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="me-2"></fa-icon>
@@ -94,15 +94,15 @@
             </div>
             <div *ngIf="isBrokenCeiling(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="me-2"></fa-icon>
-                <span>Ceiling depth {{ event.depth | number:'1.0-0' }} m broken at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
+                <span>Ceiling depth {{ event.depth | number:'1.0-0' }} {{units.length}} broken at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
             </div>
             <div *ngIf="isHighN2Switch(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="me-2"></fa-icon>
-                <span>Gas switch to gas with higher nitrogen content in {{ event.depth | number:'1.0-0' }} m at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min is not recommended!</span>
+                <span>Gas switch to gas with higher nitrogen content in {{ event.depth | number:'1.0-0' }} {{units.length}} at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min is not recommended!</span>
             </div>
             <div *ngIf="isMndExceeded(event)" class="alert alert-warning">
                 <fa-icon [icon]="warning" class="me-2"></fa-icon>
-                <span>Exceeded maximum narcotic depth for selected gas in {{ event.depth | number:'1.0-0' }} m at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
+                <span>Exceeded maximum narcotic depth for selected gas in {{ event.depth | number:'1.0-0' }} {{units.length}} at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
             </div>
 
         </div>

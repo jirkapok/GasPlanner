@@ -4,6 +4,7 @@ import { Dive } from '../shared/models';
 import { DateFormats } from '../shared/formaters';
 import { faExclamationCircle, faExclamationTriangle, faSlidersH, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { EventType, Event, Time, Tank } from 'scuba-physics';
+import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-consumption',
@@ -17,7 +18,7 @@ export class DiveInfoComponent {
     public info = faInfoCircle;
     public icon = faSlidersH;
 
-    constructor(public planner: PlannerService) {
+    constructor(public planner: PlannerService, public units: UnitConversion) {
         this.dive = this.planner.dive;
     }
 

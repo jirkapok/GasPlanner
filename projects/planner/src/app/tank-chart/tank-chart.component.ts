@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Tank } from 'scuba-physics';
+import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-tankchart',
@@ -13,5 +14,5 @@ export class TankChartComponent {
     @Input()
     public showId = false;
 
-    constructor() { }
+    constructor(public units: UnitConversion) { }
 }

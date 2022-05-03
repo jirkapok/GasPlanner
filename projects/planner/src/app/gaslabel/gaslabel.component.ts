@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Tank } from 'scuba-physics';
+import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-gaslabel',
@@ -34,5 +35,5 @@ export class GaslabelComponent {
         return this.planer.switchDepth(this.tank);
     }
 
-    constructor(private planer: PlannerService) { }
+    constructor(private planer: PlannerService, public units: UnitConversion) { }
 }

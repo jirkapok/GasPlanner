@@ -3,6 +3,7 @@ import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { OptionDefaults, SafetyStop, Salinity } from 'scuba-physics';
 import { Plan, Strategies } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
+import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-diveoptions',
@@ -23,16 +24,19 @@ export class DiveOptionsComponent {
     public readonly brackishName = 'Brackish (EN13319)';
     public readonly saltName = 'Salt';
     public readonly safetyOffName = 'Never';
-    public readonly safetyAutoName = 'Auto (> 10 m)';
     public readonly safetyOnName = 'Always';
     public conservatism = this.mediumName;
     public plan: Plan;
     public strategy = this.allUsableName;
     public icon = faCog;
 
-    constructor(private planner: PlannerService) {
+    constructor(private planner: PlannerService, public units: UnitConversion) {
         this.plan = this.planner.plan;
     }
+
+    // TODO fix units in labels
+    // "Ascent 6 m to surface"
+    // "Ascent up to 6 m depth"
 
     public reset(): void {
         switch (this.plan.strategy) {
@@ -228,6 +232,11 @@ export class DiveOptionsComponent {
             default:
                 return this.freshName;
         }
+    }
+
+    public get safetyAutoName(): string {
+        const level = this.units.autoStopLevel;
+        return `Auto (> ${level} ${this.units.length})`;
     }
 
     public get safetyStopOption(): string {

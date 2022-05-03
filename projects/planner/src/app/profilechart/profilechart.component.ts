@@ -6,6 +6,7 @@ import * as Plotly from 'plotly.js';
 import { Subscription } from 'rxjs';
 import { EventType, Time, Gas, StandardGases, Segment } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
+import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-profilechart',
@@ -30,7 +31,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
 
     private layout: any;
 
-    constructor(private planer: PlannerService) {
+    constructor(private planer: PlannerService, private units: UnitConversion) {
         this.dive = this.planer.dive;
 
         this.layout = {
@@ -39,14 +40,14 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             xaxis: {
                 fixedrange: true,
                 title: {
-                    text: 'Time [minutes]'
+                    text: 'Time [min]'
                 }
             },
             yaxis: {
                 fixedrange: true,
                 autorange: 'reversed',
                 title: {
-                    text: 'Depth [meters]'
+                    text: `Depth [${units.length}]`
                 }
             },
             margin: { l: 40, r: 10, b: 40, t: 10 },
@@ -118,7 +119,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             line: {
                 dash: 'dot'
             },
-            name: 'Average depth',
+            name: 'Avg. depth',
             marker: {
                 color: 'rgb(62, 157, 223)'
             }
@@ -213,7 +214,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             mode: 'text+markers',
             fill: 'tozeroy',
             name: 'events',
-            hovertemplate: '%{x}<br>%{text} at %{y}m',
+            hovertemplate: `%{x}<br>%{text} at %{y} ${this.units.length}`,
             texttemplate: '%{text}',
             textposition: 'top left',
             fillcolor: 'rgba(0, 0, 0, 0)',
@@ -250,7 +251,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
                 y.push(event.depth);
                 const gas = <Gas>event.data;
                 const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
-                labels.push(`Switch to ${gasName}`);
+                labels.push(`${gasName}`);
             }
         });
     }

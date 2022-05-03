@@ -1,1 +1,5 @@
-<small class="text-muted"><span *ngIf="showName" class="fw-bold">{{tank.name}} </span>MOD: {{gasMod | number:'1.0-0' }} m, switch {{gasDecoMod | number:'1.0-0' }} m<span *ngIf="isTrimix">, MND: {{gasMnd | number:'1.0-0' }} m</span></small>
+<small class="text-muted">
+    <span *ngIf="showName" class="fw-bold">{{tank.name}} </span>
+    MOD: {{gasMod | number:'1.0-0' }} {{units.length}}, switch {{gasDecoMod | number:'1.0-0' }} {{units.length}}
+    <span *ngIf="isTrimix">, MND: {{gasMnd | number:'1.0-0' }} {{units.length}}</span>
+</small>

@@ -4,6 +4,7 @@ import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { NitroxCalculatorService, NitroxMode } from '../shared/nitrox-calculator.service';
 import { PlannerService } from '../shared/planner.service';
+import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-nitrox',
@@ -13,7 +14,7 @@ import { PlannerService } from '../shared/planner.service';
 export class NitroxComponent {
     public calcIcon = faCalculator;
     constructor(public calc: NitroxCalculatorService,
-        private router: Router, private planer: PlannerService) {
+        private router: Router, private planer: PlannerService, public units: UnitConversion) {
     }
 
     public get inMod(): boolean {

@@ -8,15 +8,15 @@
         <div>
         <label for="sac">Surface air consumption [{{units.volume}}/min]:
             <input [(ngModel)]="diver.rmv" class="form-control" #sac="ngModel" name="sac" id="sac"
-            type="number" required [rangeVal]="[5,90]" [minVal]="5" [maxVal]="90" min="5" max="90" step="1"
+            type="number" required [rangeVal]="ranges.diverSac" [min]="ranges.diverSac[0]" [max]="ranges.diverSac[1]" step="1"
             [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)"/>
         </label>
-        <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number 5-90 {{units.volume}}/min</div>
+        <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number {{ranges.diverSacLabel}}</div>
         </div>
         <div>
         <label for="maxPpO2">Maximum ppO2:
             <input [(ngModel)]="diver.maxPpO2" class="form-control" #maxPpO2="ngModel" name="maxPpO2" id="maxPpO2"
-            type="number" required [rangeVal]="[.21,3]" [minVal]=".21" [maxVal]="3" min=".21" max="3" step=".1"
+            type="number" required [rangeVal]="[.21,3]" min=".21" max="3" step=".1"
             [class.is-invalid]="maxPpO2.invalid && (maxPpO2.dirty || maxPpO2.touched)"/>
         </label>
         <div class="text-danger" *ngIf="maxPpO2.invalid && (maxPpO2.dirty || maxPpO2.touched)">Needs to be number 0.21-3</div>
@@ -24,7 +24,7 @@
         <div>
         <label for="maxDecoPpO2">Maximum deco ppO2:
             <input [(ngModel)]="diver.maxDecoPpO2" class="form-control" #maxDecoPpO2="ngModel" name="maxDecoPpO2" id="maxDecoPpO2"
-            type="number" required [rangeVal]="[.21,3]" [minVal]=".21" [maxVal]="3" step=".1" min=".21" max="3"
+            type="number" required [rangeVal]="[.21,3]" step=".1" min=".21" max="3"
             [class.is-invalid]="maxDecoPpO2.invalid && (maxDecoPpO2.dirty || maxDecoPpO2.touched)"/>
         </label>
         <div class="text-danger" *ngIf="maxDecoPpO2.invalid && (maxDecoPpO2.dirty || maxDecoPpO2.touched)">Needs to be number 0.21-3</div>

@@ -10,7 +10,7 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add imperial units option
-  * Fix all validator ranges (Settings, Nitrox calc, SAC, tanks, depths, options)
+  * Fix all validator ranges (Nitrox calc, SAC, depths, options)
   * Fix all value bindings (Settings, Nitrox calc, SAC, tanks, depths, options, profile, profile chart, dive info)
   * Fix depth range inside the algorithm and add test to keep the stops per 10 feet
   * Fix last stop depth values

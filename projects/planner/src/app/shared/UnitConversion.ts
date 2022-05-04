@@ -60,6 +60,8 @@ export interface RangeConstants {
     tankOxygenLabel: string;
     tankHe: [number, number];
     tankHeLabel: string;
+    diverSac: [number, number];
+    diverSacLabel: string;
 }
 
 const toLabel = (range: [number, number], unit: string): string => `${range[0]} - ${range[1]} ${unit}`;
@@ -73,10 +75,15 @@ class MetricRanges implements RangeConstants {
     public tankOxygenLabel: string = toLabel(this.tankOxygen, '%');
     public tankHe: [number, number] = [0, 99];
     public tankHeLabel: string = toLabel(this.tankHe, '%');
+    public diverSac: [number, number] = [5, 90];
+    public diverSacLabel: string = toLabel(this.diverSac, this.units.volumeShortcut + '/min');
+
+
+
     constructor(private units: Units) {}
 }
 
 
-class ImperialRanges { //implements RangeConstants  {
+class ImperialRanges { // TODO implements RangeConstants  {
     constructor(private units: Units) {}
 }

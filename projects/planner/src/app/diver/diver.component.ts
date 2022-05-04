@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { PlannerService } from '../shared/planner.service';
 import { Diver } from 'scuba-physics';
-import { UnitConversion } from '../shared/UnitConversion';
+import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-diver',
@@ -15,5 +15,9 @@ export class DiverComponent{
 
     constructor(private planer: PlannerService, public units: UnitConversion) {
         this.diver = this.planer.diver;
+    }
+
+    public get ranges(): RangeConstants {
+        return this.units.ranges;
     }
 }

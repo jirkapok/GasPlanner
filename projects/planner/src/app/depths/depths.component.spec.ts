@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { PlannerService } from '../shared/planner.service';
+import { UnitConversion } from '../shared/UnitConversion';
 import { DepthsComponent } from './depths.component';
 
 describe('DepthsComponent', () => {
@@ -11,7 +12,7 @@ describe('DepthsComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [DepthsComponent],
             imports: [FormsModule],
-            providers: [PlannerService]
+            providers: [PlannerService, UnitConversion]
         })
             .compileComponents();
     });

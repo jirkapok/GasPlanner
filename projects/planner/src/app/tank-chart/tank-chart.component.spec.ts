@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { UnitConversion } from '../shared/UnitConversion';
 import { TankChartComponent } from './tank-chart.component';
 
 describe('TankChartComponent', () => {
@@ -7,7 +8,8 @@ describe('TankChartComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TankChartComponent]
+            declarations: [TankChartComponent],
+            providers: [UnitConversion]
         })
             .compileComponents();
     });

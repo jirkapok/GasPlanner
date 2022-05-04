@@ -35,6 +35,31 @@
       },
       {
         "type": "npm",
+        "script": "test",
+        "label": "npm: test",
+        "detail": "ng test",
+        "problemMatcher": {
+            "owner": "typescript",
+            "source": "ts",
+            "applyTo": "closedDocuments",
+            "fileLocation": [
+              "relative",
+              "${cwd}"
+            ],
+            "pattern": "$tsc",
+            "background": {
+              "activeOnStart": true,
+              "beginsPattern": {
+                "regexp": "(.*?)"
+              },
+              "endsPattern": {
+                "regexp": "Compiled |Failed to compile."
+              }
+            }
+          }
+      },
+      {
+        "type": "npm",
         "script": "test-lib",
         "label": "npm: test-lib",
         "detail": "ng test --project scuba-physics",

@@ -243,7 +243,7 @@ export class Gas {
     }
 
     public set fO2(newValue: number) {
-        this._fO2 = newValue;
+        this._fO2 = newValue > 1 ? 1 : newValue;
 
         if(this.contentExceeds100percent()) {
             this._fHe = this.countRemaining(this._fO2);
@@ -255,7 +255,7 @@ export class Gas {
     }
 
     public set fHe(newValue: number) {
-        this._fHe = newValue;
+        this._fHe = newValue > 0.99 ? 0.99 : newValue;
 
         if(this.contentExceeds100percent()) {
             this._fO2 = this.countRemaining(this._fHe);

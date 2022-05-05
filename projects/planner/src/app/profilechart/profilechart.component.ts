@@ -125,7 +125,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             }
         }];
 
-        Plotly.react(this.elementName, dataAverageDepths, this.layout, this.options);
+        Plotly.newPlot(this.elementName, dataAverageDepths, this.layout, this.options);
     }
 
     private transformAverageDepth(waiPoints: WayPoint[], xDepthValues: Date[], yDepthValues: number[]): number {
@@ -172,7 +172,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             this.resampleDepthsToSeconds(xValues, yValues, item);
         });
 
-        Plotly.plot(this.elementName, data, this.layout, this.options);
+        Plotly.addTraces(this.elementName, data, this.layout, this.options);
     }
 
     private plotCeilings(): void {
@@ -197,7 +197,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             }
         }];
 
-        Plotly.plot(this.elementName, dataCeilings, this.layout, this.options);
+        Plotly.addTraces(this.elementName, dataCeilings, this.layout, this.options);
     }
 
     private plotEvents(): void {
@@ -241,7 +241,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         };
 
         this.convertEvents(x, y, labels);
-        Plotly.plot(this.elementName, dataEvents, eventsLayout);
+        Plotly.addTraces(this.elementName, dataEvents, eventsLayout);
     }
 
     private convertEvents(x: Date[], y: number[], labels: string[]): void {

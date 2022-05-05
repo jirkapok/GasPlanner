@@ -1,6 +1,7 @@
 {
   "name": "plotly.js",
-  "version": "1.58.4",
+  "version": "2.12.0",
   "typings": "index.d.ts",
-  "main": "plotly-basic.min.js"
+  "main": "plotly-basic.min.js",
+  "homepage": "https://github.com/plotly/plotly.js#readme"
 }

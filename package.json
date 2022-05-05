@@ -31,7 +31,7 @@
     "@fortawesome/free-solid-svg-icons": "6.1.1",
     "@ng-bootstrap/ng-bootstrap": "12.0.1",
     "@popperjs/core": "^2.11.4",
-    "angular-plotly.js": "^4.0.4",
+    "bootstrap": "^5.1.3",
     "plotly.js": "file:projects/planner/src/types/plotly.js",
     "rxjs": "7.5.5",
     "tslib": "^2.3.1",

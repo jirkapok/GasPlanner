@@ -13,8 +13,10 @@ import { UnitConversion } from '../shared/UnitConversion';
 })
 export class NitroxComponent {
     public calcIcon = faCalculator;
-    constructor(public calc: NitroxCalculatorService,
-        private router: Router, private planer: PlannerService, public units: UnitConversion) {
+    constructor(public calc: NitroxCalculatorService, private router: Router,
+        private planer: PlannerService, public units: UnitConversion) {
+        this.calc.fO2 = this.planer.firstTank.o2;
+        this.calc.pO2 = this.planer.diver.maxPpO2;
     }
 
     public get inMod(): boolean {
@@ -45,9 +47,8 @@ export class NitroxComponent {
         return await this.router.navigateByUrl('/');
     }
 
-    public async use(): Promise<boolean>  {
+    public use(): void {
         this.planer.firstTank.o2 = this.calc.fO2;
         this.planer.diver.maxPpO2 = this.calc.pO2;
-        return await  this.router.navigateByUrl('/');
     }
 }

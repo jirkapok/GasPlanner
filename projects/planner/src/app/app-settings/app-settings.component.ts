@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { Diver } from 'scuba-physics';
@@ -10,15 +10,12 @@ import { UnitConversion } from '../shared/UnitConversion';
     templateUrl: './app-settings.component.html',
     styleUrls: ['./app-settings.component.css']
 })
-export class AppSettingsComponent implements OnInit {
+export class AppSettingsComponent {
     public flagIcon = faFlag;
     public diver = new Diver();
     public imperialUnits = false;
 
     constructor(private router: Router, public units: UnitConversion, private planner: PlannerService) {
-    }
-
-    public ngOnInit(): void {
         this.imperialUnits = this.units.imperialUnits;
         this.diver.loadFrom(this.planner.diver);
     }

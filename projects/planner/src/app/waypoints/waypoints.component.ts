@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint, SwimAction } from '../shared/models';
 import { faArrowDown, faArrowUp, faArrowRight, faTasks, faRandom, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Time } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
+import { SelectedWaypoint } from '../shared/selectedwaypointService';
 
 @Component({
     selector: 'app-waypoints',
@@ -18,9 +19,8 @@ export class WayPointsComponent {
     public hover = faArrowRight;
     public tasks = faTasks;
     public switch = faRandom;
-    private lastSelected: WayPoint | undefined;
 
-    constructor(private planner: PlannerService, public units: UnitConversion) {
+    constructor(private planner: PlannerService, public units: UnitConversion, private selectedWaypoint: SelectedWaypoint) {
         this.dive = this.planner.dive;
     }
 
@@ -30,21 +30,6 @@ export class WayPointsComponent {
 
     public durationFormat(): string {
         return DateFormats.selectTimeFormat(this.dive.totalDuration);
-    }
-
-    @Input()
-    public set selectedTimeStamp(newValue: string) {
-        if (this.lastSelected) {
-            this.lastSelected.selected = false;
-        }
-
-        if (newValue) {
-            const newTimeStamp = Time.secondsFromDate(newValue);
-            this.lastSelected = this.dive.wayPoints.find(p => p.fits(newTimeStamp));
-            if (this.lastSelected) {
-                this.lastSelected.selected = true;
-            }
-        }
     }
 
     public swimActionIcon(point: WayPoint): IconDefinition {
@@ -81,5 +66,9 @@ export class WayPointsComponent {
         };
 
         return classes;
+    }
+
+    public highlightRow(point: WayPoint | undefined): void {
+        this.selectedWaypoint.selected = point;
     }
 }

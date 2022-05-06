@@ -29,6 +29,7 @@ import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { PlannerService } from './shared/planner.service';
 import { PreferencesService } from './shared/preferences.service';
 import { UnitConversion } from './shared/UnitConversion';
+import { SelectedWaypoint } from './shared/selectedwaypointService';
 
 @NgModule({
     declarations: [
@@ -65,7 +66,7 @@ import { UnitConversion } from './shared/UnitConversion';
         })
     ],
     exports: [],
-    providers: [PlannerService, PreferencesService, UnitConversion],
+    providers: [PlannerService, PreferencesService, UnitConversion, SelectedWaypoint],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

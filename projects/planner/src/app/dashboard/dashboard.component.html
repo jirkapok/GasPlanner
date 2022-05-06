@@ -33,10 +33,10 @@
         'col-lg-12': !isComplex,
         'col-lg-8': isComplex
          } ">
-        <app-profilechart (chartHover)="chartHover($event)"></app-profilechart>
+        <app-profilechart></app-profilechart>
     </div>
     <div *ngIf="showResults" class="col-md-6 col-xxl-3 mt-4">
-        <app-waypoints [selectedTimeStamp]="selectedTimeStamp"></app-waypoints>
+        <app-waypoints></app-waypoints>
     </div>
     <div class="col-md-6 col-xxl-3 mt-4">
         <app-consumption></app-consumption>

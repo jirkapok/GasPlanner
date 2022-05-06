@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output, Input } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint } from '../shared/models';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { EventType, Time, Gas, StandardGases, Segment } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
+import { SelectedWaypoint } from '../shared/selectedwaypointService';
 
 @Component({
     selector: 'app-profilechart',
@@ -14,10 +15,10 @@ import { UnitConversion } from '../shared/UnitConversion';
     styleUrls: ['./profilechart.component.css']
 })
 export class ProfileChartComponent implements OnInit, OnDestroy {
-    private subscription: Subscription;
     public dive: Dive;
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
+    private subscription: Subscription;
     private chartElement: any;
 
     private options = {
@@ -36,18 +37,21 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         // x-reference is assigned to the x-values
         xref: 'x',
         // y-reference is assigned to the plot paper [0,1]
-        yref: 'paper',
-        x0: '2001-06-12 12:30', // dummy values
+        yref: 'y',
+        x0: new Date('2001-06-12 12:30'), // dummy values
         y0: 0,
-        x1: '2001-06-12 12:30',
+        x1: new Date('2001-06-12 12:30'),
         y1: 1,
         fillcolor: '#d3d3d3',
-        opacity: 0.2,
+        line: {
+            color: 'rgb(31, 119, 180)',
+            width: 5
+        }
     };
 
     private layout: any;
 
-    constructor(private planer: PlannerService, private units: UnitConversion) {
+    constructor(private planer: PlannerService, private units: UnitConversion, private selectedWaypoint: SelectedWaypoint) {
         this.dive = this.planer.dive;
 
         this.layout = {
@@ -67,17 +71,22 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
                 }
             },
             margin: { l: 40, r: 10, b: 40, t: 10 },
+            hovermode: 'x unified',
+            hoverlabel: {
+                bgcolor: 'rgba(200, 200, 200, 0.25)',
+                bordercolor: 'rgba(200, 200, 200, 0.25)'
+            },
             shapes: []
         };
 
         this.updateLayoutThickFormat();
-        this.subscription = this.planer.calculated.subscribe(() => {
-            this.plotCharts();
-        });
+        this.subscription = this.planer.calculated.subscribe(() => this.plotCharts());
+        this.selectedWaypoint.selectedChanged.subscribe((wayPoint) => this.selectWayPoint(wayPoint));
     }
 
-    @Output()
-    public chartHover: EventEmitter<string> = new EventEmitter<string>();
+    public get noDecoTime(): number {
+        return this.planer.plan.noDecoTime;
+    }
 
     ngOnInit() {
         this.plotCharts();
@@ -99,32 +108,30 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         return y * (graphHeight - 10) / this.planer.plan.maxDepth;
     }
 
-    public get noDecoTime(): number {
-        return this.planer.plan.noDecoTime;
-    }
-
     public plotlyHover(data: any): void {
-        if (this.layout.shapes.length === 0) {
-            this.layout.shapes.push(this.cursor1);
-        }
-
-        const update = {
-            'shapes[0].x0': data.points[0].x,
-            'shapes[0].x1': data.points[0].x
-        };
-
-        // TODO finish the focus in the current grid
-        // Plotly.relayout(this.elementName, update);
-
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x;
-        this.chartHover.emit(timeStampValue);
+        this.selectedWaypoint.selectedTimeStamp = timeStampValue;
     }
 
     private plotlyHoverLeave(data: any) {
+        this.selectedWaypoint.selectedTimeStamp = '';
+    }
+
+    private selectWayPoint(wayPoint: WayPoint | undefined) {
+        const shapes: any[] = [];
         const update = {
-            shapes: []
+            shapes: shapes
         };
+
+        if(wayPoint) {
+            this.cursor1.x0 = Time.toDate(wayPoint.startTime);
+            this.cursor1.x1 = Time.toDate(wayPoint.endTime);
+            this.cursor1.y0 = wayPoint.startDepth;
+            this.cursor1.y1 = wayPoint.endDepth;
+            update.shapes.push(this.cursor1);
+        }
+
         Plotly.relayout(this.elementName, update);
     }
 
@@ -162,7 +169,8 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             name: 'Avg. depth',
             marker: {
                 color: 'rgb(62, 157, 223)'
-            }
+            },
+            hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
 
         return dataAverageDepths;
@@ -202,10 +210,11 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             x: xValues,
             y: yValues,
             type: 'scatter',
-            name: 'Dive',
+            name: 'Depth',
             marker: {
                 color: 'rgb(31, 119, 180)'
-            }
+            },
+            hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
 
         this.dive.wayPoints.forEach((item, index, waypoints) => {
@@ -231,10 +240,11 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             y: yCeilingValues,
             type: 'scatter',
             fill: 'tozeroy',
-            name: 'Ceilings',
+            name: 'Ceiling',
             marker: {
                 color: 'rgb(255, 160, 73)'
-            }
+            },
+            hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
 
         return dataCeilings;
@@ -253,10 +263,10 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             type: 'scatter',
             mode: 'text+markers',
             fill: 'tozeroy',
-            name: 'events',
-            hovertemplate: `%{x}<br>%{text} at %{y} ${this.units.length}`,
+            name: 'Event',
+            hovertemplate: 'Switch to %{text}',
             texttemplate: '%{text}',
-            textposition: 'top left',
+            textposition: 'top center',
             fillcolor: 'rgba(0, 0, 0, 0)',
             marker: {
                 color: 'rgba(31, 119, 180, 0.5)',

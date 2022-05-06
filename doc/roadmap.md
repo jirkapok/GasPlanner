@@ -7,6 +7,8 @@ Following list of features and improvements ordered by priority is under develop
 * Gas oxygen content spinner shows not rounded number, where it shouldn't
 * Setting 15/55 trimix sets the helium to unexpected precise value
 * When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter for founding switch depth
+* When using low oxygen content close to 1% only, the app freezes
+* Bottom gas 21/35 at 50 meters - no MND warning is shown
 
 ## Improvements / Features
 
@@ -17,6 +19,7 @@ Following list of features and improvements ordered by priority is under develop
   * Fix last stop depth values
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
+  * Round the values in data model, after unit switched
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
     * Fix RMV/SAC calculator based on Nominal volume
     * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
@@ -44,9 +47,7 @@ Following list of features and improvements ordered by priority is under develop
     * Unify dive settings and default settings
   * UX
     * fix layout, so the fields aren't moving when validation error appears
-    * add vertical line to chart to highlight current moment
     * align fields to consume full space
-    * Hover row in Dive info should focus chart
     * Profile errors should contain explanation how to fix it
 * Help
   * Add help to the UI as side bar

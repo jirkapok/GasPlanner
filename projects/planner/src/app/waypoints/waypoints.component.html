@@ -13,7 +13,9 @@
                     <th>Run [min]</th>
                     <th *ngIf="isComplex">Gas</th>
                 </tr>
-                <tr *ngFor="let point of dive.wayPoints" [ngClass]="{'table-active': point.selected }">
+                <tr *ngFor="let point of dive.wayPoints" [ngClass]="{'table-active': point.selected }"
+                 (mouseover)="highlightRow(point)"
+                 (mouseleave)="highlightRow(undefined)">
                     <td>
                         <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)" [title]="iconTitle(point)"></fa-icon>
                     </td>

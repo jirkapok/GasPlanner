@@ -1,23 +1,29 @@
 <div class="row mt-5">
-    <app-diver class="col col-auto"></app-diver>
+    <app-diver class="col col-auto" [diver]="diver"></app-diver>
     <div class="col col-auto mt-3">
         <div class="card">
             <div class="card-header">
                 <fa-icon [icon]="flagIcon" class="me-3"></fa-icon>
-                <span>Locale</span>
+                <span>Units</span>
             </div>
             <div class="card-body">
-                <div class="form-check form-switch">
-                    <input type="checkbox" class="form-check-input" id="units" [checked]="units.imperialUnits"
-                        (change)="units.imperialUnits = !units.imperialUnits" mdbCheckbox />
-                    <label class="custom-control-label" for="units" style="width: 200px">{{units.label}} units</label>
+                <div class="form-check">
+                    <input type="radio" name="unitsRadio" id="metricRadio" class="form-check-input"
+                        [checked]="!imperialUnits" (change)="imperialUnits = !imperialUnits" />
+                    <label class="custom-control-label" for="metricRadio" value="metric">Metric units (m, l, bar)</label>
                 </div>
+                <div class="form-check">
+                    <input type="radio" name="unitsRadio" id="imperialRadio" class="form-check-input"
+                        [checked]="imperialUnits" (change)="imperialUnits = !imperialUnits">
+                    <label class="custom-control-label" for="imperialRadio" value="imperial">Imperial units (ft, cuft, psi)</label>
+                  </div>
             </div>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="form-group mt-2">
-        <button type="button" class="btn btn-primary" (click)="goBack()">Back</button>
+        <button type="button" class="btn btn-primary me-2" (click)="goBack()">Back</button>
+        <button type="button" class="btn btn-secondary" (click)="use()">Use</button>
     </div>
 </div>

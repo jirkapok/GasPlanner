@@ -4,7 +4,7 @@ import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService, SacMode } from '../shared/sac-calculator.service';
 import { PlannerService } from '../shared/planner.service';
-import { UnitConversion } from '../shared/UnitConversion';
+import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { Diver } from 'scuba-physics';
 
 @Component({
@@ -18,6 +18,10 @@ export class SacComponent {
     constructor(
         private router: Router,
         private planer: PlannerService, public calc: SacCalculatorService, public units: UnitConversion) {
+    }
+
+    public get ranges(): RangeConstants {
+        return this.units.ranges;
     }
 
     public get inDuration(): boolean {

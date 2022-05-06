@@ -61,6 +61,8 @@ export interface RangeConstants {
     diverSac: [number, number];
     diverSacLabel: string;
     ppO2: [number, number];
+    depth: [number, number];
+    depthLabel: string;
 }
 
 const toLabel = (range: [number, number], unit: string): string => `${range[0]} - ${range[1]} ${unit}`;
@@ -79,6 +81,10 @@ class MetricRanges implements RangeConstants {
     public diverSac: [number, number] = [5, 90];
     public diverSacLabel: string = toLabel(this.diverSac, this.units.volumeShortcut + '/min');
     public ppO2: [number, number] = [0.21, 3];
+    public depth: [number, number] = [1,350];
+    public depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
+    // TODO add speed, altitude
+
 
 
     constructor(private units: Units) {}

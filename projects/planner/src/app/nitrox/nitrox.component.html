@@ -32,11 +32,11 @@
           <div [hidden]="inMod" class="my-2">
             <label for="mod">MOD [{{units.length}}]:
               <input [(ngModel)]="calc.mod" class="form-control" #mod="ngModel" name="mod" id="mod" type="number"
-                 required [rangeVal]="[1,350]" [minVal]="1" [maxVal]="350" min="1" max="350" step="1"
+                 required [rangeVal]="ranges.depth" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
                  [class.is-invalid]="mod.invalid && (mod.dirty || mod.touched)" />
                 <small class="form-text text-muted">EAD: {{calc.ead}} {{units.length}}</small>
             </label>
-            <div class="text-danger" *ngIf="mod.invalid && (mod.dirty || mod.touched)">Needs to be number 3-350 {{units.length}}</div>
+            <div class="text-danger" *ngIf="mod.invalid && (mod.dirty || mod.touched)">Needs to be number {{ranges.depthLabel}}</div>
           </div>
           <div [hidden]="!inMod" class="my-2">
             <label for="mod">MOD [{{units.length}}]:

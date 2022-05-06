@@ -51,7 +51,7 @@
                         <div class="input-group">
                             <input #gasO2="ngModel" name="gasO2" [(ngModel)]="tank.o2" class="form-control" type="number"
                                 (change)="gasChanged()" required [rangeVal]="[1, 100]"
-                                [rangeVal]="ranges.tankOxygen" [min]="ranges.tankOxygen[0]" [max]="ranges.tankOxygen[1]" step="1"
+                                [rangeVal]="ranges.nitroxOxygen" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]" step="1"
                                 [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />
                             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                                 <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number
-                            {{ranges.tankOxygenLabel}}</div>
+                            {{ranges.nitroxOxygenLabel}}</div>
                     </div>
 
                     <div class="mx-1">
@@ -110,7 +110,7 @@
         <label for="gasO2" class="form-label">Percent O2:</label>
         <div class="input-group col-auto o2-max-width">
             <input #gasO2="ngModel" name="gasO2" [(ngModel)]="o2" class="form-control" type="number" (change)="gasChanged()"
-                required [rangeVal]="ranges.tankOxygen" [min]="ranges.tankOxygen[0]" [max]="ranges.tankOxygen[1]" step="1"
+                required [rangeVal]="ranges.nitroxOxygen" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]" step="1"
                 [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                 <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
@@ -122,7 +122,7 @@
             </div>
         </div>
         <app-gaslabel [tank]="firstTank"></app-gaslabel>
-        <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number {{ranges.tankOxygenLabel}}</div>
+        <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number {{ranges.nitroxOxygenLabel}}</div>
       </div>
   </div>
 </div>

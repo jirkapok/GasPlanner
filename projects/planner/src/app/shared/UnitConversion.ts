@@ -54,6 +54,8 @@ export interface RangeConstants {
     tankPressureLabel: string;
     nitroxOxygen: [number, number];
     nitroxOxygenLabel: string;
+    trimixOxygen: [number, number];
+    trimixOxygenLabel: string;
     tankHe: [number, number];
     tankHeLabel: string;
     diverSac: [number, number];
@@ -68,9 +70,10 @@ class MetricRanges implements RangeConstants {
     public tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
     public tankPressure: [number, number] = [30, 350];
     public tankPressureLabel: string = toLabel(this.tankPressure, this.units.pressureShortcut);
-    // TODO remove, since oxygen range is identical for both units, but different for nitrox and trimix gases
-    public nitroxOxygen: [number, number] = [1, 100];
+    public nitroxOxygen: [number, number] = [21, 100];
     public nitroxOxygenLabel: string = toLabel(this.nitroxOxygen, '%');
+    public trimixOxygen: [number, number] = [1, 100];
+    public trimixOxygenLabel: string = toLabel(this.trimixOxygen, '%');
     public tankHe: [number, number] = [0, 99];
     public tankHeLabel: string = toLabel(this.tankHe, '%');
     public diverSac: [number, number] = [5, 90];

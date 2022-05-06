@@ -17,8 +17,8 @@
                 </div>
             </th>
             <th>
-                <button class="btn btn-sm m-0 p-0" type="button" (click)="addTank()">
-                    <fa-icon [icon]="plusIcon"></fa-icon>
+                <button class="btn btn-default m-0 p-0 text-primary" type="button" (click)="addTank()">
+                    <fa-icon [icon]="plusIcon" class="px-0 mx-0"></fa-icon>
                 </button>
             </th>
         </tr>
@@ -82,7 +82,7 @@
                 </div>
             </td>
             <td class="align-top">
-                <button *ngIf="planner.firstTank !== tank" type="button" class="btn btn-sm m-0 p-0 align-top"
+                <button *ngIf="planner.firstTank !== tank" type="button" class="btn text-secondary m-0 p-0 align-top"
                     (click)="removeTank(tank)">
                     <fa-icon [icon]="trashIcon"></fa-icon>
                 </button>

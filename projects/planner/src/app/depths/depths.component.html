@@ -38,7 +38,7 @@
           <th>To [{{units.length}}]</th>
           <th>Duration [min]</th>
           <th>Tank</th>
-          <th><button class="btn btn-sm m-0 p-0" type="button" (click)="addSegment()"><fa-icon [icon]="addIcon"></fa-icon></button></th>
+          <th><button class="btn btn-default m-0 p-0 text-primary" type="button" (click)="addSegment()"><fa-icon [icon]="addIcon"></fa-icon></button></th>
         </tr>
         <tr *ngFor="let level of levels">
             <td>{{ level.startDepth | number:'1.0-0' }}</td>
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </td>
-            <td><button *ngIf="minimumSegments" type="button" class="btn btn-sm m-0 p-0" (click)="removeSegment(level)"><fa-icon [icon]="removeIcon"></fa-icon></button></td>
+            <td><button *ngIf="minimumSegments" type="button" class="btn text-secondary m-0 p-0 align-top" (click)="removeSegment(level)"><fa-icon [icon]="removeIcon"></fa-icon></button></td>
         </tr>
     </table>
   </div>

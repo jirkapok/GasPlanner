@@ -93,17 +93,20 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
 
     private plotCharts(): void {
         this.updateLayoutThickFormat();
-        this.plotAverageDepth();
-        this.plotDepths();
-        this.plotCeilings();
-        this.plotEvents();
+        const dataAverageDepths = this.plotAverageDepth();
+        const depths = this.plotDepths();
+        const ceilings = this.plotCeilings();
+        const plotEvents = this.plotEvents();
+        const traces = [ dataAverageDepths, depths, ceilings, plotEvents ];
+
+        Plotly.newPlot(this.elementName, traces, this.layout, this.options);
     }
 
     private updateLayoutThickFormat(): void {
         this.layout.xaxis.tickformat = DateFormats.selectChartTimeFormat(this.dive.totalDuration);
     }
 
-    private plotAverageDepth(): void {
+    private plotAverageDepth(): any {
         const xDepthValues: Date[] = [];
         const yDepthValues: number[] = [];
 
@@ -112,7 +115,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             this.transformAverageDepth(wayPoints, xDepthValues, yDepthValues);
         }
 
-        const dataAverageDepths = [{
+        const dataAverageDepths = {
             x: xDepthValues,
             y: yDepthValues,
             type: 'scatter',
@@ -123,9 +126,9 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             marker: {
                 color: 'rgb(62, 157, 223)'
             }
-        }];
+        };
 
-        Plotly.newPlot(this.elementName, dataAverageDepths, this.layout, this.options);
+        return dataAverageDepths;
     }
 
     private transformAverageDepth(waiPoints: WayPoint[], xDepthValues: Date[], yDepthValues: number[]): number {
@@ -154,11 +157,11 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         return cumulativeAverage;
     }
 
-    private plotDepths(): void {
+    private plotDepths(): any {
         const xValues: Date[] = [];
         const yValues: number[] = [];
 
-        const data = [{
+        const data = {
             x: xValues,
             y: yValues,
             type: 'scatter',
@@ -166,16 +169,16 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             marker: {
                 color: 'rgb(31, 119, 180)'
             }
-        }];
+        };
 
         this.dive.wayPoints.forEach((item, index, waypoints) => {
             this.resampleDepthsToSeconds(xValues, yValues, item);
         });
 
-        Plotly.addTraces(this.elementName, data, this.layout, this.options);
+        return data;
     }
 
-    private plotCeilings(): void {
+    private plotCeilings(): any  {
         const xCeilingValues: Date[] = [];
         const yCeilingValues: number[] = [];
 
@@ -186,7 +189,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             yCeilingValues.push(depth);
         });
 
-        const dataCeilings = [{
+        const dataCeilings = {
             x: xCeilingValues,
             y: yCeilingValues,
             type: 'scatter',
@@ -195,17 +198,17 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             marker: {
                 color: 'rgb(255, 160, 73)'
             }
-        }];
+        };
 
-        Plotly.addTraces(this.elementName, dataCeilings, this.layout, this.options);
+        return dataCeilings;
     }
 
-    private plotEvents(): void {
+    private plotEvents(): any {
         const x: Date[] = [];
         const y: number[] = [];
         const labels: string[] = [];
 
-        const dataEvents = [{
+        const dataEvents = {
             x: x,
             y: y,
             labels: labels,
@@ -228,20 +231,10 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
                 }
             },
             showlegend: false
-        }];
-
-        const eventsLayout = {
-            xaxis: {
-                showgrid: false,
-                showline: false
-            },
-            fig_bgcolor: 'rgb(255, 255, 255)',
-            plot_bgcolor: 'rgba(0, 0, 0, 0)',
-            paper_bgcolor: 'rgba(0, 0, 0, 0)'
         };
 
         this.convertEvents(x, y, labels);
-        Plotly.addTraces(this.elementName, dataEvents, eventsLayout);
+        return dataEvents;
     }
 
     private convertEvents(x: Date[], y: number[], labels: string[]): void {

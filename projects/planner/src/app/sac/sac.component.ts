@@ -48,9 +48,8 @@ export class SacComponent {
         return await this.router.navigateByUrl('/');
     }
 
-    public async use(): Promise<boolean>  {
+    public use(): void {
         this.planer.diver.rmv = this.calc.rmv;
-        return await this.router.navigateByUrl('/');
     }
 
     public gasSac(): number {

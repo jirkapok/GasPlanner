@@ -6,6 +6,7 @@ Following list of features and improvements ordered by priority is under develop
 
 * Gas oxygen content spinner shows not rounded number, where it shouldn't
 * Setting 15/55 trimix sets the helium to unexpected precise value
+* When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter for founding switch depth
 
 ## Improvements / Features
 

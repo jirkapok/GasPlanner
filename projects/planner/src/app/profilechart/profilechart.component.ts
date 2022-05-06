@@ -18,6 +18,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     public dive: Dive;
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
+    private chartElement: any;
 
     private options = {
         displaylogo: false,
@@ -27,6 +28,21 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         autosize: true,
         scrollZoom: false,
         editable: false
+    };
+
+    private cursor1 = {
+        xid: 1,
+        type: 'line',
+        // x-reference is assigned to the x-values
+        xref: 'x',
+        // y-reference is assigned to the plot paper [0,1]
+        yref: 'paper',
+        x0: '2001-06-12 12:30', // dummy values
+        y0: 0,
+        x1: '2001-06-12 12:30',
+        y1: 1,
+        fillcolor: '#d3d3d3',
+        opacity: 0.2,
     };
 
     private layout: any;
@@ -51,6 +67,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
                 }
             },
             margin: { l: 40, r: 10, b: 40, t: 10 },
+            shapes: []
         };
 
         this.updateLayoutThickFormat();
@@ -64,9 +81,10 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.plotCharts();
-        const chartElement: any = document.getElementById(this.elementName);
-        chartElement.on('plotly_hover', (e: any) => this.plotlyHover(e));
-        chartElement.on('plotly_click', (e: any) => this.plotlyHover(e));
+        this.chartElement = document.getElementById(this.elementName);
+        this.chartElement.on('plotly_hover', (e: any) => this.plotlyHover(e));
+        this.chartElement.on('plotly_click', (e: any) => this.plotlyHover(e));
+        this.chartElement.on('plotly_unhover', (e: any) => this.plotlyHoverLeave(e));
     }
 
     ngOnDestroy() {
@@ -86,9 +104,28 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     }
 
     public plotlyHover(data: any): void {
+        if (this.layout.shapes.length === 0) {
+            this.layout.shapes.push(this.cursor1);
+        }
+
+        const update = {
+            'shapes[0].x0': data.points[0].x,
+            'shapes[0].x1': data.points[0].x
+        };
+
+        // TODO finish the focus in the current grid
+        // Plotly.relayout(this.elementName, update);
+
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x;
         this.chartHover.emit(timeStampValue);
+    }
+
+    private plotlyHoverLeave(data: any) {
+        const update = {
+            shapes: []
+        };
+        Plotly.relayout(this.elementName, update);
     }
 
     private plotCharts(): void {
@@ -99,7 +136,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         const plotEvents = this.plotEvents();
         const traces = [ dataAverageDepths, depths, ceilings, plotEvents ];
 
-        Plotly.newPlot(this.elementName, traces, this.layout, this.options);
+        Plotly.react(this.elementName, traces, this.layout, this.options);
     }
 
     private updateLayoutThickFormat(): void {

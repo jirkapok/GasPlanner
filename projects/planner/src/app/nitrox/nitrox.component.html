@@ -19,15 +19,15 @@
                 required [rangeVal]="ranges.ppO2" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1"
                 [class.is-invalid]="pO2.invalid && (pO2.dirty || pO2.touched)" />
             </label>
-            <div class="text-danger" *ngIf="pO2.invalid && (pO2.dirty || pO2.touched)">Needs to be number 0.21-3 {{units.pressure}}</div>
+            <div class="text-danger" *ngIf="pO2.invalid && (pO2.dirty || pO2.touched)">Needs to be number 0.21-3</div>
           </div>
           <div [hidden]="inBestMix" class="my-2">
             <label for="fO2">Percent O2:
               <input [(ngModel)]="calc.fO2" class="form-control" #fO2="ngModel" name="fO2" id="fO2" type="number"
-                 required [rangeVal]="[21,100]" min="21" max="100" step="1"
+                 required [rangeVal]="ranges.nitroxOxygen" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[0]" step="1"
                  [class.is-invalid]="fO2.invalid && (fO2.dirty || fO2.touched)" />
             </label>
-            <div class="text-danger" *ngIf="fO2.invalid && (fO2.dirty || fO2.touched)">Needs to be number 21-100 %</div>
+            <div class="text-danger" *ngIf="fO2.invalid && (fO2.dirty || fO2.touched)">Needs to be number {{ranges.nitroxOxygenLabel}}</div>
           </div>
           <div [hidden]="inMod" class="my-2">
             <label for="mod">MOD [{{units.length}}]:
@@ -50,7 +50,7 @@
               </label>
           </div>
           <div [hidden]="!inPO2" class="my-2">
-              <label for="mod">ppO2 [{{units.pressure}}]:
+              <label for="mod">ppO2:
                 <input [ngModel]="calc.pO2" class="form-control" readonly/>
               </label>
           </div>

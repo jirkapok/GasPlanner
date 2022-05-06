@@ -14,9 +14,9 @@
             <button type="button" class="btn" [class.btn-primary]="inPO2" (click)="toPO2()">ppO2</button>
           </div>
           <div [hidden]="inPO2" class="my-2">
-            <label for="pO2">ppO2 [{{units.pressure}}]:
+            <label for="pO2">ppO2:
               <input [(ngModel)]="calc.pO2" class="form-control" #pO2="ngModel" name="pO2" id="pO2" type="number"
-                required [rangeVal]="[0.21,3]"  [minVal]="0.21" [maxVal]="3" min="0.21" max="3" step="0.1"
+                required [rangeVal]="ranges.ppO2" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1"
                 [class.is-invalid]="pO2.invalid && (pO2.dirty || pO2.touched)" />
             </label>
             <div class="text-danger" *ngIf="pO2.invalid && (pO2.dirty || pO2.touched)">Needs to be number 0.21-3 {{units.pressure}}</div>
@@ -24,7 +24,7 @@
           <div [hidden]="inBestMix" class="my-2">
             <label for="fO2">Percent O2:
               <input [(ngModel)]="calc.fO2" class="form-control" #fO2="ngModel" name="fO2" id="fO2" type="number"
-                 required [rangeVal]="[21,100]" [minVal]="21" [maxVal]="100" min="21" max="100" step="1"
+                 required [rangeVal]="[21,100]" min="21" max="100" step="1"
                  [class.is-invalid]="fO2.invalid && (fO2.dirty || fO2.touched)" />
             </label>
             <div class="text-danger" *ngIf="fO2.invalid && (fO2.dirty || fO2.touched)">Needs to be number 21-100 %</div>

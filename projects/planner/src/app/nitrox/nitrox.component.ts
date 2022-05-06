@@ -4,7 +4,7 @@ import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { NitroxCalculatorService, NitroxMode } from '../shared/nitrox-calculator.service';
 import { PlannerService } from '../shared/planner.service';
-import { UnitConversion } from '../shared/UnitConversion';
+import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-nitrox',
@@ -17,6 +17,10 @@ export class NitroxComponent {
         private planer: PlannerService, public units: UnitConversion) {
         this.calc.fO2 = this.planer.firstTank.o2;
         this.calc.pO2 = this.planer.diver.maxPpO2;
+    }
+
+    public get ranges(): RangeConstants {
+        return this.units.ranges;
     }
 
     public get inMod(): boolean {

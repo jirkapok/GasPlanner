@@ -25,10 +25,6 @@ export class UnitConversion {
         }
     }
 
-    public get label(): string {
-        return `${this.current.name} (${this.current.lengthShortcut}, ${this.current.pressureShortcut}, ${this.current.volumeShortcut})`;
-    }
-
     public get length(): string {
         return this.current.lengthShortcut;
     }

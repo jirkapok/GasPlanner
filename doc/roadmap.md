@@ -12,6 +12,7 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
+* Add metadata to html head
 * Add imperial units option
   * Fix all validator ranges (SAC, depths, options)
   * Fix all value bindings (Settings, Nitrox calc, SAC, tanks, depths, options, profile, profile chart, dive info)

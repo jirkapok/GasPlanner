@@ -31,12 +31,12 @@
           <div [hidden]="inDuration" class="my-2">
             <label for="duration">Dive time [min]:
               <input [(ngModel)]="calc.duration" class="form-control" #duration="ngModel" name="duration" id="duration"
-              type="number" required  [rangeVal]="[1,350]" min="1" max="350" step="1"
+              type="number" required  [rangeVal]="ranges.duration" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
               [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"
               />
             </label>
             <div class="text-danger" *ngIf="duration.invalid && (duration.dirty || duration.touched)"
-            >Needs to be number 1-350 min</div>
+            >Needs to be number {{ ranges.durationLabel }}</div>
           </div>
           <div [hidden]="inUsed" class="my-2">
             <label for="used">Gas consumed [{{units.pressure}}]:

@@ -9,22 +9,6 @@ export class UnitConversion {
         return this._ranges;
     }
 
-    public get imperialUnits(): boolean {
-        return this._imperialUnits;
-    }
-
-    public set imperialUnits(newValue: boolean) {
-        this._imperialUnits = newValue;
-
-        if (this._imperialUnits) {
-            this.current = new ImperialUnits();
-            this._ranges = new MetricRanges(this.current);
-        } else {
-            this.current = new MetricUnits();
-            this._ranges = new MetricRanges(this.current);
-        }
-    }
-
     public get length(): string {
         return this.current.lengthShortcut;
     }
@@ -43,6 +27,23 @@ export class UnitConversion {
 
     public get autoStopLevel(): number {
         return this._imperialUnits ? 33 : 10;
+    }
+
+    public get imperialUnits(): boolean {
+        return this._imperialUnits;
+    }
+
+    public set imperialUnits(newValue: boolean) {
+        this._imperialUnits = newValue;
+
+        if (this._imperialUnits) {
+            this.current = new ImperialUnits();
+            this._ranges = new MetricRanges(this.current);
+        } else {
+            this.current = new MetricUnits();
+            // TODO Replace with ImperialRanges
+            this._ranges = new MetricRanges(this.current);
+        }
     }
 }
 
@@ -63,6 +64,8 @@ export interface RangeConstants {
     ppO2: [number, number];
     depth: [number, number];
     depthLabel: string;
+    duration: [number, number];
+    durationLabel: string;
 }
 
 const toLabel = (range: [number, number], unit: string): string => `${range[0]} - ${range[1]} ${unit}`;
@@ -83,9 +86,10 @@ class MetricRanges implements RangeConstants {
     public ppO2: [number, number] = [0.21, 3];
     public depth: [number, number] = [1,350];
     public depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
+    public duration: [number, number] = [1,1440];
+    public durationLabel: string = toLabel(this.duration, 'min');
+
     // TODO add speed, altitude
-
-
 
     constructor(private units: Units) {}
 }

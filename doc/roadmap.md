@@ -14,7 +14,7 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add metadata to html head
 * Add imperial units option
-  * Fix all validator ranges (SAC, depths, options)
+  * Fix all validator ranges (options)
   * Fix all value bindings (Settings, Nitrox calc, SAC, tanks, depths, options, profile, profile chart, dive info)
   * Fix depth range inside the algorithm and add test to keep the stops per 10 feet
   * Fix last stop depth values
@@ -27,6 +27,7 @@ Following list of features and improvements ordered by priority is under develop
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
 * Add no deco table
+* Redundancies calculator - when filling one tank from second. What is the target pressure in both.
 * Add gas depth range calculator
 * Add CNS and OTU calculations
   * <https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf>
@@ -38,6 +39,9 @@ Following list of features and improvements ordered by priority is under develop
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
   * Add explanation how to fix the events
 * UI Tweaks
+  * Calculation
+    * Set dive not calculated, if any field on the form isn't valid
+    * Delay Long duration of calculation (depth more than 200 m already takes few seconds)
   * Tanks
     * Add Dropdown for well known tank sizes
   * Profile:

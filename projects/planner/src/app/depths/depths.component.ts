@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { Segment, StandardGases, Tank } from 'scuba-physics';
 import { Plan, Level, Dive } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
-import { UnitConversion } from '../shared/UnitConversion';
+import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-depths',
@@ -23,7 +23,6 @@ export class DepthsComponent implements OnDestroy {
     private subscription: Subscription;
     private dive: Dive;
 
-
     constructor(public planner: PlannerService, public units: UnitConversion) {
         this.plan = this.planner.plan;
         this.dive = this.planner.dive;
@@ -34,20 +33,12 @@ export class DepthsComponent implements OnDestroy {
         });
     }
 
-    public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+    public get ranges(): RangeConstants {
+        return this.units.ranges;
     }
 
     public get isComplex(): boolean {
         return this.planner.isComplex;
-    }
-
-    public get planDuration(): number {
-        return this.plan.duration;
-    }
-
-    public set planDuration(newValue: number) {
-        this.planner.assignDuration(newValue);
     }
 
     public get minimumSegments(): boolean {
@@ -60,6 +51,45 @@ export class DepthsComponent implements OnDestroy {
 
     public get tanks(): Tank[] {
         return this.planner.tanks;
+    }
+
+    public get noDecoTime(): number {
+        const result = this.plan.noDecoTime;
+        if (result >= PlannerService.maxAcceptableNdl) {
+            return Infinity;
+        }
+
+        return result;
+    }
+
+    public get bestMix(): string {
+        const o2 = this.planner.bestNitroxMix() / 100;
+        return StandardGases.nameFor(o2);
+    }
+
+    public get showMaxDuration(): boolean {
+        return this.dive.calculated && this.dive.maxTime > 0;
+    }
+
+    public get planDuration(): number {
+        return this.plan.duration;
+    }
+
+    public set planDuration(newValue: number) {
+        this.planner.assignDuration(newValue);
+    }
+
+    @Input()
+    public get plannedDepth(): number {
+        return this.plan.maxDepth;
+    }
+
+    public set plannedDepth(depth: number) {
+        this.planner.assignDepth(depth);
+    }
+
+    public ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     public tankLabel(tank: Tank): string {
@@ -86,33 +116,6 @@ export class DepthsComponent implements OnDestroy {
     public assignTank(level: Level, tank: Tank): void {
         level.tank = tank;
         this.planner.calculate();
-    }
-
-    @Input()
-    public get plannedDepth(): number {
-        return this.plan.maxDepth;
-    }
-
-    public set plannedDepth(depth: number) {
-        this.planner.assignDepth(depth);
-    }
-
-    public get noDecoTime(): number {
-        const result = this.plan.noDecoTime;
-        if (result >= PlannerService.maxAcceptableNdl) {
-            return Infinity;
-        }
-
-        return result;
-    }
-
-    public get bestMix(): string {
-        const o2 = this.planner.bestNitroxMix() / 100;
-        return StandardGases.nameFor(o2);
-    }
-
-    public get showMaxDuration(): boolean {
-        return this.dive.calculated && this.dive.maxTime > 0;
     }
 
     private updateLevels(): void {

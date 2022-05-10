@@ -4,8 +4,12 @@ export interface Units {
     pressureShortcut: string;
     volumeShortcut: string;
     altitudeShortcut: string;
+    /** Depth at which last speed change occurs */
     lastSpeedLevel: number;
+    /** Depth at which we decide if safety stop is required */
     autoStopLevel: number;
+    /** Distance defining stops during auto calculated ascent */
+    stopsDistance: number;
     toMeters(length: number): number;
     fromMeters(meters: number): number;
     toBar(pressure: number): number;
@@ -45,6 +49,10 @@ export class MetricUnits implements Units {
 
     public get autoStopLevel(): number {
         return 10;
+    }
+
+    public get stopsDistance(): number {
+        return 3;
     }
 
     public toMeters(length: number): number {
@@ -118,6 +126,10 @@ export class ImperialUnits implements Units {
 
     public get autoStopLevel(): number {
         return 33;
+    }
+
+    public get stopsDistance(): number {
+        return 10;
     }
 
     public toMeters(length: number): number {

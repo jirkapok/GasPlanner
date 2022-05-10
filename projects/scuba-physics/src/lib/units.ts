@@ -3,6 +3,9 @@ export interface Units {
     lengthShortcut: string;
     pressureShortcut: string;
     volumeShortcut: string;
+    altitudeShortcut: string;
+    lastSpeedLevel: number;
+    autoStopLevel: number;
     toMeters(length: number): number;
     fromMeters(meters: number): number;
     toBar(pressure: number): number;
@@ -30,6 +33,18 @@ export class MetricUnits implements Units {
 
     public get volumeShortcut(): string{
         return 'l';
+    }
+
+    public get altitudeShortcut(): string{
+        return 'm.a.s.l';
+    }
+
+    public get lastSpeedLevel(): number {
+        return 6;
+    }
+
+    public get autoStopLevel(): number {
+        return 10;
     }
 
     public toMeters(length: number): number {
@@ -91,6 +106,18 @@ export class ImperialUnits implements Units {
 
     public get volumeShortcut(): string{
         return 'cuft';
+    }
+
+    public get altitudeShortcut(): string{
+        return 'ft.a.s.l';
+    }
+
+    public get lastSpeedLevel(): number {
+        return 20;
+    }
+
+    public get autoStopLevel(): number {
+        return 33;
     }
 
     public toMeters(length: number): number {

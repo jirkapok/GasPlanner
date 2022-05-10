@@ -6,7 +6,7 @@
     </div>
     <div class="card-body">
         <div>
-        <label for="sac">Surface air consumption [{{units.volume}}/min]:
+        <label for="sac">Respiratory minute volume [{{units.rmv}}]:
             <input [(ngModel)]="diver.rmv" class="form-control" #sac="ngModel" name="sac" id="sac"
             type="number" required [rangeVal]="ranges.diverSac" [min]="ranges.diverSac[0]" [max]="ranges.diverSac[1]" step="1"
             [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)"/>

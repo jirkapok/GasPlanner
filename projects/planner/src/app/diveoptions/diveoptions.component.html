@@ -54,13 +54,13 @@
                     </div>
                 </div>
                 <div class="mb-3 col-auto">
-                    <label for="altitude" class="form-label">Altitude [{{units.length}}.a.s.l.]:</label>
+                    <label for="altitude" class="form-label">Altitude [{{units.altitude}}]:</label>
                     <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude"
-                        class="form-control col-auto" type="number" required [rangeVal]="[0, 4000]" [minVal]="0"
-                        [maxVal]="4000" min="0" max="4000" step="1"
+                        class="form-control col-auto" type="number"
+                        required [rangeVal]="ranges.altitude" [min]="ranges.altitude[0]" [max]="ranges.altitude[1]" step="1"
                         [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)" />
                     <div class="text-danger form-text" *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">
-                        Needs to be number 0 - 4000 {{units.length}}
+                        Needs to be number {{ranges.altitudeLabel}}
                     </div>
                 </div>
             </div>
@@ -97,14 +97,14 @@
                     aria-labelledby="environment-tab">
                     <div class="mt-3">
                         <div class="mb-3">
-                            <label for="altitude" class="form-label">Altitude [{{units.length}}.a.s.l.]:</label>
+                            <label for="altitude" class="form-label">Altitude  [{{units.altitude}}]:</label>
                             <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude"
-                                class="form-control col-auto" type="number" required [rangeVal]="[0, 4000]" [minVal]="0"
-                                [maxVal]="4000" step="1" min="0" max="4000"
+                                class="form-control col-auto" type="number"
+                                required [rangeVal]="ranges.altitude" [min]="ranges.altitude[0]" [max]="ranges.altitude[1]" step="1"
                                 [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)" />
                             <div class="text-danger form-text"
                                 *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">
-                                Needs to be number 0 - 4000 {{units.length}}
+                                Needs to be number {{ranges.altitudeLabel}}
                             </div>
                         </div>
                         <div class="mb-3">
@@ -173,11 +173,11 @@
                             <label for="maxNarcoticDepth" class="form-label">Maximum narcotic depth [{{units.length}}]:</label>
                             <input id="maxNarcoticDepth" name="maxNarcoticDepth" #maxNarcoticDepth="ngModel"
                                 [(ngModel)]="gasMaxNarcoticDepth" class="form-control col-auto" type="number" required
-                                [rangeVal]="[1, 100]" [minVal]="1" [maxVal]="100" step="1" min="1" max="100"
+                                [rangeVal]="ranges.narcoticDepth" [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
                                 [class.is-invalid]="maxNarcoticDepth.invalid && (maxNarcoticDepth.dirty || maxNarcoticDepth.touched)" />
                             <div class="text-danger form-text"
                                 *ngIf="maxNarcoticDepth.invalid && (maxNarcoticDepth.dirty || maxNarcoticDepth.touched)">
-                                Needs to be number 1 - 100 {{units.length}}
+                                Needs to be number {{ranges.narcoticDepthLabel}}
                             </div>
                         </div>
                         <div class="row ms-4">
@@ -237,11 +237,11 @@
                             <label for="lastStop" class="form-label">Last stop depth [{{units.length}}]:</label>
                             <input id="lastStop" name="lastStop" #lastStop="ngModel"
                                 [(ngModel)]="lastStopDepth" class="form-control col-auto" type="number" required
-                                [rangeVal]="[3, 6]" [minVal]="3" [maxVal]="6" step="1" min="3" max="6"
+                                [rangeVal]="ranges.lastStopDepth" [min]="ranges.lastStopDepth[0]" [max]="ranges.lastStopDepth[1]" step="1"
                                 [class.is-invalid]="lastStop.invalid && (lastStop.dirty || lastStop.touched)" />
                             <div class="text-danger form-text"
                                 *ngIf="lastStop.invalid && (lastStop.dirty || lastStop.touched)">
-                                Needs to be number 3 - 6 {{units.length}}
+                                Needs to be number {{ranges.lastStopDepthLabel}}
                             </div>
                         </div>
                         <div class="row ms-4">
@@ -256,49 +256,49 @@
                 <div class="tab-pane fade container" id="speeds" role="tabpanel" aria-labelledby="speeds-tab">
                     <div class="row mt-3">
                         <div class="mb-3 col-auto">
-                            <label for="descSpeed" class="form-label">Descent speed [{{units.length}}/min]:</label>
+                            <label for="descSpeed" class="form-label">Descent speed [{{units.speed}}]:</label>
                             <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="descentSpeed"
-                                class="form-control col-auto" type="number" required [rangeVal]="[1, 100]" [minVal]="1"
-                                [maxVal]="100" step="1" min="1" max="100"
+                                class="form-control col-auto" type="number"
+                                required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                 [class.is-invalid]="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)" />
                             <div class="text-danger form-text"
                                 *ngIf="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)">
-                                Needs to be number 1 - 100 {{units.length}}/min
+                                Needs to be number {{ranges.speedLabel}}
                             </div>
                         </div>
                         <div class="mb-3 col-auto">
-                            <label for="ascSpeed" class="form-label">Ascent {{units.lastSpeedLevel}} {{units.length}} to surface [{{units.length}}/min]:</label>
+                            <label for="ascSpeed" class="form-label">Ascent {{units.lastSpeedLevel}} {{units.length}} to surface [{{units.speed}}]:</label>
                             <input id="ascSpeed" name="ascSpeed" #ascSpeed="ngModel" [(ngModel)]="ascentSpeed6m"
-                                class="form-control col-auto" type="number" required [rangeVal]="[1, 100]" [minVal]="1"
-                                [maxVal]="100" step="1" min="1" max="100"
+                                class="form-control col-auto" type="number"
+                                required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                 [class.is-invalid]="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)" />
                             <div class="text-danger form-text"
                                 *ngIf="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)">
-                                Needs to be number 1 - 100 {{units.length}}/min
+                                Needs to be number {{ranges.speedLabel}}
                             </div>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="mb-3 col-auto">
-                            <label for="ascSpeed2" class="form-label">Ascent up to {{units.lastSpeedLevel}} {{units.length}} depth [{{units.length}}/min]:</label>
+                            <label for="ascSpeed2" class="form-label">Ascent up to {{units.lastSpeedLevel}} {{units.length}} depth [{{units.speed}}]:</label>
                             <input id="ascSpeed2" name="ascSpeed2" #ascSpeed2="ngModel"
-                                [(ngModel)]="ascentSpeed50percTo6m" class="form-control col-auto" type="number" required
-                                [rangeVal]="[1, 100]" [minVal]="1" [maxVal]="100" step="1" min="1" max="100"
+                                [(ngModel)]="ascentSpeed50percTo6m" class="form-control col-auto" type="number"
+                                required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                 [class.is-invalid]="ascSpeed2.invalid && (ascSpeed2.dirty || ascSpeed2.touched)" />
                             <div class="text-danger form-text"
                                 *ngIf="ascSpeed2.invalid && (ascSpeed2.dirty || ascSpeed2.touched)">
-                                Needs to be number 1 - 100 {{units.length}}/min
+                                Needs to be number {{ranges.speedLabel}}
                             </div>
                         </div>
                         <div class="mb-3 col-auto">
-                            <label for="ascSpeed3" class="form-label">Ascent up to 50% depth [{{units.length}}/min]:</label>
+                            <label for="ascSpeed3" class="form-label">Ascent up to 50% depth [{{units.speed}}]:</label>
                             <input id="ascSpeed3" name="ascSpeed3" #ascSpeed3="ngModel" [(ngModel)]="ascentSpeed50perc"
-                                class="form-control col-auto" type="number" required [rangeVal]="[1, 100]" [minVal]="1"
-                                [maxVal]="100" step="1" min="1" max="100"
+                                class="form-control col-auto" type="number"
+                                required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                 [class.is-invalid]="ascSpeed3.invalid && (ascSpeed3.dirty || ascSpeed3.touched)" />
                             <div class="text-danger form-text"
                                 *ngIf="ascSpeed3.invalid && (ascSpeed3.dirty || ascSpeed3.touched)">
-                                Needs to be number 1 - 100 {{units.length}}/min
+                                Needs to be number {{ranges.speedLabel}}
                             </div>
                         </div>
                     </div>

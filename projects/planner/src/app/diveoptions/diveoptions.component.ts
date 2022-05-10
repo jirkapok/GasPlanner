@@ -3,7 +3,7 @@ import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { OptionDefaults, SafetyStop, Salinity } from 'scuba-physics';
 import { Plan, Strategies } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
-import { UnitConversion } from '../shared/UnitConversion';
+import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-diveoptions',
@@ -48,6 +48,10 @@ export class DiveOptionsComponent {
         }
 
         this.planner.calculate();
+    }
+
+    public get ranges(): RangeConstants {
+        return this.units.ranges;
     }
 
     public get roundDecoStops(): boolean {

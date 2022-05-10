@@ -49,11 +49,11 @@
           <div [hidden]="inSac" class="my-2">
             <label for="sac">RMV [{{units.rmv}}]:
               <input [(ngModel)]="calc.rmv" class="form-control" #sac="ngModel" name="sac" id="sac" type="number"
-                 required [rangeVal]="ranges.diverSac" [min]="ranges.diverSac[0]" [max]="ranges.diverSac[1]" step="1"
+                 required [rangeVal]="ranges.diverRmv" [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="1"
                  [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)" />
               <small class="form-text text-muted">SAC: {{gasSac() | number:'1.0-2'}} {{units.sac}}</small>
             </label>
-            <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number {{ranges.diverSacLabel}}</div>
+            <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number {{ranges.diverRmvLabel}}</div>
           </div>
           <div [hidden]="!inSac" class="my-2">
             <label for="sac">RMV [{{units.rmv}}]:

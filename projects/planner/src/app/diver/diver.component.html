@@ -8,10 +8,10 @@
         <div>
         <label for="sac">Respiratory minute volume [{{units.rmv}}]:
             <input [(ngModel)]="diver.rmv" class="form-control" #sac="ngModel" name="sac" id="sac"
-            type="number" required [rangeVal]="ranges.diverSac" [min]="ranges.diverSac[0]" [max]="ranges.diverSac[1]" step="1"
+            type="number" required [rangeVal]="ranges.diverRmv" [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="1"
             [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)"/>
         </label>
-        <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number {{ranges.diverSacLabel}}</div>
+        <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number {{ranges.diverRmvLabel}}</div>
         </div>
         <div>
         <label for="maxPpO2">Maximum ppO2:

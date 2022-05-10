@@ -78,8 +78,8 @@ export interface RangeConstants {
     trimixOxygenLabel: string;
     tankHe: [number, number];
     tankHeLabel: string;
-    diverSac: [number, number];
-    diverSacLabel: string;
+    diverRmv: [number, number];
+    diverRmvLabel: string;
     ppO2: [number, number];
     depth: [number, number];
     depthLabel: string;
@@ -109,8 +109,8 @@ class MetricRanges implements RangeConstants {
     public trimixOxygenLabel: string = toLabel(this.trimixOxygen, '%');
     public tankHe: [number, number] = [0, 99];
     public tankHeLabel: string = toLabel(this.tankHe, '%');
-    public diverSac: [number, number] = [5, 90];
-    public diverSacLabel: string = toLabel(this.diverSac, this.units.volumeShortcut + perMinute);
+    public diverRmv: [number, number] = [5, 90];
+    public diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
     public ppO2: [number, number] = [0.21, 3];
     public depth: [number, number] = [1,350];
     public depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);

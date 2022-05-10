@@ -7,14 +7,13 @@ Following list of features and improvements ordered by priority is under develop
 * Gas oxygen content spinner shows not rounded number, where it shouldn't
 * Setting 15/55 trimix sets the helium to unexpected precise value
 * When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter for founding switch depth
-* When using low oxygen content close to 1% only, the app freezes
+* When using low oxygen content close to 1% only or depth more than 200 m, the app freezes
 * Bottom gas 21/35 at 50 meters - no MND warning is shown
 
 ## Improvements / Features
 
 * Add metadata to html head
 * Add imperial units option
-  * Fix all validator ranges (options)
   * Fix all value bindings (Settings, Nitrox calc, SAC, tanks, depths, options, profile, profile chart, dive info)
   * Fix depth range inside the algorithm and add test to keep the stops per 10 feet
   * Fix last stop depth values

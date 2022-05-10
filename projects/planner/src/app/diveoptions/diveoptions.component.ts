@@ -34,103 +34,6 @@ export class DiveOptionsComponent {
         this.plan = this.planner.plan;
     }
 
-    // TODO fix units in labels
-    // "Ascent 6 m to surface"
-    // "Ascent up to 6 m depth"
-
-    public reset(): void {
-        switch (this.plan.strategy) {
-            case Strategies.HALF: {
-                this.halfUsable();
-                break;
-            }
-            case Strategies.THIRD: {
-                this.thirdUsable();
-                break;
-            }
-            default: {
-                this.allUsable();
-                break;
-            }
-        }
-    }
-
-    public lowConservatism(): void {
-        this.conservatism = this.lowName;
-        this.plannedGfLow = 45;
-        this.plannedGfHigh = 95;
-    }
-
-    public mediumConservatism(): void {
-        this.setMediumConservatism();
-        this.planner.setMediumConservatism();
-        this.planner.calculate();
-    }
-
-    public highConservatism(): void {
-        this.conservatism = this.highName;
-        this.plannedGfLow = 30;
-        this.plannedGfHigh = 75;
-    }
-
-    public allUsable(): void {
-        this.setAllUsable();
-        this.planner.calculate();
-    }
-
-    public setAllUsable(): void {
-        this.plan.strategy = Strategies.ALL;
-        this.strategy = this.allUsableName;
-    }
-
-    public halfUsable(): void {
-        this.plan.strategy = Strategies.HALF;
-        this.strategy = this.halfUsableName;
-        this.planner.calculate();
-    }
-
-    public thirdUsable(): void {
-        this.plan.strategy = Strategies.THIRD;
-        this.strategy = this.thirdUsableName;
-        this.planner.calculate();
-    }
-
-    public useRecreational(): void {
-        this.mediumConservatism();
-        OptionDefaults.useRecreational(this.planner.options);
-        this.planner.calculate();
-    }
-
-    public useRecommended(): void {
-        this.mediumConservatism();
-        OptionDefaults.useRecommended(this.planner.options);
-        this.planner.calculate();
-    }
-
-    public useFresh(): void {
-        this.planner.changeWaterType(Salinity.fresh);
-    }
-
-    public useBrackish(): void {
-        this.planner.changeWaterType(Salinity.brackish);
-    }
-
-    public useSalt(): void {
-        this.planner.changeWaterType(Salinity.salt);
-    }
-
-    public useSafetyOff(): void {
-        this.planner.changeSafetyStop(SafetyStop.never);
-    }
-
-    public useSafetyAuto(): void {
-        this.planner.changeSafetyStop(SafetyStop.auto);
-    }
-
-    public useSafetyOn(): void {
-        this.planner.changeSafetyStop(SafetyStop.always);
-    }
-
     public get isComplex(): boolean {
         return this.planner.isComplex;
     }
@@ -145,10 +48,6 @@ export class DiveOptionsComponent {
         }
 
         this.planner.calculate();
-    }
-
-    private setMediumConservatism(): void {
-        this.conservatism = this.mediumName;
     }
 
     public get roundDecoStops(): boolean {
@@ -310,5 +209,106 @@ export class DiveOptionsComponent {
 
         this.planner.options.descentSpeed = newValue;
         this.planner.calculate();
+    }
+
+    // TODO fix units in labels
+    // "Ascent 6 m to surface"
+    // "Ascent up to 6 m depth"
+
+    public reset(): void {
+        switch (this.plan.strategy) {
+            case Strategies.HALF: {
+                this.halfUsable();
+                break;
+            }
+            case Strategies.THIRD: {
+                this.thirdUsable();
+                break;
+            }
+            default: {
+                this.allUsable();
+                break;
+            }
+        }
+    }
+
+    public lowConservatism(): void {
+        this.conservatism = this.lowName;
+        this.plannedGfLow = 45;
+        this.plannedGfHigh = 95;
+    }
+
+    public mediumConservatism(): void {
+        this.setMediumConservatism();
+        this.planner.setMediumConservatism();
+        this.planner.calculate();
+    }
+
+    public highConservatism(): void {
+        this.conservatism = this.highName;
+        this.plannedGfLow = 30;
+        this.plannedGfHigh = 75;
+    }
+
+    public allUsable(): void {
+        this.setAllUsable();
+        this.planner.calculate();
+    }
+
+    public setAllUsable(): void {
+        this.plan.strategy = Strategies.ALL;
+        this.strategy = this.allUsableName;
+    }
+
+    public halfUsable(): void {
+        this.plan.strategy = Strategies.HALF;
+        this.strategy = this.halfUsableName;
+        this.planner.calculate();
+    }
+
+    public thirdUsable(): void {
+        this.plan.strategy = Strategies.THIRD;
+        this.strategy = this.thirdUsableName;
+        this.planner.calculate();
+    }
+
+    public useRecreational(): void {
+        this.mediumConservatism();
+        OptionDefaults.useRecreational(this.planner.options);
+        this.planner.calculate();
+    }
+
+    public useRecommended(): void {
+        this.mediumConservatism();
+        OptionDefaults.useRecommended(this.planner.options);
+        this.planner.calculate();
+    }
+
+    public useFresh(): void {
+        this.planner.changeWaterType(Salinity.fresh);
+    }
+
+    public useBrackish(): void {
+        this.planner.changeWaterType(Salinity.brackish);
+    }
+
+    public useSalt(): void {
+        this.planner.changeWaterType(Salinity.salt);
+    }
+
+    public useSafetyOff(): void {
+        this.planner.changeSafetyStop(SafetyStop.never);
+    }
+
+    public useSafetyAuto(): void {
+        this.planner.changeSafetyStop(SafetyStop.auto);
+    }
+
+    public useSafetyOn(): void {
+        this.planner.changeSafetyStop(SafetyStop.always);
+    }
+
+    private setMediumConservatism(): void {
+        this.conservatism = this.mediumName;
     }
 }

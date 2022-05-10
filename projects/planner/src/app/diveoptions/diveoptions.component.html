@@ -135,8 +135,8 @@
                             <label for="gfLow" class="form-label">Gradient low [%]:</label>
                             <div class="input-group gradients-max-width">
                                 <input id="gfLow" name="gfLow" #gfLow="ngModel" [(ngModel)]="plannedGfLow"
-                                    class="form-control col-auto" type="number" required [rangeVal]="[10, 100]"
-                                    [minVal]="10" [maxVal]="100" step="1" min="10" max="100"
+                                    class="form-control col-auto" type="number"
+                                    required [rangeVal]="[10, 100]" min="10" max="100" step="1"
                                     [class.is-invalid]="gfLow.invalid && (gfLow.dirty || gfLow.touched)" />
                                 <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                                     <button type="button" class="btn btn-default border" id="conservatismMenu2"
@@ -157,8 +157,8 @@
                         <div class="mb-3">
                             <label for="gfHigh" class="form-label">Gradient high [%]:</label>
                             <input id="gfHigh" name="gfHigh" #gfHigh="ngModel" [(ngModel)]="plannedGfHigh"
-                                class="form-control col-auto" type="number" required [rangeVal]="[10, 100]"
-                                [minVal]="10" [maxVal]="100" step="1" min="10" max="100"
+                                class="form-control col-auto" type="number" required
+                                [rangeVal]="[10, 100]" min="10" max="100" step="1"
                                 [class.is-invalid]="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)" />
                             <div class="text-danger form-text"
                                 *ngIf="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)">
@@ -194,8 +194,8 @@
                         <div class="mb-3 col-auto">
                             <label for="problem" class="form-label">Problem solving duration [min]:</label>
                             <input id="problem" name="problem" #problem="ngModel" [(ngModel)]="problemSolvingDuration"
-                                class="form-control col-auto" type="number" required [rangeVal]="[1, 100]" [minVal]="1"
-                                [maxVal]="100" step="1" min="1" max="100"
+                                class="form-control col-auto" type="number"
+                                required [rangeVal]="[1, 100]" min="1" max="100" step="1"
                                 [class.is-invalid]="problem.invalid && (problem.dirty || problem.touched)" />
                             <div class="text-danger form-text"
                                 *ngIf="problem.invalid && (problem.dirty || problem.touched)">
@@ -205,8 +205,8 @@
                         <div class="mb-3 col-auto">
                             <label for="switchDuration" class="form-label">Gas switch duration [min]:</label>
                             <input id="switchDuration" name="switchDuration" #switchDuration="ngModel"
-                                [(ngModel)]="gasSwitchDuration" class="form-control col-auto" type="number" required
-                                [rangeVal]="[1, 10]" [minVal]="1" [maxVal]="10" step="1" min="1" max="10"
+                                [(ngModel)]="gasSwitchDuration" class="form-control col-auto" type="number"
+                                required [rangeVal]="[1, 10]" min="1" max="10" step="1"
                                 [class.is-invalid]="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)" />
                             <div class="text-danger form-text"
                                 *ngIf="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)">

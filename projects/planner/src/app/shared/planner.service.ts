@@ -26,6 +26,36 @@ export class PlannerService {
     private depthConverter: DepthConverter;
     private nitroxCalculator: NitroxCalculator;
 
+    constructor() {
+        this._options = new Options();
+        this._options.salinity = Salinity.fresh;
+        this._options.safetyStop = SafetyStop.auto;
+        this.depthConverterFactory = new DepthConverterFactory(this.options);
+        this.depthConverter = this.depthConverterFactory.create();
+        this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
+        const tank = Tank.createDefault();
+        tank.id = 1;
+        this._tanks.push(tank);
+        this.calculated = this.onCalculated.asObservable();
+        this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
+    }
+
+    public get maxNarcDepth(): number {
+        const depthInBars = this.depthConverter.toBar(this.options.maxEND);
+        const maxNarcBar = this.firstTank.gas.end(depthInBars, this.options.oxygenNarcotic);
+        const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
+        // because of javascript numbers precision we need to help our self
+        const roundedNarc = Math.round(maxNarcDepth * 100) / 100;
+        // Narcotic depth it self makes no sense without helium,
+        // because its narcotic coefficient is 1 for all Nitrox mixes
+        const minFound = Math.min(roundedNarc, this.gasMod);
+        return Math.floor(minFound);
+    }
+
+    public get gasMod(): number {
+        return this.modForGas(this.firstTank);
+    }
+
     public get options(): Options {
         return this._options;
     }
@@ -40,20 +70,6 @@ export class PlannerService {
 
     public get ndlValid(): boolean {
         return this.dive.calculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
-    }
-
-    constructor() {
-        this._options = new Options();
-        this._options.salinity = Salinity.fresh;
-        this._options.safetyStop = SafetyStop.auto;
-        this.depthConverterFactory = new DepthConverterFactory(this.options);
-        this.depthConverter = this.depthConverterFactory.create();
-        this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
-        const tank = Tank.createDefault();
-        tank.id = 1;
-        this._tanks.push(tank);
-        this.calculated = this.onCalculated.asObservable();
-        this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
     }
 
     public resetToSimple(): void {
@@ -118,22 +134,6 @@ export class PlannerService {
         const maxPpO2 = this.options.maxPpO2;
         const o2 = this.nitroxCalculator.bestMix(maxPpO2, this.plan.maxDepth);
         return Math.round(o2);
-    }
-
-    public get maxNarcDepth(): number {
-        const depthInBars = this.depthConverter.toBar(this.options.maxEND);
-        const maxNarcBar = this.firstTank.gas.end(depthInBars, this.options.oxygenNarcotic);
-        const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
-        // because of javascript numbers precision we need to help our self
-        const roundedNarc = Math.round(maxNarcDepth * 100) / 100;
-        // Narcotic depth it self makes no sense without helium,
-        // because its narcotic coefficient is 1 for all Nitrox mixes
-        const minFound = Math.min(roundedNarc, this.gasMod);
-        return Math.floor(minFound);
-    }
-
-    public get gasMod(): number {
-        return this.modForGas(this.firstTank);
     }
 
     public switchDepth(gas: Tank): number {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NitroxCalculator, DepthConverter } from 'scuba-physics';
+import { NitroxCalculator, DepthConverter, SafetyStop, DepthLevels } from 'scuba-physics';
 
 export enum NitroxMode {
     Mod,
@@ -17,7 +17,16 @@ export class NitroxCalculatorService {
     private _calculation = NitroxMode.Mod;
     private calculate: () => void = this.calculateCurrentMod;
     // consider usage of switch in the UI to change the depth converter
-    private nitroxCalculator = new NitroxCalculator(DepthConverter.simple());
+    private nitroxCalculator: NitroxCalculator;
+
+    constructor() {
+        const depthConverter = DepthConverter.simple();
+        const depthLevels = new DepthLevels(depthConverter, {
+            lastStopDepth: 6,
+            safetyStop: SafetyStop.never
+        });
+        this.nitroxCalculator = new NitroxCalculator(depthLevels, DepthConverter.simple());
+    }
 
     public get calculation(): NitroxMode {
         return this._calculation;

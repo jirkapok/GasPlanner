@@ -7,7 +7,8 @@ import {
     NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
     Diver, Time, Consumption, Segment, Gases,
-    Segments, OptionDefaults, Salinity, SafetyStop
+    Segments, OptionDefaults, Salinity, SafetyStop,
+    DepthLevels
 } from 'scuba-physics';
 
 @Injectable()
@@ -25,6 +26,7 @@ export class PlannerService {
     private depthConverterFactory: DepthConverterFactory;
     private depthConverter: DepthConverter;
     private nitroxCalculator: NitroxCalculator;
+    private depthLevels: DepthLevels;
 
     constructor() {
         this._options = new Options();
@@ -32,7 +34,8 @@ export class PlannerService {
         this._options.safetyStop = SafetyStop.auto;
         this.depthConverterFactory = new DepthConverterFactory(this.options);
         this.depthConverter = this.depthConverterFactory.create();
-        this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
+        this.depthLevels = new DepthLevels(this.depthConverter, this.options);
+        this.nitroxCalculator = new NitroxCalculator(this.depthLevels, this.depthConverter);
         const tank = Tank.createDefault();
         tank.id = 1;
         this._tanks.push(tank);
@@ -170,7 +173,7 @@ export class PlannerService {
         this.options.maxPpO2 = this.diver.maxPpO2;
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         this.depthConverter = this.depthConverterFactory.create();
-        this.nitroxCalculator = new NitroxCalculator(this.depthConverter);
+        this.nitroxCalculator = new NitroxCalculator(this.depthLevels, this.depthConverter);
         const profile = WayPointsService.calculateWayPoints(this.plan, this._tanks, this.options);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;

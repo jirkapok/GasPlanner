@@ -1,4 +1,5 @@
 import { DepthConverter } from './depth-converter';
+import { DepthLevels } from './DepthLevels';
 import { Event, EventsFactory } from './Profile';
 import { Tank } from './Tanks';
 
@@ -51,6 +52,14 @@ export interface BestGasOptions {
 export class Gases {
     private bottomGases: Gas[] = [];
 
+    public get all(): Gas[] {
+        return this.bottomGases.slice();
+    }
+
+    public get hasBottomGas(): boolean {
+        return this.bottomGases.length >= 1;
+    }
+
     public static fromTanks(tanks: Tank[]): Gases {
         const gases = new Gases();
 
@@ -67,7 +76,7 @@ export class Gases {
     * Better gas is breathable at current depth and with higher O2, because during decompression we need to offgass both He and N2.
     * Use this method to find decompression gas during ascent.
     */
-    public bestGas(depthConverter: DepthConverter, options: BestGasOptions): Gas {
+    public bestGas(depthLevels: DepthLevels, depthConverter: DepthConverter, options: BestGasOptions): Gas {
         const currentPressure = depthConverter.toBar(options.currentDepth);
         let found = options.currentGas;
 
@@ -75,7 +84,7 @@ export class Gases {
             const candidate = this.bottomGases[index];
             const modPressure = candidate.mod(options.maxDecoPpO2);
             // e.g. oxygen at 6m wouldn't be best for 6m without rounding
-            const mod = depthConverter.toDecoStop(modPressure);
+            const mod = depthLevels.toDecoStop(modPressure);
             const end = candidate.end(currentPressure, options.oxygenNarcotic);
 
             // We allow switch to gas with higher nitrogen content, if no better gas is available, but at least show warning
@@ -88,14 +97,6 @@ export class Gases {
             }
         });
         return found;
-    }
-
-    public get all(): Gas[] {
-        return this.bottomGases.slice();
-    }
-
-    public get hasBottomGas(): boolean {
-        return this.bottomGases.length >= 1;
     }
 
     public add(gas: Gas): void {
@@ -224,18 +225,18 @@ export class GasMixtures {
 }
 
 export class Gas {
-    public get fN2(): number {
-        return 1 - this._fO2 - this._fHe;
-    }
-
     /**
      * @param _fO2 partial pressure of O2 in the mix, range 0-1
      * @param _fHe partial pressure of He in the mix, range 0-1
      */
     constructor(private _fO2: number, private _fHe: number) {
-        if(this.contentExceeds100percent()) {
+        if (this.contentExceeds100percent()) {
             throw new Error('O2 + He can\'t exceed 100 %');
         }
+    }
+
+    public get fN2(): number {
+        return 1 - this._fO2 - this._fHe;
     }
 
     public get fO2(): number {
@@ -245,7 +246,7 @@ export class Gas {
     public set fO2(newValue: number) {
         this._fO2 = newValue > 1 ? 1 : newValue;
 
-        if(this.contentExceeds100percent()) {
+        if (this.contentExceeds100percent()) {
             this._fHe = this.countRemaining(this._fO2);
         }
     }
@@ -257,7 +258,7 @@ export class Gas {
     public set fHe(newValue: number) {
         this._fHe = newValue > 0.99 ? 0.99 : newValue;
 
-        if(this.contentExceeds100percent()) {
+        if (this.contentExceeds100percent()) {
             this._fO2 = this.countRemaining(this._fHe);
         }
     }

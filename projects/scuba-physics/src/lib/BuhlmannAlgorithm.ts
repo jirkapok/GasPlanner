@@ -37,12 +37,7 @@ class AlgorithmContext {
         };
 
         this.speeds = new AscentSpeeds(this.options);
-        this.levels = new DepthLevels(options.lastStopDepth, options.safetyStop);
-    }
-
-    // use this just before calculating ascent to be able calculate correct speeds
-    public markAverageDepth(): void {
-        this.speeds.markAverageDepth(this.segments);
+        this.levels = new DepthLevels(depthConverter, options.lastStopDepth, options.safetyStop);
     }
 
     public get ascentSpeed(): number {
@@ -57,6 +52,19 @@ class AlgorithmContext {
         return this.depthConverter.toBar(this.currentDepth);
     }
 
+    public get addSafetyStop(): boolean {
+        return this.levels.addSafetyStop(this.currentDepth, this.segments.maxDepth);
+    }
+
+    public get decoStopDuration(): number {
+        return this.options.roundStopsToMinutes ? Time.oneMinute : Time.oneSecond;
+    }
+
+    // use this just before calculating ascent to be able calculate correct speeds
+    public markAverageDepth(): void {
+        this.speeds.markAverageDepth(this.segments);
+    }
+
     public addCeiling() {
         const depth = this.ceiling();
         const newCeiling = new Ceiling(this.runTime, depth);
@@ -67,23 +75,15 @@ class AlgorithmContext {
         return this.gradients.ceiling();
     }
 
-    public get decoStopDuration(): number {
-        return this.options.roundStopsToMinutes ? Time.oneMinute : Time.oneSecond;
-    }
-
     public bestDecoGas(): Gas {
         this.bestGasOptions.currentDepth = this.currentDepth;
         this.bestGasOptions.currentGas = this.currentGas;
-        const newGas = this.gases.bestGas(this.depthConverter, this.bestGasOptions);
+        const newGas = this.gases.bestGas(this.levels, this.depthConverter, this.bestGasOptions);
         return newGas;
     }
 
     public nextStop(currentStop: number): number {
         return this.levels.nextStop(currentStop);
-    }
-
-    public get addSafetyStop(): boolean {
-        return this.levels.addSafetyStop(this.currentDepth, this.segments.maxDepth);
     }
 }
 

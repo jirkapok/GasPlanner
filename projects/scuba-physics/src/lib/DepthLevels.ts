@@ -1,3 +1,4 @@
+import { DepthConverter } from './depth-converter';
 import { SafetyStop } from './Options';
 
 export class DepthLevels {
@@ -8,11 +9,16 @@ export class DepthLevels {
     private static readonly minimumAutoStopDepth = 10;
 
     // constructor(private lastStopDepth: number) {}
-    constructor(private lastStopDepth: number, private safetyStop: SafetyStop) { }
+    constructor(private depthConverter: DepthConverter, private lastStopDepth: number, private safetyStop: SafetyStop) { }
 
-    // depth in meters, returns also meters
-    public static roundToDeco(depth: number): number {
-        return Math.round(depth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
+    /**
+     * Converts the pressure to depth in meters and round it to nearest deco stop
+     *
+     * @param depthPressure depth in bars
+     */
+    public toDecoStop(depthPressure: number): number {
+        const depth = this.depthConverter.fromBar(depthPressure);
+        return this.roundToDeco(depth);
     }
 
     /**
@@ -44,5 +50,10 @@ export class DepthLevels {
         return (this.safetyStop === SafetyStop.always ||
                 (this.safetyStop === SafetyStop.auto && maxDepth > DepthLevels.minimumAutoStopDepth)) &&
                  currentDepth === this.lastStopDepth;
+    }
+
+    // depth in meters, returns also meters
+    private roundToDeco(depth: number): number {
+        return Math.round(depth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
     }
 }

@@ -32,6 +32,10 @@ export class DepthConverter {
         this._surfacePressure = PressureConverter.pascalToBar(pressureInPascals);
     }
 
+    public get surfacePressure(): number {
+        return this._surfacePressure;
+    }
+
     /**
      * Creates new instance of depth converter
      * @param altitude Meters above see level, 0 for see level
@@ -67,10 +71,6 @@ export class DepthConverter {
         return converter;
     }
 
-    public get surfacePressure(): number {
-        return this._surfacePressure;
-    }
-
     /**
      * Calculates the absolute pressure (in bars) for 1 cubic meter of water for the given depth (meters).
      *
@@ -96,15 +96,5 @@ export class DepthConverter {
         const weightDensity = this.density * this._gravity;
         const pressure = PressureConverter.barToPascal(bars - this._surfacePressure);
         return pressure / weightDensity;
-    }
-
-    /**
-     * Converts the pressure to depth in meters and round it to nearest deco stop
-     *
-     * @param depthPressure depth in bars
-     */
-    public toDecoStop(depthPressure: number): number {
-        const depth = this.fromBar(depthPressure);
-        return DepthLevels.roundToDeco(depth);
     }
 }

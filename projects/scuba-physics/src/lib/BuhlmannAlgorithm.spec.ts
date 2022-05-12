@@ -82,6 +82,18 @@ describe('Buhlmann Algorithm - Plan', () => {
         });
     });
 
+    it('Stop distance is applied', () => {
+        options.lastStopDepth = 3;
+        const gases: Gases = new Gases();
+        gases.add(StandardGases.air);
+        const segments = new Segments();
+        segments.add(0, 30, StandardGases.air, 3 * Time.oneMinute);
+        segments.addFlat(30, StandardGases.air, 30 * Time.oneMinute);
+        const planText = calculatePlan(gases, segments);
+        const expectedPlan = '0,30,180; 30,30,1800; 30,12,108; 12,12,120; 12,9,18; 9,9,180; 9,6,18; 6,6,360; 6,3,18; 3,3,960; 3,0,18;';
+        expect(planText).toBe(expectedPlan);
+    });
+
     describe('Safety Stop', () => {
         describe('Last stop depth', () => {
             it('5m for 30 minutes, last stop depth at 6 m - no safety stop', () => {

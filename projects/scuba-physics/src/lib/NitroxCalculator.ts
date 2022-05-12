@@ -1,8 +1,9 @@
 import { DepthConverter } from './depth-converter';
+import { DepthLevels } from './DepthLevels';
 import { GasMixtures } from './Gases';
 
 export class NitroxCalculator {
-    constructor(private depthConverter: DepthConverter) {
+    constructor(private depthLevels: DepthLevels, private depthConverter: DepthConverter) {
     }
 
     /**
@@ -61,7 +62,7 @@ export class NitroxCalculator {
     public gasSwitch(ppO2: number, percentO2: number): number {
         const fO2 = percentO2 / 100;
         const result = GasMixtures.mod(ppO2, fO2);
-        return this.depthConverter.toDecoStop(result);
+        return this.depthLevels.toDecoStop(result);
     }
 
     /**

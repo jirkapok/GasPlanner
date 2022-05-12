@@ -11,7 +11,11 @@ describe('Gases', () => {
     };
 
     const freshWaterConverter = DepthConverter.forFreshWater();
-    const depthLevels = new DepthLevels(freshWaterConverter, 6, SafetyStop.never);
+    const levelOptions = {
+        lastStopDepth: 6,
+        safetyStop: SafetyStop.never
+    };
+    const depthLevels = new DepthLevels(freshWaterConverter, levelOptions);
 
     describe('Gas', () => {
         describe('Maximum operational depth', () => {

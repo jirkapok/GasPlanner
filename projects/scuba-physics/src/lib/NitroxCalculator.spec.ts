@@ -5,7 +5,11 @@ import { SafetyStop } from './Options';
 
 describe('NitroxCalculatorService', () => {
     const depthConverter = DepthConverter.forFreshWater();
-    const depthLevels = new DepthLevels(depthConverter, 6, SafetyStop.never);
+    const options = {
+        lastStopDepth: 6,
+        safetyStop: SafetyStop.never
+    };
+    const depthLevels = new DepthLevels(depthConverter, options);
     const nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);
 
     describe('Maximum operational depth (MOD)', () => {

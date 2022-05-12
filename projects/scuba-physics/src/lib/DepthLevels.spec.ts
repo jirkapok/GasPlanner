@@ -6,40 +6,49 @@ describe('Depth Levels', () => {
     const irrelevantDepthConverter = DepthConverter.simple();
 
     describe('Next stop', () => {
-        const irrelevantSafety = SafetyStop.always;
+        const options = {
+            lastStopDepth: 5,
+            safetyStop: SafetyStop.always
+        };
 
         it('Rounds to 3 meter increments', () => {
-            const levels = new DepthLevels(irrelevantDepthConverter, 3, irrelevantSafety);
+            options.lastStopDepth = 3;
+            const levels = new DepthLevels(irrelevantDepthConverter, options);
             const result = levels.nextStop(17.6);
             expect(result).toBe(15);
         });
 
         it('At 12 m returns first stop at 9 meters', () => {
-            const levels = new DepthLevels(irrelevantDepthConverter, 3, irrelevantSafety);
+            options.lastStopDepth = 3;
+            const levels = new DepthLevels(irrelevantDepthConverter, options);
             const result = levels.nextStop(12);
             expect(result).toBe(9);
         });
 
         it('At 12 m returns next stop at 9 meters', () => {
-            const levels = new DepthLevels(irrelevantDepthConverter, 3, irrelevantSafety);
+            options.lastStopDepth = 3;
+            const levels = new DepthLevels(irrelevantDepthConverter, options);
             const result = levels.nextStop(9);
             expect(result).toBe(6);
         });
 
         it('Returns 0 m bellow 3 m last stop', () => {
-            const levels = new DepthLevels(irrelevantDepthConverter, 6, irrelevantSafety);
+            options.lastStopDepth = 6;
+            const levels = new DepthLevels(irrelevantDepthConverter, options);
             const result = levels.nextStop(5);
             expect(result).toBe(0);
         });
 
         it('Is 5 m from 6 m in case last stop 5 m', () => {
-            const levels = new DepthLevels(irrelevantDepthConverter, 5, irrelevantSafety);
+            options.lastStopDepth = 5;
+            const levels = new DepthLevels(irrelevantDepthConverter, options);
             const result = levels.nextStop(6);
             expect(result).toBe(5);
         });
 
         it('Is 0 meters at 6 meters in case last stop 6 m', () => {
-            const levels = new DepthLevels(irrelevantDepthConverter, 6, irrelevantSafety);
+            options.lastStopDepth = 6;
+            const levels = new DepthLevels(irrelevantDepthConverter, options);
             const result = levels.nextStop(6);
             expect(result).toBe(0);
         });
@@ -47,7 +56,12 @@ describe('Depth Levels', () => {
 
     describe('Add safety stop', () => {
         describe('Always', () => {
-            const levels = new DepthLevels(irrelevantDepthConverter, 5, SafetyStop.always);
+            const options = {
+                lastStopDepth: 5,
+                safetyStop: SafetyStop.always
+            };
+            const levels = new DepthLevels(irrelevantDepthConverter, options);
+
             it('Deep dive below last stop', () => {
                 const result = levels.addSafetyStop(7, 40);
                 expect(result).toBeFalsy();
@@ -70,7 +84,12 @@ describe('Depth Levels', () => {
         });
 
         describe('Auto', () => {
-            const levels = new DepthLevels(irrelevantDepthConverter, 5, SafetyStop.auto);
+            const options = {
+                lastStopDepth: 5,
+                safetyStop: SafetyStop.auto
+            };
+            const levels = new DepthLevels(irrelevantDepthConverter, options);
+
             it('Deep dive below stop', () => {
                 const result = levels.addSafetyStop(10, 40);
                 expect(result).toBeFalsy();
@@ -93,7 +112,12 @@ describe('Depth Levels', () => {
         });
 
         describe('Never', () => {
-            const levels = new DepthLevels(irrelevantDepthConverter, 5, SafetyStop.never);
+            const options = {
+                lastStopDepth: 5,
+                safetyStop: SafetyStop.never
+            };
+            const levels = new DepthLevels(irrelevantDepthConverter, options);
+
             it('Deep dive, below stop', () => {
                 const result = levels.addSafetyStop(7, 40);
                 expect(result).toBeFalsy();

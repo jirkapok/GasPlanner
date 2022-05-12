@@ -37,7 +37,7 @@ class AlgorithmContext {
         };
 
         this.speeds = new AscentSpeeds(this.options);
-        this.levels = new DepthLevels(depthConverter, options.lastStopDepth, options.safetyStop);
+        this.levels = new DepthLevels(depthConverter, options);
     }
 
     public get ascentSpeed(): number {

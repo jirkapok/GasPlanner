@@ -49,8 +49,6 @@ export class UnitConversion {
         return this._imperialUnits;
     }
 
-
-
     public set imperialUnits(newValue: boolean) {
         this._imperialUnits = newValue;
 
@@ -93,12 +91,16 @@ export interface RangeConstants {
     altitudeLabel: string;
     speed: [number, number];
     speedLabel: string;
+
+    decoStopDistance: number;
+    minimumAutoStopDepth: number;
 }
 
 const perMinute = '/min';
 const toLabel = (range: [number, number], unit: string): string => `${range[0]} - ${range[1]} ${unit}`;
 
 class MetricRanges implements RangeConstants {
+    // Forms
     public tankSize: [number, number] = [1, 50];
     public tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
     public tankPressure: [number, number] = [30, 350];
@@ -125,6 +127,9 @@ class MetricRanges implements RangeConstants {
     public speed: [number, number] = [1,100];
     public speedLabel: string = toLabel(this.speed, this.units.lengthShortcut + perMinute);
 
+    // Algorithm
+    public decoStopDistance = 3;
+    public minimumAutoStopDepth = 10;
 
     constructor(private units: Units) {}
 }

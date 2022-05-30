@@ -28,5 +28,13 @@ export class AppSettingsComponent {
         // TODO save settings only if form is valid
         this.planner.diver.loadFrom(this.diver);
         this.units.imperialUnits = this.imperialUnits;
+        this.applyToOptions();
+    }
+
+    private applyToOptions(): void {
+        const ranges = this.units.ranges;
+        const options = this.planner.options;
+        options.decoStopDistance = ranges.decoStopDistance;
+        options.minimumAutoStopDepth = ranges.minimumAutoStopDepth;
     }
 }

@@ -8,7 +8,9 @@ describe('Depth Levels', () => {
     describe('Next stop', () => {
         const options = {
             lastStopDepth: 5,
-            safetyStop: SafetyStop.always
+            safetyStop: SafetyStop.always,
+            decoStopDistance: 3,
+            minimumAutoStopDepth: 10
         };
 
         it('Rounds to 3 meter increments', () => {
@@ -58,7 +60,9 @@ describe('Depth Levels', () => {
         describe('Always', () => {
             const options = {
                 lastStopDepth: 5,
-                safetyStop: SafetyStop.always
+                safetyStop: SafetyStop.always,
+                decoStopDistance: 3,
+                minimumAutoStopDepth: 10
             };
             const levels = new DepthLevels(irrelevantDepthConverter, options);
 
@@ -86,7 +90,9 @@ describe('Depth Levels', () => {
         describe('Auto', () => {
             const options = {
                 lastStopDepth: 5,
-                safetyStop: SafetyStop.auto
+                safetyStop: SafetyStop.auto,
+                decoStopDistance: 3,
+                minimumAutoStopDepth: 10
             };
             const levels = new DepthLevels(irrelevantDepthConverter, options);
 
@@ -114,7 +120,9 @@ describe('Depth Levels', () => {
         describe('Never', () => {
             const options = {
                 lastStopDepth: 5,
-                safetyStop: SafetyStop.never
+                safetyStop: SafetyStop.never,
+                decoStopDistance: 3,
+                minimumAutoStopDepth: 10
             };
             const levels = new DepthLevels(irrelevantDepthConverter, options);
 

@@ -7,7 +7,9 @@ describe('NitroxCalculatorService', () => {
     const depthConverter = DepthConverter.forFreshWater();
     const options = {
         lastStopDepth: 6,
-        safetyStop: SafetyStop.never
+        safetyStop: SafetyStop.never,
+        decoStopDistance: 3,
+        minimumAutoStopDepth: 10
     };
     const depthLevels = new DepthLevels(depthConverter, options);
     const nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);

@@ -13,7 +13,9 @@ describe('Gases', () => {
     const freshWaterConverter = DepthConverter.forFreshWater();
     const levelOptions = {
         lastStopDepth: 6,
-        safetyStop: SafetyStop.never
+        safetyStop: SafetyStop.never,
+        decoStopDistance: 3,
+        minimumAutoStopDepth: 10
     };
     const depthLevels = new DepthLevels(freshWaterConverter, levelOptions);
 

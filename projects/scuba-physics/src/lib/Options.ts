@@ -1,4 +1,5 @@
 import { DepthOptions } from './depth-converter';
+import { DepthLevelOptions } from './DepthLevels';
 import { GasOptions } from './Gases';
 import { Salinity } from './pressure-converter';
 import { SpeedOptions } from './speeds';
@@ -20,6 +21,9 @@ export class OptionDefaults {
     public static readonly lastStopDepth = 3;
     public static readonly lastStopDepthRecre = 5;
     public static readonly safetyStopRecre = SafetyStop.auto;
+    public static readonly decoStopDistance = 3;
+    public static readonly minimumAutoStopDepth = 10;
+
     public static readonly addSafetyStop = true;
     public static readonly maxEND = 30;
     public static readonly oxygenNarcotic = true;
@@ -65,7 +69,7 @@ export class OptionDefaults {
     }
 }
 
-export class Options implements GasOptions, DepthOptions, SpeedOptions {
+export class Options implements GasOptions, DepthOptions, DepthLevelOptions, SpeedOptions {
     /**
      * meters above see level, 0 for see level (default)
      */
@@ -88,6 +92,15 @@ export class Options implements GasOptions, DepthOptions, SpeedOptions {
      * Depth in meters where to execute the last stop, should be 3-6 m (default 3 m).
      */
     public lastStopDepth = OptionDefaults.lastStopDepth;
+
+    /**
+     * Depth difference between two deco stops in metres.
+     * Default 3 meters
+     */
+    public decoStopDistance = OptionDefaults.decoStopDistance;
+
+    /** Depth in meters, default 10 meters */
+    public minimumAutoStopDepth = OptionDefaults.minimumAutoStopDepth;
 
     /**
      * Maximum equivalent air narcotic depth in meters, default 30 meters

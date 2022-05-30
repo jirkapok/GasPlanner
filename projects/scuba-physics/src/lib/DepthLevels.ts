@@ -6,17 +6,18 @@ export interface DepthLevelOptions {
     /** depth of the last stop in meters, needs to be positive number */
     lastStopDepth: number;
     safetyStop: SafetyStop;
+
+    /**
+     * Depth difference between two deco stops in metres.
+     * Default 3 meters
+     */
+    decoStopDistance: number;
+
+    /** Depth in meters, default 10 meters */
+    minimumAutoStopDepth: number;
 }
 
 export class DepthLevels {
-    /**
-     * Depth difference between two deco stops in metres.
-     */
-    private decoStopDistance = 3;
-
-    /** Depth in meters */
-    private minimumAutoStopDepth = 10;
-
     constructor(private depthConverter: DepthConverter, private options: DepthLevelOptions) { }
 
     /**
@@ -39,13 +40,13 @@ export class DepthLevels {
             return 0;
         }
 
-        const rounded = Math.floor(currentDepth / this.decoStopDistance) * this.decoStopDistance;
+        const rounded = Math.floor(currentDepth / this.options.decoStopDistance) * this.options.decoStopDistance;
 
         if (rounded !== currentDepth) {
             return rounded;
         }
 
-        const result = currentDepth - this.decoStopDistance;
+        const result = currentDepth - this.options.decoStopDistance;
 
         if(result <= this.options.lastStopDepth) {
             return this.options.lastStopDepth;
@@ -56,12 +57,12 @@ export class DepthLevels {
 
     public addSafetyStop(currentDepth: number, maxDepth: number): boolean {
         return (this.options.safetyStop === SafetyStop.always ||
-                (this.options.safetyStop === SafetyStop.auto && maxDepth > this.minimumAutoStopDepth)) &&
+                (this.options.safetyStop === SafetyStop.auto && maxDepth > this.options.minimumAutoStopDepth)) &&
                  currentDepth === this.options.lastStopDepth;
     }
 
     // depth in meters, returns also meters
     private roundToDeco(depth: number): number {
-        return Math.round(depth / this.decoStopDistance) * this.decoStopDistance;
+        return Math.round(depth / this.options.decoStopDistance) * this.options.decoStopDistance;
     }
 }

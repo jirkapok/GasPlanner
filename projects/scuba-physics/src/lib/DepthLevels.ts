@@ -12,10 +12,11 @@ export class DepthLevels {
     /**
      * Depth difference between two deco stops in metres.
      */
-    public static readonly decoStopDistance = 3;
-    private static readonly minimumAutoStopDepth = 10;
+    private decoStopDistance = 3;
 
-    // constructor(private lastStopDepth: number) {}
+    /** Depth in meters */
+    private minimumAutoStopDepth = 10;
+
     constructor(private depthConverter: DepthConverter, private options: DepthLevelOptions) { }
 
     /**
@@ -38,13 +39,13 @@ export class DepthLevels {
             return 0;
         }
 
-        const rounded = Math.floor(currentDepth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
+        const rounded = Math.floor(currentDepth / this.decoStopDistance) * this.decoStopDistance;
 
         if (rounded !== currentDepth) {
             return rounded;
         }
 
-        const result = currentDepth - DepthLevels.decoStopDistance;
+        const result = currentDepth - this.decoStopDistance;
 
         if(result <= this.options.lastStopDepth) {
             return this.options.lastStopDepth;
@@ -55,12 +56,12 @@ export class DepthLevels {
 
     public addSafetyStop(currentDepth: number, maxDepth: number): boolean {
         return (this.options.safetyStop === SafetyStop.always ||
-                (this.options.safetyStop === SafetyStop.auto && maxDepth > DepthLevels.minimumAutoStopDepth)) &&
+                (this.options.safetyStop === SafetyStop.auto && maxDepth > this.minimumAutoStopDepth)) &&
                  currentDepth === this.options.lastStopDepth;
     }
 
     // depth in meters, returns also meters
     private roundToDeco(depth: number): number {
-        return Math.round(depth / DepthLevels.decoStopDistance) * DepthLevels.decoStopDistance;
+        return Math.round(depth / this.decoStopDistance) * this.decoStopDistance;
     }
 }

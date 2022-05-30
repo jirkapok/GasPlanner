@@ -24,18 +24,15 @@ export class PlannerService {
     private _options: Options;
     private onCalculated = new Subject();
     private depthConverterFactory: DepthConverterFactory;
-    private depthConverter: DepthConverter;
-    private nitroxCalculator: NitroxCalculator;
-    private depthLevels: DepthLevels;
+    private depthConverter!: DepthConverter;
+    private nitroxCalculator!: NitroxCalculator;
 
     constructor() {
         this._options = new Options();
         this._options.salinity = Salinity.fresh;
         this._options.safetyStop = SafetyStop.auto;
         this.depthConverterFactory = new DepthConverterFactory(this.options);
-        this.depthConverter = this.depthConverterFactory.create();
-        this.depthLevels = new DepthLevels(this.depthConverter, this.options);
-        this.nitroxCalculator = new NitroxCalculator(this.depthLevels, this.depthConverter);
+        this.resetDepthConverter();
         const tank = Tank.createDefault();
         tank.id = 1;
         this._tanks.push(tank);
@@ -172,8 +169,7 @@ export class PlannerService {
         // TODO copy options to diver only on app startup, let it customize per dive
         this.options.maxPpO2 = this.diver.maxPpO2;
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
-        this.depthConverter = this.depthConverterFactory.create();
-        this.nitroxCalculator = new NitroxCalculator(this.depthLevels, this.depthConverter);
+        this.resetDepthConverter();
         const profile = WayPointsService.calculateWayPoints(this.plan, this._tanks, this.options);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;
@@ -226,10 +222,17 @@ export class PlannerService {
     private assignOptions(newOptions: Options): void {
         this._options.loadFrom(newOptions);
         this.depthConverterFactory = new DepthConverterFactory(newOptions);
+        this.resetDepthConverter();
     }
 
     private calculateTurnPressure(): number {
         const consumed = this.firstTank.consumed / 2;
         return this.firstTank.startPressure - Math.floor(consumed);
+    }
+
+    private resetDepthConverter(): void {
+        this.depthConverter = this.depthConverterFactory.create();
+        const depthLevels = new DepthLevels(this.depthConverter, this.options);
+        this.nitroxCalculator = new NitroxCalculator(depthLevels, this.depthConverter);
     }
 }

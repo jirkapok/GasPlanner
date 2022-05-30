@@ -181,7 +181,8 @@
                         "/"
                     ]
                 }
-            ]
+            ],
+            "@typescript-eslint/adjacent-overload-signatures": "off"
         }
     }]
 }

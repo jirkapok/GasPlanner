@@ -20,11 +20,15 @@ export class NitroxCalculatorService {
 
     constructor() {
         const depthConverter = DepthConverter.simple();
-        const depthLevels = new DepthLevels(depthConverter, {
+        // TODO replace stop values by values converted by units
+        const levelOptions = {
             lastStopDepth: 6,
-            safetyStop: SafetyStop.never
-        });
-        this.nitroxCalculator = new NitroxCalculator(depthLevels, DepthConverter.simple());
+            safetyStop: SafetyStop.never,
+            decoStopDistance: 3,
+            minimumAutoStopDepth: 10
+        };
+        const depthLevels = new DepthLevels(depthConverter, levelOptions);
+        this.nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);
     }
 
     public get calculation(): NitroxMode {
@@ -52,13 +56,13 @@ export class NitroxCalculatorService {
 
         switch (newValue) {
             case NitroxMode.BestMix:
-                this.calculate = () => this.calculateBestMix;
+                this.calculate = () => this.calculateBestMix();
                 break;
             case NitroxMode.PO2:
-                this.calculate = () => this.calculatePartial;
+                this.calculate = () => this.calculatePartial();
                 break;
             default:
-                this.calculate = () => this.calculateCurrentMod;
+                this.calculate = () => this.calculateCurrentMod();
         }
     }
 
@@ -89,5 +93,5 @@ export class NitroxCalculatorService {
         this._pO2 = this.nitroxCalculator.partialPressure(this._fO2, this._mod);
     };
 
-    private calculate = () => this.calculateCurrentMod;
+    private calculate = () => this.calculateCurrentMod();
 }

@@ -15,8 +15,6 @@ Following list of features and improvements ordered by priority is under develop
 * Add metadata to html head
 * Add imperial units option
   * Fix all value bindings (Settings, Nitrox calc, SAC, tanks, depths, options, profile, profile chart, dive info)
-  * Fix depth range inside the algorithm and add test to keep the stops per 10 feet
-  * Fix last stop depth values
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
   * Round the values in data model, after unit switched

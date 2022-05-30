@@ -36,5 +36,6 @@ export class AppSettingsComponent {
         const options = this.planner.options;
         options.decoStopDistance = ranges.decoStopDistance;
         options.minimumAutoStopDepth = ranges.minimumAutoStopDepth;
+        options.lastStopDepth = ranges.lastStopDepthDefault;
     }
 }

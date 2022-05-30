@@ -94,6 +94,7 @@ export interface RangeConstants {
 
     decoStopDistance: number;
     minimumAutoStopDepth: number;
+    lastStopDepthDefault: number;
 }
 
 const perMinute = '/min';
@@ -130,6 +131,7 @@ class MetricRanges implements RangeConstants {
     // Algorithm
     public decoStopDistance = 3;
     public minimumAutoStopDepth = 10;
+    public lastStopDepthDefault = 3;
 
     constructor(private units: Units) {}
 }

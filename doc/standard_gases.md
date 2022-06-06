@@ -27,6 +27,8 @@ Source:
 | Trimix 12/65   |  -                 | 75 - 92            | 106     | 27      |
 | Trimix 10/70   |  93 - 110          | 92 +               | 130     | 26      |
 
+Note: The MND is shown for UTD maximum depth for each range.
+
 ## Deco mixes
 
 | Gas            | UTD Range used / GUE Range used [m] | MOD [m] |
@@ -35,3 +37,5 @@ Source:
 | Ean50          |  9 - 21                             | 21      |
 | Helitrox 35/25 |  24 - 36                            | 36      |
 | Helitrox 21/35 |  39 - 57                            | 57      |
+
+Note: MND here isn't relevant, since it is always lower than 30 meters.

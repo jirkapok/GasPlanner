@@ -215,10 +215,6 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    // TODO fix units in labels
-    // "Ascent 6 m to surface"
-    // "Ascent up to 6 m depth"
-
     public reset(): void {
         switch (this.plan.strategy) {
             case Strategies.HALF: {

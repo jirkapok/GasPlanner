@@ -76,6 +76,14 @@ export class UnitConversion {
     public fromMeters(meters: number): number {
         return this.current.fromMeters(meters);
     }
+
+    public toBar(length: number): number {
+        return this.current.toBar(length);
+    }
+
+    public fromBar(meters: number): number {
+        return this.current.fromBar(meters);
+    }
 }
 
 

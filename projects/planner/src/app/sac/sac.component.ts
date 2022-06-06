@@ -36,6 +36,38 @@ export class SacComponent {
         return this.calc.calculation === SacMode.sac;
     }
 
+    public get calcDepth(): number {
+        return this.units.fromMeters(this.calc.depth);
+    }
+
+    public get calcTank(): number {
+        return this.units.fromLiter(this.calc.tank);
+    }
+
+    public get calcUsed(): number {
+        return this.units.fromBar(this.calc.used);
+    }
+
+    public get calcRmv(): number {
+        return this.units.fromLiter(this.calc.rmv);
+    }
+
+    public set calcDepth(newValue: number) {
+        this.calc.depth = this.units.toMeters(newValue);
+    }
+
+    public set calcTank(newValue: number) {
+        this.calc.tank = this.units.toLiter(newValue);
+    }
+
+    public set calcUsed(newValue: number) {
+        this.calc.used = this.units.toBar(newValue);
+    }
+
+    public set calcRmv(newValue: number) {
+        this.calc.rmv = this.units.toLiter(newValue);
+    }
+
     public toDuration(): void {
         this.calc.calculation = SacMode.duration;
     }
@@ -57,6 +89,7 @@ export class SacComponent {
     }
 
     public gasSac(): number {
-        return Diver.gasSac(this.calc.rmv, this.calc.tank);
+        const sac = Diver.gasSac(this.calc.rmv, this.calc.tank);
+        return this.units.fromLiter(sac);
     }
 }

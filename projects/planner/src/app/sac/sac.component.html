@@ -14,7 +14,7 @@
           </div>
           <div class="my-2">
             <label for="depth">Average depth [{{units.length}}]:
-              <input [(ngModel)]="calc.depth" class="form-control" #depth="ngModel" name="depth" id="depth" type="number"
+              <input [(ngModel)]="calcDepth" class="form-control" #depth="ngModel" name="depth" id="depth" type="number"
                 required [rangeVal]="ranges.depth" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
                 [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)" />
             </label>
@@ -22,7 +22,7 @@
           </div>
           <div class="my-2">
             <label for="tank">Tank size [{{units.volume}}]:
-              <input [(ngModel)]="calc.tank" class="form-control" #tank="ngModel" name="tank" id="tank" type="number"
+              <input [(ngModel)]="calcTank" class="form-control" #tank="ngModel" name="tank" id="tank" type="number"
                 required [rangeVal]="ranges.tankSize" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
                 [class.is-invalid]="tank.invalid && (tank.dirty || tank.touched)" />
             </label>
@@ -40,7 +40,7 @@
           </div>
           <div [hidden]="inUsed" class="my-2">
             <label for="used">Gas consumed [{{units.pressure}}]:
-              <input [(ngModel)]="calc.used" class="form-control" #used="ngModel" name="used" id="used" type="number"
+              <input [(ngModel)]="calcUsed" class="form-control" #used="ngModel" name="used" id="used" type="number"
                 required [rangeVal]="ranges.tankPressure" [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
                 [class.is-invalid]="used.invalid && (used.dirty || used.touched)" />
             </label>
@@ -48,7 +48,7 @@
           </div>
           <div [hidden]="inSac" class="my-2">
             <label for="sac">RMV [{{units.rmv}}]:
-              <input [(ngModel)]="calc.rmv" class="form-control" #sac="ngModel" name="sac" id="sac" type="number"
+              <input [(ngModel)]="calcRmv" class="form-control" #sac="ngModel" name="sac" id="sac" type="number"
                  required [rangeVal]="ranges.diverRmv" [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="1"
                  [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)" />
               <small class="form-text text-muted">SAC: {{gasSac() | number:'1.0-2'}} {{units.sac}}</small>
@@ -57,13 +57,13 @@
           </div>
           <div [hidden]="!inSac" class="my-2">
             <label for="sac">RMV [{{units.rmv}}]:
-              <input [ngModel]="calc.rmv" class="form-control" readonly/>
+              <input [ngModel]="calcRmv" class="form-control" readonly/>
               <small class="form-text text-muted">SAC: {{gasSac() | number:'1.0-2'}} {{units.sac}}</small>
             </label>
           </div>
           <div [hidden]="!inUsed" class="my-2">
             <label for="sac">Gas consumed [{{units.pressure}}]:
-              <input [ngModel]="calc.used" class="form-control" readonly/>
+              <input [ngModel]="calcUsed" class="form-control" readonly/>
             </label>
           </div>
           <div [hidden]="!inDuration" class="my-2">

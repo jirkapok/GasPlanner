@@ -3,7 +3,7 @@ import { ImperialUnits, MetricUnits, Units } from 'scuba-physics';
 export class UnitConversion {
     private _imperialUnits = true;
     private current: Units = new ImperialUnits();
-    private _ranges: RangeConstants = new MetricRanges(this.current);
+    private _ranges: RangeConstants = new ImperialRanges(this.current);
 
     public get ranges(): RangeConstants {
         return this._ranges;
@@ -67,6 +67,14 @@ export class UnitConversion {
 
     public fromLiter(liters: number): number {
         return this.current.fromLiter(liters);
+    }
+
+    public toMeters(length: number): number {
+        return this.current.toMeters(length);
+    }
+
+    public fromMeters(meters: number): number {
+        return this.current.fromMeters(meters);
     }
 }
 
@@ -146,6 +154,9 @@ class MetricRanges implements RangeConstants {
 class ImperialRanges implements RangeConstants  {
     // Forms
     public diverRmv: [number, number] = [0.17, 3.178];
+    public diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
+    public depth: [number, number] = [3,1150];
+    public depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
 
     // Algorithm
     public decoStopDistance = 10;
@@ -165,10 +176,9 @@ class ImperialRanges implements RangeConstants  {
     public tankHe: [number, number] = [0, 99];
     public tankHeLabel: string = toLabel(this.tankHe, '%');
 
-    public diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
+
     public ppO2: [number, number] = [0.21, 3];
-    public depth: [number, number] = [1,350];
-    public depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
+
     public narcoticDepth: [number, number] = [1,100];
     public narcoticDepthLabel: string = toLabel(this.narcoticDepth, this.units.lengthShortcut);
     public lastStopDepth: [number, number] = [3,6];

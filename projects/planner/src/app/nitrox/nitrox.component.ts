@@ -35,6 +35,14 @@ export class NitroxComponent {
         return this.calc.calculation === NitroxMode.PO2;
     }
 
+    public get calcMod(): number {
+        return this.units.fromMeters(this.calc.mod);
+    }
+
+    public set calcMod(newValue: number) {
+        this.calc.mod = this.units.toMeters(newValue);
+    }
+
     public toMod(): void {
         this.calc.calculation = NitroxMode.Mod;
     }

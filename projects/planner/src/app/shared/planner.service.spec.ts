@@ -1,4 +1,4 @@
-import { Time, SafetyStop, Segment } from 'scuba-physics';
+import { Time, SafetyStop, Segment, StandardGases } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 
@@ -126,14 +126,20 @@ describe('PlannerService', () => {
 
     describe('Max narcotic depth', ()=>{
         it('Is calculated 30 m for Air with 30m max. narcotic depth option', ()=> {
-            const result = planner.maxNarcDepth;
+            const result = planner.firstGasMaxDepth;
             expect(result).toBe(30);
         });
 
         it('Is calculated as MOD for EAN50', ()=> {
             planner.firstTank.gas.fO2 = 0.5;
-            const result = planner.maxNarcDepth;
+            const result = planner.firstGasMaxDepth;
             expect(result).toBe(18);
+        });
+
+        it('For 12/35 returns 52 m', ()=> {
+            const gas = StandardGases.trimix2135;
+            const result = planner.mndForGas(gas);
+            expect(result).toBe(51.72);
         });
     });
 

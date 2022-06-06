@@ -8,7 +8,8 @@ import {
     DepthConverter, DepthConverterFactory, Tank, Tanks,
     Diver, Time, Consumption, Segment, Gases,
     Segments, OptionDefaults, Salinity, SafetyStop,
-    DepthLevels
+    DepthLevels,
+    Gas
 } from 'scuba-physics';
 
 @Injectable()
@@ -40,14 +41,8 @@ export class PlannerService {
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
     }
 
-    public get maxNarcDepth(): number {
-        const depthInBars = this.depthConverter.toBar(this.options.maxEND);
-        const maxNarcBar = this.firstTank.gas.end(depthInBars, this.options.oxygenNarcotic);
-        const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
-        // because of javascript numbers precision we need to help our self
-        const roundedNarc = Math.round(maxNarcDepth * 100) / 100;
-        // Narcotic depth it self makes no sense without helium,
-        // because its narcotic coefficient is 1 for all Nitrox mixes
+    public get firstGasMaxDepth(): number {
+        const roundedNarc = this.mndForGas(this.firstTank.gas);
         const minFound = Math.min(roundedNarc, this.gasMod);
         return Math.floor(minFound);
     }
@@ -73,6 +68,7 @@ export class PlannerService {
     }
 
     public resetToSimple(): void {
+        // TODO Consider: If first gas is trimix, it still remains with helium and you cant edit it.
         this._tanks = this._tanks.slice(0, 1);
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
         this.setMediumConservatism();
@@ -117,7 +113,7 @@ export class PlannerService {
     }
 
     public applyMaxDepth(): void {
-        this.assignDepth(this.maxNarcDepth);
+        this.assignDepth(this.firstGasMaxDepth);
     }
 
     public applyMaxDuration(): void {
@@ -142,6 +138,15 @@ export class PlannerService {
 
     public modForGas(gas: Tank): number {
         return this.nitroxCalculator.mod(this.diver.maxPpO2, gas.o2);
+    }
+
+    public mndForGas(gas: Gas): number {
+        const depthInBars = this.depthConverter.toBar(this.options.maxEND);
+        const maxNarcBar = gas.mnd(depthInBars, this.options.oxygenNarcotic);
+        const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
+        // because of javascript numbers precision we need to help our self
+        const roundedNarc = Math.round(maxNarcDepth * 100) / 100;
+        return roundedNarc;
     }
 
     public noDecoTime(): number {

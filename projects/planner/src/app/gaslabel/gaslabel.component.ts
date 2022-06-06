@@ -9,21 +9,20 @@ import { UnitConversion } from '../shared/UnitConversion';
     styleUrls: ['./gaslabel.component.css']
 })
 export class GaslabelComponent {
-
     @Input()
     public tank: Tank = Tank.createDefault();
 
     @Input()
     public showName = true;
 
+    constructor(private planer: PlannerService, public units: UnitConversion) { }
+
     public get gasMod(): number {
         return this.planer.modForGas(this.tank);
     }
 
     public get gasMnd(): number {
-        const maxEnd = this.planer.options.maxEND;
-        const oxygenNarcotic = this.planer.options.oxygenNarcotic;
-        const mnd = this.tank.gas.mnd(maxEnd, oxygenNarcotic);
+        const mnd = this.planer.mndForGas(this.tank.gas);
         return mnd;
     }
 
@@ -34,6 +33,4 @@ export class GaslabelComponent {
     public get gasDecoMod(): number {
         return this.planer.switchDepth(this.tank);
     }
-
-    constructor(private planer: PlannerService, public units: UnitConversion) { }
 }

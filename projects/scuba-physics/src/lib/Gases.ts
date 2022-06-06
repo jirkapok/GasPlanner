@@ -177,7 +177,6 @@ export class GasMixtures {
      * @returns Depth in bars.
      */
     public static end(currentDepth: number, fN2: number, fO2: number = 0): number {
-        // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
         const narcIndex = this.narcoticIndex(fO2, fN2);
         return currentDepth * narcIndex;
     }
@@ -194,7 +193,6 @@ export class GasMixtures {
      * @returns Depth in bars.
      */
     public static mnd(narcoticDepth: number, fN2: number, fO2: number = 0): number {
-        // Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1
         const narcIndex = this.narcoticIndex(fO2, fN2);
         return narcoticDepth / narcIndex;
     }
@@ -219,6 +217,7 @@ export class GasMixtures {
         return bars;
     }
 
+    /** Helium has a narc factor of 0 while N2 and O2 have a narc factor of 1 */
     private static narcoticIndex(fN2: number, fO2: number = 0): number {
         return fO2 + fN2;
     }
@@ -243,16 +242,16 @@ export class Gas {
         return this._fO2;
     }
 
+    public get fHe(): number {
+        return this._fHe;
+    }
+
     public set fO2(newValue: number) {
         this._fO2 = newValue > 1 ? 1 : newValue;
 
         if (this.contentExceeds100percent()) {
             this._fHe = this.countRemaining(this._fO2);
         }
-    }
-
-    public get fHe(): number {
-        return this._fHe;
     }
 
     public set fHe(newValue: number) {

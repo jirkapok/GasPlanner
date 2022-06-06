@@ -14,6 +14,7 @@ describe('Depth Levels', () => {
     const levels = new DepthLevels(irrelevantDepthConverter, options);
 
     beforeEach(() => {
+        options.lastStopDepth = 5;
         options.safetyStop = SafetyStop.always;
         options.decoStopDistance = 3;
         options.minimumAutoStopDepth = 10;

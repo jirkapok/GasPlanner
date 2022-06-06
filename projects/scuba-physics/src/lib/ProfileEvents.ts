@@ -119,7 +119,7 @@ export class ProfileEvents {
             this.addUserTankSwitch(context);
             this.addHighDescentSpeed(context);
             this.addHighAscentSpeed(context);
-            this.addSwitchHighN2(context, ceilings);
+            this.addSwitchHighN2(context);
             this.addMndExceeded(context, pressureSegment);
 
             ceilingContext.assignSegment(context.current);
@@ -230,7 +230,7 @@ export class ProfileEvents {
         }
     }
 
-    private static addSwitchHighN2(context: EventsContext, ceilings: Ceiling[]): void {
+    private static addSwitchHighN2(context: EventsContext): void {
         const current = context.current;
         const previous = context.previous;
 

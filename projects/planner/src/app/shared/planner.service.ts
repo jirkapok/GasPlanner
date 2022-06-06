@@ -8,8 +8,7 @@ import {
     DepthConverter, DepthConverterFactory, Tank, Tanks,
     Diver, Time, Consumption, Segment, Gases,
     Segments, OptionDefaults, Salinity, SafetyStop,
-    DepthLevels,
-    Gas
+    DepthLevels, Gas
 } from 'scuba-physics';
 
 @Injectable()
@@ -68,8 +67,13 @@ export class PlannerService {
     }
 
     public resetToSimple(): void {
-        // TODO Consider: If first gas is trimix, it still remains with helium and you cant edit it.
+        // reset only gas and depths to values valid for simple view.
         this._tanks = this._tanks.slice(0, 1);
+
+        if (this.firstTank.he > 0) {
+            this.firstTank.assignStandardGas('Air');
+        }
+
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
         this.setMediumConservatism();
     }
@@ -217,7 +221,7 @@ export class PlannerService {
             this._tanks = tanks;
         }
 
-        if(segments.length > 1) {
+        if (segments.length > 1) {
             this.plan.loadFrom(segments);
         }
 

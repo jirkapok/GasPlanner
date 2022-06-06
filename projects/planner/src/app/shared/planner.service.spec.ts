@@ -1,6 +1,7 @@
 import { Time, SafetyStop, Segment, StandardGases } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
+import { first } from 'rxjs';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -94,6 +95,15 @@ describe('PlannerService', () => {
 
         it('Keeps first gas content', () => {
             expect(planner.firstTank.o2).toBe(o2Expected);
+        });
+
+        it('Resets gas content to editable gas', () => {
+            const firstTank = planner.firstTank;
+            firstTank.he = 45;
+            firstTank.o2 = 18;
+            planner.resetToSimple();
+            expect(firstTank.o2).toBe(21);
+            expect(firstTank.he).toBe(0);
         });
     });
 

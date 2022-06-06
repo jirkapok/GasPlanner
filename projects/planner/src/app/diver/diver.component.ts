@@ -18,4 +18,13 @@ export class DiverComponent{
     public get ranges(): RangeConstants {
         return this.units.ranges;
     }
+
+    public get rmv(): number {
+        const rmvMetric = this.diver.rmv;
+        return this.units.fromLiter(rmvMetric);
+    }
+
+    public set rmv(newValue: number) {
+        this.diver.rmv = this.units.toLiter(newValue);
+    }
 }

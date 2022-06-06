@@ -54,13 +54,19 @@ export class UnitConversion {
 
         if (this._imperialUnits) {
             this.current = new ImperialUnits();
-            this._ranges = new MetricRanges(this.current);
+            this._ranges = new ImperialRanges(this.current);
         } else {
             this.current = new MetricUnits();
-            // TODO Replace with ImperialRanges
-            // this._ranges = new ImperialRanges(this.current);
             this._ranges = new MetricRanges(this.current);
         }
+    }
+
+    public toLiter(volume: number): number {
+        return this.current.toLiter(volume);
+    }
+
+    public fromLiter(liters: number): number {
+        return this.current.fromLiter(liters);
     }
 }
 
@@ -137,6 +143,42 @@ class MetricRanges implements RangeConstants {
 }
 
 
-class ImperialRanges { // TODO implements RangeConstants  {
+class ImperialRanges implements RangeConstants  {
+    // Forms
+    public diverRmv: [number, number] = [0.17, 3.178];
+
+    // Algorithm
+    public decoStopDistance = 10;
+    public minimumAutoStopDepth = 33;
+    public lastStopDepthDefault = 10;
+
+    // TODO ranges aren't bound after units are switched
+    // TODO adjust imperial ranges
+    public tankSize: [number, number] = [1, 50];
+    public tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
+    public tankPressure: [number, number] = [30, 350];
+    public tankPressureLabel: string = toLabel(this.tankPressure, this.units.pressureShortcut);
+    public nitroxOxygen: [number, number] = [21, 100];
+    public nitroxOxygenLabel: string = toLabel(this.nitroxOxygen, '%');
+    public trimixOxygen: [number, number] = [1, 100];
+    public trimixOxygenLabel: string = toLabel(this.trimixOxygen, '%');
+    public tankHe: [number, number] = [0, 99];
+    public tankHeLabel: string = toLabel(this.tankHe, '%');
+
+    public diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
+    public ppO2: [number, number] = [0.21, 3];
+    public depth: [number, number] = [1,350];
+    public depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
+    public narcoticDepth: [number, number] = [1,100];
+    public narcoticDepthLabel: string = toLabel(this.narcoticDepth, this.units.lengthShortcut);
+    public lastStopDepth: [number, number] = [3,6];
+    public lastStopDepthLabel: string = toLabel(this.lastStopDepth, this.units.lengthShortcut);
+    public duration: [number, number] = [1,1440];
+    public durationLabel: string = toLabel(this.duration, 'min');
+    public altitude: [number, number] = [0,5000];
+    public altitudeLabel: string = toLabel(this.altitude, this.units.altitudeShortcut);
+    public speed: [number, number] = [1,100];
+    public speedLabel: string = toLabel(this.speed, this.units.lengthShortcut + perMinute);
+
     constructor(private units: Units) {}
 }

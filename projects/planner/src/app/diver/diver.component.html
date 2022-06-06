@@ -7,8 +7,8 @@
     <div class="card-body">
         <div>
         <label for="sac">Respiratory minute volume [{{units.rmv}}]:
-            <input [(ngModel)]="diver.rmv" class="form-control" #sac="ngModel" name="sac" id="sac"
-            type="number" required [rangeVal]="ranges.diverRmv" [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="1"
+            <input [(ngModel)]="rmv" class="form-control" #sac="ngModel" name="sac" id="sac"
+            type="number" required [rangeVal]="ranges.diverRmv" [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="0.1"
             [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)"/>
         </label>
         <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number {{ranges.diverRmvLabel}}</div>

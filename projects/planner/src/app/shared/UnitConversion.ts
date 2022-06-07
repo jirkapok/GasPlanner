@@ -163,20 +163,20 @@ class ImperialRanges implements RangeConstants  {
     // Forms
     public diverRmv: [number, number] = [0.17, 3.178];
     public diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
-    public depth: [number, number] = [3,1150];
+    public depth: [number, number] = [3, 1150];
     public depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
+    public tankSize: [number, number] = [1, 50]; // TODO fix
+    public tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
+    public tankPressure: [number, number] = [435, 5076];
+    public tankPressureLabel: string = toLabel(this.tankPressure, this.units.pressureShortcut);
 
     // Algorithm
     public decoStopDistance = 10;
     public minimumAutoStopDepth = 33;
     public lastStopDepthDefault = 10;
 
-    // TODO ranges aren't bound after units are switched
+    // TODO ranges aren't bound after units are switched: see app-settings
     // TODO adjust imperial ranges
-    public tankSize: [number, number] = [1, 50];
-    public tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
-    public tankPressure: [number, number] = [30, 350];
-    public tankPressureLabel: string = toLabel(this.tankPressure, this.units.pressureShortcut);
     public nitroxOxygen: [number, number] = [21, 100];
     public nitroxOxygenLabel: string = toLabel(this.nitroxOxygen, '%');
     public trimixOxygen: [number, number] = [1, 100];

@@ -25,6 +25,7 @@ Following list of features and improvements ordered by priority is under develop
 * Add no deco table
 * Redundancies calculator - when filling one tank from second. What is the target pressure in both.
 * Add gas depth range calculator
+* Add calculation trainings
 * Add CNS and OTU calculations
   * <https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf>
   * <https://gue.com/blog/pulmonary-oxygen-toxicity-expanding-our-understanding-with-two-new-models/>

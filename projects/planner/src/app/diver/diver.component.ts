@@ -10,13 +10,11 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 })
 export class DiverComponent{
     @Input() public diver: Diver = new Diver();
+    @Input() public ranges: RangeConstants;
     public icon = faUserCog;
 
     constructor(public units: UnitConversion) {
-    }
-
-    public get ranges(): RangeConstants {
-        return this.units.ranges;
+        this.ranges = units.ranges;
     }
 
     public get rmv(): number {

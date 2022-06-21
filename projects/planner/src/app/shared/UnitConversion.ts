@@ -1,12 +1,19 @@
+import { BehaviorSubject } from 'rxjs';
 import { ImperialUnits, MetricUnits, Units } from 'scuba-physics';
 
 export class UnitConversion {
+    public ranges: RangeConstants;
+    /**
+     * Only to be able immediately refresh Diver component, since in the same view.
+     * Other components refresh next time their are shown.
+     */
+    public ranges$: BehaviorSubject<RangeConstants>;
     private _imperialUnits = true;
     private current: Units = new ImperialUnits();
-    private _ranges: RangeConstants = new ImperialRanges(this.current);
 
-    public get ranges(): RangeConstants {
-        return this._ranges;
+    constructor() {
+        this.ranges = new ImperialRanges(this.current);
+        this.ranges$ = new BehaviorSubject<RangeConstants>(this.ranges);
     }
 
     public get length(): string {
@@ -54,11 +61,13 @@ export class UnitConversion {
 
         if (this._imperialUnits) {
             this.current = new ImperialUnits();
-            this._ranges = new ImperialRanges(this.current);
+            this.ranges = new ImperialRanges(this.current);
         } else {
             this.current = new MetricUnits();
-            this._ranges = new MetricRanges(this.current);
+            this.ranges = new MetricRanges(this.current);
         }
+
+        this.ranges$.next(this.ranges);
     }
 
     public toLiter(volume: number): number {

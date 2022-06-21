@@ -30,6 +30,10 @@ Following list of features and improvements ordered by priority is under develop
   * <https://gue.com/blog/pulmonary-oxygen-toxicity-expanding-our-understanding-with-two-new-models/>
   * <https://thetheoreticaldiver.org/wordpress/index.php/tag/oxygen/>
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
+* Add gas density calculator (to be able understand to dont breath gas with higher density than 5.7 g/l):
+  * <https://www.thoughtco.com/how-to-calculate-density-of-a-gas-607847>
+  * <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/>
+  * Add corresponding event warning
 * Events:
   * Add time to all events warning/error messages where it makes sense
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop

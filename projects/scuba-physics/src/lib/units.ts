@@ -16,6 +16,8 @@ export interface Units {
     fromBar(bars: number): number;
     toLiter(volume: number): number;
     fromLiter(liters: number): number;
+    fromTankLiters(liters: number): number;
+    toTankLiters(cuftVolume: number): number;
 }
 
 /**
@@ -78,6 +80,14 @@ export class MetricUnits implements Units {
     public fromLiter(liters: number): number {
         return liters;
     }
+
+    public fromTankLiters(liters: number): number {
+        return liters;
+    }
+
+    public toTankLiters(cuftVolume: number): number {
+        return cuftVolume;
+    }
 }
 
 /**
@@ -99,6 +109,8 @@ export class ImperialUnits implements Units {
     private static readonly psiRate = 14.503773773022;
     private static readonly cftRate = 28.316846592;
     private static readonly footRate = 0.3048;
+    // TODO make working pressure configurable
+    private readonly workingPressure = 206.84; // bar (3000 psi)
 
     public get name(): string{
         return 'Imperial';
@@ -154,5 +166,20 @@ export class ImperialUnits implements Units {
 
     public fromLiter(liters: number): number {
         return liters / ImperialUnits.cftRate;
+    }
+
+    public fromTankLiters(liters: number): number {
+        // return this.units.fromLiter(this.tank.size);
+        const relativeVolume = this.fromLiter(liters);
+        const absoluteVolume = relativeVolume * this.workingPressure;
+        return absoluteVolume;
+    }
+
+    public toTankLiters(cuftVolume: number): number {
+        // S80 => 11.1 L  => 80 cuft at 3000 psi
+        // 80 cuft -> 2265.3 L, 3000 psi -> 206.84 b => 2265.3/206.84 = 10.95 L
+        const absoluteLiters = this.toLiter(cuftVolume);
+        const newLiters = absoluteLiters / this.workingPressure;
+        return newLiters;
     }
 }

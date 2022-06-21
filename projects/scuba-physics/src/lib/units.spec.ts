@@ -203,4 +203,22 @@ describe('Imperial units', () => {
             expect(result).toBeCloseTo(0.0353146667214886, 8);
         });
     });
+
+    describe('Imperial - Tank size', () => {
+        it('cft to/from liters is precise tank size', () => {
+            let result = units.fromTankLiters(11);
+            result = units.toTankLiters(result);
+            expect(result).toBeCloseTo(11, 8);
+        });
+
+        it('80 cuft size at 207 bars working pressure is 11 liter', () => {
+            const result = units.toTankLiters(80);
+            expect(result).toBeCloseTo(10.952174276, 8);
+        });
+
+        it('11 liter size at 207 bars working pressure is 80 cuft', () => {
+            const result = units.fromTankLiters(10.952174276);
+            expect(result).toBeCloseTo(80, 8);
+        });
+    });
 });

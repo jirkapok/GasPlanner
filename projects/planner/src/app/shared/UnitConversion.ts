@@ -93,6 +93,14 @@ export class UnitConversion {
     public fromBar(meters: number): number {
         return this.current.fromBar(meters);
     }
+
+    public fromTankLiters(liters: number): number {
+        return this.current.fromTankLiters(liters);
+    }
+
+    public toTankLiters(cuftVolume: number): number {
+        return this.current.toTankLiters(cuftVolume);
+    }
 }
 
 
@@ -174,9 +182,9 @@ class ImperialRanges implements RangeConstants  {
     public diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
     public depth: [number, number] = [3, 1150];
     public depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
-    public tankSize: [number, number] = [1, 50]; // TODO fix
+    public tankSize: [number, number] = [1, 300];
     public tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
-    public tankPressure: [number, number] = [435, 5076];
+    public tankPressure: [number, number] = [400, 5100];
     public tankPressureLabel: string = toLabel(this.tankPressure, this.units.pressureShortcut);
 
     // Algorithm

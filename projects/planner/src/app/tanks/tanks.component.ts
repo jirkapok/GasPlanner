@@ -9,9 +9,7 @@ export class TankBound {
     constructor(public tank: Tank, private units: UnitConversion) {}
 
     public get size(): number {
-        // TODO fix cubic feet conversion by including working pressure
-        // S80 => 11.1 L  => 0.392 cuft  * 207 bar = 80.7 cuft
-        return this.units.fromLiter(this.tank.size);
+        return this.units.fromTankLiters(this.tank.size);
     }
 
     public get startPressure(): number {
@@ -23,7 +21,7 @@ export class TankBound {
     }
 
     public set size(newValue: number) {
-        this.tank.size = this.units.toLiter(newValue);
+        this.tank.size = this.units.toTankLiters(newValue);
     }
 
     public set startPressure(newValue: number) {

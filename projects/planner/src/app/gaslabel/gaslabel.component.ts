@@ -18,12 +18,13 @@ export class GaslabelComponent {
     constructor(private planer: PlannerService, public units: UnitConversion) { }
 
     public get gasMod(): number {
-        return this.planer.modForGas(this.tank);
+        const mod = this.planer.modForGas(this.tank);
+        return this.units.fromMeters(mod);
     }
 
     public get gasMnd(): number {
         const mnd = this.planer.mndForGas(this.tank.gas);
-        return mnd;
+        return this.units.fromMeters(mnd);
     }
 
     public get isTrimix(): boolean {
@@ -31,6 +32,7 @@ export class GaslabelComponent {
     }
 
     public get gasDecoMod(): number {
-        return this.planer.switchDepth(this.tank);
+        const mod = this.planer.switchDepth(this.tank);
+        return this.units.fromMeters(mod);
     }
 }

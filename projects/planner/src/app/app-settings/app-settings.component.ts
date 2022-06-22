@@ -29,6 +29,7 @@ export class AppSettingsComponent {
         this.planner.diver.loadFrom(this.diver);
         this.units.imperialUnits = this.imperialUnits;
         this.applyToOptions();
+        this.applyToTanks();
     }
 
     private applyToOptions(): void {
@@ -37,5 +38,9 @@ export class AppSettingsComponent {
         options.decoStopDistance = ranges.decoStopDistance;
         options.minimumAutoStopDepth = ranges.minimumAutoStopDepth;
         options.lastStopDepth = ranges.lastStopDepthDefault;
+    }
+
+    private applyToTanks(): void {
+        // TODO round values of tanks
     }
 }

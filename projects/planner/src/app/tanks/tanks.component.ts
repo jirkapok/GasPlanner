@@ -68,7 +68,7 @@ export class TanksComponent {
 
     public gasSac(tank: Tank): number {
         const sac = this.diver.gasSac(tank);
-        return this.units.toLiter(sac);
+        return this.units.fromBar(sac);
     }
 
     public addTank(): void {

@@ -28,7 +28,7 @@
                 <div class="d-flex flex-row justify-content-between py-0">
                     <div class="me-1">
                         <input #size="ngModel" name="size" [(ngModel)]="tank.size" class="form-control" type="number"
-                            (change)="gasChanged()" required [rangeVal]="[1, 50]"
+                            (change)="gasChanged()" required
                             [rangeVal]="ranges.tankSize" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
                             [class.is-invalid]="size.invalid && (size.dirty || size.touched)" />
 
@@ -50,7 +50,7 @@
                     <div class="ms-1">
                         <div class="input-group">
                             <input #gasO2="ngModel" name="gasO2" [(ngModel)]="tank.o2" class="form-control" type="number"
-                                (change)="gasChanged()" required [rangeVal]="[1, 100]"
+                                (change)="gasChanged()" required
                                 [rangeVal]="ranges.trimixOxygen" [min]="ranges.trimixOxygen[0]" [max]="ranges.trimixOxygen[1]" step="1"
                                 [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />
                             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">

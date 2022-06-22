@@ -36,7 +36,8 @@
               "projects/planner/src/types/plotly.js/plotly-basic.min.js"
             ],
             "serviceWorker": true,
-            "ngswConfigPath": "projects/planner/ngsw-config.json"
+            "ngswConfigPath": "projects/planner/ngsw-config.json",
+            "webWorkerTsConfig": "projects/planner/tsconfig.worker.json"
           },
           "configurations": {
             "production": {
@@ -104,7 +105,8 @@
             "styles": [
               "projects/planner/src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "webWorkerTsConfig": "projects/planner/tsconfig.worker.json"
           }
         },
         "lint": {

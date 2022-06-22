@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { Plan, Dive, Strategies } from './models';
+import { Plan, Dive, Strategies, } from './models';
 import { WayPointsService } from './waypoints.service';
 import {
     NitroxCalculator, BuhlmannAlgorithm, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
-    Diver, Time, Consumption, Segment, Gases,
+    Diver, Segment, Gases,
     Segments, OptionDefaults, Salinity, SafetyStop,
     DepthLevels, Gas
 } from 'scuba-physics';
+import { DiveResultDto, DtoSerialization, PlanRequestDto } from './serializationmodel';
 
 @Injectable()
 export class PlannerService {
@@ -26,6 +27,7 @@ export class PlannerService {
     private depthConverterFactory: DepthConverterFactory;
     private depthConverter!: DepthConverter;
     private nitroxCalculator!: NitroxCalculator;
+    private worker: PlanWorker;
 
     constructor() {
         this._options = new Options();
@@ -38,6 +40,10 @@ export class PlannerService {
         this._tanks.push(tank);
         this.calculated = this.onCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
+        this.worker = new PlanWorker();
+        this.worker.calculated.subscribe((data) => {
+            this.finishCalculation(<DiveResultDto>data);
+        });
     }
 
     public get firstGasMaxDepth(): number {
@@ -174,44 +180,6 @@ export class PlannerService {
         this.calculate();
     }
 
-    public calculate(): void {
-        // TODO copy options to diver only on app startup, let it customize per dive
-        this.options.maxPpO2 = this.diver.maxPpO2;
-        this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
-        this.resetDepthConverter();
-        const profile = WayPointsService.calculateWayPoints(this.plan, this._tanks, this.options);
-        this.dive.wayPoints = profile.wayPoints;
-        this.dive.ceilings = profile.ceilings;
-        this.dive.events = profile.events;
-        this.dive.averageDepth = Segments.averageDepth(profile.origin);
-
-        // TODO consider to schedule the consumption related stuff to delayed calculation
-        if (profile.endsOnSurface) {
-            const consumption = new Consumption(this.depthConverter);
-            this.plan.noDecoTime = this.noDecoTime();
-
-            // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
-            const segments = this.plan.copySegments();
-            this.dive.maxTime = consumption.calculateMaxBottomTime(segments, this._tanks, this.diver, this.options);
-            const emergencyAscent = consumption.emergencyAscent(profile.origin, this.options, this.tanks);
-            const timeToSurface = Segments.duration(emergencyAscent);
-            this.dive.timeToSurface = Time.toMinutes(timeToSurface);
-            consumption.consumeFromTanks2(profile.origin, emergencyAscent, this.options, this._tanks, this.diver);
-            this.dive.notEnoughTime = this.plan.notEnoughTime;
-            this.dive.emergencyAscentStart = this.plan.startAscentTime;
-        }
-
-        // even in case thirds rule, the last third is reserve, so we always divide by 2
-        this.dive.turnPressure = this.calculateTurnPressure();
-        this.dive.turnTime = Math.floor(this.plan.duration / 2);
-        // this needs to be moved to each gas or do we have other option?
-        this.dive.needsReturn = this.plan.needsReturn && this._tanks.length === 1;
-        this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
-        this.dive.noDecoExceeded = this.plan.noDecoExceeded;
-        this.dive.calculated = true;
-        this.onCalculated.next({});
-    }
-
     public loadFrom(isComplex: boolean, options: Options, diver: Diver, tanks: Tank[], segments: Segment[]): void {
         this.isComplex = isComplex;
         this.assignOptions(options);
@@ -228,12 +196,59 @@ export class PlannerService {
         this.calculate();
     }
 
+    public calculate(): void {
+        this.dive.calculated = false;
+        // TODO copy options to diver only on app startup, let it customize per dive
+        this.options.maxPpO2 = this.diver.maxPpO2;
+        this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
+        this.resetDepthConverter();
+        // TODO move calculateWayPoints to worker
+        const profile = WayPointsService.calculateWayPoints(this.plan, this._tanks, this.options);
+        this.dive.wayPoints = profile.wayPoints;
+        this.dive.ceilings = profile.ceilings;
+        this.dive.events = profile.events;
+        this.dive.averageDepth = Segments.averageDepth(profile.origin);
+
+        if (profile.endsOnSurface) {
+            // TODO move to another background thread: const noDecoTime = this.noDecoTime();
+
+            const request = {
+                plan: DtoSerialization.toSegmentPreferences(this.plan.segments),
+                profile: DtoSerialization.toSegmentPreferences(profile.origin),
+                depthConverter: this.depthConverter,
+                options: this.options,
+                diver: this.diver,
+                tanks: DtoSerialization.toTankPreferences(this._tanks)
+            };
+
+            this.worker.calculate(request);
+        }
+    }
+
+    private finishCalculation(result: DiveResultDto): void {
+        // TODO update tanks consumption from result
+        this.dive.maxTime = result.maxTime;
+        this.dive.timeToSurface = result.timeToSurface;
+
+        this.dive.notEnoughTime = this.plan.notEnoughTime;
+        this.dive.emergencyAscentStart = this.plan.startAscentTime;
+        this.dive.turnPressure = this.calculateTurnPressure();
+        this.dive.turnTime = Math.floor(this.plan.duration / 2);
+        // this needs to be moved to each gas or do we have other option?
+        this.dive.needsReturn = this.plan.needsReturn && this._tanks.length === 1;
+        this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
+        this.dive.noDecoExceeded = this.plan.noDecoExceeded;
+        this.dive.calculated = true;
+        this.onCalculated.next({});
+    }
+
     private assignOptions(newOptions: Options): void {
         this._options.loadFrom(newOptions);
         this.depthConverterFactory = new DepthConverterFactory(newOptions);
         this.resetDepthConverter();
     }
 
+    /** even in case thirds rule, the last third is reserve, so we always divide by 2 */
     private calculateTurnPressure(): number {
         const consumed = this.firstTank.consumed / 2;
         return this.firstTank.startPressure - Math.floor(consumed);
@@ -243,5 +258,26 @@ export class PlannerService {
         this.depthConverter = this.depthConverterFactory.create();
         const depthLevels = new DepthLevels(this.depthConverter, this.options);
         this.nitroxCalculator = new NitroxCalculator(depthLevels, this.depthConverter);
+    }
+}
+
+/** Allows calculation in background thread using web worker */
+export class PlanWorker {
+    public calculated;
+    private worker =  new Worker(new URL('../workers/plan.worker', import.meta.url));
+    private onCalculated = new Subject();
+
+    constructor() {
+        this. calculated = this.onCalculated.asObservable();
+        // TODO add worker error handling
+        this.worker.addEventListener('message', (m) => this.processMessage(m));
+    }
+
+    public calculate(request: PlanRequestDto): void {
+        this.worker.postMessage(request);
+    }
+
+    private processMessage(message: MessageEvent<DiveResultDto>): void {
+        this.onCalculated.next(message.data);
     }
 }

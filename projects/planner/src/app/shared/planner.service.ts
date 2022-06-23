@@ -226,7 +226,6 @@ export class PlannerService {
             this.worker.calculate(request);
         }
 
-        this.dive.calculated = true;
         this.onWayPointsCalculated.next({});
     }
 

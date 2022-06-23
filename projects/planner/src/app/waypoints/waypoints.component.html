@@ -3,8 +3,9 @@
         <fa-icon [icon]="tasks" class="me-3"></fa-icon>
         <span>Dive way points</span>
     </div>
-    <div class="card-body">
-        <table class="table">
+    <div class="card-body card-minheight">
+        <div *ngIf="!dive.showResults">Calculating ...</div>
+        <table class="table" *ngIf="dive.showResults">
             <tbody>
                 <tr>
                     <th></th>

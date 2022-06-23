@@ -90,10 +90,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.plotCharts();
-        this.chartElement = document.getElementById(this.elementName);
-        this.chartElement.on('plotly_hover', (e: any) => this.plotlyHover(e));
-        this.chartElement.on('plotly_click', (e: any) => this.plotlyHover(e));
-        this.chartElement.on('plotly_unhover', (e: any) => this.plotlyHoverLeave(e));
+        this.hookChartEvents();
     }
 
     ngOnDestroy() {
@@ -145,6 +142,13 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         const traces = [ dataAverageDepths, depths, ceilings, plotEvents ];
 
         Plotly.react(this.elementName, traces, this.layout, this.options);
+    }
+
+    private hookChartEvents(): void {
+        this.chartElement = document.getElementById(this.elementName);
+        this.chartElement.on('plotly_hover', (e: any) => this.plotlyHover(e));
+        this.chartElement.on('plotly_click', (e: any) => this.plotlyHover(e));
+        this.chartElement.on('plotly_unhover', (e: any) => this.plotlyHoverLeave(e));
     }
 
     private updateLayoutThickFormat(): void {

@@ -6,3 +6,7 @@
 .table-noheader > tbody > tr:first-child > td {
     border: none;
 }
+
+.card-minheight {
+    min-height: 485px;
+}

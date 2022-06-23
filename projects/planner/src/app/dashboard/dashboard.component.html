@@ -29,13 +29,13 @@
            } ">
         <app-diveoptions></app-diveoptions>
     </div>
-    <div *ngIf="showResults" class="col-12 col-xxl-6 mt-4" [ngClass]="{
+    <div class="col-12 col-xxl-6 mt-4" [ngClass]="{
         'col-lg-12': !isComplex,
         'col-lg-8': isComplex
          } ">
         <app-profilechart></app-profilechart>
     </div>
-    <div *ngIf="showResults" class="col-md-6 col-xxl-3 mt-4">
+    <div class="col-md-6 col-xxl-3 mt-4">
         <app-waypoints></app-waypoints>
     </div>
     <div class="col-md-6 col-xxl-3 mt-4">

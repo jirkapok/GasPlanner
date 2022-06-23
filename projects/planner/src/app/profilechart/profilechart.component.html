@@ -3,8 +3,12 @@
     <fa-icon [icon]="icon" class="me-3" flip="vertical"></fa-icon>
     <span>Profile chart</span>
   </div>
-  <div class="card-body">
-    <div id="diveplot">
+  <div class="card-body card-minheight">
+    <div *ngIf="!dive.calculated" >Calculating ...</div>
+    <div id="diveplot" class="diveplot" [ngClass]="{
+        'plot-display': dive.calculated,
+        'plot-hidden': !dive.calculated
+      }">
     </div>
   </div>
 </div>

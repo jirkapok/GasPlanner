@@ -200,6 +200,10 @@ export class Dive {
         // the only errors preventing draw chart
         return this.calculated && this.notEnoughTime;
     }
+
+    public get showResults(): boolean {
+        return this.calculated && !this.hasErrors;
+    }
 }
 
 export enum SwimAction {

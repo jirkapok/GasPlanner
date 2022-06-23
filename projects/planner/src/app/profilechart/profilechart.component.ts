@@ -80,7 +80,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         };
 
         this.updateLayoutThickFormat();
-        this.subscription = this.planer.calculated.subscribe(() => this.plotCharts());
+        this.subscription = this.planer.wayPointsCalculated.subscribe(() => this.plotCharts());
         this.selectedWaypoint.selectedChanged.subscribe((wayPoint) => this.selectWayPoint(wayPoint));
     }
 
@@ -137,6 +137,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
 
     private plotCharts(): void {
         this.updateLayoutThickFormat();
+        // TODO performance: reduce number of samples shown in chart to speedup the drawing
         const dataAverageDepths = this.plotAverageDepth();
         const depths = this.plotDepths();
         const ceilings = this.plotCeilings();

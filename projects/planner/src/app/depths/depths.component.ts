@@ -28,7 +28,7 @@ export class DepthsComponent implements OnDestroy {
         this.dive = this.planner.dive;
         this.updateLevels();
 
-        this.subscription = this.planner.calculated.subscribe(() => {
+        this.subscription = this.planner.infoCalculated.subscribe(() => {
             this.updateLevels();
         });
     }

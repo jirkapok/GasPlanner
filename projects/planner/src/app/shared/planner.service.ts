@@ -20,10 +20,12 @@ export class PlannerService {
     public diver: Diver = new Diver();
     // there always needs to be at least one
     public dive: Dive = new Dive();
-    public calculated;
+    public infoCalculated;
+    public wayPointsCalculated;
     private _tanks: Tank[] = [];
     private _options: Options;
-    private onCalculated = new Subject();
+    private onInfoCalculated = new Subject();
+    private onWayPointsCalculated = new Subject();
     private depthConverterFactory: DepthConverterFactory;
     private depthConverter!: DepthConverter;
     private nitroxCalculator!: NitroxCalculator;
@@ -38,7 +40,8 @@ export class PlannerService {
         const tank = Tank.createDefault();
         tank.id = 1;
         this._tanks.push(tank);
-        this.calculated = this.onCalculated.asObservable();
+        this.infoCalculated = this.onInfoCalculated.asObservable();
+        this.wayPointsCalculated = this.onWayPointsCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
         this.worker = new PlanWorker();
         this.worker.calculated.subscribe((data) => {
@@ -202,7 +205,6 @@ export class PlannerService {
         this.options.maxPpO2 = this.diver.maxPpO2;
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         this.resetDepthConverter();
-        // TODO move calculateWayPoints to worker
         const profile = WayPointsService.calculateWayPoints(this.plan, this._tanks, this.options);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;
@@ -223,6 +225,9 @@ export class PlannerService {
 
             this.worker.calculate(request);
         }
+
+        this.dive.calculated = true;
+        this.onWayPointsCalculated.next({});
     }
 
     private finishCalculation(result: DiveResultDto): void {
@@ -239,7 +244,7 @@ export class PlannerService {
         this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.calculated = true;
-        this.onCalculated.next({});
+        this.onInfoCalculated.next({});
     }
 
     private assignOptions(newOptions: Options): void {

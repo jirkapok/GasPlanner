@@ -192,7 +192,6 @@ class ImperialRanges implements RangeConstants  {
     public minimumAutoStopDepth = 33;
     public lastStopDepthDefault = 10;
 
-    // TODO ranges aren't bound after units are switched: see app-settings
     // TODO adjust imperial ranges
     public nitroxOxygen: [number, number] = [21, 100];
     public nitroxOxygenLabel: string = toLabel(this.nitroxOxygen, '%');

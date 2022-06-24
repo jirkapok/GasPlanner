@@ -1,6 +1,6 @@
 import { Diver, Options, Segment, StandardGases, Tank, Tanks } from 'scuba-physics';
 
-export interface PlanRequestDto {
+export interface ConsumptionRequestDto {
     plan: SegmentDto[];
     profile: SegmentDto[];
     options: Options;
@@ -8,7 +8,7 @@ export interface PlanRequestDto {
     tanks: TankDto[];
 }
 
-export interface DiveResultDto {
+export interface ConsumptionResultDto {
     maxTime: number;
     timeToSurface: number;
     tanks: TankDto[];

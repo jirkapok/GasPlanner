@@ -10,7 +10,7 @@ import {
     Segments, OptionDefaults, Salinity, SafetyStop,
     DepthLevels, Gas
 } from 'scuba-physics';
-import { DiveResultDto, DtoSerialization, PlanRequestDto } from './serializationmodel';
+import { DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto, SegmentDto, TankDto } from './serializationmodel';
 
 @Injectable()
 export class PlannerService {
@@ -29,7 +29,7 @@ export class PlannerService {
     private depthConverterFactory: DepthConverterFactory;
     private depthConverter!: DepthConverter;
     private nitroxCalculator!: NitroxCalculator;
-    private worker: PlanWorker;
+    private consumptionTask: BackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
 
     constructor() {
         this._options = new Options();
@@ -43,9 +43,11 @@ export class PlannerService {
         this.infoCalculated = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated = this.onWayPointsCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
-        this.worker = new PlanWorker();
-        this.worker.calculated.subscribe((data) => {
-            this.finishCalculation(<DiveResultDto>data);
+
+        const consumptionWorker = new Worker(new URL('../workers/plan.worker', import.meta.url));
+        this.consumptionTask = new BackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>(consumptionWorker);
+        this.consumptionTask.calculated.subscribe((data) => {
+            this.finishCalculation(data);
         });
     }
 
@@ -73,6 +75,20 @@ export class PlannerService {
 
     public get ndlValid(): boolean {
         return this.dive.calculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
+    }
+
+    public static noDecoTime(tanksDto: TankDto[], originProfileDto: SegmentDto[], options: Options): number {
+
+        // we can't speedup the prediction from already obtained profile,
+        // since it may happen, the deco starts during ascent.
+        // we cant use the maxDepth, because its purpose is only for single level dives
+        const tanks = DtoSerialization.toTanks(tanksDto);
+        const gases = Gases.fromTanks(tanks);
+        const originProfile = DtoSerialization.toSegments(originProfileDto, tanks);
+        const segments = Segments.fromCollection(originProfile);
+        const algorithm = new BuhlmannAlgorithm();
+        const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, options);
+        return noDecoLimit;
     }
 
     public resetToSimple(): void {
@@ -162,17 +178,6 @@ export class PlannerService {
         return roundedNarc;
     }
 
-    public noDecoTime(): number {
-        const algorithm = new BuhlmannAlgorithm();
-        // we can't speedup the prediction from already obtained profile,
-        // since it may happen, the deco starts during ascent.
-        // we cant use the maxDepth, because its purpose is only for single level dives
-        const gases = Gases.fromTanks(this._tanks);
-        const segments = this.plan.copySegments();
-        const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, this.options);
-        return noDecoLimit;
-    }
-
     public assignDuration(newDuration: number): void {
         this.plan.assignDuration(newDuration, this.firstTank, this.options);
         this.calculate();
@@ -206,6 +211,11 @@ export class PlannerService {
         this.options.maxPpO2 = this.diver.maxPpO2;
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         this.resetDepthConverter();
+
+        const serializedPlan = DtoSerialization.toSegmentPreferences(this.plan.segments);
+        const serializedTanks =  DtoSerialization.toTankPreferences(this._tanks);
+
+        // TODO move to worker
         const profile = WayPointsService.calculateWayPoints(this.plan, this._tanks, this.options);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;
@@ -213,23 +223,25 @@ export class PlannerService {
         this.dive.averageDepth = Segments.averageDepth(profile.origin);
 
         if (profile.endsOnSurface) {
-            // TODO performance: move to another background thread: const noDecoTime = this.noDecoTime();
+            this.plan.noDecoTime = PlannerService.noDecoTime(serializedTanks, serializedPlan, this.options);
 
             const request = {
-                plan: DtoSerialization.toSegmentPreferences(this.plan.segments),
+                plan: serializedPlan,
                 profile: DtoSerialization.toSegmentPreferences(profile.origin),
                 options: this.options,
                 diver: this.diver,
-                tanks: DtoSerialization.toTankPreferences(this._tanks)
+                tanks: serializedTanks
             };
 
-            this.worker.calculate(request);
+            this.consumptionTask.calculate(request);
+        } else {
+            // TODO provide error values to calculated profile
         }
 
         this.onWayPointsCalculated.next({});
     }
 
-    private finishCalculation(result: DiveResultDto): void {
+    private finishCalculation(result: ConsumptionResultDto): void {
         // TODO update tanks consumption from result
         this.dive.maxTime = result.maxTime;
         this.dive.timeToSurface = result.timeToSurface;
@@ -266,22 +278,22 @@ export class PlannerService {
 }
 
 /** Allows calculation in background thread using web worker */
-export class PlanWorker {
+export class BackgroundTask<TRequest, TResponse> {
     public calculated;
-    private worker =  new Worker(new URL('../workers/plan.worker', import.meta.url));
-    private onCalculated = new Subject();
+    private onCalculated = new Subject<TResponse>();
 
-    constructor() {
+    constructor(private worker: Worker) {
         this. calculated = this.onCalculated.asObservable();
         // TODO add worker error handling
         this.worker.addEventListener('message', (m) => this.processMessage(m));
     }
 
-    public calculate(request: PlanRequestDto): void {
+    public calculate(request: TRequest): void {
         this.worker.postMessage(request);
     }
 
-    private processMessage(message: MessageEvent<DiveResultDto>): void {
+    private processMessage(message: MessageEvent<TResponse>): void {
         this.onCalculated.next(message.data);
     }
 }
+

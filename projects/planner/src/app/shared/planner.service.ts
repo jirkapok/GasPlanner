@@ -10,7 +10,7 @@ import {
     Segments, OptionDefaults, Salinity, SafetyStop,
     DepthLevels, Gas
 } from 'scuba-physics';
-import { DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto, SegmentDto, TankDto } from './serialization.model';
+import { DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto, NoDecoRequestDto } from './serialization.model';
 import { BackgroundTask } from './background-task';
 
 @Injectable()
@@ -31,6 +31,7 @@ export class PlannerService {
     private depthConverter!: DepthConverter;
     private nitroxCalculator!: NitroxCalculator;
     private consumptionTask: BackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
+    private noDecoTask: BackgroundTask<NoDecoRequestDto, number>;
 
     constructor() {
         this._options = new Options();
@@ -44,6 +45,12 @@ export class PlannerService {
         this.infoCalculated = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated = this.onWayPointsCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
+
+        const noDecoWorker = new Worker(new URL('../workers/no-deco.worker', import.meta.url));
+        this.noDecoTask = new BackgroundTask<NoDecoRequestDto, number>(noDecoWorker);
+        this.noDecoTask.calculated.subscribe((calculated) => {
+            this.plan.noDecoTime = calculated;
+        });
 
         const consumptionWorker = new Worker(new URL('../workers/consumption.worker', import.meta.url));
         this.consumptionTask = new BackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>(consumptionWorker);
@@ -76,20 +83,6 @@ export class PlannerService {
 
     public get ndlValid(): boolean {
         return this.dive.calculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
-    }
-
-    public static noDecoTime(tanksDto: TankDto[], originProfileDto: SegmentDto[], options: Options): number {
-
-        // we can't speedup the prediction from already obtained profile,
-        // since it may happen, the deco starts during ascent.
-        // we cant use the maxDepth, because its purpose is only for single level dives
-        const tanks = DtoSerialization.toTanks(tanksDto);
-        const gases = Gases.fromTanks(tanks);
-        const originProfile = DtoSerialization.toSegments(originProfileDto, tanks);
-        const segments = Segments.fromCollection(originProfile);
-        const algorithm = new BuhlmannAlgorithm();
-        const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, options);
-        return noDecoLimit;
     }
 
     public resetToSimple(): void {
@@ -224,9 +217,15 @@ export class PlannerService {
         this.dive.averageDepth = Segments.averageDepth(profile.origin);
 
         if (profile.endsOnSurface) {
-            this.plan.noDecoTime = PlannerService.noDecoTime(serializedTanks, serializedPlan, this.options);
 
-            const request = {
+            const noDecoRequest = {
+                tanks: serializedTanks,
+                originProfile: serializedPlan,
+                options: this.options
+            };
+            this.noDecoTask.calculate(noDecoRequest);
+
+            const consumptionRequest = {
                 plan: serializedPlan,
                 profile: DtoSerialization.toSegmentPreferences(profile.origin),
                 options: this.options,
@@ -234,7 +233,7 @@ export class PlannerService {
                 tanks: serializedTanks
             };
 
-            this.consumptionTask.calculate(request);
+            this.consumptionTask.calculate(consumptionRequest);
         } else {
             // TODO provide error values to calculated profile
         }

@@ -1,5 +1,11 @@
 import { Diver, Options, Segment, StandardGases, Tank, Tanks } from 'scuba-physics';
 
+export interface NoDecoRequestDto {
+    tanks: TankDto[];
+    originProfile: SegmentDto[];
+    options: Options;
+}
+
 export interface ConsumptionRequestDto {
     plan: SegmentDto[];
     profile: SegmentDto[];

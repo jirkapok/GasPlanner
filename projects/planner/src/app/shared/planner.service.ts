@@ -200,6 +200,7 @@ export class PlannerService {
     }
 
     public calculate(): void {
+        // TODO calculate only if form is valid
         this.dive.calculated = false;
         // TODO copy options to diver only on app startup, let it customize per dive
         this.options.maxPpO2 = this.diver.maxPpO2;
@@ -212,7 +213,7 @@ export class PlannerService {
         this.dive.averageDepth = Segments.averageDepth(profile.origin);
 
         if (profile.endsOnSurface) {
-            // TODO move to another background thread: const noDecoTime = this.noDecoTime();
+            // TODO performance: move to another background thread: const noDecoTime = this.noDecoTime();
 
             const request = {
                 plan: DtoSerialization.toSegmentPreferences(this.plan.segments),

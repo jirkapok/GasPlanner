@@ -228,7 +228,7 @@ export class Segments {
             return this.segments;
         }
 
-        // TODO optimize mergeFlat performance or get rid of it
+        // TODO performance: optimize mergeFlat performance or get rid of it
         const toRemove: Segment[] = [];
         for (let index = this.segments.length - 1; index > skipItems; index--) {
             const segment1 = this.segments[index - 1];

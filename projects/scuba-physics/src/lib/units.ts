@@ -110,7 +110,8 @@ export class ImperialUnits implements Units {
     private static readonly cftRate = 28.316846592;
     private static readonly footRate = 0.3048;
     // TODO make working pressure configurable
-    private readonly workingPressure = 206.84; // bar (3000 psi)
+    /** In bars corresponding to 3000 psi */
+    private readonly workingPressure = 206.84;
 
     public get name(): string{
         return 'Imperial';

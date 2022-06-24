@@ -1,9 +1,8 @@
-import { DepthConverter, Diver, Options, Segment, StandardGases, Tank, Tanks } from 'scuba-physics';
+import { Diver, Options, Segment, StandardGases, Tank, Tanks } from 'scuba-physics';
 
 export interface PlanRequestDto {
     plan: SegmentDto[];
     profile: SegmentDto[];
-    depthConverter: DepthConverter;
     options: Options;
     diver: Diver;
     tanks: TankDto[];

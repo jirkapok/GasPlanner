@@ -218,7 +218,6 @@ export class PlannerService {
             const request = {
                 plan: DtoSerialization.toSegmentPreferences(this.plan.segments),
                 profile: DtoSerialization.toSegmentPreferences(profile.origin),
-                depthConverter: this.depthConverter,
                 options: this.options,
                 diver: this.diver,
                 tanks: DtoSerialization.toTankPreferences(this._tanks)

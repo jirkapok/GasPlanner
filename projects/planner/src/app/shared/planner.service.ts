@@ -10,7 +10,7 @@ import {
     Segments, OptionDefaults, Salinity, SafetyStop,
     DepthLevels, Gas
 } from 'scuba-physics';
-import { DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto, SegmentDto, TankDto } from './serializationmodel';
+import { DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto, SegmentDto, TankDto } from './serialization.model';
 
 @Injectable()
 export class PlannerService {

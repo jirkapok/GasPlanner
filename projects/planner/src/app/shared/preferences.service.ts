@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Diver, Options } from 'scuba-physics';
 import { PlannerService } from './planner.service';
-import { DtoSerialization, SegmentDto, TankDto } from './serializationmodel';
+import { DtoSerialization, SegmentDto, TankDto } from './serialization.model';
 
 export interface AppPreferences  {
     isComplex: boolean;

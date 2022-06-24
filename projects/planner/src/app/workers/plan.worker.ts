@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 
 import { Consumption, DepthConverterFactory, Segments, Time } from 'scuba-physics';
-import { DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto, } from '../shared/serializationmodel';
+import { DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto, } from '../shared/serialization.model';
 
 addEventListener('message', ({ data }) => {
     const response = ConsumptionTask.calculateConsumption(data);

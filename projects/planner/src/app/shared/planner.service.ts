@@ -44,7 +44,7 @@ export class PlannerService {
         this.wayPointsCalculated = this.onWayPointsCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
 
-        const consumptionWorker = new Worker(new URL('../workers/plan.worker', import.meta.url));
+        const consumptionWorker = new Worker(new URL('../workers/consumption.worker', import.meta.url));
         this.consumptionTask = new BackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>(consumptionWorker);
         this.consumptionTask.calculated.subscribe((data) => {
             this.finishCalculation(data);

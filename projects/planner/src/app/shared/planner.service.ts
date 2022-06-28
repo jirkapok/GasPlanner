@@ -4,13 +4,15 @@ import { Subject } from 'rxjs';
 import { Plan, Dive, Strategies, } from './models';
 import { WayPointsService } from './waypoints.service';
 import {
-    NitroxCalculator, BuhlmannAlgorithm, Options,
+    NitroxCalculator, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
-    Diver, Segment, Gases,
-    Segments, OptionDefaults, Salinity, SafetyStop,
+    Diver, Segment, Segments, OptionDefaults, Salinity, SafetyStop,
     DepthLevels, Gas
 } from 'scuba-physics';
-import { DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto, NoDecoRequestDto } from './serialization.model';
+import {
+    DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
+    NoDecoRequestDto, TankConsumedDto
+} from './serialization.model';
 import { BackgroundTask } from './background-task';
 
 @Injectable()
@@ -242,7 +244,7 @@ export class PlannerService {
     }
 
     private finishCalculation(result: ConsumptionResultDto): void {
-        // TODO update tanks consumption from result
+        this.copyTanksConsumption(result.tanks);
         this.dive.maxTime = result.maxTime;
         this.dive.timeToSurface = result.timeToSurface;
 
@@ -256,6 +258,15 @@ export class PlannerService {
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.calculated = true;
         this.onInfoCalculated.next({});
+    }
+
+    private copyTanksConsumption(tanks: TankConsumedDto[]) {
+        for(let index = 0; index < this.tanks.length; index++) {
+            const source = tanks[index];
+            const target = this.tanks[index];
+            target.consumed = source.consumed;
+            target.reserve = source.reserve;
+        }
     }
 
     private assignOptions(newOptions: Options): void {

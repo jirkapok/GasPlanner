@@ -17,7 +17,13 @@ export interface ConsumptionRequestDto {
 export interface ConsumptionResultDto {
     maxTime: number;
     timeToSurface: number;
-    tanks: TankDto[];
+    tanks: TankConsumedDto[];
+}
+
+export interface TankConsumedDto {
+    id: number;
+    consumed: number;
+    reserve: number;
 }
 
 export interface TankDto {
@@ -71,6 +77,19 @@ export class DtoSerialization {
             result.push(converted);
         }
 
+        return result;
+    }
+
+    public static toTanksConsumption(tanks: Tank[]): TankConsumedDto[] {
+        const result: TankConsumedDto[] = [];
+        tanks.forEach(tank => {
+            const serialized: TankConsumedDto = {
+                id: tank.id,
+                consumed: tank.consumed,
+                reserve: tank.reserve
+            };
+            result.push(serialized);
+        });
         return result;
     }
 

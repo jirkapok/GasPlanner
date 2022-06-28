@@ -28,7 +28,7 @@ class ConsumptionTask {
         return {
             maxTime,
             timeToSurface,
-            tanks: DtoSerialization.toTankPreferences(tanks),
+            tanks: DtoSerialization.toTanksConsumption(tanks),
         };
     }
 }

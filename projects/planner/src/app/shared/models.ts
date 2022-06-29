@@ -14,21 +14,8 @@ export class Level {
     ){
     }
 
-    public static tankLabel(tank: Tank | undefined): string {
-        if(!tank) {
-            return '';
-        }
-
-        return `${tank.id}. ${tank.name}/${tank.size}/${tank.startPressure}`;
-    }
-
     public get duration(): number {
         return Time.toMinutes(this.segment.duration);
-    }
-
-    /** in minutes */
-    public set duration(newValue: number) {
-        this.segment.duration = Time.toSeconds(newValue);
     }
 
     public get startDepth(): number {
@@ -39,20 +26,33 @@ export class Level {
         return this.segment.endDepth;
     }
 
-    public set endDepth(newValue: number) {
-        this.segment.endDepth = newValue;
-    }
-
     public get tank(): Tank | undefined {
         return this.segment.tank;
+    }
+
+    public get tankLabel(): string {
+        return Level.tankLabel(this.segment.tank);
+    }
+
+    /** in minutes */
+    public set duration(newValue: number) {
+        this.segment.duration = Time.toSeconds(newValue);
+    }
+
+    public set endDepth(newValue: number) {
+        this.segment.endDepth = newValue;
     }
 
     public set tank(newValue: Tank | undefined) {
         this.segment.tank = newValue;
     }
 
-    public get tankLabel(): string {
-        return Level.tankLabel(this.segment.tank);
+    public static tankLabel(tank: Tank | undefined): string {
+        if(!tank) {
+            return '';
+        }
+
+        return `${tank.id}. ${tank.name}/${tank.size}/${tank.startPressure}`;
     }
 }
 
@@ -81,17 +81,8 @@ export class Plan {
         return this.length === 2 && this.segments[1].duration === 0;
     }
 
-    public copySegments(): Segments {
-        return this._segments.copy();
-    }
-
     public get segments(): Segment[] {
         return this._segments.items;
-    }
-
-    public setSimple(depth: number, duration: number, tank: Tank, options: Options): void {
-        this.reset(depth, duration, tank, options);
-        this.onChanged.next({});
     }
 
     public get maxDepth(): number {
@@ -106,15 +97,37 @@ export class Plan {
         return this._segments.startAscentTime;
     }
 
-    public assignDepth(newDepth: number, tank: Tank, options: Options): void {
-        this._segments = SegmentsFactory.createForPlan(newDepth, this.duration, tank, options);
-        this.onChanged.next({});
-    }
-
     /** in minutes */
     public get duration(): number {
         const seconds = this._segments.duration;
         return Time.toMinutes(seconds);
+    }
+
+    public get availablePressureRatio(): number {
+        return this.strategy === Strategies.THIRD ? 2 / 3 : 1;
+    }
+
+    public get needsReturn(): boolean {
+        return this.strategy !== Strategies.ALL;
+    }
+
+    public get noDecoExceeded(): boolean {
+        return this.duration > this.noDecoTime;
+    }
+
+    public copySegments(): Segments {
+        return this._segments.copy();
+    }
+
+    public setSimple(depth: number, duration: number, tank: Tank, options: Options): void {
+        this.reset(depth, duration, tank, options);
+        this.onChanged.next({});
+    }
+
+
+    public assignDepth(newDepth: number, tank: Tank, options: Options): void {
+        this._segments = SegmentsFactory.createForPlan(newDepth, this.duration, tank, options);
+        this.onChanged.next({});
     }
 
     public assignDuration(newDuration: number, tank: Tank, options: Options): void {
@@ -136,18 +149,6 @@ export class Plan {
 
     public fixDepths(): void {
         this._segments.fixStartDepths();
-    }
-
-    public get availablePressureRatio(): number {
-        return this.strategy === Strategies.THIRD ? 2 / 3 : 1;
-    }
-
-    public get needsReturn(): boolean {
-        return this.strategy !== Strategies.ALL;
-    }
-
-    public get noDecoExceeded(): boolean {
-        return this.duration > this.noDecoTime;
     }
 
     public loadFrom(other: Segment[]): void {
@@ -231,10 +232,6 @@ export class WayPoint {
 
     private _gasName = '';
 
-    public get gasName(): string {
-        return this._gasName;
-    }
-
     /**
      * @param duration in seconds
      * @param newDepth in meters
@@ -247,16 +244,8 @@ export class WayPoint {
         this.updateSwimAction();
     }
 
-    public static fromSegment(segment: Segment): WayPoint {
-        const newWayPoint = new WayPoint(segment.duration, segment.endDepth);
-        const gasName = StandardGases.nameFor(segment.gas.fO2, segment.gas.fHe);
-        newWayPoint._gasName = gasName;
-        newWayPoint.speed = segment.speed;
-        return newWayPoint;
-    }
-
-    public asGasSwitch(): void {
-        this.action = SwimAction.switch;
+    public get gasName(): string {
+        return this._gasName;
     }
 
     /** in meters */
@@ -287,6 +276,18 @@ export class WayPoint {
         let durationText = Math.round(this.duration).toString();
         durationText += ' min.';
         return `${depth},${durationText}`;
+    }
+
+    public static fromSegment(segment: Segment): WayPoint {
+        const newWayPoint = new WayPoint(segment.duration, segment.endDepth);
+        const gasName = StandardGases.nameFor(segment.gas.fO2, segment.gas.fHe);
+        newWayPoint._gasName = gasName;
+        newWayPoint.speed = segment.speed;
+        return newWayPoint;
+    }
+
+    public asGasSwitch(): void {
+        this.action = SwimAction.switch;
     }
 
     public toLevel(segment: Segment): WayPoint {

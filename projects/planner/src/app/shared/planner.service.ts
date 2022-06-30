@@ -215,7 +215,6 @@ export class PlannerService {
         this.calculatingProfile = true;
         this.calculatingNoDeco = true;
         // TODO calculate only if form is valid
-        // TODO Fix when calculation is requested before the currently running is finished
 
         setTimeout(() => {
             this.showStillRunning();
@@ -238,6 +237,7 @@ export class PlannerService {
     }
 
     private showStillRunning(): void {
+        // TODO Fix when calculation is requested before the currently running is finished
         if(this.calculatingProfile) {
             this.dive.profileCalculated = false;
             this.dive.emptyProfile();
@@ -256,6 +256,7 @@ export class PlannerService {
         const serializedPlan = DtoSerialization.toSegmentPreferences(this.plan.segments);
         const serializedTanks =  DtoSerialization.toTankPreferences(this._tanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, this._tanks);
+        // TODO Fix data property of events, looks like deserialization doesn't work
         const profile = WayPointsService.calculateWayPoints(calculatedProfile, result.events);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;

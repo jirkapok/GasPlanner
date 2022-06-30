@@ -1,0 +1,46 @@
+.orange {
+    background-color: rgb(255, 160, 73);
+}
+
+.loadbar .orange1 {
+	animation-delay: 0.1s;
+}
+
+.loadbar .orange2 {
+	animation-delay: 0.2s;
+}
+
+.loadbar .orange3 {
+	animation-delay: 0.3s;
+}
+
+.container {
+	display: flex;
+	justify-self: center;
+	align-items: center;
+	flex-direction: row;
+}
+
+.container > div{
+	width: .5vw;
+	height: .5vw;
+	border-radius: 100%;
+	margin: 0.2vw;
+	background-image: linear-gradient(145deg, rgba(255,255,255,0.5) 0%, rgba(0,0,0,0) 100%);
+	animation: bounce 1.5s 0.5s linear infinite;
+}
+
+@keyframes bounce
+{
+	0%, 50%, 100% {
+		transform: scale(1);
+	}
+
+	25% {
+		transform: scale(0.6);
+	}
+
+	75% {
+		transform: scale(1.4);
+	}
+}

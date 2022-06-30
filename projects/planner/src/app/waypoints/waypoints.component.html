@@ -16,7 +16,7 @@
                 </tr>
                 <tr *ngIf="!dive.profileCalculated">
                     <td colspan="5">
-                        <div >Calculating ...</div>
+                        <app-calculating [show]="true"></app-calculating>
                     </td>
                 </tr>
                 <tr *ngFor="let point of dive.wayPoints" [ngClass]="{'table-active': point.selected }"

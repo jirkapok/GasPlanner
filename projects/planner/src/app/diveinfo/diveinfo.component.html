@@ -64,7 +64,7 @@
                     <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="showTankId"></app-tankchart>
                 </div>
             </div>
-            <div *ngIf="!dive.calculated" class="mb-2" >Calculating ...</div>
+            <app-calculating [show]="!dive.calculated"></app-calculating>
 
             <div *ngIf="dive.calculated && dive.notEnoughGas" class="alert  alert-danger">
                 <fa-icon [icon]="exclamation" class="me-2"></fa-icon>

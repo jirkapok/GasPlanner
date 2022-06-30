@@ -30,6 +30,7 @@ import { PlannerService } from './shared/planner.service';
 import { PreferencesService } from './shared/preferences.service';
 import { UnitConversion } from './shared/UnitConversion';
 import { SelectedWaypoint } from './shared/selectedwaypointService';
+import { CalculatingComponent } from './calculating/calculating.component';
 
 @NgModule({
     declarations: [
@@ -49,7 +50,8 @@ import { SelectedWaypoint } from './shared/selectedwaypointService';
         AppFooterComponent,
         DepthsComponent,
         TankChartComponent,
-        AppSettingsComponent
+        AppSettingsComponent,
+        CalculatingComponent
     ],
     imports: [
         BrowserModule,

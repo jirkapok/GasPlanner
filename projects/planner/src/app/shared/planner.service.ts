@@ -25,6 +25,9 @@ export class PlannerService {
     public dive: Dive = new Dive();
     public infoCalculated;
     public wayPointsCalculated;
+    private calculating = false;
+    private calculatingNoDeco = false;
+    private calculatingProfile = false;
     private _tanks: Tank[] = [];
     private _options: Options;
     private onInfoCalculated = new Subject();
@@ -208,12 +211,16 @@ export class PlannerService {
     }
 
     public calculate(): void {
+        this.calculating = true;
+        this.calculatingProfile = true;
+        this.calculatingNoDeco = true;
         // TODO calculate only if form is valid
         // TODO Fix when calculation is requested before the currently running is finished
-        this.dive.calculated = false;
-        this.dive.noDecoCalculated = false;
-        this.dive.profileCalculated = false;
-        this.dive.emptyProfile();
+
+        setTimeout(() => {
+            this.showStillRunning();
+        }, 500);
+
         // TODO copy options to diver only on app startup, let it customize per dive
         this.options.maxPpO2 = this.diver.maxPpO2;
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
@@ -228,6 +235,21 @@ export class PlannerService {
             options: this.options
         };
         this.profileTask.calculate(profileRequest);
+    }
+
+    private showStillRunning(): void {
+        if(this.calculatingProfile) {
+            this.dive.profileCalculated = false;
+            this.dive.emptyProfile();
+        }
+
+        if(this.calculatingNoDeco) {
+            this.dive.noDecoCalculated = false;
+        }
+
+        if(this.calculating) {
+            this.dive.calculated = false;
+        }
     }
 
     private continueCalculation(result: ProfileResultDto): void {
@@ -263,6 +285,7 @@ export class PlannerService {
         }
 
         this.dive.profileCalculated = true;
+        this.calculatingProfile = false;
         this.onWayPointsCalculated.next({});
     }
 
@@ -271,6 +294,7 @@ export class PlannerService {
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.notEnoughTime = this.plan.notEnoughTime;
         this.dive.noDecoCalculated = true;
+        this.calculatingNoDeco = false;
     }
 
     private finishCalculation(result: ConsumptionResultDto): void {
@@ -284,7 +308,9 @@ export class PlannerService {
         // this needs to be moved to each gas or do we have other option?
         this.dive.needsReturn = this.plan.needsReturn && this._tanks.length === 1;
         this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
+
         this.dive.calculated = true;
+        this.calculating = false;
         this.onInfoCalculated.next({});
     }
 

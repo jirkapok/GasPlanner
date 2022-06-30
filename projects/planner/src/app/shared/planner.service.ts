@@ -11,7 +11,7 @@ import {
 } from 'scuba-physics';
 import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
-    NoDecoRequestDto, TankConsumedDto
+    ProfileRequestDto, TankConsumedDto, ProfileResultDto
 } from './serialization.model';
 import { BackgroundTask } from './background-task';
 
@@ -32,8 +32,9 @@ export class PlannerService {
     private depthConverterFactory: DepthConverterFactory;
     private depthConverter!: DepthConverter;
     private nitroxCalculator!: NitroxCalculator;
+    private profileTask: BackgroundTask<ProfileRequestDto, ProfileResultDto>;
     private consumptionTask: BackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
-    private noDecoTask: BackgroundTask<NoDecoRequestDto, number>;
+    private noDecoTask: BackgroundTask<ProfileRequestDto, number>;
 
     constructor() {
         this._options = new Options();
@@ -48,10 +49,16 @@ export class PlannerService {
         this.wayPointsCalculated = this.onWayPointsCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
 
+        const profileWorker = new Worker(new URL('../workers/profile.worker', import.meta.url));
+        this.profileTask = new BackgroundTask<ProfileRequestDto, ProfileResultDto>(profileWorker);
+        this.profileTask.calculated.subscribe((data) => {
+            this.continueCalculation(data);
+        });
+
         const noDecoWorker = new Worker(new URL('../workers/no-deco.worker', import.meta.url));
-        this.noDecoTask = new BackgroundTask<NoDecoRequestDto, number>(noDecoWorker);
+        this.noDecoTask = new BackgroundTask<ProfileRequestDto, number>(noDecoWorker);
         this.noDecoTask.calculated.subscribe((calculated) => {
-            this.plan.noDecoTime = calculated;
+            this.finishNoDeco(calculated);
         });
 
         const consumptionWorker = new Worker(new URL('../workers/consumption.worker', import.meta.url));
@@ -84,7 +91,7 @@ export class PlannerService {
     }
 
     public get ndlValid(): boolean {
-        return this.dive.calculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
+        return this.dive.noDecoCalculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
     }
 
     public resetToSimple(): void {
@@ -202,7 +209,11 @@ export class PlannerService {
 
     public calculate(): void {
         // TODO calculate only if form is valid
+        // TODO Fix when calculation is requested before the currently running is finished
         this.dive.calculated = false;
+        this.dive.noDecoCalculated = false;
+        this.dive.profileCalculated = false;
+        this.dive.emptyProfile();
         // TODO copy options to diver only on app startup, let it customize per dive
         this.options.maxPpO2 = this.diver.maxPpO2;
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
@@ -211,8 +222,19 @@ export class PlannerService {
         const serializedPlan = DtoSerialization.toSegmentPreferences(this.plan.segments);
         const serializedTanks =  DtoSerialization.toTankPreferences(this._tanks);
 
-        // TODO move to worker
-        const profile = WayPointsService.calculateWayPoints(this.plan, this._tanks, this.options);
+        const profileRequest = {
+            tanks: serializedTanks,
+            plan: serializedPlan,
+            options: this.options
+        };
+        this.profileTask.calculate(profileRequest);
+    }
+
+    private continueCalculation(result: ProfileResultDto): void {
+        const serializedPlan = DtoSerialization.toSegmentPreferences(this.plan.segments);
+        const serializedTanks =  DtoSerialization.toTankPreferences(this._tanks);
+        const calculatedProfile = DtoSerialization.toProfile(result.profile, this._tanks);
+        const profile = WayPointsService.calculateWayPoints(calculatedProfile, result.events);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;
         this.dive.events = profile.events;
@@ -222,7 +244,7 @@ export class PlannerService {
 
             const noDecoRequest = {
                 tanks: serializedTanks,
-                originProfile: serializedPlan,
+                plan: serializedPlan,
                 options: this.options
             };
             this.noDecoTask.calculate(noDecoRequest);
@@ -240,7 +262,15 @@ export class PlannerService {
             // TODO provide error values to calculated profile
         }
 
+        this.dive.profileCalculated = true;
         this.onWayPointsCalculated.next({});
+    }
+
+    private finishNoDeco(noDeco: number): void {
+        this.plan.noDecoTime = noDeco;
+        this.dive.noDecoExceeded = this.plan.noDecoExceeded;
+        this.dive.notEnoughTime = this.plan.notEnoughTime;
+        this.dive.noDecoCalculated = true;
     }
 
     private finishCalculation(result: ConsumptionResultDto): void {
@@ -248,14 +278,12 @@ export class PlannerService {
         this.dive.maxTime = result.maxTime;
         this.dive.timeToSurface = result.timeToSurface;
 
-        this.dive.notEnoughTime = this.plan.notEnoughTime;
         this.dive.emergencyAscentStart = this.plan.startAscentTime;
         this.dive.turnPressure = this.calculateTurnPressure();
         this.dive.turnTime = Math.floor(this.plan.duration / 2);
         // this needs to be moved to each gas or do we have other option?
         this.dive.needsReturn = this.plan.needsReturn && this._tanks.length === 1;
         this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
-        this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.calculated = true;
         this.onInfoCalculated.next({});
     }

@@ -4,8 +4,8 @@
         <span>Dive way points</span>
     </div>
     <div class="card-body card-minheight">
-        <div *ngIf="!dive.showResults">Calculating ...</div>
-        <table class="table" *ngIf="dive.showResults">
+
+        <table class="table">
             <tbody>
                 <tr>
                     <th></th>
@@ -13,6 +13,11 @@
                     <th>Duration [min]</th>
                     <th>Run [min]</th>
                     <th *ngIf="isComplex">Gas</th>
+                </tr>
+                <tr *ngIf="!dive.profileCalculated">
+                    <td colspan="5">
+                        <div >Calculating ...</div>
+                    </td>
                 </tr>
                 <tr *ngFor="let point of dive.wayPoints" [ngClass]="{'table-active': point.selected }"
                  (mouseover)="highlightRow(point)"

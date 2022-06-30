@@ -1,9 +1,20 @@
-import { Diver, Options, Segment, StandardGases, Tank, Tanks } from 'scuba-physics';
+import { Diver, Options, Segment, StandardGases, Tank, Tanks, Event, CalculatedProfile, Events, Ceiling } from 'scuba-physics';
 
-export interface NoDecoRequestDto {
+export interface ProfileRequestDto {
     tanks: TankDto[];
-    originProfile: SegmentDto[];
+    plan: SegmentDto[];
     options: Options;
+}
+
+export interface ProfileResultDto {
+    profile: CalculatedProfileDto;
+    events: Events;
+}
+
+export interface CalculatedProfileDto {
+    segments: SegmentDto[];
+    ceilings: Ceiling[];
+    errors: Event[];
 }
 
 export interface ConsumptionRequestDto {
@@ -123,5 +134,20 @@ export class DtoSerialization {
             result.push(serialized);
         });
         return result;
+    }
+
+    public static toProfile(profile: CalculatedProfileDto, tanks: Tank[]): CalculatedProfile {
+        const segments = DtoSerialization.toSegments(profile.segments, tanks);
+        return CalculatedProfile.fromProfile(segments, profile.ceilings);
+    }
+
+    public static fromProfile(profile: CalculatedProfile): CalculatedProfileDto {
+        const segments = DtoSerialization.toSegmentPreferences(profile.segments);
+
+        return {
+            segments: segments,
+            ceilings: profile.ceilings,
+            errors: profile.errors
+        };
     }
 }

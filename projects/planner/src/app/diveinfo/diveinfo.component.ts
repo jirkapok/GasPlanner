@@ -46,6 +46,10 @@ export class DiveInfoComponent {
         return this.planner.plan.duration + 1;
     }
 
+    public get showApply(): boolean {
+        return !this.planner.isComplex;
+    }
+
     public timeStampToString(seconds: number): Date{
         return Time.toDate(seconds);
     }
@@ -80,9 +84,5 @@ export class DiveInfoComponent {
 
     public isMndExceeded(event: Event): boolean {
         return event.type === EventType.maxEndExceeded;
-    }
-
-    public get showApply(): boolean {
-        return !this.planner.isComplex;
     }
 }

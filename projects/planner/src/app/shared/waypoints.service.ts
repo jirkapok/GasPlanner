@@ -1,8 +1,7 @@
 import { WayPoint, Plan } from './models';
 import {
-    BuhlmannAlgorithm, Options, Gases,
-    Segments, Segment, Event, CalculatedProfile,
-    EventType, ProfileEvents, Ceiling, Tank
+    Segment, Event, CalculatedProfile,
+    Ceiling, Events
 } from 'scuba-physics';
 
 export class Profile {
@@ -13,20 +12,20 @@ export class Profile {
         public events: Event[]
     ) { }
 
-    public static newEmpty(errors: Event[]): Profile {
-        return new Profile([], [], [], errors);
-    }
-
     public get endsOnSurface(): boolean {
         const count = this.wayPoints.length;
         return count > 0 && this.wayPoints[count - 1].endDepth === 0;
     }
+
+    public static newEmpty(errors: Event[]): Profile {
+        return new Profile([], [], [], errors);
+    }
 }
 
 export class WayPointsService {
-    public static calculateWayPoints(plan: Plan, gases: Tank[], options: Options): Profile {
+    public static calculateWayPoints(profile: CalculatedProfile, events: Events): Profile {
         const wayPoints = [];
-        const profile = this.calculateDecompression(plan, gases, options);
+        // const profile: CalculatedProfile = this.calculateDecompression(segments, gases, options);
 
         // not propagated to the UI
         if (profile.errors.length > 0) {
@@ -34,8 +33,6 @@ export class WayPointsService {
             console.table(profile.errors);
         }
 
-        const startAscentIndex = plan.startAscentIndex;
-        const events = ProfileEvents.fromProfile(startAscentIndex, profile.segments, profile.ceilings, options);
         const descent = profile.segments[0];
         let lastWayPoint = WayPoint.fromSegment(descent);
         let lastSegment = descent;
@@ -61,16 +58,6 @@ export class WayPointsService {
         }
 
         return waypoint;
-    }
-
-
-    private static calculateDecompression(plan: Plan, tanks: Tank[], options: Options): CalculatedProfile {
-        const gases = Gases.fromTanks(tanks);
-
-        const segments: Segments = plan.copySegments();
-        const algorithm = new BuhlmannAlgorithm();
-        const profile = algorithm.calculateDecompression(options, gases, segments);
-        return profile;
     }
 }
 

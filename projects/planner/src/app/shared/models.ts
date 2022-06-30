@@ -174,6 +174,8 @@ export class Plan {
 
 export class Dive {
     public calculated = false;
+    public noDecoCalculated = false;
+    public profileCalculated = false;
     public maxTime = 0;
     public timeToSurface = 0;
     public turnPressure = 0;
@@ -204,6 +206,12 @@ export class Dive {
 
     public get showResults(): boolean {
         return this.calculated && !this.hasErrors;
+    }
+
+    public emptyProfile(): void {
+        this.wayPoints = [];
+        this.ceilings = [];
+        this.events = [];
     }
 }
 

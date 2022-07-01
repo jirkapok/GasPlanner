@@ -215,6 +215,7 @@ export class PlannerService {
         this.calculatingProfile = true;
         this.calculatingNoDeco = true;
         // TODO calculate only if form is valid
+        // TODO Fix unit tests
 
         setTimeout(() => {
             this.showStillRunning();

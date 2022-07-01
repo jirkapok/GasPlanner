@@ -31,6 +31,8 @@ import { PreferencesService } from './shared/preferences.service';
 import { UnitConversion } from './shared/UnitConversion';
 import { SelectedWaypoint } from './shared/selectedwaypointService';
 import { CalculatingComponent } from './calculating/calculating.component';
+import { DurationPipe } from './pipes/duration.pipe';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -51,7 +53,8 @@ import { CalculatingComponent } from './calculating/calculating.component';
         DepthsComponent,
         TankChartComponent,
         AppSettingsComponent,
-        CalculatingComponent
+        CalculatingComponent,
+        DurationPipe
     ],
     imports: [
         BrowserModule,
@@ -68,7 +71,13 @@ import { CalculatingComponent } from './calculating/calculating.component';
         })
     ],
     exports: [],
-    providers: [PlannerService, PreferencesService, UnitConversion, SelectedWaypoint],
+    providers: [
+        PlannerService,
+        PreferencesService,
+        UnitConversion,
+        SelectedWaypoint,
+        DatePipe
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

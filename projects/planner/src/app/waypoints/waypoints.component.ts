@@ -6,6 +6,7 @@ import { Time } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
+import { DurationPipe } from '../pipes/duration.pipe';
 
 @Component({
     selector: 'app-waypoints',
@@ -28,8 +29,8 @@ export class WayPointsComponent {
         return this.planner.isComplex;
     }
 
-    public durationFormat(): string {
-        return DateFormats.selectTimeFormat(this.dive.totalDuration);
+    public get totalDuration(): number {
+        return this.dive.totalDuration;
     }
 
     public swimActionIcon(point: WayPoint): IconDefinition {
@@ -52,10 +53,6 @@ export class WayPointsComponent {
             default:
                 return 'hover';
         }
-    }
-
-    public durationToString(seconds: number): Date {
-        return Time.toDate(seconds);
     }
 
     public iconClasses(point: WayPoint): any {

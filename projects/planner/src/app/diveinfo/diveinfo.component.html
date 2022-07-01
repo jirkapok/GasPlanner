@@ -24,8 +24,8 @@
                         <tr>
                             <td>Rock bottom at:</td>
                             <td class="table-active">
-                                <strong *ngIf="dive.calculated">{{ timeStampToString(dive.emergencyAscentStart) |
-                                    date:durationFormat(dive.emergencyAscentStart) }} </strong>
+                                <strong *ngIf="dive.calculated">{{ dive.emergencyAscentStart |
+                                   duration:dive.emergencyAscentStart }} </strong>
                             </td>
                         </tr>
                         <tr>
@@ -98,29 +98,29 @@
                     </div>
                     <div *ngIf="isHighDescentSpeed(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
-                        <span>High descent speed at {{ timeStampToString(event.timeStamp) |
-                            date:durationFormat(event.timeStamp) }} min!</span>
+                        <span>High descent speed at {{ event.timeStamp |
+                            duration:event.timeStamp }} min!</span>
                     </div>
                     <div *ngIf="isHighAscentSpeed(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
-                        <span>High ascent speed at {{ timeStampToString(event.timeStamp) |
-                            date:durationFormat(event.timeStamp) }} min!</span>
+                        <span>High ascent speed at {{ event.timeStamp |
+                            duration:event.timeStamp }} min!</span>
                     </div>
                     <div *ngIf="isBrokenCeiling(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>Ceiling depth {{ event.depth | number:'1.0-0' }} {{units.length}} broken at {{
-                            timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp) }} min!</span>
+                            event.timeStamp | duration:event.timeStamp }} min!</span>
                     </div>
                     <div *ngIf="isHighN2Switch(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>Gas switch to gas with higher nitrogen content in {{ event.depth | number:'1.0-0' }}
-                            {{units.length}} at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp)
+                            {{units.length}} at {{ event.timeStamp | duration:event.timeStamp
                             }} min is not recommended!</span>
                     </div>
                     <div *ngIf="isMndExceeded(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>Exceeded maximum narcotic depth for selected gas in {{ event.depth | number:'1.0-0' }}
-                            {{units.length}} at {{ timeStampToString(event.timeStamp) | date:durationFormat(event.timeStamp)
+                            {{units.length}} at {{ event.timeStamp | duration:event.timeStamp
                             }} min!</span>
                     </div>
                 </div>

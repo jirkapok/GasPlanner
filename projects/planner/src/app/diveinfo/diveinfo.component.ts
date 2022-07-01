@@ -50,14 +50,6 @@ export class DiveInfoComponent {
         return !this.planner.isComplex;
     }
 
-    public timeStampToString(seconds: number): Date{
-        return Time.toDate(seconds);
-    }
-
-    public durationFormat(seconds: number): string {
-        return DateFormats.selectTimeFormat(seconds);
-    }
-
     public isLowPpO2(event: Event): boolean {
         return event.type === EventType.lowPpO2;
     }

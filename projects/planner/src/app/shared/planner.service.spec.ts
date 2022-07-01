@@ -1,7 +1,6 @@
 import { Time, SafetyStop, Segment, StandardGases } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
-import { first } from 'rxjs';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -16,7 +15,7 @@ describe('PlannerService', () => {
 
     describe('no deco limit', () => {
         it('is calculated', () => {
-            const noDecoLimit = planner.noDecoTime();
+            const noDecoLimit = planner.plan.noDecoTime;
             expect(noDecoLimit).toBe(12);
         });
     });

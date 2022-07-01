@@ -1,6 +1,6 @@
 import { WayPointsService } from './waypoints.service';
 import { Plan, Strategies } from './models';
-import { Tank, Salinity } from 'scuba-physics';
+import { Tank, Salinity, CalculatedProfile, Events } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { SafetyStop } from 'projects/scuba-physics/src/public-api';
 
@@ -12,15 +12,17 @@ describe('WayPointsService', () => {
 
     it('40m for 20 min calculates all way points', () => {
         const plan = new Plan(Strategies.ALL, 40, 20, airTank, options);
+        const profile = CalculatedProfile.fromProfile(plan.segments, []);
 
-        const wayPoints = WayPointsService.calculateWayPoints(plan, gases, options);
+        const wayPoints = WayPointsService.calculateWayPoints(profile, new Events());
         expect(wayPoints.wayPoints.length).toBe(13);
     });
 
     it('10m for 30 min calculates all way points', () => {
         const plan = new Plan(Strategies.ALL, 30, 10, airTank, options);
+        const profile = CalculatedProfile.fromProfile(plan.segments, []);
 
-        const wayPoints = WayPointsService.calculateWayPoints(plan, gases, options);
+        const wayPoints = WayPointsService.calculateWayPoints(profile, new Events());
         expect(wayPoints.wayPoints.length).toBe(5);
     });
 });

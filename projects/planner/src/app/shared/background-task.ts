@@ -1,8 +1,13 @@
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+
+export interface IBackgroundTask<TRequest, TResponse> {
+    calculated: Observable<TResponse>;
+    calculate(request: TRequest): void;
+}
 
 /** Allows calculation in background thread using web worker */
-export class BackgroundTask<TRequest, TResponse> {
-    public calculated;
+export class BackgroundTask<TRequest, TResponse> implements IBackgroundTask<TRequest, TResponse> {
+    public calculated: Observable<TResponse>;
     private onCalculated = new Subject<TResponse>();
 
     constructor(private worker: Worker) {

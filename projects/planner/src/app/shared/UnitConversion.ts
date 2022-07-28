@@ -8,11 +8,12 @@ export class UnitConversion {
      * Other components refresh next time their are shown.
      */
     public ranges$: BehaviorSubject<RangeConstants>;
-    private _imperialUnits = true;
-    private current: Units = new ImperialUnits();
+    private _imperialUnits = false;
+    private current: Units;
 
     constructor() {
-        this.ranges = new ImperialRanges(this.current);
+        this.current = new MetricUnits();
+        this.ranges = new MetricRanges(this.current);
         this.ranges$ = new BehaviorSubject<RangeConstants>(this.ranges);
     }
 

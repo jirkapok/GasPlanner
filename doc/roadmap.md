@@ -22,6 +22,7 @@ Following list of features and improvements ordered by priority is under develop
     * Fix RMV/SAC calculator based on Nominal volume
     * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
+    * <https://youtu.be/OI4ZzqJLQjw>
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
 * Add no deco table
 * Redundancies calculator - when filling one tank from second. What is the target pressure in both.

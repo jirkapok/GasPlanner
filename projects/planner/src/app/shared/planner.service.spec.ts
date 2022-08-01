@@ -1,12 +1,21 @@
 import { Time, SafetyStop, Segment, StandardGases } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
+import { TestBed } from '@angular/core/testing';
+// import { WorkersFactorySpy } from './planner.service.workers.spec';
+import { WorkersFactoryCommon } from './serial.workers.factory';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
 
-    beforeEach(() => {
-        planner = new PlannerService();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [],
+            providers: [ WorkersFactoryCommon, PlannerService ],
+            imports: []
+        }).compileComponents();
+
+        planner = TestBed.inject(PlannerService);
         OptionExtensions.applySimpleSpeeds(planner.options);
         planner.options.problemSolvingDuration = 2;
         planner.options.safetyStop = SafetyStop.always;
@@ -195,13 +204,13 @@ describe('PlannerService', () => {
             const descentOnly = 1.7;
 
             it('Max bottom time is NOT applied', ()=> {
-                planner = new PlannerService();
+                planner = TestBed.inject(PlannerService);
                 planner.applyMaxDuration();
                 expect(planner.plan.duration).toBe(descentOnly);
             });
 
             it('No deco limit is NOT applied', ()=> {
-                planner = new PlannerService();
+                planner = TestBed.inject(PlannerService);
                 planner.applyNdlDuration();
                 expect(planner.plan.duration).toBe(descentOnly);
             });

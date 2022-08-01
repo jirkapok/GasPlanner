@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 
 import { Plan, Dive, Strategies, } from './models';
 import { WayPointsService } from './waypoints.service';
+import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
     NitroxCalculator, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
@@ -13,7 +14,7 @@ import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
     ProfileRequestDto, TankDto, ProfileResultDto
 } from './serialization.model';
-import { BackgroundTask } from './background-task';
+import { IBackgroundTask } from '../workers/background-task';
 
 @Injectable()
 export class PlannerService {
@@ -35,11 +36,11 @@ export class PlannerService {
     private depthConverterFactory: DepthConverterFactory;
     private depthConverter!: DepthConverter;
     private nitroxCalculator!: NitroxCalculator;
-    private profileTask: BackgroundTask<ProfileRequestDto, ProfileResultDto>;
-    private consumptionTask: BackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
-    private noDecoTask: BackgroundTask<ProfileRequestDto, number>;
+    private profileTask: IBackgroundTask<ProfileRequestDto, ProfileResultDto>;
+    private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
+    private noDecoTask: IBackgroundTask<ProfileRequestDto, number>;
 
-    constructor() {
+    constructor(private workerFactory: WorkersFactoryCommon) {
         this._options = new Options();
         this._options.salinity = Salinity.fresh;
         this._options.safetyStop = SafetyStop.auto;
@@ -52,20 +53,17 @@ export class PlannerService {
         this.wayPointsCalculated = this.onWayPointsCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
 
-        const profileWorker = new Worker(new URL('../workers/profile.worker', import.meta.url));
-        this.profileTask = new BackgroundTask<ProfileRequestDto, ProfileResultDto>(profileWorker);
+        this.profileTask = this.workerFactory.createProfileWorker();
         this.profileTask.calculated.subscribe((data) => {
             this.continueCalculation(data);
         });
 
-        const noDecoWorker = new Worker(new URL('../workers/no-deco.worker', import.meta.url));
-        this.noDecoTask = new BackgroundTask<ProfileRequestDto, number>(noDecoWorker);
+        this.noDecoTask = this.workerFactory.createNoDecoWorker();
         this.noDecoTask.calculated.subscribe((calculated) => {
             this.finishNoDeco(calculated);
         });
 
-        const consumptionWorker = new Worker(new URL('../workers/consumption.worker', import.meta.url));
-        this.consumptionTask = new BackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>(consumptionWorker);
+        this.consumptionTask = this.workerFactory.createConsumptionWorker();
         this.consumptionTask.calculated.subscribe((data) => {
             this.finishCalculation(data);
         });

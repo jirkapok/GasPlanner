@@ -204,13 +204,14 @@ describe('PlannerService', () => {
             const descentOnly = 1.7;
 
             it('Max bottom time is NOT applied', ()=> {
-                planner = TestBed.inject(PlannerService);
+                // manual service initialization to avoid testbed conflicts
+                planner = new PlannerService(new WorkersFactoryCommon());
                 planner.applyMaxDuration();
                 expect(planner.plan.duration).toBe(descentOnly);
             });
 
             it('No deco limit is NOT applied', ()=> {
-                planner = TestBed.inject(PlannerService);
+                planner = new PlannerService(new WorkersFactoryCommon());
                 planner.applyNdlDuration();
                 expect(planner.plan.duration).toBe(descentOnly);
             });

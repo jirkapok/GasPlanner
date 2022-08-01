@@ -17,8 +17,8 @@ export class PreferencesFactory {
             isComplex: planner.isComplex,
             options: planner.options,
             diver: planner.diver,
-            tanks: DtoSerialization.toTankPreferences(planner.tanks),
-            plan: DtoSerialization.toSegmentPreferences(planner.plan.segments),
+            tanks: DtoSerialization.fromTanks(planner.tanks),
+            plan: DtoSerialization.fromSegments(planner.plan.segments),
         };
     }
 }

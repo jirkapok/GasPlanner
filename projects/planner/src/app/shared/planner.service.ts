@@ -11,7 +11,7 @@ import {
 } from 'scuba-physics';
 import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
-    ProfileRequestDto, TankConsumedDto, ProfileResultDto
+    ProfileRequestDto, TankDto, ProfileResultDto
 } from './serialization.model';
 import { BackgroundTask } from './background-task';
 
@@ -226,8 +226,8 @@ export class PlannerService {
         this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         this.resetDepthConverter();
 
-        const serializedPlan = DtoSerialization.toSegmentPreferences(this.plan.segments);
-        const serializedTanks =  DtoSerialization.toTankPreferences(this._tanks);
+        const serializedPlan = DtoSerialization.fromSegments(this.plan.segments);
+        const serializedTanks =  DtoSerialization.fromTanks(this._tanks);
 
         const profileRequest = {
             tanks: serializedTanks,
@@ -254,8 +254,8 @@ export class PlannerService {
     }
 
     private continueCalculation(result: ProfileResultDto): void {
-        const serializedPlan = DtoSerialization.toSegmentPreferences(this.plan.segments);
-        const serializedTanks =  DtoSerialization.toTankPreferences(this._tanks);
+        const serializedPlan = DtoSerialization.fromSegments(this.plan.segments);
+        const serializedTanks =  DtoSerialization.fromTanks(this._tanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, this._tanks);
         // TODO Fix data property of events, looks like deserialization doesn't work
         const profile = WayPointsService.calculateWayPoints(calculatedProfile, result.events);
@@ -275,7 +275,7 @@ export class PlannerService {
 
             const consumptionRequest = {
                 plan: serializedPlan,
-                profile: DtoSerialization.toSegmentPreferences(profile.origin),
+                profile: DtoSerialization.fromSegments(profile.origin),
                 options: this.options,
                 diver: this.diver,
                 tanks: serializedTanks
@@ -316,7 +316,7 @@ export class PlannerService {
         this.onInfoCalculated.next({});
     }
 
-    private copyTanksConsumption(tanks: TankConsumedDto[]) {
+    private copyTanksConsumption(tanks: TankDto[]) {
         for(let index = 0; index < this.tanks.length; index++) {
             const source = tanks[index];
             const target = this.tanks[index];

@@ -295,7 +295,7 @@ describe('Profile Events', () => {
         });
     });
 
-    describe('Switch to higher N2 on deco dive', () => {
+    describe('ICD - Switch to higher N2 on deco dive', () => {
         it('from 18/45 to Ean50', () => {
             const segments = new Segments();
             segments.add(30, 21, StandardGases.trimix1845, Time.oneMinute * 3);
@@ -385,3 +385,9 @@ describe('Profile Events', () => {
         });
     });
 });
+
+// TODO test case start dive on ean50, switch to 15/55 - doesn't generate warning low pO2 at ascent to surface
+// Consider to propose gas with higher oxygen content even it will generate ICD warnig
+// TODO improve the IDC message by adding ICD reason
+// TODO bug in chart label of gas switch from 18/45 to Ean50
+// TODO profile Ean50 - 18/45 - ean50 doesnt finish calculation

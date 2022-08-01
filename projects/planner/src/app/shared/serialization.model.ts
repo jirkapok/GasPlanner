@@ -28,19 +28,15 @@ export interface ConsumptionRequestDto {
 export interface ConsumptionResultDto {
     maxTime: number;
     timeToSurface: number;
-    tanks: TankConsumedDto[];
-}
-
-export interface TankConsumedDto {
-    id: number;
-    consumed: number;
-    reserve: number;
+    tanks: TankDto[];
 }
 
 export interface TankDto {
     id: number;
     size: number;
     startPressure: number;
+    consumed: number;
+    reserve: number;
     gas: GasDto;
 }
 
@@ -62,12 +58,33 @@ export class DtoSerialization {
         source.forEach(tank => {
             const converted = new Tank(tank.size, tank.startPressure, 0);
             converted.id = tank.id;
+            converted.consumed = tank.consumed;
+            converted.reserve = tank.reserve;
             converted.gas.fO2 = tank.gas.fo2;
             converted.gas.fHe = tank.gas.fHe;
             result.push(converted);
         });
 
         Tanks.renumberIds(result);
+        return result;
+    }
+
+    public static fromTanks(tanks: Tank[]): TankDto[] {
+        const result: TankDto[] = [];
+        tanks.forEach(tank => {
+            const serialized: TankDto = {
+                id: tank.id,
+                size: tank.size,
+                startPressure: tank.startPressure,
+                consumed: tank.consumed,
+                reserve: tank.reserve,
+                gas: {
+                    fo2: tank.gas.fO2,
+                    fHe: tank.gas.fHe
+                }
+            };
+            result.push(serialized);
+        });
         return result;
     }
 
@@ -91,37 +108,7 @@ export class DtoSerialization {
         return result;
     }
 
-    public static toTanksConsumption(tanks: Tank[]): TankConsumedDto[] {
-        const result: TankConsumedDto[] = [];
-        tanks.forEach(tank => {
-            const serialized: TankConsumedDto = {
-                id: tank.id,
-                consumed: tank.consumed,
-                reserve: tank.reserve
-            };
-            result.push(serialized);
-        });
-        return result;
-    }
-
-    public static toTankPreferences(tanks: Tank[]): TankDto[] {
-        const result: TankDto[] = [];
-        tanks.forEach(tank => {
-            const serialized: TankDto = {
-                id: tank.id,
-                size: tank.size,
-                startPressure: tank.startPressure,
-                gas: {
-                    fo2: tank.gas.fO2,
-                    fHe: tank.gas.fHe
-                }
-            };
-            result.push(serialized);
-        });
-        return result;
-    }
-
-    public static toSegmentPreferences(plan: Segment[]): SegmentDto[] {
+    public static fromSegments(plan: Segment[]): SegmentDto[] {
         const result: SegmentDto[] = [];
         plan.forEach(segment => {
             const tankId = segment.tank ? segment.tank.id : 1;
@@ -142,7 +129,7 @@ export class DtoSerialization {
     }
 
     public static fromProfile(profile: CalculatedProfile): CalculatedProfileDto {
-        const segments = DtoSerialization.toSegmentPreferences(profile.segments);
+        const segments = DtoSerialization.fromSegments(profile.segments);
 
         return {
             segments: segments,

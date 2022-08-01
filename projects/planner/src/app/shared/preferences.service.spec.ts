@@ -3,11 +3,12 @@ import { PreferencesService } from './preferences.service';
 import { PlannerService } from './planner.service';
 import { Diver, Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
+import { WorkersFactoryCommon } from './serial.workers.factory';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [PreferencesService, PlannerService]
+            providers: [WorkersFactoryCommon, PreferencesService, PlannerService]
         });
 
         localStorage.clear();

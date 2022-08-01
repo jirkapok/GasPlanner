@@ -1,8 +1,7 @@
 import { WayPointsService } from './waypoints.service';
-import { Plan, Strategies } from './models';
-import { Tank, Salinity, CalculatedProfile, Events } from 'scuba-physics';
+import { Plan, Strategies, SwimAction } from './models';
+import { Tank, Salinity, CalculatedProfile, Events, Event, EventType, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
-import { SafetyStop } from 'projects/scuba-physics/src/public-api';
 
 describe('WayPointsService', () => {
     const airTank = new Tank(12, 200, 21);
@@ -10,19 +9,30 @@ describe('WayPointsService', () => {
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
     options.safetyStop = SafetyStop.always;
 
-    it('40m for 20 min calculates all way points', () => {
+    it('No errors converts waypoints', () => {
         const plan = new Plan(Strategies.ALL, 40, 20, airTank, options);
         const profile = CalculatedProfile.fromProfile(plan.segments, []);
 
         const wayPoints = WayPointsService.calculateWayPoints(profile, new Events());
-        expect(wayPoints.wayPoints.length).toBe(13);
+        expect(wayPoints.wayPoints.length).toBe(2);
     });
 
-    it('10m for 30 min calculates all way points', () => {
+    it('With errors generates empty waypoints', () => {
         const plan = new Plan(Strategies.ALL, 30, 10, airTank, options);
+        const profile = CalculatedProfile.fromErrors(plan.segments, [
+            new Event(0,0, EventType.error)
+        ]);
+
+        const wayPoints = WayPointsService.calculateWayPoints(profile, new Events());
+        expect(wayPoints.wayPoints.length).toBe(0);
+    });
+
+    it('With gas switch adds event', () => {
+        const plan = new Plan(Strategies.ALL, 40, 20, airTank, options);
+        plan.addSegment(new Tank(10, 0, 50));
         const profile = CalculatedProfile.fromProfile(plan.segments, []);
 
         const wayPoints = WayPointsService.calculateWayPoints(profile, new Events());
-        expect(wayPoints.wayPoints.length).toBe(5);
+        expect(wayPoints.wayPoints[2].swimAction).toBe(SwimAction.switch);
     });
 });

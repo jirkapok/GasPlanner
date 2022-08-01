@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FormsModule, NgModel } from '@angular/forms';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 import { PlannerService } from '../shared/planner.service';
+import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
 import { RangeValidator } from '../validators/range/directive';
 import { TanksComponent } from './tanks.component';
@@ -13,7 +14,7 @@ describe('Tanks component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [TanksComponent, NgModel, GaslabelComponent, RangeValidator],
-            providers: [UnitConversion, PlannerService],
+            providers: [WorkersFactoryCommon, UnitConversion, PlannerService],
             imports: [FormsModule]
         })
             .compileComponents();

@@ -5,6 +5,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { PlannerService } from './planner.service';
 import { Salinity, Segment, StandardGases } from 'scuba-physics';
 import { WayPoint } from './models';
+import { WorkersFactoryCommon } from './serial.workers.factory';
 
 describe('Selected Waypoint', () => {
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
@@ -12,7 +13,7 @@ describe('Selected Waypoint', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [PlannerService]
+            providers: [WorkersFactoryCommon, PlannerService]
         });
     });
 

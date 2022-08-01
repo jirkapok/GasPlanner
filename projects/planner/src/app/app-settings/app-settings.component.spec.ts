@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlannerService } from '../shared/planner.service';
+import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
 import { AppSettingsComponent } from './app-settings.component';
 
@@ -11,7 +12,7 @@ describe('App settings component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [AppSettingsComponent],
-            providers: [UnitConversion, PlannerService, RouterTestingModule],
+            providers: [WorkersFactoryCommon, UnitConversion, PlannerService, RouterTestingModule],
             imports: [RouterTestingModule.withRoutes([])]
         })
             .compileComponents();

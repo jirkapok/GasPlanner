@@ -45,6 +45,7 @@ export interface SegmentDto {
     endDepth: number;
     duration: number;
     tankId: number;
+    gas: GasDto;
 }
 
 export interface GasDto {
@@ -52,6 +53,7 @@ export interface GasDto {
     fHe: number;
 }
 
+/** Serialization used to store preferences and for communication with background workers */
 export class DtoSerialization {
     public static toTanks(source: TankDto[]): Tank[] {
         const result: Tank[] = [];
@@ -94,6 +96,8 @@ export class DtoSerialization {
         for (let index = 0; index < source.length; index++) {
             const loaded = source[index];
             const gas = StandardGases.air.copy();
+            gas.fO2 = loaded.gas.fo2;
+            gas.fHe = loaded.gas.fHe;
             const converted = new Segment(loaded.startDepth, loaded.endDepth, gas, loaded.duration);
 
             if (loaded.tankId > 0 && loaded.tankId <= tanks.length) {
@@ -115,7 +119,11 @@ export class DtoSerialization {
                 startDepth: segment.startDepth,
                 endDepth: segment.endDepth,
                 duration: segment.duration,
-                tankId: tankId
+                tankId: tankId,
+                gas: {
+                    fo2: segment.gas.fO2,
+                    fHe: segment.gas.fHe
+                }
             };
             result.push(serialized);
         });

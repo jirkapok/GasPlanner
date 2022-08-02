@@ -95,13 +95,12 @@ export class DtoSerialization {
             const loaded = source[index];
             const gas = StandardGases.air.copy();
             const converted = new Segment(loaded.startDepth, loaded.endDepth, gas, loaded.duration);
-            let tankIndex = 0;
 
-            if (loaded.tankId <= tanks.length) {
-                tankIndex = loaded.tankId - 1;
+            if (loaded.tankId > 0 && loaded.tankId <= tanks.length) {
+                const tankIndex = loaded.tankId - 1;
+                converted.tank = tanks[tankIndex];
             }
 
-            converted.tank = tanks[tankIndex];
             result.push(converted);
         }
 
@@ -111,7 +110,7 @@ export class DtoSerialization {
     public static fromSegments(plan: Segment[]): SegmentDto[] {
         const result: SegmentDto[] = [];
         plan.forEach(segment => {
-            const tankId = segment.tank ? segment.tank.id : 1;
+            const tankId = segment.tank ? segment.tank.id : 0;
             const serialized: SegmentDto = {
                 startDepth: segment.startDepth,
                 endDepth: segment.endDepth,

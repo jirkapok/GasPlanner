@@ -1,9 +1,11 @@
-import { Time, SafetyStop, Segment, StandardGases } from 'scuba-physics';
+import { Time, SafetyStop, Segment, StandardGases, Event, EventType, CalculatedProfile, Events } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
-import { TestBed } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 // import { WorkersFactorySpy } from './planner.service.workers.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
+import { PlanningTasks } from '../workers/planning.tasks';
+import { DtoSerialization, ProfileRequestDto, ProfileResultDto } from './serialization.model';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -11,7 +13,7 @@ describe('PlannerService', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
-            providers: [ WorkersFactoryCommon, PlannerService ],
+            providers: [WorkersFactoryCommon, PlannerService],
             imports: []
         }).compileComponents();
 
@@ -142,27 +144,27 @@ describe('PlannerService', () => {
         });
     });
 
-    describe('Max narcotic depth', ()=>{
-        it('Is calculated 30 m for Air with 30m max. narcotic depth option', ()=> {
+    describe('Max narcotic depth', () => {
+        it('Is calculated 30 m for Air with 30m max. narcotic depth option', () => {
             const result = planner.firstGasMaxDepth;
             expect(result).toBe(30);
         });
 
-        it('Is calculated as MOD for EAN50', ()=> {
+        it('Is calculated as MOD for EAN50', () => {
             planner.firstTank.gas.fO2 = 0.5;
             const result = planner.firstGasMaxDepth;
             expect(result).toBe(18);
         });
 
-        it('For 12/35 returns 52 m', ()=> {
+        it('For 12/35 returns 52 m', () => {
             const gas = StandardGases.trimix2135;
             const result = planner.mndForGas(gas);
             expect(result).toBe(51.72);
         });
     });
 
-    describe('Manage tanks', ()=> {
-        it('Added tank receives ID', ()=> {
+    describe('Manage tanks', () => {
+        it('Added tank receives ID', () => {
             planner.addTank();
             const count = planner.tanks.length;
             const added = planner.tanks[count - 1];
@@ -170,7 +172,7 @@ describe('PlannerService', () => {
             expect(added.id).toEqual(2);
         });
 
-        describe('Remove', ()=> {
+        describe('Remove', () => {
             let lastSegment: Segment;
 
             beforeEach(() => {
@@ -185,32 +187,32 @@ describe('PlannerService', () => {
             });
 
 
-            it('Updates segment reference to first tank', ()=> {
+            it('Updates segment reference to first tank', () => {
                 expect(lastSegment.tank).toEqual(planner.firstTank);
             });
 
-            it('Tank ids are updated', ()=> {
+            it('Tank ids are updated', () => {
                 const secondTank = planner.tanks[1];
                 expect(secondTank.id).toEqual(2);
             });
         });
     });
 
-    describe('Apply plan limits', ()=>{
+    describe('Apply plan limits', () => {
         // Needs to be already calculated because NDL is needed
         describe('When NOT yet calculated', () => {
             // this value is used as minimum for simple profiles to be able descent
             // with default speed to default depth 30m.
             const descentOnly = 1.7;
 
-            it('Max bottom time is NOT applied', ()=> {
+            it('Max bottom time is NOT applied', () => {
                 // manual service initialization to avoid testbed conflicts
                 planner = new PlannerService(new WorkersFactoryCommon());
                 planner.applyMaxDuration();
                 expect(planner.plan.duration).toBe(descentOnly);
             });
 
-            it('No deco limit is NOT applied', ()=> {
+            it('No deco limit is NOT applied', () => {
                 planner = new PlannerService(new WorkersFactoryCommon());
                 planner.applyNdlDuration();
                 expect(planner.plan.duration).toBe(descentOnly);
@@ -218,20 +220,20 @@ describe('PlannerService', () => {
         });
 
         describe('When Calculated', () => {
-            it('Max bottom time is applied', ()=> {
+            it('Max bottom time is applied', () => {
                 planner.calculate();
                 planner.applyMaxDuration();
                 expect(planner.plan.duration).toBe(18);
             });
 
-            it('No deco limit is applied', ()=> {
+            it('No deco limit is applied', () => {
                 planner.calculate();
                 planner.applyNdlDuration();
                 expect(planner.plan.duration).toBe(12);
             });
         });
 
-        it('Max narcotic depth is applied', ()=> {
+        it('Max narcotic depth is applied', () => {
             planner.firstTank.gas.fO2 = 0.5;
             planner.applyMaxDepth();
             expect(planner.plan.maxDepth).toBe(18);
@@ -239,15 +241,53 @@ describe('PlannerService', () => {
     });
 
     describe('Updates dive', () => {
-        it('Average depth is calculated', ()=> {
+        it('Average depth is calculated', () => {
             planner.calculate();
             expect(planner.dive.averageDepth).toBe(21.75);
         });
 
-        it('Start ascent is updated', ()=> {
+        it('Start ascent is updated', () => {
             planner.calculate();
             planner.applyNdlDuration();
             expect(planner.dive.emergencyAscentStart).toEqual(Time.oneMinute * 12);
         });
+    });
+
+    describe('Errors', () => {
+        it('Profile calc failed', () => {
+            spyOn(PlanningTasks, 'calculateDecompression')
+                .and.callFake((data: ProfileRequestDto) => {
+                    const events = new Events();
+                    events.add(new Event(0, 0, EventType.error));
+                    const profile = CalculatedProfile.fromErrors(planner.plan.segments, []);
+                    const profileDto = DtoSerialization.fromProfile(profile);
+
+                    const result: ProfileResultDto = {
+                        profile: profileDto,
+                        events
+                    };
+                    return result;
+                });
+
+            planner.calculate();
+
+            // TODO Returns incomplete profile
+            // no other background call are performed
+            // all processing state variables are reset
+            // profile calculated event is still fired
+            const firstEvent = planner.dive.events[0];
+            expect(firstEvent.type).toBe(EventType.error);
+        });
+
+        // TODO learn what happens, if the worker fails (does it finish or new event is possible)
+
+
+        // NoDeco failed
+        // - processing is reset
+        // - event is returned
+
+        // Consumption failed
+        // - processing is reset
+        // - event is returned
     });
 });

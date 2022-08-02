@@ -25,12 +25,10 @@ export class Profile {
 export class WayPointsService {
     public static calculateWayPoints(profile: CalculatedProfile, events: Events): Profile {
         const wayPoints = [];
-        // const profile: CalculatedProfile = this.calculateDecompression(segments, gases, options);
 
         // not propagated to the UI
         if (profile.errors.length > 0) {
             return Profile.newEmpty(profile.errors);
-            console.table(profile.errors);
         }
 
         const descent = profile.segments[0];

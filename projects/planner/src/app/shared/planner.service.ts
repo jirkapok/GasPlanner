@@ -215,9 +215,7 @@ export class PlannerService {
     }
 
     public calculate(): void {
-        this.calculating = true;
-        this.calculatingProfile = true;
-        this.calculatingNoDeco = true;
+        this.startCalculatingState();
         // TODO calculate only if form is valid
 
         setTimeout(() => {
@@ -235,6 +233,21 @@ export class PlannerService {
             options: this.options
         };
         this.profileTask.calculate(profileRequest);
+    }
+
+    private startCalculatingState(): void {
+        this.calculating = true;
+        this.calculatingProfile = true;
+        this.calculatingNoDeco = true;
+    }
+
+    private endCalculatingState(): void {
+        this.calculating = false;
+        this.calculatingProfile = false;
+        this.calculatingNoDeco = false;
+        this.dive.profileCalculated = true;
+        this.dive.noDecoCalculated = true;
+        this.dive.calculated = true;
     }
 
     private showStillRunning(): void {
@@ -257,7 +270,6 @@ export class PlannerService {
         const serializedPlan = DtoSerialization.fromSegments(this.plan.segments);
         const serializedTanks =  DtoSerialization.fromTanks(this._tanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, this._tanks);
-        // TODO Fix data property of events, looks like deserialization doesn't work
         const profile = WayPointsService.calculateWayPoints(calculatedProfile, result.events);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;
@@ -265,7 +277,6 @@ export class PlannerService {
         this.dive.averageDepth = Segments.averageDepth(profile.origin);
 
         if (profile.endsOnSurface) {
-
             const noDecoRequest = {
                 tanks: serializedTanks,
                 plan: serializedPlan,
@@ -283,7 +294,8 @@ export class PlannerService {
 
             this.consumptionTask.calculate(consumptionRequest);
         } else {
-            // TODO provide error values to calculated profile
+            this.endCalculatingState();
+            console.table(calculatedProfile.errors);
         }
 
         this.dive.profileCalculated = true;

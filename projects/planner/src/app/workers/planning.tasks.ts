@@ -14,8 +14,8 @@ export class PlanningTasks {
         const algorithm = new BuhlmannAlgorithm();
         const profile = algorithm.calculateDecompression(data.options, gases, plan);
         const profileDto = DtoSerialization.fromProfile(profile);
-        const events = ProfileEvents.fromProfile(plan.startAscentIndex, segments, profile.ceilings, data.options);
-        // TODO fix errors usage present in WaypointService
+        const events = ProfileEvents.fromProfile(plan.startAscentIndex, profile.segments, profile.ceilings, data.options);
+
         return {
             profile: profileDto,
             events

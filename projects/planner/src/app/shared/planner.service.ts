@@ -192,6 +192,12 @@ export class PlannerService {
         this.calculate();
     }
 
+    public applyDiver(diver: Diver): void {
+        this.diver.loadFrom(diver);
+        this.options.maxPpO2 = diver.maxPpO2;
+        this.options.maxDecoPpO2 = diver.maxDecoPpO2;
+    }
+
     public loadFrom(isComplex: boolean, options: Options, diver: Diver, tanks: Tank[], segments: Segment[]): void {
         this.isComplex = isComplex;
         this.assignOptions(options);
@@ -213,15 +219,11 @@ export class PlannerService {
         this.calculatingProfile = true;
         this.calculatingNoDeco = true;
         // TODO calculate only if form is valid
-        // TODO Fix unit tests
 
         setTimeout(() => {
             this.showStillRunning();
         }, 500);
 
-        // TODO copy options to diver only on app startup, let it customize per dive
-        this.options.maxPpO2 = this.diver.maxPpO2;
-        this.options.maxDecoPpO2 = this.diver.maxDecoPpO2;
         this.resetDepthConverter();
 
         const serializedPlan = DtoSerialization.fromSegments(this.plan.segments);

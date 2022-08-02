@@ -24,6 +24,29 @@ describe('App settings component', () => {
         fixture.detectChanges();
     });
 
+    describe('Diver', () => {
+        it('RMV applies to planner', inject([PlannerService],
+            (planner: PlannerService) => {
+                component.diver.rmv = 18;
+                component.use();
+                expect(planner.diver.rmv).toBe(18);
+            }));
+
+        it('ppO2 applies to planner', inject([PlannerService],
+            (planner: PlannerService) => {
+                component.diver.maxPpO2 = 1.1;
+                component.use();
+                expect(planner.options.maxPpO2).toBe(1.1);
+            }));
+
+        it('Deco ppO2 applies to planner', inject([PlannerService],
+            (planner: PlannerService) => {
+                component.diver.maxDecoPpO2 = 1.5;
+                component.use();
+                expect(planner.options.maxDecoPpO2).toBe(1.5);
+            }));
+    });
+
     it('Metric units updates depth level options', inject([PlannerService],
         (planner: PlannerService) => {
             component.imperialUnits = false;

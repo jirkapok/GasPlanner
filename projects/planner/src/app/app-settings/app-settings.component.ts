@@ -26,7 +26,7 @@ export class AppSettingsComponent {
 
     public use(): void {
         // TODO save settings only if form is valid
-        this.planner.diver.loadFrom(this.diver);
+        this.planner.applyDiver(this.diver);
         this.units.imperialUnits = this.imperialUnits;
         this.applyToOptions();
         this.applyToTanks();

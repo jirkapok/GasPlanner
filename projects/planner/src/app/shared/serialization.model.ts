@@ -21,7 +21,7 @@ export interface ConsumptionRequestDto {
     plan: SegmentDto[];
     profile: SegmentDto[];
     options: Options;
-    diver: Diver;
+    diver: DiverDto;
     tanks: TankDto[];
 }
 
@@ -51,6 +51,10 @@ export interface SegmentDto {
 export interface GasDto {
     fo2: number;
     fHe: number;
+}
+
+export interface DiverDto {
+    rmv: number;
 }
 
 /** Serialization used to store preferences and for communication with background workers */

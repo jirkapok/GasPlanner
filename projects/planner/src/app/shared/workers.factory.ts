@@ -10,12 +10,12 @@ export class WorkersFactory extends WorkersFactoryCommon {
     }
 
     public createNoDecoWorker(): IBackgroundTask<ProfileRequestDto, number> {
-        const noDecoWorker = new Worker(new URL('./workers/no-deco.worker', import.meta.url));
+        const noDecoWorker = new Worker(new URL('../workers/no-deco.worker', import.meta.url));
         return new BackgroundTask<ProfileRequestDto, number>(noDecoWorker);
     }
 
     public createConsumptionWorker(): IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto> {
-        const consumptionWorker = new Worker(new URL('./workers/consumption.worker', import.meta.url));
+        const consumptionWorker = new Worker(new URL('../workers/consumption.worker', import.meta.url));
         return new BackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>(consumptionWorker);
     }
 }

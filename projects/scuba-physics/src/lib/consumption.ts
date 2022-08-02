@@ -21,8 +21,6 @@ class ConsumptionSegment {
     /** in meters */
     private _endDepth = 0;
 
-
-
     /**
      * @param duration in seconds
      * @param newDepth in meters
@@ -35,10 +33,6 @@ class ConsumptionSegment {
         this.averageDepth = averageDepth;
     }
 
-    public static fromSegment(segment: Segment): ConsumptionSegment {
-        return new ConsumptionSegment(segment.duration, segment.endDepth, segment.startDepth, segment.averageDepth);
-    }
-
     /** in meters */
     public get startDepth(): number {
         return this._startDepth;
@@ -47,6 +41,10 @@ class ConsumptionSegment {
     /** in meters */
     public get endDepth(): number {
         return this._endDepth;
+    }
+
+    public static fromSegment(segment: Segment): ConsumptionSegment {
+        return new ConsumptionSegment(segment.duration, segment.endDepth, segment.startDepth, segment.averageDepth);
     }
 }
 

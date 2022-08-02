@@ -33,6 +33,8 @@ import { SelectedWaypoint } from './shared/selectedwaypointService';
 import { CalculatingComponent } from './calculating/calculating.component';
 import { DurationPipe } from './pipes/duration.pipe';
 import { DatePipe } from '@angular/common';
+import { WorkersFactory } from './shared/workers.factory';
+import { WorkersFactoryCommon } from './shared/serial.workers.factory';
 
 @NgModule({
     declarations: [
@@ -72,11 +74,12 @@ import { DatePipe } from '@angular/common';
     ],
     exports: [],
     providers: [
+        { provide: WorkersFactoryCommon, useClass: WorkersFactory },
         PlannerService,
         PreferencesService,
         UnitConversion,
         SelectedWaypoint,
-        DatePipe
+        DatePipe,
     ],
     bootstrap: [AppComponent]
 })

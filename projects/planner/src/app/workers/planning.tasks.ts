@@ -1,5 +1,5 @@
 import {
-    Segments, Gases, BuhlmannAlgorithm, ProfileEvents, DepthConverterFactory, Consumption, Time
+    Segments, Gases, BuhlmannAlgorithm, ProfileEvents, DepthConverterFactory, Consumption, Time, Diver
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, DtoSerialization, ConsumptionRequestDto, ConsumptionResultDto
@@ -44,13 +44,15 @@ export class PlanningTasks {
         const originProfile = DtoSerialization.toSegments(task.profile, tanks);
         const segments = DtoSerialization.toSegments(task.plan, tanks);
         const plan = Segments.fromCollection(segments);
+        // diver ppO2 is irrelevant for consumption calculation
+        const diver = new Diver(task.diver.rmv, task.options.maxPpO2);
 
         // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
-        const maxTime = consumption.calculateMaxBottomTime(plan, tanks, task.diver, task.options);
+        const maxTime = consumption.calculateMaxBottomTime(plan, tanks, diver, task.options);
         const emergencyAscent = consumption.emergencyAscent(originProfile, task.options, tanks);
         let timeToSurface = Segments.duration(emergencyAscent);
         timeToSurface = Time.toMinutes(timeToSurface);
-        consumption.consumeFromTanks2(originProfile, emergencyAscent, task.options, tanks, task.diver);
+        consumption.consumeFromTanks2(originProfile, emergencyAscent, task.options, tanks, diver);
         return {
             maxTime,
             timeToSurface,

@@ -386,6 +386,3 @@ describe('Profile Events', () => {
     });
 });
 
-// TODO test case start dive on ean50, switch to 15/55 - doesn't generate warning low pO2 at ascent to surface
-// Consider to propose gas with higher oxygen content even it will generate ICD warnig
-// TODO profile Ean50 - 18/45 - ean50 doesnt finish calculation

@@ -291,9 +291,8 @@ describe('PlannerService', () => {
                 planner.calculate();
             });
 
-            it('Returns an error event', () => {
-                const firstEvent = planner.dive.events[0];
-                expect(firstEvent.type).toBe(EventType.error);
+            it('Fallback to error state', () => {
+                expect(planner.dive.hasErrors).toBeTruthy();
             });
 
             it('Still fires waypoints calculated event', () => {

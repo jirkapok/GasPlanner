@@ -301,7 +301,10 @@ export class PlannerService {
     }
 
     private profileFailed(): void {
-        // TODO set dive to failed state
+        this.dive.calculationFailed = true;
+        this.dive.events = [];
+        this.dive.wayPoints = [];
+        this.dive.ceilings = [];
         this.endCalculatingState();
         // fire events, because there will be no continuation
         this.onWayPointsCalculated.next({});
@@ -329,6 +332,7 @@ export class PlannerService {
         this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
 
         this.dive.calculated = true;
+        this.dive.calculationFailed = false;
         this.calculating = false;
         this.onInfoCalculated.next({});
     }

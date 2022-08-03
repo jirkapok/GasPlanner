@@ -176,6 +176,7 @@ export class Dive {
     public calculated = false;
     public noDecoCalculated = false;
     public profileCalculated = false;
+    public calculationFailed = false;
     public maxTime = 0;
     public timeToSurface = 0;
     public turnPressure = 0;
@@ -201,7 +202,7 @@ export class Dive {
 
     public get hasErrors(): boolean {
         // the only errors preventing draw chart
-        return this.calculated && this.notEnoughTime;
+        return this.calculated && (this.calculationFailed || this.notEnoughTime);
     }
 
     public get showResults(): boolean {

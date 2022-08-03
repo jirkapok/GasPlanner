@@ -66,26 +66,32 @@
             </div>
             <app-calculating [show]="!dive.calculated"></app-calculating>
 
-            <div *ngIf="dive.calculated && dive.notEnoughGas" class="alert  alert-danger">
+            <div *ngIf="dive.calculated && dive.calculationFailed" class="alert alert-danger">
                 <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
-                <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
-                    {{ dive.maxTime | number:'1.0-0' }} min</span>
+                <span>There was an error while calculating profile.</span>
             </div>
-            <div *ngIf="dive.noDecoCalculated &&  dive.notEnoughTime" class="alert  alert-danger">
+
+            <div *ngIf="dive.noDecoCalculated && dive.notEnoughTime" class="alert alert-danger">
                 <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
                 <span>Not enough time to realize the dive (duration needs to be at least {{ minimumDuration |
                     number:'1.0-0' }}
                     min)!</span>
             </div>
-            <div *ngIf="dive.noDecoCalculated && dive.noDecoExceeded" class="alert  alert-info">
-                <fa-icon [icon]="info" class="me-2"></fa-icon>
-                <span>No decompression time for current depth exceeded (For no decompression dive set dive time maximum
-                    to
-                    {{ noDeco | number:'1.0-0' }} min)!</span>
-            </div>
 
-            <div *ngIf="dive.profileCalculated">
-                <div *ngFor="let event of dive.events">
+            <ng-container *ngIf="!dive.hasErrors">
+                <div *ngIf="dive.calculated && dive.notEnoughGas" class="alert alert-danger">
+                    <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
+                    <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
+                        {{ dive.maxTime | number:'1.0-0' }} min</span>
+                </div>
+                <div *ngIf="dive.noDecoCalculated && dive.noDecoExceeded" class="alert alert-info">
+                    <fa-icon [icon]="info" class="me-2"></fa-icon>
+                    <span>No decompression time for current depth exceeded (For no decompression dive set dive time maximum
+                        to
+                        {{ noDeco | number:'1.0-0' }} min)!</span>
+                </div>
+
+                <ng-container  *ngFor="let event of dive.events">
                     <div *ngIf="isLowPpO2(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>Low partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }}
@@ -123,8 +129,8 @@
                             {{units.length}} at {{ event.timeStamp | duration:event.timeStamp
                             }} min!</span>
                     </div>
-                </div>
-            </div>
+                </ng-container>
+            </ng-container>
         </div>
     </div>
 </div>

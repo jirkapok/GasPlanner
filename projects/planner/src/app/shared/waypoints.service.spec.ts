@@ -5,7 +5,6 @@ import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec
 
 describe('WayPointsService', () => {
     const airTank = new Tank(12, 200, 21);
-    const gases = [airTank];
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
     options.safetyStop = SafetyStop.always;
 

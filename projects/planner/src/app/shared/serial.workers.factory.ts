@@ -7,34 +7,48 @@ import { PlanningTasks } from '../workers/planning.tasks';
 export class WorkersFactoryCommon {
     public createProfileWorker(): IBackgroundTask<ProfileRequestDto, ProfileResultDto> {
         const subject = new Subject<ProfileResultDto>();
+        const failedSubject = new Subject<void>();
         return {
             calculated: subject,
-            calculate: (request: ProfileRequestDto) => {
-                const result = PlanningTasks.calculateDecompression(request);
-                subject.next(result);
+            calculate: (request: ProfileRequestDto): void => {
+                this.tryAction((r) => PlanningTasks.calculateDecompression(r), request, subject, failedSubject);
             },
+            failed: failedSubject,
         };
     }
 
     public createNoDecoWorker(): IBackgroundTask<ProfileRequestDto, number> {
         const subject = new Subject<number>();
+        const failedSubject = new Subject<void>();
         return {
             calculated: subject,
-            calculate: (request: ProfileRequestDto) => {
-                const result = PlanningTasks.noDecoTime(request);
-                subject.next(result);
+            calculate: (request: ProfileRequestDto): void => {
+                this.tryAction((r) => PlanningTasks.noDecoTime(r), request, subject, failedSubject);
             },
+            failed: failedSubject,
         };
     }
 
     public createConsumptionWorker(): IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto> {
         const subject = new Subject<ConsumptionResultDto>();
+        const failedSubject = new Subject<void>();
         return {
             calculated: subject,
-            calculate: (request: ConsumptionRequestDto) => {
-                const result = PlanningTasks.calculateConsumption(request);
-                subject.next(result);
+            calculate: (request: ConsumptionRequestDto): void => {
+                this.tryAction((r) => PlanningTasks.calculateConsumption(r), request, subject, failedSubject);
             },
+            failed: failedSubject,
         };
+    }
+
+    /** simulate worker error reporting */
+    private tryAction<TRequest, TResponse>(action: (r: TRequest) => TResponse,
+        request: TRequest, subject: Subject<TResponse>, failed: Subject<void>): void {
+        try {
+            const result = action(request);
+            subject.next(result);
+        } catch {
+            failed.next();
+        }
     }
 }

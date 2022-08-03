@@ -256,8 +256,19 @@ describe('PlannerService', () => {
         });
     });
 
-    fdescribe('Errors', () => {
-        describe('Profile calc failed', () => {
+    describe('Errors', () => {
+        const createProfileResultDto = (): ProfileResultDto => {
+            const events = new Events();
+            events.add(new Event(0, 0, EventType.error));
+            const profile = CalculatedProfile.fromErrors(planner.plan.segments, []);
+            const profileDto = DtoSerialization.fromProfile(profile);
+            return  {
+                profile: profileDto,
+                events
+            };
+        };
+
+        describe('Profile calculated with errors', () => {
             let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => number>;
             let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
             let wayPointsFinished = false;
@@ -265,18 +276,7 @@ describe('PlannerService', () => {
 
             beforeEach(() => {
                 spyOn(PlanningTasks, 'calculateDecompression')
-                    .and.callFake(() => {
-                        const events = new Events();
-                        events.add(new Event(0, 0, EventType.error));
-                        const profile = CalculatedProfile.fromErrors(planner.plan.segments, []);
-                        const profileDto = DtoSerialization.fromProfile(profile);
-
-                        const result: ProfileResultDto = {
-                            profile: profileDto,
-                            events
-                        };
-                        return result;
-                    });
+                    .and.callFake(() => createProfileResultDto());
 
                 planner.wayPointsCalculated.subscribe(() => wayPointsFinished = true);
                 planner.infoCalculated.subscribe(() => infoFinished = true);
@@ -311,7 +311,46 @@ describe('PlannerService', () => {
             it('Doesn\'t call consumption task', () => {
                 expect(consumptionSpy).not.toHaveBeenCalled();
             });
+        });
 
+        describe('Profile task failed', () => {
+            let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => number>;
+            let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
+            let wayPointsFinished = false;
+            let infoFinished = false;
+
+            beforeEach(() => {
+                spyOn(PlanningTasks, 'calculateDecompression')
+                    .and.throwError('Profile failed');
+
+                planner.wayPointsCalculated.subscribe(() => wayPointsFinished = true);
+                planner.infoCalculated.subscribe(() => infoFinished = true);
+                noDecoSpy = spyOn(PlanningTasks, 'noDecoTime').and.callThrough();
+                consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
+                planner.calculate();
+            });
+
+            it('Still finishes waypoints calculated event', () => {
+                expect(wayPointsFinished).toBeTruthy();
+            });
+
+            it('Still finishes info calculated event', () => {
+                expect(infoFinished).toBeTruthy();
+            });
+
+            it('Sets calculation to failed', () => {
+                expect(planner.dive.noDecoCalculated).toBeTruthy();
+                expect(planner.dive.calculated).toBeTruthy();
+                expect(planner.dive.profileCalculated).toBeTruthy();
+            });
+
+            it('Skips no deco task', () => {
+                expect(noDecoSpy).not.toHaveBeenCalled();
+            });
+
+            it('Skips consumption task', () => {
+                expect(consumptionSpy).not.toHaveBeenCalled();
+            });
         });
 
         // TODO learn what happens, if the worker fails (does it finish or new event is possible)

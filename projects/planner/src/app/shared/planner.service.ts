@@ -54,19 +54,16 @@ export class PlannerService {
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
 
         this.profileTask = this.workerFactory.createProfileWorker();
-        this.profileTask.calculated.subscribe((data) => {
-            this.continueCalculation(data);
-        });
+        this.profileTask.calculated.subscribe((data) => this.continueCalculation(data));
+        this.profileTask.failed.subscribe(() => this.profileFailed());
 
         this.noDecoTask = this.workerFactory.createNoDecoWorker();
-        this.noDecoTask.calculated.subscribe((calculated) => {
-            this.finishNoDeco(calculated);
-        });
+        this.noDecoTask.calculated.subscribe((calculated) => this.finishNoDeco(calculated));
+        this.noDecoTask.failed.subscribe(() => this.profileFailed());
 
         this.consumptionTask = this.workerFactory.createConsumptionWorker();
-        this.consumptionTask.calculated.subscribe((data) => {
-            this.finishCalculation(data);
-        });
+        this.consumptionTask.calculated.subscribe((data) => this.finishCalculation(data));
+        this.consumptionTask.failed.subscribe(() => this.profileFailed());
     }
 
     public get firstGasMaxDepth(): number {
@@ -293,15 +290,22 @@ export class PlannerService {
             };
 
             this.consumptionTask.calculate(consumptionRequest);
+            this.dive.profileCalculated = true;
+            this.calculatingProfile = false;
+            this.onWayPointsCalculated.next({});
         } else {
-            this.endCalculatingState();
-            this.onInfoCalculated.next({}); // because there will be no continuation
+            // fires info finished before the profile finished, case of error it doesn't matter
+            this.profileFailed();
             console.table(calculatedProfile.errors);
         }
+    }
 
-        this.dive.profileCalculated = true;
-        this.calculatingProfile = false;
+    private profileFailed(): void {
+        // TODO set dive to failed state
+        this.endCalculatingState();
+        // fire events, because there will be no continuation
         this.onWayPointsCalculated.next({});
+        this.onInfoCalculated.next({});
     }
 
     private finishNoDeco(noDeco: number): void {

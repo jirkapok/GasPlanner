@@ -1,11 +1,14 @@
 import { Time, SafetyStop, Segment, StandardGases, Event, EventType, CalculatedProfile, Events } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 // import { WorkersFactorySpy } from './planner.service.workers.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
-import { DtoSerialization, ProfileRequestDto, ProfileResultDto } from './serialization.model';
+import {
+    ConsumptionRequestDto, ConsumptionResultDto, DtoSerialization,
+    ProfileRequestDto, ProfileResultDto
+} from './serialization.model';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -253,30 +256,62 @@ describe('PlannerService', () => {
         });
     });
 
-    describe('Errors', () => {
-        it('Profile calc failed', () => {
-            spyOn(PlanningTasks, 'calculateDecompression')
-                .and.callFake((data: ProfileRequestDto) => {
-                    const events = new Events();
-                    events.add(new Event(0, 0, EventType.error));
-                    const profile = CalculatedProfile.fromErrors(planner.plan.segments, []);
-                    const profileDto = DtoSerialization.fromProfile(profile);
+    fdescribe('Errors', () => {
+        describe('Profile calc failed', () => {
+            let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => number>;
+            let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
+            let wayPointsFinished = false;
+            let infoFinished = false;
 
-                    const result: ProfileResultDto = {
-                        profile: profileDto,
-                        events
-                    };
-                    return result;
-                });
+            beforeEach(() => {
+                spyOn(PlanningTasks, 'calculateDecompression')
+                    .and.callFake(() => {
+                        const events = new Events();
+                        events.add(new Event(0, 0, EventType.error));
+                        const profile = CalculatedProfile.fromErrors(planner.plan.segments, []);
+                        const profileDto = DtoSerialization.fromProfile(profile);
 
-            planner.calculate();
+                        const result: ProfileResultDto = {
+                            profile: profileDto,
+                            events
+                        };
+                        return result;
+                    });
 
-            // TODO Returns incomplete profile
-            // no other background call are performed
-            // all processing state variables are reset
-            // profile calculated event is still fired
-            const firstEvent = planner.dive.events[0];
-            expect(firstEvent.type).toBe(EventType.error);
+                planner.wayPointsCalculated.subscribe(() => wayPointsFinished = true);
+                planner.infoCalculated.subscribe(() => infoFinished = true);
+                noDecoSpy = spyOn(PlanningTasks, 'noDecoTime').and.callThrough();
+                consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
+                planner.calculate();
+            });
+
+            it('Returns an error event', () => {
+                const firstEvent = planner.dive.events[0];
+                expect(firstEvent.type).toBe(EventType.error);
+            });
+
+            it('Still fires waypoints calculated event', () => {
+                expect(wayPointsFinished).toBeTruthy();
+            });
+
+            it('Still fires info calculated event', () => {
+                expect(infoFinished).toBeTruthy();
+            });
+
+            it('Sets all progress properties to true', () => {
+                expect(planner.dive.noDecoCalculated).toBeTruthy();
+                expect(planner.dive.calculated).toBeTruthy();
+                expect(planner.dive.profileCalculated).toBeTruthy();
+            });
+
+            it('Doesn\'t call no deco task', () => {
+                expect(noDecoSpy).not.toHaveBeenCalled();
+            });
+
+            it('Doesn\'t call consumption task', () => {
+                expect(consumptionSpy).not.toHaveBeenCalled();
+            });
+
         });
 
         // TODO learn what happens, if the worker fails (does it finish or new event is possible)

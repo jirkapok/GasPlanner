@@ -295,6 +295,7 @@ export class PlannerService {
             this.consumptionTask.calculate(consumptionRequest);
         } else {
             this.endCalculatingState();
+            this.onInfoCalculated.next({}); // because there will be no continuation
             console.table(calculatedProfile.errors);
         }
 

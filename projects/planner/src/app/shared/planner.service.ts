@@ -267,7 +267,8 @@ export class PlannerService {
         const serializedPlan = DtoSerialization.fromSegments(this.plan.segments);
         const serializedTanks =  DtoSerialization.fromTanks(this._tanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, this._tanks);
-        const profile = WayPointsService.calculateWayPoints(calculatedProfile, result.events);
+        const events = DtoSerialization.fromEvents(result.events);
+        const profile = WayPointsService.calculateWayPoints(calculatedProfile, events);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;
         this.dive.events = profile.events;

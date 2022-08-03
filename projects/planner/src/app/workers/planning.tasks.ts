@@ -15,10 +15,11 @@ export class PlanningTasks {
         const profile = algorithm.calculateDecompression(data.options, gases, plan);
         const profileDto = DtoSerialization.fromProfile(profile);
         const events = ProfileEvents.fromProfile(plan.startAscentIndex, profile.segments, profile.ceilings, data.options);
+        const eventsDto = DtoSerialization.toEvents(events.items);
 
         return {
             profile: profileDto,
-            events
+            events: eventsDto
         };
     }
 

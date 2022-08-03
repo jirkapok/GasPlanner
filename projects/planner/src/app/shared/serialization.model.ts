@@ -1,4 +1,7 @@
-import { Diver, Options, Segment, StandardGases, Tank, Tanks, Event, CalculatedProfile, Events, Ceiling } from 'scuba-physics';
+import {
+    Options, Segment, StandardGases, Tank, Tanks,
+    CalculatedProfile, Ceiling, EventType, Event, Events, Gas
+} from 'scuba-physics';
 
 export interface ProfileRequestDto {
     tanks: TankDto[];
@@ -8,13 +11,21 @@ export interface ProfileRequestDto {
 
 export interface ProfileResultDto {
     profile: CalculatedProfileDto;
-    events: Events;
+    events: EventDto[];
+}
+
+export interface EventDto {
+    timeStamp: number;
+    depth: number;
+    type: EventType;
+    message?: string;
+    gas?: GasDto;
 }
 
 export interface CalculatedProfileDto {
     segments: SegmentDto[];
     ceilings: Ceiling[];
-    errors: Event[];
+    errors: EventDto[];
 }
 
 export interface ConsumptionRequestDto {
@@ -49,7 +60,7 @@ export interface SegmentDto {
 }
 
 export interface GasDto {
-    fo2: number;
+    fO2: number;
     fHe: number;
 }
 
@@ -66,7 +77,7 @@ export class DtoSerialization {
             converted.id = tank.id;
             converted.consumed = tank.consumed;
             converted.reserve = tank.reserve;
-            converted.gas.fO2 = tank.gas.fo2;
+            converted.gas.fO2 = tank.gas.fO2;
             converted.gas.fHe = tank.gas.fHe;
             result.push(converted);
         });
@@ -85,7 +96,7 @@ export class DtoSerialization {
                 consumed: tank.consumed,
                 reserve: tank.reserve,
                 gas: {
-                    fo2: tank.gas.fO2,
+                    fO2: tank.gas.fO2,
                     fHe: tank.gas.fHe
                 }
             };
@@ -100,7 +111,7 @@ export class DtoSerialization {
         for (let index = 0; index < source.length; index++) {
             const loaded = source[index];
             const gas = StandardGases.air.copy();
-            gas.fO2 = loaded.gas.fo2;
+            gas.fO2 = loaded.gas.fO2; // segment always has gas
             gas.fHe = loaded.gas.fHe;
             const converted = new Segment(loaded.startDepth, loaded.endDepth, gas, loaded.duration);
 
@@ -125,7 +136,7 @@ export class DtoSerialization {
                 duration: segment.duration,
                 tankId: tankId,
                 gas: {
-                    fo2: segment.gas.fO2,
+                    fO2: segment.gas.fO2,
                     fHe: segment.gas.fHe
                 }
             };
@@ -136,6 +147,7 @@ export class DtoSerialization {
 
     public static toProfile(profile: CalculatedProfileDto, tanks: Tank[]): CalculatedProfile {
         const segments = DtoSerialization.toSegments(profile.segments, tanks);
+        // ceilings have simple data, no custom conversion needed
         return CalculatedProfile.fromProfile(segments, profile.ceilings);
     }
 
@@ -145,7 +157,41 @@ export class DtoSerialization {
         return {
             segments: segments,
             ceilings: profile.ceilings,
-            errors: profile.errors
+            errors: DtoSerialization.toEvents(profile.errors)
         };
+    }
+
+    public static fromEvents(dto: EventDto[]): Events {
+        const result = new Events();
+        dto.forEach(d => {
+            const e = new Event(d.timeStamp, d.depth, d.type, d.message);
+            if(d.gas) {
+                e.gas = new Gas(d.gas?.fO2, d.gas?.fHe);
+            }
+
+            result.add(e);
+        });
+        return result;
+    }
+
+    public static toEvents(events: Event[]): EventDto[] {
+        const result: EventDto[] = [];
+        events.forEach(e => {
+            const dto: EventDto = {
+                timeStamp: e.timeStamp,
+                depth: e.depth,
+                type: e.type,
+                message: e.message,
+            };
+
+            if(e.gas) {
+                dto.gas = {
+                    fO2: e.gas.fO2,
+                    fHe: e.gas.fHe,
+                };
+            }
+            result.push(dto);
+        });
+        return result;
     }
 }

@@ -248,7 +248,6 @@ export class PlannerService {
     }
 
     private showStillRunning(): void {
-        // TODO Fix when calculation is requested before the currently running is finished
         if(this.calculatingProfile) {
             this.dive.profileCalculated = false;
             this.dive.emptyProfile();

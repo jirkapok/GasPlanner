@@ -5,13 +5,14 @@ Following list of features and improvements ordered by priority is under develop
 ## Known issues
 
 * Gas content spinners issue: oxygen content spinner shows not rounded number, where it shouldn't, Setting 15/55 trimix sets the helium to unexpected precise value
-* Wrong time format for durations of the dive longer than 24 hours.
 * When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter for founding switch depth
 * Fix wrong time format message in console created by plotly
+* Fix the duplicate load needed when accessing the page as pwa
 
 ## Improvements / Features
 
 * Add metadata to html head
+* Add all settings as url parameters so user can share the profile using an url (<https://angular.io/guide/router#link-parameters-array>)
 * Add imperial units option
   * Fix all value bindings (depths, options, profile, profile chart, dive info)
   * Provide rounded default values (Settings, Sac, Nitrox, tanks, depths, options)
@@ -40,11 +41,9 @@ Following list of features and improvements ordered by priority is under develop
 * Events:
   * Add time to all events warning/error messages where it makes sense
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
-  * Add explanation how to fix the events
 * UI Tweaks
   * Calculation
     * Set dive not calculated, if any field on the form isn't valid
-    * Delay Long duration of calculation (depth more than 200 m already takes few seconds)
   * Tanks
     * Add Dropdown for well known tank sizes
   * Profile:
@@ -56,7 +55,6 @@ Following list of features and improvements ordered by priority is under develop
   * UX
     * fix layout, so the fields aren't moving when validation error appears
     * align fields to consume full space
-    * Profile errors should contain explanation how to fix it
 * Help
   * Add help to the UI as side bar
     * <https://ej2.syncfusion.com/angular/documentation/sidebar/getting-started/>
@@ -65,7 +63,6 @@ Following list of features and improvements ordered by priority is under develop
     * <https://stackoverflow.com/questions/53416871/routing-to-static-html-page-in-angular-6>
 * Add option to define repetitive dives
 * Add localizations
-* Add all settings as url parameters so user can share the profile using an url (<https://angular.io/guide/router#link-parameters-array>)
 * Allow user to compare multiple plans side by side
 * Algorithm
   * Improve ascent to next stop by estimated offgasing during the ascent to reduce the stop length

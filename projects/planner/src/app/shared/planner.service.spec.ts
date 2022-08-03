@@ -268,6 +268,12 @@ describe('PlannerService', () => {
             };
         };
 
+        const expectDiveMarkedAsCalculated = (): void => {
+            expect(planner.dive.noDecoCalculated).toBeTruthy();
+            expect(planner.dive.calculated).toBeTruthy();
+            expect(planner.dive.profileCalculated).toBeTruthy();
+        };
+
         describe('Profile calculated with errors', () => {
             let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => number>;
             let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
@@ -299,9 +305,7 @@ describe('PlannerService', () => {
             });
 
             it('Sets all progress properties to true', () => {
-                expect(planner.dive.noDecoCalculated).toBeTruthy();
-                expect(planner.dive.calculated).toBeTruthy();
-                expect(planner.dive.profileCalculated).toBeTruthy();
+                expectDiveMarkedAsCalculated();
             });
 
             it('Doesn\'t call no deco task', () => {
@@ -339,9 +343,7 @@ describe('PlannerService', () => {
             });
 
             it('Sets calculation to failed', () => {
-                expect(planner.dive.noDecoCalculated).toBeTruthy();
-                expect(planner.dive.calculated).toBeTruthy();
-                expect(planner.dive.profileCalculated).toBeTruthy();
+                expectDiveMarkedAsCalculated();
             });
 
             it('Skips no deco task', () => {
@@ -353,15 +355,44 @@ describe('PlannerService', () => {
             });
         });
 
-        // TODO learn what happens, if the worker fails (does it finish or new event is possible)
+        describe('No deco task failed', () => {
+            let infoFinished = false;
 
+            beforeEach(() => {
+                spyOn(PlanningTasks, 'noDecoTime')
+                    .and.throwError('No deco failed');
 
-        // NoDeco failed
-        // - processing is reset
-        // - event is returned
+                planner.infoCalculated.subscribe(() => infoFinished = true);
+                planner.calculate();
+            });
 
-        // Consumption failed
-        // - processing is reset
-        // - event is returned
+            it('Still ends info calculated event', () => {
+                expect(infoFinished).toBeTruthy();
+            });
+
+            it('Sets calculation to resolved failed', () => {
+                expectDiveMarkedAsCalculated();
+            });
+        });
+
+        describe('Consumption task failed', () => {
+            let infoFinished = false;
+
+            beforeEach(() => {
+                spyOn(PlanningTasks, 'calculateConsumption')
+                    .and.throwError('Consumption failed');
+
+                planner.infoCalculated.subscribe(() => infoFinished = true);
+                planner.calculate();
+            });
+
+            it('Still ends calculated event', () => {
+                expect(infoFinished).toBeTruthy();
+            });
+
+            it('Sets consumption to resolved failed', () => {
+                expectDiveMarkedAsCalculated();
+            });
+        });
     });
 });

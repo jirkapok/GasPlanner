@@ -294,9 +294,11 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             if (event.type === EventType.gasSwitch) {
                 x.push(Time.toDate(event.timeStamp));
                 y.push(event.depth);
-                const gas = <Gas>event.data;
-                const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
-                labels.push(`${gasName}`);
+                const gas = event.gas;
+                if(gas) {
+                    const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
+                    labels.push(`${gasName}`);
+                }
             }
         });
     }

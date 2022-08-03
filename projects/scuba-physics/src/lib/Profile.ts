@@ -39,7 +39,7 @@ export class Event {
         /** Optional explanation of the event or empty string */
         public message?: string,
         /** Optional data associated with the event, e.g. Gas for gas switch */
-        public data?: any
+        public gas?: Gas
     ) { }
 }
 
@@ -49,7 +49,7 @@ export class EventsFactory {
             timeStamp: timeStamp,
             depth: depth,
             type: EventType.gasSwitch,
-            data: gas
+            gas: gas
         };
     }
 
@@ -107,7 +107,7 @@ export class EventsFactory {
             timeStamp: timeStamp,
             depth: depth,
             type: EventType.maxEndExceeded,
-            data: gas
+            gas: gas
         };
     }
 
@@ -116,7 +116,7 @@ export class EventsFactory {
             timeStamp: timeStamp,
             depth: depth,
             type: EventType.switchToHigherN2,
-            data: gas
+            gas: gas
         };
     }
 }

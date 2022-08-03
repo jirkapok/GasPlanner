@@ -11,7 +11,6 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Add metadata to html head
 * Add all settings as url parameters so user can share the profile using an url (<https://angular.io/guide/router#link-parameters-array>)
 * Add imperial units option
   * Fix all value bindings (depths, options, profile, profile chart, dive info)

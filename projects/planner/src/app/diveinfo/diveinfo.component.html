@@ -18,20 +18,21 @@
                         <tr>
                             <td>Average depth [{{units.length}}]:</td>
                             <td class="table-active">
-                                <strong  *ngIf="dive.profileCalculated">{{ dive.averageDepth | number:'1.0-1' }}</strong>
+                                <strong *ngIf="dive.profileCalculated">{{ dive.averageDepth | number:'1.0-1' }}</strong>
                             </td>
                         </tr>
                         <tr>
                             <td>Rock bottom at:</td>
                             <td class="table-active">
                                 <strong *ngIf="dive.calculated">{{ dive.emergencyAscentStart |
-                                   duration:dive.emergencyAscentStart }} </strong>
+                                    duration:dive.emergencyAscentStart }} </strong>
                             </td>
                         </tr>
                         <tr>
                             <td>No decompression time [min]:
                                 <button type="button" class="btn btn-secondary btn-sm ml-2"
-                                    (click)="planner.applyNdlDuration()" *ngIf="showApply && dive.noDecoCalculated">Use</button>
+                                    (click)="planner.applyNdlDuration()"
+                                    *ngIf="showApply && dive.noDecoCalculated">Use</button>
                             </td>
                             <td class="table-active">
                                 <strong *ngIf="dive.noDecoCalculated">{{ noDeco | number:'1.0-0' }}</strong>
@@ -40,7 +41,8 @@
                         <tr *ngIf="showMaxBottomTime">
                             <td>Maximum bottom time [min]:
                                 <button type="button" class="btn btn-secondary btn-sm ml-2"
-                                    (click)="planner.applyMaxDuration()" *ngIf="showApply && dive.calculated">Use</button>
+                                    (click)="planner.applyMaxDuration()"
+                                    *ngIf="showApply && dive.calculated">Use</button>
                             </td>
                             <td class="table-active">
                                 <strong *ngIf="dive.calculated">{{ dive.maxTime | number:'1.0-0' }}</strong>
@@ -74,60 +76,64 @@
             <div *ngIf="dive.noDecoCalculated && dive.notEnoughTime" class="alert alert-danger">
                 <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
                 <span>Not enough time to realize the dive (duration needs to be at least {{ minimumDuration |
-                    number:'1.0-0' }}
-                    min)!</span>
+                    number:'1.0-0' }} min)! Set longer planed dive time.</span>
             </div>
 
             <ng-container *ngIf="!dive.hasErrors">
                 <div *ngIf="dive.calculated && dive.notEnoughGas" class="alert alert-danger">
                     <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
                     <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
-                        {{ dive.maxTime | number:'1.0-0' }} min</span>
+                        {{ dive.maxTime | number:'1.0-0' }} min. Use larger tank, fill it with more gas, reduce dive
+                        duration or planned depth.</span>
                 </div>
                 <div *ngIf="dive.noDecoCalculated && dive.noDecoExceeded" class="alert alert-info">
                     <fa-icon [icon]="info" class="me-2"></fa-icon>
-                    <span>No decompression time for current depth exceeded (For no decompression dive set dive time maximum
-                        to
-                        {{ noDeco | number:'1.0-0' }} min)!</span>
+                    <span>No decompression time for current depth exceeded (For no decompression dive set dive time
+                        maximum
+                        to {{ noDeco | number:'1.0-0' }} min)!</span>
                 </div>
 
-                <ng-container  *ngFor="let event of dive.events">
+                <ng-container *ngFor="let event of dive.events">
                     <div *ngIf="isLowPpO2(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>Low partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }}
-                            {{units.length}} (minimum depth exceeded)!</span>
+                            {{units.length}} (minimum depth exceeded)! There is a risk of hypoxia.
+                            Use gas with higher oxygen content.</span>
                     </div>
                     <div *ngIf="isHighPpO2(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>High partial pressure of oxygen reached at depth {{ event.depth | number:'1.0-0' }}
-                            {{units.length}} (maximum depth exceeded)!</span>
+                            {{units.length}} (maximum depth exceeded)! There is a risk of oxygen toxicity.
+                            Reduce the depth or use gas with lower oxygen content.</span>
                     </div>
                     <div *ngIf="isHighDescentSpeed(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>High descent speed at {{ event.timeStamp |
-                            duration:event.timeStamp }} min!</span>
+                            duration:event.timeStamp }} min! Descent longer time or descent to lower depth.</span>
                     </div>
                     <div *ngIf="isHighAscentSpeed(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>High ascent speed at {{ event.timeStamp |
-                            duration:event.timeStamp }} min!</span>
+                            duration:event.timeStamp }} min! Ascent to higher depth only or ascent longer time.</span>
                     </div>
                     <div *ngIf="isBrokenCeiling(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>Ceiling depth {{ event.depth | number:'1.0-0' }} {{units.length}} broken at {{
-                            event.timeStamp | duration:event.timeStamp }} min!</span>
+                            event.timeStamp | duration:event.timeStamp }} min! Change your plan to higher depth at this
+                            point.</span>
                     </div>
                     <div *ngIf="isHighN2Switch(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>Gas switch to gas with higher nitrogen content in {{ event.depth | number:'1.0-0' }}
                             {{units.length}} at {{ event.timeStamp | duration:event.timeStamp
-                            }} min is not recommended!</span>
+                            }} min is not recommended! There is a risk od isobaric counter diffusion (IDC).
+                            Switch to another gas with higher helium content or lower nitrogen content.</span>
                     </div>
                     <div *ngIf="isMndExceeded(event)" class="alert alert-warning">
                         <fa-icon [icon]="warning" class="me-2"></fa-icon>
                         <span>Exceeded maximum narcotic depth for selected gas in {{ event.depth | number:'1.0-0' }}
                             {{units.length}} at {{ event.timeStamp | duration:event.timeStamp
-                            }} min!</span>
+                            }} min! Reduce the depth or use gas with higher helium content.</span>
                     </div>
                 </ng-container>
             </ng-container>

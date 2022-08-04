@@ -5,6 +5,7 @@ import { WorkersFactoryCommon } from './serial.workers.factory';
 export class PlanUrlSerialization {
     public static toUrl(plan: AppPreferences): string {
         const serialized: string = JSON.stringify(plan);
+        // TODO encode to Base64 and than cut the invalid characters
         return serialized;
     }
 

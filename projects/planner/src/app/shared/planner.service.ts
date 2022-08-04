@@ -221,13 +221,10 @@ export class PlannerService {
 
         this.resetDepthConverter();
 
-        const serializedPlan = DtoSerialization.fromSegments(this.plan.segments);
-        const serializedTanks =  DtoSerialization.fromTanks(this._tanks);
-
         const profileRequest = {
-            tanks: serializedTanks,
-            plan: serializedPlan,
-            options: this.options
+            tanks: DtoSerialization.fromTanks(this._tanks),
+            plan: DtoSerialization.fromSegments(this.plan.segments),
+            options: DtoSerialization.fromOptions(this.options)
         };
         this.profileTask.calculate(profileRequest);
     }
@@ -272,24 +269,25 @@ export class PlannerService {
         this.dive.ceilings = profile.ceilings;
         this.dive.events = profile.events;
         this.dive.averageDepth = Segments.averageDepth(profile.origin);
+        const optionsDto = DtoSerialization.fromOptions(this.options);
 
         if (profile.endsOnSurface) {
             const noDecoRequest = {
                 tanks: serializedTanks,
                 plan: serializedPlan,
-                options: this.options
+                options: optionsDto
             };
             this.noDecoTask.calculate(noDecoRequest);
 
             const consumptionRequest = {
                 plan: serializedPlan,
                 profile: DtoSerialization.fromSegments(profile.origin),
-                options: this.options,
-                diver: this.diver,
+                options: optionsDto,
+                diver: DtoSerialization.fromDiver(this.diver),
                 tanks: serializedTanks
             };
-
             this.consumptionTask.calculate(consumptionRequest);
+
             this.dive.profileCalculated = true;
             this.calculatingProfile = false;
             this.onWayPointsCalculated.next({});

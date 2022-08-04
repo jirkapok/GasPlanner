@@ -1,12 +1,12 @@
 import {
     Options, Segment, StandardGases, Tank, Tanks,
-    CalculatedProfile, Ceiling, EventType, Event, Events, Gas
+    CalculatedProfile, Ceiling, EventType, Event, Events, Gas, Diver, Salinity, SafetyStop
 } from 'scuba-physics';
 
 export interface ProfileRequestDto {
     tanks: TankDto[];
     plan: SegmentDto[];
-    options: Options;
+    options: OptionsDto;
 }
 
 export interface ProfileResultDto {
@@ -31,7 +31,7 @@ export interface CalculatedProfileDto {
 export interface ConsumptionRequestDto {
     plan: SegmentDto[];
     profile: SegmentDto[];
-    options: Options;
+    options: OptionsDto;
     diver: DiverDto;
     tanks: TankDto[];
 }
@@ -66,6 +66,30 @@ export interface GasDto {
 
 export interface DiverDto {
     rmv: number;
+    maxPpO2: number;
+    maxDecoPpO2: number;
+}
+
+export interface OptionsDto {
+    gfLow: number;
+    gfHigh: number;
+    maxPpO2: number;
+    maxDecoPpO2: number;
+    salinity: Salinity;
+    altitude: number;
+    roundStopsToMinutes: boolean;
+    gasSwitchDuration: number;
+    safetyStop: SafetyStop;
+    lastStopDepth: number;
+    decoStopDistance: number;
+    minimumAutoStopDepth: number;
+    maxEND: number;
+    oxygenNarcotic: boolean;
+    ascentSpeed6m: number;
+    ascentSpeed50percTo6m: number;
+    ascentSpeed50perc: number;
+    descentSpeed: number;
+    problemSolvingDuration: number;
 }
 
 /** Serialization used to store preferences and for communication with background workers */
@@ -165,7 +189,7 @@ export class DtoSerialization {
         const result = new Events();
         dto.forEach(d => {
             const e = new Event(d.timeStamp, d.depth, d.type, d.message);
-            if(d.gas) {
+            if (d.gas) {
                 e.gas = new Gas(d.gas?.fO2, d.gas?.fHe);
             }
 
@@ -184,7 +208,7 @@ export class DtoSerialization {
                 message: e.message,
             };
 
-            if(e.gas) {
+            if (e.gas) {
                 dto.gas = {
                     fO2: e.gas.fO2,
                     fHe: e.gas.fHe,
@@ -193,5 +217,63 @@ export class DtoSerialization {
             result.push(dto);
         });
         return result;
+    }
+
+    // TODO unification of the naming from/to
+    public static fromDiver(diver: Diver): DiverDto {
+        return {
+            rmv: diver.rmv,
+            maxPpO2: diver.maxPpO2,
+            maxDecoPpO2: diver.maxDecoPpO2
+        };
+    }
+
+    public static toDiver(dto: DiverDto): Diver {
+        const diver = new Diver(dto.rmv, dto.maxPpO2);
+        diver.maxDecoPpO2 = dto.maxDecoPpO2;
+        return diver;
+    }
+
+    public static fromOptions(options: Options): OptionsDto {
+        return {
+            gfLow: options.gfLow,
+            gfHigh: options.gfHigh,
+            maxPpO2: options.maxPpO2,
+            maxDecoPpO2: options.maxDecoPpO2,
+            salinity: options.salinity,
+            altitude: options.altitude,
+            roundStopsToMinutes: options.roundStopsToMinutes,
+            gasSwitchDuration: options.gasSwitchDuration,
+            safetyStop: options.safetyStop,
+            lastStopDepth: options.lastStopDepth,
+            decoStopDistance: options.decoStopDistance,
+            minimumAutoStopDepth: options.minimumAutoStopDepth,
+            maxEND: options.maxEND,
+            oxygenNarcotic: options.oxygenNarcotic,
+            ascentSpeed6m: options.ascentSpeed6m,
+            ascentSpeed50percTo6m: options.ascentSpeed50percTo6m,
+            ascentSpeed50perc: options.ascentSpeed50perc,
+            descentSpeed: options.descentSpeed,
+            problemSolvingDuration: options.problemSolvingDuration,
+        };
+    }
+
+    public static toOptions(dto: OptionsDto): Options {
+        const options = new Options(dto.gfLow, dto.gfHigh, dto.maxPpO2, dto.maxDecoPpO2, dto.salinity);
+        options.altitude = dto.altitude;
+        options.roundStopsToMinutes = dto.roundStopsToMinutes;
+        options.gasSwitchDuration = dto.gasSwitchDuration;
+        options.safetyStop = dto.safetyStop;
+        options.lastStopDepth = dto.lastStopDepth;
+        options.decoStopDistance = dto.decoStopDistance;
+        options.minimumAutoStopDepth = dto.minimumAutoStopDepth;
+        options.maxEND = dto.maxEND;
+        options.oxygenNarcotic = dto.oxygenNarcotic;
+        options.ascentSpeed6m = dto.ascentSpeed6m;
+        options.ascentSpeed50percTo6m = dto.ascentSpeed50percTo6m;
+        options.ascentSpeed50perc = dto.ascentSpeed50perc;
+        options.descentSpeed = dto.descentSpeed;
+        options.problemSolvingDuration = dto.problemSolvingDuration;
+        return options;
     }
 }

@@ -16,10 +16,9 @@ describe('Url Serialization', () => {
         comparePlan = PreferencesFactory.toPreferences(planner);
     });
 
-    xit('Serialize and deserialize plan', () => {
+    it('Serialize and deserialize plan', () => {
         const dto = PlanUrlSerialization.toUrl(comparePlan);
         const resolved = PlanUrlSerialization.fromUrl(dto);
-        // TODO options and diver serialization
         expect(resolved).toEqual(comparePlan);
     });
 

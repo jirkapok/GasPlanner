@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Diver, Options } from 'scuba-physics';
 import { PlannerService } from './planner.service';
-import { DtoSerialization, SegmentDto, TankDto } from './serialization.model';
+import { DiverDto, DtoSerialization, OptionsDto, SegmentDto, TankDto } from './serialization.model';
 
 export interface AppPreferences  {
     isComplex: boolean;
-    options: Options;
-    diver: Diver;
+    options: OptionsDto;
+    diver: DiverDto;
     tanks: TankDto[];
     plan: SegmentDto[];
 }
@@ -15,8 +14,8 @@ export class PreferencesFactory {
     public static toPreferences(planner: PlannerService): AppPreferences {
         return {
             isComplex: planner.isComplex,
-            options: planner.options,
-            diver: planner.diver,
+            options: DtoSerialization.fromOptions(planner.options),
+            diver: DtoSerialization.fromDiver(planner.diver),
             tanks: DtoSerialization.fromTanks(planner.tanks),
             plan: DtoSerialization.fromSegments(planner.plan.segments),
         };
@@ -42,7 +41,9 @@ export class PreferencesService {
         const loaded = JSON.parse(toParse) as AppPreferences;
         const tanks = DtoSerialization.toTanks(loaded.tanks);
         const segments = DtoSerialization.toSegments(loaded.plan, tanks);
-        this.planner.loadFrom(loaded.isComplex, loaded.options, loaded.diver, tanks, segments);
+        const diver = DtoSerialization.toDiver(loaded.diver);
+        const options = DtoSerialization.toOptions(loaded.options);
+        this.planner.loadFrom(loaded.isComplex, options, diver, tanks, segments);
     }
 
     public saveDefaults(): void {

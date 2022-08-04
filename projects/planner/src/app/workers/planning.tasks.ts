@@ -12,9 +12,10 @@ export class PlanningTasks {
         const plan = Segments.fromCollection(segments);
         const gases = Gases.fromTanks(tanks);
         const algorithm = new BuhlmannAlgorithm();
-        const profile = algorithm.calculateDecompression(data.options, gases, plan);
+        const options = DtoSerialization.toOptions(data.options);
+        const profile = algorithm.calculateDecompression(options, gases, plan);
         const profileDto = DtoSerialization.fromProfile(profile);
-        const events = ProfileEvents.fromProfile(plan.startAscentIndex, profile.segments, profile.ceilings, data.options);
+        const events = ProfileEvents.fromProfile(plan.startAscentIndex, profile.segments, profile.ceilings, options);
         const eventsDto = DtoSerialization.toEvents(events.items);
 
         return {
@@ -32,7 +33,8 @@ export class PlanningTasks {
         const originProfile = DtoSerialization.toSegments(task.plan, tanks);
         const segments = Segments.fromCollection(originProfile);
         const algorithm = new BuhlmannAlgorithm();
-        const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, task.options);
+        const options = DtoSerialization.toOptions(task.options);
+        const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, options);
         return noDecoLimit;
     }
 
@@ -48,12 +50,13 @@ export class PlanningTasks {
         // diver ppO2 is irrelevant for consumption calculation
         const diver = new Diver(task.diver.rmv, task.options.maxPpO2);
 
+        const options = DtoSerialization.toOptions(task.options);
         // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
-        const maxTime = consumption.calculateMaxBottomTime(plan, tanks, diver, task.options);
-        const emergencyAscent = consumption.emergencyAscent(originProfile, task.options, tanks);
+        const maxTime = consumption.calculateMaxBottomTime(plan, tanks, diver, options);
+        const emergencyAscent = consumption.emergencyAscent(originProfile, options, tanks);
         let timeToSurface = Segments.duration(emergencyAscent);
         timeToSurface = Time.toMinutes(timeToSurface);
-        consumption.consumeFromTanks2(originProfile, emergencyAscent, task.options, tanks, diver);
+        consumption.consumeFromTanks2(originProfile, emergencyAscent, options, tanks, diver);
         return {
             maxTime,
             timeToSurface,

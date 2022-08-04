@@ -1,35 +1,62 @@
 import { PlannerService } from './planner.service';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
-import { AppPreferences, PreferencesFactory } from './preferences.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 
 describe('Url Serialization', () => {
-    let defaultPlan: AppPreferences;
-    let comparePlan: AppPreferences;
+    const irrelevantFactory = new WorkersFactoryCommon();
+    let defaultPlan: PlannerService;
+    let planner: PlannerService;
 
     beforeEach(() => {
-        const irrelevantFactory = new WorkersFactoryCommon();
-        const planner = new PlannerService(irrelevantFactory);
-        defaultPlan = PreferencesFactory.toPreferences(planner);
+        defaultPlan = new PlannerService(irrelevantFactory);
+        planner = new PlannerService(irrelevantFactory);
         planner.addSegment();
         planner.addTank();
-        comparePlan = PreferencesFactory.toPreferences(planner);
+    });
+
+    const expectParsedEquals = (expected: PlannerService, current: PlannerService): void => {
+        const toExpect = {
+            plan: expected.plan.segments,
+            tansk: expected.tanks,
+            diver: expected.diver,
+            options: expected.options,
+            isComplex: expected.isComplex
+        };
+
+        const toCompare = {
+            plan: current.plan.segments,
+            tansk: current.tanks,
+            diver: current.diver,
+            options: current.options,
+            isComplex: current.isComplex
+        };
+
+        expect(toCompare).toEqual(toExpect);
+    };
+
+    it('Generates valid url characters', () => {
+        const urlParams = PlanUrlSerialization.toUrl(planner);
+        const isValid = /[-a-zA-Z0-9@:%_+.~#&//=]*/g.test(urlParams);
+        expect(isValid).toBeTruthy();
     });
 
     it('Serialize and deserialize plan', () => {
-        const dto = PlanUrlSerialization.toUrl(comparePlan);
-        const resolved = PlanUrlSerialization.fromUrl(dto);
-        expect(resolved).toEqual(comparePlan);
+        const urlParams = PlanUrlSerialization.toUrl(planner);
+        const current = new PlannerService(irrelevantFactory);
+        PlanUrlSerialization.fromUrl(urlParams, current);
+        expectParsedEquals(planner, current);
     });
 
     it('Deserialize empty string', () => {
-        const deserialized = PlanUrlSerialization.fromUrl('');
-        expect(deserialized).toEqual(defaultPlan);
+        const current = new PlannerService(irrelevantFactory);
+        PlanUrlSerialization.fromUrl('', current);
+        expectParsedEquals(current, defaultPlan);
     });
 
     it('Deserialize null', () => {
         const planUrl: any = null;
-        const deserialized = PlanUrlSerialization.fromUrl(<string>planUrl);
-        expect(deserialized).toEqual(defaultPlan);
+        const current = new PlannerService(irrelevantFactory);
+        PlanUrlSerialization.fromUrl(<string>planUrl, current);
+        expectParsedEquals(current, defaultPlan);
     });
 });

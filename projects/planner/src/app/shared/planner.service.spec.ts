@@ -264,7 +264,7 @@ describe('PlannerService', () => {
             const profileDto = DtoSerialization.fromProfile(profile);
             return  {
                 profile: profileDto,
-                events: DtoSerialization.toEvents(events.items)
+                events: DtoSerialization.fromEvents(events.items)
             };
         };
 

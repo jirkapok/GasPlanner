@@ -181,11 +181,11 @@ export class DtoSerialization {
         return {
             segments: segments,
             ceilings: profile.ceilings,
-            errors: DtoSerialization.toEvents(profile.errors)
+            errors: DtoSerialization.fromEvents(profile.errors)
         };
     }
 
-    public static fromEvents(dto: EventDto[]): Events {
+    public static toEvents(dto: EventDto[]): Events {
         const result = new Events();
         dto.forEach(d => {
             const e = new Event(d.timeStamp, d.depth, d.type, d.message);
@@ -198,7 +198,7 @@ export class DtoSerialization {
         return result;
     }
 
-    public static toEvents(events: Event[]): EventDto[] {
+    public static fromEvents(events: Event[]): EventDto[] {
         const result: EventDto[] = [];
         events.forEach(e => {
             const dto: EventDto = {
@@ -219,7 +219,6 @@ export class DtoSerialization {
         return result;
     }
 
-    // TODO unification of the naming from/to
     public static fromDiver(diver: Diver): DiverDto {
         return {
             rmv: diver.rmv,

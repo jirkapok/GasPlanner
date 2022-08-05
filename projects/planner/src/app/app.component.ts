@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { PlannerService } from './shared/planner.service';
 
 @Component({
     selector: 'app-root',
@@ -7,7 +6,6 @@ import { PlannerService } from './shared/planner.service';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-    constructor(planner: PlannerService) {
-        planner.calculate();
+    constructor() {
     }
 }

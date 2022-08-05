@@ -24,6 +24,13 @@ class ParseContext {
         return (toParse === 'true');
     }
 
+    public processValues(valueSeparator: string, action: (c: ParseContext) => void): void {
+        for(let index = 0; index < this.paramValues.length; index++) {
+            const partContext = this.toPartContext(index, valueSeparator);
+            action(partContext);
+        }
+    }
+
     public toPartContext(index: number, separator: string): ParseContext {
         const part = this.paramValues[index];
         return new ParseContext(part, separator);
@@ -139,8 +146,7 @@ export class PlanUrlSerialization {
         const result: TankDto[] = [];
         const tanksContext = new ParseContext(parseParam, ',');
 
-        tanksContext.paramValues.forEach((tv, index) => {
-            const context = tanksContext.toPartContext(index, '-');
+        tanksContext.processValues('-', (context: ParseContext) => {
             const tank: TankDto = {
                 id: context.parseNumber(0),
                 size: context.parseNumber(1),
@@ -171,16 +177,15 @@ export class PlanUrlSerialization {
 
     private static fromDepthsParam(tanks: TankDto[], parseParam: string):  SegmentDto[] {
         const result: SegmentDto[] = [];
-        const context = new ParseContext(parseParam, ',');
+        const segContext = new ParseContext(parseParam, ',');
 
-        context.paramValues.forEach((sv: string, index: number) => {
-            const sContext = context.toPartContext(index, '-');
-            const tankId = sContext.parseNumber(3);
+        segContext.processValues('-', (context: ParseContext) => {
+            const tankId = context.parseNumber(3);
 
             const segment: SegmentDto = {
-                startDepth: sContext.parseNumber(0),
-                endDepth: sContext.parseNumber(1),
-                duration: sContext.parseNumber(2),
+                startDepth: context.parseNumber(0),
+                endDepth: context.parseNumber(1),
+                duration: context.parseNumber(2),
                 tankId: 1,
                 gas: {
                     fO2: 0,

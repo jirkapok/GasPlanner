@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomFormsModule } from './validators/custom-forms.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { AppComponent } from './app.component';
 import { TanksComponent } from './tanks/tanks.component';
@@ -65,6 +66,7 @@ import { WorkersFactoryCommon } from './shared/serial.workers.factory';
         AppRoutingModule,
         CustomFormsModule,
         FontAwesomeModule,
+        ClipboardModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,
             // Register the ServiceWorker as soon as the application is stable

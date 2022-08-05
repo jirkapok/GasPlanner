@@ -1,7 +1,27 @@
 <div class="card">
     <div class="card-header">
-        <fa-icon [icon]="icon" class="me-3"></fa-icon>
-        <span>Dive info</span>
+        <div class="float-start mt-1">
+            <fa-icon [icon]="icon" class="me-3"></fa-icon>
+            <span >Dive info</span>
+        </div>
+        <div class="float-end">
+            <button class="btn btn-sm btn-secondary" (click)="sharePlan()">
+                <fa-icon [icon]="iconShare" class="me-2"></fa-icon>Share
+            </button>
+        </div>
+    </div>
+
+    <div class="position-fixed top-0 end-0 px-3 py-2 m-16 mt-5 success">
+        <div #toastElement role="alert" aria-live="assertive" aria-atomic="true" class="toast fade text-light mt-2 bg-success success" data-autohide="true">
+            <div class="toast-header">
+                <fa-icon [icon]="iconShare" class="me-2"></fa-icon>
+                <strong class="me-auto">Share plan</strong>
+                <button type="button" class="btn-close" aria-label="Close" (click)="hideToast()"></button>
+            </div>
+            <div class="toast-body">
+                URL address of this dive plan was copied to the clipboard.
+            </div>
+        </div>
     </div>
 
     <div class="card-body card-minheight">

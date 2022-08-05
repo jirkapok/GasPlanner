@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
+import { Toast } from 'bootstrap';
+import {
+    faExclamationCircle, faExclamationTriangle,
+    faSlidersH, faInfoCircle, faShareFromSquare
+} from '@fortawesome/free-solid-svg-icons';
+
 import { PlannerService } from '../shared/planner.service';
 import { Dive } from '../shared/models';
-import { DateFormats } from '../shared/formaters';
-import { faExclamationCircle, faExclamationTriangle, faSlidersH, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { EventType, Event, Time, Tank } from 'scuba-physics';
+import { EventType, Event, Tank } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
@@ -11,15 +16,27 @@ import { UnitConversion } from '../shared/UnitConversion';
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.css']
 })
-export class DiveInfoComponent {
+export class DiveInfoComponent implements OnInit {
+    @ViewChild('toastElement', { static: true })
+    public toastEl!: ElementRef;
+
     public dive: Dive;
     public exclamation = faExclamationCircle;
     public warning = faExclamationTriangle;
     public info = faInfoCircle;
     public icon = faSlidersH;
+    public iconShare = faShareFromSquare;
 
-    constructor(public planner: PlannerService, public units: UnitConversion) {
+    private toast!: Toast;
+
+    constructor(private clipboard: ClipboardService, public planner: PlannerService, public units: UnitConversion) {
         this.dive = this.planner.dive;
+
+        this.clipboard.copyResponse$.subscribe((res: IClipboardResponse) => {
+            if (res.isSuccess) {
+                this.toast.show();
+            }
+        });
     }
 
     public get tanks(): Tank[] {
@@ -50,6 +67,10 @@ export class DiveInfoComponent {
         return !this.planner.isComplex;
     }
 
+    public ngOnInit(): void {
+       this.toast = new Toast( this.toastEl.nativeElement, { delay: 5000, });
+    }
+
     public isLowPpO2(event: Event): boolean {
         return event.type === EventType.lowPpO2;
     }
@@ -76,5 +97,13 @@ export class DiveInfoComponent {
 
     public isMndExceeded(event: Event): boolean {
         return event.type === EventType.maxEndExceeded;
+    }
+
+    public sharePlan(): void {
+        this.clipboard.copy(window.location.href);
+    }
+
+    public hideToast(): void {
+        this.toast.hide();
     }
 }

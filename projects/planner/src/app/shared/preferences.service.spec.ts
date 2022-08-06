@@ -47,6 +47,7 @@ describe('PreferencesService', () => {
                 // not going to test all options, since it is a flat structure
                 options.gfLow = 0.3;
                 options.descentSpeed = 15;
+                planner.isComplex = true; // otherwise reset of GF.
                 planner.calculate();
                 service.saveDefaults();
 
@@ -70,6 +71,7 @@ describe('PreferencesService', () => {
                 planner.addTank();
                 tanks[0].startPressure = 150;
                 tanks[1].o2 = 50;
+                planner.isComplex = true; // otherwise the tank will be removed.
                 planner.calculate();
                 service.saveDefaults();
 
@@ -99,6 +101,7 @@ describe('PreferencesService', () => {
                 const lastSegment = plan.segments[2];
                 const secondTank = planner.tanks[1];
                 lastSegment.tank =secondTank;
+                planner.isComplex = true;
                 planner.calculate();
                 service.saveDefaults();
 
@@ -109,6 +112,21 @@ describe('PreferencesService', () => {
                 expect(planner.tanks.length).toEqual(3);
                 expect(planner.plan.length).toEqual(3);
                 expect(planner.plan.segments[2].tank?.id).toEqual(2);
+            }));
+
+        it('Simple profile is loaded after save and trims tank', inject([PreferencesService, PlannerService],
+            (service: PreferencesService, planner: PlannerService) => {
+                // invalid operations for simple profile simulate wrong data
+                planner.addTank();
+                planner.addTank();
+                planner.addSegment();
+                planner.calculate();
+                service.saveDefaults();
+
+                service.loadDefaults();
+
+                expect(planner.tanks.length).toEqual(1);
+                expect(planner.plan.length).toEqual(2);
             }));
     });
 });

@@ -198,9 +198,6 @@ export class PlannerService {
     public loadFrom(isComplex: boolean, options: Options, diver: Diver, tanks: Tank[], segments: Segment[]): void {
         // TODO Apply from Units after the plan was applied, we don't need to check them
         // minimumAutoStopDepth lastStopDepth decoStopDistance
-
-        // TODO assign the isComplex also by switching method, after tanks and segments are imported
-        this.isComplex = isComplex;
         this.assignOptions(options);
         this.diver.loadFrom(diver);
 
@@ -210,6 +207,11 @@ export class PlannerService {
 
         if (segments.length > 1) {
             this.plan.loadFrom(segments);
+        }
+
+        this.isComplex = isComplex;
+        if(!isComplex) {
+            this.resetToSimple();
         }
 
         this.calculate();

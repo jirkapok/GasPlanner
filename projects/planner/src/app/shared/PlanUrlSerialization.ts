@@ -1,12 +1,23 @@
 import { Diver, Options, SafetyStop, Salinity, Segment, Tank } from 'scuba-physics';
 import { PlannerService } from './planner.service';
+import { PlanValidation } from './PlanValidation';
 import { PreferencesFactory } from './preferences.factory';
 import { AppPreferences, DiverDto, OptionsDto, SegmentDto, TankDto } from './serialization.model';
 
 class ParseContext {
+    private static readonly trueValue = '1';
     public readonly paramValues: string[];
+
     constructor(source: string, separator: string) {
         this.paramValues = source.split(separator);
+    }
+
+    public static serializeBoolean(value: boolean): string {
+        return value ? ParseContext.trueValue : '0';
+    }
+
+    public static deserializeBoolean(value: string): boolean {
+        return (value === ParseContext.trueValue);
     }
 
     public parseNumber(index: number): number {
@@ -19,9 +30,9 @@ class ParseContext {
         return <TType>(<unknown>Number(toParse));
     }
 
-    public parseBoolean( index: number): boolean {
+    public parseBoolean(index: number): boolean {
         const toParse = this.paramValues[index];
-        return (toParse === 'true');
+        return ParseContext.deserializeBoolean(toParse);
     }
 
     public processValues(valueSeparator: string, action: (c: ParseContext) => void): void {
@@ -51,7 +62,8 @@ export class PlanUrlSerialization {
         const depthsParam = PlanUrlSerialization.toDepthsParam(source.plan.segments);
         const diParam =  PlanUrlSerialization.toDiverParam(source.diver);
         const optionsParam = PlanUrlSerialization.toOptionsParam(source.options);
-        const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&c=${source.isComplex}`;
+        const isComplex = ParseContext.serializeBoolean(source.isComplex);
+        const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&c=${isComplex}`;
         return result;
     }
 
@@ -62,11 +74,15 @@ export class PlanUrlSerialization {
             }
 
             const parsed = PlanUrlSerialization.parseDto(url);
-            // TODO validation of loaded data
             // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
-            PreferencesFactory.applyLoaded(target, parsed);
+            const isValid = new PlanValidation().validate(parsed);
+            if(isValid) {
+                PreferencesFactory.applyLoaded(target, parsed);
+            } else {
+                console.log('Unable to load planner from url parameters, due to invalid data.');
+            }
         } catch {
-            console.log('Failed loading of planner from url parameters');
+            console.log('Failed loading of planner from url parameters.');
         }
     }
 
@@ -80,7 +96,7 @@ export class PlanUrlSerialization {
 
         const tanks = PlanUrlSerialization.fromTanksParam(tanksParam);
         const parsed: AppPreferences = {
-            isComplex:  (complexParam === 'true'),
+            isComplex: ParseContext.deserializeBoolean(complexParam),
             options: PlanUrlSerialization.fromOptionsParam(optionsParam),
             diver: PlanUrlSerialization.fromDiverParam(diverParam),
             tanks: tanks,
@@ -117,12 +133,14 @@ export class PlanUrlSerialization {
     }
 
     private static toOptionsParam(o: Options): string {
+        const oxygenNarcotic = ParseContext.serializeBoolean(o.oxygenNarcotic);
+        const roundStopsToMinutes = ParseContext.serializeBoolean(o.roundStopsToMinutes);
         const optionsParam = `${o.altitude},` +
         `${o.ascentSpeed50perc},${o.ascentSpeed50percTo6m},${o.ascentSpeed6m},` +
         `${o.decoStopDistance},${o.descentSpeed},${o.gasSwitchDuration},` +
         `${o.gfHigh},${o.gfLow},${o.lastStopDepth},${o.maxDecoPpO2},${o.maxEND},` +
-        `${o.maxPpO2},${o.minimumAutoStopDepth},${o.oxygenNarcotic},${o.problemSolvingDuration},` +
-        `${o.roundStopsToMinutes},${o.safetyStop},${o.salinity}`;
+        `${o.maxPpO2},${o.minimumAutoStopDepth},${oxygenNarcotic},${o.problemSolvingDuration},` +
+        `${roundStopsToMinutes},${o.safetyStop},${o.salinity}`;
         return optionsParam;
     }
 
@@ -143,6 +161,7 @@ export class PlanUrlSerialization {
     }
 
     private static fromTanksParam(parseParam: string): TankDto[] {
+        //  TODO sort tanks by ID
         const result: TankDto[] = [];
         const tanksContext = new ParseContext(parseParam, ',');
 

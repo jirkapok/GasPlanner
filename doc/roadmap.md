@@ -11,7 +11,6 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Add all settings as url parameters so user can share the profile using an url (<https://angular.io/guide/router#link-parameters-array>)
 * Add imperial units option
   * Fix all value bindings (depths, options, profile, profile chart, dive info)
   * Provide rounded default values (Settings, Sac, Nitrox, tanks, depths, options)
@@ -25,9 +24,7 @@ Following list of features and improvements ordered by priority is under develop
     * <https://youtu.be/OI4ZzqJLQjw>
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
 * Add no deco table
-* Redundancies calculator - when filling one tank from second. What is the target pressure in both.
 * Add gas depth range calculator
-* Add calculation trainings
 * Add CNS and OTU calculations
   * <https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf>
   * <https://gue.com/blog/pulmonary-oxygen-toxicity-expanding-our-understanding-with-two-new-models/>
@@ -37,6 +34,8 @@ Following list of features and improvements ordered by priority is under develop
   * <https://www.thoughtco.com/how-to-calculate-density-of-a-gas-607847>
   * <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/>
   * Add corresponding event warning
+* Redundancies calculator - when filling one tank from second. What is the target pressure in both.
+* Add calculation trainings
 * Events:
   * Add time to all events warning/error messages where it makes sense
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop

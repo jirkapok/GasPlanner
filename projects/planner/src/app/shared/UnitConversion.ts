@@ -71,6 +71,10 @@ export class UnitConversion {
         this.ranges$.next(this.ranges);
     }
 
+    public static createMetricRanges(): RangeConstants {
+        return new MetricRanges(new MetricUnits());
+    }
+
     public toLiter(volume: number): number {
         return this.current.toLiter(volume);
     }

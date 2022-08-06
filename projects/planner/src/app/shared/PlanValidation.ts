@@ -8,7 +8,6 @@ export class PlanValidation {
     private ranges = UnitConversion.createMetricRanges();
 
     public validate(plan: AppPreferences): boolean {
-        // TODO tank ids are ordered
         const maxTankId = plan.tanks.length + 1;
         const contentRanges = this.selectContentRanges(plan.isComplex);
         const tanksValid = this.allTanksValid(plan.tanks, maxTankId, contentRanges);
@@ -55,7 +54,6 @@ export class PlanValidation {
     }
 
     private allSegmentsValid(segments: SegmentDto[], maxTankId: number, contentRanges: [[number, number], [number, number]]): boolean {
-        // TODO each segment follows the previous one by start depth?
         return segments.length > 0 &&
              _(segments).every(s => this.isValidSegment(s, maxTankId, contentRanges));
     }

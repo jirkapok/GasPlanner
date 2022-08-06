@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Diver, Options, SafetyStop, Salinity, Segment, Tank } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';
@@ -161,8 +162,7 @@ export class PlanUrlSerialization {
     }
 
     private static fromTanksParam(parseParam: string): TankDto[] {
-        //  TODO sort tanks by ID
-        const result: TankDto[] = [];
+        let result: TankDto[] = [];
         const tanksContext = new ParseContext(parseParam, ',');
 
         tanksContext.processValues('-', (context: ParseContext) => {
@@ -180,6 +180,7 @@ export class PlanUrlSerialization {
             result.push(tank);
         });
 
+        result = _.sortBy(result, [(t) => t.id]);
         return result;
     }
 
@@ -197,31 +198,40 @@ export class PlanUrlSerialization {
     private static fromDepthsParam(tanks: TankDto[], parseParam: string):  SegmentDto[] {
         const result: SegmentDto[] = [];
         const segContext = new ParseContext(parseParam, ',');
+        let last: SegmentDto;
 
         segContext.processValues('-', (context: ParseContext) => {
-            const tankId = context.parseNumber(3);
-
-            const segment: SegmentDto = {
-                startDepth: context.parseNumber(0),
-                endDepth: context.parseNumber(1),
-                duration: context.parseNumber(2),
-                tankId: 1,
-                gas: {
-                    fO2: 0,
-                    fHe: 0
-                }
-            };
-
-            if(0 < tankId && tankId <= tanks.length) {
-                const tank = tanks[tankId - 1];
-                segment.tankId = tankId;
-                segment.gas.fO2 = tank.gas.fO2;
-                segment.gas.fHe = tank.gas.fHe;
-            }
+            const startDepth = last ? last.endDepth : 0;
+            const segment = this.toSegment(context, tanks, startDepth);
+            last = segment;
             result.push(segment);
         });
 
         return result;
+    }
+
+    private static toSegment(context: ParseContext, tanks: TankDto[], startDepth: number): SegmentDto {
+        const segment: SegmentDto = {
+            startDepth: startDepth,
+            endDepth: context.parseNumber(1),
+            duration: context.parseNumber(2),
+            tankId: 1,
+            gas: {
+                fO2: 0,
+                fHe: 0
+            }
+        };
+
+        const tankId = context.parseNumber(3);
+
+        if(0 < tankId && tankId <= tanks.length) {
+            const tank = tanks[tankId - 1];
+            segment.tankId = tankId;
+            segment.gas.fO2 = tank.gas.fO2;
+            segment.gas.fHe = tank.gas.fHe;
+        }
+
+        return segment;
     }
 
     private static toDepthsParam(segments: Segment[]): string {

@@ -27,7 +27,7 @@ export class PlanValidation {
     }
 
     private allTanksValid(tanks: TankDto[], maxTankId: number, contentRanges: [[number, number], [number, number]]): boolean {
-        const hasTanks = tanks.length > 1;
+        const hasTanks = tanks.length > 0;
         const allValid = _(tanks).every(t => this.isValidTank(t, maxTankId, contentRanges));
         const uniqueIds = _(tanks).map(t=> t.id).uniq();
         const countValid = uniqueIds.size() === tanks.length;

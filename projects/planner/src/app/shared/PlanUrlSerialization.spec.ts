@@ -41,11 +41,21 @@ describe('Url Serialization', () => {
         expect(isValid).toBeTruthy();
     });
 
-    it('Serialize and deserialize plan', () => {
+    it('Serialize and deserialize complex plan', () => {
         const urlParams = PlanUrlSerialization.toUrl(planner);
         const current = new PlannerService(irrelevantFactory);
         PlanUrlSerialization.fromUrl(urlParams, current);
         expectParsedEquals(planner, current);
+    });
+
+    it('Serialize and deserialize simple plan', () => {
+        const source = new PlannerService(irrelevantFactory);
+        source.tanks[0].size = 18;
+        source.calculate();
+        const urlParams = PlanUrlSerialization.toUrl(source);
+        const current = new PlannerService(irrelevantFactory);
+        PlanUrlSerialization.fromUrl(urlParams, current);
+        expectParsedEquals(source, current);
     });
 
     describe('Skips loading', () => {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { PreferencesService } from '../shared/preferences.service';
 import { PlannerService } from '../shared/planner.service';
@@ -16,8 +16,9 @@ export class DashboardComponent implements OnInit {
     public exclamation = faExclamationTriangle;
     private dive: Dive;
 
-    constructor(private activatedRoute: ActivatedRoute,
-        private router: Router, private preferences: PreferencesService, private planner: PlannerService) {
+    constructor(private router: Router,
+        private preferences: PreferencesService,
+        private planner: PlannerService) {
         this.dive = planner.dive;
     }
 
@@ -29,16 +30,14 @@ export class DashboardComponent implements OnInit {
         this.showDisclaimer = this.preferences.disclaimerEnabled();
         const query = window.location.search;
         if (query !=='') {
-            // TODO doesn't apply changes when isComplex doesn't reflect rest of the values in url
             PlanUrlSerialization.fromUrl(query, this.planner);
         }
-
-        this.planner.calculate();
-
         // first calculate, than subscribe for later updates by user
         this.planner.infoCalculated.subscribe(() => {
             this.updateQueryParams();
         });
+
+        this.planner.calculate();
     }
 
     public stopDisclaimer(): void {

@@ -39,7 +39,6 @@ export class TankBound {
     styleUrls: ['./tanks.component.css']
 })
 export class TanksComponent {
-    public firstTank: TankBound;
     public allNames: string[];
     public nitroxNames: string[];
     public icon = faBatteryHalf;
@@ -48,10 +47,13 @@ export class TanksComponent {
     private diver: Diver;
 
     constructor(public planner: PlannerService, public units: UnitConversion) {
-        this.firstTank = new TankBound(this.planner.firstTank, this.units);
         this.diver = this.planner.diver;
         this.allNames = StandardGases.allNames();
         this.nitroxNames = StandardGases.nitroxNames();
+    }
+
+    public get firstTank(): TankBound {
+        return new TankBound(this.planner.firstTank, this.units);
     }
 
     public get ranges(): RangeConstants {

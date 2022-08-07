@@ -42,6 +42,7 @@ import { AltitudeComponent } from './altitude/altitude.component';
 import { GradientsComponent } from './gradients/gradients.component';
 import { DepthComponent } from './depth/depth.component';
 import { NitroxO2Component } from './nitrox-o2/nitrox-o2.component';
+import { NdlService } from './shared/ndl.service';
 
 @NgModule({
     declarations: [
@@ -93,6 +94,7 @@ import { NitroxO2Component } from './nitrox-o2/nitrox-o2.component';
         PreferencesService,
         UnitConversion,
         SelectedWaypoint,
+        NdlService,
         DatePipe,
     ],
     bootstrap: [AppComponent]

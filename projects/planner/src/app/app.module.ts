@@ -40,6 +40,7 @@ import { NdlLimitsComponent } from './ndl-limits/ndl-limits.component';
 import { SalinityComponent } from './salinity/salinity.component';
 import { AltitudeComponent } from './altitude/altitude.component';
 import { GradientsComponent } from './gradients/gradients.component';
+import { DepthComponent } from './depth/depth.component';
 
 @NgModule({
     declarations: [
@@ -65,7 +66,8 @@ import { GradientsComponent } from './gradients/gradients.component';
         NdlLimitsComponent,
         SalinityComponent,
         AltitudeComponent,
-        GradientsComponent
+        GradientsComponent,
+        DepthComponent
     ],
     imports: [
         BrowserModule,

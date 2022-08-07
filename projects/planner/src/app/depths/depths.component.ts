@@ -62,11 +62,6 @@ export class DepthsComponent implements OnDestroy {
         return result;
     }
 
-    public get bestMix(): string {
-        const o2 = this.planner.bestNitroxMix() / 100;
-        return StandardGases.nameFor(o2);
-    }
-
     public get showMaxDuration(): boolean {
         return this.dive.calculated && this.dive.maxTime > 0;
     }

@@ -6,20 +6,20 @@
                 <span>Options</span>
             </div>
             <div class="card-body">
-                <div>
+                <div class="mb-3">
                     Gas
                 </div>
-                <div>
-                    Target depth
+                <div class="mb-3">
+                    <app-depth></app-depth>
                 </div>
-                <div>
-                    <app-salinity></app-salinity>
+                <div class="mb-3">
+                    <app-salinity [salinity]="options.salinity"></app-salinity>
                 </div>
-                <div>
-                    <app-altitude></app-altitude>
+                <div class="mb-3">
+                    <app-altitude [altitude]="options.altitude"></app-altitude>
                 </div>
-                <div>
-                    Gradient factors
+                <div class="mb-3">
+                    <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh" [simple]="false"></app-gradients>
                 </div>
             </div>
         </div>
@@ -31,7 +31,6 @@
                 <span>No decompression limits</span>
             </div>
             <div class="card-body card-minheight">
-
                 <table class="table">
                     <tbody>
                         <tr>

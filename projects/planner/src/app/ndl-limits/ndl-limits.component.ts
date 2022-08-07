@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
-import { Time } from 'scuba-physics';
+import { Options, Time } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 
 
@@ -18,22 +18,27 @@ export class NdlLimit {
 export class NdlLimitsComponent {
     public icon = faTable;
     public iconConfig = faCog;
+    public options = new Options();
     public totalDuration = Time.oneDay;
     public isComplex = false;
     public calculating = false;
 
     public limits: NdlLimit[] = [
-        {
-            depth: 12,
-            limit: 200
-        },
-        {
-            depth: 12,
-            limit: 360
-        }
+        { depth: 12, limit: 200 },
+        { depth: 15, limit: 200 },
+        { depth: 18, limit: 200 },
+        { depth: 21, limit: 200 },
+        { depth: 24, limit: 200 },
+        { depth: 27, limit: 200 },
+        { depth: 30, limit: 200 },
+        { depth: 33, limit: 200 },
+        { depth: 36, limit: 200 },
+        { depth: 39, limit: 200 },
+        { depth: 42, limit: 200 },
     ];
 
-    constructor(private router: Router, public units: UnitConversion) { }
+    constructor(private router: Router, public units: UnitConversion) {
+    }
 
     public async goBack(): Promise<boolean> {
         return await this.router.navigateByUrl('/');

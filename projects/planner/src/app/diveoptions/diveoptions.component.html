@@ -16,40 +16,17 @@
         <div *ngIf="!isComplex">
             <div class="mt-3 row">
                 <div class="mb-3 col-auto">
-                    <label for="conservatism" class="form-label">Conservatism (Gradient factors):</label>
-                    <div class="input-group gradients-max-width">
-                        <input id="conservatism" [(ngModel)]="conservatism" class="form-control" type="text" readonly />
-                        <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                            <button type="button" class="btn btn-default border" id="conservatismMenu"
-                                ngbDropdownToggle></button>
-                            <div ngbDropdownMenu aria-labelledby="conservatismMenu" aria-expanded="false">
-                                <button type="button" class="dropdown-item"
-                                    (click)="lowConservatism()">{{lowName}}</button>
-                                <button type="button" class="dropdown-item"
-                                    (click)="mediumConservatism()">{{mediumName}}</button>
-                                <button type="button" class="dropdown-item"
-                                    (click)="highConservatism()">{{highName}}</button>
-                            </div>
-                        </div>
-                    </div>
+                    <app-gradients></app-gradients>
                 </div>
                 <div class="mb-3 col-auto">
                     <app-salinity [salinity]="options.salinity"></app-salinity>
                 </div>
 
                 <div class="mb-3 col-auto">
-                    <label for="altitude" class="form-label">Altitude [{{units.altitude}}]:</label>
-                    <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude"
-                        class="form-control col-auto" type="number"
-                        required [rangeVal]="ranges.altitude" [min]="ranges.altitude[0]" [max]="ranges.altitude[1]" step="1"
-                        [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)" />
-                    <div class="text-danger form-text" *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">
-                        Needs to be number {{ranges.altitudeLabel}}
-                    </div>
+                    <app-altitude [plannedAltitude]="options.altitude"></app-altitude>
                 </div>
             </div>
         </div>
-
 
         <!-- Complex UI only -->
         <div *ngIf="isComplex">
@@ -90,40 +67,7 @@
                 </div>
                 <div class="tab-pane fade" id="conservatism" role="tabpanel" aria-labelledby="conservatism-tab">
                     <div class="col-sm mt-3">
-                        <div class="mb-3">
-                            <label for="gfLow" class="form-label">Gradient low [%]:</label>
-                            <div class="input-group gradients-max-width">
-                                <input id="gfLow" name="gfLow" #gfLow="ngModel" [(ngModel)]="plannedGfLow"
-                                    class="form-control col-auto" type="number"
-                                    required [rangeVal]="[10, 100]" min="10" max="100" step="1"
-                                    [class.is-invalid]="gfLow.invalid && (gfLow.dirty || gfLow.touched)" />
-                                <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                                    <button type="button" class="btn btn-default border" id="conservatismMenu2"
-                                        ngbDropdownToggle></button>
-                                    <div ngbDropdownMenu aria-labelledby="conservatismMenu2" aria-expanded="false">
-                                        <button type="button" class="dropdown-item"
-                                            (click)="lowConservatism()">{{lowName}}</button>
-                                        <button type="button" class="dropdown-item"
-                                            (click)="mediumConservatism()">{{mediumName}}</button>
-                                        <button type="button" class="dropdown-item"
-                                            (click)="highConservatism()">{{highName}}</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-danger form-text" *ngIf="gfLow.invalid && (gfLow.dirty || gfLow.touched)">
-                                Needs to be number 10 - 100 lower than gradient high</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="gfHigh" class="form-label">Gradient high [%]:</label>
-                            <input id="gfHigh" name="gfHigh" #gfHigh="ngModel" [(ngModel)]="plannedGfHigh"
-                                class="form-control col-auto" type="number" required
-                                [rangeVal]="[10, 100]" min="10" max="100" step="1"
-                                [class.is-invalid]="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)" />
-                            <div class="text-danger form-text"
-                                *ngIf="gfHigh.invalid && (gfHigh.dirty || gfHigh.touched)">
-                                Needs to be number 10 - 100 higher than gradient low
-                            </div>
-                        </div>
+                        <app-gradients></app-gradients>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="gases" role="tabpanel" aria-labelledby="gases-tab">

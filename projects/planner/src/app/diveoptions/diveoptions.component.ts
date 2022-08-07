@@ -44,12 +44,14 @@ export class DiveOptionsComponent {
 
         if (!this.planner.isComplex) {
             this.setAllUsable();
-            this.setMediumConservatism();
+            // TODO this.setMediumConservatism();
             this.planner.resetToSimple();
         }
 
         this.planner.calculate();
     }
+
+    // TODO fix usage of  gradients-max-width
 
     public get ranges(): RangeConstants {
         return this.units.ranges;
@@ -106,24 +108,6 @@ export class DiveOptionsComponent {
 
     public set gasOxygenNarcotic(newValue: boolean) {
         this.planner.options.oxygenNarcotic = newValue;
-        this.planner.calculate();
-    }
-
-    public get plannedGfHigh(): number {
-        return this.planner.options.gfHigh * 100;
-    }
-
-    public set plannedGfHigh(newValue: number) {
-        this.planner.options.gfHigh = newValue / 100;
-        this.planner.calculate();
-    }
-
-    public get plannedGfLow(): number {
-        return this.planner.options.gfLow * 100;
-    }
-
-    public set plannedGfLow(newValue: number) {
-        this.planner.options.gfLow = newValue / 100;
         this.planner.calculate();
     }
 
@@ -222,24 +206,6 @@ export class DiveOptionsComponent {
         }
     }
 
-    public lowConservatism(): void {
-        this.conservatism = this.lowName;
-        this.plannedGfLow = 45;
-        this.plannedGfHigh = 95;
-    }
-
-    public mediumConservatism(): void {
-        this.setMediumConservatism();
-        this.planner.setMediumConservatism();
-        this.planner.calculate();
-    }
-
-    public highConservatism(): void {
-        this.conservatism = this.highName;
-        this.plannedGfLow = 30;
-        this.plannedGfHigh = 75;
-    }
-
     public allUsable(): void {
         this.setAllUsable();
         this.planner.calculate();
@@ -263,19 +229,20 @@ export class DiveOptionsComponent {
     }
 
     public useRecreational(): void {
-        this.mediumConservatism();
+        // TODO this.mediumConservatism();
         OptionDefaults.useRecreational(this.planner.options);
         this.planner.calculate();
     }
 
     public useRecommended(): void {
-        this.mediumConservatism();
+        // TODO this.mediumConservatism();
         OptionDefaults.useRecommended(this.planner.options);
         this.planner.calculate();
     }
 
     // TODO apply this.planner changeWaterType, when salinity was changed
     // this.planner.changeWaterType(Salinity.fresh);
+    // altitude, conservatism
 
     public useSafetyOff(): void {
         this.planner.changeSafetyStop(SafetyStop.never);
@@ -287,9 +254,5 @@ export class DiveOptionsComponent {
 
     public useSafetyOn(): void {
         this.planner.changeSafetyStop(SafetyStop.always);
-    }
-
-    private setMediumConservatism(): void {
-        this.conservatism = this.mediumName;
     }
 }

@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1651085808722,
+  "timestamp": 1659835466189,
   "index": "/https://jirkapok.github.io/GasPlanner/index.html",
   "assetGroups": [
     {
@@ -11,14 +11,18 @@
         "ignoreVary": true
       },
       "urls": [
+        "/10.70a2aea5111c5c4f.js",
+        "/481.4695076157b97963.js",
+        "/626.6d39ffab3d51649a.js",
+        "/691.710f13f50b4a537e.js",
         "/favicon.ico",
         "/index.html",
-        "/main.608570140187b9af01e2.js",
+        "/main.2cd50c2ebd1118d4.js",
         "/manifest.webmanifest",
-        "/polyfills.c48406d8a1d540e8be08.js",
-        "/runtime.9cdd13016da0406a5550.js",
-        "/scripts.505ed5c9103be7dc0e8b.js",
-        "/styles.452aea94dfb97f1dcb37.css"
+        "/polyfills.7964cbf638e0e665.js",
+        "/runtime.257af1332cc9acdb.js",
+        "/scripts.d2dfb1487dc08ea5.js",
+        "/styles.f971dce9965f03ea.css"
       ],
       "patterns": []
     },
@@ -44,6 +48,10 @@
   ],
   "dataGroups": [],
   "hashTable": {
+    "/10.70a2aea5111c5c4f.js": "5926fcf2b3994848b805f268ccfe616915d6478a",
+    "/481.4695076157b97963.js": "3cc84a93fa8558561297af365df9898ad0b41581",
+    "/626.6d39ffab3d51649a.js": "06c61640cd29ee1926968622601618371c2e2c48",
+    "/691.710f13f50b4a537e.js": "ab7731c47c259f5f852e8d1c7b90807e14d48d6b",
     "/assets/icons/icon-128x128.png": "ff40289d8a8f61e85436fd7f5f42c7c5d9e55589",
     "/assets/icons/icon-144x144.png": "5e3d0cc7d9a497058e6f87c817c821b7fb4a5bc3",
     "/assets/icons/icon-152x152.png": "d36c00962cfc95ce49600cfd281b421f1d944ccd",
@@ -53,13 +61,13 @@
     "/assets/icons/icon-72x72.png": "bbf3a0e1d4a961f7360746df724533232813649a",
     "/assets/icons/icon-96x96.png": "2c1540d7bb572d2178c2ded3f45adc0cf19fbc6a",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "b6138c03f27f6bcfc359277fc90e459bd97bf189",
-    "/main.608570140187b9af01e2.js": "b8c27e6186e611e7277d5045be6003d17945ab06",
+    "/index.html": "0ecc9375635f2fb1cd199ff37bdf23de012e6b6e",
+    "/main.2cd50c2ebd1118d4.js": "e07a16e84c40d33aedc0f49d7305d5648bf35551",
     "/manifest.webmanifest": "8e6296cf5d7bd1aadaef5e749f1ed9f6b461dc62",
-    "/polyfills.c48406d8a1d540e8be08.js": "d14aa7c71ac46307478dac38d84dacccecdce8a1",
-    "/runtime.9cdd13016da0406a5550.js": "c818ba1a48cccb36c641b77276a327124aaf2f24",
-    "/scripts.505ed5c9103be7dc0e8b.js": "3e5632dd9797cbbfbb0bbab243e6b4cc705ca968",
-    "/styles.452aea94dfb97f1dcb37.css": "a8ef542d8638b548a067c45efa2e7cbc23c493d9"
+    "/polyfills.7964cbf638e0e665.js": "b86faf3d25745af51833084170cf4deba5dd2b57",
+    "/runtime.257af1332cc9acdb.js": "4b8ace5d9472c343a230944bb5aa17eeefc4f326",
+    "/scripts.d2dfb1487dc08ea5.js": "13dff4137307000ba9320aa7567225001bedb5ca",
+    "/styles.f971dce9965f03ea.css": "d18d8591677f257a4b6174f734ebf1d1465e1c8a"
   },
   "navigationUrls": [
     {

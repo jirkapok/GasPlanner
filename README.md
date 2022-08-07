@@ -17,6 +17,7 @@ None of the authors, contributors, administrators, or anyone else connected with
 * Calculation of consumed gas and rock bottom for each tank
 * Environment using water salinity and altitude options
 * Ascent plan using table and chart with list of warnings
+* Share dive plan using url address
 * See more in **[Application help](./doc/help.md)**
 * See also [Road map of planned features](./doc/roadmap.md)
 

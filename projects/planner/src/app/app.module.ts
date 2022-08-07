@@ -38,6 +38,7 @@ import { WorkersFactory } from './shared/workers.factory';
 import { WorkersFactoryCommon } from './shared/serial.workers.factory';
 import { NdlLimitsComponent } from './ndl-limits/ndl-limits.component';
 import { SalinityComponent } from './salinity/salinity.component';
+import { AltitudeComponent } from './altitude/altitude.component';
 
 @NgModule({
     declarations: [
@@ -61,7 +62,8 @@ import { SalinityComponent } from './salinity/salinity.component';
         CalculatingComponent,
         DurationPipe,
         NdlLimitsComponent,
-        SalinityComponent
+        SalinityComponent,
+        AltitudeComponent
     ],
     imports: [
         BrowserModule,

@@ -4,10 +4,11 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Known issues
 
+* Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Gas content spinners issue: oxygen content spinner shows not rounded number, where it shouldn't, Setting 15/55 trimix sets the helium to unexpected precise value
 * When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter for founding switch depth
 * Fix wrong time format message in console created by plotly
-* Fix the duplicate load needed when accessing the page as pwa
+
 
 ## Improvements / Features
 

@@ -1,0 +1,61 @@
+<div class="row mt-5">
+    <div class="col col-auto mt-3">
+        <div class="card">
+            <div class="card-header">
+                <fa-icon [icon]="icon" class="me-3"></fa-icon>
+                <span>Options</span>
+            </div>
+            <div class="card-body">
+                <div>
+                    Gas
+                </div>
+                <div>
+                    Target depth
+                </div>
+                <div>
+                    Salinity
+                </div>
+                <div>
+                    Altitude
+                </div>
+                <div>
+                    Gradient factors
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col col-auto mt-3">
+        <div class="card">
+            <div class="card-header">
+                <fa-icon [icon]="icon" class="me-3"></fa-icon>
+                <span>No decompression limits</span>
+            </div>
+            <div class="card-body card-minheight">
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Depth [{{units.length}}]</th>
+                            <th>Limit [min]</th>
+                        </tr>
+                        <tr *ngIf="calculating">
+                            <td colspan="5">
+                                <app-calculating [show]="true"></app-calculating>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let limit of limits">
+                            <td>{{ limit.depth }}</td>
+                            <td>{{ limit.limit | duration:totalDuration }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group mt-2">
+        <button type="button" class="btn btn-primary me-2" (click)="goBack()">Back</button>
+    </div>
+</div>

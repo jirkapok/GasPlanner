@@ -29,7 +29,7 @@ Keep the project Alive!
 
 ## Prerequisites
 
-To work on the application install NodeJs, AngularCli 11.0 and TypeScript. Recommended development environment is Visual Studio Code. Use `instalEnvironment.ps1` to get initial environment tools and packages.
+To work on the application install NodeJs, AngularCli and TypeScript. Recommended development environment is Visual Studio Code. Use `instalEnvironment.ps1` to get initial environment tools and packages.
 
 ## Build
 

@@ -7,16 +7,16 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <app-nitrox-o2 [tank]="tank.tank" [showBestMix]="false"></app-nitrox-o2>
+                    <app-nitrox-o2 [tank]="tank.tank" [showBestMix]="false" (gasChange)="calculate()"></app-nitrox-o2>
                 </div>
                 <div class="mb-3">
-                    <app-salinity [(salinity)]="options.salinity"></app-salinity>
+                    <app-salinity [(salinity)]="options.salinity" (salinityChange)="calculate()"></app-salinity>
                 </div>
                 <div class="mb-3">
-                    <app-altitude [(altitude)]="options.altitude"></app-altitude>
+                    <app-altitude [(altitude)]="options.altitude" (altitudeChange)="calculate()"></app-altitude>
                 </div>
                 <div class="mb-3">
-                    <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" [simple]="false"></app-gradients>
+                    <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" (gfHighChange)="calculate()" (gfLowChange)="calculate()" [simple]="false"></app-gradients>
                 </div>
             </div>
         </div>

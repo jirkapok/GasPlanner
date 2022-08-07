@@ -32,9 +32,7 @@ export class NdlLimitsComponent {
 
     // TODO Nitrox component uses planner to get its values to label, the same applies to tank
 
-    public goBack(): void {
-    // public async goBack(): Promise<boolean> {
-        // TODO return await this.router.navigateByUrl('/');
-        this.calculate();
+    public async goBack(): Promise<boolean> {
+        return await this.router.navigateByUrl('/');
     }
 }

@@ -107,7 +107,7 @@
         <div class="text-danger form-text" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number {{ranges.tankPressureLabel}}</div>
       </div>
       <div class="mb-3 col-auto">
-          <app-nitrox-o2 [tank]="firstTank.tank"></app-nitrox-o2>
+          <app-nitrox-o2 [tank]="firstTank.tank" (gasChange)="gasChanged()" (assignBestMix)="assignBestMix()"></app-nitrox-o2>
       </div>
   </div>
 </div>

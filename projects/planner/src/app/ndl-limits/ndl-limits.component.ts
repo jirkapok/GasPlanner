@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
-import { Options, Time } from 'scuba-physics';
+import { Options, Tank, Time } from 'scuba-physics';
+import { NdlLimit, NdlService } from '../shared/ndl.service';
 import { UnitConversion } from '../shared/UnitConversion';
+import { TankBound } from '../tanks/tanks.component';
 
-
-export class NdlLimit {
-    public depth = 0;
-    public limit = 3600;
-}
 
 @Component({
     selector: 'app-ndl-limits',
@@ -18,29 +15,26 @@ export class NdlLimit {
 export class NdlLimitsComponent {
     public icon = faTable;
     public iconConfig = faCog;
+    public tank: TankBound;
     public options = new Options();
     public totalDuration = Time.oneDay;
     public isComplex = false;
     public calculating = false;
+    public limits: NdlLimit[] = [];
 
-    public limits: NdlLimit[] = [
-        { depth: 12, limit: 200 },
-        { depth: 15, limit: 200 },
-        { depth: 18, limit: 200 },
-        { depth: 21, limit: 200 },
-        { depth: 24, limit: 200 },
-        { depth: 27, limit: 200 },
-        { depth: 30, limit: 200 },
-        { depth: 33, limit: 200 },
-        { depth: 36, limit: 200 },
-        { depth: 39, limit: 200 },
-        { depth: 42, limit: 200 },
-    ];
-
-    constructor(private router: Router, public units: UnitConversion) {
+    constructor(private router: Router, public units: UnitConversion, private ndl: NdlService) {
+        this.tank = new TankBound(new Tank(15, 200, 21), this.units);
     }
 
-    public async goBack(): Promise<boolean> {
-        return await this.router.navigateByUrl('/');
+    public calculate(): void {
+        this.limits = this.ndl.calculate(this.tank.tank.gas, this.options);
+    }
+
+    // TODO Nitrox component uses planner to get its values to label, the same applies to tank
+
+    public goBack(): void {
+    // public async goBack(): Promise<boolean> {
+        // TODO return await this.router.navigateByUrl('/');
+        this.calculate();
     }
 }

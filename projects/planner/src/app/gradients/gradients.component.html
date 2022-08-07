@@ -3,7 +3,7 @@
     <label for="gfLowField" class="form-label" *ngIf="!simple">Gradient low [%]:</label>
     <div class="input-group gradients-max-width">
         <ng-container *ngIf="simple">
-            <input id="conservatism" [(ngModel)]="conservatism" class="form-control" type="text" readonly />
+            <input id="conservatism" [ngModel]="conservatism" class="form-control" type="text" readonly />
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                 <button type="button" class="btn btn-default border" id="conservatismMenu"
                     ngbDropdownToggle></button>

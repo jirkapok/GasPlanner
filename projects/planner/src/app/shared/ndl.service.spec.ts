@@ -1,16 +1,20 @@
 import { TestBed } from '@angular/core/testing';
+import { Options, StandardGases } from 'scuba-physics';
 
-import { NdlServiceService } from './ndl-service.service';
+import { NdlService } from './ndl.service';
 
 describe('NdlServiceService', () => {
-  let service: NdlServiceService;
+    let service: NdlService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(NdlServiceService);
-  });
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+        service = TestBed.inject(NdlService);
+    });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    it('Calculates NDL table', () => {
+        const options = new Options();
+        const gas = StandardGases.air.copy();
+        const results = service.calculate(gas, options);
+        expect(results.length).toBe(11);
+    });
 });

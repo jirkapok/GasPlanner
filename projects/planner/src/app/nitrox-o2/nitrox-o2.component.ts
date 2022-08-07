@@ -10,7 +10,8 @@ import { UnitConversion } from '../shared/UnitConversion';
 export class NitroxO2Component {
     @Input()
     public tank = new Tank(15, 200, 21);
-
+    @Input()
+    public showBestMix = true;
     public nitroxNames: string[];
 
     constructor(public units: UnitConversion) {

@@ -2,21 +2,21 @@
     <div class="col col-auto mt-3">
         <div class="card">
             <div class="card-header">
-                <fa-icon [icon]="icon" class="me-3"></fa-icon>
+                <fa-icon [icon]="iconConfig" class="me-3"></fa-icon>
                 <span>Options</span>
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <app-nitrox-o2></app-nitrox-o2>
+                    <app-nitrox-o2 [tank]="tank.tank" [showBestMix]="false"></app-nitrox-o2>
                 </div>
                 <div class="mb-3">
-                    <app-salinity [salinity]="options.salinity"></app-salinity>
+                    <app-salinity [(salinity)]="options.salinity"></app-salinity>
                 </div>
                 <div class="mb-3">
-                    <app-altitude [altitude]="options.altitude"></app-altitude>
+                    <app-altitude [(altitude)]="options.altitude"></app-altitude>
                 </div>
                 <div class="mb-3">
-                    <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh" [simple]="false"></app-gradients>
+                    <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" [simple]="false"></app-gradients>
                 </div>
             </div>
         </div>
@@ -39,9 +39,9 @@
                                 <app-calculating [show]="true"></app-calculating>
                             </td>
                         </tr>
-                        <tr *ngFor="let limit of limits">
-                            <td>{{ limit.depth }}</td>
-                            <td>{{ limit.limit | duration:totalDuration }}</td>
+                        <tr *ngFor="let ndl of this.limits">
+                            <td>{{ ndl.depth }}</td>
+                            <td>{{ ndl.limit | number: '1.0-0'}}</td>
                         </tr>
                     </tbody>
                 </table>

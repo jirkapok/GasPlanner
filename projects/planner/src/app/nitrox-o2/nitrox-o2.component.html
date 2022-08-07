@@ -6,7 +6,7 @@
     <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
         <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
         <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-            <button type="button" class="dropdown-item" (click)="assignBestMix()">Best mix</button>
+            <button type="button" class="dropdown-item" (click)="assignBestMix()" *ngIf="showBestMix">Best mix</button>
             <button *ngFor="let stgas of this.nitroxNames" type="button" class="dropdown-item"
                 (click)="assignStandardGas(stgas)">{{stgas}}</button>
         </div>

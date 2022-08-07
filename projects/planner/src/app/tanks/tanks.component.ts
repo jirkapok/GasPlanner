@@ -40,7 +40,6 @@ export class TankBound {
 })
 export class TanksComponent {
     public allNames: string[];
-    public nitroxNames: string[];
     public icon = faBatteryHalf;
     public plusIcon = faPlusSquare;
     public trashIcon = faTrashAlt;
@@ -49,7 +48,6 @@ export class TanksComponent {
     constructor(public planner: PlannerService, public units: UnitConversion) {
         this.diver = this.planner.diver;
         this.allNames = StandardGases.allNames();
-        this.nitroxNames = StandardGases.nitroxNames();
     }
 
     public get firstTank(): TankBound {

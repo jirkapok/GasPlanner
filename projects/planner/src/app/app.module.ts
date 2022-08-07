@@ -41,6 +41,7 @@ import { SalinityComponent } from './salinity/salinity.component';
 import { AltitudeComponent } from './altitude/altitude.component';
 import { GradientsComponent } from './gradients/gradients.component';
 import { DepthComponent } from './depth/depth.component';
+import { NitroxO2Component } from './nitrox-o2/nitrox-o2.component';
 
 @NgModule({
     declarations: [
@@ -67,7 +68,8 @@ import { DepthComponent } from './depth/depth.component';
         SalinityComponent,
         AltitudeComponent,
         GradientsComponent,
-        DepthComponent
+        DepthComponent,
+        NitroxO2Component
     ],
     imports: [
         BrowserModule,

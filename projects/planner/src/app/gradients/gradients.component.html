@@ -1,5 +1,6 @@
 <div class="mb-3">
-    <label for="conservatism" class="form-label">Conservatism (Gradient factors):</label>
+    <label for="conservatism" class="form-label" *ngIf="simple">Conservatism (Gradient factors):</label>
+    <label for="gfLowField" class="form-label" *ngIf="!simple">Gradient low [%]:</label>
     <div class="input-group gradients-max-width">
         <ng-container *ngIf="simple">
             <input id="conservatism" [(ngModel)]="conservatism" class="form-control" type="text" readonly />

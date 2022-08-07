@@ -107,22 +107,7 @@
         <div class="text-danger form-text" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number {{ranges.tankPressureLabel}}</div>
       </div>
       <div class="mb-3 col-auto">
-        <label for="gasO2" class="form-label">Percent O2:</label>
-        <div class="input-group col-auto o2-max-width">
-            <input #gasO2="ngModel" name="gasO2" [(ngModel)]="firstTank.o2" class="form-control" type="number" (change)="gasChanged()"
-                required [rangeVal]="ranges.nitroxOxygen" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]" step="1"
-                [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />
-            <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
-                <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-                    <button type="button" class="dropdown-item" (click)="assignBestMix()">Best mix</button>
-                    <button *ngFor="let stgas of this.nitroxNames" type="button" class="dropdown-item"
-                        (click)="assignStandardGas(firstTank.tank, stgas)">{{stgas}}</button>
-                </div>
-            </div>
-        </div>
-        <app-gaslabel [tank]="firstTank.tank"></app-gaslabel>
-        <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number {{ranges.nitroxOxygenLabel}}</div>
+          <app-nitrox-o2 [tank]="firstTank.tank"></app-nitrox-o2>
       </div>
   </div>
 </div>

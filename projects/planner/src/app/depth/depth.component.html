@@ -1,10 +1,10 @@
-<label for="depth" class="form-label">Depth [{{units.length}}]:</label>
+<label for="depthField" class="form-label">Depth [{{units.length}}]:</label>
 <div class="row row-cols-auto">
-    <input id="depth" name="depth" #depth="ngModel" [(ngModel)]="plannedDepth" class="form-control col-auto ms-3" type="number"
+    <input id="depthField" name="depthField" #depthField="ngModel" [(ngModel)]="depth" class="form-control col-auto ms-3" type="number"
         required  [rangeVal]="units.ranges.depth" [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1"
-        [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)"/>
+        [class.is-invalid]="depthField.invalid && (depthField.dirty || depthField.touched)"/>
     <button type="button" class="btn btn-secondary ms-2" (click)="applyMaxDepth()">Max</button>
 </div>
 
 <div><small class="text-muted form-text">Best mix is {{ bestMix }}</small></div>
-<div class="text-danger form-text" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number {{units.ranges.depthLabel}}</div>
+<div class="text-danger form-text" *ngIf="depthField.invalid && (depthField.dirty || depthField.touched)">Needs to be number {{units.ranges.depthLabel}}</div>

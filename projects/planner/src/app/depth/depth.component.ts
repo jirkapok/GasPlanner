@@ -9,7 +9,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 })
 export class DepthComponent{
     @Input() // TODO fix depth binding
-    public plannedDepth = 30;
+    public depth = 30;
 
     constructor(public units: UnitConversion){
     }

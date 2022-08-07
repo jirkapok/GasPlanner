@@ -8,7 +8,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 })
 export class AltitudeComponent {
     @Input()
-    public plannedAltitude = 0;
+    public altitude = 0;
 
     constructor(public units: UnitConversion) { }
 }

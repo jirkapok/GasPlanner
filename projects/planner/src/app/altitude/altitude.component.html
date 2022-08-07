@@ -1,11 +1,11 @@
 <div class="mb-3">
-    <label for="altitude" class="form-label">Altitude  [{{units.altitude}}]:</label>
-    <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude"
+    <label for="altitudeField" class="form-label">Altitude  [{{units.altitude}}]:</label>
+    <input id="altitudeField" name="altitudeField" #altitudeField="ngModel" [(ngModel)]="altitude"
         class="form-control col-auto" type="number"
         required [rangeVal]="units.ranges.altitude" [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1"
-        [class.is-invalid]="altitude.invalid && (altitude.dirty || altitude.touched)" />
+        [class.is-invalid]="altitudeField.invalid && (altitudeField.dirty || altitudeField.touched)" />
     <div class="text-danger form-text"
-        *ngIf="altitude.invalid && (altitude.dirty || altitude.touched)">
+        *ngIf="altitudeField.invalid && (altitudeField.dirty || altitudeField.touched)">
         Needs to be number {{units.ranges.altitudeLabel}}
     </div>
 </div>

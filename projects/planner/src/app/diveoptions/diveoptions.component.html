@@ -34,25 +34,9 @@
                     </div>
                 </div>
                 <div class="mb-3 col-auto">
-                    <label for="gfLow" class="form-label">Water salinity:</label>
-                    <div class="input-group gradients-max-width">
-                        <input id="salinity" name="salinity" #salinity="ngModel" [ngModel]="salinityOption"
-                            class="form-control col-auto" type="text" readonly
-                            [class.is-invalid]="salinity.invalid && (salinity.dirty || salinity.touched)" />
-                        <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                            <button type="button" class="btn btn-default border" id="salinityMenu"
-                                ngbDropdownToggle></button>
-                            <div ngbDropdownMenu aria-labelledby="salinityMenu" aria-expanded="false">
-                                <button type="button" class="dropdown-item"
-                                    (click)="useFresh()">{{freshName}}</button>
-                                <button type="button" class="dropdown-item"
-                                    (click)="useBrackish()">{{brackishName}}</button>
-                                <button type="button" class="dropdown-item"
-                                    (click)="useSalt()">{{saltName}}</button>
-                            </div>
-                        </div>
-                    </div>
+                    <app-salinity [salinity]="options.salinity"></app-salinity>
                 </div>
+
                 <div class="mb-3 col-auto">
                     <label for="altitude" class="form-label">Altitude [{{units.altitude}}]:</label>
                     <input id="altitude" name="altitude" #altitude="ngModel" [(ngModel)]="plannedAltitude"
@@ -108,24 +92,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="gfLow" class="form-label">Water salinity:</label>
-                            <div class="input-group gradients-max-width">
-                                <input id="salinity" name="salinity" #salinity="ngModel" [ngModel]="salinityOption"
-                                    class="form-control col-auto" type="text" readonly
-                                    [class.is-invalid]="salinity.invalid && (salinity.dirty || salinity.touched)" />
-                                <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                                    <button type="button" class="btn btn-default border" id="salinityMenu"
-                                        ngbDropdownToggle></button>
-                                    <div ngbDropdownMenu aria-labelledby="salinityMenu" aria-expanded="false">
-                                        <button type="button" class="dropdown-item"
-                                            (click)="useFresh()">{{freshName}}</button>
-                                        <button type="button" class="dropdown-item"
-                                            (click)="useBrackish()">{{brackishName}}</button>
-                                        <button type="button" class="dropdown-item"
-                                            (click)="useSalt()">{{saltName}}</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <app-salinity [salinity]="options.salinity"></app-salinity>
                         </div>
                     </div>
                 </div>

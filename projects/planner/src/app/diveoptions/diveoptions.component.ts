@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { OptionDefaults, SafetyStop, Salinity } from 'scuba-physics';
+import { OptionDefaults, Options, SafetyStop } from 'scuba-physics';
 import { Plan, Strategies } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -20,9 +20,6 @@ export class DiveOptionsComponent {
     public readonly lowName = 'Low (45/95)';
     public readonly mediumName = 'Medium (40/85)';
     public readonly highName = 'High (30/75)';
-    public readonly freshName = 'Fresh';
-    public readonly brackishName = 'Brackish (EN13319)';
-    public readonly saltName = 'Salt';
     public readonly safetyOffName = 'Never';
     public readonly safetyOnName = 'Always';
     public conservatism = this.mediumName;
@@ -32,6 +29,10 @@ export class DiveOptionsComponent {
 
     constructor(private planner: PlannerService, public units: UnitConversion) {
         this.plan = this.planner.plan;
+    }
+
+    public get options(): Options {
+        return this.planner.options;
     }
 
     public get isComplex(): boolean {
@@ -124,17 +125,6 @@ export class DiveOptionsComponent {
     public set plannedGfLow(newValue: number) {
         this.planner.options.gfLow = newValue / 100;
         this.planner.calculate();
-    }
-
-    public get salinityOption(): string {
-        switch(this.planner.options.salinity){
-            case Salinity.salt:
-                return this.saltName;
-            case Salinity.brackish:
-                return this.brackishName;
-            default:
-                return this.freshName;
-        }
     }
 
     public get safetyAutoName(): string {
@@ -284,17 +274,8 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    public useFresh(): void {
-        this.planner.changeWaterType(Salinity.fresh);
-    }
-
-    public useBrackish(): void {
-        this.planner.changeWaterType(Salinity.brackish);
-    }
-
-    public useSalt(): void {
-        this.planner.changeWaterType(Salinity.salt);
-    }
+    // TODO apply this.planner changeWaterType, when salinity was changed
+    // this.planner.changeWaterType(Salinity.fresh);
 
     public useSafetyOff(): void {
         this.planner.changeSafetyStop(SafetyStop.never);

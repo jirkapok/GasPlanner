@@ -37,6 +37,7 @@ import { DatePipe } from '@angular/common';
 import { WorkersFactory } from './shared/workers.factory';
 import { WorkersFactoryCommon } from './shared/serial.workers.factory';
 import { NdlLimitsComponent } from './ndl-limits/ndl-limits.component';
+import { SalinityComponent } from './salinity/salinity.component';
 
 @NgModule({
     declarations: [
@@ -59,7 +60,8 @@ import { NdlLimitsComponent } from './ndl-limits/ndl-limits.component';
         AppSettingsComponent,
         CalculatingComponent,
         DurationPipe,
-        NdlLimitsComponent
+        NdlLimitsComponent,
+        SalinityComponent
     ],
     imports: [
         BrowserModule,

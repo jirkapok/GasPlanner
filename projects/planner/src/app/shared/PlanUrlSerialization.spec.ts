@@ -39,13 +39,13 @@ describe('Url Serialization', () => {
     };
 
     it('Generates valid url characters', () => {
-        const urlParams = PlanUrlSerialization.toUrl(planner);
+        const urlParams = PlanUrlSerialization.toUrl(planner, options);
         const isValid = /[-a-zA-Z0-9@:%_+.~#&//=]*/g.test(urlParams);
         expect(isValid).toBeTruthy();
     });
 
     it('Serialize and deserialize complex plan', () => {
-        const urlParams = PlanUrlSerialization.toUrl(planner);
+        const urlParams = PlanUrlSerialization.toUrl(planner, options);
         const current = new PlannerService(irrelevantFactory);
         PlanUrlSerialization.fromUrl(urlParams, options, current);
         expectParsedEquals(planner, current);
@@ -55,7 +55,7 @@ describe('Url Serialization', () => {
         const source = new PlannerService(irrelevantFactory);
         source.tanks[0].size = 18;
         source.calculate();
-        const urlParams = PlanUrlSerialization.toUrl(source);
+        const urlParams = PlanUrlSerialization.toUrl(source, options);
         const current = new PlannerService(irrelevantFactory);
         PlanUrlSerialization.fromUrl(urlParams, options, current);
         expectParsedEquals(source, current);

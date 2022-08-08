@@ -22,7 +22,7 @@ export class StandardGradientsService {
         this.gfMap.set(this.highName, new Gradients(0.30, 0.75));
     }
 
-    public standardLabel(gfLow: number, gfHigh: number): string {
+    public labelFor(gfLow: number, gfHigh: number): string {
         for (const key of this.gfMap.keys()) {
             const entry = this.gfMap.get(key) || this.empty;
             if(entry.gfLow === gfLow && entry.gfHeigh === gfHigh) {

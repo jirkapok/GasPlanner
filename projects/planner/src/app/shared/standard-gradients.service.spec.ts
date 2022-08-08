@@ -21,12 +21,12 @@ describe('StandardGradientsService', () => {
     });
 
     it('Known Gf return expected label', () => {
-        const found = service.standardLabel(0.3, 0.75);
+        const found = service.labelFor(0.3, 0.75);
         expect(found).toEqual('High (30/75)');
     });
 
     it('Custom Gf return empty label', () => {
-        const found = service.standardLabel(0.5, 0.5);
+        const found = service.labelFor(0.5, 0.5);
         expect(found).toEqual('');
     });
 });

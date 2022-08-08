@@ -29,7 +29,7 @@ export class GradientsComponent {
     }
 
     public get conservatism(): string {
-        return this.standards.standardLabel(this.gfLow, this.gfHigh);
+        return this.standards.labelFor(this.gfLow, this.gfHigh);
     }
 
     public get plannedGfHigh(): number {

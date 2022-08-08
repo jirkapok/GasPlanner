@@ -10,3 +10,7 @@
 .card-minheight {
     min-height: 485px;
 }
+
+.gradients-max-width {
+    max-width: 180px;
+}

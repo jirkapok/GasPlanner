@@ -3,7 +3,7 @@
     <input id="depthField" name="depthField" #depthField="ngModel" [(ngModel)]="depth" class="form-control col-auto ms-3" type="number"
         required  [rangeVal]="units.ranges.depth" [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1"
         [class.is-invalid]="depthField.invalid && (depthField.dirty || depthField.touched)"/>
-    <button type="button" class="btn btn-secondary ms-2" (click)="applyMaxDepth()">Max</button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="fireApplyMaxDepth()">Max</button>
 </div>
 
 <div><small class="text-muted form-text">Best mix is {{ bestMix }}</small></div>

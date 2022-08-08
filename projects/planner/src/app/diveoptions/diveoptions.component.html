@@ -16,14 +16,14 @@
         <div *ngIf="!isComplex">
             <div class="mt-3 row">
                 <div class="mb-3 col-auto">
-                    <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfLow" [simple]="true"></app-gradients>
+                    <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" (gfHighChange)="planner.calculate()" (gfLowChange)="planner.calculate()" [simple]="true" ></app-gradients>
                 </div>
                 <div class="mb-3 col-auto">
-                    <app-salinity [salinity]="options.salinity"></app-salinity>
+                    <app-salinity [(salinity)]="options.salinity" (salinityChange)="planner.calculate()"></app-salinity>
                 </div>
 
                 <div class="mb-3 col-auto">
-                    <app-altitude [altitude]="options.altitude"></app-altitude>
+                    <app-altitude [(altitude)]="options.altitude" (altitudeChange)="planner.calculate()"></app-altitude>
                 </div>
             </div>
         </div>
@@ -58,16 +58,16 @@
                     aria-labelledby="environment-tab">
                     <div class="mt-3">
                         <div class="mb-3">
-                            <app-altitude [altitude]="options.altitude"></app-altitude>
+                            <app-altitude [(altitude)]="options.altitude" (altitudeChange)="planner.calculate()"></app-altitude>
                         </div>
                         <div class="mb-3">
-                            <app-salinity [salinity]="options.salinity"></app-salinity>
+                            <app-salinity [(salinity)]="options.salinity" (salinityChange)="planner.calculate()"></app-salinity>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="conservatism" role="tabpanel" aria-labelledby="conservatism-tab">
                     <div class="col-sm mt-3">
-                        <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfLow" [simple]="false"></app-gradients>
+                        <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh" (gfHighChange)="planner.calculate()" (gfLowChange)="planner.calculate()" [simple]="false"></app-gradients>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="gases" role="tabpanel" aria-labelledby="gases-tab">

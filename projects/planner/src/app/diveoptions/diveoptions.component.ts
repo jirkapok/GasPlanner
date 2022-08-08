@@ -27,7 +27,7 @@ export class DiveOptionsComponent {
     public strategy = this.allUsableName;
     public icon = faCog;
 
-    constructor(private planner: PlannerService, public units: UnitConversion) {
+    constructor(public planner: PlannerService, public units: UnitConversion) {
         this.plan = this.planner.plan;
     }
 
@@ -50,8 +50,6 @@ export class DiveOptionsComponent {
 
         this.planner.calculate();
     }
-
-    // TODO fix usage of  gradients-max-width
 
     public get ranges(): RangeConstants {
         return this.units.ranges;
@@ -239,10 +237,6 @@ export class DiveOptionsComponent {
         OptionDefaults.useRecommended(this.planner.options);
         this.planner.calculate();
     }
-
-    // TODO apply this.planner changeWaterType, when salinity was changed
-    // this.planner.changeWaterType(Salinity.fresh);
-    // altitude, conservatism
 
     public useSafetyOff(): void {
         this.planner.changeSafetyStop(SafetyStop.never);

@@ -17,11 +17,18 @@ export class GradientsComponent {
     public readonly lowName = 'Low (45/95)';
     public readonly mediumName = 'Medium (40/85)';
     public readonly highName = 'High (30/75)';
-    // The string is changed only inside of this component
-    public _conservatism = this.mediumName;
 
     private _gfLow = OptionDefaults.gfLow;
     private _gfHigh = OptionDefaults.gfHigh;
+
+    // TODO move to Options service
+    private gfMap = new Map<string, [number, number]>();
+
+    constructor() {
+        this.gfMap.set(this.lowName, [0.45, 0.95]);
+        this.gfMap.set(this.mediumName, [OptionDefaults.gfLow, OptionDefaults.gfHigh]);
+        this.gfMap.set(this.highName, [0.30, 0.75]);
+    }
 
     @Input()
     public get gfLow(): number {
@@ -34,7 +41,14 @@ export class GradientsComponent {
     }
 
     public get conservatism(): string {
-        return this._conservatism;
+        for (const key of this.gfMap.keys()) {
+            const entry = this.gfMap.get(key) || [0,0];
+            if(entry[0] === this.gfLow && entry[1] === this.gfHigh) {
+                return key;
+            }
+        }
+
+        return `${this.gfLow}/${this.gfHigh}`;
     }
 
     public get plannedGfHigh(): number {
@@ -64,19 +78,16 @@ export class GradientsComponent {
     }
 
     public lowConservatism(): void {
-        this._conservatism = this.lowName;
         this.gfLow = 0.45;
         this.gfHigh = 0.95;
     }
 
     public mediumConservatism(): void {
-        this._conservatism = this.mediumName;
         this.gfLow = OptionDefaults.gfLow;
         this.gfHigh = OptionDefaults.gfHigh;
     }
 
     public highConservatism(): void {
-        this._conservatism = this.highName;
         this.gfLow = 0.30;
         this.gfHigh = 0.75;
     }

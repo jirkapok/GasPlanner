@@ -33,6 +33,11 @@ export class DepthsComponent implements OnDestroy {
         });
     }
 
+    @Input()
+    public get plannedDepth(): number {
+        return this.plan.maxDepth;
+    }
+
     public get ranges(): RangeConstants {
         return this.units.ranges;
     }
@@ -70,13 +75,13 @@ export class DepthsComponent implements OnDestroy {
         return this.plan.duration;
     }
 
-    public set planDuration(newValue: number) {
-        this.planner.assignDuration(newValue);
+    public get bestNitroxMix(): string {
+        const o2 = this.planner.bestNitroxMix() / 100;
+        return StandardGases.nameFor(o2);
     }
 
-    @Input()
-    public get plannedDepth(): number {
-        return this.plan.maxDepth;
+    public set planDuration(newValue: number) {
+        this.planner.assignDuration(newValue);
     }
 
     public set plannedDepth(depth: number) {

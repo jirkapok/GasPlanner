@@ -30,7 +30,7 @@ export class PlannerService {
     private calculatingNoDeco = false;
     private calculatingProfile = false;
     private _tanks: Tank[] = [];
-    private _options: Options;
+    private _options: Options; // TODO move options to separate service
     private onInfoCalculated = new Subject();
     private onWayPointsCalculated = new Subject();
     private depthConverterFactory: DepthConverterFactory;
@@ -129,11 +129,6 @@ export class PlannerService {
 
     public removeSegment(segment: Segment): void {
         this.plan.removeSegment(segment);
-        this.calculate();
-    }
-
-    public changeWaterType(salinity: Salinity): void {
-        this.options.salinity = salinity;
         this.calculate();
     }
 

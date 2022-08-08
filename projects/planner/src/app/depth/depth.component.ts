@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { StandardGases } from 'scuba-physics';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
@@ -8,19 +7,31 @@ import { UnitConversion } from '../shared/UnitConversion';
     styleUrls: ['./depth.component.css']
 })
 export class DepthComponent{
-    @Input() // TODO fix depth binding
-    public depth = 30;
+    @Input()
+    public bestMix = '';
 
-    constructor(public units: UnitConversion){
+    @Output()
+    public applyMaxDepth = new EventEmitter();
+
+    @Output()
+    public depthChange = new EventEmitter<number>();
+
+    private _depth = 30;
+
+    constructor(public units: UnitConversion){}
+
+    @Input()
+    public get depth(): number {
+        return this._depth;
     }
 
-    public get bestMix(): string {
-        // TODO const o2 = this.planner.bestNitroxMix() / 100;
-        const o2 = 0.32;
-        return StandardGases.nameFor(o2);
+    public set depth(newValue: number) {
+        this._depth = newValue;
+        this.depthChange.emit(this._depth);
     }
 
-    public applyMaxDepth(): void {
-        // TODO applyMaxDepth
+
+    public fireApplyMaxDepth(): void {
+        this.applyMaxDepth.emit();
     }
 }

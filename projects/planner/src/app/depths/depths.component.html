@@ -19,7 +19,7 @@
     </div>
 
     <div class="mb-3">
-        <app-depth [depth]="plannedDepth"></app-depth>
+        <app-depth [(depth)]="plannedDepth" [bestMix]="bestNitroxMix" (applyMaxDepth)="planner.applyMaxDepth()"></app-depth>
     </div>
   </div>
   <div class="card-body" *ngIf="isComplex">

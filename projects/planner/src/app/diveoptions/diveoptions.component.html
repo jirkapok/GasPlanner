@@ -16,14 +16,14 @@
         <div *ngIf="!isComplex">
             <div class="mt-3 row">
                 <div class="mb-3 col-auto">
-                    <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" (gfHighChange)="planner.calculate()" (gfLowChange)="planner.calculate()" [simple]="true" ></app-gradients>
+                    <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" [simple]="true" ></app-gradients>
                 </div>
                 <div class="mb-3 col-auto">
-                    <app-salinity [(salinity)]="options.salinity" (salinityChange)="planner.calculate()"></app-salinity>
+                    <app-salinity [(salinity)]="options.salinity"></app-salinity>
                 </div>
 
                 <div class="mb-3 col-auto">
-                    <app-altitude [(altitude)]="options.altitude" (altitudeChange)="planner.calculate()"></app-altitude>
+                    <app-altitude [(altitude)]="options.altitude"></app-altitude>
                 </div>
             </div>
         </div>
@@ -58,16 +58,16 @@
                     aria-labelledby="environment-tab">
                     <div class="mt-3">
                         <div class="mb-3">
-                            <app-altitude [(altitude)]="options.altitude" (altitudeChange)="planner.calculate()"></app-altitude>
+                            <app-altitude [(altitude)]="options.altitude"></app-altitude>
                         </div>
                         <div class="mb-3">
-                            <app-salinity [(salinity)]="options.salinity" (salinityChange)="planner.calculate()"></app-salinity>
+                            <app-salinity [(salinity)]="options.salinity"></app-salinity>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="conservatism" role="tabpanel" aria-labelledby="conservatism-tab">
                     <div class="col-sm mt-3">
-                        <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" (gfHighChange)="planner.calculate()" (gfLowChange)="planner.calculate()" [simple]="false"></app-gradients>
+                        <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" [simple]="false"></app-gradients>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="gases" role="tabpanel" aria-labelledby="gases-tab">
@@ -75,7 +75,7 @@
                         <div class="mb-3 col-auto">
                             <label for="maxNarcoticDepth" class="form-label">Maximum narcotic depth [{{units.length}}]:</label>
                             <input id="maxNarcoticDepth" name="maxNarcoticDepth" #maxNarcoticDepth="ngModel"
-                                [(ngModel)]="gasMaxNarcoticDepth" class="form-control col-auto" type="number" required
+                                [(ngModel)]="options.maxEND" class="form-control col-auto" type="number" required
                                 [rangeVal]="ranges.narcoticDepth" [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
                                 [class.is-invalid]="maxNarcoticDepth.invalid && (maxNarcoticDepth.dirty || maxNarcoticDepth.touched)" />
                             <div class="text-danger form-text"
@@ -86,7 +86,7 @@
                         <div class="row ms-4">
                             <div class="form-check form-switch pb-1">
                                 <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
-                                    [checked]="gasOxygenNarcotic" (change)="gasOxygenNarcotic = !gasOxygenNarcotic" />
+                                    [checked]="options.oxygenNarcotic" (change)="options.oxygenNarcotic = !options.oxygenNarcotic" />
                                 <label class="form-check-label" for="roundStops">Oxygen is narcotic</label>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                     <div class="row mt-3">
                         <div class="mb-3 col-auto">
                             <label for="problem" class="form-label">Problem solving duration [min]:</label>
-                            <input id="problem" name="problem" #problem="ngModel" [(ngModel)]="problemSolvingDuration"
+                            <input id="problem" name="problem" #problem="ngModel" [(ngModel)]="options.problemSolvingDuration"
                                 class="form-control col-auto" type="number"
                                 required [rangeVal]="[1, 100]" min="1" max="100" step="1"
                                 [class.is-invalid]="problem.invalid && (problem.dirty || problem.touched)" />
@@ -108,7 +108,7 @@
                         <div class="mb-3 col-auto">
                             <label for="switchDuration" class="form-label">Gas switch duration [min]:</label>
                             <input id="switchDuration" name="switchDuration" #switchDuration="ngModel"
-                                [(ngModel)]="gasSwitchDuration" class="form-control col-auto" type="number"
+                                [(ngModel)]="options.gasSwitchDuration" class="form-control col-auto" type="number"
                                 required [rangeVal]="[1, 10]" min="1" max="10" step="1"
                                 [class.is-invalid]="switchDuration.invalid && (switchDuration.dirty || switchDuration.touched)" />
                             <div class="text-danger form-text"
@@ -127,11 +127,11 @@
                                         ngbDropdownToggle></button>
                                     <div ngbDropdownMenu aria-labelledby="safetyStopMenu" aria-expanded="false">
                                         <button type="button" class="dropdown-item"
-                                            (click)="useSafetyOff()">{{safetyOffName}}</button>
+                                            (click)="options.useSafetyOff()">{{safetyOffName}}</button>
                                         <button type="button" class="dropdown-item"
-                                            (click)="useSafetyAuto()">{{safetyAutoName}}</button>
+                                            (click)="options.useSafetyAuto()">{{safetyAutoName}}</button>
                                         <button type="button" class="dropdown-item"
-                                            (click)="useSafetyOn()">{{safetyOnName}}</button>
+                                            (click)="options.useSafetyOn()">{{safetyOnName}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -139,7 +139,7 @@
                         <div class="mb-3 col-auto">
                             <label for="lastStop" class="form-label">Last stop depth [{{units.length}}]:</label>
                             <input id="lastStop" name="lastStop" #lastStop="ngModel"
-                                [(ngModel)]="lastStopDepth" class="form-control col-auto" type="number" required
+                                [(ngModel)]="options.lastStopDepth" class="form-control col-auto" type="number" required
                                 [rangeVal]="ranges.lastStopDepth" [min]="ranges.lastStopDepth[0]" [max]="ranges.lastStopDepth[1]" step="1"
                                 [class.is-invalid]="lastStop.invalid && (lastStop.dirty || lastStop.touched)" />
                             <div class="text-danger form-text"
@@ -150,7 +150,7 @@
                         <div class="row ms-4">
                             <div class="form-check form-switch pb-1">
                                 <input type="checkbox" class="form-check-input" id="roundStops" mdbCheckbox
-                                    [checked]="roundDecoStops" (change)="roundDecoStops = !roundDecoStops" />
+                                    [checked]="options.roundStopsToMinutes" (change)="options.roundStopsToMinutes = !options.roundStopsToMinutes" />
                                 <label class="form-check-label" for="roundStops">Round deco stops to minutes</label>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                     <div class="row mt-3">
                         <div class="mb-3 col-auto">
                             <label for="descSpeed" class="form-label">Descent speed [{{units.speed}}]:</label>
-                            <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="descentSpeed"
+                            <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="options.descentSpeed"
                                 class="form-control col-auto" type="number"
                                 required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                 [class.is-invalid]="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)" />
@@ -171,7 +171,7 @@
                         </div>
                         <div class="mb-3 col-auto">
                             <label for="ascSpeed" class="form-label">Ascent {{units.lastSpeedLevel}} {{units.length}} to surface [{{units.speed}}]:</label>
-                            <input id="ascSpeed" name="ascSpeed" #ascSpeed="ngModel" [(ngModel)]="ascentSpeed6m"
+                            <input id="ascSpeed" name="ascSpeed" #ascSpeed="ngModel" [(ngModel)]="options.ascentSpeed6m"
                                 class="form-control col-auto" type="number"
                                 required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                 [class.is-invalid]="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)" />
@@ -185,7 +185,7 @@
                         <div class="mb-3 col-auto">
                             <label for="ascSpeed2" class="form-label">Ascent up to {{units.lastSpeedLevel}} {{units.length}} depth [{{units.speed}}]:</label>
                             <input id="ascSpeed2" name="ascSpeed2" #ascSpeed2="ngModel"
-                                [(ngModel)]="ascentSpeed50percTo6m" class="form-control col-auto" type="number"
+                                [(ngModel)]="options.ascentSpeed50percTo6m" class="form-control col-auto" type="number"
                                 required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                 [class.is-invalid]="ascSpeed2.invalid && (ascSpeed2.dirty || ascSpeed2.touched)" />
                             <div class="text-danger form-text"
@@ -195,7 +195,7 @@
                         </div>
                         <div class="mb-3 col-auto">
                             <label for="ascSpeed3" class="form-label">Ascent up to 50% depth [{{units.speed}}]:</label>
-                            <input id="ascSpeed3" name="ascSpeed3" #ascSpeed3="ngModel" [(ngModel)]="ascentSpeed50perc"
+                            <input id="ascSpeed3" name="ascSpeed3" #ascSpeed3="ngModel" [(ngModel)]="options.ascentSpeed50perc"
                                 class="form-control col-auto" type="number"
                                 required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                 [class.is-invalid]="ascSpeed3.invalid && (ascSpeed3.dirty || ascSpeed3.touched)" />
@@ -210,8 +210,8 @@
         </div>
 
         <div>
-            <button type="button" class="btn btn-secondary me-2 mt-3" (click)="useRecreational()">Recreational</button>
-            <button type="button" class="btn btn-secondary mt-3" (click)="useRecommended()">Recommended</button>
+            <button type="button" class="btn btn-secondary me-2 mt-3" (click)="options.useRecreational()">Recreational</button>
+            <button type="button" class="btn btn-secondary mt-3" (click)="options.useRecommended()">Recommended</button>
         </div>
     </div>
 </div>

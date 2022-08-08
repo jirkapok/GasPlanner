@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { OptionsDispatcherService } from './options-dispatcher.service';
 import { PlannerService } from './planner.service';
 import { PreferencesFactory } from './preferences.factory';
 import { AppPreferences } from './serialization.model';
@@ -11,7 +12,7 @@ export class PreferencesService {
     private static readonly storageKey = 'preferences';
     private static readonly disclaimerKey = 'disclaimer';
 
-    constructor(private planner: PlannerService) { }
+    constructor(private planner: PlannerService, private options: OptionsDispatcherService) { }
 
     public loadDefaults(): void {
         const toParse = localStorage.getItem(PreferencesService.storageKey);
@@ -20,7 +21,7 @@ export class PreferencesService {
         }
 
         const loaded = JSON.parse(toParse) as AppPreferences;
-        PreferencesFactory.applyLoaded(this.planner, loaded);
+        PreferencesFactory.applyLoaded(this.planner, this.options, loaded);
     }
 
     public saveDefaults(): void {

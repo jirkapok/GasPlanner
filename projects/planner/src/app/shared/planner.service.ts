@@ -30,7 +30,7 @@ export class PlannerService {
     private calculatingNoDeco = false;
     private calculatingProfile = false;
     private _tanks: Tank[] = [];
-    private _options: Options; // TODO move options to separate service
+    private _options: Options;
     private onInfoCalculated = new Subject();
     private onWayPointsCalculated = new Subject();
     private depthConverterFactory: DepthConverterFactory;
@@ -101,11 +101,6 @@ export class PlannerService {
         }
 
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
-        this.setMediumConservatism();
-    }
-
-    public setMediumConservatism(): void {
-        OptionDefaults.setMediumConservatism(this.options);
     }
 
     public addTank(): void {
@@ -129,11 +124,6 @@ export class PlannerService {
 
     public removeSegment(segment: Segment): void {
         this.plan.removeSegment(segment);
-        this.calculate();
-    }
-
-    public changeSafetyStop(safetyStop: SafetyStop): void {
-        this.options.safetyStop = safetyStop;
         this.calculate();
     }
 
@@ -186,8 +176,6 @@ export class PlannerService {
 
     public applyDiver(diver: Diver): void {
         this.diver.loadFrom(diver);
-        this.options.maxPpO2 = diver.maxPpO2;
-        this.options.maxDecoPpO2 = diver.maxDecoPpO2;
     }
 
     public loadFrom(isComplex: boolean, options: Options, diver: Diver, tanks: Tank[], segments: Segment[]): void {
@@ -210,6 +198,12 @@ export class PlannerService {
         }
 
         this.calculate();
+    }
+
+    public assignOptions(newOptions: Options): void {
+        this._options.loadFrom(newOptions);
+        this.depthConverterFactory = new DepthConverterFactory(newOptions);
+        this.resetDepthConverter();
     }
 
     public calculate(): void {
@@ -343,12 +337,6 @@ export class PlannerService {
             target.consumed = source.consumed;
             target.reserve = source.reserve;
         }
-    }
-
-    private assignOptions(newOptions: Options): void {
-        this._options.loadFrom(newOptions);
-        this.depthConverterFactory = new DepthConverterFactory(newOptions);
-        this.resetDepthConverter();
     }
 
     /** even in case thirds rule, the last third is reserve, so we always divide by 2 */

@@ -9,7 +9,6 @@ Following list of features and improvements ordered by priority is under develop
 * When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter for founding switch depth
 * Fix wrong time format message in console created by plotly
 
-
 ## Improvements / Features
 
 * Add imperial units option
@@ -24,7 +23,6 @@ Following list of features and improvements ordered by priority is under develop
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
     * <https://youtu.be/OI4ZzqJLQjw>
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
-* Add no deco table
 * Add gas depth range calculator
 * Add CNS and OTU calculations
   * <https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf>

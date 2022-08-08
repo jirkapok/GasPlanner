@@ -5,6 +5,7 @@ import { PreferencesService } from '../shared/preferences.service';
 import { PlannerService } from '../shared/planner.service';
 import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
 import { Dive } from '../shared/models';
+import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,6 +19,7 @@ export class DashboardComponent implements OnInit {
 
     constructor(private router: Router,
         private preferences: PreferencesService,
+        private options: OptionsDispatcherService,
         private planner: PlannerService) {
         this.dive = planner.dive;
     }
@@ -30,7 +32,7 @@ export class DashboardComponent implements OnInit {
         this.showDisclaimer = this.preferences.disclaimerEnabled();
         const query = window.location.search;
         if (query !=='') {
-            PlanUrlSerialization.fromUrl(query, this.planner);
+            PlanUrlSerialization.fromUrl(query, this.options, this.planner);
         }
         // first calculate, than subscribe for later updates by user
         this.planner.infoCalculated.subscribe(() => {

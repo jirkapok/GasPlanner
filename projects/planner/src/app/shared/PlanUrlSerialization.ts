@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { Diver, Options, SafetyStop, Salinity, Segment, Tank } from 'scuba-physics';
+import { OptionsDispatcherService } from './options-dispatcher.service';
 import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';
 import { PreferencesFactory } from './preferences.factory';
@@ -62,13 +63,14 @@ export class PlanUrlSerialization {
         const tanksParam = PlanUrlSerialization.toTanksParam(source.tanks);
         const depthsParam = PlanUrlSerialization.toDepthsParam(source.plan.segments);
         const diParam =  PlanUrlSerialization.toDiverParam(source.diver);
+        // TODO take options from its service
         const optionsParam = PlanUrlSerialization.toOptionsParam(source.options);
         const isComplex = ParseContext.serializeBoolean(source.isComplex);
         const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&c=${isComplex}`;
         return result;
     }
 
-    public static fromUrl(url: string, target: PlannerService): void {
+    public static fromUrl(url: string, targetOptions: OptionsDispatcherService, target: PlannerService): void {
         try {
             if(!url) {
                 return;
@@ -78,7 +80,7 @@ export class PlanUrlSerialization {
             // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
             const isValid = new PlanValidation().validate(parsed);
             if(isValid) {
-                PreferencesFactory.applyLoaded(target, parsed);
+                PreferencesFactory.applyLoaded(target, targetOptions, parsed);
             } else {
                 console.log('Unable to load planner from url parameters, due to invalid data.');
             }

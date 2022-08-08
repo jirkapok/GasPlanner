@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { OptionDefaults, Options, SafetyStop } from 'scuba-physics';
 import { Plan, Strategies } from '../shared/models';
+import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 
@@ -13,26 +14,19 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 export class DiveOptionsComponent {
     @Input()
     public formValid = true;
-
     public readonly allUsableName = 'All usable';
     public readonly halfUsableName = 'Half usable';
     public readonly thirdUsableName = 'Thirds usable';
-    public readonly lowName = 'Low (45/95)';
-    public readonly mediumName = 'Medium (40/85)';
-    public readonly highName = 'High (30/75)';
     public readonly safetyOffName = 'Never';
     public readonly safetyOnName = 'Always';
-    public conservatism = this.mediumName;
     public plan: Plan;
     public strategy = this.allUsableName;
     public icon = faCog;
 
-    constructor(public planner: PlannerService, public units: UnitConversion) {
+    constructor(public units: UnitConversion, public options: OptionsDispatcherService,
+        private planner: PlannerService) {
         this.plan = this.planner.plan;
-    }
-
-    public get options(): Options {
-        return this.planner.options;
+        this.options.change.subscribe((o) => this.assignOptions(o));
     }
 
     public get isComplex(): boolean {
@@ -43,37 +37,13 @@ export class DiveOptionsComponent {
         return this.units.ranges;
     }
 
-    public get roundDecoStops(): boolean {
-        return this.planner.options.roundStopsToMinutes;
-    }
-
-    public get lastStopDepth(): number {
-        return this.planner.options.lastStopDepth;
-    }
-
-    public get problemSolvingDuration(): number {
-        return this.planner.options.problemSolvingDuration;
-    }
-
-    public get gasSwitchDuration(): number {
-        return this.planner.options.gasSwitchDuration;
-    }
-
-    public get gasMaxNarcoticDepth(): number {
-        return this.planner.options.maxEND;
-    }
-
-    public get gasOxygenNarcotic(): boolean {
-        return this.planner.options.oxygenNarcotic;
-    }
-
     public get safetyAutoName(): string {
         const level = this.units.autoStopLevel;
         return `Auto (> ${level} ${this.units.length})`;
     }
 
     public get safetyStopOption(): string {
-        switch(this.planner.options.safetyStop){
+        switch(this.options.safetyStop){
             case SafetyStop.never:
                 return this.safetyOffName;
             case SafetyStop.always:
@@ -83,106 +53,15 @@ export class DiveOptionsComponent {
         }
     }
 
-    public get plannedAltitude(): number {
-        return this.planner.options.altitude;
-    }
-
-    public get ascentSpeed50perc(): number {
-        return this.planner.options.ascentSpeed50perc;
-    }
-
-    public get ascentSpeed50percTo6m(): number {
-        return this.planner.options.ascentSpeed50percTo6m;
-    }
-
-    public get ascentSpeed6m(): number {
-        return this.planner.options.ascentSpeed6m;
-    }
-
-    public get descentSpeed(): number {
-        return this.planner.options.descentSpeed;
-    }
-
     public set isComplex(newValue: boolean) {
         this.planner.isComplex = newValue;
 
         if (!this.planner.isComplex) {
             this.setAllUsable();
+            this.options.resetToSimple();
             this.planner.resetToSimple();
         }
 
-        this.planner.calculate();
-    }
-
-    public set roundDecoStops(newValue: boolean) {
-        this.planner.options.roundStopsToMinutes = newValue;
-        this.planner.calculate();
-    }
-
-    public set lastStopDepth(newValue: number) {
-        this.planner.options.lastStopDepth = newValue;
-        this.planner.calculate();
-    }
-
-    public set problemSolvingDuration(newValue: number) {
-        this.planner.options.problemSolvingDuration = newValue;
-        this.planner.calculate();
-    }
-
-    public set gasSwitchDuration(newValue: number) {
-        this.planner.options.gasSwitchDuration = newValue;
-        this.planner.calculate();
-    }
-
-    public set gasMaxNarcoticDepth(newValue: number) {
-        this.planner.options.maxEND = newValue;
-        this.planner.calculate();
-    }
-
-    public set gasOxygenNarcotic(newValue: boolean) {
-        this.planner.options.oxygenNarcotic = newValue;
-        this.planner.calculate();
-    }
-
-    public set plannedAltitude(newValue: number) {
-        this.planner.options.altitude = newValue;
-        this.planner.calculate();
-    }
-
-    public set ascentSpeed50perc(newValue: number) {
-        if (newValue < 1) {
-            return;
-        }
-
-        this.planner.options.ascentSpeed50perc = newValue;
-        this.planner.calculate();
-    }
-
-    public set ascentSpeed50percTo6m(newValue: number) {
-        if (newValue < 1) {
-            return;
-        }
-
-        this.planner.options.ascentSpeed50percTo6m = newValue;
-        this.planner.calculate();
-    }
-
-    public set ascentSpeed6m(newValue: number) {
-        // somehow noticed frozen UI in case copy/paste 0 into the asc/desc fields
-        if (newValue < 1) {
-            return;
-        }
-
-        this.planner.options.ascentSpeed6m = newValue;
-        this.planner.calculate();
-    }
-
-    public set descentSpeed(newValue: number) {
-        if (newValue < 1) {
-            return;
-        }
-
-        this.planner.options.descentSpeed = newValue;
         this.planner.calculate();
     }
 
@@ -225,25 +104,8 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    public useRecreational(): void {
-        OptionDefaults.useRecreational(this.planner.options);
+    public assignOptions(o: Options): void {
+        this.planner.assignOptions(o);
         this.planner.calculate();
-    }
-
-    public useRecommended(): void {
-        OptionDefaults.useRecommended(this.planner.options);
-        this.planner.calculate();
-    }
-
-    public useSafetyOff(): void {
-        this.planner.changeSafetyStop(SafetyStop.never);
-    }
-
-    public useSafetyAuto(): void {
-        this.planner.changeSafetyStop(SafetyStop.auto);
-    }
-
-    public useSafetyOn(): void {
-        this.planner.changeSafetyStop(SafetyStop.always);
     }
 }

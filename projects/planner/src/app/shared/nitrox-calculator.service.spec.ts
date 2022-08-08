@@ -1,10 +1,11 @@
 import { NitroxCalculatorService, NitroxMode } from './nitrox-calculator.service';
+import { OptionsDispatcherService } from './options-dispatcher.service';
 
 describe('NitroxCalculatorService', () => {
     let service: NitroxCalculatorService;
 
     beforeEach(() => {
-        service = new NitroxCalculatorService();
+        service = new NitroxCalculatorService(new OptionsDispatcherService());
     });
 
     describe('Maximum operational depth (MOD)', () => {

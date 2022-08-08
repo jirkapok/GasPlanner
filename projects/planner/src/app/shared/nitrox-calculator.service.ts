@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { NitroxCalculator, DepthConverter, SafetyStop, DepthLevels } from 'scuba-physics';
+import { NitroxCalculator, DepthConverter, DepthLevels } from 'scuba-physics';
+import { OptionsDispatcherService } from './options-dispatcher.service';
 
 export enum NitroxMode {
     Mod,
@@ -18,16 +19,10 @@ export class NitroxCalculatorService {
 
     private nitroxCalculator: NitroxCalculator;
 
-    constructor() {
+    constructor(options: OptionsDispatcherService) {
         const depthConverter = DepthConverter.simple();
         // TODO replace stop values by values converted by units
-        const levelOptions = {
-            lastStopDepth: 6,
-            safetyStop: SafetyStop.never,
-            decoStopDistance: 3,
-            minimumAutoStopDepth: 10
-        };
-        const depthLevels = new DepthLevels(depthConverter, levelOptions);
+        const depthLevels = new DepthLevels(depthConverter, options);
         this.nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);
     }
 

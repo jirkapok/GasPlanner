@@ -1,13 +1,16 @@
+import { OptionsDispatcherService } from './options-dispatcher.service';
 import { PlannerService } from './planner.service';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 
 describe('Url Serialization', () => {
     const irrelevantFactory = new WorkersFactoryCommon();
+    let options: OptionsDispatcherService;
     let defaultPlan: PlannerService;
     let planner: PlannerService;
 
     beforeEach(() => {
+        options = new OptionsDispatcherService();
         defaultPlan = new PlannerService(irrelevantFactory);
         planner = new PlannerService(irrelevantFactory);
         planner.isComplex = true;
@@ -44,7 +47,7 @@ describe('Url Serialization', () => {
     it('Serialize and deserialize complex plan', () => {
         const urlParams = PlanUrlSerialization.toUrl(planner);
         const current = new PlannerService(irrelevantFactory);
-        PlanUrlSerialization.fromUrl(urlParams, current);
+        PlanUrlSerialization.fromUrl(urlParams, options, current);
         expectParsedEquals(planner, current);
     });
 
@@ -54,7 +57,7 @@ describe('Url Serialization', () => {
         source.calculate();
         const urlParams = PlanUrlSerialization.toUrl(source);
         const current = new PlannerService(irrelevantFactory);
-        PlanUrlSerialization.fromUrl(urlParams, current);
+        PlanUrlSerialization.fromUrl(urlParams, options, current);
         expectParsedEquals(source, current);
     });
 
@@ -64,20 +67,20 @@ describe('Url Serialization', () => {
             const urlParams = 't=1-15-200-0.209-0,2-11-200-0.5-0&de=0-30-102-1,30-30-618-1&' +
                 'di=20,1.4,1.6&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&c=0';
             const current = new PlannerService(irrelevantFactory);
-            PlanUrlSerialization.fromUrl(urlParams, current);
+            PlanUrlSerialization.fromUrl(urlParams, options, current);
             expectParsedEquals(current, defaultPlan);
         });
 
         it('Empty string', () => {
             const current = new PlannerService(irrelevantFactory);
-            PlanUrlSerialization.fromUrl('', current);
+            PlanUrlSerialization.fromUrl('', options, current);
             expectParsedEquals(current, defaultPlan);
         });
 
         it('Null string', () => {
             const planUrl: any = null;
             const current = new PlannerService(irrelevantFactory);
-            PlanUrlSerialization.fromUrl(<string>planUrl, current);
+            PlanUrlSerialization.fromUrl(<string>planUrl, options, current);
             expectParsedEquals(current, defaultPlan);
         });
     });

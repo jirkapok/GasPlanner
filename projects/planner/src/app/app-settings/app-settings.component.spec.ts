@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -12,7 +13,8 @@ describe('App settings component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [AppSettingsComponent],
-            providers: [WorkersFactoryCommon, UnitConversion, PlannerService, RouterTestingModule],
+            providers: [WorkersFactoryCommon, UnitConversion,
+                PlannerService, RouterTestingModule, OptionsDispatcherService],
             imports: [RouterTestingModule.withRoutes([])]
         })
             .compileComponents();
@@ -32,18 +34,18 @@ describe('App settings component', () => {
                 expect(planner.diver.rmv).toBe(18);
             }));
 
-        it('ppO2 applies to planner', inject([PlannerService],
-            (planner: PlannerService) => {
+        it('ppO2 applies to planner', inject([OptionsDispatcherService],
+            (options: OptionsDispatcherService) => {
                 component.diver.maxPpO2 = 1.1;
                 component.use();
-                expect(planner.options.maxPpO2).toBe(1.1);
+                expect(options.maxPpO2).toBe(1.1);
             }));
 
-        it('Deco ppO2 applies to planner', inject([PlannerService],
-            (planner: PlannerService) => {
+        it('Deco ppO2 applies to planner', inject([OptionsDispatcherService],
+            (options: OptionsDispatcherService) => {
                 component.diver.maxDecoPpO2 = 1.5;
                 component.use();
-                expect(planner.options.maxDecoPpO2).toBe(1.5);
+                expect(options.maxDecoPpO2).toBe(1.5);
             }));
     });
 

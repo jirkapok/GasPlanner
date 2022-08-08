@@ -24,7 +24,7 @@
           <div [hidden]="inBestMix" class="my-2">
             <label for="fO2">Percent O2:
               <input [(ngModel)]="calc.fO2" class="form-control" #fO2="ngModel" name="fO2" id="fO2" type="number"
-                 required [rangeVal]="ranges.nitroxOxygen" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[0]" step="1"
+                 required [rangeVal]="ranges.nitroxOxygen" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]" step="1"
                  [class.is-invalid]="fO2.invalid && (fO2.dirty || fO2.touched)" />
             </label>
             <div class="text-danger" *ngIf="fO2.invalid && (fO2.dirty || fO2.touched)">Needs to be number {{ranges.nitroxOxygenLabel}}</div>

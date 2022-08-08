@@ -59,12 +59,11 @@ class ParseContext {
  * 3. Encode as url parameter
  **/
 export class PlanUrlSerialization {
-    public static toUrl(source: PlannerService): string {
+    public static toUrl(source: PlannerService, options: OptionsDispatcherService): string {
         const tanksParam = PlanUrlSerialization.toTanksParam(source.tanks);
         const depthsParam = PlanUrlSerialization.toDepthsParam(source.plan.segments);
         const diParam =  PlanUrlSerialization.toDiverParam(source.diver);
-        // TODO take options from its service
-        const optionsParam = PlanUrlSerialization.toOptionsParam(source.options);
+        const optionsParam = PlanUrlSerialization.toOptionsParam(options.getOptions());
         const isComplex = ParseContext.serializeBoolean(source.isComplex);
         const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&c=${isComplex}`;
         return result;

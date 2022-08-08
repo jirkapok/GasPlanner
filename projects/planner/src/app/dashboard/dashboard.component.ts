@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
     }
 
     private updateQueryParams(): void {
-        const urlParams = PlanUrlSerialization.toUrl(this.planner);
+        const urlParams = PlanUrlSerialization.toUrl(this.planner, this.options);
         this.router.navigateByUrl( '?' + urlParams);
     }
 }

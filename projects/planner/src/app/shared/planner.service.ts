@@ -7,7 +7,7 @@ import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
     NitroxCalculator, Options,
     DepthConverter, DepthConverterFactory, Tank, Tanks,
-    Diver, Segment, Segments, OptionDefaults, Salinity, SafetyStop,
+    Diver, Segment, Segments, Salinity, SafetyStop,
     DepthLevels, Gas
 } from 'scuba-physics';
 import {

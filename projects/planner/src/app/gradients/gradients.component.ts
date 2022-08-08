@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { OptionDefaults } from 'scuba-physics';
+import { StandardGradientsService } from '../shared/standard-gradients.service';
 
 @Component({
     selector: 'app-gradients',
@@ -13,22 +14,9 @@ export class GradientsComponent {
     public gfLowChange = new EventEmitter<number>();
     @Output()
     public gfHighChange = new EventEmitter<number>();
-
-    public readonly lowName = 'Low (45/95)';
-    public readonly mediumName = 'Medium (40/85)';
-    public readonly highName = 'High (30/75)';
-
+    public standards = new StandardGradientsService();
     private _gfLow = OptionDefaults.gfLow;
     private _gfHigh = OptionDefaults.gfHigh;
-
-    // TODO move to Options service
-    private gfMap = new Map<string, [number, number]>();
-
-    constructor() {
-        this.gfMap.set(this.lowName, [0.45, 0.95]);
-        this.gfMap.set(this.mediumName, [OptionDefaults.gfLow, OptionDefaults.gfHigh]);
-        this.gfMap.set(this.highName, [0.30, 0.75]);
-    }
 
     @Input()
     public get gfLow(): number {
@@ -41,14 +29,7 @@ export class GradientsComponent {
     }
 
     public get conservatism(): string {
-        for (const key of this.gfMap.keys()) {
-            const entry = this.gfMap.get(key) || [0,0];
-            if(entry[0] === this.gfLow && entry[1] === this.gfHigh) {
-                return key;
-            }
-        }
-
-        return `${this.gfLow}/${this.gfHigh}`;
+        return this.standards.standardLabel(this.gfLow, this.gfHigh);
     }
 
     public get plannedGfHigh(): number {
@@ -78,17 +59,20 @@ export class GradientsComponent {
     }
 
     public lowConservatism(): void {
-        this.gfLow = 0.45;
-        this.gfHigh = 0.95;
+        this.applyStandards(this.standards.lowName);
     }
 
     public mediumConservatism(): void {
-        this.gfLow = OptionDefaults.gfLow;
-        this.gfHigh = OptionDefaults.gfHigh;
+        this.applyStandards(this.standards.mediumName);
     }
 
     public highConservatism(): void {
-        this.gfLow = 0.30;
-        this.gfHigh = 0.75;
+        this.applyStandards(this.standards.highName);
+    }
+
+    private applyStandards(label: string): void  {
+        const toApply = this.standards.get(label);
+        this.gfLow = toApply.gfLow;
+        this.gfHigh = toApply.gfHeigh;
     }
 }

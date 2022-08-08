@@ -239,6 +239,7 @@ export class OptionsDispatcherService {
     }
 
     public resetToSimple(): void {
+        // TODO only in case the set is not a standard set
         OptionDefaults.setMediumConservatism(this.options);
         this.change.emit(this.options);
     }

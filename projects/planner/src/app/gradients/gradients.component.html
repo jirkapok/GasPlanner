@@ -9,11 +9,11 @@
                     ngbDropdownToggle></button>
                 <div ngbDropdownMenu aria-labelledby="conservatismMenu" aria-expanded="false">
                     <button type="button" class="dropdown-item"
-                        (click)="lowConservatism()">{{lowName}}</button>
+                        (click)="lowConservatism()">{{standards.lowName}}</button>
                     <button type="button" class="dropdown-item"
-                        (click)="mediumConservatism()">{{mediumName}}</button>
+                        (click)="mediumConservatism()">{{standards.mediumName}}</button>
                     <button type="button" class="dropdown-item"
-                        (click)="highConservatism()">{{highName}}</button>
+                        (click)="highConservatism()">{{standards.highName}}</button>
                 </div>
             </div>
         </ng-container>
@@ -27,11 +27,11 @@
                     ngbDropdownToggle></button>
                 <div ngbDropdownMenu aria-labelledby="conservatismMenu" aria-expanded="false">
                     <button type="button" class="dropdown-item"
-                        (click)="lowConservatism()">{{lowName}}</button>
+                        (click)="lowConservatism()">{{standards.lowName}}</button>
                     <button type="button" class="dropdown-item"
-                        (click)="mediumConservatism()">{{mediumName}}</button>
+                        (click)="mediumConservatism()">{{standards.mediumName}}</button>
                     <button type="button" class="dropdown-item"
-                        (click)="highConservatism()">{{highName}}</button>
+                        (click)="highConservatism()">{{standards.highName}}</button>
                 </div>
             </div>
             <div class="text-danger form-text" *ngIf="gfLowField.invalid && (gfLowField.dirty || gfLowField.touched)">

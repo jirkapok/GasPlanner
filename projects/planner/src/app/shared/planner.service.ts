@@ -76,6 +76,7 @@ export class PlannerService {
         return this.modForGas(this.firstTank);
     }
 
+    // TODO only for testing purposes
     public get options(): Options {
         return this._options;
     }

@@ -80,7 +80,7 @@ export class PlanUrlSerialization {
             // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
             const isValid = new PlanValidation().validate(parsed);
             if(isValid) {
-                PreferencesFactory.applyLoaded(target, targetOptions, parsed);
+                new PreferencesFactory().applyLoaded(target, targetOptions, parsed);
             } else {
                 console.log('Unable to load planner from url parameters, due to invalid data.');
             }

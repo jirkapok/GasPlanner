@@ -243,6 +243,10 @@ export class OptionsDispatcherService {
         this.change.emit(this.options);
     }
 
+    public getOptions(): Options {
+        return this.options;
+    }
+
     private fireChange(): void {
         this.change.emit(this.options);
     }

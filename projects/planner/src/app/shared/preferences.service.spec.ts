@@ -4,18 +4,21 @@ import { PlannerService } from './planner.service';
 import { Diver, Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
+import { OptionsDispatcherService } from './options-dispatcher.service';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [WorkersFactoryCommon, PreferencesService, PlannerService]
+            providers: [WorkersFactoryCommon,
+                PreferencesService, PlannerService,
+                OptionsDispatcherService ]
         });
 
         localStorage.clear();
     });
 
     it('loads saved disclaimer', inject([PreferencesService, PlannerService],
-        (service: PreferencesService, planner: PlannerService) => {
+        (service: PreferencesService) => {
             service.disableDisclaimer();
             const enabled = service.disclaimerEnabled();
             expect(enabled).toBeFalsy();
@@ -23,7 +26,7 @@ describe('PreferencesService', () => {
 
     describe('Preferences', () => {
         it('Diver values are loaded after save', inject([PreferencesService, PlannerService],
-            (service: PreferencesService, planner: PlannerService) => {
+            (service: PreferencesService, planner: PlannerService, options: OptionsDispatcherService) => {
                 const diver = planner.diver;
                 diver.rmv = 10;
                 diver.maxPpO2 = 1.1;
@@ -41,13 +44,13 @@ describe('PreferencesService', () => {
                 expect(diver).toEqual(expected);
             }));
 
-        it('Options values are loaded after save', inject([PreferencesService, PlannerService],
-            (service: PreferencesService, planner: PlannerService) => {
-                const options = planner.options;
+        it('Options values are loaded after save', inject([PreferencesService, PlannerService, OptionsDispatcherService],
+            (service: PreferencesService, planner: PlannerService, options: OptionsDispatcherService) => {
                 // not going to test all options, since it is a flat structure
                 options.gfLow = 0.3;
                 options.descentSpeed = 15;
                 planner.isComplex = true; // otherwise reset of GF.
+                planner.assignOptions(options.getOptions());
                 planner.calculate();
                 service.saveDefaults();
 
@@ -61,12 +64,14 @@ describe('PreferencesService', () => {
                 expect(planner.options).toEqual(expected);
             }));
 
-        it('Tanks are loaded after save', inject([PreferencesService, PlannerService],
-            (service: PreferencesService, planner: PlannerService) => {
-                OptionExtensions.applySimpleSpeeds(planner.options);
-                planner.options.safetyStop = SafetyStop.always;
-                planner.options.gasSwitchDuration = 1;
-                planner.options.problemSolvingDuration = 2;
+        it('Tanks are loaded after save', inject([PreferencesService, PlannerService, OptionsDispatcherService],
+            (service: PreferencesService, planner: PlannerService, options: OptionsDispatcherService) => {
+                const oValues = options.getOptions();
+                OptionExtensions.applySimpleSpeeds(oValues);
+                options.safetyStop = SafetyStop.always;
+                options.gasSwitchDuration = 1;
+                options.problemSolvingDuration = 2;
+                planner.assignOptions(options.getOptions());
                 const tanks = planner.tanks;
                 planner.addTank();
                 tanks[0].startPressure = 150;

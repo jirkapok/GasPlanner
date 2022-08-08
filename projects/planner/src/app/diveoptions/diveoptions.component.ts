@@ -39,17 +39,6 @@ export class DiveOptionsComponent {
         return this.planner.isComplex;
     }
 
-    public set isComplex(newValue: boolean) {
-        this.planner.isComplex = newValue;
-
-        if (!this.planner.isComplex) {
-            this.setAllUsable();
-            this.planner.resetToSimple();
-        }
-
-        this.planner.calculate();
-    }
-
     public get ranges(): RangeConstants {
         return this.units.ranges;
     }
@@ -58,54 +47,24 @@ export class DiveOptionsComponent {
         return this.planner.options.roundStopsToMinutes;
     }
 
-    public set roundDecoStops(newValue: boolean) {
-        this.planner.options.roundStopsToMinutes = newValue;
-        this.planner.calculate();
-    }
-
     public get lastStopDepth(): number {
         return this.planner.options.lastStopDepth;
-    }
-
-    public set lastStopDepth(newValue: number) {
-        this.planner.options.lastStopDepth = newValue;
-        this.planner.calculate();
     }
 
     public get problemSolvingDuration(): number {
         return this.planner.options.problemSolvingDuration;
     }
 
-    public set problemSolvingDuration(newValue: number) {
-        this.planner.options.problemSolvingDuration = newValue;
-        this.planner.calculate();
-    }
-
     public get gasSwitchDuration(): number {
         return this.planner.options.gasSwitchDuration;
-    }
-
-    public set gasSwitchDuration(newValue: number) {
-        this.planner.options.gasSwitchDuration = newValue;
-        this.planner.calculate();
     }
 
     public get gasMaxNarcoticDepth(): number {
         return this.planner.options.maxEND;
     }
 
-    public set gasMaxNarcoticDepth(newValue: number) {
-        this.planner.options.maxEND = newValue;
-        this.planner.calculate();
-    }
-
     public get gasOxygenNarcotic(): boolean {
         return this.planner.options.oxygenNarcotic;
-    }
-
-    public set gasOxygenNarcotic(newValue: boolean) {
-        this.planner.options.oxygenNarcotic = newValue;
-        this.planner.calculate();
     }
 
     public get safetyAutoName(): string {
@@ -128,13 +87,66 @@ export class DiveOptionsComponent {
         return this.planner.options.altitude;
     }
 
-    public set plannedAltitude(newValue: number) {
-        this.planner.options.altitude = newValue;
+    public get ascentSpeed50perc(): number {
+        return this.planner.options.ascentSpeed50perc;
+    }
+
+    public get ascentSpeed50percTo6m(): number {
+        return this.planner.options.ascentSpeed50percTo6m;
+    }
+
+    public get ascentSpeed6m(): number {
+        return this.planner.options.ascentSpeed6m;
+    }
+
+    public get descentSpeed(): number {
+        return this.planner.options.descentSpeed;
+    }
+
+    public set isComplex(newValue: boolean) {
+        this.planner.isComplex = newValue;
+
+        if (!this.planner.isComplex) {
+            this.setAllUsable();
+            this.planner.resetToSimple();
+        }
+
         this.planner.calculate();
     }
 
-    public get ascentSpeed50perc(): number {
-        return this.planner.options.ascentSpeed50perc;
+    public set roundDecoStops(newValue: boolean) {
+        this.planner.options.roundStopsToMinutes = newValue;
+        this.planner.calculate();
+    }
+
+    public set lastStopDepth(newValue: number) {
+        this.planner.options.lastStopDepth = newValue;
+        this.planner.calculate();
+    }
+
+    public set problemSolvingDuration(newValue: number) {
+        this.planner.options.problemSolvingDuration = newValue;
+        this.planner.calculate();
+    }
+
+    public set gasSwitchDuration(newValue: number) {
+        this.planner.options.gasSwitchDuration = newValue;
+        this.planner.calculate();
+    }
+
+    public set gasMaxNarcoticDepth(newValue: number) {
+        this.planner.options.maxEND = newValue;
+        this.planner.calculate();
+    }
+
+    public set gasOxygenNarcotic(newValue: boolean) {
+        this.planner.options.oxygenNarcotic = newValue;
+        this.planner.calculate();
+    }
+
+    public set plannedAltitude(newValue: number) {
+        this.planner.options.altitude = newValue;
+        this.planner.calculate();
     }
 
     public set ascentSpeed50perc(newValue: number) {
@@ -146,10 +158,6 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    public get ascentSpeed50percTo6m(): number {
-        return this.planner.options.ascentSpeed50percTo6m;
-    }
-
     public set ascentSpeed50percTo6m(newValue: number) {
         if (newValue < 1) {
             return;
@@ -157,10 +165,6 @@ export class DiveOptionsComponent {
 
         this.planner.options.ascentSpeed50percTo6m = newValue;
         this.planner.calculate();
-    }
-
-    public get ascentSpeed6m(): number {
-        return this.planner.options.ascentSpeed6m;
     }
 
     public set ascentSpeed6m(newValue: number) {
@@ -171,10 +175,6 @@ export class DiveOptionsComponent {
 
         this.planner.options.ascentSpeed6m = newValue;
         this.planner.calculate();
-    }
-
-    public get descentSpeed(): number {
-        return this.planner.options.descentSpeed;
     }
 
     public set descentSpeed(newValue: number) {

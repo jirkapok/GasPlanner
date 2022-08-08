@@ -67,7 +67,7 @@
                 </div>
                 <div class="tab-pane fade" id="conservatism" role="tabpanel" aria-labelledby="conservatism-tab">
                     <div class="col-sm mt-3">
-                        <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh" (gfHighChange)="planner.calculate()" (gfLowChange)="planner.calculate()" [simple]="false"></app-gradients>
+                        <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" (gfHighChange)="planner.calculate()" (gfLowChange)="planner.calculate()" [simple]="false"></app-gradients>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="gases" role="tabpanel" aria-labelledby="gases-tab">

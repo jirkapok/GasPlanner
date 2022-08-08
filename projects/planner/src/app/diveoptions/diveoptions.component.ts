@@ -44,7 +44,6 @@ export class DiveOptionsComponent {
 
         if (!this.planner.isComplex) {
             this.setAllUsable();
-            // TODO this.setMediumConservatism();
             this.planner.resetToSimple();
         }
 
@@ -227,13 +226,11 @@ export class DiveOptionsComponent {
     }
 
     public useRecreational(): void {
-        // TODO this.mediumConservatism();
         OptionDefaults.useRecreational(this.planner.options);
         this.planner.calculate();
     }
 
     public useRecommended(): void {
-        // TODO this.mediumConservatism();
         OptionDefaults.useRecommended(this.planner.options);
         this.planner.calculate();
     }

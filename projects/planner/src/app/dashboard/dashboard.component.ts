@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { PreferencesService } from '../shared/preferences.service';
 import { PlannerService } from '../shared/planner.service';
@@ -17,7 +18,9 @@ export class DashboardComponent implements OnInit {
     public exclamation = faExclamationTriangle;
     private dive: Dive;
 
-    constructor(private router: Router,
+    constructor(
+        private router: Router,
+        private location: Location,
         private preferences: PreferencesService,
         private options: OptionsDispatcherService,
         private planner: PlannerService) {
@@ -34,11 +37,10 @@ export class DashboardComponent implements OnInit {
         if (query !=='') {
             PlanUrlSerialization.fromUrl(query, this.options, this.planner);
         }
-        // first calculate, than subscribe for later updates by user
-        this.planner.infoCalculated.subscribe(() => {
-            this.updateQueryParams();
-        });
 
+        // first calculate, than subscribe for later updates by user
+        // TODO reloads dozenths of times
+        this.planner.infoCalculated.subscribe(() => this.updateQueryParams());
         this.planner.calculate();
     }
 
@@ -48,7 +50,10 @@ export class DashboardComponent implements OnInit {
     }
 
     private updateQueryParams(): void {
-        const urlParams = PlanUrlSerialization.toUrl(this.planner, this.options);
-        this.router.navigateByUrl( '?' + urlParams);
+        console.log('Planner calculated');
+        if(this.router.url === '/') {
+            const urlParams = PlanUrlSerialization.toUrl(this.planner, this.options);
+            this.location.go( '?' + urlParams);
+        }
     }
 }

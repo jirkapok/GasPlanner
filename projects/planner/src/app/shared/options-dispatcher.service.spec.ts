@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Options } from 'scuba-physics';
+import { Diver } from 'scuba-physics';
 
 import { OptionsDispatcherService } from './options-dispatcher.service';
 
@@ -11,10 +11,18 @@ describe('OptionsDispatcherService', () => {
         service = TestBed.inject(OptionsDispatcherService);
     });
 
-    it('Change property fires change event', () => {
-        let eventArgs: Options | null = null;
-        service.change.subscribe((o) => eventArgs = o);
-        service.altitude = 1000;
-        expect(eventArgs).not.toBeNull();
+    it('Use recommended applies default values', () => {
+        service.ascentSpeed6m = 1;
+        service.useRecommended();
+        expect(service.ascentSpeed6m).toBe(3);
+    });
+
+    it('Apply diver updates ppO2 limits', () => {
+        const diver = new Diver();
+        diver.maxPpO2 = 1.22;
+        diver.maxDecoPpO2 = 1.45;
+        service.applyDiver(diver);
+        expect(service.maxPpO2).toBe(1.22);
+        expect(service.maxDecoPpO2).toBe(1.45);
     });
 });

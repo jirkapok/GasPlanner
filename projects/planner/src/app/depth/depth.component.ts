@@ -14,6 +14,9 @@ export class DepthComponent{
     public applyMaxDepth = new EventEmitter();
 
     @Output()
+    public inputChange = new EventEmitter();
+
+    @Output()
     public depthChange = new EventEmitter<number>();
 
     private _depth = 30;
@@ -29,7 +32,6 @@ export class DepthComponent{
         this._depth = newValue;
         this.depthChange.emit(this._depth);
     }
-
 
     public fireApplyMaxDepth(): void {
         this.applyMaxDepth.emit();

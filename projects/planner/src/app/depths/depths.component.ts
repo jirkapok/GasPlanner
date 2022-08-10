@@ -12,7 +12,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
     templateUrl: './depths.component.html',
     styleUrls: ['./depths.component.css']
 })
-export class DepthsComponent implements OnDestroy {
+export class DepthsComponent {
     @Input()
     public formValid = true;
     public plan: Plan;
@@ -20,17 +20,13 @@ export class DepthsComponent implements OnDestroy {
     public addIcon = faPlusSquare;
     public removeIcon = faTrashAlt;
     private _levels: Level[] = [];
-    private subscription: Subscription;
     private dive: Dive;
 
     constructor(public planner: PlannerService, public units: UnitConversion) {
         this.plan = this.planner.plan;
         this.dive = this.planner.dive;
+        // data are already available, it is ok to generate the levels.
         this.updateLevels();
-
-        this.subscription = this.planner.infoCalculated.subscribe(() => {
-            this.updateLevels();
-        });
     }
 
     @Input()
@@ -88,8 +84,20 @@ export class DepthsComponent implements OnDestroy {
         this.planner.assignDepth(depth);
     }
 
-    public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+    public applyMaxDuration(): void {
+        this.planner.applyMaxDuration();
+        this.planner.calculate();
+    }
+
+    public applyNdlDuration(): void {
+        this.planner.applyNdlDuration();
+        this.planner.calculate();
+    }
+
+
+    public applyMaxDepth(): void {
+        this.planner.applyMaxDepth();
+        this.planner.calculate();
     }
 
     public tankLabel(tank: Tank): string {
@@ -98,10 +106,12 @@ export class DepthsComponent implements OnDestroy {
 
     public addSegment(): void {
         this.planner.addSegment();
+        this.updateLevels();
     }
 
     public removeSegment(level: Level): void {
         this.planner.removeSegment(level.segment);
+        this.updateLevels();
     }
 
     public depthChanged(): void {
@@ -118,6 +128,7 @@ export class DepthsComponent implements OnDestroy {
         this.planner.calculate();
     }
 
+    // TODO check how levels are refreshed after reload defaults
     private updateLevels(): void {
         const segments: Segment[] = this.plan.segments;
         const converted: Level[] = [];

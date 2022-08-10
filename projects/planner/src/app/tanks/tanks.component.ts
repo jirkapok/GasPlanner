@@ -81,6 +81,7 @@ export class TanksComponent {
 
     public assignBestMix(): void {
         this.firstTank.o2 = this.planner.bestNitroxMix();
+        this.gasChanged();
     }
 
     public gasChanged(): void {

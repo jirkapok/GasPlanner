@@ -94,7 +94,6 @@ export class DepthsComponent {
         this.planner.calculate();
     }
 
-
     public applyMaxDepth(): void {
         this.planner.applyMaxDepth();
         this.planner.calculate();

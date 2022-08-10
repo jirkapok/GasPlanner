@@ -39,12 +39,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const query = window.location.search;
         if (query !=='') {
             PlanUrlSerialization.fromUrl(query, this.options, this.planner);
+        } else {
+            this.planner.calculate();
         }
 
         // first calculate, than subscribe for later updates by user
         // TODO reloads dozenths of times
         this.subscription = this.planner.infoCalculated.subscribe(() => this.updateQueryParams());
-        this.planner.calculate();
     }
 
     public ngOnDestroy(): void {

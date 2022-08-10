@@ -28,7 +28,7 @@
                 <div class="d-flex flex-row justify-content-between py-0">
                     <div class="me-1">
                         <input #size="ngModel" name="size" [(ngModel)]="tank.size" class="form-control" type="number"
-                            (change)="gasChanged()" required
+                            (input)="gasChanged()" required
                             [rangeVal]="ranges.tankSize" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
                             [class.is-invalid]="size.invalid && (size.dirty || size.touched)" />
 
@@ -39,7 +39,7 @@
 
                     <div class="mx-1">
                         <input #startPressure="ngModel" name="startPressure" [(ngModel)]="tank.startPressure"
-                            class="form-control" type="number" (change)="gasChanged()" required
+                            class="form-control" type="number" (input)="gasChanged()" required
                             [rangeVal]="ranges.tankPressure" [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
                             [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)" />
                         <div class="text-danger"
@@ -50,7 +50,7 @@
                     <div class="ms-1">
                         <div class="input-group">
                             <input #gasO2="ngModel" name="gasO2" [(ngModel)]="tank.o2" class="form-control" type="number"
-                                (change)="gasChanged()" required
+                                (input)="gasChanged()" required
                                 [rangeVal]="ranges.trimixOxygen" [min]="ranges.trimixOxygen[0]" [max]="ranges.trimixOxygen[1]" step="1"
                                 [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />
                             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
@@ -93,7 +93,7 @@
   <div class="card-body row" *ngIf="!isComplex">
       <div class="mb-3 col-auto">
         <label for="size" class="form-label">Size [{{units.volume}}]:</label>
-        <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control col-auto" type="number" (change)="gasChanged()"
+        <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control col-auto" type="number" (input)="gasChanged()"
         required [rangeVal]="ranges.tankSize" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
         [class.is-invalid]="size.invalid && (size.dirty || size.touched)"/>
         <small class="form-text text-muted">SAC: {{gasSac(firstTank.tank) | number:'1.0-2'}} {{units.sac}}</small>
@@ -101,7 +101,8 @@
       </div>
       <div class="mb-3 col-auto">
         <label for="startPressure" class="form-label">Start pressure [{{units.pressure}}]:</label>
-        <input #startPressure="ngModel" name="startPressure" [(ngModel)]="firstTank.startPressure" class="form-control col-auto" type="number" (change)="gasChanged()"
+        <input #startPressure="ngModel" name="startPressure" class="form-control col-auto" type="number"
+        (input)="gasChanged()" [(ngModel)]="firstTank.startPressure"
         required [rangeVal]="ranges.tankPressure" [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
         [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)"/>
         <div class="text-danger form-text" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number {{ranges.tankPressureLabel}}</div>

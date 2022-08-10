@@ -1,4 +1,3 @@
-import { Subject } from 'rxjs';
 import { Ceiling, Time, Event, Segment, Segments, SegmentsFactory,
     StandardGases, Options, Tank } from 'scuba-physics';
 
@@ -59,14 +58,11 @@ export class Level {
 export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     public noDecoTime = 0;
-    public changed;
     private _segments: Segments = new Segments();
-    private onChanged = new Subject();
 
     /** provide the not necessary tank and options only to start from simple valid profile */
     constructor(public strategy: Strategies, depth: number, duration: number, tank: Tank, options: Options) {
         this.reset(depth, duration, tank, options);
-        this.changed = this.onChanged.asObservable();
     }
 
     public get length(): number {
@@ -121,30 +117,25 @@ export class Plan {
 
     public setSimple(depth: number, duration: number, tank: Tank, options: Options): void {
         this.reset(depth, duration, tank, options);
-        this.onChanged.next({});
     }
 
 
     public assignDepth(newDepth: number, tank: Tank, options: Options): void {
         this._segments = SegmentsFactory.createForPlan(newDepth, this.duration, tank, options);
-        this.onChanged.next({});
     }
 
     public assignDuration(newDuration: number, tank: Tank, options: Options): void {
         this._segments = SegmentsFactory.createForPlan(this.maxDepth, newDuration, tank, options);
-        this.onChanged.next({});
     }
 
     public addSegment(tank: Tank): void {
         const last = this._segments.last();
         const created = this._segments.addChangeTo(last.endDepth, tank.gas, Plan.defaultDuration);
         created.tank = tank;
-        this.onChanged.next({});
     }
 
     public removeSegment(segment: Segment): void {
         this._segments.remove(segment);
-        this.onChanged.next({});
     }
 
     public fixDepths(): void {
@@ -156,7 +147,6 @@ export class Plan {
         // this.strategy = other.strategy;
         // cant use copy, since deserialized objects wouldn't have one.
         this._segments = Segments.fromCollection(other);
-        this.onChanged.next({});
     }
 
     public resetSegments(removed: Tank, replacement: Tank): void {

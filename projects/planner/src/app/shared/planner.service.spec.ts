@@ -24,7 +24,8 @@ describe('PlannerService', () => {
         OptionExtensions.applySimpleSpeeds(planner.options);
         planner.options.problemSolvingDuration = 2;
         planner.options.safetyStop = SafetyStop.always;
-        planner.assignDepth(30); // to enforce plan to be updated
+        planner.assignDepth(30);
+        planner.calculate();
     });
 
     describe('no deco limit', () => {

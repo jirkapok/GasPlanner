@@ -199,6 +199,7 @@ export class PlannerService {
         this.resetDepthConverter();
     }
 
+    /** Not called by default, needs to be called manually */
     public calculate(): void {
         this.startCalculatingState();
         // TODO calculate only if form is valid

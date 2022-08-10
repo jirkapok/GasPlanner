@@ -16,6 +16,7 @@ describe('Url Serialization', () => {
         planner.isComplex = true;
         planner.addSegment();
         planner.addTank();
+        planner.calculate();
     });
 
     const expectParsedEquals = (expected: PlannerService, current: PlannerService): void => {

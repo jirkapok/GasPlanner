@@ -10,6 +10,9 @@ export class AltitudeComponent {
     @Output()
     public altitudeChange = new EventEmitter<number>();
 
+    @Output()
+    public inputChange = new EventEmitter();
+
     private _altitude = 0;
 
     constructor(public units: UnitConversion) { }

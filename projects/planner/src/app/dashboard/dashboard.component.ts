@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
@@ -8,16 +8,18 @@ import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
 import { Dive } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { environment } from '../../environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
     public showDisclaimer = true;
     public exclamation = faExclamationTriangle;
     private dive: Dive;
+    private subscription: Subscription | null = null;
 
     constructor(
         private router: Router,
@@ -41,8 +43,14 @@ export class DashboardComponent implements OnInit {
 
         // first calculate, than subscribe for later updates by user
         // TODO reloads dozenths of times
-        this.planner.infoCalculated.subscribe(() => this.updateQueryParams());
+        this.subscription = this.planner.infoCalculated.subscribe(() => this.updateQueryParams());
         this.planner.calculate();
+    }
+
+    public ngOnDestroy(): void {
+        if(this.subscription) {
+            this.subscription.unsubscribe();
+        }
     }
 
     public stopDisclaimer(): void {

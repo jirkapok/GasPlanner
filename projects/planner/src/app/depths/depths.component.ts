@@ -12,7 +12,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
     templateUrl: './depths.component.html',
     styleUrls: ['./depths.component.css']
 })
-export class DepthsComponent {
+export class DepthsComponent implements OnDestroy {
     @Input()
     public formValid = true;
     public plan: Plan;
@@ -21,12 +21,14 @@ export class DepthsComponent {
     public removeIcon = faTrashAlt;
     private _levels: Level[] = [];
     private dive: Dive;
+    private subscription: Subscription;
 
     constructor(public planner: PlannerService, public units: UnitConversion) {
         this.plan = this.planner.plan;
         this.dive = this.planner.dive;
         // data are already available, it is ok to generate the levels.
         this.updateLevels();
+        this.subscription = this.plan.reloaded.subscribe(() => this.updateLevels());
     }
 
     @Input()
@@ -82,6 +84,10 @@ export class DepthsComponent {
 
     public set plannedDepth(depth: number) {
         this.planner.assignDepth(depth);
+    }
+
+    public ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     public applyMaxDuration(): void {

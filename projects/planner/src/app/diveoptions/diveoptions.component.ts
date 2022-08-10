@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { OptionDefaults, Options, SafetyStop } from 'scuba-physics';
+import { SafetyStop } from 'scuba-physics';
 import { Plan, Strategies } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
@@ -23,10 +23,10 @@ export class DiveOptionsComponent {
     public strategy = this.allUsableName;
     public icon = faCog;
 
-    constructor(public units: UnitConversion, public options: OptionsDispatcherService,
+    constructor(public units: UnitConversion,
+        public options: OptionsDispatcherService,
         private planner: PlannerService) {
         this.plan = this.planner.plan;
-        this.options.change.subscribe((o) => this.assignOptions(o));
     }
 
     public get isComplex(): boolean {
@@ -62,7 +62,8 @@ export class DiveOptionsComponent {
             this.planner.resetToSimple();
         }
 
-        this.planner.calculate();
+        // TODO check if it is necessary to calculate when the isComplex changes to true
+        this.applyOptions();
     }
 
     public reset(): void {
@@ -104,8 +105,42 @@ export class DiveOptionsComponent {
         this.planner.calculate();
     }
 
-    public assignOptions(o: Options): void {
-        this.planner.assignOptions(o);
+    public useRecreational(): void {
+        this.options.useRecreational();
+        this.applyOptions();
+    }
+
+    public useRecommended(): void {
+        this.options.useRecommended();
+        this.applyOptions();
+    }
+
+    public switchStopsRounding(): void {
+        this.options.roundStopsToMinutes = !this.options.roundStopsToMinutes;
+        this.applyOptions();
+    }
+
+    public useSafetyOff(): void {
+        this.options.useSafetyOff();
+        this.applyOptions();
+    }
+
+    public useSafetyAuto(): void {
+        this.options.useSafetyAuto();
+        this.applyOptions();
+    }
+    public useSafetyOn(): void {
+        this.options.useSafetyOn();
+        this.applyOptions();
+    }
+
+    public switchOxygenNarcotic(): void {
+        this.options.oxygenNarcotic = !this.options.oxygenNarcotic;
+        this.applyOptions();
+    }
+
+    public applyOptions(): void {
+        this.planner.assignOptions(this.options.getOptions());
         this.planner.calculate();
     }
 }

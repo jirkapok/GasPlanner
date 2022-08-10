@@ -7,6 +7,7 @@ import { PlannerService } from '../shared/planner.service';
 import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
 import { Dive } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-dashboard',
@@ -50,7 +51,10 @@ export class DashboardComponent implements OnInit {
     }
 
     private updateQueryParams(): void {
-        console.log('Planner calculated');
+        if(!environment.production) {
+            console.log('Planner calculated');
+        }
+
         if(this.router.url === '/') {
             const urlParams = PlanUrlSerialization.toUrl(this.planner, this.options);
             this.location.go( '?' + urlParams);

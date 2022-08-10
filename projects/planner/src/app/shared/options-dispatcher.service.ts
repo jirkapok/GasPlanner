@@ -218,6 +218,8 @@ export class OptionsDispatcherService {
         OptionDefaults.setMediumConservatism(this.options);
     }
 
+    // didn't use inheritance to be able override some properties
+    // can be considered later
     public getOptions(): Options {
         return this.options;
     }

@@ -9,6 +9,10 @@ import { Salinity } from 'scuba-physics';
 export class SalinityComponent {
     @Output()
     public salinityChange = new EventEmitter<Salinity>();
+
+    @Output()
+    public inputChange = new EventEmitter();
+
     public readonly freshName = 'Fresh';
     public readonly brackishName = 'Brackish (EN13319)';
     public readonly saltName = 'Salt';
@@ -36,17 +40,17 @@ export class SalinityComponent {
     }
 
     public useFresh(): void {
-        this._salinity = Salinity.fresh;
-        this.salinityChange.emit(this._salinity);
+        this.salinity = Salinity.fresh;
+        this.inputChange.emit();
     }
 
     public useBrackish(): void {
-        this._salinity = Salinity.brackish;
-        this.salinityChange.emit(this._salinity);
+        this.salinity = Salinity.brackish;
+        this.inputChange.emit();
     }
 
     public useSalt(): void {
-        this._salinity = Salinity.salt;
-        this.salinityChange.emit(this._salinity);
+        this.salinity = Salinity.salt;
+        this.inputChange.emit();
     }
 }

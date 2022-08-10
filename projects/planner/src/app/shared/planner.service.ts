@@ -109,23 +109,19 @@ export class PlannerService {
         newTank.size = 11;
         this._tanks.push(newTank);
         newTank.id = this._tanks.length;
-        this.calculate();
     }
 
     public removeTank(tank: Tank): void {
         this._tanks = Tanks.removeTank(this._tanks, tank);
         this.plan.resetSegments(tank, this.firstTank);
-        this.calculate();
     }
 
     public addSegment(): void {
         this.plan.addSegment(this.firstTank);
-        this.calculate();
     }
 
     public removeSegment(segment: Segment): void {
         this.plan.removeSegment(segment);
-        this.calculate();
     }
 
     public applyMaxDepth(): void {
@@ -167,12 +163,10 @@ export class PlannerService {
 
     public assignDuration(newDuration: number): void {
         this.plan.assignDuration(newDuration, this.firstTank, this.options);
-        // TODO fix tests this.calculate();
     }
 
     public assignDepth(newDepth: number): void {
         this.plan.assignDepth(newDepth, this.firstTank, this.options);
-        // TODO fix tests: this.calculate();
     }
 
     public applyDiver(diver: Diver): void {
@@ -197,8 +191,6 @@ export class PlannerService {
         if(!isComplex) {
             this.resetToSimple();
         }
-
-        this.calculate();
     }
 
     public assignOptions(newOptions: Options): void {

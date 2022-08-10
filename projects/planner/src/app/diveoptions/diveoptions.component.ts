@@ -85,7 +85,7 @@ export class DiveOptionsComponent {
 
     public allUsable(): void {
         this.setAllUsable();
-        this.planner.calculate();
+        this.applyOptions();
     }
 
     public setAllUsable(): void {
@@ -96,13 +96,13 @@ export class DiveOptionsComponent {
     public halfUsable(): void {
         this.plan.strategy = Strategies.HALF;
         this.strategy = this.halfUsableName;
-        this.planner.calculate();
+        this.applyOptions();
     }
 
     public thirdUsable(): void {
         this.plan.strategy = Strategies.THIRD;
         this.strategy = this.thirdUsableName;
-        this.planner.calculate();
+        this.applyOptions();
     }
 
     public useRecreational(): void {

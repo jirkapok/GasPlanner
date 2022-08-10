@@ -45,11 +45,12 @@ export class TanksComponent {
     public trashIcon = faTrashAlt;
     private diver: Diver;
 
-    constructor(public planner: PlannerService, public units: UnitConversion) {
+    constructor(private planner: PlannerService, public units: UnitConversion) {
         this.diver = this.planner.diver;
         this.allNames = StandardGases.allNames();
     }
 
+    // TODO Bound tank for all tanks
     public get firstTank(): TankBound {
         return new TankBound(this.planner.firstTank, this.units);
     }
@@ -66,6 +67,10 @@ export class TanksComponent {
         return this.planner.isComplex;
     }
 
+    public isFirstTank(tank: Tank): boolean {
+        return this.planner.firstTank !== tank;
+    }
+
     public gasSac(tank: Tank): number {
         const sac = this.diver.gasSac(tank);
         return this.units.fromBar(sac);
@@ -73,23 +78,25 @@ export class TanksComponent {
 
     public addTank(): void {
         this.planner.addTank();
+        this.apply();
     }
 
     public removeTank(tank: Tank): void {
         this.planner.removeTank(tank);
+        this.apply();
     }
 
     public assignBestMix(): void {
         this.firstTank.o2 = this.planner.bestNitroxMix();
-        this.gasChanged();
-    }
-
-    public gasChanged(): void {
-        this.planner.calculate();
+        this.apply();
     }
 
     public assignStandardGas(gas: Tank, gasName: string): void {
         gas.assignStandardGas(gasName);
-        this.gasChanged();
+        this.apply();
+    }
+
+    public apply(): void {
+        this.planner.calculate();
     }
 }

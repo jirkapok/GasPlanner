@@ -9,7 +9,7 @@
         <label for="duration" class="form-label">Bottom time [min]:</label>
         <div class="row row-cols-auto">
             <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="planDuration" class="form-control ms-3 mt-2"
-                (input)="planner.calculate()"
+                (input)="apply()"
                 type="number" required [rangeVal]="ranges.duration" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
                 [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)" />
             <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="applyMaxDuration()" *ngIf="showMaxDuration">Max</button>
@@ -21,7 +21,7 @@
 
     <div class="mb-3">
         <app-depth [(depth)]="plannedDepth" [bestMix]="bestNitroxMix"
-            (applyMaxDepth)="applyMaxDepth()" (inputChange)="planner.calculate()"></app-depth>
+            (applyMaxDepth)="applyMaxDepth()" (inputChange)="apply()"></app-depth>
     </div>
   </div>
   <div class="card-body" *ngIf="isComplex">
@@ -45,7 +45,7 @@
             </td>
             <td>
                 <div class="input-group">
-                    <input #duration2="ngModel" name="duration2" [(ngModel)]="level.duration" class="form-control" type="number" (input)="durationChanged()"
+                    <input #duration2="ngModel" name="duration2" [(ngModel)]="level.duration" class="form-control" type="number" (input)="apply()"
                     required [rangeVal]="ranges.duration" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
                     [class.is-invalid]="duration2.invalid && (duration2.dirty || duration2.touched)"/>
                     <div class="text-danger" *ngIf="duration2.invalid && (duration2.dirty || duration2.touched)">Needs to be number {{ ranges.durationLabel }}</div>

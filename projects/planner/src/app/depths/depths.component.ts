@@ -92,17 +92,17 @@ export class DepthsComponent implements OnDestroy {
 
     public applyMaxDuration(): void {
         this.planner.applyMaxDuration();
-        this.planner.calculate();
+        this.apply();
     }
 
     public applyNdlDuration(): void {
         this.planner.applyNdlDuration();
-        this.planner.calculate();
+        this.apply();
     }
 
     public applyMaxDepth(): void {
         this.planner.applyMaxDepth();
-        this.planner.calculate();
+        this.apply();
     }
 
     public tankLabel(tank: Tank): string {
@@ -112,24 +112,26 @@ export class DepthsComponent implements OnDestroy {
     public addSegment(): void {
         this.planner.addSegment();
         this.updateLevels();
+        this.apply();
     }
 
     public removeSegment(level: Level): void {
         this.planner.removeSegment(level.segment);
         this.updateLevels();
+        this.apply();
     }
 
     public depthChanged(): void {
         this.plan.fixDepths();
-        this.planner.calculate();
-    }
-
-    public durationChanged(): void {
-        this.planner.calculate();
+        this.apply();
     }
 
     public assignTank(level: Level, tank: Tank): void {
         level.tank = tank;
+        this.apply();
+    }
+
+    public apply(): void {
         this.planner.calculate();
     }
 

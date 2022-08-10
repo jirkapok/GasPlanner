@@ -14,6 +14,8 @@ export class GradientsComponent {
     public gfLowChange = new EventEmitter<number>();
     @Output()
     public gfHighChange = new EventEmitter<number>();
+    @Output()
+    public inputChange = new EventEmitter();
     public standards = new StandardGradientsService();
     private _gfLow = OptionDefaults.gfLow;
     private _gfHigh = OptionDefaults.gfHigh;
@@ -74,5 +76,6 @@ export class GradientsComponent {
         const toApply = this.standards.get(label);
         this.gfLow = toApply.gfLow;
         this.gfHigh = toApply.gfHeigh;
+        this.inputChange.emit();
     }
 }

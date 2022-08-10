@@ -20,6 +20,7 @@
         <ng-container *ngIf="!simple">
             <input id="gfLowField" name="gfLowField" #gfLowField="ngModel" [(ngModel)]="plannedGfLow"
                 class="form-control col-auto" type="number"
+                (input)="inputChange.emit()"
                 required [rangeVal]="[10, 100]" min="10" max="100" step="1"
                 [class.is-invalid]="gfLowField.invalid && (gfLowField.dirty || gfLowField.touched)" />
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
@@ -43,6 +44,7 @@
     <label for="gfHighField" class="form-label">Gradient high [%]:</label>
     <input id="gfHighField" name="gfHighField" #gfHighField="ngModel" [(ngModel)]="plannedGfHigh"
         class="form-control col-auto" type="number" required
+        (input)="inputChange.emit()"
         [rangeVal]="[10, 100]" min="10" max="100" step="1"
         [class.is-invalid]="gfHighField.invalid && (gfHighField.dirty || gfHighField.touched)" />
     <div class="text-danger form-text"

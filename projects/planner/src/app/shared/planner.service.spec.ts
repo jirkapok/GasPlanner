@@ -148,25 +148,6 @@ describe('PlannerService', () => {
         });
     });
 
-    describe('Max narcotic depth', () => {
-        it('Is calculated 30 m for Air with 30m max. narcotic depth option', () => {
-            const result = planner.firstGasMaxDepth;
-            expect(result).toBe(30);
-        });
-
-        it('Is calculated as MOD for EAN50', () => {
-            planner.firstTank.gas.fO2 = 0.5;
-            const result = planner.firstGasMaxDepth;
-            expect(result).toBe(18);
-        });
-
-        it('For 12/35 returns 52 m', () => {
-            const gas = StandardGases.trimix2135;
-            const result = planner.mndForGas(gas);
-            expect(result).toBe(51.72);
-        });
-    });
-
     describe('Manage tanks', () => {
         it('Added tank receives ID', () => {
             planner.addTank();
@@ -235,12 +216,6 @@ describe('PlannerService', () => {
                 planner.applyNdlDuration();
                 expect(planner.plan.duration).toBe(12);
             });
-        });
-
-        it('Max narcotic depth is applied', () => {
-            planner.firstTank.gas.fO2 = 0.5;
-            planner.applyMaxDepth();
-            expect(planner.plan.maxDepth).toBe(18);
         });
     });
 

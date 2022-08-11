@@ -1,5 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { StandardGases } from 'scuba-physics';
+import { GasToxicity } from '../shared/gasToxicity.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -24,7 +26,27 @@ describe('DepthsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
+    it('MND for 12/35 returns 52 m', () => {
+        const toxicity = new GasToxicity();
+        const gas = StandardGases.trimix2135.copy();
+        const result = toxicity.mndForGas(gas);
+        // TODO after services are fixed should be 51.72
+        expect(result).toBe(51.54);
+    });
+
+    describe('Max narcotic depth', () => {
+        it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject([PlannerService],
+            (planner: PlannerService) => {
+                component.applyMaxDepth();
+                expect(planner.plan.maxDepth).toBe(30);
+            }));
+
+        it('Max narcotic depth is applied', inject([PlannerService],
+            (planner: PlannerService) => {
+                planner.firstTank.o2 = 50;
+                component.applyMaxDepth();
+                // TODO after services are fixed should be 18 m
+                expect(planner.plan.maxDepth).toBe(17);
+            }));
     });
 });

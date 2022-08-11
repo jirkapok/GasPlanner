@@ -1,7 +1,6 @@
 import { OptionsDispatcherService } from './options-dispatcher.service';
 import { PlannerService } from './planner.service';
 import { AppPreferences, DtoSerialization } from './serialization.model';
-import { StandardGradientsService } from './standard-gradients.service';
 
 export class PreferencesFactory {
     public toPreferences(planner: PlannerService, targetOptions: OptionsDispatcherService): AppPreferences {

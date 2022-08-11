@@ -9,6 +9,7 @@ import { Dive } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { environment } from '../../environments/environment';
 import { Subscription } from 'rxjs';
+import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -26,7 +27,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private location: Location,
         private preferences: PreferencesService,
         private options: OptionsDispatcherService,
-        private planner: PlannerService) {
+        private planner: PlannerService,
+        private delayedCalc: DelayedScheduleService) {
         this.dive = planner.dive;
     }
 
@@ -40,7 +42,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (query !=='') {
             PlanUrlSerialization.fromUrl(query, this.options, this.planner);
         } else {
-            this.planner.calculate();
+            this.delayedCalc.schedule();
         }
 
         // because the calculation runs in background first it subscribes,

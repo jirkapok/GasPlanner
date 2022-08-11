@@ -45,6 +45,7 @@ import { WorkersFactoryCommon } from './shared/serial.workers.factory';
 import { NdlService } from './shared/ndl.service';
 import { OptionsDispatcherService } from './shared/options-dispatcher.service';
 import { PpO2Component } from './pp-o2/pp-o2.component';
+import { DelayedScheduleService } from './shared/delayedSchedule.service';
 
 @NgModule({
     declarations: [
@@ -98,6 +99,7 @@ import { PpO2Component } from './pp-o2/pp-o2.component';
         UnitConversion,
         SelectedWaypoint,
         OptionsDispatcherService,
+        DelayedScheduleService,
         NdlService,
         DatePipe,
     ],

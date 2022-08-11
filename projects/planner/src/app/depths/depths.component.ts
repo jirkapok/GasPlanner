@@ -3,6 +3,7 @@ import { faLayerGroup, faTrashAlt, faPlusSquare  } from '@fortawesome/free-solid
 import { Subscription } from 'rxjs';
 
 import { Segment, StandardGases, Tank } from 'scuba-physics';
+import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { Plan, Level, Dive } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -23,7 +24,10 @@ export class DepthsComponent implements OnDestroy {
     private dive: Dive;
     private subscription: Subscription;
 
-    constructor(public planner: PlannerService, public units: UnitConversion) {
+    constructor(
+        public planner: PlannerService,
+        public units: UnitConversion,
+        private delayedCalc: DelayedScheduleService) {
         this.plan = this.planner.plan;
         this.dive = this.planner.dive;
         // data are already available, it is ok to generate the levels.
@@ -132,7 +136,7 @@ export class DepthsComponent implements OnDestroy {
     }
 
     public apply(): void {
-        this.planner.calculate();
+        this.delayedCalc.schedule();
     }
 
     private updateLevels(): void {

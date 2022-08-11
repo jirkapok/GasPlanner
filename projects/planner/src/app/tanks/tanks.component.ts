@@ -4,6 +4,7 @@ import { faBatteryHalf, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid
 import { PlannerService } from '../shared/planner.service';
 import { StandardGases, Tank, Diver } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
+import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 
 export class TankBound {
     constructor(public tank: Tank, private units: UnitConversion) {}
@@ -45,7 +46,9 @@ export class TanksComponent {
     public trashIcon = faTrashAlt;
     private diver: Diver;
 
-    constructor(private planner: PlannerService, public units: UnitConversion) {
+    constructor(private planner: PlannerService,
+        public units: UnitConversion,
+        private delayedCalc: DelayedScheduleService) {
         this.diver = this.planner.diver;
         this.allNames = StandardGases.allNames();
     }
@@ -97,6 +100,6 @@ export class TanksComponent {
     }
 
     public apply(): void {
-        this.planner.calculate();
+        this.delayedCalc.schedule();
     }
 }

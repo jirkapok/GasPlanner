@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { SafetyStop } from 'scuba-physics';
+import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { Plan, Strategies } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
@@ -25,7 +26,8 @@ export class DiveOptionsComponent {
 
     constructor(public units: UnitConversion,
         public options: OptionsDispatcherService,
-        private planner: PlannerService) {
+        private planner: PlannerService,
+        private delayedCalc: DelayedScheduleService) {
         this.plan = this.planner.plan;
     }
 
@@ -61,7 +63,6 @@ export class DiveOptionsComponent {
             this.options.resetToSimple();
             this.planner.resetToSimple();
             // no need to recalculate in simple mode, since there are no data changes
-            // TODO schedule the recalculation with delay 100 ms, we can merge multiple requests into one.
             this.applyOptions();
         }
     }
@@ -141,6 +142,6 @@ export class DiveOptionsComponent {
 
     public applyOptions(): void {
         this.planner.assignOptions(this.options.getOptions());
-        this.planner.calculate();
+        this.delayedCalc.schedule();
     }
 }

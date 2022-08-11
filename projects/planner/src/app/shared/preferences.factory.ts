@@ -4,8 +4,6 @@ import { AppPreferences, DtoSerialization } from './serialization.model';
 import { StandardGradientsService } from './standard-gradients.service';
 
 export class PreferencesFactory {
-    private standardGradients = new StandardGradientsService();
-
     public toPreferences(planner: PlannerService, targetOptions: OptionsDispatcherService): AppPreferences {
         return {
             isComplex: planner.isComplex,
@@ -23,8 +21,7 @@ export class PreferencesFactory {
         const options = DtoSerialization.toOptions(loaded.options);
         targetOptions.loadFrom(options);
 
-        const foundGfLabel = this.standardGradients.labelFor(options.gfLow, options.gfHigh);
-        if(!loaded.isComplex && foundGfLabel === '') {
+        if(!loaded.isComplex) {
             targetOptions.resetToSimple();
         }
 

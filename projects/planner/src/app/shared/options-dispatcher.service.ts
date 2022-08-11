@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Diver, OptionDefaults, Options, SafetyStop, Salinity } from 'scuba-physics';
+import { StandardGradientsService } from './standard-gradients.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class OptionsDispatcherService {
+    private standardGradients = new StandardGradientsService();
     private options = new Options();
 
     constructor() {
@@ -214,8 +216,10 @@ export class OptionsDispatcherService {
     }
 
     public resetToSimple(): void {
-        // TODO only in case the set is not a standard set
-        OptionDefaults.setMediumConservatism(this.options);
+        const foundGfLabel = this.standardGradients.labelFor(this.gfLow, this.gfHigh);
+        if(foundGfLabel === '') {
+            OptionDefaults.setMediumConservatism(this.options);
+        }
     }
 
     // didn't use inheritance to be able override some properties

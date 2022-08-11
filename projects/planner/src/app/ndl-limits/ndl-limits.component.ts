@@ -19,19 +19,23 @@ export class NdlLimitsComponent {
     public options = new Options();
     public totalDuration = Time.oneDay;
     public isComplex = false;
-    public calculating = false;
     public limits: NdlLimit[] = [];
 
     constructor(private router: Router, public units: UnitConversion, private ndl: NdlService) {
         this.tank = new TankBound(new Tank(15, 200, 21), this.units);
+        this.calculate();
+    }
+
+    public get noResults(): boolean {
+        return this.limits.length === 0;
     }
 
     public calculate(): void {
         this.limits = this.ndl.calculate(this.tank.tank.gas, this.options);
     }
 
+    // TODO add ppO2 editor
     // TODO Nitrox component uses planner to get its values to label, the same applies to tank
-
     public async goBack(): Promise<boolean> {
         return await this.router.navigateByUrl('/');
     }

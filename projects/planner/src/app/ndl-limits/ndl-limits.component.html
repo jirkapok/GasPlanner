@@ -10,13 +10,13 @@
                     <app-nitrox-o2 [tank]="tank.tank" [showBestMix]="false" (gasChange)="calculate()"></app-nitrox-o2>
                 </div>
                 <div class="mb-3">
-                    <app-salinity [(salinity)]="options.salinity" (salinityChange)="calculate()"></app-salinity>
+                    <app-salinity [(salinity)]="options.salinity" (inputChange)="calculate()"></app-salinity>
                 </div>
                 <div class="mb-3">
-                    <app-altitude [(altitude)]="options.altitude" (altitudeChange)="calculate()"></app-altitude>
+                    <app-altitude [(altitude)]="options.altitude" (inputChange)="calculate()"></app-altitude>
                 </div>
                 <div class="mb-3">
-                    <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" (gfHighChange)="calculate()" (gfLowChange)="calculate()" [simple]="false"></app-gradients>
+                    <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" (inputChange)="calculate()" [simple]="false"></app-gradients>
                 </div>
             </div>
         </div>
@@ -34,9 +34,10 @@
                             <th>Depth [{{units.length}}]</th>
                             <th>Limit [min]</th>
                         </tr>
-                        <tr *ngIf="calculating">
-                            <td colspan="5">
-                                <app-calculating [show]="true"></app-calculating>
+                        <tr *ngIf="noResults">
+                            <td colspan="2">
+                                No NDL limits found in meaningful depth range.<br>
+                                Change gas O2 content.
                             </td>
                         </tr>
                         <tr *ngFor="let ndl of this.limits">

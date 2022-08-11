@@ -60,10 +60,10 @@ export class DiveOptionsComponent {
             this.setAllUsable();
             this.options.resetToSimple();
             this.planner.resetToSimple();
+            // no need to recalculate in simple mode, since there are no data changes
+            // TODO schedule the recalculation with delay 100 ms, we can merge multiple requests into one.
+            this.applyOptions();
         }
-
-        // TODO check if it is necessary to calculate when the isComplex changes to true
-        this.applyOptions();
     }
 
     public reset(): void {

@@ -8,65 +8,65 @@
     <table class="table table-borderless">
         <tr>
             <th></th>
-            <th colspan="3">
-                <div class="d-flex flex-row justify-content-around">
-                    <div class="me-1">Size [{{units.volume}}]</div>
-                    <div class="mx-1">Pressure [{{units.pressure}}]</div>
-                    <div class="ms-1">O2 [%]</div>
-                    <div class="ms-1">He [%]</div>
+            <th><div>Size [{{units.volume}}]</div></th>
+            <th><div>Pressure [{{units.pressure}}]</div></th>
+            <th><div>O2 [%]</div></th>
+            <th><div>He [%]</div></th>
+            <th>
+                <div>
+                    <button class="btn btn-default m-0 p-0 text-primary" type="button" (click)="addTank()">
+                        <fa-icon [icon]="plusIcon" class="px-0 mx-0"></fa-icon>
+                    </button>
                 </div>
             </th>
-            <th>
-                <button class="btn btn-default m-0 p-0 text-primary" type="button" (click)="addTank()">
-                    <fa-icon [icon]="plusIcon" class="px-0 mx-0"></fa-icon>
-                </button>
-            </th>
         </tr>
-        <tr *ngFor="let tank of tanks">
-            <td class="align-top"><span>{{tank.id}}.</span></td>
-            <td class="align-top" colspan="3">
-                <div class="d-flex flex-row justify-content-between py-0">
-                    <div class="me-1">
+        <ng-container *ngFor="let tank of tanks">
+            <tr class="p-0">
+                <td class="align-center">
+                   <div class="mb-0 pb-0">{{tank.id}}.</div>
+                </td>
+                <td>
+                    <div class="mb-0 pb-0">
                         <input #size="ngModel" name="size" [(ngModel)]="tank.size" class="form-control" type="number"
                             (input)="apply()" required
                             [rangeVal]="ranges.tankSize" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
                             [class.is-invalid]="size.invalid && (size.dirty || size.touched)" />
-
                         <div class="text-danger" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number
                             {{ranges.tankSizeLabel}}
                         </div>
                     </div>
-
-                    <div class="mx-1">
+                </td>
+                <td>
+                    <div class="mb-0 pb-0">
                         <input #startPressure="ngModel" name="startPressure" [(ngModel)]="tank.startPressure"
-                            class="form-control" type="number" (input)="apply()" required
-                            [rangeVal]="ranges.tankPressure" [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
-                            [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)" />
+                        class="form-control" type="number" (input)="apply()" required
+                        [rangeVal]="ranges.tankPressure" [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
+                        [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)" />
                         <div class="text-danger"
                             *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be
                             number {{ranges.tankPressureLabel}}</div>
                     </div>
-
-                    <div class="ms-1">
-                        <div class="input-group">
-                            <input #gasO2="ngModel" name="gasO2" [(ngModel)]="tank.o2" class="form-control" type="number"
-                                (input)="apply()" required
-                                [rangeVal]="ranges.trimixOxygen" [min]="ranges.trimixOxygen[0]" [max]="ranges.trimixOxygen[1]" step="1"
-                                [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />
-                            <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                                <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
-                                <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-                                    <button *ngFor="let stgas of this.allNames" type="button" class="dropdown-item"
-                                        (click)="assignStandardGas(tank, stgas)">{{stgas}}</button>
-                                </div>
+                </td>
+                <td>
+                    <div class="input-group mb-0 pb-0">
+                        <input #gasO2="ngModel" name="gasO2" [(ngModel)]="tank.o2" class="form-control" type="number"
+                            (input)="apply()" required
+                            [rangeVal]="ranges.trimixOxygen" [min]="ranges.trimixOxygen[0]" [max]="ranges.trimixOxygen[1]" step="1"
+                            [class.is-invalid]="gasO2.invalid && (gasO2.dirty || gasO2.touched)" />
+                        <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
+                            <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
+                            <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
+                                <button *ngFor="let stgas of this.allNames" type="button" class="dropdown-item"
+                                    (click)="assignStandardGas(tank, stgas)">{{stgas}}</button>
                             </div>
                         </div>
-
+                    </div>
+                </td>
+                <td >
+                    <div class="mb-0 pb-0">
                         <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number
                             {{ranges.trimixOxygenLabel}}</div>
-                    </div>
 
-                    <div class="mx-1">
                         <input #gasHe="ngModel" name="gasHe" [(ngModel)]="tank.he"
                             class="form-control" type="number" (change)="apply()" required
                             [rangeVal]="ranges.tankHe" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
@@ -75,19 +75,25 @@
                             *ngIf="gasHe.invalid && (gasHe.dirty || gasHe.touched)">Needs to be
                             number  {{ranges.tankHeLabel}}</div>
                     </div>
-                </div>
-                <div class="pt-0">
-                    <small class="form-text text-muted">SAC: {{gasSac(tank) | number:'1.0-2'}} {{units.sac}}</small>
-                    <app-gaslabel [tank]="tank" class="float-end"></app-gaslabel>
-                </div>
-            </td>
-            <td class="align-top">
-                <button *ngIf="isFirstTank(tank)" type="button" class="btn text-secondary m-0 p-0 align-top"
-                    (click)="removeTank(tank)">
-                    <fa-icon [icon]="trashIcon"></fa-icon>
-                </button>
-            </td>
-        </tr>
+                </td>
+                <td>
+                    <button *ngIf="isFirstTank(tank)" type="button" class="btn text-secondary m-0 p-0 align-top"
+                        (click)="removeTank(tank)">
+                        <fa-icon [icon]="trashIcon"></fa-icon>
+                    </button>
+                </td>
+            </tr>
+            <tr >
+                <td></td>
+                <td colspan="4">
+                    <div class="mt-0 pt-0">
+                        <small class="form-text text-muted">SAC: {{gasSac(tank) | number:'1.0-2'}} {{units.sac}}</small>
+                        <app-gaslabel [tank]="tank" class="float-end"></app-gaslabel>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+        </ng-container>
     </table>
   </div>
   <div class="card-body row" *ngIf="!isComplex">

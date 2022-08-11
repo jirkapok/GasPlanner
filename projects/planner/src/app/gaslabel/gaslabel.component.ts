@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Tank } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
-import { PlannerService } from '../shared/planner.service';
 import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({

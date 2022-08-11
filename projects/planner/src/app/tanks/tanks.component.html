@@ -91,23 +91,25 @@
     </table>
   </div>
   <div class="card-body row" *ngIf="!isComplex">
-      <div class="mb-3 col-auto">
-        <label for="size" class="form-label">Size [{{units.volume}}]:</label>
-        <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control col-auto" type="number" (input)="apply()"
-        required [rangeVal]="ranges.tankSize" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-        [class.is-invalid]="size.invalid && (size.dirty || size.touched)"/>
-        <small class="form-text text-muted">SAC: {{gasSac(firstTank.tank) | number:'1.0-2'}} {{units.sac}}</small>
-        <div class="text-danger form-text" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number {{ranges.tankSizeLabel}}</div>
+      <div class="mb-2 col-auto">
+        <label for="size" class="form-label">Size [{{units.volume}}]:
+            <input #size="ngModel" name="size" [(ngModel)]="firstTank.size" class="form-control col-auto" type="number" (input)="apply()"
+            required [rangeVal]="ranges.tankSize" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
+            [class.is-invalid]="size.invalid && (size.dirty || size.touched)"/>
+            <small class="form-text text-muted">SAC: {{gasSac(firstTank.tank) | number:'1.0-2'}} {{units.sac}}</small>
+            <div class="text-danger form-text" *ngIf="size.invalid && (size.dirty || size.touched)">Needs to be number {{ranges.tankSizeLabel}}</div>
+        </label>
       </div>
-      <div class="mb-3 col-auto">
-        <label for="startPressure" class="form-label">Start pressure [{{units.pressure}}]:</label>
-        <input #startPressure="ngModel" name="startPressure" class="form-control col-auto" type="number"
-        (input)="apply()" [(ngModel)]="firstTank.startPressure"
-        required [rangeVal]="ranges.tankPressure" [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
-        [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)"/>
-        <div class="text-danger form-text" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number {{ranges.tankPressureLabel}}</div>
+      <div class="mb-2 col-auto">
+        <label for="startPressure" class="form-label">Start pressure [{{units.pressure}}]:
+            <input #startPressure="ngModel" name="startPressure" class="form-control col-auto" type="number"
+            (input)="apply()" [(ngModel)]="firstTank.startPressure"
+            required [rangeVal]="ranges.tankPressure" [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
+            [class.is-invalid]="startPressure.invalid && (startPressure.dirty || startPressure.touched)"/>
+            <div class="text-danger form-text" *ngIf="startPressure.invalid && (startPressure.dirty || startPressure.touched)">Needs to be number {{ranges.tankPressureLabel}}</div>
+        </label>
       </div>
-      <div class="mb-3 col-auto">
+      <div class="mb-2 col-auto">
           <app-nitrox-o2 [tank]="firstTank.tank" (gasChange)="apply()" (assignBestMix)="assignBestMix()"></app-nitrox-o2>
       </div>
   </div>

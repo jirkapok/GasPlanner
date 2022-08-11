@@ -5,10 +5,8 @@ import { Plan, Dive, Strategies, } from './models';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
-    NitroxCalculator, Options,
-    DepthConverter, DepthConverterFactory, Tank, Tanks,
-    Diver, Segment, Segments, Salinity, SafetyStop,
-    DepthLevels, Gas
+    Options, Tank, Tanks,
+    Diver, Segment, Segments, Salinity, SafetyStop
 } from 'scuba-physics';
 import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
@@ -21,6 +19,7 @@ export class PlannerService {
     public static readonly maxAcceptableNdl = 1000;
     public isComplex = false;
     public plan: Plan;
+    // TODO diver can't be used outside of planner, serialization or app settings
     public diver: Diver = new Diver();
     // there always needs to be at least one
     public dive: Dive = new Dive();
@@ -33,9 +32,6 @@ export class PlannerService {
     private _options: Options;
     private onInfoCalculated = new Subject();
     private onWayPointsCalculated = new Subject();
-    private depthConverterFactory: DepthConverterFactory;
-    private depthConverter!: DepthConverter;
-    private nitroxCalculator!: NitroxCalculator;
     private profileTask: IBackgroundTask<ProfileRequestDto, ProfileResultDto>;
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
     private noDecoTask: IBackgroundTask<ProfileRequestDto, number>;
@@ -44,8 +40,6 @@ export class PlannerService {
         this._options = new Options();
         this._options.salinity = Salinity.fresh;
         this._options.safetyStop = SafetyStop.auto;
-        this.depthConverterFactory = new DepthConverterFactory(this.options);
-        this.resetDepthConverter();
         const tank = Tank.createDefault();
         tank.id = 1;
         this._tanks.push(tank);
@@ -64,16 +58,6 @@ export class PlannerService {
         this.consumptionTask = this.workerFactory.createConsumptionWorker();
         this.consumptionTask.calculated.subscribe((data) => this.finishCalculation(data));
         this.consumptionTask.failed.subscribe(() => this.profileFailed());
-    }
-
-    public get firstGasMaxDepth(): number {
-        const roundedNarc = this.mndForGas(this.firstTank.gas);
-        const minFound = Math.min(roundedNarc, this.gasMod);
-        return Math.floor(minFound);
-    }
-
-    public get gasMod(): number {
-        return this.modForGas(this.firstTank);
     }
 
     /** Gets the current options. Used only for testing purposes */
@@ -124,10 +108,6 @@ export class PlannerService {
         this.plan.removeSegment(segment);
     }
 
-    public applyMaxDepth(): void {
-        this.assignDepth(this.firstGasMaxDepth);
-    }
-
     public applyMaxDuration(): void {
         const newValue = this.dive.maxTime;
         this.assignDuration(newValue);
@@ -136,29 +116,6 @@ export class PlannerService {
     public applyNdlDuration(): void {
         const newValue = this.plan.noDecoTime;
         this.assignDuration(newValue);
-    }
-
-    public bestNitroxMix(): number {
-        const maxPpO2 = this.options.maxPpO2;
-        const o2 = this.nitroxCalculator.bestMix(maxPpO2, this.plan.maxDepth);
-        return Math.round(o2);
-    }
-
-    public switchDepth(gas: Tank): number {
-        return this.nitroxCalculator.gasSwitch(this.diver.maxDecoPpO2, gas.o2);
-    }
-
-    public modForGas(gas: Tank): number {
-        return this.nitroxCalculator.mod(this.diver.maxPpO2, gas.o2);
-    }
-
-    public mndForGas(gas: Gas): number {
-        const depthInBars = this.depthConverter.toBar(this.options.maxEND);
-        const maxNarcBar = gas.mnd(depthInBars, this.options.oxygenNarcotic);
-        const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
-        // because of javascript numbers precision we need to help our self
-        const roundedNarc = Math.round(maxNarcDepth * 100) / 100;
-        return roundedNarc;
     }
 
     public assignDuration(newDuration: number): void {
@@ -195,8 +152,6 @@ export class PlannerService {
 
     public assignOptions(newOptions: Options): void {
         this._options.loadFrom(newOptions);
-        this.depthConverterFactory = new DepthConverterFactory(newOptions);
-        this.resetDepthConverter();
     }
 
     /** Not called by default, needs to be called manually */
@@ -207,8 +162,6 @@ export class PlannerService {
         setTimeout(() => {
             this.showStillRunning();
         }, 500);
-
-        this.resetDepthConverter();
 
         const profileRequest = {
             tanks: DtoSerialization.fromTanks(this._tanks),
@@ -337,11 +290,5 @@ export class PlannerService {
     private calculateTurnPressure(): number {
         const consumed = this.firstTank.consumed / 2;
         return this.firstTank.startPressure - Math.floor(consumed);
-    }
-
-    private resetDepthConverter(): void {
-        this.depthConverter = this.depthConverterFactory.create();
-        const depthLevels = new DepthLevels(this.depthConverter, this.options);
-        this.nitroxCalculator = new NitroxCalculator(depthLevels, this.depthConverter);
     }
 }

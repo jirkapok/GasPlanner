@@ -5,6 +5,7 @@ import { PlannerService } from '../shared/planner.service';
 import { StandardGases, Tank, Diver } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+import { GasToxicity } from '../shared/gasToxicity.service';
 
 export class TankBound {
     constructor(public tank: Tank, private units: UnitConversion) {}
@@ -45,6 +46,7 @@ export class TanksComponent {
     public plusIcon = faPlusSquare;
     public trashIcon = faTrashAlt;
     private diver: Diver;
+    private toxicity = new GasToxicity();
 
     constructor(private planner: PlannerService,
         public units: UnitConversion,
@@ -90,7 +92,8 @@ export class TanksComponent {
     }
 
     public assignBestMix(): void {
-        this.firstTank.o2 = this.planner.bestNitroxMix();
+        const maxDepth = this.planner.plan.maxDepth;
+        this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
         this.apply();
     }
 

@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 import { Segment, StandardGases, Tank } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+import { GasToxicity } from '../shared/gasToxicity.service';
 import { Plan, Level, Dive } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -23,6 +24,7 @@ export class DepthsComponent implements OnDestroy {
     private _levels: Level[] = [];
     private dive: Dive;
     private subscription: Subscription;
+    private toxicity = new GasToxicity();
 
     constructor(
         public planner: PlannerService,
@@ -78,7 +80,7 @@ export class DepthsComponent implements OnDestroy {
     }
 
     public get bestNitroxMix(): string {
-        const o2 = this.planner.bestNitroxMix() / 100;
+        const o2 = this.toxicity.bestNitroxMix(this.plan.maxDepth) / 100;
         return StandardGases.nameFor(o2);
     }
 
@@ -105,7 +107,9 @@ export class DepthsComponent implements OnDestroy {
     }
 
     public applyMaxDepth(): void {
-        this.planner.applyMaxDepth();
+        const tank = this.planner.firstTank;
+        const maxDepth = this.toxicity.maxDepth(tank);
+        this.planner.assignDepth(maxDepth);
         this.apply();
     }
 

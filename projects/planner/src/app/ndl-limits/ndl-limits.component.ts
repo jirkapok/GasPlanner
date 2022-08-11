@@ -34,7 +34,6 @@ export class NdlLimitsComponent {
         this.limits = this.ndl.calculate(this.tank.tank.gas, this.options);
     }
 
-    // TODO add ppO2 editor
     // TODO Nitrox component uses planner to get its values to label, the same applies to tank
     public async goBack(): Promise<boolean> {
         return await this.router.navigateByUrl('/');

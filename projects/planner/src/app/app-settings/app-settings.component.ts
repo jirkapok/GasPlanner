@@ -28,7 +28,6 @@ export class AppSettingsComponent {
     }
 
     public use(): void {
-        // TODO error expression has changed in console
         // TODO save settings only if form is valid
         this.planner.applyDiver(this.diver);
         this.units.imperialUnits = this.imperialUnits;

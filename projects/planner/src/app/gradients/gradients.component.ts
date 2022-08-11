@@ -9,6 +9,8 @@ import { StandardGradientsService } from '../shared/standard-gradients.service';
 })
 export class GradientsComponent {
     @Input()
+    public showTitle = false;
+    @Input()
     public simple = false;
     @Output()
     public gfLowChange = new EventEmitter<number>();

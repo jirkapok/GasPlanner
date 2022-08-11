@@ -1,18 +1,19 @@
-<label for="salinity" class="form-label">Water salinity:</label>
-<div class="input-group gradients-max-width">
-    <input id="salinity" name="salinity" #salinity="ngModel" [ngModel]="salinityOption"
-        class="form-control col-auto" type="text" readonly
-        [class.is-invalid]="salinity.invalid && (salinity.dirty || salinity.touched)" />
-    <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-        <button type="button" class="btn btn-default border" id="salinityMenu"
-            ngbDropdownToggle></button>
-        <div ngbDropdownMenu aria-labelledby="salinityMenu" aria-expanded="false">
-            <button type="button" class="dropdown-item"
-                (click)="useFresh()">{{freshName}}</button>
-            <button type="button" class="dropdown-item"
-                (click)="useBrackish()">{{brackishName}}</button>
-            <button type="button" class="dropdown-item"
-                (click)="useSalt()">{{saltName}}</button>
+<label for="salinity" class="form-label">Water salinity:
+    <div class="input-group gradients-max-width">
+        <input id="salinity" name="salinity" #salinity="ngModel" [ngModel]="salinityOption"
+            class="form-control col-auto" type="text" readonly
+            [class.is-invalid]="salinity.invalid && (salinity.dirty || salinity.touched)" />
+        <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
+            <button type="button" class="btn btn-default border" id="salinityMenu"
+                ngbDropdownToggle></button>
+            <div ngbDropdownMenu aria-labelledby="salinityMenu" aria-expanded="false">
+                <button type="button" class="dropdown-item"
+                    (click)="useFresh()">{{freshName}}</button>
+                <button type="button" class="dropdown-item"
+                    (click)="useBrackish()">{{brackishName}}</button>
+                <button type="button" class="dropdown-item"
+                    (click)="useSalt()">{{saltName}}</button>
+            </div>
         </div>
     </div>
-</div>
+</label>

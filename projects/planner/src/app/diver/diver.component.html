@@ -13,21 +13,11 @@
         </label>
         <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number {{ranges.diverRmvLabel}}</div>
         </div>
-        <div>
-        <label for="maxPpO2">Maximum ppO2:
-            <input [(ngModel)]="diver.maxPpO2" class="form-control" #maxPpO2="ngModel" name="maxPpO2" id="maxPpO2"
-            type="number" required [rangeVal]="ranges.ppO2" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step=".1"
-            [class.is-invalid]="maxPpO2.invalid && (maxPpO2.dirty || maxPpO2.touched)"/>
-        </label>
-        <div class="text-danger" *ngIf="maxPpO2.invalid && (maxPpO2.dirty || maxPpO2.touched)">Needs to be number 0.21-3</div>
+        <div class="mt-2">
+            <app-pp-o2 [(maxPpO2)]="diver.maxPpO2" label="Maximum ppO2:"></app-pp-o2>
         </div>
-        <div>
-        <label for="maxDecoPpO2">Maximum deco ppO2:
-            <input [(ngModel)]="diver.maxDecoPpO2" class="form-control" #maxDecoPpO2="ngModel" name="maxDecoPpO2" id="maxDecoPpO2"
-            type="number" required [rangeVal]="ranges.ppO2" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]"step=".1"
-            [class.is-invalid]="maxDecoPpO2.invalid && (maxDecoPpO2.dirty || maxDecoPpO2.touched)"/>
-        </label>
-        <div class="text-danger" *ngIf="maxDecoPpO2.invalid && (maxDecoPpO2.dirty || maxDecoPpO2.touched)">Needs to be number 0.21-3</div>
+        <div class="mt-2">
+            <app-pp-o2 [(maxPpO2)]="diver.maxDecoPpO2" label="Maximum deco ppO2:"></app-pp-o2>
         </div>
     </div>
     </div>

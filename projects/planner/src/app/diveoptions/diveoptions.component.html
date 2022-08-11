@@ -18,7 +18,7 @@
                 <div class="mb-3 col-auto">
                     <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh"
                         (inputChange)="applyOptions()"
-                        [simple]="true" ></app-gradients>
+                        [simple]="true" [showTitle]="true"></app-gradients>
                 </div>
                 <div class="mb-3 col-auto">
                     <app-salinity [(salinity)]="options.salinity" (inputChange)="applyOptions()"></app-salinity>
@@ -71,7 +71,7 @@
                     <div class="col-sm mt-3">
                         <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh"
                           (inputChange)="applyOptions()"
-                          [simple]="false"></app-gradients>
+                          [simple]="false" [showTitle]="false"></app-gradients>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="gases" role="tabpanel" aria-labelledby="gases-tab">

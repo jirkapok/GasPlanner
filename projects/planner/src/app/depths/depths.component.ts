@@ -135,7 +135,6 @@ export class DepthsComponent implements OnDestroy {
         this.planner.calculate();
     }
 
-    // TODO check how levels are refreshed after reload defaults
     private updateLevels(): void {
         const segments: Segment[] = this.plan.segments;
         const converted: Level[] = [];

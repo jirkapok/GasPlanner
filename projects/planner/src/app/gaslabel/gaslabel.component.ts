@@ -22,6 +22,7 @@ export class GaslabelComponent {
         return this.units.fromMeters(mod);
     }
 
+    // TODO fix rounding of MOD and MND to pessimistic number for EAN33 the depth should be 30 m only
     public get gasMnd(): number {
         const mnd = this.planer.mndForGas(this.tank.gas);
         return this.units.fromMeters(mnd);

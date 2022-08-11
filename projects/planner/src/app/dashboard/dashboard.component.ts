@@ -43,8 +43,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.planner.calculate();
         }
 
-        // first calculate, than subscribe for later updates by user
-        // TODO reloads dozenths of times
+        // because the calculation runs in background first it subscribes,
+        // than it starts to receive the event. Even for the initial calls.
         this.subscription = this.planner.infoCalculated.subscribe(() => this.updateQueryParams());
     }
 

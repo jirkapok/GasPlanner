@@ -10,6 +10,7 @@ import { PlannerService } from '../shared/planner.service';
 import { Dive } from '../shared/models';
 import { EventType, Event, Tank } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
+import { GasToxicity } from '../shared/gasToxicity.service';
 
 @Component({
     selector: 'app-consumption',
@@ -20,6 +21,7 @@ export class DiveInfoComponent implements OnInit {
     @ViewChild('toastElement', { static: true })
     public toastEl!: ElementRef;
 
+    public toxicity: GasToxicity;
     public dive: Dive;
     public exclamation = faExclamationCircle;
     public warning = faExclamationTriangle;
@@ -31,6 +33,7 @@ export class DiveInfoComponent implements OnInit {
 
     constructor(private clipboard: ClipboardService, public planner: PlannerService, public units: UnitConversion) {
         this.dive = this.planner.dive;
+        this.toxicity = new GasToxicity(this.planner.options);
 
         this.clipboard.copyResponse$.subscribe((res: IClipboardResponse) => {
             if (res.isSuccess) {
@@ -68,7 +71,7 @@ export class DiveInfoComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-       this.toast = new Toast( this.toastEl.nativeElement, { delay: 5000, });
+        this.toast = new Toast(this.toastEl.nativeElement, { delay: 5000, });
     }
 
     public isLowPpO2(event: Event): boolean {

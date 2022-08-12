@@ -1,5 +1,6 @@
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
 import { StandardGases } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { PlannerService } from '../shared/planner.service';
@@ -27,7 +28,8 @@ describe('DepthsComponent', () => {
     });
 
     it('MND for 12/35 returns 52 m', () => {
-        const toxicity = new GasToxicity();
+        const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, 1);
+        const toxicity = new GasToxicity(options);
         const gas = StandardGases.trimix2135.copy();
         const result = toxicity.mndForGas(gas);
         // TODO after services are fixed should be 51.72

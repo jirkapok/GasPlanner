@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Tank } from 'scuba-physics';
+import { Diver, Options, Tank } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { UnitConversion } from '../shared/UnitConversion';
 
@@ -15,7 +15,8 @@ export class GaslabelComponent {
     @Input()
     public showName = true;
 
-    private toxicity = new GasToxicity();
+    @Input()
+    public toxicity = new GasToxicity();
 
     constructor(public units: UnitConversion) { }
 

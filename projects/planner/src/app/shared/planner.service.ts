@@ -134,7 +134,7 @@ export class PlannerService {
         // TODO Apply from Units after the plan was applied, we don't need to check them
         // minimumAutoStopDepth lastStopDepth decoStopDistance
         this.assignOptions(options);
-        this.diver.loadFrom(diver);
+        this.applyDiver(diver);
 
         if (tanks.length > 0) {
             this._tanks = tanks;

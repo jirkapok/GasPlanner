@@ -12,6 +12,6 @@
         </div>
     </div>
 </div>
-<app-gaslabel [tank]="tank"></app-gaslabel>
+<app-gaslabel [tank]="tank" [toxicity]="toxicity" ></app-gaslabel>
 </label>
 <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number {{units.ranges.nitroxOxygenLabel}}</div>

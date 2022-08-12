@@ -41,6 +41,7 @@ export class AppSettingsComponent {
         this.options.decoStopDistance = ranges.decoStopDistance;
         this.options.minimumAutoStopDepth = ranges.minimumAutoStopDepth;
         this.options.lastStopDepth = ranges.lastStopDepthDefault;
+        this.planner.assignOptions(this.options);
     }
 
     private applyToTanks(): void {

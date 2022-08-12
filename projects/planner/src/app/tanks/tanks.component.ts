@@ -45,13 +45,12 @@ export class TanksComponent {
     public icon = faBatteryHalf;
     public plusIcon = faPlusSquare;
     public trashIcon = faTrashAlt;
-    private diver: Diver;
-    private toxicity = new GasToxicity();
+    public toxicity: GasToxicity;
 
     constructor(private planner: PlannerService,
         public units: UnitConversion,
         private delayedCalc: DelayedScheduleService) {
-        this.diver = this.planner.diver;
+        this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
     }
 
@@ -77,7 +76,7 @@ export class TanksComponent {
     }
 
     public gasSac(tank: Tank): number {
-        const sac = this.diver.gasSac(tank);
+        const sac = this.planner.diver.gasSac(tank);
         return this.units.fromBar(sac);
     }
 

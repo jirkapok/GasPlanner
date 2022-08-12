@@ -1,7 +1,7 @@
 <div class="my-4">
     <div class="d-flex flex-row justify-content-between">
         <strong class="text-start"><span *ngIf="showId"> {{ tank.id }}.</span> {{ tank.name }}</strong>
-        <app-gaslabel [tank]="tank" [showName]="false" class="text-end"></app-gaslabel>
+        <app-gaslabel [tank]="tank" [toxicity]="toxicity"  [showName]="false" class="text-end"></app-gaslabel>
     </div>
     <div class="d-flex flex-row justify-content-between">
         <small class="text-start text-muted">Gas remaining: {{ tank.endPressure | number:'1.0-0'  }}/{{ tank.startPressure | number:'1.0-0'  }} {{units.pressure}}</small>

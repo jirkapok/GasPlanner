@@ -83,7 +83,7 @@
                     </tbody>
                 </table>
                 <div *ngIf="dive.showResults">
-                    <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="showTankId"></app-tankchart>
+                    <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="showTankId" [toxicity]="toxicity"></app-tankchart>
                 </div>
             </div>
             <app-calculating [show]="!dive.calculated"></app-calculating>

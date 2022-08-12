@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Tank } from 'scuba-physics';
+import { GasToxicity } from '../shared/gasToxicity.service';
 import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
@@ -10,7 +11,8 @@ import { UnitConversion } from '../shared/UnitConversion';
 export class TankChartComponent {
     @Input()
     public tank: Tank = Tank.createDefault();
-
+    @Input()
+    public toxicity = new GasToxicity();
     @Input()
     public showId = false;
 

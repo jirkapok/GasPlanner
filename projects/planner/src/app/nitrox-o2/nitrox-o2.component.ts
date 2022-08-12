@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { StandardGases, Tank } from 'scuba-physics';
+import { Diver, Options, StandardGases, Tank } from 'scuba-physics';
+import { GasToxicity } from '../shared/gasToxicity.service';
 import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
@@ -11,6 +12,8 @@ export class NitroxO2Component {
     // TODO consider get rid of tank
     @Input()
     public tank = new Tank(15, 200, 21);
+    @Input()
+    public toxicity = new GasToxicity();
     @Input()
     public showBestMix = true;
 

@@ -24,7 +24,7 @@ export class DepthsComponent implements OnDestroy {
     private _levels: Level[] = [];
     private dive: Dive;
     private subscription: Subscription;
-    private toxicity = new GasToxicity();
+    private toxicity: GasToxicity;
 
     constructor(
         public planner: PlannerService,
@@ -32,6 +32,7 @@ export class DepthsComponent implements OnDestroy {
         private delayedCalc: DelayedScheduleService) {
         this.plan = this.planner.plan;
         this.dive = this.planner.dive;
+        this.toxicity = new GasToxicity(this.planner.options);
         // data are already available, it is ok to generate the levels.
         this.updateLevels();
         this.subscription = this.plan.reloaded.subscribe(() => this.updateLevels());
@@ -143,7 +144,7 @@ export class DepthsComponent implements OnDestroy {
         this.delayedCalc.schedule();
     }
 
-    // TODO refresh of tanks doesn't work
+    // TODO refresh of levels doesn't work
     private updateLevels(): void {
         const segments: Segment[] = this.plan.segments;
         const converted: Level[] = [];

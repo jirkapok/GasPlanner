@@ -1,21 +1,18 @@
-import { DepthConverter, DepthLevels, Diver, Gas, NitroxCalculator, Options, Tank } from 'scuba-physics';
+import { DepthConverter, DepthLevels, Gas, NitroxCalculator, Options, Tank } from 'scuba-physics';
 
 export class GasToxicity {
+    // for gas toxicity only always use simple to be aligned with what people expect
+    private depthConverter = DepthConverter.simple();
     private nitroxCalculator: NitroxCalculator;
-    private depthConverter: DepthConverter;
-    private diver = new Diver();
-    private options: Options;
 
-    constructor() {
-        // TODO provide services and reset depth converter whenever options change
-        this.options = new Options();
-        this.depthConverter = DepthConverter.simple();
+    // since we don't need to fix biding of the options, the original instance is OK.
+    constructor(private options: Options = new Options()) {
         const levels = new DepthLevels(this.depthConverter, this.options);
         this.nitroxCalculator = new NitroxCalculator(levels, this.depthConverter);
     }
 
     public modForGas(tank: Tank): number {
-        return this.nitroxCalculator.mod(this.diver.maxPpO2, tank.o2);
+        return this.nitroxCalculator.mod(this.options.maxPpO2, tank.o2);
     }
 
     public mndForGas(gas: Gas): number {
@@ -28,7 +25,7 @@ export class GasToxicity {
     }
 
     public switchDepth(tank: Tank): number {
-        return this.nitroxCalculator.gasSwitch(this.diver.maxDecoPpO2, tank.o2);
+        return this.nitroxCalculator.gasSwitch(this.options.maxDecoPpO2, tank.o2);
     }
 
     public maxDepth(tank: Tank): number {

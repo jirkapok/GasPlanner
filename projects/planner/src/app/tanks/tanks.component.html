@@ -116,7 +116,7 @@
         </label>
       </div>
       <div class="mb-2 col-auto">
-          <app-nitrox-o2 [tank]="firstTank.tank" (gasChange)="apply()" (assignBestMix)="assignBestMix()"></app-nitrox-o2>
+          <app-nitrox-o2 [tank]="firstTank.tank" [toxicity]="toxicity" (gasChange)="apply()" (assignBestMix)="assignBestMix()"></app-nitrox-o2>
       </div>
   </div>
 </div>

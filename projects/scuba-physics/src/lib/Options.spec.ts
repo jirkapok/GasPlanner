@@ -16,3 +16,17 @@ export class OptionExtensions {
         options.descentSpeed = 20;
     }
 }
+
+
+describe('Options', () => {
+    describe('LoadFrom', () => {
+        it('applies 0 m altitude', () => {
+            const sut = OptionExtensions.createOptions(1,1,1,1,Salinity.fresh);
+            sut.altitude = 500;
+            const modified = OptionExtensions.createOptions(1,1,1,1,Salinity.fresh);
+            modified.altitude = 0;
+            sut.loadFrom(modified);
+            expect(sut).toEqual(modified);
+        });
+    });
+});

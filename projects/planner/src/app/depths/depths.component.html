@@ -35,9 +35,9 @@
           <th><button class="btn btn-default m-0 p-0 text-primary" type="button" (click)="addSegment()"><fa-icon [icon]="addIcon"></fa-icon></button></th>
         </tr>
         <tr *ngFor="let level of levels">
-            <td>{{ level.startDepth | number:'1.0-0' }}</td>
+            <td><div class="mb-0 pb-0 px-1 text-end">{{ level.startDepth | number:'1.0-0' }}</div></td>
             <td>
-                <div class="input-group">
+                <div class="input-group mb-0 pb-0 px-1">
                     <input #endDepth="ngModel" name="endDepth" [(ngModel)]="level.endDepth" class="form-control" type="number" (input)="depthChanged()"
                     required [rangeVal]="ranges.depth" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
                     [class.is-invalid]="endDepth.invalid && (endDepth.dirty || endDepth.touched)"/>
@@ -45,7 +45,7 @@
                </div>
             </td>
             <td>
-                <div class="input-group">
+                <div class="input-group mb-0 pb-0 px-1">
                     <input #duration2="ngModel" name="duration2" [(ngModel)]="level.duration" class="form-control" type="number" (input)="apply()"
                     required [rangeVal]="ranges.duration" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
                     [class.is-invalid]="duration2.invalid && (duration2.dirty || duration2.touched)"/>
@@ -53,7 +53,7 @@
                 </div>
             </td>
             <td>
-                <div class="input-group">
+                <div class="input-group mb-0 pb-0 px-1">
                     <input id="tanks" [ngModel]="level.tankLabel" class="form-control" type="text" readonly />
                     <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                         <button class="btn btn-default border" id="tankMenu" type="button" ngbDropdownToggle></button>
@@ -63,7 +63,11 @@
                     </div>
                 </div>
             </td>
-            <td><button *ngIf="minimumSegments" type="button" class="btn text-secondary m-0 p-0 align-top" (click)="removeSegment(level)"><fa-icon [icon]="removeIcon"></fa-icon></button></td>
+            <td>
+                <button *ngIf="minimumSegments" type="button" class="btn text-secondary m-0 p-0 align-top" (click)="removeSegment(level)">
+                <fa-icon [icon]="removeIcon"></fa-icon>
+                </button>
+            </td>
         </tr>
     </table>
   </div>

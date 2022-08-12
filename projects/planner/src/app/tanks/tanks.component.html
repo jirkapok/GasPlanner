@@ -8,12 +8,12 @@
     <table class="table table-borderless">
         <tr>
             <th></th>
-            <th><div>Size [{{units.volume}}]</div></th>
-            <th><div>Pressure [{{units.pressure}}]</div></th>
-            <th><div>O2 [%]</div></th>
-            <th><div>He [%]</div></th>
+            <th><div class="m-0 p-0">Size [{{units.volume}}]</div></th>
+            <th><div class="m-0 p-0">Pressure [{{units.pressure}}]</div></th>
+            <th><div class="m-0 p-0">O2 [%]</div></th>
+            <th><div class="m-0 p-0">He [%]</div></th>
             <th>
-                <div>
+                <div class="m-0 p-0">
                     <button class="btn btn-default m-0 p-0 text-primary" type="button" (click)="addTank()">
                         <fa-icon [icon]="plusIcon" class="px-0 mx-0"></fa-icon>
                     </button>
@@ -23,10 +23,10 @@
         <ng-container *ngFor="let tank of tanks">
             <tr class="p-0">
                 <td class="align-center">
-                   <div class="mb-0 pb-0">{{tank.id}}.</div>
+                   <div class="mb-0 pb-0 px-1">{{tank.id}}.</div>
                 </td>
                 <td>
-                    <div class="mb-0 pb-0">
+                    <div class="mb-0 pb-0 px-0">
                         <input #size="ngModel" name="size" [(ngModel)]="tank.size" class="form-control" type="number"
                             (input)="apply()" required
                             [rangeVal]="ranges.tankSize" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
@@ -37,7 +37,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="mb-0 pb-0">
+                    <div class="mb-0 pb-0 px-1">
                         <input #startPressure="ngModel" name="startPressure" [(ngModel)]="tank.startPressure"
                         class="form-control" type="number" (input)="apply()" required
                         [rangeVal]="ranges.tankPressure" [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
@@ -48,7 +48,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="input-group mb-0 pb-0">
+                    <div class="input-group mb-0 pb-0 px-1">
                         <input #gasO2="ngModel" name="gasO2" [(ngModel)]="tank.o2" class="form-control" type="number"
                             (input)="apply()" required
                             [rangeVal]="ranges.trimixOxygen" [min]="ranges.trimixOxygen[0]" [max]="ranges.trimixOxygen[1]" step="1"
@@ -63,7 +63,7 @@
                     </div>
                 </td>
                 <td >
-                    <div class="mb-0 pb-0">
+                    <div class="mb-0 pb-0 px-1">
                         <div class="text-danger" *ngIf="gasO2.invalid && (gasO2.dirty || gasO2.touched)">Needs to be number
                             {{ranges.trimixOxygenLabel}}</div>
 

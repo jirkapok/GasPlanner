@@ -62,9 +62,10 @@ export class DiveOptionsComponent {
             this.setAllUsable();
             this.options.resetToSimple();
             this.planner.resetToSimple();
-            // no need to recalculate in simple mode, since there are no data changes
-            this.applyOptions();
         }
+
+        // always calculate, even nothing changed, since we want to propagate url update
+        this.applyOptions();
     }
 
     public reset(): void {

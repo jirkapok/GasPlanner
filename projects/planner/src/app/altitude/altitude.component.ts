@@ -58,6 +58,6 @@ export class AltitudeComponent {
 
     private setLevel(latitude: number): void {
         this.altitude = latitude;
-        // TODO doesn't refresh the options before they are applied
+        this.inputChange.emit();
     }
 }

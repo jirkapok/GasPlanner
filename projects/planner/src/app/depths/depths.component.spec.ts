@@ -28,11 +28,10 @@ describe('DepthsComponent', () => {
     });
 
     it('MND for 12/35 returns 52 m', () => {
-        const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, 1);
+        const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6);
         const toxicity = new GasToxicity(options);
         const gas = StandardGases.trimix2135.copy();
         const result = toxicity.mndForGas(gas);
-        // TODO after services are fixed should be 51.72
         expect(result).toBe(51.54);
     });
 
@@ -47,8 +46,7 @@ describe('DepthsComponent', () => {
             (planner: PlannerService) => {
                 planner.firstTank.o2 = 50;
                 component.applyMaxDepth();
-                // TODO after services are fixed should be 18 m
-                expect(planner.plan.maxDepth).toBe(17);
+                expect(planner.plan.maxDepth).toBe(18);
             }));
     });
 });

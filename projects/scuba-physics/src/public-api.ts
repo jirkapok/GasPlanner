@@ -20,3 +20,4 @@ export * from './lib/Tanks';
 export * from './lib/Time';
 export * from './lib/Tissues';
 export * from './lib/units';
+export * from './lib/precision';

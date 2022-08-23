@@ -1,3 +1,4 @@
+import { Precision } from './precision';
 import { DepthConverter } from './depth-converter';
 import { DepthLevels } from './DepthLevels';
 import { GasMixtures } from './Gases';
@@ -22,7 +23,8 @@ export class NitroxCalculator {
             return 0;
         }
 
-        const resultMeters = this.depthConverter.fromBar(result);
+        let resultMeters = this.depthConverter.fromBar(result);
+        resultMeters = Precision.fix(resultMeters);
         return Math.ceil(resultMeters * 100) / 100;
     }
 
@@ -34,7 +36,8 @@ export class NitroxCalculator {
      * @returns Percents of oxygen fraction in required gas.
      */
     public bestMix(pO2: number, depth: number): number {
-        const result = GasMixtures.bestMix(pO2, depth, this.depthConverter) * 100;
+        let result = GasMixtures.bestMix(pO2, depth, this.depthConverter) * 100;
+        result = Precision.fix(result);
         return Math.floor(result * 100) / 100;
     }
 
@@ -49,6 +52,7 @@ export class NitroxCalculator {
         const fO2 = percentO2 / 100;
         let result = GasMixtures.mod(ppO2, fO2);
         result = this.depthConverter.fromBar(result);
+        result = Precision.fix(result);
         return Math.floor(result * 100) / 100;
     }
 
@@ -74,7 +78,8 @@ export class NitroxCalculator {
      */
     public partialPressure(fO2: number, depth: number): number {
         const bar = this.depthConverter.toBar(depth);
-        const result = GasMixtures.partialPressure(bar, fO2) / 100;
+        let result = GasMixtures.partialPressure(bar, fO2) / 100;
+        result = Precision.fix(result);
         return Math.ceil(result * 100) / 100;
     }
 }

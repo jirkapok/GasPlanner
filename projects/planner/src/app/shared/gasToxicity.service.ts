@@ -1,4 +1,7 @@
-import { DepthConverter, DepthLevels, Gas, NitroxCalculator, Options, Tank } from 'scuba-physics';
+import {
+    DepthConverter, DepthLevels, Gas, NitroxCalculator,
+    Options, Precision, Tank
+} from 'scuba-physics';
 
 export class GasToxicity {
     // for gas toxicity only always use simple to be aligned with what people expect
@@ -19,8 +22,8 @@ export class GasToxicity {
         const depthInBars = this.depthConverter.toBar(this.options.maxEND);
         const maxNarcBar = gas.mnd(depthInBars, this.options.oxygenNarcotic);
         const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
-        // because of javascript numbers precision we need to help our self
-        const roundedNarc = Math.round(maxNarcDepth * 100) / 100;
+        let roundedNarc = Precision.fix(maxNarcDepth);
+        roundedNarc = Math.round(roundedNarc * 100) / 100;
         return roundedNarc;
     }
 

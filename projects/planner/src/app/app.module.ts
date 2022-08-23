@@ -46,6 +46,7 @@ import { NdlService } from './shared/ndl.service';
 import { OptionsDispatcherService } from './shared/options-dispatcher.service';
 import { PpO2Component } from './pp-o2/pp-o2.component';
 import { DelayedScheduleService } from './shared/delayedSchedule.service';
+import { AppinfoComponent } from './appinfo/appinfo.component';
 
 @NgModule({
     declarations: [
@@ -74,7 +75,8 @@ import { DelayedScheduleService } from './shared/delayedSchedule.service';
         GradientsComponent,
         DepthComponent,
         NitroxO2Component,
-        PpO2Component
+        PpO2Component,
+        AppinfoComponent
     ],
     imports: [
         BrowserModule,

@@ -144,7 +144,6 @@ export class DepthsComponent implements OnDestroy {
         this.delayedCalc.schedule();
     }
 
-    // TODO refresh of levels doesn't work
     private updateLevels(): void {
         const segments: Segment[] = this.plan.segments;
         const converted: Level[] = [];

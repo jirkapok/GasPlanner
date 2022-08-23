@@ -18,6 +18,8 @@ None of the authors, contributors, administrators, or anyone else connected with
 * Environment using water salinity and altitude options
 * Ascent plan using table and chart with list of warnings
 * Share dive plan using url address
+* Nitrox and RMV/SAC calculators
+* No decompression limits table
 * See more in **[Application help](./doc/help.md)**
 * See also [Road map of planned features](./doc/roadmap.md)
 

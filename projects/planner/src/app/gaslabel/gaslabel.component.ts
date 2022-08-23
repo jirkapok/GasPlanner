@@ -22,13 +22,14 @@ export class GaslabelComponent {
 
     public get gasMod(): number {
         const mod = this.toxicity.modForGas(this.tank);
-        return this.units.fromMeters(mod);
+        const result = this.units.fromMeters(mod);
+        return Math.floor(result);
     }
 
-    // TODO fix rounding of MOD and MND to pessimistic number for EAN33 the depth should be 30 m only
     public get gasMnd(): number {
         const mnd = this.toxicity.mndForGas(this.tank.gas);
-        return this.units.fromMeters(mnd);
+        const result = this.units.fromMeters(mnd);
+        return Math.floor(result);
     }
 
     public get isTrimix(): boolean {
@@ -37,6 +38,7 @@ export class GaslabelComponent {
 
     public get gasDecoMod(): number {
         const mod = this.toxicity.switchDepth(this.tank);
-        return this.units.fromMeters(mod);
+        const result = this.units.fromMeters(mod);
+        return Math.floor(result);
     }
 }

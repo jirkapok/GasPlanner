@@ -26,19 +26,18 @@ describe('Gas label component', () => {
     it('Imperial units adjusts mod', inject([UnitConversion],
         (units: UnitConversion) => {
             units.imperialUnits = true;
-            // TODO after services are fixed, should be 189.10761
-            expect(component.gasMod).toBeCloseTo(185.89239, 5);
+            expect(component.gasMod).toBeCloseTo(185, 5);
         }));
 
     it('Imperial units adjusts deco mod', inject([UnitConversion],
         (units: UnitConversion) => {
             units.imperialUnits = true;
-            expect(component.gasDecoMod).toBeCloseTo(216.53543, 5);
+            expect(component.gasDecoMod).toBeCloseTo(216, 5);
         }));
 
     it('Imperial units adjusts mnd', inject([UnitConversion],
         (units: UnitConversion) => {
             units.imperialUnits = true;
-            expect(component.gasMnd).toBeCloseTo(98.42520, 5);
+            expect(component.gasMnd).toBeCloseTo(98, 5);
         }));
 });

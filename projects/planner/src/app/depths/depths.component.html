@@ -28,10 +28,10 @@
   <div class="card-body" *ngIf="isComplex">
     <table class="table table-borderless">
         <tr>
-          <th>From [{{units.length}}]</th>
-          <th>To [{{units.length}}]</th>
-          <th>Duration [min]</th>
-          <th>Tank</th>
+          <th class="text-end"><div>From [{{units.length}}]</div></th>
+          <th><div>To [{{units.length}}]</div></th>
+          <th><div>Duration [min]</div></th>
+          <th><div>Tank</div></th>
           <th><button class="btn btn-default m-0 p-0 text-primary" type="button" (click)="addSegment()"><fa-icon [icon]="addIcon"></fa-icon></button></th>
         </tr>
         <tr *ngFor="let level of levels">

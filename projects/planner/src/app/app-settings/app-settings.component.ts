@@ -38,9 +38,9 @@ export class AppSettingsComponent {
     private applyToOptions(): void {
         this.options.applyDiver(this.diver);
         const ranges = this.units.ranges;
-        this.options.decoStopDistance = ranges.decoStopDistance;
-        this.options.minimumAutoStopDepth = ranges.minimumAutoStopDepth;
-        this.options.lastStopDepth = ranges.lastStopDepthDefault;
+        this.options.decoStopDistance = this.units.toMeters(ranges.decoStopDistance);
+        this.options.minimumAutoStopDepth = this.units.toMeters(ranges.minimumAutoStopDepth);
+        this.options.lastStopDepth = this.units.toMeters(ranges.lastStopDepthDefault);
         this.planner.assignOptions(this.options);
     }
 

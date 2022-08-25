@@ -4,6 +4,7 @@ import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
 import { Options, Tank, Time } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { NdlLimit, NdlService } from '../shared/ndl.service';
+import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { TankBound } from '../tanks/tanks.component';
 
@@ -23,9 +24,12 @@ export class NdlLimitsComponent {
     public limits: NdlLimit[] = [];
     public toxicity: GasToxicity;
 
-    constructor(private router: Router, public units: UnitConversion, private ndl: NdlService) {
+    constructor(private router: Router, public units: UnitConversion,
+        private ndl: NdlService, optionsService: OptionsDispatcherService) {
         this.tank = new TankBound(new Tank(15, 200, 21), this.units);
-        this.options = new Options();
+        // TODO copy values only
+        // Altitude already converted to metric value in its component
+        this.options = optionsService.getOptions();
         this.toxicity = new GasToxicity(this.options);
         this.calculate();
     }
@@ -35,8 +39,15 @@ export class NdlLimitsComponent {
     }
 
     public calculate(): void {
-        // TODO depths return need to be converted to defined units
         this.limits = this.ndl.calculate(this.tank.tank.gas, this.options);
+        const ranges = this.units.ranges;
+        const indexOffset = 4; // 4 times the minimum 3 m depth (= 12 m)
+
+        for(let index = 0; index < this.limits.length; index++) {
+            // convert meters to target unit
+            const limit = this.limits[index];
+            limit.depth = ranges.decoStopDistance * (index + indexOffset);
+        }
     }
 
     public async goBack(): Promise<boolean> {

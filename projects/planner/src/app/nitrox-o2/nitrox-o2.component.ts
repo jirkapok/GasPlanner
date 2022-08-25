@@ -9,7 +9,6 @@ import { UnitConversion } from '../shared/UnitConversion';
     styleUrls: ['./nitrox-o2.component.css']
 })
 export class NitroxO2Component {
-    // TODO consider get rid of tank
     @Input()
     public tank = new Tank(15, 200, 21);
     @Input()

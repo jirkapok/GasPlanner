@@ -24,11 +24,10 @@ describe('NdlLimits component', () => {
         fixture.detectChanges();
     });
 
-    xit('Imperial units adjusts calculated depths to feet', inject([UnitConversion],
+    it('Imperial units adjusts calculated depths to feet', inject([UnitConversion],
         (units: UnitConversion) => {
             units.imperialUnits = true;
             component.calculate();
-            // TODO imperial units
             expect(component.limits[0].depth).toBe(40);
         }));
 

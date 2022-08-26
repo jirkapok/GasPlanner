@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { faBatteryHalf, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
@@ -6,6 +6,7 @@ import { StandardGases, Tank } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
+import { Subscription } from 'rxjs';
 
 export class TankBound {
     constructor(public tank: Tank, private units: UnitConversion) {}
@@ -52,7 +53,7 @@ export class TankBound {
     templateUrl: './tanks.component.html',
     styleUrls: ['./tanks.component.css']
 })
-export class TanksComponent {
+export class TanksComponent implements OnDestroy {
     public allNames: string[];
     public icon = faBatteryHalf;
     public plusIcon = faPlusSquare;
@@ -60,14 +61,15 @@ export class TanksComponent {
     public toxicity: GasToxicity;
 
     private bound: TankBound[] = [];
+    private subscription: Subscription;
 
     constructor(private planner: PlannerService,
         public units: UnitConversion,
         private delayedCalc: DelayedScheduleService) {
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
-        // TODO react on tanks reloaded from planner loadFrom
         this.updateTanks();
+        this.subscription = this.planner.tanksReloaded.subscribe(() => this.updateTanks());
     }
 
     public get firstTank(): TankBound {
@@ -120,6 +122,10 @@ export class TanksComponent {
 
     public apply(): void {
         this.delayedCalc.schedule();
+    }
+
+    public ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     private updateTanks(): void {

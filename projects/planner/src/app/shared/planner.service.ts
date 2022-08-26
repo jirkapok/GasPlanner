@@ -25,6 +25,10 @@ export class PlannerService {
     public dive: Dive = new Dive();
     public infoCalculated;
     public wayPointsCalculated;
+
+    /** Event fired only in case of tanks rebuild. Not fired when adding or removing. */
+    public tanksReloaded;
+    private onTanksReloaded = new Subject();
     private calculating = false;
     private calculatingNoDeco = false;
     private calculatingProfile = false;
@@ -46,6 +50,7 @@ export class PlannerService {
         this.infoCalculated = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated = this.onWayPointsCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
+        this.tanksReloaded = this.onTanksReloaded.asObservable();
 
         this.profileTask = this.workerFactory.createProfileWorker();
         this.profileTask.calculated.subscribe((data) => this.continueCalculation(data));
@@ -85,6 +90,7 @@ export class PlannerService {
             this.firstTank.assignStandardGas('Air');
         }
 
+        this.onTanksReloaded.next({});
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
     }
 
@@ -138,6 +144,7 @@ export class PlannerService {
 
         if (tanks.length > 0) {
             this._tanks = tanks;
+            this.onTanksReloaded.next({});
         }
 
         if (segments.length > 1) {

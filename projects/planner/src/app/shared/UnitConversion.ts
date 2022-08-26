@@ -53,6 +53,10 @@ export class UnitConversion {
         return this.current.autoStopLevel;
     }
 
+    public get stopsDistance(): number {
+        return this.current.stopsDistance;
+    }
+
     public get imperialUnits(): boolean {
         return this._imperialUnits;
     }
@@ -109,6 +113,7 @@ export class UnitConversion {
 }
 
 
+/** All numeric values are in current units of the provider, e.g. not normalized to metrics only. */
 export interface RangeConstants {
     tankSize: [number, number];
     tankSizeLabel: string;
@@ -135,10 +140,6 @@ export interface RangeConstants {
     altitudeLabel: string;
     speed: [number, number];
     speedLabel: string;
-
-    decoStopDistance: number;
-    minimumAutoStopDepth: number;
-    lastStopDepthDefault: number;
 }
 
 const perMinute = '/min';
@@ -172,11 +173,6 @@ class MetricRanges implements RangeConstants {
     public speed: [number, number] = [1,100];
     public speedLabel: string = toLabel(this.speed, this.units.lengthShortcut + perMinute);
 
-    // Algorithm
-    public decoStopDistance = 3;
-    public minimumAutoStopDepth = 10;
-    public lastStopDepthDefault = 3;
-
     constructor(private units: Units) {}
 }
 
@@ -191,11 +187,6 @@ class ImperialRanges implements RangeConstants  {
     public tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
     public tankPressure: [number, number] = [400, 5100];
     public tankPressureLabel: string = toLabel(this.tankPressure, this.units.pressureShortcut);
-
-    // Algorithm
-    public decoStopDistance = 10;
-    public minimumAutoStopDepth = 33;
-    public lastStopDepthDefault = 10;
 
     // TODO adjust imperial ranges
     public nitroxOxygen: [number, number] = [21, 100];

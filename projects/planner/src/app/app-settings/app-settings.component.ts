@@ -37,10 +37,12 @@ export class AppSettingsComponent {
 
     private applyToOptions(): void {
         this.options.applyDiver(this.diver);
-        const ranges = this.units.ranges;
-        this.options.decoStopDistance = this.units.toMeters(ranges.decoStopDistance);
-        this.options.minimumAutoStopDepth = this.units.toMeters(ranges.minimumAutoStopDepth);
-        this.options.lastStopDepth = this.units.toMeters(ranges.lastStopDepthDefault);
+        // options need to be in metrics only
+        this.options.decoStopDistance = this.units.toMeters(this.units.stopsDistance);
+        // unable to fit the stop, the lowest value is always the minimum distance
+        this.options.lastStopDepth = this.units.toMeters(this.units.stopsDistance);
+        this.options.minimumAutoStopDepth = this.units.toMeters(this.units.autoStopLevel);
+        // TODO apply also rounded MND limit
         this.planner.assignOptions(this.options);
     }
 

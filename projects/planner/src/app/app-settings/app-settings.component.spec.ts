@@ -58,12 +58,13 @@ describe('App settings component', () => {
             expect(planner.options.lastStopDepth).toBe(3);
         }));
 
-    xit('Imperial units updates depth level options', inject([PlannerService],
+    it('Imperial units updates depth level options', inject([PlannerService],
         (planner: PlannerService) => {
             component.imperialUnits = true;
             component.use();
-            expect(planner.options.decoStopDistance).toBe(10);
-            expect(planner.options.minimumAutoStopDepth).toBe(33);
-            expect(planner.options.lastStopDepth).toBe(10);
+            // all options are still in metric
+            expect(planner.options.decoStopDistance).toBeCloseTo(3.048, 4);
+            expect(planner.options.minimumAutoStopDepth).toBeCloseTo(10.0584, 4);
+            expect(planner.options.lastStopDepth).toBeCloseTo(3.048, 4);
         }));
 });

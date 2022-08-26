@@ -27,9 +27,8 @@ export class NdlLimitsComponent {
     constructor(private router: Router, public units: UnitConversion,
         private ndl: NdlService, optionsService: OptionsDispatcherService) {
         this.tank = new TankBound(new Tank(15, 200, 21), this.units);
-        // TODO copy values only
-        // Altitude already converted to metric value in its component
-        this.options = optionsService.getOptions();
+        this.options = new Options();
+        this.copyOptions(optionsService);
         this.toxicity = new GasToxicity(this.options);
         this.calculate();
     }
@@ -40,17 +39,25 @@ export class NdlLimitsComponent {
 
     public calculate(): void {
         this.limits = this.ndl.calculate(this.tank.tank.gas, this.options);
-        const ranges = this.units.ranges;
         const indexOffset = 4; // 4 times the minimum 3 m depth (= 12 m)
 
         for(let index = 0; index < this.limits.length; index++) {
             // convert meters to target unit
             const limit = this.limits[index];
-            limit.depth = ranges.decoStopDistance * (index + indexOffset);
+            limit.depth = this.units.stopsDistance * (index + indexOffset);
         }
     }
 
     public async goBack(): Promise<boolean> {
         return await this.router.navigateByUrl('/');
+    }
+
+    private copyOptions(optionsService: OptionsDispatcherService): void {
+        this.options.gfLow = optionsService.gfLow;
+        this.options.gfHigh = optionsService.gfHigh;
+        this.options.salinity = optionsService.salinity;
+        // Altitude already converted to metric value in its component
+        this.options.altitude = optionsService.altitude;
+        this.options.maxPpO2 = optionsService.maxPpO2;
     }
 }

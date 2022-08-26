@@ -18,7 +18,7 @@ export class SacCalculatorService {
     private _rmv = 0;
     private sacCalculator: SacCalculator;
     private _calculation = SacMode.sac;
-    private calculate: () => void = this.calculateSac;
+
     private options: DepthOptions = {
         salinity: Salinity.fresh,
         altitude: 0
@@ -36,13 +36,29 @@ export class SacCalculatorService {
         return this._depth;
     }
 
+    public get tank(): number {
+        return this._tank;
+    }
+
+    public get rmv(): number {
+        return this._rmv;
+    }
+
+    public get duration(): number {
+        return this._duration;
+    }
+
+    public get used(): number {
+        return this._used;
+    }
+
+    public get calculation(): SacMode {
+        return this._calculation;
+    }
+
     public set depth(newValue: number) {
         this._depth = newValue;
         this.calculate();
-    }
-
-    public get tank(): number {
-        return this._tank;
     }
 
     public set tank(newValue: number) {
@@ -50,17 +66,9 @@ export class SacCalculatorService {
         this.calculate();
     }
 
-    public get rmv(): number {
-        return this._rmv;
-    }
-
     public set rmv(newValue: number) {
         this._rmv = newValue;
         this.calculate();
-    }
-
-    public get duration(): number {
-        return this._duration;
     }
 
     public set duration(newValue: number) {
@@ -68,17 +76,9 @@ export class SacCalculatorService {
         this.calculate();
     }
 
-    public get used(): number {
-        return this._used;
-    }
-
     public set used(newValue: number) {
         this._used = newValue;
         this.calculate();
-    }
-
-    public get calculation(): SacMode {
-        return this._calculation;
     }
 
     public set calculation(newValue: SacMode) {
@@ -86,13 +86,13 @@ export class SacCalculatorService {
 
         switch (newValue) {
             case SacMode.duration:
-                this.calculate = this.calculateDuration;
+                this.calculate = () => this.calculateDuration();
                 break;
             case SacMode.used:
-                this.calculate = this.calculateUsed;
+                this.calculate = () => this.calculateUsed();
                 break;
             default:
-                this.calculate = this.calculateSac;
+                this.calculate = () => this.calculateSac();
         }
     }
 
@@ -107,4 +107,6 @@ export class SacCalculatorService {
     private calculateUsed(): void {
         this._used = this.sacCalculator.calculateUsed(this.depth, this.tank, this.duration, this.rmv);
     }
+
+    private calculate: () => void = () => this.calculateSac();
 }

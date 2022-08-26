@@ -32,4 +32,22 @@ describe('Tanks component', () => {
             const sac = component.gasSac(planner.firstTank);
             expect(sac).toBeCloseTo(19.33836, 5);
         }));
+
+    it('Adds tank', inject([PlannerService],
+        (planner: PlannerService) => {
+            planner.resetToSimple();
+            component.addTank();
+            expect(component.tanks.length).toBe(2);
+        }));
+
+    it('Removes tank', inject([PlannerService],
+        (planner: PlannerService) => {
+            planner.resetToSimple();
+            component.addTank();
+            component.addTank();
+            component.addTank();
+            const lastTank = component.tanks[3];
+            component.removeTank(lastTank);
+            expect(component.tanks.length).toBe(3);
+        }));
 });

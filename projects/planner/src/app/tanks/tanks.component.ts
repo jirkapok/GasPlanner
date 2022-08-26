@@ -2,13 +2,17 @@ import { Component } from '@angular/core';
 import { faBatteryHalf, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
-import { StandardGases, Tank, Diver } from 'scuba-physics';
+import { StandardGases, Tank } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
 
 export class TankBound {
     constructor(public tank: Tank, private units: UnitConversion) {}
+
+    public get id(): number {
+        return this.tank.id;
+    }
 
     public get size(): number {
         return this.units.fromTankLiters(this.tank.size);
@@ -22,6 +26,10 @@ export class TankBound {
         return this.tank.o2;
     }
 
+    public get he(): number {
+        return this.tank.he;
+    }
+
     public set size(newValue: number) {
         this.tank.size = this.units.toTankLiters(newValue);
     }
@@ -32,6 +40,10 @@ export class TankBound {
 
     public set o2(newValue: number) {
         this.tank.o2 = newValue;
+    }
+
+    public set he(newValue: number) {
+        this.tank.he = newValue;
     }
 }
 
@@ -47,46 +59,51 @@ export class TanksComponent {
     public trashIcon = faTrashAlt;
     public toxicity: GasToxicity;
 
+    private bound: TankBound[] = [];
+
     constructor(private planner: PlannerService,
         public units: UnitConversion,
         private delayedCalc: DelayedScheduleService) {
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
+        // TODO react on tanks reloaded from planner loadFrom
+        this.updateTanks();
     }
 
-    // TODO Bound tank for all tanks
     public get firstTank(): TankBound {
-        return new TankBound(this.planner.firstTank, this.units);
+        return this.bound[0];
     }
 
     public get ranges(): RangeConstants {
         return this.units.ranges;
     }
 
-    public get tanks(): Tank[] {
-        return this.planner.tanks;
+    public get tanks(): TankBound[] {
+        return this.bound;
     }
 
     public get isComplex(): boolean {
         return this.planner.isComplex;
     }
 
-    public isFirstTank(tank: Tank): boolean {
-        return this.planner.firstTank !== tank;
+    public isFirstTank(bound: TankBound): boolean {
+        return this.firstTank !== bound;
     }
 
-    public gasSac(tank: Tank): number {
-        const sac = this.planner.diver.gasSac(tank);
+    public gasSac(bound: TankBound): number {
+        const sac = this.planner.diver.gasSac(bound.tank);
         return this.units.fromBar(sac);
     }
 
     public addTank(): void {
         this.planner.addTank();
+        this.updateTanks();
         this.apply();
     }
 
-    public removeTank(tank: Tank): void {
-        this.planner.removeTank(tank);
+    public removeTank(bound: TankBound): void {
+        this.planner.removeTank(bound.tank);
+        this.updateTanks();
         this.apply();
     }
 
@@ -96,12 +113,26 @@ export class TanksComponent {
         this.apply();
     }
 
-    public assignStandardGas(gas: Tank, gasName: string): void {
-        gas.assignStandardGas(gasName);
+    public assignStandardGas(bound: TankBound, gasName: string): void {
+        bound.tank.assignStandardGas(gasName);
         this.apply();
     }
 
     public apply(): void {
         this.delayedCalc.schedule();
+    }
+
+    private updateTanks(): void {
+        const bound: TankBound[] = [];
+        this.planner.tanks.forEach((t)=> {
+            const newBound = this.toBound(t);
+            bound.push(newBound);
+        });
+
+        this.bound = bound;
+    }
+
+    private toBound(tank: Tank): TankBound {
+        return new TankBound(tank, this.units);
     }
 }

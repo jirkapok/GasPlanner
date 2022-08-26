@@ -21,7 +21,6 @@ export class NitroxCalculatorService {
 
     constructor(options: OptionsDispatcherService) {
         const depthConverter = DepthConverter.simple();
-        // TODO replace stop values by values converted by units
         const depthLevels = new DepthLevels(depthConverter, options);
         this.nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);
     }

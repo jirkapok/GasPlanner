@@ -1,3 +1,4 @@
+/** All values are in respective units */
 export interface Units {
     name: string;
     lengthShortcut: string;

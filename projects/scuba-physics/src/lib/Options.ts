@@ -69,6 +69,7 @@ export class OptionDefaults {
     }
 }
 
+/** All the units defined here need to be used only in metric system */
 export class Options implements GasOptions, DepthOptions, DepthLevelOptions, SpeedOptions {
     /**
      * meters above see level, 0 for see level (default)
@@ -84,7 +85,7 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
 
     /**
      * If configured, adds 3 minutes to last stop in 3 meters.
-     * In case Auto, adds the stop, only if the maximum depth exceeds 10 meters (default).
+     * In case Auto, adds the stop, only if the maximum depth defined by minimumAutoStopDepth.
      */
     public safetyStop = OptionDefaults.safetyStopRecre;
 
@@ -173,21 +174,29 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
     }
 
     public loadFrom(other: Options): void {
+        // gases
         this.gfLow = other.gfLow || this.gfLow;
         this.gfHigh = other.gfHigh || this.gfHigh;
         this.maxPpO2 = other.maxPpO2 || this.maxPpO2;
         this.maxDecoPpO2 = other.maxDecoPpO2 || this.maxDecoPpO2;
-        this.salinity = other.salinity || this.salinity;
+        this.oxygenNarcotic = other.oxygenNarcotic;
 
+        // environment
+        this.salinity = other.salinity || this.salinity;
         // altitude is the only one property, which accepts 0;
         this.altitude = (other.altitude || other.altitude === 0) ? other.altitude : this.altitude;
         this.roundStopsToMinutes = other.roundStopsToMinutes || this.roundStopsToMinutes;
         this.gasSwitchDuration = other.gasSwitchDuration || this.gasSwitchDuration;
         this.problemSolvingDuration = other.problemSolvingDuration || this.problemSolvingDuration;
+
+        // depths
         this.lastStopDepth = other.lastStopDepth || this.lastStopDepth;
+        this.decoStopDistance = other.decoStopDistance || this.decoStopDistance;
+        this.minimumAutoStopDepth =  other.minimumAutoStopDepth || this.minimumAutoStopDepth;
         this.safetyStop = other.safetyStop || this.safetyStop;
         this.maxEND = other.maxEND || this.maxEND;
 
+        // speeds
         this.ascentSpeed6m = other.ascentSpeed6m || this.ascentSpeed6m;
         this.ascentSpeed50percTo6m = other.ascentSpeed50percTo6m || this.ascentSpeed50percTo6m;
         this.ascentSpeed50perc = other.ascentSpeed50perc || this.ascentSpeed50perc;

@@ -27,6 +27,7 @@ export class SacCalculatorService {
     private depthConverterFactory = new DepthConverterFactory(this.options);
 
     constructor() {
+        // TODO consider simple depth converter
         const depthConverter = this.depthConverterFactory.create();
         this.sacCalculator = new SacCalculator(depthConverter);
         this.calculate();

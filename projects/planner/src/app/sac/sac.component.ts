@@ -41,7 +41,7 @@ export class SacComponent {
     }
 
     public get calcTank(): number {
-        return this.units.fromLiter(this.calc.tank);
+        return this.units.fromTankLiters(this.calc.tank);
     }
 
     public get calcUsed(): number {
@@ -61,7 +61,7 @@ export class SacComponent {
     }
 
     public set calcTank(newValue: number) {
-        this.calc.tank = this.units.toLiter(newValue);
+        this.calc.tank = this.units.toTankLiters(newValue);
     }
 
     public set calcUsed(newValue: number) {

@@ -13,51 +13,70 @@ export class AltitudeComponent {
     @Output()
     public inputChange = new EventEmitter();
 
-    private _altitude = 0;
+    /** In m.a.s.l */
+    @Input()
+    public altitude = 0;
+
+    private metricLevels = [0, 300, 800, 1500];
+    private imperialLevels = [0, 1000, 2600, 5000];
 
     constructor(public units: UnitConversion) { }
 
-    @Input()
-    public get altitude(): number {
-        return this._altitude;
+    public get altitudeBound(): number {
+        return this.units.fromMeters(this.altitude);
     }
 
-    // TODO calculate by units
     public get smallHill(): string  {
-        return '300 m.a.s.l';
+        return this.levelLabel(1);
     }
 
     public get mountains(): string  {
-        return '800 m.a.s.l';
+        return this.levelLabel(2);
     }
 
     public get highMountains(): string  {
-        return '1500 m.a.s.l';
+        return this.levelLabel(3);
     }
 
-    public set altitude(newValue: number) {
-        this._altitude = newValue;
-        this.altitudeChange.emit(this._altitude);
-    }
-
-    public setHighMountains(): void {
-        this.setLevel(1500);
-    }
-
-    public setMountains(): void {
-        this.setLevel(800);
-    }
-
-    public setHill(): void {
-        this.setLevel(300);
+    public set altitudeBound(newValue: number) {
+        this.altitude = this.units.toMeters(newValue);
+        this.altitudeChange.emit(this.altitude);
     }
 
     public seaLevel(): void {
         this.setLevel(0);
     }
 
-    private setLevel(latitude: number): void {
-        this.altitude = latitude;
+    public setHill(): void {
+        this.setLevel(1);
+    }
+
+    public setMountains(): void {
+        this.setLevel(2);
+    }
+
+    // we don't change the values for imperial units here
+    // simply lets fit closes rounded value
+    public setHighMountains(): void {
+        this.setLevel(3);
+    }
+
+    private setLevel(index: number): void {
+        const level = this.selectLevels()[index];
+        this.altitudeBound = level;
         this.inputChange.emit();
+    }
+
+    private levelLabel(index: number): string {
+        const level = this.selectLevels()[index];
+        return `${level} ${this.units.altitude}`;
+    }
+
+    private selectLevels(): number[] {
+        if(this.units.imperialUnits) {
+            return this.imperialLevels;
+        }
+
+        return this.metricLevels;
     }
 }

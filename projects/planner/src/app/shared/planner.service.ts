@@ -137,8 +137,6 @@ export class PlannerService {
     }
 
     public loadFrom(isComplex: boolean, options: Options, diver: Diver, tanks: Tank[], segments: Segment[]): void {
-        // TODO Apply from Units after the plan was applied, we don't need to check them
-        // minimumAutoStopDepth lastStopDepth decoStopDistance
         this.assignOptions(options);
         this.applyDiver(diver);
 

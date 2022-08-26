@@ -32,6 +32,6 @@ export class DateFormats {
 
     private static hasHoursRuntime(seconds: number): boolean {
         const hoursCount = DateFormats.hoursDuration(seconds);
-        return hoursCount > 0;
+        return hoursCount >= 1;
     }
 }

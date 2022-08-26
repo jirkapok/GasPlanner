@@ -152,6 +152,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     }
 
     private updateLayoutThickFormat(): void {
+        // setting to string instead expected d3 formtting function causes warning in console = want fix
         this.layout.xaxis.tickformat = DateFormats.selectChartTimeFormat(this.dive.totalDuration);
     }
 

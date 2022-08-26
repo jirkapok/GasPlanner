@@ -60,7 +60,7 @@ describe('Sac component', () => {
         });
 
         it('adjusts sac', () => {
-            expect(component.gasSac()).toBeCloseTo(0.046947, 5);
+            expect(component.gasSac()).toBeCloseTo(19.28155, 5);
         });
     });
 });

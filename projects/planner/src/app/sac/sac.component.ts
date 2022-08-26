@@ -98,6 +98,6 @@ export class SacComponent {
 
     public gasSac(): number {
         const sac = Diver.gasSac(this.calc.rmv, this.calc.tank);
-        return this.units.fromLiter(sac);
+        return this.units.fromBar(sac);
     }
 }

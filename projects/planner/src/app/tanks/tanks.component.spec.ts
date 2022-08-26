@@ -29,7 +29,7 @@ describe('Tanks component', () => {
     it('Imperial units adjusts sac', inject([PlannerService, UnitConversion],
         (planner: PlannerService, units: UnitConversion) => {
             units.imperialUnits = true;
-            const sac = component.gasSac(planner.firstTank);
+            const sac = component.gasSac(component.firstTank);
             expect(sac).toBeCloseTo(19.33836, 5);
         }));
 

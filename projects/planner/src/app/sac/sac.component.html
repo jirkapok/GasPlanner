@@ -30,7 +30,7 @@
           </div>
           <div [hidden]="inDuration" class="my-2">
             <label for="duration">Dive time [min]:
-              <input [(ngModel)]="calc.duration" class="form-control" #duration="ngModel" name="duration" id="duration"
+              <input [(ngModel)]="calcDuration" class="form-control" #duration="ngModel" name="duration" id="duration"
               type="number" required  [rangeVal]="ranges.duration" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
               [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"
               />
@@ -68,7 +68,7 @@
           </div>
           <div [hidden]="!inDuration" class="my-2">
             <label for="sac">Dive time [min]:
-              <input [ngModel]="calc.duration" class="form-control" readonly/>
+              <input [ngModel]="calcDuration" class="form-control" readonly/>
             </label>
           </div>
         </div>

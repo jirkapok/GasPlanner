@@ -38,6 +38,7 @@ export class DepthsComponent implements OnDestroy {
         this.subscription = this.plan.reloaded.subscribe(() => this.updateLevels());
     }
 
+    /** In meters */
     @Input()
     public get plannedDepth(): number {
         return this.plan.maxDepth;
@@ -59,6 +60,7 @@ export class DepthsComponent implements OnDestroy {
         return this._levels;
     }
 
+    // only to get their label, formatted in the tankLabel
     public get tanks(): Tank[] {
         return this.planner.tanks;
     }
@@ -115,7 +117,7 @@ export class DepthsComponent implements OnDestroy {
     }
 
     public tankLabel(tank: Tank): string {
-        return Level.tankLabel(tank);
+        return Level.tankLabel(this.units, tank);
     }
 
     public addSegment(): void {
@@ -148,7 +150,7 @@ export class DepthsComponent implements OnDestroy {
         const segments: Segment[] = this.plan.segments;
         const converted: Level[] = [];
         segments.forEach(segment => {
-            const level = new Level(segment);
+            const level = new Level(this.units, segment);
             converted.push(level);
         });
 

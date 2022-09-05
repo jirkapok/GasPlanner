@@ -1,7 +1,7 @@
 <label for="depthField" class="form-label">Depth [{{units.length}}]:
     <div class="row row-cols-auto">
         <input id="depthField" name="depthField" #depthField="ngModel"
-            [(ngModel)]="depth" class="form-control col-auto ms-3" type="number"
+            [(ngModel)]="boundDepth" class="form-control col-auto ms-3" type="number"
             required  [rangeVal]="units.ranges.depth" [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1"
             (input)="inputChange.emit()"
             [class.is-invalid]="depthField.invalid && (depthField.dirty || depthField.touched)"/>

@@ -1,6 +1,7 @@
 import { Subject } from 'rxjs';
 import { Ceiling, Time, Event, Segment, Segments, SegmentsFactory,
     StandardGases, Options, Tank } from 'scuba-physics';
+import { UnitConversion } from './UnitConversion';
 
 export enum Strategies {
     ALL = 1,
@@ -10,6 +11,7 @@ export enum Strategies {
 
 export class Level {
     constructor(
+        private units: UnitConversion,
         public segment: Segment
     ){
     }
@@ -19,11 +21,13 @@ export class Level {
     }
 
     public get startDepth(): number {
-        return this.segment.startDepth;
+        const depth = this.segment.startDepth;
+        return this.units.fromMeters(depth);
     }
 
     public get endDepth(): number {
-        return this.segment.endDepth;
+        const depth = this.segment.endDepth;
+        return this.units.fromMeters(depth);
     }
 
     public get tank(): Tank | undefined {
@@ -31,7 +35,8 @@ export class Level {
     }
 
     public get tankLabel(): string {
-        return Level.tankLabel(this.segment.tank);
+        const tank = this.segment.tank;
+        return Level.tankLabel(this.units, tank);
     }
 
     /** in minutes */
@@ -40,19 +45,22 @@ export class Level {
     }
 
     public set endDepth(newValue: number) {
-        this.segment.endDepth = newValue;
+        const meters = this.units.toMeters(newValue);
+        this.segment.endDepth = meters;
     }
 
     public set tank(newValue: Tank | undefined) {
         this.segment.tank = newValue;
     }
 
-    public static tankLabel(tank: Tank | undefined): string {
+    public static tankLabel(units: UnitConversion, tank: Tank | undefined): string {
         if(!tank) {
             return '';
         }
 
-        return `${tank.id}. ${tank.name}/${tank.size}/${tank.startPressure}`;
+        const volume = units.fromTankLiters(tank.size);
+        const startPressure = units.fromBar(tank.startPressure);
+        return `${tank.id}. ${tank.name}/${volume}/${startPressure}`;
     }
 }
 

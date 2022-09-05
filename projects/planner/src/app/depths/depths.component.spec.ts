@@ -1,7 +1,7 @@
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
-import { StandardGases } from 'scuba-physics';
+import { StandardGases, Tank } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -48,5 +48,38 @@ describe('DepthsComponent', () => {
                 component.applyMaxDepth();
                 expect(planner.plan.maxDepth).toBe(18);
             }));
+    });
+
+    describe('Imperial Units', () => {
+        beforeEach(() => {
+            component.units.imperialUnits = true;
+        });
+
+        it('Updates end depth', () => {
+            const last = component.levels[1];
+            last.endDepth = 70;
+            const result = last.segment.endDepth;
+            expect(result).toBeCloseTo(21.336, 6);
+        });
+
+        it('Converts start depth', () => {
+            const last = component.levels[1];
+            last.segment.startDepth = 6.096;
+            expect(last.startDepth).toBeCloseTo(20, 6);
+        });
+
+        it('planed depth is still in meters', () => {
+            component.plannedDepth = 70;
+            const last = component.levels[1];
+            expect(last.segment.endDepth).toBe(70);
+        });
+
+        it('Adjusts tank label', () => {
+            const last = component.levels[1];
+            const tank: Tank = last.tank || new Tank(0, 0, 0);
+            tank.startPressure = component.units.toBar(3000);
+            tank.size = component.units.toTankLiters(100);
+            expect(last.tankLabel).toBe('1. Air/100/3000');
+        });
     });
 });

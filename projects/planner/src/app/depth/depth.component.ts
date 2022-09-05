@@ -23,15 +23,25 @@ export class DepthComponent{
 
     constructor(public units: UnitConversion){}
 
+    /** In metres */
     @Input()
     public get depth(): number {
         return this._depth;
+    }
+
+    public get boundDepth(): number {
+        return this.units.fromMeters(this.depth);
     }
 
     public set depth(newValue: number) {
         this._depth = newValue;
         this.depthChange.emit(this._depth);
     }
+
+    public set boundDepth(newValue: number) {
+        this.depth = this.units.toMeters(newValue);
+    }
+
 
     public fireApplyMaxDepth(): void {
         this.applyMaxDepth.emit();

@@ -134,7 +134,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
 
     private plotCharts(): void {
         this.updateLayoutThickFormat();
-        // TODO performance: reduce number of samples shown in chart to speedup the drawing
+        // performance: number of samples shown in chart doesn't speedup the drawing significantly
         const dataAverageDepths = this.plotAverageDepth();
         const depths = this.plotDepths();
         const ceilings = this.plotCeilings();

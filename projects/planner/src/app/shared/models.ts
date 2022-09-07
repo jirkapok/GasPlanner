@@ -182,7 +182,7 @@ export class Plan {
 
 export class Dive {
     public calculated = false;
-    public noDecoCalculated = false;
+    public diveInfoCalculated = false;
     public profileCalculated = false;
     public calculationFailed = false;
     public maxTime = 0;

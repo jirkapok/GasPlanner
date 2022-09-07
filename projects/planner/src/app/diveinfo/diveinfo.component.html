@@ -52,10 +52,10 @@
                             <td>No decompression time [min]:
                                 <button type="button" class="btn btn-secondary btn-sm ml-2"
                                     (click)="planner.applyNdlDuration()"
-                                    *ngIf="showApply && dive.noDecoCalculated">Use</button>
+                                    *ngIf="showApply && dive.diveInfoCalculated">Use</button>
                             </td>
                             <td class="table-active">
-                                <strong *ngIf="dive.noDecoCalculated">{{ noDeco | number:'1.0-0' }}</strong>
+                                <strong *ngIf="dive.diveInfoCalculated">{{ noDeco | number:'1.0-0' }}</strong>
                             </td>
                         </tr>
                         <tr *ngIf="showMaxBottomTime">
@@ -99,7 +99,7 @@
                 <span>There was an error while calculating profile.</span>
             </div>
 
-            <div *ngIf="dive.noDecoCalculated && dive.notEnoughTime" class="alert alert-danger">
+            <div *ngIf="dive.diveInfoCalculated && dive.notEnoughTime" class="alert alert-danger">
                 <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
                 <span>Not enough time to realize the dive (duration needs to be at least {{ minimumDuration |
                     number:'1.0-0' }} min)! Set longer planed dive time.</span>
@@ -112,7 +112,13 @@
                         {{ dive.maxTime | number:'1.0-0' }} min. Use larger tank, fill it with more gas, reduce dive
                         duration or planned depth.</span>
                 </div>
-                <div *ngIf="dive.noDecoCalculated && dive.noDecoExceeded" class="alert alert-info">
+                <div *ngIf="dive.diveInfoCalculated && dive.noDecoExceeded" class="alert alert-info">
+                    <fa-icon [icon]="info" class="me-2"></fa-icon>
+                    <span>No decompression time for current depth exceeded (For no decompression dive set dive time
+                        maximum
+                        to {{ noDeco | number:'1.0-0' }} min)!</span>
+                </div>
+                <div *ngIf="dive.diveInfoCalculated && dive.noDecoExceeded" class="alert alert-info">
                     <fa-icon [icon]="info" class="me-2"></fa-icon>
                     <span>No decompression time for current depth exceeded (For no decompression dive set dive time
                         maximum

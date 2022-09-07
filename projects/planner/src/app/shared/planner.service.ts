@@ -30,7 +30,7 @@ export class PlannerService {
     public tanksReloaded;
     private onTanksReloaded = new Subject();
     private calculating = false;
-    private calculatingNoDeco = false;
+    private calculatingDiveInfo = false;
     private calculatingProfile = false;
     private _tanks: Tank[] = [];
     private _options: Options;
@@ -79,7 +79,7 @@ export class PlannerService {
     }
 
     public get ndlValid(): boolean {
-        return this.dive.noDecoCalculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
+        return this.dive.diveInfoCalculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
     }
 
     public resetToSimple(): void {
@@ -179,15 +179,15 @@ export class PlannerService {
     private startCalculatingState(): void {
         this.calculating = true;
         this.calculatingProfile = true;
-        this.calculatingNoDeco = true;
+        this.calculatingDiveInfo = true;
     }
 
     private endCalculatingState(): void {
         this.calculating = false;
         this.calculatingProfile = false;
-        this.calculatingNoDeco = false;
+        this.calculatingDiveInfo = false;
         this.dive.profileCalculated = true;
-        this.dive.noDecoCalculated = true;
+        this.dive.diveInfoCalculated = true;
         this.dive.calculated = true;
     }
 
@@ -197,8 +197,8 @@ export class PlannerService {
             this.dive.emptyProfile();
         }
 
-        if(this.calculatingNoDeco) {
-            this.dive.noDecoCalculated = false;
+        if(this.calculatingDiveInfo) {
+            this.dive.diveInfoCalculated = false;
         }
 
         if(this.calculating) {
@@ -262,8 +262,8 @@ export class PlannerService {
         this.dive.cns = diveInfo.cns;
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.notEnoughTime = this.plan.notEnoughTime;
-        this.dive.noDecoCalculated = true;
-        this.calculatingNoDeco = false;
+        this.dive.diveInfoCalculated = true;
+        this.calculatingDiveInfo = false;
     }
 
     private finishCalculation(result: ConsumptionResultDto): void {

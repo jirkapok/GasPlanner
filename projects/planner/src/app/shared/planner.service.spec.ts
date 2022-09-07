@@ -245,7 +245,7 @@ describe('PlannerService', () => {
         };
 
         const expectDiveMarkedAsCalculated = (): void => {
-            expect(planner.dive.noDecoCalculated).toBeTruthy();
+            expect(planner.dive.diveInfoCalculated).toBeTruthy();
             expect(planner.dive.calculated).toBeTruthy();
             expect(planner.dive.profileCalculated).toBeTruthy();
         };

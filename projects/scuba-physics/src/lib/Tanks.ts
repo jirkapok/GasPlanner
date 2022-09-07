@@ -65,11 +65,6 @@ export class Tank {
         this.o2 = o2Percent;
     }
 
-    /** Creates 15 L, filled with 200 bar Air */
-    public static createDefault(): Tank {
-        return new Tank(15, 200, StandardGases.o2InAir * 100);
-    }
-
     public get gas(): Gas {
         return this._gas;
     }
@@ -85,23 +80,9 @@ export class Tank {
         return current;
     }
 
-    /** o2 content in percent adjusted to iterate to Air*/
-    public set o2(newValue: number) {
-        if (this.isInAirRange(newValue)) {
-            this.gas.fO2 = StandardGases.o2InAir;
-        } else {
-            this._gas.fO2 = newValue / 100;
-        }
-    }
-
     /** The helium part of tank gas in percents */
     public get he(): number {
         return this.gas.fHe * 100;
-    }
-
-    /** The helium part of tank gas in percents */
-    public set he(newValue: number) {
-        this.gas.fHe = newValue / 100;
     }
 
     /** Gets total volume at start pressure in liters */
@@ -112,17 +93,6 @@ export class Tank {
     /** Gets not null name of the content gas based on O2 fraction */
     public get name(): string {
         return StandardGases.nameFor(this._gas.fO2, this._gas.fHe);
-    }
-
-    public assignStandardGas(standard: string): void {
-        const found = StandardGases.byName(standard);
-
-        if (!found) {
-            return;
-        }
-
-        this._gas.fO2 = found.fO2;
-        this._gas.fHe = found.fHe;
     }
 
     /** calculated value in range 0 - start pressure in bars  */
@@ -156,6 +126,36 @@ export class Tank {
      */
     public get hasReserve(): boolean {
         return this.endPressure >= this.reserve;
+    }
+
+    /** o2 content in percent adjusted to iterate to Air*/
+    public set o2(newValue: number) {
+        if (this.isInAirRange(newValue)) {
+            this.gas.fO2 = StandardGases.o2InAir;
+        } else {
+            this._gas.fO2 = newValue / 100;
+        }
+    }
+
+    /** The helium part of tank gas in percents */
+    public set he(newValue: number) {
+        this.gas.fHe = newValue / 100;
+    }
+
+    /** Creates 15 L, filled with 200 bar Air */
+    public static createDefault(): Tank {
+        return new Tank(15, 200, StandardGases.o2InAir * 100);
+    }
+
+    public assignStandardGas(standard: string): void {
+        const found = StandardGases.byName(standard);
+
+        if (!found) {
+            return;
+        }
+
+        this._gas.fO2 = found.fO2;
+        this._gas.fHe = found.fHe;
     }
 
     public loadFrom(other: Tank): void {

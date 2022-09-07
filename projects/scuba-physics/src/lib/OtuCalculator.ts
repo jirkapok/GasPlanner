@@ -9,8 +9,6 @@ type OTU = number;
  * @author Michael Czolko <michael@czolko.cz>
  */
 export class OtuCalculator {
-
-
     /**
      * Flat OTU calculation
      *
@@ -18,9 +16,9 @@ export class OtuCalculator {
      * @param PO2 - partial oxygen concentration (EAN32 = 0.32)
      * @param depth - depth in meters
      */
-    public calculateFlatWithDepth(time: number, PO2: number, depth: number): OTU {
+    public calculateFlatWithDepth(time: number, pO2: number, depth: number): OTU {
         const absoluteAtmosphericPressure = (depth + 10) / 10;
-        const ppO2 = PO2 * absoluteAtmosphericPressure;
+        const ppO2 = pO2 * absoluteAtmosphericPressure;
         return this.calculateFlat(time, ppO2);
     }
 
@@ -43,18 +41,20 @@ export class OtuCalculator {
      * @param startDepth - start depth in meters
      * @param endDepth - end depth in meters
      */
-    public calculateDifference(time: number, PO2: number, startDepth: number, endDepth: number): OTU {
+    public calculateDifference(time: number, pO2: number, startDepth: number, endDepth: number): OTU {
         const startAAP = (startDepth + 10) / 10;
         const endAAP = (endDepth + 10) / 10;
         const maxAAP = Math.max(startAAP, endAAP);
         const minAAP = Math.min(startAAP, endAAP);
-        const maxPO2 = maxAAP * PO2;
-        const minP02 = minAAP * PO2;
+        const maxPO2 = maxAAP * pO2;
+        const minP02 = minAAP * pO2;
 
-        if (maxPO2 <= .5) return 0.0;
+        if (maxPO2 <= .5) {
+            return 0.0;
+        }
+
         const lowPO2 = minP02 < 0.5 ? 0.5 : minP02;
         const oxygenTime = time * (maxPO2 - lowPO2) / (maxPO2 - minP02);
-
         return this.differenceEquation(oxygenTime, maxPO2, lowPO2);
     }
 
@@ -71,5 +71,4 @@ export class OtuCalculator {
     private pO2part(pO2: number): number {
         return Math.pow((pO2 - .5) / .5, 11.0 / 6.0);
     }
-
 }

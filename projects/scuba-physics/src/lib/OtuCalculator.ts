@@ -12,6 +12,7 @@ type OTU = number;
  * @author Michael Czolko <michael@czolko.cz>
  */
 export class OtuCalculator {
+    public static readonly dailyLimit = 300;
     private static readonly minPressure = 0.5;
     private static readonly threeElevenths = 3 / 11;
     private static readonly elevenSixths = 11 / 6;

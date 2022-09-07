@@ -2,7 +2,7 @@
     <div class="card-header">
         <div class="float-start mt-1">
             <fa-icon [icon]="icon" class="me-3"></fa-icon>
-            <span >Dive info</span>
+            <span>Dive info</span>
         </div>
         <div class="float-end">
             <button class="btn btn-sm btn-secondary" type="button" (click)="sharePlan()">
@@ -12,7 +12,8 @@
     </div>
 
     <div class="position-fixed top-0 end-0 px-3 py-2 m-16 mt-5 success">
-        <div #toastElement role="alert" aria-live="assertive" aria-atomic="true" class="toast fade text-light mt-2 bg-success success" data-autohide="true">
+        <div #toastElement role="alert" aria-live="assertive" aria-atomic="true"
+            class="toast fade text-light mt-2 bg-success success" data-autohide="true">
             <div class="toast-header">
                 <fa-icon [icon]="iconShare" class="me-2"></fa-icon>
                 <strong class="me-auto">Share plan</strong>
@@ -89,7 +90,8 @@
                     </tbody>
                 </table>
                 <div *ngIf="dive.showResults">
-                    <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="showTankId" [toxicity]="toxicity"></app-tankchart>
+                    <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="showTankId" [toxicity]="toxicity">
+                    </app-tankchart>
                 </div>
             </div>
             <app-calculating [show]="!dive.calculated"></app-calculating>
@@ -118,11 +120,10 @@
                         maximum
                         to {{ noDeco | number:'1.0-0' }} min)!</span>
                 </div>
-                <div *ngIf="dive.diveInfoCalculated && dive.noDecoExceeded" class="alert alert-info">
-                    <fa-icon [icon]="info" class="me-2"></fa-icon>
-                    <span>No decompression time for current depth exceeded (For no decompression dive set dive time
-                        maximum
-                        to {{ noDeco | number:'1.0-0' }} min)!</span>
+                <div *ngIf="dive.diveInfoCalculated && dive.otuExceeded" class="alert alert-warning">
+                    <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
+                    <span>Exceeded 80 % of maximum single exposure oxygen toxicity units
+                        ({{dive.otu| number:'1.0-0'}}/{{otuLimit}} OTU)! There is a high risk of lungs injury.</span>
                 </div>
 
                 <ng-container *ngFor="let event of dive.events">

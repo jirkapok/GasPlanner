@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { Ceiling, Time, Event, Segment, Segments, SegmentsFactory,
-    StandardGases, Options, Tank } from 'scuba-physics';
+    StandardGases, Options, Tank, OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
 export enum Strategies {
@@ -218,6 +218,10 @@ export class Dive {
 
     public get showResults(): boolean {
         return this.calculated && !this.hasErrors;
+    }
+
+    public get otuExceeded(): boolean {
+        return this.otu > (.8 * OtuCalculator.dailyLimit);
     }
 
     public emptyProfile(): void {

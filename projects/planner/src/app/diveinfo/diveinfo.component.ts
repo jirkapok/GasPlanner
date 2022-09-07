@@ -8,7 +8,7 @@ import {
 
 import { PlannerService } from '../shared/planner.service';
 import { Dive } from '../shared/models';
-import { EventType, Event, Tank } from 'scuba-physics';
+import { EventType, Event, Tank, OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import { GasToxicity } from '../shared/gasToxicity.service';
 
@@ -28,6 +28,7 @@ export class DiveInfoComponent implements OnInit {
     public info = faInfoCircle;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
+    public otuLimit = OtuCalculator.dailyLimit;
 
     private toast!: Toast;
 

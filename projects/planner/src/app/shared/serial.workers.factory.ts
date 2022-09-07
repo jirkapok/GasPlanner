@@ -17,13 +17,13 @@ export class WorkersFactoryCommon {
         };
     }
 
-    public createNoDecoWorker(): IBackgroundTask<ProfileRequestDto, DiveInfoResultDto> {
+    public createDiveInfoWorker(): IBackgroundTask<ProfileRequestDto, DiveInfoResultDto> {
         const subject = new Subject<DiveInfoResultDto>();
         const failedSubject = new Subject<void>();
         return {
             calculated: subject,
             calculate: (request: ProfileRequestDto): void => {
-                this.tryAction((r) => PlanningTasks.noDecoTime(r), request, subject, failedSubject);
+                this.tryAction((r) => PlanningTasks.diveInfo(r), request, subject, failedSubject);
             },
             failed: failedSubject,
         };

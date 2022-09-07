@@ -8,8 +8,8 @@ export class WorkersFactory extends WorkersFactoryCommon {
         return new BackgroundTask<ProfileRequestDto, ProfileResultDto>(profileWorker);
     }
 
-    public createNoDecoWorker(): IBackgroundTask<ProfileRequestDto, DiveInfoResultDto> {
-        const diveInfoWorker = new Worker(new URL('../workers/no-deco.worker', import.meta.url));
+    public createDiveInfoWorker(): IBackgroundTask<ProfileRequestDto, DiveInfoResultDto> {
+        const diveInfoWorker = new Worker(new URL('../workers/diveInfo.worker', import.meta.url));
         return new BackgroundTask<ProfileRequestDto, DiveInfoResultDto>(diveInfoWorker);
     }
 

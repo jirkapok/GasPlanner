@@ -38,7 +38,7 @@ export class PlannerService {
     private onWayPointsCalculated = new Subject();
     private profileTask: IBackgroundTask<ProfileRequestDto, ProfileResultDto>;
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
-    private noDecoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
+    private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
 
     constructor(private workerFactory: WorkersFactoryCommon) {
         this._options = new Options();
@@ -56,9 +56,9 @@ export class PlannerService {
         this.profileTask.calculated.subscribe((data) => this.continueCalculation(data));
         this.profileTask.failed.subscribe(() => this.profileFailed());
 
-        this.noDecoTask = this.workerFactory.createNoDecoWorker();
-        this.noDecoTask.calculated.subscribe((calculated) => this.finishNoDeco(calculated));
-        this.noDecoTask.failed.subscribe(() => this.profileFailed());
+        this.diveInfoTask = this.workerFactory.createDiveInfoWorker();
+        this.diveInfoTask.calculated.subscribe((calculated) => this.finishDiveInfo(calculated));
+        this.diveInfoTask.failed.subscribe(() => this.profileFailed());
 
         this.consumptionTask = this.workerFactory.createConsumptionWorker();
         this.consumptionTask.calculated.subscribe((data) => this.finishCalculation(data));
@@ -224,7 +224,7 @@ export class PlannerService {
                 plan: serializedPlan,
                 options: optionsDto
             };
-            this.noDecoTask.calculate(noDecoRequest);
+            this.diveInfoTask.calculate(noDecoRequest);
 
             const consumptionRequest = {
                 plan: serializedPlan,
@@ -256,7 +256,7 @@ export class PlannerService {
         this.onInfoCalculated.next({});
     }
 
-    private finishNoDeco(diveInfo: DiveInfoResultDto): void {
+    private finishDiveInfo(diveInfo: DiveInfoResultDto): void {
         this.plan.noDecoTime = diveInfo.noDeco;
         this.dive.otu = diveInfo.otu;
         this.dive.cns = diveInfo.cns;

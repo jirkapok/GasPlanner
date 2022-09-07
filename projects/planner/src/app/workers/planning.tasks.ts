@@ -25,7 +25,7 @@ export class PlanningTasks {
         };
     }
 
-    public static noDecoTime(task: ProfileRequestDto): DiveInfoResultDto {
+    public static diveInfo(task: ProfileRequestDto): DiveInfoResultDto {
         // we can't speedup the prediction from already obtained profile,
         // since it may happen, the deco starts during ascent.
         // we cant use the maxDepth, because its purpose is only for single level dives

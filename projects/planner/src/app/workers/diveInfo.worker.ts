@@ -2,7 +2,7 @@
 import { PlanningTasks } from './planning.tasks';
 
 addEventListener('message', ({ data }) => {
-    const response = PlanningTasks.noDecoTime(data);
+    const response = PlanningTasks.diveInfo(data);
     postMessage(response);
 });
 

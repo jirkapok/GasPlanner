@@ -14,33 +14,6 @@ export class OtuCalculator {
     private static readonly elevenSixths = 11 / 6;
 
     /**
-     * Flat OTU calculation
-     *
-     * @param time - time in minutes
-     * @param PO2 - partial oxygen concentration (EAN32 = 0.32)
-     * @param depth - depth in meters
-     */
-    public calculateFlatWithDepth(time: number, pO2: number, depth: number): OTU {
-        const pressure = this.depthToPressure(depth);
-        const ppO2 = pO2 * pressure;
-        return this.calculateFlat(time, ppO2);
-    }
-
-    /**
-     * Flat OTU calculation
-     *
-     * @param time - time in minutes
-     * @param ppO2 - partial pressure of oxygen (1.4)
-     */
-    public calculateFlat(time: number, ppO2: number): OTU {
-        if(ppO2 < OtuCalculator.minPressure) {
-            return 0;
-        }
-
-        return time * (Math.pow((.5 / (ppO2 - .5)), -5 / 6));
-    }
-
-    /**
      * Ascent or descent profile at a constant rate
      * AAP - Absolute Atmospheric Pressure
      *
@@ -49,7 +22,38 @@ export class OtuCalculator {
      * @param startDepth - start depth in meters
      * @param endDepth - end depth in meters
      */
-    public calculateDifference(time: number, pO2: number, startDepth: number, endDepth: number): OTU {
+    public calculate(time: number, pO2: number, startDepth: number, endDepth: number): OTU {
+        // TODO consider merge into one formula
+        if (startDepth === endDepth) {
+            return this.calculateFlatWithDepth(time, pO2, startDepth);
+        }
+
+        return this.calculateDifference(time, pO2, startDepth, endDepth);
+    }
+
+    /**
+     * only for start and end depths are equal
+     */
+    private calculateFlatWithDepth(time: number, pO2: number, depth: number): OTU {
+        const pressure = this.depthToPressure(depth);
+        const ppO2 = pO2 * pressure;
+        return this.calculateFlat(time, ppO2);
+    }
+
+    private calculateFlat(time: number, ppO2: number): OTU {
+        if (ppO2 < OtuCalculator.minPressure) {
+            return 0;
+        }
+
+        return time * (Math.pow((.5 / (ppO2 - .5)), -5 / 6));
+    }
+
+    /**
+     * Only for different start and end depths
+     * (Ascent or descent profile at a constant rate)
+     */
+    private calculateDifference(time: number, pO2: number, startDepth: number, endDepth: number): OTU {
+        // AP - Absolute Atmospheric Pressure
         const startAAP = this.depthToPressure(startDepth);
         const endAAP = this.depthToPressure(endDepth);
         const maxAAP = Math.max(startAAP, endAAP);
@@ -67,8 +71,6 @@ export class OtuCalculator {
     }
 
     /**
-     * Ascent or descent profile at a constant rate
-     *
      * Formula written in FORTRAN:
      * OTU = 3.0/11.0*TIME/(maxPO2 - lowPO2)*(((maxPO2 - 0.5)/0.5)**(11.0/6.0) - ((lowPO2 - 0.5)/0.5)**(11.0/6.0))
      */

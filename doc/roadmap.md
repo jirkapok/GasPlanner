@@ -11,6 +11,7 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
+* Oxygen at 4 m shows MOD 4 meters, but there is still warning about exceeded MOD.
 * Add imperial units option
   * Fix all value bindings (options, profile, profile chart, dive info)
   * Provide rounded default values (Settings, Sac, Nitrox, tanks, depths, options)

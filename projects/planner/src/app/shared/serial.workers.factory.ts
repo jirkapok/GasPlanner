@@ -1,4 +1,4 @@
-import { ConsumptionRequestDto, ConsumptionResultDto, ProfileRequestDto, ProfileResultDto } from './serialization.model';
+import { ConsumptionRequestDto, ConsumptionResultDto, DiveInfoResultDto, ProfileRequestDto, ProfileResultDto } from './serialization.model';
 import { IBackgroundTask } from '../workers/background-task';
 import { Subject } from 'rxjs';
 import { PlanningTasks } from '../workers/planning.tasks';
@@ -17,8 +17,8 @@ export class WorkersFactoryCommon {
         };
     }
 
-    public createNoDecoWorker(): IBackgroundTask<ProfileRequestDto, number> {
-        const subject = new Subject<number>();
+    public createNoDecoWorker(): IBackgroundTask<ProfileRequestDto, DiveInfoResultDto> {
+        const subject = new Subject<DiveInfoResultDto>();
         const failedSubject = new Subject<void>();
         return {
             calculated: subject,

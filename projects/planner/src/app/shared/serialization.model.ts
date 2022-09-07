@@ -17,6 +17,12 @@ export interface ProfileRequestDto {
     options: OptionsDto;
 }
 
+export interface DiveInfoResultDto {
+    noDeco: number;
+    otu: number;
+    cns: number;
+}
+
 export interface ProfileResultDto {
     profile: CalculatedProfileDto;
     events: EventDto[];

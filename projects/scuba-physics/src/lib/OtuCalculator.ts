@@ -40,7 +40,8 @@ export class OtuCalculator {
      * @param endDepth - end depth in meters
      */
     public calculate(time: number, pO2: number, startDepth: number, endDepth: number): OTU {
-        // TODO consider merge into one formula
+        // consider merge into one formula as described:
+        // https://thetheoreticaldiver.org/wordpress/index.php/2018/12/05/a-few-thoughts-on-oxygen-toxicity/
         if (startDepth === endDepth) {
             return this.calculateFlatWithDepth(time, pO2, startDepth);
         }

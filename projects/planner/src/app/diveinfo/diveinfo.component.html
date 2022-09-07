@@ -75,9 +75,15 @@
                             </td>
                         </tr>
                         <tr *ngIf="dive.needsReturn">
-                            <td>Turn pressure [{{units.pressure}]:</td>
+                            <td>Turn pressure [{{units.pressure}}]:</td>
                             <td class="table-active">
                                 <strong *ngIf="dive.calculated">{{ dive.turnPressure | number:'1.0-0' }}</strong>
+                            </td>
+                        </tr>
+                        <tr *ngIf="dive.profileCalculated">
+                            <td>OTU toxicity [OTU]:</td>
+                            <td class="table-active">
+                                <strong *ngIf="dive.calculated">{{ dive.otu | number:'1.0-0' }}</strong>
                             </td>
                         </tr>
                     </tbody>

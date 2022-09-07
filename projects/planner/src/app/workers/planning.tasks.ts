@@ -1,8 +1,9 @@
 import {
-    Segments, Gases, BuhlmannAlgorithm, ProfileEvents, DepthConverterFactory, Consumption, Time, Diver
+    Segments, Gases, BuhlmannAlgorithm, ProfileEvents, DepthConverterFactory, Consumption, Time, Diver,
+    OtuCalculator
 } from 'scuba-physics';
 import {
-    ProfileRequestDto, ProfileResultDto, DtoSerialization, ConsumptionRequestDto, ConsumptionResultDto
+    ProfileRequestDto, ProfileResultDto, DtoSerialization, ConsumptionRequestDto, ConsumptionResultDto, DiveInfoResultDto
 } from '../shared/serialization.model';
 
 export class PlanningTasks {
@@ -24,7 +25,7 @@ export class PlanningTasks {
         };
     }
 
-    public static noDecoTime(task: ProfileRequestDto): number {
+    public static noDecoTime(task: ProfileRequestDto): DiveInfoResultDto {
         // we can't speedup the prediction from already obtained profile,
         // since it may happen, the deco starts during ascent.
         // we cant use the maxDepth, because its purpose is only for single level dives
@@ -35,7 +36,14 @@ export class PlanningTasks {
         const algorithm = new BuhlmannAlgorithm();
         const options = DtoSerialization.toOptions(task.options);
         const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, options);
-        return noDecoLimit;
+        const otu = new OtuCalculator().calculateForProfile(originProfile);
+        // TODO add cns calculation
+
+        return {
+            noDeco: noDecoLimit,
+            otu: otu,
+            cns: 0
+        };
     }
 
     public static calculateConsumption(task: ConsumptionRequestDto): ConsumptionResultDto {
@@ -57,6 +65,7 @@ export class PlanningTasks {
         let timeToSurface = Segments.duration(emergencyAscent);
         timeToSurface = Time.toMinutes(timeToSurface);
         consumption.consumeFromTanks2(originProfile, emergencyAscent, options, tanks, diver);
+
         return {
             maxTime,
             timeToSurface,

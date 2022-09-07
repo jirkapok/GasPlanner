@@ -11,6 +11,7 @@ export * from './lib/Diver';
 export * from './lib/Gases';
 export * from './lib/NitroxCalculator';
 export * from './lib/Options';
+export * from './lib/OtuCalculator';
 export * from './lib/pressure-converter';
 export * from './lib/Profile';
 export * from './lib/ProfileEvents';

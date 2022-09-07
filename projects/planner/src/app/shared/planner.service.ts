@@ -10,7 +10,7 @@ import {
 } from 'scuba-physics';
 import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
-    ProfileRequestDto, TankDto, ProfileResultDto
+    ProfileRequestDto, TankDto, ProfileResultDto, DiveInfoResultDto
 } from './serialization.model';
 import { IBackgroundTask } from '../workers/background-task';
 
@@ -38,7 +38,7 @@ export class PlannerService {
     private onWayPointsCalculated = new Subject();
     private profileTask: IBackgroundTask<ProfileRequestDto, ProfileResultDto>;
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
-    private noDecoTask: IBackgroundTask<ProfileRequestDto, number>;
+    private noDecoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
 
     constructor(private workerFactory: WorkersFactoryCommon) {
         this._options = new Options();
@@ -256,8 +256,10 @@ export class PlannerService {
         this.onInfoCalculated.next({});
     }
 
-    private finishNoDeco(noDeco: number): void {
-        this.plan.noDecoTime = noDeco;
+    private finishNoDeco(diveInfo: DiveInfoResultDto): void {
+        this.plan.noDecoTime = diveInfo.noDeco;
+        this.dive.otu = diveInfo.otu;
+        this.dive.cns = diveInfo.cns;
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.notEnoughTime = this.plan.notEnoughTime;
         this.dive.noDecoCalculated = true;

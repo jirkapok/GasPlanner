@@ -8,6 +8,18 @@ describe('Tank', () => {
         tank = Tank.createDefault();
     });
 
+    describe('Gas content precision', () => {
+        it('Fixes O2 29%', () => {
+            tank.o2 = 29;
+            expect(tank.o2).toBe(29);
+        });
+
+        it('Fixes He 29%', () => {
+            tank.he = 29;
+            expect(tank.he).toBe(29);
+        });
+    });
+
     describe('Full', () => {
         it('has nothing consumed', () => {
             expect(tank.endPressure).toBe(200);

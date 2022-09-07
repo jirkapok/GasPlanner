@@ -71,18 +71,20 @@ export class Tank {
 
     /** o2 content in percent adjusted to iterate to Air*/
     public get o2(): number {
-        const current = this._gas.fO2 * 100;
+        const current = this.gas.fO2 * 100;
 
         if (this.isInAirRange(current)) {
-            return Math.round(this.gas.fO2 * 100);
+            return Math.round(current);
         }
 
-        return current;
+        // for both o2 and he, we are fixing the javascript precision
+        return Math.round(current * 100) / 100;
     }
 
     /** The helium part of tank gas in percents */
     public get he(): number {
-        return this.gas.fHe * 100;
+        const current = this.gas.fHe * 100;
+        return Math.round(current * 100) / 100;
     }
 
     /** Gets total volume at start pressure in liters */

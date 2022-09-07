@@ -6,7 +6,7 @@ import { TestBed } from '@angular/core/testing';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
 import {
-    ConsumptionRequestDto, ConsumptionResultDto, DtoSerialization,
+    ConsumptionRequestDto, ConsumptionResultDto, DiveInfoResultDto, DtoSerialization,
     ProfileRequestDto, ProfileResultDto
 } from './serialization.model';
 
@@ -251,7 +251,7 @@ describe('PlannerService', () => {
         };
 
         describe('Profile calculated with errors', () => {
-            let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => number>;
+            let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => DiveInfoResultDto>;
             let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
             let wayPointsFinished = false;
             let infoFinished = false;
@@ -262,7 +262,7 @@ describe('PlannerService', () => {
 
                 planner.wayPointsCalculated.subscribe(() => wayPointsFinished = true);
                 planner.infoCalculated.subscribe(() => infoFinished = true);
-                noDecoSpy = spyOn(PlanningTasks, 'noDecoTime').and.callThrough();
+                noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
                 consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
                 planner.calculate();
             });
@@ -293,7 +293,7 @@ describe('PlannerService', () => {
         });
 
         describe('Profile task failed', () => {
-            let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => number>;
+            let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => DiveInfoResultDto>;
             let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
             let wayPointsFinished = false;
             let infoFinished = false;
@@ -304,7 +304,7 @@ describe('PlannerService', () => {
 
                 planner.wayPointsCalculated.subscribe(() => wayPointsFinished = true);
                 planner.infoCalculated.subscribe(() => infoFinished = true);
-                noDecoSpy = spyOn(PlanningTasks, 'noDecoTime').and.callThrough();
+                noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
                 consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
                 planner.calculate();
             });
@@ -334,7 +334,7 @@ describe('PlannerService', () => {
             let infoFinished = false;
 
             beforeEach(() => {
-                spyOn(PlanningTasks, 'noDecoTime')
+                spyOn(PlanningTasks, 'diveInfo')
                     .and.throwError('No deco failed');
 
                 planner.infoCalculated.subscribe(() => infoFinished = true);

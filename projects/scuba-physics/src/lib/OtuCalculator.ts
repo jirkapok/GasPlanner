@@ -1,3 +1,6 @@
+import { Segment } from './Segments';
+import { Time } from './Time';
+
 type OTU = number;
 
 /**
@@ -12,6 +15,20 @@ export class OtuCalculator {
     private static readonly minPressure = 0.5;
     private static readonly threeElevenths = 3 / 11;
     private static readonly elevenSixths = 11 / 6;
+
+    /** Calculates total OTU units for provided profile */
+    public calculateForProfile(profile: Segment[]): OTU {
+        let total = 0;
+
+        profile.forEach(segment => {
+            const o2 = segment.gas.fO2;
+            const minutes = Time.toMinutes(segment.duration);
+            const partOtu = this.calculate(minutes, o2, segment.startDepth, segment.endDepth);
+            total += partOtu;
+        });
+
+        return total;
+    }
 
     /**
      * Ascent or descent profile at a constant rate

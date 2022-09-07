@@ -1,7 +1,29 @@
+import { StandardGases } from './Gases';
 import { OtuCalculator } from './OtuCalculator';
+import { Segment } from './Segments';
+import { Time } from './Time';
 
 describe('OtuCalculatorService', () => {
     const otuCalculator = new OtuCalculator();
+
+    describe('Segments', () => {
+        it('0 OTU for empty segments', () => {
+            const profile: Segment[] = [];
+            const otu = otuCalculator.calculateForProfile(profile);
+            expect(otu).toBe(0);
+        });
+
+        it('OTU counts as sum of all segments', () => {
+            const gas = StandardGases.ean32.copy();
+            const profile: Segment[] = [
+                new Segment(0, 36, gas, Time.oneMinute * 3),
+                new Segment(36, 36, gas, Time.oneMinute * 22),
+                new Segment(36, 0, gas, Time.oneMinute * 30)
+            ];
+            const otu = otuCalculator.calculateForProfile(profile);
+            expect(otu).toBe(64.7108642683392);
+        });
+    });
 
     describe('Flat - depth does not change', () => {
         it('0 OTU for 0 min at 0 ppO2', () => {
@@ -48,17 +70,17 @@ describe('OtuCalculatorService', () => {
         });
 
         it('28.9 OTU for 20 min with EAN32 in 30 metres', () => {
-            const otu = otuCalculator.calculate(20, .32, 30, 30);
-            expect(otu).toBe(28.971245142600388);
+            const otu = otuCalculator.calculate(22, .32, 36, 36);
+            expect(otu).toBe(38.28272978563932);
         });
 
         it('2.4026 OTU for 3 min with EAN32 from 0 m to 36 m', () => {
-            const otu = otuCalculator.calculate(3, .32, .0, 36);
+            const otu = otuCalculator.calculate(3, .32, 0, 36);
             expect(otu).toBe(2.4025576802454425);
         });
 
         it('24.0256 OTU for 30 min with EAN32 from 36 m to 0 m', () => {
-            const otu = otuCalculator.calculate(30, .32, 36, .0);
+            const otu = otuCalculator.calculate(30, .32, 36, 0);
             expect(otu).toBe(24.02557680245443);
         });
     });

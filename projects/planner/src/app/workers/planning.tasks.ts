@@ -36,7 +36,9 @@ export class PlanningTasks {
         const algorithm = new BuhlmannAlgorithm();
         const options = DtoSerialization.toOptions(task.options);
         const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, options);
-        const otu = new OtuCalculator().calculateForProfile(originProfile);
+
+        const depthConverter = new DepthConverterFactory(task.options).create();
+        const otu = new OtuCalculator(depthConverter).calculateForProfile(originProfile);
         // TODO add cns calculation
 
         return {

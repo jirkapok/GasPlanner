@@ -36,7 +36,7 @@ describe('PlannerService', () => {
 
         it('OTU limit is calculated', () => {
             const noDecoLimit = planner.dive.otu;
-            expect(noDecoLimit).toBeCloseTo(7.8541, 4);
+            expect(noDecoLimit).toBeCloseTo(7.6688, 4);
         });
     });
 

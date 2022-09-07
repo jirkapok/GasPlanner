@@ -1,27 +1,35 @@
+import { DepthConverter } from './depth-converter';
 import { StandardGases } from './Gases';
 import { OtuCalculator } from './OtuCalculator';
 import { Segment } from './Segments';
 import { Time } from './Time';
 
 describe('OtuCalculatorService', () => {
-    const otuCalculator = new OtuCalculator();
+    const otuCalculator = new OtuCalculator(DepthConverter.simple());
 
     describe('Segments', () => {
         it('0 OTU for empty segments', () => {
-            const profile: Segment[] = [];
-            const otu = otuCalculator.calculateForProfile(profile);
+            const emptyProfile: Segment[] = [];
+            const otu = otuCalculator.calculateForProfile(emptyProfile);
             expect(otu).toBe(0);
         });
 
+        const gas = StandardGases.ean32.copy();
+        const profile: Segment[] = [
+            new Segment(0, 36, gas, Time.oneMinute * 3),
+            new Segment(36, 36, gas, Time.oneMinute * 22),
+            new Segment(36, 0, gas, Time.oneMinute * 30)
+        ];
+
         it('OTU counts as sum of all segments', () => {
-            const gas = StandardGases.ean32.copy();
-            const profile: Segment[] = [
-                new Segment(0, 36, gas, Time.oneMinute * 3),
-                new Segment(36, 36, gas, Time.oneMinute * 22),
-                new Segment(36, 0, gas, Time.oneMinute * 30)
-            ];
             const otu = otuCalculator.calculateForProfile(profile);
             expect(otu).toBe(64.7108642683392);
+        });
+
+        it('Applies depth converter', () => {
+            const calculator = new OtuCalculator(DepthConverter.forSaltWater());
+            const otu = calculator.calculateForProfile(profile);
+            expect(otu).toBe(65.75466537123029);
         });
     });
 

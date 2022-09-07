@@ -1,3 +1,4 @@
+import { DepthConverter } from './depth-converter';
 import { Segment } from './Segments';
 import { Time } from './Time';
 
@@ -16,6 +17,8 @@ export class OtuCalculator {
     private static readonly minPressure = 0.5;
     private static readonly threeElevenths = 3 / 11;
     private static readonly elevenSixths = 11 / 6;
+
+    constructor(private depthConverter: DepthConverter) {}
 
     /** Calculates total OTU units for provided profile */
     public calculateForProfile(profile: Segment[]): OTU {
@@ -54,7 +57,7 @@ export class OtuCalculator {
      * only for start and end depths are equal
      */
     private calculateFlatWithDepth(time: number, pO2: number, depth: number): OTU {
-        const pressure = this.depthToPressure(depth);
+        const pressure = this.depthConverter.toBar(depth);
         const ppO2 = pO2 * pressure;
         return this.calculateFlat(time, ppO2);
     }
@@ -73,8 +76,8 @@ export class OtuCalculator {
      */
     private calculateDifference(time: number, pO2: number, startDepth: number, endDepth: number): OTU {
         // AP - Absolute Atmospheric Pressure
-        const startAAP = this.depthToPressure(startDepth);
-        const endAAP = this.depthToPressure(endDepth);
+        const startAAP = this.depthConverter.toBar(startDepth);
+        const endAAP = this.depthConverter.toBar(endDepth);
         const maxAAP = Math.max(startAAP, endAAP);
         const minAAP = Math.min(startAAP, endAAP);
         const maxPO2 = maxAAP * pO2;
@@ -99,10 +102,5 @@ export class OtuCalculator {
 
     private pO2part(pO2: number): number {
         return Math.pow((pO2 - .5) / .5, OtuCalculator.elevenSixths);
-    }
-
-    private depthToPressure(depthMeters: number): number {
-        // TODO replace by depth converter
-        return (depthMeters + 10) / 10;
     }
 }

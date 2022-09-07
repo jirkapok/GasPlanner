@@ -28,10 +28,15 @@ describe('PlannerService', () => {
         planner.calculate();
     });
 
-    describe('no deco limit', () => {
-        it('is calculated', () => {
+    describe('Dive info calculated', () => {
+        it('No deco limit is calculated', () => {
             const noDecoLimit = planner.plan.noDecoTime;
             expect(noDecoLimit).toBe(12);
+        });
+
+        it('OTU limit is calculated', () => {
+            const noDecoLimit = planner.dive.otu;
+            expect(noDecoLimit).toBeCloseTo(7.8541, 4);
         });
     });
 

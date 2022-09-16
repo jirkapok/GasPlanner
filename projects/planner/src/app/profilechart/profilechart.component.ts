@@ -237,7 +237,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         // possible performance optimization = remove all waypoints, where ceiling = 0 and depth didn't change
         this.dive.ceilings.forEach((item, index, ceilings) => {
             xCeilingValues.push(Time.toDate(item.time));
-            const depth = this.roundDepth(item.depth);
+            const depth = Precision.roundTwoDecimals(item.depth);
             yCeilingValues.push(depth);
         });
 

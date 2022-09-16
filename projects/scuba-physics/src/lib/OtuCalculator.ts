@@ -75,7 +75,7 @@ export class OtuCalculator {
      * (Ascent or descent profile at a constant rate)
      */
     private calculateDifference(time: number, pO2: number, startDepth: number, endDepth: number): OTU {
-        // AP - Absolute Atmospheric Pressure
+        // AAP - Absolute Atmospheric Pressure
         const startAAP = this.depthConverter.toBar(startDepth);
         const endAAP = this.depthConverter.toBar(endDepth);
         const maxAAP = Math.max(startAAP, endAAP);

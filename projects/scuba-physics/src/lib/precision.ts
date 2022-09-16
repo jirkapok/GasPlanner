@@ -12,15 +12,27 @@ export class Precision {
     }
 
     public static round(source: number, digits: number = 0): number {
-        const precision = Math.pow(10, digits);
-        return Math.round(source * precision) / precision;
+        return Precision.adapt(Math.round, source, digits);
     }
 
     public static floorTwoDecimals(source: number): number {
-        return Math.floor(source * 100) / 100;
+        return Precision.floor(source, 2);
+    }
+
+    public static floor(source: number, digits: number = 0): number {
+        return Precision.adapt(Math.floor, source, digits);
     }
 
     public static ceilTwoDecimals(source: number): number {
-        return Math.ceil(source * 100) / 100;
+        return Precision.ceil(source, 2);
+    }
+
+    public static ceil(source: number, digits: number = 0): number {
+        return Precision.adapt(Math.ceil, source, digits);
+    }
+
+    private static adapt(func: (source: number) => number, source: number, digits: number): number {
+        const precision = Math.pow(10, digits);
+        return func(source * precision) / precision;
     }
 }

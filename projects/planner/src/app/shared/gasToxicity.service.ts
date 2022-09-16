@@ -35,7 +35,7 @@ export class GasToxicity {
         const roundedNarc = this.mndForGas(tank.gas);
         const gasMod = this.modForGas(tank);
         const minFound = Math.min(roundedNarc, gasMod);
-        return Math.floor(minFound);
+        return Precision.floor(minFound);
     }
 
     public bestNitroxMix(maxDepth: number): number {

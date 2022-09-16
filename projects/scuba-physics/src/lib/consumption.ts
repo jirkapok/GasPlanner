@@ -151,7 +151,7 @@ export class Consumption {
 
         // Round down to minutes directly to ensure we are in range of enough value
         const totalDuration = Time.toMinutes(sourceSegments.duration + addedDuration);
-        return Math.floor(totalDuration);
+        return Precision.floor(totalDuration);
     }
 
     private findRightUpperInterval(testSegments: Segments, addedSegment: Segment,

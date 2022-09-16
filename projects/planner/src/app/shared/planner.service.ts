@@ -273,7 +273,7 @@ export class PlannerService {
 
         this.dive.emergencyAscentStart = this.plan.startAscentTime;
         this.dive.turnPressure = this.calculateTurnPressure();
-        this.dive.turnTime = Math.floor(this.plan.duration / 2);
+        this.dive.turnTime = Precision.floor(this.plan.duration / 2);
         // this needs to be moved to each gas or do we have other option?
         this.dive.needsReturn = this.plan.needsReturn && this._tanks.length === 1;
         this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
@@ -296,6 +296,6 @@ export class PlannerService {
     /** even in case thirds rule, the last third is reserve, so we always divide by 2 */
     private calculateTurnPressure(): number {
         const consumed = this.firstTank.consumed / 2;
-        return this.firstTank.startPressure - Math.floor(consumed);
+        return this.firstTank.startPressure - Precision.floor(consumed);
     }
 }

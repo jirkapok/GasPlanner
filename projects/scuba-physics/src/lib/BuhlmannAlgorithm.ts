@@ -269,7 +269,7 @@ export class BuhlmannAlgorithm {
 
     private floorNdl(ndlSeconds: number): number {
         let result = Time.toMinutes(ndlSeconds);
-        result = Math.floor(result);
+        result = Precision.floor(result);
         // We went one minute past a ceiling of "0"
         return result - 1;
     }

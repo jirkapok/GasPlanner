@@ -38,7 +38,7 @@ export class NitroxCalculator {
     public bestMix(pO2: number, depth: number): number {
         let result = GasMixtures.bestMix(pO2, depth, this.depthConverter) * 100;
         result = Precision.fix(result);
-        return Math.floor(result * 100) / 100;
+        return Precision.floor(result, 2) ;
     }
 
     /**
@@ -53,7 +53,7 @@ export class NitroxCalculator {
         let result = GasMixtures.mod(ppO2, fO2);
         result = this.depthConverter.fromBar(result);
         result = Precision.fix(result);
-        return Math.floor(result * 100) / 100;
+        return Precision.floor(result, 2);
     }
 
     /**

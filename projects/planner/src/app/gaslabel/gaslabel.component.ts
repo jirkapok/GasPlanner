@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Diver, Options, Tank } from 'scuba-physics';
+import { Precision, Tank } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { UnitConversion } from '../shared/UnitConversion';
 
@@ -23,13 +23,13 @@ export class GaslabelComponent {
     public get gasMod(): number {
         const mod = this.toxicity.modForGas(this.tank);
         const result = this.units.fromMeters(mod);
-        return Math.floor(result);
+        return Precision.floor(result);
     }
 
     public get gasMnd(): number {
         const mnd = this.toxicity.mndForGas(this.tank.gas);
         const result = this.units.fromMeters(mnd);
-        return Math.floor(result);
+        return Precision.floor(result);
     }
 
     public get isTrimix(): boolean {
@@ -39,6 +39,6 @@ export class GaslabelComponent {
     public get gasDecoMod(): number {
         const mod = this.toxicity.switchDepth(this.tank);
         const result = this.units.fromMeters(mod);
-        return Math.floor(result);
+        return Precision.floor(result);
     }
 }

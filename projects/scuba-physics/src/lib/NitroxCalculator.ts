@@ -25,7 +25,7 @@ export class NitroxCalculator {
 
         let resultMeters = this.depthConverter.fromBar(result);
         resultMeters = Precision.fix(resultMeters);
-        return Math.ceil(resultMeters * 100) / 100;
+        return Precision.ceilTwoDecimals(resultMeters);
     }
 
     /**
@@ -80,6 +80,6 @@ export class NitroxCalculator {
         const bar = this.depthConverter.toBar(depth);
         let result = GasMixtures.partialPressure(bar, fO2) / 100;
         result = Precision.fix(result);
-        return Math.ceil(result * 100) / 100;
+        return Precision.ceilTwoDecimals(result);
     }
 }

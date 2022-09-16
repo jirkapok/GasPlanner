@@ -230,7 +230,7 @@ export class Consumption {
     }
 
     private addReserveToTank(tank: Tank, consumedLiters: number): number {
-        const consumedBars = Math.ceil(consumedLiters / tank.size);
+        const consumedBars = Precision.ceil(consumedLiters / tank.size);
         const tankConsumedBars = (consumedBars + tank.reserve) > tank.startPressure ? tank.startPressure - tank.reserve : consumedBars;
         tank.reserve += tankConsumedBars;
         return this.extractRemaining(consumedLiters, tankConsumedBars, tank.size);
@@ -286,7 +286,7 @@ export class Consumption {
     }
 
     private consumeFromTank(tank: Tank, consumedLiters: number): number {
-        const consumedBars = Math.ceil(consumedLiters / tank.size);
+        const consumedBars = Precision.ceil(consumedLiters / tank.size);
         const tankConsumedBars = consumedBars > tank.endPressure ? tank.endPressure : consumedBars;
         tank.consumed += tankConsumedBars;
         return this.extractRemaining(consumedLiters, tankConsumedBars, tank.size);

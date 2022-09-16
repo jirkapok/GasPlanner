@@ -1,3 +1,4 @@
+import { Precision } from './precision';
 import { DepthConverter } from './depth-converter';
 
 /**
@@ -20,7 +21,7 @@ export class SacCalculator {
     public calculateSac(depth: number, tank: number, used: number, duration: number): number {
         const bars = this.depthConverter.toBar(depth);
         const result = tank * used / duration / bars;
-        return Math.ceil(result * 100) / 100;
+        return Precision.ceilTwoDecimals(result);
     }
 
     /**
@@ -35,7 +36,7 @@ export class SacCalculator {
     public calculateDuration(depth: number, tank: number, used: number, sac: number): number {
         const bars = this.depthConverter.toBar(depth);
         const result = tank * used / sac / bars;
-        return Math.ceil(result);
+        return Precision.ceil(result);
     }
 
     /**
@@ -50,6 +51,6 @@ export class SacCalculator {
     public calculateUsed(depth: number, tank: number, duration: number, sac: number): number {
         const bars = this.depthConverter.toBar(depth);
         const result = duration * bars * sac / tank;
-        return Math.ceil(result);
+        return Precision.ceil(result);
     }
 }

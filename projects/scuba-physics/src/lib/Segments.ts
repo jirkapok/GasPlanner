@@ -3,6 +3,7 @@ import { EventsFactory, Event } from './Profile';
 import { Options } from './Options';
 import { Time } from './Time';
 import { Tank } from './Tanks';
+import { Precision } from './precision';
 
 export class SegmentsValidator {
     public static validate(segments: Segments, gases: Gases): Event[] {
@@ -349,8 +350,8 @@ export class SegmentsFactory {
         // to avoid precise numbers lik 1.6666 minutes when using speed 18 meters/min
         let estimate = targetDepth / options.descentSpeed;
         // loosing precision +-6 seconds acceptable rounding
-        estimate = Math.ceil(estimate * 10) / 10;
+        estimate = Precision.ceil(estimate, 1);
         estimate =Time.toSeconds(estimate);
-        return  Math.ceil(estimate);
+        return  Precision.ceil(estimate);
     }
 }

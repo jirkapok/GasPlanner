@@ -8,6 +8,7 @@ import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
 import { Options } from './Options';
 import { AscentSpeeds } from './speeds';
 import { DepthLevels } from './DepthLevels';
+import { Precision } from './precision';
 
 class AlgorithmContext {
     public tissues: Tissues;

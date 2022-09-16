@@ -5,7 +5,7 @@ import { Plan, Dive, Strategies, } from './models';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
-    Options, Tank, Tanks,
+    Options, Tank, Tanks, Precision,
     Diver, Segment, Segments, Salinity, SafetyStop
 } from 'scuba-physics';
 import {

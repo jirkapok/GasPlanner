@@ -23,7 +23,7 @@ export class GasToxicity {
         const maxNarcBar = gas.mnd(depthInBars, this.options.oxygenNarcotic);
         const maxNarcDepth = this.depthConverter.fromBar(maxNarcBar);
         let roundedNarc = Precision.fix(maxNarcDepth);
-        roundedNarc = Math.round(roundedNarc * 100) / 100;
+        roundedNarc = Precision.roundTwoDecimals(roundedNarc);
         return roundedNarc;
     }
 
@@ -41,6 +41,6 @@ export class GasToxicity {
     public bestNitroxMix(maxDepth: number): number {
         const maxPpO2 = this.options.maxPpO2;
         const o2 = this.nitroxCalculator.bestMix(maxPpO2, maxDepth);
-        return Math.round(o2);
+        return Precision.round(o2);
     }
 }

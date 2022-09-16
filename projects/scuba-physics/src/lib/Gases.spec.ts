@@ -2,6 +2,7 @@ import { Gases, Gas, GasesValidator, GasMixtures, GasOptions, BestGasOptions, St
 import { DepthConverter } from './depth-converter';
 import { DepthLevels } from './DepthLevels';
 import { SafetyStop } from './Options';
+import { Precision } from './precision';
 
 describe('Gases', () => {
     const options: GasOptions = {
@@ -30,7 +31,7 @@ describe('Gases', () => {
 
             it('Air for ppO 1.4 is 57 m', () => {
                 let mod = StandardGases.air.mod(ppO2);
-                mod = Math.round(mod * 100) / 100;
+                mod = Precision.roundTwoDecimals(mod);
                 expect(mod).toBeCloseTo(6.7, 2);
             });
         });
@@ -116,7 +117,7 @@ describe('Gases', () => {
 
             it('Hypoxic Trimix 10/70 in fresh water to 8 m', () => {
                 let ceiling = StandardGases.trimix1070.ceiling(freshWaterConverter.surfacePressure);
-                ceiling = Math.round(ceiling * 100) / 100;
+                ceiling = Precision.roundTwoDecimals(ceiling);
                 expect(ceiling).toBeCloseTo(1.82, 2);
             });
         });

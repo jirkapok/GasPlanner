@@ -1,3 +1,4 @@
+import { Precision } from './precision';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { DepthConverter } from './depth-converter';
 import { Diver } from './Diver';
@@ -27,7 +28,7 @@ class ConsumptionSegment {
      * @param previousDepth in meters
      */
     private constructor(public duration: number, newDepth: number, previousDepth: number, averageDepth: number) {
-        this.endTime = Math.round(duration * 100) / 100;
+        this.endTime = Precision.roundTwoDecimals(duration);
         this._endDepth = newDepth;
         this._startDepth = previousDepth;
         this.averageDepth = averageDepth;

@@ -1,3 +1,4 @@
+import { Precision } from './precision';
 import { Gas, StandardGases } from './Gases';
 
 export class Tanks {
@@ -74,17 +75,17 @@ export class Tank {
         const current = this.gas.fO2 * 100;
 
         if (this.isInAirRange(current)) {
-            return Math.round(current);
+            return Precision.round(current);
         }
 
         // for both o2 and he, we are fixing the javascript precision
-        return Math.round(current * 100) / 100;
+        return Precision.roundTwoDecimals(current);
     }
 
     /** The helium part of tank gas in percents */
     public get he(): number {
         const current = this.gas.fHe * 100;
-        return Math.round(current * 100) / 100;
+        return Precision.roundTwoDecimals(current);
     }
 
     /** Gets total volume at start pressure in liters */

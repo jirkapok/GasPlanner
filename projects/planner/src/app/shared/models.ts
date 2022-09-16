@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { Ceiling, Time, Event, Segment, Segments, SegmentsFactory,
-    StandardGases, Options, Tank, OtuCalculator } from 'scuba-physics';
+    StandardGases, Options, Tank, OtuCalculator, Precision } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
 export enum Strategies {
@@ -262,7 +262,7 @@ export class WayPoint {
      * @param previousDepth in meters
      */
     private constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
-        this.endTime = Math.round(duration * 100) / 100;
+        this.endTime = Precision.roundTwoDecimals(duration);
         this._endDepth = newDepth;
         this._startDepth = previousDepth;
         this.updateSwimAction();
@@ -297,7 +297,7 @@ export class WayPoint {
         }
 
         const depth = `${this.endDepth} m`;
-        let durationText = Math.round(this.duration).toString();
+        let durationText = Precision.round(this.duration).toString();
         durationText += ' min.';
         return `${depth},${durationText}`;
     }
@@ -318,7 +318,7 @@ export class WayPoint {
         const result = WayPoint.fromSegment(segment);
         result.startTime = this.endTime;
         const end = this.endTime + segment.duration;
-        result.endTime = Math.round(end * 100) / 100;
+        result.endTime = Precision.roundTwoDecimals(end);
         result._startDepth = this.endDepth;
         result.updateSwimAction();
         return result;

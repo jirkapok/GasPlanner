@@ -1,3 +1,4 @@
+import { Precision } from './precision';
 import { DepthConverter } from './depth-converter';
 import { DepthLevels } from './DepthLevels';
 import { Event, EventsFactory } from './Profile';
@@ -320,7 +321,8 @@ export class Gas {
     public contentCode(): number {
         const fourK = 10000;
         // considered identical gas rounding on two decimal places
-        return Math.round(this._fO2 * fourK) * fourK + Math.round(this._fHe * fourK);
+        return Precision.round(this._fO2 * fourK * fourK) +
+            Precision.round(this._fHe * fourK);
     }
 
     private contentExceeds100percent(): boolean {
@@ -329,7 +331,7 @@ export class Gas {
 
     private countRemaining(part: number): number {
         const rest = 1 - part;
-        return Math.round(rest * 100000) / 100000;
+        return Precision.round(rest, 5);
     }
 }
 
@@ -431,8 +433,8 @@ export class StandardGases {
     public static nameFor(fO2: number, fHe: number = 0): string {
         const simpleO2InAir = 21;
         // not sure, if this rounding is acceptable for the UI
-        const percentO2 = Math.round(fO2 * 100);
-        const percentHe = Math.round(fHe * 100);
+        const percentO2 = Precision.round(fO2 * 100);
+        const percentHe = Precision.round(fHe * 100);
 
         if (percentO2 <= 0) {
             return '';

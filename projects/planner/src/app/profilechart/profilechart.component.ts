@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint } from '../shared/models';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js';
 import { Subscription } from 'rxjs';
-import { EventType, Time, Gas, StandardGases, Segment } from 'scuba-physics';
+import { EventType, Time, StandardGases, Precision } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
@@ -199,7 +199,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
                     const cumulativeWeight = depth + totalDuration * cumulativeAverage;
                     totalDuration++;
                     cumulativeAverage = cumulativeWeight / totalDuration;
-                    const rounded = Math.round(cumulativeAverage * 10) / 10;
+                    const rounded = Precision.round(cumulativeAverage, 1);
                     yDepthValues.push(rounded);
                 }
             }
@@ -304,16 +304,12 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         });
     }
 
-    private roundDepth(depth: number): number {
-        return Math.round(depth * 100) / 100;
-    }
-
     private resampleDepthsToSeconds(xValues: Date[], yValues: number[], item: WayPoint) {
         const speed = (item.endDepth - item.startDepth) / item.duration;
         for (let timeStamp = item.startTime; timeStamp < item.endTime; timeStamp++) {
             xValues.push(Time.toDate(timeStamp));
             let depth = item.startDepth + (timeStamp - item.startTime) * speed;
-            depth = this.roundDepth(depth);
+            depth = Precision.roundTwoDecimals(depth);
             yValues.push(depth);
         }
 

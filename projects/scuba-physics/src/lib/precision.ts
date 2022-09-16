@@ -1,4 +1,4 @@
-/** Unified helpers to deal with numbers precision in javascsript */
+/** Unified helpers to deal with numbers precision in javascript */
 export class Precision {
     // TODO check the nitrox calculator, if we really need this fix, if round isn't enough
     /** because of javascript numbers precision we need to help our self without rounding*/
@@ -11,7 +11,7 @@ export class Precision {
         return Precision.round(source, 2);
     }
 
-    public static round(source: number, digits: number): number {
+    public static round(source: number, digits: number = 0): number {
         const precision = Math.pow(10, digits);
         return Math.round(source * precision) / precision;
     }

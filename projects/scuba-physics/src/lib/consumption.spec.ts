@@ -7,6 +7,7 @@ import { Segment, Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
 import { SafetyStop } from './Options';
 import { Salinity } from './pressure-converter';
+import { Precision } from './precision';
 
 describe('Consumption', () => {
     const diver = new Diver(20, 1.6);
@@ -82,7 +83,7 @@ describe('Consumption', () => {
             const startTime = performance.now();
             consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             const endTime = performance.now();
-            const methodDuration = Math.round(endTime - startTime);
+            const methodDuration = Precision.round(endTime - startTime);
 
             console.log(`Max bottom time duration: ${methodDuration} ms`);
             expect(methodDuration).toBeLessThan(400);

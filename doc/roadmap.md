@@ -6,7 +6,6 @@ Following list of features and improvements ordered by priority is under develop
 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
-* Gas content spinners issue: oxygen content spinner shows not rounded number, where it shouldn't, Setting 15/55 trimix sets the helium to unexpected precise value
 * When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter for founding switch depth
 
 ## Improvements / Features
@@ -63,6 +62,8 @@ Following list of features and improvements ordered by priority is under develop
 * Algorithm
   * Improve ascent to next stop by estimated offgasing during the ascent to reduce the stop length
   * Improve performance when estimating stop length
-* Gas consumption: Restore 1/2 and 1/3 reserve strategies
+* Gas consumption:
+  * Restore 1/2 and 1/3 reserve strategies
+  * Add setting for minimum reserve for both main tank and deco tanks
 * TRIMIX support
   * Add air breaks

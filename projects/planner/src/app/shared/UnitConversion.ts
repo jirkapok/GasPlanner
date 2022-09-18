@@ -199,15 +199,15 @@ class ImperialRanges implements RangeConstants  {
 
     public ppO2: [number, number] = [0.21, 3];
 
-    public narcoticDepth: [number, number] = [1,100];
+    public narcoticDepth: [number, number] = [1,300];
     public narcoticDepthLabel: string = toLabel(this.narcoticDepth, this.units.lengthShortcut);
-    public lastStopDepth: [number, number] = [3,6];
+    public lastStopDepth: [number, number] = [10,20];
     public lastStopDepthLabel: string = toLabel(this.lastStopDepth, this.units.lengthShortcut);
     public duration: [number, number] = [1,1440];
     public durationLabel: string = toLabel(this.duration, 'min');
     public altitude: [number, number] = [0,5000];
     public altitudeLabel: string = toLabel(this.altitude, this.units.altitudeShortcut);
-    public speed: [number, number] = [1,100];
+    public speed: [number, number] = [1,300];
     public speedLabel: string = toLabel(this.speed, this.units.lengthShortcut + perMinute);
 
     constructor(private units: Units) {}

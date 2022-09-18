@@ -91,14 +91,13 @@ export class OptionsDispatcherService {
         return this.options.salinity;
     }
 
-
-
     public set altitude(newValue: number) {
         this.options.altitude = newValue;
     }
 
     public set ascentSpeed50perc(newValue: number) {
         // somehow noticed frozen UI in case copy/paste 0 into the asc/desc fields
+        // not need to be converted by units since for our use case need at least some finite value
         if (newValue < 1) {
             return;
         }
@@ -218,6 +217,7 @@ export class OptionsDispatcherService {
     public resetToSimple(): void {
         const foundGfLabel = this.standardGradients.labelFor(this.gfLow, this.gfHigh);
         if(foundGfLabel === '') {
+            // TODO needs to be rounded to units
             OptionDefaults.setMediumConservatism(this.options);
         }
     }

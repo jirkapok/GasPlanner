@@ -25,10 +25,6 @@ describe('DepthComponent Imperial units', () => {
         fixture.detectChanges();
     });
 
-    // TODO test cases:
-    // - Last stop depth
-    // - Speeds
-
     it('Altitude bound to imperial', () => {
         component.options.maxEND = 30;
         expect(component.maxEND).toBeCloseTo(98.425197, 6);
@@ -37,5 +33,25 @@ describe('DepthComponent Imperial units', () => {
     it('Last stop depth bound to imperial', () => {
         component.lastStopDepth = 10;
         expect(component.options.lastStopDepth).toBeCloseTo(3.048, 6);
+    });
+
+    it('Descent speed bound to imperial', () => {
+        component.descentSpeed = 10;
+        expect(component.options.descentSpeed).toBeCloseTo(3.048, 6);
+    });
+
+    it('Ascent speed to 50% bound to imperial', () => {
+        component.ascentSpeed50perc = 10;
+        expect(component.options.ascentSpeed50perc).toBeCloseTo(3.048, 6);
+    });
+
+    it('Ascent speed 50% to 6 m bound to imperial', () => {
+        component.ascentSpeed50percTo6m = 10;
+        expect(component.options.ascentSpeed50percTo6m).toBeCloseTo(3.048, 6);
+    });
+
+    it('Ascent speed from 6 m bound to imperial', () => {
+        component.ascentSpeed6m = 10;
+        expect(component.options.ascentSpeed6m).toBeCloseTo(3.048, 6);
     });
 });

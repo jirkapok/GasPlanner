@@ -65,12 +65,48 @@ export class DiveOptionsComponent {
         return this.units.fromMeters(source);
     }
 
+    public get descentSpeed(): number {
+        const source = this.options.descentSpeed;
+        return this.units.fromMeters(source);
+    }
+
+    public get ascentSpeed6m(): number {
+        const source = this.options.ascentSpeed6m;
+        return this.units.fromMeters(source);
+    }
+
+    public get ascentSpeed50percTo6m(): number {
+        const source = this.options.ascentSpeed50percTo6m;
+        return this.units.fromMeters(source);
+    }
+
+    public get ascentSpeed50perc(): number {
+        const source = this.options.ascentSpeed50perc;
+        return this.units.fromMeters(source);
+    }
+
     public set maxEND(newValue: number) {
         this.options.maxEND = this.units.toMeters(newValue);
     }
 
     public set lastStopDepth(newValue: number) {
-        this.options.lastStopDepth= this.units.toMeters(newValue);
+        this.options.lastStopDepth = this.units.toMeters(newValue);
+    }
+
+    public set descentSpeed(newValue: number) {
+        this.options.descentSpeed = this.units.toMeters(newValue);
+    }
+
+    public set ascentSpeed6m(newValue: number) {
+        this.options.ascentSpeed6m = this.units.toMeters(newValue);
+    }
+
+    public set ascentSpeed50percTo6m(newValue: number) {
+        this.options.ascentSpeed50percTo6m = this.units.toMeters(newValue);
+    }
+
+    public set ascentSpeed50perc(newValue: number) {
+        this.options.ascentSpeed50perc = this.units.toMeters(newValue);
     }
 
     public set isComplex(newValue: boolean) {

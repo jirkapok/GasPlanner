@@ -170,7 +170,7 @@
                     <div class="row mt-3">
                         <div class="mb-2 col-auto">
                             <label for="descSpeed" class="form-label">Descent speed [{{units.speed}}]:
-                                <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="options.descentSpeed"
+                                <input id="descSpeed" name="descSpeed" #descSpeed="ngModel" [(ngModel)]="descentSpeed"
                                     class="form-control col-auto" type="number" (input)="applyOptions()"
                                     required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                     [class.is-invalid]="descSpeed.invalid && (descSpeed.dirty || descSpeed.touched)" />
@@ -182,7 +182,7 @@
                         </div>
                         <div class="mb-2 col-auto">
                             <label for="ascSpeed" class="form-label">Ascent {{units.lastSpeedLevel}} {{units.length}} to surface [{{units.speed}}]:
-                                <input id="ascSpeed" name="ascSpeed" #ascSpeed="ngModel" [(ngModel)]="options.ascentSpeed6m"
+                                <input id="ascSpeed" name="ascSpeed" #ascSpeed="ngModel" [(ngModel)]="ascentSpeed6m"
                                     class="form-control col-auto" type="number" (input)="applyOptions()"
                                     required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                     [class.is-invalid]="ascSpeed.invalid && (ascSpeed.dirty || ascSpeed.touched)" />
@@ -197,7 +197,7 @@
                         <div class="mb-2 col-auto">
                             <label for="ascSpeed2" class="form-label">Ascent up to {{units.lastSpeedLevel}} {{units.length}} depth [{{units.speed}}]:
                                 <input id="ascSpeed2" name="ascSpeed2" #ascSpeed2="ngModel" (input)="applyOptions()"
-                                    [(ngModel)]="options.ascentSpeed50percTo6m" class="form-control col-auto" type="number"
+                                    [(ngModel)]="ascentSpeed50percTo6m" class="form-control col-auto" type="number"
                                     required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                     [class.is-invalid]="ascSpeed2.invalid && (ascSpeed2.dirty || ascSpeed2.touched)" />
                                 <div class="text-danger form-text"
@@ -208,7 +208,7 @@
                         </div>
                         <div class="mb-2 col-auto">
                             <label for="ascSpeed3" class="form-label">Ascent up to 50% depth [{{units.speed}}]:
-                                <input id="ascSpeed3" name="ascSpeed3" #ascSpeed3="ngModel" [(ngModel)]="options.ascentSpeed50perc"
+                                <input id="ascSpeed3" name="ascSpeed3" #ascSpeed3="ngModel" [(ngModel)]="ascentSpeed50perc"
                                     class="form-control col-auto" type="number" (input)="applyOptions()"
                                     required [rangeVal]="ranges.speed" [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
                                     [class.is-invalid]="ascSpeed3.invalid && (ascSpeed3.dirty || ascSpeed3.touched)" />

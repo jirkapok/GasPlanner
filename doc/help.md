@@ -27,4 +27,4 @@ To be able calculate dive profile you need to enter Gases used during the dive, 
   * [Results](./results.md)
 * [Application settings](./settings.md)
 * [Calculators](./calculators.md)
-* [External reading](./doc/links.md)
+* [External reading](./links.md)

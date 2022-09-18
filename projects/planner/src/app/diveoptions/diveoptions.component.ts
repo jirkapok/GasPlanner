@@ -55,6 +55,24 @@ export class DiveOptionsComponent {
         }
     }
 
+    public get maxEND(): number {
+        const source = this.options.maxEND;
+        return this.units.fromMeters(source);
+    }
+
+    public get lastStopDepth(): number {
+        const source = this.options.lastStopDepth;
+        return this.units.fromMeters(source);
+    }
+
+    public set maxEND(newValue: number) {
+        this.options.maxEND = this.units.toMeters(newValue);
+    }
+
+    public set lastStopDepth(newValue: number) {
+        this.options.lastStopDepth= this.units.toMeters(newValue);
+    }
+
     public set isComplex(newValue: boolean) {
         this.planner.isComplex = newValue;
 

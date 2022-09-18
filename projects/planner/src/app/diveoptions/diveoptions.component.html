@@ -79,7 +79,7 @@
                         <div class="mb-2 col-auto">
                             <label for="maxNarcoticDepth" class="form-label">Maximum narcotic depth [{{units.length}}]:
                                 <input id="maxNarcoticDepth" name="maxNarcoticDepth" #maxNarcoticDepth="ngModel"
-                                    [(ngModel)]="options.maxEND" class="form-control col-auto" type="number" required
+                                    [(ngModel)]="maxEND" class="form-control col-auto" type="number" required
                                     [rangeVal]="ranges.narcoticDepth" [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
                                     [class.is-invalid]="maxNarcoticDepth.invalid && (maxNarcoticDepth.dirty || maxNarcoticDepth.touched)"
                                     (input)="applyOptions()"/>
@@ -148,7 +148,7 @@
                         <div class="mb-2 col-auto">
                             <label for="lastStop" class="form-label">Last stop depth [{{units.length}}]:
                                 <input id="lastStop" name="lastStop" #lastStop="ngModel" (input)="applyOptions()"
-                                    [(ngModel)]="options.lastStopDepth" class="form-control col-auto" type="number" required
+                                    [(ngModel)]="lastStopDepth" class="form-control col-auto" type="number" required
                                     [rangeVal]="ranges.lastStopDepth" [min]="ranges.lastStopDepth[0]" [max]="ranges.lastStopDepth[1]" step="1"
                                     [class.is-invalid]="lastStop.invalid && (lastStop.dirty || lastStop.touched)" />
                                 <div class="text-danger form-text"

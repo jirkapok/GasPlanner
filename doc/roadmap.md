@@ -24,7 +24,6 @@ Following list of features and improvements ordered by priority is under develop
     * <https://youtu.be/OI4ZzqJLQjw>
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
 * Add gas depth range calculator
-* Add CNS calculations
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Add gas density calculator (to be able understand to dont breath gas with higher density than 5.7 g/l):
   * <https://www.thoughtco.com/how-to-calculate-density-of-a-gas-607847>

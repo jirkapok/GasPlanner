@@ -39,12 +39,12 @@ describe('CNSCalculatorService', () => {
         });
 
         // TODO fix test cases for ppO2 higher than 1.7
-        xit('CNS for ppO2 above 1.7 for flat segment', () => {
+        fit('CNS for ppO2 above 1.7 for flat segment', () => {
             const cns = cnsCalculator.calculate(ean32pO2, 70, 70, 22);
             expect(cns).toBeCloseTo(123, 6);
         });
 
-        xit('CNS for ppO2 above 1.7 for ascent/descent segment', () => {
+        it('CNS for ppO2 above 1.7 for ascent/descent segment', () => {
             const cns = cnsCalculator.calculate(ean32pO2, 70, 80, 22);
             expect(cns).toBeCloseTo(123, 6);
         });

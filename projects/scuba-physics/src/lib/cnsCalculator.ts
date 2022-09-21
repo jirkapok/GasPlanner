@@ -11,6 +11,19 @@ class CnsRange {
         public intercept: number) { }
 }
 
+class SegmentPpO2 {
+    constructor(
+        public start: number,
+        public end: number) { }
+
+    get difference(): number {
+        return this.end - this.start;
+    }
+}
+
+// TODO simplify the OTU and CNS calculations
+// based on https://thetheoreticaldiver.org/wordpress/index.php/tag/oxygen/ formulas
+
 /**
  * Reference: https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf
  * Shortcuts for the most common operations:
@@ -84,76 +97,49 @@ export class CnsCalculator {
         }
 
         const lowPpO2 = minPpO2 < this.minimumPpO2 ? this.minimumPpO2 : minPpO2;
-
-        const o2time = duration * (maxPpO2 - lowPpO2) / (maxPpO2 - minPpO2);
-        const oTime = [];
-        const segPpO2 = [];
-        const ppO2o = [];
-        const ppO2f = [];
+        const totalO2time = duration * (maxPpO2 - lowPpO2) / (maxPpO2 - minPpO2);
+        let totalCns = 0;
 
         for (let i = 0; i <= 6; i++) {
             const item = this.cnsTable[i];
 
             if ((maxPpO2 > item.minPo2) && (lowPpO2 <= item.maxPo2)) {
-                if ((maxPpO2 >= item.maxPo2) && (lowPpO2 < item.minPo2)) {
-                    if (startDepth > endDepth) {
-                        ppO2o.push(item.maxPo2);
-                        ppO2f.push(item.minPo2);
-                    } else {
-                        ppO2o.push(item.minPo2);
-                        ppO2f.push(item.maxPo2);
-                    }
-                } else if ((maxPpO2 < item.maxPo2) && (lowPpO2 <= item.minPo2)) {
-                    if (startDepth > endDepth) {
-                        ppO2o.push(maxPpO2);
-                        ppO2f.push(item.minPo2);
-                    } else {
-                        ppO2o.push(item.minPo2);
-                        ppO2f.push(maxPpO2);
-                    }
-                } else if ((lowPpO2 > item.minPo2) && (maxPpO2 >= item.maxPo2)) {
-                    if (startDepth > endDepth) {
-                        ppO2o.push(item.maxPo2);
-                        ppO2f.push(lowPpO2);
-                    } else {
-                        ppO2o.push(lowPpO2);
-                        ppO2f.push(item.maxPo2);
-                    }
-                } else {
-                    if (startDepth > endDepth) {
-                        ppO2o.push(maxPpO2);
-                        ppO2f.push(lowPpO2);
-                    } else {
-                        ppO2o.push(lowPpO2);
-                        ppO2f.push(maxPpO2);
-                    }
-                }
-
-                segPpO2.push(ppO2f[i] - ppO2o[i]);
-                const current = o2time * Math.abs(segPpO2[i]) / (maxPpO2 - lowPpO2);
-                oTime.push(current);
-            } else {
-                oTime.push(0);
+                const segmentPpO2 = this.resolvePo2Segment(item, lowPpO2, maxPpO2, startDepth, endDepth);
+                const currentO2Time = totalO2time * Math.abs(segmentPpO2.difference) / (maxPpO2 - lowPpO2);
+                // this is the table based approximation of cns limits from original paper
+                const timeLimit =  item.slope * segmentPpO2.start + item.intercept;
+                const mk =  item.slope * (segmentPpO2.difference / currentO2Time);
+                const cnsIncrement = 1.0 / mk * (Math.log(Math.abs(timeLimit + mk * currentO2Time)) - Math.log(Math.abs(timeLimit)));
+                totalCns += Math.abs(cnsIncrement);
             }
         }
 
-        let result = 0;
+        return totalCns;
+    }
 
-        for (let i = 0; i <= 6; i++) {
-            if (oTime[i] === 0) {
-                continue;
-            }
+    private resolvePo2Segment(item: CnsRange,
+        lowPpO2: number, maxPpO2: number,
+        startDepth: number, endDepth: number): SegmentPpO2 {
+        const boundaries = this.selectPo2Boundaries(item, lowPpO2, maxPpO2);
 
-            const slope = this.cnsTable[i].slope;
-            const intercept = this.cnsTable[i].intercept;
-
-            const timeLimit = slope * ppO2o[i] + intercept;
-            const mk = slope * (segPpO2[i] / oTime[i]);
-            const cnsI = 1.0 / mk * (Math.log(Math.abs(timeLimit + mk * oTime[i])) - Math.log(Math.abs(timeLimit)));
-            result += Math.abs(cnsI);
+        if (startDepth > endDepth) {
+            return new SegmentPpO2(boundaries[0], boundaries[1]);
         }
 
-        return result;
+        return new SegmentPpO2(boundaries[1], boundaries[0]);
+    }
+
+    private selectPo2Boundaries(item: CnsRange,
+        lowPpO2: number, maxPpO2: number): [number, number] {
+        if ((maxPpO2 >= item.maxPo2) && (lowPpO2 < item.minPo2)) {
+            return [item.maxPo2, item.minPo2];
+        } else if ((maxPpO2 < item.maxPo2) && (lowPpO2 <= item.minPo2)) {
+            return [maxPpO2, item.minPo2];
+        } else if ((lowPpO2 > item.minPo2) && (maxPpO2 >= item.maxPo2)) {
+            return [item.maxPo2, lowPpO2];
+        }
+
+        return [maxPpO2, lowPpO2];
     }
 
     /**
@@ -177,6 +163,7 @@ export class CnsCalculator {
             }
         }
 
-        return new CnsRange(0, 0, 0, 0);
+        // expecting the lower range is checked by minimum ppO2.
+        return this.cnsTable[6];
     }
 }

@@ -38,26 +38,25 @@ describe('CNSCalculatorService', () => {
             expect(cns).toBeCloseTo(0, 6);
         });
 
-        // TODO fix test cases for ppO2 higher than 1.7
-        fit('CNS for ppO2 above 1.7 for flat segment', () => {
+        it('CNS for ppO2 above 1.7 for flat segment', () => {
             const cns = cnsCalculator.calculate(ean32pO2, 70, 70, 22);
-            expect(cns).toBeCloseTo(123, 6);
+            expect(cns).toBeCloseTo(96.097649, 6);
         });
 
         it('CNS for ppO2 above 1.7 for ascent/descent segment', () => {
             const cns = cnsCalculator.calculate(ean32pO2, 70, 80, 22);
-            expect(cns).toBeCloseTo(123, 6);
+            expect(cns).toBeCloseTo(461.596556, 6);
         });
 
         it('CNS counts as sum of all segments', () => {
             const cns = cnsCalculator.calculateForProfile(profile);
-            expect(cns).toBeCloseTo(0.278264, 6);
+            expect(cns).toBeCloseTo(0.268006, 6);
         });
 
         it('Applies depth converter', () => {
             const calculator = new CnsCalculator(DepthConverter.forSaltWater());
             const cns = calculator.calculateForProfile(profile);
-            expect(cns).toBeCloseTo(0.292927, 6);
+            expect(cns).toBeCloseTo(0.276516, 6);
         });
     });
 });

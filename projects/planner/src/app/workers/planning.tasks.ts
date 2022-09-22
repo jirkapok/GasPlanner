@@ -1,6 +1,6 @@
 import {
-    Segments, Gases, BuhlmannAlgorithm, ProfileEvents, DepthConverterFactory, Consumption, Time, Diver,
-    OtuCalculator
+    Segments, Gases, BuhlmannAlgorithm, ProfileEvents, DepthConverterFactory,
+    Consumption, Time, Diver, OtuCalculator, CnsCalculator
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, DtoSerialization, ConsumptionRequestDto, ConsumptionResultDto, DiveInfoResultDto
@@ -39,12 +39,12 @@ export class PlanningTasks {
 
         const depthConverter = new DepthConverterFactory(task.options).create();
         const otu = new OtuCalculator(depthConverter).calculateForProfile(originProfile);
-        // TODO add cns calculation
+        const cns = new CnsCalculator(depthConverter).calculateForProfile(originProfile);
 
         return {
             noDeco: noDecoLimit,
             otu: otu,
-            cns: 0
+            cns: cns
         };
     }
 

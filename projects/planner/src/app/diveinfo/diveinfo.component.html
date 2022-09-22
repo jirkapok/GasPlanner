@@ -87,6 +87,12 @@
                                 <strong *ngIf="dive.calculated">{{ dive.otu | number:'1.0-0' }}</strong>
                             </td>
                         </tr>
+                        <tr *ngIf="dive.profileCalculated">
+                            <td>CNS toxicity [%]:</td>
+                            <td class="table-active">
+                                <strong *ngIf="dive.calculated">{{ dive.cns * 100 | number:'1.0-0' }}</strong>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <div *ngIf="dive.showResults">
@@ -124,6 +130,13 @@
                     <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
                     <span>Exceeded 80 % of maximum single exposure oxygen toxicity units
                         ({{dive.otu| number:'1.0-0'}}/{{otuLimit}} OTU)! There is a high risk of lungs injury.
+                        Reduce amount of oxygen in your gases, dive duration or target depths.</span>
+                </div>
+
+                <div *ngIf="dive.diveInfoCalculated && dive.cnsExeeded" class="alert alert-warning">
+                    <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
+                    <span>Exceeded 80 % of maximum single exposure oxygen toxicity
+                        ({{dive.cns * 100 | number:'1.0-0'}} %)! There is a high risk of CNS injury.
                         Reduce amount of oxygen in your gases, dive duration or target depths.</span>
                 </div>
 

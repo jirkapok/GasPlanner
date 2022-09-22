@@ -5,6 +5,7 @@
 export * from './lib/BuhlmannAlgorithm';
 export * from './lib/consumption';
 export * from './lib/Compartments';
+export * from './lib/cnsCalculator';
 export * from './lib/depth-converter';
 export * from './lib/DepthLevels';
 export * from './lib/Diver';

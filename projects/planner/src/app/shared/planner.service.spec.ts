@@ -35,8 +35,13 @@ describe('PlannerService', () => {
         });
 
         it('OTU limit is calculated', () => {
-            const noDecoLimit = planner.dive.otu;
-            expect(noDecoLimit).toBeCloseTo(7.6688, 4);
+            const otuLimit = planner.dive.otu;
+            expect(otuLimit).toBeCloseTo(7.6712, 4);
+        });
+
+        it('CNS limit is calculated', () => {
+            const cnsLimit = planner.dive.cns;
+            expect(cnsLimit).toBeCloseTo(0.025702, 6);
         });
     });
 

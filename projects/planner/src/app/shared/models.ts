@@ -224,6 +224,10 @@ export class Dive {
         return this.otu > (.8 * OtuCalculator.dailyLimit);
     }
 
+    public get cnsExeeded(): boolean {
+        return this.cns > 0.8;
+    }
+
     public emptyProfile(): void {
         this.wayPoints = [];
         this.ceilings = [];

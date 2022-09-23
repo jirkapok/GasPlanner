@@ -6,11 +6,28 @@ import { OptionExtensions } from './Options.spec';
 import { Salinity } from './pressure-converter';
 
 describe('Buhlmann Algorithm - No decompression times', () => {
-    it('Calculate air No decompression limit at surface', () => {
+    it('Ndl at surface returns Infinity', () => {
         const depth = 0;
         const options = OptionExtensions.createOptions(1, 1, 1.6, 1.6, Salinity.fresh);
         const algorithm = new BuhlmannAlgorithm();
         const ndl = algorithm.noDecoLimit(depth, StandardGases.air, options);
+        expect(ndl).toBe(Infinity);
+    });
+
+    it('8 m on air after 1440 minutes returns Infinity', () => {
+        const depth = 6;
+        const options = OptionExtensions.createOptions(1, 1, 1.4, 1.4, Salinity.fresh);
+
+        const gases = new Gases();
+        const air = StandardGases.air;
+        gases.add(air);
+
+        const segments = new Segments();
+        segments.add(0, depth, air, Time.oneMinute * 1);
+        segments.addFlat(depth, air, Time.oneMinute * 1440);
+
+        const algorithm = new BuhlmannAlgorithm();
+        const ndl = algorithm.noDecoLimitMultiLevel(segments, gases, options);
         expect(ndl).toBe(Infinity);
     });
 

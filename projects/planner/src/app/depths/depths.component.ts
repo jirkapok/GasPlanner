@@ -66,12 +66,7 @@ export class DepthsComponent implements OnDestroy {
     }
 
     public get noDecoTime(): number {
-        const result = this.plan.noDecoTime;
-        if (result >= PlannerService.maxAcceptableNdl) {
-            return Infinity;
-        }
-
-        return result;
+        return this.plan.noDecoTime;
     }
 
     public get showMaxDuration(): boolean {

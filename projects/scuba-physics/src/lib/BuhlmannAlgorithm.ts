@@ -90,7 +90,9 @@ class AlgorithmContext {
 
 export class BuhlmannAlgorithm {
     /**
-     * Calculates no decompression limit in minutes
+     * Calculates no decompression limit in minutes.
+     * Returns positive number or Infinity, in case there is no more tissues loading.
+     * Usually at small depths (bellow 10 meters).
      * @param depth depth below surface in meters
      * @param gas gas to use as the only one during the plan
      * @param options conservatism options to be used
@@ -107,7 +109,9 @@ export class BuhlmannAlgorithm {
     }
 
     /**
-     * Calculates no decompression limit in minutes
+     * Calculates no decompression limit in minutes.
+     * Returns positive number or Infinity, in case there is no more tissues loading.
+     * Usually at small depths (bellow 10 meters).
      * @param segments Already realized part of the dive
      * @param options conservatism options to be used
      */

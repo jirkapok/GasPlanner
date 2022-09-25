@@ -81,13 +81,13 @@
                                 <strong *ngIf="dive.calculated">{{ dive.turnPressure | number:'1.0-0' }}</strong>
                             </td>
                         </tr>
-                        <tr *ngIf="false">
+                        <tr *ngIf="dive.profileCalculated">
                             <td>OTU toxicity [OTU]:</td>
                             <td class="table-active">
                                 <strong *ngIf="dive.calculated">{{ dive.otu | number:'1.0-0' }}</strong>
                             </td>
                         </tr>
-                        <tr *ngIf="false">
+                        <tr *ngIf="dive.profileCalculated">
                             <td>CNS toxicity [%]:</td>
                             <td class="table-active">
                                 <strong *ngIf="dive.calculated">{{ dive.cns * 100 | number:'1.0-0' }}</strong>

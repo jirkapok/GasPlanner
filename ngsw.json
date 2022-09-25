@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1659835466189,
+  "timestamp": 1664147753748,
   "index": "/https://jirkapok.github.io/GasPlanner/index.html",
   "assetGroups": [
     {
@@ -11,18 +11,18 @@
         "ignoreVary": true
       },
       "urls": [
-        "/10.70a2aea5111c5c4f.js",
-        "/481.4695076157b97963.js",
-        "/626.6d39ffab3d51649a.js",
-        "/691.710f13f50b4a537e.js",
+        "/39.02f7aaa4728a044d.js",
+        "/481.c5abad2f7ac7de3c.js",
+        "/626.222ac13467b1c7a9.js",
+        "/691.40a6dc375666f77a.js",
         "/favicon.ico",
         "/index.html",
-        "/main.2cd50c2ebd1118d4.js",
+        "/main.535c37b95f3f463a.js",
         "/manifest.webmanifest",
         "/polyfills.7964cbf638e0e665.js",
-        "/runtime.257af1332cc9acdb.js",
+        "/runtime.a42a375f183bba16.js",
         "/scripts.d2dfb1487dc08ea5.js",
-        "/styles.f971dce9965f03ea.css"
+        "/styles.07365122cab454e3.css"
       ],
       "patterns": []
     },
@@ -48,10 +48,10 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/10.70a2aea5111c5c4f.js": "5926fcf2b3994848b805f268ccfe616915d6478a",
-    "/481.4695076157b97963.js": "3cc84a93fa8558561297af365df9898ad0b41581",
-    "/626.6d39ffab3d51649a.js": "06c61640cd29ee1926968622601618371c2e2c48",
-    "/691.710f13f50b4a537e.js": "ab7731c47c259f5f852e8d1c7b90807e14d48d6b",
+    "/39.02f7aaa4728a044d.js": "8ad686d307ff33a6db24f55d56f2d5edfa8d2f68",
+    "/481.c5abad2f7ac7de3c.js": "530f149acdb042413bfa82fce0485edde6b8ecd6",
+    "/626.222ac13467b1c7a9.js": "30230da06206cf576f5988096af12e93eb8bb5cf",
+    "/691.40a6dc375666f77a.js": "3a56e460343f90f3d05181846753a1225bfe9bea",
     "/assets/icons/icon-128x128.png": "ff40289d8a8f61e85436fd7f5f42c7c5d9e55589",
     "/assets/icons/icon-144x144.png": "5e3d0cc7d9a497058e6f87c817c821b7fb4a5bc3",
     "/assets/icons/icon-152x152.png": "d36c00962cfc95ce49600cfd281b421f1d944ccd",
@@ -61,13 +61,13 @@
     "/assets/icons/icon-72x72.png": "bbf3a0e1d4a961f7360746df724533232813649a",
     "/assets/icons/icon-96x96.png": "2c1540d7bb572d2178c2ded3f45adc0cf19fbc6a",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "0ecc9375635f2fb1cd199ff37bdf23de012e6b6e",
-    "/main.2cd50c2ebd1118d4.js": "e07a16e84c40d33aedc0f49d7305d5648bf35551",
+    "/index.html": "ddfa34d9f3d2a6fe4864dd3d9982669ae2776cc2",
+    "/main.535c37b95f3f463a.js": "7895e364610a644d1faf4d8959e4271d489f9709",
     "/manifest.webmanifest": "8e6296cf5d7bd1aadaef5e749f1ed9f6b461dc62",
     "/polyfills.7964cbf638e0e665.js": "b86faf3d25745af51833084170cf4deba5dd2b57",
-    "/runtime.257af1332cc9acdb.js": "4b8ace5d9472c343a230944bb5aa17eeefc4f326",
+    "/runtime.a42a375f183bba16.js": "89bf6328141b4365acb03fef94ae3ee86bfc5f2e",
     "/scripts.d2dfb1487dc08ea5.js": "13dff4137307000ba9320aa7567225001bedb5ca",
-    "/styles.f971dce9965f03ea.css": "d18d8591677f257a4b6174f734ebf1d1465e1c8a"
+    "/styles.07365122cab454e3.css": "d181dc3d4c35157a211779ef05a6262557de0172"
   },
   "navigationUrls": [
     {

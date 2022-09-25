@@ -1,17 +1,28 @@
 import { AppPreferences, DiverDto, GasDto, OptionsDto, SegmentDto, TankDto } from './serialization.model';
 import _ from 'lodash';
-import { SafetyStop, Salinity } from 'scuba-physics';
+import { SafetyStop, Salinity, Time } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
 export class PlanValidation {
     // the internal storage is always in metric units
     private ranges = UnitConversion.createMetricRanges();
+    private simpleDurationRange: [number, number];
+    private complexDurationRange: [number, number];
+
+    constructor() {
+        const minDuration  = Time.toSeconds(this.ranges.duration[0]);
+        const maxDuration  = Time.toSeconds(this.ranges.duration[1]);
+        // min only 1 second, since simple profiles may have auto calculated descent shorter than one minute
+        this.simpleDurationRange = [1, maxDuration];
+        this.complexDurationRange = [minDuration, maxDuration];
+    }
 
     public validate(plan: AppPreferences): boolean {
         const maxTankId = plan.tanks.length + 1;
         const contentRanges = this.selectContentRanges(plan.isComplex);
         const tanksValid = this.allTanksValid(plan.tanks, maxTankId, contentRanges);
-        const segmentsValid = this.allSegmentsValid(plan.plan, maxTankId, contentRanges);
+        const durationRange = this.selectDurationRanges(plan.isComplex);
+        const segmentsValid = this.allSegmentsValid(plan.plan, maxTankId, durationRange, contentRanges);
         const optionsValid = this.optionsValid(plan.options);
         const diverValid = this.diverValid(plan.diver);
         const complexValid = this.complexModeValid(plan);
@@ -24,6 +35,14 @@ export class PlanValidation {
         }
 
         return [this.ranges.nitroxOxygen, [0,0]];
+    }
+
+    private selectDurationRanges(isComplex: boolean): [number, number] {
+        if(isComplex) {
+            return this.complexDurationRange;
+        }
+
+        return this.simpleDurationRange;
     }
 
     private allTanksValid(tanks: TankDto[], maxTankId: number, contentRanges: [[number, number], [number, number]]): boolean {
@@ -53,19 +72,22 @@ export class PlanValidation {
         return isAir || (o2Valid && heValid && contentValid);
     }
 
-    private allSegmentsValid(segments: SegmentDto[], maxTankId: number, contentRanges: [[number, number], [number, number]]): boolean {
+    private allSegmentsValid(segments: SegmentDto[], maxTankId: number,
+        durationRange: [number, number], contentRanges: [[number, number], [number, number]]): boolean {
         return segments.length > 0 &&
-             _(segments).every(s => this.isValidSegment(s, maxTankId, contentRanges));
+             _(segments).every(s => this.isValidSegment(s, maxTankId, durationRange, contentRanges));
     }
 
-    private isValidSegment(segment: SegmentDto, maxTankId: number, contentRanges: [[number, number], [number, number]]): boolean {
+    private isValidSegment(segment: SegmentDto, maxTankId: number,
+        durationRange: [number, number], contentRanges: [[number, number], [number, number]]): boolean {
         // it is a plan, so all segments need to have tankId
-        return this.isInRange(segment.tankId, [1, maxTankId]) &&
-            // cant use range, since the values may end at surface
-            this.isInRange(segment.startDepth, [0, 350]) &&
-            this.isInRange(segment.endDepth, [0, 350]) &&
-            this.isInRange(segment.duration, this.ranges.duration) &&
-            this.isValidGas(segment.gas, contentRanges);
+        const tankValid = this.isInRange(segment.tankId, [1, maxTankId]);
+        // cant use range, since the values may end at surface
+        const startValid = this.isInRange(segment.startDepth, [0, 350]);
+        const endValid = this.isInRange(segment.endDepth, [0, 350]);
+        const durationValid = this.isInRange(segment.duration, durationRange);
+        const gasValid = this.isValidGas(segment.gas, contentRanges);
+        return tankValid && startValid && endValid && durationValid && gasValid;
     }
 
     private optionsValid(options: OptionsDto): boolean {

@@ -75,7 +75,8 @@ export class PlanUrlSerialization {
                 return;
             }
 
-            const parsed = PlanUrlSerialization.parseDto(url);
+            const decodedUrl = decodeURIComponent(url);
+            const parsed = PlanUrlSerialization.parseDto(decodedUrl);
             // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
             const isValid = new PlanValidation().validate(parsed);
             if(isValid) {

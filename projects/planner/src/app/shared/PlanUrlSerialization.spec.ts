@@ -8,6 +8,7 @@ describe('Url Serialization', () => {
     let options: OptionsDispatcherService;
     let defaultPlan: PlannerService;
     let planner: PlannerService;
+    let customizedUrl: string;
 
     beforeEach(() => {
         options = new OptionsDispatcherService();
@@ -17,6 +18,7 @@ describe('Url Serialization', () => {
         planner.addSegment();
         planner.addTank();
         planner.calculate();
+        customizedUrl = PlanUrlSerialization.toUrl(planner, options);
     });
 
     const expectParsedEquals = (expected: PlannerService, current: PlannerService): void => {
@@ -60,6 +62,13 @@ describe('Url Serialization', () => {
         const current = new PlannerService(irrelevantFactory);
         PlanUrlSerialization.fromUrl(urlParams, options, current);
         expectParsedEquals(source, current);
+    });
+
+    it('Decodes url for facebook link', () => {
+        const encodedParams = encodeURIComponent(customizedUrl);
+        const current = new PlannerService(irrelevantFactory);
+        PlanUrlSerialization.fromUrl(encodedParams, options, current);
+        expectParsedEquals(current, planner);
     });
 
     describe('Skips loading', () => {

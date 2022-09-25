@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { PreferencesService } from '../shared/preferences.service';
@@ -23,7 +22,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private subscription: Subscription | null = null;
 
     constructor(
-        private router: Router,
         private location: Location,
         private preferences: PreferencesService,
         private options: OptionsDispatcherService,
@@ -39,6 +37,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.showDisclaimer = this.preferences.disclaimerEnabled();
         const query = window.location.search;
+
         if (query !=='') {
             PlanUrlSerialization.fromUrl(query, this.options, this.planner);
         } else {
@@ -66,9 +65,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             console.log('Planner calculated');
         }
 
-        if(this.router.url === '/') {
-            const urlParams = PlanUrlSerialization.toUrl(this.planner, this.options);
-            this.location.go( '?' + urlParams);
-        }
+        const urlParams = PlanUrlSerialization.toUrl(this.planner, this.options);
+        this.location.go( '?' + urlParams);
     }
 }

@@ -2,11 +2,8 @@ import { Component } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint, SwimAction } from '../shared/models';
 import { faArrowDown, faArrowUp, faArrowRight, faTasks, faRandom, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { Time } from 'scuba-physics';
-import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
-import { DurationPipe } from '../pipes/duration.pipe';
 
 @Component({
     selector: 'app-waypoints',
@@ -53,6 +50,10 @@ export class WayPointsComponent {
             default:
                 return 'hover';
         }
+    }
+
+    public toEndDepth(point: WayPoint): number {
+        return this.units.fromMeters(point.endDepth);
     }
 
     public iconClasses(point: WayPoint): any {

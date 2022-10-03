@@ -25,7 +25,7 @@
                     <td>
                         <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)" [title]="iconTitle(point)"></fa-icon>
                     </td>
-                    <td>{{ point.endDepth }}</td>
+                    <td>{{ toEndDepth(point) | number:'1.0-0' }}</td>
                     <td>{{ point.duration | duration:totalDuration }}</td>
                     <td>{{ point.endTime | duration:totalDuration }}</td>
                     <td *ngIf="isComplex">{{ point.gasName }}</td>

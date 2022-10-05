@@ -46,9 +46,9 @@ export class Tanks {
 export class Tank {
     /** Gets or sets a unique identifier of the tank in its collection */
     public id = 0;
-    /** Gets or sets the consumed liters of gas */
+    /** Gets or sets the consumed pressure of gas in bars */
     public consumed = 0;
-    /** Gets or sets the reserve which should remain in the tank in liters */
+    /** Gets or sets the reserve which should remain in the tank in bars */
     public reserve = 0;
 
     private _gas: Gas = StandardGases.air.copy();

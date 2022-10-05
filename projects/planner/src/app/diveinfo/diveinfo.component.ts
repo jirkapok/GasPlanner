@@ -71,6 +71,10 @@ export class DiveInfoComponent implements OnInit {
         return !this.planner.isComplex;
     }
 
+    public get averageDepth(): number {
+        return this.units.fromMeters(this.dive.averageDepth);
+    }
+
     public ngOnInit(): void {
         this.toast = new Toast(this.toastEl.nativeElement, { delay: 5000, });
     }

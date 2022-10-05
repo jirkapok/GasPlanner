@@ -124,8 +124,8 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         if(wayPoint) {
             this.cursor1.x0 = Time.toDate(wayPoint.startTime);
             this.cursor1.x1 = Time.toDate(wayPoint.endTime);
-            this.cursor1.y0 = wayPoint.startDepth;
-            this.cursor1.y1 = wayPoint.endDepth;
+            this.cursor1.y0 = this.convertDepth(wayPoint.startDepth);
+            this.cursor1.y1 = this.convertDepth(wayPoint.endDepth);
             update.shapes.push(this.cursor1);
         }
 
@@ -199,7 +199,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
                     const cumulativeWeight = depth + totalDuration * cumulativeAverage;
                     totalDuration++;
                     cumulativeAverage = cumulativeWeight / totalDuration;
-                    const rounded = Precision.round(cumulativeAverage, 1);
+                    const rounded = this.convertDepth(cumulativeAverage);
                     yDepthValues.push(rounded);
                 }
             }
@@ -237,7 +237,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         // possible performance optimization = remove all waypoints, where ceiling = 0 and depth didn't change
         this.dive.ceilings.forEach((item, index, ceilings) => {
             xCeilingValues.push(Time.toDate(item.time));
-            const depth = Precision.roundTwoDecimals(item.depth);
+            const depth = this.convertDepth(item.depth);
             yCeilingValues.push(depth);
         });
 
@@ -294,7 +294,8 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         this.dive.events.forEach((event, index, events) => {
             if (event.type === EventType.gasSwitch) {
                 x.push(Time.toDate(event.timeStamp));
-                y.push(event.depth);
+                const convertedDepth = this.convertDepth(event.depth);
+                y.push(convertedDepth);
                 const gas = event.gas;
                 if(gas) {
                     const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
@@ -308,13 +309,19 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         const speed = (item.endDepth - item.startDepth) / item.duration;
         for (let timeStamp = item.startTime; timeStamp < item.endTime; timeStamp++) {
             xValues.push(Time.toDate(timeStamp));
-            let depth = item.startDepth + (timeStamp - item.startTime) * speed;
-            depth = Precision.roundTwoDecimals(depth);
-            yValues.push(depth);
+            const depth = item.startDepth + (timeStamp - item.startTime) * speed;
+            const rounded = this.convertDepth(depth);
+            yValues.push(rounded);
         }
 
         // fix end of the dive
         xValues.push(Time.toDate(item.endTime));
-        yValues.push(item.endDepth);
+        const endDepth = this.convertDepth(item.endDepth);
+        yValues.push(endDepth);
+    }
+
+    private convertDepth(metersDepth: number): number {
+        const converted = this.units.fromMeters(metersDepth);
+        return Precision.round(converted, 1);
     }
 }

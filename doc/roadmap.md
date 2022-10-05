@@ -12,7 +12,6 @@ Following list of features and improvements ordered by priority is under develop
 
 * Oxygen at 4 m shows MOD 4 meters, but there is still warning about exceeded MOD.
 * Add imperial units option
-  * Fix all value bindings (profile chart, dive info)
   * Provide rounded default values within acceptable range (Settings, Sac, Nitrox, tanks, depths, options)
   * Round the values in data model, after unit switched
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet

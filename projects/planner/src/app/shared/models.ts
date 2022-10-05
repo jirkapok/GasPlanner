@@ -211,8 +211,8 @@ export class Dive {
         return this.wayPoints[this.wayPoints.length - 1].endTime;
     }
 
+    /** the only errors preventing draw chart */
     public get hasErrors(): boolean {
-        // the only errors preventing draw chart
         return this.calculated && (this.calculationFailed || this.notEnoughTime);
     }
 

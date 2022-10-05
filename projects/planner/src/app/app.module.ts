@@ -47,6 +47,7 @@ import { OptionsDispatcherService } from './shared/options-dispatcher.service';
 import { PpO2Component } from './pp-o2/pp-o2.component';
 import { DelayedScheduleService } from './shared/delayedSchedule.service';
 import { AppinfoComponent } from './appinfo/appinfo.component';
+import { DiveIssuesComponent } from './dive-issues/dive-issues.component';
 
 @NgModule({
     declarations: [
@@ -76,7 +77,8 @@ import { AppinfoComponent } from './appinfo/appinfo.component';
         DepthComponent,
         NitroxO2Component,
         PpO2Component,
-        AppinfoComponent
+        AppinfoComponent,
+        DiveIssuesComponent
     ],
     imports: [
         BrowserModule,

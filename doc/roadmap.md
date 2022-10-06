@@ -7,13 +7,12 @@ Following list of features and improvements ordered by priority is under develop
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
 * When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter for founding switch depth
+* Oxygen at 4 m shows MOD 4 meters, but there is still warning about exceeded MOD.
 
 ## Improvements / Features
 
-* Oxygen at 4 m shows MOD 4 meters, but there is still warning about exceeded MOD.
 * Add imperial units option
-  * Provide rounded default values within acceptable range (Settings, Sac, Nitrox, tanks, depths, options)
-  * Round the values in data model, after unit switched
+  * Provide rounded default values within acceptable range (Settings, Sac, tanks, depths, options)
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
   * Liter: <https://en.wikipedia.org/wiki/Cubic_foot>
@@ -24,7 +23,7 @@ Following list of features and improvements ordered by priority is under develop
   * bar: <https://en.wikipedia.org/wiki/Pound_per_square_inch> (S80 - 11.1L 206.8428 bar = 3000 psi working pressure)
 * Add gas depth range calculator
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
-* Add gas density calculator (to be able understand to dont breath gas with higher density than 5.7 g/l):
+* Add gas density calculator (to be able understand to don't breath gas with higher density than 5.7 g/l):
   * <https://www.thoughtco.com/how-to-calculate-density-of-a-gas-607847>
   * <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/>
   * Add corresponding event warning

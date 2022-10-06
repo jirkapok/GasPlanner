@@ -38,6 +38,7 @@ export class DepthsComponent implements OnDestroy {
         this.subscription = this.plan.reloaded.subscribe(() => this.updateLevels());
     }
 
+    // TODO fix binding issue in imperial units
     /** In meters */
     @Input()
     public get plannedDepth(): number {

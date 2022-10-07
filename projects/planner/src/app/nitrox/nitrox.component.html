@@ -15,7 +15,8 @@
           </div>
           <div [hidden]="inPO2" class="my-2">
             <label for="pO2">ppO2:
-              <input [(ngModel)]="calc.pO2" class="form-control" #pO2="ngModel" name="pO2" id="pO2" type="number"
+              <input [ngModel]="calc.pO2 | number: '1.0-2'" class="form-control" #pO2="ngModel" name="pO2" id="pO2" type="number"
+                (ngModelChange)="calc.pO2=$event"
                 required [rangeVal]="ranges.ppO2" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1"
                 [class.is-invalid]="pO2.invalid && (pO2.dirty || pO2.touched)" />
             </label>
@@ -23,7 +24,8 @@
           </div>
           <div [hidden]="inBestMix" class="my-2">
             <label for="fO2">Percent O2:
-              <input [(ngModel)]="calc.fO2" class="form-control" #fO2="ngModel" name="fO2" id="fO2" type="number"
+              <input [ngModel]="calc.fO2 | number: '1.0-1'" class="form-control" #fO2="ngModel" name="fO2" id="fO2" type="number"
+                 (ngModelChange)="calc.fO2=$event"
                  required [rangeVal]="ranges.nitroxOxygen" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]" step="1"
                  [class.is-invalid]="fO2.invalid && (fO2.dirty || fO2.touched)" />
             </label>
@@ -47,12 +49,12 @@
           </div>
           <div [hidden]="!inBestMix" class="my-2">
               <label for="mod">Percent O2:
-                <input [ngModel]="calc.fO2" class="form-control" readonly/>
+                <input [ngModel]="calc.fO2 | number: '1.0-1'" class="form-control" readonly/>
               </label>
           </div>
           <div [hidden]="!inPO2" class="my-2">
               <label for="mod">ppO2:
-                <input [ngModel]="calc.pO2" class="form-control" readonly/>
+                <input [ngModel]="calc.pO2 | number: '1.0-1'" class="form-control" readonly/>
               </label>
           </div>
         </div>

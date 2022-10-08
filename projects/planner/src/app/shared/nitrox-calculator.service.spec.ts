@@ -1,4 +1,4 @@
-import { NitroxCalculatorService, NitroxMode } from './nitrox-calculator.service';
+import { NitroxCalculatorService } from './nitrox-calculator.service';
 import { OptionsDispatcherService } from './options-dispatcher.service';
 
 describe('NitroxCalculatorService', () => {
@@ -28,14 +28,14 @@ describe('NitroxCalculatorService', () => {
 
     describe('Best mix (fO2)', () => {
         it('pO2 1.6 with MOD 22 m has fO2 50%', () => {
-            service.calculation = NitroxMode.BestMix;
+            service.toBestMix();
             service.mod = 22;
             service.pO2 = 1.6;
             expect(service.fO2).toBe(50);
         });
 
         it('pO2 1.3 with MOD 30 m has fO2 32.5%', () => {
-            service.calculation = NitroxMode.BestMix;
+            service.toBestMix();
             service.mod = 30;
             service.pO2 = 1.3;
             expect(service.fO2).toBe(32.5);
@@ -44,14 +44,14 @@ describe('NitroxCalculatorService', () => {
 
     describe('Partial O2 (pO2)', () => {
         it('fO2 50% with MOD 22 m has pO2 1.6', () => {
-            service.calculation = NitroxMode.PO2;
+            service.toPO2();
             service.mod = 22;
             service.fO2 = 50;
             expect(service.pO2).toBe(1.6);
         });
 
         it('fO2 32.5% with MOD 30 m has pO2 1.3', () => {
-            service.calculation = NitroxMode.PO2;
+            service.toPO2();
             service.mod = 30;
             service.fO2 = 32.5;
             expect(service.pO2).toBe(1.3);

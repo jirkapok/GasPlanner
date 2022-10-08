@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { NitroxCalculatorService, NitroxMode } from '../shared/nitrox-calculator.service';
+import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 
@@ -28,18 +28,6 @@ export class NitroxComponent implements OnInit {
 
     public get ranges(): RangeConstants {
         return this.units.ranges;
-    }
-
-    public get inMod(): boolean {
-        return this.calc.calculation === NitroxMode.Mod;
-    }
-
-    public get inBestMix(): boolean {
-        return this.calc.calculation === NitroxMode.BestMix;
-    }
-
-    public get inPO2(): boolean {
-        return this.calc.calculation === NitroxMode.PO2;
     }
 
     public get calcMod(): number {
@@ -80,18 +68,6 @@ export class NitroxComponent implements OnInit {
         this.calc.mod = values.mod;
 
         this.nitroxForm.patchValue(this.dataModel);
-    }
-
-    public toMod(): void {
-        this.calc.calculation = NitroxMode.Mod;
-    }
-
-    public toBestMix(): void {
-        this.calc.calculation = NitroxMode.BestMix;
-    }
-
-    public toPO2(): void {
-        this.calc.calculation = NitroxMode.PO2;
     }
 
     public async goBack(): Promise<boolean> {

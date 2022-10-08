@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { NitroxCalculator, DepthConverter, DepthLevels } from 'scuba-physics';
 import { OptionsDispatcherService } from './options-dispatcher.service';
 
-export enum NitroxMode {
+enum NitroxMode {
     Mod,
     BestMix,
     PO2
@@ -23,6 +23,18 @@ export class NitroxCalculatorService {
         const depthConverter = DepthConverter.simple();
         const depthLevels = new DepthLevels(depthConverter, options);
         this.nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);
+    }
+
+    public get inMod(): boolean {
+        return this.calculation === NitroxMode.Mod;
+    }
+
+    public get inBestMix(): boolean {
+        return this.calculation === NitroxMode.BestMix;
+    }
+
+    public get inPO2(): boolean {
+        return this.calculation === NitroxMode.PO2;
     }
 
     public get calculation(): NitroxMode {
@@ -73,6 +85,18 @@ export class NitroxCalculatorService {
     public set mod(newValue: number) {
         this._mod = newValue;
         this.calculate();
+    }
+
+    public toMod(): void {
+        this.calculation = NitroxMode.Mod;
+    }
+
+    public toBestMix(): void {
+        this.calculation = NitroxMode.BestMix;
+    }
+
+    public toPO2(): void {
+        this.calculation = NitroxMode.PO2;
     }
 
     private calculateCurrentMod = () => {

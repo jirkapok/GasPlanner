@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { Diver, Precision } from 'scuba-physics';
@@ -11,16 +12,23 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
     templateUrl: './app-settings.component.html',
     styleUrls: ['./app-settings.component.css']
 })
-export class AppSettingsComponent {
+export class AppSettingsComponent implements OnInit {
     public flagIcon = faFlag;
     public diver = new Diver();
-    public imperialUnits = false;
+    public settingsForm!: FormGroup;
 
-    constructor(private router: Router, public units: UnitConversion,
+    constructor(public units: UnitConversion,
+        private formBuilder: FormBuilder,
+        private router: Router,
         private options: OptionsDispatcherService,
         private planner: PlannerService) {
-        this.imperialUnits = this.units.imperialUnits;
         this.diver.loadFrom(this.planner.diver);
+    }
+
+    public ngOnInit(): void {
+        this.settingsForm = this.formBuilder.group({
+            imperialUnits: [this.units.imperialUnits,  Validators.required]
+        });
     }
 
     public async goBack(): Promise<boolean> {
@@ -30,7 +38,7 @@ export class AppSettingsComponent {
     public use(): void {
         // TODO save settings only if form is valid
         this.planner.applyDiver(this.diver);
-        this.units.imperialUnits = this.imperialUnits;
+        this.units.imperialUnits = this.settingsForm.controls.imperialUnits.value;
         const ranges = this.units.ranges;
         this.applyToOptions(ranges);
         this.normalizeTanks(ranges);

@@ -32,6 +32,12 @@ describe('NitroxCalculatorService', () => {
             expect(ead).toBe(30);
         });
 
+        it('Ead equals mod for Air', () => {
+            const mod = nitroxCalculator.mod(1.4, 20.9);
+            const ead = nitroxCalculator.ead(20.9, mod);
+            expect(ead).toBeCloseTo(mod, 2);
+        });
+
         it('EAN32 at 30 m has EAD 30 m', () => {
             const ead = nitroxCalculator.ead(32, 30);
             expect(ead).toBe(24.35); // because N2 in air 79.1%

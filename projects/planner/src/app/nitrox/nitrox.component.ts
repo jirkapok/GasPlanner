@@ -30,6 +30,11 @@ export class NitroxComponent implements OnInit {
         return this.units.ranges;
     }
 
+    public get ead(): number {
+        const ead = this.calc.ead;
+        return this.units.fromMeters(ead);
+    }
+
     public get calcMod(): number {
         return this.units.fromMeters(this.calc.mod);
     }

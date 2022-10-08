@@ -40,14 +40,14 @@
                                 <input class="form-control" name="mod" id="mod" type="number" formControlName="mod"
                                     (input)="inputChanged()" required [min]="ranges.depth[0]" [max]="ranges.depth[1]"
                                     step="1" [class.is-invalid]="modInvalid" />
-                                <small class="form-text text-muted">EAD: {{calc.ead}} {{units.length}}</small>
+                                <small class="form-text text-muted">EAD: {{ calc.ead | number: '1.0-1' }} {{units.length}}</small>
                             </label>
                             <div class="text-danger" *ngIf="modInvalid">Needs to be number {{ranges.depthLabel}}</div>
                         </div>
                         <div [hidden]="!calc.inMod" class="my-2">
                             <label for="mod">MOD [{{units.length}}]:
                                 <input class="form-control" formControlName="mod" readonly />
-                                <small class="form-text text-muted">EAD: {{calc.ead}} {{units.length}}</small>
+                                <small class="form-text text-muted">EAD: {{ ead | number: '1.0-1' }} {{units.length}}</small>
                             </label>
                         </div>
                         <div [hidden]="!calc.inBestMix" class="my-2">

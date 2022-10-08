@@ -9,13 +9,14 @@ export class NitroxCalculatorService {
     private _pO2 = 1.6;
     private _fO2 = 50;
     private _mod = 22;
-
+    private calculate: () => void;
     private nitroxCalculator: NitroxCalculator;
 
     constructor(options: OptionsDispatcherService) {
         const depthConverter = DepthConverter.simple();
         const depthLevels = new DepthLevels(depthConverter, options);
         this.nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);
+        this.calculate = this.calculateCurrentMod;
     }
 
     public get inMod(): boolean {
@@ -84,6 +85,4 @@ export class NitroxCalculatorService {
     private calculatePartial = () => {
         this._pO2 = this.nitroxCalculator.partialPressure(this._fO2, this._mod);
     };
-
-    private calculate = () => this.calculateCurrentMod();
 }

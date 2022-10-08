@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SacCalculator, DepthConverterFactory, DepthOptions, Salinity } from 'scuba-physics';
 
-export enum SacMode {
-    sac = 0,
-    used = 1,
-    duration = 2
-}
-
 @Injectable({
     providedIn: 'root'
 })
@@ -17,7 +11,7 @@ export class SacCalculatorService {
     private _duration = 45;
     private _rmv = 0;
     private sacCalculator: SacCalculator;
-    private _calculation = SacMode.sac;
+    private calculate: () => void;
 
     private options: DepthOptions = {
         salinity: Salinity.fresh,
@@ -30,6 +24,7 @@ export class SacCalculatorService {
         // TODO consider simple depth converter
         const depthConverter = this.depthConverterFactory.create();
         this.sacCalculator = new SacCalculator(depthConverter);
+        this.calculate = this.calculateSac;
         this.calculate();
     }
 
@@ -53,8 +48,16 @@ export class SacCalculatorService {
         return this._used;
     }
 
-    public get calculation(): SacMode {
-        return this._calculation;
+    public get inDuration(): boolean {
+        return this.calculate === this.calculateDuration;
+    }
+
+    public get inUsed(): boolean {
+        return this.calculate === this.calculateUsed;
+    }
+
+    public get inSac(): boolean {
+        return this.calculate === this.calculateSac;
     }
 
     public set depth(newValue: number) {
@@ -82,19 +85,16 @@ export class SacCalculatorService {
         this.calculate();
     }
 
-    public set calculation(newValue: SacMode) {
-        this._calculation = newValue;
+    public toDuration(): void {
+        this.calculate = this.calculateDuration;
+    }
 
-        switch (newValue) {
-            case SacMode.duration:
-                this.calculate = () => this.calculateDuration();
-                break;
-            case SacMode.used:
-                this.calculate = () => this.calculateUsed();
-                break;
-            default:
-                this.calculate = () => this.calculateSac();
-        }
+    public toUsed(): void {
+        this.calculate = this.calculateUsed;
+    }
+
+    public toSac(): void {
+        this.calculate = this.calculateSac;
     }
 
     private calculateSac(): void {
@@ -108,6 +108,4 @@ export class SacCalculatorService {
     private calculateUsed(): void {
         this._used = this.sacCalculator.calculateUsed(this.depth, this.tank, this.duration, this.rmv);
     }
-
-    private calculate: () => void = () => this.calculateSac();
 }

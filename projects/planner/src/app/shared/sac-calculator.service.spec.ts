@@ -1,4 +1,4 @@
-import { SacCalculatorService, SacMode } from './sac-calculator.service';
+import { SacCalculatorService } from './sac-calculator.service';
 
 describe('SacCalculatorService', () => {
     let service: SacCalculatorService;
@@ -39,7 +39,7 @@ describe('SacCalculatorService', () => {
 
     describe('Duration calculations', () => {
         it('15m with 15L tank (defaults) with sac 20.24 L/min. holds 45 minutes.', () => {
-            service.calculation = SacMode.duration;
+            service.toDuration();
             service.rmv = 20.24;
             expect(service.duration).toBe(45);
         });
@@ -47,7 +47,7 @@ describe('SacCalculatorService', () => {
 
     describe('Used bars calculations', () => {
         it('15m for 45 min with 15L tank (defaults) with sac 20.24 L/min. consumes 151 bar.', () => {
-            service.calculation = SacMode.used;
+            service.toUsed();
             service.rmv = 20.24;
             expect(service.used).toBe(151);
         });

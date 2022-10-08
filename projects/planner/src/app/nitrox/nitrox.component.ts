@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { PlannerService } from '../shared/planner.service';
@@ -32,6 +32,21 @@ export class NitroxComponent implements OnInit {
 
     public get calcMod(): number {
         return this.units.fromMeters(this.calc.mod);
+    }
+
+    public get pO2Invalid(): boolean {
+        const pO2 = this.nitroxForm.controls.pO2;
+        return this.controlInValid(pO2);
+    }
+
+    public get modInvalid(): boolean {
+        const mod = this.nitroxForm.controls.mod;
+        return this.controlInValid(mod);
+    }
+
+    public get fO2Invalid(): boolean {
+        const fO2 = this.nitroxForm.controls.fO2;
+        return this.controlInValid(fO2);
     }
 
     private get dataModel(): any {
@@ -77,6 +92,10 @@ export class NitroxComponent implements OnInit {
     public use(): void {
         this.planer.firstTank.o2 = this.calc.fO2;
         this.planer.diver.maxPpO2 = this.calc.pO2;
+    }
+
+    public controlInValid(control: AbstractControl): boolean {
+        return control.invalid && (control.dirty || control.touched);
     }
 
     private formatNumber(value: number): string | null {

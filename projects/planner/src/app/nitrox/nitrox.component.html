@@ -1,71 +1,72 @@
 <div class="mt-5">
-  <div class="row">
-    <div class="col-lg-3 col-md-6 mt-3">
-      <div class="card">
-        <div class="card-header">
-          <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
-          <span>Nitrox calculator</span>
+    <div class="row">
+        <div class="col-lg-3 col-md-6 mt-3">
+            <div class="card">
+                <div class="card-header">
+                    <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
+                    <span>Nitrox calculator</span>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="nitroxForm">
+                        <div class="my-3">This calculator uses simple depth conversion (where 1 ATM = 1 bar), so the
+                            values shown here are less precise, than in rest of the application.</div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn" [class.btn-primary]="calc.inMod"
+                                (click)="calc.toMod()">MOD</button>
+                            <button type="button" class="btn" [class.btn-primary]="calc.inBestMix"
+                                (click)="calc.toBestMix()">Best mix</button>
+                            <button type="button" class="btn" [class.btn-primary]="calc.inPO2"
+                                (click)="calc.toPO2()">ppO2</button>
+                        </div>
+                        <div [hidden]="calc.inPO2" class="my-2">
+                            <label for="pO2">ppO2:
+                                <input class="form-control" name="pO2" id="pO2" type="number" formControlName="pO2"
+                                    (input)="inputChanged()" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1"
+                                    [class.is-invalid]="pO2Invalid" />
+                            </label>
+                            <div class="text-danger" *ngIf="pO2Invalid">Needs to be number 0.21-3</div>
+                        </div>
+                        <div [hidden]="calc.inBestMix" class="my-2">
+                            <label for="fO2">Percent O2:
+                                <input class="form-control" name="fO2" id="fO2" type="number" formControlName="fO2"
+                                    (input)="inputChanged()" required [min]="ranges.nitroxOxygen[0]"
+                                    [max]="ranges.nitroxOxygen[1]" step="1" [class.is-invalid]="fO2Invalid" />
+                            </label>
+                            <div class="text-danger" *ngIf="fO2Invalid">Needs to be number {{ranges.nitroxOxygenLabel}}
+                            </div>
+                        </div>
+                        <div [hidden]="calc.inMod" class="my-2">
+                            <label for="mod">MOD [{{units.length}}]:
+                                <input class="form-control" name="mod" id="mod" type="number" formControlName="mod"
+                                    (input)="inputChanged()" required [min]="ranges.depth[0]" [max]="ranges.depth[1]"
+                                    step="1" [class.is-invalid]="modInvalid" />
+                                <small class="form-text text-muted">EAD: {{calc.ead}} {{units.length}}</small>
+                            </label>
+                            <div class="text-danger" *ngIf="modInvalid">Needs to be number {{ranges.depthLabel}}</div>
+                        </div>
+                        <div [hidden]="!calc.inMod" class="my-2">
+                            <label for="mod">MOD [{{units.length}}]:
+                                <input class="form-control" formControlName="mod" readonly />
+                                <small class="form-text text-muted">EAD: {{calc.ead}} {{units.length}}</small>
+                            </label>
+                        </div>
+                        <div [hidden]="!calc.inBestMix" class="my-2">
+                            <label for="fO2">Percent O2:
+                                <input class="form-control" formControlName="fO2" readonly />
+                            </label>
+                        </div>
+                        <div [hidden]="!calc.inPO2" class="my-2">
+                            <label for="pO2">ppO2:
+                                <input class="form-control" formControlName="pO2" readonly />
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="form-group mt-2">
+                <button type="button" class="btn btn-primary me-2" (click)="goBack()">Back</button>
+                <button type="button" class="btn btn-secondary" (click)="use()">Use</button>
+            </div>
         </div>
-        <div class="card-body">
-            <form [formGroup]="nitroxForm">
-          <div class="my-3">This calculator uses simple depth conversion (where 1 ATM = 1 bar), so the values shown here are less precise, than in rest of the application.</div>
-          <div class="btn-group" role="group">
-            <button type="button" class="btn" [class.btn-primary]="calc.inMod" (click)="calc.toMod()">MOD</button>
-            <button type="button" class="btn" [class.btn-primary]="calc.inBestMix" (click)="calc.toBestMix()">Best mix</button>
-            <button type="button" class="btn" [class.btn-primary]="calc.inPO2" (click)="calc.toPO2()">ppO2</button>
-          </div>
-          <div [hidden]="calc.inPO2" class="my-2">
-            <label for="pO2">ppO2:
-              <input class="form-control" name="pO2" id="pO2" type="number" formControlName="pO2"
-                (input)="inputChanged()"
-                [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1"
-                [class.is-invalid]="nitroxForm.controls.pO2.invalid && (nitroxForm.controls.pO2.dirty || nitroxForm.controls.pO2.touched)" />
-            </label>
-            <div class="text-danger" *ngIf="nitroxForm.controls.pO2.invalid && (nitroxForm.controls.pO2.dirty || nitroxForm.controls.pO2.touched)">Needs to be number 0.21-3</div>
-          </div>
-          <div [hidden]="calc.inBestMix" class="my-2">
-            <label for="fO2">Percent O2:
-              <input class="form-control" name="fO2" id="fO2" type="number" formControlName="fO2"
-                 (input)="inputChanged()"
-                 required [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]" step="1"
-                 [class.is-invalid]="nitroxForm.controls.fO2.invalid && (nitroxForm.controls.fO2.dirty || nitroxForm.controls.fO2.touched)" />
-            </label>
-            <div class="text-danger" *ngIf="nitroxForm.controls.fO2.invalid && (nitroxForm.controls.fO2.dirty || nitroxForm.controls.fO2.touched)">Needs to be number {{ranges.nitroxOxygenLabel}}</div>
-          </div>
-          <div [hidden]="calc.inMod" class="my-2">
-            <label for="mod">MOD [{{units.length}}]:
-              <input class="form-control" name="mod" id="mod" type="number" formControlName="mod"
-                 (input)="inputChanged()"
-                 required [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
-                 [class.is-invalid]="nitroxForm.controls.mod.invalid && (nitroxForm.controls.mod.dirty || nitroxForm.controls.mod.touched)" />
-                <small class="form-text text-muted">EAD: {{calc.ead}} {{units.length}}</small>
-            </label>
-            <div class="text-danger" *ngIf="nitroxForm.controls.mod.invalid && (nitroxForm.controls.mod.dirty || nitroxForm.controls.mod.touched)">Needs to be number {{ranges.depthLabel}}</div>
-          </div>
-          <div [hidden]="!calc.inMod" class="my-2">
-            <label for="mod">MOD [{{units.length}}]:
-              <input class="form-control" formControlName="mod" readonly/>
-              <small class="form-text text-muted">EAD: {{calc.ead}} {{units.length}}</small>
-            </label>
-          </div>
-          <div [hidden]="!calc.inBestMix" class="my-2">
-              <label for="fO2">Percent O2:
-                <input class="form-control" formControlName="fO2" readonly/>
-              </label>
-          </div>
-          <div [hidden]="!calc.inPO2" class="my-2">
-              <label for="pO2">ppO2:
-                <input class="form-control" formControlName="pO2" readonly/>
-              </label>
-          </div>
-          Value: {{ nitroxForm.value | json }}
-        </form>
-        </div>
-      </div>
-      <div class="form-group mt-2">
-        <button type="button" class="btn btn-primary me-2" (click)="goBack()">Back</button>
-        <button type="button" class="btn btn-secondary" (click)="use()">Use</button>
-      </div>
     </div>
-  </div>
 </div>

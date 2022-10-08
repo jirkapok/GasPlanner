@@ -7,6 +7,7 @@
           <span>Nitrox calculator</span>
         </div>
         <div class="card-body">
+            <form [formGroup]="nitroxForm">
           <div class="my-3">This calculator uses simple depth conversion (where 1 ATM = 1 bar), so the values shown here are less precise, than in rest of the application.</div>
           <div class="btn-group" role="group">
             <button type="button" class="btn" [class.btn-primary]="inMod" (click)="toMod()">MOD</button>
@@ -15,48 +16,50 @@
           </div>
           <div [hidden]="inPO2" class="my-2">
             <label for="pO2">ppO2:
-              <input [ngModel]="calc.pO2 | number: '1.0-2'" class="form-control" #pO2="ngModel" name="pO2" id="pO2" type="number"
-                (ngModelChange)="calc.pO2=$event"
-                required [rangeVal]="ranges.ppO2" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1"
-                [class.is-invalid]="pO2.invalid && (pO2.dirty || pO2.touched)" />
+              <input class="form-control" name="pO2" id="pO2" type="number" formControlName="pO2"
+                (input)="inputChanged()"
+                [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1"
+                [class.is-invalid]="nitroxForm.controls.pO2.invalid && (nitroxForm.controls.pO2.dirty || nitroxForm.controls.pO2.touched)" />
             </label>
-            <div class="text-danger" *ngIf="pO2.invalid && (pO2.dirty || pO2.touched)">Needs to be number 0.21-3</div>
+            <div class="text-danger" *ngIf="nitroxForm.controls.pO2.invalid && (nitroxForm.controls.pO2.dirty || nitroxForm.controls.pO2.touched)">Needs to be number 0.21-3</div>
           </div>
           <div [hidden]="inBestMix" class="my-2">
             <label for="fO2">Percent O2:
-              <input [ngModel]="calc.fO2 | number: '1.0-1'" class="form-control" #fO2="ngModel" name="fO2" id="fO2" type="number"
-                 (ngModelChange)="calc.fO2=$event"
-                 required [rangeVal]="ranges.nitroxOxygen" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]" step="1"
-                 [class.is-invalid]="fO2.invalid && (fO2.dirty || fO2.touched)" />
+              <input class="form-control" name="fO2" id="fO2" type="number" formControlName="fO2"
+                 (input)="inputChanged()"
+                 required [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]" step="1"
+                 [class.is-invalid]="nitroxForm.controls.fO2.invalid && (nitroxForm.controls.fO2.dirty || nitroxForm.controls.fO2.touched)" />
             </label>
-            <div class="text-danger" *ngIf="fO2.invalid && (fO2.dirty || fO2.touched)">Needs to be number {{ranges.nitroxOxygenLabel}}</div>
+            <div class="text-danger" *ngIf="nitroxForm.controls.fO2.invalid && (nitroxForm.controls.fO2.dirty || nitroxForm.controls.fO2.touched)">Needs to be number {{ranges.nitroxOxygenLabel}}</div>
           </div>
           <div [hidden]="inMod" class="my-2">
             <label for="mod">MOD [{{units.length}}]:
-              <input [ngModel]="calcMod | number: '1.0-1'" class="form-control" #mod="ngModel" name="mod" id="mod" type="number"
-                 (ngModelChange)="calcMod=$event"
-                 required [rangeVal]="ranges.depth" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
-                 [class.is-invalid]="mod.invalid && (mod.dirty || mod.touched)" />
+              <input class="form-control" name="mod" id="mod" type="number" formControlName="mod"
+                 (input)="inputChanged()"
+                 required [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
+                 [class.is-invalid]="nitroxForm.controls.mod.invalid && (nitroxForm.controls.mod.dirty || nitroxForm.controls.mod.touched)" />
                 <small class="form-text text-muted">EAD: {{calc.ead}} {{units.length}}</small>
             </label>
-            <div class="text-danger" *ngIf="mod.invalid && (mod.dirty || mod.touched)">Needs to be number {{ranges.depthLabel}}</div>
+            <div class="text-danger" *ngIf="nitroxForm.controls.mod.invalid && (nitroxForm.controls.mod.dirty || nitroxForm.controls.mod.touched)">Needs to be number {{ranges.depthLabel}}</div>
           </div>
           <div [hidden]="!inMod" class="my-2">
             <label for="mod">MOD [{{units.length}}]:
-              <input [ngModel]="calcMod | number: '1.0-1'" class="form-control" readonly/>
+              <input class="form-control" formControlName="mod" readonly/>
               <small class="form-text text-muted">EAD: {{calc.ead}} {{units.length}}</small>
             </label>
           </div>
           <div [hidden]="!inBestMix" class="my-2">
-              <label for="mod">Percent O2:
-                <input [ngModel]="calc.fO2 | number: '1.0-1'" class="form-control" readonly/>
+              <label for="fO2">Percent O2:
+                <input class="form-control" formControlName="fO2" readonly/>
               </label>
           </div>
           <div [hidden]="!inPO2" class="my-2">
-              <label for="mod">ppO2:
-                <input [ngModel]="calc.pO2 | number: '1.0-1'" class="form-control" readonly/>
+              <label for="pO2">ppO2:
+                <input class="form-control" formControlName="pO2" readonly/>
               </label>
           </div>
+          Value: {{ nitroxForm.value | json }}
+        </form>
         </div>
       </div>
       <div class="form-group mt-2">

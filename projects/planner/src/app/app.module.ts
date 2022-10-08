@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomFormsModule } from './validators/custom-forms.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -83,6 +83,7 @@ import { DiveIssuesComponent } from './dive-issues/dive-issues.component';
     imports: [
         BrowserModule,
         FormsModule,
+        ReactiveFormsModule,
         NgbModule,
         AppRoutingModule,
         CustomFormsModule,
@@ -106,6 +107,7 @@ import { DiveIssuesComponent } from './dive-issues/dive-issues.component';
         DelayedScheduleService,
         NdlService,
         DatePipe,
+        DecimalPipe
     ],
     bootstrap: [AppComponent]
 })

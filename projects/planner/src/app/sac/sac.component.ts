@@ -1,39 +1,63 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
-import { SacCalculatorService, SacMode } from '../shared/sac-calculator.service';
+import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { Diver } from 'scuba-physics';
+
 
 @Component({
     selector: 'app-sac',
     templateUrl: './sac.component.html',
     styleUrls: ['./sac.component.css']
 })
-export class SacComponent {
+export class SacComponent implements OnInit {
     public calcIcon = faCalculator;
+    public formSac!: FormGroup;
 
     constructor(
+        private numberPipe: DecimalPipe,
+        private formBuilder: FormBuilder,
         private router: Router, private planer: PlannerService,
-        private calc: SacCalculatorService, public units: UnitConversion) {
+        public calc: SacCalculatorService, public units: UnitConversion) {
+    }
+
+    public get gasSac(): number {
+        const sac = Diver.gasSac(this.calc.rmv, this.calc.tank);
+        return this.units.fromBar(sac);
     }
 
     public get ranges(): RangeConstants {
         return this.units.ranges;
     }
 
-    public get inDuration(): boolean {
-        return this.calc.calculation === SacMode.duration;
+    public get depthInvalid(): boolean {
+        const depth = this.formSac.controls.depth;
+        return this.controlInValid(depth);
     }
 
-    public get inUsed(): boolean {
-        return this.calc.calculation === SacMode.used;
+    public get tankInvalid(): boolean {
+        const tankSize = this.formSac.controls.tankSize;
+        return this.controlInValid(tankSize);
     }
 
-    public get inSac(): boolean {
-        return this.calc.calculation === SacMode.sac;
+    public get usedInvalid(): boolean {
+        const used = this.formSac.controls.used;
+        return this.controlInValid(used);
+    }
+
+    public get rmvInvalid(): boolean {
+        const rmv = this.formSac.controls.rmv;
+        return this.controlInValid(rmv);
+    }
+
+    public get durationInvalid(): boolean {
+        const duration = this.formSac.controls.duration;
+        return this.controlInValid(duration);
     }
 
     public get calcDepth(): number {
@@ -56,36 +80,44 @@ export class SacComponent {
         return this.calc.duration;
     }
 
-    public set calcDepth(newValue: number) {
-        this.calc.depth = this.units.toMeters(newValue);
+    private get dataModel(): any {
+        return {
+            depth: this.formatNumber(this.calc.depth),
+            duration: this.formatNumber(this.calc.duration),
+            tankSize: this.formatNumber(this.calcTank),
+            used: this.formatNumber(this.calcUsed),
+            rmv:  this.formatNumber(this.calcRmv),
+        };
     }
 
-    public set calcTank(newValue: number) {
-        this.calc.tank = this.units.toTankLiters(newValue);
+    public ngOnInit(): void {
+        this.formSac = this.formBuilder.group({
+            depth: [this.formatNumber(this.calcDepth),
+                [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]],
+            duration: [this.formatNumber(this.calcDuration),
+                [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]],
+            tankSize: [this.formatNumber(this.calcTank),
+                [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
+            used: [this.formatNumber(this.calcUsed),
+                [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
+            rmv:  [this.formatNumber(this.calcRmv),
+                [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]],
+        });
     }
 
-    public set calcUsed(newValue: number) {
-        this.calc.used = this.units.toBar(newValue);
-    }
+    public inputChanged(): void {
+        if(this.formSac.invalid) {
+            return;
+        }
 
-    public set calcRmv(newValue: number) {
-        this.calc.rmv = this.units.toLiter(newValue);
-    }
+        const values = this.formSac.value;
+        this.calc.depth = this.units.toMeters(values.depth);
+        this.calc.tank = this.units.toTankLiters(values.tankSize);
+        this.calc.used = this.units.toBar(values.used);
+        this.calc.rmv = this.units.toLiter(values.rmv);
+        this.calc.duration = values.duration;
 
-    public set calcDuration(newValue: number) {
-        this.calc.duration = newValue;
-    }
-
-    public toDuration(): void {
-        this.calc.calculation = SacMode.duration;
-    }
-
-    public toUsed(): void {
-        this.calc.calculation = SacMode.used;
-    }
-
-    public toSac(): void {
-        this.calc.calculation = SacMode.sac;
+        this.formSac.patchValue(this.dataModel);
     }
 
     public async goBack(): Promise<boolean>  {
@@ -96,8 +128,11 @@ export class SacComponent {
         this.planer.diver.rmv = this.calc.rmv;
     }
 
-    public gasSac(): number {
-        const sac = Diver.gasSac(this.calc.rmv, this.calc.tank);
-        return this.units.fromBar(sac);
+    public controlInValid(control: AbstractControl): boolean {
+        return control.invalid && (control.dirty || control.touched);
+    }
+
+    private formatNumber(value: number): string | null {
+        return this.numberPipe.transform(value, '1.0-1');
     }
 }

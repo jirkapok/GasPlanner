@@ -1,82 +1,93 @@
 <div class="mt-5">
-  <div class="row">
-    <div class="col-lg-3 col-md-6 mt-3">
-      <div class="card">
-        <div class="card-header">
-          <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
-          <span>Respiratory minute volume</span>
+    <div class="row">
+        <div class="col-lg-3 col-md-6 mt-3">
+            <div class="card">
+                <div class="card-header">
+                    <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
+                    <span>Respiratory minute volume</span>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="formSac">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn" [class.btn-primary]="calc.inSac"
+                                (click)="calc.toSac()">RMV</button>
+                            <button type="button" class="btn" [class.btn-primary]="calc.inUsed"
+                                (click)="calc.toUsed()">Used</button>
+                            <button type="button" class="btn" [class.btn-primary]="calc.inDuration"
+                                (click)="calc.toDuration()">Duration</button>
+                        </div>
+                        <div class="my-2">
+                            <label for="depth">Average depth [{{units.length}}]:
+                                <input formControlName="depth" class="form-control" name="depth"
+                                    id="depth" type="number" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
+                                    [class.is-invalid]="depthInvalid" (input)="inputChanged()" />
+                            </label>
+                            <div class="text-danger" *ngIf="depthInvalid">Needs to be
+                                number {{ranges.depthLabel}}</div>
+                        </div>
+                        <div class="my-2">
+                            <label for="tank">Tank size [{{units.volume}}]:
+                                <input formControlName="tankSize" class="form-control" name="tank" id="tank"
+                                    type="number" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
+                                    [class.is-invalid]="tankInvalid" (input)="inputChanged()" />
+                            </label>
+                            <div class="text-danger" *ngIf="tankInvalid">Needs to be
+                                number {{ranges.tankSizeLabel}}</div>
+                        </div>
+                        <div [hidden]="calc.inDuration" class="my-2">
+                            <label for="duration">Dive time [min]:
+                                <input formControlName="duration" class="form-control"
+                                    name="duration" id="duration" type="number"
+                                    [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
+                                    [class.is-invalid]="durationInvalid" (input)="inputChanged()"/>
+                            </label>
+                            <div class="text-danger" *ngIf="durationInvalid">
+                                Needs to be number {{ ranges.durationLabel }}</div>
+                        </div>
+                        <div [hidden]="calc.inUsed" class="my-2">
+                            <label for="used">Gas consumed [{{units.pressure}}]:
+                                <input formControlName="used" class="form-control" name="used" id="used"
+                                    type="number" [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
+                                    [class.is-invalid]="usedInvalid" (input)="inputChanged()"/>
+                            </label>
+                            <div class="text-danger" *ngIf="usedInvalid">Needs to be
+                                number {{ranges.tankPressureLabel}}</div>
+                        </div>
+                        <div [hidden]="calc.inSac" class="my-2">
+                            <label for="sac">RMV [{{units.rmv}}]:
+                                <input formControlName="rmv" class="form-control" name="sac" id="sac"
+                                    type="number" [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="1"
+                                    [class.is-invalid]="rmvInvalid" (input)="inputChanged()"/>
+                                <small class="form-text text-muted">SAC: {{ gasSac | number:'1.0-2'}}
+                                    {{units.sac}}</small>
+                            </label>
+                            <div class="text-danger" *ngIf="rmvInvalid">Needs to be
+                                number {{ranges.diverRmvLabel}}</div>
+                        </div>
+                        <div [hidden]="!calc.inSac" class="my-2">
+                            <label for="sac">RMV [{{units.rmv}}]:
+                                <input formControlName="rmv" class="form-control" readonly />
+                                <small class="form-text text-muted">SAC: {{ gasSac | number:'1.0-2'}}
+                                    {{units.sac}}</small>
+                            </label>
+                        </div>
+                        <div [hidden]="!calc.inUsed" class="my-2">
+                            <label for="sac">Gas consumed [{{units.pressure}}]:
+                                <input formControlName="used" class="form-control" readonly />
+                            </label>
+                        </div>
+                        <div [hidden]="!calc.inDuration" class="my-2">
+                            <label for="sac">Dive time [min]:
+                                <input formControlName="duration" class="form-control" readonly />
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="form-group mt-2">
+                <button type="button" class="btn btn-primary me-2" (click)="goBack()">Back</button>
+                <button type="button" class="btn btn-secondary" (click)="use()">Use</button>
+            </div>
         </div>
-        <div class="card-body">
-          <div class="btn-group" role="group">
-            <button type="button" class="btn" [class.btn-primary]="inSac" (click)="toSac()">RMV</button>
-            <button type="button" class="btn" [class.btn-primary]="inUsed" (click)="toUsed()">Used</button>
-            <button type="button" class="btn" [class.btn-primary]="inDuration" (click)="toDuration()">Duration</button>
-          </div>
-          <div class="my-2">
-            <label for="depth">Average depth [{{units.length}}]:
-              <input [(ngModel)]="calcDepth" class="form-control" #depth="ngModel" name="depth" id="depth" type="number"
-                required [rangeVal]="ranges.depth" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
-                [class.is-invalid]="depth.invalid && (depth.dirty || depth.touched)" />
-            </label>
-            <div class="text-danger" *ngIf="depth.invalid && (depth.dirty || depth.touched)">Needs to be number {{ranges.depthLabel}}</div>
-          </div>
-          <div class="my-2">
-            <label for="tank">Tank size [{{units.volume}}]:
-              <input [(ngModel)]="calcTank" class="form-control" #tank="ngModel" name="tank" id="tank" type="number"
-                required [rangeVal]="ranges.tankSize" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-                [class.is-invalid]="tank.invalid && (tank.dirty || tank.touched)" />
-            </label>
-            <div class="text-danger" *ngIf="tank.invalid && (tank.dirty || tank.touched)">Needs to be number {{ranges.tankSizeLabel}}</div>
-          </div>
-          <div [hidden]="inDuration" class="my-2">
-            <label for="duration">Dive time [min]:
-              <input [(ngModel)]="calcDuration" class="form-control" #duration="ngModel" name="duration" id="duration"
-              type="number" required  [rangeVal]="ranges.duration" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
-              [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)"
-              />
-            </label>
-            <div class="text-danger" *ngIf="duration.invalid && (duration.dirty || duration.touched)"
-            >Needs to be number {{ ranges.durationLabel }}</div>
-          </div>
-          <div [hidden]="inUsed" class="my-2">
-            <label for="used">Gas consumed [{{units.pressure}}]:
-              <input [(ngModel)]="calcUsed" class="form-control" #used="ngModel" name="used" id="used" type="number"
-                required [rangeVal]="ranges.tankPressure" [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
-                [class.is-invalid]="used.invalid && (used.dirty || used.touched)" />
-            </label>
-            <div class="text-danger" *ngIf="used.invalid && (used.dirty || used.touched)">Needs to be number {{ranges.tankPressureLabel}}</div>
-          </div>
-          <div [hidden]="inSac" class="my-2">
-            <label for="sac">RMV [{{units.rmv}}]:
-              <input [(ngModel)]="calcRmv" class="form-control" #sac="ngModel" name="sac" id="sac" type="number"
-                 required [rangeVal]="ranges.diverRmv" [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="1"
-                 [class.is-invalid]="sac.invalid && (sac.dirty || sac.touched)" />
-              <small class="form-text text-muted">SAC: {{gasSac() | number:'1.0-2'}} {{units.sac}}</small>
-            </label>
-            <div class="text-danger" *ngIf="sac.invalid && (sac.dirty || sac.touched)">Needs to be number {{ranges.diverRmvLabel}}</div>
-          </div>
-          <div [hidden]="!inSac" class="my-2">
-            <label for="sac">RMV [{{units.rmv}}]:
-              <input [ngModel]="calcRmv" class="form-control" readonly/>
-              <small class="form-text text-muted">SAC: {{gasSac() | number:'1.0-2'}} {{units.sac}}</small>
-            </label>
-          </div>
-          <div [hidden]="!inUsed" class="my-2">
-            <label for="sac">Gas consumed [{{units.pressure}}]:
-              <input [ngModel]="calcUsed" class="form-control" readonly/>
-            </label>
-          </div>
-          <div [hidden]="!inDuration" class="my-2">
-            <label for="sac">Dive time [min]:
-              <input [ngModel]="calcDuration" class="form-control" readonly/>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="form-group mt-2">
-        <button type="button" class="btn btn-primary me-2" (click)="goBack()">Back</button>
-        <button type="button" class="btn btn-secondary" (click)="use()">Use</button>
-      </div>
     </div>
-  </div>
 </div>

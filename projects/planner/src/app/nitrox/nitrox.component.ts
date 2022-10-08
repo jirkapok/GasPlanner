@@ -85,7 +85,7 @@ export class NitroxComponent implements OnInit {
         const values = this.nitroxForm.value;
         this.calc.pO2 = values.pO2;
         this.calc.fO2 = values.fO2;
-        this.calc.mod = values.mod;
+        this.calc.mod = this.units.toMeters(values.mod);
 
         this.nitroxForm.patchValue(this.dataModel);
     }

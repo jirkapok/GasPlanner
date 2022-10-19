@@ -1,23 +1,24 @@
 <div class="mb-2">
-    <label for="altitudeField" class="form-label">Altitude  [{{units.altitude}}]:
-        <div class="input-group col-auto o2-max-width">
-            <input id="altitudeField" name="altitudeField" #altitudeField="ngModel" [(ngModel)]="altitudeBound"
-                class="form-control col-auto" type="number" (input)="inputChange.emit()"
-                required [rangeVal]="units.ranges.altitude" [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1"
-                [class.is-invalid]="altitudeField.invalid && (altitudeField.dirty || altitudeField.touched)" />
-            <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
-                <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-                    <button type="button" class="dropdown-item" (click)="seaLevel()">Sea level</button>
-                    <button type="button" class="dropdown-item" (click)="setHill()">{{ smallHill }}</button>
-                    <button type="button" class="dropdown-item" (click)="setMountains()">{{ mountains }}</button>
-                    <button type="button" class="dropdown-item" (click)="setHighMountains()">{{ highMountains }}</button>
+    <label for="altitudeField" class="form-label">Altitude [{{units.altitude}}]:
+        <form [formGroup]="altitudeForm">
+            <div class="input-group col-auto o2-max-width">
+                <input id="altitudeField" class="form-control col-auto" type="number" (input)="altitudeChanged()"
+                    required [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1"
+                    formControlName="altitude" [class.is-invalid]="altitudeValid" />
+                <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
+                    <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
+                    <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
+                        <button type="button" class="dropdown-item" (click)="seaLevel()">Sea level</button>
+                        <button type="button" class="dropdown-item" (click)="setHill()">{{ smallHill }}</button>
+                        <button type="button" class="dropdown-item" (click)="setMountains()">{{ mountains }}</button>
+                        <button type="button" class="dropdown-item" (click)="setHighMountains()">{{ highMountains
+                            }}</button>
+                    </div>
+                </div>
+                <div class="text-danger form-text" *ngIf="altitudeValid">
+                    Needs to be number {{units.ranges.altitudeLabel}}
                 </div>
             </div>
-            <div class="text-danger form-text"
-                *ngIf="altitudeField.invalid && (altitudeField.dirty || altitudeField.touched)">
-                Needs to be number {{units.ranges.altitudeLabel}}
-            </div>
-        </div>
+        </form>
     </label>
 </div>

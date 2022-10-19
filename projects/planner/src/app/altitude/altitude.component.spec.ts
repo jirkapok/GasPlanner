@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, NgModel } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -11,10 +11,10 @@ describe('Altitude', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AltitudeComponent, NgModel],
+            declarations: [AltitudeComponent],
             providers: [UnitConversion,
                 RouterTestingModule, OptionsDispatcherService],
-            imports: [RouterTestingModule.withRoutes([]), FormsModule]
+            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         })
             .compileComponents();
     });

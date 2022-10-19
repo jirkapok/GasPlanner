@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
@@ -6,7 +7,7 @@ import { UnitConversion } from '../shared/UnitConversion';
     templateUrl: './altitude.component.html',
     styleUrls: ['./altitude.component.css']
 })
-export class AltitudeComponent {
+export class AltitudeComponent implements OnInit{
     @Output()
     public altitudeChange = new EventEmitter<number>();
 
@@ -17,10 +18,12 @@ export class AltitudeComponent {
     @Input()
     public altitude = 0;
 
+    public altitudeForm!: FormGroup;
+
     private metricLevels = [0, 300, 800, 1500];
     private imperialLevels = [0, 1000, 2600, 5000];
 
-    constructor(public units: UnitConversion) { }
+    constructor(private fb: FormBuilder, public units: UnitConversion) { }
 
     public get altitudeBound(): number {
         return this.units.fromMeters(this.altitude);
@@ -38,9 +41,27 @@ export class AltitudeComponent {
         return this.levelLabel(3);
     }
 
+    public get altitudeValid(): boolean {
+        const altitudeField = this.altitudeForm.controls.altitude;
+        return altitudeField.invalid && (altitudeField.dirty || altitudeField.touched);
+    }
+
     public set altitudeBound(newValue: number) {
         this.altitude = this.units.toMeters(newValue);
         this.altitudeChange.emit(this.altitude);
+        this.inputChange.emit();
+    }
+
+    public ngOnInit(): void {
+        const ranges = this.units.ranges;
+        this.altitudeForm = this.fb.group({
+            altitude: [this.altitudeBound,
+                [Validators.required, Validators.min(ranges.altitude[0]), Validators.max(ranges.altitude[1])]]
+        });
+    }
+
+    public altitudeChanged(): void {
+        this.altitudeBound = this.altitudeForm.value.altitude;
     }
 
     public seaLevel(): void {
@@ -64,7 +85,9 @@ export class AltitudeComponent {
     private setLevel(index: number): void {
         const level = this.selectLevels()[index];
         this.altitudeBound = level;
-        this.inputChange.emit();
+        this.altitudeForm.patchValue({
+            altitude: level
+        });
     }
 
     private levelLabel(index: number): string {

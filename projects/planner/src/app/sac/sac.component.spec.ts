@@ -1,6 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlannerService } from '../shared/planner.service';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
@@ -14,10 +14,10 @@ describe('Sac component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SacComponent, NgModel],
+            declarations: [SacComponent],
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, DecimalPipe, FormBuilder ],
-            imports: [RouterTestingModule.withRoutes([]), FormsModule, ReactiveFormsModule ]
+            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule ]
         })
             .compileComponents();
     });

@@ -1,5 +1,6 @@
+import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlannerService } from '../shared/planner.service';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
@@ -14,8 +15,9 @@ describe('Sac component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SacComponent, NgModel],
-            providers: [WorkersFactoryCommon, UnitConversion, PlannerService],
-            imports: [RouterTestingModule.withRoutes([]), FormsModule]
+            providers: [WorkersFactoryCommon, UnitConversion,
+                PlannerService, DecimalPipe, FormBuilder ],
+            imports: [RouterTestingModule.withRoutes([]), FormsModule, ReactiveFormsModule ]
         })
             .compileComponents();
     });
@@ -37,30 +39,27 @@ describe('Sac component', () => {
     describe('Imperial units', () => {
         beforeEach(() => {
             component.units.imperialUnits = true;
-            // not real values, only round numbers similar to metric
-            component.calcDepth = 50;
-            component.calcTank = 110;
-            component.calcUsed = 2175;
+            component.ngOnInit();
         });
 
         it('adjusts tank', () => {
-            expect(component.calcTank).toBeCloseTo(110, 5);
+            expect(component.calcTank).toBeCloseTo(109.567285, 6);
         });
 
         it('adjusts depth', () => {
-            expect(component.calcDepth).toBe(50);
+            expect(component.calcDepth).toBeCloseTo(49.212598, 6);
         });
 
         it('adjusts used', () => {
-            expect(component.calcUsed).toBe(2175);
+            expect(component.calcUsed).toBeCloseTo(2175.566, 3);
         });
 
         it('adjusts rmv', () => {
-            expect(component.calcRmv).toBeCloseTo(0.7069996, 7);
+            expect(component.calcRmv).toBeCloseTo(0.710884, 6);
         });
 
         it('adjusts sac', () => {
-            expect(component.gasSac()).toBeCloseTo(19.28155, 5);
+            expect(component.gasSac).toBeCloseTo(19.464064, 6);
         });
     });
 });

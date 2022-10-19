@@ -82,7 +82,7 @@ export class SacComponent implements OnInit {
 
     private get dataModel(): any {
         return {
-            depth: this.formatNumber(this.calc.depth),
+            depth: this.formatNumber(this.calcDepth),
             duration: this.formatNumber(this.calc.duration),
             tankSize: this.formatNumber(this.calcTank),
             used: this.formatNumber(this.calcUsed),

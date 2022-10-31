@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
@@ -8,6 +8,7 @@ import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { Diver } from 'scuba-physics';
+import { InputControls } from '../shared/inputcontrols';
 
 
 @Component({
@@ -37,27 +38,27 @@ export class SacComponent implements OnInit {
 
     public get depthInvalid(): boolean {
         const depth = this.formSac.controls.depth;
-        return this.controlInValid(depth);
+        return InputControls.controlInValid(depth);
     }
 
     public get tankInvalid(): boolean {
         const tankSize = this.formSac.controls.tankSize;
-        return this.controlInValid(tankSize);
+        return InputControls.controlInValid(tankSize);
     }
 
     public get usedInvalid(): boolean {
         const used = this.formSac.controls.used;
-        return this.controlInValid(used);
+        return InputControls.controlInValid(used);
     }
 
     public get rmvInvalid(): boolean {
         const rmv = this.formSac.controls.rmv;
-        return this.controlInValid(rmv);
+        return InputControls.controlInValid(rmv);
     }
 
     public get durationInvalid(): boolean {
         const duration = this.formSac.controls.duration;
-        return this.controlInValid(duration);
+        return InputControls.controlInValid(duration);
     }
 
     public get calcDepth(): number {
@@ -82,25 +83,25 @@ export class SacComponent implements OnInit {
 
     private get dataModel(): any {
         return {
-            depth: this.formatNumber(this.calcDepth),
-            duration: this.formatNumber(this.calc.duration),
-            tankSize: this.formatNumber(this.calcTank),
-            used: this.formatNumber(this.calcUsed),
-            rmv:  this.formatNumber(this.calcRmv),
+            depth: InputControls.formatNumber(this.numberPipe, this.calcDepth),
+            duration: InputControls.formatNumber(this.numberPipe, this.calc.duration),
+            tankSize: InputControls.formatNumber(this.numberPipe, this.calcTank),
+            used: InputControls.formatNumber(this.numberPipe, this.calcUsed),
+            rmv:  InputControls.formatNumber(this.numberPipe, this.calcRmv),
         };
     }
 
     public ngOnInit(): void {
         this.formSac = this.formBuilder.group({
-            depth: [this.formatNumber(this.calcDepth),
+            depth: [InputControls.formatNumber(this.numberPipe, this.calcDepth),
                 [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]],
-            duration: [this.formatNumber(this.calcDuration),
+            duration: [InputControls.formatNumber(this.numberPipe, this.calcDuration),
                 [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]],
-            tankSize: [this.formatNumber(this.calcTank),
+            tankSize: [InputControls.formatNumber(this.numberPipe, this.calcTank),
                 [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
-            used: [this.formatNumber(this.calcUsed),
+            used: [InputControls.formatNumber(this.numberPipe, this.calcUsed),
                 [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
-            rmv:  [this.formatNumber(this.calcRmv),
+            rmv:  [InputControls.formatNumber(this.numberPipe, this.calcRmv),
                 [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]],
         });
     }
@@ -126,13 +127,5 @@ export class SacComponent implements OnInit {
 
     public use(): void {
         this.planer.diver.rmv = this.calc.rmv;
-    }
-
-    public controlInValid(control: AbstractControl): boolean {
-        return control.invalid && (control.dirty || control.touched);
-    }
-
-    private formatNumber(value: number): string | null {
-        return this.numberPipe.transform(value, '1.0-1');
     }
 }

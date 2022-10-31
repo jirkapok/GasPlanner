@@ -1,4 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
@@ -6,25 +9,42 @@ import { UnitConversion } from '../shared/UnitConversion';
     templateUrl: './pp-o2.component.html',
     styleUrls: ['./pp-o2.component.css']
 })
-export class PpO2Component {
+export class PpO2Component implements OnInit {
+    @Input()
+    public maxPpO2 = 1.4;
+
     @Input()
     public label = '';
+
     @Output()
-    public maxPpO2Change = new EventEmitter<number>();
-    @Output()
-    public inputChange = new EventEmitter();
+    public ppO2Change = new EventEmitter<number>();
 
-    private _maxPpO2 = 1.4;
+    public pO2Form!: FormGroup;
 
-    constructor(public units: UnitConversion) { }
+    constructor(private fb: FormBuilder,
+        private numberPipe: DecimalPipe,
+        public units: UnitConversion) { }
 
-    @Input()
-    public get maxPpO2(): number {
-        return this._maxPpO2;
+    public get ppO2Invalid(): boolean {
+        const maxPpO2Field = this.pO2Form.controls.maxPpO2;
+        return maxPpO2Field.invalid && (maxPpO2Field.dirty || maxPpO2Field.touched);
     }
 
-    public set maxPpO2(newValue: number) {
-        this._maxPpO2 = newValue;
-        this.maxPpO2Change.emit(newValue);
+    public ngOnInit(): void {
+        const ranges = this.units.ranges;
+
+        this.pO2Form = this.fb.group({
+            maxPpO2: [InputControls.formatNumber(this.numberPipe, this.maxPpO2),
+                [Validators.required, Validators.min(ranges.ppO2[0]), Validators.max(ranges.ppO2[1])]],
+        });
+    }
+
+    public fireChanged(): void {
+        if(this.ppO2Invalid) {
+            return;
+        }
+
+        const newValue = this.pO2Form.controls.maxPpO2.value as number;
+        this.ppO2Change.emit(newValue);
     }
 }

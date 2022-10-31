@@ -10,7 +10,7 @@
                     <app-nitrox-o2 [tank]="tank.tank" [showBestMix]="false" (gasChange)="calculate()" [toxicity]="toxicity"></app-nitrox-o2>
                 </div>
                 <div class="mb-2">
-                    <app-pp-o2 [(maxPpO2)]="options.maxPpO2" (inputChange)="calculate()" label="Maximum ppO2:"></app-pp-o2>
+                    <app-pp-o2 [maxPpO2]="options.maxPpO2" (ppO2Change)="ppO2Changed($event)" label="Maximum ppO2:"></app-pp-o2>
                 </div>
                 <div class="mb-2">
                     <app-salinity [(salinity)]="options.salinity" (inputChange)="calculate()"></app-salinity>

@@ -59,6 +59,13 @@ export class DiverComponent implements OnInit, OnDestroy {
 
         const values = this.diverForm.value;
         this.diver.rmv = this.units.toLiter(values.rmv);
-        // TODO fix ppO2 bindings after the ngModel is removed
+    }
+
+    public maxPpO2Changed(newValue: number): void {
+        this.diver.maxPpO2 = newValue;
+    }
+
+    public maxDecoPpO2Changed(newValue: number): void {
+        this.diver.maxDecoPpO2 = newValue;
     }
 }

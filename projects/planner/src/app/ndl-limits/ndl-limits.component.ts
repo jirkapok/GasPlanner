@@ -8,7 +8,6 @@ import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { TankBound } from '../tanks/tanks.component';
 
-
 @Component({
     selector: 'app-ndl-limits',
     templateUrl: './ndl-limits.component.html',
@@ -46,6 +45,11 @@ export class NdlLimitsComponent {
             const limit = this.limits[index];
             limit.depth = this.units.stopsDistance * (index + indexOffset);
         }
+    }
+
+    public ppO2Changed(newValue: number): void {
+        this.options.maxPpO2 = newValue;
+        this.calculate();
     }
 
     public async goBack(): Promise<boolean> {

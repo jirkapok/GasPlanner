@@ -1,7 +1,8 @@
-<label for="maxPpO2">{{label}}
-    <input [(ngModel)]="maxPpO2" class="form-control" #maxPpO2Field="ngModel" name="maxPpO2" id="maxPpO2"
-        (input)="inputChange.emit()"
-        type="number" required [rangeVal]="units.ranges.ppO2" [min]="units.ranges.ppO2[0]" [max]="units.ranges.ppO2[1]" step=".1"
-        [class.is-invalid]="maxPpO2Field.invalid && (maxPpO2Field.dirty || maxPpO2Field.touched)"/>
-</label>
-<div class="text-danger" *ngIf="maxPpO2Field.invalid && (maxPpO2Field.dirty || maxPpO2Field.touched)">Needs to be number 0.21-3</div>
+<form [formGroup]="pO2Form">
+    <label for="maxPpO2">{{label}}
+        <input class="form-control" id="maxPpO2" formControlName="maxPpO2" (input)="fireChanged()" type="number"
+            required [min]="units.ranges.ppO2[0]" [max]="units.ranges.ppO2[1]" step="0.1"
+            [class.is-invalid]="ppO2Invalid" />
+    </label>
+    <div class="text-danger" *ngIf="ppO2Invalid">Needs to be number 0.21-3</div>
+</form>

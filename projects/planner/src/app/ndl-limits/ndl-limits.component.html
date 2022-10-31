@@ -13,13 +13,13 @@
                     <app-pp-o2 [maxPpO2]="options.maxPpO2" (ppO2Change)="ppO2Changed($event)" label="Maximum ppO2:"></app-pp-o2>
                 </div>
                 <div class="mb-2">
-                    <app-salinity [(salinity)]="options.salinity" (inputChange)="calculate()"></app-salinity>
+                    <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)"></app-salinity>
                 </div>
                 <div class="mb-2">
-                    <app-altitude [(altitude)]="options.altitude" (inputChange)="calculate()"></app-altitude>
+                    <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)"></app-altitude>
                 </div>
                 <div class="mb-2">
-                    <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh" (inputChange)="updateGradients($event)"
+                    <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh" (inputChange)="gradientsChanged($event)"
                        [simple]="false" [showTitle]="true"></app-gradients>
                 </div>
             </div>

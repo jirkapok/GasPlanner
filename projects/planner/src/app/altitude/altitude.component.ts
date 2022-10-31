@@ -10,10 +10,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 })
 export class AltitudeComponent implements OnInit{
     @Output()
-    public altitudeChange = new EventEmitter<number>();
-
-    @Output()
-    public inputChange = new EventEmitter();
+    public inputChange = new EventEmitter<number>();
 
     /** In m.a.s.l */
     @Input()
@@ -42,15 +39,9 @@ export class AltitudeComponent implements OnInit{
         return this.levelLabel(3);
     }
 
-    public get altitudeValid(): boolean {
+    public get altitudeInvalid(): boolean {
         const altitudeField = this.altitudeForm.controls.altitude;
         return InputControls.controlInValid(altitudeField);
-    }
-
-    public set altitudeBound(newValue: number) {
-        this.altitude = this.units.toMeters(newValue);
-        this.altitudeChange.emit(this.altitude);
-        this.inputChange.emit();
     }
 
     public ngOnInit(): void {
@@ -62,7 +53,9 @@ export class AltitudeComponent implements OnInit{
     }
 
     public altitudeChanged(): void {
-        this.altitudeBound = this.altitudeForm.value.altitude;
+        const newValue = this.altitudeForm.value.altitude as number;
+        this.altitude = this.units.toMeters(newValue);
+        this.inputChange.emit(this.altitude);
     }
 
     public seaLevel(): void {
@@ -85,10 +78,11 @@ export class AltitudeComponent implements OnInit{
 
     private setLevel(index: number): void {
         const level = this.selectLevels()[index];
-        this.altitudeBound = level;
         this.altitudeForm.patchValue({
             altitude: level
         });
+
+        this.altitudeChanged();
     }
 
     private levelLabel(index: number): string {

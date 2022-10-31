@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
-import { Options, Tank, Time } from 'scuba-physics';
+import { Options, Salinity, Tank, Time } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { NdlLimit, NdlService } from '../shared/ndl.service';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
@@ -53,7 +53,17 @@ export class NdlLimitsComponent {
         this.calculate();
     }
 
-    public updateGradients(gf: Gradients): void {
+    public salinityChanged(newValue: Salinity): void {
+        this.options.salinity = newValue;
+        this.calculate();
+    }
+
+    public altitudeChanged(newValue: number): void {
+        this.options.altitude = newValue;
+        this.calculate();
+    }
+
+    public gradientsChanged(gf: Gradients): void {
         this.options.gfLow = gf.gfLow;
         this.options.gfHigh = gf.gfHeigh;
         this.calculate();

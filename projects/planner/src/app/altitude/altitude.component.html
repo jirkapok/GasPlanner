@@ -4,7 +4,7 @@
             <div class="input-group col-auto o2-max-width">
                 <input id="altitudeField" class="form-control col-auto" type="number" (input)="altitudeChanged()"
                     required [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1"
-                    formControlName="altitude" [class.is-invalid]="altitudeValid" />
+                    formControlName="altitude" [class.is-invalid]="altitudeInvalid" />
                 <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                     <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
                     <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
@@ -15,7 +15,7 @@
                             }}</button>
                     </div>
                 </div>
-                <div class="text-danger form-text" *ngIf="altitudeValid">
+                <div class="text-danger form-text" *ngIf="altitudeInvalid">
                     Needs to be number {{units.ranges.altitudeLabel}}
                 </div>
             </div>

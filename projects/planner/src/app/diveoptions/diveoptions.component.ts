@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { SafetyStop } from 'scuba-physics';
+import { SafetyStop, Salinity } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { Plan, Strategies } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
@@ -199,6 +199,16 @@ export class DiveOptionsComponent {
     public updateGradients(gf: Gradients): void {
         this.options.gfLow = gf.gfLow;
         this.options.gfHigh = gf.gfHeigh;
+        this.applyOptions();
+    }
+
+    public salinityChanged(newValue: Salinity): void {
+        this.options.salinity = newValue;
+        this.applyOptions();
+    }
+
+    public altitudeChanged(newValue: number): void {
+        this.options.altitude = newValue;
         this.applyOptions();
     }
 

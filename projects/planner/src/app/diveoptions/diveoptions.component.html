@@ -21,11 +21,11 @@
                         [simple]="true" [showTitle]="true"></app-gradients>
                 </div>
                 <div class="mb-2 col-auto">
-                    <app-salinity [(salinity)]="options.salinity" (inputChange)="applyOptions()"></app-salinity>
+                    <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)"></app-salinity>
                 </div>
 
                 <div class="mb-2 col-auto">
-                    <app-altitude [(altitude)]="options.altitude" (inputChange)="applyOptions()"></app-altitude>
+                    <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)"></app-altitude>
                 </div>
             </div>
         </div>
@@ -60,10 +60,10 @@
                     aria-labelledby="environment-tab">
                     <div class="mt-3">
                         <div class="mb-2">
-                            <app-altitude [(altitude)]="options.altitude" (inputChange)="applyOptions()"></app-altitude>
+                            <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)"></app-altitude>
                         </div>
                         <div class="mb-2">
-                            <app-salinity [(salinity)]="options.salinity" (inputChange)="applyOptions()"></app-salinity>
+                            <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)"></app-salinity>
                         </div>
                     </div>
                 </div>

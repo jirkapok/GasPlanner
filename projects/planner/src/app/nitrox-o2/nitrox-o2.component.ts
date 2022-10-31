@@ -37,7 +37,7 @@ export class NitroxO2Component implements OnInit {
 
     public get gasO2Invalid(): boolean {
         const gasO2 = this.nitroxForm.controls.o2;
-        return gasO2.invalid && (gasO2.dirty || gasO2.touched);
+        return InputControls.controlInValid(gasO2);
     }
 
     public ngOnInit(): void {

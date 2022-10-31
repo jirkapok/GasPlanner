@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
@@ -43,7 +44,7 @@ export class AltitudeComponent implements OnInit{
 
     public get altitudeValid(): boolean {
         const altitudeField = this.altitudeForm.controls.altitude;
-        return altitudeField.invalid && (altitudeField.dirty || altitudeField.touched);
+        return InputControls.controlInValid(altitudeField);
     }
 
     public set altitudeBound(newValue: number) {

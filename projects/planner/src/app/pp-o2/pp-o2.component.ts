@@ -27,7 +27,7 @@ export class PpO2Component implements OnInit {
 
     public get ppO2Invalid(): boolean {
         const maxPpO2Field = this.pO2Form.controls.maxPpO2;
-        return maxPpO2Field.invalid && (maxPpO2Field.dirty || maxPpO2Field.touched);
+        return InputControls.controlInValid(maxPpO2Field);
     }
 
     public ngOnInit(): void {

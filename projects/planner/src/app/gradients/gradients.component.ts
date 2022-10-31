@@ -35,12 +35,12 @@ export class GradientsComponent implements OnInit {
 
     public get gfLowInvalid(): boolean {
         const gfLowField = this.gfForm.controls.gfLow;
-        return gfLowField.invalid && (gfLowField.dirty || gfLowField.touched);
+        return InputControls.controlInValid(gfLowField);
     }
 
     public get gfHighInvalid(): boolean {
         const gfHighField = this.gfForm.controls.gfHigh;
-        return gfHighField.invalid && (gfHighField.dirty || gfHighField.touched);
+        return InputControls.controlInValid(gfHighField);
     }
 
     public gfHighChanged(): void {

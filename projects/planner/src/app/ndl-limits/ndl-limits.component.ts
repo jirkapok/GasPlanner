@@ -5,6 +5,7 @@ import { Options, Tank, Time } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { NdlLimit, NdlService } from '../shared/ndl.service';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { Gradients } from '../shared/standard-gradients.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { TankBound } from '../tanks/tanks.component';
 
@@ -49,6 +50,12 @@ export class NdlLimitsComponent {
 
     public ppO2Changed(newValue: number): void {
         this.options.maxPpO2 = newValue;
+        this.calculate();
+    }
+
+    public updateGradients(gf: Gradients): void {
+        this.options.gfLow = gf.gfLow;
+        this.options.gfHigh = gf.gfHeigh;
         this.calculate();
     }
 

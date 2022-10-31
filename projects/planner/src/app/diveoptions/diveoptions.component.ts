@@ -5,6 +5,7 @@ import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { Plan, Strategies } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
+import { Gradients } from '../shared/standard-gradients.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 
 @Component({
@@ -192,6 +193,12 @@ export class DiveOptionsComponent {
 
     public switchOxygenNarcotic(): void {
         this.options.oxygenNarcotic = !this.options.oxygenNarcotic;
+        this.applyOptions();
+    }
+
+    public updateGradients(gf: Gradients): void {
+        this.options.gfLow = gf.gfLow;
+        this.options.gfHigh = gf.gfHeigh;
         this.applyOptions();
     }
 

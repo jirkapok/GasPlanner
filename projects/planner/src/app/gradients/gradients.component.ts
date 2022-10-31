@@ -1,65 +1,75 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OptionDefaults } from 'scuba-physics';
-import { StandardGradientsService } from '../shared/standard-gradients.service';
+import { InputControls } from '../shared/inputcontrols';
+import { Gradients, StandardGradientsService } from '../shared/standard-gradients.service';
 
 @Component({
     selector: 'app-gradients',
     templateUrl: './gradients.component.html',
     styleUrls: ['./gradients.component.css']
 })
-export class GradientsComponent {
+export class GradientsComponent implements OnInit {
     @Input()
     public showTitle = false;
     @Input()
     public simple = false;
+
+    @Input()
+    public gfLow = OptionDefaults.gfLow;
+    @Input()
+    public gfHigh = OptionDefaults.gfHigh;
+
     @Output()
-    public gfLowChange = new EventEmitter<number>();
-    @Output()
-    public gfHighChange = new EventEmitter<number>();
-    @Output()
-    public inputChange = new EventEmitter();
+    public inputChange = new EventEmitter<Gradients>();
     public standards = new StandardGradientsService();
-    private _gfLow = OptionDefaults.gfLow;
-    private _gfHigh = OptionDefaults.gfHigh;
+    public gfForm!: FormGroup;
 
-    @Input()
-    public get gfLow(): number {
-        return this._gfLow;
-    }
-
-    @Input()
-    public get gfHigh(): number {
-        return this._gfHigh;
-    }
+    constructor(private fb: FormBuilder,
+        private numberPipe: DecimalPipe) { }
 
     public get conservatism(): string {
         return this.standards.labelFor(this.gfLow, this.gfHigh);
     }
 
-    public get plannedGfHigh(): number {
-        return this.gfHigh * 100;
+    public get gfLowInvalid(): boolean {
+        const gfLowField = this.gfForm.controls.gfLow;
+        return gfLowField.invalid && (gfLowField.dirty || gfLowField.touched);
     }
 
-    public get plannedGfLow(): number {
-        return this.gfLow * 100;
+    public get gfHighInvalid(): boolean {
+        const gfHighField = this.gfForm.controls.gfHigh;
+        return gfHighField.invalid && (gfHighField.dirty || gfHighField.touched);
     }
 
-    public set plannedGfHigh(newValue: number) {
+    public gfHighChanged(): void {
+        if(this.gfHighInvalid) {
+            return;
+        }
+
+        const newValue = this.gfForm.controls.gfHigh.value as number;
         this.gfHigh = newValue / 100;
+        this.inputChange.emit(new Gradients(this.gfLow, this.gfHigh));
     }
 
-    public set plannedGfLow(newValue: number) {
+    public gfLowChanged(): void {
+        if(this.gfLowInvalid) {
+            return;
+        }
+
+        const newValue = this.gfForm.controls.gfLow.value as number;
         this.gfLow = newValue / 100;
+        this.inputChange.emit(new Gradients(this.gfLow, this.gfHigh));
     }
 
-    public set gfHigh(newValue: number) {
-        this._gfHigh = newValue;
-        this.gfHighChange.emit(this._gfHigh);
-    }
-
-    public set gfLow(newValue: number) {
-        this._gfLow = newValue;
-        this.gfLowChange.emit(this._gfLow);
+    public ngOnInit(): void {
+        this.gfForm = this.fb.group({
+            gfLow: [InputControls.formatNumber(this.numberPipe, this.gfLow * 100),
+                [Validators.required, Validators.min(10), Validators.max(100)]],
+            gfHigh: [InputControls.formatNumber(this.numberPipe, this.gfHigh * 100),
+                [Validators.required, Validators.min(10), Validators.max(100)]]
+        });
     }
 
     public lowConservatism(): void {
@@ -74,10 +84,15 @@ export class GradientsComponent {
         this.applyStandards(this.standards.highName);
     }
 
-    private applyStandards(label: string): void  {
+    private applyStandards(label: string): void {
         const toApply = this.standards.get(label);
         this.gfLow = toApply.gfLow;
         this.gfHigh = toApply.gfHeigh;
-        this.inputChange.emit();
+        this.gfForm.patchValue({
+            gfLow: InputControls.formatNumber(this.numberPipe, this.gfLow * 100),
+            gfHigh: InputControls.formatNumber(this.numberPipe, this.gfHigh * 100),
+            conservatism: this.conservatism
+        });
+        this.inputChange.emit(new Gradients(this.gfLow, this.gfHigh));
     }
 }

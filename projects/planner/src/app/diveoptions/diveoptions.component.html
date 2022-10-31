@@ -16,8 +16,8 @@
         <div *ngIf="!isComplex">
             <div class="mt-3 row">
                 <div class="mb-2 col-auto">
-                    <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh"
-                        (inputChange)="applyOptions()"
+                    <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
+                        (inputChange)="updateGradients($event)"
                         [simple]="true" [showTitle]="true"></app-gradients>
                 </div>
                 <div class="mb-2 col-auto">
@@ -69,8 +69,8 @@
                 </div>
                 <div class="tab-pane fade" id="conservatism" role="tabpanel" aria-labelledby="conservatism-tab">
                     <div class="col-sm mt-3">
-                        <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh"
-                          (inputChange)="applyOptions()"
+                        <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
+                          (inputChange)="updateGradients($event)"
                           [simple]="false" [showTitle]="false"></app-gradients>
                     </div>
                 </div>

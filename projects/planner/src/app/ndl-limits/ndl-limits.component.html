@@ -19,7 +19,7 @@
                     <app-altitude [(altitude)]="options.altitude" (inputChange)="calculate()"></app-altitude>
                 </div>
                 <div class="mb-2">
-                    <app-gradients [(gfLow)]="options.gfLow" [(gfHigh)]="options.gfHigh" (inputChange)="calculate()"
+                    <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh" (inputChange)="updateGradients($event)"
                        [simple]="false" [showTitle]="true"></app-gradients>
                 </div>
             </div>

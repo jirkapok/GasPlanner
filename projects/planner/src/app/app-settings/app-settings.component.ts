@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { Diver } from 'scuba-physics';
-import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -22,7 +21,6 @@ export class AppSettingsComponent implements OnInit {
         private settingsNormalization: SettingsNormalizationService,
         private formBuilder: FormBuilder,
         private router: Router,
-        private options: OptionsDispatcherService,
         private planner: PlannerService) {
         this.diver.loadFrom(this.planner.diver);
     }

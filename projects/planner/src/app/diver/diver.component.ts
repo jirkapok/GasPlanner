@@ -1,7 +1,8 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 import { Diver } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -11,11 +12,12 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
     templateUrl: './diver.component.html',
     styleUrls: ['./diver.component.css']
 })
-export class DiverComponent implements OnInit {
+export class DiverComponent implements OnInit, OnDestroy {
     @Input() public diver: Diver = new Diver();
     @Input() public ranges: RangeConstants;
     public icon = faUserCog;
     public diverForm!: FormGroup;
+    private subscription!: Subscription;
 
     constructor(private fb: FormBuilder,
         private numberPipe: DecimalPipe,
@@ -38,6 +40,16 @@ export class DiverComponent implements OnInit {
             rmv: [InputControls.formatNumber(this.numberPipe, this.rmv),
                 [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]]
         });
+
+        this.subscription = this.units.ranges$.subscribe(() => this.diverForm.patchValue({
+            rmv:  InputControls.formatNumber(this.numberPipe, this.rmv)
+        }));
+    }
+
+    public ngOnDestroy(): void {
+        if(this.subscription) {
+            this.subscription.unsubscribe();
+        }
     }
 
     public inputChanged(): void {

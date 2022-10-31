@@ -8,7 +8,7 @@
             <form [formGroup]="diverForm">
                 <div>
                     <label for="sac">Respiratory minute volume [{{units.rmv}}]:
-                        <input [value]="rmv" class="form-control" id="sac" formControlName="rmv" type="number" required
+                        <input class="form-control" id="sac" formControlName="rmv" type="number" required
                             (input)="inputChanged()" [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="0.1"
                             [class.is-invalid]="rmvInvalid" />
                     </label>

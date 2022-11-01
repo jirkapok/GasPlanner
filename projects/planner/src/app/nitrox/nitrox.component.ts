@@ -19,9 +19,10 @@ export class NitroxComponent implements OnInit {
     public nitroxForm!: FormGroup;
 
     constructor(
-        private fb: FormBuilder, private router: Router,
+        private fb: FormBuilder,
         private numberPipe: DecimalPipe,
         public calc: NitroxCalculatorService,
+        private router: Router,
         private planer: PlannerService, public units: UnitConversion) {
         this.calc.fO2 = this.planer.firstTank.o2;
         this.calc.pO2 = this.planer.diver.maxPpO2;

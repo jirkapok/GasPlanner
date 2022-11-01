@@ -9,6 +9,7 @@ import { DepthComponent } from './depth.component';
 describe('DepthComponent Imperial units', () => {
     let component: DepthComponent;
     let fixture: ComponentFixture<DepthComponent>;
+    let planner: PlannerService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -24,11 +25,12 @@ describe('DepthComponent Imperial units', () => {
         fixture = TestBed.createComponent(DepthComponent);
         component = fixture.componentInstance;
         component.units.imperialUnits = true;
+        planner = TestBed.inject(PlannerService);
         fixture.detectChanges();
     });
 
     it('Converts bound depth to imperial', () => {
-        expect(component.boundDepth).toBeCloseTo(98.425197, 6);
+        expect(component.depths.plannedDepth).toBeCloseTo(98.425197, 6);
     });
 
     it('Depth to imperial', () => {
@@ -36,6 +38,7 @@ describe('DepthComponent Imperial units', () => {
             depth: 70
         });
         component.depthChanged();
-        expect(component.depth).toBeCloseTo(21.336, 6);
+        const depth = planner.plan.maxDepth;
+        expect(depth).toBeCloseTo(21.336, 6);
     });
 });

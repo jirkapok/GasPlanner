@@ -9,11 +9,11 @@
         <label for="duration" class="form-label">Bottom time [min]:
             <div class="row row-cols-auto">
                 <input id="duration" name="duration" #duration="ngModel" [(ngModel)]="planDuration" class="form-control ms-3 mt-2"
-                    (input)="apply()"
+                    (input)="depths.apply()"
                     type="number" required [rangeVal]="ranges.duration" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
                     [class.is-invalid]="duration.invalid && (duration.dirty || duration.touched)" />
-                <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="applyMaxDuration()" *ngIf="showMaxDuration">Max</button>
-                <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="applyNdlDuration()" *ngIf="planner.ndlValid">No deco</button>
+                <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="depths.applyMaxDuration()" *ngIf="showMaxDuration">Max</button>
+                <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="depths.applyNdlDuration()" *ngIf="planner.ndlValid">No deco</button>
             </div>
         </label>
         <div><small class="text-muted form-text">No deco limit {{ noDecoTime | number:'1.0-0' }} min</small></div>
@@ -21,8 +21,7 @@
     </div>
 
     <div class="mb-3">
-        <app-depth [depth]="plannedDepth" [bestMix]="bestNitroxMix"
-            (applyMaxDepth)="applyMaxDepth()" (inputChange)="assignDepth($event)"></app-depth>
+        <app-depth></app-depth>
     </div>
   </div>
   <div class="card-body" *ngIf="isComplex">
@@ -32,14 +31,14 @@
           <th><div>To [{{units.length}}]</div></th>
           <th><div>Duration [min]</div></th>
           <th><div>Tank</div></th>
-          <th><button class="btn btn-default m-0 p-0 text-primary" type="button" (click)="addSegment()"><fa-icon [icon]="addIcon"></fa-icon></button></th>
+          <th><button class="btn btn-default m-0 p-0 text-primary" type="button" (click)="depths.addSegment()"><fa-icon [icon]="addIcon"></fa-icon></button></th>
         </tr>
-        <tr *ngFor="let level of levels">
+        <tr *ngFor="let level of depths.levels">
             <td><div class="mb-0 pb-0 px-1 text-end">{{ level.startDepth | number:'1.0-0' }}</div></td>
             <td>
                 <div class="input-group mb-0 pb-0 px-1">
                     <input #endDepth="ngModel" name="endDepth" [(ngModel)]="level.endDepth" class="form-control" type="number"
-                        (input)="depthInputChanged()"
+                        (input)="depths.depthInputChanged()"
                     required [rangeVal]="ranges.depth" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
                     [class.is-invalid]="endDepth.invalid && (endDepth.dirty || endDepth.touched)"/>
                     <div class="text-danger" *ngIf="endDepth.invalid && (endDepth.dirty || endDepth.touched)">Needs to be number {{ranges.depthLabel}}</div>
@@ -47,7 +46,7 @@
             </td>
             <td>
                 <div class="input-group mb-0 pb-0 px-1">
-                    <input #duration2="ngModel" name="duration2" [(ngModel)]="level.duration" class="form-control" type="number" (input)="apply()"
+                    <input #duration2="ngModel" name="duration2" [(ngModel)]="level.duration" class="form-control" type="number" (input)="depths.apply()"
                     required [rangeVal]="ranges.duration" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
                     [class.is-invalid]="duration2.invalid && (duration2.dirty || duration2.touched)"/>
                     <div class="text-danger" *ngIf="duration2.invalid && (duration2.dirty || duration2.touched)">Needs to be number {{ ranges.durationLabel }}</div>
@@ -59,13 +58,13 @@
                     <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                         <button class="btn btn-default border" id="tankMenu" type="button" ngbDropdownToggle></button>
                         <div ngbDropdownMenu aria-labelledby="tankMenu" aria-expanded="false">
-                        <button *ngFor="let tank of tanks" type="button" class="dropdown-item" (click)="assignTank(level, tank)">{{ tankLabel(tank) }}</button>
+                        <button *ngFor="let tank of tanks" type="button" class="dropdown-item" (click)="depths.assignTank(level, tank)">{{ tankLabel(tank) }}</button>
                         </div>
                     </div>
                 </div>
             </td>
             <td>
-                <button *ngIf="minimumSegments" type="button" class="btn text-secondary m-0 p-0 align-top" (click)="removeSegment(level)">
+                <button *ngIf="minimumSegments" type="button" class="btn text-secondary m-0 p-0 align-top" (click)="depths.removeSegment(level)">
                 <fa-icon [icon]="removeIcon"></fa-icon>
                 </button>
             </td>

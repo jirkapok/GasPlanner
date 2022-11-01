@@ -1,6 +1,7 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 
@@ -9,29 +10,13 @@ import { UnitConversion } from '../shared/UnitConversion';
     templateUrl: './depth.component.html',
     styleUrls: ['./depth.component.css']
 })
-export class DepthComponent{
-    @Input()
-    public bestMix = '';
-
-    /** In metres */
-    @Input()
-    public depth = 30;
-
-    @Output()
-    public applyMaxDepth = new EventEmitter();
-
-    @Output()
-    public inputChange = new EventEmitter<number>();
-
+export class DepthComponent implements OnInit {
     public depthForm!: FormGroup;
 
     constructor(private fb: FormBuilder,
         private numberPipe: DecimalPipe,
-        public units: UnitConversion){}
-
-    public get boundDepth(): number {
-        return this.units.fromMeters(this.depth);
-    }
+        public units: UnitConversion,
+        public depths: DepthsService) { }
 
     public get depthInvalid(): boolean {
         const depthField = this.depthForm.controls.depth;
@@ -40,19 +25,21 @@ export class DepthComponent{
 
     public depthChanged() {
         const newValue = this.depthForm.controls.depth.value as number;
-        this.depth = this.units.toMeters(newValue);
-        this.inputChange.emit(this.depth);
+        this.depths.plannedDepth = newValue;
+    }
+
+    public applyMaxDepth(): void {
+        this.depths.applyMaxDepth();
+        this.depthForm.patchValue({
+            depth: InputControls.formatNumber(this.numberPipe, this.depths.plannedDepth)
+        });
     }
 
     public ngOnInit(): void {
         const ranges = this.units.ranges;
         this.depthForm = this.fb.group({
-            depth: [InputControls.formatNumber(this.numberPipe, this.boundDepth),
-                [Validators.required, Validators.min(ranges.depth[0]), Validators.max(ranges.depth[1])]]
+            depth: [InputControls.formatNumber(this.numberPipe, this.depths.plannedDepth),
+            [Validators.required, Validators.min(ranges.depth[0]), Validators.max(ranges.depth[1])]]
         });
-    }
-
-    public fireApplyMaxDepth(): void {
-        this.applyMaxDepth.emit();
     }
 }

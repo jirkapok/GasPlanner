@@ -4,10 +4,10 @@
             <input id="depthField" formControlName="depth" class="form-control col-auto ms-3" type="number" required
                 [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1" (input)="depthChanged()"
                 [class.is-invalid]="depthInvalid" />
-            <button type="button" class="btn btn-secondary ms-2" (click)="fireApplyMaxDepth()">Max</button>
+            <button type="button" class="btn btn-secondary ms-2" (click)="applyMaxDepth()">Max</button>
         </div>
         <div>
-            <small class="text-muted form-text">Best mix is {{ bestMix }}</small>
+            <small class="text-muted form-text">Best mix is {{ depths.bestNitroxMix }}</small>
         </div>
     </label>
     <div class="text-danger form-text" *ngIf="depthInvalid">Needs to be number {{units.ranges.depthLabel}}</div>

@@ -1,14 +1,14 @@
-<label for="depthField" class="form-label">Depth [{{units.length}}]:
-    <div class="row row-cols-auto">
-        <input id="depthField" name="depthField" #depthField="ngModel"
-            [(ngModel)]="boundDepth" class="form-control col-auto ms-3" type="number"
-            required  [rangeVal]="units.ranges.depth" [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1"
-            (input)="inputChange.emit()"
-            [class.is-invalid]="depthField.invalid && (depthField.dirty || depthField.touched)"/>
-        <button type="button" class="btn btn-secondary ms-2" (click)="fireApplyMaxDepth()">Max</button>
-    </div>
-    <div>
-        <small class="text-muted form-text">Best mix is {{ bestMix }}</small>
-    </div>
-</label>
-<div class="text-danger form-text" *ngIf="depthField.invalid && (depthField.dirty || depthField.touched)">Needs to be number {{units.ranges.depthLabel}}</div>
+<form [formGroup]="depthForm">
+    <label for="depthField" class="form-label">Depth [{{units.length}}]:
+        <div class="row row-cols-auto">
+            <input id="depthField" formControlName="depth" class="form-control col-auto ms-3" type="number" required
+                [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1" (input)="depthChanged()"
+                [class.is-invalid]="depthInvalid" />
+            <button type="button" class="btn btn-secondary ms-2" (click)="fireApplyMaxDepth()">Max</button>
+        </div>
+        <div>
+            <small class="text-muted form-text">Best mix is {{ bestMix }}</small>
+        </div>
+    </label>
+    <div class="text-danger form-text" *ngIf="depthInvalid">Needs to be number {{units.ranges.depthLabel}}</div>
+</form>

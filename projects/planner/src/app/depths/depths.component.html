@@ -21,8 +21,8 @@
     </div>
 
     <div class="mb-3">
-        <app-depth [(depth)]="plannedDepth" [bestMix]="bestNitroxMix"
-            (applyMaxDepth)="applyMaxDepth()" (inputChange)="apply()"></app-depth>
+        <app-depth [depth]="plannedDepth" [bestMix]="bestNitroxMix"
+            (applyMaxDepth)="applyMaxDepth()" (inputChange)="assignDepth($event)"></app-depth>
     </div>
   </div>
   <div class="card-body" *ngIf="isComplex">
@@ -38,7 +38,8 @@
             <td><div class="mb-0 pb-0 px-1 text-end">{{ level.startDepth | number:'1.0-0' }}</div></td>
             <td>
                 <div class="input-group mb-0 pb-0 px-1">
-                    <input #endDepth="ngModel" name="endDepth" [(ngModel)]="level.endDepth" class="form-control" type="number" (input)="depthChanged()"
+                    <input #endDepth="ngModel" name="endDepth" [(ngModel)]="level.endDepth" class="form-control" type="number"
+                        (input)="depthInputChanged()"
                     required [rangeVal]="ranges.depth" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
                     [class.is-invalid]="endDepth.invalid && (endDepth.dirty || endDepth.touched)"/>
                     <div class="text-danger" *ngIf="endDepth.invalid && (endDepth.dirty || endDepth.touched)">Needs to be number {{ranges.depthLabel}}</div>

@@ -69,7 +69,7 @@ describe('DepthsComponent', () => {
         });
 
         it('planed depth is still in meters', () => {
-            component.plannedDepth = 70;
+            component.assignDepth(70);
             const last = component.levels[1];
             expect(last.segment.endDepth).toBe(70);
         });

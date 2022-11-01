@@ -40,7 +40,6 @@ export class DepthsComponent implements OnDestroy {
 
     // TODO fix binding issue in imperial units
     /** In meters */
-    @Input()
     public get plannedDepth(): number {
         return this.plan.maxDepth;
     }
@@ -87,10 +86,6 @@ export class DepthsComponent implements OnDestroy {
         this.planner.assignDuration(newValue);
     }
 
-    public set plannedDepth(depth: number) {
-        this.planner.assignDepth(depth);
-    }
-
     public ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
@@ -108,8 +103,8 @@ export class DepthsComponent implements OnDestroy {
     public applyMaxDepth(): void {
         const tank = this.planner.firstTank;
         const maxDepth = this.toxicity.maxDepth(tank);
-        this.planner.assignDepth(maxDepth);
-        this.apply();
+        // TODO bind back the depth value to the simple depth control
+        this.assignDepth(maxDepth);
     }
 
     public tankLabel(tank: Tank): string {
@@ -128,7 +123,13 @@ export class DepthsComponent implements OnDestroy {
         this.apply();
     }
 
-    public depthChanged(): void {
+    /** in meters */
+    public assignDepth(newValue: number): void {
+        this.planner.assignDepth(newValue);
+        this.depthInputChanged();
+    }
+
+    public depthInputChanged(): void {
         this.plan.fixDepths();
         this.apply();
     }

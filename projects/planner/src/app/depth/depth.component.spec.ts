@@ -1,5 +1,6 @@
+import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -12,8 +13,9 @@ describe('DepthComponent Imperial units', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DepthComponent],
-            imports: [FormsModule],
-            providers: [WorkersFactoryCommon, PlannerService, UnitConversion]
+            imports: [ReactiveFormsModule],
+            providers: [FormBuilder, DecimalPipe,
+                WorkersFactoryCommon, PlannerService, UnitConversion]
         })
             .compileComponents();
     });
@@ -30,7 +32,10 @@ describe('DepthComponent Imperial units', () => {
     });
 
     it('Depth to imperial', () => {
-        component.boundDepth = 70;
+        component.depthForm.patchValue({
+            depth: 70
+        });
+        component.depthChanged();
         expect(component.depth).toBeCloseTo(21.336, 6);
     });
 });

@@ -46,6 +46,11 @@ export class DepthsService {
         this.depthInputChanged();
     }
 
+    public set planDuration(newValue: number) {
+        this.planner.assignDuration(newValue);
+        this.apply();
+    }
+
     public addSegment(): void {
         this.planner.addSegment();
         this.updateLevels();

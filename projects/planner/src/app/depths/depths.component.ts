@@ -79,11 +79,12 @@ export class DepthsComponent implements OnInit, OnDestroy {
         return InputControls.controlInValid(duration);
     }
 
-    // TODO rebind duration in case max bottom or ndl time used
+    // TODO rebind duration in case max bottom or ndl time used or swith from complex
+    // TODO duration change generates new line in dive info table
 
     public ngOnInit(): void {
         this.depthsForm = this.fb.group({
-            planDuration: this.createDurationControl(this.plan.duration),
+            planDuration: this.createDurationControl(this.depths.planDuration),
             levels: this.fb.array(this.createLevelControls())
         });
     }
@@ -114,7 +115,6 @@ export class DepthsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // TODO pick up values from the duration and end depth controls
         const level = this.depths.levels[index];
         const levelControl = this.levels.at(index) as FormGroup;
         const levelValue = levelControl.value;
@@ -133,9 +133,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
         }
 
         const newValue = this.depthsForm.value.planDuration as number;
-        // TODO move to depths as property
-        this.planner.assignDuration(newValue);
-        this.depths.apply();
+        this.depths.planDuration = newValue;
     }
 
     public tankLabel(tank: Tank): string {

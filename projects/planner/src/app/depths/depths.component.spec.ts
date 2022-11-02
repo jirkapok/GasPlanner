@@ -1,6 +1,8 @@
 import { DecimalPipe } from '@angular/common';
+import { DebugElement } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
 import { StandardGases, Tank } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
@@ -10,10 +12,27 @@ import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
 import { DepthsComponent } from './depths.component';
 
+export class DepthsPage {
+    constructor(private fixture: ComponentFixture<DepthsComponent>) {}
+
+    public get durationInput(): DebugElement {
+        return this.fixture.debugElement.query(By.css('#duration'));
+    }
+
+    public get durationElement(): HTMLInputElement {
+        return this.durationInput.nativeElement as HTMLInputElement;
+    }
+
+    public get applyMaxDurationButton(): DebugElement {
+        return this.fixture.debugElement.query(By.css('#btnApplyDuration'));
+    }
+}
+
 describe('DepthsComponent', () => {
     let component: DepthsComponent;
     let depths: DepthsService;
     let fixture: ComponentFixture<DepthsComponent>;
+    let page: DepthsPage;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -29,7 +48,9 @@ describe('DepthsComponent', () => {
         fixture = TestBed.createComponent(DepthsComponent);
         component = fixture.componentInstance;
         depths = component.depths;
+        component.planner.calculate();
         fixture.detectChanges();
+        page = new DepthsPage(fixture);
     });
 
     it('MND for 12/35 returns 52 m', () => {
@@ -40,12 +61,60 @@ describe('DepthsComponent', () => {
         expect(result).toBe(51.54);
     });
 
-    // TODO test cases:
-    // - planDuration kicks of the calculation
-    // - max ndl, max. duration and switch to simple kicks of plannedDuration reload
-    // - Add level kicks calculation and adds levels and to the data
-    // - remove level removes data and removes control
-    // - all changes aren't possible if form is invalid
+    it('Duration change enforces calculation', () => {
+        const setDuration = spyOnProperty(depths, 'planDuration', 'set')
+            .withArgs(20)
+            .and.callThrough();
+        fixture.detectChanges();
+        page.durationElement.value = '20';
+        page.durationInput.triggerEventHandler('input', {});
+        expect(setDuration).toHaveBeenCalledTimes(1);
+    });
+
+    describe('Duration reloaded enforced by', () => {
+        it('Apply max NDL', () => {
+            page.applyMaxDurationButton.triggerEventHandler('click', {});
+            expect(page.durationElement.value).toBe('18');
+        });
+
+        it('Apply max depth', () => {
+            expect(true).toBeTruthy();
+        });
+
+        it('Apply max duration', () => {
+            expect(true).toBeTruthy();
+        });
+
+        it('Swtich to simple view', () => {
+            expect(true).toBeTruthy();
+        });
+    });
+
+
+    describe('Levels enforce calculation', () => {
+        it('Is added to end of profile segments', () => {
+            expect(true).toBeTruthy();
+        });
+
+        it('Is removed from correct position', () => {
+            expect(true).toBeTruthy();
+        });
+    });
+
+
+    describe('Invalid form prevents calculation after', () => {
+        it('wrong duration', () => {
+            expect(true).toBeTruthy();
+        });
+
+        it('wrong level end depth', () => {
+            expect(true).toBeTruthy();
+        });
+
+        it('wrong level duration', () => {
+            expect(true).toBeTruthy();
+        });
+    });
 
     describe('Max narcotic depth', () => {
         it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject([PlannerService],

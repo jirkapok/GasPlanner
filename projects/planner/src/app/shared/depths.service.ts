@@ -90,10 +90,6 @@ export class DepthsService {
         this.apply();
     }
 
-    public apply(): void {
-        this.delayedCalc.schedule();
-    }
-
     public updateLevels(): void {
         const segments: Segment[] = this.plan.segments;
         const converted: Level[] = [];
@@ -103,5 +99,9 @@ export class DepthsService {
         });
 
         this._levels = converted;
+    }
+
+    private apply(): void {
+        this.delayedCalc.schedule();
     }
 }

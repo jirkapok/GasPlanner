@@ -34,10 +34,9 @@ describe('DepthComponent Imperial units', () => {
     });
 
     it('Depth to imperial', () => {
-        component.depthForm.patchValue({
-            depth: 70
-        });
-        component.depthChanged();
+        const input = fixture.nativeElement.querySelector("input") as HTMLInputElement ;
+        input.value = '70';
+        input.dispatchEvent(new Event('input'));
         const depth = planner.plan.maxDepth;
         expect(depth).toBeCloseTo(21.336, 6);
     });

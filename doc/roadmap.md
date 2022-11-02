@@ -12,6 +12,8 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
+* Forms refactoring general verification (ranges, imperial units, calculation enforced on all changes, and after switch simple/complex UI): Nitrox, SAC, NDL calculators, depths, tanks, options, settings
+* UI Tweaks: Depths and tanks, get rid of html table and make it responsive on small devices
 * Add imperial units option
   * Provide rounded default values within acceptable range (Settings, Sac, tanks, depths, options)
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet

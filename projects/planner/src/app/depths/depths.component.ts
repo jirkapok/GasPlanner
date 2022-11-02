@@ -79,6 +79,19 @@ export class DepthsComponent implements OnInit, OnDestroy {
         return InputControls.controlInValid(duration);
     }
 
+    public startDepth(index: number): number {
+        return this.levelAt(index).startDepth;
+    }
+
+    public tankLabelFor(index: number): string {
+        return this.levelAt(index).tankLabel;
+    }
+
+    public assignTank(index: number, tank: Tank): void {
+        const level = this.levelAt(index);
+        this.depths.assignTank(level, tank);
+    }
+
     // TODO duration change generates new line in dive info table
 
     public ngOnInit(): void {
@@ -94,7 +107,8 @@ export class DepthsComponent implements OnInit, OnDestroy {
         }
 
         this.depths.addSegment();
-        const newLevel = this.depths.levels[this.depths.levels.length - 1];
+        const index = this.depths.levels.length - 1;
+        const newLevel = this.levelAt(index);
         const levelControls = this.createLevelControl(newLevel);
         this.levels.push(levelControls);
     }
@@ -104,7 +118,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const level = this.depths.levels[index];
+        const level = this.levelAt(index);
         this.depths.removeSegment(level);
         this.levels.removeAt(index);
     }
@@ -114,7 +128,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const level = this.depths.levels[index];
+        const level = this.levelAt(index);
         const levelControl = this.levels.at(index) as FormGroup;
         const levelValue = levelControl.value;
         level.duration = levelValue.duration;
@@ -168,5 +182,9 @@ export class DepthsComponent implements OnInit, OnDestroy {
     private createDurationControl(duration: number): [string | null, Validators[]] {
         return [InputControls.formatNumber(this.numberPipe, duration),
             [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]];
+    }
+
+    private levelAt(index: number): Level {
+        return this.depths.levels[index];
     }
 }

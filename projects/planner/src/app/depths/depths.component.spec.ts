@@ -40,6 +40,13 @@ describe('DepthsComponent', () => {
         expect(result).toBe(51.54);
     });
 
+    // TODO test cases:
+    // - planDuration kicks of the calculation
+    // - max ndl, max. duration and switch to simple kicks of plannedDuration reload
+    // - Add level kicks calculation and adds levels and to the data
+    // - remove level removes data and removes control
+    // - all changes aren't possible if form is invalid
+
     describe('Max narcotic depth', () => {
         it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject([PlannerService],
             (planner: PlannerService) => {

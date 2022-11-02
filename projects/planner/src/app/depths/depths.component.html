@@ -51,7 +51,7 @@
                 <ng-container formArrayName="levels" >
                     <tr *ngFor="let level of levels.controls; let i = index" [formGroupName]="i">
                         <td>
-                            <div class="mb-0 pb-0 px-1 text-end">{{ depths.levels[i].startDepth | number:'1.0-0' }}
+                            <div class="mb-0 pb-0 px-1 text-end">{{ startDepth(i) | number:'1.0-0' }}
                             </div>
                         </td>
                         <td>
@@ -75,14 +75,14 @@
                         </td>
                         <td>
                             <div class="input-group mb-0 pb-0 px-1">
-                                <input id="tanks" [value]="depths.levels[i].tankLabel" class="form-control" type="text"
+                                <input id="tanks" [value]="tankLabelFor(i)" class="form-control" type="text"
                                     readonly />
                                 <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                                     <button class="btn btn-default border" id="tankMenu" type="button"
                                         ngbDropdownToggle></button>
                                     <div ngbDropdownMenu aria-labelledby="tankMenu" aria-expanded="false">
                                         <button *ngFor="let tank of tanks" type="button" class="dropdown-item"
-                                            (click)="depths.assignTank(depths.levels[i], tank)">{{ tankLabel(tank)
+                                            (click)="assignTank(i, tank)">{{ tankLabel(tank)
                                             }}</button>
                                     </div>
                                 </div>

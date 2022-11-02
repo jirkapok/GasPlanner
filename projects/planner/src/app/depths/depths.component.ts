@@ -34,7 +34,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
         this.dive = this.planner.dive;
         // data are already available, it is ok to generate the levels.
         this.depths.updateLevels();
-        this.subscription = this.plan.reloaded.subscribe(() => this.reloadLevels());
+        this.subscription = this.plan.reloaded.subscribe(() => this.reload());
     }
 
     public get ranges(): RangeConstants {
@@ -79,7 +79,6 @@ export class DepthsComponent implements OnInit, OnDestroy {
         return InputControls.controlInValid(duration);
     }
 
-    // TODO rebind duration in case max bottom or ndl time used or swith from complex
     // TODO duration change generates new line in dive info table
 
     public ngOnInit(): void {
@@ -140,7 +139,10 @@ export class DepthsComponent implements OnInit, OnDestroy {
         return Level.tankLabel(this.units, tank);
     }
 
-    private reloadLevels(): void {
+    private reload(): void {
+        this.depthsForm.patchValue({
+            planDuration: InputControls.formatNumber(this.numberPipe, this.depths.planDuration)
+        });
         this.depths.updateLevels();
         this.levels.controls = this.createLevelControls();
     }
@@ -165,6 +167,6 @@ export class DepthsComponent implements OnInit, OnDestroy {
 
     private createDurationControl(duration: number): [string | null, Validators[]] {
         return [InputControls.formatNumber(this.numberPipe, duration),
-            [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]]
+            [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]];
     }
 }

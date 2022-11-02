@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { faLayerGroup, faTrashAlt, faPlusSquare  } from '@fortawesome/free-solid-svg-icons';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { faLayerGroup, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Tank } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
@@ -21,7 +21,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     public addIcon = faPlusSquare;
     public removeIcon = faTrashAlt;
     public depthsForm!: FormGroup;
-    private dive: Dive;
+    public dive: Dive;
     private subscription: Subscription;
 
     constructor(
@@ -34,8 +34,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
         this.dive = this.planner.dive;
         // data are already available, it is ok to generate the levels.
         this.depths.updateLevels();
-        // TODO reload needs to rebind all user controls
-        this.subscription = this.plan.reloaded.subscribe(() => this.depths.updateLevels());
+        this.subscription = this.plan.reloaded.subscribe(() => this.reloadLevels());
     }
 
     public get ranges(): RangeConstants {
@@ -64,20 +63,64 @@ export class DepthsComponent implements OnInit, OnDestroy {
         return InputControls.controlInValid(duration);
     }
 
-    // TODO move to dive
-    public get showMaxDuration(): boolean {
-        return this.dive.calculated && this.dive.maxTime > 0;
+    public get levels(): FormArray {
+        return this.depthsForm.controls.levels as FormArray;
     }
+
+    public depthItemInvalid(index: number): boolean {
+        const level = this.levels.at(index) as FormGroup;
+        const endDepth = level.controls.endDepth;
+        return InputControls.controlInValid(endDepth);
+    }
+
+    public durationItemInvalid(index: number): boolean {
+        const level = this.levels.at(index) as FormGroup;
+        const duration = level.controls.duration;
+        return InputControls.controlInValid(duration);
+    }
+
+    // TODO rebind duration in case max bottom or ndl time used
 
     public ngOnInit(): void {
         this.depthsForm = this.fb.group({
-            planDuration: [InputControls.formatNumber(this.numberPipe, this.plan.duration),
-                [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]],
-            // pO2: [InputControls.formatNumber(this.numberPipe, this.calc.pO2),
-            //     [Validators.required, Validators.min(this.ranges.ppO2[0]), Validators.max(this.ranges.ppO2[1])]],
-            // mod: [InputControls.formatNumber(this.numberPipe, this.calc.mod),
-            //     [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]],
+            planDuration: this.createDurationControl(this.plan.duration),
+            levels: this.fb.array(this.createLevelControls())
         });
+    }
+
+    public addLevel(): void {
+        if (this.depthsForm.invalid) {
+            return;
+        }
+
+        this.depths.addSegment();
+        const newLevel = this.depths.levels[this.depths.levels.length - 1];
+        const levelControls = this.createLevelControl(newLevel);
+        this.levels.push(levelControls);
+    }
+
+    public removeLevel(index: number): void {
+        if (this.depthsForm.invalid || !this.minimumSegments) {
+            return;
+        }
+
+        const level = this.depths.levels[index];
+        this.depths.removeSegment(level);
+        this.levels.removeAt(index);
+    }
+
+    public levelChanged(index: number): void {
+        if (this.depthsForm.invalid) {
+            return;
+        }
+
+        // TODO pick up values from the duration and end depth controls
+        const level = this.depths.levels[index];
+        const levelControl = this.levels.at(index) as FormGroup;
+        const levelValue = levelControl.value;
+        level.duration = levelValue.duration;
+        level.endDepth = levelValue.endDepth;
+        this.depths.depthInputChanged();
     }
 
     public ngOnDestroy(): void {
@@ -85,7 +128,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     }
 
     public durationChanged(): void {
-        if(this.depthsForm.invalid) {
+        if (this.depthsForm.invalid) {
             return;
         }
 
@@ -97,5 +140,33 @@ export class DepthsComponent implements OnInit, OnDestroy {
 
     public tankLabel(tank: Tank): string {
         return Level.tankLabel(this.units, tank);
+    }
+
+    private reloadLevels(): void {
+        this.depths.updateLevels();
+        this.levels.controls = this.createLevelControls();
+    }
+
+    private createLevelControls(): AbstractControl[] {
+        const created: AbstractControl[] = [];
+        for(const level of this.depths.levels) {
+            const newControl = this.createLevelControl(level);
+            created.push(newControl);
+        }
+
+        return created;
+    }
+
+    private createLevelControl(level: Level): AbstractControl {
+        return this.fb.group({
+            duration: this.createDurationControl(level.duration),
+            endDepth: [InputControls.formatNumber(this.numberPipe, level.endDepth),
+                [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]]
+        });
+    }
+
+    private createDurationControl(duration: number): [string | null, Validators[]] {
+        return [InputControls.formatNumber(this.numberPipe, duration),
+            [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]]
     }
 }

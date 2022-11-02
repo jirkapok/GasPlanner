@@ -228,6 +228,10 @@ export class Dive {
         return this.cns > 0.8;
     }
 
+    public get showMaxDuration(): boolean {
+        return this.calculated && this.maxTime > 0;
+    }
+
     public emptyProfile(): void {
         this.wayPoints = [];
         this.ceilings = [];

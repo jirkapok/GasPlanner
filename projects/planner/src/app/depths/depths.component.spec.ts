@@ -1,5 +1,6 @@
+import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
 import { StandardGases, Tank } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
@@ -17,8 +18,9 @@ describe('DepthsComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DepthsComponent],
-            imports: [FormsModule],
-            providers: [WorkersFactoryCommon, PlannerService, UnitConversion]
+            imports: [ReactiveFormsModule],
+            providers: [WorkersFactoryCommon, PlannerService,
+                UnitConversion, DecimalPipe]
         })
             .compileComponents();
     });

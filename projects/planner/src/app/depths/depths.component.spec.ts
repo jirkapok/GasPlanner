@@ -12,19 +12,46 @@ import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
 import { DepthsComponent } from './depths.component';
 
-export class DepthsPage {
-    constructor(private fixture: ComponentFixture<DepthsComponent>) {}
+export class SimpleDepthsPage {
+    constructor(private fixture: ComponentFixture<DepthsComponent>) { }
 
-    public get durationInput(): DebugElement {
-        return this.fixture.debugElement.query(By.css('#duration'));
+    public get durationInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#duration')).nativeElement as HTMLInputElement;
     }
 
-    public get durationElement(): HTMLInputElement {
-        return this.durationInput.nativeElement as HTMLInputElement;
+    public get applyMaxDurationButton(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#btnApplyDuration')).nativeElement as HTMLButtonElement;
     }
 
-    public get applyMaxDurationButton(): DebugElement {
-        return this.fixture.debugElement.query(By.css('#btnApplyDuration'));
+    public get applyNdlButton(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#btnApplyNdl')).nativeElement as HTMLButtonElement;
+    }
+}
+
+export class ComplexDepthsPage {
+    constructor(private fixture: ComponentFixture<DepthsComponent>) { }
+
+    public get addLevelButton(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#addLevel')).nativeElement as HTMLButtonElement;
+    }
+
+    public get durationDebugs(): DebugElement[] {
+        const all = this.fixture.debugElement.queryAll(By.css('#durationItem'));
+        return all;
+    }
+
+    public removeLevelButton(index: number): HTMLButtonElement {
+        const all = this.fixture.debugElement.queryAll(By.css('#removeLevel'));
+        return all[index].nativeElement as HTMLButtonElement;
+    }
+
+    public durationInput(index: number): HTMLInputElement {
+        return this.durationDebugs[index].nativeElement as HTMLInputElement;
+    }
+
+    public depthInput(index: number): HTMLInputElement {
+        const all = this.fixture.debugElement.queryAll(By.css('#depthItem'));
+        return all[index].nativeElement as HTMLInputElement;
     }
 }
 
@@ -32,7 +59,8 @@ describe('DepthsComponent', () => {
     let component: DepthsComponent;
     let depths: DepthsService;
     let fixture: ComponentFixture<DepthsComponent>;
-    let page: DepthsPage;
+    let simplePage: SimpleDepthsPage;
+    let complexPage: ComplexDepthsPage;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -50,9 +78,11 @@ describe('DepthsComponent', () => {
         depths = component.depths;
         component.planner.calculate();
         fixture.detectChanges();
-        page = new DepthsPage(fixture);
+        simplePage = new SimpleDepthsPage(fixture);
+        complexPage = new ComplexDepthsPage(fixture);
     });
 
+    // TODO move to toxicity tests
     it('MND for 12/35 returns 52 m', () => {
         const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6);
         const toxicity = new GasToxicity(options);
@@ -62,57 +92,83 @@ describe('DepthsComponent', () => {
     });
 
     it('Duration change enforces calculation', () => {
-        const setDuration = spyOnProperty(depths, 'planDuration', 'set')
-            .withArgs(20)
-            .and.callThrough();
-        fixture.detectChanges();
-        page.durationElement.value = '20';
-        page.durationInput.triggerEventHandler('input', {});
-        expect(setDuration).toHaveBeenCalledTimes(1);
+        simplePage.durationInput.value = '20';
+        simplePage.durationInput.dispatchEvent(new Event('input'));
+        expect(depths.planDuration).toBe(20);
     });
 
-    describe('Duration reloaded enforced by', () => {
-        it('Apply max NDL', () => {
-            page.applyMaxDurationButton.triggerEventHandler('click', {});
-            expect(page.durationElement.value).toBe('18');
+    describe('Simple view', () => {
+        describe('Duration reloaded enforced by', () => {
+            it('Apply max NDL', () => {
+                simplePage.applyNdlButton.click();
+                expect(simplePage.durationInput.value).toBe('13');
+            });
+
+            it('Apply max duration', () => {
+                simplePage.applyMaxDurationButton.click();
+                expect(simplePage.durationInput.value).toBe('18');
+            });
+
+            it('Switch to simple view', () => {
+                component.planner.isComplex = true;
+                fixture.detectChanges();
+                complexPage.durationInput(1).value = '20';
+                complexPage.durationInput(1).dispatchEvent(new Event('input'));
+                expect(depths.planDuration).toBe(21.7);
+            });
         });
 
-        it('Apply max depth', () => {
-            expect(true).toBeTruthy();
-        });
+        it('wrong duration doesn\'t call calculate', () => {
+            const durationSpy = spyOnProperty(depths, 'planDuration')
+                .and.callThrough();
 
-        it('Apply max duration', () => {
-            expect(true).toBeTruthy();
-        });
-
-        it('Swtich to simple view', () => {
-            expect(true).toBeTruthy();
-        });
-    });
-
-
-    describe('Levels enforce calculation', () => {
-        it('Is added to end of profile segments', () => {
-            expect(true).toBeTruthy();
-        });
-
-        it('Is removed from correct position', () => {
-            expect(true).toBeTruthy();
+            simplePage.durationInput.value = 'aaa';
+            simplePage.durationInput.dispatchEvent(new Event('input'));
+            expect(durationSpy).not.toHaveBeenCalled();
         });
     });
 
 
-    describe('Invalid form prevents calculation after', () => {
-        it('wrong duration', () => {
-            expect(true).toBeTruthy();
+    describe('Complex view', () => {
+        beforeEach(() => {
+            component.planner.isComplex = true;
+            fixture.detectChanges();
         });
 
-        it('wrong level end depth', () => {
-            expect(true).toBeTruthy();
+        describe('Levels enforce calculation', () => {
+            it('Adds level to end of profile segments', () => {
+                complexPage.addLevelButton.click();
+                fixture.detectChanges();
+                expect(depths.levels.length).toBe(3);
+                expect(complexPage.durationDebugs.length).toBe(3);
+            });
+
+            it('Is removed from correct position', () => {
+                complexPage.removeLevelButton(1).click();
+                fixture.detectChanges();
+                expect(depths.levels.length).toBe(1);
+                expect(complexPage.durationDebugs.length).toBe(1);
+            });
         });
 
-        it('wrong level duration', () => {
-            expect(true).toBeTruthy();
+        describe('Invalid form prevents calculation after', () => {
+            it('wrong level enddepth', () => {
+                const durationSpy = spyOn(depths, 'levelChanged')
+                    .and.callThrough();
+
+                complexPage.durationInput(1).value = 'aaa';
+                complexPage.durationInput(1).dispatchEvent(new Event('input'));
+                expect(durationSpy).not.toHaveBeenCalled();
+            });
+
+            it('wrong level duration', () => {
+                const durationSpy = spyOn(depths, 'levelChanged')
+                    .and.callThrough();
+
+                complexPage.depthInput(1).value = 'aaa';
+                complexPage.depthInput(1).dispatchEvent(new Event('input'));
+                expect(durationSpy).not.toHaveBeenCalled();
+            });
         });
     });
 

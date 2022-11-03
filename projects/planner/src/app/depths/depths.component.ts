@@ -133,7 +133,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
         const levelValue = levelControl.value;
         level.duration = levelValue.duration;
         level.endDepth = levelValue.endDepth;
-        this.depths.depthInputChanged();
+        this.depths.levelChanged();
     }
 
     public ngOnDestroy(): void {
@@ -154,10 +154,11 @@ export class DepthsComponent implements OnInit, OnDestroy {
     }
 
     private reload(): void {
+        this.depths.updateLevels();
+
         this.depthsForm.patchValue({
             planDuration: InputControls.formatNumber(this.numberPipe, this.depths.planDuration)
         });
-        this.depths.updateLevels();
         this.levels.controls = this.createLevelControls();
     }
 

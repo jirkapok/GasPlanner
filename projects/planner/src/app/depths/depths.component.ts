@@ -92,8 +92,6 @@ export class DepthsComponent implements OnInit, OnDestroy {
         this.depths.assignTank(level, tank);
     }
 
-    // TODO duration change generates new line in dive info table
-
     public ngOnInit(): void {
         this.depthsForm = this.fb.group({
             planDuration: this.createDurationControl(this.depths.planDuration),
@@ -131,8 +129,8 @@ export class DepthsComponent implements OnInit, OnDestroy {
         const level = this.levelAt(index);
         const levelControl = this.levels.at(index) as FormGroup;
         const levelValue = levelControl.value;
-        level.duration = levelValue.duration;
-        level.endDepth = levelValue.endDepth;
+        level.duration = Number(levelValue.duration);
+        level.endDepth = Number(levelValue.endDepth);
         this.depths.levelChanged();
     }
 
@@ -145,8 +143,8 @@ export class DepthsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const newValue = this.depthsForm.value.planDuration as number;
-        this.depths.planDuration = newValue;
+        const newValue = this.depthsForm.value.planDuration;
+        this.depths.planDuration = Number(newValue);
     }
 
     public tankLabel(tank: Tank): string {

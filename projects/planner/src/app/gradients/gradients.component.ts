@@ -48,7 +48,7 @@ export class GradientsComponent implements OnInit {
             return;
         }
 
-        const newValue = this.gfForm.controls.gfHigh.value as number;
+        const newValue = Number(this.gfForm.controls.gfHigh.value);
         this.gfHigh = newValue / 100;
         this.inputChange.emit(new Gradients(this.gfLow, this.gfHigh));
     }
@@ -58,7 +58,7 @@ export class GradientsComponent implements OnInit {
             return;
         }
 
-        const newValue = this.gfForm.controls.gfLow.value as number;
+        const newValue = Number(this.gfForm.controls.gfLow.value);
         this.gfLow = newValue / 100;
         this.inputChange.emit(new Gradients(this.gfLow, this.gfHigh));
     }

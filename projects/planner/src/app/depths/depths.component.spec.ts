@@ -4,6 +4,7 @@ import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Tank } from 'scuba-physics';
+import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { DepthsService } from '../shared/depths.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -65,7 +66,7 @@ describe('DepthsComponent', () => {
             declarations: [DepthsComponent],
             imports: [ReactiveFormsModule],
             providers: [WorkersFactoryCommon, PlannerService,
-                UnitConversion, DecimalPipe]
+                UnitConversion, DecimalPipe, DelayedScheduleService]
         })
             .compileComponents();
     });
@@ -78,6 +79,11 @@ describe('DepthsComponent', () => {
         fixture.detectChanges();
         simplePage = new SimpleDepthsPage(fixture);
         complexPage = new ComplexDepthsPage(fixture);
+        const scheduler = TestBed.inject(DelayedScheduleService);
+        const schedulerSpy = spyOn(scheduler, 'schedule')
+            .and.callFake(() => {
+                component.planner.calculate();
+            });
     });
 
     it('Duration change enforces calculation', () => {
@@ -122,6 +128,13 @@ describe('DepthsComponent', () => {
         beforeEach(() => {
             component.planner.isComplex = true;
             fixture.detectChanges();
+        });
+
+        it('Change depth calculates profile correctly', () => {
+            complexPage.durationInput(1).value = '5';
+            complexPage.durationInput(1).dispatchEvent(new Event('input'));
+            // in case of wrong binding, the algorithm ads segment with 0 duration
+            expect(component.planner.dive.totalDuration).toBe(882);
         });
 
         describe('Levels enforce calculation', () => {

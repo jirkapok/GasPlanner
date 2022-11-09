@@ -44,7 +44,7 @@ export class PpO2Component implements OnInit {
             return;
         }
 
-        const newValue = this.pO2Form.controls.maxPpO2.value as number;
+        const newValue = Number(this.pO2Form.controls.maxPpO2.value);
         this.ppO2Change.emit(newValue);
     }
 }

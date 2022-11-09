@@ -57,8 +57,8 @@ export class DiverComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const values = this.diverForm.value;
-        this.diver.rmv = this.units.toLiter(values.rmv);
+        const rmv = Number(this.diverForm.value.rmv);
+        this.diver.rmv = this.units.toLiter(rmv);
     }
 
     public maxPpO2Changed(newValue: number): void {

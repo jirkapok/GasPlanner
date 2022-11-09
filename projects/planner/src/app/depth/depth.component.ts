@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
@@ -24,8 +24,8 @@ export class DepthComponent implements OnInit {
     }
 
     public depthChanged() {
-        const newValue = this.depthForm.controls.depth.value as number;
-        this.depths.plannedDepth = newValue;
+        const newValue = this.depthForm.controls.depth.value;
+        this.depths.plannedDepth = Number(newValue);
     }
 
     public applyMaxDepth(): void {

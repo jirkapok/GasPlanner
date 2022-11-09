@@ -112,11 +112,11 @@ export class SacComponent implements OnInit {
         }
 
         const values = this.formSac.value;
-        this.calc.depth = this.units.toMeters(values.depth);
-        this.calc.tank = this.units.toTankLiters(values.tankSize);
-        this.calc.used = this.units.toBar(values.used);
-        this.calc.rmv = this.units.toLiter(values.rmv);
-        this.calc.duration = values.duration;
+        this.calc.depth = this.units.toMeters(Number(values.depth));
+        this.calc.tank = this.units.toTankLiters(Number(values.tankSize));
+        this.calc.used = this.units.toBar(Number(values.used));
+        this.calc.rmv = this.units.toLiter(Number(values.rmv));
+        this.calc.duration = Number(values.duration);
 
         this.formSac.patchValue(this.dataModel);
     }

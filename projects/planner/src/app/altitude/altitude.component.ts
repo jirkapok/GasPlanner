@@ -53,7 +53,7 @@ export class AltitudeComponent implements OnInit{
     }
 
     public altitudeChanged(): void {
-        const newValue = this.altitudeForm.value.altitude as number;
+        const newValue = Number(this.altitudeForm.value.altitude);
         this.altitude = this.units.toMeters(newValue);
         this.inputChange.emit(this.altitude);
     }

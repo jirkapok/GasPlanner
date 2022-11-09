@@ -58,8 +58,8 @@ export class NitroxO2Component implements OnInit {
             return;
         }
 
-        const newValue = this.nitroxForm.controls.o2.value as number;
-        this.tank.o2 = newValue;
+        const newValue = this.nitroxForm.controls.o2.value;
+        this.tank.o2 = Number(newValue);
         this.gasChange.emit();
     }
 

@@ -3,10 +3,8 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
-import { StandardGases, Tank } from 'scuba-physics';
+import { Tank } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
-import { GasToxicity } from '../shared/gasToxicity.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -80,15 +78,6 @@ describe('DepthsComponent', () => {
         fixture.detectChanges();
         simplePage = new SimpleDepthsPage(fixture);
         complexPage = new ComplexDepthsPage(fixture);
-    });
-
-    // TODO move to toxicity tests
-    it('MND for 12/35 returns 52 m', () => {
-        const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6);
-        const toxicity = new GasToxicity(options);
-        const gas = StandardGases.trimix2135.copy();
-        const result = toxicity.mndForGas(gas);
-        expect(result).toBe(51.54);
     });
 
     it('Duration change enforces calculation', () => {

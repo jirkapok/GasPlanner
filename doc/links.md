@@ -13,6 +13,8 @@ Based on following references:
 * <http://www.lizardland.co.uk/DIYDeco.html>
 * <https://www.frogkick.nl/files/understanding_m-values.pdf>
 * <https://diverclub.ru/File/literatur/Deep_Stops.pdf>
+* <https://www.researchgate.net/publication/350176530_Update_per_03_2021_on_Decompression-Calculations_for_Trimix_Dives_with_PC-_Software_Gradient_Factors_do_they_repair_defective_algorithms_or_do_they_repair_defective_implementations>
+* <https://www.divetable.info/skripte/theory.pdf>
 * <https://thetheoreticaldiver.org/wordpress//var/lib/wordpress/wp-content/uploads/2017/11/dekotheorie1.pdf>
 * <https://njscuba.net/gear/trng_10_deco.php>
 * <https://thetheoreticaldiver.org/wordpress/index.php/2019/01/18/ndl-and-gradient-factors/>
@@ -28,9 +30,9 @@ At time of development also other implementations are available:
 * Gas mixture calculator: <https://github.com/eianlei/pydplan>
 
 * Add air breaks
-    * <https://dan.org/alert-diver/article/understanding-oxygen-toxicity/>
-    * Subsurface 12min/6 min. to back gas (first tank), not checking its content
-    * <https://decodoppler.wordpress.com/2012/08/02/air-breaks-what-are-they-and-do-people-take-them-for-the-wrong-reason/>
-    * <https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/>
-    * <https://www.diverite.com/articles/oxygen-toxicity-signs-and-symptoms/>
-    * Diverite and decodopler: 20min./5 min.
+  * <https://dan.org/alert-diver/article/understanding-oxygen-toxicity/>
+  * Subsurface 12min/6 min. to back gas (first tank), not checking its content
+  * <https://decodoppler.wordpress.com/2012/08/02/air-breaks-what-are-they-and-do-people-take-them-for-the-wrong-reason/>
+  * <https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/>
+  * <https://www.diverite.com/articles/oxygen-toxicity-signs-and-symptoms/>
+  * Diverite and decodopler: 20min./5 min.

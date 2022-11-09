@@ -22,7 +22,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     public removeIcon = faTrashAlt;
     public depthsForm!: FormGroup;
     public dive: Dive;
-    private subscription: Subscription;
+    private subscription!: Subscription;
 
     constructor(
         private fb: FormBuilder,
@@ -34,7 +34,6 @@ export class DepthsComponent implements OnInit, OnDestroy {
         this.dive = this.planner.dive;
         // data are already available, it is ok to generate the levels.
         this.depths.updateLevels();
-        this.subscription = this.plan.reloaded.subscribe(() => this.reload());
     }
 
     public get ranges(): RangeConstants {
@@ -97,6 +96,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
             planDuration: this.createDurationControl(this.depths.planDuration),
             levels: this.fb.array(this.createLevelControls())
         });
+        this.subscription = this.plan.reloaded.subscribe(() => this.reload());
     }
 
     public addLevel(): void {

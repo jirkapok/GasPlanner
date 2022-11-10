@@ -1,7 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { SafetyStop, Salinity } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+import { InputControls } from '../shared/inputcontrols';
 import { Plan, Strategies } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
@@ -13,7 +16,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.css']
 })
-export class DiveOptionsComponent {
+export class DiveOptionsComponent implements OnInit {
     @Input()
     public formValid = true;
     public readonly allUsableName = 'All usable';
@@ -24,9 +27,12 @@ export class DiveOptionsComponent {
     public plan: Plan;
     public strategy = this.allUsableName;
     public icon = faCog;
+    public optionsForm!: FormGroup;
 
     constructor(public units: UnitConversion,
         public options: OptionsDispatcherService,
+        private fb: FormBuilder,
+        private numberPipe: DecimalPipe,
         private planner: PlannerService,
         private delayedCalc: DelayedScheduleService) {
         this.plan = this.planner.plan;
@@ -46,7 +52,7 @@ export class DiveOptionsComponent {
     }
 
     public get safetyStopOption(): string {
-        switch(this.options.safetyStop){
+        switch (this.options.safetyStop) {
             case SafetyStop.never:
                 return this.safetyOffName;
             case SafetyStop.always:
@@ -56,6 +62,47 @@ export class DiveOptionsComponent {
         }
     }
 
+    public get narcoticDepthInvalid(): boolean {
+        const narcoticDepth = this.optionsForm.controls.maxEND;
+        return InputControls.controlInValid(narcoticDepth);
+    }
+
+    public get problemInvalid(): boolean {
+        const problem = this.optionsForm.controls.problem;
+        return InputControls.controlInValid(problem);
+    }
+
+    public get switchDurationInvalid(): boolean {
+        const gasSwitch = this.optionsForm.controls.gasSwitch;
+        return InputControls.controlInValid(gasSwitch);
+    }
+
+    public get lastStopInvalid(): boolean {
+        const lastStopDepth = this.optionsForm.controls.lastStopDepth;
+        return InputControls.controlInValid(lastStopDepth);
+    }
+
+    public get descSpeedInvalid(): boolean {
+        const descentSpeed = this.optionsForm.controls.descentSpeed;
+        return InputControls.controlInValid(descentSpeed);
+    }
+
+    public get ascSpeedInvalid(): boolean {
+        const ascentSpeed6m = this.optionsForm.controls.ascentSpeed6m;
+        return InputControls.controlInValid(ascentSpeed6m);
+    }
+
+    public get ascentSpeed50percTo6mInvalid(): boolean {
+        const ascentSpeed50percTo6m = this.optionsForm.controls.ascentSpeed50percTo6m;
+        return InputControls.controlInValid(ascentSpeed50percTo6m);
+    }
+
+    public get ascentSpeed50percInvalid(): boolean {
+        const ascentSpeed50perc = this.optionsForm.controls.ascentSpeed50perc;
+        return InputControls.controlInValid(ascentSpeed50perc);
+    }
+
+    // TODO consider move units conversion directly to OptionsDispatcherService
     public get maxEND(): number {
         const source = this.options.maxEND;
         return this.units.fromMeters(source);
@@ -123,6 +170,29 @@ export class DiveOptionsComponent {
         this.applyOptions();
     }
 
+    public ngOnInit(): void {
+        this.optionsForm = this.fb.group({
+            maxEND: [InputControls.formatNumber(this.numberPipe, this.maxEND),
+                [Validators.required, Validators.min(this.ranges.narcoticDepth[0]), Validators.max(this.ranges.narcoticDepth[1])]],
+            problem: [InputControls.formatNumber(this.numberPipe, this.options.problemSolvingDuration),
+                [Validators.required, Validators.min(1), Validators.max(100)]],
+            gasSwitch: [InputControls.formatNumber(this.numberPipe, this.options.gasSwitchDuration),
+                [Validators.required, Validators.min(1), Validators.max(10)]],
+            lastStopDepth: [InputControls.formatNumber(this.numberPipe, this.lastStopDepth),
+                [Validators.required, Validators.min(this.ranges.lastStopDepth[0]), Validators.max(this.ranges.lastStopDepth[1])]],
+            descentSpeed: [InputControls.formatNumber(this.numberPipe, this.descentSpeed),
+                [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
+            ascentSpeed6m: [InputControls.formatNumber(this.numberPipe, this.ascentSpeed6m),
+                [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
+            ascentSpeed50percTo6m: [InputControls.formatNumber(this.numberPipe, this.ascentSpeed50percTo6m),
+                [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
+            ascentSpeed50perc: [InputControls.formatNumber(this.numberPipe, this.ascentSpeed50perc),
+                [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
+        });
+
+        // TODO reload values after reloaded
+    }
+
     public reset(): void {
         switch (this.plan.strategy) {
             case Strategies.HALF: {
@@ -162,6 +232,7 @@ export class DiveOptionsComponent {
         this.applyOptions();
     }
 
+    // TODO use recre and recommended should reload form
     public useRecreational(): void {
         this.options.useRecreational();
         this.applyOptions();
@@ -213,6 +284,21 @@ export class DiveOptionsComponent {
     }
 
     public applyOptions(): void {
+        // altitude and salinity are checked in their respective component and shouldn't fire event
+        if(this.optionsForm.invalid) {
+            return;
+        }
+
+        const values = this.optionsForm.value;
+        this.maxEND = Number(values.maxEND);
+        this.options.problemSolvingDuration = Number(values.problem);
+        this.options.gasSwitchDuration = Number(values.gasSwitch);
+        this.lastStopDepth = Number(values.lastStopDepth);
+        this.descentSpeed = Number(values.descentSpeed);
+        this.ascentSpeed6m = Number(values.ascentSpeed6m);
+        this.ascentSpeed50percTo6m = Number(values.ascentSpeed50percTo6m);
+        this.ascentSpeed50perc = Number(values.ascentSpeed50perc);
+
         this.planner.assignOptions(this.options.getOptions());
         this.delayedCalc.schedule();
     }

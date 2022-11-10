@@ -232,15 +232,16 @@ export class DiveOptionsComponent implements OnInit {
         this.applyOptions();
     }
 
-    // TODO use recre and recommended should reload form
     public useRecreational(): void {
         this.options.useRecreational();
-        this.applyOptions();
+        this.fireCalculation();
+        this.reloadForm();
     }
 
     public useRecommended(): void {
         this.options.useRecommended();
-        this.applyOptions();
+        this.fireCalculation();
+        this.reloadForm();
     }
 
     public switchStopsRounding(): void {
@@ -299,7 +300,24 @@ export class DiveOptionsComponent implements OnInit {
         this.ascentSpeed50percTo6m = Number(values.ascentSpeed50percTo6m);
         this.ascentSpeed50perc = Number(values.ascentSpeed50perc);
 
+        this.fireCalculation();
+    }
+
+    private fireCalculation(): void {
         this.planner.assignOptions(this.options.getOptions());
         this.delayedCalc.schedule();
+    }
+
+    private reloadForm(): void {
+        this.optionsForm.patchValue({
+            maxEND: InputControls.formatNumber(this.numberPipe, this.maxEND),
+            problem: InputControls.formatNumber(this.numberPipe, this.options.problemSolvingDuration),
+            gasSwitch: InputControls.formatNumber(this.numberPipe, this.options.gasSwitchDuration),
+            lastStopDepth: InputControls.formatNumber(this.numberPipe, this.lastStopDepth),
+            descentSpeed: InputControls.formatNumber(this.numberPipe, this.descentSpeed),
+            ascentSpeed6m: InputControls.formatNumber(this.numberPipe, this.ascentSpeed6m),
+            ascentSpeed50percTo6m: InputControls.formatNumber(this.numberPipe, this.ascentSpeed50percTo6m),
+            ascentSpeed50perc: InputControls.formatNumber(this.numberPipe, this.ascentSpeed50perc),
+        });
     }
 }

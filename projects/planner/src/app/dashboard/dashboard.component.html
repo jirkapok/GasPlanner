@@ -1,46 +1,49 @@
 <form #f="ngForm" name="form" novalidate>
-<div class="mt-5">
-  <div class="row">
-    <div>
-        <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert" *ngIf="showDisclaimer">
-            <fa-icon [icon]="exclamation" class="me-2 fa-lg"></fa-icon>
-            <span><strong>Disclaimer:</strong> None of the authors, contributors, administrators, or anyone else connected with this project can be responsible
-                for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="stopDisclaimer()"></button>
+    <div class="mt-5">
+        <div class="row">
+            <div>
+                <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert" *ngIf="showDisclaimer">
+                    <fa-icon [icon]="exclamation" class="me-2 fa-lg"></fa-icon>
+                    <span><strong>Disclaimer:</strong> None of the authors, contributors, administrators, or anyone else
+                        connected with this project can be responsible
+                        for your use of the information provided by this application or linked from these web pages. Use
+                        the results at your own risk.</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                        (click)="stopDisclaimer()"></button>
+                </div>
+            </div>
+            <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
+                'col-md-4': !isComplex,
+                'col-sm-6': !isComplex,
+                'col-lg-6': isComplex
+                }">
+                <app-tanks (validate)="f.form.updateValueAndValidity()"></app-tanks>
+            </div>
+            <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
+                'col-md-4': !isComplex,
+                'col-sm-6': !isComplex,
+                'col-lg-6': isComplex
+                }">
+                <app-depths></app-depths>
+            </div>
+            <div class="col-12 col-lg-4 mt-4" [ngClass]="{
+                'col-md-4': !isComplex,
+                'col-sm-12': !isComplex
+                } ">
+                <app-diveoptions></app-diveoptions>
+            </div>
+            <div class="col-12 col-xxl-6 mt-4" [ngClass]="{
+                'col-lg-12': !isComplex,
+                'col-lg-8': isComplex
+                } ">
+                <app-profilechart></app-profilechart>
+            </div>
+            <div class="col-md-6 col-xxl-3 mt-4">
+                <app-waypoints></app-waypoints>
+            </div>
+            <div class="col-md-6 col-xxl-3 mt-4">
+                <app-consumption></app-consumption>
+            </div>
         </div>
-    </div>
-    <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
-          'col-md-4': !isComplex,
-          'col-sm-6': !isComplex,
-          'col-lg-6': isComplex
-         }">
-        <app-tanks (validate)="f.form.updateValueAndValidity()"></app-tanks>
-    </div>
-    <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
-          'col-md-4': !isComplex,
-          'col-sm-6': !isComplex,
-          'col-lg-6': isComplex
-        }">
-        <app-depths></app-depths>
-    </div>
-    <div class="col-12 col-lg-4 mt-4" [ngClass]="{
-          'col-md-4': !isComplex,
-          'col-sm-12': !isComplex
-           } ">
-        <app-diveoptions></app-diveoptions>
-    </div>
-    <div class="col-12 col-xxl-6 mt-4" [ngClass]="{
-        'col-lg-12': !isComplex,
-        'col-lg-8': isComplex
-         } ">
-        <app-profilechart></app-profilechart>
-    </div>
-    <div class="col-md-6 col-xxl-3 mt-4">
-        <app-waypoints></app-waypoints>
-    </div>
-    <div class="col-md-6 col-xxl-3 mt-4">
-        <app-consumption></app-consumption>
-    </div>
-    </div>
     </div>
 </form>

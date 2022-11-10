@@ -29,7 +29,6 @@ export class TankChartComponent {
     }
 
     public get reserve(): number {
-        // TODO check, if the unit is liter for reserve
         return this.units.fromBar(this.tank.reserve);
     }
 }

@@ -1,5 +1,6 @@
+import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -12,8 +13,9 @@ describe('DepthComponent Imperial units', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DiveOptionsComponent],
-            imports: [FormsModule],
-            providers: [WorkersFactoryCommon, PlannerService, UnitConversion]
+            imports: [ReactiveFormsModule],
+            providers: [WorkersFactoryCommon, DecimalPipe,
+                PlannerService, UnitConversion]
         })
             .compileComponents();
     });

@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faBatteryHalf, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
@@ -7,9 +7,12 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { Subscription } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
+import { InputControls } from '../shared/inputcontrols';
 
 export class TankBound {
-    constructor(public tank: Tank, private units: UnitConversion) {}
+    constructor(public tank: Tank, private units: UnitConversion) { }
 
     public get id(): number {
         return this.tank.id;
@@ -53,23 +56,25 @@ export class TankBound {
     templateUrl: './tanks.component.html',
     styleUrls: ['./tanks.component.css']
 })
-export class TanksComponent implements OnDestroy {
+export class TanksComponent implements OnInit, OnDestroy {
     public allNames: string[];
     public icon = faBatteryHalf;
     public plusIcon = faPlusSquare;
     public trashIcon = faTrashAlt;
     public toxicity: GasToxicity;
+    public tanksForm!: FormGroup;
 
     private bound: TankBound[] = [];
-    private subscription: Subscription;
+    private subscription!: Subscription;
 
     constructor(private planner: PlannerService,
         public units: UnitConversion,
+        private fb: FormBuilder,
+        private numberPipe: DecimalPipe,
         private delayedCalc: DelayedScheduleService) {
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
         this.updateTanks();
-        this.subscription = this.planner.tanksReloaded.subscribe(() => this.updateTanks());
     }
 
     public get firstTank(): TankBound {
@@ -86,6 +91,31 @@ export class TanksComponent implements OnDestroy {
 
     public get isComplex(): boolean {
         return this.planner.isComplex;
+    }
+
+    public get firstTankSizeInvalid(): boolean {
+        const firstTankSize = this.tanksForm.controls.firstTankSize;
+        return InputControls.controlInValid(firstTankSize);
+    }
+
+    public get firstTankStartPressureInvalid(): boolean {
+        const firstTankStartPressure = this.tanksForm.controls.firstTankStartPressure;
+        return InputControls.controlInValid(firstTankStartPressure);
+    }
+
+    public ngOnInit(): void {
+        this.tanksForm = this.fb.group({
+            firstTankSize: [InputControls.formatNumber(this.numberPipe, this.firstTank.size),
+                [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
+            firstTankStartPressure: [InputControls.formatNumber(this.numberPipe, this.firstTank.startPressure),
+                [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
+        });
+
+        this.subscription = this.planner.tanksReloaded.subscribe(() => this.updateTanks());
+    }
+
+    public ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     public isFirstTank(bound: TankBound): boolean {
@@ -121,16 +151,16 @@ export class TanksComponent implements OnDestroy {
     }
 
     public apply(): void {
-        this.delayedCalc.schedule();
-    }
+        const values = this.tanksForm.value;
 
-    public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        this.firstTank.size = Number(values.firstTankSize);
+        this.firstTank.startPressure = Number(values.firstTankStartPressure);
+        this.delayedCalc.schedule();
     }
 
     private updateTanks(): void {
         const bound: TankBound[] = [];
-        this.planner.tanks.forEach((t)=> {
+        this.planner.tanks.forEach((t) => {
             const newBound = this.toBound(t);
             bound.push(newBound);
         });

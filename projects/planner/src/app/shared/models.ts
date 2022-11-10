@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Ceiling, Time, Event, Segment, Segments, SegmentsFactory,
     StandardGases, Options, Tank, OtuCalculator, Precision } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
@@ -68,7 +68,7 @@ export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     public noDecoTime = 0;
     /** Event fired only in case of segments rebuild. Not fired when adding or removing. */
-    public reloaded;
+    public reloaded: Observable<unknown>;
     private _segments: Segments = new Segments();
     private onReloaded = new Subject();
 

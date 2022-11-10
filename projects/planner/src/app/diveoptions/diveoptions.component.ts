@@ -1,7 +1,8 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 import { SafetyStop, Salinity } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
@@ -16,7 +17,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.css']
 })
-export class DiveOptionsComponent implements OnInit {
+export class DiveOptionsComponent implements OnInit, OnDestroy {
     @Input()
     public formValid = true;
     public readonly allUsableName = 'All usable';
@@ -28,6 +29,7 @@ export class DiveOptionsComponent implements OnInit {
     public strategy = this.allUsableName;
     public icon = faCog;
     public optionsForm!: FormGroup;
+    private subscription!: Subscription;
 
     constructor(public units: UnitConversion,
         public options: OptionsDispatcherService,
@@ -102,7 +104,6 @@ export class DiveOptionsComponent implements OnInit {
         return InputControls.controlInValid(ascentSpeed50perc);
     }
 
-    // TODO consider move units conversion directly to OptionsDispatcherService
     public get maxEND(): number {
         const source = this.options.maxEND;
         return this.units.fromMeters(source);
@@ -190,7 +191,13 @@ export class DiveOptionsComponent implements OnInit {
                 [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
         });
 
-        // TODO reload values after reloaded
+        this.subscription = this.options.reloaded.subscribe(() => this.reloadForm());
+    }
+
+    public ngOnDestroy(): void {
+        if(this.subscription) {
+            this.subscription.unsubscribe();
+        }
     }
 
     public reset(): void {

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { Diver, OptionDefaults, Options, SafetyStop, Salinity } from 'scuba-physics';
 import { StandardGradientsService } from './standard-gradients.service';
 
@@ -6,13 +7,16 @@ import { StandardGradientsService } from './standard-gradients.service';
     providedIn: 'root'
 })
 export class OptionsDispatcherService {
+    public reloaded: Observable<unknown>;
     private standardGradients = new StandardGradientsService();
     private options = new Options();
+    private onReloaded = new Subject();
 
     constructor() {
         // To be aligned with planner
         this.options.salinity = Salinity.fresh;
         this.options.safetyStop = SafetyStop.auto;
+        this.reloaded = this.onReloaded.asObservable();
     }
 
     public get altitude(): number {
@@ -207,6 +211,7 @@ export class OptionsDispatcherService {
 
     public loadFrom(newOptions: Options): void {
         this.options.loadFrom(newOptions);
+        this.onReloaded.next({});
     }
 
     public applyDiver(diver: Diver): void {

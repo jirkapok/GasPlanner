@@ -96,6 +96,8 @@ export class DepthsComponent implements OnInit, OnDestroy {
             planDuration: this.createDurationControl(this.depths.planDuration),
             levels: this.fb.array(this.createLevelControls())
         });
+
+        // TODO check behavior in case of switch to complex view
         this.subscription = this.plan.reloaded.subscribe(() => this.reload());
     }
 
@@ -151,12 +153,16 @@ export class DepthsComponent implements OnInit, OnDestroy {
         return Level.tankLabel(this.units, tank);
     }
 
+    // not called in complex mode
     private reload(): void {
         this.depths.updateLevels();
 
         this.depthsForm.patchValue({
             planDuration: InputControls.formatNumber(this.numberPipe, this.depths.planDuration)
         });
+
+        // even in simple mode before we switch to complex mode,
+        // this enforces reload of values to the UI for complex mode
         this.levels.controls = this.createLevelControls();
     }
 

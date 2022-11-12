@@ -7,7 +7,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { Subscription } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { InputControls } from '../shared/inputcontrols';
 
@@ -89,6 +89,10 @@ export class TanksComponent implements OnInit, OnDestroy {
         return this.bound;
     }
 
+    public get tanksGroup(): FormArray {
+        return this.tanksForm.controls.boundTanks as FormArray;
+    }
+
     public get isComplex(): boolean {
         return this.planner.isComplex;
     }
@@ -109,6 +113,7 @@ export class TanksComponent implements OnInit, OnDestroy {
                 [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
             firstTankStartPressure: [InputControls.formatNumber(this.numberPipe, this.firstTank.startPressure),
                 [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
+            boundTanks: this.fb.array(this.createTankControls())
         });
 
         this.subscription = this.planner.tanksReloaded.subscribe(() => this.updateTanks());
@@ -118,43 +123,80 @@ export class TanksComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    public isFirstTank(bound: TankBound): boolean {
-        return this.firstTank !== bound;
-    }
-
-    public gasSac(bound: TankBound): number {
+    public gasSac(index: number): number {
+        const bound = this.tanks[index];
         const sac = this.planner.diver.gasSac(bound.tank);
         return this.units.fromBar(sac);
+    }
+
+    public gasHeInvalid(index: number): boolean {
+        const tank = this.tanksGroup.at(index) as FormGroup;
+        return InputControls.controlInValid(tank.controls.tankHe);
+    }
+
+    public gasO2Invalid(index: number): boolean {
+        const tank = this.tanksGroup.at(index) as FormGroup;
+        return InputControls.controlInValid(tank.controls.tankO2);
+    }
+
+    public startPressureInvalid(index: number): boolean {
+        const tank = this.tanksGroup.at(index) as FormGroup;
+        return InputControls.controlInValid(tank.controls.tankStartPressure);
+    }
+
+    public tankSizeInvalid(index: number): boolean {
+        const tank = this.tanksGroup.at(index) as FormGroup;
+        return InputControls.controlInValid(tank.controls.tankSize);
     }
 
     public addTank(): void {
         this.planner.addTank();
         this.updateTanks();
-        this.apply();
+        // TODO replace
+        this.applySimple();
     }
 
-    public removeTank(bound: TankBound): void {
+    public removeTank(index: number): void {
+        const bound = this.tanks[index];
         this.planner.removeTank(bound.tank);
         this.updateTanks();
-        this.apply();
+        // TODO replace
+        this.applySimple();
     }
 
     public assignBestMix(): void {
         const maxDepth = this.planner.plan.maxDepth;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
-        this.apply();
+        // TODO instead of apply use reload
+        this.applySimple();
     }
 
-    public assignStandardGas(bound: TankBound, gasName: string): void {
+    public assignStandardGas(index: number, gasName: string): void {
+        const bound = this.tanks[index];
         bound.tank.assignStandardGas(gasName);
-        this.apply();
+        // TODO rebind item after gas assigned
+        this.applySimple();
     }
 
-    public apply(): void {
-        const values = this.tanksForm.value;
+    public tankChanged(index: number): void {
+        // TODO switch to complex view need to rebind
+        const tankControl = this.tanksGroup.at(index) as FormGroup;
+        const bound = this.tanks[index];
 
+        const values = tankControl.value;
+        bound.size = Number(values.tankSize);
+        bound.startPressure = Number(values.tankStartPressure);
+        bound.o2 = Number(values.tankO2);
+        bound.he = Number(values.tankHe);
+
+        this.delayedCalc.schedule();
+    }
+
+    public applySimple(): void {
+        const values = this.tanksForm.value;
         this.firstTank.size = Number(values.firstTankSize);
         this.firstTank.startPressure = Number(values.firstTankStartPressure);
+        // TODO ensure rebind of the o2 field.
         this.delayedCalc.schedule();
     }
 
@@ -170,5 +212,28 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     private toBound(tank: Tank): TankBound {
         return new TankBound(tank, this.units);
+    }
+
+    private createTankControls(): AbstractControl[] {
+        const created: AbstractControl[] = [];
+        for(const bound of this.tanks) {
+            const newControl = this.createTankControl(bound);
+            created.push(newControl);
+        }
+
+        return created;
+    }
+
+    private createTankControl(tank: TankBound): AbstractControl {
+        return this.fb.group({
+            tankSize: [InputControls.formatNumber(this.numberPipe, tank.size),
+                [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
+            tankStartPressure: [InputControls.formatNumber(this.numberPipe, tank.startPressure),
+                [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
+            tankO2: [InputControls.formatNumber(this.numberPipe, tank.o2),
+                [Validators.required, Validators.min(this.ranges.trimixOxygen[0]), Validators.max(this.ranges.trimixOxygen[1])]],
+            tankHe: [InputControls.formatNumber(this.numberPipe, tank.he),
+                [Validators.required, Validators.min(this.ranges.tankHe[0]), Validators.max(this.ranges.tankHe[1])]],
+        });
     }
 }

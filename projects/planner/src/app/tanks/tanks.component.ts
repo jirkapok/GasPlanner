@@ -65,7 +65,8 @@ export class TanksComponent implements OnInit, OnDestroy {
     public tanksForm!: FormGroup;
 
     private bound: TankBound[] = [];
-    private subscription!: Subscription;
+    private tanksSubscription!: Subscription;
+    private depthsSubscription!: Subscription;
 
     constructor(private planner: PlannerService,
         public units: UnitConversion,
@@ -116,11 +117,14 @@ export class TanksComponent implements OnInit, OnDestroy {
             boundTanks: this.fb.array(this.createTankControls())
         });
 
-        this.subscription = this.planner.tanksReloaded.subscribe(() => this.updateTanks());
+        this.tanksSubscription = this.planner.tanksReloaded.subscribe(() => this.reloadAll());
+        // trick how to check for switch to simple,but fires plan reload only when switching to simple
+        this.depthsSubscription = this.planner.plan.reloaded.subscribe(() => this.reloadAll());
     }
 
     public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+        this.tanksSubscription?.unsubscribe();
+        this.depthsSubscription?.unsubscribe();
     }
 
     public gasSac(index: number): number {
@@ -150,36 +154,45 @@ export class TanksComponent implements OnInit, OnDestroy {
     }
 
     public addTank(): void {
+        if (this.tanksForm.invalid) {
+            return;
+        }
+
         this.planner.addTank();
         this.updateTanks();
-        // TODO replace
-        this.applySimple();
+        const lastTank = this.tanks[this.tanks.length-1];
+        const levelControls = this.createTankControl(lastTank);
+        this.tanksGroup.push(levelControls);
+        this.delayedCalc.schedule();
     }
 
     public removeTank(index: number): void {
+        if (this.tanksForm.invalid || this.tanks.length <= 1) {
+            return;
+        }
+
         const bound = this.tanks[index];
         this.planner.removeTank(bound.tank);
+        this.tanksGroup.removeAt(index);
         this.updateTanks();
-        // TODO replace
-        this.applySimple();
+        this.delayedCalc.schedule();
     }
 
     public assignBestMix(): void {
         const maxDepth = this.planner.plan.maxDepth;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
-        // TODO instead of apply use reload
-        this.applySimple();
+        this.reload(this.firstTank, 1);
+        this.delayedCalc.schedule();
     }
 
     public assignStandardGas(index: number, gasName: string): void {
         const bound = this.tanks[index];
         bound.tank.assignStandardGas(gasName);
-        // TODO rebind item after gas assigned
-        this.applySimple();
+        this.reload(bound, index);
+        this.delayedCalc.schedule();
     }
 
     public tankChanged(index: number): void {
-        // TODO switch to complex view need to rebind
         const tankControl = this.tanksGroup.at(index) as FormGroup;
         const bound = this.tanks[index];
 
@@ -196,8 +209,17 @@ export class TanksComponent implements OnInit, OnDestroy {
         const values = this.tanksForm.value;
         this.firstTank.size = Number(values.firstTankSize);
         this.firstTank.startPressure = Number(values.firstTankStartPressure);
-        // TODO ensure rebind of the o2 field.
         this.delayedCalc.schedule();
+    }
+
+    private reloadAll(): void {
+        this.updateTanks();
+        this.tanksForm.patchValue({
+            firstTankSize: InputControls.formatNumber(this.numberPipe, this.firstTank.size),
+            firstTankStartPressure: InputControls.formatNumber(this.numberPipe, this.firstTank.startPressure),
+        });
+        // recreate all controls, because wo don't know which were removed/added as part of reload.
+        this.tanksForm.controls.boundTanks = this.fb.array(this.createTankControls());
     }
 
     private updateTanks(): void {
@@ -212,6 +234,16 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     private toBound(tank: Tank): TankBound {
         return new TankBound(tank, this.units);
+    }
+
+    private reload(bound: TankBound, index: number): void {
+        const tankControl = this.tanksGroup.at(index);
+        tankControl.patchValue({
+            tankSize: bound.size,
+            tankStartPressure: bound.startPressure,
+            tankO2: bound.o2,
+            tankHe: bound.he
+        });
     }
 
     private createTankControls(): AbstractControl[] {

@@ -17,7 +17,6 @@ import { IBackgroundTask } from '../workers/background-task';
 @Injectable()
 export class PlannerService {
     public static readonly maxAcceptableNdl = 1000;
-    public isComplex = false;
     public plan: Plan;
     // TODO diver can't be used outside of planner, serialization or app settings
     public diver: Diver = new Diver();
@@ -26,9 +25,13 @@ export class PlannerService {
     public infoCalculated;
     public wayPointsCalculated;
 
-    /** Event fired only in case of tanks rebuild. Not fired when adding or removing. */
+    /** Event fired only in case of tanks rebuild. Not fired when adding or removing tanks. */
     public tanksReloaded;
+    /** when switching between simple and complex view */
+    public viewSwitched;
     private onTanksReloaded = new Subject();
+    private onViewSwitched = new Subject();
+    private _isComplex = false;
     private calculating = false;
     private calculatingDiveInfo = false;
     private calculatingProfile = false;
@@ -51,6 +54,7 @@ export class PlannerService {
         this.wayPointsCalculated = this.onWayPointsCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
         this.tanksReloaded = this.onTanksReloaded.asObservable();
+        this.viewSwitched = this.onViewSwitched.asObservable();
 
         this.profileTask = this.workerFactory.createProfileWorker();
         this.profileTask.calculated.subscribe((data) => this.continueCalculation(data));
@@ -63,6 +67,10 @@ export class PlannerService {
         this.consumptionTask = this.workerFactory.createConsumptionWorker();
         this.consumptionTask.calculated.subscribe((data) => this.finishCalculation(data));
         this.consumptionTask.failed.subscribe(() => this.profileFailed());
+    }
+
+    public get isComplex(): boolean {
+        return this._isComplex;
     }
 
     /** Gets the current options. Used only for testing purposes */
@@ -82,16 +90,13 @@ export class PlannerService {
         return this.dive.diveInfoCalculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
     }
 
-    public resetToSimple(): void {
-        // reset only gas and depths to values valid for simple view.
-        this._tanks = this._tanks.slice(0, 1);
-
-        if (this.firstTank.he > 0) {
-            this.firstTank.assignStandardGas('Air');
+    public set isComplex(newValue: boolean) {
+        this._isComplex = newValue;
+        if(!newValue) {
+            this.resetToSimple();
         }
 
-        this.onTanksReloaded.next({});
-        this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
+        this.onViewSwitched.next({});
     }
 
     public addTank(): void {
@@ -142,7 +147,6 @@ export class PlannerService {
 
         if (tanks.length > 0) {
             this._tanks = tanks;
-            this.onTanksReloaded.next({});
         }
 
         if (segments.length > 1) {
@@ -152,6 +156,9 @@ export class PlannerService {
         this.isComplex = isComplex;
         if(!isComplex) {
             this.resetToSimple();
+        } else {
+            // to prevent fire the event twice
+            this.onTanksReloaded.next({});
         }
     }
 
@@ -282,6 +289,18 @@ export class PlannerService {
         this.dive.calculationFailed = false;
         this.calculating = false;
         this.onInfoCalculated.next({});
+    }
+
+    private resetToSimple(): void {
+        // reset only gas and depths to values valid for simple view.
+        this._tanks = this._tanks.slice(0, 1);
+
+        if (this.firstTank.he > 0) {
+            this.firstTank.assignStandardGas('Air');
+        }
+
+        this.onTanksReloaded.next({});
+        this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
     }
 
     private copyTanksConsumption(tanks: TankDto[]) {

@@ -159,14 +159,12 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
     }
 
     public set isComplex(newValue: boolean) {
-        this.planner.isComplex = newValue;
-
-        if (!this.planner.isComplex) {
+        if (!newValue) {
             this.setAllUsable();
             this.options.resetToSimple();
-            this.planner.resetToSimple();
         }
 
+        this.planner.isComplex = newValue;
         // always calculate, even nothing changed, since we want to propagate url update
         this.applyOptions();
     }

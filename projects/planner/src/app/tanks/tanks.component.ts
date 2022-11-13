@@ -66,7 +66,7 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     private bound: TankBound[] = [];
     private tanksSubscription!: Subscription;
-    private depthsSubscription!: Subscription;
+    private viewSwitchSubscription!: Subscription;
 
     constructor(private planner: PlannerService,
         public units: UnitConversion,
@@ -118,13 +118,12 @@ export class TanksComponent implements OnInit, OnDestroy {
         });
 
         this.tanksSubscription = this.planner.tanksReloaded.subscribe(() => this.reloadAll());
-        // trick how to check for switch to simple,but fires plan reload only when switching to simple
-        this.depthsSubscription = this.planner.plan.reloaded.subscribe(() => this.reloadAll());
+        this.viewSwitchSubscription = this.planner.viewSwitched.subscribe(() => this.reloadAll());
     }
 
     public ngOnDestroy(): void {
         this.tanksSubscription?.unsubscribe();
-        this.depthsSubscription?.unsubscribe();
+        this.viewSwitchSubscription?.unsubscribe();
     }
 
     public gasSac(index: number): number {

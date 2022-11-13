@@ -99,7 +99,7 @@ describe('PlannerService', () => {
             planner.plan.segments[1].endDepth = 5;
             planner.addSegment();
             planner.plan.fixDepths(); // to simplify setup
-            planner.resetToSimple();
+            planner.isComplex = false;
         });
 
         it('Sets simple profile', () => {
@@ -125,7 +125,7 @@ describe('PlannerService', () => {
             const firstTank = planner.firstTank;
             firstTank.he = 45;
             firstTank.o2 = 18;
-            planner.resetToSimple();
+            planner.isComplex = false;
             expect(firstTank.o2).toBe(21);
             expect(firstTank.he).toBe(0);
         });

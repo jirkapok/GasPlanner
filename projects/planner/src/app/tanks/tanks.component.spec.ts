@@ -1,5 +1,6 @@
+import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { FormsModule, NgModel } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -13,9 +14,9 @@ describe('Tanks component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TanksComponent, NgModel, GaslabelComponent, RangeValidator],
-            providers: [WorkersFactoryCommon, UnitConversion, PlannerService],
-            imports: [FormsModule]
+            declarations: [TanksComponent, GaslabelComponent, RangeValidator],
+            providers: [WorkersFactoryCommon, UnitConversion, PlannerService, DecimalPipe],
+            imports: [ReactiveFormsModule]
         })
             .compileComponents();
     });
@@ -29,25 +30,24 @@ describe('Tanks component', () => {
     it('Imperial units adjusts sac', inject([PlannerService, UnitConversion],
         (planner: PlannerService, units: UnitConversion) => {
             units.imperialUnits = true;
-            const sac = component.gasSac(component.firstTank);
+            const sac = component.gasSac(0);
             expect(sac).toBeCloseTo(19.33836, 5);
         }));
 
     it('Adds tank', inject([PlannerService],
         (planner: PlannerService) => {
-            planner.resetToSimple();
+            planner.isComplex = true;
             component.addTank();
             expect(component.tanks.length).toBe(2);
         }));
 
     it('Removes tank', inject([PlannerService],
         (planner: PlannerService) => {
-            planner.resetToSimple();
+            planner.isComplex = true;
             component.addTank();
             component.addTank();
             component.addTank();
-            const lastTank = component.tanks[3];
-            component.removeTank(lastTank);
+            component.removeTank(3);
             expect(component.tanks.length).toBe(3);
         }));
 });

@@ -137,7 +137,14 @@ describe('PlannerService', () => {
             const added = planner.plan.segments[2];
             expect(added.endDepth).toBe(30);
             expect(added.duration).toBe(600);
-            expect(added.tank).toBe(planner.firstTank);
+        });
+
+        it('Added segment has previous segment tank', () => {
+            planner.addSegment();
+            planner.addTank();
+            planner.plan.segments[2].tank = planner.tanks[1];
+            planner.addSegment();
+            expect(planner.plan.segments[3].tank).toBe(planner.tanks[1]);
         });
 
         it('Remove first segment sets initial depth to 0m', () => {

@@ -112,7 +112,10 @@ export class PlannerService {
     }
 
     public addSegment(): void {
-        this.plan.addSegment(this.firstTank);
+        const segments = this.plan.segments;
+        const lastUsedTank = segments[segments.length - 1].tank;
+        const tank = lastUsedTank || this.firstTank;
+        this.plan.addSegment(tank);
     }
 
     public removeSegment(segment: Segment): void {

@@ -2,7 +2,7 @@
     <label for="gasO2" class="form-label">Percent O2:
         <div class="input-group col-auto o2-max-width">
             <input class="form-control" type="number" (input)="fireGasChanged()" formControlName="o2" required
-                [min]="units.ranges.nitroxOxygen[0]" [max]="units.ranges.nitroxOxygen[1]" step="1"
+                [min]="units.ranges.nitroxOxygen[0]" [max]="units.ranges.nitroxOxygen[1]" step="1" id="o2Nitrox"
                 [class.is-invalid]="gasO2Invalid" />
             <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                 <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>

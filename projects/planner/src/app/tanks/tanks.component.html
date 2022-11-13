@@ -41,7 +41,7 @@
                                 <div class="mb-0 pb-0 px-0">
                                     <input formControlName="tankSize" class="form-control" type="number"
                                         (input)="tankChanged(i)" required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]"
-                                        step="1" [class.is-invalid]="tankSizeInvalid(i)" />
+                                        step="1" [class.is-invalid]="tankSizeInvalid(i)" id="sizeItem"/>
                                     <div class="text-danger" *ngIf="tankSizeInvalid(i)">Needs to be number
                                         {{ranges.tankSizeLabel}}
                                     </div>
@@ -51,7 +51,7 @@
                                 <div class="mb-0 pb-0 px-1">
                                     <input formControlName="tankStartPressure" class="form-control" type="number"
                                         (input)="tankChanged(i)" required [min]="ranges.tankPressure[0]"
-                                        [max]="ranges.tankPressure[1]" step="1"
+                                        [max]="ranges.tankPressure[1]" step="1" id="pressureItem"
                                         [class.is-invalid]="startPressureInvalid(i)" />
                                     <div class="text-danger" *ngIf="startPressureInvalid(i)">
                                         Needs to be number {{ranges.tankPressureLabel}}</div>
@@ -61,7 +61,7 @@
                                 <div class="input-group mb-0 pb-0 px-1">
                                     <input formControlName="tankO2" class="form-control" type="number" (input)="tankChanged(i)"
                                         required [min]="ranges.trimixOxygen[0]" [max]="ranges.trimixOxygen[1]" step="1"
-                                        [class.is-invalid]="gasO2Invalid(i)" />
+                                        [class.is-invalid]="gasO2Invalid(i)" id="o2Item" />
                                     <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
                                         <button class="btn btn-default border" id="o2Menu" type="button"
                                             ngbDropdownToggle></button>
@@ -79,7 +79,7 @@
                                 <div class="mb-0 pb-0 px-1">
                                     <input formControlName="tankHe" class="form-control" type="number" (input)="tankChanged(i)"
                                         [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1" required
-                                        [class.is-invalid]="gasHeInvalid(i)" />
+                                        [class.is-invalid]="gasHeInvalid(i)" id="heItem" />
                                     <div class="text-danger" *ngIf="gasHeInvalid(i)">Needs to be number
                                         {{ranges.tankHeLabel}}</div>
                                 </div>
@@ -112,7 +112,7 @@
                 <label for="size" class="form-label">Size [{{units.volume}}]:
                     <input formControlName="firstTankSize" class="form-control col-auto" type="number" (input)="applySimple()"
                         required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-                        [class.is-invalid]="firstTankSizeInvalid" />
+                        [class.is-invalid]="firstTankSizeInvalid" id="sizeFirstTank"/>
                     <small class="form-text text-muted">SAC: {{gasSac(0) | number:'1.0-2'}}
                         {{units.sac}}</small>
                     <div class="text-danger form-text" *ngIf="firstTankSizeInvalid">Needs to be
@@ -121,7 +121,7 @@
             </div>
             <div class="mb-2 col-auto">
                 <label for="startPressure" class="form-label">Start pressure [{{units.pressure}}]:
-                    <input class="form-control col-auto" type="number" (input)="applySimple()"
+                    <input class="form-control col-auto" type="number" (input)="applySimple()" id="startPressureFirstTank"
                         formControlName="firstTankStartPressure" required [min]="ranges.tankPressure[0]"
                         [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankStartPressureInvalid" />
                     <div class="text-danger form-text" *ngIf="firstTankStartPressureInvalid">Needs to be

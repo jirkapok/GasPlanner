@@ -23,6 +23,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     public depthsForm!: FormGroup;
     public dive: Dive;
     private subscription!: Subscription;
+    private viewSubsription!: Subscription;
 
     constructor(
         private fb: FormBuilder,
@@ -97,8 +98,20 @@ export class DepthsComponent implements OnInit, OnDestroy {
             levels: this.fb.array(this.createLevelControls())
         });
 
-        // TODO check behavior in case of switch to complex view
-        this.subscription = this.plan.reloaded.subscribe(() => this.reload());
+        // this combination of event handlers isn't efficient, but leave it because its simple
+        // for simple view, this is also kicked of when switching to simple view
+        this.subscription = this.plan.reloaded.subscribe(() => {
+            this.reload();
+            this.reloadComplex();
+        });
+
+        // for complex view
+        this.viewSubsription = this.planner.viewSwitched.subscribe(() => this.reloadComplex());
+    }
+
+    public ngOnDestroy(): void {
+        this.subscription?.unsubscribe();
+        this.viewSubsription?.unsubscribe();
     }
 
     public addLevel(): void {
@@ -136,10 +149,6 @@ export class DepthsComponent implements OnInit, OnDestroy {
         this.depths.levelChanged();
     }
 
-    public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
-    }
-
     public durationChanged(): void {
         if (this.depthsForm.invalid) {
             return;
@@ -153,16 +162,19 @@ export class DepthsComponent implements OnInit, OnDestroy {
         return Level.tankLabel(this.units, tank);
     }
 
-    // not called in complex mode
+    // for simple view only
     private reload(): void {
         this.depths.updateLevels();
 
+        // depth is reloaded in its nested component
         this.depthsForm.patchValue({
             planDuration: InputControls.formatNumber(this.numberPipe, this.depths.planDuration)
         });
+    }
 
-        // even in simple mode before we switch to complex mode,
-        // this enforces reload of values to the UI for complex mode
+    // for complex view only
+    private reloadComplex(): void {
+        this.depths.updateLevels();
         this.levels.controls = this.createLevelControls();
     }
 

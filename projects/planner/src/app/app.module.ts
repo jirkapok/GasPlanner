@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CustomFormsModule } from './validators/custom-forms.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ClipboardModule } from 'ngx-clipboard';
 
@@ -86,7 +85,6 @@ import { DiveIssuesComponent } from './dive-issues/dive-issues.component';
         ReactiveFormsModule,
         NgbModule,
         AppRoutingModule,
-        CustomFormsModule,
         FontAwesomeModule,
         ClipboardModule,
         ServiceWorkerModule.register('ngsw-worker.js', {

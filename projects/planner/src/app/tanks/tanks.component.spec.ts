@@ -8,7 +8,6 @@ import { NitroxO2Component } from '../nitrox-o2/nitrox-o2.component';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
-import { RangeValidator } from '../validators/range/directive';
 import { TanksComponent } from './tanks.component';
 
 export class SimpleTanksPage {
@@ -65,9 +64,10 @@ describe('Tanks component', () => {
     let complexPage: ComplexTanksPage;
     let simplePage: SimpleTanksPage;
 
+    // TODO remove the range validator, mix and max no longer needed directives
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TanksComponent, GaslabelComponent, RangeValidator, NitroxO2Component],
+            declarations: [TanksComponent, GaslabelComponent, NitroxO2Component],
             providers: [WorkersFactoryCommon, UnitConversion, PlannerService, DecimalPipe],
             imports: [ReactiveFormsModule]
         })
@@ -134,15 +134,6 @@ describe('Tanks component', () => {
             expect(complexPage.pressureInput(1).value).toBe('150');
             expect(complexPage.o2Input(1).value).toBe('25');
             expect(complexPage.heInput(1).value).toBe('31');
-        }));
-
-    xit('Assign gas name in simple view new o2 value', inject([PlannerService],
-        (planner: PlannerService) => {
-            planner.isComplex = false;
-            component.assignStandardGas(0, 'Ean36');
-            simplePage.oxygenInput.dispatchEvent(new Event('input'));
-            fixture.detectChanges();
-            expect(simplePage.oxygenInput.value).toBe('36');
         }));
 
     it('Assign gas name in complex view tank rebinds new o2 value', inject([PlannerService],

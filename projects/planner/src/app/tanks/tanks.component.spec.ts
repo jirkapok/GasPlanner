@@ -66,7 +66,6 @@ describe('Tanks component', () => {
     let simplePage: SimpleTanksPage;
     let schedulerSpy: jasmine.Spy<() => void>;
 
-    // TODO remove the range validator, mix and max no longer needed directives
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [TanksComponent, GaslabelComponent, NitroxO2Component],

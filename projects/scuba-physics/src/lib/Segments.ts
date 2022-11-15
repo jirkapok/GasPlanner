@@ -43,17 +43,6 @@ export class Segment {
         /** in seconds */
         public duration: number) { }
 
-    public static from(other: Segment): Segment {
-        const copy = new Segment(other.startDepth, other.endDepth, other._gas, other.duration);
-        // this assignment causes some rounding issues, which are ignored
-        copy.tank = other.tank;
-        return copy;
-    }
-
-    public static depthAt(startDepth: number, speed: number, duration: number): number {
-        return startDepth + speed * duration;
-    }
-
     /** See tank, you can change gas only by assigning tank,
      * gas doesn't change for calculated segments.
      */
@@ -63,6 +52,18 @@ export class Segment {
 
     public get tank(): Tank | undefined {
         return this._tank;
+    }
+
+    /**
+     * meters per second, positive for descent, negative for ascent
+     */
+    public get speed(): number {
+        return (this.endDepth - this.startDepth) / this.duration;
+    }
+
+    /** in meters */
+    public get averageDepth(): number {
+        return (this.startDepth + this.endDepth) / 2;
     }
 
     /**
@@ -79,21 +80,20 @@ export class Segment {
         }
     }
 
+    public static from(other: Segment): Segment {
+        const copy = new Segment(other.startDepth, other.endDepth, other._gas, other.duration);
+        // this assignment causes some rounding issues, which are ignored
+        copy.tank = other.tank;
+        return copy;
+    }
+
+    public static depthAt(startDepth: number, speed: number, duration: number): number {
+        return startDepth + speed * duration;
+    }
+
     public contentEquals(toCompare: Segment): boolean {
         return this.speed === toCompare.speed &&
             this._gas === toCompare._gas;
-    }
-
-    /**
-     * meters per second, positive for descent, negative for ascent
-     */
-    public get speed(): number {
-        return (this.endDepth - this.startDepth) / this.duration;
-    }
-
-    /** in meters */
-    public get averageDepth(): number {
-        return (this.startDepth + this.endDepth) / 2;
     }
 
     /**
@@ -101,7 +101,7 @@ export class Segment {
      * @returns current depth in meters where the diver was at the moment
      */
     public depthAt(duration: number): number {
-        return  Segment.depthAt(this.startDepth, this.speed, duration);
+        return Segment.depthAt(this.startDepth, this.speed, duration);
     }
 
     public mergeFrom(toAdd: Segment): void {
@@ -113,6 +113,48 @@ export class Segment {
 export class Segments {
     private segments: Segment[] = [];
     private _maxDepth = 0;
+
+    /** Index of the first segment, where the ascent starts */
+    public get startAscentIndex(): number {
+        return this.deepestPart().length;
+    }
+
+    /**
+     * Duration of dive up to the ascent start in seconds.
+     */
+    public get startAscentTime(): number {
+        const toCount = this.deepestPart();
+        return Segments.duration(toCount);
+    }
+
+    /** Gets count stored items */
+    public get length(): number {
+        return this.segments.length;
+    }
+
+    /** Gets copy of managed items */
+    public get items(): Segment[] {
+        return this.segments.slice();
+    }
+
+    /** in meters */
+    public get maxDepth(): number {
+        return this._maxDepth;
+    }
+
+    /** Gets end depth of last segment as current depth in meters during profile generation */
+    public get currentDepth(): number {
+        if (this.any()) {
+            return this.last().endDepth;
+        }
+
+        return 0;
+    }
+
+    /** Gets total duration of all segments in seconds */
+    public get duration(): number {
+        return Segments.duration(this.segments);
+    }
 
     public static from(other: Segments): Segments {
         const result = Segments.fromCollection(other.segments);
@@ -156,7 +198,7 @@ export class Segments {
 
         // Uses cumulative average to prevent number overflow for large segment durations
         segments.forEach(segment => {
-            if(segment.duration > 0) {
+            if (segment.duration > 0) {
                 const cumulativeWeight = segment.averageDepth * segment.duration + totalDuration * cumulativeAverage;
                 totalDuration += segment.duration;
                 cumulativeAverage = cumulativeWeight / totalDuration;
@@ -164,35 +206,6 @@ export class Segments {
         });
 
         return cumulativeAverage;
-    }
-
-    /** Gets count stored items */
-    public get length(): number {
-        return this.segments.length;
-    }
-
-    /** Gets copy of managed items */
-    public get items(): Segment[] {
-        return this.segments.slice();
-    }
-
-    /** in meters */
-    public get maxDepth(): number {
-        return this._maxDepth;
-    }
-
-    /** Gets end depth of last segment as current depth in meters during profile generation */
-    public get currentDepth(): number {
-        if (this.any()) {
-            return this.last().endDepth;
-        }
-
-        return 0;
-    }
-
-    /** Gets total duration of all segments in seconds */
-    public get duration(): number {
-        return Segments.duration(this.segments);
     }
 
     /**
@@ -225,7 +238,7 @@ export class Segments {
      * @returns not null collection managed items after all neighbor elements with identical speed are merged into one
      * */
     public mergeFlat(skipItems = 0): Segment[] {
-        if(skipItems < 0) {
+        if (skipItems < 0) {
             return this.segments;
         }
 
@@ -290,25 +303,12 @@ export class Segments {
     */
     public deepestPart(): Segment[] {
         for (let index = this.segments.length - 1; index >= 0; index--) {
-            if(this.segments[index].endDepth === this.maxDepth) {
+            if (this.segments[index].endDepth === this.maxDepth) {
                 return this.items.slice(0, index + 1);
             }
         }
 
         return [];
-    }
-
-    /** Index of the first segment, where the ascent starts */
-    public get startAscentIndex(): number {
-        return this.deepestPart().length;
-    }
-
-    /**
-     * Duration of dive up to the ascent start in seconds.
-     */
-    public get startAscentTime(): number {
-        const toCount = this.deepestPart();
-        return Segments.duration(toCount);
     }
 
     private updateMaxDepth(segment: Segment): void {
@@ -351,7 +351,7 @@ export class SegmentsFactory {
         let estimate = targetDepth / options.descentSpeed;
         // loosing precision +-6 seconds acceptable rounding
         estimate = Precision.ceil(estimate, 1);
-        estimate =Time.toSeconds(estimate);
-        return  Precision.ceil(estimate);
+        estimate = Time.toSeconds(estimate);
+        return Precision.ceil(estimate);
     }
 }

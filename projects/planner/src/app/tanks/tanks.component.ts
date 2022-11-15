@@ -192,6 +192,10 @@ export class TanksComponent implements OnInit, OnDestroy {
     }
 
     public tankChanged(index: number): void {
+        if(this.tanksForm.invalid) {
+            return;
+        }
+
         const tankControl = this.tanksGroup.at(index) as FormGroup;
         const bound = this.tanks[index];
 
@@ -205,6 +209,10 @@ export class TanksComponent implements OnInit, OnDestroy {
     }
 
     public applySimple(): void {
+        if(this.tanksForm.invalid) {
+            return;
+        }
+
         const values = this.tanksForm.value;
         this.firstTank.size = Number(values.firstTankSize);
         this.firstTank.startPressure = Number(values.firstTankStartPressure);
@@ -217,8 +225,10 @@ export class TanksComponent implements OnInit, OnDestroy {
             firstTankSize: InputControls.formatNumber(this.numberPipe, this.firstTank.size),
             firstTankStartPressure: InputControls.formatNumber(this.numberPipe, this.firstTank.startPressure),
         });
+
         // recreate all controls, because wo don't know which were removed/added as part of reload.
-        this.tanksForm.controls.boundTanks = this.fb.array(this.createTankControls());
+        this.tanksGroup.clear();
+        this.createTankControls().forEach(c => this.tanksGroup.push(c));
     }
 
     private updateTanks(): void {

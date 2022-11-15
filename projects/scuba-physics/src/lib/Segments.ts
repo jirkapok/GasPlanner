@@ -239,7 +239,7 @@ export class Segments {
      * */
     public mergeFlat(skipItems = 0): Segment[] {
         if (skipItems < 0) {
-            return this.segments;
+            return this.items;
         }
 
         // TODO performance: optimize mergeFlat performance or get rid of it
@@ -254,7 +254,7 @@ export class Segments {
         }
 
         this.segments = this.segments.filter(s => !toRemove.includes(s));
-        return this.segments;
+        return this.items;
     }
 
     /** Removes the given segment from managed collection */

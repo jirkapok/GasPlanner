@@ -63,18 +63,18 @@ export class DepthsComponent implements OnInit, OnDestroy {
         return InputControls.controlInValid(duration);
     }
 
-    public get levels(): FormArray {
+    public get levelControls(): FormArray {
         return this.depthsForm.controls.levels as FormArray;
     }
 
     public depthItemInvalid(index: number): boolean {
-        const level = this.levels.at(index) as FormGroup;
+        const level = this.levelControls.at(index) as FormGroup;
         const endDepth = level.controls.endDepth;
         return InputControls.controlInValid(endDepth);
     }
 
     public durationItemInvalid(index: number): boolean {
-        const level = this.levels.at(index) as FormGroup;
+        const level = this.levelControls.at(index) as FormGroup;
         const duration = level.controls.duration;
         return InputControls.controlInValid(duration);
     }
@@ -101,12 +101,16 @@ export class DepthsComponent implements OnInit, OnDestroy {
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
         this.subscription = this.plan.reloaded.subscribe(() => {
-            this.reload();
+            this.depths.updateLevels();
+            this.reloadSimple();
             this.reloadComplex();
         });
 
-        // for complex view
-        this.viewSubsription = this.planner.viewSwitched.subscribe(() => this.reloadComplex());
+        // for complex view only
+        this.viewSubsription = this.planner.viewSwitched.subscribe(() => {
+            this.depths.updateLevels();
+            this.reloadComplex();
+        });
     }
 
     public ngOnDestroy(): void {
@@ -123,7 +127,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
         const index = this.depths.levels.length - 1;
         const newLevel = this.levelAt(index);
         const levelControls = this.createLevelControl(newLevel);
-        this.levels.push(levelControls);
+        this.levelControls.push(levelControls);
     }
 
     public removeLevel(index: number): void {
@@ -133,7 +137,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
 
         const level = this.levelAt(index);
         this.depths.removeSegment(level);
-        this.levels.removeAt(index);
+        this.levelControls.removeAt(index);
     }
 
     public levelChanged(index: number): void {
@@ -142,7 +146,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
         }
 
         const level = this.levelAt(index);
-        const levelControl = this.levels.at(index) as FormGroup;
+        const levelControl = this.levelControls.at(index) as FormGroup;
         const levelValue = levelControl.value;
         level.duration = Number(levelValue.duration);
         level.endDepth = Number(levelValue.endDepth);
@@ -163,9 +167,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     }
 
     // for simple view only
-    private reload(): void {
-        this.depths.updateLevels();
-
+    private reloadSimple(): void {
         // depth is reloaded in its nested component
         this.depthsForm.patchValue({
             planDuration: InputControls.formatNumber(this.numberPipe, this.depths.planDuration)
@@ -174,13 +176,13 @@ export class DepthsComponent implements OnInit, OnDestroy {
 
     // for complex view only
     private reloadComplex(): void {
-        this.depths.updateLevels();
-        this.levels.controls = this.createLevelControls();
+        this.levelControls.clear();
+        this.createLevelControls().forEach(c => this.levelControls.push(c));
     }
 
     private createLevelControls(): AbstractControl[] {
         const created: AbstractControl[] = [];
-        for(const level of this.depths.levels) {
+        for (const level of this.depths.levels) {
             const newControl = this.createLevelControl(level);
             created.push(newControl);
         }
@@ -192,13 +194,13 @@ export class DepthsComponent implements OnInit, OnDestroy {
         return this.fb.group({
             duration: this.createDurationControl(level.duration),
             endDepth: [InputControls.formatNumber(this.numberPipe, level.endDepth),
-                [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]]
+            [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]]
         });
     }
 
     private createDurationControl(duration: number): [string | null, Validators[]] {
         return [InputControls.formatNumber(this.numberPipe, duration),
-            [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]];
+        [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]];
     }
 
     private levelAt(index: number): Level {

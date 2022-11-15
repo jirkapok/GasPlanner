@@ -49,7 +49,7 @@
                         </button></th>
                 </tr>
                 <ng-container formArrayName="levels">
-                    <tr *ngFor="let level of levels.controls; let i = index" [formGroupName]="i">
+                    <tr *ngFor="let level of levelControls.controls; let i = index" [formGroupName]="i">
                         <td>
                             <div class="mb-0 pb-0 px-1 text-end">{{ startDepth(i) | number:'1.0-0' }}
                             </div>

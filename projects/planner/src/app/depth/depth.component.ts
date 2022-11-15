@@ -24,6 +24,10 @@ export class DepthComponent implements OnInit {
     }
 
     public depthChanged() {
+        if (this.depthForm.invalid) {
+            return;
+        }
+
         const newValue = this.depthForm.controls.depth.value;
         this.depths.plannedDepth = Number(newValue);
     }

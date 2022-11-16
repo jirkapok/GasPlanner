@@ -215,10 +215,11 @@ export class BuhlmannAlgorithm {
     private stayAtDecoStop(context: AlgorithmContext, nextStop: number): void {
         // TODO performance, we need to try faster algorithm, how to find the stop length
         // TODO add air breaks - https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/
-        if (nextStop < context.ceiling()) {
-            let stopDuration = 0;
+        if (this.needsDecoStop(context, nextStop)) {
             const stopIncrement = context.decoStopDuration;
+            let stopDuration = stopIncrement;
             const decoStop = context.addDecoStopSegment();
+            this.swim(context, decoStop);
 
             // max stop duration was chosen as one day which may not be enough for saturation divers
             while (this.needsDecoStop(context, nextStop) && stopDuration < Time.oneDay) {
@@ -230,13 +231,17 @@ export class BuhlmannAlgorithm {
         }
     }
 
-    // TODO measure performance before and after
     // there is better option, than to try, since we cant predict the tissues loading
     private needsDecoStop(context: AlgorithmContext, nextStop: number): boolean {
+        if(nextStop >= context.ceiling()) {
+            return false;
+        }
+
+        // only in case the offgasing is faster than ascent to next stop.
         const memento = context.createMemento();
-        // this.ascentToNextStop(context, nextStop);
+        this.ascentToNextStop(context, nextStop);
         const result = nextStop < context.ceiling();
-        // context.restore(memento);
+        context.restore(memento);
         return result;
     }
 

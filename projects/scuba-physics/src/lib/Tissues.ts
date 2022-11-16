@@ -59,6 +59,16 @@ export class Tissue extends Compartment {
         return this._b;
     }
 
+    public copy(): Tissue {
+        const backup = new Tissue(this, 1); // irrelevant pressure wouldn't be used
+        backup._pN2 = this._pN2;
+        backup._pHe = this._pHe;
+        backup._pTotal = this._pTotal;
+        backup._a = this._a;
+        backup._b = this._b;
+        return backup;
+    }
+
     /**
      * Returns pressure in bars of the depth representing maximum ceiling
      * reduced by the provided gradient.
@@ -150,5 +160,15 @@ export class Tissues {
             loadChange = loadChange + tissueChange;
         }
         return loadChange;
+    }
+
+    public copy(): Tissue[] {
+        const backup: Tissue[] = [];
+        for(let index = 0; index < this.compartments.length; index++) {
+            const compartmentCopy = this.compartments[index].copy();
+            backup.push(compartmentCopy);
+        }
+
+        return backup;
     }
 }

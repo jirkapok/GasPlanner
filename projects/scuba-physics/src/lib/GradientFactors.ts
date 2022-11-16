@@ -4,6 +4,8 @@ import { Segments } from './Segments';
 import { Tissues } from './Tissues';
 
 export interface GradientFactors {
+    /** only for memento purposes */
+    lowestCeiling: number;
     /** Gets current highest ceiling of all tissues */
     ceiling(): number;
 }
@@ -15,7 +17,7 @@ export interface GradientFactors {
  * this part needs to be under GNU General Public License v2.0
  */
 export class SubSurfaceGradientFactors {
-    private lowestCeiling = 0;
+    public lowestCeiling = 0;
 
     constructor(private depthConverter: DepthConverter, private options: Options, private tissues: Tissues) {
         // add 1 to compensate gradient low on start of the dive
@@ -90,6 +92,7 @@ export class SubSurfaceGradientFactors {
  * Generates not linear transition from GFlow to GFHigh
  */
 export class SimpleGradientFactors {
+    public lowestCeiling = 0;// not used
     private gfDiff: number;
 
     constructor(private depthConverter: DepthConverter, private options: Options, private tissues: Tissues, private segments: Segments) {

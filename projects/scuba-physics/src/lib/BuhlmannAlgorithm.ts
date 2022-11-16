@@ -1,4 +1,4 @@
-import { Tissues, LoadSegment } from './Tissues';
+import { Tissues, LoadSegment, Tissue } from './Tissues';
 import { Gases, Gas, BestGasOptions, GasesValidator } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
@@ -9,6 +9,13 @@ import { Options } from './Options';
 import { AscentSpeeds } from './speeds';
 import { DepthLevels } from './DepthLevels';
 import { Precision } from './precision';
+
+interface ContextMemento {
+    tissues: Tissue[];
+    ceilings: number;
+    runTime: number;
+    lowestCeiling: number;
+}
 
 class AlgorithmContext {
     public tissues: Tissues;
@@ -21,8 +28,8 @@ class AlgorithmContext {
     private speeds: AscentSpeeds;
     private levels: DepthLevels;
 
-    // TODO reuse tissues for repetitive dives
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
+        // TODO reuse tissues for repetitive dives
         this.tissues = new Tissues(depthConverter.surfacePressure);
         // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
@@ -61,7 +68,7 @@ class AlgorithmContext {
         return this.options.roundStopsToMinutes ? Time.oneMinute : Time.oneSecond;
     }
 
-    // use this just before calculating ascent to be able calculate correct speeds
+    /** use this just before calculating ascent to be able calculate correct speeds */
     public markAverageDepth(): void {
         this.speeds.markAverageDepth(this.segments);
     }
@@ -81,6 +88,25 @@ class AlgorithmContext {
         this.bestGasOptions.currentGas = this.currentGas;
         const newGas = this.gases.bestGas(this.levels, this.depthConverter, this.bestGasOptions);
         return newGas;
+    }
+
+    public createMemento(): ContextMemento {
+        return {
+            runTime: this.runTime,
+            tissues: this.tissues.copy(),
+            ceilings: this.ceilings.length,
+            lowestCeiling: this.gradients.lowestCeiling
+        };
+    }
+
+    public restore(memento: ContextMemento): void {
+        // here we don't copy, since we expect it wasn't touched
+        this.tissues.compartments = memento.tissues;
+        this.gradients.lowestCeiling = memento.lowestCeiling;
+        this.runTime = memento.runTime;
+        // ceilings and segments are only added
+        this.ceilings = this.ceilings.slice(0, memento.ceilings);
+        this.segments.remove(this.segments.last());
     }
 
     public nextStop(currentStop: number): number {
@@ -195,13 +221,23 @@ export class BuhlmannAlgorithm {
             const decoStop = context.addDecoStopSegment();
 
             // max stop duration was chosen as one day which may not be enough for saturation divers
-            while (nextStop < context.ceiling() && stopDuration < Time.oneDay) {
+            while (this.needsDecoStop(context, nextStop) && stopDuration < Time.oneDay) {
                 this.swim(context, decoStop);
                 stopDuration += stopIncrement;
             }
 
             decoStop.duration = stopDuration;
         }
+    }
+
+    // TODO measure performance before and after
+    // there is better option, than to try, since we cant predict the tissues loading
+    private needsDecoStop(context: AlgorithmContext, nextStop: number): boolean {
+        const memento = context.createMemento();
+        // this.ascentToNextStop(context, nextStop);
+        const result = nextStop < context.ceiling();
+        // context.restore(memento);
+        return result;
     }
 
     private stayAtSafetyStop(context: AlgorithmContext): void {

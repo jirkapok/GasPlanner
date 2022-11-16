@@ -156,11 +156,13 @@ export class Segments {
         return Segments.duration(this.segments);
     }
 
+    /** deep copy of all element */
     public static from(other: Segments): Segments {
         const result = Segments.fromCollection(other.segments);
         return result;
     }
 
+    /** deep copy of all element */
     public static fromCollection(segments: Segment[]): Segments {
         const result = new Segments();
 
@@ -276,6 +278,7 @@ export class Segments {
         return this.segments[this.segments.length - 1];
     }
 
+    /* deep copy of managed items */
     public copy(): Segments {
         return Segments.from(this);
     }

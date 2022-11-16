@@ -90,6 +90,29 @@ class AlgorithmContext {
     public shouldSwitchTo(newGas: Gas): boolean {
         return newGas && !this.currentGas.compositionEquals(newGas);
     }
+
+    public addGasSwitchSegment(): Segment {
+        const duration = this.options.gasSwitchDuration * Time.oneMinute;
+        return this.addStopSegment(duration);
+    }
+
+    public addDecoStopSegment(): Segment {
+        const duration = this.decoStopDuration;
+        return this.addStopSegment(duration);
+    }
+
+    public addSafetyStopSegment(): Segment {
+        const duration = Time.oneMinute * 3;
+        return this.addStopSegment(duration);
+    }
+
+    public addAscentSegment(nextStop: number, duration: number): Segment {
+        return this.segments.add(this.currentDepth, nextStop, this.currentGas, duration);
+    }
+
+    private addStopSegment(duration: number): Segment {
+        return this.segments.add(this.currentDepth, this.currentDepth, this.currentGas, duration);
+    }
 }
 
 export class BuhlmannAlgorithm {
@@ -158,8 +181,7 @@ export class BuhlmannAlgorithm {
 
         if (context.shouldSwitchTo(newGas)) {
             context.currentGas = newGas;
-            const duration = context.options.gasSwitchDuration * Time.oneMinute;
-            const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, duration);
+            const stop = context.addGasSwitchSegment();
             this.swim(context, stop);
         }
     }
@@ -170,7 +192,7 @@ export class BuhlmannAlgorithm {
         if (nextStop < context.ceiling()) {
             let stopDuration = 0;
             const stopIncrement = context.decoStopDuration;
-            const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, stopIncrement);
+            const decoStop = context.addDecoStopSegment();
 
             // max stop duration was chosen as one day which may not be enough for saturation divers
             while (nextStop < context.ceiling() && stopDuration < Time.oneDay) {
@@ -184,8 +206,7 @@ export class BuhlmannAlgorithm {
 
     private stayAtSafetyStop(context: AlgorithmContext): void {
         if (context.addSafetyStop) {
-            const safetyStopDuration = Time.oneMinute * 3;
-            const safetyStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, safetyStopDuration);
+            const safetyStop = context.addSafetyStopSegment();
             this.swim(context, safetyStop);
         }
     }
@@ -193,7 +214,7 @@ export class BuhlmannAlgorithm {
     private ascentToNextStop(context: AlgorithmContext, nextStop: number): void {
         const depthDifference = context.currentDepth - nextStop;
         const duration = this.duration(depthDifference, context.ascentSpeed);
-        const ascent = context.segments.add(context.currentDepth, nextStop, context.currentGas, duration);
+        const ascent = context.addAscentSegment(nextStop, duration);
         this.swim(context, ascent);
     }
 

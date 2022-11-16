@@ -142,22 +142,31 @@ export class BuhlmannAlgorithm {
             this.tryGasSwitch(context);
 
             // 2. Deco stop
-            // TODO we may still ongasing during ascent to next stop
             // TODO performance, we need to try faster algorithm, how to find the stop length
             // TODO add air breaks - https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/
-            let stopElapsed = 0; // max stop duration was chosen as one day.
+            let stopElapsed = 0;
+            const stopDuration = context.decoStopDuration;
+            let decoStop: Segment | null = null;
+
+            // max stop duration was chosen as one day which may not be enough for saturation divers
             while (nextStop < context.ceiling() && stopElapsed < Time.oneDay) {
-                const stopDuration = context.decoStopDuration;
-                const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, stopDuration);
+                if(!decoStop) {
+                    decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, stopDuration);
+                }
+
                 this.swim(context, decoStop);
                 stopElapsed += stopDuration;
+            }
+
+            if(decoStop) {
+                decoStop.duration = stopElapsed;
             }
 
             // 3. safety stop
             if (context.addSafetyStop) {
                 const safetyStopDuration = Time.oneMinute * 3;
-                const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, safetyStopDuration);
-                this.swim(context, decoStop);
+                const safetyStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, safetyStopDuration);
+                this.swim(context, safetyStop);
             }
 
             // 4. ascent to the nextStop

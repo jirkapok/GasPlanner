@@ -86,6 +86,10 @@ class AlgorithmContext {
     public nextStop(currentStop: number): number {
         return this.levels.nextStop(currentStop);
     }
+
+    public shouldSwitchTo(newGas: Gas): boolean {
+        return newGas && !this.currentGas.compositionEquals(newGas);
+    }
 }
 
 export class BuhlmannAlgorithm {
@@ -152,35 +156,29 @@ export class BuhlmannAlgorithm {
     private tryGasSwitch(context: AlgorithmContext) {
         const newGas: Gas = context.bestDecoGas();
 
-        if (!newGas || context.currentGas.compositionEquals(newGas)) {
-            return;
+        if (context.shouldSwitchTo(newGas)) {
+            context.currentGas = newGas;
+            const duration = context.options.gasSwitchDuration * Time.oneMinute;
+            const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, duration);
+            this.swim(context, stop);
         }
-
-        context.currentGas = newGas;
-        const duration = context.options.gasSwitchDuration * Time.oneMinute;
-        const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, duration);
-        this.swim(context, stop);
     }
 
     private stayAtDecoStop(context: AlgorithmContext, nextStop: number): void {
         // TODO performance, we need to try faster algorithm, how to find the stop length
         // TODO add air breaks - https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/
-        let stopElapsed = 0;
-        const stopDuration = context.decoStopDuration;
-        let decoStop: Segment | null = null;
+        if (nextStop < context.ceiling()) {
+            let stopDuration = 0;
+            const stopIncrement = context.decoStopDuration;
+            const decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, stopIncrement);
 
-        // max stop duration was chosen as one day which may not be enough for saturation divers
-        while (nextStop < context.ceiling() && stopElapsed < Time.oneDay) {
-            if (!decoStop) {
-                decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, stopDuration);
+            // max stop duration was chosen as one day which may not be enough for saturation divers
+            while (nextStop < context.ceiling() && stopDuration < Time.oneDay) {
+                this.swim(context, decoStop);
+                stopDuration += stopIncrement;
             }
 
-            this.swim(context, decoStop);
-            stopElapsed += stopDuration;
-        }
-
-        if (decoStop) {
-            decoStop.duration = stopElapsed;
+            decoStop.duration = stopDuration;
         }
     }
 
@@ -197,7 +195,6 @@ export class BuhlmannAlgorithm {
         const duration = this.duration(depthDifference, context.ascentSpeed);
         const ascent = context.segments.add(context.currentDepth, nextStop, context.currentGas, duration);
         this.swim(context, ascent);
-
     }
 
     private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): Event[] {

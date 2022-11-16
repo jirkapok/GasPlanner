@@ -137,48 +137,54 @@ export class BuhlmannAlgorithm {
 
         // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.
         while (nextStop >= 0 && segments.last().endDepth !== 0) {
-            // 1. Gas switch
-            // multiple gas switches may happen before first deco stop
-            this.tryGasSwitch(context);
-
-            // 2. Deco stop
-            // TODO performance, we need to try faster algorithm, how to find the stop length
-            // TODO add air breaks - https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/
-            let stopElapsed = 0;
-            const stopDuration = context.decoStopDuration;
-            let decoStop: Segment | null = null;
-
-            // max stop duration was chosen as one day which may not be enough for saturation divers
-            while (nextStop < context.ceiling() && stopElapsed < Time.oneDay) {
-                if(!decoStop) {
-                    decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, stopDuration);
-                }
-
-                this.swim(context, decoStop);
-                stopElapsed += stopDuration;
-            }
-
-            if(decoStop) {
-                decoStop.duration = stopElapsed;
-            }
-
-            // 3. safety stop
-            if (context.addSafetyStop) {
-                const safetyStopDuration = Time.oneMinute * 3;
-                const safetyStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, safetyStopDuration);
-                this.swim(context, safetyStop);
-            }
-
-            // 4. ascent to the nextStop
-            const depthDifference = context.currentDepth - nextStop;
-            const duration = this.duration(depthDifference, context.ascentSpeed);
-            const ascent = context.segments.add(context.currentDepth, nextStop, context.currentGas, duration);
-            this.swim(context, ascent);
+            // Next steps need to be in this order
+            this.tryGasSwitch(context); // multiple gas switches may happen before first deco stop
+            this.stayAtDecoStop(context, nextStop);
+            this.stayAtSafetyStop(context);
+            this.ascentToNextStop(context, nextStop);
             nextStop = context.nextStop(nextStop);
         }
 
         const merged = segments.mergeFlat(originSegments.length);
         return CalculatedProfile.fromProfile(merged, context.ceilings);
+    }
+
+    private stayAtDecoStop(context: AlgorithmContext, nextStop: number): void {
+        // TODO performance, we need to try faster algorithm, how to find the stop length
+        // TODO add air breaks - https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/
+        let stopElapsed = 0;
+        const stopDuration = context.decoStopDuration;
+        let decoStop: Segment | null = null;
+
+        // max stop duration was chosen as one day which may not be enough for saturation divers
+        while (nextStop < context.ceiling() && stopElapsed < Time.oneDay) {
+            if (!decoStop) {
+                decoStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, stopDuration);
+            }
+
+            this.swim(context, decoStop);
+            stopElapsed += stopDuration;
+        }
+
+        if (decoStop) {
+            decoStop.duration = stopElapsed;
+        }
+    }
+
+    private stayAtSafetyStop(context: AlgorithmContext): void {
+        if (context.addSafetyStop) {
+            const safetyStopDuration = Time.oneMinute * 3;
+            const safetyStop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, safetyStopDuration);
+            this.swim(context, safetyStop);
+        }
+    }
+
+    private ascentToNextStop(context: AlgorithmContext, nextStop: number): void {
+        const depthDifference = context.currentDepth - nextStop;
+        const duration = this.duration(depthDifference, context.ascentSpeed);
+        const ascent = context.segments.add(context.currentDepth, nextStop, context.currentGas, duration);
+        this.swim(context, ascent);
+
     }
 
     private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): Event[] {

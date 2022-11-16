@@ -149,6 +149,19 @@ export class BuhlmannAlgorithm {
         return CalculatedProfile.fromProfile(merged, context.ceilings);
     }
 
+    private tryGasSwitch(context: AlgorithmContext) {
+        const newGas: Gas = context.bestDecoGas();
+
+        if (!newGas || context.currentGas.compositionEquals(newGas)) {
+            return;
+        }
+
+        context.currentGas = newGas;
+        const duration = context.options.gasSwitchDuration * Time.oneMinute;
+        const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, duration);
+        this.swim(context, stop);
+    }
+
     private stayAtDecoStop(context: AlgorithmContext, nextStop: number): void {
         // TODO performance, we need to try faster algorithm, how to find the stop length
         // TODO add air breaks - https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/
@@ -199,19 +212,6 @@ export class BuhlmannAlgorithm {
         }
 
         return [];
-    }
-
-    private tryGasSwitch(context: AlgorithmContext) {
-        const newGas: Gas = context.bestDecoGas();
-
-        if (!newGas || context.currentGas.compositionEquals(newGas)) {
-            return;
-        }
-
-        context.currentGas = newGas;
-        const duration = context.options.gasSwitchDuration * Time.oneMinute;
-        const stop = context.segments.add(context.currentDepth, context.currentDepth, context.currentGas, duration);
-        this.swim(context, stop);
     }
 
     // Speed in meters / min.

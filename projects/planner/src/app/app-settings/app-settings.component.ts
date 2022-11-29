@@ -36,7 +36,10 @@ export class AppSettingsComponent implements OnInit {
     }
 
     public use(): void {
-        // TODO save settings only if form is valid
+        if(this.settingsForm.invalid) {
+            return;
+        }
+
         const imperialUnits = Boolean(this.settingsForm.controls.imperialUnits.value);
         this.settingsNormalization.apply(this.diver, imperialUnits);
     }

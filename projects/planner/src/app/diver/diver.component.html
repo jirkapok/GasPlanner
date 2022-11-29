@@ -15,10 +15,10 @@
                     <div class="text-danger" *ngIf="rmvInvalid">Needs to be number {{ranges.diverRmvLabel}}</div>
                 </div>
                 <div class="mt-2">
-                    <app-pp-o2 [maxPpO2]="diver.maxPpO2" (ppO2Change)="maxPpO2Changed($event)" label="Maximum ppO2:"></app-pp-o2>
+                    <app-pp-o2 [maxPpO2]="diver.maxPpO2" (ppO2Change)="maxPpO2Changed($event)" label="Maximum ppO2:" [pO2Form]="diverForm" controlName="maxPO2"></app-pp-o2>
                 </div>
                 <div class="mt-2">
-                    <app-pp-o2 [maxPpO2]="diver.maxDecoPpO2" (ppO2Change)="maxDecoPpO2Changed($event)" label="Maximum deco ppO2:"></app-pp-o2>
+                    <app-pp-o2 [maxPpO2]="diver.maxDecoPpO2" (ppO2Change)="maxDecoPpO2Changed($event)" label="Maximum deco ppO2:" [pO2Form]="diverForm" controlName="maxDecoPO2"></app-pp-o2>
                 </div>
             </form>
         </div>

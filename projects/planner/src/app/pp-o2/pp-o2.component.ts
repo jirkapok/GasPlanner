@@ -10,41 +10,39 @@ import { UnitConversion } from '../shared/UnitConversion';
     styleUrls: ['./pp-o2.component.css']
 })
 export class PpO2Component implements OnInit {
-    @Input()
-    public maxPpO2 = 1.4;
-
-    @Input()
-    public label = '';
-
-    @Output()
-    public ppO2Change = new EventEmitter<number>();
-
-    public pO2Form!: FormGroup;
+    @Input() public maxPpO2 = 1.4;
+    @Input() public label = '';
+    @Input() public controlName = 'maxPpO2';
+    @Input() public pO2Form!: FormGroup;
+    @Output() public ppO2Change = new EventEmitter<number>();
 
     constructor(private fb: FormBuilder,
         private numberPipe: DecimalPipe,
         public units: UnitConversion) { }
 
     public get ppO2Invalid(): boolean {
-        const maxPpO2Field = this.pO2Form.controls.maxPpO2;
-        return InputControls.controlInValid(maxPpO2Field);
+        const maxPpO2Field = this.pO2Form.get(this.controlName);
+        return !maxPpO2Field || InputControls.controlInValid(maxPpO2Field);
     }
 
     public ngOnInit(): void {
-        const ranges = this.units.ranges;
+        if (!this.pO2Form) {
+            this.pO2Form = this.fb.group({});
+        }
 
-        this.pO2Form = this.fb.group({
-            maxPpO2: [InputControls.formatNumber(this.numberPipe, this.maxPpO2),
-                [Validators.required, Validators.min(ranges.ppO2[0]), Validators.max(ranges.ppO2[1])]],
-        });
+        const ranges = this.units.ranges;
+        const maxPpO2Control = this.fb.control(InputControls.formatNumber(this.numberPipe, this.maxPpO2),
+            [Validators.required, Validators.min(ranges.ppO2[0]), Validators.max(ranges.ppO2[1])]);
+        this.pO2Form.addControl(this.controlName, maxPpO2Control);
     }
 
     public fireChanged(): void {
-        if(this.ppO2Invalid) {
+        if (this.ppO2Invalid) {
             return;
         }
 
-        const newValue = Number(this.pO2Form.controls.maxPpO2.value);
+        const maxPpO2Control = this.pO2Form.get(this.controlName);
+        const newValue = Number(maxPpO2Control?.value);
         this.ppO2Change.emit(newValue);
     }
 }

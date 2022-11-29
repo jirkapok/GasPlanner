@@ -172,7 +172,6 @@ export class PlannerService {
     /** Not called by default, needs to be called manually */
     public calculate(): void {
         this.startCalculatingState();
-        // TODO calculate only if form is valid
 
         setTimeout(() => {
             this.showStillRunning();

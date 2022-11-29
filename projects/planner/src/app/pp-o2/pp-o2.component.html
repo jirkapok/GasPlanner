@@ -1,6 +1,6 @@
 <form [formGroup]="pO2Form">
     <label for="maxPpO2">{{label}}
-        <input class="form-control" id="maxPpO2" formControlName="maxPpO2" (input)="fireChanged()" type="number"
+        <input class="form-control" id="maxPpO2" [formControlName]="this.controlName" (input)="fireChanged()" type="number"
             required [min]="units.ranges.ppO2[0]" [max]="units.ranges.ppO2[1]" step="0.1"
             [class.is-invalid]="ppO2Invalid" />
     </label>

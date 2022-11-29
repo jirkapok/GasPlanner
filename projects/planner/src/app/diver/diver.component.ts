@@ -15,8 +15,8 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 export class DiverComponent implements OnInit, OnDestroy {
     @Input() public diver: Diver = new Diver();
     @Input() public ranges: RangeConstants;
+    @Input() public diverForm!: FormGroup;
     public icon = faUserCog;
-    public diverForm!: FormGroup;
     private subscription!: Subscription;
 
     constructor(private fb: FormBuilder,
@@ -36,24 +36,27 @@ export class DiverComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.diverForm = this.fb.group({
-            rmv: [InputControls.formatNumber(this.numberPipe, this.rmv),
-                [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]]
-        });
+        if(!this.diverForm) {
+            this.diverForm = this.fb.group({});
+        }
+
+        const rmvControl = this.fb.control(InputControls.formatNumber(this.numberPipe, this.rmv),
+            [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]);
+        this.diverForm.addControl('rmv', rmvControl);
 
         this.subscription = this.units.ranges$.subscribe(() => this.diverForm.patchValue({
-            rmv:  InputControls.formatNumber(this.numberPipe, this.rmv)
+            rmv: InputControls.formatNumber(this.numberPipe, this.rmv)
         }));
     }
 
     public ngOnDestroy(): void {
-        if(this.subscription) {
+        if (this.subscription) {
             this.subscription.unsubscribe();
         }
     }
 
     public inputChanged(): void {
-        if(this.diverForm.invalid) {
+        if (this.diverForm.invalid) {
             return;
         }
 

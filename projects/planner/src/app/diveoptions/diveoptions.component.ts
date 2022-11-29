@@ -169,8 +169,6 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
         this.applyOptions();
     }
 
-    // TODO switch rounding of decostops to minutes doesnt force calculation
-
     public ngOnInit(): void {
         this.optionsForm = this.fb.group({
             maxEND: [InputControls.formatNumber(this.numberPipe, this.maxEND),

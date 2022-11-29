@@ -179,13 +179,13 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         this.gfHigh = other.gfHigh || this.gfHigh;
         this.maxPpO2 = other.maxPpO2 || this.maxPpO2;
         this.maxDecoPpO2 = other.maxDecoPpO2 || this.maxDecoPpO2;
-        this.oxygenNarcotic = other.oxygenNarcotic;
+        this.oxygenNarcotic = !!other.oxygenNarcotic;
 
         // environment
         this.salinity = other.salinity || this.salinity;
         // altitude is the only one property, which accepts 0;
         this.altitude = (other.altitude || other.altitude === 0) ? other.altitude : this.altitude;
-        this.roundStopsToMinutes = other.roundStopsToMinutes || this.roundStopsToMinutes;
+        this.roundStopsToMinutes = !!other.roundStopsToMinutes;
         this.gasSwitchDuration = other.gasSwitchDuration || this.gasSwitchDuration;
         this.problemSolvingDuration = other.problemSolvingDuration || this.problemSolvingDuration;
 

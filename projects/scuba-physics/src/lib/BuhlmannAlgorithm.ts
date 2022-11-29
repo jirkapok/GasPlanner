@@ -231,7 +231,7 @@ export class BuhlmannAlgorithm {
         }
     }
 
-    // there is better option, than to try, since we cant predict the tissues loading
+    // there is NO better option, than to try, since we cant predict the tissues loading
     private needsDecoStop(context: AlgorithmContext, nextStop: number): boolean {
         if(nextStop >= context.ceiling()) {
             return false;

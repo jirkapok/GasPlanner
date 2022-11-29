@@ -101,7 +101,7 @@ describe('DepthsComponent', () => {
 
             it('Apply max duration', () => {
                 simplePage.applyMaxDurationButton.click();
-                expect(simplePage.durationInput.value).toBe('18');
+                expect(simplePage.durationInput.value).toBe('19');
             });
 
             it('Switch to simple view', () => {

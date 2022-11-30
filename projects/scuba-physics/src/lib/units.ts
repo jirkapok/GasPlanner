@@ -17,8 +17,8 @@ export interface Units {
     fromBar(bars: number): number;
     toLiter(volume: number): number;
     fromLiter(liters: number): number;
-    fromTankLiters(liters: number): number;
-    toTankLiters(cuftVolume: number): number;
+    fromTankLiters(liters: number, workingPressure: number): number;
+    toTankLiters(cuftVolume: number, workingPressure: number): number;
 }
 
 /**
@@ -82,11 +82,11 @@ export class MetricUnits implements Units {
         return liters;
     }
 
-    public fromTankLiters(liters: number): number {
+    public fromTankLiters(liters: number, workingPressure: number): number {
         return liters;
     }
 
-    public toTankLiters(cuftVolume: number): number {
+    public toTankLiters(cuftVolume: number, workingPressure: number): number {
         return cuftVolume;
     }
 }
@@ -107,12 +107,12 @@ export class MetricUnits implements Units {
  * 1 bar = 14.503773773022 psi
 */
 export class ImperialUnits implements Units {
+    /** In bars corresponding to 3000 psi */
+    public static readonly defaultWorkingPressure = 206.84;
+
     private static readonly psiRate = 14.503773773022;
     private static readonly cftRate = 28.316846592;
     private static readonly footRate = 0.3048;
-    // TODO make working pressure configurable
-    /** In bars corresponding to 3000 psi */
-    private readonly workingPressure = 206.84;
 
     public get name(): string{
         return 'Imperial';
@@ -170,18 +170,18 @@ export class ImperialUnits implements Units {
         return liters / ImperialUnits.cftRate;
     }
 
-    public fromTankLiters(liters: number): number {
+    public fromTankLiters(liters: number, workingPressure: number): number {
         // return this.units.fromLiter(this.tank.size);
         const relativeVolume = this.fromLiter(liters);
-        const absoluteVolume = relativeVolume * this.workingPressure;
+        const absoluteVolume = relativeVolume * workingPressure;
         return absoluteVolume;
     }
 
-    public toTankLiters(cuftVolume: number): number {
+    public toTankLiters(cuftVolume: number, workingPressure: number): number {
         // S80 => 11.1 L  => 80 cuft at 3000 psi
         // 80 cuft -> 2265.3 L, 3000 psi -> 206.84 b => 2265.3/206.84 = 10.95 L
         const absoluteLiters = this.toLiter(cuftVolume);
-        const newLiters = absoluteLiters / this.workingPressure;
+        const newLiters = absoluteLiters / workingPressure;
         return newLiters;
     }
 }

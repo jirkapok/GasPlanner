@@ -103,12 +103,13 @@ export class UnitConversion {
         return this.current.fromBar(meters);
     }
 
+    // TODO make working pressure configurable
     public fromTankLiters(liters: number): number {
-        return this.current.fromTankLiters(liters);
+        return this.current.fromTankLiters(liters, ImperialUnits.defaultWorkingPressure);
     }
 
     public toTankLiters(cuftVolume: number): number {
-        return this.current.toTankLiters(cuftVolume);
+        return this.current.toTankLiters(cuftVolume, ImperialUnits.defaultWorkingPressure);
     }
 }
 

@@ -1,7 +1,9 @@
 /** Unified helpers to deal with numbers precision in javascript */
 export class Precision {
-    // TODO check the nitrox calculator, if we really need this fix, if round isn't enough
-    /** because of javascript numbers precision we need to help our self without rounding*/
+    /**
+     * In the nitrox calculator, if we really need this fix, if round isn't enough
+     * because of javascript numbers precision we need to help our self without rounding
+     **/
     public static fix(source: number): number {
         const result = Number(source.toFixed(10));
         return result;

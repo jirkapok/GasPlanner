@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +19,7 @@ export class DiverComponent implements OnInit, OnDestroy {
     private subscription!: Subscription;
 
     constructor(private fb: FormBuilder,
-        private numberPipe: DecimalPipe,
+        private inputs: InputControls,
         public units: UnitConversion) {
         this.ranges = units.ranges;
     }
@@ -32,7 +31,7 @@ export class DiverComponent implements OnInit, OnDestroy {
 
     public get rmvInvalid(): boolean {
         const rmv = this.diverForm.controls.rmv;
-        return InputControls.controlInValid(rmv);
+        return this.inputs.controlInValid(rmv);
     }
 
     public ngOnInit(): void {
@@ -40,12 +39,12 @@ export class DiverComponent implements OnInit, OnDestroy {
             this.diverForm = this.fb.group({});
         }
 
-        const rmvControl = this.fb.control(InputControls.formatNumber(this.numberPipe, this.rmv),
+        const rmvControl = this.fb.control(this.inputs.formatNumber(this.rmv),
             [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]);
         this.diverForm.addControl('rmv', rmvControl);
 
         this.subscription = this.units.ranges$.subscribe(() => this.diverForm.patchValue({
-            rmv: InputControls.formatNumber(this.numberPipe, this.rmv)
+            rmv: this.inputs.formatNumber(this.rmv)
         }));
     }
 

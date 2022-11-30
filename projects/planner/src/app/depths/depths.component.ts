@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { faLayerGroup, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
@@ -27,7 +26,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
 
     constructor(
         private fb: FormBuilder,
-        private numberPipe: DecimalPipe,
+        private inputs: InputControls,
         public planner: PlannerService,
         public depths: DepthsService,
         public units: UnitConversion) {
@@ -60,7 +59,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
 
     public get durationInvalid(): boolean {
         const duration = this.depthsForm.controls.planDuration;
-        return InputControls.controlInValid(duration);
+        return this.inputs.controlInValid(duration);
     }
 
     public get levelControls(): FormArray {
@@ -70,13 +69,13 @@ export class DepthsComponent implements OnInit, OnDestroy {
     public depthItemInvalid(index: number): boolean {
         const level = this.levelControls.at(index) as FormGroup;
         const endDepth = level.controls.endDepth;
-        return InputControls.controlInValid(endDepth);
+        return this.inputs.controlInValid(endDepth);
     }
 
     public durationItemInvalid(index: number): boolean {
         const level = this.levelControls.at(index) as FormGroup;
         const duration = level.controls.duration;
-        return InputControls.controlInValid(duration);
+        return this.inputs.controlInValid(duration);
     }
 
     public startDepth(index: number): number {
@@ -170,7 +169,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     private reloadSimple(): void {
         // depth is reloaded in its nested component
         this.depthsForm.patchValue({
-            planDuration: InputControls.formatNumber(this.numberPipe, this.depths.planDuration)
+            planDuration: this.inputs.formatNumber(this.depths.planDuration)
         });
     }
 
@@ -193,13 +192,13 @@ export class DepthsComponent implements OnInit, OnDestroy {
     private createLevelControl(level: Level): AbstractControl {
         return this.fb.group({
             duration: this.createDurationControl(level.duration),
-            endDepth: [InputControls.formatNumber(this.numberPipe, level.endDepth),
+            endDepth: [this.inputs.formatNumber(level.endDepth),
             [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]]
         });
     }
 
     private createDurationControl(duration: number): [string | null, Validators[]] {
-        return [InputControls.formatNumber(this.numberPipe, duration),
+        return [this.inputs.formatNumber(duration),
         [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]];
     }
 

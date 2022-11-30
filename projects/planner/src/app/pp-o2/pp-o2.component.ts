@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
@@ -17,12 +16,12 @@ export class PpO2Component implements OnInit {
     @Output() public ppO2Change = new EventEmitter<number>();
 
     constructor(private fb: FormBuilder,
-        private numberPipe: DecimalPipe,
+        private inputs: InputControls,
         public units: UnitConversion) { }
 
     public get ppO2Invalid(): boolean {
         const maxPpO2Field = this.pO2Form.get(this.controlName);
-        return !maxPpO2Field || InputControls.controlInValid(maxPpO2Field);
+        return !maxPpO2Field || this.inputs.controlInValid(maxPpO2Field);
     }
 
     public ngOnInit(): void {
@@ -31,7 +30,7 @@ export class PpO2Component implements OnInit {
         }
 
         const ranges = this.units.ranges;
-        const maxPpO2Control = this.fb.control(InputControls.formatNumber(this.numberPipe, this.maxPpO2),
+        const maxPpO2Control = this.fb.control(this.inputs.formatNumber(this.maxPpO2),
             [Validators.required, Validators.min(ranges.ppO2[0]), Validators.max(ranges.ppO2[1])]);
         this.pO2Form.addControl(this.controlName, maxPpO2Control);
     }

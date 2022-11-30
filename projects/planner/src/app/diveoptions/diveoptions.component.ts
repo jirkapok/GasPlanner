@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
@@ -34,7 +33,7 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
     constructor(public units: UnitConversion,
         public options: OptionsDispatcherService,
         private fb: FormBuilder,
-        private numberPipe: DecimalPipe,
+        private inputs: InputControls,
         private planner: PlannerService,
         private delayedCalc: DelayedScheduleService) {
         this.plan = this.planner.plan;
@@ -66,42 +65,42 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
 
     public get narcoticDepthInvalid(): boolean {
         const narcoticDepth = this.optionsForm.controls.maxEND;
-        return InputControls.controlInValid(narcoticDepth);
+        return this.inputs.controlInValid(narcoticDepth);
     }
 
     public get problemInvalid(): boolean {
         const problem = this.optionsForm.controls.problem;
-        return InputControls.controlInValid(problem);
+        return this.inputs.controlInValid(problem);
     }
 
     public get switchDurationInvalid(): boolean {
         const gasSwitch = this.optionsForm.controls.gasSwitch;
-        return InputControls.controlInValid(gasSwitch);
+        return this.inputs.controlInValid(gasSwitch);
     }
 
     public get lastStopInvalid(): boolean {
         const lastStopDepth = this.optionsForm.controls.lastStopDepth;
-        return InputControls.controlInValid(lastStopDepth);
+        return this.inputs.controlInValid(lastStopDepth);
     }
 
     public get descSpeedInvalid(): boolean {
         const descentSpeed = this.optionsForm.controls.descentSpeed;
-        return InputControls.controlInValid(descentSpeed);
+        return this.inputs.controlInValid(descentSpeed);
     }
 
     public get ascSpeedInvalid(): boolean {
         const ascentSpeed6m = this.optionsForm.controls.ascentSpeed6m;
-        return InputControls.controlInValid(ascentSpeed6m);
+        return this.inputs.controlInValid(ascentSpeed6m);
     }
 
     public get ascentSpeed50percTo6mInvalid(): boolean {
         const ascentSpeed50percTo6m = this.optionsForm.controls.ascentSpeed50percTo6m;
-        return InputControls.controlInValid(ascentSpeed50percTo6m);
+        return this.inputs.controlInValid(ascentSpeed50percTo6m);
     }
 
     public get ascentSpeed50percInvalid(): boolean {
         const ascentSpeed50perc = this.optionsForm.controls.ascentSpeed50perc;
-        return InputControls.controlInValid(ascentSpeed50perc);
+        return this.inputs.controlInValid(ascentSpeed50perc);
     }
 
     public get maxEND(): number {
@@ -171,21 +170,21 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.optionsForm = this.fb.group({
-            maxEND: [InputControls.formatNumber(this.numberPipe, this.maxEND),
+            maxEND: [this.inputs.formatNumber(this.maxEND),
                 [Validators.required, Validators.min(this.ranges.narcoticDepth[0]), Validators.max(this.ranges.narcoticDepth[1])]],
-            problem: [InputControls.formatNumber(this.numberPipe, this.options.problemSolvingDuration),
+            problem: [this.inputs.formatNumber(this.options.problemSolvingDuration),
                 [Validators.required, Validators.min(1), Validators.max(100)]],
-            gasSwitch: [InputControls.formatNumber(this.numberPipe, this.options.gasSwitchDuration),
+            gasSwitch: [this.inputs.formatNumber(this.options.gasSwitchDuration),
                 [Validators.required, Validators.min(1), Validators.max(10)]],
-            lastStopDepth: [InputControls.formatNumber(this.numberPipe, this.lastStopDepth),
+            lastStopDepth: [this.inputs.formatNumber(this.lastStopDepth),
                 [Validators.required, Validators.min(this.ranges.lastStopDepth[0]), Validators.max(this.ranges.lastStopDepth[1])]],
-            descentSpeed: [InputControls.formatNumber(this.numberPipe, this.descentSpeed),
+            descentSpeed: [this.inputs.formatNumber(this.descentSpeed),
                 [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
-            ascentSpeed6m: [InputControls.formatNumber(this.numberPipe, this.ascentSpeed6m),
+            ascentSpeed6m: [this.inputs.formatNumber(this.ascentSpeed6m),
                 [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
-            ascentSpeed50percTo6m: [InputControls.formatNumber(this.numberPipe, this.ascentSpeed50percTo6m),
+            ascentSpeed50percTo6m: [this.inputs.formatNumber(this.ascentSpeed50percTo6m),
                 [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
-            ascentSpeed50perc: [InputControls.formatNumber(this.numberPipe, this.ascentSpeed50perc),
+            ascentSpeed50perc: [this.inputs.formatNumber(this.ascentSpeed50perc),
                 [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
         });
 
@@ -315,14 +314,14 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
 
     private reloadForm(): void {
         this.optionsForm.patchValue({
-            maxEND: InputControls.formatNumber(this.numberPipe, this.maxEND),
-            problem: InputControls.formatNumber(this.numberPipe, this.options.problemSolvingDuration),
-            gasSwitch: InputControls.formatNumber(this.numberPipe, this.options.gasSwitchDuration),
-            lastStopDepth: InputControls.formatNumber(this.numberPipe, this.lastStopDepth),
-            descentSpeed: InputControls.formatNumber(this.numberPipe, this.descentSpeed),
-            ascentSpeed6m: InputControls.formatNumber(this.numberPipe, this.ascentSpeed6m),
-            ascentSpeed50percTo6m: InputControls.formatNumber(this.numberPipe, this.ascentSpeed50percTo6m),
-            ascentSpeed50perc: InputControls.formatNumber(this.numberPipe, this.ascentSpeed50perc),
+            maxEND: this.inputs.formatNumber(this.maxEND),
+            problem: this.inputs.formatNumber(this.options.problemSolvingDuration),
+            gasSwitch: this.inputs.formatNumber(this.options.gasSwitchDuration),
+            lastStopDepth: this.inputs.formatNumber(this.lastStopDepth),
+            descentSpeed: this.inputs.formatNumber(this.descentSpeed),
+            ascentSpeed6m: this.inputs.formatNumber(this.ascentSpeed6m),
+            ascentSpeed50percTo6m: this.inputs.formatNumber(this.ascentSpeed50percTo6m),
+            ascentSpeed50perc: this.inputs.formatNumber(this.ascentSpeed50perc),
         });
     }
 }

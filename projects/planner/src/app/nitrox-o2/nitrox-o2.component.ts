@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StandardGases, Tank } from 'scuba-physics';
@@ -30,21 +29,21 @@ export class NitroxO2Component implements OnInit {
     public nitroxNames: string[];
 
     constructor(private fb: FormBuilder,
-        private numberPipe: DecimalPipe,
+        private inputs: InputControls,
         public units: UnitConversion) {
         this.nitroxNames = StandardGases.nitroxNames();
     }
 
     public get gasO2Invalid(): boolean {
         const gasO2 = this.nitroxForm.controls.o2;
-        return InputControls.controlInValid(gasO2);
+        return this.inputs.controlInValid(gasO2);
     }
 
     public ngOnInit(): void {
         const ranges = this.units.ranges;
 
         this.nitroxForm = this.fb.group({
-            o2: [InputControls.formatNumber(this.numberPipe,this.tank.o2),
+            o2: [this.inputs.formatNumber(this.tank.o2),
                 [Validators.required, Validators.min(ranges.nitroxOxygen[0]), Validators.max(ranges.nitroxOxygen[1])]]
         });
     }
@@ -66,7 +65,7 @@ export class NitroxO2Component implements OnInit {
     public assignStandardGas(gasName: string): void {
         this.tank.assignStandardGas(gasName);
         this.nitroxForm.patchValue({
-            o2: InputControls.formatNumber(this.numberPipe,this.tank.o2)
+            o2: this.inputs.formatNumber(this.tank.o2)
         });
         this.fireGasChanged();
     }

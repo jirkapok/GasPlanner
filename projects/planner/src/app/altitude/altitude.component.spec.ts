@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -13,8 +14,12 @@ describe('Altitude', () => {
         await TestBed.configureTestingModule({
             declarations: [AltitudeComponent],
             providers: [UnitConversion,
-                RouterTestingModule, OptionsDispatcherService],
-            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
+                RouterTestingModule,
+                OptionsDispatcherService,
+                DecimalPipe],
+            imports: [
+                RouterTestingModule.withRoutes([]),
+                ReactiveFormsModule]
         })
             .compileComponents();
     });

@@ -8,7 +8,6 @@ import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { Subscription } from 'rxjs';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DecimalPipe } from '@angular/common';
 import { InputControls } from '../shared/inputcontrols';
 
 export class TankBound {
@@ -71,7 +70,7 @@ export class TanksComponent implements OnInit, OnDestroy {
     constructor(private planner: PlannerService,
         public units: UnitConversion,
         private fb: FormBuilder,
-        private numberPipe: DecimalPipe,
+        private inputs: InputControls,
         private delayedCalc: DelayedScheduleService) {
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
@@ -100,19 +99,19 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     public get firstTankSizeInvalid(): boolean {
         const firstTankSize = this.tanksForm.controls.firstTankSize;
-        return InputControls.controlInValid(firstTankSize);
+        return this.inputs.controlInValid(firstTankSize);
     }
 
     public get firstTankStartPressureInvalid(): boolean {
         const firstTankStartPressure = this.tanksForm.controls.firstTankStartPressure;
-        return InputControls.controlInValid(firstTankStartPressure);
+        return this.inputs.controlInValid(firstTankStartPressure);
     }
 
     public ngOnInit(): void {
         this.tanksForm = this.fb.group({
-            firstTankSize: [InputControls.formatNumber(this.numberPipe, this.firstTank.size),
+            firstTankSize: [this.inputs.formatNumber(this.firstTank.size),
                 [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
-            firstTankStartPressure: [InputControls.formatNumber(this.numberPipe, this.firstTank.startPressure),
+            firstTankStartPressure: [this.inputs.formatNumber(this.firstTank.startPressure),
                 [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
             boundTanks: this.fb.array(this.createTankControls())
         });
@@ -134,22 +133,22 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     public gasHeInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index) as FormGroup;
-        return InputControls.controlInValid(tank.controls.tankHe);
+        return this.inputs.controlInValid(tank.controls.tankHe);
     }
 
     public gasO2Invalid(index: number): boolean {
         const tank = this.tanksGroup.at(index) as FormGroup;
-        return InputControls.controlInValid(tank.controls.tankO2);
+        return this.inputs.controlInValid(tank.controls.tankO2);
     }
 
     public startPressureInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index) as FormGroup;
-        return InputControls.controlInValid(tank.controls.tankStartPressure);
+        return this.inputs.controlInValid(tank.controls.tankStartPressure);
     }
 
     public tankSizeInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index) as FormGroup;
-        return InputControls.controlInValid(tank.controls.tankSize);
+        return this.inputs.controlInValid(tank.controls.tankSize);
     }
 
     public addTank(): void {
@@ -222,8 +221,8 @@ export class TanksComponent implements OnInit, OnDestroy {
     private reloadAll(): void {
         this.updateTanks();
         this.tanksForm.patchValue({
-            firstTankSize: InputControls.formatNumber(this.numberPipe, this.firstTank.size),
-            firstTankStartPressure: InputControls.formatNumber(this.numberPipe, this.firstTank.startPressure),
+            firstTankSize: this.inputs.formatNumber(this.firstTank.size),
+            firstTankStartPressure: this.inputs.formatNumber(this.firstTank.startPressure),
         });
 
         // recreate all controls, because wo don't know which were removed/added as part of reload.
@@ -267,13 +266,13 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     private createTankControl(tank: TankBound): AbstractControl {
         return this.fb.group({
-            tankSize: [InputControls.formatNumber(this.numberPipe, tank.size),
+            tankSize: [this.inputs.formatNumber(tank.size),
                 [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
-            tankStartPressure: [InputControls.formatNumber(this.numberPipe, tank.startPressure),
+            tankStartPressure: [this.inputs.formatNumber(tank.startPressure),
                 [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
-            tankO2: [InputControls.formatNumber(this.numberPipe, tank.o2),
+            tankO2: [this.inputs.formatNumber(tank.o2),
                 [Validators.required, Validators.min(this.ranges.trimixOxygen[0]), Validators.max(this.ranges.trimixOxygen[1])]],
-            tankHe: [InputControls.formatNumber(this.numberPipe, tank.he),
+            tankHe: [this.inputs.formatNumber(tank.he),
                 [Validators.required, Validators.min(this.ranges.tankHe[0]), Validators.max(this.ranges.tankHe[1])]],
         });
     }

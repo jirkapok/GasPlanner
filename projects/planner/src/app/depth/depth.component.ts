@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DepthsService } from '../shared/depths.service';
@@ -14,13 +13,13 @@ export class DepthComponent implements OnInit {
     public depthForm!: FormGroup;
 
     constructor(private fb: FormBuilder,
-        private numberPipe: DecimalPipe,
+        private inputs: InputControls,
         public units: UnitConversion,
         public depths: DepthsService) { }
 
     public get depthInvalid(): boolean {
         const depthField = this.depthForm.controls.depth;
-        return InputControls.controlInValid(depthField);
+        return this.inputs.controlInValid(depthField);
     }
 
     public depthChanged() {
@@ -35,14 +34,14 @@ export class DepthComponent implements OnInit {
     public applyMaxDepth(): void {
         this.depths.applyMaxDepth();
         this.depthForm.patchValue({
-            depth: InputControls.formatNumber(this.numberPipe, this.depths.plannedDepth)
+            depth: this.inputs.formatNumber(this.depths.plannedDepth)
         });
     }
 
     public ngOnInit(): void {
         const ranges = this.units.ranges;
         this.depthForm = this.fb.group({
-            depth: [InputControls.formatNumber(this.numberPipe, this.depths.plannedDepth),
+            depth: [this.inputs.formatNumber(this.depths.plannedDepth),
             [Validators.required, Validators.min(ranges.depth[0]), Validators.max(ranges.depth[1])]]
         });
     }

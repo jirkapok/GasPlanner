@@ -21,7 +21,7 @@ export class AltitudeComponent implements OnInit{
     private metricLevels = [0, 300, 800, 1500];
     private imperialLevels = [0, 1000, 2600, 5000];
 
-    constructor(private fb: FormBuilder, public units: UnitConversion) { }
+    constructor(private fb: FormBuilder, private inputs: InputControls, public units: UnitConversion) { }
 
     public get altitudeBound(): number {
         return this.units.fromMeters(this.altitude);
@@ -41,7 +41,7 @@ export class AltitudeComponent implements OnInit{
 
     public get altitudeInvalid(): boolean {
         const altitudeField = this.altitudeForm.controls.altitude;
-        return InputControls.controlInValid(altitudeField);
+        return this.inputs.controlInValid(altitudeField);
     }
 
     public ngOnInit(): void {

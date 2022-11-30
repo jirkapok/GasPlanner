@@ -47,6 +47,7 @@ import { PpO2Component } from './pp-o2/pp-o2.component';
 import { DelayedScheduleService } from './shared/delayedSchedule.service';
 import { AppinfoComponent } from './appinfo/appinfo.component';
 import { DiveIssuesComponent } from './dive-issues/dive-issues.component';
+import { InputControls } from './shared/inputcontrols';
 
 @NgModule({
     declarations: [
@@ -103,6 +104,7 @@ import { DiveIssuesComponent } from './dive-issues/dive-issues.component';
         OptionsDispatcherService,
         DelayedScheduleService,
         NdlService,
+        InputControls,
         DatePipe,
         DecimalPipe
     ],

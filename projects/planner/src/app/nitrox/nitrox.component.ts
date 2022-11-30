@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -20,7 +19,7 @@ export class NitroxComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private numberPipe: DecimalPipe,
+        private inputs: InputControls,
         public calc: NitroxCalculatorService,
         private router: Router,
         private planer: PlannerService, public units: UnitConversion) {
@@ -43,24 +42,24 @@ export class NitroxComponent implements OnInit {
 
     public get pO2Invalid(): boolean {
         const pO2 = this.nitroxForm.controls.pO2;
-        return InputControls.controlInValid(pO2);
+        return this.inputs.controlInValid(pO2);
     }
 
     public get modInvalid(): boolean {
         const mod = this.nitroxForm.controls.mod;
-        return InputControls.controlInValid(mod);
+        return this.inputs.controlInValid(mod);
     }
 
     public get fO2Invalid(): boolean {
         const fO2 = this.nitroxForm.controls.fO2;
-        return InputControls.controlInValid(fO2);
+        return this.inputs.controlInValid(fO2);
     }
 
     private get dataModel(): any {
         return {
-            fO2: InputControls.formatNumber(this.numberPipe, this.calc.fO2),
-            pO2: InputControls.formatNumber(this.numberPipe, this.calc.pO2),
-            mod: InputControls.formatNumber(this.numberPipe, this.calc.mod)
+            fO2: this.inputs.formatNumber(this.calc.fO2),
+            pO2: this.inputs.formatNumber(this.calc.pO2),
+            mod: this.inputs.formatNumber(this.calc.mod)
         };
     }
 
@@ -70,11 +69,11 @@ export class NitroxComponent implements OnInit {
 
     public ngOnInit(): void {
         this.nitroxForm = this.fb.group({
-            fO2: [InputControls.formatNumber(this.numberPipe, this.calc.fO2),
+            fO2: [this.inputs.formatNumber(this.calc.fO2),
                 [Validators.required, Validators.min(this.ranges.nitroxOxygen[0]), Validators.max(this.ranges.nitroxOxygen[1])]],
-            pO2: [InputControls.formatNumber(this.numberPipe, this.calc.pO2),
+            pO2: [this.inputs.formatNumber(this.calc.pO2),
                 [Validators.required, Validators.min(this.ranges.ppO2[0]), Validators.max(this.ranges.ppO2[1])]],
-            mod: [InputControls.formatNumber(this.numberPipe, this.calc.mod),
+            mod: [this.inputs.formatNumber(this.calc.mod),
                 [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]],
         });
     }

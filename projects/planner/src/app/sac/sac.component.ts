@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DecimalPipe } from '@angular/common';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService } from '../shared/sac-calculator.service';
@@ -21,7 +20,7 @@ export class SacComponent implements OnInit {
     public formSac!: FormGroup;
 
     constructor(
-        private numberPipe: DecimalPipe,
+        private inputs: InputControls,
         private formBuilder: FormBuilder,
         private router: Router, private planer: PlannerService,
         public calc: SacCalculatorService, public units: UnitConversion) {
@@ -38,27 +37,27 @@ export class SacComponent implements OnInit {
 
     public get depthInvalid(): boolean {
         const depth = this.formSac.controls.depth;
-        return InputControls.controlInValid(depth);
+        return this.inputs.controlInValid(depth);
     }
 
     public get tankInvalid(): boolean {
         const tankSize = this.formSac.controls.tankSize;
-        return InputControls.controlInValid(tankSize);
+        return this.inputs.controlInValid(tankSize);
     }
 
     public get usedInvalid(): boolean {
         const used = this.formSac.controls.used;
-        return InputControls.controlInValid(used);
+        return this.inputs.controlInValid(used);
     }
 
     public get rmvInvalid(): boolean {
         const rmv = this.formSac.controls.rmv;
-        return InputControls.controlInValid(rmv);
+        return this.inputs.controlInValid(rmv);
     }
 
     public get durationInvalid(): boolean {
         const duration = this.formSac.controls.duration;
-        return InputControls.controlInValid(duration);
+        return this.inputs.controlInValid(duration);
     }
 
     public get calcDepth(): number {
@@ -83,25 +82,25 @@ export class SacComponent implements OnInit {
 
     private get dataModel(): any {
         return {
-            depth: InputControls.formatNumber(this.numberPipe, this.calcDepth),
-            duration: InputControls.formatNumber(this.numberPipe, this.calc.duration),
-            tankSize: InputControls.formatNumber(this.numberPipe, this.calcTank),
-            used: InputControls.formatNumber(this.numberPipe, this.calcUsed),
-            rmv:  InputControls.formatNumber(this.numberPipe, this.calcRmv),
+            depth: this.inputs.formatNumber(this.calcDepth),
+            duration: this.inputs.formatNumber(this.calc.duration),
+            tankSize: this.inputs.formatNumber(this.calcTank),
+            used: this.inputs.formatNumber(this.calcUsed),
+            rmv:  this.inputs.formatNumber(this.calcRmv),
         };
     }
 
     public ngOnInit(): void {
         this.formSac = this.formBuilder.group({
-            depth: [InputControls.formatNumber(this.numberPipe, this.calcDepth),
+            depth: [this.inputs.formatNumber(this.calcDepth),
                 [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]],
-            duration: [InputControls.formatNumber(this.numberPipe, this.calcDuration),
+            duration: [this.inputs.formatNumber(this.calcDuration),
                 [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]],
-            tankSize: [InputControls.formatNumber(this.numberPipe, this.calcTank),
+            tankSize: [this.inputs.formatNumber(this.calcTank),
                 [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
-            used: [InputControls.formatNumber(this.numberPipe, this.calcUsed),
+            used: [this.inputs.formatNumber(this.calcUsed),
                 [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
-            rmv:  [InputControls.formatNumber(this.numberPipe, this.calcRmv),
+            rmv:  [this.inputs.formatNumber(this.calcRmv),
                 [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]],
         });
     }

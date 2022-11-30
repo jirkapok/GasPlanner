@@ -12,7 +12,12 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Forms refactoring general verification (ranges, imperial units, calculation enforced on all changes, and after switch simple/complex UI): Nitrox, SAC, NDL calculators, depths, tanks, options, settings
+* Forms refactoring general verification (ranges, imperial units, calculation enforced on all changes, and after switch simple/complex UI): depths, tanks, options
+  * settings when using units, the range for rmw isn't reloaded
+  * sac calculator:
+    * when changing depth to 300 m, it results in invalid rmv value, which prevents next calculations
+    * Use button is available in case invalid form
+  * Nitrox calc: the issues as in sac calc
 * UI Tweaks: Depths and tanks, get rid of html table and make it responsive on small devices
 * Add imperial units option
   * Provide rounded default values within acceptable range (Settings, Sac, tanks, depths, options)

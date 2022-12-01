@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { OptionDefaults } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { Gradients, StandardGradientsService } from '../shared/standard-gradients.service';
@@ -23,9 +23,9 @@ export class GradientsComponent implements OnInit {
     @Output()
     public inputChange = new EventEmitter<Gradients>();
     public standards = new StandardGradientsService();
-    public gfForm!: FormGroup;
+    public gfForm!: UntypedFormGroup;
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls) { }
 
     public get conservatism(): string {

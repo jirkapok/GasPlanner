@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 
@@ -12,10 +12,10 @@ export class PpO2Component implements OnInit {
     @Input() public maxPpO2 = 1.4;
     @Input() public label = '';
     @Input() public controlName = 'maxPpO2';
-    @Input() public pO2Form!: FormGroup;
+    @Input() public pO2Form!: UntypedFormGroup;
     @Output() public ppO2Change = new EventEmitter<number>();
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
         public units: UnitConversion) { }
 

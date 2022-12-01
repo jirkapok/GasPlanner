@@ -7,7 +7,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { Subscription } from 'rxjs';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
 
 export class TankBound {
@@ -61,7 +61,7 @@ export class TanksComponent implements OnInit, OnDestroy {
     public plusIcon = faPlusSquare;
     public trashIcon = faTrashAlt;
     public toxicity: GasToxicity;
-    public tanksForm!: FormGroup;
+    public tanksForm!: UntypedFormGroup;
 
     private bound: TankBound[] = [];
     private tanksSubscription!: Subscription;
@@ -69,7 +69,7 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     constructor(private planner: PlannerService,
         public units: UnitConversion,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private inputs: InputControls,
         private delayedCalc: DelayedScheduleService) {
         this.toxicity = new GasToxicity(this.planner.options);
@@ -89,8 +89,8 @@ export class TanksComponent implements OnInit, OnDestroy {
         return this.bound;
     }
 
-    public get tanksGroup(): FormArray {
-        return this.tanksForm.controls.boundTanks as FormArray;
+    public get tanksGroup(): UntypedFormArray {
+        return this.tanksForm.controls.boundTanks as UntypedFormArray;
     }
 
     public get isComplex(): boolean {
@@ -132,22 +132,22 @@ export class TanksComponent implements OnInit, OnDestroy {
     }
 
     public gasHeInvalid(index: number): boolean {
-        const tank = this.tanksGroup.at(index) as FormGroup;
+        const tank = this.tanksGroup.at(index) as UntypedFormGroup;
         return this.inputs.controlInValid(tank.controls.tankHe);
     }
 
     public gasO2Invalid(index: number): boolean {
-        const tank = this.tanksGroup.at(index) as FormGroup;
+        const tank = this.tanksGroup.at(index) as UntypedFormGroup;
         return this.inputs.controlInValid(tank.controls.tankO2);
     }
 
     public startPressureInvalid(index: number): boolean {
-        const tank = this.tanksGroup.at(index) as FormGroup;
+        const tank = this.tanksGroup.at(index) as UntypedFormGroup;
         return this.inputs.controlInValid(tank.controls.tankStartPressure);
     }
 
     public tankSizeInvalid(index: number): boolean {
-        const tank = this.tanksGroup.at(index) as FormGroup;
+        const tank = this.tanksGroup.at(index) as UntypedFormGroup;
         return this.inputs.controlInValid(tank.controls.tankSize);
     }
 
@@ -195,7 +195,7 @@ export class TanksComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const tankControl = this.tanksGroup.at(index) as FormGroup;
+        const tankControl = this.tanksGroup.at(index) as UntypedFormGroup;
         const bound = this.tanks[index];
 
         const values = tankControl.value;

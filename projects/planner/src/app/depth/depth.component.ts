@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -10,9 +10,9 @@ import { UnitConversion } from '../shared/UnitConversion';
     styleUrls: ['./depth.component.css']
 })
 export class DepthComponent implements OnInit {
-    public depthForm!: FormGroup;
+    public depthForm!: UntypedFormGroup;
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
         public units: UnitConversion,
         public depths: DepthsService) { }

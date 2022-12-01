@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { PlannerService } from '../shared/planner.service';
@@ -15,10 +15,10 @@ import { InputControls } from '../shared/inputcontrols';
 })
 export class NitroxComponent implements OnInit {
     public calcIcon = faCalculator;
-    public nitroxForm!: FormGroup;
+    public nitroxForm!: UntypedFormGroup;
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private inputs: InputControls,
         public calc: NitroxCalculatorService,
         private router: Router,

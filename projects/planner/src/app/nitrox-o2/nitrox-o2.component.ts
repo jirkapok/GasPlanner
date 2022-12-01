@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { StandardGases, Tank } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { InputControls } from '../shared/inputcontrols';
@@ -24,11 +24,11 @@ export class NitroxO2Component implements OnInit {
     @Output()
     public assignBestMix = new EventEmitter();
 
-    public nitroxForm!: FormGroup;
+    public nitroxForm!: UntypedFormGroup;
 
     public nitroxNames: string[];
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
         public units: UnitConversion) {
         this.nitroxNames = StandardGases.nitroxNames();

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService } from '../shared/sac-calculator.service';
@@ -17,11 +17,11 @@ import { InputControls } from '../shared/inputcontrols';
 })
 export class SacComponent implements OnInit {
     public calcIcon = faCalculator;
-    public formSac!: FormGroup;
+    public formSac!: UntypedFormGroup;
 
     constructor(
         private inputs: InputControls,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private router: Router, private planer: PlannerService,
         public calc: SacCalculatorService, public units: UnitConversion) {
     }

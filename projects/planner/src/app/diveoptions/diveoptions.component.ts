@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { SafetyStop, Salinity } from 'scuba-physics';
@@ -27,12 +27,12 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
     public plan: Plan;
     public strategy = this.allUsableName;
     public icon = faCog;
-    public optionsForm!: FormGroup;
+    public optionsForm!: UntypedFormGroup;
     private subscription!: Subscription;
 
     constructor(public units: UnitConversion,
         public options: OptionsDispatcherService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private inputs: InputControls,
         private planner: PlannerService,
         private delayedCalc: DelayedScheduleService) {

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Diver } from 'scuba-physics';
@@ -14,11 +14,11 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 export class DiverComponent implements OnInit, OnDestroy {
     @Input() public diver: Diver = new Diver();
     @Input() public ranges: RangeConstants;
-    @Input() public diverForm!: FormGroup;
+    @Input() public diverForm!: UntypedFormGroup;
     public icon = faUserCog;
     private subscription!: Subscription;
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
         public units: UnitConversion) {
         this.ranges = units.ranges;

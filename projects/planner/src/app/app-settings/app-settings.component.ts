@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { Diver } from 'scuba-physics';
@@ -15,11 +15,11 @@ import { UnitConversion } from '../shared/UnitConversion';
 export class AppSettingsComponent implements OnInit {
     public flagIcon = faFlag;
     public diver = new Diver();
-    public settingsForm!: FormGroup;
+    public settingsForm!: UntypedFormGroup;
 
     constructor(public units: UnitConversion,
         private settingsNormalization: SettingsNormalizationService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private router: Router,
         private planner: PlannerService) {
         this.diver.loadFrom(this.planner.diver);

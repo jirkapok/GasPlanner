@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { faLayerGroup, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Tank } from 'scuba-physics';
@@ -19,13 +19,13 @@ export class DepthsComponent implements OnInit, OnDestroy {
     public cardIcon = faLayerGroup;
     public addIcon = faPlusSquare;
     public removeIcon = faTrashAlt;
-    public depthsForm!: FormGroup;
+    public depthsForm!: UntypedFormGroup;
     public dive: Dive;
     private subscription!: Subscription;
     private viewSubsription!: Subscription;
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private inputs: InputControls,
         public planner: PlannerService,
         public depths: DepthsService,
@@ -62,18 +62,18 @@ export class DepthsComponent implements OnInit, OnDestroy {
         return this.inputs.controlInValid(duration);
     }
 
-    public get levelControls(): FormArray {
-        return this.depthsForm.controls.levels as FormArray;
+    public get levelControls(): UntypedFormArray {
+        return this.depthsForm.controls.levels as UntypedFormArray;
     }
 
     public depthItemInvalid(index: number): boolean {
-        const level = this.levelControls.at(index) as FormGroup;
+        const level = this.levelControls.at(index) as UntypedFormGroup;
         const endDepth = level.controls.endDepth;
         return this.inputs.controlInValid(endDepth);
     }
 
     public durationItemInvalid(index: number): boolean {
-        const level = this.levelControls.at(index) as FormGroup;
+        const level = this.levelControls.at(index) as UntypedFormGroup;
         const duration = level.controls.duration;
         return this.inputs.controlInValid(duration);
     }
@@ -145,7 +145,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
         }
 
         const level = this.levelAt(index);
-        const levelControl = this.levelControls.at(index) as FormGroup;
+        const levelControl = this.levelControls.at(index) as UntypedFormGroup;
         const levelValue = levelControl.value;
         level.duration = Number(levelValue.duration);
         level.endDepth = Number(levelValue.endDepth);

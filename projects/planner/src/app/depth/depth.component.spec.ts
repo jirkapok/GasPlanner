@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DepthsService } from '../shared/depths.service';
 import { PlannerService } from '../shared/planner.service';
@@ -32,7 +32,7 @@ describe('DepthComponent Imperial units', () => {
         await TestBed.configureTestingModule({
             declarations: [DepthComponent],
             imports: [ReactiveFormsModule],
-            providers: [FormBuilder, DecimalPipe,
+            providers: [UntypedFormBuilder, DecimalPipe,
                 WorkersFactoryCommon, PlannerService, UnitConversion]
         })
             .compileComponents();

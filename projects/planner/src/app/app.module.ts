@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule  } from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ClipboardModule } from 'ngx-clipboard';
 
@@ -83,7 +82,6 @@ import { InputControls } from './shared/inputcontrols';
     imports: [
         BrowserModule,
         ReactiveFormsModule,
-        NgbModule,
         AppRoutingModule,
         FontAwesomeModule,
         ClipboardModule,

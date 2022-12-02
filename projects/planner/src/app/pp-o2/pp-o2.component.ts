@@ -6,7 +6,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 @Component({
     selector: 'app-pp-o2',
     templateUrl: './pp-o2.component.html',
-    styleUrls: ['./pp-o2.component.css']
+    styleUrls: ['./pp-o2.component.scss']
 })
 export class PpO2Component implements OnInit {
     @Input() public maxPpO2 = 1.4;

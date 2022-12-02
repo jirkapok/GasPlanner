@@ -9,7 +9,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 @Component({
     selector: 'app-diver',
     templateUrl: './diver.component.html',
-    styleUrls: ['./diver.component.css']
+    styleUrls: ['./diver.component.scss']
 })
 export class DiverComponent implements OnInit, OnDestroy {
     @Input() public diver: Diver = new Diver();

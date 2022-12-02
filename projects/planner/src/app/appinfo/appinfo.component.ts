@@ -4,7 +4,7 @@ import pkg from '../../../../../package.json';
 @Component({
     selector: 'app-info',
     templateUrl: './appinfo.component.html',
-    styleUrls: ['./appinfo.component.css']
+    styleUrls: ['./appinfo.component.scss']
 })
 export class AppinfoComponent {
     public appVersion: string = pkg.version;

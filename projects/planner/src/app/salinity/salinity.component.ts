@@ -4,7 +4,7 @@ import { Salinity } from 'scuba-physics';
 @Component({
     selector: 'app-salinity',
     templateUrl: './salinity.component.html',
-    styleUrls: ['./salinity.component.css']
+    styleUrls: ['./salinity.component.scss']
 })
 export class SalinityComponent {
     @Input()

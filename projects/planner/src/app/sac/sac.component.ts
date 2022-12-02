@@ -13,7 +13,7 @@ import { InputControls } from '../shared/inputcontrols';
 @Component({
     selector: 'app-sac',
     templateUrl: './sac.component.html',
-    styleUrls: ['./sac.component.css']
+    styleUrls: ['./sac.component.scss']
 })
 export class SacComponent implements OnInit {
     public calcIcon = faCalculator;

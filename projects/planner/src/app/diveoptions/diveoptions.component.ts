@@ -14,7 +14,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 @Component({
     selector: 'app-diveoptions',
     templateUrl: './diveoptions.component.html',
-    styleUrls: ['./diveoptions.component.css']
+    styleUrls: ['./diveoptions.component.scss']
 })
 export class DiveOptionsComponent implements OnInit, OnDestroy {
     @Input()

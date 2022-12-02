@@ -7,7 +7,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 @Component({
     selector: 'app-depth',
     templateUrl: './depth.component.html',
-    styleUrls: ['./depth.component.css']
+    styleUrls: ['./depth.component.scss']
 })
 export class DepthComponent implements OnInit {
     public depthForm!: UntypedFormGroup;

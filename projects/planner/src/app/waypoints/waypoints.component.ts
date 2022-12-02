@@ -8,7 +8,7 @@ import { SelectedWaypoint } from '../shared/selectedwaypointService';
 @Component({
     selector: 'app-waypoints',
     templateUrl: './waypoints.component.html',
-    styleUrls: ['./waypoints.component.css']
+    styleUrls: ['./waypoints.component.scss']
 })
 export class WayPointsComponent {
     public dive: Dive;

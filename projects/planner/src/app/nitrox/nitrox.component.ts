@@ -11,7 +11,7 @@ import { InputControls } from '../shared/inputcontrols';
 @Component({
     selector: 'app-nitrox',
     templateUrl: './nitrox.component.html',
-    styleUrls: ['./nitrox.component.css']
+    styleUrls: ['./nitrox.component.scss']
 })
 export class NitroxComponent implements OnInit {
     public calcIcon = faCalculator;

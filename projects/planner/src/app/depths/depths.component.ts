@@ -12,7 +12,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 @Component({
     selector: 'app-depths',
     templateUrl: './depths.component.html',
-    styleUrls: ['./depths.component.css']
+    styleUrls: ['./depths.component.scss']
 })
 export class DepthsComponent implements OnInit, OnDestroy {
     public plan: Plan;

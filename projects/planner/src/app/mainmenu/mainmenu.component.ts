@@ -5,7 +5,7 @@ import { PreferencesService } from '../shared/preferences.service';
 @Component({
     selector: 'app-mainmenu',
     templateUrl: './mainmenu.component.html',
-    styleUrls: ['./mainmenu.component.css']
+    styleUrls: ['./mainmenu.component.scss']
 })
 export class MainMenuComponent {
     public isNavbarCollapsed = true;

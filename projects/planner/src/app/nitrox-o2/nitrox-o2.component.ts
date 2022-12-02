@@ -8,7 +8,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 @Component({
     selector: 'app-nitrox-o2',
     templateUrl: './nitrox-o2.component.html',
-    styleUrls: ['./nitrox-o2.component.css']
+    styleUrls: ['./nitrox-o2.component.scss']
 })
 export class NitroxO2Component implements OnInit {
     @Input()

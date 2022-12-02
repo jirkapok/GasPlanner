@@ -6,7 +6,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 @Component({
     selector: 'app-altitude',
     templateUrl: './altitude.component.html',
-    styleUrls: ['./altitude.component.css']
+    styleUrls: ['./altitude.component.scss']
 })
 export class AltitudeComponent implements OnInit{
     @Output()

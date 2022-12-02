@@ -10,7 +10,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 @Component({
     selector: 'app-dive-issues',
     templateUrl: './dive-issues.component.html',
-    styleUrls: ['./dive-issues.component.css']
+    styleUrls: ['./dive-issues.component.scss']
 })
 export class DiveIssuesComponent {
     public dive: Dive;

@@ -14,7 +14,7 @@ import { GasToxicity } from '../shared/gasToxicity.service';
 @Component({
     selector: 'app-consumption',
     templateUrl: './diveinfo.component.html',
-    styleUrls: ['./diveinfo.component.css']
+    styleUrls: ['./diveinfo.component.scss']
 })
 export class DiveInfoComponent implements OnInit {
     @ViewChild('toastElement', { static: true })

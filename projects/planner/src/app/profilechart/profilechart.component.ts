@@ -12,7 +12,7 @@ import { SelectedWaypoint } from '../shared/selectedwaypointService';
 @Component({
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
-    styleUrls: ['./profilechart.component.css']
+    styleUrls: ['./profilechart.component.scss']
 })
 export class ProfileChartComponent implements OnInit, OnDestroy {
     public dive: Dive;

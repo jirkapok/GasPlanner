@@ -53,7 +53,7 @@ export class TankBound {
 @Component({
     selector: 'app-tanks',
     templateUrl: './tanks.component.html',
-    styleUrls: ['./tanks.component.css']
+    styleUrls: ['./tanks.component.scss']
 })
 export class TanksComponent implements OnInit, OnDestroy {
     public allNames: string[];

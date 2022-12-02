@@ -12,7 +12,7 @@ import { TankBound } from '../tanks/tanks.component';
 @Component({
     selector: 'app-ndl-limits',
     templateUrl: './ndl-limits.component.html',
-    styleUrls: ['./ndl-limits.component.css']
+    styleUrls: ['./ndl-limits.component.scss']
 })
 export class NdlLimitsComponent {
     public icon = faTable;

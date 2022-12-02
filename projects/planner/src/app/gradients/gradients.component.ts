@@ -7,7 +7,7 @@ import { Gradients, StandardGradientsService } from '../shared/standard-gradient
 @Component({
     selector: 'app-gradients',
     templateUrl: './gradients.component.html',
-    styleUrls: ['./gradients.component.css']
+    styleUrls: ['./gradients.component.scss']
 })
 export class GradientsComponent implements OnInit {
     @Input()

@@ -10,6 +10,9 @@
       "schematics": {
         "@schematics/angular:application": {
           "strict": true
+        },
+        "@schematics/angular:component": {
+            "style": "scss"
         }
       },
       "prefix": "app",
@@ -29,7 +32,7 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "projects/planner/src/styles.css"
+              "projects/planner/src/styles.scss"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
@@ -103,7 +106,7 @@
               "projects/planner/src/manifest.webmanifest"
             ],
             "styles": [
-              "projects/planner/src/styles.css"
+              "projects/planner/src/styles.scss"
             ],
             "scripts": [],
             "webWorkerTsConfig": "projects/planner/tsconfig.worker.json"

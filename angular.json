@@ -31,11 +31,9 @@
               "projects/planner/src/manifest.webmanifest"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "projects/planner/src/styles.scss"
             ],
             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "projects/planner/src/types/plotly.js/plotly-basic.min.js"
             ],
             "serviceWorker": true,

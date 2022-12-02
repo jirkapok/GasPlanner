@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
-import { Toast } from 'bootstrap';
+// import { Toast } from 'bootstrap';
 import {
     faSlidersH, faShareFromSquare
 } from '@fortawesome/free-solid-svg-icons';
@@ -23,7 +23,7 @@ export class DiveInfoComponent implements OnInit {
     public dive: Dive;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
-    private toast!: Toast;
+    // private toast!: Toast;
 
     constructor(private clipboard: ClipboardService, public planner: PlannerService, public units: UnitConversion) {
         this.dive = this.planner.dive;
@@ -31,7 +31,7 @@ export class DiveInfoComponent implements OnInit {
 
         this.clipboard.copyResponse$.subscribe((res: IClipboardResponse) => {
             if (res.isSuccess) {
-                this.toast.show();
+               // this.toast.show();
             }
         });
     }
@@ -65,7 +65,7 @@ export class DiveInfoComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.toast = new Toast(this.toastEl.nativeElement, { delay: 5000, });
+        //this.toast = new Toast(this.toastEl.nativeElement, { delay: 5000, });
     }
 
     public sharePlan(): void {
@@ -73,6 +73,6 @@ export class DiveInfoComponent implements OnInit {
     }
 
     public hideToast(): void {
-        this.toast.hide();
+       // this.toast.hide();
     }
 }

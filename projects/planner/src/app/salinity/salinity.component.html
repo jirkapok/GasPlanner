@@ -1,18 +1,12 @@
 <label for="salinity" class="form-label">Water salinity:
-    <div class="input-group gradients-max-width">
-        <input id="salinity" [value]="salinityOption"
-            class="form-control col-auto" type="text" readonly />
-        <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-            <button type="button" class="btn btn-default border" id="salinityMenu"
-                ngbDropdownToggle></button>
-            <div ngbDropdownMenu aria-labelledby="salinityMenu" aria-expanded="false">
-                <button type="button" class="dropdown-item"
-                    (click)="useFresh()">{{freshName}}</button>
-                <button type="button" class="dropdown-item"
-                    (click)="useBrackish()">{{brackishName}}</button>
-                <button type="button" class="dropdown-item"
-                    (click)="useSalt()">{{saltName}}</button>
-            </div>
-        </div>
+    <div class="input-group dropdown gradients-max-width" mdbDropdown>
+        <input id="salinity" [value]="salinityOption" class="form-control col-auto" type="text" readonly />
+        <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="salinityMenu"
+        type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>
+        <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+            <li (click)="useFresh()"><a class="dropdown-item">{{freshName}}</a></li>
+            <li (click)="useBrackish()"><a class="dropdown-item">{{brackishName}}</a></li>
+            <li (click)="useSalt()"><a class="dropdown-item">{{saltName}}</a></li>
+        </ul>
     </div>
 </label>

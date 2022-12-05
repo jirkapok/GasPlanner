@@ -1,23 +1,21 @@
 <div class="mb-2">
     <label for="altitudeField" class="form-label">Altitude [{{units.altitude}}]:
         <form [formGroup]="altitudeForm">
-            <div class="input-group col-auto o2-max-width">
+            <div class="input-group o2-max-width" mdbDropdown>
                 <input id="altitudeField" class="form-control col-auto" type="number" (input)="altitudeChanged()"
                     required [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1"
                     formControlName="altitude" [class.is-invalid]="altitudeInvalid" />
-                <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                    <button class="btn btn-default border" id="o2Menu" type="button" ngbDropdownToggle></button>
-                    <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-                        <button type="button" class="dropdown-item" (click)="seaLevel()">Sea level</button>
-                        <button type="button" class="dropdown-item" (click)="setHill()">{{ smallHill }}</button>
-                        <button type="button" class="dropdown-item" (click)="setMountains()">{{ mountains }}</button>
-                        <button type="button" class="dropdown-item" (click)="setHighMountains()">{{ highMountains
-                            }}</button>
-                    </div>
-                </div>
-                <div class="text-danger form-text" *ngIf="altitudeInvalid">
-                    Needs to be number {{units.ranges.altitudeLabel}}
-                </div>
+                <button class="btn btn-default dropdown-toggle dropdown-toggle-split" type="button"
+                    aria-expanded="false" mdbDropdownToggle></button>
+                <ul mdbDropdownMenu class="dropdown-menu dropdown-menu-end">
+                    <li class="dropdown-item" (click)="seaLevel()"><a>Sea level</a></li>
+                    <li class="dropdown-item" (click)="setHill()"><a>{{ smallHill }}</a></li>
+                    <li class="dropdown-item" (click)="setMountains()"><a>{{ mountains }}</a></li>
+                    <li class="dropdown-item" (click)="setHighMountains()"><a>{{ highMountains }}</a></li>
+                </ul>
+            </div>
+            <div class="text-danger form-text" *ngIf="altitudeInvalid">
+                Needs to be number {{units.ranges.altitudeLabel}}
             </div>
         </form>
     </label>

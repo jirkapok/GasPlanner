@@ -31,8 +31,7 @@
                     </th>
                 </tr>
                 <ng-container formArrayName="boundTanks">
-                    <ng-container *ngFor="let bound of tanksGroup.controls; let i = index"
-                        [formGroupName]="i">
+                    <ng-container *ngFor="let bound of tanksGroup.controls; let i = index" [formGroupName]="i">
                         <tr class="p-0">
                             <td class="align-center">
                                 <div class="mb-0 pb-0 px-1">{{ tanks[i].id }}.</div>
@@ -40,8 +39,9 @@
                             <td>
                                 <div class="mb-0 pb-0 px-0">
                                     <input formControlName="tankSize" class="form-control" type="number"
-                                        (input)="tankChanged(i)" required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]"
-                                        step="1" [class.is-invalid]="tankSizeInvalid(i)" id="sizeItem"/>
+                                        (input)="tankChanged(i)" required [min]="ranges.tankSize[0]"
+                                        [max]="ranges.tankSize[1]" step="1" [class.is-invalid]="tankSizeInvalid(i)"
+                                        id="sizeItem" />
                                     <div class="text-danger" *ngIf="tankSizeInvalid(i)">Needs to be number
                                         {{ranges.tankSizeLabel}}
                                     </div>
@@ -59,17 +59,20 @@
                             </td>
                             <td>
                                 <div class="input-group mb-0 pb-0 px-1">
-                                    <input formControlName="tankO2" class="form-control" type="number" (input)="tankChanged(i)"
-                                        required [min]="ranges.trimixOxygen[0]" [max]="ranges.trimixOxygen[1]" step="1"
-                                        [class.is-invalid]="gasO2Invalid(i)" id="o2Item" />
-                                    <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                                        <button class="btn btn-default border" id="o2Menu" type="button"
-                                            ngbDropdownToggle></button>
-                                        <div ngbDropdownMenu aria-labelledby="o2Menu" aria-expanded="false">
-                                            <button *ngFor="let stgas of this.allNames" type="button"
-                                                class="dropdown-item"
-                                                (click)="assignStandardGas(i, stgas)">{{stgas}}</button>
-                                        </div>
+                                    <div class="input-group dropdown" mdbDropdown>
+                                        <input formControlName="tankO2" class="form-control" type="number"
+                                            (input)="tankChanged(i)" required [min]="ranges.trimixOxygen[0]"
+                                            [max]="ranges.trimixOxygen[1]" step="1" [class.is-invalid]="gasO2Invalid(i)"
+                                            id="o2Item" />
+                                        <button class="btn btn-default dropdown-toggle dropdown-toggle-split"
+                                            id="o2Menu" type="button" aria-expanded="false" data-mdb-toggle="dropdown"
+                                            mdbDropdownToggle></button>
+                                        <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+                                            <li *ngFor="let stgas of this.allNames"
+                                                (click)="assignStandardGas(i, stgas)">
+                                                <a class="dropdown-item">{{stgas}}</a>
+                                            </li>
+                                        </ul>
                                     </div>
                                     <div class="text-danger" *ngIf="gasO2Invalid(i)">Needs to be number
                                         {{ranges.trimixOxygenLabel}}</div>
@@ -77,16 +80,16 @@
                             </td>
                             <td>
                                 <div class="mb-0 pb-0 px-1">
-                                    <input formControlName="tankHe" class="form-control" type="number" (input)="tankChanged(i)"
-                                        [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1" required
-                                        [class.is-invalid]="gasHeInvalid(i)" id="heItem" />
+                                    <input formControlName="tankHe" class="form-control" type="number"
+                                        (input)="tankChanged(i)" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]"
+                                        step="1" required [class.is-invalid]="gasHeInvalid(i)" id="heItem" />
                                     <div class="text-danger" *ngIf="gasHeInvalid(i)">Needs to be number
                                         {{ranges.tankHeLabel}}</div>
                                 </div>
                             </td>
                             <td>
-                                <button *ngIf="i === 1" type="button"
-                                    class="btn text-secondary btn-lg m-0 p-0 align-top" (click)="removeTank(i)">
+                                <button *ngIf="i !== 0" type="button"
+                                    class="btn text-secondary btn-lg m-0 p-0" (click)="removeTank(i)">
                                     <fa-icon [icon]="trashIcon"></fa-icon>
                                 </button>
                             </td>
@@ -110,9 +113,9 @@
         <div class="card-body row" *ngIf="!isComplex">
             <div class="mb-2 col-auto">
                 <label for="size" class="form-label">Size [{{units.volume}}]:
-                    <input formControlName="firstTankSize" class="form-control col-auto" type="number" (input)="applySimple()"
-                        required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-                        [class.is-invalid]="firstTankSizeInvalid" id="sizeFirstTank"/>
+                    <input formControlName="firstTankSize" class="form-control col-auto" type="number"
+                        (input)="applySimple()" required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
+                        [class.is-invalid]="firstTankSizeInvalid" id="sizeFirstTank" />
                     <small class="form-text text-muted">SAC: {{gasSac(0) | number:'1.0-2'}}
                         {{units.sac}}</small>
                     <div class="text-danger form-text" *ngIf="firstTankSizeInvalid">Needs to be
@@ -121,9 +124,10 @@
             </div>
             <div class="mb-2 col-auto">
                 <label for="startPressure" class="form-label">Start pressure [{{units.pressure}}]:
-                    <input class="form-control col-auto" type="number" (input)="applySimple()" id="startPressureFirstTank"
-                        formControlName="firstTankStartPressure" required [min]="ranges.tankPressure[0]"
-                        [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankStartPressureInvalid" />
+                    <input class="form-control col-auto" type="number" (input)="applySimple()"
+                        id="startPressureFirstTank" formControlName="firstTankStartPressure" required
+                        [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
+                        [class.is-invalid]="firstTankStartPressureInvalid" />
                     <div class="text-danger form-text" *ngIf="firstTankStartPressureInvalid">Needs to be
                         number
                         {{ranges.tankPressureLabel}}</div>

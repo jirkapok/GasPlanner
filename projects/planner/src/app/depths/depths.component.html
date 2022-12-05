@@ -74,15 +74,17 @@
                         </td>
                         <td>
                             <div class="input-group mb-0 pb-0 px-1">
-                                <input id="tanks" [value]="tankLabelFor(i)" class="form-control" type="text" readonly />
-                                <div ngbDropdown class="input-group-append d-inline-block" placement="bottom-right">
-                                    <button class="btn btn-default border" id="tankMenu" type="button"
-                                        ngbDropdownToggle></button>
-                                    <div ngbDropdownMenu aria-labelledby="tankMenu" aria-expanded="false">
-                                        <button *ngFor="let tank of tanks" type="button" class="dropdown-item"
-                                            (click)="assignTank(i, tank)">{{ tankLabel(tank)
-                                            }}</button>
-                                    </div>
+                                <div mdbDropdown class="input-group dropdown">
+                                    <input id="tanks" [value]="tankLabelFor(i)" class="form-control" type="text"
+                                        readonly />
+                                    <button class="btn btn-default dropdown-toggle dropdown-toggle-split" id="tankMenu"
+                                        type="button" mdbDropdownToggle aria-expanded="false"
+                                        data-mdb-toggle="dropdown"></button>
+                                    <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+                                        <li *ngFor="let tank of tanks" (click)="assignTank(i, tank)">
+                                            <a class="dropdown-item">{{ tankLabel(tank) }}</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </td>

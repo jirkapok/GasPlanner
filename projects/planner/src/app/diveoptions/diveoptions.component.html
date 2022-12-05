@@ -128,20 +128,18 @@
                             <div class="mb-2 col-auto">
                                 <label for="safetyStop" class="form-label">Add 3 min safety stop:
                                     <div class="input-group gradients-max-width">
-                                        <input id="safetyStop" [value]="safetyStopOption" class="form-control col-auto"
-                                            type="text" readonly />
-                                        <div ngbDropdown class="input-group-append d-inline-block"
-                                            placement="bottom-right">
-                                            <button type="button" class="btn btn-default border" id="safetyStopMenu"
-                                                ngbDropdownToggle></button>
-                                            <div ngbDropdownMenu aria-labelledby="safetyStopMenu" aria-expanded="false">
-                                                <button type="button" class="dropdown-item"
-                                                    (click)="useSafetyOff()">{{safetyOffName}}</button>
-                                                <button type="button" class="dropdown-item"
-                                                    (click)="useSafetyAuto()">{{safetyAutoName}}</button>
-                                                <button type="button" class="dropdown-item"
-                                                    (click)="useSafetyOn()">{{safetyOnName}}</button>
-                                            </div>
+                                        <div class="input-group dropdown" mdbDropdown>
+                                            <input id="safetyStop" [value]="safetyStopOption"
+                                                class="form-control col-auto" type="text" readonly />
+                                            <button type="button"
+                                                class="btn btn-default dropdown-toggle dropdown-toggle-split"
+                                                id="safetyStopMenu" aria-expanded="false" data-mdb-toggle="dropdown"
+                                                mdbDropdownToggle></button>
+                                            <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+                                                <li (click)="useSafetyOff()"><a class="dropdown-item">{{safetyOffName}}</a></li>
+                                                <li (click)="useSafetyAuto()"><a class="dropdown-item">{{safetyAutoName}}</a></li>
+                                                <li (click)="useSafetyOn()"><a class="dropdown-item">{{safetyOnName}}</a></li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </label>

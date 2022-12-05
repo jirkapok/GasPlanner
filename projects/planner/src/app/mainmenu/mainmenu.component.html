@@ -1,34 +1,36 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
-    <a class="navbar-brand ps-3" routerLink="/">Gas planner</a>
-    <button class="navbar-toggler hidden-sm-up" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed"
-     data-target="#navbarsDefault"
-      aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarsDefault">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item dropdown" ngbDropdown>
-          <a class="nav-link dropdown-toggle" id="id01" ngbDropdownToggle>Calculators</a>
-          <div class="dropdown-menu" aria-labelledby="id01" ngbDropdownMenu>
-            <a class="dropdown-item" routerLink="/sac">RMV/SAC</a>
-            <a class="dropdown-item" routerLink="/nitrox">Nitrox</a>
-            <a class="dropdown-item" routerLink="/ndl">NDL table</a>
-          </div>
-        </li>
-        <li class="nav-item dropdown" ngbDropdown>
-          <a class="nav-link dropdown-toggle" id="id02" ngbDropdownToggle>Settings</a>
-          <div class="dropdown-menu" aria-labelledby="id02" ngbDropdownMenu>
-            <a class="dropdown-item" routerLink="/settings">Edit</a>
-            <a class="dropdown-item" (click)="saveDefaults()">Save defaults</a>
-            <a class="dropdown-item" (click)="loadDefaults()">Reload defaults</a>
-          </div>
-        </li>
-        <a class="nav-link" href="{{mainHelpUrl}}/standard_gases.md" target="_blank">Standard gases</a>
-        <a class="nav-link" href="{{mainHelpUrl}}/help.md" target="_blank">Help/Learn</a>
-        <a class="nav-link" routerLink="/about">About</a>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><button *ngIf="showInstallButton" (click)="addToHomeScreen()" class="btn btn-success btn-small mr-auto">Add to Home screen</button></li>
-      </ul>
+    <div class="container-fluid">
+        <a class="navbar-brand ps-3" routerLink="/">Gas planner</a>
+        <button class="navbar-toggler" type="button" aria-expanded="false" aria-label="Toggle navigation"
+            (click)="basicNavbar.toggle()">
+            <fa-icon [icon]="faBars" class="me-3"></fa-icon>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" mdbCollapse #basicNavbar="mdbCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown" mdbDropdown >
+                    <a class="nav-link dropdown-toggle" id="id01" mdbDropdownToggle>Calculators</a>
+                    <div class="dropdown-menu" aria-labelledby="id01" mdbDropdownMenu>
+                        <a class="dropdown-item" routerLink="/sac">RMV/SAC</a>
+                        <a class="dropdown-item" routerLink="/nitrox">Nitrox</a>
+                        <a class="dropdown-item" routerLink="/ndl">NDL table</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown" mdbDropdown >
+                    <a class="nav-link dropdown-toggle" id="id02" mdbDropdownToggle>Settings</a>
+                    <div class="dropdown-menu" aria-labelledby="id02" mdbDropdownMenu>
+                        <a class="dropdown-item" routerLink="/settings">Edit</a>
+                        <a class="dropdown-item" (click)="saveDefaults()">Save defaults</a>
+                        <a class="dropdown-item" (click)="loadDefaults()">Reload defaults</a>
+                    </div>
+                </li>
+                <a class="nav-link" href="{{mainHelpUrl}}/standard_gases.md" target="_blank">Standard gases</a>
+                <a class="nav-link" href="{{mainHelpUrl}}/help.md" target="_blank">Help/Learn</a>
+                <a class="nav-link" routerLink="/about">About</a>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><button *ngIf="showInstallButton" (click)="addToHomeScreen()"
+                        class="btn btn-success btn-small mr-auto">Add to Home screen</button></li>
+            </ul>
+        </div>
     </div>
-  </nav>
+</nav>

@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { Urls } from '../shared/navigation.service';
 import { PreferencesService } from '../shared/preferences.service';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-mainmenu',
@@ -9,6 +10,7 @@ import { PreferencesService } from '../shared/preferences.service';
 })
 export class MainMenuComponent {
     public isNavbarCollapsed = true;
+    public faBars = faBars;
     public showInstallButton = false;
     private deferredPrompt: any;
 

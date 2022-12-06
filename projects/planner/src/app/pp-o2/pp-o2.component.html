@@ -1,8 +1,9 @@
 <form [formGroup]="pO2Form">
-    <label for="maxPpO2">{{label}}
-        <input class="form-control" id="maxPpO2" [formControlName]="this.controlName" (input)="fireChanged()" type="number"
-            required [min]="units.ranges.ppO2[0]" [max]="units.ranges.ppO2[1]" step="0.1"
-            [class.is-invalid]="ppO2Invalid" />
-    </label>
-    <div class="text-danger" *ngIf="ppO2Invalid">Needs to be number 0.21-3</div>
+    <mdb-form-control>
+        <input class="form-control" id="maxPpO2" [formControlName]="this.controlName" (input)="fireChanged()"
+            type="number" [min]="units.ranges.ppO2[0]" [max]="units.ranges.ppO2[1]" step="0.1"
+            mdbInput mdbValidate/>
+        <label for="maxPpO2" class="form-label" mdbLabel>{{label}}</label>
+        <mdb-error *ngIf="ppO2Invalid">Needs to be number 0.21-3</mdb-error>
+    </mdb-form-control>
 </form>

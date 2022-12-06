@@ -88,7 +88,8 @@
                             </td>
                             <td>
                                 <div class="m-0 pb-0 px-1">
-                                    <button *ngIf="i !== 0" class="m-0 p-1 btn btn-secondary" type="button" (click)="removeTank(i)">
+                                    <button *ngIf="i !== 0" class="m-0 p-1 btn btn-secondary" type="button"
+                                        (click)="removeTank(i)">
                                         <fa-icon [icon]="minusIcon" class="p-0 m-0 fa-xl"></fa-icon>
                                     </button>
                                 </div>
@@ -111,29 +112,30 @@
             </table>
         </div>
         <div class="card-body row" *ngIf="!isComplex">
-            <div class="mb-2 col-auto">
-                <label for="size" class="form-label">Size [{{units.volume}}]:
-                    <input formControlName="firstTankSize" class="form-control col-auto" type="number"
-                        (input)="applySimple()" required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-                        [class.is-invalid]="firstTankSizeInvalid" id="sizeFirstTank" />
-                    <small class="form-text text-muted">SAC: {{gasSac(0) | number:'1.0-2'}}
-                        {{units.sac}}</small>
-                    <div class="text-danger form-text" *ngIf="firstTankSizeInvalid">Needs to be
-                        number {{ranges.tankSizeLabel}}</div>
-                </label>
+            <div class="mb-4 col col-auto">
+                <mdb-form-control>
+                    <input formControlName="firstTankSize" class="form-control" type="number" (input)="applySimple()"
+                        required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
+                        [class.is-invalid]="firstTankSizeInvalid" id="sizeFirstTank" mdbInput />
+                    <label for="size" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>
+                </mdb-form-control>
+                <small class="form-text text-muted">SAC: {{gasSac(0) | number:'1.0-2'}}
+                    {{units.sac}}</small>
+                <div class="text-danger form-text" *ngIf="firstTankSizeInvalid">Needs to be
+                    number {{ranges.tankSizeLabel}}</div>
             </div>
-            <div class="mb-2 col-auto">
-                <label for="startPressure" class="form-label">Start pressure [{{units.pressure}}]:
-                    <input class="form-control col-auto" type="number" (input)="applySimple()"
-                        id="startPressureFirstTank" formControlName="firstTankStartPressure" required
-                        [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
-                        [class.is-invalid]="firstTankStartPressureInvalid" />
-                    <div class="text-danger form-text" *ngIf="firstTankStartPressureInvalid">Needs to be
-                        number
-                        {{ranges.tankPressureLabel}}</div>
-                </label>
+            <div class="mb-4 col col-auto" id="oxygen-input">
+                <mdb-form-control>
+                    <input class="form-control" type="number" (input)="applySimple()" id="startPressureFirstTank"
+                        formControlName="firstTankStartPressure" required [min]="ranges.tankPressure[0]"
+                        [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankStartPressureInvalid"
+                        mdbInput />
+                    <label for="startPressure" class="form-label" mdbLabel>Start pressure [{{units.pressure}}]: </label>
+                </mdb-form-control>
+                <div class="text-danger form-text" *ngIf="firstTankStartPressureInvalid">Needs to be number
+                    {{ranges.tankPressureLabel}}</div>
             </div>
-            <div class="mb-2 col-auto">
+            <div class="mb-4 col col-auto">
                 <app-nitrox-o2 [tank]="firstTank.tank" [toxicity]="toxicity" (gasChange)="applySimple()"
                     (assignBestMix)="assignBestMix()"></app-nitrox-o2>
             </div>

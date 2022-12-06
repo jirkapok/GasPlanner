@@ -1,21 +1,22 @@
 <form [formGroup]="nitroxForm">
-    <label for="gasO2" class="form-label">Percent O2:
-        <div class="input-group dropdown" mdbDropdown>
+    <div class="input-group dropdown" mdbDropdown>
+        <mdb-form-control>
             <input class="form-control" type="number" (input)="fireGasChanged()" formControlName="o2" required
                 [min]="units.ranges.nitroxOxygen[0]" [max]="units.ranges.nitroxOxygen[1]" step="1" id="o2Nitrox"
-                [class.is-invalid]="gasO2Invalid" />
-            <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="o2Menu"
-                type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>
-            <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                <li (click)="fireAssignBestMix()" *ngIf="showBestMix">
-                    <a class="dropdown-item">Best mix </a>
-                </li>
-                <li *ngFor="let stgas of nitroxNames" (click)="assignStandardGas(stgas)">
-                    <a class="dropdown-item">{{stgas}}</a>
-                </li>
-            </ul>
-        </div>
-        <app-gaslabel [tank]="tank" [toxicity]="toxicity"></app-gaslabel>
-    </label>
+                [class.is-invalid]="gasO2Invalid" mdbInput/>
+            <label for="gasO2" class="form-label" mdbLabel>Percent O2:</label>
+        </mdb-form-control>
+        <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="o2Menu"
+            type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>
+        <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+            <li (click)="fireAssignBestMix()" *ngIf="showBestMix">
+                <a class="dropdown-item">Best mix </a>
+            </li>
+            <li *ngFor="let stgas of nitroxNames" (click)="assignStandardGas(stgas)">
+                <a class="dropdown-item">{{stgas}}</a>
+            </li>
+        </ul>
+    </div>
+    <app-gaslabel [tank]="tank" [toxicity]="toxicity"></app-gaslabel>
     <div class="text-danger" *ngIf="gasO2Invalid">Needs to be number {{units.ranges.nitroxOxygenLabel}}</div>
 </form>

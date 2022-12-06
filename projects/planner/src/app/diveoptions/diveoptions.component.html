@@ -34,34 +34,8 @@
 
             <!-- Complex UI only -->
             <div *ngIf="isComplex">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="environment-tab" data-bs-toggle="tab"
-                            data-bs-target="#environment" type="button" role="tab" aria-controls="environment"
-                            aria-selected="true">Environment</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="conservatism-tab" data-bs-toggle="tab"
-                            data-bs-target="#conservatism" type="button" role="tab" aria-controls="conservatism"
-                            aria-selected="false">Conservatism</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="gases-tab" data-bs-toggle="tab" data-bs-target="#gases"
-                            type="button" role="tab" aria-controls="gases" aria-selected="false">Gases</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="stops-tab" data-bs-toggle="tab" data-bs-target="#stops"
-                            type="button" role="tab" aria-controls="stops" aria-selected="false">Stops</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="speeds-tab" data-bs-toggle="tab" data-bs-target="#speeds"
-                            type="button" role="tab" aria-controls="speeds" aria-selected="false">Speeds</button>
-                    </li>
-                </ul>
-
-                <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="environment" role="tabpanel"
-                        aria-labelledby="environment-tab">
+                <mdb-tabs>
+                    <mdb-tab title="Environment">
                         <div class="mt-3">
                             <div class="mb-2">
                                 <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)">
@@ -72,15 +46,15 @@
                                 </app-salinity>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="conservatism" role="tabpanel" aria-labelledby="conservatism-tab">
+                    </mdb-tab>
+                    <mdb-tab title="Conservatism">
                         <div class="col-sm mt-3">
                             <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
                                 (inputChange)="updateGradients($event)" [simple]="false" [showTitle]="false">
                             </app-gradients>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="gases" role="tabpanel" aria-labelledby="gases-tab">
+                    </mdb-tab>
+                    <mdb-tab title="Gases">
                         <div class="row mt-3">
                             <div class="mb-2 col-auto">
                                 <label for="maxNarcoticDepth" class="form-label">Maximum narcotic depth
@@ -94,7 +68,7 @@
                                     </div>
                                 </label>
                             </div>
-                            <div class="row ms-4">
+                            <div class="row ms-2">
                                 <div class="form-check form-switch pb-1">
                                     <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
                                         [checked]="options.oxygenNarcotic" (change)="switchOxygenNarcotic()" />
@@ -102,8 +76,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="stops" role="tabpanel" aria-labelledby="stops-tab">
+                    </mdb-tab>
+                    <mdb-tab title="Stops">
                         <div class="row mt-3">
                             <div class="mb-2 col-auto">
                                 <label for="problem" class="form-label">Problem solving duration [min]:
@@ -136,9 +110,12 @@
                                                 id="safetyStopMenu" aria-expanded="false" data-mdb-toggle="dropdown"
                                                 mdbDropdownToggle></button>
                                             <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                                                <li (click)="useSafetyOff()"><a class="dropdown-item">{{safetyOffName}}</a></li>
-                                                <li (click)="useSafetyAuto()"><a class="dropdown-item">{{safetyAutoName}}</a></li>
-                                                <li (click)="useSafetyOn()"><a class="dropdown-item">{{safetyOnName}}</a></li>
+                                                <li (click)="useSafetyOff()"><a
+                                                        class="dropdown-item">{{safetyOffName}}</a></li>
+                                                <li (click)="useSafetyAuto()"><a
+                                                        class="dropdown-item">{{safetyAutoName}}</a></li>
+                                                <li (click)="useSafetyOn()"><a
+                                                        class="dropdown-item">{{safetyOnName}}</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -159,12 +136,13 @@
                                 <div class="form-check form-switch pb-1">
                                     <input type="checkbox" class="form-check-input" id="roundStops" mdbCheckbox
                                         [checked]="options.roundStopsToMinutes" (change)="switchStopsRounding()" />
-                                    <label class="form-check-label" for="roundStops">Round deco stops to minutes</label>
+                                    <label class="form-check-label" for="roundStops">Round deco stops to
+                                        minutes</label>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade container" id="speeds" role="tabpanel" aria-labelledby="speeds-tab">
+                    </mdb-tab>
+                    <mdb-tab title="Speeds">
                         <div class="row mt-3">
                             <div class="mb-2 col-auto">
                                 <label for="descSpeed" class="form-label">Descent speed [{{units.speed}}]:
@@ -213,8 +191,8 @@
                                 </label>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </mdb-tab>
+                </mdb-tabs>
             </div>
             <div>
                 <button type="button" class="btn btn-secondary me-2 mt-3"

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { faLayerGroup, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Tank } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
@@ -17,8 +17,8 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 export class DepthsComponent implements OnInit, OnDestroy {
     public plan: Plan;
     public cardIcon = faLayerGroup;
-    public addIcon = faPlusSquare;
-    public removeIcon = faTrashAlt;
+    public addIcon = faPlus;
+    public removeIcon = faMinus;
     public depthsForm!: UntypedFormGroup;
     public dive: Dive;
     private subscription!: Subscription;

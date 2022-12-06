@@ -31,31 +31,34 @@
         <div class="card-body" *ngIf="isComplex">
             <table class="table table-borderless">
                 <tr>
-                    <th class="text-end">
-                        <div>From [{{units.length}}]</div>
+                    <th>
+                        <div class="m-0 py-0 px-1 text-end">From [{{units.length}}]</div>
                     </th>
                     <th>
-                        <div>To [{{units.length}}]</div>
+                        <div class="m-0 py-0 px-1">To [{{units.length}}]</div>
                     </th>
                     <th>
-                        <div>Duration [min]</div>
+                        <div class="m-0 py-0 px-1">Duration [min]</div>
                     </th>
                     <th>
-                        <div>Tank</div>
+                        <div class="m-0 py-0 px-1">Tank</div>
                     </th>
-                    <th><button class="btn btn-default btn-lg m-0 p-0 text-primary" type="button" (click)="addLevel()"
-                            id="addLevel">
-                            <fa-icon [icon]="addIcon"></fa-icon>
-                        </button></th>
+                    <th>
+                        <div class="m-0 py-0 px-1">
+                            <button class="m-0 p-1 btn btn-secondary" type="button" (click)="addLevel()">
+                                <fa-icon [icon]="addIcon" class="fa-xl"></fa-icon>
+                            </button>
+                        </div>
+                    </th>
                 </tr>
                 <ng-container formArrayName="levels">
-                    <tr *ngFor="let level of levelControls.controls; let i = index" [formGroupName]="i">
+                    <tr *ngFor="let level of levelControls.controls; let i = index" [formGroupName]="i" class="p-0">
                         <td>
-                            <div class="mb-0 pb-0 px-1 text-end">{{ startDepth(i) | number:'1.0-0' }}
+                            <div class="m-0 pb-0 px-1 text-end">{{ startDepth(i) | number:'1.0-0' }}
                             </div>
                         </td>
                         <td>
-                            <div class="input-group mb-0 pb-0 px-1">
+                            <div class="input-group m-0 pb-0 px-1">
                                 <input formControlName="endDepth" class="form-control" type="number" id="depthItem"
                                     (input)="levelChanged(i)" required [min]="ranges.depth[0]" [max]="ranges.depth[1]"
                                     step="1" [class.is-invalid]="depthItemInvalid(i)" />
@@ -64,7 +67,7 @@
                             </div>
                         </td>
                         <td>
-                            <div class="input-group mb-0 pb-0 px-1">
+                            <div class="input-group m-0 pb-0 px-1">
                                 <input formControlName="duration" class="form-control" type="number" id="durationItem"
                                     (input)="levelChanged(i)" required [min]="ranges.duration[0]"
                                     [max]="ranges.duration[1]" step="1" [class.is-invalid]="durationItemInvalid(i)" />
@@ -73,7 +76,7 @@
                             </div>
                         </td>
                         <td>
-                            <div class="input-group mb-0 pb-0 px-1">
+                            <div class="input-group m-0 pb-0 px-1">
                                 <div mdbDropdown class="input-group dropdown">
                                     <input id="tanks" [value]="tankLabelFor(i)" class="form-control" type="text"
                                         readonly />
@@ -89,11 +92,12 @@
                             </div>
                         </td>
                         <td>
-                            <button *ngIf="minimumSegments" type="button"
-                                class="btn text-secondary btn-lg m-0 p-0 align-top" (click)="removeLevel(i)"
-                                id="removeLevel">
-                                <fa-icon [icon]="removeIcon"></fa-icon>
-                            </button>
+                            <div class="input-group m-0 pb-0 px-1">
+                                <button *ngIf="minimumSegments" type="button" class="m-0 p-1 btn btn-secondary"
+                                    (click)="removeLevel(i)" id="removeLevel">
+                                    <fa-icon [icon]="removeIcon" class="p-0 m-0 fa-xl"></fa-icon>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </ng-container>

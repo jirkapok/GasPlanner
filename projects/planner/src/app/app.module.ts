@@ -8,7 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ClipboardModule } from 'ngx-clipboard';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
-
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -91,6 +91,7 @@ import { InputControls } from './shared/inputcontrols';
         ClipboardModule,
         MdbCollapseModule,
         MdbDropdownModule,
+        MdbFormsModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,
             // Register the ServiceWorker as soon as the application is stable

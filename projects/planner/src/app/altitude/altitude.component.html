@@ -1,7 +1,7 @@
 <div class="mb-2">
     <label for="altitudeField" class="form-label">Altitude [{{units.altitude}}]:
         <form [formGroup]="altitudeForm">
-            <div class="input-group o2-max-width" mdbDropdown>
+            <div class="input-group" mdbDropdown>
                 <input id="altitudeField" class="form-control col-auto" type="number" (input)="altitudeChanged()"
                     required [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1"
                     formControlName="altitude" [class.is-invalid]="altitudeInvalid" />

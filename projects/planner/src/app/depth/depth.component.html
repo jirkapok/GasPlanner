@@ -1,14 +1,14 @@
 <form [formGroup]="depthForm">
-    <label for="depthField" class="form-label">Depth [{{units.length}}]:
-        <div class="row row-cols-auto">
-            <input id="depthField" formControlName="depth" class="form-control col-auto ms-3" type="number" required
-                [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1" (input)="depthChanged()"
-                [class.is-invalid]="depthInvalid" />
-            <button type="button" class="btn btn-secondary ms-2" id="applyMaxDepthBtn" (click)="applyMaxDepth()">Max</button>
-        </div>
-        <div>
-            <small class="text-muted form-text">Best mix is {{ depths.bestNitroxMix }}</small>
-        </div>
-    </label>
+    <mdb-form-control>
+        <input id="depthField" formControlName="depth" class="form-control" type="number" required
+            [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1" (input)="depthChanged()"
+            [class.is-invalid]="depthInvalid" mdbInput />
+        <label for="depthField" class="form-label" mdbLabel >Depth [{{units.length}}]:</label>
+    </mdb-form-control>
+    <div>
+        <small class="text-muted form-text">Best mix is {{ depths.bestNitroxMix }}</small>
+    </div>
+    <button type="button" class="btn btn-secondary mt-2" id="applyMaxDepthBtn"
+            (click)="applyMaxDepth()">Max</button>
     <div class="text-danger form-text" *ngIf="depthInvalid">Needs to be number {{units.ranges.depthLabel}}</div>
 </form>

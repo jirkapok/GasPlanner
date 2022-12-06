@@ -36,10 +36,6 @@ export class NitroxComponent implements OnInit {
         return this.units.fromMeters(ead);
     }
 
-    public get calcMod(): number {
-        return this.units.fromMeters(this.calc.mod);
-    }
-
     public get pO2Invalid(): boolean {
         const pO2 = this.nitroxForm.controls.pO2;
         return this.inputs.controlInValid(pO2);
@@ -55,16 +51,16 @@ export class NitroxComponent implements OnInit {
         return this.inputs.controlInValid(fO2);
     }
 
+    public get calcMod(): number {
+        return this.units.fromMeters(this.calc.mod);
+    }
+
     private get dataModel(): any {
         return {
             fO2: this.inputs.formatNumber(this.calc.fO2),
             pO2: this.inputs.formatNumber(this.calc.pO2),
-            mod: this.inputs.formatNumber(this.calc.mod)
+            mod: this.inputs.formatNumber(this.calcMod)
         };
-    }
-
-    public set calcMod(newValue: number) {
-        this.calc.mod = this.units.toMeters(newValue);
     }
 
     public ngOnInit(): void {
@@ -73,7 +69,7 @@ export class NitroxComponent implements OnInit {
                 [Validators.required, Validators.min(this.ranges.nitroxOxygen[0]), Validators.max(this.ranges.nitroxOxygen[1])]],
             pO2: [this.inputs.formatNumber(this.calc.pO2),
                 [Validators.required, Validators.min(this.ranges.ppO2[0]), Validators.max(this.ranges.ppO2[1])]],
-            mod: [this.inputs.formatNumber(this.calc.mod),
+            mod: [this.inputs.formatNumber(this.calcMod),
                 [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]],
         });
     }

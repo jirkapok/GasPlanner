@@ -124,7 +124,7 @@
                 <div class="text-danger form-text" *ngIf="firstTankSizeInvalid">Needs to be
                     number {{ranges.tankSizeLabel}}</div>
             </div>
-            <div class="mb-4 col col-auto" id="oxygen-input">
+            <div class="mb-4 col col-auto">
                 <mdb-form-control>
                     <input class="form-control" type="number" (input)="applySimple()" id="startPressureFirstTank"
                         formControlName="firstTankStartPressure" required [min]="ranges.tankPressure[0]"

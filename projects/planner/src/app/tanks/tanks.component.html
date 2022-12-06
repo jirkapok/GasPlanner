@@ -10,22 +10,21 @@
                 <tr>
                     <th></th>
                     <th>
-                        <div class="">Size [{{units.volume}}]</div>
+                        <div class="m-0 p-0">Size [{{units.volume}}]</div>
                     </th>
                     <th>
-                        <div class="">Pressure [{{units.pressure}}]</div>
+                        <div class="m-0 p-0">Pressure [{{units.pressure}}]</div>
                     </th>
                     <th>
-                        <div class="">O2 [%]</div>
+                        <div class="m-0 p-0">O2 [%]</div>
                     </th>
                     <th>
-                        <div class="">He [%]</div>
+                        <div class="m-0 p-0">He [%]</div>
                     </th>
                     <th>
                         <div class="m-0 p-0">
-                            <button class="btn btn-default btn-lg m-0 p-0 text-primary" type="button"
-                                (click)="addTank()">
-                                <fa-icon [icon]="plusIcon" class="px-0 mx-0"></fa-icon>
+                            <button class="m-0 p-1 btn btn-secondary" type="button" (click)="addTank()">
+                                <fa-icon [icon]="plusIcon" class="fa-xl"></fa-icon>
                             </button>
                         </div>
                     </th>
@@ -33,11 +32,11 @@
                 <ng-container formArrayName="boundTanks">
                     <ng-container *ngFor="let bound of tanksGroup.controls; let i = index" [formGroupName]="i">
                         <tr class="p-0">
-                            <td class="align-center">
-                                <div class="mb-0 pb-0 px-1">{{ tanks[i].id }}.</div>
+                            <td>
+                                <div class="m-0 pb-0 px-1">{{ tanks[i].id }}.</div>
                             </td>
                             <td>
-                                <div class="mb-0 pb-0 px-0">
+                                <div class="m-0 pb-0 px-1">
                                     <input formControlName="tankSize" class="form-control" type="number"
                                         (input)="tankChanged(i)" required [min]="ranges.tankSize[0]"
                                         [max]="ranges.tankSize[1]" step="1" [class.is-invalid]="tankSizeInvalid(i)"
@@ -48,7 +47,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="mb-0 pb-0 px-1">
+                                <div class="m-0 pb-0 px-1">
                                     <input formControlName="tankStartPressure" class="form-control" type="number"
                                         (input)="tankChanged(i)" required [min]="ranges.tankPressure[0]"
                                         [max]="ranges.tankPressure[1]" step="1" id="pressureItem"
@@ -58,7 +57,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="input-group mb-0 pb-0 px-1">
+                                <div class="input-group m-0 pb-0 px-1">
                                     <div class="input-group dropdown" mdbDropdown>
                                         <input formControlName="tankO2" class="form-control" type="number"
                                             (input)="tankChanged(i)" required [min]="ranges.trimixOxygen[0]"
@@ -79,7 +78,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="mb-0 pb-0 px-1">
+                                <div class="m-0 pb-0 px-1">
                                     <input formControlName="tankHe" class="form-control" type="number"
                                         (input)="tankChanged(i)" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]"
                                         step="1" required [class.is-invalid]="gasHeInvalid(i)" id="heItem" />
@@ -88,16 +87,17 @@
                                 </div>
                             </td>
                             <td>
-                                <button *ngIf="i !== 0" type="button"
-                                    class="btn text-secondary btn-lg m-0 p-0" (click)="removeTank(i)">
-                                    <fa-icon [icon]="trashIcon"></fa-icon>
-                                </button>
+                                <div class="m-0 pb-0 px-1">
+                                    <button *ngIf="i !== 0" class="m-0 p-1 btn btn-secondary" type="button" (click)="removeTank(i)">
+                                        <fa-icon [icon]="minusIcon" class="p-0 m-0 fa-xl"></fa-icon>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td></td>
                             <td colspan="4">
-                                <div class="mt-0 pt-0">
+                                <div class="m-0 p-0">
                                     <small class="form-text text-muted">SAC: {{gasSac(i) | number:'1.0-2'}}
                                         {{units.sac}}</small>
                                     <app-gaslabel [tank]="tanks[i].tank" [toxicity]="toxicity" class="float-end">

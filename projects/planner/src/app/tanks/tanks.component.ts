@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { faBatteryHalf, faTrashAlt, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-
+import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { PlannerService } from '../shared/planner.service';
 import { StandardGases, Tank } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -58,8 +57,8 @@ export class TankBound {
 export class TanksComponent implements OnInit, OnDestroy {
     public allNames: string[];
     public icon = faBatteryHalf;
-    public plusIcon = faPlusSquare;
-    public trashIcon = faTrashAlt;
+    public plusIcon = faPlus;
+    public minusIcon = faMinus;
     public toxicity: GasToxicity;
     public tanksForm!: UntypedFormGroup;
 

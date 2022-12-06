@@ -2,14 +2,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule  } from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { DatePipe, DecimalPipe } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { DatePipe, DecimalPipe } from '@angular/common';
+
 import { ClipboardModule } from 'ngx-clipboard';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
+import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
+
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,8 +39,8 @@ import { AltitudeComponent } from './altitude/altitude.component';
 import { GradientsComponent } from './gradients/gradients.component';
 import { DepthComponent } from './depth/depth.component';
 import { NitroxO2Component } from './nitrox-o2/nitrox-o2.component';
-import { DurationPipe } from './pipes/duration.pipe';
 
+import { DurationPipe } from './pipes/duration.pipe';
 import { PlannerService } from './shared/planner.service';
 import { PreferencesService } from './shared/preferences.service';
 import { UnitConversion } from './shared/UnitConversion';
@@ -51,6 +54,22 @@ import { DelayedScheduleService } from './shared/delayedSchedule.service';
 import { AppinfoComponent } from './appinfo/appinfo.component';
 import { DiveIssuesComponent } from './dive-issues/dive-issues.component';
 import { InputControls } from './shared/inputcontrols';
+
+const ANGULAR_MODULES = [
+    BrowserModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    FontAwesomeModule,
+    AppRoutingModule
+];
+
+const MDB_MODULES = [
+    MdbCollapseModule,
+    MdbDropdownModule,
+    MdbFormsModule,
+    MdbTabsModule,
+    MdbValidationModule
+];
 
 @NgModule({
     declarations: [
@@ -84,16 +103,9 @@ import { InputControls } from './shared/inputcontrols';
         DiveIssuesComponent
     ],
     imports: [
-        BrowserModule,
-        ReactiveFormsModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        FontAwesomeModule,
+        ...ANGULAR_MODULES,
+        ...MDB_MODULES,
         ClipboardModule,
-        MdbCollapseModule,
-        MdbDropdownModule,
-        MdbFormsModule,
-        MdbTabsModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,
             // Register the ServiceWorker as soon as the application is stable

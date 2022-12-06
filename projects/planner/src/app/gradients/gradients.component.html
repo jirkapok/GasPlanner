@@ -1,53 +1,45 @@
 <form [formGroup]="gfForm">
-    <div class="mb-2">
+    <div class="mb-4">
         <div *ngIf="showTitle">
             <label for="conservatism" class="form-label">Conservatism (Gradient factors):</label>
         </div>
-        <label for="gfLowField" class="form-label"><span *ngIf="!simple">Gradient low [%]:</span>
-            <div class="input-group gradients-max-width">
+        <div class="input-group">
+            <div mdbDropdown class="input-group dropdown">
                 <ng-container *ngIf="simple">
-                    <div mdbDropdown class="input-group dropdown">
-                        <input id="gfLowField" [value]="conservatism" class="form-control col-auto" type="text"
-                            readonly />
-                        <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
-                            mdbDropdownToggle data-mdb-toggle="dropdown" aria-expanded="false"></button>
-                        <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                            <li (click)="lowConservatism()"><a class="dropdown-item">{{standards.lowName}}</a></li>
-                            <li (click)="mediumConservatism()"><a class="dropdown-item">{{standards.mediumName}}</a>
-                            </li>
-                            <li (click)="highConservatism()"><a class="dropdown-item">{{standards.highName}}</a></li>
-                        </ul>
-                    </div>
-                    <div class="text-danger form-text" *ngIf="gfLowInvalid">
-                        Needs to be number 10 - 100 lower than gradient high</div>
+                    <mdb-form-control>
+                        <input id="gfLowField" [value]="conservatism" class="form-control" type="text" [readonly]="true"
+                            mdbInput />
+                    </mdb-form-control>
                 </ng-container>
                 <ng-container *ngIf="!simple">
-                    <div mdbDropdown class="input-group dropdown">
-                        <input id="gfLowField" class="form-control col-auto" type="number" formControlName="gfLow"
+                    <mdb-form-control>
+                        <input id="gfLowField" class="form-control" type="number" formControlName="gfLow"
                             (input)="gfLowChanged()" required min="10" max="100" step="1"
-                            [class.is-invalid]="gfLowInvalid" />
-                        <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
-                            id="conservatismMenu" mdbDropdownToggle data-mdb-toggle="dropdown"
-                            aria-expanded="false"></button>
-                        <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                            <li (click)="lowConservatism()"><a class="dropdown-item">{{standards.lowName}}</a></li>
-                            <li (click)="mediumConservatism()"><a class="dropdown-item">{{standards.mediumName}}</a></li>
-                            <li (click)="highConservatism()"><a class="dropdown-item">{{standards.highName}}</a></li>
-                        </ul>
-                    </div>
-                    <div class="text-danger form-text" *ngIf="gfLowInvalid">
-                        Needs to be number 10 - 100 lower than gradient high</div>
+                            [class.is-invalid]="gfLowInvalid" mdbInput />
+                        <label for="gfLowField" class="form-label" mdbLabel>Gradient low [%]:</label>
+                    </mdb-form-control>
                 </ng-container>
+                <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
+                    id="conservatismMenu" mdbDropdownToggle data-mdb-toggle="dropdown" aria-expanded="false"></button>
+                <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+                    <li (click)="lowConservatism()"><a class="dropdown-item">{{standards.lowName}}</a></li>
+                    <li (click)="mediumConservatism()"><a class="dropdown-item">{{standards.mediumName}}</a>
+                    </li>
+                    <li (click)="highConservatism()"><a class="dropdown-item">{{standards.highName}}</a></li>
+                </ul>
             </div>
-        </label>
+            <div class="text-danger form-text" *ngIf="gfLowInvalid">
+                Needs to be number 10 - 100 lower than gradient high</div>
+        </div>
     </div>
-    <div class="mb-2" *ngIf="!simple">
-        <label for="gfHighField" class="form-label">Gradient high [%]:
-            <input id="gfHighField" formControlName="gfHigh" class="form-control col-auto" type="number" required
-                (input)="gfHighChanged()" min="10" max="100" step="1" [class.is-invalid]="gfHighInvalid" />
-            <div class="text-danger form-text" *ngIf="gfHighInvalid">
-                Needs to be number 10 - 100 higher than gradient low
-            </div>
-        </label>
+    <div class="mb-4" *ngIf="!simple">
+        <mdb-form-control>
+            <input id="gfHighField" formControlName="gfHigh" class="form-control" type="number" required
+                (input)="gfHighChanged()" min="10" max="100" step="1" [class.is-invalid]="gfHighInvalid" mdbInput />
+            <label for="gfHighField" class="form-label" mdbLabel>Gradient high [%]:</label>
+        </mdb-form-control>
+        <div class="text-danger form-text" *ngIf="gfHighInvalid">
+            Needs to be number 10 - 100 higher than gradient low
+        </div>
     </div>
 </form>

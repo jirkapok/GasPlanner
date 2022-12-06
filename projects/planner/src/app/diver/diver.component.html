@@ -6,19 +6,22 @@
         </div>
         <div class="card-body">
             <form [formGroup]="diverForm">
-                <div>
-                    <label for="sac">Respiratory minute volume [{{units.rmv}}]:
-                        <input class="form-control" id="sac" formControlName="rmv" type="number" required
+                <div class="mt-2">
+                    <mdb-form-control>
+                        <input class="form-control" id="sac" formControlName="rmv" type="number"
                             (input)="inputChanged()" [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="0.1"
-                            [class.is-invalid]="rmvInvalid" />
-                    </label>
-                    <div class="text-danger" *ngIf="rmvInvalid">Needs to be number {{ranges.diverRmvLabel}}</div>
+                            mdbInput mdbValidate />
+                        <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
+                        <mdb-error *ngIf="rmvInvalid">Needs to be number {{ranges.diverRmvLabel}}</mdb-error>
+                    </mdb-form-control>
                 </div>
-                <div class="mt-2">
-                    <app-pp-o2 [maxPpO2]="diver.maxPpO2" (ppO2Change)="maxPpO2Changed($event)" label="Maximum ppO2:" [pO2Form]="diverForm" controlName="maxPO2"></app-pp-o2>
+                <div class="pt-2 mt-4">
+                    <app-pp-o2 [maxPpO2]="diver.maxPpO2" (ppO2Change)="maxPpO2Changed($event)" label="Maximum ppO2:"
+                        [pO2Form]="diverForm" controlName="maxPO2"></app-pp-o2>
                 </div>
-                <div class="mt-2">
-                    <app-pp-o2 [maxPpO2]="diver.maxDecoPpO2" (ppO2Change)="maxDecoPpO2Changed($event)" label="Maximum deco ppO2:" [pO2Form]="diverForm" controlName="maxDecoPO2"></app-pp-o2>
+                <div class="pt-2 my-4">
+                    <app-pp-o2 [maxPpO2]="diver.maxDecoPpO2" (ppO2Change)="maxDecoPpO2Changed($event)"
+                        label="Maximum deco ppO2:" [pO2Form]="diverForm" controlName="maxDecoPO2"></app-pp-o2>
                 </div>
             </form>
         </div>

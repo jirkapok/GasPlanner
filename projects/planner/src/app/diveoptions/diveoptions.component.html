@@ -57,14 +57,11 @@
                     <mdb-tab title="Gases">
                         <div class="pt-3 row">
                             <div class="mb-3 col col-12 col-sm-6">
-                                <mdb-form-control>
-                                    <input id="maxNarcoticDepth" class="form-control" type="number"
-                                        formControlName="maxEND" required [min]="ranges.narcoticDepth[0]"
-                                        [max]="ranges.narcoticDepth[1]" step="1" (input)="applyOptions()"
-                                        [class.is-invalid]="narcoticDepthInvalid" mdbInput />
-                                    <label for="maxNarcoticDepth" class="form-label" mdbLabel>Max narc depth
-                                        [{{units.length}}]:</label>
-                                </mdb-form-control>
+                                <label for="maxNarcoticDepth" class="form-label" mdbLabel>Max narc depth
+                                    [{{units.length}}]:</label>
+                                <input id="maxNarcoticDepth" class="form-control" type="number" formControlName="maxEND"
+                                    required [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
+                                    (input)="applyOptions()" [class.is-invalid]="narcoticDepthInvalid" mdbInput />
                                 <div class="text-danger form-text" *ngIf="narcoticDepthInvalid">
                                     Needs to be number {{ranges.narcoticDepthLabel}}
                                 </div>
@@ -81,35 +78,29 @@
                     <mdb-tab title="Stops">
                         <div class="row pt-3">
                             <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                                <mdb-form-control>
-                                    <input id="problem" formControlName="problem" class="form-control" type="number"
-                                        (input)="applyOptions()" required [min]="1" [max]="100" min="1" max="100"
-                                        step="1" [class.is-invalid]="problemInvalid" mdbInput />
-                                    <label for="problem" class="form-label" mdbLabel>Solve problem [min]:</label>
-                                </mdb-form-control>
+                                <label for="problem" class="form-label" mdbLabel>Solve problem [min]:</label>
+                                <input id="problem" formControlName="problem" class="form-control" type="number"
+                                    (input)="applyOptions()" required [min]="1" [max]="100" min="1" max="100" step="1"
+                                    [class.is-invalid]="problemInvalid" mdbInput />
                                 <div class="text-danger form-text" *ngIf="problemInvalid">
                                     Needs to be number 1 - 100 mim
                                 </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                                <mdb-form-control>
-                                    <input id="switchDuration" formControlName="gasSwitch" class="form-control"
-                                        type="number" required min="1" max="10" step="1" (input)="applyOptions()"
-                                        [class.is-invalid]="switchDurationInvalid" mdbInput />
-                                    <label for="switchDuration" class="form-label" mdbLabel>Gas switch [min]:</label>
-                                </mdb-form-control>
+                                <label for="switchDuration" class="form-label" mdbLabel>Gas switch [min]:</label>
+                                <input id="switchDuration" formControlName="gasSwitch" class="form-control"
+                                    type="number" required min="1" max="10" step="1" (input)="applyOptions()"
+                                    [class.is-invalid]="switchDurationInvalid" mdbInput />
                                 <div class="text-danger form-text" *ngIf="switchDurationInvalid">
                                     Needs to be number 1 - 10 min
                                 </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
+                                <label for="safetyStop" class="form-label" mdbLabel>Add 3 min safety
+                                    stop:</label>
                                 <div class="input-group dropdown" mdbDropdown>
-                                    <mdb-form-control>
-                                        <input id="safetyStop" [value]="safetyStopOption" class="form-control"
-                                            type="text" [readonly]="true" mdbInput />
-                                        <label for="safetyStop" class="form-label" mdbLabel>Add 3 min safety
-                                            stop:</label>
-                                    </mdb-form-control>
+                                    <input id="safetyStop" [value]="safetyStopOption" class="form-control" type="text"
+                                        [readonly]="true" mdbInput />
                                     <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
                                         id="safetyStopMenu" aria-expanded="false" data-mdb-toggle="dropdown"
                                         mdbDropdownToggle></button>
@@ -124,14 +115,12 @@
                                 </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                                <mdb-form-control>
-                                    <input id="lastStop" (input)="applyOptions()" formControlName="lastStopDepth"
-                                        class="form-control" type="number" required [min]="ranges.lastStopDepth[0]"
-                                        [max]="ranges.lastStopDepth[1]" step="1" [class.is-invalid]="lastStopInvalid"
-                                        mdbInput />
-                                    <label for="lastStop" class="form-label" mdbLabel>Last stop depth
-                                        [{{units.length}}]:</label>
-                                </mdb-form-control>
+                                <label for="lastStop" class="form-label" mdbLabel>Last stop depth
+                                    [{{units.length}}]:</label>
+                                <input id="lastStop" (input)="applyOptions()" formControlName="lastStopDepth"
+                                    class="form-control" type="number" required [min]="ranges.lastStopDepth[0]"
+                                    [max]="ranges.lastStopDepth[1]" step="1" [class.is-invalid]="lastStopInvalid"
+                                    mdbInput />
                                 <div class="text-danger form-text" *ngIf="lastStopInvalid">
                                     Needs to be number {{ranges.lastStopDepthLabel}}
                                 </div>
@@ -149,54 +138,44 @@
                     <mdb-tab title="Speeds">
                         <div class="row pt-3">
                             <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <mdb-form-control>
-                                    <input id="descSpeed" formControlName="descentSpeed" class="form-control"
-                                        type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
-                                        [max]="ranges.speed[1]" step="1" [class.is-invalid]="descSpeedInvalid"
-                                        mdbInput />
-                                    <label for="descSpeed" class="form-label" mdbLabel>Descent
-                                        [{{units.speed}}]:</label>
-                                </mdb-form-control>
+                                <label for="descSpeed" class="form-label" mdbLabel>Descent
+                                    [{{units.speed}}]:</label>
+                                <input id="descSpeed" formControlName="descentSpeed" class="form-control" type="number"
+                                    (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
+                                    step="1" [class.is-invalid]="descSpeedInvalid" mdbInput />
                                 <div class="text-danger form-text" *ngIf="descSpeedInvalid">
                                     Needs to be number {{ranges.speedLabel}}
                                 </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <mdb-form-control>
-                                    <input id="ascSpeed" formControlName="ascentSpeed6m" class="form-control"
-                                        type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
-                                        [max]="ranges.speed[1]" step="1" [class.is-invalid]="ascSpeedInvalid"
-                                        mdbInput />
-                                    <label for="ascSpeed" class="form-label" mdbLabel>Ascent {{units.lastSpeedLevel}}
-                                        {{units.length}} to surface [{{units.speed}}]:</label>
-                                </mdb-form-control>
+                                <label for="ascSpeed" class="form-label" mdbLabel>Ascent {{units.lastSpeedLevel}}
+                                    {{units.length}} to surface [{{units.speed}}]:</label>
+                                <input id="ascSpeed" formControlName="ascentSpeed6m" class="form-control" type="number"
+                                    (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
+                                    step="1" [class.is-invalid]="ascSpeedInvalid" mdbInput />
                                 <div class="text-danger form-text" *ngIf="ascSpeedInvalid">
                                     Needs to be number {{ranges.speedLabel}}
                                 </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <mdb-form-control>
-                                    <input id="ascSpeed2" (input)="applyOptions()"
-                                        formControlName="ascentSpeed50percTo6m" class="form-control" type="number"
-                                        required [min]="ranges.speed[0]" [max]="ranges.speed[1]" step="1"
-                                        [class.is-invalid]="ascentSpeed50percTo6mInvalid" mdbInput />
-                                    <label for="ascSpeed2" class="form-label" mdbLabel>Ascent to
-                                        {{units.lastSpeedLevel}}
-                                        {{units.length}} [{{units.speed}}]:</label>
-                                </mdb-form-control>
+                                <label for="ascSpeed2" class="form-label" mdbLabel>Ascent to
+                                    {{units.lastSpeedLevel}}
+                                    {{units.length}} [{{units.speed}}]:</label>
+                                <input id="ascSpeed2" (input)="applyOptions()" formControlName="ascentSpeed50percTo6m"
+                                    class="form-control" type="number" required [min]="ranges.speed[0]"
+                                    [max]="ranges.speed[1]" step="1" [class.is-invalid]="ascentSpeed50percTo6mInvalid"
+                                    mdbInput />
                                 <div class="text-danger form-text" *ngIf="ascentSpeed50percTo6mInvalid">
                                     Needs to be number {{ranges.speedLabel}}
                                 </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <mdb-form-control>
-                                    <input id="ascSpeed3" formControlName="ascentSpeed50perc" class="form-control"
-                                        type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
-                                        [max]="ranges.speed[1]" step="1" [class.is-invalid]="ascentSpeed50percInvalid"
-                                        mdbInput />
-                                    <label for="ascSpeed3" class="form-label" mdbLabel>Ascent to 50%
-                                        [{{units.speed}}]:</label>
-                                </mdb-form-control>
+                                <label for="ascSpeed3" class="form-label" mdbLabel>Ascent to 50%
+                                    [{{units.speed}}]:</label>
+                                <input id="ascSpeed3" formControlName="ascentSpeed50perc" class="form-control"
+                                    type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
+                                    [max]="ranges.speed[1]" step="1" [class.is-invalid]="ascentSpeed50percInvalid"
+                                    mdbInput />
                                 <div class="text-danger form-text" *ngIf="ascentSpeed50percInvalid">
                                     Needs to be number {{ranges.speedLabel}}
                                 </div>

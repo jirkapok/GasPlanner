@@ -7,13 +7,10 @@
         <div class="card-body">
             <ng-container [formGroup]="diverForm">
                 <div class="mt-2">
-                    <mdb-form-control>
-                        <input class="form-control" id="sac" formControlName="rmv" type="number"
-                            (input)="inputChanged()" [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="0.1"
-                            mdbInput mdbValidate />
-                        <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                        <mdb-error *ngIf="rmvInvalid">Needs to be number {{ranges.diverRmvLabel}}</mdb-error>
-                    </mdb-form-control>
+                    <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
+                    <input class="form-control" id="sac" formControlName="rmv" type="number" (input)="inputChanged()"
+                        [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="0.1" mdbInput mdbValidate />
+                    <mdb-error *ngIf="rmvInvalid">Needs to be number {{ranges.diverRmvLabel}}</mdb-error>
                 </div>
                 <div class="pt-2 mt-4">
                     <app-pp-o2 [maxPpO2]="diver.maxPpO2" (ppO2Change)="maxPpO2Changed($event)" label="Maximum ppO2:"

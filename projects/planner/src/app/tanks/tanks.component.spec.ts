@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
-import { NitroxO2Component } from '../nitrox-o2/nitrox-o2.component';
+import { OxygenComponent } from '../oxygen/oxygen.component';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -68,7 +68,7 @@ describe('Tanks component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TanksComponent, GaslabelComponent, NitroxO2Component],
+            declarations: [TanksComponent, GaslabelComponent, OxygenComponent],
             providers: [WorkersFactoryCommon, UnitConversion, PlannerService, DecimalPipe],
             imports: [ReactiveFormsModule]
         })

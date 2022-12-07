@@ -38,7 +38,7 @@ import { SalinityComponent } from './salinity/salinity.component';
 import { AltitudeComponent } from './altitude/altitude.component';
 import { GradientsComponent } from './gradients/gradients.component';
 import { DepthComponent } from './depth/depth.component';
-import { NitroxO2Component } from './nitrox-o2/nitrox-o2.component';
+import { OxygenComponent } from './oxygen/oxygen.component';
 
 import { DurationPipe } from './pipes/duration.pipe';
 import { PlannerService } from './shared/planner.service';
@@ -97,7 +97,7 @@ const MDB_MODULES = [
         AltitudeComponent,
         GradientsComponent,
         DepthComponent,
-        NitroxO2Component,
+        OxygenComponent,
         PpO2Component,
         AppinfoComponent,
         DiveIssuesComponent

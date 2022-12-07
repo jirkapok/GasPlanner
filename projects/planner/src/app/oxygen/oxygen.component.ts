@@ -6,11 +6,11 @@ import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
-    selector: 'app-nitrox-o2',
-    templateUrl: './nitrox-o2.component.html',
-    styleUrls: ['./nitrox-o2.component.scss']
+    selector: 'app-oxygen',
+    templateUrl: './oxygen.component.html',
+    styleUrls: ['./oxygen.component.scss']
 })
-export class NitroxO2Component implements OnInit {
+export class OxygenComponent implements OnInit {
     @Input()
     public tank = new Tank(15, 200, 21);
     @Input()

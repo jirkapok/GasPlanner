@@ -57,8 +57,8 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="input-group m-0 pb-0 px-1">
-                                    <div class="input-group dropdown" mdbDropdown>
+                                <div class="m-0 pb-0 px-1">
+                                    <div class="input-group  d-flex d-inline-flex dropdown" mdbDropdown>
                                         <input formControlName="tankO2" class="form-control" type="number"
                                             (input)="tankChanged(i)" required [min]="ranges.trimixOxygen[0]"
                                             [max]="ranges.trimixOxygen[1]" step="1" [class.is-invalid]="gasO2Invalid(i)"

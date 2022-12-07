@@ -36,27 +36,27 @@
             <div *ngIf="isComplex">
                 <mdb-tabs>
                     <mdb-tab title="Environment">
-                        <div class="pt-3">
-                            <div class="mb-4">
+                        <div class="pt-3 row">
+                            <div class="mb-4 col col-12 col-sm-6">
                                 <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)">
                                 </app-altitude>
                             </div>
-                            <div class="mb-4">
+                            <div class="mb-4 col col-12 col-sm-6">
                                 <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)">
                                 </app-salinity>
                             </div>
                         </div>
                     </mdb-tab>
                     <mdb-tab title="Conservatism">
-                        <div class="col-sm pt-3">
+                        <div class="pt-3">
                             <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
                                 (inputChange)="updateGradients($event)" [simple]="false" [showTitle]="false">
                             </app-gradients>
                         </div>
                     </mdb-tab>
                     <mdb-tab title="Gases">
-                        <div class="row pt-3">
-                            <div class="mb-2 col col-auto">
+                        <div class="pt-3 row">
+                            <div class="mb-3 col col-12 col-sm-6">
                                 <mdb-form-control>
                                     <input id="maxNarcoticDepth" class="form-control" type="number"
                                         formControlName="maxEND" required [min]="ranges.narcoticDepth[0]"
@@ -69,7 +69,7 @@
                                     Needs to be number {{ranges.narcoticDepthLabel}}
                                 </div>
                             </div>
-                            <div class="row ms-2">
+                            <div class="col col-12 col-sm-6">
                                 <div class="form-check form-switch pb-1">
                                     <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
                                         [checked]="options.oxygenNarcotic" (change)="switchOxygenNarcotic()" />
@@ -80,7 +80,7 @@
                     </mdb-tab>
                     <mdb-tab title="Stops">
                         <div class="row pt-3">
-                            <div class="mb-4 col col-auto">
+                            <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
                                 <mdb-form-control>
                                     <input id="problem" formControlName="problem" class="form-control" type="number"
                                         (input)="applyOptions()" required [min]="1" [max]="100" min="1" max="100"
@@ -91,7 +91,7 @@
                                     Needs to be number 1 - 100 mim
                                 </div>
                             </div>
-                            <div class="mb-4 col col-auto">
+                            <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
                                 <mdb-form-control>
                                     <input id="switchDuration" formControlName="gasSwitch" class="form-control"
                                         type="number" required min="1" max="10" step="1" (input)="applyOptions()"
@@ -102,8 +102,8 @@
                                     Needs to be number 1 - 10 min
                                 </div>
                             </div>
-                            <div class="mb-4 col col-auto">
-                                <div class="input-group dropdown" mdbDropdown>
+                            <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
+                                <div class="d-flex d-inline-flex dropdown" mdbDropdown>
                                     <mdb-form-control>
                                         <input id="safetyStop" [value]="safetyStopOption" class="form-control"
                                             type="text" [readonly]="true" mdbInput />
@@ -123,7 +123,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="mb-4 col col-auto">
+                            <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
                                 <mdb-form-control>
                                     <input id="lastStop" (input)="applyOptions()" formControlName="lastStopDepth"
                                         class="form-control" type="number" required [min]="ranges.lastStopDepth[0]"
@@ -148,7 +148,7 @@
                     </mdb-tab>
                     <mdb-tab title="Speeds">
                         <div class="row pt-3">
-                            <div class="mb-4 col col-auto">
+                            <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
                                 <mdb-form-control>
                                     <input id="descSpeed" formControlName="descentSpeed" class="form-control"
                                         type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
@@ -161,7 +161,7 @@
                                     Needs to be number {{ranges.speedLabel}}
                                 </div>
                             </div>
-                            <div class="mb-4 col col-auto">
+                            <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
                                 <mdb-form-control>
                                     <input id="ascSpeed" formControlName="ascentSpeed6m" class="form-control"
                                         type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
@@ -174,9 +174,7 @@
                                     Needs to be number {{ranges.speedLabel}}
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="mb-4 col col-auto">
+                            <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
                                 <mdb-form-control>
                                     <input id="ascSpeed2" (input)="applyOptions()"
                                         formControlName="ascentSpeed50percTo6m" class="form-control" type="number"
@@ -190,7 +188,7 @@
                                     Needs to be number {{ranges.speedLabel}}
                                 </div>
                             </div>
-                            <div class="mb-4 col col-auto">
+                            <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
                                 <mdb-form-control>
                                     <input id="ascSpeed3" formControlName="ascentSpeed50perc" class="form-control"
                                         type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"

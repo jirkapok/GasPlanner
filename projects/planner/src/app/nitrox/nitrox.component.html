@@ -20,28 +20,29 @@
                     <div [hidden]="calc.inPO2" class="pt-2 mb-4">
                         <label for="pO2" class="form-label" mdbLabel>ppO2:</label>
                         <input class="form-control" name="pO2" id="pO2" type="number" formControlName="pO2"
-                            (input)="inputChanged()" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1" mdbInput
-                            mdbValidate />
-                        <mdb-error *ngIf="pO2Invalid">Needs to be number 0.21-3</mdb-error>
+                            (input)="inputChanged()" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1"
+                            [class.is-invalid]="pO2Invalid" />
+                        <div class="invalid-feedback position-absolute">Needs to be number 0.21-3
+                        </div>
                     </div>
                     <div [hidden]="calc.inBestMix" class="pt-2 mb-4">
                         <label for="fO2" class="form-label" mdbLabel>Percent O2:</label>
                         <input class="form-control" name="fO2" id="fO2" type="number" formControlName="fO2"
                             (input)="inputChanged()" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]"
-                            step="1" mdbInput mdbValidate />
-                        <mdb-error *ngIf="fO2Invalid">Needs to be number {{ranges.nitroxOxygenLabel}}
-                        </mdb-error>
+                            step="1" [class.is-invalid]="fO2Invalid" />
+                        <div class="invalid-feedback position-absolute">Needs to be number
+                            {{ranges.nitroxOxygenLabel}}
+                        </div>
                     </div>
                     <div [hidden]="calc.inMod" class="pt-2 mb-4">
                         <label for="mod" class="form-label" mdbLabel>MOD [{{units.length}}]:</label>
                         <input class="form-control" name="mod" id="mod" type="number" formControlName="mod"
                             (input)="inputChanged()" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
-                            aria-describedby="eadDescribe" mdbInput mdbValidate />
-                        <mdb-error class="text-danger" *ngIf="modInvalid">Needs to be number
-                            {{ranges.depthLabel}}</mdb-error>
-                        <div id="eadDescribe" class="form-text" [style.visibility]="modInvalid ? 'hidden' : 'visible'">
-                            EAD: {{ ead | number: '1.0-1' }}
-                            {{units.length}}</div>
+                            aria-describedby="eadDescribe" [class.is-invalid]="modInvalid" />
+                        <div class="invalid-feedback position-absolute">Needs to
+                            be number {{ranges.depthLabel}}</div>
+                        <div id="eadDescribe" class="form-text" [class.invisible]="modInvalid">
+                            EAD: {{ ead | number: '1.0-1' }} {{units.length}}</div>
                     </div>
                     <div [hidden]="!calc.inMod" class="pt-2 mb-4">
                         <label for="mod" class="form-label" mdbLabel>MOD [{{units.length}}]:</label>

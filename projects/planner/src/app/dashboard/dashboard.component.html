@@ -11,22 +11,18 @@
                     (click)="stopDisclaimer()"></button>
             </div>
         </div>
-        <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
-                'col-md-4': !isComplex,
-                'col-sm-6': !isComplex,
-                'col-lg-6': isComplex
+        <div class="col-12 col-lg-6 col-xxl-4 mt-4" [ngClass]="{
+                'col-sm-6': !isComplex
                 }">
             <app-tanks></app-tanks>
         </div>
-        <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
-                'col-md-4': !isComplex,
-                'col-sm-6': !isComplex,
-                'col-lg-6': isComplex
+        <div class="col-12 col-lg-6 col-xxl-4 mt-4" [ngClass]="{
+                'col-sm-6': !isComplex
                 }">
             <app-depths></app-depths>
         </div>
-        <div class="col-12 col-lg-4 mt-4" [ngClass]="{
-                'col-md-4': !isComplex,
+        <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
+                'col-md-12': !isComplex,
                 'col-sm-12': !isComplex
                 } ">
             <app-diveoptions></app-diveoptions>

@@ -3,8 +3,8 @@
         <div *ngIf="showTitle">
             <label for="conservatism" class="form-label">Conservatism (Gradient factors):</label>
         </div>
-        <div class="input-group">
-            <div mdbDropdown class="input-group dropdown">
+        <div>
+            <div mdbDropdown class="d-flex d-inline-flex dropdown">
                 <ng-container *ngIf="simple">
                     <mdb-form-control>
                         <input id="gfLowField" [value]="conservatism" class="form-control" type="text" [readonly]="true"

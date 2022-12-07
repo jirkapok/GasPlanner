@@ -62,17 +62,17 @@
                         </div>
                         <div [hidden]="!calc.inSac" class="pt-2 mb-4">
                             <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                            <input formControlName="rmv" class="form-control" [readonly]="true" mdbInput />
+                            <input formControlName="rmv" class="form-control" [readonly]="true" />
                             <small class="form-text text-muted">SAC: {{ gasSac | number:'1.0-2'}}
                                 {{units.sac}}</small>
                         </div>
                         <div [hidden]="!calc.inUsed" class="pt-2 mb-4">
                             <label for="sac" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
-                            <input formControlName="used" class="form-control" [readonly]="true" mdbInput />
+                            <input formControlName="used" class="form-control" [readonly]="true" />
                         </div>
                         <div [hidden]="!calc.inDuration" class="pt-2 mb-4">
                             <label for="sac" class="form-label" mdbLabel>Dive time [min]:</label>
-                            <input formControlName="duration" class="form-control" [readonly]="true" mdbInput />
+                            <input formControlName="duration" class="form-control" [readonly]="true" />
                         </div>
                     </form>
                 </div>

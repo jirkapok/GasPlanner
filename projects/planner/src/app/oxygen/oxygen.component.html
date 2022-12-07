@@ -3,7 +3,7 @@
     <div class="input-group dropdown" mdbDropdown>
         <input class="form-control" type="number" (input)="fireGasChanged()" formControlName="o2" required
             [min]="units.ranges.nitroxOxygen[0]" [max]="units.ranges.nitroxOxygen[1]" step="1" id="o2Nitrox"
-            [class.is-invalid]="gasO2Invalid" mdbInput />
+            [class.is-invalid]="gasO2Invalid" />
         <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="o2Menu"
             type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>
         <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
@@ -15,6 +15,6 @@
             </li>
         </ul>
     </div>
-    <app-gaslabel [tank]="tank" [toxicity]="toxicity"></app-gaslabel>
-    <div class="text-danger" *ngIf="gasO2Invalid">Needs to be number {{units.ranges.nitroxOxygenLabel}}</div>
+    <div class="text-danger form-text position-absolute" *ngIf="gasO2Invalid" >Needs to be number {{units.ranges.nitroxOxygenLabel}}</div>
+    <app-gaslabel [tank]="tank" [toxicity]="toxicity" [class.invisible]="gasO2Invalid"></app-gaslabel>
 </ng-container>

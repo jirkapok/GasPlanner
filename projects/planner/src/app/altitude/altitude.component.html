@@ -1,11 +1,9 @@
 <div class="mb-2" [formGroup]="altitudeForm">
-    <div class="input-group" mdbDropdown>
-        <mdb-form-control>
-            <input id="altitudeField" class="form-control" type="number" (input)="altitudeChanged()" required
-                [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1" formControlName="altitude"
-                [class.is-invalid]="altitudeInvalid" mdbInput />
-            <label for="altitudeField" class="form-label" mdbLabel>Altitude [{{units.altitude}}]:</label>
-        </mdb-form-control>
+    <label for="altitudeField" class="form-label" mdbLabel>Altitude [{{units.altitude}}]:</label>
+    <div class="input-group dropdown" mdbDropdown>
+        <input id="altitudeField" class="form-control" type="number" (input)="altitudeChanged()" required
+            [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1" formControlName="altitude"
+            [class.is-invalid]="altitudeInvalid" mdbInput />
         <button class="btn btn-default dropdown-toggle dropdown-toggle-split" type="button" aria-expanded="false"
             mdbDropdownToggle></button>
         <ul mdbDropdownMenu class="dropdown-menu dropdown-menu-end">

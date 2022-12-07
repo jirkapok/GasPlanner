@@ -1,5 +1,5 @@
 <form [formGroup]="nitroxForm">
-    <div class="input-group d-flex d-inline-flex dropdown" mdbDropdown>
+    <div class="input-group dropdown" mdbDropdown>
         <mdb-form-control>
             <input class="form-control" type="number" (input)="fireGasChanged()" formControlName="o2" required
                 [min]="units.ranges.nitroxOxygen[0]" [max]="units.ranges.nitroxOxygen[1]" step="1" id="o2Nitrox"

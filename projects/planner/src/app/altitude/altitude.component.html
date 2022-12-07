@@ -1,6 +1,6 @@
 <div class="mb-2">
-    <form [formGroup]="altitudeForm">
-        <div class="input-group d-flex d-inline-flex" mdbDropdown>
+    <form [formGroup]="altitudeForm" >
+        <div class="input-group" mdbDropdown>
             <mdb-form-control>
                 <input id="altitudeField" class="form-control" type="number" (input)="altitudeChanged()"
                     required [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1"

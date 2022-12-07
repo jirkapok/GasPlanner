@@ -1,6 +1,6 @@
 <div class="mt-5">
     <div class="row">
-        <div class="col-lg-5 col-md-6 mt-3">
+        <div class="col col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
             <div class="card">
                 <div class="card-header">
                     <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
@@ -17,74 +17,58 @@
                                 (click)="calc.toDuration()">Duration</button>
                         </div>
                         <div class="pt-2 mb-4">
-                            <mdb-form-control>
-                                <input formControlName="depth" class="form-control" name="depth" id="depth"
-                                    type="number" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
-                                    (input)="inputChanged()" mdbInput mdbValidate />
-                                <label for="depth" class="form-label" mdbLabel>Average depth [{{units.length}}]:</label>
-                                <mdb-error *ngIf="depthInvalid">Needs to be number {{ranges.depthLabel}}</mdb-error>
-                            </mdb-form-control>
+                            <label for="depth" class="form-label" mdbLabel>Average depth [{{units.length}}]:</label>
+                            <input formControlName="depth" class="form-control" name="depth" id="depth" type="number"
+                                [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1" (input)="inputChanged()"
+                                mdbInput mdbValidate />
+                            <mdb-error *ngIf="depthInvalid">Needs to be number {{ranges.depthLabel}}</mdb-error>
                         </div>
                         <div class="pt-2 mb-4">
-                            <mdb-form-control>
-                                <input formControlName="tankSize" class="form-control" name="tank" id="tank"
-                                    type="number" [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-                                    (input)="inputChanged()" mdbInput mdbValidate />
-                                <label for="tank" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
-                                <mdb-error *ngIf="tankInvalid">Needs to be number {{ranges.tankSizeLabel}}</mdb-error>
-                            </mdb-form-control>
+                            <label for="tank" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
+                            <input formControlName="tankSize" class="form-control" name="tank" id="tank" type="number"
+                                [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1" (input)="inputChanged()"
+                                mdbInput mdbValidate />
+                            <mdb-error *ngIf="tankInvalid">Needs to be number {{ranges.tankSizeLabel}}</mdb-error>
                         </div>
                         <div [hidden]="calc.inDuration" class="pt-2 mb-4">
-                            <mdb-form-control>
-                                <input formControlName="duration" class="form-control" name="duration" id="duration"
-                                    type="number" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
-                                    (input)="inputChanged()" mdbInput mdbValidate />
-                                <label for="duration" class="form-label" mdbLabel>Dive time [min]:</label>
-                                <mdb-error *ngIf="durationInvalid">
-                                    Needs to be number {{ ranges.durationLabel }}</mdb-error>
-                            </mdb-form-control>
+                            <label for="duration" class="form-label" mdbLabel>Dive time [min]:</label>
+                            <input formControlName="duration" class="form-control" name="duration" id="duration"
+                                type="number" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
+                                (input)="inputChanged()" mdbInput mdbValidate />
+                            <mdb-error *ngIf="durationInvalid">
+                                Needs to be number {{ ranges.durationLabel }}</mdb-error>
                         </div>
                         <div [hidden]="calc.inUsed" class="pt-2 mb-4">
-                            <mdb-form-control>
-                                <input formControlName="used" class="form-control" name="used" id="used" type="number"
-                                    [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
-                                    (input)="inputChanged()" mdbInput mdbValidate />
-                                <label for="used" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
-                                <mdb-error *ngIf="usedInvalid">Needs to be number {{ranges.tankPressureLabel}}
-                                </mdb-error>
-                            </mdb-form-control>
+                            <label for="used" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
+                            <input formControlName="used" class="form-control" name="used" id="used" type="number"
+                                [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
+                                (input)="inputChanged()" mdbInput mdbValidate />
+                            <mdb-error *ngIf="usedInvalid">Needs to be number {{ranges.tankPressureLabel}}
+                            </mdb-error>
                         </div>
                         <div [hidden]="calc.inSac" class="pt-2 mb-4">
-                            <mdb-form-control>
-                                <input formControlName="rmv" class="form-control" name="sac" id="sac" type="number"
-                                    [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="1"
-                                    (input)="inputChanged()" aria-describedby="rmvDescribe" mdbInput mdbValidate />
-                                <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                                <mdb-error *ngIf="rmvInvalid">Needs to be number {{ranges.diverRmvLabel}}</mdb-error>
-                            </mdb-form-control>
+                            <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
+                            <input formControlName="rmv" class="form-control" name="sac" id="sac" type="number"
+                                [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="1" (input)="inputChanged()"
+                                aria-describedby="rmvDescribe" mdbInput mdbValidate />
+                            <mdb-error *ngIf="rmvInvalid">Needs to be number {{ranges.diverRmvLabel}}</mdb-error>
                             <div id="rmvDescribe" class="form-text"
                                 [style.visibility]="rmvInvalid ? 'hidden' : 'visible'">SAC: {{ gasSac | number:'1.0-2'}}
                                 {{units.sac}}</div>
                         </div>
                         <div [hidden]="!calc.inSac" class="pt-2 mb-4">
-                            <mdb-form-control>
-                                <input formControlName="rmv" class="form-control" [readonly]="true" mdbInput />
-                                <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                            </mdb-form-control>
+                            <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
+                            <input formControlName="rmv" class="form-control" [readonly]="true" mdbInput />
                             <small class="form-text text-muted">SAC: {{ gasSac | number:'1.0-2'}}
                                 {{units.sac}}</small>
                         </div>
                         <div [hidden]="!calc.inUsed" class="pt-2 mb-4">
-                            <mdb-form-control>
-                                <input formControlName="used" class="form-control" [readonly]="true" mdbInput />
-                                <label for="sac" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
-                            </mdb-form-control>
+                            <label for="sac" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
+                            <input formControlName="used" class="form-control" [readonly]="true" mdbInput />
                         </div>
                         <div [hidden]="!calc.inDuration" class="pt-2 mb-4">
-                            <mdb-form-control>
-                                <input formControlName="duration" class="form-control" [readonly]="true" mdbInput />
-                                <label for="sac" class="form-label" mdbLabel>Dive time [min]:</label>
-                            </mdb-form-control>
+                            <label for="sac" class="form-label" mdbLabel>Dive time [min]:</label>
+                            <input formControlName="duration" class="form-control" [readonly]="true" mdbInput />
                         </div>
                     </form>
                 </div>

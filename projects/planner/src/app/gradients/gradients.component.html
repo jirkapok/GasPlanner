@@ -1,5 +1,5 @@
-<form [formGroup]="gfForm" class="row">
-    <div class="mb-4 col col-12 col-sm-6">
+<ng-container [formGroup]="gfForm" class="row">
+    <div class="mb-4">
         <div *ngIf="showTitle">
             <label for="conservatism" class="form-label">Conservatism (Gradient factors):</label>
         </div>
@@ -32,7 +32,7 @@
                 Needs to be number 10 - 100 lower than gradient high</div>
         </div>
     </div>
-    <div class="mb-4 col col-12 col-sm-6" *ngIf="!simple">
+    <div class="mb-4" *ngIf="!simple">
         <mdb-form-control>
             <input id="gfHighField" formControlName="gfHigh" class="form-control" type="number" required
                 (input)="gfHighChanged()" min="10" max="100" step="1" [class.is-invalid]="gfHighInvalid" mdbInput />
@@ -42,4 +42,4 @@
             Needs to be number 10 - 100 higher than gradient low
         </div>
     </div>
-</form>
+</ng-container>

@@ -1,4 +1,4 @@
-<form [formGroup]="depthForm">
+<ng-container [formGroup]="depthForm">
     <mdb-form-control>
         <input id="depthField" formControlName="depth" class="form-control" type="number" required
             [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1" (input)="depthChanged()"
@@ -11,4 +11,4 @@
     <button type="button" class="btn btn-secondary mt-2" id="applyMaxDepthBtn"
             (click)="applyMaxDepth()">Max</button>
     <div class="text-danger form-text" *ngIf="depthInvalid">Needs to be number {{units.ranges.depthLabel}}</div>
-</form>
+</ng-container>

@@ -1,4 +1,4 @@
-<form [formGroup]="nitroxForm">
+<ng-container [formGroup]="nitroxForm">
     <div class="input-group dropdown" mdbDropdown>
         <mdb-form-control>
             <input class="form-control" type="number" (input)="fireGasChanged()" formControlName="o2" required
@@ -19,4 +19,4 @@
     </div>
     <app-gaslabel [tank]="tank" [toxicity]="toxicity"></app-gaslabel>
     <div class="text-danger" *ngIf="gasO2Invalid">Needs to be number {{units.ranges.nitroxOxygenLabel}}</div>
-</form>
+</ng-container>

@@ -3,32 +3,33 @@
         <fa-icon [icon]="tasks" class="me-3"></fa-icon>
         <span>Dive way points</span>
     </div>
-    <div class="card-body card-minheight">
-
-        <table class="table">
-            <tbody>
+    <div class="card-body card-minheight table-responsive">
+        <table class="table table-sm p-0">
+            <thead class="table-light">
                 <tr>
                     <th></th>
-                    <th>Depth [{{units.length}}]</th>
-                    <th>Duration [min]</th>
-                    <th>Run [min]</th>
-                    <th *ngIf="isComplex">Gas</th>
+                    <th class="fw-bold px-1">Depth [{{units.length}}]</th>
+                    <th class="fw-bold px-1">Duration [min]</th>
+                    <th class="fw-bold px-1">Run [min]</th>
+                    <th *ngIf="isComplex" class="fw-bold px-1">Gas</th>
                 </tr>
+            </thead>
+            <tbody>
                 <tr *ngIf="!dive.profileCalculated">
                     <td colspan="5">
                         <app-calculating [show]="true"></app-calculating>
                     </td>
                 </tr>
                 <tr *ngFor="let point of dive.wayPoints" [ngClass]="{'table-active': point.selected }"
-                 (mouseover)="highlightRow(point)"
-                 (mouseleave)="highlightRow(undefined)">
-                    <td>
-                        <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)" [title]="iconTitle(point)"></fa-icon>
+                    (mouseover)="highlightRow(point)" (mouseleave)="highlightRow(undefined)">
+                    <td class="px-1 text-center">
+                        <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)"
+                            [title]="iconTitle(point)"></fa-icon>
                     </td>
-                    <td>{{ toEndDepth(point) | number:'1.0-0' }}</td>
-                    <td>{{ point.duration | duration:totalDuration }}</td>
-                    <td>{{ point.endTime | duration:totalDuration }}</td>
-                    <td *ngIf="isComplex">{{ point.gasName }}</td>
+                    <td class="px-1">{{ toEndDepth(point) | number:'1.0-0' }}</td>
+                    <td class="px-1">{{ point.duration | duration:totalDuration }}</td>
+                    <td class="px-1">{{ point.endTime | duration:totalDuration }}</td>
+                    <td *ngIf="isComplex" class="px-1">{{ point.gasName }}</td>
                 </tr>
             </tbody>
         </table>

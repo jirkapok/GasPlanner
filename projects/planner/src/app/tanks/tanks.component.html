@@ -112,7 +112,7 @@
             </table>
         </div>
         <div class="card-body row" *ngIf="!isComplex">
-            <div class="mb-4 col col-auto">
+            <div class="mb-4 col col-12 col-sm-4">
                 <mdb-form-control>
                     <input formControlName="firstTankSize" class="form-control" type="number" (input)="applySimple()"
                         required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
@@ -124,7 +124,7 @@
                 <div class="text-danger form-text" *ngIf="firstTankSizeInvalid">Needs to be
                     number {{ranges.tankSizeLabel}}</div>
             </div>
-            <div class="mb-4 col col-auto">
+            <div class="mb-4 col col-12 col-sm-4">
                 <mdb-form-control>
                     <input class="form-control" type="number" (input)="applySimple()" id="startPressureFirstTank"
                         formControlName="firstTankStartPressure" required [min]="ranges.tankPressure[0]"
@@ -135,7 +135,7 @@
                 <div class="text-danger form-text" *ngIf="firstTankStartPressureInvalid">Needs to be number
                     {{ranges.tankPressureLabel}}</div>
             </div>
-            <div class="mb-4 col col-auto">
+            <div class="mb-4 col col-12 col-sm-4">
                 <app-nitrox-o2 [tank]="firstTank.tank" [toxicity]="toxicity" (gasChange)="applySimple()"
                     (assignBestMix)="assignBestMix()"></app-nitrox-o2>
             </div>

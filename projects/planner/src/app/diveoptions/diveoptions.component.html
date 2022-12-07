@@ -17,10 +17,6 @@
             <div *ngIf="!isComplex">
                 <div class="mt-3 row">
                     <div class="mb-4 col col-auto">
-                        <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
-                            (inputChange)="updateGradients($event)" [simple]="true" [showTitle]="true"></app-gradients>
-                    </div>
-                    <div class="mb-4 col col-auto">
                         <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)">
                         </app-salinity>
                     </div>
@@ -28,6 +24,10 @@
                     <div class="mb-4 col col-auto">
                         <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)">
                         </app-altitude>
+                    </div>
+                    <div class="mb-4 col col-auto">
+                        <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
+                            (inputChange)="updateGradients($event)" [simple]="true" [showTitle]="true"></app-gradients>
                     </div>
                 </div>
             </div>

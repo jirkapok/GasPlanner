@@ -1,8 +1,8 @@
 <div [formGroup]="gfForm" class="row">
+    <div class="row" *ngIf="showTitle">
+        <label for="conservatism" class="form-label">Conservatism (Gradient factors):</label>
+    </div>
     <div class="mb-4 col col-12" [ngClass]="{ 'col-sm-6': !simple }">
-        <div *ngIf="showTitle">
-            <label for="conservatism" class="form-label">Conservatism (Gradient factors):</label>
-        </div>
         <div>
             <label *ngIf="!simple" for="gfLowField" class="form-label" mdbLabel>Gradient low [%]:</label>
             <div mdbDropdown class="input-group dropdown">

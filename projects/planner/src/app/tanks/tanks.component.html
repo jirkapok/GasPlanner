@@ -118,8 +118,8 @@
                     required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
                     [class.is-invalid]="firstTankSizeInvalid" id="sizeFirstTank" />
                 <div class="invalid-feedback position-absolute">Needs to be number {{ranges.tankSizeLabel}}</div>
-                <small class="form-text text-muted" [class.invisible]="firstTankSizeInvalid">SAC: {{gasSac(0) |
-                    number:'1.0-2'}} {{units.sac}}</small>
+                <div class="form-text text-muted" [class.invisible]="firstTankSizeInvalid">SAC: {{gasSac(0) |
+                    number:'1.0-2'}} {{units.sac}}</div>
             </div>
             <div class="mb-4 col col-12 col-md-6">
                 <label for="startPressure" class="form-label" mdbLabel>Start pressure [{{units.pressure}}]: </label>

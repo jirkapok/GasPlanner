@@ -2,10 +2,8 @@
     <label for="depthField" class="form-label" mdbLabel>Depth [{{units.length}}]:</label>
     <input id="depthField" formControlName="depth" class="form-control" type="number" required
         [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1" (input)="depthChanged()"
-        [class.is-invalid]="depthInvalid" mdbInput />
-    <div>
-        <small class="text-muted form-text">Best mix is {{ depths.bestNitroxMix }}</small>
-    </div>
+        [class.is-invalid]="depthInvalid" />
+    <div class="invalid-feedback position-absolute">Needs to be number {{units.ranges.depthLabel}}</div>
+    <div class="text-muted form-text" [class.invisible]="depthInvalid">Best mix is {{ depths.bestNitroxMix }}</div>
     <button type="button" class="btn btn-secondary mt-2" id="applyMaxDepthBtn" (click)="applyMaxDepth()">Max</button>
-    <div class="text-danger form-text" *ngIf="depthInvalid">Needs to be number {{units.ranges.depthLabel}}</div>
 </ng-container>

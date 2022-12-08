@@ -10,15 +10,16 @@
                 <label for="duration" class="form-label" mdbLabel>Bottom time [min]:</label>
                 <input id="duration" formControlName="planDuration" class="form-control" (input)="durationChanged()"
                     type="number" required [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
-                    [class.is-invalid]="durationInvalid" mdbInput />
-                <div><small class="text-muted form-text">No deco limit {{ noDecoTime | number:'1.0-0' }} min</small>
+                    [class.is-invalid]="durationInvalid" />
+                <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.durationLabel }}
                 </div>
+                <div class="text-muted form-text" [class.invisible]="durationInvalid">No deco limit {{ noDecoTime |
+                    number:'1.0-0' }} min</div>
                 <button type="button" class="btn btn-secondary mt-2 me-2 col col-auto"
-                    (click)="depths.applyMaxDuration()" *ngIf="dive.showMaxDuration" id="btnApplyDuration">Max</button>
+                    (click)="depths.applyMaxDuration()" [class.invisible]="!dive.showMaxDuration"
+                    id="btnApplyDuration">Max</button>
                 <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="depths.applyNdlDuration()"
-                    *ngIf="planner.ndlValid" id="btnApplyNdl">No deco</button>
-                <div class="text-danger form-text" *ngIf="durationInvalid">Needs to be number {{ ranges.durationLabel }}
-                </div>
+                    [class.invisible]="!planner.ndlValid" id="btnApplyNdl">No deco</button>
             </div>
             <div class="col col-12 col-md-6">
                 <app-depth></app-depth>

@@ -116,19 +116,17 @@
                 <label for="size" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>
                 <input formControlName="firstTankSize" class="form-control" type="number" (input)="applySimple()"
                     required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-                    [class.is-invalid]="firstTankSizeInvalid" id="sizeFirstTank" mdbInput />
-                <small class="form-text text-muted">SAC: {{gasSac(0) | number:'1.0-2'}}
-                    {{units.sac}}</small>
-                <div class="text-danger form-text" *ngIf="firstTankSizeInvalid">Needs to be
-                    number {{ranges.tankSizeLabel}}</div>
+                    [class.is-invalid]="firstTankSizeInvalid" id="sizeFirstTank" />
+                <div class="invalid-feedback position-absolute">Needs to be number {{ranges.tankSizeLabel}}</div>
+                <small class="form-text text-muted" [class.invisible]="firstTankSizeInvalid">SAC: {{gasSac(0) |
+                    number:'1.0-2'}} {{units.sac}}</small>
             </div>
             <div class="mb-4 col col-12 col-md-6">
                 <label for="startPressure" class="form-label" mdbLabel>Start pressure [{{units.pressure}}]: </label>
                 <input class="form-control" type="number" (input)="applySimple()" id="startPressureFirstTank"
                     formControlName="firstTankStartPressure" required [min]="ranges.tankPressure[0]"
-                    [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankStartPressureInvalid"
-                    mdbInput />
-                <div class="text-danger form-text" *ngIf="firstTankStartPressureInvalid">Needs to be number
+                    [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankStartPressureInvalid" />
+                <div class="invalid-feedback position-absolute">Needs to be number
                     {{ranges.tankPressureLabel}}</div>
             </div>
             <div class="mb-4 col col-12 col-md-6">

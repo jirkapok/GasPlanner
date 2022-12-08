@@ -175,6 +175,7 @@ export class TanksComponent implements OnInit, OnDestroy {
         this.delayedCalc.schedule();
     }
 
+    // TODO doesn't reload the oxygen input
     public assignBestMix(): void {
         const maxDepth = this.planner.plan.maxDepth;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);

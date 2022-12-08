@@ -8,6 +8,7 @@ import { GasToxicity } from '../shared/gasToxicity.service';
 import { Subscription } from 'rxjs';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
+import { Level } from '../shared/models';
 
 export class TankBound {
     constructor(public tank: Tank, private units: UnitConversion) { }
@@ -216,6 +217,10 @@ export class TanksComponent implements OnInit, OnDestroy {
         this.firstTank.size = Number(values.firstTankSize);
         this.firstTank.startPressure = Number(values.firstTankStartPressure);
         this.delayedCalc.schedule();
+    }
+
+    public tankLabel(tank: Tank): string {
+        return Level.tankLabel(this.units, tank);
     }
 
     private reloadAll(): void {

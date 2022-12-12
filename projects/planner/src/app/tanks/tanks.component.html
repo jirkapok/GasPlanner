@@ -19,7 +19,18 @@
                 </div>
             </div>
             <div *ngFor="let bound of tanksGroup.controls; let i = index" [formGroupName]="i">
-                <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-sm-none d-block">{{ tanks[i].id }}.</div>
+                <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-sm-none d-block">
+                    <div class="row">
+                        <div class="col col-6">
+                            {{ tanks[i].id }}.
+                        </div>
+                        <div class="col col-6 text-end">
+                            <button *ngIf="i !== 0" class="m-0 p-1 btn btn-secondary" type="button" (click)="removeTank(i)">
+                                <fa-icon [icon]="minusIcon" class="p-0 m-0 fa-xl"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="row p-0">
                     <div class="col col-12 col-sm-1 m-0 pb-0 px-1 text-end d-none d-sm-block">{{ tanks[i].id }}.</div>
                     <div class="col col-12 col-sm-2 m-0 pb-0 px-1">

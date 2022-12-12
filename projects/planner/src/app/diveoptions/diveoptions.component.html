@@ -147,11 +147,11 @@
                                 </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <label for="ascSpeed" class="form-label" mdbLabel>Ascent {{units.lastSpeedLevel}}
-                                    {{units.length}} to surface [{{units.speed}}]:</label>
-                                <input id="ascSpeed" formControlName="ascentSpeed6m" class="form-control" type="number"
-                                    (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
-                                    step="1" [class.is-invalid]="ascSpeedInvalid" />
+                                <label for="ascSpeed3" class="form-label" mdbLabel>Ascent to 50%
+                                    [{{units.speed}}]:</label>
+                                <input id="ascSpeed3" formControlName="ascentSpeed50perc" class="form-control"
+                                    type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
+                                    [max]="ranges.speed[1]" step="1" [class.is-invalid]="ascentSpeed50percInvalid" />
                                 <div class="invalid-feedback position-absolute">
                                     Needs to be number {{ranges.speedLabel}}
                                 </div>
@@ -169,11 +169,11 @@
                                 </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <label for="ascSpeed3" class="form-label" mdbLabel>Ascent to 50%
-                                    [{{units.speed}}]:</label>
-                                <input id="ascSpeed3" formControlName="ascentSpeed50perc" class="form-control"
-                                    type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
-                                    [max]="ranges.speed[1]" step="1" [class.is-invalid]="ascentSpeed50percInvalid" />
+                                <label for="ascSpeed" class="form-label" mdbLabel>Ascent {{units.lastSpeedLevel}}
+                                    {{units.length}} to surface [{{units.speed}}]:</label>
+                                <input id="ascSpeed" formControlName="ascentSpeed6m" class="form-control" type="number"
+                                    (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
+                                    step="1" [class.is-invalid]="ascSpeedInvalid" />
                                 <div class="invalid-feedback position-absolute">
                                     Needs to be number {{ranges.speedLabel}}
                                 </div>

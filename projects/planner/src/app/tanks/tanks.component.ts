@@ -8,7 +8,6 @@ import { GasToxicity } from '../shared/gasToxicity.service';
 import { Subscription } from 'rxjs';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
-import { Level } from '../shared/models';
 
 export class TankBound {
     constructor(public tank: Tank, private units: UnitConversion) { }
@@ -164,6 +163,7 @@ export class TanksComponent implements OnInit, OnDestroy {
         this.delayedCalc.schedule();
     }
 
+    // TODO add accordion for small screen, use tank label for its items title
     public removeTank(index: number): void {
         if (this.tanksForm.invalid || this.tanks.length <= 1) {
             return;
@@ -219,10 +219,7 @@ export class TanksComponent implements OnInit, OnDestroy {
         this.delayedCalc.schedule();
     }
 
-    public tankLabel(tank: Tank): string {
-        return Level.tankLabel(this.units, tank);
-    }
-
+    // TODO doesn't reload all tanks from url arguments when page is loaded
     private reloadAll(): void {
         this.updateTanks();
         this.tanksForm.patchValue({

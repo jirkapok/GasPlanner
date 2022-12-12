@@ -163,7 +163,6 @@ export class TanksComponent implements OnInit, OnDestroy {
         this.delayedCalc.schedule();
     }
 
-    // TODO add accordion for small screen, use tank label for its items title
     public removeTank(index: number): void {
         if (this.tanksForm.invalid || this.tanks.length <= 1) {
             return;
@@ -176,7 +175,6 @@ export class TanksComponent implements OnInit, OnDestroy {
         this.delayedCalc.schedule();
     }
 
-    // TODO doesn't reload the oxygen input
     public assignBestMix(): void {
         const maxDepth = this.planner.plan.maxDepth;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);

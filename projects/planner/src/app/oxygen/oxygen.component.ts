@@ -50,6 +50,7 @@ export class OxygenComponent implements OnInit {
 
     public fireAssignBestMix(): void {
         this.assignBestMix.emit();
+        this.reload();
     }
 
     public fireGasChanged(): void {
@@ -64,9 +65,14 @@ export class OxygenComponent implements OnInit {
 
     public assignStandardGas(gasName: string): void {
         this.tank.assignStandardGas(gasName);
+        this.reload();
+        this.fireGasChanged();
+    }
+
+    // TODO reload from url parameters
+    private reload(): void {
         this.nitroxForm.patchValue({
             o2: this.inputs.formatNumber(this.tank.o2)
         });
-        this.fireGasChanged();
     }
 }

@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <div class="row p-0 pb-2">
-                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block text-end">{{ startDepth(i) | number:'1.0-0' }}</div>
+                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block text-end align-self-center">{{ startDepth(i) | number:'1.0-0' }}</div>
                     <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
                         <input formControlName="endDepth" class="form-control" type="number" id="depthItem"
                             (input)="levelChanged(i)" required [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
@@ -82,7 +82,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block">
+                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block align-self-center">
                         <button *ngIf="minimumSegments" type="button" class="m-0 p-1 btn btn-secondary"
                             (click)="removeLevel(i)" id="removeLevel">
                             <fa-icon [icon]="removeIcon" class="p-0 m-0 fa-xl"></fa-icon>

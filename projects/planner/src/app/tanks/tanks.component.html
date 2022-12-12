@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="row p-0">
-                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 text-end d-none d-sm-block">{{ tanks[i].id }}.</div>
+                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 text-end d-none d-sm-block align-self-center">{{ tanks[i].id }}.</div>
                     <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
                         <label for="sizeItem" class="form-label d-sm-none d-block">Size
                             [{{units.volume}}]:</label>
@@ -71,7 +71,6 @@
                         <div class="text-danger" *ngIf="gasO2Invalid(i)">Needs to be number
                             {{ranges.trimixOxygenLabel}}</div>
                     </div>
-
                     <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
                         <label for="o2Item" class="form-label d-sm-none d-block mt-2">He [%]:</label>
                         <input formControlName="tankHe" class="form-control" type="number" (input)="tankChanged(i)"
@@ -80,7 +79,7 @@
                         <div class="text-danger" *ngIf="gasHeInvalid(i)">Needs to be number
                             {{ranges.tankHeLabel}}</div>
                     </div>
-                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block">
+                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block align-self-center">
                         <button *ngIf="i !== 0" class="m-0 p-1 btn btn-secondary" type="button" (click)="removeTank(i)">
                             <fa-icon [icon]="minusIcon" class="p-0 m-0 fa-xl"></fa-icon>
                         </button>

@@ -25,80 +25,78 @@
                 <app-depth></app-depth>
             </div>
         </div>
-        <div class="card-body" *ngIf="isComplex">
-            <table class="table table-borderless">
-                <tr>
-                    <th>
-                        <div class="m-0 py-0 px-1 text-end">From [{{units.length}}]</div>
-                    </th>
-                    <th>
-                        <div class="m-0 py-0 px-1">To [{{units.length}}]</div>
-                    </th>
-                    <th>
-                        <div class="m-0 py-0 px-1">Duration [min]</div>
-                    </th>
-                    <th>
-                        <div class="m-0 py-0 px-1">Tank</div>
-                    </th>
-                    <th>
-                        <div class="m-0 py-0 px-1">
-                            <button class="m-0 p-1 btn btn-secondary" id="addLevel" type="button" (click)="addLevel()">
-                                <fa-icon [icon]="addIcon" class="fa-xl"></fa-icon>
+        <div class="card-body" *ngIf="isComplex" formArrayName="levels">
+            <div class="row pb-2">
+                <div class="col col-1 m-0 px-1 d-none d-sm-block text-end">From [{{units.length}}]</div>
+                <div class="col col-2 m-0 px-1 d-none d-sm-block">To [{{units.length}}]</div>
+                <div class="col col-2 m-0 px-1 d-none d-sm-block">Duration [min]</div>
+                <div class="col col-6 m-0 px-1 d-none d-sm-block">Tank</div>
+                <div class="col col-1 m-0 px-1 d-none d-sm-block">
+                    <button class="p-1 btn btn-secondary" id="addLevel" type="button" (click)="addLevel()">
+                        <fa-icon [icon]="addIcon" class="fa-xl"></fa-icon>
+                    </button>
+                </div>
+            </div>
+            <div *ngFor="let level of levelControls.controls; let i = index" [formGroupName]="i" class="px-0 pb-2">
+                <div class="col col-12 col-sm-1 m-0 pb-0 px-1 pt-2 d-sm-none d-block">
+                    <div class="row">
+                        <div class="col col-10 form-label">From {{ startDepth(i) | number:'1.0-0' }} [{{units.length}}]
+                            To [{{units.length}}]:
+                        </div>
+                        <div class="col col-2 text-end">
+                            <button class="m-0 p-1 btn btn-secondary" type="button"
+                                (click)="removeLevel(i)">
+                                <fa-icon [icon]="removeIcon" class="p-0 m-0 fa-xl"></fa-icon>
                             </button>
                         </div>
-                    </th>
-                </tr>
-                <ng-container formArrayName="levels">
-                    <tr *ngFor="let level of levelControls.controls; let i = index" [formGroupName]="i" class="p-0">
-                        <td>
-                            <div class="m-0 pb-0 px-1 text-end">{{ startDepth(i) | number:'1.0-0' }}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group m-0 pb-0 px-1">
-                                <input formControlName="endDepth" class="form-control" type="number" id="depthItem"
-                                    (input)="levelChanged(i)" required [min]="ranges.depth[0]" [max]="ranges.depth[1]"
-                                    step="1" [class.is-invalid]="depthItemInvalid(i)" />
-                                <div class="text-danger" *ngIf="depthItemInvalid(i)">
-                                    Needs to be number {{ranges.depthLabel}}</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group m-0 pb-0 px-1">
-                                <input formControlName="duration" class="form-control" type="number" id="durationItem"
-                                    (input)="levelChanged(i)" required [min]="ranges.duration[0]"
-                                    [max]="ranges.duration[1]" step="1" [class.is-invalid]="durationItemInvalid(i)" />
-                                <div class="text-danger" *ngIf="durationItemInvalid(i)">Needs to be number
-                                    {{ ranges.durationLabel }}</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group m-0 pb-0 px-1">
-                                <div mdbDropdown class="input-group dropdown">
-                                    <input id="tanks" [value]="tankLabelFor(i)" class="form-control" type="text"
-                                        readonly />
-                                    <button class="btn btn-default dropdown-toggle dropdown-toggle-split" id="tankMenu"
-                                        type="button" mdbDropdownToggle aria-expanded="false"
-                                        data-mdb-toggle="dropdown"></button>
-                                    <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                                        <li *ngFor="let tank of tanks" (click)="assignTank(i, tank)">
-                                            <a class="dropdown-item">{{ tankLabel(tank) }}</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group m-0 pb-0 px-1">
-                                <button *ngIf="minimumSegments" type="button" class="m-0 p-1 btn btn-secondary"
-                                    (click)="removeLevel(i)" id="removeLevel">
-                                    <fa-icon [icon]="removeIcon" class="p-0 m-0 fa-xl"></fa-icon>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </ng-container>
-            </table>
+                    </div>
+                </div>
+                <div class="row p-0 pb-2">
+                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block text-end">{{ startDepth(i) | number:'1.0-0' }}</div>
+                    <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
+                        <input formControlName="endDepth" class="form-control" type="number" id="depthItem"
+                            (input)="levelChanged(i)" required [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
+                            [class.is-invalid]="depthItemInvalid(i)" />
+                        <div class="text-danger" *ngIf="depthItemInvalid(i)">
+                            Needs to be number {{ranges.depthLabel}}</div>
+                    </div>
+                    <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
+                        <label for="durationItem" class="form-label d-sm-none d-block mt-2">Duration [min]:</label>
+                        <input formControlName="duration" class="form-control" type="number" id="durationItem"
+                            (input)="levelChanged(i)" required [min]="ranges.duration[0]" [max]="ranges.duration[1]"
+                            step="1" [class.is-invalid]="durationItemInvalid(i)" />
+                        <div class="text-danger" *ngIf="durationItemInvalid(i)">Needs to be number
+                            {{ ranges.durationLabel }}</div>
+                    </div>
+                    <div class="col col-12 col-sm-6 m-0 pb-0 px-1">
+                        <label for="tanks" class="form-label d-sm-none d-block mt-2">Tank:</label>
+                        <div mdbDropdown class="input-group dropdown">
+                            <input id="tanks" [value]="tankLabelFor(i)" class="form-control" type="text" readonly />
+                            <button class="btn btn-default dropdown-toggle dropdown-toggle-split" id="tankMenu"
+                                type="button" mdbDropdownToggle aria-expanded="false"
+                                data-mdb-toggle="dropdown"></button>
+                            <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+                                <li *ngFor="let tank of tanks" (click)="assignTank(i, tank)">
+                                    <a class="dropdown-item">{{ tankLabel(tank) }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block">
+                        <button *ngIf="minimumSegments" type="button" class="m-0 p-1 btn btn-secondary"
+                            (click)="removeLevel(i)" id="removeLevel">
+                            <fa-icon [icon]="removeIcon" class="p-0 m-0 fa-xl"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-end m-1 px-1 pb-2">
+                <div class="col col-1 d-sm-none d-block">
+                    <button class="p-1 btn btn-secondary" type="button" (click)="addLevel()">
+                        <fa-icon [icon]="addIcon" class="fa-xl"></fa-icon>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </form>

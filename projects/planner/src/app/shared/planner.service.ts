@@ -56,6 +56,7 @@ export class PlannerService {
         this.tanksReloaded = this.onTanksReloaded.asObservable();
         this.viewSwitched = this.onViewSwitched.asObservable();
 
+        // TODO unregister events
         this.profileTask = this.workerFactory.createProfileWorker();
         this.profileTask.calculated.subscribe((data) => this.continueCalculation(data));
         this.profileTask.failed.subscribe(() => this.profileFailed());

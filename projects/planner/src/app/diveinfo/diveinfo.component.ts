@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 // import { Toast } from 'bootstrap';
 import {
@@ -10,26 +10,28 @@ import { Dive } from '../shared/models';
 import { Tank, OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import { GasToxicity } from '../shared/gasToxicity.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-consumption',
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss']
 })
-export class DiveInfoComponent implements OnInit {
+export class DiveInfoComponent implements OnInit, OnDestroy {
     @ViewChild('toastElement', { static: true })
     public toastEl!: ElementRef;
     public toxicity: GasToxicity;
     public dive: Dive;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
+    private subscription: Subscription;
     // private toast!: Toast;
 
     constructor(private clipboard: ClipboardService, public planner: PlannerService, public units: UnitConversion) {
         this.dive = this.planner.dive;
         this.toxicity = new GasToxicity(this.planner.options);
 
-        this.clipboard.copyResponse$.subscribe((res: IClipboardResponse) => {
+        this.subscription = this.clipboard.copyResponse$.subscribe((res: IClipboardResponse) => {
             if (res.isSuccess) {
                // this.toast.show();
             }
@@ -66,6 +68,10 @@ export class DiveInfoComponent implements OnInit {
 
     public ngOnInit(): void {
         //this.toast = new Toast(this.toastEl.nativeElement, { delay: 5000, });
+    }
+
+    public ngOnDestroy(): void {
+        this.subscription?.unsubscribe();
     }
 
     public sharePlan(): void {

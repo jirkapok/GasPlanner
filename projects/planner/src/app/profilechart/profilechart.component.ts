@@ -18,7 +18,8 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     public dive: Dive;
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
-    private subscription: Subscription;
+    private waypointsSubscription: Subscription;
+    private selectionSubscription: Subscription;
     private chartElement: any;
 
     private options = {
@@ -80,8 +81,8 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         };
 
         this.updateLayoutThickFormat();
-        this.subscription = this.planer.wayPointsCalculated.subscribe(() => this.plotCharts());
-        this.selectedWaypoint.selectedChanged.subscribe((wayPoint) => this.selectWayPoint(wayPoint));
+        this.waypointsSubscription = this.planer.wayPointsCalculated.subscribe(() => this.plotCharts());
+        this.selectionSubscription = this.selectedWaypoint.selectedChanged.subscribe((wayPoint) => this.selectWayPoint(wayPoint));
     }
 
     public get noDecoTime(): number {
@@ -94,7 +95,8 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        this.waypointsSubscription?.unsubscribe();
+        this.selectionSubscription?.unsubscribe();
     }
 
     public scaleWidth(x: number, graphWidth: number): number {

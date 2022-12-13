@@ -19,7 +19,8 @@ export class DepthsComponent implements OnInit, OnDestroy {
     public cardIcon = faLayerGroup;
     public addIcon = faPlus;
     public removeIcon = faMinus;
-    public depthsForm!: UntypedFormGroup;
+    public complexForm!: UntypedFormGroup;
+    public simpleForm!: UntypedFormGroup;
     public dive: Dive;
     private subscription!: Subscription;
     private viewSubsription!: Subscription;
@@ -58,12 +59,12 @@ export class DepthsComponent implements OnInit, OnDestroy {
     }
 
     public get durationInvalid(): boolean {
-        const duration = this.depthsForm.controls.planDuration;
+        const duration = this.simpleForm.controls.planDuration;
         return this.inputs.controlInValid(duration);
     }
 
     public get levelControls(): UntypedFormArray {
-        return this.depthsForm.controls.levels as UntypedFormArray;
+        return this.complexForm.controls.levels as UntypedFormArray;
     }
 
     public depthItemInvalid(index: number): boolean {
@@ -92,9 +93,12 @@ export class DepthsComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.depthsForm = this.fb.group({
-            planDuration: this.createDurationControl(this.depths.planDuration),
+        this.complexForm = this.fb.group({
             levels: this.fb.array(this.createLevelControls())
+        });
+
+        this.simpleForm = this.fb.group({
+            planDuration: this.createDurationControl(this.depths.planDuration),
         });
 
         // this combination of event handlers isn't efficient, but leave it because its simple
@@ -118,7 +122,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     }
 
     public addLevel(): void {
-        if (this.depthsForm.invalid) {
+        if (this.complexForm.invalid) {
             return;
         }
 
@@ -130,7 +134,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     }
 
     public removeLevel(index: number): void {
-        if (this.depthsForm.invalid || !this.minimumSegments) {
+        if (this.complexForm.invalid || !this.minimumSegments) {
             return;
         }
 
@@ -140,7 +144,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     }
 
     public levelChanged(index: number): void {
-        if (this.depthsForm.invalid) {
+        if (this.complexForm.invalid) {
             return;
         }
 
@@ -153,11 +157,11 @@ export class DepthsComponent implements OnInit, OnDestroy {
     }
 
     public durationChanged(): void {
-        if (this.depthsForm.invalid) {
+        if (this.simpleForm.invalid) {
             return;
         }
 
-        const newValue = this.depthsForm.value.planDuration;
+        const newValue = this.simpleForm.value.planDuration;
         this.depths.planDuration = Number(newValue);
     }
 
@@ -168,7 +172,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     // for simple view only
     private reloadSimple(): void {
         // depth is reloaded in its nested component
-        this.depthsForm.patchValue({
+        this.simpleForm.patchValue({
             planDuration: this.inputs.formatNumber(this.depths.planDuration)
         });
     }

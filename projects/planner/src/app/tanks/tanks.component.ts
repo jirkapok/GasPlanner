@@ -74,6 +74,9 @@ export class TanksComponent implements OnInit, OnDestroy {
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
         this.updateTanks();
+
+        this.tanksSubscription = this.planner.tanksReloaded.subscribe(() => this.reloadAll());
+        this.viewSwitchSubscription = this.planner.viewSwitched.subscribe(() => this.reloadAll());
     }
 
     public get firstTank(): TankBound {
@@ -114,9 +117,6 @@ export class TanksComponent implements OnInit, OnDestroy {
                 [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
             boundTanks: this.fb.array(this.createTankControls())
         });
-
-        this.tanksSubscription = this.planner.tanksReloaded.subscribe(() => this.reloadAll());
-        this.viewSwitchSubscription = this.planner.viewSwitched.subscribe(() => this.reloadAll());
     }
 
     public ngOnDestroy(): void {
@@ -217,7 +217,6 @@ export class TanksComponent implements OnInit, OnDestroy {
         this.delayedCalc.schedule();
     }
 
-    // TODO doesn't reload all tanks from url arguments when page is loaded
     private reloadAll(): void {
         this.updateTanks();
         this.tanksForm.patchValue({

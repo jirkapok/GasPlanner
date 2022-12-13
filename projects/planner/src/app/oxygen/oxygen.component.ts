@@ -69,7 +69,6 @@ export class OxygenComponent implements OnInit {
         this.fireGasChanged();
     }
 
-    // TODO reload from url parameters
     private reload(): void {
         this.nitroxForm.patchValue({
             o2: this.inputs.formatNumber(this.tank.o2)

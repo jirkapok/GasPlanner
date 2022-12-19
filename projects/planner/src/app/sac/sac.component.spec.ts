@@ -16,8 +16,8 @@ describe('Sac component', () => {
         await TestBed.configureTestingModule({
             declarations: [SacComponent],
             providers: [WorkersFactoryCommon, UnitConversion,
-                PlannerService, DecimalPipe, UntypedFormBuilder ],
-            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule ]
+                PlannerService, DecimalPipe, UntypedFormBuilder],
+            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         })
             .compileComponents();
     });
@@ -50,12 +50,13 @@ describe('Sac component', () => {
             expect(component.calcDepth).toBeCloseTo(49.212598, 6);
         });
 
+        // inconsistency, other properties are number, here they are already formatted
         it('adjusts used', () => {
-            expect(component.calcUsed).toBeCloseTo(2175.566, 3);
+            expect(component.calcUsed).toBe('2,175.6');
         });
 
         it('adjusts rmv', () => {
-            expect(component.calcRmv).toBeCloseTo(0.710884, 6);
+            expect(component.calcRmv).toBe('0.71');
         });
 
         it('adjusts sac', () => {

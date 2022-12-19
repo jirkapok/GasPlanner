@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService } from '../shared/sac-calculator.service';
@@ -18,6 +18,9 @@ import { InputControls } from '../shared/inputcontrols';
 export class SacComponent implements OnInit {
     public calcIcon = faCalculator;
     public formSac!: UntypedFormGroup;
+    private durationControl!: FormControl;
+    private rmvControl!: FormControl;
+    private usedControl!: FormControl;
 
     constructor(
         private inputs: InputControls,
@@ -51,7 +54,7 @@ export class SacComponent implements OnInit {
     }
 
     public get rmvInvalid(): boolean {
-        const rmv = this.formSac.controls.rmv;
+        const rmv =  this.formSac.controls.rmv;
         return this.inputs.controlInValid(rmv);
     }
 
@@ -68,45 +71,51 @@ export class SacComponent implements OnInit {
         return this.units.fromTankLiters(this.calc.tank);
     }
 
-    public get calcUsed(): number {
-        return this.units.fromBar(this.calc.used);
+    public get calcUsed(): string | null {
+        const used = this.units.fromBar(this.calc.used);
+        return this.inputs.formatNumber(used);
     }
 
-    public get calcRmv(): number {
-        return this.units.fromLiter(this.calc.rmv);
+    public get calcRmv(): string | null {
+        const rmv = this.units.fromLiter(this.calc.rmv);
+        return this.inputs.formatNumber(rmv, 2);
     }
 
-    public get calcDuration(): number {
-        return this.calc.duration;
+    public get calcDuration(): string | null {
+        const duration = this.calc.duration;
+        return this.inputs.formatNumber(duration);
     }
 
     private get dataModel(): any {
         return {
             depth: this.inputs.formatNumber(this.calcDepth),
-            duration: this.inputs.formatNumber(this.calc.duration),
             tankSize: this.inputs.formatNumber(this.calcTank),
-            used: this.inputs.formatNumber(this.calcUsed),
-            rmv:  this.inputs.formatNumber(this.calcRmv),
+            used: this.calcUsed,
+            duration: this.calcDuration,
+            rmv: this.calcRmv,
         };
     }
 
     public ngOnInit(): void {
+        this.durationControl = this.formBuilder.control(this.calcDuration,
+            [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]);
+        this.usedControl = this.formBuilder.control(this.calcUsed,
+            [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]);
+        this.rmvControl = this.formBuilder.control(this.calcRmv,
+            [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]);
+
         this.formSac = this.formBuilder.group({
             depth: [this.inputs.formatNumber(this.calcDepth),
                 [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]],
-            duration: [this.inputs.formatNumber(this.calcDuration),
-                [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]],
             tankSize: [this.inputs.formatNumber(this.calcTank),
-                [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
-            used: [this.inputs.formatNumber(this.calcUsed),
-                [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
-            rmv:  [this.inputs.formatNumber(this.calcRmv),
-                [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]],
+                [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]]
         });
+
+        this.toSac();
     }
 
     public inputChanged(): void {
-        if(this.formSac.invalid) {
+        if (this.formSac.invalid) {
             return;
         }
 
@@ -117,14 +126,47 @@ export class SacComponent implements OnInit {
         this.calc.rmv = this.units.toLiter(Number(values.rmv));
         this.calc.duration = Number(values.duration);
 
-        this.formSac.patchValue(this.dataModel);
+        this.reload();
     }
 
-    public async goBack(): Promise<boolean>  {
+    public toDuration(): void {
+        this.calc.toDuration();
+        this.enableAll();
+        this.formSac.removeControl('duration');
+    }
+
+    public toUsed(): void {
+        this.calc.toUsed();
+        this.enableAll();
+        this.formSac.removeControl('used');
+    }
+
+    public toSac(): void {
+        this.calc.toSac();
+        this.enableAll();
+        this.formSac.removeControl('rmv');
+    }
+
+    public async goBack(): Promise<boolean> {
         return await this.router.navigateByUrl('/');
     }
 
     public use(): void {
+        if (this.formSac.invalid) {
+            return;
+        }
+
         this.planer.diver.rmv = this.calc.rmv;
+    }
+
+    private enableAll(): void {
+        this.formSac.addControl('used', this.usedControl);
+        this.formSac.addControl('duration', this.durationControl);
+        this.formSac.addControl('rmv', this.rmvControl);
+        this.reload();
+    }
+
+    private reload(): void {
+        this.formSac.patchValue(this.dataModel);
     }
 }

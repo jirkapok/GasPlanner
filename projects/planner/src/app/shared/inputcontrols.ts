@@ -13,7 +13,7 @@ export class InputControls {
         return control.invalid && (control.dirty || control.touched);
     }
 
-    public formatNumber(value: number): string | null {
-        return this.numberPipe.transform(value, '1.0-1');
+    public formatNumber(value: number, decimals: number = 1): string | null {
+        return this.numberPipe.transform(value, `1.0-${decimals}`);
     }
 }

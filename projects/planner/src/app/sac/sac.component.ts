@@ -71,37 +71,34 @@ export class SacComponent implements OnInit {
         return this.units.fromTankLiters(this.calc.tank);
     }
 
-    public get calcUsed(): string | null {
-        const used = this.units.fromBar(this.calc.used);
-        return this.inputs.formatNumber(used);
+    public get calcUsed(): number {
+        return this.units.fromBar(this.calc.used);
     }
 
-    public get calcRmv(): string | null {
-        const rmv = this.units.fromLiter(this.calc.rmv);
-        return this.inputs.formatNumber(rmv, 2);
+    public get calcRmv(): number {
+        return this.units.fromLiter(this.calc.rmv);
     }
 
-    public get calcDuration(): string | null {
-        const duration = this.calc.duration;
-        return this.inputs.formatNumber(duration);
+    public get calcDuration(): number {
+        return this.calc.duration;
     }
 
     private get dataModel(): any {
         return {
             depth: this.inputs.formatNumber(this.calcDepth),
             tankSize: this.inputs.formatNumber(this.calcTank),
-            used: this.calcUsed,
-            duration: this.calcDuration,
-            rmv: this.calcRmv,
+            used: this.inputs.formatNumber(this.calcUsed),
+            duration: this.inputs.formatNumber(this.calcDuration),
+            rmv: this.inputs.formatNumber(this.calcRmv),
         };
     }
 
     public ngOnInit(): void {
-        this.durationControl = this.formBuilder.control(this.calcDuration,
+        this.durationControl = this.formBuilder.control(this.inputs.formatNumber(this.calcDuration),
             [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]);
-        this.usedControl = this.formBuilder.control(this.calcUsed,
+        this.usedControl = this.formBuilder.control(this.inputs.formatNumber(this.calcUsed),
             [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]);
-        this.rmvControl = this.formBuilder.control(this.calcRmv,
+        this.rmvControl = this.formBuilder.control(this.inputs.formatNumber(this.calcRmv),
             [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]);
 
         this.formSac = this.formBuilder.group({

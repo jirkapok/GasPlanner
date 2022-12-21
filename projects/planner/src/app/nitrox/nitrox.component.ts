@@ -1,12 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    FormControl, UntypedFormBuilder, UntypedFormGroup,
+    ValidationErrors, ValidatorFn, Validators
+} from '@angular/forms';
 
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { InputControls } from '../shared/inputcontrols';
+
+export class NitroxValidators {
+    public static lowMod(failingMod: () => boolean): ValidatorFn {
+        return (): ValidationErrors | null => {
+            if (failingMod()) {
+                return {
+                    lowMod: true
+                };
+            }
+
+            return null;
+        };
+    }
+}
 
 @Component({
     selector: 'app-nitrox',
@@ -19,6 +36,7 @@ export class NitroxComponent implements OnInit {
     private fO2Control!: FormControl;
     private pO2Control!: FormControl;
     private modControl!: FormControl;
+    private failingMod = false;
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -55,6 +73,10 @@ export class NitroxComponent implements OnInit {
     }
 
     public get calcMod(): number {
+        if (this.failingMod) {
+            return 0;
+        }
+
         return this.units.fromMeters(this.calc.mod);
     }
 
@@ -76,23 +98,30 @@ export class NitroxComponent implements OnInit {
         this.modControl = this.fb.control(this.inputs.formatNumber(this.calcMod),
             [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]);
 
-        this.nitroxForm = this.fb.group({});
+        this.nitroxForm = this.fb.group({}, { validator: NitroxValidators.lowMod(() => this.failingMod), });
         this.toMod();
     }
 
     public inputChanged(): void {
-        if (this.nitroxForm.invalid) {
-            return;
+        try {
+            this.failingMod = false;
+            this.nitroxForm.updateValueAndValidity();
+
+            if (this.nitroxForm.invalid) {
+                return;
+            }
+
+            const values = this.nitroxForm.value;
+            this.calc.pO2 = Number(values.pO2);
+            this.calc.fO2 = Number(values.fO2);
+            const newMod = Number(values.mod);
+            this.calc.mod = this.units.toMeters(newMod);
+
+            this.reload();
+        } catch (e) {
+            this.failingMod = true;
+            this.nitroxForm.updateValueAndValidity();
         }
-
-        // TODO fix error in case ppO2 = .21 (minimum) and fO2 = 21%
-        const values = this.nitroxForm.value;
-        this.calc.pO2 = Number(values.pO2);
-        this.calc.fO2 = Number(values.fO2);
-        const newMod = Number(values.mod);
-        this.calc.mod = this.units.toMeters(newMod);
-
-        this.reload();
     }
 
     public async goBack(): Promise<boolean> {

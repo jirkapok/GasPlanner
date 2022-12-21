@@ -37,8 +37,6 @@ Following list of features and improvements ordered by priority is under develop
   * Add time to all events warning/error messages where it makes sense
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * UI Tweaks
-  * Calculation
-    * Set dive not calculated, if any field on the form isn't valid
   * Tanks
     * Add Dropdown for well known tank sizes
   * Profile:
@@ -47,9 +45,8 @@ Following list of features and improvements ordered by priority is under develop
     * Add other events to profile chart like gas switch
   * Settings
     * Unify dive settings and default settings
-  * UX
-    * fix layout, so the fields aren't moving when validation error appears
-    * align fields to consume full space
+    * Apply settings after each change and distinguish from default settings
+  * Nitrox calc: Use common nitrox gases dropdown for O2
 * Help
   * Add help to the UI as side bar
     * <https://ej2.syncfusion.com/angular/documentation/sidebar/getting-started/>
@@ -60,7 +57,6 @@ Following list of features and improvements ordered by priority is under develop
 * Add localizations
 * Allow user to compare multiple plans side by side
 * Algorithm
-  * Improve ascent to next stop by estimated offgasing during the ascent to reduce the stop length
   * Improve performance when estimating stop length
 * Gas consumption:
   * Restore 1/2 and 1/3 reserve strategies

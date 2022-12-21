@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { PlannerService } from '../shared/planner.service';
@@ -16,6 +16,9 @@ import { InputControls } from '../shared/inputcontrols';
 export class NitroxComponent implements OnInit {
     public calcIcon = faCalculator;
     public nitroxForm!: UntypedFormGroup;
+    private fO2Control!: FormControl;
+    private pO2Control!: FormControl;
+    private modControl!: FormControl;
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -58,34 +61,38 @@ export class NitroxComponent implements OnInit {
     private get dataModel(): any {
         return {
             fO2: this.inputs.formatNumber(this.calc.fO2),
-            pO2: this.inputs.formatNumber(this.calc.pO2),
+            pO2: this.inputs.formatNumber(this.calc.pO2, 2),
             mod: this.inputs.formatNumber(this.calcMod)
         };
     }
 
     public ngOnInit(): void {
-        this.nitroxForm = this.fb.group({
-            fO2: [this.inputs.formatNumber(this.calc.fO2),
-                [Validators.required, Validators.min(this.ranges.nitroxOxygen[0]), Validators.max(this.ranges.nitroxOxygen[1])]],
-            pO2: [this.inputs.formatNumber(this.calc.pO2),
-                [Validators.required, Validators.min(this.ranges.ppO2[0]), Validators.max(this.ranges.ppO2[1])]],
-            mod: [this.inputs.formatNumber(this.calcMod),
-                [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]],
-        });
+        this.fO2Control = this.fb.control(this.inputs.formatNumber(this.calc.fO2),
+            [Validators.required, Validators.min(this.ranges.nitroxOxygen[0]), Validators.max(this.ranges.nitroxOxygen[1])]);
+
+        this.pO2Control = this.fb.control(this.inputs.formatNumber(this.calc.pO2),
+            [Validators.required, Validators.min(this.ranges.ppO2[0]), Validators.max(this.ranges.ppO2[1])]);
+
+        this.modControl = this.fb.control(this.inputs.formatNumber(this.calcMod),
+            [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]);
+
+        this.nitroxForm = this.fb.group({});
+        this.toMod();
     }
 
     public inputChanged(): void {
-        if(this.nitroxForm.invalid) {
+        if (this.nitroxForm.invalid) {
             return;
         }
 
+        // TODO fix error in case ppO2 = .21 (minimum) and fO2 = 21%
         const values = this.nitroxForm.value;
         this.calc.pO2 = Number(values.pO2);
         this.calc.fO2 = Number(values.fO2);
         const newMod = Number(values.mod);
         this.calc.mod = this.units.toMeters(newMod);
 
-        this.nitroxForm.patchValue(this.dataModel);
+        this.reload();
     }
 
     public async goBack(): Promise<boolean> {
@@ -93,7 +100,40 @@ export class NitroxComponent implements OnInit {
     }
 
     public use(): void {
+        if (this.nitroxForm.invalid) {
+            return;
+        }
+
         this.planer.firstTank.o2 = this.calc.fO2;
         this.planer.diver.maxPpO2 = this.calc.pO2;
+    }
+
+    public toMod(): void {
+        this.calc.toMod();
+        this.enableAll();
+        this.nitroxForm.removeControl('mod');
+    }
+
+    public toBestMix(): void {
+        this.calc.toBestMix();
+        this.enableAll();
+        this.nitroxForm.removeControl('fO2');
+    }
+
+    public toPO2(): void {
+        this.calc.toPO2();
+        this.enableAll();
+        this.nitroxForm.removeControl('pO2');
+    }
+
+    private enableAll(): void {
+        this.nitroxForm.addControl('mod', this.modControl);
+        this.nitroxForm.addControl('fO2', this.fO2Control);
+        this.nitroxForm.addControl('pO2', this.pO2Control);
+        this.reload();
+    }
+
+    private reload(): void {
+        this.nitroxForm.patchValue(this.dataModel);
     }
 }

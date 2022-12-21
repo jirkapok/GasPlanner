@@ -11,59 +11,71 @@
                         values shown here are less precise, than in rest of the application.</div>
                     <div class="btn-group mb-3" role="group">
                         <button type="button" class="btn" [class.btn-primary]="calc.inMod"
-                            (click)="calc.toMod()">MOD</button>
+                            (click)="toMod()">MOD</button>
                         <button type="button" class="btn" [class.btn-primary]="calc.inBestMix"
-                            (click)="calc.toBestMix()">Best mix</button>
+                            (click)="toBestMix()">Best mix</button>
                         <button type="button" class="btn" [class.btn-primary]="calc.inPO2"
-                            (click)="calc.toPO2()">ppO2</button>
+                            (click)="toPO2()">ppO2</button>
                     </div>
-                    <div [hidden]="calc.inPO2" class="pt-2 mb-4">
-                        <label for="pO2" class="form-label" mdbLabel>ppO2:</label>
-                        <input class="form-control" name="pO2" id="pO2" type="number" formControlName="pO2"
-                            (input)="inputChanged()" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1"
-                            [class.is-invalid]="pO2Invalid" />
-                        <div class="invalid-feedback position-absolute">Needs to be number 0.21-3
+                    <ng-container *ngIf="!calc.inPO2">
+                        <div class="pt-2 mb-4">
+                            <label for="pO2" class="form-label" mdbLabel>ppO2:</label>
+                            <input class="form-control" name="pO2" id="pO2" type="number" formControlName="pO2"
+                                (input)="inputChanged()" [min]="ranges.ppO2[0]" [max]="ranges.ppO2[1]" step="0.1"
+                                [class.is-invalid]="pO2Invalid" />
+                            <div class="invalid-feedback position-absolute">Needs to be number 0.21-3
+                            </div>
                         </div>
-                    </div>
-                    <div [hidden]="calc.inBestMix" class="pt-2 mb-4">
-                        <label for="fO2" class="form-label" mdbLabel>Percent O2:</label>
-                        <input class="form-control" name="fO2" id="fO2" type="number" formControlName="fO2"
-                            (input)="inputChanged()" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]"
-                            step="1" [class.is-invalid]="fO2Invalid" />
-                        <div class="invalid-feedback position-absolute">Needs to be number
-                            {{ranges.nitroxOxygenLabel}}
+                    </ng-container>
+                    <ng-container *ngIf="!calc.inBestMix">
+                        <div class="pt-2 mb-4">
+                            <label for="fO2" class="form-label" mdbLabel>Percent O2:</label>
+                            <input class="form-control" name="fO2" id="fO2" type="number" formControlName="fO2"
+                                (input)="inputChanged()" [min]="ranges.nitroxOxygen[0]" [max]="ranges.nitroxOxygen[1]"
+                                step="1" [class.is-invalid]="fO2Invalid" />
+                            <div class="invalid-feedback position-absolute">Needs to be number
+                                {{ranges.nitroxOxygenLabel}}
+                            </div>
                         </div>
-                    </div>
-                    <div [hidden]="calc.inMod" class="pt-2 mb-4">
-                        <label for="mod" class="form-label" mdbLabel>MOD [{{units.length}}]:</label>
-                        <input class="form-control" name="mod" id="mod" type="number" formControlName="mod"
-                            (input)="inputChanged()" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
-                            aria-describedby="eadDescribe" [class.is-invalid]="modInvalid" />
-                        <div class="invalid-feedback position-absolute">Needs to
-                            be number {{ranges.depthLabel}}</div>
-                        <div id="eadDescribe" class="form-text" [class.invisible]="modInvalid">
-                            EAD: {{ ead | number: '1.0-1' }} {{units.length}}</div>
-                    </div>
-                    <div [hidden]="!calc.inMod" class="pt-2 mb-4">
-                        <label for="mod" class="form-label" mdbLabel>MOD [{{units.length}}]:</label>
-                        <input class="form-control" formControlName="mod" [readonly]="true" />
-                        <small class="form-text text-muted">EAD: {{ ead | number: '1.0-1' }}
-                            {{units.length}}</small>
-                    </div>
-                    <div [hidden]="!calc.inBestMix" class="pt-2 mb-4">
-                        <label for="fO2" class="form-label" mdbLabel>Percent O2:</label>
-                        <input class="form-control" formControlName="fO2" [readonly]="true" />
-                    </div>
-                    <div [hidden]="!calc.inPO2" class="pt-2 mb-4">
-                        <label for="pO2" class="form-label" mdbLabel>ppO2:</label>
-                        <input class="form-control" formControlName="pO2" [readonly]="true" />
-                    </div>
+                    </ng-container>
+                    <ng-container *ngIf="!calc.inMod">
+                        <div class="pt-2 mb-4">
+                            <label for="mod" class="form-label" mdbLabel>MOD [{{units.length}}]:</label>
+                            <input class="form-control" name="mod" id="mod" type="number" formControlName="mod"
+                                (input)="inputChanged()" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
+                                aria-describedby="eadDescribe" [class.is-invalid]="modInvalid" />
+                            <div class="invalid-feedback position-absolute">Needs to
+                                be number {{ranges.depthLabel}}</div>
+                            <div id="eadDescribe" class="form-text" [class.invisible]="modInvalid">
+                                EAD: {{ ead | number: '1.0-1' }} {{units.length}}</div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="calc.inMod">
+                        <div class="pt-2 mb-4">
+                            <label for="mod" class="form-label" mdbLabel>MOD [{{units.length}}]:</label>
+                            <input class="form-control" [readonly]="true" [value]="calcMod"/>
+                            <small class="form-text text-muted">EAD: {{ ead | number: '1.0-1' }}
+                                {{units.length}}</small>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="calc.inBestMix">
+                        <div class="pt-2 mb-4">
+                            <label for="fO2" class="form-label" mdbLabel>Percent O2:</label>
+                            <input class="form-control" [readonly]="true" [value]="calc.fO2"/>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="calc.inPO2">
+                        <div class="pt-2 mb-4">
+                            <label for="pO2" class="form-label" mdbLabel>ppO2:</label>
+                            <input class="form-control" [readonly]="true" [value]="calc.pO2"/>
+                        </div>
+                    </ng-container>
                 </form>
             </div>
         </div>
         <div class="form-group mt-3">
             <button type="button" class="btn btn-primary me-2" (click)="goBack()">Back</button>
-            <button type="button" class="btn btn-secondary" (click)="use()">Use</button>
+            <button type="button" class="btn btn-secondary" (click)="use()" *ngIf="!nitroxForm.invalid">Use</button>
         </div>
     </div>
 </div>

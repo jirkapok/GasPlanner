@@ -9,6 +9,7 @@ Following list of features and improvements ordered by priority is under develop
 * When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter for founding switch depth
 * Oxygen at 4 m shows MOD 4 meters, but there is still warning about exceeded MOD.
 * Nitrox calculator - minimum value is 21 % O2, but the MOD doesn't equal EAD, because Oxygen is 20.9 % only.
+* SAC calculator - duration fails calculation on large number like 1440 minutes
 
 ## Improvements / Features
 

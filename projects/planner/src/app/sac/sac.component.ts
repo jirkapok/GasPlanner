@@ -88,7 +88,6 @@ export class SacComponent implements OnInit {
             depth: this.inputs.formatNumber(this.calcDepth),
             tankSize: this.inputs.formatNumber(this.calcTank),
             used: this.inputs.formatNumber(this.calcUsed),
-            // TODO with formatting it fails on large number
             duration: this.calcDuration,
             rmv: this.inputs.formatNumber(this.calcRmv, 2),
         };

@@ -52,11 +52,11 @@ describe('Sac component', () => {
 
         // inconsistency, other properties are number, here they are already formatted
         it('adjusts used', () => {
-            expect(component.calcUsed).toBe('2,175.6');
+            expect(component.calcUsed).toBeCloseTo(2175.566, 3);
         });
 
         it('adjusts rmv', () => {
-            expect(component.calcRmv).toBe('0.71');
+            expect(component.calcRmv).toBeCloseTo(0.710884, 6);
         });
 
         it('adjusts sac', () => {

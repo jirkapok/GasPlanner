@@ -14,12 +14,7 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Forms refactoring general verification (ranges, imperial units, calculation enforced on all changes, and after switch simple/complex UI): depths, tanks, options
-  * settings when using units, the range for rmw isn't reloaded
-  * sac calculator:
-    * when changing depth to 300 m, it results in invalid rmv value, which prevents next calculations
-    * Use button is available in case invalid form
-  * Nitrox calc: the issues as in sac calc
-* UI Tweaks: Depths and tanks, get rid of html table and make it responsive on small devices
+  * settings Use units, the range for rmw isn't reloaded and form is invalid
 * Add imperial units option
   * Provide rounded default values within acceptable range (Settings, Sac, tanks, depths, options)
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet

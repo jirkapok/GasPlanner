@@ -8,7 +8,7 @@ import { UnitConversion } from '../shared/UnitConversion';
     templateUrl: './altitude.component.html',
     styleUrls: ['./altitude.component.scss']
 })
-export class AltitudeComponent implements OnInit{
+export class AltitudeComponent implements OnInit {
     @Output()
     public inputChange = new EventEmitter<number>();
 
@@ -27,15 +27,15 @@ export class AltitudeComponent implements OnInit{
         return this.units.fromMeters(this.altitude);
     }
 
-    public get smallHill(): string  {
+    public get smallHill(): string {
         return this.levelLabel(1);
     }
 
-    public get mountains(): string  {
+    public get mountains(): string {
         return this.levelLabel(2);
     }
 
-    public get highMountains(): string  {
+    public get highMountains(): string {
         return this.levelLabel(3);
     }
 
@@ -48,11 +48,15 @@ export class AltitudeComponent implements OnInit{
         const ranges = this.units.ranges;
         this.altitudeForm = this.fb.group({
             altitude: [this.altitudeBound,
-                [Validators.required, Validators.min(ranges.altitude[0]), Validators.max(ranges.altitude[1])]]
+            [Validators.required, Validators.min(ranges.altitude[0]), Validators.max(ranges.altitude[1])]]
         });
     }
 
     public altitudeChanged(): void {
+        if (this.altitudeForm.invalid) {
+            return;
+        }
+
         const newValue = Number(this.altitudeForm.value.altitude);
         this.altitude = this.units.toMeters(newValue);
         this.inputChange.emit(this.altitude);
@@ -91,7 +95,7 @@ export class AltitudeComponent implements OnInit{
     }
 
     private selectLevels(): number[] {
-        if(this.units.imperialUnits) {
+        if (this.units.imperialUnits) {
             return this.imperialLevels;
         }
 

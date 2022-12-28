@@ -6,15 +6,13 @@ Following list of features and improvements ordered by priority is under develop
 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
-* When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter for founding switch depth
+* When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter when searching for switch depth
 * Oxygen at 4 m shows MOD 4 meters, but there is still warning about exceeded MOD.
 * Nitrox calculator - minimum value is 21 % O2, but the MOD doesn't equal EAD, because Oxygen is 20.9 % only.
 * SAC calculator - duration fails calculation on large number like 1440 minutes
 
 ## Improvements / Features
 
-* Forms refactoring general verification (ranges, imperial units, calculation enforced on all changes, and after switch simple/complex UI): depths, tanks, options
-  * settings Use units, the range for rmw isn't reloaded and form is invalid
 * Add imperial units option
   * Provide rounded default values within acceptable range (Settings, Sac, tanks, depths, options)
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
@@ -46,6 +44,8 @@ Following list of features and improvements ordered by priority is under develop
   * Settings
     * Unify dive settings and default settings
     * Apply settings after each change and distinguish from default settings
+  * move the tank and depth validation messages to separate row
+  * Recommended and recreational buttons still calculated even with invalid altitude
   * Nitrox calc: Use common nitrox gases dropdown for O2
 * Help
   * Add help to the UI as side bar

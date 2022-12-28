@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
@@ -21,13 +21,14 @@ export class AppSettingsComponent implements OnInit {
         private settingsNormalization: SettingsNormalizationService,
         private formBuilder: UntypedFormBuilder,
         private router: Router,
+        private cd: ChangeDetectorRef,
         private planner: PlannerService) {
         this.diver.loadFrom(this.planner.diver);
     }
 
     public ngOnInit(): void {
         this.settingsForm = this.formBuilder.group({
-            imperialUnits: [this.units.imperialUnits,  Validators.required]
+            imperialUnits: [this.units.imperialUnits, [Validators.required]]
         });
     }
 
@@ -42,5 +43,7 @@ export class AppSettingsComponent implements OnInit {
 
         const imperialUnits = Boolean(this.settingsForm.controls.imperialUnits.value);
         this.settingsNormalization.apply(this.diver, imperialUnits);
+        // only to recheck the form validity
+        this.cd.detectChanges();
     }
 }

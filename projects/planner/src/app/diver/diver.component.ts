@@ -1,5 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    AbstractControl, UntypedFormBuilder, UntypedFormGroup,
+    ValidationErrors, ValidatorFn, Validators
+} from '@angular/forms';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Diver } from 'scuba-physics';
@@ -13,7 +16,6 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 })
 export class DiverComponent implements OnInit, OnDestroy {
     @Input() public diver: Diver = new Diver();
-    @Input() public ranges: RangeConstants;
     @Input() public diverForm!: UntypedFormGroup;
     public icon = faUserCog;
     private subscription!: Subscription;
@@ -21,7 +23,10 @@ export class DiverComponent implements OnInit, OnDestroy {
     constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
         public units: UnitConversion) {
-        this.ranges = units.ranges;
+    }
+
+    public get ranges(): RangeConstants {
+        return this.units.ranges;
     }
 
     public get rmv(): number {
@@ -35,12 +40,12 @@ export class DiverComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        if(!this.diverForm) {
+        if (!this.diverForm) {
             this.diverForm = this.fb.group({});
         }
 
         const rmvControl = this.fb.control(this.inputs.formatNumber(this.rmv),
-            [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]);
+            [Validators.required, this.validateMinRmv, this.validateMaxRmv]);
         this.diverForm.addControl('rmv', rmvControl);
 
         this.subscription = this.units.ranges$.subscribe(() => this.diverForm.patchValue({
@@ -69,5 +74,13 @@ export class DiverComponent implements OnInit, OnDestroy {
 
     public maxDecoPpO2Changed(newValue: number): void {
         this.diver.maxDecoPpO2 = newValue;
+    }
+
+    private validateMinRmv(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => Validators.min(this.ranges.diverRmv[0])(control);
+    }
+
+    private validateMaxRmv(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => Validators.max(this.ranges.diverRmv[1])(control);
     }
 }

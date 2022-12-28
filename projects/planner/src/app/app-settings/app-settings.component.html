@@ -1,7 +1,7 @@
 <div class="row mt-5">
     <form [formGroup]="settingsForm" class="row">
-        <app-diver class="col col-12 col-sm-5 col-lg-4 col-xl-3 col-xxl-2" [diver]="diver" [diverForm]="settingsForm"
-            [ranges]="(units.ranges$ | async) || units.ranges"></app-diver>
+        <app-diver class="col col-12 col-sm-5 col-lg-4 col-xl-3 col-xxl-2" [diver]="diver"
+            [diverForm]="settingsForm"></app-diver>
         <div class="col col-12 col-sm-7 col-lg-5 col-xl-4 col-xxl-3 mt-3">
             <div class="card">
                 <div class="card-header">
@@ -21,7 +21,6 @@
                         <label class="custom-control-label" for="imperialRadio">Imperial units (ft, cuft, psi)<br>
                             (Experimental, not recommended)</label>
                     </div>
-
                 </div>
             </div>
         </div>

@@ -3,27 +3,14 @@ import { Router } from '@angular/router';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import {
     FormControl, UntypedFormBuilder, UntypedFormGroup,
-    ValidationErrors, ValidatorFn, Validators
+    Validators
 } from '@angular/forms';
 
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { InputControls } from '../shared/inputcontrols';
-
-export class NitroxValidators {
-    public static lowMod(failingMod: () => boolean): ValidatorFn {
-        return (): ValidationErrors | null => {
-            if (failingMod()) {
-                return {
-                    lowMod: true
-                };
-            }
-
-            return null;
-        };
-    }
-}
+import { NitroxValidators } from '../shared/NitroxValidators';
 
 @Component({
     selector: 'app-nitrox',

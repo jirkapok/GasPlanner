@@ -33,7 +33,7 @@ describe('Sac component', () => {
             planner.diver.rmv = 30;
             component.use();
             const applied = planner.diver.rmv;
-            expect(applied).toBeCloseTo(20.13, 5);
+            expect(applied).toBeCloseTo(20, 5);
         }));
 
     describe('Imperial units', () => {
@@ -50,17 +50,16 @@ describe('Sac component', () => {
             expect(component.calcDepth).toBeCloseTo(49.212598, 6);
         });
 
-        // inconsistency, other properties are number, here they are already formatted
         it('adjusts used', () => {
             expect(component.calcUsed).toBeCloseTo(2175.566, 3);
         });
 
         it('adjusts rmv', () => {
-            expect(component.calcRmv).toBeCloseTo(0.710884, 6);
+            expect(component.calcRmv).toBeCloseTo(0.706293, 6);
         });
 
         it('adjusts sac', () => {
-            expect(component.gasSac).toBeCloseTo(19.464064, 6);
+            expect(component.gasSac).toBeCloseTo(19.338365, 6);
         });
     });
 });

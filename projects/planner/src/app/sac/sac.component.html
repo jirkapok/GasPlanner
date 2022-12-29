@@ -8,6 +8,7 @@
                 </div>
                 <div class="card-body">
                     <form [formGroup]="formSac">
+                        <div class="mb-4">{{ depthConverterWarning }}</div>
                         <div class="btn-group mb-3" role="group">
                             <button type="button" class="btn" [class.btn-primary]="calc.inSac"
                                 (click)="toSac()">RMV</button>

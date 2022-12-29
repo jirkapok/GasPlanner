@@ -7,8 +7,7 @@
             </div>
             <div class="card-body">
                 <form [formGroup]="nitroxForm">
-                    <div class="mb-4">This calculator uses simple depth conversion (where 1 ATM = 1 bar), so the
-                        values shown here are less precise, than in rest of the application.</div>
+                    <div class="mb-4">{{ depthConverterWarning }}</div>
                     <div class="btn-group mb-3" role="group">
                         <button type="button" class="btn" [class.btn-primary]="calc.inMod"
                             (click)="toMod()">MOD</button>

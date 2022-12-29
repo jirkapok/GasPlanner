@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SacCalculator, DepthConverterFactory, DepthOptions, Salinity } from 'scuba-physics';
+import { SacCalculator, DepthConverter } from 'scuba-physics';
 
 @Injectable({
     providedIn: 'root'
@@ -13,16 +13,8 @@ export class SacCalculatorService {
     private sacCalculator: SacCalculator;
     private calculate: () => void;
 
-    private options: DepthOptions = {
-        salinity: Salinity.fresh,
-        altitude: 0
-    };
-
-    private depthConverterFactory = new DepthConverterFactory(this.options);
-
     constructor() {
-        // TODO consider simple depth converter
-        const depthConverter = this.depthConverterFactory.create();
+        const depthConverter = DepthConverter.simple();
         this.sacCalculator = new SacCalculator(depthConverter);
         this.calculate = this.calculateSac;
         this.calculate();

@@ -8,6 +8,7 @@ import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { Diver } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
+import { TextConstants } from '../shared/TextConstants';
 
 
 @Component({
@@ -18,6 +19,7 @@ import { InputControls } from '../shared/inputcontrols';
 export class SacComponent implements OnInit {
     public calcIcon = faCalculator;
     public formSac!: UntypedFormGroup;
+    public depthConverterWarning = TextConstants.depthConverterWarning;
     private durationControl!: FormControl;
     private rmvControl!: FormControl;
     private usedControl!: FormControl;

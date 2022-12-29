@@ -11,6 +11,7 @@ import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { InputControls } from '../shared/inputcontrols';
 import { NitroxValidators } from '../shared/NitroxValidators';
+import { TextConstants } from '../shared/TextConstants';
 
 @Component({
     selector: 'app-nitrox',
@@ -20,6 +21,7 @@ import { NitroxValidators } from '../shared/NitroxValidators';
 export class NitroxComponent implements OnInit {
     public calcIcon = faCalculator;
     public nitroxForm!: UntypedFormGroup;
+    public depthConverterWarning = TextConstants.depthConverterWarning;
     private fO2Control!: FormControl;
     private pO2Control!: FormControl;
     private modControl!: FormControl;

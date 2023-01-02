@@ -10,67 +10,67 @@ export class ValidatorGroups {
     }
 
     public get nitroxOxygen(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.nitroxOxygen[0]), Validators.max(this.ranges.nitroxOxygen[1])];
+        return this.rangeFor(this.ranges.nitroxOxygen);
     }
 
     public get trimixOxygen(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.trimixOxygen[0]), Validators.max(this.ranges.trimixOxygen[1])];
+        return this.rangeFor(this.ranges.trimixOxygen);
     }
 
     public get trimixHe(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.tankHe[0]), Validators.max(this.ranges.tankHe[1])];
+        return this.rangeFor(this.ranges.tankHe);
     }
 
     public get ppO2(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.ppO2[0]), Validators.max(this.ranges.ppO2[1])];
+        return this.rangeFor(this.ranges.ppO2);
     }
 
     public get depth(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])];
+        return this.rangeFor(this.ranges.depth);
     }
 
     public get duration(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])];
+        return this.rangeFor(this.ranges.duration);
     }
 
     public get tankPressure(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])];
+        return this.rangeFor(this.ranges.tankPressure);
+    }
+
+    public get tankSize(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.tankSize);
+    }
+
+    public get altitude(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.altitude);
+    }
+
+    public get gradients(): ValidatorFn[] {
+        return this.rangeFor([10,100]);
+    }
+
+    public get speed(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.speed);
+    }
+
+    public get lastStopDepth(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.lastStopDepth);
+    }
+
+    public get gasSwitchDuration(): ValidatorFn[] {
+        return this.rangeFor([1,100]);
+    }
+
+    public get problemSolvingDuration(): ValidatorFn[] {
+        return this.rangeFor([1,100]);
+    }
+
+    public get maxEnd(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.narcoticDepth);
     }
 
     public get diverRmv(): ValidatorFn[] {
         return [Validators.required, this.validateMinRmv, this.validateMaxRmv];
-    }
-
-    public get tankSize(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])];
-    }
-
-    public get altitude(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.altitude[0]), Validators.max(this.ranges.altitude[1])];
-    }
-
-    public get gradients(): ValidatorFn[] {
-        return [Validators.required, Validators.min(10), Validators.max(100)];
-    }
-
-    public get speed(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])];
-    }
-
-    public get lastStopDepth(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.lastStopDepth[0]), Validators.max(this.ranges.lastStopDepth[1])];
-    }
-
-    public get gasSwitchDuration(): ValidatorFn[] {
-        return [Validators.required, Validators.min(1), Validators.max(100)];
-    }
-
-    public get problemSolvingDuration(): ValidatorFn[] {
-        return [Validators.required, Validators.min(1), Validators.max(100)];
-    }
-
-    public get maxEnd(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.narcoticDepth[0]), Validators.max(this.ranges.narcoticDepth[1])];
     }
 
     private get ranges(): RangeConstants {
@@ -84,5 +84,9 @@ export class ValidatorGroups {
 
     private validateMaxRmv(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => Validators.max(this.ranges.diverRmv[1])(control);
+    }
+
+    private rangeFor(range: [number, number]): ValidatorFn[] {
+        return [Validators.required, Validators.min(range[0]), Validators.max(range[1])];
     }
 }

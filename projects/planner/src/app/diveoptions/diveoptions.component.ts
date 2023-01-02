@@ -10,6 +10,7 @@ import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-diveoptions',
@@ -34,6 +35,7 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
         public options: OptionsDispatcherService,
         private fb: UntypedFormBuilder,
         private inputs: InputControls,
+        private validators: ValidatorGroups,
         private planner: PlannerService,
         private delayedCalc: DelayedScheduleService) {
         this.plan = this.planner.plan;
@@ -170,29 +172,21 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.optionsForm = this.fb.group({
-            maxEND: [this.inputs.formatNumber(this.maxEND),
-                [Validators.required, Validators.min(this.ranges.narcoticDepth[0]), Validators.max(this.ranges.narcoticDepth[1])]],
-            problem: [this.inputs.formatNumber(this.options.problemSolvingDuration),
-                [Validators.required, Validators.min(1), Validators.max(100)]],
-            gasSwitch: [this.inputs.formatNumber(this.options.gasSwitchDuration),
-                [Validators.required, Validators.min(1), Validators.max(10)]],
-            lastStopDepth: [this.inputs.formatNumber(this.lastStopDepth),
-                [Validators.required, Validators.min(this.ranges.lastStopDepth[0]), Validators.max(this.ranges.lastStopDepth[1])]],
-            descentSpeed: [this.inputs.formatNumber(this.descentSpeed),
-                [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
-            ascentSpeed6m: [this.inputs.formatNumber(this.ascentSpeed6m),
-                [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
-            ascentSpeed50percTo6m: [this.inputs.formatNumber(this.ascentSpeed50percTo6m),
-                [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
-            ascentSpeed50perc: [this.inputs.formatNumber(this.ascentSpeed50perc),
-                [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])]],
+            maxEND: [this.inputs.formatNumber(this.maxEND), this.validators.maxEnd],
+            problem: [this.inputs.formatNumber(this.options.problemSolvingDuration), this.validators.problemSolvingDuration],
+            gasSwitch: [this.inputs.formatNumber(this.options.gasSwitchDuration), this.validators.gasSwitchDuration],
+            lastStopDepth: [this.inputs.formatNumber(this.lastStopDepth), this.validators.lastStopDepth],
+            descentSpeed: [this.inputs.formatNumber(this.descentSpeed), this.validators.speed],
+            ascentSpeed6m: [this.inputs.formatNumber(this.ascentSpeed6m), this.validators.speed],
+            ascentSpeed50percTo6m: [this.inputs.formatNumber(this.ascentSpeed50percTo6m), this.validators.speed],
+            ascentSpeed50perc: [this.inputs.formatNumber(this.ascentSpeed50perc), this.validators.speed],
         });
 
         this.subscription = this.options.reloaded.subscribe(() => this.reloadForm());
     }
 
     public ngOnDestroy(): void {
-        if(this.subscription) {
+        if (this.subscription) {
             this.subscription.unsubscribe();
         }
     }
@@ -290,7 +284,7 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
 
     public applyOptions(): void {
         // altitude and salinity are checked in their respective component and shouldn't fire event
-        if(this.optionsForm.invalid) {
+        if (this.optionsForm.invalid) {
             return;
         }
 

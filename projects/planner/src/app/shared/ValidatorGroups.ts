@@ -45,6 +45,26 @@ export class ValidatorGroups {
         return [Validators.required, Validators.min(10), Validators.max(100)];
     }
 
+    public get speed(): ValidatorFn[] {
+        return [Validators.required, Validators.min(this.ranges.speed[0]), Validators.max(this.ranges.speed[1])];
+    }
+
+    public get lastStopDepth(): ValidatorFn[] {
+        return [Validators.required, Validators.min(this.ranges.lastStopDepth[0]), Validators.max(this.ranges.lastStopDepth[1])];
+    }
+
+    public get gasSwitchDuration(): ValidatorFn[] {
+        return [Validators.required, Validators.min(1), Validators.max(100)];
+    }
+
+    public get problemSolvingDuration(): ValidatorFn[] {
+        return [Validators.required, Validators.min(1), Validators.max(100)];
+    }
+
+    public get maxEnd(): ValidatorFn[] {
+        return [Validators.required, Validators.min(this.ranges.narcoticDepth[0]), Validators.max(this.ranges.narcoticDepth[1])];
+    }
+
     private get ranges(): RangeConstants {
         return this.units.ranges;
     }

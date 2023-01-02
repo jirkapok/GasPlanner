@@ -110,6 +110,8 @@ export class SacComponent implements OnInit {
         this.toSac();
     }
 
+    // TODO expression changed sac.component.html:97:82
+    // duration 500 min, consumed 30 bar on rmv tab and switch to used tab
     public inputChanged(): void {
         if (this.formSac.invalid) {
             return;

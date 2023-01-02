@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
@@ -29,8 +29,11 @@ export class SacComponent implements OnInit {
         private validators: ValidatorGroups,
         private inputs: InputControls,
         private formBuilder: UntypedFormBuilder,
-        private router: Router, private planer: PlannerService,
-        public calc: SacCalculatorService, public units: UnitConversion) {
+        private router: Router,
+        private planer: PlannerService,
+        private cd: ChangeDetectorRef,
+        public calc: SacCalculatorService,
+        public units: UnitConversion) {
     }
 
     public get gasSac(): number {
@@ -110,8 +113,6 @@ export class SacComponent implements OnInit {
         this.toSac();
     }
 
-    // TODO expression changed sac.component.html:97:82
-    // duration 500 min, consumed 30 bar on rmv tab and switch to used tab
     public inputChanged(): void {
         if (this.formSac.invalid) {
             return;
@@ -131,18 +132,21 @@ export class SacComponent implements OnInit {
         this.calc.toDuration();
         this.enableAll();
         this.formSac.removeControl('duration');
+        this.cd.detectChanges();
     }
 
     public toUsed(): void {
         this.calc.toUsed();
         this.enableAll();
         this.formSac.removeControl('used');
+        this.cd.detectChanges();
     }
 
     public toSac(): void {
         this.calc.toSac();
         this.enableAll();
         this.formSac.removeControl('rmv');
+        this.cd.detectChanges();
     }
 
     public async goBack(): Promise<boolean> {

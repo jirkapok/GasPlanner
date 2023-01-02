@@ -8,6 +8,7 @@ import { GasToxicity } from '../shared/gasToxicity.service';
 import { Subscription } from 'rxjs';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 export class TankBound {
     constructor(public tank: Tank, private units: UnitConversion) { }
@@ -70,6 +71,7 @@ export class TanksComponent implements OnInit, OnDestroy {
         public units: UnitConversion,
         private fb: UntypedFormBuilder,
         private inputs: InputControls,
+        private validators: ValidatorGroups,
         private delayedCalc: DelayedScheduleService) {
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
@@ -111,10 +113,8 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.tanksForm = this.fb.group({
-            firstTankSize: [this.inputs.formatNumber(this.firstTank.size),
-                [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
-            firstTankStartPressure: [this.inputs.formatNumber(this.firstTank.startPressure),
-                [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
+            firstTankSize: [this.inputs.formatNumber(this.firstTank.size), this.validators.tankSize],
+            firstTankStartPressure: [this.inputs.formatNumber(this.firstTank.startPressure), this.validators.tankPressure],
             boundTanks: this.fb.array(this.createTankControls())
         });
     }
@@ -265,14 +265,10 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     private createTankControl(tank: TankBound): AbstractControl {
         return this.fb.group({
-            tankSize: [this.inputs.formatNumber(tank.size),
-                [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]],
-            tankStartPressure: [this.inputs.formatNumber(tank.startPressure),
-                [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]],
-            tankO2: [this.inputs.formatNumber(tank.o2),
-                [Validators.required, Validators.min(this.ranges.trimixOxygen[0]), Validators.max(this.ranges.trimixOxygen[1])]],
-            tankHe: [this.inputs.formatNumber(tank.he),
-                [Validators.required, Validators.min(this.ranges.tankHe[0]), Validators.max(this.ranges.tankHe[1])]],
+            tankSize: [this.inputs.formatNumber(tank.size), this.validators.tankSize],
+            tankStartPressure: [this.inputs.formatNumber(tank.startPressure), this.validators.tankPressure],
+            tankO2: [this.inputs.formatNumber(tank.o2), this.validators.trimixOxygen],
+            tankHe: [this.inputs.formatNumber(tank.he), this.validators.trimixHe],
         });
     }
 }

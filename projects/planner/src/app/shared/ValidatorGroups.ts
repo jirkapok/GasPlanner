@@ -13,6 +13,14 @@ export class ValidatorGroups {
         return [Validators.required, Validators.min(this.ranges.nitroxOxygen[0]), Validators.max(this.ranges.nitroxOxygen[1])];
     }
 
+    public get trimixOxygen(): ValidatorFn[] {
+        return [Validators.required, Validators.min(this.ranges.trimixOxygen[0]), Validators.max(this.ranges.trimixOxygen[1])];
+    }
+
+    public get trimixHe(): ValidatorFn[] {
+        return [Validators.required, Validators.min(this.ranges.tankHe[0]), Validators.max(this.ranges.tankHe[1])];
+    }
+
     public get ppO2(): ValidatorFn[] {
         return [Validators.required, Validators.min(this.ranges.ppO2[0]), Validators.max(this.ranges.ppO2[1])];
     }

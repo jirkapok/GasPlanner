@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { OptionDefaults } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { Gradients, StandardGradientsService } from '../shared/standard-gradients.service';

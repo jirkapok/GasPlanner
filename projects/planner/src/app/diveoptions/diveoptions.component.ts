@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { SafetyStop, Salinity } from 'scuba-physics';

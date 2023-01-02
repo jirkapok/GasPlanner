@@ -219,6 +219,7 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     private reloadAll(): void {
         this.updateTanks();
+        // TODO reload page by url fails on form not initialized yet
         this.tanksForm.patchValue({
             firstTankSize: this.inputs.formatNumber(this.firstTank.size),
             firstTankStartPressure: this.inputs.formatNumber(this.firstTank.startPressure),

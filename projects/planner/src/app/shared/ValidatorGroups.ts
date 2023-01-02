@@ -38,7 +38,11 @@ export class ValidatorGroups {
     }
 
     public get altitude(): ValidatorFn[] {
-        return [Validators.required, Validators.min(ranges.altitude[0]), Validators.max(ranges.altitude[1])];
+        return [Validators.required, Validators.min(this.ranges.altitude[0]), Validators.max(this.ranges.altitude[1])];
+    }
+
+    public get gradients(): ValidatorFn[] {
+        return [Validators.required, Validators.min(10), Validators.max(100)];
     }
 
 

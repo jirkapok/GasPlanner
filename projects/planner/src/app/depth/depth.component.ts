@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-depth',
@@ -14,6 +15,7 @@ export class DepthComponent implements OnInit {
 
     constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
+        private validators: ValidatorGroups,
         public units: UnitConversion,
         public depths: DepthsService) { }
 
@@ -39,10 +41,8 @@ export class DepthComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        const ranges = this.units.ranges;
         this.depthForm = this.fb.group({
-            depth: [this.inputs.formatNumber(this.depths.plannedDepth),
-            [Validators.required, Validators.min(ranges.depth[0]), Validators.max(ranges.depth[1])]]
+            depth: [this.inputs.formatNumber(this.depths.plannedDepth), this.validators.depth]
         });
     }
 }

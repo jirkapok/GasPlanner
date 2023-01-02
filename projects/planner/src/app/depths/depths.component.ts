@@ -8,6 +8,7 @@ import { InputControls } from '../shared/inputcontrols';
 import { Plan, Level, Dive } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-depths',
@@ -28,6 +29,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     constructor(
         private fb: UntypedFormBuilder,
         private inputs: InputControls,
+        private validators: ValidatorGroups,
         public planner: PlannerService,
         public depths: DepthsService,
         public units: UnitConversion) {
@@ -196,14 +198,12 @@ export class DepthsComponent implements OnInit, OnDestroy {
     private createLevelControl(level: Level): AbstractControl {
         return this.fb.group({
             duration: this.createDurationControl(level.duration),
-            endDepth: [this.inputs.formatNumber(level.endDepth),
-            [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]]
+            endDepth: [this.inputs.formatNumber(level.endDepth), this.validators.depth]
         });
     }
 
     private createDurationControl(duration: number): [string | null, Validators[]] {
-        return [this.inputs.formatNumber(duration),
-        [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]];
+        return [this.inputs.formatNumber(duration), this.validators.duration];
     }
 
     private levelAt(index: number): Level {

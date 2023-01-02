@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { OptionDefaults } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { Gradients, StandardGradientsService } from '../shared/standard-gradients.service';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-gradients',
@@ -26,7 +27,8 @@ export class GradientsComponent implements OnInit {
     public gfForm!: UntypedFormGroup;
 
     constructor(private fb: UntypedFormBuilder,
-        private inputs: InputControls) { }
+        private inputs: InputControls,
+        private validators: ValidatorGroups) { }
 
     public get conservatism(): string {
         return this.standards.labelFor(this.gfLow, this.gfHigh);
@@ -43,7 +45,7 @@ export class GradientsComponent implements OnInit {
     }
 
     public gfHighChanged(): void {
-        if(this.gfHighInvalid) {
+        if (this.gfHighInvalid) {
             return;
         }
 
@@ -53,7 +55,7 @@ export class GradientsComponent implements OnInit {
     }
 
     public gfLowChanged(): void {
-        if(this.gfLowInvalid) {
+        if (this.gfLowInvalid) {
             return;
         }
 
@@ -64,10 +66,8 @@ export class GradientsComponent implements OnInit {
 
     public ngOnInit(): void {
         this.gfForm = this.fb.group({
-            gfLow: [this.inputs.formatNumber(this.gfLow * 100),
-                [Validators.required, Validators.min(10), Validators.max(100)]],
-            gfHigh: [this.inputs.formatNumber(this.gfHigh * 100),
-                [Validators.required, Validators.min(10), Validators.max(100)]]
+            gfLow: [this.inputs.formatNumber(this.gfLow * 100), this.validators.gradients],
+            gfHigh: [this.inputs.formatNumber(this.gfHigh * 100), this.validators.gradients]
         });
     }
 

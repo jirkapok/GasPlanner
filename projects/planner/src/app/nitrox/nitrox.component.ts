@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import {
-    FormControl, UntypedFormBuilder, UntypedFormGroup,
-    Validators
+    FormControl, UntypedFormBuilder, UntypedFormGroup
 } from '@angular/forms';
 
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
@@ -12,6 +11,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { InputControls } from '../shared/inputcontrols';
 import { NitroxValidators } from '../shared/NitroxValidators';
 import { TextConstants } from '../shared/TextConstants';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-nitrox',
@@ -30,6 +30,7 @@ export class NitroxComponent implements OnInit {
     constructor(
         private fb: UntypedFormBuilder,
         private inputs: InputControls,
+        private validators: ValidatorGroups,
         public calc: NitroxCalculatorService,
         private router: Router,
         private planer: PlannerService, public units: UnitConversion) {
@@ -78,15 +79,9 @@ export class NitroxComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.fO2Control = this.fb.control(this.inputs.formatNumber(this.calc.fO2),
-            [Validators.required, Validators.min(this.ranges.nitroxOxygen[0]), Validators.max(this.ranges.nitroxOxygen[1])]);
-
-        this.pO2Control = this.fb.control(this.inputs.formatNumber(this.calc.pO2),
-            [Validators.required, Validators.min(this.ranges.ppO2[0]), Validators.max(this.ranges.ppO2[1])]);
-
-        this.modControl = this.fb.control(this.inputs.formatNumber(this.calcMod),
-            [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]);
-
+        this.fO2Control = this.fb.control(this.inputs.formatNumber(this.calc.fO2), this.validators.oxygen);
+        this.pO2Control = this.fb.control(this.inputs.formatNumber(this.calc.pO2), this.validators.ppO2);
+        this.modControl = this.fb.control(this.inputs.formatNumber(this.calcMod), this.validators.depth);
         this.nitroxForm = this.fb.group({}, { validator: NitroxValidators.lowMod(() => this.failingMod), });
         this.toMod();
     }

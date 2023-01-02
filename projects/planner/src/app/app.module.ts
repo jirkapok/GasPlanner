@@ -53,6 +53,7 @@ import { DelayedScheduleService } from './shared/delayedSchedule.service';
 import { AppinfoComponent } from './appinfo/appinfo.component';
 import { DiveIssuesComponent } from './dive-issues/dive-issues.component';
 import { InputControls } from './shared/inputcontrols';
+import { ValidatorGroups } from './shared/ValidatorGroups';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -122,6 +123,7 @@ const MDB_MODULES = [
         DelayedScheduleService,
         NdlService,
         InputControls,
+        ValidatorGroups,
         DatePipe,
         DecimalPipe
     ],

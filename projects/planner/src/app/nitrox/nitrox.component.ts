@@ -79,7 +79,7 @@ export class NitroxComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.fO2Control = this.fb.control(this.inputs.formatNumber(this.calc.fO2), this.validators.oxygen);
+        this.fO2Control = this.fb.control(this.inputs.formatNumber(this.calc.fO2), this.validators.nitroxOxygen);
         this.pO2Control = this.fb.control(this.inputs.formatNumber(this.calc.pO2), this.validators.ppO2);
         this.modControl = this.fb.control(this.inputs.formatNumber(this.calcMod), this.validators.depth);
         this.nitroxForm = this.fb.group({}, { validator: NitroxValidators.lowMod(() => this.failingMod), });

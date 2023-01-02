@@ -9,6 +9,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { Diver } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { TextConstants } from '../shared/TextConstants';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class SacComponent implements OnInit {
     private usedControl!: FormControl;
 
     constructor(
+        private validators: ValidatorGroups,
         private inputs: InputControls,
         private formBuilder: UntypedFormBuilder,
         private router: Router, private planer: PlannerService,
@@ -96,18 +98,13 @@ export class SacComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.durationControl = this.formBuilder.control(this.inputs.formatNumber(this.calcDuration),
-            [Validators.required, Validators.min(this.ranges.duration[0]), Validators.max(this.ranges.duration[1])]);
-        this.usedControl = this.formBuilder.control(this.inputs.formatNumber(this.calcUsed),
-            [Validators.required, Validators.min(this.ranges.tankPressure[0]), Validators.max(this.ranges.tankPressure[1])]);
-        this.rmvControl = this.formBuilder.control(this.inputs.formatNumber(this.calcRmv),
-            [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])]);
+        this.durationControl = this.formBuilder.control(this.inputs.formatNumber(this.calcDuration), this.validators.duration);
+        this.usedControl = this.formBuilder.control(this.inputs.formatNumber(this.calcUsed), this.validators.tankPressure);
+        this.rmvControl = this.formBuilder.control(this.inputs.formatNumber(this.calcRmv), this.validators.diverRmv);
 
         this.formSac = this.formBuilder.group({
-            depth: [this.inputs.formatNumber(this.calcDepth),
-                [Validators.required, Validators.min(this.ranges.depth[0]), Validators.max(this.ranges.depth[1])]],
-            tankSize: [this.inputs.formatNumber(this.calcTank),
-                [Validators.required, Validators.min(this.ranges.tankSize[0]), Validators.max(this.ranges.tankSize[1])]]
+            depth: [this.inputs.formatNumber(this.calcDepth), this.validators.depth],
+            tankSize: [this.inputs.formatNumber(this.calcTank), this.validators.tankSize]
         });
 
         this.toSac();

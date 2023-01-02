@@ -4,6 +4,7 @@ import { StandardGases, Tank } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-oxygen',
@@ -30,6 +31,7 @@ export class OxygenComponent implements OnInit {
 
     constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
+        private validators: ValidatorGroups,
         public units: UnitConversion) {
         this.nitroxNames = StandardGases.nitroxNames();
     }
@@ -40,11 +42,8 @@ export class OxygenComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        const ranges = this.units.ranges;
-
         this.nitroxForm = this.fb.group({
-            o2: [this.inputs.formatNumber(this.tank.o2),
-                [Validators.required, Validators.min(ranges.nitroxOxygen[0]), Validators.max(ranges.nitroxOxygen[1])]]
+            o2: [this.inputs.formatNumber(this.tank.o2), this.validators.nitroxOxygen]
         });
     }
 

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-pp-o2',
@@ -17,6 +18,7 @@ export class PpO2Component implements OnInit {
 
     constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
+        private validators: ValidatorGroups,
         public units: UnitConversion) { }
 
     public get ppO2Invalid(): boolean {
@@ -29,9 +31,7 @@ export class PpO2Component implements OnInit {
             this.pO2Form = this.fb.group({});
         }
 
-        const ranges = this.units.ranges;
-        const maxPpO2Control = this.fb.control(this.inputs.formatNumber(this.maxPpO2),
-            [Validators.required, Validators.min(ranges.ppO2[0]), Validators.max(ranges.ppO2[1])]);
+        const maxPpO2Control = this.fb.control(this.inputs.formatNumber(this.maxPpO2), this.validators.ppO2);
         this.pO2Form.addControl(this.controlName, maxPpO2Control);
     }
 

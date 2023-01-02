@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-altitude',
@@ -21,7 +22,10 @@ export class AltitudeComponent implements OnInit {
     private metricLevels = [0, 300, 800, 1500];
     private imperialLevels = [0, 1000, 2600, 5000];
 
-    constructor(private fb: UntypedFormBuilder, private inputs: InputControls, public units: UnitConversion) { }
+    constructor(private fb: UntypedFormBuilder,
+        private inputs: InputControls,
+        private validators: ValidatorGroups,
+        public units: UnitConversion) { }
 
     public get altitudeBound(): number {
         return this.units.fromMeters(this.altitude);
@@ -45,10 +49,8 @@ export class AltitudeComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        const ranges = this.units.ranges;
         this.altitudeForm = this.fb.group({
-            altitude: [this.altitudeBound,
-            [Validators.required, Validators.min(ranges.altitude[0]), Validators.max(ranges.altitude[1])]]
+            altitude: [this.altitudeBound, this.validators.altitude]
         });
     }
 

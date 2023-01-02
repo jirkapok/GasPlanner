@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Validators, ValidatorFn } from '@angular/forms';
+import { Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 
 @Injectable({
@@ -30,7 +30,7 @@ export class ValidatorGroups {
     }
 
     public get diverRmv(): ValidatorFn[] {
-        return [Validators.required, Validators.min(this.ranges.diverRmv[0]), Validators.max(this.ranges.diverRmv[1])];
+        return [Validators.required, this.validateMinRmv, this.validateMaxRmv];
     }
 
     public get tankSize(): ValidatorFn[] {
@@ -45,9 +45,16 @@ export class ValidatorGroups {
         return [Validators.required, Validators.min(10), Validators.max(100)];
     }
 
-
-
     private get ranges(): RangeConstants {
         return this.units.ranges;
+    }
+
+    // only these RMV methods needs direct access to the range without component reload
+    private validateMinRmv(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => Validators.min(this.ranges.diverRmv[0])(control);
+    }
+
+    private validateMaxRmv(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => Validators.max(this.ranges.diverRmv[1])(control);
     }
 }

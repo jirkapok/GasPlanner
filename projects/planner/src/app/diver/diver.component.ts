@@ -1,13 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
-    AbstractControl, UntypedFormBuilder, UntypedFormGroup,
-    ValidationErrors, ValidatorFn, Validators
+    UntypedFormBuilder, UntypedFormGroup
 } from '@angular/forms';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Diver } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-diver',
@@ -22,6 +22,7 @@ export class DiverComponent implements OnInit, OnDestroy {
 
     constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
+        private validators: ValidatorGroups,
         public units: UnitConversion) {
     }
 
@@ -44,8 +45,7 @@ export class DiverComponent implements OnInit, OnDestroy {
             this.diverForm = this.fb.group({});
         }
 
-        const rmvControl = this.fb.control(this.inputs.formatNumber(this.rmv),
-            [Validators.required, this.validateMinRmv, this.validateMaxRmv]);
+        const rmvControl = this.fb.control(this.inputs.formatNumber(this.rmv), this.validators.diverRmv);
         this.diverForm.addControl('rmv', rmvControl);
 
         this.subscription = this.units.ranges$.subscribe(() => this.diverForm.patchValue({
@@ -74,13 +74,5 @@ export class DiverComponent implements OnInit, OnDestroy {
 
     public maxDecoPpO2Changed(newValue: number): void {
         this.diver.maxDecoPpO2 = newValue;
-    }
-
-    private validateMinRmv(): ValidatorFn {
-        return (control: AbstractControl): ValidationErrors | null => Validators.min(this.ranges.diverRmv[0])(control);
-    }
-
-    private validateMaxRmv(): ValidatorFn {
-        return (control: AbstractControl): ValidationErrors | null => Validators.max(this.ranges.diverRmv[1])(control);
     }
 }

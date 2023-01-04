@@ -179,4 +179,15 @@ describe('Tanks component', () => {
             fixture.detectChanges();
             expect(complexPage.o2Input(0).value).toBe('36');
         }));
+
+    it('He field affects O2 field tank is reloaded', inject([PlannerService],
+        (planner: PlannerService) => {
+            planner.isComplex = true;
+            component.assignStandardGas(0, 'Oxygen');
+            fixture.detectChanges();
+            complexPage.heInput(0).value = '70';
+            complexPage.heInput(0).dispatchEvent(new Event('input'));
+
+            expect(complexPage.o2Input(0).value).toBe('30');
+        }));
 });

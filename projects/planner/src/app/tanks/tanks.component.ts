@@ -202,6 +202,8 @@ export class TanksComponent implements OnInit, OnDestroy {
         bound.startPressure = Number(values.tankStartPressure);
         bound.o2 = Number(values.tankO2);
         bound.he = Number(values.tankHe);
+        // to enforce reload he and O2 fields in case the affected each other
+        this.reload(bound, index);
 
         this.delayedCalc.schedule();
     }
@@ -218,9 +220,7 @@ export class TanksComponent implements OnInit, OnDestroy {
     }
 
     private reloadAll(): void {
-        console.log('Tanks reloaded');
         this.updateTanks();
-        // TODO when changing he content, the O2 content may be reduced and may require reload
 
         this.tanksForm.patchValue({
             firstTankSize: this.inputs.formatNumber(this.firstTank.size),

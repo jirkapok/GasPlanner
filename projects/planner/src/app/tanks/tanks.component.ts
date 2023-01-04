@@ -76,9 +76,6 @@ export class TanksComponent implements OnInit, OnDestroy {
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
         this.updateTanks();
-
-        this.tanksSubscription = this.planner.tanksReloaded.subscribe(() => this.reloadAll());
-        this.viewSwitchSubscription = this.planner.viewSwitched.subscribe(() => this.reloadAll());
     }
 
     public get firstTank(): TankBound {
@@ -117,6 +114,9 @@ export class TanksComponent implements OnInit, OnDestroy {
             firstTankStartPressure: [this.inputs.formatNumber(this.firstTank.startPressure), this.validators.tankPressure],
             boundTanks: this.fb.array(this.createTankControls())
         });
+
+        this.tanksSubscription = this.planner.tanksReloaded.subscribe(() => this.reloadAll());
+        this.viewSwitchSubscription = this.planner.viewSwitched.subscribe(() => this.reloadAll());
     }
 
     public ngOnDestroy(): void {
@@ -218,9 +218,10 @@ export class TanksComponent implements OnInit, OnDestroy {
     }
 
     private reloadAll(): void {
+        console.log('Tanks reloaded');
         this.updateTanks();
-        // TODO reload page by url fails on form not initialized yet
         // TODO when changing he content, the O2 content may be reduced and may require reload
+
         this.tanksForm.patchValue({
             firstTankSize: this.inputs.formatNumber(this.firstTank.size),
             firstTankStartPressure: this.inputs.formatNumber(this.firstTank.startPressure),

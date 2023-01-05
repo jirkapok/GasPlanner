@@ -50,14 +50,6 @@ class ConsumptionSegment {
     }
 }
 
-interface  Interval {
-    /** seconds */
-    left: number;
-
-    /** seconds */
-    right: number;
-}
-
 /**
  * Calculates tank consumptions during the dive and related variables
  * (e.g. rock bottom, turn pressure, turn time)
@@ -158,7 +150,7 @@ export class Consumption {
         const addedDuration = interval.search(context);
 
         // the estimated max. duration is shorter, than user defined segments
-        if(addedDuration === 0) {
+        if (addedDuration === 0) {
             return 0;
         }
 
@@ -167,7 +159,7 @@ export class Consumption {
         return Precision.floor(totalDuration);
     }
 
-    private consumeFromProfile(testSegments: Segments, tanks: Tank[], diver: Diver, options: Options){
+    private consumeFromProfile(testSegments: Segments, tanks: Tank[], diver: Diver, options: Options) {
         const profile = Consumption.calculateDecompression(testSegments, tanks, options);
         this.consumeFromTanks(profile.segments, options, tanks, diver);
     }

@@ -288,6 +288,7 @@ export class PlannerService {
         this.dive.needsReturn = this.plan.needsReturn && this._tanks.length === 1;
         this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
 
+        // TODO still there is an option, that some calculation is still running.
         this.dive.calculated = true;
         this.dive.calculationFailed = false;
         this.calculating = false;

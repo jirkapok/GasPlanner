@@ -8,6 +8,7 @@ import { CalculatedProfile } from './Profile';
 import { Segment, Segments } from './Segments';
 import { Tank, Tanks } from './Tanks';
 import { Time } from './Time';
+import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
 
 
 class ConsumptionSegment {
@@ -141,8 +142,20 @@ export class Consumption {
     public calculateMaxBottomTime(sourceSegments: Segments, tanks: Tank[], diver: Diver, options: Options): number {
         const testSegments = this.createTestProfile(sourceSegments);
         const addedSegment = testSegments.last();
-        const limits = this.findRightUpperInterval(testSegments, addedSegment, tanks, diver, options);
-        const addedDuration = this.findMaximalAddedDuration(testSegments, addedSegment, tanks, diver, options, limits);
+
+        const context: SearchContext = {
+            step: (Time.oneMinute * 40),
+            initialValue: 0,
+            maxValue: Time.oneDay,
+            doWork: (newValue: number) => {
+                addedSegment.duration = newValue;
+                this.consumeFromProfile(testSegments, tanks, diver, options);
+            },
+            meetsCondition: () => Tanks.haveReserve(tanks)
+        };
+
+        const interval = new BinaryIntervalSearch();
+        const addedDuration = interval.search(context);
 
         // the estimated max. duration is shorter, than user defined segments
         if(addedDuration === 0) {
@@ -152,49 +165,6 @@ export class Consumption {
         // Round down to minutes directly to ensure we are in range of enough value
         const totalDuration = Time.toMinutes(sourceSegments.duration + addedDuration);
         return Precision.floor(totalDuration);
-    }
-
-    private findRightUpperInterval(testSegments: Segments, addedSegment: Segment,
-        tanks: Tank[], diver: Diver, options: Options): Interval {
-
-        // Choosing this as estimated typical middle length of the dive
-        const stepDuration = Time.oneMinute * 40;
-        this.consumeFromProfile(testSegments, tanks, diver, options);
-
-        while (Tanks.haveReserve(tanks)) {
-            addedSegment.duration += stepDuration;
-            // This is performance hit, we dont know the no decompression profile, so we need to create always new one.
-            // and initial profile, can be already decompression.
-            this.consumeFromProfile(testSegments, tanks, diver, options);
-        }
-
-        let leftLimit = addedSegment.duration - stepDuration;
-        leftLimit = leftLimit < 0 ? 0 : leftLimit;
-
-        return {
-            left: leftLimit,
-            right:  addedSegment.duration
-        };
-    }
-
-    /** binary search to reduce the interval up to one minute */
-    private findMaximalAddedDuration(testSegments: Segments, addedSegment: Segment,  tanks: Tank[],
-        diver: Diver, options: Options, limits: Interval): number {
-
-        // 1 second precision - because we later add additional user defined seconds to prevent rounding issues
-        while (limits.right - limits.left > Time.oneSecond) {
-            const middle = limits.left + (limits.right - limits.left) / 2;
-            addedSegment.duration = middle;
-            this.consumeFromProfile(testSegments, tanks, diver, options);
-
-            if(Tanks.haveReserve(tanks)) {
-                limits.left = middle;
-            } else {
-                limits.right = middle;
-            }
-        }
-
-        return limits.left;
     }
 
     private consumeFromProfile(testSegments: Segments, tanks: Tank[], diver: Diver, options: Options){

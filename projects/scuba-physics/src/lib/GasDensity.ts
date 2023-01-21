@@ -6,6 +6,8 @@ export class GasDensity {
 
     /**
      * Calculates approximate gas density of oxygen, nitrogen, helium mixture at 1 ATA.
+     * https://www.facebook.com/watch/?v=400481725415718
+     * https://dan.org/alert-diver/article/performance-under-pressure/
      * @param fO2 fraction of oxygen in range 0-1
      * @param fHe fraction of helium in range 0-1
      * @returns Calculated density in g/l

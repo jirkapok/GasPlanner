@@ -1,5 +1,6 @@
 import { DepthConverter } from './depth-converter';
 import { SafetyStop } from './Options';
+import { Precision } from './precision';
 
 
 export interface DepthLevelOptions {
@@ -27,7 +28,7 @@ export class DepthLevels {
      */
     public toDecoStop(depthPressure: number): number {
         const depth = this.depthConverter.fromBar(depthPressure);
-        return this.roundToDeco(depth);
+        return Precision.roundDistance(depth, this.options.decoStopDistance);
     }
 
     /**
@@ -40,7 +41,7 @@ export class DepthLevels {
             return 0;
         }
 
-        const rounded = Math.floor(currentDepth / this.options.decoStopDistance) * this.options.decoStopDistance;
+        const rounded = Precision.floorDistance(currentDepth, this.options.decoStopDistance);
 
         if (rounded !== currentDepth) {
             return rounded;
@@ -59,10 +60,5 @@ export class DepthLevels {
         return (this.options.safetyStop === SafetyStop.always ||
                 (this.options.safetyStop === SafetyStop.auto && maxDepth > this.options.minimumAutoStopDepth)) &&
                  currentDepth === this.options.lastStopDepth;
-    }
-
-    // depth in meters, returns also meters
-    private roundToDeco(depth: number): number {
-        return Math.round(depth / this.options.decoStopDistance) * this.options.decoStopDistance;
     }
 }

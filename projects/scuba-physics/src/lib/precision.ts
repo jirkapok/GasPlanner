@@ -33,8 +33,24 @@ export class Precision {
         return Precision.adapt(Math.ceil, source, digits);
     }
 
+    public static ceilDistance(source: number, distance: number): number {
+        return Precision.adaptDistance(Math.ceil, source, distance);
+    }
+
+    public static roundDistance(source: number, distance: number): number {
+        return Precision.adaptDistance(Math.round, source, distance);
+    }
+
+    public static floorDistance(source: number, distance: number): number {
+        return Precision.adaptDistance(Math.floor, source, distance);
+    }
+
     private static adapt(func: (source: number) => number, source: number, digits: number): number {
         const precision = Math.pow(10, digits);
         return func(source * precision) / precision;
+    }
+
+    private static adaptDistance(func: (source: number) => number, source: number, distance: number): number {
+        return func(source / distance) * distance;
     }
 }

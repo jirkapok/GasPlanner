@@ -149,6 +149,39 @@ describe('Segments', () => {
         });
     });
 
+    describe('cutDown', () => {
+        it('Empty makes no change', () => {
+            const segments = new Segments();
+            segments.cutDown(1);
+            expect(segments.length).toBe(0);
+        });
+
+        it('Remove more than in the array clears all', () => {
+            const segments = new Segments();
+            segments.add(0, 20, StandardGases.air, 2);
+            segments.add(20, 20, StandardGases.air, 18);
+            segments.cutDown(5);
+            expect(segments.length).toBe(0);
+        });
+
+        it('Remove one removes only last', () => {
+            const segments = new Segments();
+            segments.add(0, 20, StandardGases.air, 2);
+            segments.add(20, 20, StandardGases.air, 18);
+            segments.cutDown(1);
+            expect(segments.length).toBe(1);
+        });
+
+        it('Remove multiple removes them from end', () => {
+            const segments = new Segments();
+            segments.add(0, 20, StandardGases.air, 2);
+            segments.add(20, 20, StandardGases.air, 18);
+            segments.add(20, 20, StandardGases.air, 18);
+            segments.cutDown(2);
+            expect(segments.length).toBe(1);
+        });
+    });
+
     describe('Fix start depths', () => {
         let segments: Segments;
         let first: Segment;

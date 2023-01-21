@@ -264,6 +264,16 @@ export class Segments {
         this.fixStartDepths();
     }
 
+    /**
+     * Removes required number of elements from end of the array
+     * @param count Number of segments to remove
+     */
+    public cutDown(count: number): void {
+        const endIndex = this.segments.length - count;
+        this.segments = this.segments.slice(0, endIndex);
+        this.fixStartDepths();
+    }
+
     public withAll(callBack: (segment: Segment) => void): void {
         for (let index = 0; index < this.segments.length; index++) {
             callBack(this.segments[index]);

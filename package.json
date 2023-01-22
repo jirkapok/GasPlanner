@@ -30,6 +30,7 @@
     "@fortawesome/free-regular-svg-icons": "6.1.1",
     "@fortawesome/free-solid-svg-icons": "6.1.1",
     "@popperjs/core": "^2.11.4",
+    "bootstrap": "^5.2.3",
     "lodash": "^4.17.21",
     "mdb-angular-ui-kit": "^3.0.0",
     "ngx-clipboard": "^15.1.0",

@@ -183,7 +183,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             ascentSpeed50perc: [this.inputs.formatNumber(this.ascentSpeed50perc), this.validators.speed],
         });
 
-        this.options.reloaded.pipe(takeUntil(this.unsubscribe$))
+        this.options.reloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadForm());
     }
 

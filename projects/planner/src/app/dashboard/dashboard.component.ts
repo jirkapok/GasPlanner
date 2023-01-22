@@ -44,7 +44,7 @@ export class DashboardComponent extends Streamed implements OnInit {
 
         // because the calculation runs in background first it subscribes,
         // than it starts to receive the event. Even for the initial calls.
-        this.planner.infoCalculated.pipe(takeUntil(this.unsubscribe$))
+        this.planner.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.updateQueryParams());
     }
 

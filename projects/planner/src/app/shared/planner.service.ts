@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { Plan, Dive, Strategies, } from './models';
 import { WayPointsService } from './waypoints.service';
@@ -22,23 +22,23 @@ export class PlannerService {
     public diver: Diver = new Diver();
     // there always needs to be at least one
     public dive: Dive = new Dive();
-    public infoCalculated;
-    public wayPointsCalculated;
+    public infoCalculated$: Observable<void>;
+    public wayPointsCalculated$: Observable<void>;
 
     /** Event fired only in case of tanks rebuild. Not fired when adding or removing tanks. */
     public tanksReloaded;
     /** when switching between simple and complex view */
     public viewSwitched;
-    private onTanksReloaded = new Subject();
-    private onViewSwitched = new Subject();
+    private onTanksReloaded = new Subject<void>();
+    private onViewSwitched = new Subject<void>();
     private _isComplex = false;
     private calculating = false;
     private calculatingDiveInfo = false;
     private calculatingProfile = false;
     private _tanks: Tank[] = [];
     private _options: Options;
-    private onInfoCalculated = new Subject();
-    private onWayPointsCalculated = new Subject();
+    private onInfoCalculated = new Subject<void>();
+    private onWayPointsCalculated = new Subject<void>();
     private profileTask: IBackgroundTask<ProfileRequestDto, ProfileResultDto>;
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
     private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
@@ -50,8 +50,8 @@ export class PlannerService {
         const tank = Tank.createDefault();
         tank.id = 1;
         this._tanks.push(tank);
-        this.infoCalculated = this.onInfoCalculated.asObservable();
-        this.wayPointsCalculated = this.onWayPointsCalculated.asObservable();
+        this.infoCalculated$ = this.onInfoCalculated.asObservable();
+        this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
         this.tanksReloaded = this.onTanksReloaded.asObservable();
         this.viewSwitched = this.onViewSwitched.asObservable();
@@ -97,7 +97,7 @@ export class PlannerService {
             this.resetToSimple();
         }
 
-        this.onViewSwitched.next({});
+        this.onViewSwitched.next();
     }
 
     public addTank(): void {
@@ -162,7 +162,7 @@ export class PlannerService {
             this.resetToSimple();
         } else {
             // to prevent fire the event twice
-            this.onTanksReloaded.next({});
+            this.onTanksReloaded.next();
         }
     }
 
@@ -247,7 +247,7 @@ export class PlannerService {
 
             this.dive.profileCalculated = true;
             this.calculatingProfile = false;
-            this.onWayPointsCalculated.next({});
+            this.onWayPointsCalculated.next();
         } else {
             // fires info finished before the profile finished, case of error it doesn't matter
             this.profileFailed();
@@ -262,8 +262,8 @@ export class PlannerService {
         this.dive.ceilings = [];
         this.endCalculatingState();
         // fire events, because there will be no continuation
-        this.onWayPointsCalculated.next({});
-        this.onInfoCalculated.next({});
+        this.onWayPointsCalculated.next();
+        this.onInfoCalculated.next();
     }
 
     private finishDiveInfo(diveInfo: DiveInfoResultDto): void {
@@ -292,7 +292,7 @@ export class PlannerService {
         this.dive.calculated = true;
         this.dive.calculationFailed = false;
         this.calculating = false;
-        this.onInfoCalculated.next({});
+        this.onInfoCalculated.next();
     }
 
     private resetToSimple(): void {
@@ -303,7 +303,7 @@ export class PlannerService {
             this.firstTank.assignStandardGas('Air');
         }
 
-        this.onTanksReloaded.next({});
+        this.onTanksReloaded.next();
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
     }
 

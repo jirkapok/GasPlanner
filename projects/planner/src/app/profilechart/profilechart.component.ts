@@ -81,7 +81,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         };
 
         this.updateLayoutThickFormat();
-        this.planer.wayPointsCalculated.pipe(takeUntil(this.unsubscribe$))
+        this.planer.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.plotCharts());
         this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))
             .subscribe((wayPoint) => this.selectWayPoint(wayPoint));

@@ -7,10 +7,15 @@ interface Interval {
 }
 
 export interface SearchContext {
+    /** Initial step used to find highest (upper boundary) limit */
     estimationStep: number;
+    /** Lower boundary for the search */
     initialValue: number;
+    /** Upper boundary extreme limit when searching its limit */
     maxValue: number;
+    /** method to be executed before calling meetsCondition */
     doWork: (newValue: number) => void;
+    /** Method used to decide, if the value is still in range */
     meetsCondition: () => boolean;
 }
 

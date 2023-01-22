@@ -58,16 +58,16 @@ export class PlannerService {
 
         // TODO unregister events
         this.profileTask = this.workerFactory.createProfileWorker();
-        this.profileTask.calculated.subscribe((data) => this.continueCalculation(data));
-        this.profileTask.failed.subscribe(() => this.profileFailed());
+        this.profileTask.calculated$.subscribe((data) => this.continueCalculation(data));
+        this.profileTask.failed$.subscribe(() => this.profileFailed());
 
         this.diveInfoTask = this.workerFactory.createDiveInfoWorker();
-        this.diveInfoTask.calculated.subscribe((calculated) => this.finishDiveInfo(calculated));
-        this.diveInfoTask.failed.subscribe(() => this.profileFailed());
+        this.diveInfoTask.calculated$.subscribe((calculated) => this.finishDiveInfo(calculated));
+        this.diveInfoTask.failed$.subscribe(() => this.profileFailed());
 
         this.consumptionTask = this.workerFactory.createConsumptionWorker();
-        this.consumptionTask.calculated.subscribe((data) => this.finishCalculation(data));
-        this.consumptionTask.failed.subscribe(() => this.profileFailed());
+        this.consumptionTask.calculated$.subscribe((data) => this.finishCalculation(data));
+        this.consumptionTask.failed$.subscribe(() => this.profileFailed());
     }
 
     public get isComplex(): boolean {

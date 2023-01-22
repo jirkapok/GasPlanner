@@ -1,13 +1,13 @@
 import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
-// import { Toast } from 'bootstrap';
+import { Toast } from 'bootstrap';
 import {
     faSlidersH, faShareFromSquare
 } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
 import { Dive } from '../shared/models';
-import { Tank, OtuCalculator } from 'scuba-physics';
+import { Tank } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { Subscription } from 'rxjs';
@@ -18,13 +18,13 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./diveinfo.component.scss']
 })
 export class DiveInfoComponent implements OnInit, OnDestroy {
-    @ViewChild('toastElement', { static: true })
+    @ViewChild('toastShare', { static: true })
     public toastEl!: ElementRef;
     public toxicity: GasToxicity;
     public dive: Dive;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
-    private subscription: Subscription;
+    private subscription?: Subscription;
     // private toast!: Toast;
 
     constructor(private clipboard: ClipboardService, public planner: PlannerService, public units: UnitConversion) {
@@ -33,7 +33,7 @@ export class DiveInfoComponent implements OnInit, OnDestroy {
 
         this.subscription = this.clipboard.copyResponse$.subscribe((res: IClipboardResponse) => {
             if (res.isSuccess) {
-               // this.toast.show();
+                // this.toast.show();
             }
         });
     }
@@ -79,6 +79,6 @@ export class DiveInfoComponent implements OnInit, OnDestroy {
     }
 
     public hideToast(): void {
-       // this.toast.hide();
+        // this.toast.hide();
     }
 }

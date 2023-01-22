@@ -220,8 +220,6 @@ export class BuhlmannAlgorithm {
         }
     }
 
-    // TODO performance verification for original implementation, initial linear search and final implementation
-    // for small and also for long stops
     private stayAtDecoStop(context: AlgorithmContext, nextStop: number): void {
         if (this.needsDecoStop(context, nextStop)) {
             const memento = context.createMemento();

@@ -68,13 +68,13 @@ export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     public noDecoTime = 0;
     /** Event fired only in case of segments rebuild. Not fired when adding or removing. */
-    public reloaded: Observable<unknown>;
+    public reloaded$: Observable<unknown>;
     private _segments: Segments = new Segments();
     private onReloaded = new Subject();
 
     /** provide the not necessary tank and options only to start from simple valid profile */
     constructor(public strategy: Strategies, depth: number, duration: number, tank: Tank, options: Options) {
-        this.reloaded = this.onReloaded.asObservable();
+        this.reloaded$ = this.onReloaded.asObservable();
         this.reset(depth, duration, tank, options);
     }
 

@@ -105,7 +105,7 @@ export class DepthsComponent extends Streamed implements OnInit {
 
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
-        this.plan.reloaded.pipe(takeUntil(this.unsubscribe$))
+        this.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.depths.updateLevels();
                 this.reloadSimple();

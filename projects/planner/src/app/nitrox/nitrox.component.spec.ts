@@ -5,9 +5,11 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { InputControls } from '../shared/inputcontrols';
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
+import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { NitroxComponent } from './nitrox.component';
 
 export class NitroxPage {
@@ -32,7 +34,9 @@ describe('Nitrox component', () => {
             declarations: [NitroxComponent],
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls, DecimalPipe,
-                NitroxCalculatorService, UntypedFormBuilder],
+                NitroxCalculatorService, ValidatorGroups,
+                OptionsDispatcherService,
+                UntypedFormBuilder],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         })
             .compileComponents();

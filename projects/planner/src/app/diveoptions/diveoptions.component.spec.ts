@@ -1,9 +1,13 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+import { InputControls } from '../shared/inputcontrols';
+import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { DiveOptionsComponent } from './diveoptions.component';
 
 describe('DepthComponent Imperial units', () => {
@@ -15,7 +19,9 @@ describe('DepthComponent Imperial units', () => {
             declarations: [DiveOptionsComponent],
             imports: [ReactiveFormsModule],
             providers: [WorkersFactoryCommon, DecimalPipe,
-                PlannerService, UnitConversion]
+                OptionsDispatcherService, InputControls,
+                ValidatorGroups, PlannerService,
+                DelayedScheduleService, UnitConversion]
         })
             .compileComponents();
     });

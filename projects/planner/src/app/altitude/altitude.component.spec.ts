@@ -2,8 +2,10 @@ import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { InputControls } from '../shared/inputcontrols';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { AltitudeComponent } from './altitude.component';
 
 describe('Altitude', () => {
@@ -13,10 +15,9 @@ describe('Altitude', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [AltitudeComponent],
-            providers: [UnitConversion,
-                RouterTestingModule,
-                OptionsDispatcherService,
-                DecimalPipe],
+            providers: [UnitConversion, InputControls,
+                OptionsDispatcherService, ValidatorGroups,
+                RouterTestingModule, DecimalPipe],
             imports: [
                 RouterTestingModule.withRoutes([]),
                 ReactiveFormsModule]

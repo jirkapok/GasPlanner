@@ -6,10 +6,13 @@ import { By } from '@angular/platform-browser';
 import { Tank } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { DepthsService } from '../shared/depths.service';
+import { InputControls } from '../shared/inputcontrols';
+import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
 import { DepthsComponent } from './depths.component';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComponent>) { }
@@ -66,7 +69,9 @@ describe('DepthsComponent', () => {
             declarations: [DepthsComponent],
             imports: [ReactiveFormsModule],
             providers: [WorkersFactoryCommon, PlannerService,
-                UnitConversion, DecimalPipe, DelayedScheduleService]
+                UnitConversion, InputControls, DelayedScheduleService,
+                OptionsDispatcherService, ValidatorGroups,
+                DepthsService, DecimalPipe]
         })
             .compileComponents();
     });

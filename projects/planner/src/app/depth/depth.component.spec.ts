@@ -1,12 +1,14 @@
 import { DecimalPipe } from '@angular/common';
-import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { DepthsService } from '../shared/depths.service';
+import { InputControls } from '../shared/inputcontrols';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { DepthComponent } from './depth.component';
 
 export class DepthPage {
@@ -33,7 +35,10 @@ describe('DepthComponent Imperial units', () => {
             declarations: [DepthComponent],
             imports: [ReactiveFormsModule],
             providers: [UntypedFormBuilder, DecimalPipe,
-                WorkersFactoryCommon, PlannerService, UnitConversion]
+                WorkersFactoryCommon, PlannerService,
+                UnitConversion, ValidatorGroups,
+                DepthsService, DelayedScheduleService,
+                InputControls]
         })
             .compileComponents();
     });

@@ -7,7 +7,9 @@ describe('NdlServiceService', () => {
     let service: NdlService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [ NdlService ]
+        });
         service = TestBed.inject(NdlService);
     });
 

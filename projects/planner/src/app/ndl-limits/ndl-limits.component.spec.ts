@@ -14,7 +14,8 @@ describe('NdlLimits component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [NdlLimitsComponent],
-            providers: [FormsModule, UnitConversion, NdlService],
+            providers: [FormsModule, UnitConversion,
+                NdlService, OptionsDispatcherService],
             imports: [RouterTestingModule.withRoutes([])]
         })
             .compileComponents();

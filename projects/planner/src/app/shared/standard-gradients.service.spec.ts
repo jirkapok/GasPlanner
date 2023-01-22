@@ -6,7 +6,9 @@ describe('StandardGradientsService', () => {
     let service: StandardGradientsService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [ StandardGradientsService ]
+        });
         service = TestBed.inject(StandardGradientsService);
     });
 

@@ -2,10 +2,12 @@ import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { InputControls } from '../shared/inputcontrols';
 import { PlannerService } from '../shared/planner.service';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { SacComponent } from './sac.component';
 
 describe('Sac component', () => {
@@ -16,7 +18,8 @@ describe('Sac component', () => {
         await TestBed.configureTestingModule({
             declarations: [SacComponent],
             providers: [WorkersFactoryCommon, UnitConversion,
-                PlannerService, DecimalPipe, UntypedFormBuilder],
+                PlannerService, DecimalPipe, UntypedFormBuilder,
+                ValidatorGroups, InputControls, SacCalculatorService],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         })
             .compileComponents();

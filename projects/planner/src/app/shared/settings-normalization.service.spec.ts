@@ -15,7 +15,8 @@ describe('SettingsNormalizationService', () => {
         TestBed.configureTestingModule({
             declarations: [],
             providers: [WorkersFactoryCommon, UnitConversion,
-                PlannerService, RouterTestingModule, OptionsDispatcherService],
+                PlannerService, RouterTestingModule, OptionsDispatcherService,
+                SettingsNormalizationService],
             imports: [RouterTestingModule.withRoutes([])]
         });
         service = TestBed.inject(SettingsNormalizationService);

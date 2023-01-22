@@ -7,7 +7,9 @@ describe('OptionsDispatcherService', () => {
     let service: OptionsDispatcherService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [ OptionsDispatcherService ]
+        });
         service = TestBed.inject(OptionsDispatcherService);
     });
 

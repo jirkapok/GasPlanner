@@ -6,9 +6,11 @@ import { By } from '@angular/platform-browser';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 import { OxygenComponent } from '../oxygen/oxygen.component';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+import { InputControls } from '../shared/inputcontrols';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TanksComponent } from './tanks.component';
 
 export class SimpleTanksPage {
@@ -69,7 +71,10 @@ describe('Tanks component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [TanksComponent, GaslabelComponent, OxygenComponent],
-            providers: [WorkersFactoryCommon, UnitConversion, PlannerService, DecimalPipe],
+            providers: [WorkersFactoryCommon, UnitConversion,
+                PlannerService, InputControls,
+                ValidatorGroups, DelayedScheduleService,
+                DecimalPipe],
             imports: [ReactiveFormsModule]
         })
             .compileComponents();

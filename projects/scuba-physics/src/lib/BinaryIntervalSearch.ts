@@ -6,9 +6,8 @@ interface Interval {
     right: number;
 }
 
-// TODO Add upper limit bound - In case of never reached right upper limit in meetsCondition
 export interface SearchContext {
-    step: number;
+    estimationStep: number;
     initialValue: number;
     maxValue: number;
     doWork: (newValue: number) => void;
@@ -22,6 +21,8 @@ export interface SearchContext {
  * https://en.wikipedia.org/wiki/Binary_search_algorithm
  */
 export class BinaryIntervalSearch {
+    /* in our usage minimal step corresponds to one second. */
+    private static readonly minimalStep = 1;
     constructor() { }
 
     public search(context: SearchContext): number {
@@ -29,7 +30,7 @@ export class BinaryIntervalSearch {
             throw Error('Max value cant be smaller than initial value');
         }
 
-        if(context.step > context.maxValue - context.initialValue){
+        if(context.estimationStep > context.maxValue - context.initialValue){
             throw Error('Step cant be larger than range');
         }
 
@@ -39,7 +40,7 @@ export class BinaryIntervalSearch {
     }
 
     private searchInsideInterval(context: SearchContext, limits: Interval): number {
-        while (limits.right - limits.left > 1) {
+        while (limits.right - limits.left > BinaryIntervalSearch.minimalStep) {
             let middle = limits.left + (limits.right - limits.left) / 2;
             middle = Math.round(middle);
             context.doWork(middle);
@@ -60,11 +61,11 @@ export class BinaryIntervalSearch {
         context.doWork(current);
 
         while (context.meetsCondition() && current <= context.maxValue) {
-            current += context.step;
+            current += context.estimationStep;
             context.doWork(current);
         }
 
-        let leftLimit = current - context.step;
+        let leftLimit = current - context.estimationStep;
         leftLimit = leftLimit < context.initialValue ? context.initialValue : leftLimit;
         const rightLimit = current > context.maxValue ? context.maxValue : current;
 

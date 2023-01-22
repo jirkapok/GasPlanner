@@ -136,7 +136,8 @@ export class Consumption {
         const addedSegment = testSegments.last();
 
         const context: SearchContext = {
-            step: (Time.oneMinute * 40),
+            // choosing the step based on typical dive duration
+            estimationStep: Time.oneMinute * 40,
             initialValue: 0,
             maxValue: Time.oneDay,
             doWork: (newValue: number) => {

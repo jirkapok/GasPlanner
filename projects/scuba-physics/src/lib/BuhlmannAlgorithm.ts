@@ -9,10 +9,12 @@ import { Options } from './Options';
 import { AscentSpeeds } from './speeds';
 import { DepthLevels } from './DepthLevels';
 import { Precision } from './precision';
+import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
 
 interface ContextMemento {
     tissues: Tissue[];
     ceilings: number;
+    segments: number;
     runTime: number;
     lowestCeiling: number;
 }
@@ -30,7 +32,7 @@ class AlgorithmContext {
 
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
         // TODO reuse tissues for repetitive dives
-        this.tissues = new Tissues(depthConverter.surfacePressure);
+        this.tissues = Tissues.createFromSurfacePressure(depthConverter.surfacePressure);
         // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
         const last = segments.last();
@@ -68,6 +70,10 @@ class AlgorithmContext {
         return this.options.roundStopsToMinutes ? Time.oneMinute : Time.oneSecond;
     }
 
+    public get isAtSurface(): boolean {
+        return this.segments.last().endDepth === 0;
+    }
+
     /** use this just before calculating ascent to be able calculate correct speeds */
     public markAverageDepth(): void {
         this.speeds.markAverageDepth(this.segments);
@@ -93,20 +99,22 @@ class AlgorithmContext {
     public createMemento(): ContextMemento {
         return {
             runTime: this.runTime,
-            tissues: this.tissues.copy(),
+            tissues: Tissues.copy(this.tissues.compartments),
             ceilings: this.ceilings.length,
+            segments: this.segments.length,
             lowestCeiling: this.gradients.lowestCeiling
         };
     }
 
     public restore(memento: ContextMemento): void {
         // here we don't copy, since we expect it wasn't touched
-        this.tissues.compartments = memento.tissues;
+        this.tissues.compartments = Tissues.copy(memento.tissues);
         this.gradients.lowestCeiling = memento.lowestCeiling;
         this.runTime = memento.runTime;
         // ceilings and segments are only added
         this.ceilings = this.ceilings.slice(0, memento.ceilings);
-        this.segments.remove(this.segments.last());
+        const toCut = this.segments.length - memento.segments;
+        this.segments.cutDown(toCut);
     }
 
     public nextStop(currentStop: number): number {
@@ -123,8 +131,7 @@ class AlgorithmContext {
     }
 
     public addDecoStopSegment(): Segment {
-        const duration = this.decoStopDuration;
-        return this.addStopSegment(duration);
+        return this.addStopSegment(0);
     }
 
     public addSafetyStopSegment(): Segment {
@@ -189,16 +196,17 @@ export class BuhlmannAlgorithm {
         let nextStop = context.nextStop(context.currentDepth);
 
         // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.
-        while (nextStop >= 0 && segments.last().endDepth !== 0) {
+        while (nextStop >= 0 && !context.isAtSurface) {
             // Next steps need to be in this order
             this.tryGasSwitch(context); // multiple gas switches may happen before first deco stop
+            // TODO add air breaks - https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/
             this.stayAtDecoStop(context, nextStop);
             this.stayAtSafetyStop(context);
             this.ascentToNextStop(context, nextStop);
             nextStop = context.nextStop(nextStop);
         }
 
-        const merged = segments.mergeFlat(originSegments.length);
+        const merged = context.segments.mergeFlat(originSegments.length);
         return CalculatedProfile.fromProfile(merged, context.ceilings);
     }
 
@@ -212,28 +220,42 @@ export class BuhlmannAlgorithm {
         }
     }
 
+    // TODO performance verification for original implementation, initial linear search and final implementation
+    // for small and also for long stops
     private stayAtDecoStop(context: AlgorithmContext, nextStop: number): void {
-        // TODO performance, we need to try faster algorithm, how to find the stop length
-        // TODO add air breaks - https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/
         if (this.needsDecoStop(context, nextStop)) {
-            const stopIncrement = context.decoStopDuration;
-            let stopDuration = stopIncrement;
-            const decoStop = context.addDecoStopSegment();
-            this.swim(context, decoStop);
+            const memento = context.createMemento();
 
-            // max stop duration was chosen as one day which may not be enough for saturation divers
-            while (this.needsDecoStop(context, nextStop) && stopDuration < Time.oneDay) {
-                this.swim(context, decoStop);
-                stopDuration += stopIncrement;
-            }
+            const searchContext: SearchContext = {
+                // choosing the step based on max. deco for middle experienced divers
+                estimationStep: Time.oneMinute * 20,
+                initialValue: 0,
+                maxValue: Time.oneDay,
+                doWork: (newDuration) => this.swimDecoStop(context, memento, newDuration),
+                // max stop duration was chosen as one day which may not be enough for saturation divers
+                meetsCondition: () => this.needsDecoStop(context, nextStop),
+            };
 
-            decoStop.duration = stopDuration;
+            const interval = new BinaryIntervalSearch();
+            // the algorithm returns lowest value, so the last second where the deco isn't enough
+            // so we need to add one more second to be safe and adjust it to the required rounding
+            const stopDuration = interval.search(searchContext) + Time.oneSecond;
+            const rounded = Precision.ceilDistance(stopDuration, context.decoStopDuration);
+            this.swimDecoStop(context, memento, rounded);
+            // we don't restore last search iteration, we keep the deco stop segment
         }
     }
 
-    // there is NO better option, than to try, since we cant predict the tissues loading
+    private swimDecoStop(context: AlgorithmContext, memento: ContextMemento, stopDuration: number): void {
+        context.restore(memento);
+        const decoStop = context.addDecoStopSegment();
+        decoStop.duration = stopDuration;
+        this.swim(context, decoStop);
+    }
+
+    /* there is NO better option then to try, since we can't predict the tissues loading */
     private needsDecoStop(context: AlgorithmContext, nextStop: number): boolean {
-        if(nextStop >= context.ceiling()) {
+        if (nextStop >= context.ceiling()) {
             return false;
         }
 

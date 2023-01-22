@@ -124,12 +124,34 @@ export class Tissue extends Compartment {
 export class Tissues {
     public compartments: Tissue[] = [];
 
-    constructor(surfacePressure: number) {
+    private constructor(){}
+
+    public static createFromOther(other: Tissue[]): Tissues {
+        const created = new Tissues();
+        created.compartments = Tissues.copy(other);
+        return created;
+    }
+
+    public static createFromSurfacePressure(surfacePressure: number) {
+        const created = new Tissues();
+
         for (let index = 0; index < Compartments.Buhlmann_ZHL16C.length; index++) {
             const compartment = Compartments.Buhlmann_ZHL16C[index];
             const tissue = new Tissue(compartment, surfacePressure);
-            this.compartments.push(tissue);
+            created.compartments.push(tissue);
         }
+
+        return created;
+    }
+
+    public static copy(source: Tissue[]): Tissue[] {
+        const backup: Tissue[] = [];
+        for(let index = 0; index < source.length; index++) {
+            const compartmentCopy = source[index].copy();
+            backup.push(compartmentCopy);
+        }
+
+        return backup;
     }
 
     /**
@@ -160,15 +182,5 @@ export class Tissues {
             loadChange = loadChange + tissueChange;
         }
         return loadChange;
-    }
-
-    public copy(): Tissue[] {
-        const backup: Tissue[] = [];
-        for(let index = 0; index < this.compartments.length; index++) {
-            const compartmentCopy = this.compartments[index].copy();
-            backup.push(compartmentCopy);
-        }
-
-        return backup;
     }
 }

@@ -5,7 +5,7 @@ describe('Binary interval search', () => {
 
     it('Step is larger than bounds throws Error', () => {
         const context: SearchContext = {
-            step: 20,
+            estimationStep: 20,
             initialValue: 11,
             maxValue: 30,
             doWork: (newValue: number) => { },
@@ -17,7 +17,7 @@ describe('Binary interval search', () => {
 
     it('MaxValue is smaller then initial value throws error', () => {
         const context: SearchContext = {
-            step: 1,
+            estimationStep: 1,
             initialValue: 40,
             maxValue: 30,
             doWork: (newValue: number) => { },
@@ -29,7 +29,7 @@ describe('Binary interval search', () => {
 
     it('When never meets condition, Found value is never lover than initial value', () => {
         const context: SearchContext = {
-            step: 1,
+            estimationStep: 1,
             initialValue: 10,
             maxValue: 1000,
             doWork: (newValue: number) => { },
@@ -42,7 +42,7 @@ describe('Binary interval search', () => {
 
     it('When always meets condition, than right upper limit is found', () => {
         const context: SearchContext = {
-            step: 1,
+            estimationStep: 1,
             initialValue: 0,
             maxValue: 1000,
             doWork: (newValue: number) => { },
@@ -57,7 +57,7 @@ describe('Binary interval search', () => {
         it('Excepted value fits step returns minimal value', () => {
             let current = 0;
             const context: SearchContext = {
-                step: 10,
+                estimationStep: 10,
                 initialValue: 0,
                 maxValue: 100,
                 doWork: (newValue: number) => {
@@ -73,7 +73,7 @@ describe('Binary interval search', () => {
         it('Rounded value is returned', () => {
             let current = 0;
             const context: SearchContext = {
-                step: 25,
+                estimationStep: 25,
                 initialValue: 0,
                 maxValue: 100,
                 doWork: (newValue: number) => {
@@ -91,7 +91,7 @@ describe('Binary interval search', () => {
             let iterations = 0;
 
             const context: SearchContext = {
-                step: 64,
+                estimationStep: 64,
                 initialValue: 0,
                 maxValue: 128,
                 doWork: (newValue: number) => {

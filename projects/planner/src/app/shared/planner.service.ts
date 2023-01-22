@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { Plan, Dive, Strategies, } from './models';
 import { WayPointsService } from './waypoints.service';
@@ -13,9 +13,10 @@ import {
     ProfileRequestDto, TankDto, ProfileResultDto, DiveInfoResultDto
 } from './serialization.model';
 import { IBackgroundTask } from '../workers/background-task';
+import { Streamed } from './streamed';
 
 @Injectable()
-export class PlannerService {
+export class PlannerService extends Streamed {
     public static readonly maxAcceptableNdl = 1000;
     public plan: Plan;
     // TODO diver can't be used outside of planner, serialization or app settings
@@ -44,6 +45,7 @@ export class PlannerService {
     private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
 
     constructor(private workerFactory: WorkersFactoryCommon) {
+        super();
         this._options = new Options();
         this._options.salinity = Salinity.fresh;
         this._options.safetyStop = SafetyStop.auto;
@@ -56,18 +58,23 @@ export class PlannerService {
         this.tanksReloaded = this.onTanksReloaded.asObservable();
         this.viewSwitched = this.onViewSwitched.asObservable();
 
-        // TODO unregister events
         this.profileTask = this.workerFactory.createProfileWorker();
-        this.profileTask.calculated$.subscribe((data) => this.continueCalculation(data));
-        this.profileTask.failed$.subscribe(() => this.profileFailed());
+        this.profileTask.calculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((data) => this.continueCalculation(data));
+        this.profileTask.failed$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.profileFailed());
 
         this.diveInfoTask = this.workerFactory.createDiveInfoWorker();
-        this.diveInfoTask.calculated$.subscribe((calculated) => this.finishDiveInfo(calculated));
-        this.diveInfoTask.failed$.subscribe(() => this.profileFailed());
+        this.diveInfoTask.calculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((calculated) => this.finishDiveInfo(calculated));
+        this.diveInfoTask.failed$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.profileFailed());
 
         this.consumptionTask = this.workerFactory.createConsumptionWorker();
-        this.consumptionTask.calculated$.subscribe((data) => this.finishCalculation(data));
-        this.consumptionTask.failed$.subscribe(() => this.profileFailed());
+        this.consumptionTask.calculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((data) => this.finishCalculation(data));
+        this.consumptionTask.failed$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.profileFailed());
     }
 
     public get isComplex(): boolean {
@@ -93,7 +100,7 @@ export class PlannerService {
 
     public set isComplex(newValue: boolean) {
         this._isComplex = newValue;
-        if(!newValue) {
+        if (!newValue) {
             this.resetToSimple();
         }
 
@@ -158,7 +165,7 @@ export class PlannerService {
         }
 
         this.isComplex = isComplex;
-        if(!isComplex) {
+        if (!isComplex) {
             this.resetToSimple();
         } else {
             // to prevent fire the event twice
@@ -202,23 +209,23 @@ export class PlannerService {
     }
 
     private showStillRunning(): void {
-        if(this.calculatingProfile) {
+        if (this.calculatingProfile) {
             this.dive.profileCalculated = false;
             this.dive.emptyProfile();
         }
 
-        if(this.calculatingDiveInfo) {
+        if (this.calculatingDiveInfo) {
             this.dive.diveInfoCalculated = false;
         }
 
-        if(this.calculating) {
+        if (this.calculating) {
             this.dive.calculated = false;
         }
     }
 
     private continueCalculation(result: ProfileResultDto): void {
         const serializedPlan = DtoSerialization.fromSegments(this.plan.segments);
-        const serializedTanks =  DtoSerialization.fromTanks(this._tanks);
+        const serializedTanks = DtoSerialization.fromTanks(this._tanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, this._tanks);
         const events = DtoSerialization.toEvents(result.events);
         const profile = WayPointsService.calculateWayPoints(calculatedProfile, events);
@@ -308,7 +315,7 @@ export class PlannerService {
     }
 
     private copyTanksConsumption(tanks: TankDto[]) {
-        for(let index = 0; index < this.tanks.length; index++) {
+        for (let index = 0; index < this.tanks.length; index++) {
             const source = tanks[index];
             const target = this.tanks[index];
             target.consumed = source.consumed;

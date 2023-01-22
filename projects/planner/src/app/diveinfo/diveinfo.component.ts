@@ -25,7 +25,7 @@ export class DiveInfoComponent extends Streamed implements OnInit {
     public dive: Dive;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
-    // private toast!: Toast;
+    // private toast!: Toast; // TODO recover toasts
 
     constructor(private clipboard: ClipboardService, public planner: PlannerService, public units: UnitConversion) {
         super();
@@ -39,6 +39,8 @@ export class DiveInfoComponent extends Streamed implements OnInit {
                 }
             });
     }
+
+    // TODO Use buttons need to call depths service methods
 
     public get tanks(): Tank[] {
         return this.planner.tanks;

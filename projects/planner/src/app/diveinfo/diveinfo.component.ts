@@ -12,6 +12,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { takeUntil } from 'rxjs';
 import { Streamed } from '../shared/streamed';
+import { DepthsService } from '../shared/depths.service';
 
 @Component({
     selector: 'app-consumption',
@@ -27,7 +28,8 @@ export class DiveInfoComponent extends Streamed implements OnInit {
     public iconShare = faShareFromSquare;
     // private toast!: Toast; // TODO recover toasts
 
-    constructor(private clipboard: ClipboardService, public planner: PlannerService, public units: UnitConversion) {
+    constructor(private clipboard: ClipboardService, private depthsService: DepthsService,
+        public planner: PlannerService, public units: UnitConversion) {
         super();
         this.dive = this.planner.dive;
         this.toxicity = new GasToxicity(this.planner.options);
@@ -39,8 +41,6 @@ export class DiveInfoComponent extends Streamed implements OnInit {
                 }
             });
     }
-
-    // TODO Use buttons need to call depths service methods
 
     public get tanks(): Tank[] {
         return this.planner.tanks;
@@ -68,6 +68,14 @@ export class DiveInfoComponent extends Streamed implements OnInit {
 
     public get averageDepth(): number {
         return this.units.fromMeters(this.dive.averageDepth);
+    }
+
+    public applyMaxDuration(): void {
+        this.depthsService.applyMaxDuration();
+    }
+
+    public applyNdlDuration(): void {
+        this.depthsService.applyNdlDuration();
     }
 
     public ngOnInit(): void {

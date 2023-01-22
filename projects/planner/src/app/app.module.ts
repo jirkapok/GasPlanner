@@ -54,6 +54,7 @@ import { AppinfoComponent } from './appinfo/appinfo.component';
 import { DiveIssuesComponent } from './dive-issues/dive-issues.component';
 import { InputControls } from './shared/inputcontrols';
 import { ValidatorGroups } from './shared/ValidatorGroups';
+import { DepthsService } from './shared/depths.service';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -121,6 +122,7 @@ const MDB_MODULES = [
         SelectedWaypoint,
         OptionsDispatcherService,
         DelayedScheduleService,
+        DepthsService,
         NdlService,
         InputControls,
         ValidatorGroups,

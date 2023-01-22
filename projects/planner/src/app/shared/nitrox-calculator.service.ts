@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { NitroxCalculator, DepthConverter, DepthLevels } from 'scuba-physics';
 import { OptionsDispatcherService } from './options-dispatcher.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class NitroxCalculatorService {
     private _pO2 = 1.6;
     private _fO2 = 50;

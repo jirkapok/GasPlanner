@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class ValidatorGroups {
     constructor(private units: UnitConversion) {
     }

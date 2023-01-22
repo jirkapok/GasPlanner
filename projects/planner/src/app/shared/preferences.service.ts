@@ -4,9 +4,7 @@ import { PlannerService } from './planner.service';
 import { PreferencesFactory } from './preferences.factory';
 import { AppPreferences } from './serialization.model';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class PreferencesService {
     private static readonly disclaimerValue = 'confirmed';
     private static readonly storageKey = 'preferences';

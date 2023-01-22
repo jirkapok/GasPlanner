@@ -2,9 +2,7 @@ import { AbstractControl } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class InputControls {
 
     constructor(private numberPipe: DecimalPipe) {}

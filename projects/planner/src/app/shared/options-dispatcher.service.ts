@@ -3,9 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { Diver, OptionDefaults, Options, SafetyStop, Salinity } from 'scuba-physics';
 import { StandardGradientsService } from './standard-gradients.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class OptionsDispatcherService {
     public reloaded: Observable<unknown>;
     private standardGradients = new StandardGradientsService();

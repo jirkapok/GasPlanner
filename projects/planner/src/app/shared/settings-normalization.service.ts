@@ -4,9 +4,7 @@ import { OptionsDispatcherService } from './options-dispatcher.service';
 import { PlannerService } from './planner.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class SettingsNormalizationService {
 
     constructor(private planner: PlannerService,

@@ -6,9 +6,7 @@ import { Level, Plan } from './models';
 import { PlannerService } from './planner.service';
 import { UnitConversion } from './UnitConversion';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class DepthsService {
     private _levels: Level[] = [];
     private plan: Plan;

@@ -5,9 +5,7 @@ export class Gradients {
     constructor(public gfLow: number, public gfHeigh: number) {}
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class StandardGradientsService {
     public readonly lowName = 'Low (45/95)';
     public readonly mediumName = 'Medium (40/85)';

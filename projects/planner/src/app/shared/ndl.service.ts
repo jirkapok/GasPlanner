@@ -6,9 +6,7 @@ export class NdlLimit {
     public limit = 3600;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class NdlService {
     public calculate(gas: Gas, options: Options): NdlLimit[] {
         const results = [];

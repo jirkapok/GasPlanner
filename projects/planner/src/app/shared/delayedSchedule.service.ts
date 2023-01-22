@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PlannerService } from './planner.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class DelayedScheduleService {
     private scheduled = false;
 

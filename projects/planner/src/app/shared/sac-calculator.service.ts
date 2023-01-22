@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SacCalculator, DepthConverter } from 'scuba-physics';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class SacCalculatorService {
     private _depth = 15;
     private _tank = 15;

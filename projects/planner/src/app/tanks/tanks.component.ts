@@ -5,7 +5,7 @@ import { StandardGases, Tank } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -62,10 +62,8 @@ export class TanksComponent implements OnInit, OnDestroy {
     public minusIcon = faMinus;
     public toxicity: GasToxicity;
     public tanksForm!: UntypedFormGroup;
-
     private bound: TankBound[] = [];
-    private tanksSubscription!: Subscription;
-    private viewSwitchSubscription!: Subscription;
+    private unsubscribe$ = new Subject<void>();
 
     constructor(private planner: PlannerService,
         public units: UnitConversion,
@@ -115,13 +113,15 @@ export class TanksComponent implements OnInit, OnDestroy {
             boundTanks: this.fb.array(this.createTankControls())
         });
 
-        this.tanksSubscription = this.planner.tanksReloaded.subscribe(() => this.reloadAll());
-        this.viewSwitchSubscription = this.planner.viewSwitched.subscribe(() => this.reloadAll());
+        this.planner.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.reloadAll());
+        this.planner.viewSwitched.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.reloadAll());
     }
 
     public ngOnDestroy(): void {
-        this.tanksSubscription?.unsubscribe();
-        this.viewSwitchSubscription?.unsubscribe();
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     public gasSac(index: number): number {
@@ -157,7 +157,7 @@ export class TanksComponent implements OnInit, OnDestroy {
 
         this.planner.addTank();
         this.updateTanks();
-        const lastTank = this.tanks[this.tanks.length-1];
+        const lastTank = this.tanks[this.tanks.length - 1];
         const levelControls = this.createTankControl(lastTank);
         this.tanksGroup.push(levelControls);
         this.delayedCalc.schedule();
@@ -190,7 +190,7 @@ export class TanksComponent implements OnInit, OnDestroy {
     }
 
     public tankChanged(index: number): void {
-        if(this.tanksForm.invalid) {
+        if (this.tanksForm.invalid) {
             return;
         }
 
@@ -209,7 +209,7 @@ export class TanksComponent implements OnInit, OnDestroy {
     }
 
     public applySimple(): void {
-        if(this.tanksForm.invalid) {
+        if (this.tanksForm.invalid) {
             return;
         }
 
@@ -258,7 +258,7 @@ export class TanksComponent implements OnInit, OnDestroy {
 
     private createTankControls(): AbstractControl[] {
         const created: AbstractControl[] = [];
-        for(const bound of this.tanks) {
+        for (const bound of this.tanks) {
             const newControl = this.createTankControl(bound);
             created.push(newControl);
         }

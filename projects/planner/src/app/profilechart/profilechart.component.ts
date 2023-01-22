@@ -3,7 +3,7 @@ import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint } from '../shared/models';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { EventType, Time, StandardGases, Precision } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -18,8 +18,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     public dive: Dive;
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
-    private waypointsSubscription: Subscription;
-    private selectionSubscription: Subscription;
+    private unsubscribe$ = new Subject<void>();
     private chartElement: any;
 
     private options = {
@@ -81,22 +80,24 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         };
 
         this.updateLayoutThickFormat();
-        this.waypointsSubscription = this.planer.wayPointsCalculated.subscribe(() => this.plotCharts());
-        this.selectionSubscription = this.selectedWaypoint.selectedChanged.subscribe((wayPoint) => this.selectWayPoint(wayPoint));
+        this.planer.wayPointsCalculated.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.plotCharts());
+        this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((wayPoint) => this.selectWayPoint(wayPoint));
     }
 
     public get noDecoTime(): number {
         return this.planer.plan.noDecoTime;
     }
 
-    ngOnInit() {
+    public ngOnInit(): void {
         this.plotCharts();
         this.hookChartEvents();
     }
 
-    ngOnDestroy() {
-        this.waypointsSubscription?.unsubscribe();
-        this.selectionSubscription?.unsubscribe();
+    public ngOnDestroy(): void {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     public scaleWidth(x: number, graphWidth: number): number {
@@ -123,7 +124,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
             shapes: shapes
         };
 
-        if(wayPoint) {
+        if (wayPoint) {
             this.cursor1.x0 = Time.toDate(wayPoint.startTime);
             this.cursor1.x1 = Time.toDate(wayPoint.endTime);
             this.cursor1.y0 = this.convertDepth(wayPoint.startDepth);
@@ -141,7 +142,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         const depths = this.plotDepths();
         const ceilings = this.plotCeilings();
         const plotEvents = this.plotEvents();
-        const traces = [ dataAverageDepths, depths, ceilings, plotEvents ];
+        const traces = [dataAverageDepths, depths, ceilings, plotEvents];
 
         Plotly.react(this.elementName, traces, this.layout, this.options);
     }
@@ -162,7 +163,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         const xDepthValues: Date[] = [];
         const yDepthValues: number[] = [];
 
-        if(this.dive.wayPoints.length > 0) {
+        if (this.dive.wayPoints.length > 0) {
             const wayPoints = this.dive.wayPoints;
             this.transformAverageDepth(wayPoints, xDepthValues, yDepthValues);
         }
@@ -194,7 +195,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
 
         // Uses cumulative average to prevent number overflow for large segment durations
         waiPoints.forEach(wayPoint => {
-            if(wayPoint.duration > 0) {
+            if (wayPoint.duration > 0) {
                 for (let seconds = 0; seconds < wayPoint.duration; seconds++) {
                     xDepthValues.push(Time.toDate(totalDuration));
                     const depth = wayPoint.depthAt(seconds);
@@ -232,7 +233,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
         return data;
     }
 
-    private plotCeilings(): any  {
+    private plotCeilings(): any {
         const xCeilingValues: Date[] = [];
         const yCeilingValues: number[] = [];
 
@@ -299,7 +300,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
                 const convertedDepth = this.convertDepth(event.depth);
                 y.push(convertedDepth);
                 const gas = event.gas;
-                if(gas) {
+                if (gas) {
                     const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
                     labels.push(`${gasName}`);
                 }

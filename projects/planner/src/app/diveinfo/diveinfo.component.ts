@@ -10,7 +10,7 @@ import { Dive } from '../shared/models';
 import { Tank } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import { GasToxicity } from '../shared/gasToxicity.service';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-consumption',
@@ -24,18 +24,19 @@ export class DiveInfoComponent implements OnInit, OnDestroy {
     public dive: Dive;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
-    private subscription?: Subscription;
+    private unsubscribe$ = new Subject<void>();
     // private toast!: Toast;
 
     constructor(private clipboard: ClipboardService, public planner: PlannerService, public units: UnitConversion) {
         this.dive = this.planner.dive;
         this.toxicity = new GasToxicity(this.planner.options);
 
-        this.subscription = this.clipboard.copyResponse$.subscribe((res: IClipboardResponse) => {
-            if (res.isSuccess) {
-                // this.toast.show();
-            }
-        });
+        this.clipboard.copyResponse$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((res: IClipboardResponse) => {
+                if (res.isSuccess) {
+                    // this.toast.show();
+                }
+            });
     }
 
     public get tanks(): Tank[] {
@@ -71,7 +72,8 @@ export class DiveInfoComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.subscription?.unsubscribe();
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     public sharePlan(): void {

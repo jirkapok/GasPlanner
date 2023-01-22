@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Tank } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
@@ -23,8 +23,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
     public complexForm!: UntypedFormGroup;
     public simpleForm!: UntypedFormGroup;
     public dive: Dive;
-    private subscription!: Subscription;
-    private viewSubsription!: Subscription;
+    private unsubscribe$ = new Subject<void>();
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -105,22 +104,24 @@ export class DepthsComponent implements OnInit, OnDestroy {
 
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
-        this.subscription = this.plan.reloaded.subscribe(() => {
-            this.depths.updateLevels();
-            this.reloadSimple();
-            this.reloadComplex();
-        });
+        this.plan.reloaded.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                this.depths.updateLevels();
+                this.reloadSimple();
+                this.reloadComplex();
+            });
 
         // for complex view only
-        this.viewSubsription = this.planner.viewSwitched.subscribe(() => {
-            this.depths.updateLevels();
-            this.reloadComplex();
-        });
+        this.planner.viewSwitched.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                this.depths.updateLevels();
+                this.reloadComplex();
+            });
     }
 
     public ngOnDestroy(): void {
-        this.subscription?.unsubscribe();
-        this.viewSubsription?.unsubscribe();
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     public addLevel(): void {

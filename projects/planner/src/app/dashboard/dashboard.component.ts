@@ -7,7 +7,7 @@ import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
 import { Dive } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { environment } from '../../environments/environment';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 
 @Component({
@@ -18,8 +18,7 @@ import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 export class DashboardComponent implements OnInit, OnDestroy {
     public showDisclaimer = true;
     public exclamation = faExclamationTriangle;
-    private dive: Dive;
-    private subscription: Subscription | null = null;
+    private unsubscribe$ = new Subject<void>();
 
     constructor(
         private location: Location,
@@ -27,7 +26,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private options: OptionsDispatcherService,
         private planner: PlannerService,
         private delayedCalc: DelayedScheduleService) {
-        this.dive = planner.dive;
     }
 
     public get isComplex(): boolean {
@@ -38,7 +36,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.showDisclaimer = this.preferences.disclaimerEnabled();
         const query = window.location.search;
 
-        if (query !=='') {
+        if (query !== '') {
             PlanUrlSerialization.fromUrl(query, this.options, this.planner);
         } else {
             this.delayedCalc.schedule();
@@ -46,13 +44,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         // because the calculation runs in background first it subscribes,
         // than it starts to receive the event. Even for the initial calls.
-        this.subscription = this.planner.infoCalculated.subscribe(() => this.updateQueryParams());
+        this.planner.infoCalculated.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.updateQueryParams());
     }
 
     public ngOnDestroy(): void {
-        if(this.subscription) {
-            this.subscription.unsubscribe();
-        }
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     public stopDisclaimer(): void {
@@ -61,11 +59,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     private updateQueryParams(): void {
-        if(!environment.production) {
+        if (!environment.production) {
             console.log('Planner calculated');
         }
 
         const urlParams = PlanUrlSerialization.toUrl(this.planner, this.options);
-        this.location.go( '?' + urlParams);
+        this.location.go('?' + urlParams);
     }
 }

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { SafetyStop, Salinity } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
@@ -29,7 +29,7 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
     public strategy = this.allUsableName;
     public icon = faCog;
     public optionsForm!: UntypedFormGroup;
-    private subscription!: Subscription;
+    private unsubscribe$ = new Subject<void>();
 
     constructor(public units: UnitConversion,
         public options: OptionsDispatcherService,
@@ -182,13 +182,13 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
             ascentSpeed50perc: [this.inputs.formatNumber(this.ascentSpeed50perc), this.validators.speed],
         });
 
-        this.subscription = this.options.reloaded.subscribe(() => this.reloadForm());
+        this.options.reloaded.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.reloadForm());
     }
 
     public ngOnDestroy(): void {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     public reset(): void {

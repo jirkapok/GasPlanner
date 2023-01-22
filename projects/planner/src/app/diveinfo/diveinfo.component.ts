@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { Toast } from 'bootstrap';
 import {
@@ -10,24 +10,25 @@ import { Dive } from '../shared/models';
 import { Tank } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import { GasToxicity } from '../shared/gasToxicity.service';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { Streamed } from '../shared/streamed';
 
 @Component({
     selector: 'app-consumption',
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss']
 })
-export class DiveInfoComponent implements OnInit, OnDestroy {
+export class DiveInfoComponent extends Streamed implements OnInit {
     @ViewChild('toastShare', { static: true })
     public toastEl!: ElementRef;
     public toxicity: GasToxicity;
     public dive: Dive;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
-    private unsubscribe$ = new Subject<void>();
     // private toast!: Toast;
 
     constructor(private clipboard: ClipboardService, public planner: PlannerService, public units: UnitConversion) {
+        super();
         this.dive = this.planner.dive;
         this.toxicity = new GasToxicity(this.planner.options);
 
@@ -69,11 +70,6 @@ export class DiveInfoComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         //this.toast = new Toast(this.toastEl.nativeElement, { delay: 5000, });
-    }
-
-    public ngOnDestroy(): void {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
     }
 
     public sharePlan(): void {

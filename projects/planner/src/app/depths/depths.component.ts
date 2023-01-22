@@ -1,12 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { Tank } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { Plan, Level, Dive } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
+import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 
@@ -15,7 +16,7 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
     templateUrl: './depths.component.html',
     styleUrls: ['./depths.component.scss']
 })
-export class DepthsComponent implements OnInit, OnDestroy {
+export class DepthsComponent extends Streamed implements OnInit {
     public plan: Plan;
     public cardIcon = faLayerGroup;
     public addIcon = faPlus;
@@ -23,7 +24,6 @@ export class DepthsComponent implements OnInit, OnDestroy {
     public complexForm!: UntypedFormGroup;
     public simpleForm!: UntypedFormGroup;
     public dive: Dive;
-    private unsubscribe$ = new Subject<void>();
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -32,6 +32,7 @@ export class DepthsComponent implements OnInit, OnDestroy {
         public planner: PlannerService,
         public depths: DepthsService,
         public units: UnitConversion) {
+        super();
         this.plan = this.planner.plan;
         this.dive = this.planner.dive;
         // data are already available, it is ok to generate the levels.
@@ -117,11 +118,6 @@ export class DepthsComponent implements OnInit, OnDestroy {
                 this.depths.updateLevels();
                 this.reloadComplex();
             });
-    }
-
-    public ngOnDestroy(): void {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
     }
 
     public addLevel(): void {

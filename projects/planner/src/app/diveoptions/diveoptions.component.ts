@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { SafetyStop, Salinity } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
@@ -9,6 +9,7 @@ import { Plan, Strategies } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { Gradients } from '../shared/standard-gradients.service';
+import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 
@@ -17,7 +18,7 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.scss']
 })
-export class DiveOptionsComponent implements OnInit, OnDestroy {
+export class DiveOptionsComponent extends Streamed implements OnInit {
     @Input()
     public formValid = true;
     public readonly allUsableName = 'All usable';
@@ -29,7 +30,6 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
     public strategy = this.allUsableName;
     public icon = faCog;
     public optionsForm!: UntypedFormGroup;
-    private unsubscribe$ = new Subject<void>();
 
     constructor(public units: UnitConversion,
         public options: OptionsDispatcherService,
@@ -38,6 +38,7 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
         private validators: ValidatorGroups,
         private planner: PlannerService,
         private delayedCalc: DelayedScheduleService) {
+        super();
         this.plan = this.planner.plan;
     }
 
@@ -184,11 +185,6 @@ export class DiveOptionsComponent implements OnInit, OnDestroy {
 
         this.options.reloaded.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadForm());
-    }
-
-    public ngOnDestroy(): void {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
     }
 
     public reset(): void {

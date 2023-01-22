@@ -1,24 +1,24 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint } from '../shared/models';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { EventType, Time, StandardGases, Precision } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
+import { Streamed } from '../shared/streamed';
 
 @Component({
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss']
 })
-export class ProfileChartComponent implements OnInit, OnDestroy {
+export class ProfileChartComponent extends Streamed implements OnInit {
     public dive: Dive;
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
-    private unsubscribe$ = new Subject<void>();
     private chartElement: any;
 
     private options = {
@@ -52,6 +52,7 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     private layout: any;
 
     constructor(private planer: PlannerService, private units: UnitConversion, private selectedWaypoint: SelectedWaypoint) {
+        super();
         this.dive = this.planer.dive;
 
         this.layout = {
@@ -93,11 +94,6 @@ export class ProfileChartComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.plotCharts();
         this.hookChartEvents();
-    }
-
-    public ngOnDestroy(): void {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
     }
 
     public scaleWidth(x: number, graphWidth: number): number {

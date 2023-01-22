@@ -1,14 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { PlannerService } from '../shared/planner.service';
 import { StandardGases, Tank } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { Streamed } from '../shared/streamed';
 
 export class TankBound {
     constructor(public tank: Tank, private units: UnitConversion) { }
@@ -55,7 +56,7 @@ export class TankBound {
     templateUrl: './tanks.component.html',
     styleUrls: ['./tanks.component.scss']
 })
-export class TanksComponent implements OnInit, OnDestroy {
+export class TanksComponent extends Streamed implements OnInit {
     public allNames: string[];
     public icon = faBatteryHalf;
     public plusIcon = faPlus;
@@ -63,7 +64,6 @@ export class TanksComponent implements OnInit, OnDestroy {
     public toxicity: GasToxicity;
     public tanksForm!: UntypedFormGroup;
     private bound: TankBound[] = [];
-    private unsubscribe$ = new Subject<void>();
 
     constructor(private planner: PlannerService,
         public units: UnitConversion,
@@ -71,6 +71,7 @@ export class TanksComponent implements OnInit, OnDestroy {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private delayedCalc: DelayedScheduleService) {
+        super();
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
         this.updateTanks();
@@ -117,11 +118,6 @@ export class TanksComponent implements OnInit, OnDestroy {
             .subscribe(() => this.reloadAll());
         this.planner.viewSwitched.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
-    }
-
-    public ngOnDestroy(): void {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
     }
 
     public gasSac(index: number): number {

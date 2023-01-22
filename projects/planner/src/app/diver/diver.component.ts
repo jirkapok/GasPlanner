@@ -1,11 +1,12 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
     UntypedFormBuilder, UntypedFormGroup
 } from '@angular/forms';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { Diver } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
+import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 
@@ -14,16 +15,16 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
     templateUrl: './diver.component.html',
     styleUrls: ['./diver.component.scss']
 })
-export class DiverComponent implements OnInit, OnDestroy {
+export class DiverComponent extends Streamed implements OnInit {
     @Input() public diver: Diver = new Diver();
     @Input() public diverForm!: UntypedFormGroup;
     public icon = faUserCog;
-    private unsubscribe$ = new Subject<void>();
 
     constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) {
+        super();
     }
 
     public get ranges(): RangeConstants {
@@ -52,11 +53,6 @@ export class DiverComponent implements OnInit, OnDestroy {
             .subscribe(() => this.diverForm.patchValue({
                 rmv: this.inputs.formatNumber(this.rmv)
             }));
-    }
-
-    public ngOnDestroy(): void {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
     }
 
     public inputChanged(): void {

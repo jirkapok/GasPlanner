@@ -1,6 +1,5 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
-import { Toast } from 'bootstrap';
 import {
     faSlidersH, faShareFromSquare
 } from '@fortawesome/free-solid-svg-icons';
@@ -19,14 +18,12 @@ import { DepthsService } from '../shared/depths.service';
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss']
 })
-export class DiveInfoComponent extends Streamed implements OnInit {
-    @ViewChild('toastShare', { static: true })
-    public toastEl!: ElementRef;
+export class DiveInfoComponent extends Streamed {
     public toxicity: GasToxicity;
     public dive: Dive;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
-    // private toast!: Toast; // TODO recover toasts
+    public toastVisible = false;
 
     constructor(private clipboard: ClipboardService, private depthsService: DepthsService,
         public planner: PlannerService, public units: UnitConversion) {
@@ -36,8 +33,12 @@ export class DiveInfoComponent extends Streamed implements OnInit {
 
         this.clipboard.copyResponse$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((res: IClipboardResponse) => {
+                // stupid replacement of Bootstrap toasts, because not part of the free mdb package
                 if (res.isSuccess) {
-                    // this.toast.show();
+                    this.toastVisible = true;
+                    setTimeout(() => {
+                        this.hideToast();
+                    }, 5000);
                 }
             });
     }
@@ -78,15 +79,11 @@ export class DiveInfoComponent extends Streamed implements OnInit {
         this.depthsService.applyNdlDuration();
     }
 
-    public ngOnInit(): void {
-        //this.toast = new Toast(this.toastEl.nativeElement, { delay: 5000, });
-    }
-
     public sharePlan(): void {
         this.clipboard.copy(window.location.href);
     }
 
     public hideToast(): void {
-        // this.toast.hide();
+        this.toastVisible = false;
     }
 }

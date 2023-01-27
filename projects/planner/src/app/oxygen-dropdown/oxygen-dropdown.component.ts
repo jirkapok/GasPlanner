@@ -59,7 +59,6 @@ export class OxygenDropDownComponent implements OnInit {
         this.gasChange.emit(newValue);
     }
 
-    // TODO fix
     public assignStandardGas(gasName: string): void {
         this.tank.tank.assignStandardGas(gasName);
         this.reload();
@@ -68,7 +67,7 @@ export class OxygenDropDownComponent implements OnInit {
 
     private reload(): void {
         this.nitroxForm.patchValue({
-            o2: this.inputs.formatNumber(this.tank.o2)
+            [this.controlName]: this.inputs.formatNumber(this.tank.o2)
         });
     }
 }

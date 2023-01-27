@@ -58,6 +58,7 @@ import { DepthsService } from './shared/depths.service';
 import { SacCalculatorService } from './shared/sac-calculator.service';
 import { NitroxCalculatorService } from './shared/nitrox-calculator.service';
 import { SettingsNormalizationService } from './shared/settings-normalization.service';
+import { OxygenDropDownComponent } from './oxygen-dropdown/oxygen-dropdown.component';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -101,6 +102,7 @@ const MDB_MODULES = [
         GradientsComponent,
         DepthComponent,
         OxygenComponent,
+        OxygenDropDownComponent,
         PpO2Component,
         AppinfoComponent,
         DiveIssuesComponent

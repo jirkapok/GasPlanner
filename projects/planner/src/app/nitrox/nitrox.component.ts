@@ -12,6 +12,8 @@ import { InputControls } from '../shared/inputcontrols';
 import { NitroxValidators } from '../shared/NitroxValidators';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { TankBound } from '../tanks/tanks.component';
+import { Tank } from 'scuba-physics';
 
 @Component({
     selector: 'app-nitrox',
@@ -22,6 +24,7 @@ export class NitroxComponent implements OnInit {
     public calcIcon = faCalculator;
     public nitroxForm!: UntypedFormGroup;
     public depthConverterWarning = TextConstants.depthConverterWarning;
+    public tank: TankBound;
     private fO2Control!: FormControl;
     private pO2Control!: FormControl;
     private modControl!: FormControl;
@@ -36,6 +39,7 @@ export class NitroxComponent implements OnInit {
         private planer: PlannerService, public units: UnitConversion) {
         this.calc.fO2 = this.planer.firstTank.o2;
         this.calc.pO2 = this.planer.diver.maxPpO2;
+        this.tank = new TankBound(new Tank(15, 200, 21), this.units);
     }
 
     public get ranges(): RangeConstants {

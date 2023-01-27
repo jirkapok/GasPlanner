@@ -27,6 +27,10 @@
                         </div>
                     </ng-container>
                     <ng-container *ngIf="!calc.inBestMix">
+                        <!-- <div class="pt-2 mb-4">
+                            <app-oxygen-dropdown [showBestMix]="false" (gasChange)="inputChanged()"
+                            [nitroxForm]="nitroxForm" controlName="fO2"></app-oxygen-dropdown>
+                        </div> -->
                         <div class="pt-2 mb-4">
                             <label for="fO2" class="form-label" mdbLabel>Percent O2:</label>
                             <input class="form-control" name="fO2" id="fO2" type="number" formControlName="fO2"

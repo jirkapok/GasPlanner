@@ -56,8 +56,6 @@ Following list of features and improvements ordered by priority is under develop
 * Add option to define repetitive dives
 * Add localizations
 * Allow user to compare multiple plans side by side
-* Algorithm
-  * Improve performance when estimating stop length
 * Gas consumption:
   * Restore 1/2 and 1/3 reserve strategies
   * Add setting for minimum reserve for both main tank and deco tanks

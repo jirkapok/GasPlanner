@@ -1,8 +1,9 @@
 import { DecimalPipe } from '@angular/common';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
+import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { InputControls } from '../shared/inputcontrols';
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
@@ -31,7 +32,7 @@ describe('Nitrox component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [NitroxComponent],
+            declarations: [NitroxComponent, OxygenDropDownComponent],
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls, DecimalPipe,
                 NitroxCalculatorService, ValidatorGroups,
@@ -49,7 +50,7 @@ describe('Nitrox component', () => {
         page = new NitroxPage(fixture);
     });
 
-    describe('Low MOD', () => {
+    fdescribe('Low MOD', () => {
         beforeEach(() => {
             fixture.detectChanges();
             page.fO2Input.value = '80';

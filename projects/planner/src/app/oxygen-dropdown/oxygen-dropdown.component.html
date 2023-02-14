@@ -2,7 +2,7 @@
     <label for="gasO2" class="form-label" mdbLabel>Percent O2:</label>
     <div class="input-group dropdown" mdbDropdown>
         <input class="form-control" type="number" (input)="fireGasChanged()" [formControlName]="this.controlName" required
-            [min]="units.ranges.nitroxOxygen[0]" [max]="units.ranges.nitroxOxygen[1]" step="1" id="o2Nitrox"
+            [min]="units.ranges.nitroxOxygen[0]" [max]="units.ranges.nitroxOxygen[1]" step="1" id="fO2"
             [class.is-invalid]="gasO2Invalid" />
         <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="o2Menu"
             type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>

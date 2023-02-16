@@ -3,7 +3,7 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Tank } from 'scuba-physics';
+import { ImperialUnits, Tank } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
@@ -216,7 +216,8 @@ describe('DepthsComponent', () => {
             const last = depths.levels[1];
             const tank: Tank = last.tank || new Tank(0, 0, 0);
             tank.startPressure = component.units.toBar(3000);
-            tank.size = component.units.toTankLiters(100);
+            // TODO working pressure
+            tank.size = component.units.toTankLiters(100, ImperialUnits.defaultWorkingPressure);
             expect(last.tankLabel).toBe('1. Air/100/3000');
         });
     });

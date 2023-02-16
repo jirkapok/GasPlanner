@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Diver, Precision } from 'scuba-physics';
+import { Diver, ImperialUnits, Precision } from 'scuba-physics';
 import { OptionsDispatcherService } from './options-dispatcher.service';
 import { PlannerService } from './planner.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
@@ -76,7 +76,11 @@ export class SettingsNormalizationService {
     }
 
     private fitTankSizeToRange(size: number, range: [number, number]): number {
-        return this.fitUnit(v => this.units.fromTankLiters(v), v => this.units.toTankLiters(v), size, range);
+        // TODO working pressure
+        const workingPressure = ImperialUnits.defaultWorkingPressure;
+        return this.fitUnit(v => this.units.fromTankLiters(v, workingPressure),
+            v => this.units.toTankLiters(v, workingPressure),
+            size, range);
     }
 
     /** Ranges are in UI units, we are rounding for the UI */

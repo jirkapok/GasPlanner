@@ -1,5 +1,5 @@
 import { Ceiling, Time, Event, Segment,
-    StandardGases, Tank, OtuCalculator, Precision } from 'scuba-physics';
+    StandardGases, Tank, OtuCalculator, Precision, ImperialUnits } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
 export enum Strategies {
@@ -35,7 +35,8 @@ export class Level {
 
     public get tankLabel(): string {
         const tank = this.segment.tank;
-        return Level.tankLabel(this.units, tank);
+        // TODO working pressure
+        return Level.tankLabel(this.units, tank, ImperialUnits.defaultWorkingPressure);
     }
 
     /** in minutes */
@@ -52,18 +53,22 @@ export class Level {
         this.segment.tank = newValue;
     }
 
-    public static tankLabel(units: UnitConversion, tank: Tank | undefined): string {
+    /** working pressure in bars */
+    public static tankLabel(units: UnitConversion, tank: Tank | undefined, workingPressure: number): string {
         if(!tank) {
             return '';
         }
 
-        const volume = units.fromTankLiters(tank.size);
+        const volume = units.fromTankLiters(tank.size, workingPressure);
         const startPressure = units.fromBar(tank.startPressure);
         return `${tank.id}. ${tank.name}/${volume}/${startPressure}`;
     }
 }
 
 export class TankBound {
+    // TODO working pressure needs to be transfered using url parameters, because this
+    private _workingPressure = ImperialUnits.defaultWorkingPressure;
+
     constructor(public tank: Tank, private units: UnitConversion) { }
 
     public get id(): number {
@@ -71,11 +76,15 @@ export class TankBound {
     }
 
     public get size(): number {
-        return this.units.fromTankLiters(this.tank.size);
+        return this.units.fromTankLiters(this.tank.size, this._workingPressure);
     }
 
     public get startPressure(): number {
         return this.units.fromBar(this.tank.startPressure);
+    }
+
+    public get workingPressure(): number {
+        return this.units.fromBar(this._workingPressure);
     }
 
     public get o2(): number {
@@ -87,11 +96,15 @@ export class TankBound {
     }
 
     public set size(newValue: number) {
-        this.tank.size = this.units.toTankLiters(newValue);
+        this.tank.size = this.units.toTankLiters(newValue, this._workingPressure);
     }
 
     public set startPressure(newValue: number) {
         this.tank.startPressure = this.units.toBar(newValue);
+    }
+
+    public set workingPressure(newValue: number) {
+        this._workingPressure = this.units.toBar(newValue);
     }
 
     public set o2(newValue: number) {

@@ -6,7 +6,7 @@ import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { Diver } from 'scuba-physics';
+import { Diver, ImperialUnits } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -75,7 +75,9 @@ export class SacComponent implements OnInit {
     }
 
     public get calcTank(): number {
-        return this.units.fromTankLiters(this.calc.tank);
+        // TODO working pressure
+        const workingPressure = ImperialUnits.defaultWorkingPressure;
+        return this.units.fromTankLiters(this.calc.tank, workingPressure);
     }
 
     public get calcUsed(): number {
@@ -118,9 +120,12 @@ export class SacComponent implements OnInit {
             return;
         }
 
+        // TODO working pressure
+        const workingPressure = ImperialUnits.defaultWorkingPressure;
+
         const values = this.formSac.value;
         this.calc.depth = this.units.toMeters(Number(values.depth));
-        this.calc.tank = this.units.toTankLiters(Number(values.tankSize));
+        this.calc.tank = this.units.toTankLiters(Number(values.tankSize), workingPressure);
         this.calc.used = this.units.toBar(Number(values.used));
         this.calc.rmv = this.units.toLiter(Number(values.rmv));
         this.calc.duration = Number(values.duration);

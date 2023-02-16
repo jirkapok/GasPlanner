@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
-import { Tank } from 'scuba-physics';
+import { ImperialUnits, Tank } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { Level, Dive } from '../shared/models';
@@ -166,7 +166,8 @@ export class DepthsComponent extends Streamed implements OnInit {
     }
 
     public tankLabel(tank: Tank): string {
-        return Level.tankLabel(this.units, tank);
+        const workingPressure = ImperialUnits.defaultWorkingPressure;
+        return Level.tankLabel(this.units, tank, workingPressure);
     }
 
     // for simple view only

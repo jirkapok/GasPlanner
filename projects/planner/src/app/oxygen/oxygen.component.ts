@@ -5,7 +5,7 @@ import { GasToxicity } from '../shared/gasToxicity.service';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { TankBound } from '../tanks/tanks.component';
+import { TankBound } from '../shared/models';
 
 @Component({
     selector: 'app-oxygen',

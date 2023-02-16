@@ -12,7 +12,7 @@ import { InputControls } from '../shared/inputcontrols';
 import { NitroxValidators } from '../shared/NitroxValidators';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { TankBound } from '../tanks/tanks.component';
+import { TankBound } from '../shared/models';
 import { Tank } from 'scuba-physics';
 
 @Component({

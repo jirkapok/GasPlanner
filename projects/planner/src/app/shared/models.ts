@@ -64,6 +64,46 @@ export class Level {
     }
 }
 
+export class TankBound {
+    constructor(public tank: Tank, private units: UnitConversion) { }
+
+    public get id(): number {
+        return this.tank.id;
+    }
+
+    public get size(): number {
+        return this.units.fromTankLiters(this.tank.size);
+    }
+
+    public get startPressure(): number {
+        return this.units.fromBar(this.tank.startPressure);
+    }
+
+    public get o2(): number {
+        return this.tank.o2;
+    }
+
+    public get he(): number {
+        return this.tank.he;
+    }
+
+    public set size(newValue: number) {
+        this.tank.size = this.units.toTankLiters(newValue);
+    }
+
+    public set startPressure(newValue: number) {
+        this.tank.startPressure = this.units.toBar(newValue);
+    }
+
+    public set o2(newValue: number) {
+        this.tank.o2 = newValue;
+    }
+
+    public set he(newValue: number) {
+        this.tank.he = newValue;
+    }
+}
+
 // TODO promote to separate service and switch planner to composite
 export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;

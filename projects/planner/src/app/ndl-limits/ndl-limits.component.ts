@@ -7,7 +7,7 @@ import { NdlLimit, NdlService } from '../shared/ndl.service';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { UnitConversion } from '../shared/UnitConversion';
-import { TankBound } from '../tanks/tanks.component';
+import { TankBound } from '../shared/models';
 
 @Component({
     selector: 'app-ndl-limits',

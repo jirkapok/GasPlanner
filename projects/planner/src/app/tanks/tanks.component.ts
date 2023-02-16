@@ -11,6 +11,7 @@ import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 
+// TODO move to models.ts
 export class TankBound {
     constructor(public tank: Tank, private units: UnitConversion) { }
 
@@ -174,7 +175,7 @@ export class TanksComponent extends Streamed implements OnInit {
     public assignBestMix(): void {
         const maxDepth = this.planner.plan.maxDepth;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
-        this.reload(this.firstTank, 1);
+        this.reload(this.firstTank, 0);
         this.delayedCalc.schedule();
     }
 

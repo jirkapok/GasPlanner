@@ -123,7 +123,7 @@
                     {{ranges.tankPressureLabel}}</div>
             </div>
             <div class="mb-4 col col-12 col-md-6">
-                <app-oxygen [tank]="firstTank.tank" [toxicity]="toxicity" (gasChange)="applySimple()"
+                <app-oxygen [tank]="firstTank" [toxicity]="toxicity" (gasChange)="applySimple()"
                     (assignBestMix)="assignBestMix()"></app-oxygen>
             </div>
         </div>

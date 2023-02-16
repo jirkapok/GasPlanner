@@ -50,7 +50,7 @@ describe('Nitrox component', () => {
         page = new NitroxPage(fixture);
     });
 
-    fdescribe('Low MOD', () => {
+    describe('Low MOD', () => {
         beforeEach(() => {
             fixture.detectChanges();
             page.fO2Input.value = '80';

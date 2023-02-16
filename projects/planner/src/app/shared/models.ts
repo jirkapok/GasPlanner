@@ -64,6 +64,7 @@ export class Level {
     }
 }
 
+// TODO promote to separate service and switch planner to composite
 export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     public noDecoTime = 0;

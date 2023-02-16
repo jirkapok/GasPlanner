@@ -1,19 +1,20 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { StandardGases, Tank } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { TankBound } from '../tanks/tanks.component';
 
 @Component({
     selector: 'app-oxygen',
     templateUrl: './oxygen.component.html',
     styleUrls: ['./oxygen.component.scss']
 })
-export class OxygenComponent implements OnInit {
+export class OxygenComponent {
     @Input()
-    public tank = new Tank(15, 200, 21);
+    public tank = new TankBound(new Tank(15, 200, 21), this.units);
     @Input()
     public toxicity = new GasToxicity();
     @Input()
@@ -34,14 +35,6 @@ export class OxygenComponent implements OnInit {
         private validators: ValidatorGroups,
         public units: UnitConversion) {
         this.nitroxNames = StandardGases.nitroxNames();
-    }
-
-    public get gasO2Invalid(): boolean {
-        const gasO2 = this.nitroxForm.controls.o2;
-        return this.inputs.controlInValid(gasO2);
-    }
-
-    public ngOnInit(): void {
         this.nitroxForm = this.fb.group({
             o2: [this.inputs.formatNumber(this.tank.o2), this.validators.nitroxOxygen]
         });
@@ -53,19 +46,7 @@ export class OxygenComponent implements OnInit {
     }
 
     public fireGasChanged(): void {
-        if(this.gasO2Invalid) {
-            return;
-        }
-
-        const newValue = this.nitroxForm.controls.o2.value;
-        this.tank.o2 = Number(newValue);
         this.gasChange.emit();
-    }
-
-    public assignStandardGas(gasName: string): void {
-        this.tank.assignStandardGas(gasName);
-        this.reload();
-        this.fireGasChanged();
     }
 
     private reload(): void {

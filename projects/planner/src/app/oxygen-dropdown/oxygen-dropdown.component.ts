@@ -14,20 +14,18 @@ import { TankBound } from '../tanks/tanks.component';
 export class OxygenDropDownComponent implements OnInit {
     @Input() public showBestMix = true;
     @Input() public controlName = 'o2';
+    @Input() public tank = new TankBound(new Tank(15, 200, 21), this.units);
     @Input() public nitroxForm!: UntypedFormGroup;
     @Output() public gasChange = new EventEmitter<number>();
     @Output() public assignBestMix = new EventEmitter();
 
     public nitroxNames: string[];
-    private defaultO2 = 21; // will be overwritten anyway
-    private tank: TankBound;
 
     constructor(private fb: UntypedFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) {
         this.nitroxNames = StandardGases.nitroxNames();
-        this.tank =  new TankBound(new Tank(15, 200, 21), this.units);
     }
 
     public get gasO2Invalid(): boolean {

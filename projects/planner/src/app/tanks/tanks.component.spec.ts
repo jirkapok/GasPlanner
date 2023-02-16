@@ -88,32 +88,8 @@ describe('Tanks component', () => {
         simplePage = new SimpleTanksPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
         schedulerSpy = spyOn(scheduler, 'schedule')
-            .and.callFake(() => {});
+            .and.callFake(() => { });
     });
-
-    it('Imperial units adjusts sac', inject([UnitConversion],
-        (units: UnitConversion) => {
-            units.imperialUnits = true;
-            const sac = component.gasSac(0);
-            expect(sac).toBeCloseTo(19.33836, 5);
-        }));
-
-    it('Adds tank', inject([PlannerService],
-        (planner: PlannerService) => {
-            planner.isComplex = true;
-            component.addTank();
-            expect(component.tanks.length).toBe(2);
-        }));
-
-    it('Removes tank', inject([PlannerService],
-        (planner: PlannerService) => {
-            planner.isComplex = true;
-            component.addTank();
-            component.addTank();
-            component.addTank();
-            component.removeTank(3);
-            expect(component.tanks.length).toBe(3);
-        }));
 
     it('Switch to simple view rebinds first tank', inject([PlannerService],
         (planner: PlannerService) => {
@@ -145,54 +121,93 @@ describe('Tanks component', () => {
             expect(complexPage.heInput(1).value).toBe('31');
         }));
 
-    it('Invalid change in complex mode prevents calculate', inject([PlannerService],
-        (planner: PlannerService) => {
-            planner.isComplex = true;
-            fixture.detectChanges();
+    describe('Simple view', () => {
+        it('Imperial units adjusts sac', inject([UnitConversion],
+            (units: UnitConversion) => {
+                units.imperialUnits = true;
+                const sac = component.gasSac(0);
+                expect(sac).toBeCloseTo(19.33836, 5);
+            }));
 
-            complexPage.sizeInput(0).value = 'aaa';
-            complexPage.sizeInput(0).dispatchEvent(new Event('input'));
+        it('Invalid change prevents calculate', () => {
+            simplePage.sizeInput.value = 'aaa';
+            simplePage.sizeInput.dispatchEvent(new Event('input'));
             expect(schedulerSpy).not.toHaveBeenCalled();
-        }));
+        });
 
-    it('Valid change in complex mode triggers calculate', inject([PlannerService],
-        (planner: PlannerService) => {
-            planner.isComplex = true;
-            fixture.detectChanges();
-
-            complexPage.sizeInput(0).value = '24';
-            complexPage.sizeInput(0).dispatchEvent(new Event('input'));
+        it('Valid change triggers calculate', () => {
+            simplePage.sizeInput.value = '12';
+            simplePage.sizeInput.dispatchEvent(new Event('input'));
             expect(schedulerSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-    it('Invalid change in simple mode prevents calculate', () => {
-        simplePage.sizeInput.value = 'aaa';
-        simplePage.sizeInput.dispatchEvent(new Event('input'));
-        expect(schedulerSpy).not.toHaveBeenCalled();
+        it('Simple view Assign best mix rebinds the control', inject([PlannerService],
+            (planner: PlannerService) => {
+                // planner.isComplex = true;
+                // component.assignStandardGas(0, 'Oxygen');
+                // fixture.detectChanges();
+                // complexPage.heInput(0).value = '70';
+                // complexPage.heInput(0).dispatchEvent(new Event('input'));
+
+                expect(true).toBeFalsy();
+            }));
     });
 
-    it('Valid change in simple mode triggers calculate', () => {
-        simplePage.sizeInput.value = '12';
-        simplePage.sizeInput.dispatchEvent(new Event('input'));
-        expect(schedulerSpy).toHaveBeenCalledTimes(1);
+    describe('Complex view', () => {
+        it('Adds tank', inject([PlannerService],
+            (planner: PlannerService) => {
+                planner.isComplex = true;
+                component.addTank();
+                expect(component.tanks.length).toBe(2);
+            }));
+
+        it('Removes tank', inject([PlannerService],
+            (planner: PlannerService) => {
+                planner.isComplex = true;
+                component.addTank();
+                component.addTank();
+                component.addTank();
+                component.removeTank(3);
+                expect(component.tanks.length).toBe(3);
+            }));
+
+        it('Invalid change in complex mode prevents calculate', inject([PlannerService],
+            (planner: PlannerService) => {
+                planner.isComplex = true;
+                fixture.detectChanges();
+
+                complexPage.sizeInput(0).value = 'aaa';
+                complexPage.sizeInput(0).dispatchEvent(new Event('input'));
+                expect(schedulerSpy).not.toHaveBeenCalled();
+            }));
+
+        it('Valid change triggers planner calculate', inject([PlannerService],
+            (planner: PlannerService) => {
+                planner.isComplex = true;
+                fixture.detectChanges();
+
+                complexPage.sizeInput(0).value = '24';
+                complexPage.sizeInput(0).dispatchEvent(new Event('input'));
+                expect(schedulerSpy).toHaveBeenCalledTimes(1);
+            }));
+
+        it('Assign gas name tank rebinds new o2 value', inject([PlannerService],
+            (planner: PlannerService) => {
+                planner.isComplex = true;
+                component.assignStandardGas(0, 'Ean36');
+                fixture.detectChanges();
+                expect(complexPage.o2Input(0).value).toBe('36');
+            }));
+
+        it('He field affects O2 field tank is reloaded', inject([PlannerService],
+            (planner: PlannerService) => {
+                planner.isComplex = true;
+                component.assignStandardGas(0, 'Oxygen');
+                fixture.detectChanges();
+                complexPage.heInput(0).value = '70';
+                complexPage.heInput(0).dispatchEvent(new Event('input'));
+
+                expect(complexPage.o2Input(0).value).toBe('30');
+            }));
     });
-
-    it('Assign gas name in complex view tank rebinds new o2 value', inject([PlannerService],
-        (planner: PlannerService) => {
-            planner.isComplex = true;
-            component.assignStandardGas(0, 'Ean36');
-            fixture.detectChanges();
-            expect(complexPage.o2Input(0).value).toBe('36');
-        }));
-
-    it('He field affects O2 field tank is reloaded', inject([PlannerService],
-        (planner: PlannerService) => {
-            planner.isComplex = true;
-            component.assignStandardGas(0, 'Oxygen');
-            fixture.detectChanges();
-            complexPage.heInput(0).value = '70';
-            complexPage.heInput(0).dispatchEvent(new Event('input'));
-
-            expect(complexPage.o2Input(0).value).toBe('30');
-        }));
 });

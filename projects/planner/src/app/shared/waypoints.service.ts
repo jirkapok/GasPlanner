@@ -1,4 +1,4 @@
-import { WayPoint, Plan } from './models';
+import { WayPoint } from './models';
 import {
     Segment, Event, CalculatedProfile,
     Ceiling, Events

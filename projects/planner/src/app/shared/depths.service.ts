@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Segment, StandardGases, Tank } from 'scuba-physics';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { GasToxicity } from './gasToxicity.service';
-import { Level, Plan } from './models';
+import { Level } from './models';
+import { Plan } from '../shared/plan.service';
 import { PlannerService } from './planner.service';
 import { UnitConversion } from './UnitConversion';
 

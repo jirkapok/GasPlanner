@@ -5,11 +5,12 @@ import { takeUntil } from 'rxjs';
 import { Tank } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
-import { Plan, Level, Dive } from '../shared/models';
+import { Level, Dive } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { Plan } from '../shared/plan.service';
 
 @Component({
     selector: 'app-depths',

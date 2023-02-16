@@ -5,13 +5,14 @@ import { takeUntil } from 'rxjs';
 import { SafetyStop, Salinity } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
-import { Plan, Strategies } from '../shared/models';
+import { Strategies } from '../shared/models';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { Plan } from '../shared/plan.service';
 
 @Component({
     selector: 'app-diveoptions',

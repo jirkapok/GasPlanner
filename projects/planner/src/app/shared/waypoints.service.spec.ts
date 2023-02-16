@@ -1,5 +1,6 @@
 import { WayPointsService } from './waypoints.service';
-import { Plan, Strategies, SwimAction } from './models';
+import { Strategies, SwimAction } from './models';
+import { Plan } from '../shared/plan.service';
 import { Tank, Salinity, CalculatedProfile, Events, Event, EventType, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 

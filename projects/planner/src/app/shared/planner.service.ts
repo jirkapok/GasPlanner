@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
-import { Plan, Dive, Strategies, } from './models';
+import { Dive, Strategies, } from './models';
+import { Plan } from '../shared/plan.service';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {

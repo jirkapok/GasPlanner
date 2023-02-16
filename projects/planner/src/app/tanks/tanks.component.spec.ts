@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
+import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../oxygen/oxygen.component';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
@@ -25,11 +26,15 @@ export class SimpleTanksPage {
     }
 
     public get oxygenDebug(): DebugElement {
-        return this.fixture.debugElement.query(By.css('#o2Nitrox'));
+        return this.fixture.debugElement.query(By.css('#fO2'));
     }
 
     public get oxygenInput(): HTMLInputElement {
         return this.oxygenDebug.nativeElement as HTMLInputElement;
+    }
+
+    public get btnBestMix(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#btnBestMix')).nativeElement as HTMLInputElement;
     }
 }
 
@@ -70,7 +75,8 @@ describe('Tanks component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TanksComponent, GaslabelComponent, OxygenComponent],
+            declarations: [TanksComponent, GaslabelComponent,
+                OxygenComponent, OxygenDropDownComponent],
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls,
                 ValidatorGroups, DelayedScheduleService,
@@ -141,16 +147,14 @@ describe('Tanks component', () => {
             expect(schedulerSpy).toHaveBeenCalledTimes(1);
         });
 
-        it('Simple view Assign best mix rebinds the control', inject([PlannerService],
-            (planner: PlannerService) => {
-                // planner.isComplex = true;
-                // component.assignStandardGas(0, 'Oxygen');
-                // fixture.detectChanges();
-                // complexPage.heInput(0).value = '70';
-                // complexPage.heInput(0).dispatchEvent(new Event('input'));
-
-                expect(true).toBeFalsy();
-            }));
+        it('Simple view Assign best mix rebinds the control', () => {
+            // can't call component.assignBestMix();, because it needs to be triggered by the dropdown
+            simplePage.btnBestMix.click();
+            fixture.detectChanges();
+            const newO2 = simplePage.oxygenInput.value;
+            expect(newO2).toBe('35');
+            expect(component.firstTank.o2).toBe(35);
+        });
     });
 
     describe('Complex view', () => {

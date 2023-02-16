@@ -7,7 +7,7 @@
         <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="o2Menu"
             type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>
         <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-            <li (click)="fireAssignBestMix()" *ngIf="showBestMix">
+            <li (click)="fireAssignBestMix()" *ngIf="showBestMix" id="btnBestMix">
                 <a class="dropdown-item">Best mix </a>
             </li>
             <li *ngFor="let stgas of nitroxNames" (click)="assignStandardGas(stgas)">

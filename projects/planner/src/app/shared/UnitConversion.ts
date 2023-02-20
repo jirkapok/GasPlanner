@@ -1,6 +1,8 @@
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ImperialUnits, MetricUnits, Units } from 'scuba-physics';
 
+@Injectable()
 export class UnitConversion {
     public ranges: RangeConstants;
     /**

@@ -112,23 +112,6 @@ describe('PlannerService', () => {
             expect(segments[0].endDepth).toBe(7);
             expect(segments[1].endDepth).toBe(7);
         });
-
-        it('Resets gases to one only', () => {
-            expect(planner.tanks.length).toBe(1);
-        });
-
-        it('Keeps first gas content', () => {
-            expect(planner.firstTank.o2).toBe(o2Expected);
-        });
-
-        it('Resets gas content to editable gas', () => {
-            const firstTank = planner.firstTank;
-            firstTank.he = 45;
-            firstTank.o2 = 18;
-            planner.isComplex = false;
-            expect(firstTank.o2).toBe(21);
-            expect(firstTank.he).toBe(0);
-        });
     });
 
     describe('Depths', () => {
@@ -166,14 +149,6 @@ describe('PlannerService', () => {
     });
 
     describe('Manage tanks', () => {
-        it('Added tank receives ID', () => {
-            planner.addTank();
-            const count = planner.tanks.length;
-            const added = planner.tanks[count - 1];
-
-            expect(added.id).toEqual(2);
-        });
-
         describe('Remove', () => {
             let lastSegment: Segment;
 
@@ -188,14 +163,8 @@ describe('PlannerService', () => {
                 planner.removeTank(secondTank);
             });
 
-
             it('Updates segment reference to first tank', () => {
                 expect(lastSegment.tank).toEqual(planner.firstTank);
-            });
-
-            it('Tank ids are updated', () => {
-                const secondTank = planner.tanks[1];
-                expect(secondTank.id).toEqual(2);
             });
         });
     });

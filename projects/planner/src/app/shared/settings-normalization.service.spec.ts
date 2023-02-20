@@ -83,7 +83,6 @@ describe('SettingsNormalizationService', () => {
         it('Rounds tank properties', inject([PlannerService],
             (planner: PlannerService) => {
                 const tank = planner.firstTank;
-                // 30 m flat segment rounded to 98 feet
                 expect(tank.startPressure).toBeCloseTo(200.016909, 6);
                 expect(tank.size).toBeCloseTo(15.05924, 5);
             }));
@@ -117,7 +116,6 @@ describe('SettingsNormalizationService', () => {
         it('Rounds segments to meters', inject([PlannerService],
             (planner: PlannerService) => {
                 const segment = planner.plan.segments[1];
-                // 30 m flat segment rounded to 98 feet
                 expect(segment.startDepth).toBe(30);
                 expect(segment.endDepth).toBe(30);
             }));
@@ -125,7 +123,6 @@ describe('SettingsNormalizationService', () => {
         it('Rounds tank properties without change', inject([PlannerService],
             (planner: PlannerService) => {
                 const tank = planner.firstTank;
-                // 30 m flat segment rounded to 98 feet
                 expect(tank.startPressure).toBe(200);
                 expect(tank.size).toBe(15);
             }));

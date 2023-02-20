@@ -95,6 +95,10 @@ export class TankBound {
         return this.tank.he;
     }
 
+    public set id(newValue: number) {
+        this.tank.id = newValue;
+    }
+
     public set size(newValue: number) {
         this.tank.size = this.units.toTankLiters(newValue, this._workingPressure);
     }

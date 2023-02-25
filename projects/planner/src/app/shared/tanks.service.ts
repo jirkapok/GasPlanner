@@ -6,7 +6,9 @@ import { UnitConversion } from './UnitConversion';
 
 @Injectable()
 export class TanksService {
-    /** Event fired only in case of tanks rebuild. Not fired when adding or removing tanks. */
+    /** Event fired only in case of tanks rebuild (loadFrom or resetToSimple).
+     *  Not fired when adding or removing tanks.
+     **/
     public tanksReloaded: Observable<void>;
 
     private _tanks: TankBound[] = [];
@@ -38,6 +40,20 @@ export class TanksService {
         // TODO this.plan.resetSegments(tank, this.firstTank);
     }
 
+    public loadFrom(tanks: Tank[]): void {
+        if (tanks.length > 0) {
+            const newTanks: TankBound[] = [];
+            for (let index = 0; index < tanks.length; index++) {
+                const tank = tanks[index];
+                this.addTankFor(newTanks, tank);
+            }
+
+            this._tanks = newTanks;
+        }
+
+        this.onTanksReloaded.next();
+    }
+
     public resetToSimple(): void {
         this._tanks = this._tanks.slice(0, 1);
 
@@ -50,10 +66,15 @@ export class TanksService {
 
     private addTankBy(size: number): void {
         const tank = Tank.createDefault();
-        const bound = new TankBound(tank, this.units);
+        const bound = this.addTankFor(this._tanks, tank);
         bound.size = size;
-        this._tanks.push(bound);
-        bound.id = this._tanks.length;
+    }
+
+    private addTankFor(target: TankBound[], source: Tank): TankBound {
+        const bound = new TankBound(source, this.units);
+        target.push(bound);
+        bound.id = target.length;
+        return bound;
     }
 
     private renumberIds(): void {

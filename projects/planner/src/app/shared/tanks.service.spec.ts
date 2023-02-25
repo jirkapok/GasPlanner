@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Tank } from 'scuba-physics';
 import { TankBound } from './models';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
@@ -8,7 +9,7 @@ describe('TanksService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [ TanksService, UnitConversion ]
+            providers: [TanksService, UnitConversion]
         });
         service = TestBed.inject(TanksService);
     });
@@ -49,8 +50,43 @@ describe('TanksService', () => {
         });
     });
 
-    describe('Switch to simple', () =>{
+    describe('Load from', () => {
+        it('Doesn\'t update by empty array', () => {
+            service.loadFrom([]);
+            expect(service.tanks.length).toEqual(1);
+        });
+
+        describe('multiple tanks', () => {
+            let tanksReloaded = false;
+
+            beforeEach(() => {
+                service.tanksReloaded.subscribe(() => tanksReloaded = true);
+
+                const newTanks = [
+                    Tank.createDefault(),
+                    Tank.createDefault(),
+                ];
+                service.loadFrom(newTanks);
+            });
+
+            it('Loads new Tanks', () => {
+                expect(service.tanks.length).toEqual(2);
+            });
+
+            it('Renumbers tanks', () => {
+                const secondTank = service.tanks[1];
+                expect(secondTank.id).toEqual(2);
+            });
+
+            it('Fires reloaded', () => {
+                expect(tanksReloaded).toBeTruthy();
+            });
+        });
+    });
+
+    describe('Switch to simple', () => {
         let firstTank: TankBound;
+        let tanksReloaded = false;
 
         beforeEach(() => {
             service.addTank();
@@ -58,6 +94,7 @@ describe('TanksService', () => {
             firstTank = service.firstTank;
             firstTank.he = 45;
             firstTank.o2 = 18;
+            service.tanksReloaded.subscribe(() => tanksReloaded = true);
             service.resetToSimple();
         });
 
@@ -76,6 +113,10 @@ describe('TanksService', () => {
         it('Resets gas content to editable gas', () => {
             expect(firstTank.o2).toBe(21);
             expect(firstTank.he).toBe(0);
+        });
+
+        it('Fires tanks reloaded', () => {
+            expect(tanksReloaded).toBeTruthy();
         });
     });
 });

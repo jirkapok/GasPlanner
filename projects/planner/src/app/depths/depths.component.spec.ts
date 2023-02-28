@@ -13,6 +13,7 @@ import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
 import { DepthsComponent } from './depths.component';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { TanksService } from '../shared/tanks.service';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComponent>) { }
@@ -71,7 +72,7 @@ describe('DepthsComponent', () => {
             providers: [WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls, DelayedScheduleService,
                 OptionsDispatcherService, ValidatorGroups,
-                DepthsService, DecimalPipe]
+                DepthsService, DecimalPipe, TanksService]
         })
             .compileComponents();
     });
@@ -186,9 +187,9 @@ describe('DepthsComponent', () => {
                 expect(planner.plan.maxDepth).toBe(30);
             }));
 
-        it('Max narcotic depth is applied', inject([PlannerService],
-            (planner: PlannerService) => {
-                planner.firstTank.o2 = 50;
+        it('Max narcotic depth is applied', inject([PlannerService, TanksService],
+            (planner: PlannerService, tanksService: TanksService) => {
+                tanksService.firstTank.o2 = 50;
                 depths.applyMaxDepth();
                 expect(planner.plan.maxDepth).toBe(18);
             }));

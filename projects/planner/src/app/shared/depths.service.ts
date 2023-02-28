@@ -6,6 +6,7 @@ import { Level } from './models';
 import { Plan } from '../shared/plan.service';
 import { PlannerService } from './planner.service';
 import { UnitConversion } from './UnitConversion';
+import { TanksService } from './tanks.service';
 
 @Injectable()
 export class DepthsService {
@@ -16,6 +17,7 @@ export class DepthsService {
     constructor(
         private units: UnitConversion,
         private planner: PlannerService,
+        private tanksService: TanksService,
         private delayedCalc: DelayedScheduleService) {
         this.plan = this.planner.plan;
         this.toxicity = new GasToxicity(this.planner.options);
@@ -73,7 +75,7 @@ export class DepthsService {
     }
 
     public applyMaxDepth(): void {
-        const tank = this.planner.firstTank;
+        const tank = this.tanksService.firstTank.tank;
         const maxDepth = this.toxicity.maxDepth(tank);
         this.planner.assignDepth(maxDepth);
         this.levelChanged();

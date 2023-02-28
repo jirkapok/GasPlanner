@@ -3,6 +3,7 @@ import { OptionsDispatcherService } from './options-dispatcher.service';
 import { PlannerService } from './planner.service';
 import { PreferencesFactory } from './preferences.factory';
 import { AppPreferences } from './serialization.model';
+import { TanksService } from './tanks.service';
 
 @Injectable()
 export class PreferencesService {
@@ -11,7 +12,7 @@ export class PreferencesService {
     private static readonly disclaimerKey = 'disclaimer';
     private preferencesFactory = new PreferencesFactory();
 
-    constructor(private planner: PlannerService, private options: OptionsDispatcherService) { }
+    constructor(private planner: PlannerService, private tanksService: TanksService, private options: OptionsDispatcherService) { }
 
     public loadDefaults(): void {
         const toParse = localStorage.getItem(PreferencesService.storageKey);
@@ -24,7 +25,7 @@ export class PreferencesService {
     }
 
     public saveDefaults(): void {
-        const toSave = this.preferencesFactory.toPreferences(this.planner, this.options);
+        const toSave = this.preferencesFactory.toPreferences(this.planner, this.tanksService, this.options);
         const serialized = JSON.stringify(toSave);
         localStorage.setItem(PreferencesService.storageKey, serialized);
     }

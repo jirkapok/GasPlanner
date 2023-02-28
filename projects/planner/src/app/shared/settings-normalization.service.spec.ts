@@ -5,6 +5,7 @@ import { OptionsDispatcherService } from './options-dispatcher.service';
 import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { SettingsNormalizationService } from './settings-normalization.service';
+import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 
 describe('SettingsNormalizationService', () => {
@@ -80,9 +81,9 @@ describe('SettingsNormalizationService', () => {
                 expect(segment.endDepth).toBeCloseTo(29.8704, 4);
             }));
 
-        it('Rounds tank properties', inject([PlannerService],
-            (planner: PlannerService) => {
-                const tank = planner.firstTank;
+        it('Rounds tank properties', inject([TanksService],
+            (tanks: TanksService) => {
+                const tank = tanks.firstTank.tank;
                 expect(tank.startPressure).toBeCloseTo(200.016909, 6);
                 expect(tank.size).toBeCloseTo(15.05924, 5);
             }));
@@ -120,9 +121,9 @@ describe('SettingsNormalizationService', () => {
                 expect(segment.endDepth).toBe(30);
             }));
 
-        it('Rounds tank properties without change', inject([PlannerService],
-            (planner: PlannerService) => {
-                const tank = planner.firstTank;
+        it('Rounds tank properties without change', inject([TanksService],
+            (tanks: TanksService) => {
+                const tank = tanks.firstTank.tank;
                 expect(tank.startPressure).toBe(200);
                 expect(tank.size).toBe(15);
             }));

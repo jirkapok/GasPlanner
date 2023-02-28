@@ -14,6 +14,7 @@ import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TankBound } from '../shared/models';
 import { Tank } from 'scuba-physics';
+import { TanksService } from '../shared/tanks.service';
 
 @Component({
     selector: 'app-nitrox',
@@ -31,13 +32,15 @@ export class NitroxComponent implements OnInit {
     private failingMod = false;
 
     constructor(
+        public calc: NitroxCalculatorService,
+        public units: UnitConversion,
         private fb: UntypedFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public calc: NitroxCalculatorService,
         private router: Router,
-        private planer: PlannerService, public units: UnitConversion) {
-        this.calc.fO2 = this.planer.firstTank.o2;
+        private planer: PlannerService,
+        private tanksService: TanksService) {
+        this.calc.fO2 = this.tanksService.firstTank.tank.o2;
         this.calc.pO2 = this.planer.diver.maxPpO2;
         this.tank = new TankBound(new Tank(15, 200, 21), this.units);
     }
@@ -121,7 +124,7 @@ export class NitroxComponent implements OnInit {
             return;
         }
 
-        this.planer.firstTank.o2 = this.calc.fO2;
+        this.tanksService.firstTank.tank.o2 = this.calc.fO2;
         this.planer.diver.maxPpO2 = this.calc.pO2;
     }
 

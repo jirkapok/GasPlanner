@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { PlannerService } from '../shared/planner.service';
-import { StandardGases, Tank } from 'scuba-physics';
+import { StandardGases } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
@@ -11,6 +11,7 @@ import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
+import { TanksService } from '../shared/tanks.service';
 
 @Component({
     selector: 'app-tanks',
@@ -24,9 +25,9 @@ export class TanksComponent extends Streamed implements OnInit {
     public minusIcon = faMinus;
     public toxicity: GasToxicity;
     public tanksForm!: UntypedFormGroup;
-    private bound: TankBound[] = [];
 
     constructor(private planner: PlannerService,
+        private tanksService: TanksService,
         public units: UnitConversion,
         private fb: UntypedFormBuilder,
         private inputs: InputControls,
@@ -35,11 +36,10 @@ export class TanksComponent extends Streamed implements OnInit {
         super();
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
-        this.updateTanks();
     }
 
     public get firstTank(): TankBound {
-        return this.bound[0];
+        return this.tanksService.firstTank;
     }
 
     public get ranges(): RangeConstants {
@@ -47,7 +47,7 @@ export class TanksComponent extends Streamed implements OnInit {
     }
 
     public get tanks(): TankBound[] {
-        return this.bound;
+        return this.tanksService.tanks;
     }
 
     public get tanksGroup(): UntypedFormArray {
@@ -112,8 +112,7 @@ export class TanksComponent extends Streamed implements OnInit {
             return;
         }
 
-        this.planner.addTank();
-        this.updateTanks();
+        this.tanksService.addTank();
         const lastTank = this.tanks[this.tanks.length - 1];
         const levelControls = this.createTankControl(lastTank);
         this.tanksGroup.push(levelControls);
@@ -126,9 +125,8 @@ export class TanksComponent extends Streamed implements OnInit {
         }
 
         const bound = this.tanks[index];
-        this.planner.removeTank(bound.tank);
+        this.tanksService.removeTank(bound);
         this.tanksGroup.removeAt(index);
-        this.updateTanks();
         this.delayedCalc.schedule();
     }
 
@@ -177,8 +175,6 @@ export class TanksComponent extends Streamed implements OnInit {
     }
 
     private reloadAll(): void {
-        this.updateTanks();
-
         this.tanksForm.patchValue({
             firstTankSize: this.inputs.formatNumber(this.firstTank.size),
             firstTankStartPressure: this.inputs.formatNumber(this.firstTank.startPressure),
@@ -187,20 +183,6 @@ export class TanksComponent extends Streamed implements OnInit {
         // recreate all controls, because wo don't know which were removed/added as part of reload.
         this.tanksGroup.clear();
         this.createTankControls().forEach(c => this.tanksGroup.push(c));
-    }
-
-    private updateTanks(): void {
-        const bound: TankBound[] = [];
-        this.planner.tanks.forEach((t) => {
-            const newBound = this.toBound(t);
-            bound.push(newBound);
-        });
-
-        this.bound = bound;
-    }
-
-    private toBound(tank: Tank): TankBound {
-        return new TankBound(tank, this.units);
     }
 
     private reload(bound: TankBound, index: number): void {

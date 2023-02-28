@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Diver, ImperialUnits, Precision } from 'scuba-physics';
 import { OptionsDispatcherService } from './options-dispatcher.service';
 import { PlannerService } from './planner.service';
+import { TanksService } from './tanks.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 
 @Injectable()
@@ -9,7 +10,8 @@ export class SettingsNormalizationService {
 
     constructor(private planner: PlannerService,
         private options: OptionsDispatcherService,
-        private units: UnitConversion) { }
+        private units: UnitConversion,
+        private tanksService: TanksService) { }
 
     private get ranges(): RangeConstants {
         return this.units.ranges;
@@ -48,7 +50,7 @@ export class SettingsNormalizationService {
     }
 
     private normalizeTanks(): void {
-        const tanks = this.planner.tanks;
+        const tanks = this.tanksService.tanks;
         tanks.forEach(t => {
             t.startPressure = this.fitPressureToRange(t.startPressure, this.ranges.tankPressure);
             t.size = this.fitTankSizeToRange(t.size, this.ranges.tankSize);

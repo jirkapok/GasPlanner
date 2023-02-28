@@ -6,15 +6,17 @@ import { Plan } from '../shared/plan.service';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
-    Options, Tank, Tanks, Precision,
+    Options, Tank, Precision,
     Diver, Segment, Segments, Salinity, SafetyStop
 } from 'scuba-physics';
 import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
-    ProfileRequestDto, TankDto, ProfileResultDto, DiveInfoResultDto
+    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto
 } from './serialization.model';
 import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
+import { TanksService } from './tanks.service';
+import { UnitConversion } from './UnitConversion';
 
 @Injectable()
 export class PlannerService extends Streamed {
@@ -31,13 +33,13 @@ export class PlannerService extends Streamed {
     public tanksReloaded;
     /** when switching between simple and complex view */
     public viewSwitched;
+    private tanks: TanksService;
     private onTanksReloaded = new Subject<void>();
     private onViewSwitched = new Subject<void>();
     private _isComplex = false;
     private calculating = false;
     private calculatingDiveInfo = false;
     private calculatingProfile = false;
-    private _tanks: Tank[] = [];
     private _options: Options;
     private onInfoCalculated = new Subject<void>();
     private onWayPointsCalculated = new Subject<void>();
@@ -45,17 +47,15 @@ export class PlannerService extends Streamed {
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
     private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
 
-    constructor(private workerFactory: WorkersFactoryCommon) {
+    constructor(private workerFactory: WorkersFactoryCommon, units: UnitConversion) {
         super();
         this._options = new Options();
         this._options.salinity = Salinity.fresh;
         this._options.safetyStop = SafetyStop.auto;
-        const tank = Tank.createDefault();
-        tank.id = 1;
-        this._tanks.push(tank);
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
-        this.plan = new Plan(Strategies.ALL, 30, 12, this.firstTank, this.options);
+        this.tanks = new TanksService(units);
+        this.plan = new Plan(Strategies.ALL, 30, 12, this.tanks.firstTank.tank, this.options);
         this.tanksReloaded = this.onTanksReloaded.asObservable();
         this.viewSwitched = this.onViewSwitched.asObservable();
 
@@ -86,17 +86,13 @@ export class PlannerService extends Streamed {
     public get options(): Options {
         return this._options;
     }
-    public get tanks(): Tank[] {
-        return this._tanks;
-    }
-
-    /** only for recreational diver use case */
-    public get firstTank(): Tank {
-        return this._tanks[0];
-    }
 
     public get ndlValid(): boolean {
         return this.dive.diveInfoCalculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
+    }
+
+    private get firstTank(): Tank {
+        return this.tanks.firstTank.tank;
     }
 
     public set isComplex(newValue: boolean) {
@@ -108,22 +104,10 @@ export class PlannerService extends Streamed {
         this.onViewSwitched.next();
     }
 
-    public addTank(): void {
-        const newTank = Tank.createDefault();
-        newTank.size = 11;
-        this._tanks.push(newTank);
-        newTank.id = this._tanks.length;
-    }
-
-    public removeTank(tank: Tank): void {
-        this._tanks = Tanks.removeTank(this._tanks, tank);
-        this.plan.resetSegments(tank, this.firstTank);
-    }
-
     public addSegment(): void {
         const segments = this.plan.segments;
         const lastUsedTank = segments[segments.length - 1].tank;
-        const tank = lastUsedTank || this.firstTank;
+        const tank = lastUsedTank as Tank;
         this.plan.addSegment(tank);
     }
 
@@ -153,13 +137,10 @@ export class PlannerService extends Streamed {
         this.diver.loadFrom(diver);
     }
 
+    // TODO needs to be called after tanks reloaded
     public loadFrom(isComplex: boolean, options: Options, diver: Diver, tanks: Tank[], segments: Segment[]): void {
         this.assignOptions(options);
         this.applyDiver(diver);
-
-        if (tanks.length > 0) {
-            this._tanks = tanks;
-        }
 
         if (segments.length > 1) {
             this.plan.loadFrom(segments);
@@ -168,9 +149,6 @@ export class PlannerService extends Streamed {
         this.isComplex = isComplex;
         if (!isComplex) {
             this.resetToSimple();
-        } else {
-            // to prevent fire the event twice
-            this.onTanksReloaded.next();
         }
     }
 
@@ -187,7 +165,7 @@ export class PlannerService extends Streamed {
         }, 500);
 
         const profileRequest = {
-            tanks: DtoSerialization.fromTanks(this._tanks),
+            tanks: DtoSerialization.fromTanks(this.tanks.tankData),
             plan: DtoSerialization.fromSegments(this.plan.segments),
             options: DtoSerialization.fromOptions(this.options)
         };
@@ -226,8 +204,9 @@ export class PlannerService extends Streamed {
 
     private continueCalculation(result: ProfileResultDto): void {
         const serializedPlan = DtoSerialization.fromSegments(this.plan.segments);
-        const serializedTanks = DtoSerialization.fromTanks(this._tanks);
-        const calculatedProfile = DtoSerialization.toProfile(result.profile, this._tanks);
+        const tankData = this.tanks.tankData;
+        const serializedTanks = DtoSerialization.fromTanks(tankData);
+        const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
         const profile = WayPointsService.calculateWayPoints(calculatedProfile, events);
         this.dive.wayPoints = profile.wayPoints;
@@ -285,16 +264,16 @@ export class PlannerService extends Streamed {
     }
 
     private finishCalculation(result: ConsumptionResultDto): void {
-        this.copyTanksConsumption(result.tanks);
+        this.tanks.copyTanksConsumption(result.tanks);
         this.dive.maxTime = result.maxTime;
         this.dive.timeToSurface = result.timeToSurface;
 
         this.dive.emergencyAscentStart = this.plan.startAscentTime;
-        this.dive.turnPressure = this.calculateTurnPressure();
+        this.dive.turnPressure = this.tanks.calculateTurnPressure();
         this.dive.turnTime = Precision.floor(this.plan.duration / 2);
         // this needs to be moved to each gas or do we have other option?
-        this.dive.needsReturn = this.plan.needsReturn && this._tanks.length === 1;
-        this.dive.notEnoughGas = !Tanks.haveReserve(this._tanks);
+        this.dive.needsReturn = this.plan.needsReturn && this.tanks.singleTank;
+        this.dive.notEnoughGas = this.tanks.enoughGas;
 
         // TODO still there is an option, that some calculation is still running.
         this.dive.calculated = true;
@@ -303,30 +282,9 @@ export class PlannerService extends Streamed {
         this.onInfoCalculated.next();
     }
 
+    /* reset only gas and depths to values valid for simple view. */
     private resetToSimple(): void {
-        // reset only gas and depths to values valid for simple view.
-        this._tanks = this._tanks.slice(0, 1);
-
-        if (this.firstTank.he > 0) {
-            this.firstTank.assignStandardGas('Air');
-        }
-
-        this.onTanksReloaded.next();
+        // TODO reset tanks first
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
-    }
-
-    private copyTanksConsumption(tanks: TankDto[]) {
-        for (let index = 0; index < this.tanks.length; index++) {
-            const source = tanks[index];
-            const target = this.tanks[index];
-            target.consumed = source.consumed;
-            target.reserve = source.reserve;
-        }
-    }
-
-    /** even in case thirds rule, the last third is reserve, so we always divide by 2 */
-    private calculateTurnPressure(): number {
-        const consumed = this.firstTank.consumed / 2;
-        return this.firstTank.startPressure - Precision.floor(consumed);
     }
 }

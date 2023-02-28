@@ -11,6 +11,7 @@ import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Plan } from '../shared/plan.service';
+import { TanksService } from '../shared/tanks.service';
 
 @Component({
     selector: 'app-depths',
@@ -31,6 +32,7 @@ export class DepthsComponent extends Streamed implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public planner: PlannerService,
+        private tanksService: TanksService,
         public depths: DepthsService,
         public units: UnitConversion) {
         super();
@@ -54,7 +56,7 @@ export class DepthsComponent extends Streamed implements OnInit {
 
     // only to get their label, formatted in the tankLabel
     public get tanks(): Tank[] {
-        return this.planner.tanks;
+        return this.tanksService.tankData;
     }
 
     public get noDecoTime(): number {

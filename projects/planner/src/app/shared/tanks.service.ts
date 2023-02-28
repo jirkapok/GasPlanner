@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { Tank } from 'scuba-physics';
+import { Precision, Tank, Tanks } from 'scuba-physics';
 import { TankBound } from './models';
+import { TankDto } from './serialization.model';
 import { UnitConversion } from './UnitConversion';
+import _ from 'lodash';
 
 @Injectable()
 export class TanksService {
@@ -29,6 +31,19 @@ export class TanksService {
         return this._tanks[0];
     }
 
+    public get singleTank(): boolean {
+        return this._tanks.length === 1;
+    }
+
+    public get enoughGas(): boolean {
+        return Tanks.haveReserve(this.tankData);
+    }
+
+    public get tankData(): Tank[] {
+        return _(this._tanks).map(bt => bt.tank)
+            .value();
+    }
+
     public addTank(): void {
         // TODO default imperial size for stage?
         this.addTankBy(11); // S80 by default
@@ -52,6 +67,21 @@ export class TanksService {
         }
 
         this.onTanksReloaded.next();
+    }
+
+    public copyTanksConsumption(tanks: TankDto[]) {
+        for (let index = 0; index < this.tanks.length; index++) {
+            const source = tanks[index];
+            const target = this.tanks[index];
+            target.tank.consumed = source.consumed;
+            target.tank.reserve = source.reserve;
+        }
+    }
+
+    /** even in case thirds rule, the last third is reserve, so we always divide by 2 */
+    public calculateTurnPressure(): number {
+        const consumed = this.firstTank.tank.consumed / 2;
+        return this.firstTank.startPressure - Precision.floor(consumed);
     }
 
     public resetToSimple(): void {

@@ -5,6 +5,7 @@ import { Diver, Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { OptionsDispatcherService } from './options-dispatcher.service';
+import { TanksService } from './tanks.service';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -64,16 +65,17 @@ describe('PreferencesService', () => {
                 expect(planner.options).toEqual(expected);
             }));
 
-        it('Tanks are loaded after save', inject([PreferencesService, PlannerService, OptionsDispatcherService],
-            (service: PreferencesService, planner: PlannerService, options: OptionsDispatcherService) => {
+        it('Tanks are loaded after save', inject([PreferencesService, PlannerService, TanksService, OptionsDispatcherService],
+            (service: PreferencesService, planner: PlannerService,
+                tanksService: TanksService, options: OptionsDispatcherService) => {
                 const oValues = options.getOptions();
                 OptionExtensions.applySimpleSpeeds(oValues);
                 options.safetyStop = SafetyStop.always;
                 options.gasSwitchDuration = 1;
                 options.problemSolvingDuration = 2;
                 planner.assignOptions(options.getOptions());
-                const tanks = planner.tanks;
-                planner.addTank();
+                const tanks = tanksService.tanks;
+                tanksService.addTank();
                 tanks[0].startPressure = 150;
                 tanks[1].o2 = 50;
                 planner.isComplex = true; // otherwise the tank will be removed.
@@ -94,43 +96,43 @@ describe('PreferencesService', () => {
                 expected2.reserve = 62;
                 // JSON serialization prevents order of items in an array
                 const expected: Tank[] = [ expected1, expected2 ];
-                expect(planner.tanks).toEqual(expected);
+                expect(tanksService.tankData).toEqual(expected);
             }));
 
-        it('Plan is loaded after save', inject([PreferencesService, PlannerService],
-            (service: PreferencesService, planner: PlannerService) => {
+        it('Plan is loaded after save', inject([PreferencesService, PlannerService, TanksService],
+            (service: PreferencesService, planner: PlannerService, tanksService: TanksService) => {
                 const plan = planner.plan;
-                planner.addTank();
-                planner.addTank();
+                tanksService.addTank();
+                tanksService.addTank();
                 planner.addSegment();
                 const lastSegment = plan.segments[2];
-                const secondTank = planner.tanks[1];
-                lastSegment.tank =secondTank;
+                const secondTank = tanksService.tanks[1];
+                lastSegment.tank =secondTank.tank;
                 planner.isComplex = true;
                 planner.calculate();
                 service.saveDefaults();
 
                 planner.removeSegment(lastSegment);
-                planner.removeTank(secondTank);
+                tanksService.removeTank(secondTank);
                 service.loadDefaults();
 
-                expect(planner.tanks.length).toEqual(3);
+                expect(tanksService.tanks.length).toEqual(3);
                 expect(planner.plan.length).toEqual(3);
                 expect(planner.plan.segments[2].tank?.id).toEqual(2);
             }));
 
-        it('Simple profile is loaded after save and trims tank', inject([PreferencesService, PlannerService],
-            (service: PreferencesService, planner: PlannerService) => {
+        it('Simple profile is loaded after save and trims tank', inject([PreferencesService, PlannerService, TanksService],
+            (service: PreferencesService, planner: PlannerService, tanksService: TanksService) => {
                 // invalid operations for simple profile simulate wrong data
-                planner.addTank();
-                planner.addTank();
+                tanksService.addTank();
+                tanksService.addTank();
                 planner.addSegment();
                 planner.calculate();
                 service.saveDefaults();
 
                 service.loadDefaults();
 
-                expect(planner.tanks.length).toEqual(1);
+                expect(tanksService.tanks.length).toEqual(1);
                 expect(planner.plan.length).toEqual(2);
             }));
     });

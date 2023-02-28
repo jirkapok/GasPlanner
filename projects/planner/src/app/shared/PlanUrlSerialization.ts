@@ -5,6 +5,7 @@ import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';
 import { PreferencesFactory } from './preferences.factory';
 import { AppPreferences, DiverDto, OptionsDto, SegmentDto, TankDto } from './serialization.model';
+import { TanksService } from './tanks.service';
 
 class ParseContext {
     private static readonly trueValue = '1';
@@ -59,8 +60,8 @@ class ParseContext {
  * 3. Encode as url parameter
  **/
 export class PlanUrlSerialization {
-    public static toUrl(source: PlannerService, options: OptionsDispatcherService): string {
-        const tanksParam = PlanUrlSerialization.toTanksParam(source.tanks);
+    public static toUrl(source: PlannerService, tanksService: TanksService, options: OptionsDispatcherService): string {
+        const tanksParam = PlanUrlSerialization.toTanksParam(tanksService.tankData);
         const depthsParam = PlanUrlSerialization.toDepthsParam(source.plan.segments);
         const diParam =  PlanUrlSerialization.toDiverParam(source.diver);
         const optionsParam = PlanUrlSerialization.toOptionsParam(options.getOptions());

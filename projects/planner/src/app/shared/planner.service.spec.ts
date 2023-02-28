@@ -1,26 +1,29 @@
-import { Time, SafetyStop, Segment, StandardGases, Event, EventType, CalculatedProfile, Events } from 'scuba-physics';
+import { Time, SafetyStop, Segment, Event, EventType, CalculatedProfile, Events } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { TestBed } from '@angular/core/testing';
-// import { WorkersFactorySpy } from './planner.service.workers.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
 import {
     ConsumptionRequestDto, ConsumptionResultDto, DiveInfoResultDto, DtoSerialization,
     ProfileRequestDto, ProfileResultDto
 } from './serialization.model';
+import { UnitConversion } from './UnitConversion';
+import { TanksService } from './tanks.service';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
+    let tanksService: TanksService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
-            providers: [WorkersFactoryCommon, PlannerService],
+            providers: [WorkersFactoryCommon, PlannerService, UnitConversion, TanksService],
             imports: []
         }).compileComponents();
 
         planner = TestBed.inject(PlannerService);
+        tanksService = TestBed.inject(TanksService);
         OptionExtensions.applySimpleSpeeds(planner.options);
         planner.options.problemSolvingDuration = 2;
         planner.options.safetyStop = SafetyStop.always;
@@ -59,12 +62,12 @@ describe('PlannerService', () => {
 
         it('74 bar rock bottom', () => {
             planner.calculate();
-            expect(planner.firstTank.reserve).toBe(78);
+            expect(tanksService.firstTank.tank.reserve).toBe(78);
         });
 
         it('109 bar remaining gas', () => {
             planner.calculate();
-            expect(planner.firstTank.endPressure).toBe(123);
+            expect(tanksService.firstTank.tank.endPressure).toBe(123);
         });
     });
 
@@ -93,8 +96,8 @@ describe('PlannerService', () => {
         const o2Expected = 50;
 
         beforeEach(() => {
-            planner.firstTank.o2 = o2Expected;
-            planner.addTank();
+            tanksService.firstTank.o2 = o2Expected;
+            tanksService.addTank();
             planner.assignDepth(7);
             planner.plan.segments[1].endDepth = 5;
             planner.addSegment();
@@ -124,10 +127,10 @@ describe('PlannerService', () => {
 
         it('Added segment has previous segment tank', () => {
             planner.addSegment();
-            planner.addTank();
-            planner.plan.segments[2].tank = planner.tanks[1];
+            tanksService.addTank();
+            planner.plan.segments[2].tank = tanksService.tankData[1];
             planner.addSegment();
-            expect(planner.plan.segments[3].tank).toBe(planner.tanks[1]);
+            expect(planner.plan.segments[3].tank).toBe(tanksService.tankData[1]);
         });
 
         it('Remove first segment sets initial depth to 0m', () => {
@@ -153,18 +156,18 @@ describe('PlannerService', () => {
             let lastSegment: Segment;
 
             beforeEach(() => {
-                planner.addTank();
-                planner.addTank();
-                const secondTank = planner.tanks[1];
+                tanksService.addTank();
+                tanksService.addTank();
+                const secondTank = tanksService.tanks[1];
                 planner.addSegment();
                 const segments = planner.plan.segments;
                 lastSegment = segments[1];
-                lastSegment.tank = secondTank;
-                planner.removeTank(secondTank);
+                lastSegment.tank = secondTank.tank;
+                tanksService.removeTank(secondTank);
             });
 
             it('Updates segment reference to first tank', () => {
-                expect(lastSegment.tank).toEqual(planner.firstTank);
+                expect(lastSegment.tank).toEqual(tanksService.firstTank.tank);
             });
         });
     });
@@ -175,16 +178,17 @@ describe('PlannerService', () => {
             // this value is used as minimum for simple profiles to be able descent
             // with default speed to default depth 30m.
             const descentOnly = 1.7;
+            // manual service initialization to avoid testbed conflicts
+            const createPlanner = () => new PlannerService(new WorkersFactoryCommon(), new UnitConversion());
 
             it('Max bottom time is NOT applied', () => {
-                // manual service initialization to avoid testbed conflicts
-                planner = new PlannerService(new WorkersFactoryCommon());
+                planner = createPlanner();
                 planner.applyMaxDuration();
                 expect(planner.plan.duration).toBe(descentOnly);
             });
 
             it('No deco limit is NOT applied', () => {
-                planner = new PlannerService(new WorkersFactoryCommon());
+                planner = createPlanner();
                 planner.applyNdlDuration();
                 expect(planner.plan.duration).toBe(descentOnly);
             });

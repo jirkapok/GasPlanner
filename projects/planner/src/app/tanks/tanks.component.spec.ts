@@ -10,6 +10,7 @@ import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
+import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TanksComponent } from './tanks.component';
@@ -110,10 +111,10 @@ describe('Tanks component', () => {
             expect(simplePage.sizeInput.value).toBe('24');
         }));
 
-    it('Switch to complex view rebinds all tanks', inject([PlannerService],
-        (planner: PlannerService) => {
-            planner.addTank();
-            const secondTank = planner.tanks[1];
+    it('Switch to complex view rebinds all tanks', inject([PlannerService, TanksService],
+        (planner: PlannerService, tanksService: TanksService) => {
+            tanksService.addTank();
+            const secondTank = tanksService.tanks[1];
             secondTank.startPressure = 150;
             secondTank.size = 20;
             secondTank.o2 = 25;

@@ -6,12 +6,14 @@ import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { OptionsDispatcherService } from './options-dispatcher.service';
 import { TanksService } from './tanks.service';
+import { UnitConversion } from './UnitConversion';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [WorkersFactoryCommon,
                 PreferencesService, PlannerService,
+                UnitConversion, TanksService,
                 OptionsDispatcherService ]
         });
 

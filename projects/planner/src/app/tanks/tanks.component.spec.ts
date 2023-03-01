@@ -81,7 +81,7 @@ describe('Tanks component', () => {
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls,
                 ValidatorGroups, DelayedScheduleService,
-                DecimalPipe],
+                DecimalPipe, TanksService],
             imports: [ReactiveFormsModule]
         })
             .compileComponents();

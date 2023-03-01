@@ -7,22 +7,22 @@ import { UnitConversion } from './UnitConversion';
 
 describe('Url Serialization', () => {
     const irrelevantFactory = new WorkersFactoryCommon();
-    const createPlanner = () => new PlannerService(irrelevantFactory, new UnitConversion());
     let options: OptionsDispatcherService;
     let defaultPlan: PlannerService;
     let planner: PlannerService;
     let tanksService: TanksService;
     let customizedUrl: string;
+    const createPlanner = () => new PlannerService(irrelevantFactory, tanksService);
 
     beforeEach(() => {
-        options = new OptionsDispatcherService();
-        defaultPlan = new PlannerService(irrelevantFactory, new UnitConversion());
-        planner = new PlannerService(irrelevantFactory, new UnitConversion());
-        planner.isComplex = true;
-        planner.addSegment();
-        // TODO fix the tanks service initialization
         tanksService = new TanksService(new UnitConversion());
         tanksService.addTank();
+
+        options = new OptionsDispatcherService();
+        defaultPlan = createPlanner();
+        planner =  createPlanner();
+        planner.isComplex = true;
+        planner.addSegment();
         planner.calculate();
         customizedUrl = PlanUrlSerialization.toUrl(planner, tanksService, options);
     });

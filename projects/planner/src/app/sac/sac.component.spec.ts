@@ -6,6 +6,7 @@ import { InputControls } from '../shared/inputcontrols';
 import { PlannerService } from '../shared/planner.service';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
+import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { SacComponent } from './sac.component';
@@ -17,10 +18,15 @@ describe('Sac component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SacComponent],
-            providers: [WorkersFactoryCommon, UnitConversion,
+            providers: [
+                WorkersFactoryCommon, UnitConversion,
                 PlannerService, DecimalPipe, UntypedFormBuilder,
-                ValidatorGroups, InputControls, SacCalculatorService],
-            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
+                ValidatorGroups, InputControls, SacCalculatorService,
+                TanksService
+            ],
+            imports: [
+                RouterTestingModule.withRoutes([]),
+                ReactiveFormsModule]
         })
             .compileComponents();
     });

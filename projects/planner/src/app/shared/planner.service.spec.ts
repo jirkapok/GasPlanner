@@ -179,7 +179,9 @@ describe('PlannerService', () => {
             // with default speed to default depth 30m.
             const descentOnly = 1.7;
             // manual service initialization to avoid testbed conflicts
-            const createPlanner = () => new PlannerService(new WorkersFactoryCommon(), new UnitConversion());
+            const createPlanner = () => new PlannerService(
+                new WorkersFactoryCommon(),
+                new TanksService(new UnitConversion()));
 
             it('Max bottom time is NOT applied', () => {
                 planner = createPlanner();

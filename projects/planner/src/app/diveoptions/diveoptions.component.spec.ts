@@ -6,6 +6,7 @@ import { InputControls } from '../shared/inputcontrols';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
+import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { DiveOptionsComponent } from './diveoptions.component';
@@ -21,7 +22,8 @@ describe('DepthComponent Imperial units', () => {
             providers: [WorkersFactoryCommon, DecimalPipe,
                 OptionsDispatcherService, InputControls,
                 ValidatorGroups, PlannerService,
-                DelayedScheduleService, UnitConversion]
+                DelayedScheduleService, UnitConversion,
+                TanksService]
         })
             .compileComponents();
     });

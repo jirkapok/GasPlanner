@@ -6,6 +6,8 @@ import { PlannerService } from './planner.service';
 import { Salinity, Segment, StandardGases } from 'scuba-physics';
 import { WayPoint } from './models';
 import { WorkersFactoryCommon } from './serial.workers.factory';
+import { UnitConversion } from './UnitConversion';
+import { TanksService } from './tanks.service';
 
 describe('Selected Waypoint', () => {
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
@@ -13,7 +15,9 @@ describe('Selected Waypoint', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [WorkersFactoryCommon, PlannerService]
+            providers: [
+                WorkersFactoryCommon, PlannerService,
+                UnitConversion, TanksService]
         });
     });
 

@@ -7,6 +7,7 @@ import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
+import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { DepthComponent } from './depth.component';
@@ -38,7 +39,7 @@ describe('DepthComponent Imperial units', () => {
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, ValidatorGroups,
                 DepthsService, DelayedScheduleService,
-                InputControls]
+                InputControls, TanksService]
         })
             .compileComponents();
     });

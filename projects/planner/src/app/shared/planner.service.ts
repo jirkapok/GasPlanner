@@ -16,7 +16,6 @@ import {
 import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
 import { TanksService } from './tanks.service';
-import { UnitConversion } from './UnitConversion';
 
 @Injectable()
 export class PlannerService extends Streamed {
@@ -33,7 +32,6 @@ export class PlannerService extends Streamed {
     public tanksReloaded;
     /** when switching between simple and complex view */
     public viewSwitched;
-    private tanks: TanksService;
     private onTanksReloaded = new Subject<void>();
     private onViewSwitched = new Subject<void>();
     private _isComplex = false;
@@ -47,14 +45,13 @@ export class PlannerService extends Streamed {
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
     private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
 
-    constructor(private workerFactory: WorkersFactoryCommon, units: UnitConversion) {
+    constructor(private workerFactory: WorkersFactoryCommon, private tanks: TanksService) {
         super();
         this._options = new Options();
         this._options.salinity = Salinity.fresh;
         this._options.safetyStop = SafetyStop.auto;
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
-        this.tanks = new TanksService(units);
         this.plan = new Plan(Strategies.ALL, 30, 12, this.tanks.firstTank.tank, this.options);
         this.tanksReloaded = this.onTanksReloaded.asObservable();
         this.viewSwitched = this.onViewSwitched.asObservable();

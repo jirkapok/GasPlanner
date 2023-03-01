@@ -9,6 +9,7 @@ import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
+import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { NitroxComponent } from './nitrox.component';
@@ -37,6 +38,7 @@ describe('Nitrox component', () => {
                 PlannerService, InputControls, DecimalPipe,
                 NitroxCalculatorService, ValidatorGroups,
                 OptionsDispatcherService,
+                TanksService,
                 UntypedFormBuilder],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         })

@@ -13,13 +13,17 @@ export class TanksService {
      **/
     public tanksReloaded: Observable<void>;
 
+    public tankRemoved: Observable<Tank>;
+
     private _tanks: TankBound[] = [];
     private onTanksReloaded = new Subject<void>();
+    private onTankRemoved = new Subject<Tank>();
 
     constructor(private units: UnitConversion) {
         // TODO default tank in imperials: 100 cubic feet / 3442 PSI
         this.addTankBy(15);
         this.tanksReloaded = this.onTanksReloaded.asObservable();
+        this.tankRemoved = this.onTankRemoved.asObservable();
     }
 
     public get tanks(): TankBound[] {
@@ -47,12 +51,13 @@ export class TanksService {
     public addTank(): void {
         // TODO default imperial size for stage?
         this.addTankBy(11); // S80 by default
+        this.onTanksReloaded.next();
     }
 
     public removeTank(tank: TankBound): void {
         this._tanks = this._tanks.filter(g => g !== tank);
         this.renumberIds();
-        // TODO this.plan.resetSegments(tank, this.firstTank);
+        this.onTankRemoved.next(tank.tank);
     }
 
     public loadFrom(tanks: Tank[]): void {

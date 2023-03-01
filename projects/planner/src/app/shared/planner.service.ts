@@ -20,6 +20,7 @@ import { TanksService } from './tanks.service';
 @Injectable()
 export class PlannerService extends Streamed {
     public static readonly maxAcceptableNdl = 1000;
+    // TODO extract the plan from planner service and merge ti with the depth service
     public plan: Plan;
     // TODO diver can't be used outside of planner, serialization or app settings
     public diver: Diver = new Diver();
@@ -53,6 +54,9 @@ export class PlannerService extends Streamed {
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
         this.plan = new Plan(Strategies.ALL, 30, 12, this.tanks.firstTank.tank, this.options);
+        // TODO move to plan
+        this.tanks.tankRemoved.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((removed) => this.plan.resetSegments(removed, this.firstTank));
         this.tanksReloaded = this.onTanksReloaded.asObservable();
         this.viewSwitched = this.onViewSwitched.asObservable();
 

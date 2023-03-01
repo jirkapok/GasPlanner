@@ -274,7 +274,7 @@ export class PlannerService extends Streamed {
         this.dive.turnTime = Precision.floor(this.plan.duration / 2);
         // this needs to be moved to each gas or do we have other option?
         this.dive.needsReturn = this.plan.needsReturn && this.tanks.singleTank;
-        this.dive.notEnoughGas = this.tanks.enoughGas;
+        this.dive.notEnoughGas = !this.tanks.enoughGas;
 
         // TODO still there is an option, that some calculation is still running.
         this.dive.calculated = true;

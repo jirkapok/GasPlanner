@@ -56,7 +56,7 @@ describe('Url Serialization', () => {
     it('Serialize and deserialize complex plan', () => {
         const urlParams = PlanUrlSerialization.toUrl(planner, tanksService, options);
         const current = createPlanner();
-        PlanUrlSerialization.fromUrl(urlParams, options, current);
+        PlanUrlSerialization.fromUrl(urlParams, options, tanksService, current);
         expectParsedEquals(planner, current);
     });
 
@@ -66,14 +66,14 @@ describe('Url Serialization', () => {
         source.calculate();
         const urlParams = PlanUrlSerialization.toUrl(source, tanksService, options);
         const current = createPlanner();
-        PlanUrlSerialization.fromUrl(urlParams, options, current);
+        PlanUrlSerialization.fromUrl(urlParams, options, tanksService, current);
         expectParsedEquals(source, current);
     });
 
     it('Decodes url for facebook link', () => {
         const encodedParams = encodeURIComponent(customizedUrl);
         const current = createPlanner();
-        PlanUrlSerialization.fromUrl(encodedParams, options, current);
+        PlanUrlSerialization.fromUrl(encodedParams, options, tanksService, current);
         expectParsedEquals(current, planner);
     });
 
@@ -83,20 +83,20 @@ describe('Url Serialization', () => {
             const urlParams = 't=1-15-200-0.209-0,2-11-200-0.5-0&de=0-30-102-1,30-30-618-1&' +
                 'di=20,1.4,1.6&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&c=0';
             const current = createPlanner();
-            PlanUrlSerialization.fromUrl(urlParams, options, current);
+            PlanUrlSerialization.fromUrl(urlParams, options, tanksService, current);
             expectParsedEquals(current, defaultPlan);
         });
 
         it('Empty string', () => {
             const current = createPlanner();
-            PlanUrlSerialization.fromUrl('', options, current);
+            PlanUrlSerialization.fromUrl('', options, tanksService, current);
             expectParsedEquals(current, defaultPlan);
         });
 
         it('Null string', () => {
             const planUrl: any = null;
             const current = createPlanner();
-            PlanUrlSerialization.fromUrl(<string>planUrl, options, current);
+            PlanUrlSerialization.fromUrl(<string>planUrl, options, tanksService, current);
             expectParsedEquals(current, defaultPlan);
         });
     });

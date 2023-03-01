@@ -21,7 +21,7 @@ export class PreferencesService {
         }
 
         const loaded = JSON.parse(toParse) as AppPreferences;
-        this.preferencesFactory.applyLoaded(this.planner, this.options, loaded);
+        this.preferencesFactory.applyLoaded(this.planner, this.tanksService, this.options, loaded);
     }
 
     public saveDefaults(): void {

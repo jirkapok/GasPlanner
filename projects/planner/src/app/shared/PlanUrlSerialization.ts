@@ -70,7 +70,7 @@ export class PlanUrlSerialization {
         return result;
     }
 
-    public static fromUrl(url: string, targetOptions: OptionsDispatcherService, target: PlannerService): void {
+    public static fromUrl(url: string, targetOptions: OptionsDispatcherService, tanksService: TanksService, target: PlannerService): void {
         try {
             if(!url) {
                 return;
@@ -81,7 +81,7 @@ export class PlanUrlSerialization {
             // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
             const isValid = new PlanValidation().validate(parsed);
             if(isValid) {
-                new PreferencesFactory().applyLoaded(target, targetOptions, parsed);
+                new PreferencesFactory().applyLoaded(target, tanksService, targetOptions, parsed);
             } else {
                 console.log('Unable to load planner from url parameters, due to invalid data.');
             }

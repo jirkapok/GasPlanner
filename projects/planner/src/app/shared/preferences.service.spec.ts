@@ -76,8 +76,8 @@ describe('PreferencesService', () => {
                 options.gasSwitchDuration = 1;
                 options.problemSolvingDuration = 2;
                 planner.assignOptions(options.getOptions());
-                const tanks = tanksService.tanks;
                 tanksService.addTank();
+                const tanks = tanksService.tanks;
                 tanks[0].startPressure = 150;
                 tanks[1].o2 = 50;
                 planner.isComplex = true; // otherwise the tank will be removed.

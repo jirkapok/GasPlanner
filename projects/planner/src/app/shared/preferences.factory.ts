@@ -14,15 +14,18 @@ export class PreferencesFactory {
         };
     }
 
-    public applyLoaded(target: PlannerService, targetOptions: OptionsDispatcherService, loaded: AppPreferences): void {
+    public applyLoaded(target: PlannerService, tanksService: TanksService,
+        targetOptions: OptionsDispatcherService, loaded: AppPreferences): void {
         const tanks = DtoSerialization.toTanks(loaded.tanks);
         const segments = DtoSerialization.toSegments(loaded.plan, tanks);
         const diver = DtoSerialization.toDiver(loaded.diver);
         const options = DtoSerialization.toOptions(loaded.options);
+        tanksService.loadFrom(tanks);
         targetOptions.loadFrom(options);
 
         if(!loaded.isComplex) {
             targetOptions.resetToSimple();
+            tanksService.resetToSimple();
         }
 
         target.loadFrom(loaded.isComplex, options, diver, tanks, segments);

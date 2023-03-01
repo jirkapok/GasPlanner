@@ -50,7 +50,7 @@ export class SettingsNormalizationService {
     }
 
     private normalizeTanks(): void {
-        const tanks = this.tanksService.tanks;
+        const tanks = this.tanksService.tankData;
         tanks.forEach(t => {
             t.startPressure = this.fitPressureToRange(t.startPressure, this.ranges.tankPressure);
             t.size = this.fitTankSizeToRange(t.size, this.ranges.tankSize);

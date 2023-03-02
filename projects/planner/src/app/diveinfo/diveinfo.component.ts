@@ -12,6 +12,7 @@ import { GasToxicity } from '../shared/gasToxicity.service';
 import { takeUntil } from 'rxjs';
 import { Streamed } from '../shared/streamed';
 import { DepthsService } from '../shared/depths.service';
+import { TanksService } from '../shared/tanks.service';
 
 @Component({
     selector: 'app-consumption',
@@ -25,8 +26,11 @@ export class DiveInfoComponent extends Streamed {
     public iconShare = faShareFromSquare;
     public toastVisible = false;
 
-    constructor(private clipboard: ClipboardService, private depthsService: DepthsService,
-        public planner: PlannerService, public units: UnitConversion) {
+    constructor(private clipboard: ClipboardService,
+        private depthsService: DepthsService,
+        private tanksService: TanksService,
+        public planner: PlannerService,
+        public units: UnitConversion) {
         super();
         this.dive = this.planner.dive;
         this.toxicity = new GasToxicity(this.planner.options);
@@ -44,7 +48,7 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get tanks(): Tank[] {
-        return this.planner.tanks;
+        return this.tanksService.tankData;
     }
 
     public get showTankId(): boolean {

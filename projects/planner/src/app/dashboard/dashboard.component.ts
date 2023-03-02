@@ -9,6 +9,7 @@ import { environment } from '../../environments/environment';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { Streamed } from '../shared/streamed';
 import { takeUntil } from 'rxjs';
+import { TanksService } from '../shared/tanks.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -23,6 +24,7 @@ export class DashboardComponent extends Streamed implements OnInit {
         private location: Location,
         private preferences: PreferencesService,
         private options: OptionsDispatcherService,
+        private tanksService: TanksService,
         private planner: PlannerService,
         private delayedCalc: DelayedScheduleService) {
         super();
@@ -37,7 +39,7 @@ export class DashboardComponent extends Streamed implements OnInit {
         const query = window.location.search;
 
         if (query !== '') {
-            PlanUrlSerialization.fromUrl(query, this.options, this.planner);
+            PlanUrlSerialization.fromUrl(query, this.options, this.tanksService, this.planner);
         } else {
             this.delayedCalc.schedule();
         }
@@ -58,7 +60,7 @@ export class DashboardComponent extends Streamed implements OnInit {
             console.log('Planner calculated');
         }
 
-        const urlParams = PlanUrlSerialization.toUrl(this.planner, this.options);
+        const urlParams = PlanUrlSerialization.toUrl(this.planner, this.tanksService, this.options);
         this.location.go('?' + urlParams);
     }
 }

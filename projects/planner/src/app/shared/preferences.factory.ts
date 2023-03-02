@@ -28,7 +28,7 @@ export class PreferencesFactory {
             tanksService.resetToSimple();
         }
 
-        target.loadFrom(loaded.isComplex, options, diver, tanks, segments);
+        target.loadFrom(loaded.isComplex, options, diver, segments);
         target.calculate();
     }
 }

@@ -138,8 +138,7 @@ export class PlannerService extends Streamed {
         this.diver.loadFrom(diver);
     }
 
-    // TODO needs to be called after tanks reloaded
-    public loadFrom(isComplex: boolean, options: Options, diver: Diver, tanks: Tank[], segments: Segment[]): void {
+    public loadFrom(isComplex: boolean, options: Options, diver: Diver, segments: Segment[]): void {
         this.assignOptions(options);
         this.applyDiver(diver);
 

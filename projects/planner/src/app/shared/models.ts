@@ -1,5 +1,6 @@
 import { Ceiling, Time, Event, Segment,
-    StandardGases, Tank, OtuCalculator, Precision, ImperialUnits } from 'scuba-physics';
+    StandardGases, Tank, OtuCalculator,
+    Precision, ImperialUnits } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
 export enum Strategies {
@@ -9,14 +10,11 @@ export enum Strategies {
 }
 
 export class Level {
-    private tankBound: TankBound;
     constructor(
         private units: UnitConversion,
-        public segment: Segment
+        public segment: Segment,
+        private tankBound: TankBound
     ){
-        const tank = segment.tank as Tank;
-        // TODO default working pressure, e.g. in loading from from saved settings or url
-        this.tankBound = new TankBound(tank, this.units);
     }
 
     public get duration(): number {
@@ -53,7 +51,7 @@ export class Level {
 
     public set tank(newValue: TankBound) {
         this.segment.tank = newValue.tank;
-        this.tank = newValue;
+        this.tankBound = newValue;
     }
 }
 

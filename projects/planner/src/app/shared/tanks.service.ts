@@ -99,6 +99,10 @@ export class TanksService {
         this.onTanksReloaded.next();
     }
 
+    public firstBy(tank: Tank): TankBound | undefined {
+        return _(this._tanks).find(t => t.tank === tank);
+    }
+
     private addTankBy(size: number): void {
         const tank = Tank.createDefault();
         const bound = this.addTankFor(this._tanks, tank);

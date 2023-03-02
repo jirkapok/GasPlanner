@@ -95,7 +95,9 @@ export class DepthsService {
         const segments: Segment[] = this.plan.segments;
         const converted: Level[] = [];
         segments.forEach(segment => {
-            const level = new Level(this.units, segment);
+            const tank = segment.tank as Tank;
+            const boundTank = this.tanksService.firstBy(tank) as TankBound;
+            const level = new Level(this.units, segment, boundTank);
             converted.push(level);
         });
 

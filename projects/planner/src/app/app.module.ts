@@ -55,6 +55,7 @@ import { DiveIssuesComponent } from './dive-issues/dive-issues.component';
 import { InputControls } from './shared/inputcontrols';
 import { ValidatorGroups } from './shared/ValidatorGroups';
 import { DepthsService } from './shared/depths.service';
+import { TanksService } from './shared/tanks.service';
 import { SacCalculatorService } from './shared/sac-calculator.service';
 import { NitroxCalculatorService } from './shared/nitrox-calculator.service';
 import { SettingsNormalizationService } from './shared/settings-normalization.service';
@@ -131,6 +132,7 @@ const MDB_MODULES = [
         NitroxCalculatorService,
         SettingsNormalizationService,
         DepthsService,
+        TanksService,
         NdlService,
         InputControls,
         ValidatorGroups,

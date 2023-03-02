@@ -17,7 +17,9 @@ export interface Units {
     fromBar(bars: number): number;
     toLiter(volume: number): number;
     fromLiter(liters: number): number;
+    /** Converts volume of tank based on working pressure in bars */
     fromTankLiters(liters: number, workingPressure: number): number;
+    /** Converts volume of tank based on working pressure in bars */
     toTankLiters(cuftVolume: number, workingPressure: number): number;
 }
 
@@ -171,7 +173,6 @@ export class ImperialUnits implements Units {
     }
 
     public fromTankLiters(liters: number, workingPressure: number): number {
-        // return this.units.fromLiter(this.tank.size);
         const relativeVolume = this.fromLiter(liters);
         const absoluteVolume = relativeVolume * workingPressure;
         return absoluteVolume;

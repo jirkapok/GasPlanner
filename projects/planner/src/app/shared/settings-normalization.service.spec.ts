@@ -87,6 +87,12 @@ describe('SettingsNormalizationService', () => {
                 expect(tank.startPressure).toBeCloseTo(200.016909, 6);
                 expect(tank.size).toBeCloseTo(15.05924, 5);
             }));
+
+        it('Sets working pressure', inject([TanksService],
+            (tanks: TanksService) => {
+                const workingPressure = tanks.firstTank.workingPressure;
+                expect(workingPressure).toBeCloseTo(3000, 6);
+            }));
     });
 
     describe('Metric units', () => {

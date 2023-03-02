@@ -7,7 +7,6 @@ import { RangeConstants, UnitConversion } from './UnitConversion';
 
 @Injectable()
 export class SettingsNormalizationService {
-
     constructor(private planner: PlannerService,
         private options: OptionsDispatcherService,
         private units: UnitConversion,
@@ -50,10 +49,13 @@ export class SettingsNormalizationService {
     }
 
     private normalizeTanks(): void {
-        const tanks = this.tanksService.tankData;
+        const tanks = this.tanksService.tanks;
         tanks.forEach(t => {
-            t.startPressure = this.fitPressureToRange(t.startPressure, this.ranges.tankPressure);
-            t.size = this.fitTankSizeToRange(t.size, this.ranges.tankSize);
+            const tank = t.tank;
+            tank.startPressure = this.fitPressureToRange(tank.startPressure, this.ranges.tankPressure);
+            tank.size = this.fitTankSizeToRange(tank.size, this.ranges.tankSize);
+            // cheating to skip the conversion to bars, since we already have the value in imperial units
+            t.workingPressure = this.fitUnit(v => v, v => v, t.workingPressure, this.ranges.tankPressure);
             // the rest (consumed and reserve) will be calculated
         });
     }

@@ -15,6 +15,7 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add imperial units option
   * Provide rounded default values within acceptable range (Settings, Sac, tanks, depths, options)
+  * Add working pressure and units to Url parameters (cant share only in metric since switching units round values)
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
   * Adjust consumption by Liter: <https://en.wikipedia.org/wiki/Cubic_foot>

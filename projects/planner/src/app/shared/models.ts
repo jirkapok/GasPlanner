@@ -9,10 +9,14 @@ export enum Strategies {
 }
 
 export class Level {
+    private tankBound: TankBound;
     constructor(
         private units: UnitConversion,
         public segment: Segment
     ){
+        const tank = segment.tank as Tank;
+        // TODO default working pressure, e.g. in loading from from saved settings or url
+        this.tankBound = new TankBound(tank, this.units);
     }
 
     public get duration(): number {
@@ -29,14 +33,12 @@ export class Level {
         return this.units.fromMeters(depth);
     }
 
-    public get tank(): Tank | undefined {
-        return this.segment.tank;
+    public get tank(): TankBound {
+        return this.tankBound;
     }
 
     public get tankLabel(): string {
-        const tank = this.segment.tank;
-        // TODO working pressure
-        return Level.tankLabel(this.units, tank, ImperialUnits.defaultWorkingPressure);
+        return this.tank.label;
     }
 
     /** in minutes */
@@ -49,19 +51,9 @@ export class Level {
         this.segment.endDepth = meters;
     }
 
-    public set tank(newValue: Tank | undefined) {
-        this.segment.tank = newValue;
-    }
-
-    /** working pressure in bars */
-    public static tankLabel(units: UnitConversion, tank: Tank | undefined, workingPressure: number): string {
-        if(!tank) {
-            return '';
-        }
-
-        const volume = units.fromTankLiters(tank.size, workingPressure);
-        const startPressure = units.fromBar(tank.startPressure);
-        return `${tank.id}. ${tank.name}/${volume}/${startPressure}`;
+    public set tank(newValue: TankBound) {
+        this.segment.tank = newValue.tank;
+        this.tank = newValue;
     }
 }
 
@@ -93,6 +85,12 @@ export class TankBound {
 
     public get he(): number {
         return this.tank.he;
+    }
+
+    public get label(): string {
+        const volume = this.units.fromTankLiters(this.tank.size, this._workingPressure);
+        const startPressure = this.units.fromBar(this.tank.startPressure);
+        return `${this.tank.id}. ${this.tank.name}/${volume}/${startPressure}`;
     }
 
     public set id(newValue: number) {

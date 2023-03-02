@@ -79,7 +79,7 @@
                                 data-mdb-toggle="dropdown"></button>
                             <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
                                 <li *ngFor="let tank of tanks" (click)="assignTank(i, tank)">
-                                    <a class="dropdown-item">{{ tankLabel(tank) }}</a>
+                                    <a class="dropdown-item">{{ tank.label }}</a>
                                 </li>
                             </ul>
                         </div>

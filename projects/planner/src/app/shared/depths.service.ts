@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Segment, StandardGases, Tank } from 'scuba-physics';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { GasToxicity } from './gasToxicity.service';
-import { Level } from './models';
+import { Level, TankBound } from './models';
 import { Plan } from '../shared/plan.service';
 import { PlannerService } from './planner.service';
 import { UnitConversion } from './UnitConversion';
@@ -86,7 +86,7 @@ export class DepthsService {
         this.apply();
     }
 
-    public assignTank(level: Level, tank: Tank): void {
+    public assignTank(level: Level, tank: TankBound): void {
         level.tank = tank;
         this.apply();
     }

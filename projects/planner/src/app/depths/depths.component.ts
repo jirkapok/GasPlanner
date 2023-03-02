@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray,
+    UntypedFormBuilder, UntypedFormGroup, Validators
+} from '@angular/forms';
 import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
-import { ImperialUnits, Tank } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
-import { Level, Dive } from '../shared/models';
+import { Level, Dive, TankBound } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -55,8 +56,8 @@ export class DepthsComponent extends Streamed implements OnInit {
     }
 
     // only to get their label, formatted in the tankLabel
-    public get tanks(): Tank[] {
-        return this.tanksService.tankData;
+    public get tanks(): TankBound[] {
+        return this.tanksService.tanks;
     }
 
     public get noDecoTime(): number {
@@ -92,7 +93,7 @@ export class DepthsComponent extends Streamed implements OnInit {
         return this.levelAt(index).tankLabel;
     }
 
-    public assignTank(index: number, tank: Tank): void {
+    public assignTank(index: number, tank: TankBound): void {
         const level = this.levelAt(index);
         this.depths.assignTank(level, tank);
     }
@@ -165,11 +166,6 @@ export class DepthsComponent extends Streamed implements OnInit {
 
         const newValue = this.simpleForm.value.planDuration;
         this.depths.planDuration = Number(newValue);
-    }
-
-    public tankLabel(tank: Tank): string {
-        const workingPressure = ImperialUnits.defaultWorkingPressure;
-        return Level.tankLabel(this.units, tank, workingPressure);
     }
 
     // for simple view only

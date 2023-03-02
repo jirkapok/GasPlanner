@@ -215,10 +215,10 @@ describe('DepthsComponent', () => {
 
         it('Adjusts tank label', () => {
             const last = depths.levels[1];
-            const tank: Tank = last.tank || new Tank(0, 0, 0);
-            tank.startPressure = component.units.toBar(3000);
-            // TODO working pressure
-            tank.size = component.units.toTankLiters(100, ImperialUnits.defaultWorkingPressure);
+            const tank = last.tank;
+            tank.startPressure = 3000;
+            tank.workingPressure = 3000;
+            tank.size = 100;
             expect(last.tankLabel).toBe('1. Air/100/3000');
         });
     });

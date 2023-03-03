@@ -2,11 +2,15 @@ import { OptionsDispatcherService } from './options-dispatcher.service';
 import { PlannerService } from './planner.service';
 import { AppPreferences, DtoSerialization } from './serialization.model';
 import { TanksService } from './tanks.service';
+import { ViewSwitchService } from './viewSwitchService';
 
 export class PreferencesFactory {
-    public toPreferences(planner: PlannerService, tanksService: TanksService, targetOptions: OptionsDispatcherService): AppPreferences {
+    public toPreferences(planner: PlannerService,
+        tanksService: TanksService,
+        targetOptions: OptionsDispatcherService,
+        viewSwitch: ViewSwitchService): AppPreferences {
         return {
-            isComplex: planner.isComplex,
+            isComplex: viewSwitch.isComplex,
             options: DtoSerialization.fromOptions(targetOptions.getOptions()),
             diver: DtoSerialization.fromDiver(planner.diver),
             tanks: DtoSerialization.fromTanks(tanksService.tankData),
@@ -14,8 +18,11 @@ export class PreferencesFactory {
         };
     }
 
-    public applyLoaded(target: PlannerService, tanksService: TanksService,
-        targetOptions: OptionsDispatcherService, loaded: AppPreferences): void {
+    public applyLoaded(target: PlannerService,
+        tanksService: TanksService,
+        targetOptions: OptionsDispatcherService,
+        viewSwitch: ViewSwitchService,
+        loaded: AppPreferences): void {
         const tanks = DtoSerialization.toTanks(loaded.tanks);
         const segments = DtoSerialization.toSegments(loaded.plan, tanks);
         const diver = DtoSerialization.toDiver(loaded.diver);
@@ -25,10 +32,10 @@ export class PreferencesFactory {
 
         if(!loaded.isComplex) {
             targetOptions.resetToSimple();
-            tanksService.resetToSimple();
         }
 
-        target.loadFrom(loaded.isComplex, options, diver, segments);
+        target.loadFrom(options, diver, segments);
+        viewSwitch.isComplex = loaded.isComplex;
         target.calculate();
     }
 }

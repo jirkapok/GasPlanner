@@ -10,6 +10,7 @@ import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { Streamed } from '../shared/streamed';
 import { takeUntil } from 'rxjs';
 import { TanksService } from '../shared/tanks.service';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 @Component({
     selector: 'app-dashboard',
@@ -26,12 +27,13 @@ export class DashboardComponent extends Streamed implements OnInit {
         private options: OptionsDispatcherService,
         private tanksService: TanksService,
         private planner: PlannerService,
+        private viewSwitch: ViewSwitchService,
         private delayedCalc: DelayedScheduleService) {
         super();
     }
 
     public get isComplex(): boolean {
-        return this.planner.isComplex;
+        return this.viewSwitch.isComplex;
     }
 
     public ngOnInit(): void {
@@ -39,7 +41,7 @@ export class DashboardComponent extends Streamed implements OnInit {
         const query = window.location.search;
 
         if (query !== '') {
-            PlanUrlSerialization.fromUrl(query, this.options, this.tanksService, this.planner);
+            PlanUrlSerialization.fromUrl(query, this.options, this.tanksService, this.viewSwitch, this.planner);
         } else {
             this.delayedCalc.schedule();
         }
@@ -60,7 +62,7 @@ export class DashboardComponent extends Streamed implements OnInit {
             console.log('Planner calculated');
         }
 
-        const urlParams = PlanUrlSerialization.toUrl(this.planner, this.tanksService, this.options);
+        const urlParams = PlanUrlSerialization.toUrl(this.planner, this.tanksService, this.viewSwitch, this.options);
         this.location.go('?' + urlParams);
     }
 }

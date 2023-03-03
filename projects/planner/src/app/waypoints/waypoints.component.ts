@@ -4,6 +4,7 @@ import { Dive, WayPoint, SwimAction } from '../shared/models';
 import { faArrowDown, faArrowUp, faArrowRight, faTasks, faRandom, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 @Component({
     selector: 'app-waypoints',
@@ -18,12 +19,15 @@ export class WayPointsComponent {
     public tasks = faTasks;
     public switch = faRandom;
 
-    constructor(private planner: PlannerService, public units: UnitConversion, private selectedWaypoint: SelectedWaypoint) {
+    constructor(private planner: PlannerService,
+        public units: UnitConversion,
+        private selectedWaypoint: SelectedWaypoint,
+        private viewSwitch: ViewSwitchService) {
         this.dive = this.planner.dive;
     }
 
     public get isComplex(): boolean {
-        return this.planner.isComplex;
+        return this.viewSwitch.isComplex;
     }
 
     public get totalDuration(): number {

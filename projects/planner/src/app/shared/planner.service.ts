@@ -31,11 +31,7 @@ export class PlannerService extends Streamed {
 
     /** Event fired only in case of tanks rebuild. Not fired when adding or removing tanks. */
     public tanksReloaded;
-    /** when switching between simple and complex view */
-    public viewSwitched;
     private onTanksReloaded = new Subject<void>();
-    private onViewSwitched = new Subject<void>();
-    private _isComplex = false;
     private calculating = false;
     private calculatingDiveInfo = false;
     private calculatingProfile = false;
@@ -58,7 +54,6 @@ export class PlannerService extends Streamed {
         this.tanks.tankRemoved.pipe(takeUntil(this.unsubscribe$))
             .subscribe((removed) => this.plan.resetSegments(removed, this.firstTank));
         this.tanksReloaded = this.onTanksReloaded.asObservable();
-        this.viewSwitched = this.onViewSwitched.asObservable();
 
         this.profileTask = this.workerFactory.createProfileWorker();
         this.profileTask.calculated$.pipe(takeUntil(this.unsubscribe$))
@@ -79,10 +74,6 @@ export class PlannerService extends Streamed {
             .subscribe(() => this.profileFailed());
     }
 
-    public get isComplex(): boolean {
-        return this._isComplex;
-    }
-
     /** Gets the current options. Used only for testing purposes */
     public get options(): Options {
         return this._options;
@@ -94,15 +85,6 @@ export class PlannerService extends Streamed {
 
     private get firstTank(): Tank {
         return this.tanks.firstTank.tank;
-    }
-
-    public set isComplex(newValue: boolean) {
-        this._isComplex = newValue;
-        if (!newValue) {
-            this.resetToSimple();
-        }
-
-        this.onViewSwitched.next();
     }
 
     public addSegment(): void {
@@ -138,7 +120,7 @@ export class PlannerService extends Streamed {
         this.diver.loadFrom(diver);
     }
 
-    public loadFrom(isComplex: boolean, options: Options, diver: Diver, segments: Segment[]): void {
+    public loadFrom(options: Options, diver: Diver, segments: Segment[]): void {
         this.assignOptions(options);
         this.applyDiver(diver);
 
@@ -146,10 +128,7 @@ export class PlannerService extends Streamed {
             this.plan.loadFrom(segments);
         }
 
-        this.isComplex = isComplex;
-        if (!isComplex) {
-            this.resetToSimple();
-        }
+        // TODO reset to simple if not complex
     }
 
     public assignOptions(newOptions: Options): void {
@@ -280,11 +259,5 @@ export class PlannerService extends Streamed {
         this.dive.calculationFailed = false;
         this.calculating = false;
         this.onInfoCalculated.next();
-    }
-
-    /* reset only gas and depths to values valid for simple view. */
-    private resetToSimple(): void {
-        this.tanks.resetToSimple();
-        this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
     }
 }

@@ -13,6 +13,7 @@ import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Plan } from '../shared/plan.service';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 @Component({
     selector: 'app-diveoptions',
@@ -38,13 +39,14 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private planner: PlannerService,
+        private viewSwitch: ViewSwitchService,
         private delayedCalc: DelayedScheduleService) {
         super();
         this.plan = this.planner.plan;
     }
 
     public get isComplex(): boolean {
-        return this.planner.isComplex;
+        return this.viewSwitch.isComplex;
     }
 
     public get ranges(): RangeConstants {
@@ -167,7 +169,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             this.options.resetToSimple();
         }
 
-        this.planner.isComplex = newValue;
+        this.viewSwitch.isComplex = newValue;
         // always calculate, even nothing changed, since we want to propagate url update
         this.applyOptions();
     }

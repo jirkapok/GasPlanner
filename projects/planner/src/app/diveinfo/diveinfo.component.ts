@@ -13,6 +13,7 @@ import { takeUntil } from 'rxjs';
 import { Streamed } from '../shared/streamed';
 import { DepthsService } from '../shared/depths.service';
 import { TanksService } from '../shared/tanks.service';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 @Component({
     selector: 'app-consumption',
@@ -30,6 +31,7 @@ export class DiveInfoComponent extends Streamed {
         private depthsService: DepthsService,
         private tanksService: TanksService,
         public planner: PlannerService,
+        private viewSwitch: ViewSwitchService,
         public units: UnitConversion) {
         super();
         this.dive = this.planner.dive;
@@ -52,7 +54,7 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get showTankId(): boolean {
-        return this.planner.isComplex;
+        return this.viewSwitch.isComplex;
     }
 
     public get showMaxBottomTime(): boolean {
@@ -68,7 +70,7 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get showApply(): boolean {
-        return !this.planner.isComplex;
+        return !this.viewSwitch.isComplex;
     }
 
     public get averageDepth(): number {

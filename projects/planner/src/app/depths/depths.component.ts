@@ -13,6 +13,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Plan } from '../shared/plan.service';
 import { TanksService } from '../shared/tanks.service';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 @Component({
     selector: 'app-depths',
@@ -35,6 +36,7 @@ export class DepthsComponent extends Streamed implements OnInit {
         public planner: PlannerService,
         private tanksService: TanksService,
         public depths: DepthsService,
+        private viewSwitch: ViewSwitchService,
         public units: UnitConversion) {
         super();
         this.plan = this.planner.plan;
@@ -48,7 +50,7 @@ export class DepthsComponent extends Streamed implements OnInit {
     }
 
     public get isComplex(): boolean {
-        return this.planner.isComplex;
+        return this.viewSwitch.isComplex;
     }
 
     public get minimumSegments(): boolean {
@@ -117,7 +119,7 @@ export class DepthsComponent extends Streamed implements OnInit {
             });
 
         // for complex view only
-        this.planner.viewSwitched.pipe(takeUntil(this.unsubscribe$))
+        this.viewSwitch.viewSwitched.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.depths.updateLevels();
                 this.reloadComplex();

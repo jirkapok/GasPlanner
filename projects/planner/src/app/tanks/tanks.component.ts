@@ -12,6 +12,7 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 @Component({
     selector: 'app-tanks',
@@ -28,6 +29,7 @@ export class TanksComponent extends Streamed implements OnInit {
 
     constructor(private planner: PlannerService,
         private tanksService: TanksService,
+        private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         private fb: UntypedFormBuilder,
         private inputs: InputControls,
@@ -55,7 +57,7 @@ export class TanksComponent extends Streamed implements OnInit {
     }
 
     public get isComplex(): boolean {
-        return this.planner.isComplex;
+        return this.viewSwitch.isComplex;
     }
 
     public get firstTankSizeInvalid(): boolean {
@@ -77,7 +79,7 @@ export class TanksComponent extends Streamed implements OnInit {
 
         this.planner.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
-        this.planner.viewSwitched.pipe(takeUntil(this.unsubscribe$))
+        this.viewSwitch.viewSwitched.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
     }
 

@@ -6,6 +6,7 @@ import { PlanValidation } from './PlanValidation';
 import { PreferencesFactory } from './preferences.factory';
 import { AppPreferences, DiverDto, OptionsDto, SegmentDto, TankDto } from './serialization.model';
 import { TanksService } from './tanks.service';
+import { ViewSwitchService } from './viewSwitchService';
 
 class ParseContext {
     private static readonly trueValue = '1';
@@ -60,17 +61,24 @@ class ParseContext {
  * 3. Encode as url parameter
  **/
 export class PlanUrlSerialization {
-    public static toUrl(source: PlannerService, tanksService: TanksService, options: OptionsDispatcherService): string {
+    public static toUrl(source: PlannerService,
+        tanksService: TanksService,
+        viewSwitch: ViewSwitchService,
+        options: OptionsDispatcherService): string {
         const tanksParam = PlanUrlSerialization.toTanksParam(tanksService.tankData);
         const depthsParam = PlanUrlSerialization.toDepthsParam(source.plan.segments);
         const diParam =  PlanUrlSerialization.toDiverParam(source.diver);
         const optionsParam = PlanUrlSerialization.toOptionsParam(options.getOptions());
-        const isComplex = ParseContext.serializeBoolean(source.isComplex);
+        const isComplex = ParseContext.serializeBoolean(viewSwitch.isComplex);
         const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&c=${isComplex}`;
         return result;
     }
 
-    public static fromUrl(url: string, targetOptions: OptionsDispatcherService, tanksService: TanksService, target: PlannerService): void {
+    public static fromUrl(url: string,
+        targetOptions: OptionsDispatcherService,
+        tanksService: TanksService,
+        viewSwitch: ViewSwitchService,
+        target: PlannerService): void {
         try {
             if(!url) {
                 return;
@@ -81,7 +89,7 @@ export class PlanUrlSerialization {
             // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
             const isValid = new PlanValidation().validate(parsed);
             if(isValid) {
-                new PreferencesFactory().applyLoaded(target, tanksService, targetOptions, parsed);
+                new PreferencesFactory().applyLoaded(target, tanksService, targetOptions, viewSwitch, parsed);
             } else {
                 console.log('Unable to load planner from url parameters, due to invalid data.');
             }

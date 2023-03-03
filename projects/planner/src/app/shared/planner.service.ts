@@ -284,7 +284,7 @@ export class PlannerService extends Streamed {
 
     /* reset only gas and depths to values valid for simple view. */
     private resetToSimple(): void {
-        // TODO reset tanks first
+        this.tanks.resetToSimple();
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.options);
     }
 }

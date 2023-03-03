@@ -59,6 +59,7 @@ import { TanksService } from './shared/tanks.service';
 import { SacCalculatorService } from './shared/sac-calculator.service';
 import { NitroxCalculatorService } from './shared/nitrox-calculator.service';
 import { SettingsNormalizationService } from './shared/settings-normalization.service';
+import { ViewSwitchService } from './shared/viewSwitchService';
 import { OxygenDropDownComponent } from './oxygen-dropdown/oxygen-dropdown.component';
 
 const ANGULAR_MODULES = [
@@ -134,6 +135,7 @@ const MDB_MODULES = [
         DepthsService,
         TanksService,
         NdlService,
+        ViewSwitchService,
         InputControls,
         ValidatorGroups,
         DatePipe,

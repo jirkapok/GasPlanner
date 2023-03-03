@@ -1,20 +1,26 @@
+import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { Time, Segment, Segments, SegmentsFactory,
     Options, Tank } from 'scuba-physics';
 import { Strategies } from './models';
 
+@Injectable()
 export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     public noDecoTime = 0;
+    // TODO move strategy to Consumption algorithm selection
+    public strategy: Strategies = Strategies.ALL;
     /** Event fired only in case of segments rebuild. Not fired when adding or removing. */
     public reloaded$: Observable<void>;
     private _segments: Segments = new Segments();
     private onReloaded = new Subject<void>();
 
     /** provide the not necessary tank and options only to start from simple valid profile */
-    constructor(public strategy: Strategies, depth: number, duration: number, tank: Tank, options: Options) {
+    constructor() {
         this.reloaded$ = this.onReloaded.asObservable();
-        this.reset(depth, duration, tank, options);
+        const tank = Tank.createDefault();
+        const options = new Options();
+        this.reset(30, 12, tank, options);
     }
 
     public get length(): number {

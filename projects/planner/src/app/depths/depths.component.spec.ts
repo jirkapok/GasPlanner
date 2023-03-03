@@ -3,8 +3,6 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ImperialUnits, Tank } from 'scuba-physics';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
@@ -14,6 +12,9 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { DepthsComponent } from './depths.component';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TanksService } from '../shared/tanks.service';
+import { ViewSwitchService } from '../shared/viewSwitchService';
+import { Plan } from '../shared/plan.service';
+import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComponent>) { }
@@ -72,7 +73,9 @@ describe('DepthsComponent', () => {
             providers: [WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls, DelayedScheduleService,
                 OptionsDispatcherService, ValidatorGroups,
-                DepthsService, DecimalPipe, TanksService]
+                DepthsService, DecimalPipe, TanksService,
+                ViewSwitchService, Plan
+            ]
         })
             .compileComponents();
     });
@@ -110,13 +113,13 @@ describe('DepthsComponent', () => {
                 expect(simplePage.durationInput.value).toBe('19');
             });
 
-            it('Switch to simple view', () => {
-                component.planner.isComplex = true;
+            it('Switch to simple view', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
+                viewSwitch.isComplex = true;
                 fixture.detectChanges();
                 complexPage.durationInput(1).value = '20';
                 complexPage.durationInput(1).dispatchEvent(new Event('input'));
                 expect(depths.planDuration).toBe(21.7);
-            });
+            }));
         });
 
         it('wrong duration doesn\'t call calculate', () => {
@@ -132,7 +135,8 @@ describe('DepthsComponent', () => {
 
     describe('Complex view', () => {
         beforeEach(() => {
-            component.planner.isComplex = true;
+            const viewSwitch = TestBed.inject(ViewSwitchService);
+            viewSwitch.isComplex = true;
             fixture.detectChanges();
         });
 

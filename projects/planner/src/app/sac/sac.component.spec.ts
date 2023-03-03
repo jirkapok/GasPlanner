@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { InputControls } from '../shared/inputcontrols';
+import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -22,7 +23,7 @@ describe('Sac component', () => {
                 WorkersFactoryCommon, UnitConversion,
                 PlannerService, DecimalPipe, UntypedFormBuilder,
                 ValidatorGroups, InputControls, SacCalculatorService,
-                TanksService
+                TanksService, Plan
             ],
             imports: [
                 RouterTestingModule.withRoutes([]),

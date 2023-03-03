@@ -8,6 +8,7 @@ import { WayPoint } from './models';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
+import { Plan } from './plan.service';
 
 describe('Selected Waypoint', () => {
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
@@ -17,7 +18,7 @@ describe('Selected Waypoint', () => {
         TestBed.configureTestingModule({
             providers: [
                 WorkersFactoryCommon, PlannerService,
-                UnitConversion, TanksService]
+                UnitConversion, TanksService, Plan]
         });
     });
 

@@ -5,11 +5,13 @@ import { By } from '@angular/platform-browser';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
+import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DepthComponent } from './depth.component';
 
 export class DepthPage {
@@ -39,7 +41,9 @@ describe('DepthComponent Imperial units', () => {
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, ValidatorGroups,
                 DepthsService, DelayedScheduleService,
-                InputControls, TanksService]
+                InputControls, TanksService,
+                Plan, ViewSwitchService
+            ]
         })
             .compileComponents();
     });

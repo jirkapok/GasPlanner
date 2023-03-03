@@ -1,5 +1,5 @@
 import { WayPointsService } from './waypoints.service';
-import { Strategies, SwimAction } from './models';
+import { SwimAction } from './models';
 import { Plan } from '../shared/plan.service';
 import { Tank, Salinity, CalculatedProfile, Events, Event, EventType, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
@@ -10,7 +10,8 @@ describe('WayPointsService', () => {
     options.safetyStop = SafetyStop.always;
 
     it('No errors converts waypoints', () => {
-        const plan = new Plan(Strategies.ALL, 40, 20, airTank, options);
+        const plan = new Plan();
+        plan.setSimple(40, 20, airTank, options);
         const profile = CalculatedProfile.fromProfile(plan.segments, []);
 
         const wayPoints = WayPointsService.calculateWayPoints(profile, new Events());
@@ -18,7 +19,8 @@ describe('WayPointsService', () => {
     });
 
     it('With errors generates empty waypoints', () => {
-        const plan = new Plan(Strategies.ALL, 30, 10, airTank, options);
+        const plan = new Plan();
+        plan.setSimple(30, 10, airTank, options);
         const profile = CalculatedProfile.fromErrors(plan.segments, [
             new Event(0,0, EventType.error)
         ]);
@@ -28,7 +30,8 @@ describe('WayPointsService', () => {
     });
 
     it('With gas switch adds event', () => {
-        const plan = new Plan(Strategies.ALL, 40, 20, airTank, options);
+        const plan = new Plan();
+        plan.setSimple(40, 20, airTank, options);
         plan.addSegment(new Tank(10, 0, 50));
         const profile = CalculatedProfile.fromProfile(plan.segments, []);
 

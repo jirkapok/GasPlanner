@@ -1,29 +1,42 @@
-import { Time, SafetyStop, Segment, Event, EventType, CalculatedProfile, Events } from 'scuba-physics';
+import {
+    Time, SafetyStop, Segment, Event,
+    EventType, CalculatedProfile, Events
+} from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { TestBed } from '@angular/core/testing';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
 import {
-    ConsumptionRequestDto, ConsumptionResultDto, DiveInfoResultDto, DtoSerialization,
+    ConsumptionRequestDto, ConsumptionResultDto,
+    DiveInfoResultDto, DtoSerialization,
     ProfileRequestDto, ProfileResultDto
 } from './serialization.model';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
+import { ViewSwitchService } from './viewSwitchService';
+import { Plan } from './plan.service';
+import { OptionsDispatcherService } from './options-dispatcher.service';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
     let tanksService: TanksService;
+    let viewSwitch: ViewSwitchService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
-            providers: [WorkersFactoryCommon, PlannerService, UnitConversion, TanksService],
+            providers: [WorkersFactoryCommon,
+                PlannerService, UnitConversion,
+                TanksService, ViewSwitchService,
+                OptionsDispatcherService, Plan
+            ],
             imports: []
         }).compileComponents();
 
         planner = TestBed.inject(PlannerService);
         tanksService = TestBed.inject(TanksService);
+        viewSwitch = TestBed.inject(ViewSwitchService);
         OptionExtensions.applySimpleSpeeds(planner.options);
         planner.options.problemSolvingDuration = 2;
         planner.options.safetyStop = SafetyStop.always;
@@ -102,7 +115,7 @@ describe('PlannerService', () => {
             planner.plan.segments[1].endDepth = 5;
             planner.addSegment();
             planner.plan.fixDepths(); // to simplify setup
-            planner.isComplex = false;
+            viewSwitch.isComplex = false;
         });
 
         it('Sets simple profile', () => {
@@ -181,7 +194,8 @@ describe('PlannerService', () => {
             // manual service initialization to avoid testbed conflicts
             const createPlanner = () => new PlannerService(
                 new WorkersFactoryCommon(),
-                new TanksService(new UnitConversion()));
+                new TanksService(new UnitConversion()),
+                new Plan());
 
             it('Max bottom time is NOT applied', () => {
                 planner = createPlanner();
@@ -230,7 +244,7 @@ describe('PlannerService', () => {
             events.add(new Event(0, 0, EventType.error));
             const profile = CalculatedProfile.fromErrors(planner.plan.segments, []);
             const profileDto = DtoSerialization.fromProfile(profile);
-            return  {
+            return {
                 profile: profileDto,
                 events: DtoSerialization.fromEvents(events.items)
             };

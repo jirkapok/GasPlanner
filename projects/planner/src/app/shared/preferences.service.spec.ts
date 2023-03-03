@@ -7,6 +7,8 @@ import { WorkersFactoryCommon } from './serial.workers.factory';
 import { OptionsDispatcherService } from './options-dispatcher.service';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
+import { ViewSwitchService } from './viewSwitchService';
+import { Plan } from './plan.service';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -14,7 +16,8 @@ describe('PreferencesService', () => {
             providers: [WorkersFactoryCommon,
                 PreferencesService, PlannerService,
                 UnitConversion, TanksService,
-                OptionsDispatcherService ]
+                ViewSwitchService,
+                OptionsDispatcherService, Plan]
         });
 
         localStorage.clear();
@@ -29,7 +32,7 @@ describe('PreferencesService', () => {
 
     describe('Preferences', () => {
         it('Diver values are loaded after save', inject([PreferencesService, PlannerService],
-            (service: PreferencesService, planner: PlannerService, options: OptionsDispatcherService) => {
+            (service: PreferencesService, planner: PlannerService) => {
                 const diver = planner.diver;
                 diver.rmv = 10;
                 diver.maxPpO2 = 1.1;
@@ -47,12 +50,12 @@ describe('PreferencesService', () => {
                 expect(diver).toEqual(expected);
             }));
 
-        it('Options values are loaded after save', inject([PreferencesService, PlannerService, OptionsDispatcherService],
-            (service: PreferencesService, planner: PlannerService, options: OptionsDispatcherService) => {
+        it('Options values are loaded after save', inject([PreferencesService, PlannerService, OptionsDispatcherService, ViewSwitchService],
+            (service: PreferencesService, planner: PlannerService, options: OptionsDispatcherService, viewSwitch: ViewSwitchService) => {
                 // not going to test all options, since it is a flat structure
                 options.gfLow = 0.3;
                 options.descentSpeed = 15;
-                planner.isComplex = true; // otherwise reset of GF.
+                viewSwitch.isComplex = true; // otherwise reset of GF.
                 planner.assignOptions(options.getOptions());
                 planner.calculate();
                 service.saveDefaults();
@@ -67,9 +70,11 @@ describe('PreferencesService', () => {
                 expect(planner.options).toEqual(expected);
             }));
 
-        it('Tanks are loaded after save', inject([PreferencesService, PlannerService, TanksService, OptionsDispatcherService],
+        it('Tanks are loaded after save', inject(
+            [PreferencesService, PlannerService, TanksService, OptionsDispatcherService, ViewSwitchService],
             (service: PreferencesService, planner: PlannerService,
-                tanksService: TanksService, options: OptionsDispatcherService) => {
+                tanksService: TanksService, options: OptionsDispatcherService,
+                viewSwitch: ViewSwitchService) => {
                 const oValues = options.getOptions();
                 OptionExtensions.applySimpleSpeeds(oValues);
                 options.safetyStop = SafetyStop.always;
@@ -80,7 +85,7 @@ describe('PreferencesService', () => {
                 const tanks = tanksService.tanks;
                 tanks[0].startPressure = 150;
                 tanks[1].o2 = 50;
-                planner.isComplex = true; // otherwise the tank will be removed.
+                viewSwitch.isComplex = true; // otherwise the tank will be removed.
                 planner.calculate();
                 service.saveDefaults();
 
@@ -97,20 +102,21 @@ describe('PreferencesService', () => {
                 expected2.consumed = 21;
                 expected2.reserve = 62;
                 // JSON serialization prevents order of items in an array
-                const expected: Tank[] = [ expected1, expected2 ];
+                const expected: Tank[] = [expected1, expected2];
                 expect(tanksService.tankData).toEqual(expected);
             }));
 
-        it('Plan is loaded after save', inject([PreferencesService, PlannerService, TanksService],
-            (service: PreferencesService, planner: PlannerService, tanksService: TanksService) => {
+        it('Plan is loaded after save', inject([PreferencesService, PlannerService, TanksService, ViewSwitchService],
+            (service: PreferencesService, planner: PlannerService,
+                tanksService: TanksService, viewSwitch: ViewSwitchService) => {
                 const plan = planner.plan;
                 tanksService.addTank();
                 tanksService.addTank();
                 planner.addSegment();
                 const lastSegment = plan.segments[2];
                 const secondTank = tanksService.tanks[1];
-                lastSegment.tank =secondTank.tank;
-                planner.isComplex = true;
+                lastSegment.tank = secondTank.tank;
+                viewSwitch.isComplex = true;
                 planner.calculate();
                 service.saveDefaults();
 

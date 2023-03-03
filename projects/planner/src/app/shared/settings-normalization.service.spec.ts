@@ -2,6 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Diver, Options } from 'scuba-physics';
 import { OptionsDispatcherService } from './options-dispatcher.service';
+import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { SettingsNormalizationService } from './settings-normalization.service';
@@ -17,7 +18,7 @@ describe('SettingsNormalizationService', () => {
             declarations: [],
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, RouterTestingModule, OptionsDispatcherService,
-                SettingsNormalizationService, TanksService],
+                SettingsNormalizationService, TanksService, Plan],
             imports: [RouterTestingModule.withRoutes([])]
         });
         service = TestBed.inject(SettingsNormalizationService);

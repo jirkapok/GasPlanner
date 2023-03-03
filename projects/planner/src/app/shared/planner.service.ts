@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
-import { Dive, Strategies, } from './models';
+import { Dive } from './models';
 import { Plan } from '../shared/plan.service';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
@@ -20,8 +20,6 @@ import { TanksService } from './tanks.service';
 @Injectable()
 export class PlannerService extends Streamed {
     public static readonly maxAcceptableNdl = 1000;
-    // TODO extract the plan from planner service and merge ti with the depth service
-    public plan: Plan;
     // TODO diver can't be used outside of planner, serialization or app settings
     public diver: Diver = new Diver();
     // there always needs to be at least one
@@ -42,14 +40,15 @@ export class PlannerService extends Streamed {
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
     private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
 
-    constructor(private workerFactory: WorkersFactoryCommon, private tanks: TanksService) {
+    constructor(private workerFactory: WorkersFactoryCommon,
+        private tanks: TanksService,
+        public plan: Plan) {
         super();
         this._options = new Options();
         this._options.salinity = Salinity.fresh;
         this._options.safetyStop = SafetyStop.auto;
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
-        this.plan = new Plan(Strategies.ALL, 30, 12, this.tanks.firstTank.tank, this.options);
         // TODO move to plan
         this.tanks.tankRemoved.pipe(takeUntil(this.unsubscribe$))
             .subscribe((removed) => this.plan.resetSegments(removed, this.firstTank));

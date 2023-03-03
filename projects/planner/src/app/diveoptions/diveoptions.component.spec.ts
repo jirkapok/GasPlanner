@@ -4,11 +4,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveOptionsComponent } from './diveoptions.component';
 
 describe('DepthComponent Imperial units', () => {
@@ -23,7 +25,8 @@ describe('DepthComponent Imperial units', () => {
                 OptionsDispatcherService, InputControls,
                 ValidatorGroups, PlannerService,
                 DelayedScheduleService, UnitConversion,
-                TanksService]
+                TanksService, Plan, ViewSwitchService
+            ]
         })
             .compileComponents();
     });

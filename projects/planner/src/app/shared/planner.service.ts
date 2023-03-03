@@ -49,6 +49,7 @@ export class PlannerService extends Streamed {
         this._options.safetyStop = SafetyStop.auto;
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
+        this.plan.setSimple(30, 12, this.firstTank, this.options);
         // TODO move to plan
         this.tanks.tankRemoved.pipe(takeUntil(this.unsubscribe$))
             .subscribe((removed) => this.plan.resetSegments(removed, this.firstTank));

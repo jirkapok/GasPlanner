@@ -61,6 +61,7 @@ import { NitroxCalculatorService } from './shared/nitrox-calculator.service';
 import { SettingsNormalizationService } from './shared/settings-normalization.service';
 import { ViewSwitchService } from './shared/viewSwitchService';
 import { OxygenDropDownComponent } from './oxygen-dropdown/oxygen-dropdown.component';
+import { Plan } from './shared/plan.service';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -124,6 +125,7 @@ const MDB_MODULES = [
     providers: [
         { provide: WorkersFactoryCommon, useClass: WorkersFactory },
         PlannerService,
+        Plan,
         PreferencesService,
         UnitConversion,
         SelectedWaypoint,

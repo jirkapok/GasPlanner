@@ -165,9 +165,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     public set isComplex(newValue: boolean) {
         if (!newValue) {
             this.setAllUsable();
-
-            // TODO move to view switch
-            this.options.resetToSimple();
         }
 
         this.viewSwitch.isComplex = newValue;

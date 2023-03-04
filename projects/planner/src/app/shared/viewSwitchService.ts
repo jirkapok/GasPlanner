@@ -35,6 +35,7 @@ export class ViewSwitchService {
 
     /* reset only gas and depths to values valid for simple view. */
     private resetToSimple(): void {
+        this.options.resetToSimple();
         this.tanks.resetToSimple();
         const firstTank = this.tanks.firstTank.tank;
         const options = this.options.getOptions();

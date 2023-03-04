@@ -72,42 +72,6 @@ export class PlanUrlSerialization {
         private plan: Plan
     ) {}
 
-    public toUrl(): string {
-        const tanksParam = PlanUrlSerialization.toTanksParam(this.tanksService.tankData);
-        const depthsParam = PlanUrlSerialization.toDepthsParam(this.plan.segments);
-        const diParam =  PlanUrlSerialization.toDiverParam(this.planner.diver);
-        const optionsParam = PlanUrlSerialization.toOptionsParam(this.options.getOptions());
-        const isComplex = ParseContext.serializeBoolean(this.viewSwitch.isComplex);
-        const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&c=${isComplex}`;
-        return result;
-    }
-
-    public static fromUrl(url: string,
-        targetOptions: OptionsDispatcherService,
-        tanksService: TanksService,
-        viewSwitch: ViewSwitchService,
-        targetPlan: Plan,
-        target: PlannerService): void {
-        try {
-            if(!url) {
-                return;
-            }
-
-            const decodedUrl = decodeURIComponent(url);
-            const parsed = PlanUrlSerialization.parseDto(decodedUrl);
-            // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
-            const isValid = new PlanValidation().validate(parsed);
-            if(isValid) {
-                new PreferencesFactory().applyLoaded(target, tanksService,
-                    targetOptions, viewSwitch, targetPlan, parsed);
-            } else {
-                console.log('Unable to load planner from url parameters, due to invalid data.');
-            }
-        } catch {
-            console.log('Failed loading of planner from url parameters.');
-        }
-    }
-
     private static parseDto(url: string): AppPreferences {
         const params = new URLSearchParams(url);
         const complexParam = params.get('c') || '';
@@ -267,5 +231,36 @@ export class PlanUrlSerialization {
         });
 
         return result.join(',');
+    }
+
+    public toUrl(): string {
+        const tanksParam = PlanUrlSerialization.toTanksParam(this.tanksService.tankData);
+        const depthsParam = PlanUrlSerialization.toDepthsParam(this.plan.segments);
+        const diParam =  PlanUrlSerialization.toDiverParam(this.planner.diver);
+        const optionsParam = PlanUrlSerialization.toOptionsParam(this.options.getOptions());
+        const isComplex = ParseContext.serializeBoolean(this.viewSwitch.isComplex);
+        const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&c=${isComplex}`;
+        return result;
+    }
+
+    public fromUrl(url: string): void {
+        try {
+            if(!url) {
+                return;
+            }
+
+            const decodedUrl = decodeURIComponent(url);
+            const parsed = PlanUrlSerialization.parseDto(decodedUrl);
+            // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
+            const isValid = new PlanValidation().validate(parsed);
+            if(isValid) {
+                new PreferencesFactory().applyLoaded(this.planner, this.tanksService,
+                    this.options, this.viewSwitch, this.plan, parsed);
+            } else {
+                console.log('Unable to load planner from url parameters, due to invalid data.');
+            }
+        } catch {
+            console.log('Failed loading of planner from url parameters.');
+        }
     }
 }

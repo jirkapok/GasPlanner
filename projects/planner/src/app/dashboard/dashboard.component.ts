@@ -47,8 +47,7 @@ export class DashboardComponent extends Streamed implements OnInit {
         const query = window.location.search;
 
         if (query !== '') {
-            PlanUrlSerialization.fromUrl(query, this.options,
-                this.tanksService, this.viewSwitch, this.plan, this.planner);
+            this.urlSerialization.fromUrl(query);
         } else {
             this.delayedCalc.schedule();
         }

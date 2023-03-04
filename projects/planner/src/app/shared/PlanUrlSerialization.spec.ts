@@ -65,7 +65,8 @@ describe('Url Serialization', () => {
     it('Serialize and deserialize complex plan', () => {
         const current = createPlanner();
         // TODO check, if viewSwitch and tank service should be also new instances.
-        PlanUrlSerialization.fromUrl(customizedUrl, options, tanksService, viewSwitch, plan, current);
+        new PlanUrlSerialization(current, tanksService, viewSwitch, options, plan)
+            .fromUrl(customizedUrl);
         expectParsedEquals(planner, current, viewSwitch.isComplex, true);
     });
 
@@ -75,14 +76,15 @@ describe('Url Serialization', () => {
         source.calculate();
         const urlParams = sut.toUrl();
         const current = createPlanner();
-        PlanUrlSerialization.fromUrl(urlParams, options, tanksService, viewSwitch, plan, current);
+        new PlanUrlSerialization(current, tanksService, viewSwitch, options, plan)
+            .fromUrl(urlParams);
         expectParsedEquals(source, current, viewSwitch.isComplex, true);
     });
 
     it('Decodes url for facebook link', () => {
         const encodedParams = encodeURIComponent(customizedUrl);
         const current = createPlanner();
-        PlanUrlSerialization.fromUrl(encodedParams, options, tanksService, viewSwitch, plan, current);
+        new PlanUrlSerialization(current, tanksService, viewSwitch, options, plan).fromUrl(encodedParams);
         expectParsedEquals(current, planner, viewSwitch.isComplex, true);
     });
 
@@ -92,20 +94,23 @@ describe('Url Serialization', () => {
             const urlParams = 't=1-15-200-0.209-0,2-11-200-0.5-0&de=0-30-102-1,30-30-618-1&' +
                 'di=20,1.4,1.6&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&c=0';
             const current = createPlanner();
-            PlanUrlSerialization.fromUrl(urlParams, options, tanksService, viewSwitch, plan, current);
+            new PlanUrlSerialization(current, tanksService, viewSwitch, options, plan)
+                .fromUrl(urlParams);
             expectParsedEquals(current, defaultPlan, viewSwitch.isComplex, true);
         });
 
         it('Empty string', () => {
             const current = createPlanner();
-            PlanUrlSerialization.fromUrl('', options, tanksService, viewSwitch, plan, current);
+            new PlanUrlSerialization(current, tanksService, viewSwitch, options, plan)
+                .fromUrl('');
             expectParsedEquals(current, defaultPlan, viewSwitch.isComplex, true);
         });
 
         it('Null string', () => {
             const planUrl: unknown = null;
             const current = createPlanner();
-            PlanUrlSerialization.fromUrl(<string>planUrl, options, tanksService, viewSwitch, plan, current);
+            new PlanUrlSerialization(current, tanksService, viewSwitch, options, plan)
+                .fromUrl(<string>planUrl);
             expectParsedEquals(current, defaultPlan, viewSwitch.isComplex, true);
         });
     });

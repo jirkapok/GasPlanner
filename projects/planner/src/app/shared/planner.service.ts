@@ -112,10 +112,6 @@ export class PlannerService extends Streamed {
         this.plan.assignDuration(newDuration, this.firstTank, this.options);
     }
 
-    public assignDepth(newDepth: number): void {
-        this.plan.assignDepth(newDepth, this.firstTank, this.options);
-    }
-
     public applyDiver(diver: Diver): void {
         this.diver.loadFrom(diver);
     }

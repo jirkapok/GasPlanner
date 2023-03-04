@@ -42,7 +42,7 @@ describe('PlannerService', () => {
         OptionExtensions.applySimpleSpeeds(planner.options);
         planner.options.problemSolvingDuration = 2;
         planner.options.safetyStop = SafetyStop.always;
-        planner.assignDepth(30);
+        plan.assignDepth(30, tanksService.firstTank.tank, planner.options);
         planner.calculate();
     });
 
@@ -88,7 +88,7 @@ describe('PlannerService', () => {
 
     describe('Shows errors', () => {
         it('60m for 50 minutes maximum depth exceeded', () => {
-            planner.assignDepth(60);
+            plan.assignDepth(60, tanksService.firstTank.tank, planner.options);
             planner.calculate();
             const hasEvents = planner.dive.events.length > 0;
             expect(hasEvents).toBeTruthy();
@@ -112,8 +112,9 @@ describe('PlannerService', () => {
 
         beforeEach(() => {
             tanksService.firstTank.o2 = o2Expected;
+            // TODO simplify setup
             tanksService.addTank();
-            planner.assignDepth(7);
+            plan.assignDepth(7, tanksService.firstTank.tank, planner.options);
             plan.segments[1].endDepth = 5;
             planner.addSegment();
             plan.fixDepths(); // to simplify setup

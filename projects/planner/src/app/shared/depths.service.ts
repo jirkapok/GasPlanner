@@ -42,7 +42,7 @@ export class DepthsService {
 
     public set plannedDepth(newValue: number) {
         const depth = this.units.toMeters(newValue);
-        this.planner.assignDepth(depth);
+        this.assignDepth(depth);
         this.levelChanged();
     }
 
@@ -76,7 +76,7 @@ export class DepthsService {
     public applyMaxDepth(): void {
         const tank = this.tanksService.firstTank.tank;
         const maxDepth = this.toxicity.maxDepth(tank);
-        this.planner.assignDepth(maxDepth);
+        this.assignDepth(maxDepth);
         this.levelChanged();
     }
 
@@ -101,6 +101,12 @@ export class DepthsService {
         });
 
         this._levels = converted;
+    }
+
+    public assignDepth(newDepth: number): void {
+        const options = this.planner.options;
+        const firstTank = this.tanksService.firstTank.tank;
+        this.plan.assignDepth(newDepth, firstTank, options);
     }
 
     private apply(): void {

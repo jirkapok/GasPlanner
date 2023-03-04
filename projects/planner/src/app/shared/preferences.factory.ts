@@ -24,6 +24,7 @@ export class PreferencesFactory {
         tanksService: TanksService,
         targetOptions: OptionsDispatcherService,
         viewSwitch: ViewSwitchService,
+        targetPlan: Plan,
         loaded: AppPreferences): void {
         const tanks = DtoSerialization.toTanks(loaded.tanks);
         const segments = DtoSerialization.toSegments(loaded.plan, tanks);
@@ -31,6 +32,7 @@ export class PreferencesFactory {
         const options = DtoSerialization.toOptions(loaded.options);
         tanksService.loadFrom(tanks);
         targetOptions.loadFrom(options);
+        targetPlan.loadFrom(segments);
         target.loadFrom(options, diver, segments);
         viewSwitch.isComplex = loaded.isComplex;
         target.calculate();

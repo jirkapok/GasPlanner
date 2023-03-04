@@ -31,11 +31,6 @@ export class PreferencesFactory {
         const options = DtoSerialization.toOptions(loaded.options);
         tanksService.loadFrom(tanks);
         targetOptions.loadFrom(options);
-
-        if(!loaded.isComplex) {
-            targetOptions.resetToSimple();
-        }
-
         target.loadFrom(options, diver, segments);
         viewSwitch.isComplex = loaded.isComplex;
         target.calculate();

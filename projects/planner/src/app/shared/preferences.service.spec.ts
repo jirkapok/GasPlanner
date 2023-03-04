@@ -131,9 +131,11 @@ describe('PreferencesService', () => {
             }));
 
         it('Simple profile is loaded after save and trims tank', inject(
-            [PreferencesService, PlannerService, TanksService, Plan],
+            [PreferencesService, PlannerService, TanksService, Plan, OptionsDispatcherService],
             (service: PreferencesService, planner: PlannerService,
-                tanksService: TanksService, plan: Plan) => {
+                tanksService: TanksService, plan: Plan, options: OptionsDispatcherService) => {
+                const optionsResetToSimple = spyOn(options, 'resetToSimple').and.callThrough();
+
                 // invalid operations for simple profile simulate wrong data
                 tanksService.addTank();
                 tanksService.addTank();
@@ -145,6 +147,7 @@ describe('PreferencesService', () => {
 
                 expect(tanksService.tanks.length).toEqual(1);
                 expect(plan.length).toEqual(2);
+                expect(optionsResetToSimple).toHaveBeenCalledTimes(1);
             }));
     });
 });

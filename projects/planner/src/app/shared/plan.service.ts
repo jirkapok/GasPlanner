@@ -104,6 +104,10 @@ export class Plan {
     }
 
     public loadFrom(other: Segment[]): void {
+        if (other.length <= 1) {
+            return;
+        }
+
         // TODO restore Strategy
         // this.strategy = other.strategy;
         // cant use copy, since deserialized objects wouldn't have one.

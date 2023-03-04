@@ -33,7 +33,7 @@ export class PreferencesFactory {
         tanksService.loadFrom(tanks);
         targetOptions.loadFrom(options);
         targetPlan.loadFrom(segments);
-        target.loadFrom(options, diver, segments);
+        target.loadFrom(options, diver);
         viewSwitch.isComplex = loaded.isComplex;
         target.calculate();
     }

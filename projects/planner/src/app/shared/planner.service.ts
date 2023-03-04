@@ -120,7 +120,7 @@ export class PlannerService extends Streamed {
         this.diver.loadFrom(diver);
     }
 
-    public loadFrom(options: Options, diver: Diver, segments: Segment[]): void {
+    public loadFrom(options: Options, diver: Diver): void {
         this.assignOptions(options);
         this.applyDiver(diver);
     }

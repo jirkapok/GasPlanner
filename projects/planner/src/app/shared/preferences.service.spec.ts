@@ -131,7 +131,7 @@ describe('PreferencesService', () => {
             }));
 
         it('Simple profile is loaded after save and trims tank', inject(
-            [PreferencesService, PlannerService, TanksService],
+            [PreferencesService, PlannerService, TanksService, Plan],
             (service: PreferencesService, planner: PlannerService,
                 tanksService: TanksService, plan: Plan) => {
                 // invalid operations for simple profile simulate wrong data

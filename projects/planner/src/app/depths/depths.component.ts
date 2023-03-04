@@ -21,7 +21,6 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
     styleUrls: ['./depths.component.scss']
 })
 export class DepthsComponent extends Streamed implements OnInit {
-    public plan: Plan;
     public cardIcon = faLayerGroup;
     public addIcon = faPlus;
     public removeIcon = faMinus;
@@ -37,9 +36,9 @@ export class DepthsComponent extends Streamed implements OnInit {
         private tanksService: TanksService,
         public depths: DepthsService,
         private viewSwitch: ViewSwitchService,
-        public units: UnitConversion) {
+        public units: UnitConversion,
+        private plan: Plan) {
         super();
-        this.plan = this.planner.plan;
         this.dive = this.planner.dive;
         // data are already available, it is ok to generate the levels.
         this.depths.updateLevels();

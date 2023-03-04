@@ -6,6 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Event, EventType, OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
+import { Plan } from '../shared/plan.service';
 
 @Component({
     selector: 'app-dive-issues',
@@ -19,16 +20,18 @@ export class DiveIssuesComponent {
     public info = faInfoCircle;
     public otuLimit = OtuCalculator.dailyLimit;
 
-    constructor(private planner: PlannerService, public units: UnitConversion) {
+    constructor(private planner: PlannerService,
+        public units: UnitConversion,
+        private plan: Plan) {
         this.dive = this.planner.dive;
     }
 
     public get minimumDuration(): number {
-        return this.planner.plan.duration + 1;
+        return this.plan.duration + 1;
     }
 
     public get noDeco(): number {
-        return this.planner.plan.noDecoTime;
+        return this.plan.noDecoTime;
     }
 
     public isLowPpO2(event: Event): boolean {

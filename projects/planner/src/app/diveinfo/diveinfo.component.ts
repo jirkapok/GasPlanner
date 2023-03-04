@@ -14,6 +14,7 @@ import { Streamed } from '../shared/streamed';
 import { DepthsService } from '../shared/depths.service';
 import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import { Plan } from '../shared/plan.service';
 
 @Component({
     selector: 'app-consumption',
@@ -32,7 +33,8 @@ export class DiveInfoComponent extends Streamed {
         private tanksService: TanksService,
         public planner: PlannerService,
         private viewSwitch: ViewSwitchService,
-        public units: UnitConversion) {
+        public units: UnitConversion,
+        private plan: Plan) {
         super();
         this.dive = this.planner.dive;
         this.toxicity = new GasToxicity(this.planner.options);
@@ -62,11 +64,11 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get needsReturn(): boolean {
-        return this.planner.plan.needsReturn;
+        return this.plan.needsReturn;
     }
 
     public get noDeco(): number {
-        return this.planner.plan.noDecoTime;
+        return this.plan.noDecoTime;
     }
 
     public get showApply(): boolean {

@@ -74,9 +74,9 @@ describe('SettingsNormalizationService', () => {
             expect(plannerOptions.descentSpeed).toBeCloseTo(17.9832, 4);
         });
 
-        it('Rounds segments to feet', inject([PlannerService],
-            (planner: PlannerService) => {
-                const segment = planner.plan.segments[1];
+        it('Rounds segments to feet', inject([Plan],
+            (plan: Plan) => {
+                const segment = plan.segments[1];
                 // 30 m flat segment rounded to 98 feet
                 expect(segment.startDepth).toBeCloseTo(29.8704, 4);
                 expect(segment.endDepth).toBeCloseTo(29.8704, 4);
@@ -121,9 +121,9 @@ describe('SettingsNormalizationService', () => {
             expect(plannerOptions.descentSpeed).toBe(18);
         });
 
-        it('Rounds segments to meters', inject([PlannerService],
-            (planner: PlannerService) => {
-                const segment = planner.plan.segments[1];
+        it('Rounds segments to meters', inject([Plan],
+            (plan: Plan) => {
+                const segment = plan.segments[1];
                 expect(segment.startDepth).toBe(30);
                 expect(segment.endDepth).toBe(30);
             }));

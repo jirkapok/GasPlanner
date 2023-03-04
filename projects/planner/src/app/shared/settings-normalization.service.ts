@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Diver, ImperialUnits, Precision } from 'scuba-physics';
+import { Diver, Precision } from 'scuba-physics';
 import { OptionsDispatcherService } from './options-dispatcher.service';
+import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { TanksService } from './tanks.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
@@ -10,7 +11,8 @@ export class SettingsNormalizationService {
     constructor(private planner: PlannerService,
         private options: OptionsDispatcherService,
         private units: UnitConversion,
-        private tanksService: TanksService) { }
+        private tanksService: TanksService,
+        private plan: Plan) { }
 
     private get ranges(): RangeConstants {
         return this.units.ranges;
@@ -62,14 +64,14 @@ export class SettingsNormalizationService {
     }
 
     private normalizeSegments(): void {
-        const segments = this.planner.plan.segments;
+        const segments = this.plan.segments;
         segments.forEach(s => {
             s.startDepth = this.fitLengthToRange(s.startDepth, this.ranges.depth);
             s.endDepth = this.fitLengthToRange(s.endDepth, this.ranges.depth);
         });
 
         // fixes start depth back to surface after moved to UI range.
-        this.planner.plan.fixDepths();
+        this.plan.fixDepths();
     }
 
     private fitLengthToRange(meters: number, range: [number, number]): number {

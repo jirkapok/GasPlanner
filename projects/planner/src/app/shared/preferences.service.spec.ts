@@ -106,10 +106,11 @@ describe('PreferencesService', () => {
                 expect(tanksService.tankData).toEqual(expected);
             }));
 
-        it('Plan is loaded after save', inject([PreferencesService, PlannerService, TanksService, ViewSwitchService],
+        it('Plan is loaded after save', inject(
+            [PreferencesService, PlannerService, TanksService, ViewSwitchService, Plan],
             (service: PreferencesService, planner: PlannerService,
-                tanksService: TanksService, viewSwitch: ViewSwitchService) => {
-                const plan = planner.plan;
+                tanksService: TanksService, viewSwitch: ViewSwitchService,
+                plan: Plan) => {
                 tanksService.addTank();
                 tanksService.addTank();
                 planner.addSegment();
@@ -125,12 +126,14 @@ describe('PreferencesService', () => {
                 service.loadDefaults();
 
                 expect(tanksService.tanks.length).toEqual(3);
-                expect(planner.plan.length).toEqual(3);
-                expect(planner.plan.segments[2].tank?.id).toEqual(2);
+                expect(plan.length).toEqual(3);
+                expect(plan.segments[2].tank?.id).toEqual(2);
             }));
 
-        it('Simple profile is loaded after save and trims tank', inject([PreferencesService, PlannerService, TanksService],
-            (service: PreferencesService, planner: PlannerService, tanksService: TanksService) => {
+        it('Simple profile is loaded after save and trims tank', inject(
+            [PreferencesService, PlannerService, TanksService],
+            (service: PreferencesService, planner: PlannerService,
+                tanksService: TanksService, plan: Plan) => {
                 // invalid operations for simple profile simulate wrong data
                 tanksService.addTank();
                 tanksService.addTank();
@@ -141,7 +144,7 @@ describe('PreferencesService', () => {
                 service.loadDefaults();
 
                 expect(tanksService.tanks.length).toEqual(1);
-                expect(planner.plan.length).toEqual(2);
+                expect(plan.length).toEqual(2);
             }));
     });
 });

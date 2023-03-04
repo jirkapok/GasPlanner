@@ -1,10 +1,13 @@
 import _ from 'lodash';
 import { Diver, Options, SafetyStop, Salinity, Segment, Tank } from 'scuba-physics';
 import { OptionsDispatcherService } from './options-dispatcher.service';
+import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';
 import { PreferencesFactory } from './preferences.factory';
-import { AppPreferences, DiverDto, OptionsDto, SegmentDto, TankDto } from './serialization.model';
+import {
+    AppPreferences, DiverDto, OptionsDto, SegmentDto, TankDto
+} from './serialization.model';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 
@@ -64,9 +67,10 @@ export class PlanUrlSerialization {
     public static toUrl(source: PlannerService,
         tanksService: TanksService,
         viewSwitch: ViewSwitchService,
-        options: OptionsDispatcherService): string {
+        options: OptionsDispatcherService,
+        plan: Plan): string {
         const tanksParam = PlanUrlSerialization.toTanksParam(tanksService.tankData);
-        const depthsParam = PlanUrlSerialization.toDepthsParam(source.plan.segments);
+        const depthsParam = PlanUrlSerialization.toDepthsParam(plan.segments);
         const diParam =  PlanUrlSerialization.toDiverParam(source.diver);
         const optionsParam = PlanUrlSerialization.toOptionsParam(options.getOptions());
         const isComplex = ParseContext.serializeBoolean(viewSwitch.isComplex);

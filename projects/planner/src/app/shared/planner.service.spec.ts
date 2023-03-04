@@ -22,6 +22,7 @@ describe('PlannerService', () => {
     let planner: PlannerService;
     let tanksService: TanksService;
     let viewSwitch: ViewSwitchService;
+    let plan: Plan;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -37,6 +38,7 @@ describe('PlannerService', () => {
         planner = TestBed.inject(PlannerService);
         tanksService = TestBed.inject(TanksService);
         viewSwitch = TestBed.inject(ViewSwitchService);
+        plan = TestBed.inject(Plan);
         OptionExtensions.applySimpleSpeeds(planner.options);
         planner.options.problemSolvingDuration = 2;
         planner.options.safetyStop = SafetyStop.always;
@@ -46,7 +48,7 @@ describe('PlannerService', () => {
 
     describe('Dive info calculated', () => {
         it('No deco limit is calculated', () => {
-            const noDecoLimit = planner.plan.noDecoTime;
+            const noDecoLimit = plan.noDecoTime;
             expect(noDecoLimit).toBe(12);
         });
 
@@ -112,18 +114,18 @@ describe('PlannerService', () => {
             tanksService.firstTank.o2 = o2Expected;
             tanksService.addTank();
             planner.assignDepth(7);
-            planner.plan.segments[1].endDepth = 5;
+            plan.segments[1].endDepth = 5;
             planner.addSegment();
-            planner.plan.fixDepths(); // to simplify setup
+            plan.fixDepths(); // to simplify setup
             viewSwitch.isComplex = false;
         });
 
         it('Sets simple profile', () => {
-            expect(planner.plan.duration).toBe(22);
+            expect(plan.duration).toBe(22);
         });
 
         it('Plan has correct depths', () => {
-            const segments = planner.plan.segments;
+            const segments = plan.segments;
             expect(segments.length).toBe(2);
             expect(segments[0].endDepth).toBe(7);
             expect(segments[1].endDepth).toBe(7);
@@ -133,7 +135,7 @@ describe('PlannerService', () => {
     describe('Depths', () => {
         it('Add correct segment to the end', () => {
             planner.addSegment();
-            const added = planner.plan.segments[2];
+            const added = plan.segments[2];
             expect(added.endDepth).toBe(30);
             expect(added.duration).toBe(600);
         });
@@ -141,25 +143,25 @@ describe('PlannerService', () => {
         it('Added segment has previous segment tank', () => {
             planner.addSegment();
             tanksService.addTank();
-            planner.plan.segments[2].tank = tanksService.tankData[1];
+            plan.segments[2].tank = tanksService.tankData[1];
             planner.addSegment();
-            expect(planner.plan.segments[3].tank).toBe(tanksService.tankData[1]);
+            expect(plan.segments[3].tank).toBe(tanksService.tankData[1]);
         });
 
         it('Remove first segment sets initial depth to 0m', () => {
             planner.addSegment();
-            let first = planner.plan.segments[0];
+            let first = plan.segments[0];
             planner.removeSegment(first);
-            first = planner.plan.segments[0];
+            first = plan.segments[0];
             expect(first.startDepth).toBe(0);
         });
 
         it('Remove middle segment corrects start depths', () => {
-            planner.plan.segments[1].endDepth = 40;
+            plan.segments[1].endDepth = 40;
             planner.addSegment();
-            let middle = planner.plan.segments[1];
+            let middle = plan.segments[1];
             planner.removeSegment(middle);
-            middle = planner.plan.segments[1];
+            middle = plan.segments[1];
             expect(middle.startDepth).toBe(30);
         });
     });
@@ -173,7 +175,7 @@ describe('PlannerService', () => {
                 tanksService.addTank();
                 const secondTank = tanksService.tanks[1];
                 planner.addSegment();
-                const segments = planner.plan.segments;
+                const segments = plan.segments;
                 lastSegment = segments[1];
                 lastSegment.tank = secondTank.tank;
                 tanksService.removeTank(secondTank);
@@ -200,13 +202,13 @@ describe('PlannerService', () => {
             it('Max bottom time is NOT applied', () => {
                 planner = createPlanner();
                 planner.applyMaxDuration();
-                expect(planner.plan.duration).toBe(descentOnly);
+                expect(plan.duration).toBe(descentOnly);
             });
 
             it('No deco limit is NOT applied', () => {
                 planner = createPlanner();
                 planner.applyNdlDuration();
-                expect(planner.plan.duration).toBe(descentOnly);
+                expect(plan.duration).toBe(descentOnly);
             });
         });
 
@@ -214,13 +216,13 @@ describe('PlannerService', () => {
             it('Max bottom time is applied', () => {
                 planner.calculate();
                 planner.applyMaxDuration();
-                expect(planner.plan.duration).toBe(18);
+                expect(plan.duration).toBe(18);
             });
 
             it('No deco limit is applied', () => {
                 planner.calculate();
                 planner.applyNdlDuration();
-                expect(planner.plan.duration).toBe(12);
+                expect(plan.duration).toBe(12);
             });
         });
     });
@@ -242,7 +244,7 @@ describe('PlannerService', () => {
         const createProfileResultDto = (): ProfileResultDto => {
             const events = new Events();
             events.add(new Event(0, 0, EventType.error));
-            const profile = CalculatedProfile.fromErrors(planner.plan.segments, []);
+            const profile = CalculatedProfile.fromErrors(plan.segments, []);
             const profileDto = DtoSerialization.fromProfile(profile);
             return {
                 profile: profileDto,

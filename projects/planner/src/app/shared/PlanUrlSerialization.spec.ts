@@ -10,6 +10,7 @@ import { ViewSwitchService } from './viewSwitchService';
 describe('Url Serialization', () => {
     const irrelevantFactory = new WorkersFactoryCommon();
     let options: OptionsDispatcherService;
+    let plan: Plan;
     let defaultPlan: PlannerService;
     let planner: PlannerService;
     let tanksService: TanksService;
@@ -20,22 +21,22 @@ describe('Url Serialization', () => {
     beforeEach(() => {
         tanksService = new TanksService(new UnitConversion());
         tanksService.addTank();
-
+        plan = new Plan();
         options = new OptionsDispatcherService();
         defaultPlan = createPlanner();
         planner =  createPlanner();
-        viewSwitch = new ViewSwitchService(planner, planner.plan, options, tanksService);
+        viewSwitch = new ViewSwitchService(planner, plan, options, tanksService);
         viewSwitch.isComplex = true;
         planner.addSegment();
         planner.calculate();
 
-        customizedUrl = PlanUrlSerialization.toUrl(planner, tanksService, viewSwitch, options);
+        customizedUrl = PlanUrlSerialization.toUrl(planner, tanksService, viewSwitch, options, plan);
     });
 
     const expectParsedEquals = (expected: PlannerService, current: PlannerService,
         expectedIsComplex: boolean, currentIsComplex: boolean): void => {
         const toExpect = {
-            plan: expected.plan.segments,
+            plan: plan.segments,
             tansk: tanksService.tankData,
             diver: expected.diver,
             options: expected.options,
@@ -43,7 +44,7 @@ describe('Url Serialization', () => {
         };
 
         const toCompare = {
-            plan: current.plan.segments,
+            plan: plan.segments, // TODO ensure correct plan is used
             tansk: tanksService.tankData,
             diver: current.diver,
             options: current.options,
@@ -54,13 +55,13 @@ describe('Url Serialization', () => {
     };
 
     it('Generates valid url characters', () => {
-        const urlParams = PlanUrlSerialization.toUrl(planner, tanksService, viewSwitch, options);
+        const urlParams = PlanUrlSerialization.toUrl(planner, tanksService, viewSwitch, options, plan);
         const isValid = /[-a-zA-Z0-9@:%_+.~#&//=]*/g.test(urlParams);
         expect(isValid).toBeTruthy();
     });
 
     it('Serialize and deserialize complex plan', () => {
-        const urlParams = PlanUrlSerialization.toUrl(planner, tanksService, viewSwitch, options);
+        const urlParams = PlanUrlSerialization.toUrl(planner, tanksService, viewSwitch, options, plan);
         const current = createPlanner();
         // TODO check, if viewSwitch and tank service should be also new instances.
         PlanUrlSerialization.fromUrl(urlParams, options, tanksService, viewSwitch, current);
@@ -71,7 +72,7 @@ describe('Url Serialization', () => {
         const source = createPlanner();
         tanksService.tanks[0].size = 18;
         source.calculate();
-        const urlParams = PlanUrlSerialization.toUrl(source, tanksService, viewSwitch, options);
+        const urlParams = PlanUrlSerialization.toUrl(source, tanksService, viewSwitch, options, plan);
         const current = createPlanner();
         PlanUrlSerialization.fromUrl(urlParams, options, tanksService, viewSwitch, current);
         expectParsedEquals(source, current, viewSwitch.isComplex, true);

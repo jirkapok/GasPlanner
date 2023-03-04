@@ -11,6 +11,7 @@ import { Streamed } from '../shared/streamed';
 import { takeUntil } from 'rxjs';
 import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import { Plan } from '../shared/plan.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -28,7 +29,8 @@ export class DashboardComponent extends Streamed implements OnInit {
         private tanksService: TanksService,
         private planner: PlannerService,
         private viewSwitch: ViewSwitchService,
-        private delayedCalc: DelayedScheduleService) {
+        private delayedCalc: DelayedScheduleService,
+        private plan: Plan) {
         super();
     }
 
@@ -62,7 +64,8 @@ export class DashboardComponent extends Streamed implements OnInit {
             console.log('Planner calculated');
         }
 
-        const urlParams = PlanUrlSerialization.toUrl(this.planner, this.tanksService, this.viewSwitch, this.options);
+        const urlParams = PlanUrlSerialization.toUrl(this.planner,
+            this.tanksService, this.viewSwitch, this.options, this.plan);
         this.location.go('?' + urlParams);
     }
 }

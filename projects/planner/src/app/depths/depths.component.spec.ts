@@ -89,7 +89,7 @@ describe('DepthsComponent', () => {
         simplePage = new SimpleDepthsPage(fixture);
         complexPage = new ComplexDepthsPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
-        const schedulerSpy = spyOn(scheduler, 'schedule')
+        spyOn(scheduler, 'schedule')
             .and.callFake(() => {
                 component.planner.calculate();
             });
@@ -185,17 +185,18 @@ describe('DepthsComponent', () => {
     });
 
     describe('Max narcotic depth', () => {
-        it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject([PlannerService],
-            (planner: PlannerService) => {
+        it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject(
+            [PlannerService, Plan],
+            (planner: PlannerService, plan: Plan) => {
                 depths.applyMaxDepth();
-                expect(planner.plan.maxDepth).toBe(30);
+                expect(plan.maxDepth).toBe(30);
             }));
 
-        it('Max narcotic depth is applied', inject([PlannerService, TanksService],
-            (planner: PlannerService, tanksService: TanksService) => {
+        it('Max narcotic depth is applied', inject([PlannerService, TanksService, Plan],
+            (planner: PlannerService, tanksService: TanksService, plan: Plan) => {
                 tanksService.firstTank.o2 = 50;
                 depths.applyMaxDepth();
-                expect(planner.plan.maxDepth).toBe(18);
+                expect(plan.maxDepth).toBe(18);
             }));
     });
 

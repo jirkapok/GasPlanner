@@ -9,6 +9,7 @@ import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { Streamed } from '../shared/streamed';
+import { Plan } from '../shared/plan.service';
 
 @Component({
     selector: 'app-profilechart',
@@ -51,7 +52,10 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     private layout: any;
 
-    constructor(private planer: PlannerService, private units: UnitConversion, private selectedWaypoint: SelectedWaypoint) {
+    constructor(private planer: PlannerService,
+        private units: UnitConversion,
+        private selectedWaypoint: SelectedWaypoint,
+        private plan: Plan) {
         super();
         this.dive = this.planer.dive;
 
@@ -88,7 +92,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     public get noDecoTime(): number {
-        return this.planer.plan.noDecoTime;
+        return this.plan.noDecoTime;
     }
 
     public ngOnInit(): void {
@@ -101,7 +105,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     public scaleHeight(y: number, graphHeight: number): number {
-        return y * (graphHeight - 10) / this.planer.plan.maxDepth;
+        return y * (graphHeight - 10) / this.plan.maxDepth;
     }
 
     public plotlyHover(data: any): void {

@@ -28,7 +28,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     public readonly thirdUsableName = 'Thirds usable';
     public readonly safetyOffName = 'Never';
     public readonly safetyOnName = 'Always';
-    public plan: Plan;
     public strategy = this.allUsableName;
     public icon = faCog;
     public optionsForm!: UntypedFormGroup;
@@ -40,9 +39,9 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         private planner: PlannerService,
         private viewSwitch: ViewSwitchService,
-        private delayedCalc: DelayedScheduleService) {
+        private delayedCalc: DelayedScheduleService,
+        private plan: Plan) {
         super();
-        this.plan = this.planner.plan;
     }
 
     public get isComplex(): boolean {
@@ -166,11 +165,14 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     public set isComplex(newValue: boolean) {
         if (!newValue) {
             this.setAllUsable();
+
+            // TODO move to view switch
             this.options.resetToSimple();
         }
 
         this.viewSwitch.isComplex = newValue;
         // always calculate, even nothing changed, since we want to propagate url update
+        // TODO what if some value on the form is invalid and we switch
         this.applyOptions();
     }
 

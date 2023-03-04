@@ -13,6 +13,7 @@ import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import { Plan } from '../shared/plan.service';
 
 @Component({
     selector: 'app-tanks',
@@ -34,7 +35,8 @@ export class TanksComponent extends Streamed implements OnInit {
         private fb: UntypedFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        private delayedCalc: DelayedScheduleService) {
+        private delayedCalc: DelayedScheduleService,
+        private plan: Plan) {
         super();
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();
@@ -133,7 +135,7 @@ export class TanksComponent extends Streamed implements OnInit {
     }
 
     public assignBestMix(): void {
-        const maxDepth = this.planner.plan.maxDepth;
+        const maxDepth = this.plan.maxDepth;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
         this.reload(this.firstTank, 0);
         this.delayedCalc.schedule();

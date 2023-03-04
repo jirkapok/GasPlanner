@@ -42,7 +42,7 @@ export class PlannerService extends Streamed {
 
     constructor(private workerFactory: WorkersFactoryCommon,
         private tanks: TanksService,
-        public plan: Plan) {
+        private plan: Plan) {
         super();
         this._options = new Options();
         this._options.salinity = Salinity.fresh;
@@ -124,11 +124,10 @@ export class PlannerService extends Streamed {
         this.assignOptions(options);
         this.applyDiver(diver);
 
+        // TODO move to plan
         if (segments.length > 1) {
             this.plan.loadFrom(segments);
         }
-
-        // TODO reset to simple if not complex
     }
 
     public assignOptions(newOptions: Options): void {

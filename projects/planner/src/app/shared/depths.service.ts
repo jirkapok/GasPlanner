@@ -11,15 +11,14 @@ import { TanksService } from './tanks.service';
 @Injectable()
 export class DepthsService {
     private _levels: Level[] = [];
-    private plan: Plan;
     private toxicity: GasToxicity;
 
     constructor(
         private units: UnitConversion,
         private planner: PlannerService,
         private tanksService: TanksService,
-        private delayedCalc: DelayedScheduleService) {
-        this.plan = this.planner.plan;
+        private delayedCalc: DelayedScheduleService,
+        private plan: Plan) {
         this.toxicity = new GasToxicity(this.planner.options);
     }
 

@@ -1,4 +1,5 @@
 import { OptionsDispatcherService } from './options-dispatcher.service';
+import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { AppPreferences, DtoSerialization } from './serialization.model';
 import { TanksService } from './tanks.service';
@@ -8,13 +9,14 @@ export class PreferencesFactory {
     public toPreferences(planner: PlannerService,
         tanksService: TanksService,
         targetOptions: OptionsDispatcherService,
-        viewSwitch: ViewSwitchService): AppPreferences {
+        viewSwitch: ViewSwitchService,
+        plan: Plan): AppPreferences {
         return {
             isComplex: viewSwitch.isComplex,
             options: DtoSerialization.fromOptions(targetOptions.getOptions()),
             diver: DtoSerialization.fromDiver(planner.diver),
             tanks: DtoSerialization.fromTanks(tanksService.tankData),
-            plan: DtoSerialization.fromSegments(planner.plan.segments),
+            plan: DtoSerialization.fromSegments(plan.segments),
         };
     }
 

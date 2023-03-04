@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
@@ -15,7 +15,7 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DepthComponent } from './depth.component';
 
 export class DepthPage {
-    constructor(private fixture: ComponentFixture<DepthComponent>) {}
+    constructor(private fixture: ComponentFixture<DepthComponent>) { }
 
     public get depthInput(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#depthField')).nativeElement as HTMLInputElement;
@@ -64,10 +64,11 @@ describe('DepthComponent Imperial units', () => {
         expect(depths.plannedDepth).toBeCloseTo(70, 6);
     });
 
-    it('Depth to imperial', () => {
-        const depth = planner.plan.maxDepth;
-        expect(depth).toBeCloseTo(21.336, 6);
-    });
+    it('Depth to imperial', inject([Plan],
+        (plan: Plan) => {
+            const depth = plan.maxDepth;
+            expect(depth).toBeCloseTo(21.336, 6);
+        }));
 
     it('Apply max depth', () => {
         page.applyMaxDepthButton.click();

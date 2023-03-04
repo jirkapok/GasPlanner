@@ -169,7 +169,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
         this.viewSwitch.isComplex = newValue;
         // always calculate, even nothing changed, since we want to propagate url update
-        // TODO what if some value on the form is invalid and we switch
+        // if some value on the form is invalid, switch causes the forms to reinit
         this.applyOptions();
     }
 

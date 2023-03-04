@@ -16,6 +16,7 @@ describe('Url Serialization', () => {
     let tanksService: TanksService;
     let customizedUrl: string;
     let viewSwitch: ViewSwitchService;
+    let sut: PlanUrlSerialization;
     const createPlanner = () => new PlannerService(irrelevantFactory, tanksService, new Plan());
 
     beforeEach(() => {
@@ -30,7 +31,8 @@ describe('Url Serialization', () => {
         planner.addSegment();
         planner.calculate();
 
-        customizedUrl = PlanUrlSerialization.toUrl(planner, tanksService, viewSwitch, options, plan);
+        sut = new PlanUrlSerialization(planner, tanksService, viewSwitch, options, plan);
+        customizedUrl = sut.toUrl();
     });
 
     const expectParsedEquals = (expected: PlannerService, current: PlannerService,
@@ -55,16 +57,15 @@ describe('Url Serialization', () => {
     };
 
     it('Generates valid url characters', () => {
-        const urlParams = PlanUrlSerialization.toUrl(planner, tanksService, viewSwitch, options, plan);
+        const urlParams = sut.toUrl();
         const isValid = /[-a-zA-Z0-9@:%_+.~#&//=]*/g.test(urlParams);
         expect(isValid).toBeTruthy();
     });
 
     it('Serialize and deserialize complex plan', () => {
-        const urlParams = PlanUrlSerialization.toUrl(planner, tanksService, viewSwitch, options, plan);
         const current = createPlanner();
         // TODO check, if viewSwitch and tank service should be also new instances.
-        PlanUrlSerialization.fromUrl(urlParams, options, tanksService, viewSwitch, plan, current);
+        PlanUrlSerialization.fromUrl(customizedUrl, options, tanksService, viewSwitch, plan, current);
         expectParsedEquals(planner, current, viewSwitch.isComplex, true);
     });
 
@@ -72,7 +73,7 @@ describe('Url Serialization', () => {
         const source = createPlanner();
         tanksService.tanks[0].size = 18;
         source.calculate();
-        const urlParams = PlanUrlSerialization.toUrl(source, tanksService, viewSwitch, options, plan);
+        const urlParams = sut.toUrl();
         const current = createPlanner();
         PlanUrlSerialization.fromUrl(urlParams, options, tanksService, viewSwitch, plan, current);
         expectParsedEquals(source, current, viewSwitch.isComplex, true);

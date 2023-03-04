@@ -64,16 +64,20 @@ class ParseContext {
  * 3. Encode as url parameter
  **/
 export class PlanUrlSerialization {
-    public static toUrl(source: PlannerService,
-        tanksService: TanksService,
-        viewSwitch: ViewSwitchService,
-        options: OptionsDispatcherService,
-        plan: Plan): string {
-        const tanksParam = PlanUrlSerialization.toTanksParam(tanksService.tankData);
-        const depthsParam = PlanUrlSerialization.toDepthsParam(plan.segments);
-        const diParam =  PlanUrlSerialization.toDiverParam(source.diver);
-        const optionsParam = PlanUrlSerialization.toOptionsParam(options.getOptions());
-        const isComplex = ParseContext.serializeBoolean(viewSwitch.isComplex);
+    constructor(
+        private planner: PlannerService,
+        private tanksService: TanksService,
+        private viewSwitch: ViewSwitchService,
+        private options: OptionsDispatcherService,
+        private plan: Plan
+    ) {}
+
+    public toUrl(): string {
+        const tanksParam = PlanUrlSerialization.toTanksParam(this.tanksService.tankData);
+        const depthsParam = PlanUrlSerialization.toDepthsParam(this.plan.segments);
+        const diParam =  PlanUrlSerialization.toDiverParam(this.planner.diver);
+        const optionsParam = PlanUrlSerialization.toOptionsParam(this.options.getOptions());
+        const isComplex = ParseContext.serializeBoolean(this.viewSwitch.isComplex);
         const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&c=${isComplex}`;
         return result;
     }

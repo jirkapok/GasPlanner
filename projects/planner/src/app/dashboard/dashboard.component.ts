@@ -21,6 +21,7 @@ import { Plan } from '../shared/plan.service';
 export class DashboardComponent extends Streamed implements OnInit {
     public showDisclaimer = true;
     public exclamation = faExclamationTriangle;
+    private urlSerialization: PlanUrlSerialization;
 
     constructor(
         private location: Location,
@@ -32,6 +33,9 @@ export class DashboardComponent extends Streamed implements OnInit {
         private delayedCalc: DelayedScheduleService,
         private plan: Plan) {
         super();
+
+        this.urlSerialization = new PlanUrlSerialization(this.planner,
+            this.tanksService, this.viewSwitch, this.options, this.plan);
     }
 
     public get isComplex(): boolean {
@@ -65,8 +69,7 @@ export class DashboardComponent extends Streamed implements OnInit {
             console.log('Planner calculated');
         }
 
-        const urlParams = PlanUrlSerialization.toUrl(this.planner,
-            this.tanksService, this.viewSwitch, this.options, this.plan);
+        const urlParams = this.urlSerialization.toUrl();
         this.location.go('?' + urlParams);
     }
 }

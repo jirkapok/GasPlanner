@@ -27,9 +27,6 @@ export class PlannerService extends Streamed {
     public infoCalculated$: Observable<void>;
     public wayPointsCalculated$: Observable<void>;
 
-    /** Event fired only in case of tanks rebuild. Not fired when adding or removing tanks. */
-    public tanksReloaded;
-    private onTanksReloaded = new Subject<void>();
     private calculating = false;
     private calculatingDiveInfo = false;
     private calculatingProfile = false;
@@ -49,11 +46,12 @@ export class PlannerService extends Streamed {
         this._options.safetyStop = SafetyStop.auto;
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
-        this.plan.setSimple(30, 12, this.firstTank, this.options);
+
         // TODO move to plan
+        const firstTank = this.tanks.firstTank.tank;
+        this.plan.setSimple(30, 12, firstTank, this.options);
         this.tanks.tankRemoved.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((removed) => this.plan.resetSegments(removed, this.firstTank));
-        this.tanksReloaded = this.onTanksReloaded.asObservable();
+            .subscribe((removed) => this.plan.resetSegments(removed, firstTank));
 
         this.profileTask = this.workerFactory.createProfileWorker();
         this.profileTask.calculated$.pipe(takeUntil(this.unsubscribe$))

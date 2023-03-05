@@ -79,7 +79,7 @@ export class TanksComponent extends Streamed implements OnInit {
             boundTanks: this.fb.array(this.createTankControls())
         });
 
-        this.planner.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
+        this.tanksService.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
         this.viewSwitch.viewSwitched.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());

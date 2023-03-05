@@ -4,7 +4,7 @@ import {
 } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
-import { TestBed } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
 import {
@@ -17,6 +17,8 @@ import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 import { Plan } from './plan.service';
 import { OptionsDispatcherService } from './options-dispatcher.service';
+import { DepthsService } from './depths.service';
+import { DelayedScheduleService } from './delayedSchedule.service';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -30,7 +32,8 @@ describe('PlannerService', () => {
             providers: [WorkersFactoryCommon,
                 PlannerService, UnitConversion,
                 TanksService, ViewSwitchService,
-                OptionsDispatcherService, Plan
+                OptionsDispatcherService, Plan,
+                DepthsService, DelayedScheduleService
             ],
             imports: []
         }).compileComponents();
@@ -94,17 +97,17 @@ describe('PlannerService', () => {
             expect(hasEvents).toBeTruthy();
         });
 
-        it('60m for 50 minutes not enough gas', () => {
-            planner.assignDuration(50);
+        it('60m for 50 minutes not enough gas', inject([DepthsService], (depthService: DepthsService) => {
+            depthService.assignDuration(50);
             planner.calculate();
             expect(planner.dive.notEnoughGas).toBeTruthy();
-        });
+        }));
 
-        it('30m for 20 minutes no decompression time exceeded', () => {
-            planner.assignDuration(20);
+        it('30m for 20 minutes no decompression time exceeded', inject([DepthsService], (depthService: DepthsService) => {
+            depthService.assignDuration(20);
             planner.calculate();
             expect(planner.dive.noDecoExceeded).toBeTruthy();
-        });
+        }));
     });
 
     describe('Switch between simple and complex', () => {
@@ -194,11 +197,11 @@ describe('PlannerService', () => {
             expect(planner.dive.averageDepth).toBe(21.75);
         });
 
-        xit('Start ascent is updated', () => {
+        it('Start ascent is updated', inject([DepthsService], (depthService: DepthsService) => {
             planner.calculate();
-            // planner.applyNdlDuration();
+            depthService.applyNdlDuration();
             expect(planner.dive.emergencyAscentStart).toEqual(Time.oneMinute * 12);
-        });
+        }));
     });
 
     describe('Errors', () => {

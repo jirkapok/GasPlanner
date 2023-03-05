@@ -83,9 +83,7 @@ export class PlannerService extends Streamed {
         return this.dive.diveInfoCalculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
     }
 
-    private get firstTank(): Tank {
-        return this.tanks.firstTank.tank;
-    }
+
 
 
 
@@ -100,9 +98,6 @@ export class PlannerService extends Streamed {
         this.plan.removeSegment(segment);
     }
 
-    public assignDuration(newDuration: number): void {
-        this.plan.assignDuration(newDuration, this.firstTank, this.options);
-    }
 
 
 

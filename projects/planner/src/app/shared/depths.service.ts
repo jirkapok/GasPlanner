@@ -40,6 +40,10 @@ export class DepthsService {
         return this.plan.duration;
     }
 
+    private get firstTank(): Tank {
+        return this.tanksService.firstTank.tank;
+    }
+
     public set plannedDepth(newValue: number) {
         const depth = this.units.toMeters(newValue);
         this.assignDepth(depth);
@@ -47,7 +51,7 @@ export class DepthsService {
     }
 
     public set planDuration(newValue: number) {
-        this.planner.assignDuration(newValue);
+        this.assignDuration(newValue);
         this.apply();
     }
 
@@ -65,19 +69,22 @@ export class DepthsService {
 
     public applyMaxDuration(): void {
         const newValue = this.planner.dive.maxTime;
-        this.planner.assignDuration(newValue);
+        this.assignDuration(newValue);
         this.apply();
     }
 
     public applyNdlDuration(): void {
         const newValue = this.plan.noDecoTime;
-        this.planner.assignDuration(newValue);
+        this.assignDuration(newValue);
         this.apply();
     }
 
+    public assignDuration(newDuration: number): void {
+        this.plan.assignDuration(newDuration, this.firstTank, this.planner.options);
+    }
+
     public applyMaxDepth(): void {
-        const tank = this.tanksService.firstTank.tank;
-        const maxDepth = this.toxicity.maxDepth(tank);
+        const maxDepth = this.toxicity.maxDepth(this.firstTank);
         this.assignDepth(maxDepth);
         this.levelChanged();
     }
@@ -107,8 +114,7 @@ export class DepthsService {
 
     public assignDepth(newDepth: number): void {
         const options = this.planner.options;
-        const firstTank = this.tanksService.firstTank.tank;
-        this.plan.assignDepth(newDepth, firstTank, options);
+        this.plan.assignDepth(newDepth, this.firstTank, options);
     }
 
     private apply(): void {

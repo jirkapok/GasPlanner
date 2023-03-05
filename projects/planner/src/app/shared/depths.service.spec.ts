@@ -7,6 +7,8 @@ import { DepthsService } from './depths.service';
 import { inject, TestBed } from '@angular/core/testing';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
+import { SafetyStop } from 'scuba-physics';
 
 describe('Depths service', () => {
     beforeEach(async () => {
@@ -27,12 +29,6 @@ describe('Depths service', () => {
         // with default speed to default depth 30m.
         const descentOnly = 1.7;
 
-        // manual service initialization to avoid testbed conflicts
-        const createPlanner = (plan: Plan) => new PlannerService(
-            new WorkersFactoryCommon(),
-            new TanksService(new UnitConversion()),
-            plan);
-
         it('Max bottom time is NOT applied', inject([DepthsService, Plan],
             (depthService: DepthsService, plan: Plan) => {
                 depthService.applyMaxDuration();
@@ -42,9 +38,37 @@ describe('Depths service', () => {
         // Plan needs to be already calculated because NDL is needed
         it('No deco limit is NOT applied', inject([DepthsService, Plan],
             (depthService: DepthsService, plan: Plan) => {
-                const planner = createPlanner(plan);
-                planner.applyNdlDuration();
+                depthService.applyNdlDuration();
                 expect(plan.duration).toBe(descentOnly);
             }));
+    });
+
+    describe('Apply plan limits', () => {
+        beforeEach(() => {
+            const planner = TestBed.inject(PlannerService);
+            OptionExtensions.applySimpleSpeeds(planner.options);
+            planner.options.problemSolvingDuration = 2;
+            planner.options.safetyStop = SafetyStop.always;
+            const tanksService = TestBed.inject(TanksService);
+            const plan = TestBed.inject(Plan);
+            plan.assignDepth(30, tanksService.firstTank.tank, planner.options);
+            planner.calculate();
+        });
+
+        describe('When Calculated', () => {
+            it('Max bottom time is applied', inject([PlannerService, DepthsService, Plan],
+                (planner: PlannerService, depthService: DepthsService, plan: Plan) => {
+                    planner.calculate();
+                    depthService.applyMaxDuration();
+                    expect(plan.duration).toBe(18);
+                }));
+
+            it('No deco limit is applied', inject([PlannerService, DepthsService, Plan],
+                (planner: PlannerService, depthService: DepthsService, plan: Plan) => {
+                    planner.calculate();
+                    depthService.applyNdlDuration();
+                    expect(plan.duration).toBe(12);
+                }));
+        });
     });
 });

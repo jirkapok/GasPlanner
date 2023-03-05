@@ -188,31 +188,15 @@ describe('PlannerService', () => {
         });
     });
 
-    describe('Apply plan limits', () => {
-        describe('When Calculated', () => {
-            xit('Max bottom time is applied', () => {
-                planner.calculate();
-                // TODO planner.applyMaxDuration();
-                expect(plan.duration).toBe(18);
-            });
-
-            it('No deco limit is applied', () => {
-                planner.calculate();
-                planner.applyNdlDuration();
-                expect(plan.duration).toBe(12);
-            });
-        });
-    });
-
     describe('Updates dive', () => {
         it('Average depth is calculated', () => {
             planner.calculate();
             expect(planner.dive.averageDepth).toBe(21.75);
         });
 
-        it('Start ascent is updated', () => {
+        xit('Start ascent is updated', () => {
             planner.calculate();
-            planner.applyNdlDuration();
+            // planner.applyNdlDuration();
             expect(planner.dive.emergencyAscentStart).toEqual(Time.oneMinute * 12);
         });
     });

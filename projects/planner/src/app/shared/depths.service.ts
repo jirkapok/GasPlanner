@@ -70,7 +70,8 @@ export class DepthsService {
     }
 
     public applyNdlDuration(): void {
-        this.planner.applyNdlDuration();
+        const newValue = this.plan.noDecoTime;
+        this.planner.assignDuration(newValue);
         this.apply();
     }
 

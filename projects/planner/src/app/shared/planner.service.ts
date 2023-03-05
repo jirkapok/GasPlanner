@@ -100,11 +100,6 @@ export class PlannerService extends Streamed {
         this.plan.removeSegment(segment);
     }
 
-    public applyNdlDuration(): void {
-        const newValue = this.plan.noDecoTime;
-        this.assignDuration(newValue);
-    }
-
     public assignDuration(newDuration: number): void {
         this.plan.assignDuration(newDuration, this.firstTank, this.options);
     }

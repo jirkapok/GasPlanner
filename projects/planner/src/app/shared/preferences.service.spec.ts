@@ -121,7 +121,7 @@ describe('PreferencesService', () => {
                 planner.calculate();
                 service.saveDefaults();
 
-                planner.removeSegment(lastSegment);
+                plan.removeSegment(lastSegment);
                 tanksService.removeTank(secondTank);
                 service.loadDefaults();
 

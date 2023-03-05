@@ -71,4 +71,48 @@ describe('Depths service', () => {
                 }));
         });
     });
+
+    describe('Depths', () => {
+        let planner: PlannerService;
+        let plan: Plan;
+        let tanksService: TanksService;
+
+        beforeEach(() => {
+            planner = TestBed.inject(PlannerService);
+            plan = TestBed.inject(Plan);
+            tanksService = TestBed.inject(TanksService);
+        });
+
+        it('Add correct segment to the end', () => {
+            planner.addSegment();
+            const added = plan.segments[2];
+            expect(added.endDepth).toBe(30);
+            expect(added.duration).toBe(600);
+        });
+
+        it('Added segment has previous segment tank', () => {
+            planner.addSegment();
+            tanksService.addTank();
+            plan.segments[2].tank = tanksService.tankData[1];
+            planner.addSegment();
+            expect(plan.segments[3].tank).toBe(tanksService.tankData[1]);
+        });
+
+        it('Remove first segment sets initial depth to 0m', () => {
+            planner.addSegment();
+            let first = plan.segments[0];
+            plan.removeSegment(first);
+            first = plan.segments[0];
+            expect(first.startDepth).toBe(0);
+        });
+
+        it('Remove middle segment corrects start depths', () => {
+            plan.segments[1].endDepth = 40;
+            planner.addSegment();
+            let middle = plan.segments[1];
+            plan.removeSegment(middle);
+            middle = plan.segments[1];
+            expect(middle.startDepth).toBe(30);
+        });
+    });
 });

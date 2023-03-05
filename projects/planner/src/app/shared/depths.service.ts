@@ -62,7 +62,7 @@ export class DepthsService {
     }
 
     public removeSegment(level: Level): void {
-        this.planner.removeSegment(level.segment);
+        this.plan.removeSegment(level.segment);
         this.updateLevels();
         this.apply();
     }

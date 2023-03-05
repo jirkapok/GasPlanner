@@ -92,11 +92,6 @@ export class PlannerService extends Streamed {
         this.plan.addSegment(tank);
     }
 
-    public removeSegment(segment: Segment): void {
-        this.plan.removeSegment(segment);
-    }
-
-
 
 
 

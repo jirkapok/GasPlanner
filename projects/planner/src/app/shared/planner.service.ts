@@ -87,6 +87,8 @@ export class PlannerService extends Streamed {
         return this.tanks.firstTank.tank;
     }
 
+
+
     public addSegment(): void {
         const segments = this.plan.segments;
         const lastUsedTank = segments[segments.length - 1].tank;
@@ -98,11 +100,6 @@ export class PlannerService extends Streamed {
         this.plan.removeSegment(segment);
     }
 
-    public applyMaxDuration(): void {
-        const newValue = this.dive.maxTime;
-        this.assignDuration(newValue);
-    }
-
     public applyNdlDuration(): void {
         const newValue = this.plan.noDecoTime;
         this.assignDuration(newValue);
@@ -111,6 +108,9 @@ export class PlannerService extends Streamed {
     public assignDuration(newDuration: number): void {
         this.plan.assignDuration(newDuration, this.firstTank, this.options);
     }
+
+
+
 
     public applyDiver(diver: Diver): void {
         this.diver.loadFrom(diver);

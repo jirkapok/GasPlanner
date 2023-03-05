@@ -64,7 +64,8 @@ export class DepthsService {
     }
 
     public applyMaxDuration(): void {
-        this.planner.applyMaxDuration();
+        const newValue = this.planner.dive.maxTime;
+        this.planner.assignDuration(newValue);
         this.apply();
     }
 

@@ -6,8 +6,8 @@ import { Plan } from '../shared/plan.service';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
-    Options, Tank, Precision,
-    Diver, Segment, Segments, Salinity, SafetyStop
+    Options, Precision,
+    Diver, Segments, Salinity, SafetyStop
 } from 'scuba-physics';
 import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
@@ -80,20 +80,6 @@ export class PlannerService extends Streamed {
     public get ndlValid(): boolean {
         return this.dive.diveInfoCalculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
     }
-
-
-
-
-
-    public addSegment(): void {
-        const segments = this.plan.segments;
-        const lastUsedTank = segments[segments.length - 1].tank;
-        const tank = lastUsedTank as Tank;
-        this.plan.addSegment(tank);
-    }
-
-
-
 
     public applyDiver(diver: Diver): void {
         this.diver.loadFrom(diver);

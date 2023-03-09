@@ -117,9 +117,11 @@ describe('PlannerService', () => {
             tanksService.firstTank.o2 = o2Expected;
             // TODO simplify setup
             tanksService.addTank();
+
             plan.assignDepth(7, tanksService.firstTank.tank, planner.options);
             plan.segments[1].endDepth = 5;
-            planner.addSegment();
+            const depthsService = TestBed.inject(DepthsService);
+            depthsService.addSegment();
             plan.fixDepths(); // to simplify setup
             viewSwitch.isComplex = false;
         });
@@ -144,7 +146,9 @@ describe('PlannerService', () => {
                 tanksService.addTank();
                 tanksService.addTank();
                 const secondTank = tanksService.tanks[1];
-                planner.addSegment();
+
+                const depthsService = TestBed.inject(DepthsService);
+                depthsService.addSegment();
                 const segments = plan.segments;
                 lastSegment = segments[1];
                 lastSegment.tank = secondTank.tank;

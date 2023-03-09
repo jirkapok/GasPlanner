@@ -9,6 +9,8 @@ import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 import { Plan } from './plan.service';
+import { DepthsService } from './depths.service';
+import { DelayedScheduleService } from './delayedSchedule.service';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -16,8 +18,9 @@ describe('PreferencesService', () => {
             providers: [WorkersFactoryCommon,
                 PreferencesService, PlannerService,
                 UnitConversion, TanksService,
-                ViewSwitchService,
-                OptionsDispatcherService, Plan]
+                ViewSwitchService, DepthsService,
+                OptionsDispatcherService, Plan,
+                DelayedScheduleService]
         });
 
         localStorage.clear();
@@ -107,13 +110,13 @@ describe('PreferencesService', () => {
             }));
 
         it('Plan is loaded after save', inject(
-            [PreferencesService, PlannerService, TanksService, ViewSwitchService, Plan],
+            [PreferencesService, PlannerService, TanksService, ViewSwitchService, DepthsService, Plan],
             (service: PreferencesService, planner: PlannerService,
                 tanksService: TanksService, viewSwitch: ViewSwitchService,
-                plan: Plan) => {
+                depthsService: DepthsService, plan: Plan) => {
                 tanksService.addTank();
                 tanksService.addTank();
-                planner.addSegment();
+                depthsService.addSegment();
                 const lastSegment = plan.segments[2];
                 const secondTank = tanksService.tanks[1];
                 lastSegment.tank = secondTank.tank;
@@ -131,15 +134,15 @@ describe('PreferencesService', () => {
             }));
 
         it('Simple profile is loaded after save and trims tank', inject(
-            [PreferencesService, PlannerService, TanksService, Plan, OptionsDispatcherService],
-            (service: PreferencesService, planner: PlannerService,
-                tanksService: TanksService, plan: Plan, options: OptionsDispatcherService) => {
+            [PreferencesService, PlannerService, TanksService, DepthsService, Plan, OptionsDispatcherService],
+            (service: PreferencesService, planner: PlannerService, tanksService: TanksService,
+                depthsService: DepthsService, plan: Plan, options: OptionsDispatcherService) => {
                 const optionsResetToSimple = spyOn(options, 'resetToSimple').and.callThrough();
 
                 // invalid operations for simple profile simulate wrong data
                 tanksService.addTank();
                 tanksService.addTank();
-                planner.addSegment();
+                depthsService.addSegment();
                 planner.calculate();
                 service.saveDefaults();
 

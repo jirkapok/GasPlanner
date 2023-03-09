@@ -32,7 +32,7 @@ describe('Url Serialization', () => {
         const created = createSut();
         created.viewSwitch.isComplex = true;
         created.tanksService.addTank();
-        created.planner.addSegment();
+        created.plan.addSegment(created.tanksService.firstTank.tank);
         created.planner.calculate();
         return created;
     };

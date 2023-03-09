@@ -56,7 +56,7 @@ export class DepthsService {
     }
 
     public addSegment(): void {
-        this.planner.addSegment();
+        this.addSegmentToPlan();
         this.updateLevels();
         this.apply();
     }
@@ -115,6 +115,13 @@ export class DepthsService {
     public assignDepth(newDepth: number): void {
         const options = this.planner.options;
         this.plan.assignDepth(newDepth, this.firstTank, options);
+    }
+
+    private addSegmentToPlan(): void {
+        const segments = this.plan.segments;
+        const lastUsedTank = segments[segments.length - 1].tank;
+        const tank = lastUsedTank as Tank;
+        this.plan.addSegment(tank);
     }
 
     private apply(): void {

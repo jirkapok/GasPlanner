@@ -1,6 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { InputControls } from '../shared/inputcontrols';
 import { Plan } from '../shared/plan.service';
@@ -12,9 +13,18 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { SacComponent } from './sac.component';
 
+class SacPage {
+    constructor(private fixture: ComponentFixture<SacComponent>) { }
+
+    public get workingPressure(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#workPressure'))?.nativeElement as HTMLInputElement;
+    }
+}
+
 describe('Sac component', () => {
     let component: SacComponent;
     let fixture: ComponentFixture<SacComponent>;
+    let sacPage: SacPage;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -36,6 +46,7 @@ describe('Sac component', () => {
         fixture = TestBed.createComponent(SacComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        sacPage = new SacPage(fixture);
     });
 
     it('use applies rmv to diver', inject([PlannerService, SacCalculatorService],
@@ -46,6 +57,12 @@ describe('Sac component', () => {
             expect(applied).toBeCloseTo(20, 5);
         }));
 
+    describe('Metric units', () => {
+        it('Working pressure is not visible', () => {
+            expect(sacPage.workingPressure).toBeUndefined();
+        });
+    });
+
     describe('Imperial units', () => {
         beforeEach(() => {
             component.units.imperialUnits = true;
@@ -53,7 +70,7 @@ describe('Sac component', () => {
         });
 
         it('adjusts tank', () => {
-            expect(component.calcTank).toBeCloseTo(109.567285, 6);
+            expect(component.calcTankSize).toBeCloseTo(109.568715, 6);
         });
 
         it('adjusts depth', () => {
@@ -70,6 +87,16 @@ describe('Sac component', () => {
 
         it('adjusts sac', () => {
             expect(component.gasSac).toBeCloseTo(19.338365, 6);
+        });
+
+        it('adjusts working pressure', () => {
+            expect(component.calcWorkingPressure).toBeCloseTo(3000, 3);
+        });
+
+        it('Working pressure affects tank size', () => {
+            sacPage.workingPressure.value = '4000';
+            sacPage.workingPressure.dispatchEvent(new Event('input'));
+            expect(component.calc.tank).toBeCloseTo(11.253, 3);
         });
     });
 });

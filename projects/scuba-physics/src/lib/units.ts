@@ -110,7 +110,7 @@ export class MetricUnits implements Units {
 */
 export class ImperialUnits implements Units {
     /** In bars corresponding to 3000 psi */
-    public static readonly defaultWorkingPressure = 206.84;
+    public static readonly defaultWorkingPressure = 206.8427;
 
     private static readonly psiRate = 14.503773773022;
     private static readonly cftRate = 28.316846592;

@@ -38,7 +38,6 @@ export class ViewSwitchService {
         this.tanks.resetToSimple();
         const firstTank = this.tanks.firstTank.tank;
         const options = this.options.getOptions();
-        // TODO simplify method arguments
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, firstTank, options);
     }
 }

@@ -1,25 +1,27 @@
-import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
-import { SafetyStop } from 'projects/scuba-physics/src/public-api';
 import { SelectedWaypoint } from './selectedwaypointService';
 import { inject, TestBed } from '@angular/core/testing';
 import { PlannerService } from './planner.service';
-import { Salinity, Segment, StandardGases } from 'scuba-physics';
+import { Segment, StandardGases } from 'scuba-physics';
 import { WayPoint } from './models';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { Plan } from './plan.service';
+import { DepthsService } from './depths.service';
+import { DelayedScheduleService } from './delayedSchedule.service';
+import { OptionsDispatcherService } from './options-dispatcher.service';
+import { TestBedExtensions } from './TestBedCommon.spec';
 
 describe('Selected Waypoint', () => {
-    const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
-    options.safetyStop = SafetyStop.always;
-
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
                 WorkersFactoryCommon, PlannerService,
-                UnitConversion, TanksService, Plan]
+                UnitConversion, TanksService,
+                Plan, DepthsService, DelayedScheduleService, OptionsDispatcherService]
         });
+
+        TestBedExtensions.initPlan();
     });
 
     it('Selected assigned fires event', inject([PlannerService],

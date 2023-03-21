@@ -1,12 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Diver, Options } from 'scuba-physics';
+import { DelayedScheduleService } from './delayedSchedule.service';
+import { DepthsService } from './depths.service';
 import { OptionsDispatcherService } from './options-dispatcher.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { TanksService } from './tanks.service';
+import { TestBedExtensions } from './TestBedCommon.spec';
 import { UnitConversion } from './UnitConversion';
 
 describe('SettingsNormalizationService', () => {
@@ -18,9 +21,12 @@ describe('SettingsNormalizationService', () => {
             declarations: [],
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, RouterTestingModule, OptionsDispatcherService,
-                SettingsNormalizationService, TanksService, Plan],
+                SettingsNormalizationService, TanksService,
+                Plan, DepthsService, DelayedScheduleService],
             imports: [RouterTestingModule.withRoutes([])]
         });
+
+        TestBedExtensions.initPlan();
         service = TestBed.inject(SettingsNormalizationService);
         diver = new Diver();
     });

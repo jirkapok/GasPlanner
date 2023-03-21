@@ -19,6 +19,7 @@ import { Plan } from './plan.service';
 import { OptionsDispatcherService } from './options-dispatcher.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
+import { TestBedExtensions } from './TestBedCommon.spec';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -41,6 +42,7 @@ describe('PlannerService', () => {
         planner = TestBed.inject(PlannerService);
         tanksService = TestBed.inject(TanksService);
         viewSwitch = TestBed.inject(ViewSwitchService);
+        TestBedExtensions.initPlan();
         plan = TestBed.inject(Plan);
         OptionExtensions.applySimpleSpeeds(planner.options);
         planner.options.problemSolvingDuration = 2;

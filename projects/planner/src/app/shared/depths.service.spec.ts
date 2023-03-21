@@ -49,6 +49,10 @@ describe('Depths service', () => {
             OptionExtensions.applySimpleSpeeds(planner.options);
             planner.options.problemSolvingDuration = 2;
             planner.options.safetyStop = SafetyStop.always;
+
+            const optionsService = TestBed.inject(OptionsDispatcherService);
+            optionsService.loadFrom(planner.options);
+
             const tanksService = TestBed.inject(TanksService);
             const plan = TestBed.inject(Plan);
             plan.assignDepth(30, tanksService.firstTank.tank, planner.options);
@@ -73,13 +77,11 @@ describe('Depths service', () => {
     });
 
     describe('Depths', () => {
-        let planner: PlannerService;
         let plan: Plan;
         let tanksService: TanksService;
         let depthService: DepthsService;
 
         beforeEach(() => {
-            planner = TestBed.inject(PlannerService);
             plan = TestBed.inject(Plan);
             tanksService = TestBed.inject(TanksService);
             depthService = TestBed.inject(DepthsService);

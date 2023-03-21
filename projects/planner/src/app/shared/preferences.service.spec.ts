@@ -11,6 +11,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { Plan } from './plan.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
+import { TestBedExtensions } from './TestBedCommon.spec';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -24,6 +25,7 @@ describe('PreferencesService', () => {
         });
 
         localStorage.clear();
+        TestBedExtensions.initPlan();
     });
 
     it('loads saved disclaimer', inject([PreferencesService, PlannerService],
@@ -74,16 +76,18 @@ describe('PreferencesService', () => {
             }));
 
         it('Tanks are loaded after save', inject(
-            [PreferencesService, PlannerService, TanksService, OptionsDispatcherService, ViewSwitchService],
+            [PreferencesService, PlannerService, TanksService,
+                OptionsDispatcherService, ViewSwitchService, Plan],
             (service: PreferencesService, planner: PlannerService,
                 tanksService: TanksService, options: OptionsDispatcherService,
-                viewSwitch: ViewSwitchService) => {
+                viewSwitch: ViewSwitchService, plan: Plan) => {
                 const oValues = options.getOptions();
                 OptionExtensions.applySimpleSpeeds(oValues);
                 options.safetyStop = SafetyStop.always;
                 options.gasSwitchDuration = 1;
                 options.problemSolvingDuration = 2;
                 planner.assignOptions(options.getOptions());
+                plan.setSimple(30, 12, tanksService.firstTank.tank, oValues);
                 tanksService.addTank();
                 const tanks = tanksService.tanks;
                 tanks[0].startPressure = 150;

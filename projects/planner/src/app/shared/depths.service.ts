@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Segment, StandardGases, Tank } from 'scuba-physics';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { GasToxicity } from './gasToxicity.service';
 import { Level, TankBound } from './models';
@@ -7,9 +6,13 @@ import { Plan } from '../shared/plan.service';
 import { PlannerService } from './planner.service';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
+import { Streamed } from './streamed';
+import { takeUntil } from 'rxjs';
+import { OptionsDispatcherService } from './options-dispatcher.service';
+import { Tank, Segment, StandardGases } from 'scuba-physics';
 
 @Injectable()
-export class DepthsService {
+export class DepthsService extends Streamed {
     private _levels: Level[] = [];
     private toxicity: GasToxicity;
 
@@ -18,8 +21,16 @@ export class DepthsService {
         private planner: PlannerService,
         private tanksService: TanksService,
         private delayedCalc: DelayedScheduleService,
-        private plan: Plan) {
+        private plan: Plan,
+        private optionsService: OptionsDispatcherService) {
+        super();
+
         this.toxicity = new GasToxicity(this.planner.options);
+        const firstTank = this.firstTank;
+        const options = this.optionsService.getOptions();
+        this.plan.setSimple(30, 12, firstTank, options);
+        this.tanksService.tankRemoved.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((removed: Tank) => this.plan.resetSegments(removed, firstTank));
     }
 
     public get levels(): Level[] {

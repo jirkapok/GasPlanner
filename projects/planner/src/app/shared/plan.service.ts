@@ -18,9 +18,7 @@ export class Plan {
     /** provide the not necessary tank and options only to start from simple valid profile */
     constructor() {
         this.reloaded$ = this.onReloaded.asObservable();
-        const tank = Tank.createDefault();
-        const options = new Options();
-        this.reset(30, 12, tank, options);
+        // TODO this.reset(30, 12, tank, options);
     }
 
     public get length(): number {

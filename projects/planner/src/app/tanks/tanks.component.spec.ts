@@ -3,6 +3,7 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { Options } from 'scuba-physics';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../oxygen/oxygen.component';
@@ -93,7 +94,10 @@ describe('Tanks component', () => {
 
     beforeEach(() => {
         fixture = TestBed.createComponent(TanksComponent);
+        const plan = TestBed.inject(Plan);
         component = fixture.componentInstance;
+        const firstTank = fixture.componentInstance.firstTank.tank;
+        plan.setSimple(30,12, firstTank, new Options());
         fixture.detectChanges();
         complexPage = new ComplexTanksPage(fixture);
         simplePage = new SimpleTanksPage(fixture);

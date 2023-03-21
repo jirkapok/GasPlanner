@@ -41,17 +41,12 @@ export class PlannerService extends Streamed {
         private tanks: TanksService,
         private plan: Plan) {
         super();
+        // TODO move to OptionsService
         this._options = new Options();
         this._options.salinity = Salinity.fresh;
         this._options.safetyStop = SafetyStop.auto;
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
-
-        // TODO move to plan
-        const firstTank = this.tanks.firstTank.tank;
-        this.plan.setSimple(30, 12, firstTank, this.options);
-        this.tanks.tankRemoved.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((removed) => this.plan.resetSegments(removed, firstTank));
 
         this.profileTask = this.workerFactory.createProfileWorker();
         this.profileTask.calculated$.pipe(takeUntil(this.unsubscribe$))

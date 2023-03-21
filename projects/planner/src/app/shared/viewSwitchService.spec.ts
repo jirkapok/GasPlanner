@@ -2,12 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
-import { DepthsService } from './depths.service';
 import { UnitConversion } from './UnitConversion';
 import { OptionsDispatcherService } from './options-dispatcher.service';
-import { PlannerService } from './planner.service';
-import { DelayedScheduleService } from './delayedSchedule.service';
-import { WorkersFactoryCommon } from './serial.workers.factory';
 
 describe('View Switch service', () => {
     const o2Expected = 50;
@@ -21,8 +17,7 @@ describe('View Switch service', () => {
             providers: [
                 TanksService, ViewSwitchService,
                 OptionsDispatcherService, UnitConversion,
-                Plan, DepthsService, WorkersFactoryCommon,
-                PlannerService, DelayedScheduleService
+                Plan
             ],
             imports: []
         }).compileComponents();
@@ -33,17 +28,22 @@ describe('View Switch service', () => {
         tanksService.firstTank.o2 = o2Expected;
         tanksService.addTank();
 
-        const depthsService = TestBed.inject(DepthsService);
-        depthsService.assignDepth(7);
-        depthsService.levels[1].endDepth = 5;
-        depthsService.addSegment();
+        const firstTank = tanksService.firstTank.tank;
+        const options = TestBed.inject(OptionsDispatcherService);
         plan = TestBed.inject(Plan);
+        plan.setSimple(7, 12, firstTank,  options.getOptions());
+        plan.segments[1].endDepth = 5;
+        plan.addSegment(firstTank);
 
         viewSwitch = TestBed.inject(ViewSwitchService);
-        viewSwitch.isComplex = false;
+        viewSwitch.isComplex = true; // because default value is false
     });
 
     describe('Switch to simple view', () => {
+        beforeEach(() => {
+            viewSwitch.isComplex = false;
+        });
+
         it('Sets simple profile', () => {
             expect(plan.duration).toBe(22);
         });
@@ -54,5 +54,13 @@ describe('View Switch service', () => {
             expect(segments[0].endDepth).toBe(7);
             expect(segments[1].endDepth).toBe(7);
         });
+    });
+
+    it('Fires event when value not changed', () => {
+        let firedTimes = 0;
+        viewSwitch.viewSwitched.subscribe(() => firedTimes++);
+        viewSwitch.isComplex = false;
+        viewSwitch.isComplex = false;
+        expect(firedTimes).toBe(2);
     });
 });

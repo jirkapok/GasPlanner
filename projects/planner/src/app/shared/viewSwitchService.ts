@@ -23,7 +23,7 @@ export class ViewSwitchService {
     }
 
     public set isComplex(newValue: boolean) {
-        // todo execute change only in case value has changed
+        // not preventing repetitive updates, because it would block settings reload
         this._isComplex = newValue;
         if (!newValue) {
             this.resetToSimple();

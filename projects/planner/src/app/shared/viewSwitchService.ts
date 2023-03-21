@@ -13,8 +13,6 @@ export class ViewSwitchService {
     private onViewSwitched = new Subject<void>();
 
     constructor(
-        // TODO remove planner
-        private planner: PlannerService,
         private plan: Plan,
         private options: OptionsDispatcherService,
         private tanks: TanksService) {

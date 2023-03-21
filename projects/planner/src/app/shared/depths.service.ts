@@ -28,6 +28,9 @@ export class DepthsService extends Streamed {
         this.toxicity = new GasToxicity(this.planner.options);
         const firstTank = this.firstTank;
         const options = this.optionsService.getOptions();
+        this.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.updateLevels());
+        // this enforces to initialize the levels, needs to be called after subscribe to plan
         this.plan.setSimple(30, 12, firstTank, options);
         this.tanksService.tankRemoved.pipe(takeUntil(this.unsubscribe$))
             .subscribe((removed: Tank) => this.plan.resetSegments(removed, firstTank));

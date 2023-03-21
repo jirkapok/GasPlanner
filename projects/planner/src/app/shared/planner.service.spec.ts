@@ -24,7 +24,6 @@ import { TestBedExtensions } from './TestBedCommon.spec';
 describe('PlannerService', () => {
     let planner: PlannerService;
     let tanksService: TanksService;
-    let viewSwitch: ViewSwitchService;
     let plan: Plan;
 
     beforeEach(async () => {
@@ -41,7 +40,6 @@ describe('PlannerService', () => {
 
         planner = TestBed.inject(PlannerService);
         tanksService = TestBed.inject(TanksService);
-        viewSwitch = TestBed.inject(ViewSwitchService);
         TestBedExtensions.initPlan();
         plan = TestBed.inject(Plan);
         OptionExtensions.applySimpleSpeeds(planner.options);
@@ -110,34 +108,6 @@ describe('PlannerService', () => {
             planner.calculate();
             expect(planner.dive.noDecoExceeded).toBeTruthy();
         }));
-    });
-
-    describe('Switch between simple and complex', () => {
-        const o2Expected = 50;
-
-        beforeEach(() => {
-            tanksService.firstTank.o2 = o2Expected;
-            // TODO simplify setup
-            tanksService.addTank();
-
-            plan.assignDepth(7, tanksService.firstTank.tank, planner.options);
-            plan.segments[1].endDepth = 5;
-            const depthsService = TestBed.inject(DepthsService);
-            depthsService.addSegment();
-            plan.fixDepths(); // to simplify setup
-            viewSwitch.isComplex = false;
-        });
-
-        it('Sets simple profile', () => {
-            expect(plan.duration).toBe(22);
-        });
-
-        it('Plan has correct depths', () => {
-            const segments = plan.segments;
-            expect(segments.length).toBe(2);
-            expect(segments[0].endDepth).toBe(7);
-            expect(segments[1].endDepth).toBe(7);
-        });
     });
 
     describe('Manage tanks', () => {

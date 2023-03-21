@@ -12,7 +12,9 @@ export class ViewSwitchService {
     private _isComplex = false;
     private onViewSwitched = new Subject<void>();
 
-    constructor(private planner: PlannerService,
+    constructor(
+        // TODO remove planner
+        private planner: PlannerService,
         private plan: Plan,
         private options: OptionsDispatcherService,
         private tanks: TanksService) {

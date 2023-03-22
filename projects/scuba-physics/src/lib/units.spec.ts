@@ -213,11 +213,11 @@ describe('Imperial units', () => {
 
         it('80 cuft size at 207 bars working pressure is 11 liter', () => {
             const result = units.toTankLiters(80, ImperialUnits.defaultWorkingPressure);
-            expect(result).toBeCloseTo(10.952174276, 8);
+            expect(result).toBeCloseTo(10.952031314, 8);
         });
 
         it('11 liter size at 207 bars working pressure is 80 cuft', () => {
-            const result = units.fromTankLiters(10.952174276, ImperialUnits.defaultWorkingPressure);
+            const result = units.fromTankLiters(10.952031314, ImperialUnits.defaultWorkingPressure);
             expect(result).toBeCloseTo(80, 8);
         });
     });

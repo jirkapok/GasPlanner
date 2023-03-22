@@ -117,6 +117,7 @@ export class SacComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        // TODO set default values based on units in case the units have changed
         this.durationControl = this.formBuilder.control(this.calcDuration, this.validators.duration);
         this.usedControl = this.formBuilder.control(this.calcUsed, this.validators.tankPressure);
         this.rmvControl = this.formBuilder.control(this.calcRmv, this.validators.diverRmv);

@@ -43,38 +43,9 @@ export class SimpleTanksPage {
     }
 }
 
-export class ComplexTanksPage {
-    constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
-
-    public get sizeDebugs(): DebugElement[] {
-        const all = this.fixture.debugElement.queryAll(By.css('#sizeItem'));
-        return all;
-    }
-
-    public sizeInput(index: number): HTMLInputElement {
-        return this.sizeDebugs[index].nativeElement as HTMLInputElement;
-    }
-
-    public pressureInput(index: number): HTMLInputElement {
-        const all = this.fixture.debugElement.queryAll(By.css('#pressureItem'));
-        return all[index].nativeElement as HTMLInputElement;
-    }
-
-    public o2Input(index: number): HTMLInputElement {
-        const all = this.fixture.debugElement.queryAll(By.css('#o2Item'));
-        return all[index].nativeElement as HTMLInputElement;
-    }
-
-    public heInput(index: number): HTMLInputElement {
-        const all = this.fixture.debugElement.queryAll(By.css('#heItem'));
-        return all[index].nativeElement as HTMLInputElement;
-    }
-}
-
 describe('Tanks Simple component', () => {
     let component: TanksSimpleComponent;
     let fixture: ComponentFixture<TanksSimpleComponent>;
-    let complexPage: ComplexTanksPage;
     let simplePage: SimpleTanksPage;
     let schedulerSpy: jasmine.Spy<() => void>;
 
@@ -99,7 +70,6 @@ describe('Tanks Simple component', () => {
         const firstTank = fixture.componentInstance.firstTank.tank;
         plan.setSimple(30,12, firstTank, new Options());
         fixture.detectChanges();
-        complexPage = new ComplexTanksPage(fixture);
         simplePage = new SimpleTanksPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
         schedulerSpy = spyOn(scheduler, 'schedule')
@@ -119,28 +89,11 @@ describe('Tanks Simple component', () => {
             expect(simplePage.sizeInput.value).toBe('24');
         }));
 
-    it('Switch to complex view rebinds all tanks', inject([ViewSwitchService, TanksService],
-        (viewSwitch: ViewSwitchService, tanksService: TanksService) => {
-            tanksService.addTank();
-            const secondTank = tanksService.tanks[1];
-            secondTank.startPressure = 150;
-            secondTank.size = 20;
-            secondTank.o2 = 25;
-            secondTank.he = 31;
-
-            viewSwitch.isComplex = true;
-            fixture.detectChanges();
-            expect(complexPage.sizeInput(1).value).toBe('20');
-            expect(complexPage.pressureInput(1).value).toBe('150');
-            expect(complexPage.o2Input(1).value).toBe('25');
-            expect(complexPage.heInput(1).value).toBe('31');
-        }));
-
     describe('Simple view', () => {
         it('Imperial units adjusts sac', inject([UnitConversion],
             (units: UnitConversion) => {
                 units.imperialUnits = true;
-                const sac = component.gasSac(0);
+                const sac = component.gasSac();
                 expect(sac).toBeCloseTo(19.33836, 5);
             }));
 
@@ -164,63 +117,5 @@ describe('Tanks Simple component', () => {
             expect(newO2).toBe('35');
             expect(component.firstTank.o2).toBe(35);
         });
-    });
-
-    describe('Complex view', () => {
-        it('Adds tank', inject([ViewSwitchService],
-            (viewSwitch: ViewSwitchService) => {
-                viewSwitch.isComplex = true;
-                component.addTank();
-                expect(component.tanks.length).toBe(2);
-            }));
-
-        it('Removes tank', inject([ViewSwitchService],
-            (viewSwitch: ViewSwitchService) => {
-                viewSwitch.isComplex = true;
-                component.addTank();
-                component.addTank();
-                component.addTank();
-                component.removeTank(3);
-                expect(component.tanks.length).toBe(3);
-            }));
-
-        it('Invalid change in complex mode prevents calculate', inject([ViewSwitchService],
-            (viewSwitch: ViewSwitchService) => {
-                viewSwitch.isComplex = true;
-                fixture.detectChanges();
-
-                complexPage.sizeInput(0).value = 'aaa';
-                complexPage.sizeInput(0).dispatchEvent(new Event('input'));
-                expect(schedulerSpy).not.toHaveBeenCalled();
-            }));
-
-        it('Valid change triggers planner calculate', inject([ViewSwitchService],
-            (viewSwitch: ViewSwitchService) => {
-                viewSwitch.isComplex = true;
-                fixture.detectChanges();
-
-                complexPage.sizeInput(0).value = '24';
-                complexPage.sizeInput(0).dispatchEvent(new Event('input'));
-                expect(schedulerSpy).toHaveBeenCalledTimes(1);
-            }));
-
-        it('Assign gas name tank rebinds new o2 value', inject([ViewSwitchService],
-            (viewSwitch: ViewSwitchService) => {
-                viewSwitch.isComplex = true;
-                component.assignStandardGas(0, 'Ean36');
-                fixture.detectChanges();
-                expect(complexPage.o2Input(0).value).toBe('36');
-            }));
-
-        it('He field affects O2 field tank is reloaded', inject([ViewSwitchService],
-            (viewSwitch: ViewSwitchService) => {
-                viewSwitch.isComplex = true;
-                component.assignStandardGas(0, 'Oxygen');
-                fixture.detectChanges();
-                complexPage.heInput(0).value = '70';
-                complexPage.heInput(0).dispatchEvent(new Event('input'));
-
-                expect(complexPage.o2Input(0).value).toBe('30');
-            }));
     });
 });

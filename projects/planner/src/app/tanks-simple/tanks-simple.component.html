@@ -2,116 +2,16 @@
     <form [formGroup]="tanksForm">
         <div class="card-header ">
             <fa-icon [icon]="icon" class="me-3"></fa-icon>
-            <span *ngIf="!isComplex">Bottom gas tank</span>
-            <span *ngIf="isComplex">Tanks</span>
+            <span>Bottom gas tank</span>
         </div>
-        <div class="card-body" *ngIf="isComplex" formArrayName="boundTanks">
-            <div class="row pb-2">
-                <div class="col col-1 m-0 px-1 d-none d-sm-block"></div>
-                <div class="col col-2 m-0 px-1 d-none d-sm-block">Size [{{units.volume}}]</div>
-                <div class="col col-2 m-0 px-1 d-none d-sm-block">Pressure [{{units.pressure}}]</div>
-                <div class="col col-4 m-0 px-1 d-none d-sm-block">O2 [%]</div>
-                <div class="col col-2 m-0 px-1 d-none d-sm-block">He [%]</div>
-                <div class="col col-1 m-0 px-1 d-none d-sm-block">
-                    <button class="p-1 btn btn-secondary" type="button" (click)="addTank()">
-                        <fa-icon [icon]="plusIcon" class="fa-xl"></fa-icon>
-                    </button>
-                </div>
-            </div>
-            <div *ngFor="let bound of tanksGroup.controls; let i = index" [formGroupName]="i">
-                <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-sm-none d-block">
-                    <div class="row">
-                        <div class="col col-6">
-                            {{ tanks[i].id }}.
-                        </div>
-                        <div class="col col-6 text-end">
-                            <button *ngIf="i !== 0" class="m-0 p-1 btn btn-secondary" type="button" (click)="removeTank(i)">
-                                <fa-icon [icon]="minusIcon" class="p-0 m-0 fa-xl"></fa-icon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row p-0">
-                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 text-end d-none d-sm-block align-self-center">{{ tanks[i].id }}.</div>
-                    <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
-                        <label for="sizeItem" class="form-label d-sm-none d-block">Size
-                            [{{units.volume}}]:</label>
-                        <input formControlName="tankSize" class="form-control" type="number" (input)="tankChanged(i)"
-                            required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-                            [class.is-invalid]="tankSizeInvalid(i)" id="sizeItem" />
-                        <div class="text-danger" *ngIf="tankSizeInvalid(i)">Needs to be number
-                            {{ranges.tankSizeLabel}}
-                        </div>
-                    </div>
-                    <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
-                        <label for="pressureItem" class="form-label d-sm-none d-block mt-2">Pressure
-                            [{{units.pressure}}]:</label>
-                        <input formControlName="tankStartPressure" class="form-control" type="number"
-                            (input)="tankChanged(i)" required [min]="ranges.tankPressure[0]"
-                            [max]="ranges.tankPressure[1]" step="1" id="pressureItem"
-                            [class.is-invalid]="startPressureInvalid(i)" />
-                        <div class="text-danger" *ngIf="startPressureInvalid(i)">
-                            Needs to be number {{ranges.tankPressureLabel}}</div>
-                    </div>
-                    <div class="col col-12 col-sm-4 m-0 pb-0 px-1">
-                        <label for="o2Item" class="form-label d-sm-none d-block  mt-2">O2 [%]:</label>
-                        <div class="input-group dropdown" mdbDropdown>
-                            <input formControlName="tankO2" class="form-control" type="number" (input)="tankChanged(i)"
-                                required [min]="ranges.trimixOxygen[0]" [max]="ranges.trimixOxygen[1]" step="1"
-                                [class.is-invalid]="gasO2Invalid(i)" id="o2Item" />
-                            <button class="btn btn-default dropdown-toggle dropdown-toggle-split" id="o2Menu"
-                                type="button" aria-expanded="false" data-mdb-toggle="dropdown"
-                                mdbDropdownToggle></button>
-                            <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                                <li *ngFor="let stgas of this.allNames" (click)="assignStandardGas(i, stgas)">
-                                    <a class="dropdown-item">{{stgas}}</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="text-danger" *ngIf="gasO2Invalid(i)">Needs to be number
-                            {{ranges.trimixOxygenLabel}}</div>
-                    </div>
-                    <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
-                        <label for="o2Item" class="form-label d-sm-none d-block mt-2">He [%]:</label>
-                        <input formControlName="tankHe" class="form-control" type="number" (input)="tankChanged(i)"
-                            [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1" required
-                            [class.is-invalid]="gasHeInvalid(i)" id="heItem" />
-                        <div class="text-danger" *ngIf="gasHeInvalid(i)">Needs to be number
-                            {{ranges.tankHeLabel}}</div>
-                    </div>
-                    <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block align-self-center">
-                        <button *ngIf="i !== 0" class="m-0 p-1 btn btn-secondary" type="button" (click)="removeTank(i)">
-                            <fa-icon [icon]="minusIcon" class="p-0 m-0 fa-xl"></fa-icon>
-                        </button>
-                    </div>
-                </div>
-                <div class="row pb-2">
-                    <div class="col col-1"></div>
-                    <div class="col col-10 m-0 p-0">
-                        <small class="form-text text-muted">SAC: {{gasSac(i) | number:'1.0-2'}}
-                            {{units.sac}}</small>
-                        <app-gaslabel [tank]="tanks[i].tank" [toxicity]="toxicity" class="float-end">
-                        </app-gaslabel>
-                    </div>
-                    <div class="col col-1"></div>
-                </div>
-            </div>
-            <div class="row justify-content-end m-1 px-1 ">
-                <div class="col col-1 d-sm-none d-block">
-                    <button class="p-1 btn btn-secondary" type="button" (click)="addTank()">
-                        <fa-icon [icon]="plusIcon" class="fa-xl"></fa-icon>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="card-body row" *ngIf="!isComplex">
+        <div class="card-body row">
             <div class="mb-4 col col-12 col-md-6">
                 <label for="size" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>
                 <input formControlName="firstTankSize" class="form-control" type="number" (input)="applySimple()"
                     required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
                     [class.is-invalid]="firstTankSizeInvalid" id="sizeFirstTank" />
                 <div class="invalid-feedback position-absolute">Needs to be number {{ranges.tankSizeLabel}}</div>
-                <div class="form-text text-muted" [class.invisible]="firstTankSizeInvalid">SAC: {{gasSac(0) |
+                <div class="form-text text-muted" [class.invisible]="firstTankSizeInvalid">SAC: {{gasSac() |
                     number:'1.0-2'}} {{units.sac}}</div>
             </div>
             <div class="mb-4 col col-12 col-md-6">

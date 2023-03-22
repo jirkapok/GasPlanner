@@ -18,6 +18,7 @@ export * from './lib/Profile';
 export * from './lib/ProfileEvents';
 export * from './lib/SacCalculator';
 export * from './lib/Segments';
+export * from './lib/StandardTanks';
 export * from './lib/Tanks';
 export * from './lib/Time';
 export * from './lib/Tissues';

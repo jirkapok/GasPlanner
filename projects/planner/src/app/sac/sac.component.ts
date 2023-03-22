@@ -29,7 +29,7 @@ export class SacComponent implements OnInit {
     public calcIcon = faCalculator;
     public formSac!: FormGroup<SacForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
-    private workingPressure = ImperialUnits.defaultWorkingPressure;
+    private workingPressure = TankConstants.metricTankWorkPressure;
     private durationControl!: FormControl<number>;
     private rmvControl!: FormControl<number>;
     private usedControl!: FormControl<number>;
@@ -199,15 +199,15 @@ export class SacComponent implements OnInit {
     }
 
     private setDefaultValues(): void {
+        // working pressure is irrelevant here, since not changed when switching units
+        // depth adjusted to cca 15 meters
+        this.calc.depth = this.units.toMeters(this.units.stopsDistance * 5);
+
         // rmv is calculated and duration is units independent
         if(this.units.imperialUnits) {
-            this.calc.depth = this.units.toMeters(TankConstants.imperial3mDepth * 5);
-            this.workingPressure = this.units.toBar(TankConstants.imperialTankWorkPressure);
             this.calc.tank = this.units.toTankLiters(TankConstants.imperialTankSize, this.workingPressure);
             this.calc.used = this.units.toBar(2200);
         } else {
-            this.calc.depth = 15;
-            // working pressure is irrelevant here
             this.calc.tank = 15;
             this.calc.used = 150;
         }

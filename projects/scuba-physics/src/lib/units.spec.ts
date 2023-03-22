@@ -205,19 +205,22 @@ describe('Imperial units', () => {
     });
 
     describe('Imperial - Tank size', () => {
+        /** In bars corresponding to 3000 psi */
+        const defaultWorkingPressure = 206.8427;
+
         it('cft to/from liters is precise tank size', () => {
-            let result = units.fromTankLiters(11, ImperialUnits.defaultWorkingPressure);
-            result = units.toTankLiters(result, ImperialUnits.defaultWorkingPressure);
+            let result = units.fromTankLiters(11, defaultWorkingPressure);
+            result = units.toTankLiters(result, defaultWorkingPressure);
             expect(result).toBeCloseTo(11, 8);
         });
 
         it('80 cuft size at 207 bars working pressure is 11 liter', () => {
-            const result = units.toTankLiters(80, ImperialUnits.defaultWorkingPressure);
+            const result = units.toTankLiters(80, defaultWorkingPressure);
             expect(result).toBeCloseTo(10.952031314, 8);
         });
 
         it('11 liter size at 207 bars working pressure is 80 cuft', () => {
-            const result = units.fromTankLiters(10.952031314, ImperialUnits.defaultWorkingPressure);
+            const result = units.fromTankLiters(10.952031314, defaultWorkingPressure);
             expect(result).toBeCloseTo(80, 8);
         });
     });

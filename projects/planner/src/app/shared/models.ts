@@ -1,6 +1,8 @@
-import { Ceiling, Time, Event, Segment,
+import {
+    Ceiling, Time, Event, Segment,
     StandardGases, Tank, OtuCalculator,
-    Precision, ImperialUnits } from 'scuba-physics';
+    Precision, TankConstants
+} from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
 export enum Strategies {
@@ -57,7 +59,7 @@ export class Level {
 
 export class TankBound {
     // TODO working pressure needs to be transfered using url parameters, because this
-    private _workingPressure = ImperialUnits.defaultWorkingPressure;
+    private _workingPressure = TankConstants.metricTankWorkPressure;
 
     constructor(public tank: Tank, private units: UnitConversion) { }
 

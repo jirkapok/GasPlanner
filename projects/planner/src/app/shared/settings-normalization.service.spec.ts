@@ -92,13 +92,13 @@ describe('SettingsNormalizationService', () => {
             (tanks: TanksService) => {
                 const tank = tanks.firstTank.tank;
                 expect(tank.startPressure).toBeCloseTo(200.016909, 6);
-                expect(tank.size).toBeCloseTo(15.059, 3);
+                expect(tank.size).toBeCloseTo(15.034, 3);
             }));
 
         it('Sets working pressure', inject([TanksService],
             (tanks: TanksService) => {
                 const workingPressure = tanks.firstTank.workingPressure;
-                expect(workingPressure).toBeCloseTo(3000, 6);
+                expect(workingPressure).toBeCloseTo(3442, 6);
             }));
     });
 

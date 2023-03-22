@@ -1,17 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { PlannerService } from '../shared/planner.service';
-import { StandardGases } from 'scuba-physics';
+import { StandardGases, Precision } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { takeUntil } from 'rxjs';
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormArray, NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
+
+interface TankRow {
+    tankSize: FormControl<number>;
+    tankStartPressure: FormControl<number>;
+    tankO2: FormControl<number>;
+    tankHe: FormControl<number>;
+}
+
+interface TanksForm {
+    boundTanks: FormArray<FormGroup<TankRow>>;
+}
 
 @Component({
     selector: 'app-tanks-complex',
@@ -24,12 +35,12 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     public plusIcon = faPlus;
     public minusIcon = faMinus;
     public toxicity: GasToxicity;
-    public tanksForm!: UntypedFormGroup;
+    public tanksForm!: FormGroup<TanksForm>;
 
     constructor(private planner: PlannerService,
         private tanksService: TanksService,
         public units: UnitConversion,
-        private fb: UntypedFormBuilder,
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private delayedCalc: DelayedScheduleService) {
@@ -46,13 +57,14 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         return this.tanksService.tanks;
     }
 
-    public get tanksGroup(): UntypedFormArray {
-        return this.tanksForm.controls.boundTanks as UntypedFormArray;
+    public get tanksGroup(): FormArray<FormGroup<TankRow>> {
+        return this.tanksForm.controls.boundTanks;
     }
 
     public ngOnInit(): void {
+        const rows = this.fb.array(this.createTankControls());
         this.tanksForm = this.fb.group({
-            boundTanks: this.fb.array(this.createTankControls())
+            boundTanks: rows
         });
 
         this.tanksService.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
@@ -66,22 +78,22 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     public gasHeInvalid(index: number): boolean {
-        const tank = this.tanksGroup.at(index) as UntypedFormGroup;
+        const tank = this.tanksGroup.at(index);
         return this.inputs.controlInValid(tank.controls.tankHe);
     }
 
     public gasO2Invalid(index: number): boolean {
-        const tank = this.tanksGroup.at(index) as UntypedFormGroup;
+        const tank = this.tanksGroup.at(index);
         return this.inputs.controlInValid(tank.controls.tankO2);
     }
 
     public startPressureInvalid(index: number): boolean {
-        const tank = this.tanksGroup.at(index) as UntypedFormGroup;
+        const tank = this.tanksGroup.at(index);
         return this.inputs.controlInValid(tank.controls.tankStartPressure);
     }
 
     public tankSizeInvalid(index: number): boolean {
-        const tank = this.tanksGroup.at(index) as UntypedFormGroup;
+        const tank = this.tanksGroup.at(index);
         return this.inputs.controlInValid(tank.controls.tankSize);
     }
 
@@ -120,7 +132,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
             return;
         }
 
-        const tankControl = this.tanksGroup.at(index) as UntypedFormGroup;
+        const tankControl = this.tanksGroup.at(index);
         const bound = this.tanks[index];
 
         const values = tankControl.value;
@@ -150,8 +162,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         });
     }
 
-    private createTankControls(): AbstractControl[] {
-        const created: AbstractControl[] = [];
+    private createTankControls(): FormGroup<TankRow>[] {
+        const created: FormGroup<TankRow>[] = [];
         for (const bound of this.tanks) {
             const newControl = this.createTankControl(bound);
             created.push(newControl);
@@ -160,12 +172,12 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         return created;
     }
 
-    private createTankControl(tank: TankBound): AbstractControl {
+    private createTankControl(tank: TankBound): FormGroup<TankRow> {
         return this.fb.group({
-            tankSize: [this.inputs.formatNumber(tank.size), this.validators.tankSize],
-            tankStartPressure: [this.inputs.formatNumber(tank.startPressure), this.validators.tankPressure],
-            tankO2: [this.inputs.formatNumber(tank.o2), this.validators.trimixOxygen],
-            tankHe: [this.inputs.formatNumber(tank.he), this.validators.trimixHe],
+            tankSize: [Precision.round(tank.size, 1), this.validators.tankSize],
+            tankStartPressure: [Precision.round(tank.startPressure, 1), this.validators.tankPressure],
+            tankO2: [Precision.round(tank.o2, 1), this.validators.trimixOxygen],
+            tankHe: [Precision.round(tank.he, 1), this.validators.trimixHe],
         });
     }
 }

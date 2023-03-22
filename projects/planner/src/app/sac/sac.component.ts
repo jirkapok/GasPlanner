@@ -11,6 +11,33 @@ import { InputControls } from '../shared/inputcontrols';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 
+/** Unit dependent default values */
+class TankConstants {
+    // https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities
+
+    // TODO move tank constants to lib
+    /** HP117 124 cuft tank as default single cylinder */
+    public static imperialTankSize = 124.1;
+
+    /** HP117 3442 PSI default working pressure default single cylinder */
+    public static imperialTankWorkPressure = 3442;
+
+    /** S80 cuft tank size for stage cylinder */
+    public static imperialStageSize = 80.1;
+
+    /** S80 aluminum 3000 PSI default working pressure for stage cylinder */
+    public static imperialStageWorkPressure = 3000;
+
+    /** 15L steel cylinder default single tank cylinder */
+    public static mertricTankSize = 15;
+
+    /** S80 aluminum 11L cylinder default single tank cylinder */
+    public static metricStageSize = 11.1;
+
+    // TODO depth constants see levels in lib
+    /** 20 ft depth as 6 m imperial alternative */
+    public static imperial3mDepth = 10;
+}
 
 interface SacForm {
     depth: FormControl<number>;
@@ -117,7 +144,8 @@ export class SacComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        // TODO set default values based on units in case the units have changed
+        this.setDefaultValues();
+
         this.durationControl = this.formBuilder.control(this.calcDuration, this.validators.duration);
         this.usedControl = this.formBuilder.control(this.calcUsed, this.validators.tankPressure);
         this.rmvControl = this.formBuilder.control(this.calcRmv, this.validators.diverRmv);
@@ -196,5 +224,20 @@ export class SacComponent implements OnInit {
             duration: this.calcDuration,
             rmv: this.calcRmv,
         });
+    }
+
+    private setDefaultValues(): void {
+        // rmv is calculated and duration is units independent
+        if(this.units.imperialUnits) {
+            this.calc.depth = this.units.toMeters(TankConstants.imperial3mDepth * 5);
+            this.workingPressure = this.units.toBar(TankConstants.imperialTankWorkPressure);
+            this.calc.tank = this.units.toTankLiters(TankConstants.imperialTankSize, this.workingPressure);
+            this.calc.used = this.units.toBar(2200);
+        } else {
+            this.calc.depth = 15;
+            // working pressure is irrelevant here
+            this.calc.tank = 15;
+            this.calc.used = 150;
+        }
     }
 }

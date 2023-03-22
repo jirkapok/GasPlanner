@@ -61,6 +61,26 @@ describe('Sac component', () => {
         it('Working pressure is not visible', () => {
             expect(sacPage.workingPressure).toBeUndefined();
         });
+
+        it('Has default tank', () => {
+            expect(component.calcTankSize).toBeCloseTo(15, 1);
+        });
+
+        it('Has default depth', () => {
+            expect(component.calcDepth).toBeCloseTo(15, 1);
+        });
+
+        it('Has default used', () => {
+            expect(component.calcUsed).toBeCloseTo(150, 1);
+        });
+
+        it('Has default rmv', () => {
+            expect(component.calcRmv).toBeCloseTo(20, 1);
+        });
+
+        it('Has default sac', () => {
+            expect(component.gasSac).toBeCloseTo(1.333333, 6);
+        });
     });
 
     describe('Imperial units', () => {
@@ -70,33 +90,33 @@ describe('Sac component', () => {
         });
 
         it('adjusts tank', () => {
-            expect(component.calcTankSize).toBeCloseTo(109.6, 1);
+            expect(component.calcTankSize).toBeCloseTo(124.1, 1);
         });
 
         it('adjusts depth', () => {
-            expect(component.calcDepth).toBeCloseTo(49.2, 1);
+            expect(component.calcDepth).toBeCloseTo(50, 1);
         });
 
         it('adjusts used', () => {
-            expect(component.calcUsed).toBeCloseTo(2175.6, 1);
+            expect(component.calcUsed).toBeCloseTo(2200, 1);
         });
 
         it('adjusts rmv', () => {
-            expect(component.calcRmv).toBeCloseTo(0.7063, 4);
+            expect(component.calcRmv).toBeCloseTo(0.6985 , 4);
         });
 
         it('adjusts sac', () => {
-            expect(component.gasSac).toBeCloseTo(19.338365, 6);
+            expect(component.gasSac).toBeCloseTo(19.374053, 6);
         });
 
         it('adjusts working pressure', () => {
-            expect(component.calcWorkingPressure).toBeCloseTo(3000, 3);
+            expect(component.calcWorkingPressure).toBeCloseTo(3442, 1);
         });
 
         it('Working pressure affects tank size', () => {
             sacPage.workingPressure.value = '4000';
             sacPage.workingPressure.dispatchEvent(new Event('input'));
-            expect(component.calc.tank).toBeCloseTo(11.253, 3);
+            expect(component.calc.tank).toBeCloseTo(12.742, 3);
         });
     });
 });

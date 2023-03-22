@@ -16,11 +16,11 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { Plan } from '../shared/plan.service';
 
 @Component({
-    selector: 'app-tanks-simple',
-    templateUrl: './tanks-simple.component.html',
-    styleUrls: ['./tanks-simple.component.scss']
+    selector: 'app-tanks-complex',
+    templateUrl: './tanks-complex.component.html',
+    styleUrls: ['./tanks-complex.component.scss']
 })
-export class TanksSimpleComponent extends Streamed implements OnInit {
+export class TanksComplexComponent extends Streamed implements OnInit {
     public allNames: string[];
     public icon = faBatteryHalf;
     public plusIcon = faPlus;

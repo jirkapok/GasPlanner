@@ -15,7 +15,8 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TanksComponent } from './tanks-simple/tanks-simple.component';
+import { TanksSimpleComponent } from './tanks-simple/tanks-simple.component';
+import { TanksComplexComponent } from './tanks-complex/tanks-complex.component';
 import { DiverComponent } from './diver/diver.component';
 import { DiveOptionsComponent } from './diveoptions/diveoptions.component';
 import { DiveInfoComponent } from './diveinfo/diveinfo.component';
@@ -81,7 +82,8 @@ const MDB_MODULES = [
 @NgModule({
     declarations: [
         AppComponent,
-        TanksComponent,
+        TanksSimpleComponent,
+        TanksComplexComponent,
         DiverComponent,
         DiveOptionsComponent,
         DiveInfoComponent,

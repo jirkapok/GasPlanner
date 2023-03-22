@@ -17,10 +17,10 @@ import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import { TanksSimpleComponent } from './tanks-simple.component';
+import { TanksComplexComponent } from './tanks-complex.component';
 
 export class SimpleTanksPage {
-    constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
+    constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
 
     public get sizeInput(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#sizeFirstTank')).nativeElement as HTMLInputElement;
@@ -44,7 +44,7 @@ export class SimpleTanksPage {
 }
 
 export class ComplexTanksPage {
-    constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
+    constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
 
     public get sizeDebugs(): DebugElement[] {
         const all = this.fixture.debugElement.queryAll(By.css('#sizeItem'));
@@ -71,16 +71,16 @@ export class ComplexTanksPage {
     }
 }
 
-describe('Tanks Simple component', () => {
-    let component: TanksSimpleComponent;
-    let fixture: ComponentFixture<TanksSimpleComponent>;
+describe('Tanks Complex component', () => {
+    let component: TanksComplexComponent;
+    let fixture: ComponentFixture<TanksComplexComponent>;
     let complexPage: ComplexTanksPage;
     let simplePage: SimpleTanksPage;
     let schedulerSpy: jasmine.Spy<() => void>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TanksSimpleComponent, GaslabelComponent,
+            declarations: [TanksComplexComponent, GaslabelComponent,
                 OxygenComponent, OxygenDropDownComponent],
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls,
@@ -93,7 +93,7 @@ describe('Tanks Simple component', () => {
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(TanksSimpleComponent);
+        fixture = TestBed.createComponent(TanksComplexComponent);
         const plan = TestBed.inject(Plan);
         component = fixture.componentInstance;
         const firstTank = fixture.componentInstance.firstTank.tank;

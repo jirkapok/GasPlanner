@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService } from '../shared/sac-calculator.service';
@@ -12,6 +12,15 @@ import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 
+interface SacForm {
+    depth: FormControl<number>;
+    tankSize: FormControl<number>;
+    workPressure: FormControl<number>;
+    used?: FormControl<number>;
+    duration?: FormControl<number>;
+    rmv?: FormControl<number>;
+}
+
 @Component({
     selector: 'app-sac',
     templateUrl: './sac.component.html',
@@ -19,18 +28,17 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 })
 export class SacComponent implements OnInit {
     public calcIcon = faCalculator;
-    public formSac!: UntypedFormGroup;
+    public formSac!: FormGroup<SacForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
     private workingPressure = ImperialUnits.defaultWorkingPressure;
-    private durationControl!: FormControl;
-    private rmvControl!: FormControl;
-    private usedControl!: FormControl;
-    private workPressureControl!: FormControl;
+    private durationControl!: FormControl<number>;
+    private rmvControl!: FormControl<number>;
+    private usedControl!: FormControl<number>;
 
     constructor(
         private validators: ValidatorGroups,
         private inputs: InputControls,
-        private formBuilder: UntypedFormBuilder,
+        private formBuilder: NonNullableFormBuilder,
         private router: Router,
         private planer: PlannerService,
         private cd: ChangeDetectorRef,
@@ -68,7 +76,7 @@ export class SacComponent implements OnInit {
     }
 
     public get rmvInvalid(): boolean {
-        const rmv =  this.formSac.controls.rmv;
+        const rmv = this.formSac.controls.rmv;
         return this.inputs.controlInValid(rmv);
     }
 
@@ -101,7 +109,10 @@ export class SacComponent implements OnInit {
         return this.calc.duration;
     }
 
-    private get dataModel(): any {
+    private get dataModel(): {
+        depth: number; tankSize: number; used: number;
+        workPressure: number; duration: number; rmv: number;
+    } {
         return {
             depth: Precision.round(this.calcDepth, 1),
             tankSize: Precision.round(this.calcTankSize, 1),
@@ -115,13 +126,12 @@ export class SacComponent implements OnInit {
     public ngOnInit(): void {
         this.durationControl = this.formBuilder.control(Precision.round(this.calcDuration), this.validators.duration);
         this.usedControl = this.formBuilder.control(Precision.round(this.calcUsed, 1), this.validators.tankPressure);
-        this.workPressureControl = this.formBuilder.control(Precision.round(this.calcWorkingPressure, 1),
-            this.validators.tankPressure);
         this.rmvControl = this.formBuilder.control(Precision.round(this.calcRmv, 2), this.validators.diverRmv);
 
         this.formSac = this.formBuilder.group({
             depth: [Precision.round(this.calcDepth, 1), this.validators.depth],
-            tankSize: [Precision.round(this.calcTankSize, 1), this.validators.tankSize]
+            tankSize: [Precision.round(this.calcTankSize, 1), this.validators.tankSize],
+            workPressure: [Precision.round(this.calcWorkingPressure, 1), this.validators.tankPressure]
         });
 
         this.toSac();
@@ -180,7 +190,6 @@ export class SacComponent implements OnInit {
         this.formSac.addControl('used', this.usedControl);
         this.formSac.addControl('duration', this.durationControl);
         this.formSac.addControl('rmv', this.rmvControl);
-        this.formSac.addControl('workPressure', this.workPressureControl);
         this.reload();
     }
 

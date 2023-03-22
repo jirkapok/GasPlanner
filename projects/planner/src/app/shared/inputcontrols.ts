@@ -7,8 +7,8 @@ export class InputControls {
 
     constructor(private numberPipe: DecimalPipe) {}
 
-    public controlInValid(control: AbstractControl): boolean {
-        return control.invalid && (control.dirty || control.touched);
+    public controlInValid(control: AbstractControl | undefined): boolean {
+        return !!control && control.invalid && (control.dirty || control.touched);
     }
 
     public formatNumber(value: number, decimals: number = 1): string | null {

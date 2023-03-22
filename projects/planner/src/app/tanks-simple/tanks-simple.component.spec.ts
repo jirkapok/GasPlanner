@@ -68,54 +68,51 @@ describe('Tanks Simple component', () => {
         const plan = TestBed.inject(Plan);
         component = fixture.componentInstance;
         const firstTank = fixture.componentInstance.firstTank.tank;
-        plan.setSimple(30,12, firstTank, new Options());
-        fixture.detectChanges();
+        plan.setSimple(30, 12, firstTank, new Options());
         simplePage = new SimpleTanksPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
         schedulerSpy = spyOn(scheduler, 'schedule')
             .and.callFake(() => { });
     });
 
-    it('Switch to simple view rebinds first tank', inject([ViewSwitchService],
-        (viewSwitch: ViewSwitchService) => {
-            viewSwitch.isComplex = true;
-            const firstTank = component.firstTank;
-            firstTank.startPressure = 210;
-            firstTank.size = 24;
-            viewSwitch.isComplex = false;
+    it('Switch to simple view rebinds first tank', () => {
+        const firstTank = component.firstTank;
+        firstTank.startPressure = 210;
+        firstTank.size = 24;
 
-            fixture.detectChanges();
-            expect(simplePage.startPressureInput.value).toBe('210');
-            expect(simplePage.sizeInput.value).toBe('24');
+        fixture.detectChanges();
+        expect(simplePage.startPressureInput.value).toBe('210');
+        expect(simplePage.sizeInput.value).toBe('24');
+    });
+
+    it('Imperial units adjusts sac', inject([UnitConversion],
+        (units: UnitConversion) => {
+            units.imperialUnits = true;
+            const sac = component.gasSac();
+            expect(sac).toBeCloseTo(19.33836, 5);
         }));
 
-    describe('Simple view', () => {
-        it('Imperial units adjusts sac', inject([UnitConversion],
-            (units: UnitConversion) => {
-                units.imperialUnits = true;
-                const sac = component.gasSac();
-                expect(sac).toBeCloseTo(19.33836, 5);
-            }));
+    it('Invalid change prevents calculate', () => {
+        fixture.detectChanges();
+        simplePage.sizeInput.value = 'aaa';
+        simplePage.sizeInput.dispatchEvent(new Event('input'));
+        expect(schedulerSpy).not.toHaveBeenCalled();
+    });
 
-        it('Invalid change prevents calculate', () => {
-            simplePage.sizeInput.value = 'aaa';
-            simplePage.sizeInput.dispatchEvent(new Event('input'));
-            expect(schedulerSpy).not.toHaveBeenCalled();
-        });
+    it('Valid change triggers calculate', () => {
+        fixture.detectChanges();
+        simplePage.sizeInput.value = '12';
+        simplePage.sizeInput.dispatchEvent(new Event('input'));
+        expect(schedulerSpy).toHaveBeenCalledTimes(1);
+    });
 
-        it('Valid change triggers calculate', () => {
-            simplePage.sizeInput.value = '12';
-            simplePage.sizeInput.dispatchEvent(new Event('input'));
-            expect(schedulerSpy).toHaveBeenCalledTimes(1);
-        });
-
-        it('Simple view Assign best mix rebinds the control', () => {
-            // can't call component.assignBestMix();, because it needs to be triggered by the dropdown
-            simplePage.btnBestMix.click();
-            fixture.detectChanges();
-            const newO2 = simplePage.oxygenInput.value;
-            expect(newO2).toBe('35');
-            expect(component.firstTank.o2).toBe(35);
-        });
+    it('Assign best mix rebinds the control', () => {
+        fixture.detectChanges();
+        // can't call component.assignBestMix();, because it needs to be triggered by the dropdown
+        simplePage.btnBestMix.click();
+        fixture.detectChanges();
+        const newO2 = simplePage.oxygenInput.value;
+        expect(newO2).toBe('35');
+        expect(component.firstTank.o2).toBe(35);
     });
 });

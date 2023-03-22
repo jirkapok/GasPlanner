@@ -103,25 +103,25 @@ export class SacComponent implements OnInit {
 
     private get dataModel(): any {
         return {
-            depth: this.inputs.formatNumber(this.calcDepth),
-            tankSize: this.inputs.formatNumber(this.calcTankSize),
+            depth: Precision.round(this.calcDepth, 1),
+            tankSize: Precision.round(this.calcTankSize, 1),
             used: Precision.round(this.calcUsed, 1),
             workPressure: Precision.round(this.calcWorkingPressure, 1),
-            duration: this.calcDuration,
-            rmv: this.inputs.formatNumber(this.calcRmv, 2),
+            duration: Precision.round(this.calcDuration),
+            rmv: Precision.round(this.calcRmv, 2),
         };
     }
 
     public ngOnInit(): void {
-        this.durationControl = this.formBuilder.control(this.inputs.formatNumber(this.calcDuration), this.validators.duration);
+        this.durationControl = this.formBuilder.control(Precision.round(this.calcDuration), this.validators.duration);
         this.usedControl = this.formBuilder.control(Precision.round(this.calcUsed, 1), this.validators.tankPressure);
         this.workPressureControl = this.formBuilder.control(Precision.round(this.calcWorkingPressure, 1),
             this.validators.tankPressure);
-        this.rmvControl = this.formBuilder.control(this.inputs.formatNumber(this.calcRmv), this.validators.diverRmv);
+        this.rmvControl = this.formBuilder.control(Precision.round(this.calcRmv, 2), this.validators.diverRmv);
 
         this.formSac = this.formBuilder.group({
-            depth: [this.inputs.formatNumber(this.calcDepth), this.validators.depth],
-            tankSize: [this.inputs.formatNumber(this.calcTankSize), this.validators.tankSize]
+            depth: [Precision.round(this.calcDepth, 1), this.validators.depth],
+            tankSize: [Precision.round(this.calcTankSize, 1), this.validators.tankSize]
         });
 
         this.toSac();

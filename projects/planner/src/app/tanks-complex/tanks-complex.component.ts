@@ -12,8 +12,6 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
-import { ViewSwitchService } from '../shared/viewSwitchService';
-import { Plan } from '../shared/plan.service';
 
 @Component({
     selector: 'app-tanks-complex',
@@ -30,13 +28,11 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     constructor(private planner: PlannerService,
         private tanksService: TanksService,
-        private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         private fb: UntypedFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        private delayedCalc: DelayedScheduleService,
-        private plan: Plan) {
+        private delayedCalc: DelayedScheduleService) {
         super();
         this.toxicity = new GasToxicity(this.planner.options);
         this.allNames = StandardGases.allNames();

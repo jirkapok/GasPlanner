@@ -70,19 +70,19 @@ describe('Sac component', () => {
         });
 
         it('adjusts tank', () => {
-            expect(component.calcTankSize).toBeCloseTo(109.568715, 6);
+            expect(component.calcTankSize).toBeCloseTo(109.6, 1);
         });
 
         it('adjusts depth', () => {
-            expect(component.calcDepth).toBeCloseTo(49.212598, 6);
+            expect(component.calcDepth).toBeCloseTo(49.2, 1);
         });
 
         it('adjusts used', () => {
-            expect(component.calcUsed).toBeCloseTo(2175.566, 3);
+            expect(component.calcUsed).toBeCloseTo(2175.6, 1);
         });
 
         it('adjusts rmv', () => {
-            expect(component.calcRmv).toBeCloseTo(0.706293, 6);
+            expect(component.calcRmv).toBeCloseTo(0.7063, 4);
         });
 
         it('adjusts sac', () => {

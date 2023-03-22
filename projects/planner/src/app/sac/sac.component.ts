@@ -46,11 +46,6 @@ export class SacComponent implements OnInit {
         public units: UnitConversion) {
     }
 
-    public get gasSac(): number {
-        const sac = Diver.gasSac(this.calc.rmv, this.calc.tank);
-        return this.units.fromBar(sac);
-    }
-
     public get ranges(): RangeConstants {
         return this.units.ranges;
     }
@@ -86,52 +81,50 @@ export class SacComponent implements OnInit {
     }
 
     public get calcDepth(): number {
-        return this.units.fromMeters(this.calc.depth);
+        const depth = this.units.fromMeters(this.calc.depth);
+        return Precision.round(depth, 1);
     }
 
     public get calcTankSize(): number {
-        return this.units.fromTankLiters(this.calc.tank, this.workingPressure);
+        const tank = this.units.fromTankLiters(this.calc.tank, this.workingPressure);
+        return Precision.round(tank, 1);
     }
 
     public get calcWorkingPressure(): number {
-        return this.units.fromBar(this.workingPressure);
+        const workPressure = this.units.fromBar(this.workingPressure);
+        return Precision.round(workPressure, 1);
     }
 
     public get calcUsed(): number {
-        return this.units.fromBar(this.calc.used);
+        const used = this.units.fromBar(this.calc.used);
+        return Precision.round(used, 1);
     }
 
     public get calcRmv(): number {
-        return this.units.fromLiter(this.calc.rmv);
+        const rmv = this.units.fromLiter(this.calc.rmv);
+        const roundTo = this.units.imperialUnits ? 4 : 2;
+        return Precision.round(rmv, roundTo);
     }
 
     public get calcDuration(): number {
-        return this.calc.duration;
+        const duration = this.calc.duration;
+        return Precision.round(duration);
     }
 
-    private get dataModel(): {
-        depth: number; tankSize: number; used: number;
-        workPressure: number; duration: number; rmv: number;
-    } {
-        return {
-            depth: Precision.round(this.calcDepth, 1),
-            tankSize: Precision.round(this.calcTankSize, 1),
-            used: Precision.round(this.calcUsed, 1),
-            workPressure: Precision.round(this.calcWorkingPressure, 1),
-            duration: Precision.round(this.calcDuration),
-            rmv: Precision.round(this.calcRmv, 2),
-        };
+    public get gasSac(): number {
+        const sac = Diver.gasSac(this.calc.rmv, this.calc.tank);
+        return this.units.fromBar(sac);
     }
 
     public ngOnInit(): void {
-        this.durationControl = this.formBuilder.control(Precision.round(this.calcDuration), this.validators.duration);
-        this.usedControl = this.formBuilder.control(Precision.round(this.calcUsed, 1), this.validators.tankPressure);
-        this.rmvControl = this.formBuilder.control(Precision.round(this.calcRmv, 2), this.validators.diverRmv);
+        this.durationControl = this.formBuilder.control(this.calcDuration, this.validators.duration);
+        this.usedControl = this.formBuilder.control(this.calcUsed, this.validators.tankPressure);
+        this.rmvControl = this.formBuilder.control(this.calcRmv, this.validators.diverRmv);
 
         this.formSac = this.formBuilder.group({
-            depth: [Precision.round(this.calcDepth, 1), this.validators.depth],
-            tankSize: [Precision.round(this.calcTankSize, 1), this.validators.tankSize],
-            workPressure: [Precision.round(this.calcWorkingPressure, 1), this.validators.tankPressure]
+            depth: [this.calcDepth, this.validators.depth],
+            tankSize: [this.calcTankSize, this.validators.tankSize],
+            workPressure: [this.calcWorkingPressure, this.validators.tankPressure]
         });
 
         this.toSac();
@@ -194,6 +187,13 @@ export class SacComponent implements OnInit {
     }
 
     private reload(): void {
-        this.formSac.patchValue(this.dataModel);
+        this.formSac.patchValue({
+            depth: this.calcDepth,
+            tankSize: this.calcTankSize,
+            workPressure: this.calcWorkingPressure,
+            used: this.calcUsed,
+            duration: this.calcDuration,
+            rmv: this.calcRmv,
+        });
     }
 }

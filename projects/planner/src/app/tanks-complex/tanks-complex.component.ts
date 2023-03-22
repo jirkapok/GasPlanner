@@ -42,10 +42,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.allNames = StandardGases.allNames();
     }
 
-    public get firstTank(): TankBound {
-        return this.tanksService.firstTank;
-    }
-
     public get ranges(): RangeConstants {
         return this.units.ranges;
     }
@@ -58,30 +54,12 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         return this.tanksForm.controls.boundTanks as UntypedFormArray;
     }
 
-    public get isComplex(): boolean {
-        return this.viewSwitch.isComplex;
-    }
-
-    public get firstTankSizeInvalid(): boolean {
-        const firstTankSize = this.tanksForm.controls.firstTankSize;
-        return this.inputs.controlInValid(firstTankSize);
-    }
-
-    public get firstTankStartPressureInvalid(): boolean {
-        const firstTankStartPressure = this.tanksForm.controls.firstTankStartPressure;
-        return this.inputs.controlInValid(firstTankStartPressure);
-    }
-
     public ngOnInit(): void {
         this.tanksForm = this.fb.group({
-            firstTankSize: [this.inputs.formatNumber(this.firstTank.size), this.validators.tankSize],
-            firstTankStartPressure: [this.inputs.formatNumber(this.firstTank.startPressure), this.validators.tankPressure],
             boundTanks: this.fb.array(this.createTankControls())
         });
 
         this.tanksService.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reloadAll());
-        this.viewSwitch.viewSwitched.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
     }
 
@@ -134,13 +112,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.delayedCalc.schedule();
     }
 
-    public assignBestMix(): void {
-        const maxDepth = this.plan.maxDepth;
-        this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
-        this.reload(this.firstTank, 0);
-        this.delayedCalc.schedule();
-    }
-
     public assignStandardGas(index: number, gasName: string): void {
         const bound = this.tanks[index];
         bound.tank.assignStandardGas(gasName);
@@ -167,23 +138,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.delayedCalc.schedule();
     }
 
-    public applySimple(): void {
-        if (this.tanksForm.invalid) {
-            return;
-        }
-
-        const values = this.tanksForm.value;
-        this.firstTank.size = Number(values.firstTankSize);
-        this.firstTank.startPressure = Number(values.firstTankStartPressure);
-        this.delayedCalc.schedule();
-    }
-
     private reloadAll(): void {
-        this.tanksForm.patchValue({
-            firstTankSize: this.inputs.formatNumber(this.firstTank.size),
-            firstTankStartPressure: this.inputs.formatNumber(this.firstTank.startPressure),
-        });
-
         // recreate all controls, because wo don't know which were removed/added as part of reload.
         this.tanksGroup.clear();
         this.createTankControls().forEach(c => this.tanksGroup.push(c));

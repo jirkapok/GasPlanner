@@ -19,30 +19,6 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { TanksComplexComponent } from './tanks-complex.component';
 
-export class SimpleTanksPage {
-    constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
-
-    public get sizeInput(): HTMLInputElement {
-        return this.fixture.debugElement.query(By.css('#sizeFirstTank')).nativeElement as HTMLInputElement;
-    }
-
-    public get startPressureInput(): HTMLInputElement {
-        return this.fixture.debugElement.query(By.css('#startPressureFirstTank')).nativeElement as HTMLInputElement;
-    }
-
-    public get oxygenDebug(): DebugElement {
-        return this.fixture.debugElement.query(By.css('#fO2'));
-    }
-
-    public get oxygenInput(): HTMLInputElement {
-        return this.oxygenDebug.nativeElement as HTMLInputElement;
-    }
-
-    public get btnBestMix(): HTMLInputElement {
-        return this.fixture.debugElement.query(By.css('#btnBestMix')).nativeElement as HTMLInputElement;
-    }
-}
-
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
 
@@ -75,7 +51,6 @@ describe('Tanks Complex component', () => {
     let component: TanksComplexComponent;
     let fixture: ComponentFixture<TanksComplexComponent>;
     let complexPage: ComplexTanksPage;
-    let simplePage: SimpleTanksPage;
     let schedulerSpy: jasmine.Spy<() => void>;
 
     beforeEach(async () => {
@@ -96,28 +71,15 @@ describe('Tanks Complex component', () => {
         fixture = TestBed.createComponent(TanksComplexComponent);
         const plan = TestBed.inject(Plan);
         component = fixture.componentInstance;
-        const firstTank = fixture.componentInstance.firstTank.tank;
+        const tanksService = TestBed.inject(TanksService);
+        const firstTank = tanksService.firstTank.tank;
         plan.setSimple(30,12, firstTank, new Options());
         fixture.detectChanges();
         complexPage = new ComplexTanksPage(fixture);
-        simplePage = new SimpleTanksPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
         schedulerSpy = spyOn(scheduler, 'schedule')
             .and.callFake(() => { });
     });
-
-    it('Switch to simple view rebinds first tank', inject([ViewSwitchService],
-        (viewSwitch: ViewSwitchService) => {
-            viewSwitch.isComplex = true;
-            const firstTank = component.firstTank;
-            firstTank.startPressure = 210;
-            firstTank.size = 24;
-            viewSwitch.isComplex = false;
-
-            fixture.detectChanges();
-            expect(simplePage.startPressureInput.value).toBe('210');
-            expect(simplePage.sizeInput.value).toBe('24');
-        }));
 
     it('Switch to complex view rebinds all tanks', inject([ViewSwitchService, TanksService],
         (viewSwitch: ViewSwitchService, tanksService: TanksService) => {
@@ -135,36 +97,6 @@ describe('Tanks Complex component', () => {
             expect(complexPage.o2Input(1).value).toBe('25');
             expect(complexPage.heInput(1).value).toBe('31');
         }));
-
-    describe('Simple view', () => {
-        it('Imperial units adjusts sac', inject([UnitConversion],
-            (units: UnitConversion) => {
-                units.imperialUnits = true;
-                const sac = component.gasSac(0);
-                expect(sac).toBeCloseTo(19.33836, 5);
-            }));
-
-        it('Invalid change prevents calculate', () => {
-            simplePage.sizeInput.value = 'aaa';
-            simplePage.sizeInput.dispatchEvent(new Event('input'));
-            expect(schedulerSpy).not.toHaveBeenCalled();
-        });
-
-        it('Valid change triggers calculate', () => {
-            simplePage.sizeInput.value = '12';
-            simplePage.sizeInput.dispatchEvent(new Event('input'));
-            expect(schedulerSpy).toHaveBeenCalledTimes(1);
-        });
-
-        it('Simple view Assign best mix rebinds the control', () => {
-            // can't call component.assignBestMix();, because it needs to be triggered by the dropdown
-            simplePage.btnBestMix.click();
-            fixture.detectChanges();
-            const newO2 = simplePage.oxygenInput.value;
-            expect(newO2).toBe('35');
-            expect(component.firstTank.o2).toBe(35);
-        });
-    });
 
     describe('Complex view', () => {
         it('Adds tank', inject([ViewSwitchService],

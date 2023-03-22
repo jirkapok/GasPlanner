@@ -16,9 +16,9 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { Plan } from '../shared/plan.service';
 
 @Component({
-    selector: 'app-tanks',
-    templateUrl: './tanks.component.html',
-    styleUrls: ['./tanks.component.scss']
+    selector: 'app-tanks-simple',
+    templateUrl: './tanks-simple.component.html',
+    styleUrls: ['./tanks-simple.component.scss']
 })
 export class TanksComponent extends Streamed implements OnInit {
     public allNames: string[];

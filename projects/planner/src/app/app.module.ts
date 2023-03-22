@@ -15,7 +15,7 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TanksComponent } from './tanks/tanks.component';
+import { TanksComponent } from './tanks-simple/tanks-simple.component';
 import { DiverComponent } from './diver/diver.component';
 import { DiveOptionsComponent } from './diveoptions/diveoptions.component';
 import { DiveInfoComponent } from './diveinfo/diveinfo.component';

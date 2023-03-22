@@ -17,7 +17,7 @@ import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import { TanksComponent } from './tanks.component';
+import { TanksComponent } from './tanks-simple.component';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksComponent>) { }

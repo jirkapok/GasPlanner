@@ -31,6 +31,13 @@ At time of development also other implementations are available:
 * <https://github.com/oliverjohnstone/npm-buhlmann-ZH-L16>
 * Gas mixture calculator: <https://github.com/eianlei/pydplan>
 
+Alternatives
+
+* <https://diveplanner.online/planner>
+* <https://play.google.com/store/apps/details?id=com.techdeco.mcp>
+* <https://play.google.com/store/apps/details?id=com.hhssoftware.multideco>
+* <https://play.google.com/store/apps/details?id=com.diveprome.avlasov.diveprome>
+
 * Add air breaks
   * <https://dan.org/alert-diver/article/understanding-oxygen-toxicity/>
   * Subsurface 12min/6 min. to back gas (first tank), not checking its content

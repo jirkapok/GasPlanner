@@ -51,7 +51,6 @@ export class TanksService {
     public addTank(): void {
         // TODO default imperial size for stage?
         this.addTankBy(11); // S80 by default
-        this.onTanksReloaded.next();
     }
 
     public removeTank(tank: TankBound): void {

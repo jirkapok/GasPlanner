@@ -5,13 +5,19 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { takeUntil } from 'rxjs';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
 import { Plan } from '../shared/plan.service';
+import { Precision } from 'scuba-physics';
+
+interface TankForm {
+    firstTankSize: FormControl<number>;
+    firstTankStartPressure: FormControl<number>;
+}
 
 @Component({
     selector: 'app-tanks-simple',
@@ -21,12 +27,12 @@ import { Plan } from '../shared/plan.service';
 export class TanksSimpleComponent extends Streamed implements OnInit {
     public icon = faBatteryHalf;
     public toxicity: GasToxicity;
-    public tanksForm!: UntypedFormGroup;
+    public tanksForm!: FormGroup<TankForm>;
 
     constructor(private planner: PlannerService,
         private tanksService: TanksService,
         public units: UnitConversion,
-        private fb: UntypedFormBuilder,
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private delayedCalc: DelayedScheduleService,
@@ -55,8 +61,8 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
 
     public ngOnInit(): void {
         this.tanksForm = this.fb.group({
-            firstTankSize: [this.inputs.formatNumber(this.firstTank.size), this.validators.tankSize],
-            firstTankStartPressure: [this.inputs.formatNumber(this.firstTank.startPressure), this.validators.tankPressure]
+            firstTankSize: [Precision.round(this.firstTank.size, 1), this.validators.tankSize],
+            firstTankStartPressure: [Precision.round(this.firstTank.startPressure, 1), this.validators.tankPressure]
         });
 
         this.tanksService.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
@@ -89,8 +95,8 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
 
     private reloadAll(): void {
         this.tanksForm.patchValue({
-            firstTankSize: this.inputs.formatNumber(this.firstTank.size),
-            firstTankStartPressure: this.inputs.formatNumber(this.firstTank.startPressure),
+            firstTankSize: Precision.round(this.firstTank.size, 1),
+            firstTankStartPressure: Precision.round(this.firstTank.startPressure, 1),
         });
     }
 }

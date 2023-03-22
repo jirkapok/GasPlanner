@@ -15,10 +15,8 @@ export class Plan {
     private _segments: Segments = new Segments();
     private onReloaded = new Subject<void>();
 
-    /** provide the not necessary tank and options only to start from simple valid profile */
     constructor() {
         this.reloaded$ = this.onReloaded.asObservable();
-        // TODO this.reset(30, 12, tank, options);
     }
 
     public get length(): number {

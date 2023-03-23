@@ -71,36 +71,25 @@ describe('Depths Simple Component', () => {
         expect(depths.planDuration).toBe(20);
     });
 
-    describe('Simple view', () => {
-        describe('Duration reloaded enforced by', () => {
-            it('Apply max NDL', () => {
-                simplePage.applyNdlButton.click();
-                expect(simplePage.durationInput.value).toBe('13');
-            });
-
-            it('Apply max duration', () => {
-                simplePage.applyMaxDurationButton.click();
-                expect(simplePage.durationInput.value).toBe('19');
-            });
-
-            xit('Switch to simple view', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
-                viewSwitch.isComplex = true;
-                fixture.detectChanges();
-                // TODO makes still sense?
-                // complexPage.durationInput(1).value = '20';
-                // complexPage.durationInput(1).dispatchEvent(new Event('input'));
-                expect(depths.planDuration).toBe(21.7);
-            }));
+    describe('Duration reloaded enforced by', () => {
+        it('Apply max NDL', () => {
+            simplePage.applyNdlButton.click();
+            expect(simplePage.durationInput.value).toBe('13');
         });
 
-        it('wrong duration doesn\'t call calculate', () => {
-            const durationSpy = spyOnProperty(depths, 'planDuration')
-                .and.callThrough();
-
-            simplePage.durationInput.value = 'aaa';
-            simplePage.durationInput.dispatchEvent(new Event('input'));
-            expect(durationSpy).not.toHaveBeenCalled();
+        it('Apply max duration', () => {
+            simplePage.applyMaxDurationButton.click();
+            expect(simplePage.durationInput.value).toBe('19');
         });
+    });
+
+    it('wrong duration doesn\'t call calculate', () => {
+        const durationSpy = spyOnProperty(depths, 'planDuration')
+            .and.callThrough();
+
+        simplePage.durationInput.value = 'aaa';
+        simplePage.durationInput.dispatchEvent(new Event('input'));
+        expect(durationSpy).not.toHaveBeenCalled();
     });
 
     describe('Max narcotic depth', () => {

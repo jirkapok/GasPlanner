@@ -25,7 +25,6 @@ Following list of features and improvements ordered by priority is under develop
   * <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/>
   * Add corresponding event warning
 * Redundancies calculator - when filling one tank from second. What is the target pressure in both.
-* Add calculation trainings
 * Events:
   * Add time to all events warning/error messages where it makes sense
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
@@ -40,8 +39,8 @@ Following list of features and improvements ordered by priority is under develop
     * Unify dive settings and default settings
     * Apply settings after each change and distinguish from default settings
   * move the tank and depth validation messages to separate row
-  * Recommended and recreational buttons still calculated even with invalid altitude
-  * Nitrox calc: Use common nitrox gases dropdown for O2
+  * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
+* Add calculation trainings
 * Help
   * Add help to the UI as side bar
     * <https://ej2.syncfusion.com/angular/documentation/sidebar/getting-started/>

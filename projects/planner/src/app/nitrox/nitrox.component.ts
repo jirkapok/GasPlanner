@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import {
-    FormControl, UntypedFormBuilder, UntypedFormGroup
+    FormControl, NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
 
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
@@ -13,8 +13,15 @@ import { NitroxValidators } from '../shared/NitroxValidators';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TankBound } from '../shared/models';
-import { Tank } from 'scuba-physics';
+import { Precision, Tank } from 'scuba-physics';
 import { TanksService } from '../shared/tanks.service';
+
+
+interface NitroxForm {
+    mod?: FormControl<number>;
+    fO2?: FormControl<number>;
+    pO2?: FormControl<number>;
+}
 
 @Component({
     selector: 'app-nitrox',
@@ -23,18 +30,18 @@ import { TanksService } from '../shared/tanks.service';
 })
 export class NitroxComponent implements OnInit {
     public calcIcon = faCalculator;
-    public nitroxForm!: UntypedFormGroup;
+    public nitroxForm!: FormGroup<NitroxForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
     public tank: TankBound;
-    private fO2Control!: FormControl;
-    private pO2Control!: FormControl;
-    private modControl!: FormControl;
+    private fO2Control!: FormControl<number>;
+    private pO2Control!: FormControl<number>;
+    private modControl!: FormControl<number>;
     private failingMod = false;
 
     constructor(
         public calc: NitroxCalculatorService,
         public units: UnitConversion,
-        private fb: UntypedFormBuilder,
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private router: Router,
@@ -77,19 +84,13 @@ export class NitroxComponent implements OnInit {
         return this.units.fromMeters(this.calc.mod);
     }
 
-    private get dataModel(): any {
-        return {
-            fO2: this.inputs.formatNumber(this.calc.fO2),
-            pO2: this.inputs.formatNumber(this.calc.pO2, 2),
-            mod: this.inputs.formatNumber(this.calcMod)
-        };
-    }
-
     public ngOnInit(): void {
-        this.fO2Control = this.fb.control(this.inputs.formatNumber(this.calc.fO2), this.validators.nitroxOxygen);
-        this.pO2Control = this.fb.control(this.inputs.formatNumber(this.calc.pO2), this.validators.ppO2);
-        this.modControl = this.fb.control(this.inputs.formatNumber(this.calcMod), this.validators.depth);
-        this.nitroxForm = this.fb.group({}, { validator: NitroxValidators.lowMod(() => this.failingMod), });
+        this.fO2Control = this.fb.control(Precision.round(this.calc.fO2, 1), this.validators.nitroxOxygen);
+        this.pO2Control = this.fb.control(Precision.round(this.calc.pO2, 2), this.validators.ppO2);
+        this.modControl = this.fb.control(Precision.round(this.calcMod, 1), this.validators.depth);
+        this.nitroxForm = this.fb.group({}, {
+            validators: NitroxValidators.lowMod(() => this.failingMod),
+        });
         this.toMod();
     }
 
@@ -154,6 +155,10 @@ export class NitroxComponent implements OnInit {
     }
 
     private reload(): void {
-        this.nitroxForm.patchValue(this.dataModel);
+        this.nitroxForm.patchValue({
+            fO2: Precision.round(this.calc.fO2, 1),
+            pO2: Precision.round(this.calc.pO2, 2),
+            mod: Precision.round(this.calcMod, 1)
+        });
     }
 }

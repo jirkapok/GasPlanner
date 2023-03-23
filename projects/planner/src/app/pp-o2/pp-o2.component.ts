@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { Precision } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -13,10 +14,10 @@ export class PpO2Component implements OnInit {
     @Input() public maxPpO2 = 1.4;
     @Input() public label = '';
     @Input() public controlName = 'maxPpO2';
-    @Input() public pO2Form!: UntypedFormGroup;
+    @Input() public pO2Form!: FormGroup;
     @Output() public ppO2Change = new EventEmitter<number>();
 
-    constructor(private fb: UntypedFormBuilder,
+    constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) { }
@@ -31,7 +32,7 @@ export class PpO2Component implements OnInit {
             this.pO2Form = this.fb.group({});
         }
 
-        const maxPpO2Control = this.fb.control(this.inputs.formatNumber(this.maxPpO2), this.validators.ppO2);
+        const maxPpO2Control = this.fb.control(Precision.round(this.maxPpO2, 2), this.validators.ppO2);
         this.pO2Form.addControl(this.controlName, maxPpO2Control);
     }
 

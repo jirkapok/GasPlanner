@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { StandardGases, Tank } from 'scuba-physics';
+import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { Precision, StandardGases, Tank } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -15,13 +15,13 @@ export class OxygenDropDownComponent implements OnInit {
     @Input() public showBestMix = true;
     @Input() public controlName = 'o2';
     @Input() public tank = new TankBound(new Tank(15, 200, 21), this.units);
-    @Input() public nitroxForm!: UntypedFormGroup;
+    @Input() public nitroxForm!: FormGroup;
     @Output() public gasChange = new EventEmitter<number>();
     @Output() public assignBestMix = new EventEmitter();
 
     public nitroxNames: string[];
 
-    constructor(private fb: UntypedFormBuilder,
+    constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) {
@@ -38,7 +38,7 @@ export class OxygenDropDownComponent implements OnInit {
             this.nitroxForm = this.fb.group({});
         }
 
-        const oO2Control = this.fb.control(this.inputs.formatNumber(this.tank.o2), this.validators.nitroxOxygen);
+        const oO2Control = this.fb.control(Precision.round(this.tank.o2, 1), this.validators.nitroxOxygen);
         this.nitroxForm.addControl(this.controlName, oO2Control);
     }
 
@@ -65,7 +65,7 @@ export class OxygenDropDownComponent implements OnInit {
 
     private reload(): void {
         this.nitroxForm.patchValue({
-            [this.controlName]: this.inputs.formatNumber(this.tank.o2)
+            [this.controlName]: Precision.round(this.tank.o2, 1)
         });
     }
 }

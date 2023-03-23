@@ -1,6 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { InputControls } from '../shared/inputcontrols';
@@ -31,7 +31,7 @@ describe('Sac component', () => {
             declarations: [SacComponent],
             providers: [
                 WorkersFactoryCommon, UnitConversion,
-                PlannerService, DecimalPipe, UntypedFormBuilder,
+                PlannerService, DecimalPipe,
                 ValidatorGroups, InputControls, SacCalculatorService,
                 TanksService, Plan
             ],

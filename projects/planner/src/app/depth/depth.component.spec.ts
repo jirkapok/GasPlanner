@@ -1,6 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { DepthsService } from '../shared/depths.service';
@@ -38,7 +38,7 @@ describe('DepthComponent Imperial units', () => {
         await TestBed.configureTestingModule({
             declarations: [DepthComponent],
             imports: [ReactiveFormsModule],
-            providers: [UntypedFormBuilder, DecimalPipe,
+            providers: [ DecimalPipe,
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, ValidatorGroups,
                 DepthsService, DelayedScheduleService,

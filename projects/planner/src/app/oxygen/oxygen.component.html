@@ -1,5 +1,5 @@
 <ng-container [formGroup]="nitroxForm">
-    <app-oxygen-dropdown [showBestMix]="true" controlName="o2" [nitroxForm]="nitroxForm"
+    <app-oxygen-dropdown [showBestMix]="showBestMix" controlName="o2" [nitroxForm]="nitroxForm"
      (gasChange)="fireGasChanged()" (assignBestMix)="fireAssignBestMix()" [tank]="tank" #oxygenDropdown/>
     <app-gaslabel [tank]="tank.tank" [toxicity]="toxicity" [class.invisible]="oxygenDropdown.gasO2Invalid"></app-gaslabel>
 </ng-container>

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
-import { SafetyStop, Salinity } from 'scuba-physics';
+import { SafetyStop, Salinity, Precision } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { Strategies } from '../shared/models';
@@ -30,11 +30,20 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     public readonly safetyOnName = 'Always';
     public strategy = this.allUsableName;
     public icon = faCog;
-    public optionsForm!: UntypedFormGroup;
+    public optionsForm!: FormGroup<{
+        maxEND: FormControl<number>;
+        problem: FormControl<number>;
+        gasSwitch: FormControl<number>;
+        lastStopDepth: FormControl<number>;
+        descentSpeed: FormControl<number>;
+        ascentSpeed6m: FormControl<number>;
+        ascentSpeed50percTo6m: FormControl<number>;
+        ascentSpeed50perc: FormControl<number>;
+    }>;
 
     constructor(public units: UnitConversion,
         public options: OptionsDispatcherService,
-        private fb: UntypedFormBuilder,
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private planner: PlannerService,
@@ -175,14 +184,14 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     public ngOnInit(): void {
         this.optionsForm = this.fb.group({
-            maxEND: [this.inputs.formatNumber(this.maxEND), this.validators.maxEnd],
-            problem: [this.inputs.formatNumber(this.options.problemSolvingDuration), this.validators.problemSolvingDuration],
-            gasSwitch: [this.inputs.formatNumber(this.options.gasSwitchDuration), this.validators.gasSwitchDuration],
-            lastStopDepth: [this.inputs.formatNumber(this.lastStopDepth), this.validators.lastStopDepth],
-            descentSpeed: [this.inputs.formatNumber(this.descentSpeed), this.validators.speed],
-            ascentSpeed6m: [this.inputs.formatNumber(this.ascentSpeed6m), this.validators.speed],
-            ascentSpeed50percTo6m: [this.inputs.formatNumber(this.ascentSpeed50percTo6m), this.validators.speed],
-            ascentSpeed50perc: [this.inputs.formatNumber(this.ascentSpeed50perc), this.validators.speed],
+            maxEND: [Precision.round(this.maxEND, 1), this.validators.maxEnd],
+            problem: [Precision.round(this.options.problemSolvingDuration, 1), this.validators.problemSolvingDuration],
+            gasSwitch: [Precision.round(this.options.gasSwitchDuration, 1), this.validators.gasSwitchDuration],
+            lastStopDepth: [Precision.round(this.lastStopDepth, 1), this.validators.lastStopDepth],
+            descentSpeed: [Precision.round(this.descentSpeed, 1), this.validators.speed],
+            ascentSpeed6m: [Precision.round(this.ascentSpeed6m, 1), this.validators.speed],
+            ascentSpeed50percTo6m: [Precision.round(this.ascentSpeed50percTo6m, 1), this.validators.speed],
+            ascentSpeed50perc: [Precision.round(this.ascentSpeed50perc, 1), this.validators.speed],
         });
 
         this.options.reloaded$.pipe(takeUntil(this.unsubscribe$))
@@ -306,14 +315,14 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     private reloadForm(): void {
         this.optionsForm.patchValue({
-            maxEND: this.inputs.formatNumber(this.maxEND),
-            problem: this.inputs.formatNumber(this.options.problemSolvingDuration),
-            gasSwitch: this.inputs.formatNumber(this.options.gasSwitchDuration),
-            lastStopDepth: this.inputs.formatNumber(this.lastStopDepth),
-            descentSpeed: this.inputs.formatNumber(this.descentSpeed),
-            ascentSpeed6m: this.inputs.formatNumber(this.ascentSpeed6m),
-            ascentSpeed50percTo6m: this.inputs.formatNumber(this.ascentSpeed50percTo6m),
-            ascentSpeed50perc: this.inputs.formatNumber(this.ascentSpeed50perc),
+            maxEND: Precision.round(this.maxEND, 1),
+            problem: Precision.round(this.options.problemSolvingDuration, 1),
+            gasSwitch: Precision.round(this.options.gasSwitchDuration, 1),
+            lastStopDepth: Precision.round(this.lastStopDepth, 1),
+            descentSpeed: Precision.round(this.descentSpeed, 1),
+            ascentSpeed6m: Precision.round(this.ascentSpeed6m, 1),
+            ascentSpeed50percTo6m: Precision.round(this.ascentSpeed50percTo6m, 1),
+            ascentSpeed50perc: Precision.round(this.ascentSpeed50perc, 1),
         });
     }
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { OptionDefaults } from 'scuba-physics';
+import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { OptionDefaults, Precision } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { Gradients, StandardGradientsService } from '../shared/standard-gradients.service';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -24,9 +24,9 @@ export class GradientsComponent implements OnInit {
     @Output()
     public inputChange = new EventEmitter<Gradients>();
     public standards = new StandardGradientsService();
-    public gfForm!: UntypedFormGroup;
+    public gfForm!: FormGroup;
 
-    constructor(private fb: UntypedFormBuilder,
+    constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups) { }
 
@@ -66,8 +66,8 @@ export class GradientsComponent implements OnInit {
 
     public ngOnInit(): void {
         this.gfForm = this.fb.group({
-            gfLow: [this.inputs.formatNumber(this.gfLow * 100), this.validators.gradients],
-            gfHigh: [this.inputs.formatNumber(this.gfHigh * 100), this.validators.gradients]
+            gfLow: [Precision.round(this.gfLow * 100, 1), this.validators.gradients],
+            gfHigh: [Precision.round(this.gfHigh * 100, 1), this.validators.gradients]
         });
     }
 
@@ -88,8 +88,8 @@ export class GradientsComponent implements OnInit {
         this.gfLow = toApply.gfLow;
         this.gfHigh = toApply.gfHeigh;
         this.gfForm.patchValue({
-            gfLow: this.inputs.formatNumber(this.gfLow * 100),
-            gfHigh: this.inputs.formatNumber(this.gfHigh * 100),
+            gfLow: Precision.round(this.gfLow * 100, 1),
+            gfHigh: Precision.round(this.gfHigh * 100, 1),
             conservatism: this.conservatism
         });
         this.inputChange.emit(new Gradients(this.gfLow, this.gfHigh));

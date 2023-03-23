@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormArray,
-    UntypedFormBuilder, UntypedFormGroup, Validators
+import { FormArray,  FormControl,
+    NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
 import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
@@ -13,6 +13,16 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Plan } from '../shared/plan.service';
 import { TanksService } from '../shared/tanks.service';
+import { Precision } from 'scuba-physics';
+
+interface LevelRow {
+    duration: FormControl<number>;
+    endDepth: FormControl<number>;
+}
+
+interface DepthsForm {
+    levels: FormArray<FormGroup<LevelRow>>;
+}
 
 @Component({
     selector: 'app-depths-complex',
@@ -23,11 +33,11 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     public cardIcon = faLayerGroup;
     public addIcon = faPlus;
     public removeIcon = faMinus;
-    public complexForm!: UntypedFormGroup;
+    public complexForm!: FormGroup<DepthsForm>;
     public dive: Dive;
 
     constructor(
-        private fb: UntypedFormBuilder,
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public planner: PlannerService,
@@ -54,18 +64,18 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         return this.tanksService.tanks;
     }
 
-    public get levelControls(): UntypedFormArray {
-        return this.complexForm.controls.levels as UntypedFormArray;
+    public get levelControls(): FormArray<FormGroup<LevelRow>> {
+        return this.complexForm.controls.levels;
     }
 
     public depthItemInvalid(index: number): boolean {
-        const level = this.levelControls.at(index) as UntypedFormGroup;
+        const level = this.levelControls.at(index);
         const endDepth = level.controls.endDepth;
         return this.inputs.controlInValid(endDepth);
     }
 
     public durationItemInvalid(index: number): boolean {
-        const level = this.levelControls.at(index) as UntypedFormGroup;
+        const level = this.levelControls.at(index);
         const duration = level.controls.duration;
         return this.inputs.controlInValid(duration);
     }
@@ -125,7 +135,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         }
 
         const level = this.levelAt(index);
-        const levelControl = this.levelControls.at(index) as UntypedFormGroup;
+        const levelControl = this.levelControls.at(index);
         const levelValue = levelControl.value;
         level.duration = Number(levelValue.duration);
         level.endDepth = Number(levelValue.endDepth);
@@ -137,8 +147,8 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         this.createLevelControls().forEach(c => this.levelControls.push(c));
     }
 
-    private createLevelControls(): AbstractControl[] {
-        const created: AbstractControl[] = [];
+    private createLevelControls(): FormGroup<LevelRow>[] {
+        const created: FormGroup<LevelRow>[] = [];
         for (const level of this.depths.levels) {
             const newControl = this.createLevelControl(level);
             created.push(newControl);
@@ -147,15 +157,11 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         return created;
     }
 
-    private createLevelControl(level: Level): AbstractControl {
+    private createLevelControl(level: Level): FormGroup<LevelRow> {
         return this.fb.group({
-            duration: this.createDurationControl(level.duration),
-            endDepth: [this.inputs.formatNumber(level.endDepth), this.validators.depth]
+            duration: [Precision.round(level.duration, 1), this.validators.duration],
+            endDepth: [Precision.round(level.endDepth, 1), this.validators.depth]
         });
-    }
-
-    private createDurationControl(duration: number): [string | null, Validators[]] {
-        return [this.inputs.formatNumber(duration), this.validators.duration];
     }
 
     private levelAt(index: number): Level {

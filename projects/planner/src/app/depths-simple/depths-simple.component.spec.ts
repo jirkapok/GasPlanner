@@ -9,7 +9,7 @@ import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
-import { DepthsComponent } from './depths.component';
+import { DepthsSimpleComponent } from './depths-simple.component';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
@@ -17,7 +17,7 @@ import { Plan } from '../shared/plan.service';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 
 export class SimpleDepthsPage {
-    constructor(private fixture: ComponentFixture<DepthsComponent>) { }
+    constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
 
     public get durationInput(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#duration')).nativeElement as HTMLInputElement;
@@ -33,7 +33,7 @@ export class SimpleDepthsPage {
 }
 
 export class ComplexDepthsPage {
-    constructor(private fixture: ComponentFixture<DepthsComponent>) { }
+    constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
 
     public get addLevelButton(): HTMLButtonElement {
         return this.fixture.debugElement.query(By.css('#addLevel')).nativeElement as HTMLButtonElement;
@@ -60,15 +60,15 @@ export class ComplexDepthsPage {
 }
 
 describe('DepthsComponent', () => {
-    let component: DepthsComponent;
+    let component: DepthsSimpleComponent;
     let depths: DepthsService;
-    let fixture: ComponentFixture<DepthsComponent>;
+    let fixture: ComponentFixture<DepthsSimpleComponent>;
     let simplePage: SimpleDepthsPage;
     let complexPage: ComplexDepthsPage;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DepthsComponent],
+            declarations: [DepthsSimpleComponent],
             imports: [ReactiveFormsModule],
             providers: [WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls, DelayedScheduleService,
@@ -81,7 +81,7 @@ describe('DepthsComponent', () => {
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DepthsComponent);
+        fixture = TestBed.createComponent(DepthsSimpleComponent);
         component = fixture.componentInstance;
         depths = component.depths;
         component.planner.calculate();

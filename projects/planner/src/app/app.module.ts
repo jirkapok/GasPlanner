@@ -29,7 +29,7 @@ import { WayPointsComponent } from './waypoints/waypoints.component';
 import { ProfileChartComponent } from './profilechart/profilechart.component';
 import { AboutComponent } from './about/about.component';
 import { AppFooterComponent } from './footer/footer.component';
-import { DepthsComponent } from './depths/depths.component';
+import { DepthsSimpleComponent } from './depths-simple/depths-simple.component';
 import { TankChartComponent } from './tank-chart/tank-chart.component';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { CalculatingComponent } from './calculating/calculating.component';
@@ -96,7 +96,7 @@ const MDB_MODULES = [
         ProfileChartComponent,
         AboutComponent,
         AppFooterComponent,
-        DepthsComponent,
+        DepthsSimpleComponent,
         TankChartComponent,
         AppSettingsComponent,
         CalculatingComponent,

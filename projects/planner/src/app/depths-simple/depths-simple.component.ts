@@ -16,11 +16,11 @@ import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 
 @Component({
-    selector: 'app-depths',
-    templateUrl: './depths.component.html',
-    styleUrls: ['./depths.component.scss']
+    selector: 'app-depths-simple',
+    templateUrl: './depths-simple.component.html',
+    styleUrls: ['./depths-simple.component.scss']
 })
-export class DepthsComponent extends Streamed implements OnInit {
+export class DepthsSimpleComponent extends Streamed implements OnInit {
     public cardIcon = faLayerGroup;
     public addIcon = faPlus;
     public removeIcon = faMinus;

@@ -1,0 +1,230 @@
+import { DecimalPipe } from '@angular/common';
+import { DebugElement } from '@angular/core';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { DepthsService } from '../shared/depths.service';
+import { InputControls } from '../shared/inputcontrols';
+import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { PlannerService } from '../shared/planner.service';
+import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
+import { UnitConversion } from '../shared/UnitConversion';
+import { DepthsComplexComponent } from './depths-complex.component';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { TanksService } from '../shared/tanks.service';
+import { ViewSwitchService } from '../shared/viewSwitchService';
+import { Plan } from '../shared/plan.service';
+import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+
+export class SimpleDepthsPage {
+    constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
+
+    public get durationInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#duration')).nativeElement as HTMLInputElement;
+    }
+
+    public get applyMaxDurationButton(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#btnApplyDuration')).nativeElement as HTMLButtonElement;
+    }
+
+    public get applyNdlButton(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#btnApplyNdl')).nativeElement as HTMLButtonElement;
+    }
+}
+
+export class ComplexDepthsPage {
+    constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
+
+    public get addLevelButton(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#addLevel')).nativeElement as HTMLButtonElement;
+    }
+
+    public get durationDebugs(): DebugElement[] {
+        const all = this.fixture.debugElement.queryAll(By.css('#durationItem'));
+        return all;
+    }
+
+    public removeLevelButton(index: number): HTMLButtonElement {
+        const all = this.fixture.debugElement.queryAll(By.css('#removeLevel'));
+        return all[index].nativeElement as HTMLButtonElement;
+    }
+
+    public durationInput(index: number): HTMLInputElement {
+        return this.durationDebugs[index].nativeElement as HTMLInputElement;
+    }
+
+    public depthInput(index: number): HTMLInputElement {
+        const all = this.fixture.debugElement.queryAll(By.css('#depthItem'));
+        return all[index].nativeElement as HTMLInputElement;
+    }
+}
+
+describe('DepthsComponent', () => {
+    let component: DepthsComplexComponent;
+    let depths: DepthsService;
+    let fixture: ComponentFixture<DepthsComplexComponent>;
+    let simplePage: SimpleDepthsPage;
+    let complexPage: ComplexDepthsPage;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [DepthsComplexComponent],
+            imports: [ReactiveFormsModule],
+            providers: [WorkersFactoryCommon, PlannerService,
+                UnitConversion, InputControls, DelayedScheduleService,
+                OptionsDispatcherService, ValidatorGroups,
+                DepthsService, DecimalPipe, TanksService,
+                ViewSwitchService, Plan
+            ]
+        })
+            .compileComponents();
+    });
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(DepthsComplexComponent);
+        component = fixture.componentInstance;
+        depths = component.depths;
+        component.planner.calculate();
+        fixture.detectChanges();
+        simplePage = new SimpleDepthsPage(fixture);
+        complexPage = new ComplexDepthsPage(fixture);
+        const scheduler = TestBed.inject(DelayedScheduleService);
+        spyOn(scheduler, 'schedule')
+            .and.callFake(() => {
+                component.planner.calculate();
+            });
+    });
+
+    it('Duration change enforces calculation', () => {
+        simplePage.durationInput.value = '20';
+        simplePage.durationInput.dispatchEvent(new Event('input'));
+        expect(depths.planDuration).toBe(20);
+    });
+
+    describe('Simple view', () => {
+        describe('Duration reloaded enforced by', () => {
+            it('Apply max NDL', () => {
+                simplePage.applyNdlButton.click();
+                expect(simplePage.durationInput.value).toBe('13');
+            });
+
+            it('Apply max duration', () => {
+                simplePage.applyMaxDurationButton.click();
+                expect(simplePage.durationInput.value).toBe('19');
+            });
+
+            it('Switch to simple view', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
+                viewSwitch.isComplex = true;
+                fixture.detectChanges();
+                complexPage.durationInput(1).value = '20';
+                complexPage.durationInput(1).dispatchEvent(new Event('input'));
+                expect(depths.planDuration).toBe(21.7);
+            }));
+        });
+
+        it('wrong duration doesn\'t call calculate', () => {
+            const durationSpy = spyOnProperty(depths, 'planDuration')
+                .and.callThrough();
+
+            simplePage.durationInput.value = 'aaa';
+            simplePage.durationInput.dispatchEvent(new Event('input'));
+            expect(durationSpy).not.toHaveBeenCalled();
+        });
+    });
+
+
+    describe('Complex view', () => {
+        beforeEach(() => {
+            const viewSwitch = TestBed.inject(ViewSwitchService);
+            viewSwitch.isComplex = true;
+            fixture.detectChanges();
+        });
+
+        it('Change depth calculates profile correctly', () => {
+            complexPage.durationInput(1).value = '5';
+            complexPage.durationInput(1).dispatchEvent(new Event('input'));
+            // in case of wrong binding, the algorithm ads segment with 0 duration
+            expect(component.planner.dive.totalDuration).toBe(882);
+        });
+
+        describe('Levels enforce calculation', () => {
+            it('Adds level to end of profile segments', () => {
+                complexPage.addLevelButton.click();
+                fixture.detectChanges();
+                expect(depths.levels.length).toBe(3);
+                expect(complexPage.durationDebugs.length).toBe(3);
+            });
+
+            it('Is removed from correct position', () => {
+                complexPage.removeLevelButton(1).click();
+                fixture.detectChanges();
+                expect(depths.levels.length).toBe(1);
+                expect(complexPage.durationDebugs.length).toBe(1);
+            });
+        });
+
+        describe('Invalid form prevents calculation after', () => {
+            it('wrong level enddepth', () => {
+                const durationSpy = spyOn(depths, 'levelChanged')
+                    .and.callThrough();
+
+                complexPage.durationInput(1).value = 'aaa';
+                complexPage.durationInput(1).dispatchEvent(new Event('input'));
+                expect(durationSpy).not.toHaveBeenCalled();
+            });
+
+            it('wrong level duration', () => {
+                const durationSpy = spyOn(depths, 'levelChanged')
+                    .and.callThrough();
+
+                complexPage.depthInput(1).value = 'aaa';
+                complexPage.depthInput(1).dispatchEvent(new Event('input'));
+                expect(durationSpy).not.toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe('Max narcotic depth', () => {
+        it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject(
+            [PlannerService, Plan],
+            (planner: PlannerService, plan: Plan) => {
+                depths.applyMaxDepth();
+                expect(plan.maxDepth).toBe(30);
+            }));
+
+        it('Max narcotic depth is applied', inject([PlannerService, TanksService, Plan],
+            (planner: PlannerService, tanksService: TanksService, plan: Plan) => {
+                tanksService.firstTank.o2 = 50;
+                depths.applyMaxDepth();
+                expect(plan.maxDepth).toBe(18);
+            }));
+    });
+
+    describe('Imperial Units', () => {
+        beforeEach(() => {
+            component.units.imperialUnits = true;
+        });
+
+        it('Updates end depth', () => {
+            const last = depths.levels[1];
+            last.endDepth = 70;
+            const result = last.segment.endDepth;
+            expect(result).toBeCloseTo(21.336, 6);
+        });
+
+        it('Converts start depth', () => {
+            const last = depths.levels[1];
+            last.segment.startDepth = 6.096;
+            expect(last.startDepth).toBeCloseTo(20, 6);
+        });
+
+        it('Adjusts tank label', () => {
+            const last = depths.levels[1];
+            const tank = last.tank;
+            tank.startPressure = 3000;
+            tank.workingPressure = 3000;
+            tank.size = 100;
+            expect(last.tankLabel).toBe('1. Air/100/3000');
+        });
+    });
+});

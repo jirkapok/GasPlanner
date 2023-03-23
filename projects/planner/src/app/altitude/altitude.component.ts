@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -17,12 +17,14 @@ export class AltitudeComponent implements OnInit {
     @Input()
     public altitude = 0;
 
-    public altitudeForm!: UntypedFormGroup;
+    public altitudeForm!: FormGroup<{
+        altitude: FormControl<number>;
+    }>;
 
     private metricLevels = [0, 300, 800, 1500];
     private imperialLevels = [0, 1000, 2600, 5000];
 
-    constructor(private fb: UntypedFormBuilder,
+    constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) { }

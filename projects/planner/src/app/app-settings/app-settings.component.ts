@@ -9,10 +9,6 @@ import { PlannerService } from '../shared/planner.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { UnitConversion } from '../shared/UnitConversion';
 
-interface SettingsForm {
-    imperialUnits: FormControl<boolean>;
-}
-
 @Component({
     selector: 'app-app-settings',
     templateUrl: './app-settings.component.html',
@@ -21,7 +17,9 @@ interface SettingsForm {
 export class AppSettingsComponent implements OnInit {
     public flagIcon = faFlag;
     public diver = new Diver();
-    public settingsForm!: FormGroup<SettingsForm>;
+    public settingsForm!: FormGroup<{
+        imperialUnits: FormControl<boolean>;
+    }>;
 
     constructor(public units: UnitConversion,
         private settingsNormalization: SettingsNormalizationService,

@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
-    UntypedFormBuilder, UntypedFormGroup
+    NonNullableFormBuilder, FormGroup, FormControl
 } from '@angular/forms';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
-import { Diver } from 'scuba-physics';
+import { Diver, Precision } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -17,10 +17,10 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 })
 export class DiverComponent extends Streamed implements OnInit {
     @Input() public diver: Diver = new Diver();
-    @Input() public diverForm!: UntypedFormGroup;
+    @Input() public diverForm!: FormGroup;
     public icon = faUserCog;
 
-    constructor(private fb: UntypedFormBuilder,
+    constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) {
@@ -46,12 +46,13 @@ export class DiverComponent extends Streamed implements OnInit {
             this.diverForm = this.fb.group({});
         }
 
-        const rmvControl = this.fb.control(this.inputs.formatNumber(this.rmv), this.validators.diverRmv);
+        // TODO rounding based on units, for imperial rmv needs more decimal palaces, see sac calculator
+        const rmvControl = this.fb.control(Precision.round(this.rmv, 2), this.validators.diverRmv);
         this.diverForm.addControl('rmv', rmvControl);
 
         this.units.ranges$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.diverForm.patchValue({
-                rmv: this.inputs.formatNumber(this.rmv)
+                rmv: Precision.round(this.rmv, 2)
             }));
     }
 

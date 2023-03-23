@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormArray,
-    UntypedFormBuilder, UntypedFormGroup, Validators
+import {
+    NonNullableFormBuilder, FormGroup, FormControl
 } from '@angular/forms';
 import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
@@ -12,6 +12,7 @@ import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Plan } from '../shared/plan.service';
+import { Precision } from 'scuba-physics';
 
 @Component({
     selector: 'app-depths-simple',
@@ -22,11 +23,13 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     public cardIcon = faLayerGroup;
     public addIcon = faPlus;
     public removeIcon = faMinus;
-    public simpleForm!: UntypedFormGroup;
+    public simpleForm!: FormGroup<{
+        planDuration: FormControl<number>;
+    }>;
     public dive: Dive;
 
     constructor(
-        private fb: UntypedFormBuilder,
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public planner: PlannerService,
@@ -54,7 +57,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
 
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({
-            planDuration: this.createDurationControl(this.depths.planDuration),
+            planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
         });
 
         // this combination of event handlers isn't efficient, but leave it because its simple
@@ -75,15 +78,10 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         this.depths.planDuration = Number(newValue);
     }
 
-    // for simple view only
     private reloadSimple(): void {
         // depth is reloaded in its nested component
         this.simpleForm.patchValue({
-            planDuration: this.inputs.formatNumber(this.depths.planDuration)
+            planDuration: Precision.round(this.depths.planDuration, 1)
         });
-    }
-
-    private createDurationControl(duration: number): [string | null, Validators[]] {
-        return [this.inputs.formatNumber(duration), this.validators.duration];
     }
 }

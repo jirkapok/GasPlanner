@@ -1,11 +1,17 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    NonNullableFormBuilder, FormGroup, Validators, FormControl
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { Diver } from 'scuba-physics';
 import { PlannerService } from '../shared/planner.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { UnitConversion } from '../shared/UnitConversion';
+
+interface SettingsForm {
+    imperialUnits: FormControl<boolean>;
+}
 
 @Component({
     selector: 'app-app-settings',
@@ -15,11 +21,11 @@ import { UnitConversion } from '../shared/UnitConversion';
 export class AppSettingsComponent implements OnInit {
     public flagIcon = faFlag;
     public diver = new Diver();
-    public settingsForm!: UntypedFormGroup;
+    public settingsForm!: FormGroup<SettingsForm>;
 
     constructor(public units: UnitConversion,
         private settingsNormalization: SettingsNormalizationService,
-        private formBuilder: UntypedFormBuilder,
+        private formBuilder: NonNullableFormBuilder,
         private router: Router,
         private cd: ChangeDetectorRef,
         private planner: PlannerService) {

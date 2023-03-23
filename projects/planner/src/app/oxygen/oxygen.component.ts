@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { StandardGases, Tank } from 'scuba-physics';
+import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { Precision, StandardGases, Tank } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -26,17 +26,17 @@ export class OxygenComponent {
     @Output()
     public assignBestMix = new EventEmitter();
 
-    public nitroxForm!: UntypedFormGroup;
+    public nitroxForm!: FormGroup;
 
     public nitroxNames: string[];
 
-    constructor(private fb: UntypedFormBuilder,
+    constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) {
         this.nitroxNames = StandardGases.nitroxNames();
         this.nitroxForm = this.fb.group({
-            o2: [this.inputs.formatNumber(this.tank.o2), this.validators.nitroxOxygen]
+            o2: [Precision.round(this.tank.o2, 1), this.validators.nitroxOxygen]
         });
     }
 
@@ -51,7 +51,7 @@ export class OxygenComponent {
 
     private reload(): void {
         this.nitroxForm.patchValue({
-            o2: this.inputs.formatNumber(this.tank.o2)
+            o2: Precision.round(this.tank.o2, 1)
         });
     }
 }

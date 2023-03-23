@@ -1,6 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
@@ -39,8 +39,8 @@ describe('Nitrox component', () => {
                 PlannerService, InputControls, DecimalPipe,
                 NitroxCalculatorService, ValidatorGroups,
                 OptionsDispatcherService,
-                TanksService, Plan,
-                UntypedFormBuilder],
+                TanksService, Plan
+            ],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         })
             .compileComponents();

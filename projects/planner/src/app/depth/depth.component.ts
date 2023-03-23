@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Precision } from 'scuba-physics';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -11,9 +12,11 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
     styleUrls: ['./depth.component.scss']
 })
 export class DepthComponent implements OnInit {
-    public depthForm!: UntypedFormGroup;
+    public depthForm!: FormGroup<{
+        depth: FormControl<number>;
+    }>;
 
-    constructor(private fb: UntypedFormBuilder,
+    constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion,
@@ -36,13 +39,13 @@ export class DepthComponent implements OnInit {
     public applyMaxDepth(): void {
         this.depths.applyMaxDepth();
         this.depthForm.patchValue({
-            depth: this.inputs.formatNumber(this.depths.plannedDepth)
+            depth: Precision.round(this.depths.plannedDepth, 1)
         });
     }
 
     public ngOnInit(): void {
         this.depthForm = this.fb.group({
-            depth: [this.inputs.formatNumber(this.depths.plannedDepth), this.validators.depth]
+            depth: [Precision.round(this.depths.plannedDepth, 1), this.validators.depth]
         });
     }
 }

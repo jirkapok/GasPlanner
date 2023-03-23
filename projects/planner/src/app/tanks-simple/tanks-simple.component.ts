@@ -89,7 +89,6 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         const values = this.tanksForm.value;
         this.firstTank.size = Number(values.firstTankSize);
         this.firstTank.startPressure = Number(values.firstTankStartPressure);
-        // TODO the o2 value isn't propagated to the tank and also validation
         this.delayedCalc.schedule();
     }
 

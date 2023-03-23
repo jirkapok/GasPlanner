@@ -54,6 +54,7 @@ export class OxygenDropDownComponent implements OnInit {
 
         const o2Field = this.nitroxForm.get(this.controlName);
         const newValue = Number(o2Field?.value);
+        this.tank.o2 = newValue;
         this.gasChange.emit(newValue);
     }
 

@@ -104,46 +104,17 @@ describe('Depths Simple Component', () => {
     });
 
     describe('Max narcotic depth', () => {
-        it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject(
-            [PlannerService, Plan],
-            (planner: PlannerService, plan: Plan) => {
+        it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject([Plan],
+            (plan: Plan) => {
                 depths.applyMaxDepth();
                 expect(plan.maxDepth).toBe(30);
             }));
 
-        it('Max narcotic depth is applied', inject([PlannerService, TanksService, Plan],
-            (planner: PlannerService, tanksService: TanksService, plan: Plan) => {
+        it('Max narcotic depth is applied', inject([TanksService, Plan],
+            (tanksService: TanksService, plan: Plan) => {
                 tanksService.firstTank.o2 = 50;
                 depths.applyMaxDepth();
                 expect(plan.maxDepth).toBe(18);
             }));
-    });
-
-    describe('Imperial Units', () => {
-        beforeEach(() => {
-            component.units.imperialUnits = true;
-        });
-
-        it('Updates end depth', () => {
-            const last = depths.levels[1];
-            last.endDepth = 70;
-            const result = last.segment.endDepth;
-            expect(result).toBeCloseTo(21.336, 6);
-        });
-
-        it('Converts start depth', () => {
-            const last = depths.levels[1];
-            last.segment.startDepth = 6.096;
-            expect(last.startDepth).toBeCloseTo(20, 6);
-        });
-
-        it('Adjusts tank label', () => {
-            const last = depths.levels[1];
-            const tank = last.tank;
-            tank.startPressure = 3000;
-            tank.workingPressure = 3000;
-            tank.size = 100;
-            expect(last.tankLabel).toBe('1. Air/100/3000');
-        });
     });
 });

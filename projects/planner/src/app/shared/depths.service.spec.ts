@@ -11,6 +11,8 @@ import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
 import { SafetyStop } from 'scuba-physics';
 
 describe('Depths service', () => {
+    let depthService: DepthsService;
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
@@ -22,6 +24,8 @@ describe('Depths service', () => {
             ]
         })
             .compileComponents();
+
+        depthService = TestBed.inject(DepthsService);
     });
 
     describe('When NOT yet calculated', () => {
@@ -29,15 +33,15 @@ describe('Depths service', () => {
         // with default speed to default depth 30m.
         const descentOnly = 1.7;
 
-        it('Max bottom time is NOT applied', inject([DepthsService, Plan],
-            (depthService: DepthsService, plan: Plan) => {
+        it('Max bottom time is NOT applied', inject([Plan],
+            (plan: Plan) => {
                 depthService.applyMaxDuration();
                 expect(plan.duration).toBe(descentOnly);
             }));
 
         // Plan needs to be already calculated because NDL is needed
-        it('No deco limit is NOT applied', inject([DepthsService, Plan],
-            (depthService: DepthsService, plan: Plan) => {
+        it('No deco limit is NOT applied', inject([Plan],
+            (plan: Plan) => {
                 depthService.applyNdlDuration();
                 expect(plan.duration).toBe(descentOnly);
             }));
@@ -60,15 +64,15 @@ describe('Depths service', () => {
         });
 
         describe('When Calculated', () => {
-            it('Max bottom time is applied', inject([PlannerService, DepthsService, Plan],
-                (planner: PlannerService, depthService: DepthsService, plan: Plan) => {
+            it('Max bottom time is applied', inject([PlannerService, Plan],
+                (planner: PlannerService, plan: Plan) => {
                     planner.calculate();
                     depthService.applyMaxDuration();
                     expect(plan.duration).toBe(18);
                 }));
 
-            it('No deco limit is applied', inject([PlannerService, DepthsService, Plan],
-                (planner: PlannerService, depthService: DepthsService, plan: Plan) => {
+            it('No deco limit is applied', inject([PlannerService, Plan],
+                (planner: PlannerService, plan: Plan) => {
                     planner.calculate();
                     depthService.applyNdlDuration();
                     expect(plan.duration).toBe(12);
@@ -79,12 +83,10 @@ describe('Depths service', () => {
     describe('Depths', () => {
         let plan: Plan;
         let tanksService: TanksService;
-        let depthService: DepthsService;
 
         beforeEach(() => {
             plan = TestBed.inject(Plan);
             tanksService = TestBed.inject(TanksService);
-            depthService = TestBed.inject(DepthsService);
         });
 
         it('Add correct segment to the end', () => {
@@ -117,6 +119,35 @@ describe('Depths service', () => {
             plan.removeSegment(middle);
             middle = plan.segments[1];
             expect(middle.startDepth).toBe(30);
+        });
+    });
+
+    describe('Imperial Units', () => {
+        beforeEach(() => {
+            const units = TestBed.inject(UnitConversion);
+            units.imperialUnits = true;
+        });
+
+        it('Updates end depth', () => {
+            const last = depthService.levels[1];
+            last.endDepth = 70;
+            const result = last.segment.endDepth;
+            expect(result).toBeCloseTo(21.336, 6);
+        });
+
+        it('Converts start depth', () => {
+            const last = depthService.levels[1];
+            last.segment.startDepth = 6.096;
+            expect(last.startDepth).toBeCloseTo(20, 6);
+        });
+
+        it('Adjusts tank label', () => {
+            const last = depthService.levels[1];
+            const tank = last.tank;
+            tank.startPressure = 3000;
+            tank.workingPressure = 3000;
+            tank.size = 100;
+            expect(last.tankLabel).toBe('1. Air/100/3000');
         });
     });
 });

@@ -13,7 +13,6 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Plan } from '../shared/plan.service';
 import { TanksService } from '../shared/tanks.service';
-import { ViewSwitchService } from '../shared/viewSwitchService';
 
 @Component({
     selector: 'app-depths-complex',
@@ -25,7 +24,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     public addIcon = faPlus;
     public removeIcon = faMinus;
     public complexForm!: UntypedFormGroup;
-    public simpleForm!: UntypedFormGroup;
     public dive: Dive;
 
     constructor(
@@ -35,7 +33,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         public planner: PlannerService,
         private tanksService: TanksService,
         public depths: DepthsService,
-        private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         private plan: Plan) {
         super();
@@ -48,10 +45,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         return this.units.ranges;
     }
 
-    public get isComplex(): boolean {
-        return this.viewSwitch.isComplex;
-    }
-
     public get minimumSegments(): boolean {
         return this.plan.minimumSegments;
     }
@@ -59,15 +52,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     // only to get their label, formatted in the tankLabel
     public get tanks(): TankBound[] {
         return this.tanksService.tanks;
-    }
-
-    public get noDecoTime(): number {
-        return this.plan.noDecoTime;
-    }
-
-    public get durationInvalid(): boolean {
-        const duration = this.simpleForm.controls.planDuration;
-        return this.inputs.controlInValid(duration);
     }
 
     public get levelControls(): UntypedFormArray {
@@ -104,21 +88,9 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
             levels: this.fb.array(this.createLevelControls())
         });
 
-        this.simpleForm = this.fb.group({
-            planDuration: this.createDurationControl(this.depths.planDuration),
-        });
-
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
         this.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                this.depths.updateLevels();
-                this.reloadSimple();
-                this.reloadComplex();
-            });
-
-        // for complex view only
-        this.viewSwitch.viewSwitched.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.depths.updateLevels();
                 this.reloadComplex();
@@ -160,24 +132,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         this.depths.levelChanged();
     }
 
-    public durationChanged(): void {
-        if (this.simpleForm.invalid) {
-            return;
-        }
-
-        const newValue = this.simpleForm.value.planDuration;
-        this.depths.planDuration = Number(newValue);
-    }
-
-    // for simple view only
-    private reloadSimple(): void {
-        // depth is reloaded in its nested component
-        this.simpleForm.patchValue({
-            planDuration: this.inputs.formatNumber(this.depths.planDuration)
-        });
-    }
-
-    // for complex view only
     private reloadComplex(): void {
         this.levelControls.clear();
         this.createLevelControls().forEach(c => this.levelControls.push(c));

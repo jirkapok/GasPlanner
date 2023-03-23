@@ -20,7 +20,8 @@
         <div class="col-12 col-lg-6 col-xxl-4 mt-4" [ngClass]="{
                 'col-sm-6': !isComplex
                 }">
-            <app-depths-simple></app-depths-simple>
+            <app-depths-simple *ngIf="!isComplex"></app-depths-simple>
+            <app-depths-complex *ngIf="isComplex"></app-depths-complex>
         </div>
         <div class="col-12 col-xxl-4 mt-4" [ngClass]="{
                 'col-md-12': !isComplex,

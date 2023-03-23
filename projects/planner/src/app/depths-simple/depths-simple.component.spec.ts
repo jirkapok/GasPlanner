@@ -31,7 +31,7 @@ export class SimpleDepthsPage {
     }
 }
 
-describe('DepthsComponent', () => {
+describe('Depths Simple Component', () => {
     let component: DepthsSimpleComponent;
     let depths: DepthsService;
     let fixture: ComponentFixture<DepthsSimpleComponent>;

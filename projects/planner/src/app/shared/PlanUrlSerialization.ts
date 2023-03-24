@@ -1,5 +1,7 @@
 import _ from 'lodash';
-import { Diver, Options, SafetyStop, Salinity, Segment, Tank } from 'scuba-physics';
+import {
+    Diver, Options, SafetyStop, Salinity, Segment, Tank
+} from 'scuba-physics';
 import { OptionsDispatcherService } from './options-dispatcher.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
@@ -10,6 +12,7 @@ import {
 } from './serialization.model';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
+import { TankBound } from './models';
 
 class ParseContext {
     private static readonly trueValue = '1';
@@ -154,10 +157,11 @@ export class PlanUrlSerialization {
             const tank: TankDto = {
                 id: context.parseNumber(0),
                 size: context.parseNumber(1),
-                startPressure: context.parseNumber(2),
+                workPressure: context.parseNumber(2),
+                startPressure: context.parseNumber(3),
                 gas: {
-                    fO2: context.parseNumber(3),
-                    fHe: context.parseNumber(4)
+                    fO2: context.parseNumber(4),
+                    fHe: context.parseNumber(5)
                 },
                 consumed: 0, // irrelevant, new value will be calculated
                 reserve: 0
@@ -169,12 +173,14 @@ export class PlanUrlSerialization {
         return result;
     }
 
-    private static toTanksParam(tanks: Tank[]): string {
+    private static toTanksParam(tanks: TankBound[]): string {
         const result: string[] = [];
 
         // consumption and reserve are calculated values, we don't need to serialize them here
-        tanks.forEach((t: Tank) => {
-            const tParam = `${t.id}-${t.size}-${t.startPressure}-${t.gas.fO2}-${t.gas.fHe}`;
+        tanks.forEach((t) => {
+            const gas = t.tank.gas;
+            const workPressure = t.workingPressureBars;
+            const tParam = `${t.id}-${t.tank.size}-${workPressure}-${t.startPressure}-${gas.fO2}-${gas.fHe}`;
             result.push(tParam);
         });
         return result.join(',');
@@ -234,7 +240,7 @@ export class PlanUrlSerialization {
     }
 
     public toUrl(): string {
-        const tanksParam = PlanUrlSerialization.toTanksParam(this.tanksService.tankData);
+        const tanksParam = PlanUrlSerialization.toTanksParam(this.tanksService.tanks);
         const depthsParam = PlanUrlSerialization.toDepthsParam(this.plan.segments);
         const diParam =  PlanUrlSerialization.toDiverParam(this.planner.diver);
         const optionsParam = PlanUrlSerialization.toOptionsParam(this.options.getOptions());

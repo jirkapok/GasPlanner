@@ -54,7 +54,6 @@ describe('SettingsNormalizationService', () => {
             }));
     });
 
-    // all options are still in metric
     describe('Imperial units', () => {
         let plannerOptions: Options;
 
@@ -71,6 +70,7 @@ describe('SettingsNormalizationService', () => {
             expect(plannerOptions.lastStopDepth).toBeCloseTo(3.048, 4);
         });
 
+        // TODO fix tests after options are also switched to imperial
         it('Rounds options feet', () => {
             expect(plannerOptions.maxEND).toBeCloseTo(29.8704, 4);
             expect(plannerOptions.altitude).toBeCloseTo(99.9744, 4);
@@ -97,6 +97,8 @@ describe('SettingsNormalizationService', () => {
 
         it('Sets working pressure', inject([TanksService],
             (tanks: TanksService) => {
+                // tank was created before switch to imperial,
+                // so it still has valid working pressure even it wasn't used in metric
                 const workingPressure = tanks.firstTank.workingPressure;
                 expect(workingPressure).toBeCloseTo(3442, 6);
             }));

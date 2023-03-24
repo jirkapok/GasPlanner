@@ -176,7 +176,6 @@ describe('TanksService', () => {
                 expect(workingPressure).toBeCloseTo(3000);
             });
 
-            // TODO add test to normalization to check working pressure after switch from metric to imperial
             // TODO add test for url deserialization to imperial units
         });
     });

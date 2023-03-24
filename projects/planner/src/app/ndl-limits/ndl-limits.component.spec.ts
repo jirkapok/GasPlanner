@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Salinity } from 'scuba-physics';
 import { NdlService } from '../shared/ndl.service';
@@ -63,12 +64,23 @@ describe('NdlLimits component', () => {
             expect(sut.maxPpO2).toBe(1.4);
         }));
 
-    it('Imperial units adjusts calculated depths to feet', inject([UnitConversion],
-        (units: UnitConversion) => {
-            units.imperialUnits = true;
-            component.calculate();
-            expect(component.limits[0].depth).toBe(40);
-        }));
+    describe('Imperial units', () => {
+        it('Adjusts calculated depths to feet', inject([UnitConversion],
+            (units: UnitConversion) => {
+                units.imperialUnits = true;
+                component.calculate();
+                expect(component.limits[0].depth).toBe(40);
+            }));
+
+        it('Uses default tank size', inject(
+            [Router, NdlService, OptionsDispatcherService],
+            (router: Router, ndlService: NdlService, options: OptionsDispatcherService) => {
+                const units = new UnitConversion();
+                units.imperialUnits = true;
+                const sut = new NdlLimitsComponent(router, units, ndlService, options);
+                expect(sut.tank.size).toBe(124.1);
+            }));
+    });
 
     it('Change of max ppO2 causes mod for limits', () => {
         component.options.maxPpO2 = 1;

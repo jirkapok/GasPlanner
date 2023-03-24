@@ -149,5 +149,20 @@ describe('Depths service', () => {
             tank.size = 100;
             expect(last.tankLabel).toBe('1. Air/100/3000');
         });
+
+        it('Defaults to 100 tf', inject(
+            [PlannerService, TanksService, DelayedScheduleService,
+                Plan, OptionsDispatcherService],
+            (planner: PlannerService,
+                tanksService: TanksService,
+                delayedCalc: DelayedScheduleService,
+                plan: Plan,
+                optionsService: OptionsDispatcherService) => {
+                const units = new UnitConversion();
+                units.imperialUnits = true; // before the depths service was even created
+                const sut = new DepthsService(units, planner, tanksService,
+                    delayedCalc, plan, optionsService);
+                expect(sut.plannedDepth).toBeCloseTo(100, 6);
+            }));
     });
 });

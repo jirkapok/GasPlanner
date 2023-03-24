@@ -14,7 +14,7 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add imperial units option
   * Provide rounded default values within acceptable range (Settings, depths, options)
-  * Add working pressure and units to Url parameters (cant share only in metric since switching units round values)
+    * For imperial default depth level should be rounded to 100 ft
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
   * Adjust usage of working pressure for consumption

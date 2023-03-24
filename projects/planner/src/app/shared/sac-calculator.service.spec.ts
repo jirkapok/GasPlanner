@@ -27,7 +27,7 @@ describe('SacCalculatorService', () => {
         });
 
         it('0 L large tank has SAC 0 L/min.', () => {
-            service.tank = 0;
+            service.tankSize = 0;
             expect(service.rmv).toBe(0);
         });
 

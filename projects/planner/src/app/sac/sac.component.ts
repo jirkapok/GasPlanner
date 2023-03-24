@@ -85,7 +85,7 @@ export class SacComponent implements OnInit {
     }
 
     public get calcTankSize(): number {
-        const tank = this.units.fromTankLiters(this.calc.tank, this.workingPressure);
+        const tank = this.units.fromTankLiters(this.calc.tankSize, this.workingPressure);
         return Precision.round(tank, 1);
     }
 
@@ -111,7 +111,7 @@ export class SacComponent implements OnInit {
     }
 
     public get gasSac(): number {
-        const sac = Diver.gasSac(this.calc.rmv, this.calc.tank);
+        const sac = Diver.gasSac(this.calc.rmv, this.calc.tankSize);
         return this.units.fromBar(sac);
     }
 
@@ -138,7 +138,7 @@ export class SacComponent implements OnInit {
 
         const values = this.formSac.value;
         this.workingPressure = this.units.toBar(Number(values.workPressure));
-        this.calc.tank = this.units.toTankLiters(Number(values.tankSize), this.workingPressure);
+        this.calc.tankSize = this.units.toTankLiters(Number(values.tankSize), this.workingPressure);
         this.calc.depth = this.units.toMeters(Number(values.depth));
         this.calc.used = this.units.toBar(Number(values.used));
         this.calc.rmv = this.units.toLiter(Number(values.rmv));
@@ -205,10 +205,10 @@ export class SacComponent implements OnInit {
 
         // rmv is calculated and duration is units independent
         if(this.units.imperialUnits) {
-            this.calc.tank = this.units.toTankLiters(TankConstants.imperialTankSize, this.workingPressure);
+            this.calc.tankSize = this.units.toTankLiters(TankConstants.imperialTankSize, this.workingPressure);
             this.calc.used = this.units.toBar(2200);
         } else {
-            this.calc.tank = 15;
+            this.calc.tankSize = 15;
             this.calc.used = 150;
         }
     }

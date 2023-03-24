@@ -22,7 +22,7 @@ export class SacCalculatorService {
         return this._depth;
     }
 
-    public get tank(): number {
+    public get tankSize(): number {
         return this._tank;
     }
 
@@ -55,7 +55,7 @@ export class SacCalculatorService {
         this.calculate();
     }
 
-    public set tank(newValue: number) {
+    public set tankSize(newValue: number) {
         this._tank = newValue;
         this.calculate();
     }
@@ -88,14 +88,14 @@ export class SacCalculatorService {
     }
 
     private calculateSac(): void {
-        this._rmv = this.sacCalculator.calculateSac(this.depth, this.tank, this.used, this.duration);
+        this._rmv = this.sacCalculator.calculateSac(this.depth, this.tankSize, this.used, this.duration);
     }
 
     private calculateDuration(): void {
-        this._duration = this.sacCalculator.calculateDuration(this.depth, this.tank, this.used, this.rmv);
+        this._duration = this.sacCalculator.calculateDuration(this.depth, this.tankSize, this.used, this.rmv);
     }
 
     private calculateUsed(): void {
-        this._used = this.sacCalculator.calculateUsed(this.depth, this.tank, this.duration, this.rmv);
+        this._used = this.sacCalculator.calculateUsed(this.depth, this.tankSize, this.duration, this.rmv);
     }
 }

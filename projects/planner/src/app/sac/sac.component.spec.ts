@@ -116,7 +116,7 @@ describe('Sac component', () => {
         it('Working pressure affects tank size', () => {
             sacPage.workingPressure.value = '4000';
             sacPage.workingPressure.dispatchEvent(new Event('input'));
-            expect(component.calc.tank).toBeCloseTo(12.742, 3);
+            expect(component.calc.tankSize).toBeCloseTo(12.742, 3);
         });
     });
 });

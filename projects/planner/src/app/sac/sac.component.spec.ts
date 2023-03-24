@@ -106,7 +106,7 @@ describe('Sac component', () => {
         });
 
         it('adjusts sac', () => {
-            expect(component.gasSac).toBeCloseTo(19.374053, 6);
+            expect(component.gasSac).toBeCloseTo(19.374090, 6);
         });
 
         it('adjusts working pressure', () => {

@@ -31,7 +31,7 @@ export class DepthsService extends Streamed {
         this.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.updateLevels());
         // this enforces to initialize the levels, needs to be called after subscribe to plan
-        let requiedDepth = this.units.stopsDistance * 10; // 30 m or 100 ft
+        let requiedDepth = this.units.defaults.stopsDistance * 10; // 30 m or 100 ft
         requiedDepth = this.units.toMeters(requiedDepth);
         this.plan.setSimple(requiedDepth, 12, firstTank, options);
         this.tanksService.tankRemoved.pipe(takeUntil(this.unsubscribe$))

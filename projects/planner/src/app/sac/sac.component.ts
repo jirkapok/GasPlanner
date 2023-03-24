@@ -201,7 +201,7 @@ export class SacComponent implements OnInit {
     private setDefaultValues(): void {
         // working pressure is irrelevant here, since not changed when switching units
         // depth adjusted to cca 15 meters
-        this.calc.depth = this.units.toMeters(this.units.stopsDistance * 5);
+        this.calc.depth = this.units.toMeters(this.units.defaults.stopsDistance * 5);
 
         // rmv is calculated and duration is units independent
         if(this.units.imperialUnits) {

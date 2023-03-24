@@ -60,18 +60,6 @@ export class UnitConversion {
         return this.volume + perMinute;
     }
 
-    public get lastSpeedLevel(): number {
-        return this.current.lastSpeedLevel;
-    }
-
-    public get autoStopLevel(): number {
-        return this.current.autoStopLevel;
-    }
-
-    public get stopsDistance(): number {
-        return this.current.stopsDistance;
-    }
-
     public get imperialUnits(): boolean {
         return this._imperialUnits;
     }

@@ -62,7 +62,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     public get safetyAutoName(): string {
-        const level = this.units.autoStopLevel;
+        const level = this.units.defaults.autoStopLevel;
         return `Auto (> ${level} ${this.units.length})`;
     }
 

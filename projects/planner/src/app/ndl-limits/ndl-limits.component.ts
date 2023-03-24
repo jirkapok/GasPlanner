@@ -26,6 +26,7 @@ export class NdlLimitsComponent {
 
     constructor(private router: Router, public units: UnitConversion,
         private ndl: NdlService, optionsService: OptionsDispatcherService) {
+        // TODO fix default value for tank size and working pressure
         this.tank = new TankBound(new Tank(15, 200, 21), this.units);
         this.options = new Options();
         this.copyOptions(optionsService);
@@ -44,7 +45,7 @@ export class NdlLimitsComponent {
         for(let index = 0; index < this.limits.length; index++) {
             // convert meters to target unit
             const limit = this.limits[index];
-            limit.depth = this.units.stopsDistance * (index + indexOffset);
+            limit.depth = this.units.defaults.stopsDistance * (index + indexOffset);
         }
     }
 

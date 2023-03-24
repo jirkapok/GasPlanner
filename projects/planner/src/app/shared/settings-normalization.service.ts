@@ -34,11 +34,12 @@ export class SettingsNormalizationService {
     }
 
     private applyOptionsCalculationValues(): void {
+        const defaults = this.units.defaults;
         // options need to be in metrics only
-        this.options.decoStopDistance = this.units.toMeters(this.units.stopsDistance);
+        this.options.decoStopDistance = this.units.toMeters(defaults.stopsDistance);
         // unable to fit the stop, the lowest value is always the minimum distance
-        this.options.lastStopDepth = this.units.toMeters(this.units.stopsDistance);
-        this.options.minimumAutoStopDepth = this.units.toMeters(this.units.autoStopLevel);
+        this.options.lastStopDepth = this.units.toMeters(defaults.stopsDistance);
+        this.options.minimumAutoStopDepth = this.units.toMeters(defaults.autoStopLevel);
     }
 
     private normalizeOptions(ranges: RangeConstants): void {

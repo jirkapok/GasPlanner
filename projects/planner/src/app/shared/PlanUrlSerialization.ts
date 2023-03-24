@@ -163,8 +163,7 @@ export class PlanUrlSerialization {
                     fO2: context.parseNumber(4),
                     fHe: context.parseNumber(5)
                 },
-                consumed: 0, // irrelevant, new value will be calculated
-                reserve: 0
+                // consumption properties are calculated, so ignoring them
             };
             result.push(tank);
         });

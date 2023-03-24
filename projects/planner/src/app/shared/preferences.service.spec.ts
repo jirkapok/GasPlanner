@@ -12,6 +12,7 @@ import { Plan } from './plan.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
+import { TankBound } from './models';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -81,6 +82,7 @@ describe('PreferencesService', () => {
             (service: PreferencesService, planner: PlannerService,
                 tanksService: TanksService, options: OptionsDispatcherService,
                 viewSwitch: ViewSwitchService, plan: Plan) => {
+                // setup needed for consumed calculation
                 const oValues = options.getOptions();
                 OptionExtensions.applySimpleSpeeds(oValues);
                 options.safetyStop = SafetyStop.always;
@@ -88,6 +90,7 @@ describe('PreferencesService', () => {
                 options.problemSolvingDuration = 2;
                 planner.assignOptions(options.getOptions());
                 plan.setSimple(30, 12, tanksService.firstTank.tank, oValues);
+
                 tanksService.addTank();
                 const tanks = tanksService.tanks;
                 tanks[0].startPressure = 150;
@@ -98,19 +101,22 @@ describe('PreferencesService', () => {
 
                 tanks[0].startPressure = 130;
                 tanks[1].o2 = 32;
+                tanks[1].workingPressureBars = 0;
                 service.loadDefaults();
 
-                const expected1 = new Tank(15, 150, 21);
+                const units = new UnitConversion();
+                const expected1 = new TankBound(new Tank(15, 150, 21), units);
                 expected1.id = 1;
-                expected1.consumed = 66;
-                expected1.reserve = 45;
-                const expected2 = new Tank(11.1, 200, 50);
+                expected1.tank.consumed = 66;
+                expected1.tank.reserve = 45;
+                const expected2 = new TankBound(new Tank(11.1, 200, 50), units);
                 expected2.id = 2;
-                expected2.consumed = 21;
-                expected2.reserve = 62;
+                expected2.workingPressure = 206.843; // default
+                expected2.tank.consumed = 21;
+                expected2.tank.reserve = 62;
                 // JSON serialization prevents order of items in an array
-                const expected: Tank[] = [expected1, expected2];
-                expect(tanksService.tankData).toEqual(expected);
+                const expected: TankBound[] = [expected1, expected2];
+                expect(tanksService.tanks).toEqual(expected);
             }));
 
         it('Plan is loaded after save', inject(

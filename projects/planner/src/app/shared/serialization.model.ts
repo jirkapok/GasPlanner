@@ -3,7 +3,18 @@ import {
     CalculatedProfile, Ceiling, EventType, Event, Events, Gas, Diver, Salinity, SafetyStop
 } from 'scuba-physics';
 
-export interface AppPreferences  {
+/**
+ *  We can't us TankBound from models directly,
+ *  because it will cause unresolved dependency in background tasks
+ **/
+export interface ITankBound {
+    id: number;
+    /** in bars to avoid conversions */
+    workingPressureBars: number;
+    tank: Tank;
+}
+
+export interface AppPreferences {
     isComplex: boolean;
     options: OptionsDto;
     diver: DiverDto;
@@ -50,18 +61,25 @@ export interface ConsumptionRequestDto {
     tanks: TankDto[];
 }
 
+export interface ConsumedDto {
+    /** Tank id */
+    id: number;
+    consumed: number;
+    reserve: number;
+}
+
 export interface ConsumptionResultDto {
     maxTime: number;
     timeToSurface: number;
-    tanks: TankDto[];
+    tanks: ConsumedDto[];
 }
 
 export interface TankDto {
     id: number;
     size: number;
+    /** in bars */
+    workPressure: number;
     startPressure: number;
-    consumed: number;
-    reserve: number;
     gas: GasDto;
 }
 
@@ -108,7 +126,6 @@ export interface OptionsDto {
 
 /** Serialization used to store preferences and for communication with background workers */
 export class DtoSerialization {
-
     public static toTanks(source: TankDto[]): Tank[] {
         const result: Tank[] = [];
         source.forEach(tank => {
@@ -116,12 +133,6 @@ export class DtoSerialization {
             converted.id = tank.id;
             converted.gas.fO2 = tank.gas.fO2;
             converted.gas.fHe = tank.gas.fHe;
-
-            // we need to serialize these two even they are calculated,
-            // because serialization is also used to send calculated values from background threads
-            converted.consumed = tank.consumed;
-            converted.reserve = tank.reserve;
-
             result.push(converted);
         });
 
@@ -129,15 +140,21 @@ export class DtoSerialization {
         return result;
     }
 
-    public static fromTanks(tanks: Tank[]): TankDto[] {
+    public static loadWorkingPressure(source: TankDto[], target: ITankBound[]): void {
+        for (let index = 0; index < target.length; index++) {
+            target[index].workingPressureBars = source[index].workPressure;
+        }
+    }
+
+    public static fromTanks(tanks: ITankBound[]): TankDto[] {
         const result: TankDto[] = [];
-        tanks.forEach(tank => {
+        tanks.forEach(t => {
+            const tank = t.tank;
             const serialized: TankDto = {
                 id: tank.id,
                 size: tank.size,
+                workPressure: t.workingPressureBars,
                 startPressure: tank.startPressure,
-                consumed: tank.consumed,
-                reserve: tank.reserve,
                 gas: {
                     fO2: tank.gas.fO2,
                     fHe: tank.gas.fHe
@@ -145,6 +162,21 @@ export class DtoSerialization {
             };
             result.push(serialized);
         });
+        return result;
+    }
+
+    public static toConsumed(tanks: Tank[]): ConsumedDto[] {
+        const result: ConsumedDto[] = [];
+        for (let index = 0; index < tanks.length; index++) {
+            const tank = tanks[index];
+            const converted = {
+                id: tank.id,
+                consumed: tank.consumed,
+                reserve: tank.reserve
+            };
+            result.push(converted);
+        }
+
         return result;
     }
 

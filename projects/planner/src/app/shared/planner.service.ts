@@ -11,7 +11,7 @@ import {
 } from 'scuba-physics';
 import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
-    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto
+    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto, ITankBound
 } from './serialization.model';
 import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
@@ -76,6 +76,10 @@ export class PlannerService extends Streamed {
         return this.dive.diveInfoCalculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
     }
 
+    private get serializableTanks(): ITankBound[] {
+        return this.tanks.tanks as ITankBound[];
+    }
+
     public applyDiver(diver: Diver): void {
         this.diver.loadFrom(diver);
     }
@@ -98,7 +102,7 @@ export class PlannerService extends Streamed {
         }, 500);
 
         const profileRequest = {
-            tanks: DtoSerialization.fromTanks(this.tanks.tankData),
+            tanks: DtoSerialization.fromTanks(this.serializableTanks),
             plan: DtoSerialization.fromSegments(this.plan.segments),
             options: DtoSerialization.fromOptions(this.options)
         };
@@ -138,7 +142,7 @@ export class PlannerService extends Streamed {
     private continueCalculation(result: ProfileResultDto): void {
         const serializedPlan = DtoSerialization.fromSegments(this.plan.segments);
         const tankData = this.tanks.tankData;
-        const serializedTanks = DtoSerialization.fromTanks(tankData);
+        const serializedTanks = DtoSerialization.fromTanks(this.serializableTanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
         const profile = WayPointsService.calculateWayPoints(calculatedProfile, events);

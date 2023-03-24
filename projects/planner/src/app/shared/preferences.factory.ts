@@ -1,7 +1,7 @@
 import { OptionsDispatcherService } from './options-dispatcher.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
-import { AppPreferences, DtoSerialization } from './serialization.model';
+import { AppPreferences, DtoSerialization, ITankBound } from './serialization.model';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 
@@ -15,7 +15,7 @@ export class PreferencesFactory {
             isComplex: viewSwitch.isComplex,
             options: DtoSerialization.fromOptions(targetOptions.getOptions()),
             diver: DtoSerialization.fromDiver(planner.diver),
-            tanks: DtoSerialization.fromTanks(tanksService.tankData),
+            tanks: DtoSerialization.fromTanks(tanksService.tanks as ITankBound[]),
             plan: DtoSerialization.fromSegments(plan.segments),
         };
     }
@@ -31,6 +31,7 @@ export class PreferencesFactory {
         const diver = DtoSerialization.toDiver(loaded.diver);
         const options = DtoSerialization.toOptions(loaded.options);
         tanksService.loadFrom(tanks);
+        DtoSerialization.loadWorkingPressure(loaded.tanks, tanksService.tanks);
         targetOptions.loadFrom(options);
         targetPlan.loadFrom(segments);
         target.loadFrom(options, diver);

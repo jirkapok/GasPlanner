@@ -3,7 +3,9 @@ import {
     Consumption, Time, Diver, OtuCalculator, CnsCalculator
 } from 'scuba-physics';
 import {
-    ProfileRequestDto, ProfileResultDto, DtoSerialization, ConsumptionRequestDto, ConsumptionResultDto, DiveInfoResultDto
+    DtoSerialization,
+    ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
+    ConsumptionResultDto, DiveInfoResultDto
 } from '../shared/serialization.model';
 
 export class PlanningTasks {
@@ -71,7 +73,7 @@ export class PlanningTasks {
         return {
             maxTime,
             timeToSurface,
-            tanks: DtoSerialization.fromTanks(tanks),
+            tanks: DtoSerialization.toConsumed(tanks),
         };
     }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { DefaultValues, Precision, Tank, Tanks } from 'scuba-physics';
 import { TankBound } from './models';
-import { TankDto } from './serialization.model';
+import { ConsumedDto } from './serialization.model';
 import { UnitConversion } from './UnitConversion';
 import _ from 'lodash';
 
@@ -75,7 +75,7 @@ export class TanksService {
         this.onTanksReloaded.next();
     }
 
-    public copyTanksConsumption(tanks: TankDto[]) {
+    public copyTanksConsumption(tanks: ConsumedDto[]) {
         for (let index = 0; index < this.tanks.length; index++) {
             const source = tanks[index];
             const target = this.tanks[index];

@@ -119,16 +119,15 @@ describe('Url Serialization', () => {
         expect(result.length).toBeLessThan(2048);
     });
 
-    // TODO fix test
     it('Complex plan is restored to app in imperial units', () => {
-        sut.tanksService.firstTank.workingPressureBars = 250;
+        const expectedBars = 250;
+        sut.tanksService.firstTank.workingPressureBars = expectedBars;
         const url = sut.urlSerialization.toUrl();
         const current = createSut(true);
         current.urlSerialization.fromUrl(url);
         // since working pressure is the main difference in handling of units
         const firstTank = current.tanksService.firstTank;
-        // 3 digits are acceptable precision here
-        expect(firstTank.workingPressure).toBeCloseTo(3442.007, 3);
+        expect(firstTank.workingPressureBars).toBeCloseTo(expectedBars, 3);
     });
 
     describe('Skips loading', () => {

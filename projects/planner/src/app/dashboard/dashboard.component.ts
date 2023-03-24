@@ -69,6 +69,12 @@ export class DashboardComponent extends Streamed implements OnInit {
         }
 
         const urlParams = this.urlSerialization.toUrl();
+        const maxUrlRecommendedLength = 2048;
+
+        if(urlParams.length > maxUrlRecommendedLength) {
+            console.warn('Created url parameters with length longer than acceptable in some browsers');
+        }
+
         this.location.go('?' + urlParams);
     }
 }

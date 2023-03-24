@@ -1,4 +1,5 @@
 import { ImperialUnits } from './units';
+import { Precision } from './precision';
 
 /**
  *  Unit dependent default cylinder values
@@ -24,14 +25,22 @@ export class TankConstants {
     public static readonly metricStageSize = 11.1;
 
     /** Default working pressure in bars for single cylinder */
-    public static readonly metricTankWorkPressure = new ImperialUnits()
-        .toBar(TankConstants.imperialTankWorkPressure);
+    public static readonly metricTankWorkPressure = TankConstants.fromImperial(TankConstants.imperialTankWorkPressure);
 
-
-    public static readonly metricStageWorkPressure = new ImperialUnits()
-        .toBar(TankConstants.imperialStageWorkPressure);
+    /** Default working pressure in bars for stage cylinder */
+    public static readonly metricStageWorkPressure = TankConstants.fromImperial(TankConstants.imperialStageWorkPressure);
 
     // TODO depth constants see levels in lib
     /** 20 ft depth as 6 m imperial alternative */
     public static readonly imperial3mDepth = 10;
+
+    /**
+     * Template for calculating rounded metric working pressure from imperial in psi.
+     * Returns bars rounded to 3 decimals.
+     **/
+    public static fromImperial(sourcePsi: number): number {
+        const units = new ImperialUnits();
+        const bars = units.toBar(sourcePsi);
+        return Precision.round(bars, 3);
+    }
 }

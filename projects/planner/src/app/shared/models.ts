@@ -88,8 +88,10 @@ export class TankBound {
     }
 
     public get label(): string {
-        const volume = this.units.fromTankLiters(this.tank.size, this._workingPressure);
-        const startPressure = this.units.fromBar(this.tank.startPressure);
+        let volume = this.units.fromTankLiters(this.tank.size, this._workingPressure);
+        volume = Precision.round(volume, 1);
+        let startPressure = this.units.fromBar(this.tank.startPressure);
+        startPressure = Precision.round(startPressure, 1);
         return `${this.tank.id}. ${this.tank.name}/${volume}/${startPressure}`;
     }
 

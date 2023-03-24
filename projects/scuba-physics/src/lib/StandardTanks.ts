@@ -27,6 +27,10 @@ export class TankConstants {
     public static readonly metricTankWorkPressure = new ImperialUnits()
         .toBar(TankConstants.imperialTankWorkPressure);
 
+
+    public static readonly metricStageWorkPressure = new ImperialUnits()
+        .toBar(TankConstants.imperialStageWorkPressure);
+
     // TODO depth constants see levels in lib
     /** 20 ft depth as 6 m imperial alternative */
     public static readonly imperial3mDepth = 10;

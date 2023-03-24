@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { Precision, Tank, Tanks } from 'scuba-physics';
+import { DefaultValues, Precision, Tank, Tanks } from 'scuba-physics';
 import { TankBound } from './models';
 import { TankDto } from './serialization.model';
 import { UnitConversion } from './UnitConversion';
@@ -20,10 +20,13 @@ export class TanksService {
     private onTankRemoved = new Subject<Tank>();
 
     constructor(private units: UnitConversion) {
-        // TODO default tank in imperials: 100 cubic feet / 3442 PSI
-        this.addTankBy(15);
+        this.addTankBy(this.defaults.primaryTankSize, this.defaults.primaryTankWorkPressure);
         this.tanksReloaded = this.onTanksReloaded.asObservable();
         this.tankRemoved = this.onTankRemoved.asObservable();
+    }
+
+    public get defaults(): DefaultValues {
+        return this.units.defaults;
     }
 
     public get tanks(): TankBound[] {
@@ -49,8 +52,7 @@ export class TanksService {
     }
 
     public addTank(): void {
-        // TODO default imperial size for stage?
-        this.addTankBy(11); // S80 by default
+        this.addTankBy(this.defaults.stageTankSize, this.defaults.stageTankWorkPressure);
     }
 
     public removeTank(tank: TankBound): void {
@@ -102,9 +104,11 @@ export class TanksService {
         return _(this._tanks).find(t => t.tank === tank);
     }
 
-    private addTankBy(size: number): void {
+    /** both arguments in respective units */
+    private addTankBy(size: number, workingPressure: number): void {
         const tank = Tank.createDefault();
         const bound = this.addTankFor(this._tanks, tank);
+        bound.workingPressure = workingPressure;
         bound.size = size;
     }
 

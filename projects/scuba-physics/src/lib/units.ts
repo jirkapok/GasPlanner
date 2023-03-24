@@ -5,6 +5,7 @@ export interface Units {
     pressureShortcut: string;
     volumeShortcut: string;
     altitudeShortcut: string;
+    // TODO move depth constants to default values
     /** Depth at which last speed change occurs */
     lastSpeedLevel: number;
     /** Depth at which we decide if safety stop is required */

@@ -1,22 +1,35 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ImperialUnits, MetricUnits, Units } from 'scuba-physics';
+import {
+    DefaultValues, ImperialDefaults, ImperialUnits,
+    MetricDefaults, MetricUnits, Units
+} from 'scuba-physics';
 
 @Injectable()
 export class UnitConversion {
-    public ranges: RangeConstants;
     /**
      * Only to be able immediately refresh Diver component, since in the same view.
      * Other components refresh next time their are shown.
      */
     public ranges$: BehaviorSubject<RangeConstants>;
+    private _ranges: RangeConstants;
     private _imperialUnits = false;
     private current: Units;
+    private _defaults: DefaultValues;
 
     constructor() {
         this.current = new MetricUnits();
-        this.ranges = new MetricRanges(this.current);
+        this._ranges = new MetricRanges(this.current);
         this.ranges$ = new BehaviorSubject<RangeConstants>(this.ranges);
+        this._defaults = new MetricDefaults();
+    }
+
+    public get ranges(): RangeConstants {
+        return this._ranges;
+    }
+
+    public get defaults(): DefaultValues {
+        return this._defaults;
     }
 
     public get length(): string {
@@ -68,10 +81,12 @@ export class UnitConversion {
 
         if (this._imperialUnits) {
             this.current = new ImperialUnits();
-            this.ranges = new ImperialRanges(this.current);
+            this._ranges = new ImperialRanges(this.current);
+            this._defaults = new ImperialDefaults();
         } else {
             this.current = new MetricUnits();
-            this.ranges = new MetricRanges(this.current);
+            this._ranges = new MetricRanges(this.current);
+            this._defaults = new MetricDefaults();
         }
 
         this.ranges$.next(this.ranges);
@@ -148,19 +163,19 @@ const perMinute = '/min';
 const toLabel = (range: [number, number], unit: string): string => `${range[0]} - ${range[1]} ${unit}`;
 
 class MetricRanges implements RangeConstants {
-    public altitude: [number, number] = [0,5000];
+    public altitude: [number, number] = [0, 5000];
     public altitudeLabel: string = toLabel(this.altitude, this.units.altitudeShortcut);
-    public depth: [number, number] = [1,350];
+    public depth: [number, number] = [1, 350];
     public depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
     public diverRmv: [number, number] = [5, 90];
     public diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
-    public duration: [number, number] = [1,1440];
+    public duration: [number, number] = [1, 1440];
     public durationLabel: string = toLabel(this.duration, 'min');
-    public narcoticDepth: [number, number] = [1,100];
+    public narcoticDepth: [number, number] = [1, 100];
     public narcoticDepthLabel: string = toLabel(this.narcoticDepth, this.units.lengthShortcut);
     public nitroxOxygen: [number, number] = [21, 100];
     public nitroxOxygenLabel: string = toLabel(this.nitroxOxygen, '%');
-    public lastStopDepth: [number, number] = [3,6];
+    public lastStopDepth: [number, number] = [3, 6];
     public lastStopDepthLabel: string = toLabel(this.lastStopDepth, this.units.lengthShortcut);
     public ppO2: [number, number] = [0.21, 3];
     public tankHe: [number, number] = [0, 99];
@@ -171,27 +186,27 @@ class MetricRanges implements RangeConstants {
     public tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
     public trimixOxygen: [number, number] = [1, 100];
     public trimixOxygenLabel: string = toLabel(this.trimixOxygen, '%');
-    public speed: [number, number] = [1,100];
+    public speed: [number, number] = [1, 100];
     public speedLabel: string = toLabel(this.speed, this.units.lengthShortcut + perMinute);
 
-    constructor(private units: Units) {}
+    constructor(private units: Units) { }
 }
 
 
-class ImperialRanges implements RangeConstants  {
-    public altitude: [number, number] = [0,16500];
+class ImperialRanges implements RangeConstants {
+    public altitude: [number, number] = [0, 16500];
     public altitudeLabel: string = toLabel(this.altitude, this.units.altitudeShortcut);
     public depth: [number, number] = [3, 1150];
     public depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
     public diverRmv: [number, number] = [0.17, 3.178];
     public diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
-    public duration: [number, number] = [1,1440];
+    public duration: [number, number] = [1, 1440];
     public durationLabel: string = toLabel(this.duration, 'min');
-    public narcoticDepth: [number, number] = [1,300];
+    public narcoticDepth: [number, number] = [1, 300];
     public narcoticDepthLabel: string = toLabel(this.narcoticDepth, this.units.lengthShortcut);
     public nitroxOxygen: [number, number] = [21, 100];
     public nitroxOxygenLabel: string = toLabel(this.nitroxOxygen, '%');
-    public lastStopDepth: [number, number] = [10,20];
+    public lastStopDepth: [number, number] = [10, 20];
     public lastStopDepthLabel: string = toLabel(this.lastStopDepth, this.units.lengthShortcut);
     public ppO2: [number, number] = [0.21, 3];
     public tankHe: [number, number] = [0, 99];
@@ -202,8 +217,8 @@ class ImperialRanges implements RangeConstants  {
     public tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
     public trimixOxygen: [number, number] = [1, 100];
     public trimixOxygenLabel: string = toLabel(this.trimixOxygen, '%');
-    public speed: [number, number] = [1,300];
+    public speed: [number, number] = [1, 300];
     public speedLabel: string = toLabel(this.speed, this.units.lengthShortcut + perMinute);
 
-    constructor(private units: Units) {}
+    constructor(private units: Units) { }
 }

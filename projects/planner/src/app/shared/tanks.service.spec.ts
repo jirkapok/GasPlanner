@@ -119,4 +119,65 @@ describe('TanksService', () => {
             expect(tanksReloaded).toBeTruthy();
         });
     });
+
+    describe('Defaults', () => {
+        describe('Metric', () => {
+            it('Default tanks is 15 L', () => {
+                const tankSize = service.firstTank.size;
+                expect(tankSize).toBe(15);
+            });
+
+            it('Default second tank is S80 11 L', () => {
+                service.addTank();
+                const tankSize = service.tanks[1].size;
+                expect(tankSize).toBe(11.1);
+            });
+
+            // working pressure is relevant when switching units for existing tanks
+
+            it('Default working pressure for 15 L', () => {
+                const workingPressure = service.firstTank.workingPressure;
+                expect(workingPressure).toBeCloseTo(237.318, 3);
+            });
+
+            it('Default second tank working pressure for S80 11 L', () => {
+                service.addTank();
+                const workingPressure = service.tanks[1].workingPressure;
+                expect(workingPressure).toBeCloseTo(206.843, 3);
+            });
+        });
+
+        describe('Imperial', () => {
+            beforeEach(() => {
+                const units = TestBed.inject(UnitConversion);
+                units.imperialUnits = true;
+                service = new TanksService(units);
+            });
+
+            it('Default tanks is 117 cuft', () => {
+                const tankSize = service.firstTank.size;
+                expect(tankSize).toBe(124.1);
+            });
+
+            it('Default second tank is S80 80 cuft', () => {
+                service.addTank();
+                const tankSize = service.tanks[1].size;
+                expect(tankSize).toBe(80.1);
+            });
+
+            it('Default working pressure for 177 cuft', () => {
+                const workingPressure = service.firstTank.workingPressure;
+                expect(workingPressure).toBeCloseTo(3442);
+            });
+
+            it('Default second tank working pressure for S80 80 cuft', () => {
+                service.addTank();
+                const workingPressure = service.tanks[1].workingPressure;
+                expect(workingPressure).toBeCloseTo(3000);
+            });
+
+            // TODO add test to normalization to check working pressure after switch from metric to imperial
+            // TODO add test for url deserialization to imperial units
+        });
+    });
 });

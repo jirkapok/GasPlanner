@@ -133,8 +133,6 @@ describe('TanksService', () => {
                 expect(tankSize).toBe(11.1);
             });
 
-            // working pressure is relevant when switching units for existing tanks
-
             it('Default working pressure for 15 L', () => {
                 const workingPressure = service.firstTank.workingPressure;
                 expect(workingPressure).toBeCloseTo(237.318, 3);
@@ -144,6 +142,12 @@ describe('TanksService', () => {
                 service.addTank();
                 const workingPressure = service.tanks[1].workingPressure;
                 expect(workingPressure).toBeCloseTo(206.843, 3);
+            });
+
+            // working pressure is relevant only when switching units for existing tanks
+            it('Default working pressure is rounded', () => {
+                const workingPressure = service.firstTank.workingPressure;
+                expect(workingPressure).toBeCloseTo(237.318);
             });
         });
 

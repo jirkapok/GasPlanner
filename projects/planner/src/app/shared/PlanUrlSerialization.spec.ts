@@ -7,13 +7,24 @@ import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 
+interface TestSut {
+    options: OptionsDispatcherService;
+    plan: Plan;
+    tanksService: TanksService;
+    planner: PlannerService;
+    viewSwitch: ViewSwitchService;
+    urlSerialization: PlanUrlSerialization;
+}
+
 describe('Url Serialization', () => {
     const irrelevantFactory = new WorkersFactoryCommon();
 
-    const createSut = () => {
+    const createSut = (imperial = false): TestSut => {
         const options = new OptionsDispatcherService();
         const plan = new Plan();
-        const tanksService = new TanksService(new UnitConversion());
+        const units = new UnitConversion();
+        units.imperialUnits = imperial;
+        const tanksService = new TanksService(units);
         const planner = new PlannerService(irrelevantFactory, tanksService, plan);
         plan.setSimple(30, 12, tanksService.firstTank.tank, planner.options);
         const viewSwitch = new ViewSwitchService(plan, options, tanksService);
@@ -29,7 +40,7 @@ describe('Url Serialization', () => {
         };
     };
 
-    const createCustomSut = () =>{
+    const createCustomSut = () => {
         const created = createSut();
         created.viewSwitch.isComplex = true;
         created.tanksService.addTank();
@@ -38,7 +49,7 @@ describe('Url Serialization', () => {
         return created;
     };
 
-    let sut: any;
+    let sut: TestSut;
     let customizedUrl: string;
 
     beforeEach(() => {
@@ -46,7 +57,7 @@ describe('Url Serialization', () => {
         customizedUrl = sut.urlSerialization.toUrl();
     });
 
-    const expectParsedEquals = (current: any): void => {
+    const expectParsedEquals = (current: TestSut): void => {
         const toExpect = {
             plan: sut.plan.segments,
             tansk: sut.tanksService.tankData,
@@ -91,6 +102,30 @@ describe('Url Serialization', () => {
         const current = createSut();
         current.urlSerialization.fromUrl(encodedParams);
         expectParsedEquals(current);
+    });
+
+    it('Complex plan in imperial units still generates url below 2048 characters', () => {
+        const current = createSut(true);
+        // tests the limits of url serialization
+        // long enough with precise imperial values, still bellow 2k characters
+        for (let index = 0; index < 40; index++) {
+            current.tanksService.addTank();
+            current.plan.addSegment(current.tanksService.firstTank.tank);
+        }
+
+        const result = current.urlSerialization.toUrl();
+        expect(result.length).toBeLessThan(2048);
+    });
+
+    // TODO fix test
+    it('Complex plan is restored to app in imperial units', () => {
+        sut.tanksService.firstTank.workingPressureBars = 250;
+        const url = sut.urlSerialization.toUrl();
+        const current = createSut(true);
+        current.urlSerialization.fromUrl(url);
+        // since working pressure is the main difference in handling of units
+        const firstTank = current.tanksService.firstTank;
+        expect(firstTank.workingPressure).toBe(3442);
     });
 
     describe('Skips loading', () => {

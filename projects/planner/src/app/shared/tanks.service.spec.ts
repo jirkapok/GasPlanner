@@ -175,8 +175,6 @@ describe('TanksService', () => {
                 const workingPressure = service.tanks[1].workingPressure;
                 expect(workingPressure).toBeCloseTo(3000);
             });
-
-            // TODO add test for url deserialization to imperial units
         });
     });
 });

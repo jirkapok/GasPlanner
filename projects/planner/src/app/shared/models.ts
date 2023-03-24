@@ -58,7 +58,6 @@ export class Level {
 }
 
 export class TankBound {
-    // TODO working pressure needs to be transfered using url parameters, because this
     private _workingPressure = TankConstants.metricTankWorkPressure;
 
     constructor(public tank: Tank, private units: UnitConversion) { }
@@ -77,6 +76,10 @@ export class TankBound {
 
     public get workingPressure(): number {
         return this.units.fromBar(this._workingPressure);
+    }
+
+    public get workingPressureBars(): number {
+        return this._workingPressure;
     }
 
     public get o2(): number {
@@ -109,6 +112,10 @@ export class TankBound {
 
     public set workingPressure(newValue: number) {
         this._workingPressure = this.units.toBar(newValue);
+    }
+
+    public set workingPressureBars(newValue: number) {
+        this._workingPressure = newValue;
     }
 
     public set o2(newValue: number) {

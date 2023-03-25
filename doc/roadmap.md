@@ -13,11 +13,11 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add imperial units option
-  * Provide rounded default values within acceptable range (Settings, depths, options)
-    * For imperial default depth level should be rounded to 100 ft
+  * Provide rounded default values within acceptable range (Settings, options)
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
   * Adjust usage of working pressure for consumption
+  * Define rounding for rmv values based on units
 * Add gas depth range calculator
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Add gas density calculator (to be able understand to don't breath gas with higher density than 5.7 g/l):

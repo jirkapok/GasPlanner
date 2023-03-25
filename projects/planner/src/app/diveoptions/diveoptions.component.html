@@ -158,7 +158,7 @@
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
                                 <label for="ascSpeed2" class="form-label" mdbLabel>Ascent to
-                                    {{units.lastSpeedLevel}}
+                                    {{units.defaults.lastSpeedLevel}}
                                     {{units.length}} [{{units.speed}}]:</label>
                                 <input id="ascSpeed2" (input)="applyOptions()" formControlName="ascentSpeed50percTo6m"
                                     class="form-control" type="number" required [min]="ranges.speed[0]"
@@ -169,7 +169,7 @@
                                 </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <label for="ascSpeed" class="form-label" mdbLabel>Ascent {{units.lastSpeedLevel}}
+                                <label for="ascSpeed" class="form-label" mdbLabel>Ascent {{units.defaults.lastSpeedLevel}}
                                     {{units.length}} to surface [{{units.speed}}]:</label>
                                 <input id="ascSpeed" formControlName="ascentSpeed6m" class="form-control" type="number"
                                     (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"

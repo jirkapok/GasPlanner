@@ -14,17 +14,13 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add imperial units option
   * Provide rounded default values within acceptable range (Settings, options)
+  * Define rounding for rmv values based on units
+  * Adjust usage of working pressure for consumption
+  * Add working pressure to simple and complex tanks UI
+  * AppPreferences are able to restore units as part of saved state
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
-  * Adjust usage of working pressure for consumption
-  * Define rounding for rmv values based on units
-* Add gas depth range calculator
-* Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
-* Add gas density calculator (to be able understand to don't breath gas with higher density than 5.7 g/l):
-  * <https://www.thoughtco.com/how-to-calculate-density-of-a-gas-607847>
-  * <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/>
-  * Add corresponding event warning
-* Redundancies calculator - when filling one tank from second. What is the target pressure in both.
+* Add gas depth range/properties/trimix calculator
 * Events:
   * Add time to all events warning/error messages where it makes sense
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
@@ -38,8 +34,18 @@ Following list of features and improvements ordered by priority is under develop
   * Settings
     * Unify dive settings and default settings
     * Apply settings after each change and distinguish from default settings
-  * move the tank and depth validation messages to separate row
+  * move the tank and depth validation messages to separate row in complex view
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
+  * Restore state on all pages from last known
+  * Back should navigate to last known view, not only to planner (switch from settings back to nitrox calc)
+  * Support screen rotation when installed as pwa
+* Add undo/redo to all pages
+* Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
+* Add gas density calculator (to be able understand to don't breath gas with higher density than 5.7 g/l):
+  * <https://www.thoughtco.com/how-to-calculate-density-of-a-gas-607847>
+  * <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/>
+  * Add corresponding event warning
+* Redundancies calculator - when filling one tank from second. What is the target pressure in both.
 * Add calculation trainings
 * Help
   * Add help to the UI as side bar
@@ -63,3 +69,4 @@ Following list of features and improvements ordered by priority is under develop
     * <https://youtu.be/OI4ZzqJLQjw>
 * TRIMIX support
   * Add air breaks
+* Add CCR support

@@ -108,10 +108,12 @@ export class UnitConversion {
         return this.current.fromBar(meters);
     }
 
+    /** working pressure in bars */
     public fromTankLiters(liters: number, workingPressure: number): number {
         return this.current.fromTankLiters(liters, workingPressure);
     }
 
+    /** working pressure in bars */
     public toTankLiters(cuftVolume: number, workingPressure: number): number {
         return this.current.toTankLiters(cuftVolume, workingPressure);
     }

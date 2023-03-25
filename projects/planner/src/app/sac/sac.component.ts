@@ -6,7 +6,7 @@ import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { Diver, ImperialUnits, Precision, TankConstants } from 'scuba-physics';
+import { Diver, Precision } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -29,7 +29,7 @@ export class SacComponent implements OnInit {
     public calcIcon = faCalculator;
     public formSac!: FormGroup<SacForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
-    private workingPressure = TankConstants.metricTankWorkPressure;
+    private workingPressure = 0;
     private durationControl!: FormControl<number>;
     private rmvControl!: FormControl<number>;
     private usedControl!: FormControl<number>;
@@ -199,16 +199,20 @@ export class SacComponent implements OnInit {
     }
 
     private setDefaultValues(): void {
+        // convert all default values to metric units
         // working pressure is irrelevant here, since not changed when switching units
         // depth adjusted to cca 15 meters
-        this.calc.depth = this.units.toMeters(this.units.defaults.stopsDistance * 5);
+        const stopDistance = this.units.defaults.stopsDistance;
+        this.calc.depth = this.units.toMeters(stopDistance * 5);
+        const workPressure = this.units.defaults.primaryTankWorkPressure;
+        this.workingPressure = this.units.toBar(workPressure);
+        const tankSize = this.units.defaults.primaryTankSize;
+        this.calc.tankSize = this.units.toTankLiters(tankSize, this.workingPressure);
 
         // rmv is calculated and duration is units independent
         if(this.units.imperialUnits) {
-            this.calc.tankSize = this.units.toTankLiters(TankConstants.imperialTankSize, this.workingPressure);
             this.calc.used = this.units.toBar(2200);
         } else {
-            this.calc.tankSize = 15;
             this.calc.used = 150;
         }
     }

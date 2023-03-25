@@ -15,4 +15,14 @@ describe('Bound tank', () => {
         const tank = new TankBound(Tank.createDefault(), units);
         expect(tank.label).toBe('0. Air/125.7/2900.8');
     });
+
+    it('Set Working pressure keeps target size', () => {
+        const units = new UnitConversion();
+        units.imperialUnits = true;
+        const tank = new TankBound(Tank.createDefault(), units);
+        const expectedSize = units.defaults.primaryTankSize;
+        tank.size = expectedSize;
+        tank.workingPressure = 3000;
+        expect(tank.size).toBeCloseTo(expectedSize, 6);
+    });
 });

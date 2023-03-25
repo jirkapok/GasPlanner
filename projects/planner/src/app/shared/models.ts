@@ -111,7 +111,9 @@ export class TankBound {
     }
 
     public set workingPressure(newValue: number) {
+        const sizeBackup = this.size;
         this._workingPressure = this.units.toBar(newValue);
+        this.size = sizeBackup;
     }
 
     public set workingPressureBars(newValue: number) {

@@ -16,6 +16,7 @@ import { Precision } from 'scuba-physics';
 
 interface TankForm {
     firstTankSize: FormControl<number>;
+    workPressure: FormControl<number>;
     firstTankStartPressure: FormControl<number>;
 }
 
@@ -54,6 +55,11 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         return this.inputs.controlInValid(firstTankSize);
     }
 
+    public get workPressureInvalid(): boolean {
+        const workPressure = this.tanksForm.controls.workPressure;
+        return this.inputs.controlInValid(workPressure);
+    }
+
     public get firstTankStartPressureInvalid(): boolean {
         const firstTankStartPressure = this.tanksForm.controls.firstTankStartPressure;
         return this.inputs.controlInValid(firstTankStartPressure);
@@ -62,6 +68,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     public ngOnInit(): void {
         this.tanksForm = this.fb.group({
             firstTankSize: [Precision.round(this.firstTank.size, 1), this.validators.tankSize],
+            workPressure: [Precision.round(this.firstTank.workingPressure, 1), this.validators.tankPressure],
             firstTankStartPressure: [Precision.round(this.firstTank.startPressure, 1), this.validators.tankPressure]
         });
 
@@ -88,6 +95,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
 
         const values = this.tanksForm.value;
         this.firstTank.size = Number(values.firstTankSize);
+        this.firstTank.workingPressure = Number(values.workPressure);
         this.firstTank.startPressure = Number(values.firstTankStartPressure);
         this.delayedCalc.schedule();
     }
@@ -95,6 +103,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     private reloadAll(): void {
         this.tanksForm.patchValue({
             firstTankSize: Precision.round(this.firstTank.size, 1),
+            workPressure: Precision.round(this.firstTank.workingPressure, 1),
             firstTankStartPressure: Precision.round(this.firstTank.startPressure, 1),
         });
     }

@@ -14,6 +14,14 @@
                 <div class="form-text text-muted" [class.invisible]="firstTankSizeInvalid">SAC: {{gasSac() |
                     number:'1.0-2'}} {{units.sac}}</div>
             </div>
+            <div class="mb-4 col col-12 col-md-6" *ngIf="units.imperialUnits">
+                <label for="workPressure" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]: </label>
+                <input class="form-control" type="number" (input)="applySimple()" id="workPressureFirstTank"
+                    formControlName="workPressure" required [min]="ranges.tankPressure[0]"
+                    [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="workPressureInvalid" />
+                <div class="invalid-feedback position-absolute">Needs to be number
+                    {{ranges.tankPressureLabel}}</div>
+            </div>
             <div class="mb-4 col col-12 col-md-6">
                 <label for="startPressure" class="form-label" mdbLabel>Start pressure [{{units.pressure}}]: </label>
                 <input class="form-control" type="number" (input)="applySimple()" id="startPressureFirstTank"

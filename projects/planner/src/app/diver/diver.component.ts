@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
-    NonNullableFormBuilder, FormGroup, FormControl
+    NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
@@ -20,6 +20,8 @@ export class DiverComponent extends Streamed implements OnInit {
     @Input() public diverForm!: FormGroup;
     public icon = faUserCog;
 
+    private _rmvStep = 2;
+
     constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
@@ -32,13 +34,19 @@ export class DiverComponent extends Streamed implements OnInit {
     }
 
     public get rmv(): number {
+        const roundTo = this.units.ranges.rmvRounding;
         const rmvMetric = this.diver.rmv;
-        return this.units.fromLiter(rmvMetric);
+        const rmv = this.units.fromLiter(rmvMetric);
+        return Precision.round(rmv, roundTo);
     }
 
     public get rmvInvalid(): boolean {
         const rmv = this.diverForm.controls.rmv;
         return this.inputs.controlInValid(rmv);
+    }
+
+    public get rmvStep(): number {
+        return this._rmvStep;
     }
 
     public ngOnInit(): void {
@@ -47,13 +55,11 @@ export class DiverComponent extends Streamed implements OnInit {
         }
 
         // TODO rounding based on units, for imperial rmv needs more decimal palaces, see sac calculator
-        const rmvControl = this.fb.control(Precision.round(this.rmv, 2), this.validators.diverRmv);
+        const rmvControl = this.fb.control(this.rmv, this.validators.diverRmv);
         this.diverForm.addControl('rmv', rmvControl);
 
         this.units.ranges$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.diverForm.patchValue({
-                rmv: Precision.round(this.rmv, 2)
-            }));
+            .subscribe((r) => this.rangeChanged(r));
     }
 
     public inputChanged(): void {
@@ -71,5 +77,13 @@ export class DiverComponent extends Streamed implements OnInit {
 
     public maxDecoPpO2Changed(newValue: number): void {
         this.diver.maxDecoPpO2 = newValue;
+    }
+
+    private rangeChanged(ranges: RangeConstants): void {
+        const exp = ranges.rmvRounding - 1;
+        this._rmvStep = Math.pow(10, -exp);
+        this.diverForm.patchValue({
+            rmv: this.rmv
+        });
     }
 }

@@ -135,6 +135,8 @@ export interface RangeConstants {
     diverRmv: [number, number];
     diverRmvLabel: string;
     ppO2: [number, number];
+    /** Number of decimal places to round rmv values */
+    rmvRounding: number;
     depth: [number, number];
     depthLabel: string;
     narcoticDepth: [number, number];
@@ -168,6 +170,7 @@ class MetricRanges implements RangeConstants {
     public lastStopDepth: [number, number] = [3, 6];
     public lastStopDepthLabel: string = toLabel(this.lastStopDepth, this.units.lengthShortcut);
     public ppO2: [number, number] = [0.21, 3];
+    public rmvRounding = 2;
     public tankHe: [number, number] = [0, 99];
     public tankHeLabel: string = toLabel(this.tankHe, '%');
     public tankPressure: [number, number] = [30, 350];
@@ -199,6 +202,7 @@ class ImperialRanges implements RangeConstants {
     public lastStopDepth: [number, number] = [10, 20];
     public lastStopDepthLabel: string = toLabel(this.lastStopDepth, this.units.lengthShortcut);
     public ppO2: [number, number] = [0.21, 3];
+    public rmvRounding = 4;
     public tankHe: [number, number] = [0, 99];
     public tankHeLabel: string = toLabel(this.tankHe, '%');
     public tankPressure: [number, number] = [400, 5100];

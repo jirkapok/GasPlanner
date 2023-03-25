@@ -101,7 +101,7 @@ export class SacComponent implements OnInit {
 
     public get calcRmv(): number {
         const rmv = this.units.fromLiter(this.calc.rmv);
-        const roundTo = this.units.imperialUnits ? 4 : 2;
+        const roundTo = this.units.ranges.rmvRounding;
         return Precision.round(rmv, roundTo);
     }
 

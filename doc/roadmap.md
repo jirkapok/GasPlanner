@@ -14,10 +14,10 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add imperial units option
   * Provide rounded default values within acceptable range (Settings, options)
-  * Define rounding for rmv values based on units
-  * Adjust usage of working pressure for consumption
+  * Define rounding precision for rmv values based on units
   * Add working pressure to simple and complex tanks UI
   * AppPreferences are able to restore units as part of saved state
+  * Round all values serialized in url address to 3 decimals
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
 * Add gas depth range/properties/trimix calculator

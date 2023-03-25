@@ -15,6 +15,7 @@ import { TanksService } from '../shared/tanks.service';
 
 interface TankRow {
     tankSize: FormControl<number>;
+    tankWorkPressure: FormControl<number>;
     tankStartPressure: FormControl<number>;
     tankO2: FormControl<number>;
     tankHe: FormControl<number>;
@@ -61,6 +62,15 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         return this.tanksForm.controls.boundTanks;
     }
 
+    public get rowClasses(): string {
+        // TODO finish complex tanks layout
+        if (this.units.imperialUnits) {
+            return '';
+        }
+
+        return '';
+    }
+
     public ngOnInit(): void {
         const rows = this.fb.array(this.createTankControls());
         this.tanksForm = this.fb.group({
@@ -85,6 +95,11 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     public gasO2Invalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
         return this.inputs.controlInValid(tank.controls.tankO2);
+    }
+
+    public workPressureInvalid(index: number): boolean {
+        const tank = this.tanksGroup.at(index);
+        return this.inputs.controlInValid(tank.controls.tankWorkPressure);
     }
 
     public startPressureInvalid(index: number): boolean {
@@ -137,6 +152,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
         const values = tankControl.value;
         bound.size = Number(values.tankSize);
+        bound.workingPressure = Number(values.tankWorkPressure);
         bound.startPressure = Number(values.tankStartPressure);
         bound.o2 = Number(values.tankO2);
         bound.he = Number(values.tankHe);
@@ -156,6 +172,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         const tankControl = this.tanksGroup.at(index);
         tankControl.patchValue({
             tankSize: bound.size,
+            tankWorkPressure: bound.workingPressure,
             tankStartPressure: bound.startPressure,
             tankO2: bound.o2,
             tankHe: bound.he
@@ -175,6 +192,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     private createTankControl(tank: TankBound): FormGroup<TankRow> {
         return this.fb.group({
             tankSize: [Precision.round(tank.size, 1), this.validators.tankSize],
+            tankWorkPressure: [Precision.round(tank.workingPressure, 1), this.validators.tankPressure],
             tankStartPressure: [Precision.round(tank.startPressure, 1), this.validators.tankPressure],
             tankO2: [Precision.round(tank.o2, 1), this.validators.trimixOxygen],
             tankHe: [Precision.round(tank.he, 1), this.validators.trimixHe],

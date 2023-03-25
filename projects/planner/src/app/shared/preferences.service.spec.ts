@@ -101,7 +101,7 @@ describe('PreferencesService', () => {
 
                 tanks[0].startPressure = 130;
                 tanks[1].o2 = 32;
-                tanks[1].workingPressureBars = 0;
+                tanks[1].workingPressure = 0;
                 service.loadDefaults();
 
                 const units = new UnitConversion();

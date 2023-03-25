@@ -1,7 +1,7 @@
 import {
     Ceiling, Time, Event, Segment,
     StandardGases, Tank, OtuCalculator,
-    Precision, TankConstants
+    Precision
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -58,9 +58,12 @@ export class Level {
 }
 
 export class TankBound {
-    private _workingPressure = TankConstants.metricTankWorkPressure;
+    private _workingPressure: number;
 
-    constructor(public tank: Tank, private units: UnitConversion) { }
+    constructor(public tank: Tank, private units: UnitConversion) {
+        const newWorkPressure = this.units.defaults.primaryTankWorkPressure;
+        this._workingPressure = this.units.toBar(newWorkPressure);
+    }
 
     public get id(): number {
         return this.tank.id;
@@ -116,8 +119,11 @@ export class TankBound {
         this.size = sizeBackup;
     }
 
+    /** For serialization purpose only */
     public set workingPressureBars(newValue: number) {
+        const sizeBackup = this.size;
         this._workingPressure = newValue;
+        this.size = sizeBackup;
     }
 
     public set o2(newValue: number) {

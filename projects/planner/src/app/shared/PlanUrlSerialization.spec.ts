@@ -121,7 +121,7 @@ describe('Url Serialization', () => {
 
     it('Complex plan is restored to app in imperial units', () => {
         const expectedBars = 250;
-        sut.tanksService.firstTank.workingPressureBars = expectedBars;
+        sut.tanksService.firstTank.workingPressure = expectedBars;
         const url = sut.urlSerialization.toUrl();
         const current = createSut(true);
         current.urlSerialization.fromUrl(url);

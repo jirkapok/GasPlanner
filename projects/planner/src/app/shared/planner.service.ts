@@ -7,7 +7,7 @@ import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
     Options, Precision,
-    Diver, Segments, Salinity, SafetyStop
+    Segments, Salinity, SafetyStop
 } from 'scuba-physics';
 import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
@@ -21,8 +21,6 @@ import { OptionsService } from './options.service';
 @Injectable()
 export class PlannerService extends Streamed {
     public static readonly maxAcceptableNdl = 1000;
-    // TODO diver can't be used outside of planner, serialization or app settings
-    public diver: Diver = new Diver();
     // there always needs to be at least one
     public dive: Dive = new Dive();
     public infoCalculated$: Observable<void>;

@@ -8,7 +8,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { OptionsService } from './options.service';
 import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
-import { SafetyStop } from 'scuba-physics';
+import { Diver, SafetyStop } from 'scuba-physics';
 
 describe('Depths service', () => {
     let depthService: DepthsService;
@@ -56,7 +56,7 @@ describe('Depths service', () => {
 
             const optionsService = TestBed.inject(OptionsService);
             // TODO remove after moved from planner to options service
-            optionsService.loadFrom(planner.options, planner.diver);
+            optionsService.loadFrom(planner.options, new Diver());
 
             const tanksService = TestBed.inject(TanksService);
             const plan = TestBed.inject(Plan);

@@ -61,7 +61,7 @@ describe('Url Serialization', () => {
         const toExpect = {
             plan: sut.plan.segments,
             tansk: sut.tanksService.tankData,
-            diver: sut.planner.diver,
+            diver: sut.options.diver,
             options: sut.options.getOptions(),
             isComplex: sut.viewSwitch.isComplex
         };
@@ -69,7 +69,7 @@ describe('Url Serialization', () => {
         const toCompare = {
             plan: current.plan.segments,
             tansk: current.tanksService.tankData,
-            diver: current.planner.diver,
+            diver: current.options.diver,
             options: current.options.getOptions(),
             isComplex: current.viewSwitch.isComplex
         };

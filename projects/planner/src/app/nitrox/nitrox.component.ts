@@ -6,7 +6,6 @@ import {
 } from '@angular/forms';
 
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
-import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { InputControls } from '../shared/inputcontrols';
 import { NitroxValidators } from '../shared/NitroxValidators';
@@ -15,6 +14,7 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TankBound } from '../shared/models';
 import { Precision, Tank } from 'scuba-physics';
 import { TanksService } from '../shared/tanks.service';
+import { OptionsService } from '../shared/options.service';
 
 
 interface NitroxForm {
@@ -45,10 +45,10 @@ export class NitroxComponent implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private router: Router,
-        private planer: PlannerService,
+        private options: OptionsService,
         private tanksService: TanksService) {
         this.calc.fO2 = this.tanksService.firstTank.tank.o2;
-        this.calc.pO2 = this.planer.diver.maxPpO2;
+        this.calc.pO2 = this.options.diver.maxPpO2;
         this.tank = new TankBound(new Tank(15, 200, 21), this.units);
     }
 
@@ -126,7 +126,7 @@ export class NitroxComponent implements OnInit {
         }
 
         this.tanksService.firstTank.tank.o2 = this.calc.fO2;
-        this.planer.diver.maxPpO2 = this.calc.pO2;
+        this.options.diver.maxPpO2 = this.calc.pO2;
     }
 
     public toMod(): void {

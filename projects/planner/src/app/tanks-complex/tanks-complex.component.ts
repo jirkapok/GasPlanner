@@ -12,6 +12,7 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
+import { OptionsService } from '../shared/options.service';
 
 interface TankRow {
     tankSize: FormControl<number>;
@@ -39,6 +40,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     public tanksForm!: FormGroup<TanksForm>;
 
     constructor(private planner: PlannerService,
+        private options: OptionsService,
         private tanksService: TanksService,
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
@@ -83,7 +85,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     public gasSac(index: number): number {
         const bound = this.tanks[index];
-        const sac = this.planner.diver.gasSac(bound.tank);
+        const sac = this.options.diver.gasSac(bound.tank);
         return this.units.fromBar(sac);
     }
 

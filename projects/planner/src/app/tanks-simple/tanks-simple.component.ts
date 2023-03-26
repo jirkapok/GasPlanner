@@ -13,6 +13,7 @@ import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
 import { Plan } from '../shared/plan.service';
 import { Precision } from 'scuba-physics';
+import { OptionsService } from '../shared/options.service';
 
 interface TankForm {
     firstTankSize: FormControl<number>;
@@ -31,6 +32,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     public tanksForm!: FormGroup<TankForm>;
 
     constructor(private planner: PlannerService,
+        private options: OptionsService,
         private tanksService: TanksService,
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
@@ -78,7 +80,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
 
     public gasSac(): number {
         const tank = this.firstTank.tank;
-        const sac = this.planner.diver.gasSac(tank);
+        const sac = this.options.diver.gasSac(tank);
         return this.units.fromBar(sac);
     }
 

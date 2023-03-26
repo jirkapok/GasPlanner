@@ -15,6 +15,7 @@ import { DepthsService } from '../shared/depths.service';
 import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { Plan } from '../shared/plan.service';
+import { OptionsService } from '../shared/options.service';
 
 @Component({
     selector: 'app-consumption',
@@ -32,12 +33,14 @@ export class DiveInfoComponent extends Streamed {
         private depthsService: DepthsService,
         private tanksService: TanksService,
         public planner: PlannerService,
+        private options: OptionsService,
         private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         private plan: Plan) {
         super();
         this.dive = this.planner.dive;
-        this.toxicity = new GasToxicity(this.planner.options);
+        // TODO move gas toxicity to options
+        this.toxicity = new GasToxicity(this.options.getOptions());
 
         this.clipboard.copyResponse$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((res: IClipboardResponse) => {

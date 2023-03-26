@@ -55,14 +55,12 @@ describe('PreferencesService', () => {
                 expect(diver).toEqual(expected);
             }));
 
-        it('Options values are loaded after save', inject([PreferencesService, PlannerService, OptionsService, ViewSwitchService],
-            (service: PreferencesService, planner: PlannerService, options: OptionsService, viewSwitch: ViewSwitchService) => {
+        it('Options values are loaded after save', inject([PreferencesService, OptionsService, ViewSwitchService],
+            (service: PreferencesService, options: OptionsService, viewSwitch: ViewSwitchService) => {
                 // not going to test all options, since it is a flat structure
                 options.gfLow = 0.3;
                 options.descentSpeed = 15;
                 viewSwitch.isComplex = true; // otherwise reset of GF.
-                planner.assignOptions(options.getOptions());
-                planner.calculate();
                 service.saveDefaults();
 
                 options.gfLow = 0.35;
@@ -72,7 +70,7 @@ describe('PreferencesService', () => {
                 const expected = new Options(0.3, 0.85, 1.4, 1.6, Salinity.fresh);
                 expected.descentSpeed = 15;
                 expected.safetyStop = SafetyStop.auto;
-                expect(planner.options).toEqual(expected);
+                expect(options.getOptions()).toEqual(expected);
             }));
 
         it('Tanks are loaded after save', inject(
@@ -87,7 +85,6 @@ describe('PreferencesService', () => {
                 options.safetyStop = SafetyStop.always;
                 options.gasSwitchDuration = 1;
                 options.problemSolvingDuration = 2;
-                planner.assignOptions(options.getOptions());
                 plan.setSimple(30, 12, tanksService.firstTank.tank, oValues);
 
                 tanksService.addTank();

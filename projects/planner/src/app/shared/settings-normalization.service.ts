@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { Diver, Precision } from 'scuba-physics';
 import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
-import { PlannerService } from './planner.service';
 import { TanksService } from './tanks.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 
 @Injectable()
 export class SettingsNormalizationService {
-    constructor(private planner: PlannerService,
+    constructor(
         private options: OptionsService,
         private units: UnitConversion,
         private tanksService: TanksService,
@@ -29,7 +28,6 @@ export class SettingsNormalizationService {
         this.options.applyDiver(diver);
         this.applyOptionsCalculationValues();
         this.normalizeOptions(this.ranges);
-        this.planner.assignOptions(this.options.getOptions());
     }
 
     private applyOptionsCalculationValues(): void {

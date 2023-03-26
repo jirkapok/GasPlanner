@@ -41,7 +41,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         private delayedCalc: DelayedScheduleService,
         private plan: Plan) {
         super();
-        this.toxicity = new GasToxicity(this.planner.options);
+        this.toxicity = new GasToxicity(this.options.getOptions());
     }
 
     public get firstTank(): TankBound {

@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { Diver, OptionDefaults, Options, SafetyStop, Salinity } from 'scuba-physics';
 import { StandardGradientsService } from './standard-gradients.service';
 
+/** All options stored in metric units */
 @Injectable()
 export class OptionsService {
     public reloaded$: Observable<unknown>;
@@ -12,7 +13,6 @@ export class OptionsService {
     private _diver: Diver = new Diver();
 
     constructor() {
-        // To be aligned with planner
         this.options.salinity = Salinity.fresh;
         this.options.safetyStop = SafetyStop.auto;
         this.reloaded$ = this.onReloaded.asObservable();

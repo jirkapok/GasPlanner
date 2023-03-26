@@ -42,10 +42,11 @@ describe('PlannerService', () => {
         tanksService = TestBed.inject(TanksService);
         TestBedExtensions.initPlan();
         plan = TestBed.inject(Plan);
-        OptionExtensions.applySimpleSpeeds(planner.options);
-        planner.options.problemSolvingDuration = 2;
-        planner.options.safetyStop = SafetyStop.always;
-        plan.assignDepth(30, tanksService.firstTank.tank, planner.options);
+        const options = TestBed.inject(OptionsService);
+        OptionExtensions.applySimpleSpeeds(options.getOptions());
+        options.problemSolvingDuration = 2;
+        options.safetyStop = SafetyStop.always;
+        plan.assignDepth(30, tanksService.firstTank.tank, options.getOptions());
         planner.calculate();
     });
 
@@ -90,12 +91,13 @@ describe('PlannerService', () => {
     });
 
     describe('Shows errors', () => {
-        it('60m for 50 minutes maximum depth exceeded', () => {
-            plan.assignDepth(60, tanksService.firstTank.tank, planner.options);
-            planner.calculate();
-            const hasEvents = planner.dive.events.length > 0;
-            expect(hasEvents).toBeTruthy();
-        });
+        it('60m for 50 minutes maximum depth exceeded', inject([OptionsService],
+            (options: OptionsService) => {
+                plan.assignDepth(60, tanksService.firstTank.tank, options.getOptions());
+                planner.calculate();
+                const hasEvents = planner.dive.events.length > 0;
+                expect(hasEvents).toBeTruthy();
+            }));
 
         it('60m for 50 minutes not enough gas', inject([DepthsService], (depthService: DepthsService) => {
             depthService.assignDuration(50);

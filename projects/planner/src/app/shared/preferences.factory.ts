@@ -34,8 +34,7 @@ export class PreferencesFactory {
         DtoSerialization.loadWorkingPressure(loaded.tanks, tanksService.tanks);
         targetOptions.loadFrom(options, diver);
         targetPlan.loadFrom(segments);
-        target.loadFrom(options);
         viewSwitch.isComplex = loaded.isComplex;
-        target.calculate();
+        target.calculate(); // TODO shouldnt there be a delayer calc call?
     }
 }

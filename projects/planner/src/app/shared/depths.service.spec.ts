@@ -50,17 +50,13 @@ describe('Depths service', () => {
     describe('Apply plan limits', () => {
         beforeEach(() => {
             const planner = TestBed.inject(PlannerService);
-            OptionExtensions.applySimpleSpeeds(planner.options);
-            planner.options.problemSolvingDuration = 2;
-            planner.options.safetyStop = SafetyStop.always;
-
-            const optionsService = TestBed.inject(OptionsService);
-            // TODO remove after moved from planner to options service
-            optionsService.loadFrom(planner.options, new Diver());
-
+            const options = TestBed.inject(OptionsService);
+            OptionExtensions.applySimpleSpeeds(options.getOptions());
+            options.problemSolvingDuration = 2;
+            options.safetyStop = SafetyStop.always;
             const tanksService = TestBed.inject(TanksService);
             const plan = TestBed.inject(Plan);
-            plan.assignDepth(30, tanksService.firstTank.tank, planner.options);
+            plan.assignDepth(30, tanksService.firstTank.tank, options.getOptions());
             planner.calculate();
         });
 

@@ -55,29 +55,29 @@ describe('SettingsNormalizationService', () => {
     });
 
     describe('Imperial units', () => {
-        let plannerOptions: Options;
+        let options: Options;
 
         beforeEach(() => {
             const sourceOptions = TestBed.inject(OptionsService);
             sourceOptions.altitude = 100;
             service.apply(diver, true);
-            plannerOptions = TestBed.inject(PlannerService).options;
+            options = sourceOptions.getOptions();
         });
 
         it('Updates depth level options to 10 feet', () => {
-            expect(plannerOptions.decoStopDistance).toBeCloseTo(3.048, 4);
-            expect(plannerOptions.minimumAutoStopDepth).toBeCloseTo(10.0584, 4);
-            expect(plannerOptions.lastStopDepth).toBeCloseTo(3.048, 4);
+            expect(options.decoStopDistance).toBeCloseTo(3.048, 4);
+            expect(options.minimumAutoStopDepth).toBeCloseTo(10.0584, 4);
+            expect(options.lastStopDepth).toBeCloseTo(3.048, 4);
         });
 
         // TODO fix tests after options are also switched to imperial
         it('Rounds options feet', () => {
-            expect(plannerOptions.maxEND).toBeCloseTo(29.8704, 4);
-            expect(plannerOptions.altitude).toBeCloseTo(99.9744, 4);
-            expect(plannerOptions.ascentSpeed50perc).toBeCloseTo(9.144, 4);
-            expect(plannerOptions.ascentSpeed50percTo6m).toBeCloseTo(6.096, 4);
-            expect(plannerOptions.ascentSpeed6m).toBeCloseTo(3.048, 4);
-            expect(plannerOptions.descentSpeed).toBeCloseTo(17.9832, 4);
+            expect(options.maxEND).toBeCloseTo(29.8704, 4);
+            expect(options.altitude).toBeCloseTo(99.9744, 4);
+            expect(options.ascentSpeed50perc).toBeCloseTo(9.144, 4);
+            expect(options.ascentSpeed50percTo6m).toBeCloseTo(6.096, 4);
+            expect(options.ascentSpeed6m).toBeCloseTo(3.048, 4);
+            expect(options.descentSpeed).toBeCloseTo(17.9832, 4);
         });
 
         it('Rounds segments to feet', inject([Plan],
@@ -105,28 +105,28 @@ describe('SettingsNormalizationService', () => {
     });
 
     describe('Metric units', () => {
-        let plannerOptions: Options;
+        let options: Options;
 
         beforeEach(() => {
             const sourceOptions = TestBed.inject(OptionsService);
             sourceOptions.altitude = 100;
             service.apply(diver, false);
-            plannerOptions = TestBed.inject(PlannerService).options;
+            options = sourceOptions.getOptions();
         });
 
         it('Updates depth level options to 3 m', () => {
-            expect(plannerOptions.decoStopDistance).toBe(3);
-            expect(plannerOptions.minimumAutoStopDepth).toBe(10);
-            expect(plannerOptions.lastStopDepth).toBe(3);
+            expect(options.decoStopDistance).toBe(3);
+            expect(options.minimumAutoStopDepth).toBe(10);
+            expect(options.lastStopDepth).toBe(3);
         });
 
         it('Rounds options meters', () => {
-            expect(plannerOptions.maxEND).toBe(30);
-            expect(plannerOptions.altitude).toBe(100);
-            expect(plannerOptions.ascentSpeed50perc).toBe(9);
-            expect(plannerOptions.ascentSpeed50percTo6m).toBe(6);
-            expect(plannerOptions.ascentSpeed6m).toBe(3);
-            expect(plannerOptions.descentSpeed).toBe(18);
+            expect(options.maxEND).toBe(30);
+            expect(options.altitude).toBe(100);
+            expect(options.ascentSpeed50perc).toBe(9);
+            expect(options.ascentSpeed50percTo6m).toBe(6);
+            expect(options.ascentSpeed6m).toBe(3);
+            expect(options.descentSpeed).toBe(18);
         });
 
         it('Rounds segments to meters', inject([Plan],

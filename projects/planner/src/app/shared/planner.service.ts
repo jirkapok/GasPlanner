@@ -6,8 +6,7 @@ import { Plan } from '../shared/plan.service';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
-    Options, Precision,
-    Segments, Salinity, SafetyStop
+    Precision, Segments
 } from 'scuba-physics';
 import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
@@ -29,7 +28,6 @@ export class PlannerService extends Streamed {
     private calculating = false;
     private calculatingDiveInfo = false;
     private calculatingProfile = false;
-    private _options: Options;
     private onInfoCalculated = new Subject<void>();
     private onWayPointsCalculated = new Subject<void>();
     private profileTask: IBackgroundTask<ProfileRequestDto, ProfileResultDto>;
@@ -41,10 +39,7 @@ export class PlannerService extends Streamed {
         private plan: Plan,
         private optionsService: OptionsService) {
         super();
-        // TODO move to OptionsService
-        this._options = new Options();
-        this._options.salinity = Salinity.fresh;
-        this._options.safetyStop = SafetyStop.auto;
+
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
 
@@ -67,25 +62,12 @@ export class PlannerService extends Streamed {
             .subscribe(() => this.profileFailed());
     }
 
-    /** Gets the current options. Used only for testing purposes */
-    public get options(): Options {
-        return this._options;
-    }
-
     public get ndlValid(): boolean {
         return this.dive.diveInfoCalculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
     }
 
     private get serializableTanks(): ITankBound[] {
         return this.tanks.tanks as ITankBound[];
-    }
-
-    public loadFrom(options: Options): void {
-        this.assignOptions(options);
-    }
-
-    public assignOptions(newOptions: Options): void {
-        this._options.loadFrom(newOptions);
     }
 
     /** Not called by default, needs to be called manually */
@@ -99,7 +81,7 @@ export class PlannerService extends Streamed {
         const profileRequest = {
             tanks: DtoSerialization.fromTanks(this.serializableTanks),
             plan: DtoSerialization.fromSegments(this.plan.segments),
-            options: DtoSerialization.fromOptions(this.options)
+            options: DtoSerialization.fromOptions(this.optionsService.getOptions())
         };
         this.profileTask.calculate(profileRequest);
     }
@@ -145,7 +127,7 @@ export class PlannerService extends Streamed {
         this.dive.ceilings = profile.ceilings;
         this.dive.events = profile.events;
         this.dive.averageDepth = Segments.averageDepth(profile.origin);
-        const optionsDto = DtoSerialization.fromOptions(this.options);
+        const optionsDto = DtoSerialization.fromOptions(this.optionsService.getOptions());
 
         if (profile.endsOnSurface) {
             const noDecoRequest = {

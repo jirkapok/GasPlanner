@@ -25,7 +25,7 @@ export class DepthsService extends Streamed {
         private optionsService: OptionsService) {
         super();
 
-        this.toxicity = new GasToxicity(this.planner.options);
+        this.toxicity = new GasToxicity(this.optionsService.getOptions());
         const firstTank = this.firstTank;
         const options = this.optionsService.getOptions();
         this.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
@@ -96,7 +96,7 @@ export class DepthsService extends Streamed {
     }
 
     public assignDuration(newDuration: number): void {
-        this.plan.assignDuration(newDuration, this.firstTank, this.planner.options);
+        this.plan.assignDuration(newDuration, this.firstTank, this.optionsService.getOptions());
     }
 
     public applyMaxDepth(): void {
@@ -129,7 +129,7 @@ export class DepthsService extends Streamed {
     }
 
     public assignDepth(newDepth: number): void {
-        const options = this.planner.options;
+        const options = this.optionsService.getOptions();
         this.plan.assignDepth(newDepth, this.firstTank, options);
     }
 

@@ -26,7 +26,7 @@ describe('Url Serialization', () => {
         units.imperialUnits = imperial;
         const tanksService = new TanksService(units);
         const planner = new PlannerService(irrelevantFactory, tanksService, plan, options);
-        plan.setSimple(30, 12, tanksService.firstTank.tank, planner.options);
+        plan.setSimple(30, 12, tanksService.firstTank.tank, options.getOptions());
         const viewSwitch = new ViewSwitchService(plan, options, tanksService);
         const urlSerialization = new PlanUrlSerialization(planner, tanksService, viewSwitch, options, plan);
 

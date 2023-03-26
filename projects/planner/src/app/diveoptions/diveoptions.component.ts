@@ -309,7 +309,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     private fireCalculation(): void {
-        this.planner.assignOptions(this.options.getOptions());
         this.delayedCalc.schedule();
     }
 

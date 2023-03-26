@@ -14,7 +14,7 @@ export class PreferencesFactory {
         return {
             isComplex: viewSwitch.isComplex,
             options: DtoSerialization.fromOptions(targetOptions.getOptions()),
-            diver: DtoSerialization.fromDiver(planner.diver),
+            diver: DtoSerialization.fromDiver(targetOptions.diver),
             tanks: DtoSerialization.fromTanks(tanksService.tanks as ITankBound[]),
             plan: DtoSerialization.fromSegments(plan.segments),
         };
@@ -32,7 +32,7 @@ export class PreferencesFactory {
         const options = DtoSerialization.toOptions(loaded.options);
         tanksService.loadFrom(tanks);
         DtoSerialization.loadWorkingPressure(loaded.tanks, tanksService.tanks);
-        targetOptions.loadFrom(options);
+        targetOptions.loadFrom(options, diver);
         targetPlan.loadFrom(segments);
         target.loadFrom(options, diver);
         viewSwitch.isComplex = loaded.isComplex;

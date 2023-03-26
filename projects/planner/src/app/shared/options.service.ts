@@ -9,12 +9,17 @@ export class OptionsService {
     private standardGradients = new StandardGradientsService();
     private options = new Options();
     private onReloaded = new Subject<void>();
+    private _diver: Diver = new Diver();
 
     constructor() {
         // To be aligned with planner
         this.options.salinity = Salinity.fresh;
         this.options.safetyStop = SafetyStop.auto;
         this.reloaded$ = this.onReloaded.asObservable();
+    }
+
+    public get diver(): Diver {
+        return this._diver;
     }
 
     public get altitude(): number {
@@ -207,14 +212,16 @@ export class OptionsService {
         this.options.safetyStop = SafetyStop.always;
     }
 
-    public loadFrom(newOptions: Options): void {
+    public loadFrom(newOptions: Options, diver: Diver): void {
         this.options.loadFrom(newOptions);
+        this.applyDiver(diver); // TODO add diver as parameter
         this.onReloaded.next();
     }
 
     public applyDiver(diver: Diver): void {
         this.options.maxPpO2 = diver.maxPpO2;
         this.options.maxDecoPpO2 = diver.maxDecoPpO2;
+        this.diver.loadFrom(diver);
     }
 
     public resetToSimple(): void {

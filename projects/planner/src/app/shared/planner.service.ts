@@ -80,13 +80,8 @@ export class PlannerService extends Streamed {
         return this.tanks.tanks as ITankBound[];
     }
 
-    public applyDiver(diver: Diver): void {
-        this.diver.loadFrom(diver);
-    }
-
     public loadFrom(options: Options, diver: Diver): void {
         this.assignOptions(options);
-        this.applyDiver(diver);
     }
 
     public assignOptions(newOptions: Options): void {

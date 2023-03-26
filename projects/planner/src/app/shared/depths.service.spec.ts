@@ -55,7 +55,8 @@ describe('Depths service', () => {
             planner.options.safetyStop = SafetyStop.always;
 
             const optionsService = TestBed.inject(OptionsService);
-            optionsService.loadFrom(planner.options);
+            // TODO remove after moved from planner to options service
+            optionsService.loadFrom(planner.options, planner.diver);
 
             const tanksService = TestBed.inject(TanksService);
             const plan = TestBed.inject(Plan);

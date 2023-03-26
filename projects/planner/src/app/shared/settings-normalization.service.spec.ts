@@ -32,11 +32,11 @@ describe('SettingsNormalizationService', () => {
     });
 
     describe('Diver', () => {
-        it('RMV applies to planner', inject([PlannerService],
-            (planner: PlannerService) => {
+        it('RMV applies to planner', inject([OptionsService],
+            (options: OptionsService) => {
                 diver.rmv = 18;
                 service.apply(diver, false);
-                expect(planner.diver.rmv).toBe(18);
+                expect(options.diver.rmv).toBe(18);
             }));
 
         it('ppO2 applies to planner', inject([OptionsService],

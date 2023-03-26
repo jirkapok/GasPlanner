@@ -20,7 +20,6 @@ export class SettingsNormalizationService {
 
     public apply(diver: Diver, imperialUnits: boolean): void {
         this.units.imperialUnits = imperialUnits;
-        this.planner.applyDiver(diver);
         this.applyToOptions(diver);
         this.normalizeTanks();
         this.normalizeSegments();
@@ -30,7 +29,7 @@ export class SettingsNormalizationService {
         this.options.applyDiver(diver);
         this.applyOptionsCalculationValues();
         this.normalizeOptions(this.ranges);
-        this.planner.assignOptions(this.options);
+        this.planner.assignOptions(this.options.getOptions());
     }
 
     private applyOptionsCalculationValues(): void {

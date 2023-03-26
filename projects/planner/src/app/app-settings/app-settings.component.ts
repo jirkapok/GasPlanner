@@ -5,7 +5,7 @@ import {
 import { Router } from '@angular/router';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { Diver } from 'scuba-physics';
-import { PlannerService } from '../shared/planner.service';
+import { OptionsService } from '../shared/options.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { UnitConversion } from '../shared/UnitConversion';
 
@@ -26,8 +26,8 @@ export class AppSettingsComponent implements OnInit {
         private formBuilder: NonNullableFormBuilder,
         private router: Router,
         private cd: ChangeDetectorRef,
-        private planner: PlannerService) {
-        this.diver.loadFrom(this.planner.diver);
+        private options: OptionsService) {
+        this.diver.loadFrom(this.options.diver);
     }
 
     public ngOnInit(): void {

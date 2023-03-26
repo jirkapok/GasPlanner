@@ -54,7 +54,6 @@ export class DiverComponent extends Streamed implements OnInit {
             this.diverForm = this.fb.group({});
         }
 
-        // TODO rounding based on units, for imperial rmv needs more decimal palaces, see sac calculator
         const rmvControl = this.fb.control(this.rmv, this.validators.diverRmv);
         this.diverForm.addControl('rmv', rmvControl);
 

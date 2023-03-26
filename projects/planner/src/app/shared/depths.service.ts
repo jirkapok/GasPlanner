@@ -8,7 +8,7 @@ import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { Streamed } from './streamed';
 import { takeUntil } from 'rxjs';
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 import { Tank, Segment, StandardGases } from 'scuba-physics';
 
 @Injectable()

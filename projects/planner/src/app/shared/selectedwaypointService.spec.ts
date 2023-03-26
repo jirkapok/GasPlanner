@@ -9,7 +9,7 @@ import { TanksService } from './tanks.service';
 import { Plan } from './plan.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
 
 describe('Selected Waypoint', () => {

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {
     Diver, Options, SafetyStop, Salinity, Segment, Tank
 } from 'scuba-physics';
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';

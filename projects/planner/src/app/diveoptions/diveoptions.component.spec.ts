@@ -3,7 +3,7 @@ import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
-import { OptionsService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options.service';
 import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';

@@ -6,7 +6,7 @@ import { SafetyStop, Salinity, Precision } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { Strategies } from '../shared/models';
-import { OptionsService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options.service';
 import { PlannerService } from '../shared/planner.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { Streamed } from '../shared/streamed';

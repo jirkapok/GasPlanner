@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { InputControls } from '../shared/inputcontrols';
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
-import { OptionsService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options.service';
 import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';

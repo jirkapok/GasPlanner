@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Diver } from 'scuba-physics';
 
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 
 describe('OptionsDispatcherService', () => {
     let service: OptionsService;

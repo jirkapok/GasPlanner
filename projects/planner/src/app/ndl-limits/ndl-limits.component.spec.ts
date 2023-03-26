@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Salinity } from 'scuba-physics';
 import { NdlService } from '../shared/ndl.service';
-import { OptionsService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { NdlLimitsComponent } from './ndl-limits.component';
 

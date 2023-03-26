@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PreferencesFactory } from './preferences.factory';

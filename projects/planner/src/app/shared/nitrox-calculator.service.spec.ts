@@ -1,5 +1,5 @@
 import { NitroxCalculatorService } from './nitrox-calculator.service';
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 
 describe('NitroxCalculatorService', () => {
     let service: NitroxCalculatorService;

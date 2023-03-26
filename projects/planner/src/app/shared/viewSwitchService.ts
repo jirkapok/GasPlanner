@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 

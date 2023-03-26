@@ -4,7 +4,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { PreferencesService } from '../shared/preferences.service';
 import { PlannerService } from '../shared/planner.service';
 import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
-import { OptionsService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options.service';
 import { environment } from '../../environments/environment';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { Streamed } from '../shared/streamed';

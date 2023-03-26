@@ -3,7 +3,7 @@ import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 import { UnitConversion } from './UnitConversion';
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 
 describe('View Switch service', () => {
     const o2Expected = 50;

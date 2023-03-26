@@ -4,7 +4,7 @@ import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
 import { Options, Salinity, Tank, Time } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { NdlLimit, NdlService } from '../shared/ndl.service';
-import { OptionsService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { TankBound } from '../shared/models';

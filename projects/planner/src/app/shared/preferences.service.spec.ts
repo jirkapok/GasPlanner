@@ -4,7 +4,7 @@ import { PlannerService } from './planner.service';
 import { Diver, Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';

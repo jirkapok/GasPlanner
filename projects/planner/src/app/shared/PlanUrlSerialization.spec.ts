@@ -1,4 +1,4 @@
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PlanUrlSerialization } from './PlanUrlSerialization';

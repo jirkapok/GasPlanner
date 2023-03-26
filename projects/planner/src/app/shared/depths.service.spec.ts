@@ -6,7 +6,7 @@ import { WorkersFactoryCommon } from './serial.workers.factory';
 import { DepthsService } from './depths.service';
 import { inject, TestBed } from '@angular/core/testing';
 import { DelayedScheduleService } from './delayedSchedule.service';
-import { OptionsService } from './options-dispatcher.service';
+import { OptionsService } from './options.service';
 import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
 import { SafetyStop } from 'scuba-physics';
 

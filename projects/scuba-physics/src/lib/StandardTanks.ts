@@ -30,10 +30,6 @@ export class TankConstants {
     /** Default working pressure in bars for stage cylinder */
     public static readonly metricStageWorkPressure = TankConstants.fromImperial(TankConstants.imperialStageWorkPressure);
 
-    // TODO depth constants see levels in lib
-    /** 20 ft depth as 6 m imperial alternative */
-    public static readonly imperial3mDepth = 10;
-
     /**
      * Template for calculating rounded metric working pressure from imperial in psi.
      * Returns bars rounded to 3 decimals.

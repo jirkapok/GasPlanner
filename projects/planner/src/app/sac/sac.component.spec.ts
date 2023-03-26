@@ -4,8 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { InputControls } from '../shared/inputcontrols';
+import { OptionsService } from '../shared/options.service';
 import { Plan } from '../shared/plan.service';
-import { PlannerService } from '../shared/planner.service';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
@@ -31,7 +31,7 @@ describe('Sac component', () => {
             declarations: [SacComponent],
             providers: [
                 WorkersFactoryCommon, UnitConversion,
-                PlannerService, DecimalPipe,
+                OptionsService, DecimalPipe,
                 ValidatorGroups, InputControls, SacCalculatorService,
                 TanksService, Plan
             ],
@@ -49,11 +49,11 @@ describe('Sac component', () => {
         sacPage = new SacPage(fixture);
     });
 
-    it('use applies rmv to diver', inject([PlannerService, SacCalculatorService],
-        (planner: PlannerService) => {
-            planner.diver.rmv = 30;
+    it('use applies rmv to diver', inject([OptionsService, SacCalculatorService],
+        (options: OptionsService) => {
+            options.diver.rmv = 30;
             component.use();
-            const applied = planner.diver.rmv;
+            const applied = options.diver.rmv;
             expect(applied).toBeCloseTo(20, 5);
         }));
 

@@ -16,6 +16,7 @@ import {
 import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
 import { TanksService } from './tanks.service';
+import { OptionsService } from './options.service';
 
 @Injectable()
 export class PlannerService extends Streamed {
@@ -39,7 +40,8 @@ export class PlannerService extends Streamed {
 
     constructor(private workerFactory: WorkersFactoryCommon,
         private tanks: TanksService,
-        private plan: Plan) {
+        private plan: Plan,
+        private optionsService: OptionsService) {
         super();
         // TODO move to OptionsService
         this._options = new Options();
@@ -80,7 +82,7 @@ export class PlannerService extends Streamed {
         return this.tanks.tanks as ITankBound[];
     }
 
-    public loadFrom(options: Options, diver: Diver): void {
+    public loadFrom(options: Options): void {
         this.assignOptions(options);
     }
 
@@ -159,7 +161,7 @@ export class PlannerService extends Streamed {
                 plan: serializedPlan,
                 profile: DtoSerialization.fromSegments(profile.origin),
                 options: optionsDto,
-                diver: DtoSerialization.fromDiver(this.diver),
+                diver: DtoSerialization.fromDiver(this.optionsService.diver),
                 tanks: serializedTanks
             };
             this.consumptionTask.calculate(consumptionRequest);

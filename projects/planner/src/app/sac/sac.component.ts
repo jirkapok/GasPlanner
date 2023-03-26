@@ -4,12 +4,12 @@ import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService } from '../shared/sac-calculator.service';
-import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { Diver, Precision } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { OptionsService } from '../shared/options.service';
 
 interface SacForm {
     depth: FormControl<number>;
@@ -39,7 +39,7 @@ export class SacComponent implements OnInit {
         private inputs: InputControls,
         private formBuilder: NonNullableFormBuilder,
         private router: Router,
-        private planer: PlannerService,
+        private options: OptionsService,
         private cd: ChangeDetectorRef,
         public calc: SacCalculatorService,
         public units: UnitConversion) {
@@ -177,7 +177,7 @@ export class SacComponent implements OnInit {
             return;
         }
 
-        this.planer.diver.rmv = this.calc.rmv;
+        this.options.diver.rmv = this.calc.rmv;
     }
 
     private enableAll(): void {

@@ -34,7 +34,7 @@ export class PreferencesFactory {
         DtoSerialization.loadWorkingPressure(loaded.tanks, tanksService.tanks);
         targetOptions.loadFrom(options, diver);
         targetPlan.loadFrom(segments);
-        target.loadFrom(options, diver);
+        target.loadFrom(options);
         viewSwitch.isComplex = loaded.isComplex;
         target.calculate();
     }

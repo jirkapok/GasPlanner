@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NitroxCalculator, DepthConverter, DepthLevels } from 'scuba-physics';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 
 @Injectable()
 export class NitroxCalculatorService {
@@ -10,7 +10,7 @@ export class NitroxCalculatorService {
     private calculate: () => void;
     private nitroxCalculator: NitroxCalculator;
 
-    constructor(options: OptionsDispatcherService) {
+    constructor(options: OptionsService) {
         const depthConverter = DepthConverter.simple();
         const depthLevels = new DepthLevels(depthConverter, options);
         this.nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);

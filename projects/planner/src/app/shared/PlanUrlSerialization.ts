@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {
     Diver, Options, SafetyStop, Salinity, Segment, Tank
 } from 'scuba-physics';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';
@@ -71,7 +71,7 @@ export class PlanUrlSerialization {
         private planner: PlannerService,
         private tanksService: TanksService,
         private viewSwitch: ViewSwitchService,
-        private options: OptionsDispatcherService,
+        private options: OptionsService,
         private plan: Plan
     ) {}
 

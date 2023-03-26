@@ -49,7 +49,7 @@ import { SelectedWaypoint } from './shared/selectedwaypointService';
 import { WorkersFactory } from './shared/workers.factory';
 import { WorkersFactoryCommon } from './shared/serial.workers.factory';
 import { NdlService } from './shared/ndl.service';
-import { OptionsDispatcherService } from './shared/options-dispatcher.service';
+import { OptionsService } from './shared/options-dispatcher.service';
 import { PpO2Component } from './pp-o2/pp-o2.component';
 import { DelayedScheduleService } from './shared/delayedSchedule.service';
 import { AppinfoComponent } from './appinfo/appinfo.component';
@@ -133,7 +133,7 @@ const MDB_MODULES = [
         PreferencesService,
         UnitConversion,
         SelectedWaypoint,
-        OptionsDispatcherService,
+        OptionsService,
         DelayedScheduleService,
         SacCalculatorService,
         NitroxCalculatorService,

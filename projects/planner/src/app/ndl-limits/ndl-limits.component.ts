@@ -4,7 +4,7 @@ import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
 import { Options, Salinity, Tank, Time } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
 import { NdlLimit, NdlService } from '../shared/ndl.service';
-import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options-dispatcher.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { TankBound } from '../shared/models';
@@ -25,7 +25,7 @@ export class NdlLimitsComponent {
     public toxicity: GasToxicity;
 
     constructor(private router: Router, public units: UnitConversion,
-        private ndl: NdlService, optionsService: OptionsDispatcherService) {
+        private ndl: NdlService, optionsService: OptionsService) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
         this.tank.workingPressure = this.units.defaults.primaryTankWorkPressure;
         this.tank.size = this.units.defaults.primaryTankSize;
@@ -75,7 +75,7 @@ export class NdlLimitsComponent {
         return await this.router.navigateByUrl('/');
     }
 
-    private copyOptions(optionsService: OptionsDispatcherService): void {
+    private copyOptions(optionsService: OptionsService): void {
         this.options.gfLow = optionsService.gfLow;
         this.options.gfHigh = optionsService.gfHigh;
         this.options.salinity = optionsService.salinity;

@@ -3,7 +3,7 @@ import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 import { UnitConversion } from './UnitConversion';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 
 describe('View Switch service', () => {
     const o2Expected = 50;
@@ -16,7 +16,7 @@ describe('View Switch service', () => {
             declarations: [],
             providers: [
                 TanksService, ViewSwitchService,
-                OptionsDispatcherService, UnitConversion,
+                OptionsService, UnitConversion,
                 Plan
             ],
             imports: []
@@ -29,7 +29,7 @@ describe('View Switch service', () => {
         tanksService.addTank();
 
         const firstTank = tanksService.firstTank.tank;
-        const options = TestBed.inject(OptionsDispatcherService);
+        const options = TestBed.inject(OptionsService);
         plan = TestBed.inject(Plan);
         plan.setSimple(7, 12, firstTank,  options.getOptions());
         plan.segments[1].endDepth = 5;

@@ -8,7 +8,7 @@ import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { Streamed } from './streamed';
 import { takeUntil } from 'rxjs';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { Tank, Segment, StandardGases } from 'scuba-physics';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class DepthsService extends Streamed {
         private tanksService: TanksService,
         private delayedCalc: DelayedScheduleService,
         private plan: Plan,
-        private optionsService: OptionsDispatcherService) {
+        private optionsService: OptionsService) {
         super();
 
         this.toxicity = new GasToxicity(this.planner.options);

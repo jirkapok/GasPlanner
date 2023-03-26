@@ -9,7 +9,7 @@ import { TanksService } from './tanks.service';
 import { Plan } from './plan.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
 
 describe('Selected Waypoint', () => {
@@ -18,7 +18,7 @@ describe('Selected Waypoint', () => {
             providers: [
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, TanksService,
-                Plan, DepthsService, DelayedScheduleService, OptionsDispatcherService]
+                Plan, DepthsService, DelayedScheduleService, OptionsService]
         });
 
         TestBedExtensions.initPlan();

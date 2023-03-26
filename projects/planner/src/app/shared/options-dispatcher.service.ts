@@ -4,7 +4,7 @@ import { Diver, OptionDefaults, Options, SafetyStop, Salinity } from 'scuba-phys
 import { StandardGradientsService } from './standard-gradients.service';
 
 @Injectable()
-export class OptionsDispatcherService {
+export class OptionsService {
     public reloaded$: Observable<unknown>;
     private standardGradients = new StandardGradientsService();
     private options = new Options();

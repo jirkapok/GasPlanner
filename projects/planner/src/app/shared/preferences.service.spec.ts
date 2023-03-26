@@ -4,7 +4,7 @@ import { PlannerService } from './planner.service';
 import { Diver, Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
@@ -21,7 +21,7 @@ describe('PreferencesService', () => {
                 PreferencesService, PlannerService,
                 UnitConversion, TanksService,
                 ViewSwitchService, DepthsService,
-                OptionsDispatcherService, Plan,
+                OptionsService, Plan,
                 DelayedScheduleService]
         });
 
@@ -56,8 +56,8 @@ describe('PreferencesService', () => {
                 expect(diver).toEqual(expected);
             }));
 
-        it('Options values are loaded after save', inject([PreferencesService, PlannerService, OptionsDispatcherService, ViewSwitchService],
-            (service: PreferencesService, planner: PlannerService, options: OptionsDispatcherService, viewSwitch: ViewSwitchService) => {
+        it('Options values are loaded after save', inject([PreferencesService, PlannerService, OptionsService, ViewSwitchService],
+            (service: PreferencesService, planner: PlannerService, options: OptionsService, viewSwitch: ViewSwitchService) => {
                 // not going to test all options, since it is a flat structure
                 options.gfLow = 0.3;
                 options.descentSpeed = 15;
@@ -78,9 +78,9 @@ describe('PreferencesService', () => {
 
         it('Tanks are loaded after save', inject(
             [PreferencesService, PlannerService, TanksService,
-                OptionsDispatcherService, ViewSwitchService, Plan],
+                OptionsService, ViewSwitchService, Plan],
             (service: PreferencesService, planner: PlannerService,
-                tanksService: TanksService, options: OptionsDispatcherService,
+                tanksService: TanksService, options: OptionsService,
                 viewSwitch: ViewSwitchService, plan: Plan) => {
                 // setup needed for consumed calculation
                 const oValues = options.getOptions();
@@ -144,9 +144,9 @@ describe('PreferencesService', () => {
             }));
 
         it('Simple profile is loaded after save and trims tank', inject(
-            [PreferencesService, PlannerService, TanksService, DepthsService, Plan, OptionsDispatcherService],
+            [PreferencesService, PlannerService, TanksService, DepthsService, Plan, OptionsService],
             (service: PreferencesService, planner: PlannerService, tanksService: TanksService,
-                depthsService: DepthsService, plan: Plan, options: OptionsDispatcherService) => {
+                depthsService: DepthsService, plan: Plan, options: OptionsService) => {
                 const optionsResetToSimple = spyOn(options, 'resetToSimple').and.callThrough();
 
                 // invalid operations for simple profile simulate wrong data

@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
-import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options-dispatcher.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -43,7 +43,7 @@ describe('Depths Simple Component', () => {
             imports: [ReactiveFormsModule],
             providers: [WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls, DelayedScheduleService,
-                OptionsDispatcherService, ValidatorGroups,
+                OptionsService, ValidatorGroups,
                 DepthsService, DecimalPipe, TanksService,
                 ViewSwitchService, Plan
             ]

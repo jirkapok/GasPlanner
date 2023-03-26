@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 
@@ -13,7 +13,7 @@ export class ViewSwitchService {
 
     constructor(
         private plan: Plan,
-        private options: OptionsDispatcherService,
+        private options: OptionsService,
         private tanks: TanksService) {
         this.viewSwitched = this.onViewSwitched.asObservable();
     }

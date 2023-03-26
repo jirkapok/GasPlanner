@@ -9,7 +9,7 @@ import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.comp
 import { OxygenComponent } from '../oxygen/oxygen.component';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
-import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options-dispatcher.service';
 import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -61,7 +61,7 @@ describe('Tanks Complex component', () => {
                 PlannerService, InputControls,
                 ValidatorGroups, DelayedScheduleService,
                 DecimalPipe, TanksService, ViewSwitchService,
-                OptionsDispatcherService, Plan],
+                OptionsService, Plan],
             imports: [ReactiveFormsModule]
         })
             .compileComponents();

@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { InputControls } from '../shared/inputcontrols';
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
-import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options-dispatcher.service';
 import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -38,7 +38,7 @@ describe('Nitrox component', () => {
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls, DecimalPipe,
                 NitroxCalculatorService, ValidatorGroups,
-                OptionsDispatcherService,
+                OptionsService,
                 TanksService, Plan
             ],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]

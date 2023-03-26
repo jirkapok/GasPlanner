@@ -1,4 +1,4 @@
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
@@ -8,7 +8,7 @@ import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 
 interface TestSut {
-    options: OptionsDispatcherService;
+    options: OptionsService;
     plan: Plan;
     tanksService: TanksService;
     planner: PlannerService;
@@ -20,7 +20,7 @@ describe('Url Serialization', () => {
     const irrelevantFactory = new WorkersFactoryCommon();
 
     const createSut = (imperial = false): TestSut => {
-        const options = new OptionsDispatcherService();
+        const options = new OptionsService();
         const plan = new Plan();
         const units = new UnitConversion();
         units.imperialUnits = imperial;

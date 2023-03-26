@@ -7,14 +7,14 @@ Following list of features and improvements ordered by priority is under develop
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
 * When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter when searching for switch depth
-* Oxygen at 4 m shows MOD 4 meters, but there is still warning about exceeded MOD.
+* Oxygen at 4 m shows MOD 4 meters, but there is still warning about exceeded MOD. (Consider rule for pure O2 only, to use only deco ppO2 as limit)
 * Nitrox calculator - minimum value is 21 % O2, but the MOD doesn't equal EAD, because Oxygen is 20.9 % only.
 
 ## Improvements / Features
 
 * Add imperial units option
   * Provide rounded default values within acceptable range (Settings, options)
-  * Add working pressure to simple and complex tanks UI
+  * Add working pressure to complex tanks UI
   * AppPreferences are able to restore units as part of saved state
   * Round all values serialized in url address to 3 decimals
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet

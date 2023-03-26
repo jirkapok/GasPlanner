@@ -3,7 +3,7 @@ import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
-import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options-dispatcher.service';
 import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -22,7 +22,7 @@ describe('DepthComponent', () => {
             declarations: [DiveOptionsComponent],
             imports: [ReactiveFormsModule],
             providers: [WorkersFactoryCommon, DecimalPipe,
-                OptionsDispatcherService, InputControls,
+                OptionsService, InputControls,
                 ValidatorGroups, PlannerService,
                 DelayedScheduleService, UnitConversion,
                 TanksService, Plan, ViewSwitchService

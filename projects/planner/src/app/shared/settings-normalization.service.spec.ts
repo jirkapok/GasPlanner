@@ -3,7 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Diver, Options } from 'scuba-physics';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { DepthsService } from './depths.service';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
@@ -20,7 +20,7 @@ describe('SettingsNormalizationService', () => {
         TestBed.configureTestingModule({
             declarations: [],
             providers: [WorkersFactoryCommon, UnitConversion,
-                PlannerService, RouterTestingModule, OptionsDispatcherService,
+                PlannerService, RouterTestingModule, OptionsService,
                 SettingsNormalizationService, TanksService,
                 Plan, DepthsService, DelayedScheduleService],
             imports: [RouterTestingModule.withRoutes([])]
@@ -39,15 +39,15 @@ describe('SettingsNormalizationService', () => {
                 expect(planner.diver.rmv).toBe(18);
             }));
 
-        it('ppO2 applies to planner', inject([OptionsDispatcherService],
-            (options: OptionsDispatcherService) => {
+        it('ppO2 applies to planner', inject([OptionsService],
+            (options: OptionsService) => {
                 diver.maxPpO2 = 1.1;
                 service.apply(diver, false);
                 expect(options.maxPpO2).toBe(1.1);
             }));
 
-        it('Deco ppO2 applies to planner', inject([OptionsDispatcherService],
-            (options: OptionsDispatcherService) => {
+        it('Deco ppO2 applies to planner', inject([OptionsService],
+            (options: OptionsService) => {
                 diver.maxDecoPpO2 = 1.5;
                 service.apply(diver, false);
                 expect(options.maxDecoPpO2).toBe(1.5);
@@ -58,7 +58,7 @@ describe('SettingsNormalizationService', () => {
         let plannerOptions: Options;
 
         beforeEach(() => {
-            const sourceOptions = TestBed.inject(OptionsDispatcherService);
+            const sourceOptions = TestBed.inject(OptionsService);
             sourceOptions.altitude = 100;
             service.apply(diver, true);
             plannerOptions = TestBed.inject(PlannerService).options;
@@ -108,7 +108,7 @@ describe('SettingsNormalizationService', () => {
         let plannerOptions: Options;
 
         beforeEach(() => {
-            const sourceOptions = TestBed.inject(OptionsDispatcherService);
+            const sourceOptions = TestBed.inject(OptionsService);
             sourceOptions.altitude = 100;
             service.apply(diver, false);
             plannerOptions = TestBed.inject(PlannerService).options;

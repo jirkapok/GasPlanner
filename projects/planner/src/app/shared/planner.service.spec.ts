@@ -16,7 +16,7 @@ import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 import { Plan } from './plan.service';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
@@ -32,7 +32,7 @@ describe('PlannerService', () => {
             providers: [WorkersFactoryCommon,
                 PlannerService, UnitConversion,
                 TanksService, ViewSwitchService,
-                OptionsDispatcherService, Plan,
+                OptionsService, Plan,
                 DepthsService, DelayedScheduleService
             ],
             imports: []

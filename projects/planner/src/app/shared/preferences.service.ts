@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PreferencesFactory } from './preferences.factory';
@@ -17,7 +17,7 @@ export class PreferencesService {
     constructor(private planner: PlannerService,
         private tanksService: TanksService,
         private viewSwitch: ViewSwitchService,
-        private options: OptionsDispatcherService,
+        private options: OptionsService,
         private plan: Plan) { }
 
     public loadDefaults(): void {

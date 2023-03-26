@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Salinity } from 'scuba-physics';
 import { NdlService } from '../shared/ndl.service';
-import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options-dispatcher.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { NdlLimitsComponent } from './ndl-limits.component';
 
@@ -16,7 +16,7 @@ describe('NdlLimits component', () => {
         await TestBed.configureTestingModule({
             declarations: [NdlLimitsComponent],
             providers: [FormsModule, UnitConversion,
-                NdlService, OptionsDispatcherService],
+                NdlService, OptionsService],
             imports: [RouterTestingModule.withRoutes([])]
         })
             .compileComponents();
@@ -28,8 +28,8 @@ describe('NdlLimits component', () => {
         fixture.detectChanges();
     });
 
-    it('Default values are copied', inject([OptionsDispatcherService],
-        (options: OptionsDispatcherService) => {
+    it('Default values are copied', inject([OptionsService],
+        (options: OptionsService) => {
             options.altitude = 200;
             options.gfLow = 0.2;
             options.gfHigh = 0.9;
@@ -48,8 +48,8 @@ describe('NdlLimits component', () => {
         }));
 
 
-    it('Changing values doesn\'t affect main options', inject([OptionsDispatcherService],
-        (sut: OptionsDispatcherService) => {
+    it('Changing values doesn\'t affect main options', inject([OptionsService],
+        (sut: OptionsService) => {
             const options = component.options;
             options.altitude = 200;
             options.gfLow = 0.2;
@@ -73,8 +73,8 @@ describe('NdlLimits component', () => {
             }));
 
         it('Uses default tank size', inject(
-            [Router, NdlService, OptionsDispatcherService],
-            (router: Router, ndlService: NdlService, options: OptionsDispatcherService) => {
+            [Router, NdlService, OptionsService],
+            (router: Router, ndlService: NdlService, options: OptionsService) => {
                 const units = new UnitConversion();
                 units.imperialUnits = true;
                 const sut = new NdlLimitsComponent(router, units, ndlService, options);

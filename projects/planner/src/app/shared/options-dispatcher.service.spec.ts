@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { Diver } from 'scuba-physics';
 
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 
 describe('OptionsDispatcherService', () => {
-    let service: OptionsDispatcherService;
+    let service: OptionsService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [ OptionsDispatcherService ]
+            providers: [ OptionsService ]
         });
-        service = TestBed.inject(OptionsDispatcherService);
+        service = TestBed.inject(OptionsService);
     });
 
     it('Use recommended applies default values', () => {

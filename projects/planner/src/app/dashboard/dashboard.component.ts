@@ -4,7 +4,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { PreferencesService } from '../shared/preferences.service';
 import { PlannerService } from '../shared/planner.service';
 import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
-import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options-dispatcher.service';
 import { environment } from '../../environments/environment';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { Streamed } from '../shared/streamed';
@@ -26,7 +26,7 @@ export class DashboardComponent extends Streamed implements OnInit {
     constructor(
         private location: Location,
         private preferences: PreferencesService,
-        private options: OptionsDispatcherService,
+        private options: OptionsService,
         private tanksService: TanksService,
         private planner: PlannerService,
         private viewSwitch: ViewSwitchService,

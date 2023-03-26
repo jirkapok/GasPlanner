@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
-import { OptionsDispatcherService } from '../shared/options-dispatcher.service';
+import { OptionsService } from '../shared/options-dispatcher.service';
 import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -43,7 +43,7 @@ describe('DepthComponent Imperial units', () => {
                 UnitConversion, ValidatorGroups,
                 DepthsService, DelayedScheduleService,
                 InputControls, TanksService,
-                Plan, ViewSwitchService, OptionsDispatcherService
+                Plan, ViewSwitchService, OptionsService
             ]
         })
             .compileComponents();

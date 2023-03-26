@@ -6,7 +6,7 @@ import { WorkersFactoryCommon } from './serial.workers.factory';
 import { DepthsService } from './depths.service';
 import { inject, TestBed } from '@angular/core/testing';
 import { DelayedScheduleService } from './delayedSchedule.service';
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
 import { SafetyStop } from 'scuba-physics';
 
@@ -19,7 +19,7 @@ describe('Depths service', () => {
             imports: [],
             providers: [WorkersFactoryCommon, PlannerService,
                 UnitConversion, DelayedScheduleService,
-                OptionsDispatcherService, Plan,
+                OptionsService, Plan,
                 DepthsService, TanksService
             ]
         })
@@ -54,7 +54,7 @@ describe('Depths service', () => {
             planner.options.problemSolvingDuration = 2;
             planner.options.safetyStop = SafetyStop.always;
 
-            const optionsService = TestBed.inject(OptionsDispatcherService);
+            const optionsService = TestBed.inject(OptionsService);
             optionsService.loadFrom(planner.options);
 
             const tanksService = TestBed.inject(TanksService);
@@ -152,12 +152,12 @@ describe('Depths service', () => {
 
         it('Defaults to 100 tf', inject(
             [PlannerService, TanksService, DelayedScheduleService,
-                Plan, OptionsDispatcherService],
+                Plan, OptionsService],
             (planner: PlannerService,
                 tanksService: TanksService,
                 delayedCalc: DelayedScheduleService,
                 plan: Plan,
-                optionsService: OptionsDispatcherService) => {
+                optionsService: OptionsService) => {
                 const units = new UnitConversion();
                 units.imperialUnits = true; // before the depths service was even created
                 const sut = new DepthsService(units, planner, tanksService,

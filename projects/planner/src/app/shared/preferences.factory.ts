@@ -1,4 +1,4 @@
-import { OptionsDispatcherService } from './options-dispatcher.service';
+import { OptionsService } from './options-dispatcher.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { AppPreferences, DtoSerialization, ITankBound } from './serialization.model';
@@ -8,7 +8,7 @@ import { ViewSwitchService } from './viewSwitchService';
 export class PreferencesFactory {
     public toPreferences(planner: PlannerService,
         tanksService: TanksService,
-        targetOptions: OptionsDispatcherService,
+        targetOptions: OptionsService,
         viewSwitch: ViewSwitchService,
         plan: Plan): AppPreferences {
         return {
@@ -22,7 +22,7 @@ export class PreferencesFactory {
 
     public applyLoaded(target: PlannerService,
         tanksService: TanksService,
-        targetOptions: OptionsDispatcherService,
+        targetOptions: OptionsService,
         viewSwitch: ViewSwitchService,
         targetPlan: Plan,
         loaded: AppPreferences): void {

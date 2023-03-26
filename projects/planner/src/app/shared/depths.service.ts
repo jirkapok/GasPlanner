@@ -25,7 +25,7 @@ export class DepthsService extends Streamed {
         private optionsService: OptionsService) {
         super();
 
-        this.toxicity = new GasToxicity(this.optionsService.getOptions());
+        this.toxicity = this.optionsService.toxicity;
         const firstTank = this.firstTank;
         const options = this.optionsService.getOptions();
         this.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))

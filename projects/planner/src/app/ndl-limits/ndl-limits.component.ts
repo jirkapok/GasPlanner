@@ -30,7 +30,7 @@ export class NdlLimitsComponent {
         this.tank.workingPressure = this.units.defaults.primaryTankWorkPressure;
         this.tank.size = this.units.defaults.primaryTankSize;
         this.options = new Options();
-        this.copyOptions(optionsService);
+        this.options.loadFrom(optionsService.getOptions());
         this.toxicity = new GasToxicity(this.options);
         this.calculate();
     }
@@ -73,14 +73,5 @@ export class NdlLimitsComponent {
 
     public async goBack(): Promise<boolean> {
         return await this.router.navigateByUrl('/');
-    }
-
-    private copyOptions(optionsService: OptionsService): void {
-        this.options.gfLow = optionsService.gfLow;
-        this.options.gfHigh = optionsService.gfHigh;
-        this.options.salinity = optionsService.salinity;
-        // Altitude already converted to metric value in its component
-        this.options.altitude = optionsService.altitude;
-        this.options.maxPpO2 = optionsService.maxPpO2;
     }
 }

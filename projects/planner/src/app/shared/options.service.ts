@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { Diver, OptionDefaults, Options, SafetyStop, Salinity } from 'scuba-physics';
+import { GasToxicity } from './gasToxicity.service';
 import { StandardGradientsService } from './standard-gradients.service';
 
 /** All options stored in metric units */
@@ -11,11 +12,16 @@ export class OptionsService {
     private options = new Options();
     private onReloaded = new Subject<void>();
     private _diver: Diver = new Diver();
+    private _toxicity = new GasToxicity(this.options);
 
     constructor() {
         this.options.salinity = Salinity.fresh;
         this.options.safetyStop = SafetyStop.auto;
         this.reloaded$ = this.onReloaded.asObservable();
+    }
+
+    public get toxicity(): GasToxicity {
+        return this._toxicity;
     }
 
     public get diver(): Diver {
@@ -214,7 +220,7 @@ export class OptionsService {
 
     public loadFrom(newOptions: Options, diver: Diver): void {
         this.options.loadFrom(newOptions);
-        this.applyDiver(diver); // TODO add diver as parameter
+        this.applyDiver(diver);
         this.onReloaded.next();
     }
 

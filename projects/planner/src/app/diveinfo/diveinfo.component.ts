@@ -39,8 +39,7 @@ export class DiveInfoComponent extends Streamed {
         private plan: Plan) {
         super();
         this.dive = this.planner.dive;
-        // TODO move gas toxicity to options
-        this.toxicity = new GasToxicity(this.options.getOptions());
+        this.toxicity = this.options.toxicity;
 
         this.clipboard.copyResponse$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((res: IClipboardResponse) => {

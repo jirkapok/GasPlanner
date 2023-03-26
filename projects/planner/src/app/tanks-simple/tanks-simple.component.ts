@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { faBatteryHalf } from '@fortawesome/free-solid-svg-icons';
-import { PlannerService } from '../shared/planner.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
@@ -31,7 +30,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     public toxicity: GasToxicity;
     public tanksForm!: FormGroup<TankForm>;
 
-    constructor(private planner: PlannerService,
+    constructor(
         private options: OptionsService,
         private tanksService: TanksService,
         public units: UnitConversion,
@@ -41,7 +40,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         private delayedCalc: DelayedScheduleService,
         private plan: Plan) {
         super();
-        this.toxicity = new GasToxicity(this.options.getOptions());
+        this.toxicity = this.options.toxicity;
     }
 
     public get firstTank(): TankBound {

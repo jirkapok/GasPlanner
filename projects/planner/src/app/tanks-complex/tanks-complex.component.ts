@@ -48,7 +48,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         private delayedCalc: DelayedScheduleService) {
         super();
-        this.toxicity = new GasToxicity(this.options.getOptions());
+        this.toxicity = this.options.toxicity;
         this.allNames = StandardGases.allNames();
     }
 

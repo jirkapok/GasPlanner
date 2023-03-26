@@ -26,8 +26,9 @@ export class SettingsNormalizationService {
 
     private applyToOptions(diver: Diver): void {
         this.options.applyDiver(diver);
+        // TODO round diver values
         this.applyOptionsCalculationValues();
-        this.normalizeOptions(this.ranges);
+        this.normalizeOptions();
     }
 
     private applyOptionsCalculationValues(): void {
@@ -39,13 +40,13 @@ export class SettingsNormalizationService {
         this.options.minimumAutoStopDepth = this.units.toMeters(defaults.autoStopLevel);
     }
 
-    private normalizeOptions(ranges: RangeConstants): void {
-        this.options.maxEND = this.fitLengthToRange(this.options.maxEND, ranges.narcoticDepth);
-        this.options.altitude = this.fitLengthToRange(this.options.altitude, ranges.altitude);
-        this.options.ascentSpeed50perc = this.fitLengthToRange(this.options.ascentSpeed50perc, ranges.speed);
-        this.options.ascentSpeed50percTo6m = this.fitLengthToRange(this.options.ascentSpeed50percTo6m, ranges.speed);
-        this.options.ascentSpeed6m = this.fitLengthToRange(this.options.ascentSpeed6m, ranges.speed);
-        this.options.descentSpeed = this.fitLengthToRange(this.options.descentSpeed, ranges.speed);
+    private normalizeOptions(): void {
+        this.options.maxEND = this.fitLengthToRange(this.options.maxEND, this.ranges.narcoticDepth);
+        this.options.altitude = this.fitLengthToRange(this.options.altitude, this.ranges.altitude);
+        this.options.ascentSpeed50perc = this.fitLengthToRange(this.options.ascentSpeed50perc, this.ranges.speed);
+        this.options.ascentSpeed50percTo6m = this.fitLengthToRange(this.options.ascentSpeed50percTo6m, this.ranges.speed);
+        this.options.ascentSpeed6m = this.fitLengthToRange(this.options.ascentSpeed6m, this.ranges.speed);
+        this.options.descentSpeed = this.fitLengthToRange(this.options.descentSpeed, this.ranges.speed);
     }
 
     private normalizeTanks(): void {

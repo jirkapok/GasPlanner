@@ -27,12 +27,13 @@ export class PreferencesService {
         }
 
         const loaded = JSON.parse(toParse) as AppPreferences;
-        this.preferencesFactory.applyLoaded(this.planner, this.tanksService,
+        this.preferencesFactory.applyLoaded(this.tanksService,
             this.options, this.viewSwitch, this.plan, loaded);
+        this.planner.calculate();
     }
 
     public saveDefaults(): void {
-        const toSave = this.preferencesFactory.toPreferences(this.planner,
+        const toSave = this.preferencesFactory.toPreferences(
             this.tanksService, this.options, this.viewSwitch, this.plan);
         const serialized = JSON.stringify(toSave);
         localStorage.setItem(PreferencesService.storageKey, serialized);

@@ -13,10 +13,9 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add imperial units option
-  * Provide rounded default values within acceptable range (Settings, options)
+  * Provide rounded default values within acceptable range (Settings)
   * Add working pressure to complex tanks UI
   * AppPreferences are able to restore units as part of saved state
-  * Round all values serialized in url address to 3 decimals
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
 * Add gas depth range/properties/trimix calculator

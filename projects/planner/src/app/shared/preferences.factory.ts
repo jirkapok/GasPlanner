@@ -1,12 +1,11 @@
 import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
-import { PlannerService } from './planner.service';
 import { AppPreferences, DtoSerialization, ITankBound } from './serialization.model';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 
 export class PreferencesFactory {
-    public toPreferences(planner: PlannerService,
+    public toPreferences(
         tanksService: TanksService,
         targetOptions: OptionsService,
         viewSwitch: ViewSwitchService,
@@ -20,7 +19,7 @@ export class PreferencesFactory {
         };
     }
 
-    public applyLoaded(target: PlannerService,
+    public applyLoaded(
         tanksService: TanksService,
         targetOptions: OptionsService,
         viewSwitch: ViewSwitchService,
@@ -35,6 +34,5 @@ export class PreferencesFactory {
         targetOptions.loadFrom(options, diver);
         targetPlan.loadFrom(segments);
         viewSwitch.isComplex = loaded.isComplex;
-        target.calculate(); // TODO shouldnt there be a delayer calc call?
     }
 }

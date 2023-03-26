@@ -233,7 +233,6 @@ export class OptionsService {
     public resetToSimple(): void {
         const foundGfLabel = this.standardGradients.labelFor(this.gfLow, this.gfHigh);
         if(foundGfLabel === '') {
-            // TODO needs to be rounded to units
             OptionDefaults.setMediumConservatism(this.options);
         }
     }

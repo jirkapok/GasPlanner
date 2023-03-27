@@ -79,7 +79,6 @@ describe('SettingsNormalizationService', () => {
             expect(rmv).toBeCloseTo(0.70060, 5);
         });
 
-        // TODO fix tests after options are also switched to imperial
         it('Rounds options feet', () => {
             expect(options.maxEND).toBeCloseTo(29.8704, 4);
             expect(options.altitude).toBeCloseTo(99.9744, 4);
@@ -131,7 +130,7 @@ describe('SettingsNormalizationService', () => {
             expect(options.lastStopDepth).toBe(3);
         });
 
-        it('Updates diver rounded rmv', () => {
+        it('Updates diver rounded rmv liters', () => {
             expect(sourceOptions.diver.rmv).toBeCloseTo(19.84000, 5);
         });
 

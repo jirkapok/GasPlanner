@@ -13,6 +13,7 @@ import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
 import { TankBound } from './models';
+import { PreferencesFactory } from './preferences.factory';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -21,7 +22,7 @@ describe('PreferencesService', () => {
                 PreferencesService, PlannerService,
                 UnitConversion, TanksService,
                 ViewSwitchService, DepthsService,
-                OptionsService, Plan,
+                OptionsService, Plan, PreferencesFactory,
                 DelayedScheduleService]
         });
 
@@ -99,6 +100,7 @@ describe('PreferencesService', () => {
                 tanks[1].o2 = 32;
                 tanks[1].workingPressure = 0;
                 service.loadDefaults();
+                // TODO  planner.calculate(); // because of reserve and consumed calculation
 
                 const units = new UnitConversion();
                 const expected1 = new TankBound(new Tank(15, 150, 21), units);

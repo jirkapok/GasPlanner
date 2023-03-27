@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import {
@@ -5,11 +6,14 @@ import {
     AppPreferences, AppPreferencesDto, AppStates, DiveDto, DtoSerialization, ITankBound
 } from './serialization.model';
 import { TanksService } from './tanks.service';
+import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 
+@Injectable()
 export class PreferencesFactory {
     constructor(
         private viewSwitch: ViewSwitchService,
+        private units: UnitConversion,
         private tanksService: TanksService,
         private plan: Plan,
         private options: OptionsService
@@ -70,7 +74,7 @@ export class PreferencesFactory {
     }
 
     private toStates(): AppStates {
-        // not implemented yet
+        // not implemented yet, restore last known app state. Used for pwa
         return {
             lastScreen: '/',
             state: {}

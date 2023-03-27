@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {
-    Diver, Options, SafetyStop, Salinity, Segment, Tank
+    Diver, Options, SafetyStop, Salinity, Segment
 } from 'scuba-physics';
 import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
@@ -13,6 +13,7 @@ import {
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
+import { UnitConversion } from './UnitConversion';
 
 class ParseContext {
     private static readonly trueValue = '1';
@@ -67,13 +68,18 @@ class ParseContext {
  * 3. Encode as url parameter
  **/
 export class PlanUrlSerialization {
+    private preferences: PreferencesFactory;
+
     constructor(
         private planner: PlannerService,
-        private tanksService: TanksService,
         private viewSwitch: ViewSwitchService,
-        private options: OptionsService,
-        private plan: Plan
-    ) { }
+        private units: UnitConversion,
+        private tanksService: TanksService,
+        private plan: Plan,
+        private options: OptionsService
+    ) {
+        this.preferences = new PreferencesFactory(this.viewSwitch, this.units, this.tanksService, this.plan, this.options);
+    }
 
     private static parseDto(url: string): AppPreferencesDto {
         const params = new URLSearchParams(url);
@@ -270,8 +276,7 @@ export class PlanUrlSerialization {
             // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
             const isValid = new PlanValidation().validate(parsed);
             if (isValid) {
-                const preferecnes = new PreferencesFactory(this.viewSwitch, this.tanksService, this.plan, this.options);
-                preferecnes.applyLoaded(parsed);
+                this.preferences.applyLoaded(parsed);
                 this.planner.calculate();
             } else {
                 console.log('Unable to load planner from url parameters, due to invalid data.');

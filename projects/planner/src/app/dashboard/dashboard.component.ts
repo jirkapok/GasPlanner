@@ -1,17 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { environment } from '../../environments/environment';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { PreferencesService } from '../shared/preferences.service';
 import { PlannerService } from '../shared/planner.service';
 import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
-import { OptionsService } from '../shared/options.service';
-import { environment } from '../../environments/environment';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { Streamed } from '../shared/streamed';
 import { takeUntil } from 'rxjs';
-import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import { Plan } from '../shared/plan.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -21,21 +18,15 @@ import { Plan } from '../shared/plan.service';
 export class DashboardComponent extends Streamed implements OnInit {
     public showDisclaimer = true;
     public exclamation = faExclamationTriangle;
-    private urlSerialization: PlanUrlSerialization;
 
     constructor(
         private location: Location,
         private preferences: PreferencesService,
-        private options: OptionsService,
-        private tanksService: TanksService,
         private planner: PlannerService,
         private viewSwitch: ViewSwitchService,
         private delayedCalc: DelayedScheduleService,
-        private plan: Plan) {
+        private urlSerialization: PlanUrlSerialization) {
         super();
-
-        this.urlSerialization = new PlanUrlSerialization(this.planner,
-            this.tanksService, this.viewSwitch, this.options, this.plan);
     }
 
     public get isComplex(): boolean {

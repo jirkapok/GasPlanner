@@ -6,7 +6,7 @@ Following list of features and improvements ordered by priority is under develop
 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
-* When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. It looks like we need to use simple depth converter when searching for switch depth
+* When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. (It looks like we need to use simple depth converter when searching for switch depth)
 * Oxygen at 4 m shows MOD 4 meters, but there is still warning about exceeded MOD. (Consider rule for pure O2 only, to use only deco ppO2 as limit)
 * Nitrox calculator - minimum value is 21 % O2, but the MOD doesn't equal EAD, because Oxygen is 20.9 % only.
 
@@ -15,22 +15,22 @@ Following list of features and improvements ordered by priority is under develop
 * Add imperial units option
   * Add working pressure to complex tanks UI
   * AppPreferences are able to restore units as part of saved state
+  * Relax tank size precision to 1 decimal when switching units
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
+* Settings
+  * UI: Add Dropdown for well known tank sizes (to reduce the work to sort all the fields on the page)
+  * Unify dive settings and default settings (app settings only units and language)
+  * Apply settings after each change and distinguish from default settings
 * Add gas depth range/properties/trimix calculator
 * Events:
   * Add time to all events warning/error messages where it makes sense
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * UI Tweaks
-  * Tanks
-    * Add Dropdown for well known tank sizes
   * Profile:
     * Add option to reduce waypoints table only to list of stops
     * Waypoints table: add switch in case user is switching to tank with the same gas
     * Add other events to profile chart like gas switch
-  * Settings
-    * Unify dive settings and default settings
-    * Apply settings after each change and distinguish from default settings
   * move the tank and depth validation messages to separate row in complex view
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Restore state on all pages from last known

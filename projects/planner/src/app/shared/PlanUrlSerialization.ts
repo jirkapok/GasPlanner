@@ -8,7 +8,7 @@ import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';
 import { PreferencesFactory } from './preferences.factory';
 import {
-    AppPreferences, DiverDto, OptionsDto, SegmentDto, TankDto
+    AppPreferencesDto, DiverDto, OptionsDto, SegmentDto, TankDto
 } from './serialization.model';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
@@ -46,7 +46,7 @@ class ParseContext {
     }
 
     public processValues(valueSeparator: string, action: (c: ParseContext) => void): void {
-        for(let index = 0; index < this.paramValues.length; index++) {
+        for (let index = 0; index < this.paramValues.length; index++) {
             const partContext = this.toPartContext(index, valueSeparator);
             action(partContext);
         }
@@ -73,26 +73,37 @@ export class PlanUrlSerialization {
         private viewSwitch: ViewSwitchService,
         private options: OptionsService,
         private plan: Plan
-    ) {}
+    ) { }
 
-    private static parseDto(url: string): AppPreferences {
+    private static parseDto(url: string): AppPreferencesDto {
         const params = new URLSearchParams(url);
-        const complexParam = params.get('c') || '';
+        const appSettingsParam = params.get('ao') || '';
         const optionsParam = params.get('o') || '';
         const diverParam = params.get('di') || '';
         const tanksParam = params.get('t') || '';
         const depthsParam = params.get('de') || '';
 
         const tanks = PlanUrlSerialization.fromTanksParam(tanksParam);
-        const parsed: AppPreferences = {
-            isComplex: ParseContext.deserializeBoolean(complexParam),
-            options: PlanUrlSerialization.fromOptionsParam(optionsParam),
-            diver: PlanUrlSerialization.fromDiverParam(diverParam),
-            tanks: tanks,
-            plan: PlanUrlSerialization.fromDepthsParam(tanks, depthsParam),
+        const parsed: AppPreferencesDto = {
+            options: PlanUrlSerialization.fromAppSettingsParam(appSettingsParam),
+            dives: [{
+                options: PlanUrlSerialization.fromOptionsParam(optionsParam),
+                diver: PlanUrlSerialization.fromDiverParam(diverParam),
+                tanks: tanks,
+                plan: PlanUrlSerialization.fromDepthsParam(tanks, depthsParam),
+            }]
         };
 
         return parsed;
+    }
+
+    private static fromAppSettingsParam(appSettings: string) {
+        const context = new ParseContext(appSettings, ',');
+        return {
+            isComplex: context.parseBoolean(0),
+            imperialUnits: context.parseBoolean(1),
+            language: 'en'
+        };
     }
 
     private static fromOptionsParam(optionsParam: string): OptionsDto {
@@ -125,11 +136,11 @@ export class PlanUrlSerialization {
         const oxygenNarcotic = ParseContext.serializeBoolean(o.oxygenNarcotic);
         const roundStopsToMinutes = ParseContext.serializeBoolean(o.roundStopsToMinutes);
         const optionsParam = `${o.altitude},` +
-        `${o.ascentSpeed50perc},${o.ascentSpeed50percTo6m},${o.ascentSpeed6m},` +
-        `${o.decoStopDistance},${o.descentSpeed},${o.gasSwitchDuration},` +
-        `${o.gfHigh},${o.gfLow},${o.lastStopDepth},${o.maxDecoPpO2},${o.maxEND},` +
-        `${o.maxPpO2},${o.minimumAutoStopDepth},${oxygenNarcotic},${o.problemSolvingDuration},` +
-        `${roundStopsToMinutes},${o.safetyStop},${o.salinity}`;
+            `${o.ascentSpeed50perc},${o.ascentSpeed50percTo6m},${o.ascentSpeed6m},` +
+            `${o.decoStopDistance},${o.descentSpeed},${o.gasSwitchDuration},` +
+            `${o.gfHigh},${o.gfLow},${o.lastStopDepth},${o.maxDecoPpO2},${o.maxEND},` +
+            `${o.maxPpO2},${o.minimumAutoStopDepth},${oxygenNarcotic},${o.problemSolvingDuration},` +
+            `${roundStopsToMinutes},${o.safetyStop},${o.salinity}`;
         return optionsParam;
     }
 
@@ -185,7 +196,7 @@ export class PlanUrlSerialization {
         return result.join(',');
     }
 
-    private static fromDepthsParam(tanks: TankDto[], parseParam: string):  SegmentDto[] {
+    private static fromDepthsParam(tanks: TankDto[], parseParam: string): SegmentDto[] {
         const result: SegmentDto[] = [];
         const segContext = new ParseContext(parseParam, ',');
         let last: SegmentDto;
@@ -214,7 +225,7 @@ export class PlanUrlSerialization {
 
         const tankId = context.parseNumber(3);
 
-        if(0 < tankId && tankId <= tanks.length) {
+        if (0 < tankId && tankId <= tanks.length) {
             const tank = tanks[tankId - 1];
             segment.tankId = tankId;
             segment.gas.fO2 = tank.gas.fO2;
@@ -241,16 +252,16 @@ export class PlanUrlSerialization {
     public toUrl(): string {
         const tanksParam = PlanUrlSerialization.toTanksParam(this.tanksService.tanks);
         const depthsParam = PlanUrlSerialization.toDepthsParam(this.plan.segments);
-        const diParam =  PlanUrlSerialization.toDiverParam(this.options.diver);
+        const diParam = PlanUrlSerialization.toDiverParam(this.options.diver);
         const optionsParam = PlanUrlSerialization.toOptionsParam(this.options.getOptions());
-        const isComplex = ParseContext.serializeBoolean(this.viewSwitch.isComplex);
-        const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&c=${isComplex}`;
+        const appOptions = this.toAppOptions();
+        const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&ao=${appOptions}`;
         return result;
     }
 
     public fromUrl(url: string): void {
         try {
-            if(!url) {
+            if (!url) {
                 return;
             }
 
@@ -258,7 +269,7 @@ export class PlanUrlSerialization {
             const parsed = PlanUrlSerialization.parseDto(decodedUrl);
             // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
             const isValid = new PlanValidation().validate(parsed);
-            if(isValid) {
+            if (isValid) {
                 new PreferencesFactory().applyLoaded(this.tanksService,
                     this.options, this.viewSwitch, this.plan, parsed);
                 this.planner.calculate();
@@ -268,5 +279,11 @@ export class PlanUrlSerialization {
         } catch {
             console.log('Failed loading of planner from url parameters.');
         }
+    }
+
+    private toAppOptions(): string {
+        const isComplex = ParseContext.serializeBoolean(this.viewSwitch.isComplex);
+        const imperial = ParseContext.serializeBoolean(false); // TODO units
+        return `${isComplex},${imperial}`;
     }
 }

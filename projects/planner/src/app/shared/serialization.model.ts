@@ -1,6 +1,7 @@
 import {
     Options, Segment, StandardGases, Tank, Tanks,
-    CalculatedProfile, Ceiling, EventType, Event, Events, Gas, Diver, Salinity, SafetyStop
+    CalculatedProfile, Ceiling, EventType,
+    Event, Events, Gas, Diver, Salinity, SafetyStop
 } from 'scuba-physics';
 
 /**
@@ -14,12 +15,37 @@ export interface ITankBound {
     tank: Tank;
 }
 
-export interface AppPreferences {
-    isComplex: boolean;
+export interface DiveDto {
     options: OptionsDto;
     diver: DiverDto;
     tanks: TankDto[];
     plan: SegmentDto[];
+}
+
+/**
+ * Send these in url, because screen without them
+ * may cause different/unexpected rounding and value ranges
+ **/
+export interface AppOptionsDto {
+    imperialUnits: boolean;
+    isComplex: boolean;
+    language: string;
+}
+
+export interface AppStates {
+    /** last page opened */
+    lastScreen: string;
+    state: unknown;
+}
+
+export interface AppPreferences extends AppPreferencesDto {
+    states: AppStates;
+}
+
+/** Only for url serialization */
+export interface AppPreferencesDto {
+    options: AppOptionsDto;
+    dives: DiveDto[];
 }
 
 export interface ProfileRequestDto {

@@ -1,4 +1,7 @@
-import { AppPreferences, DiverDto, GasDto, OptionsDto, SegmentDto, TankDto } from './serialization.model';
+import {
+    AppPreferencesDto, DiverDto, GasDto,
+    OptionsDto, SegmentDto, TankDto, DiveDto
+} from './serialization.model';
 import _ from 'lodash';
 import { SafetyStop, Salinity, Time } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
@@ -17,15 +20,22 @@ export class PlanValidation {
         this.complexDurationRange = [minDuration, maxDuration];
     }
 
-    public validate(plan: AppPreferences): boolean {
+    public validate(appDto: AppPreferencesDto): boolean {
+        if(appDto.dives.length === 0) {
+            return false;
+        }
+
+        // TODO validate all dives
+        const plan = appDto.dives[0];
+        const isComplex = appDto.options.isComplex;
         const maxTankId = plan.tanks.length + 1;
-        const contentRanges = this.selectContentRanges(plan.isComplex);
+        const contentRanges = this.selectContentRanges(isComplex);
         const tanksValid = this.allTanksValid(plan.tanks, maxTankId, contentRanges);
-        const durationRange = this.selectDurationRanges(plan.isComplex);
+        const durationRange = this.selectDurationRanges(isComplex);
         const segmentsValid = this.allSegmentsValid(plan.plan, maxTankId, durationRange, contentRanges);
         const optionsValid = this.optionsValid(plan.options);
         const diverValid = this.diverValid(plan.diver);
-        const complexValid = this.complexModeValid(plan);
+        const complexValid = this.complexModeValid(appDto);
         return tanksValid && segmentsValid && optionsValid && diverValid && complexValid;
     }
 
@@ -114,9 +124,12 @@ export class PlanValidation {
             this.isInRange(diver.maxDecoPpO2, this.ranges.ppO2);
     }
 
-    private complexModeValid(plan: AppPreferences): boolean {
-        return plan.isComplex ||
-            (plan.plan.length === 2 && plan.tanks.length === 1);
+    private complexModeValid(app: AppPreferencesDto): boolean {
+        return app.options.isComplex || this.allDivesSimple(app.dives);
+    }
+
+    private allDivesSimple(dives: DiveDto[]): boolean {
+        return _(dives).every(d => d.plan.length === 2 && d.tanks.length === 1);
     }
 
     private isInRange(value: number, range: [number, number]): boolean {

@@ -8,37 +8,30 @@ import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 
 export class PreferencesFactory {
-    public toPreferences(
-        tanksService: TanksService,
-        targetOptions: OptionsService,
-        viewSwitch: ViewSwitchService,
-        plan: Plan): AppPreferences {
+    constructor(
+        private viewSwitch: ViewSwitchService,
+        private tanksService: TanksService,
+        private plan: Plan,
+        private options: OptionsService
+    ){}
+
+    public toPreferences(): AppPreferences {
         return {
             states: this.toStates(),
-            options: this.toAppSettings(viewSwitch),
-            dives: this.toDives(targetOptions, tanksService, plan)
+            options: this.toAppSettings(this.viewSwitch),
+            dives: this.toDives()
         };
     }
 
-    public applyApp(
-        tanksService: TanksService,
-        targetOptions: OptionsService,
-        viewSwitch: ViewSwitchService,
-        targetPlan: Plan,
-        loaded: AppPreferences): void {
-        this.applyLoaded(tanksService, targetOptions, viewSwitch, targetPlan, loaded);
+    public applyApp(loaded: AppPreferences): void {
+        this.applyLoaded(loaded);
         this.applyStates();
     }
 
-    public applyLoaded(
-        tanksService: TanksService,
-        targetOptions: OptionsService,
-        viewSwitch: ViewSwitchService,
-        targetPlan: Plan,
-        loaded: AppPreferencesDto): void {
-        this.applyDives(tanksService, targetOptions, targetPlan, loaded);
+    public applyLoaded(loaded: AppPreferencesDto): void {
+        this.applyDives(loaded);
         // switch after data load fixes simple view valid data
-        this.applyAppSettings(viewSwitch, loaded);
+        this.applyAppSettings(loaded);
         // TODO consider use normalization service to fix data out of values
     }
 
@@ -50,33 +43,30 @@ export class PreferencesFactory {
         };
     }
 
-    private applyAppSettings(viewSwitch: ViewSwitchService, loaded: AppPreferencesDto): void {
-        viewSwitch.isComplex = loaded.options.isComplex;
+    private applyAppSettings(loaded: AppPreferencesDto): void {
+        this.viewSwitch.isComplex = loaded.options.isComplex;
         // TODO imperial units
     }
 
-    private toDives(targetOptions: OptionsService, tanksService: TanksService, plan: Plan): DiveDto[] {
+    private toDives(): DiveDto[] {
         return [{
-            options: DtoSerialization.fromOptions(targetOptions.getOptions()),
-            diver: DtoSerialization.fromDiver(targetOptions.diver),
-            tanks: DtoSerialization.fromTanks(tanksService.tanks as ITankBound[]),
-            plan: DtoSerialization.fromSegments(plan.segments),
+            options: DtoSerialization.fromOptions(this.options.getOptions()),
+            diver: DtoSerialization.fromDiver(this.options.diver),
+            tanks: DtoSerialization.fromTanks(this.tanksService.tanks as ITankBound[]),
+            plan: DtoSerialization.fromSegments(this.plan.segments),
         }];
     }
 
-    private applyDives(tanksService: TanksService,
-        targetOptions: OptionsService,
-        targetPlan: Plan,
-        loaded: AppPreferencesDto): void {
+    private applyDives(loaded: AppPreferencesDto): void {
         const firstDive = loaded.dives[0];
         const tanks = DtoSerialization.toTanks(firstDive.tanks);
         const segments = DtoSerialization.toSegments(firstDive.plan, tanks);
         const diver = DtoSerialization.toDiver(firstDive.diver);
         const options = DtoSerialization.toOptions(firstDive.options);
-        tanksService.loadFrom(tanks);
-        DtoSerialization.loadWorkingPressure(firstDive.tanks, tanksService.tanks);
-        targetOptions.loadFrom(options, diver);
-        targetPlan.loadFrom(segments);
+        this.tanksService.loadFrom(tanks);
+        DtoSerialization.loadWorkingPressure(firstDive.tanks, this.tanksService.tanks);
+        this.options.loadFrom(options, diver);
+        this.plan.loadFrom(segments);
     }
 
     private toStates(): AppStates {

@@ -12,13 +12,15 @@ export class PreferencesService {
     private static readonly disclaimerValue = 'confirmed';
     private static readonly storageKey = 'preferences';
     private static readonly disclaimerKey = 'disclaimer';
-    private preferencesFactory = new PreferencesFactory();
+    private preferencesFactory: PreferencesFactory;
 
     constructor(private planner: PlannerService,
         private tanksService: TanksService,
         private viewSwitch: ViewSwitchService,
         private options: OptionsService,
-        private plan: Plan) { }
+        private plan: Plan) {
+        this.preferencesFactory = new PreferencesFactory(viewSwitch, tanksService, plan, options);
+    }
 
     public loadDefaults(): void {
         const toParse = localStorage.getItem(PreferencesService.storageKey);
@@ -27,14 +29,12 @@ export class PreferencesService {
         }
 
         const loaded = JSON.parse(toParse) as AppPreferences;
-        this.preferencesFactory.applyLoaded(this.tanksService,
-            this.options, this.viewSwitch, this.plan, loaded);
+        this.preferencesFactory.applyApp(loaded);
         this.planner.calculate();
     }
 
     public saveDefaults(): void {
-        const toSave = this.preferencesFactory.toPreferences(
-            this.tanksService, this.options, this.viewSwitch, this.plan);
+        const toSave = this.preferencesFactory.toPreferences();
         const serialized = JSON.stringify(toSave);
         localStorage.setItem(PreferencesService.storageKey, serialized);
     }

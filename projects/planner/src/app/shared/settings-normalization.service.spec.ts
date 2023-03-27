@@ -56,10 +56,12 @@ describe('SettingsNormalizationService', () => {
 
     describe('Imperial units', () => {
         let options: Options;
+        let sourceOptions: OptionsService;
 
         beforeEach(() => {
-            const sourceOptions = TestBed.inject(OptionsService);
+            sourceOptions = TestBed.inject(OptionsService);
             sourceOptions.altitude = 100;
+            diver.rmv = 19.837563;
             service.apply(diver, true);
             options = sourceOptions.getOptions();
         });
@@ -68,6 +70,13 @@ describe('SettingsNormalizationService', () => {
             expect(options.decoStopDistance).toBeCloseTo(3.048, 4);
             expect(options.minimumAutoStopDepth).toBeCloseTo(10.0584, 4);
             expect(options.lastStopDepth).toBeCloseTo(3.048, 4);
+        });
+
+        it('Updates diver rounded rmv', () => {
+            const units = TestBed.inject(UnitConversion);
+            units.imperialUnits = true;
+            const rmv = units.fromLiter(sourceOptions.diver.rmv);
+            expect(rmv).toBeCloseTo(0.70060, 5);
         });
 
         // TODO fix tests after options are also switched to imperial
@@ -106,10 +115,12 @@ describe('SettingsNormalizationService', () => {
 
     describe('Metric units', () => {
         let options: Options;
+        let sourceOptions: OptionsService;
 
         beforeEach(() => {
-            const sourceOptions = TestBed.inject(OptionsService);
+            sourceOptions = TestBed.inject(OptionsService);
             sourceOptions.altitude = 100;
+            diver.rmv = 19.837563;
             service.apply(diver, false);
             options = sourceOptions.getOptions();
         });
@@ -118,6 +129,10 @@ describe('SettingsNormalizationService', () => {
             expect(options.decoStopDistance).toBe(3);
             expect(options.minimumAutoStopDepth).toBe(10);
             expect(options.lastStopDepth).toBe(3);
+        });
+
+        it('Updates diver rounded rmv', () => {
+            expect(sourceOptions.diver.rmv).toBeCloseTo(19.84000, 5);
         });
 
         it('Rounds options meters', () => {

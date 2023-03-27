@@ -7,7 +7,6 @@ import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { Strategies } from '../shared/models';
 import { OptionsService } from '../shared/options.service';
-import { PlannerService } from '../shared/planner.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -46,7 +45,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        private planner: PlannerService,
         private viewSwitch: ViewSwitchService,
         private delayedCalc: DelayedScheduleService,
         private plan: Plan) {

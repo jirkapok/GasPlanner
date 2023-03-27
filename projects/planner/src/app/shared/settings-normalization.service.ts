@@ -26,7 +26,11 @@ export class SettingsNormalizationService {
 
     private applyToOptions(diver: Diver): void {
         this.options.applyDiver(diver);
-        // TODO round diver values
+        const oDiver = this.options.diver;
+        const rmvRounding = this.units.ranges.rmvRounding;
+        this.options.diver.rmv = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
+            oDiver.rmv, this.units.ranges.diverRmv, rmvRounding);
+
         this.applyOptionsCalculationValues();
         this.normalizeOptions();
     }
@@ -89,9 +93,9 @@ export class SettingsNormalizationService {
 
     /** Ranges are in UI units, we are rounding for the UI */
     private fitUnit(fromMetric: (v: number) => number, toMetric: (v: number) => number,
-        bars: number, range: [number, number]): number {
+        bars: number, range: [number, number], precision: number = 0): number {
         let newValue = fromMetric(bars);
-        newValue = Precision.round(newValue, 0);
+        newValue = Precision.round(newValue, precision);
         newValue = this.fitToRange(newValue, range[0], range[1]);
         return toMetric(newValue);
     }

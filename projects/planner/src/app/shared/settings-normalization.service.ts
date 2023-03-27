@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Diver, Precision } from 'scuba-physics';
+import { Precision } from 'scuba-physics';
 import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
@@ -17,15 +17,13 @@ export class SettingsNormalizationService {
         return this.units.ranges;
     }
 
-    public apply(diver: Diver, imperialUnits: boolean): void {
-        this.units.imperialUnits = imperialUnits;
-        this.applyToOptions(diver);
+    public apply(): void {
+        this.applyToOptions();
         this.normalizeTanks();
         this.normalizeSegments();
     }
 
-    private applyToOptions(diver: Diver): void {
-        this.options.applyDiver(diver);
+    private applyToOptions(): void {
         const oDiver = this.options.diver;
         const rmvRounding = this.units.ranges.rmvRounding;
         this.options.diver.rmv = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),

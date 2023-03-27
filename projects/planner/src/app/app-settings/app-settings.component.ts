@@ -46,7 +46,9 @@ export class AppSettingsComponent implements OnInit {
         }
 
         const imperialUnits = Boolean(this.settingsForm.controls.imperialUnits.value);
-        this.settingsNormalization.apply(this.diver, imperialUnits);
+        this.options.applyDiver(this.diver);
+        this.units.imperialUnits = imperialUnits;
+        this.settingsNormalization.apply();
         // only to recheck the form validity
         this.cd.detectChanges();
     }

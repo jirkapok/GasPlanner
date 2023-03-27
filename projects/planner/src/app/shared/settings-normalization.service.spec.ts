@@ -16,6 +16,11 @@ describe('SettingsNormalizationService', () => {
     let service: SettingsNormalizationService;
     let diver: Diver;
 
+    const applySut = (options: OptionsService) => {
+        options.applyDiver(diver);
+        service.apply();
+    };
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [],
@@ -35,21 +40,21 @@ describe('SettingsNormalizationService', () => {
         it('RMV applies to planner', inject([OptionsService],
             (options: OptionsService) => {
                 diver.rmv = 18;
-                service.apply(diver, false);
+                applySut(options);
                 expect(options.diver.rmv).toBe(18);
             }));
 
         it('ppO2 applies to planner', inject([OptionsService],
             (options: OptionsService) => {
                 diver.maxPpO2 = 1.1;
-                service.apply(diver, false);
+                applySut(options);
                 expect(options.maxPpO2).toBe(1.1);
             }));
 
         it('Deco ppO2 applies to planner', inject([OptionsService],
             (options: OptionsService) => {
                 diver.maxDecoPpO2 = 1.5;
-                service.apply(diver, false);
+                applySut(options);
                 expect(options.maxDecoPpO2).toBe(1.5);
             }));
     });
@@ -61,8 +66,10 @@ describe('SettingsNormalizationService', () => {
         beforeEach(() => {
             sourceOptions = TestBed.inject(OptionsService);
             sourceOptions.altitude = 100;
-            diver.rmv = 19.837563;
-            service.apply(diver, true);
+            sourceOptions.diver.rmv = 19.837563;
+            const units = TestBed.inject(UnitConversion);
+            units.imperialUnits = true;
+            service.apply();
             options = sourceOptions.getOptions();
         });
 
@@ -74,7 +81,6 @@ describe('SettingsNormalizationService', () => {
 
         it('Updates diver rounded rmv', () => {
             const units = TestBed.inject(UnitConversion);
-            units.imperialUnits = true;
             const rmv = units.fromLiter(sourceOptions.diver.rmv);
             expect(rmv).toBeCloseTo(0.70060, 5);
         });
@@ -120,7 +126,7 @@ describe('SettingsNormalizationService', () => {
             sourceOptions = TestBed.inject(OptionsService);
             sourceOptions.altitude = 100;
             diver.rmv = 19.837563;
-            service.apply(diver, false);
+            applySut(sourceOptions);
             options = sourceOptions.getOptions();
         });
 

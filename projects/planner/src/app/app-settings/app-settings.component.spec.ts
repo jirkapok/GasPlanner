@@ -13,21 +13,18 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { AppSettingsComponent } from './app-settings.component';
 
-export class DepthPage {
+export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
 
-    public get depthInput(): HTMLInputElement {
-        return this.fixture.debugElement.query(By.css('#depthField')).nativeElement as HTMLInputElement;
-    }
-
-    public get applyMaxDepthButton(): HTMLButtonElement {
-        return this.fixture.debugElement.query(By.css('#applyMaxDepthBtn')).nativeElement as HTMLButtonElement;
+    public get imperialRadio(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#imperialRadio')).nativeElement as HTMLInputElement;
     }
 }
 
 describe('App settings component', () => {
     let component: AppSettingsComponent;
     let fixture: ComponentFixture<AppSettingsComponent>;
+    let page: AppSettingsPage;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -47,12 +44,24 @@ describe('App settings component', () => {
         fixture = TestBed.createComponent(AppSettingsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        page = new AppSettingsPage(fixture);
     });
 
-    it('Converts bound depth to imperial', inject([OptionsService],
-        (options: OptionsService) => {
+    describe('Imperial units', () => {
+        beforeEach(() => {
             component.diver.rmv = 30;
+            page.imperialRadio.click();
             component.use();
-            expect(options.diver.rmv).toBeCloseTo(30, 1);
-        }));
+        });
+
+        it('Normalize rmv to imperial', inject([OptionsService],
+            (options: OptionsService) => {
+                expect(options.diver.rmv).toBeCloseTo(29.998867, 6);
+            }));
+
+        it('Applies units change', inject([UnitConversion],
+            (units: UnitConversion) => {
+                expect(units.imperialUnits).toBeTruthy();
+            }));
+    });
 });

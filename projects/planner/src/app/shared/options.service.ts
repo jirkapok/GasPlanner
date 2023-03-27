@@ -17,6 +17,9 @@ export class OptionsService {
     constructor() {
         this.options.salinity = Salinity.fresh;
         this.options.safetyStop = SafetyStop.auto;
+        // units rounded default values aren't provided,
+        // because there is no real use case where this service
+        // is created with imperial units by default
         this.reloaded$ = this.onReloaded.asObservable();
     }
 

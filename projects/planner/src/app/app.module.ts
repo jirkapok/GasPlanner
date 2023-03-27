@@ -64,6 +64,8 @@ import { SettingsNormalizationService } from './shared/settings-normalization.se
 import { ViewSwitchService } from './shared/viewSwitchService';
 import { OxygenDropDownComponent } from './oxygen-dropdown/oxygen-dropdown.component';
 import { Plan } from './shared/plan.service';
+import { PreferencesFactory } from './shared/preferences.factory';
+import { PlanUrlSerialization } from './shared/PlanUrlSerialization';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -130,6 +132,8 @@ const MDB_MODULES = [
         { provide: WorkersFactoryCommon, useClass: WorkersFactory },
         PlannerService,
         Plan,
+        PlanUrlSerialization,
+        PreferencesFactory,
         PreferencesService,
         UnitConversion,
         SelectedWaypoint,

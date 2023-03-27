@@ -3,7 +3,7 @@
   "version": "0.1.18",
   "license": "MIT",
   "scripts": {
-    "start": "ng build scuba-physics && ng serve",
+    "start": "ng build scuba-physics && ng serve --host 0.0.0.0",
     "start-pwa": "ng build && http-server -p 9090 -c-1 dist/planner",
     "build": "ng build --configuration production planner",
     "build-lib": "ng build scuba-physics",

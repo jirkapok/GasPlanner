@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import _ from 'lodash';
 import {
     Diver, Options, SafetyStop, Salinity, Segment
@@ -67,19 +68,17 @@ class ParseContext {
  * 2. convert to Base64
  * 3. Encode as url parameter
  **/
+@Injectable()
 export class PlanUrlSerialization {
-    private preferences: PreferencesFactory;
-
     constructor(
         private planner: PlannerService,
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
         private tanksService: TanksService,
         private plan: Plan,
-        private options: OptionsService
-    ) {
-        this.preferences = new PreferencesFactory(this.viewSwitch, this.units, this.tanksService, this.plan, this.options);
-    }
+        private options: OptionsService,
+        private preferences: PreferencesFactory
+    ) { }
 
     private static parseDto(url: string): AppPreferencesDto {
         const params = new URLSearchParams(url);

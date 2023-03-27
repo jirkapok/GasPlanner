@@ -54,8 +54,12 @@ export class SettingsNormalizationService {
     private normalizeTanks(): void {
         const tanks = this.tanksService.tanks;
         tanks.forEach(t => {
-            // cheating to skip the conversion to bars, since we already have the value in imperial units
-            t.workingPressure = this.fitUnit(v => v, v => v, t.workingPressure, this.ranges.tankPressure);
+            // otherwise loosing precision in metric, where the value is even not relevant
+            if(this.units.imperialUnits) {
+                // cheating to skip the conversion to bars, since we already have the value in imperial units
+                t.workingPressure = this.fitUnit(v => v, v => v, t.workingPressure, this.ranges.tankPressure);
+            } // TODO consider switching of working pressure to 0 im metric use case
+
             // the rest (consumed and reserve) will be calculated
             const tank = t.tank;
             tank.startPressure = this.fitPressureToRange(tank.startPressure, this.ranges.tankPressure);
@@ -86,7 +90,7 @@ export class SettingsNormalizationService {
     private fitTankSizeToRange(size: number, workingPressureBars: number, range: [number, number]): number {
         return this.fitUnit(v => this.units.fromTankLiters(v, workingPressureBars),
             v => this.units.toTankLiters(v, workingPressureBars),
-            size, range);
+            size, range, 0); // TODO fix precision to 1
     }
 
     /** Ranges are in UI units, we are rounding for the UI */

@@ -14,6 +14,7 @@ import { DelayedScheduleService } from './delayedSchedule.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
 import { TankBound } from './models';
 import { PreferencesFactory } from './preferences.factory';
+import { SettingsNormalizationService } from './settings-normalization.service';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -23,7 +24,7 @@ describe('PreferencesService', () => {
                 UnitConversion, TanksService,
                 ViewSwitchService, DepthsService,
                 OptionsService, Plan, PreferencesFactory,
-                DelayedScheduleService]
+                DelayedScheduleService, SettingsNormalizationService]
         });
 
         localStorage.clear();
@@ -100,21 +101,20 @@ describe('PreferencesService', () => {
                 tanks[1].o2 = 32;
                 tanks[1].workingPressure = 0;
                 service.loadDefaults();
-                // TODO  planner.calculate(); // because of reserve and consumed calculation
 
-                const units = new UnitConversion();
-                const expected1 = new TankBound(new Tank(15, 150, 21), units);
+                const expected1 = new Tank(15, 150, 21);
                 expected1.id = 1;
-                expected1.tank.consumed = 66;
-                expected1.tank.reserve = 45;
-                const expected2 = new TankBound(new Tank(11.1, 200, 50), units);
+                expected1.consumed = 66;
+                expected1.reserve = 45;
+                const expected2 = new Tank(11.1, 200, 50);
                 expected2.id = 2;
-                expected2.workingPressure = 206.843; // default
-                expected2.tank.consumed = 21;
-                expected2.tank.reserve = 62;
+                expected2.consumed = 21;
+                expected2.reserve = 62;
                 // JSON serialization prevents order of items in an array
-                const expected: TankBound[] = [expected1, expected2];
-                expect(tanksService.tanks).toEqual(expected);
+                const expected: Tank[] = [expected1, expected2];
+                expect(tanksService.tankData).toEqual(expected);
+                expect(tanksService.tanks[0].workingPressureBars).toBeCloseTo(237.318, 6);
+                expect(tanksService.tanks[1].workingPressureBars).toBeCloseTo(206.843, 6);
             }));
 
         it('Plan is loaded after save', inject(
@@ -159,6 +159,24 @@ describe('PreferencesService', () => {
                 expect(tanksService.tanks.length).toEqual(1);
                 expect(plan.length).toEqual(2);
                 expect(optionsResetToSimple).toHaveBeenCalledTimes(1);
+            }));
+
+        it('Applies imperial units', inject(
+            [PreferencesService, UnitConversion, OptionsService, SettingsNormalizationService],
+            (service: PreferencesService, units: UnitConversion, options: OptionsService,
+                normalizationService: SettingsNormalizationService) => {
+                units.imperialUnits = true;
+                options.diver.rmv = 29.998867;
+                normalizationService.apply();
+                service.saveDefaults();
+
+                units.imperialUnits = false;
+                options.diver.rmv = 19.6;
+                normalizationService.apply();
+                service.loadDefaults();
+
+                expect(options.diver.rmv).toBeCloseTo(29.998867, 6);
+                expect(units.imperialUnits).toBeTruthy();
             }));
     });
 });

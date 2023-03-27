@@ -10,7 +10,7 @@ export class PreferencesService {
     private static readonly disclaimerKey = 'disclaimer';
 
     constructor(
-        private planner: PlannerService, // TODO move planner out of here
+        private planner: PlannerService,
         private preferencesFactory: PreferencesFactory) {}
 
     public loadDefaults(): void {

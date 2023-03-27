@@ -5,6 +5,7 @@ import {
     AppOptionsDto,
     AppPreferences, AppPreferencesDto, AppStates, DiveDto, DtoSerialization, ITankBound
 } from './serialization.model';
+import { SettingsNormalizationService } from './settings-normalization.service';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
@@ -16,7 +17,8 @@ export class PreferencesFactory {
         private units: UnitConversion,
         private tanksService: TanksService,
         private plan: Plan,
-        private options: OptionsService
+        private options: OptionsService,
+        private normalization: SettingsNormalizationService
     ){}
 
     public toPreferences(): AppPreferences {
@@ -34,14 +36,12 @@ export class PreferencesFactory {
 
     public applyLoaded(loaded: AppPreferencesDto): void {
         this.applyDives(loaded);
-        // switch after data load fixes simple view valid data
         this.applyAppSettings(loaded);
-        // TODO consider use normalization service to fix data out of values
     }
 
     private toAppSettings(viewSwitch: ViewSwitchService): AppOptionsDto {
         return {
-            imperialUnits: false, // TODO imperial units
+            imperialUnits: this.units.imperialUnits,
             isComplex: viewSwitch.isComplex,
             language: 'en'
         };
@@ -49,7 +49,8 @@ export class PreferencesFactory {
 
     private applyAppSettings(loaded: AppPreferencesDto): void {
         this.viewSwitch.isComplex = loaded.options.isComplex;
-        // TODO imperial units
+        this.units.imperialUnits = loaded.options.imperialUnits;
+        // not using normalization to fix values here, because expecting they are valid
     }
 
     private toDives(): DiveDto[] {

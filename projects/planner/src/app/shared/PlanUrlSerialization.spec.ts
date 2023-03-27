@@ -13,6 +13,7 @@ interface TestSut {
     tanksService: TanksService;
     planner: PlannerService;
     viewSwitch: ViewSwitchService;
+    units: UnitConversion;
     urlSerialization: PlanUrlSerialization;
 }
 
@@ -36,6 +37,7 @@ describe('Url Serialization', () => {
             tanksService: tanksService,
             planner: planner,
             viewSwitch: viewSwitch,
+            units: units,
             urlSerialization: urlSerialization
         };
     };
@@ -80,6 +82,13 @@ describe('Url Serialization', () => {
     it('Generates valid url characters', () => {
         const isValid = /[-a-zA-Z0-9@:%_+.~#&//=]*/g.test(customizedUrl);
         expect(isValid).toBeTruthy();
+    });
+
+    it('Serialize application options', () => {
+        sut.viewSwitch.isComplex = true;
+        sut.units.imperialUnits = true;
+        const url = sut.urlSerialization.toUrl();
+        expect(url).toContain('ao=1,1');
     });
 
     it('Serialize and deserialize complex plan', () => {

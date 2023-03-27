@@ -288,7 +288,7 @@ export class PlanUrlSerialization {
 
     private toAppOptions(): string {
         const isComplex = ParseContext.serializeBoolean(this.viewSwitch.isComplex);
-        const imperial = ParseContext.serializeBoolean(false); // TODO units
+        const imperial = ParseContext.serializeBoolean(this.units.imperialUnits);
         return `${isComplex},${imperial}`;
     }
 }

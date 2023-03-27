@@ -4,7 +4,6 @@ import { PlannerService } from './planner.service';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
 import { PreferencesFactory } from './preferences.factory';
 import { WorkersFactoryCommon } from './serial.workers.factory';
-import { SettingsNormalizationService } from './settings-normalization.service';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
@@ -32,8 +31,7 @@ describe('Url Serialization', () => {
         const planner = new PlannerService(irrelevantFactory, tanksService, plan, options);
         plan.setSimple(30, 12, tanksService.firstTank.tank, options.getOptions());
         const viewSwitch = new ViewSwitchService(plan, options, tanksService);
-        const normalization = new SettingsNormalizationService(options, units, tanksService, plan);
-        const preferencesFactory = new PreferencesFactory(viewSwitch, units, tanksService, plan, options, normalization);
+        const preferencesFactory = new PreferencesFactory(viewSwitch, units, tanksService, plan, options);
         const urlSerialization = new PlanUrlSerialization(planner, viewSwitch,
             units, tanksService, plan, options, preferencesFactory);
 

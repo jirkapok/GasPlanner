@@ -5,7 +5,6 @@ import {
     AppOptionsDto,
     AppPreferences, AppPreferencesDto, AppStates, DiveDto, DtoSerialization, ITankBound
 } from './serialization.model';
-import { SettingsNormalizationService } from './settings-normalization.service';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
@@ -17,8 +16,7 @@ export class PreferencesFactory {
         private units: UnitConversion,
         private tanksService: TanksService,
         private plan: Plan,
-        private options: OptionsService,
-        private normalization: SettingsNormalizationService
+        private options: OptionsService
     ){}
 
     public toPreferences(): AppPreferences {

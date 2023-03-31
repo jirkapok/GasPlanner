@@ -16,8 +16,8 @@ import { OptionsService } from '../shared/options.service';
 
 interface TankForm {
     firstTankSize: FormControl<number>;
-    workPressure: FormControl<number>;
     firstTankStartPressure: FormControl<number>;
+    workPressure?: FormControl<number>;
 }
 
 @Component({
@@ -69,9 +69,14 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     public ngOnInit(): void {
         this.tanksForm = this.fb.group({
             firstTankSize: [Precision.round(this.firstTank.size, 1), this.validators.tankSize],
-            workPressure: [Precision.round(this.firstTank.workingPressure, 1), this.validators.tankPressure],
             firstTankStartPressure: [Precision.round(this.firstTank.startPressure, 1), this.validators.tankPressure]
         });
+
+        if (this.units.imperialUnits) {
+            const workPressureControl = this.fb.control(
+                Precision.round(this.firstTank.workingPressure, 1), this.validators.tankPressure);
+            this.tanksForm.addControl('workPressure', workPressureControl);
+        }
 
         this.tanksService.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());

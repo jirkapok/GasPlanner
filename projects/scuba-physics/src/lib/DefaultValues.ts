@@ -22,7 +22,7 @@ export class MetricDefaults implements DefaultValues {
     }
 
     public get primaryTankWorkPressure(): number {
-        return TankConstants.metricTankWorkPressure;
+        return 0;
     }
 
     public get stageTankSize(): number {
@@ -30,7 +30,7 @@ export class MetricDefaults implements DefaultValues {
     }
 
     public get stageTankWorkPressure(): number {
-        return TankConstants.metricStageWorkPressure;
+        return 0;
     }
 
     public get lastSpeedLevel(): number {

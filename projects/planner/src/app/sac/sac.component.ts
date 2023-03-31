@@ -14,10 +14,10 @@ import { OptionsService } from '../shared/options.service';
 interface SacForm {
     depth: FormControl<number>;
     tankSize: FormControl<number>;
-    workPressure: FormControl<number>;
     used?: FormControl<number>;
     duration?: FormControl<number>;
     rmv?: FormControl<number>;
+    workPressure?: FormControl<number>;
 }
 
 @Component({
@@ -124,9 +124,13 @@ export class SacComponent implements OnInit {
 
         this.formSac = this.formBuilder.group({
             depth: [this.calcDepth, this.validators.depth],
-            tankSize: [this.calcTankSize, this.validators.tankSize],
-            workPressure: [this.calcWorkingPressure, this.validators.tankPressure]
+            tankSize: [this.calcTankSize, this.validators.tankSize]
         });
+
+        if(this.units.imperialUnits) {
+            const workPressureControl  = this.formBuilder.control(this.calcWorkingPressure, this.validators.tankPressure);
+            this.formSac.addControl('workPressure', workPressureControl);
+        }
 
         this.toSac();
     }

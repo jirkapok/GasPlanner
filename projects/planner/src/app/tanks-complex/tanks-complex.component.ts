@@ -16,10 +16,10 @@ import { OptionsService } from '../shared/options.service';
 
 interface TankRow {
     tankSize: FormControl<number>;
-    tankWorkPressure: FormControl<number>;
     tankStartPressure: FormControl<number>;
     tankO2: FormControl<number>;
     tankHe: FormControl<number>;
+    tankWorkPressure?: FormControl<number>;
 }
 
 interface TanksForm {
@@ -192,12 +192,18 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     private createTankControl(tank: TankBound): FormGroup<TankRow> {
-        return this.fb.group({
+        const rowControls: FormGroup<TankRow> = this.fb.group({
             tankSize: [Precision.round(tank.size, 1), this.validators.tankSize],
-            tankWorkPressure: [Precision.round(tank.workingPressure, 1), this.validators.tankPressure],
             tankStartPressure: [Precision.round(tank.startPressure, 1), this.validators.tankPressure],
             tankO2: [Precision.round(tank.o2, 1), this.validators.trimixOxygen],
             tankHe: [Precision.round(tank.he, 1), this.validators.trimixHe],
         });
+
+        if (this.units.imperialUnits) {
+            const wpControl = this.fb.control(Precision.round(tank.workingPressure, 1), this.validators.tankPressure);
+            rowControls.addControl('tankWorkPressure', wpControl);
+        }
+
+        return rowControls;
     }
 }

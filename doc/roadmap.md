@@ -14,14 +14,17 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add imperial units option
   * Add working pressure to complex tanks UI
-  * AppPreferences are able to restore units as part of saved state
-  * Relax tank size precision to 1 decimal when switching units
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
+  * fix warnings calculation in corresponding units
+  * fix missing working pressure control in case we reload stored imperial settings
+  * fix recommended and recreational buttons in options to apply rounded values
+* UI: Add Dropdown for well known tank sizes (to reduce the work to sort all the fields on the page)
 * Settings
-  * UI: Add Dropdown for well known tank sizes (to reduce the work to sort all the fields on the page)
-  * Unify dive settings and default settings (app settings only units and language)
   * Apply settings after each change and distinguish from default settings
+  * Create default dive options
+    * Add button to dive options
+    * Put diver under all other options
 * Add gas depth range/properties/trimix calculator
 * Events:
   * Add time to all events warning/error messages where it makes sense

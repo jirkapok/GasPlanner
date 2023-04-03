@@ -61,7 +61,6 @@ export class SettingsNormalizationService {
                 t.workingPressure = this.units.defaults.primaryTankWorkPressure;
                 // to keep it aligned with previous value in bars
                 t.size = this.units.fromTankLiters(size, t.workingPressureBars);
-                // TODO fit to units
             } else {
                 t.workingPressureBars = 0;
             }
@@ -95,7 +94,7 @@ export class SettingsNormalizationService {
     private fitTankSizeToRange(size: number, workingPressureBars: number, range: [number, number]): number {
         return this.fitUnit(v => this.units.fromTankLiters(v, workingPressureBars),
             v => this.units.toTankLiters(v, workingPressureBars),
-            size, range, 0); // TODO fix precision to 1 also in the UI
+            size, range, 1);
             // TODO switch to imperial units in simple mode does not round 30 m to 100 ft.
     }
 

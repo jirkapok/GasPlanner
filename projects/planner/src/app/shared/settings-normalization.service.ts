@@ -74,6 +74,7 @@ export class SettingsNormalizationService {
 
     private normalizeSegments(): void {
         const segments = this.plan.segments;
+        // rounding to imperial units rounds 30 m to 98 ft.
         segments.forEach(s => {
             s.startDepth = this.fitLengthToRange(s.startDepth, this.ranges.depth);
             s.endDepth = this.fitLengthToRange(s.endDepth, this.ranges.depth);
@@ -95,13 +96,12 @@ export class SettingsNormalizationService {
         return this.fitUnit(v => this.units.fromTankLiters(v, workingPressureBars),
             v => this.units.toTankLiters(v, workingPressureBars),
             size, range, 1);
-            // TODO switch to imperial units in simple mode does not round 30 m to 100 ft.
     }
 
     /** Ranges are in UI units, we are rounding for the UI */
     private fitUnit(fromMetric: (v: number) => number, toMetric: (v: number) => number,
-        bars: number, range: [number, number], precision: number = 0): number {
-        let newValue = fromMetric(bars);
+        unitValue: number, range: [number, number], precision: number = 0): number {
+        let newValue = fromMetric(unitValue);
         newValue = Precision.round(newValue, precision);
         newValue = this.fitToRange(newValue, range[0], range[1]);
         return toMetric(newValue);

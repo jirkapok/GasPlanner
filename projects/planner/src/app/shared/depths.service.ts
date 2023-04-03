@@ -9,7 +9,7 @@ import { TanksService } from './tanks.service';
 import { Streamed } from './streamed';
 import { takeUntil } from 'rxjs';
 import { OptionsService } from './options.service';
-import { Tank, Segment, StandardGases } from 'scuba-physics';
+import { Tank, Segment, StandardGases, Precision } from 'scuba-physics';
 
 @Injectable()
 export class DepthsService extends Streamed {
@@ -100,7 +100,10 @@ export class DepthsService extends Streamed {
     }
 
     public applyMaxDepth(): void {
-        const maxDepth = this.toxicity.maxDepth(this.firstTank);
+        let maxDepth = this.toxicity.maxDepth(this.firstTank);
+        let maxUnit = this.units.fromMeters(maxDepth);
+        maxUnit = Precision.floor(maxUnit, 1);
+        maxDepth = this.units.toMeters(maxUnit);
         this.assignDepth(maxDepth);
         this.levelChanged();
     }

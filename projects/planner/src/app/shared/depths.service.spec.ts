@@ -8,7 +8,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { OptionsService } from './options.service';
 import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
-import { Diver, SafetyStop } from 'scuba-physics';
+import { SafetyStop } from 'scuba-physics';
 
 describe('Depths service', () => {
     let depthService: DepthsService;

@@ -7,8 +7,12 @@ import { SafetyStop, Salinity, Time } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
 export class PlanValidation {
-    // the internal storage is always in metric units
+    // TODO consider validate against target units
+    // values stored in metric doesn't have to fit to imperial ranges when saving imperial
+    /** the internal storage is always in metric units */
     private ranges = UnitConversion.createMetricRanges();
+    /** Only for working pressure, which needs to be compared in imperial */
+    private rangesImperial = UnitConversion.createImperial();
     private simpleDurationRange: [number, number];
     private complexDurationRange: [number, number];
 
@@ -25,18 +29,22 @@ export class PlanValidation {
             return false;
         }
 
-        // TODO validate all dives
-        const plan = appDto.dives[0];
         const isComplex = appDto.options.isComplex;
-        const maxTankId = plan.tanks.length + 1;
+        const imperialUnits = appDto.options.imperialUnits;
+        const result = appDto.dives.every(p => this.isValidPlan(p, isComplex, imperialUnits));
+        const complexValid = this.complexModeValid(appDto);
+        return result && complexValid;
+    }
+
+    private isValidPlan(plan: DiveDto, isComplex: boolean, imperialUnits: boolean): boolean {
+        const maxTankId = plan.tanks.length;
         const contentRanges = this.selectContentRanges(isComplex);
-        const tanksValid = this.allTanksValid(plan.tanks, maxTankId, contentRanges);
+        const tanksValid = this.allTanksValid(imperialUnits, plan.tanks, maxTankId, contentRanges);
         const durationRange = this.selectDurationRanges(isComplex);
         const segmentsValid = this.allSegmentsValid(plan.plan, maxTankId, durationRange, contentRanges);
         const optionsValid = this.optionsValid(plan.options);
         const diverValid = this.diverValid(plan.diver);
-        const complexValid = this.complexModeValid(appDto);
-        return tanksValid && segmentsValid && optionsValid && diverValid && complexValid;
+        return tanksValid && segmentsValid && optionsValid && diverValid;
     }
 
     private selectContentRanges(isComplex: boolean): [[number, number], [number, number]] {
@@ -55,21 +63,33 @@ export class PlanValidation {
         return this.simpleDurationRange;
     }
 
-    private allTanksValid(tanks: TankDto[], maxTankId: number, contentRanges: [[number, number], [number, number]]): boolean {
+    private allTanksValid(imperialUnits: boolean, tanks: TankDto[], maxTankId: number,
+        contentRanges: [[number, number], [number, number]]): boolean {
         const hasTanks = tanks.length > 0;
-        const allValid = _(tanks).every(t => this.isValidTank(t, maxTankId, contentRanges));
+        const allValid = _(tanks).every(t => this.isValidTank(imperialUnits, t, maxTankId, contentRanges));
         const uniqueIds = _(tanks).map(t=> t.id).uniq();
         const countValid = uniqueIds.size() === tanks.length;
         return hasTanks && allValid && countValid;
     }
 
-    private isValidTank(tank: TankDto, maxId: number, contentRanges: [[number, number], [number, number]]): boolean {
+    private isValidTank(imperialUnits: boolean, tank: TankDto, maxId: number,
+        contentRanges: [[number, number], [number, number]]): boolean {
         // the rest will be recalculated
         const idValid = this.isInRange(tank.id, [1, maxId]);
         const sizeValid = this.isInRange(tank.size, this.ranges.tankSize);
         const presureValid = this.isInRange(tank.startPressure, this.ranges.tankPressure);
+        const workPressureValid = this.workingPressureValid(imperialUnits, tank);
         const gasValid = this.isValidGas(tank.gas, contentRanges);
-        return idValid && sizeValid && presureValid && gasValid;
+        return idValid && sizeValid && presureValid && gasValid && workPressureValid;
+    }
+
+    private workingPressureValid(imperialUnits: boolean, tank: TankDto): boolean {
+        if(imperialUnits) {
+            const workingPressure = this.rangesImperial.units.fromBar(tank.workPressure);
+            return this.isInRange(workingPressure, this.rangesImperial.tankPressure);
+        }
+
+        return tank.workPressure === 0;
     }
 
     private isValidGas(gas: GasDto, contentRanges: [[number, number], [number, number]]): boolean {

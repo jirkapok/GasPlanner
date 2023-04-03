@@ -127,6 +127,11 @@ describe('SettingsNormalizationService', () => {
             sourceOptions.altitude = 100;
             diver.rmv = 19.837563;
             applySut(sourceOptions);
+            const units = TestBed.inject(UnitConversion);
+            units.imperialUnits = true;
+            applySut(sourceOptions);
+            units.imperialUnits = false;
+            applySut(sourceOptions);
             options = sourceOptions.getOptions();
         });
 
@@ -161,6 +166,14 @@ describe('SettingsNormalizationService', () => {
                 const tank = tanks.firstTank.tank;
                 expect(tank.startPressure).toBe(200);
                 expect(tank.size).toBe(15);
+            }));
+
+        it('Sets working pressure without affecting size', inject([TanksService],
+            (tanks: TanksService) => {
+                // tank was created before switch to imperial,
+                // so it still has valid working pressure even it wasn't used in metric
+                const workingPressure = tanks.firstTank.workingPressure;
+                expect(workingPressure).toBeCloseTo(0, 6);
             }));
     });
 });

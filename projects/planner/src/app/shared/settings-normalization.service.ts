@@ -54,14 +54,19 @@ export class SettingsNormalizationService {
     private normalizeTanks(): void {
         const tanks = this.tanksService.tanks;
         tanks.forEach(t => {
+            const tank = t.tank;
             // otherwise loosing precision in metric, where the value is even not relevant
             if(this.units.imperialUnits) {
-                // cheating to skip the conversion to bars, since we already have the value in imperial units
-                t.workingPressure = this.fitUnit(v => v, v => v, t.workingPressure, this.ranges.tankPressure);
-            } // TODO consider switching of working pressure to 0 im metric use case
+                const size = tank.size;
+                t.workingPressure = this.units.defaults.primaryTankWorkPressure;
+                // to keep it aligned with previous value in bars
+                t.size = this.units.fromTankLiters(size, t.workingPressureBars);
+                // TODO fit to units
+            } else {
+                t.workingPressureBars = 0;
+            }
 
             // the rest (consumed and reserve) will be calculated
-            const tank = t.tank;
             tank.startPressure = this.fitPressureToRange(tank.startPressure, this.ranges.tankPressure);
             const workingPressureBars = this.units.toBar(t.workingPressure);
             tank.size = this.fitTankSizeToRange(tank.size, workingPressureBars, this.ranges.tankSize);
@@ -90,7 +95,8 @@ export class SettingsNormalizationService {
     private fitTankSizeToRange(size: number, workingPressureBars: number, range: [number, number]): number {
         return this.fitUnit(v => this.units.fromTankLiters(v, workingPressureBars),
             v => this.units.toTankLiters(v, workingPressureBars),
-            size, range, 0); // TODO fix precision to 1
+            size, range, 0); // TODO fix precision to 1 also in the UI
+            // TODO switch to imperial units in simple mode does not round 30 m to 100 ft.
     }
 
     /** Ranges are in UI units, we are rounding for the UI */

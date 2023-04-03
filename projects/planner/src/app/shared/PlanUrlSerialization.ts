@@ -99,6 +99,8 @@ export class PlanUrlSerialization {
             }]
         };
 
+        // for imperial units the string is long because of precise values,
+        // consider rounding to 6 decimal places
         return parsed;
     }
 
@@ -193,9 +195,10 @@ export class PlanUrlSerialization {
 
         // consumption and reserve are calculated values, we don't need to serialize them here
         tanks.forEach((t) => {
-            const gas = t.tank.gas;
+            const tank = t.tank;
+            const gas = tank.gas;
             const workPressure = t.workingPressureBars;
-            const tParam = `${t.id}-${t.tank.size}-${workPressure}-${t.startPressure}-${gas.fO2}-${gas.fHe}`;
+            const tParam = `${tank.id}-${tank.size}-${workPressure}-${tank.startPressure}-${gas.fO2}-${gas.fHe}`;
             result.push(tParam);
         });
         return result.join(',');

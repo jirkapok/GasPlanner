@@ -33,8 +33,12 @@ export class PreferencesFactory {
     }
 
     public applyLoaded(loaded: AppPreferencesDto): void {
+        // first apply units to prevent loading of invalid values
+        this.units.imperialUnits = loaded.options.imperialUnits;
         this.applyDives(loaded);
-        this.applyAppSettings(loaded);
+        // now we are able to switch the view
+        this.viewSwitch.isComplex = loaded.options.isComplex;
+        // not using normalization to fix values here, because expecting they are valid
     }
 
     private toAppSettings(viewSwitch: ViewSwitchService): AppOptionsDto {
@@ -43,12 +47,6 @@ export class PreferencesFactory {
             isComplex: viewSwitch.isComplex,
             language: 'en'
         };
-    }
-
-    private applyAppSettings(loaded: AppPreferencesDto): void {
-        this.viewSwitch.isComplex = loaded.options.isComplex;
-        this.units.imperialUnits = loaded.options.imperialUnits;
-        // not using normalization to fix values here, because expecting they are valid
     }
 
     private toDives(): DiveDto[] {

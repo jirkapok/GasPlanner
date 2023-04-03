@@ -12,7 +12,6 @@ import { Plan } from './plan.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
-import { TankBound } from './models';
 import { PreferencesFactory } from './preferences.factory';
 import { SettingsNormalizationService } from './settings-normalization.service';
 
@@ -113,8 +112,8 @@ describe('PreferencesService', () => {
                 // JSON serialization prevents order of items in an array
                 const expected: Tank[] = [expected1, expected2];
                 expect(tanksService.tankData).toEqual(expected);
-                expect(tanksService.tanks[0].workingPressureBars).toBeCloseTo(237.318, 6);
-                expect(tanksService.tanks[1].workingPressureBars).toBeCloseTo(206.843, 6);
+                expect(tanksService.tanks[0].workingPressureBars).toBeCloseTo(0, 6);
+                expect(tanksService.tanks[1].workingPressureBars).toBeCloseTo(0, 6);
             }));
 
         it('Plan is loaded after save', inject(
@@ -162,9 +161,9 @@ describe('PreferencesService', () => {
             }));
 
         it('Applies imperial units', inject(
-            [PreferencesService, UnitConversion, OptionsService, SettingsNormalizationService],
+            [PreferencesService, UnitConversion, OptionsService, SettingsNormalizationService, TanksService],
             (service: PreferencesService, units: UnitConversion, options: OptionsService,
-                normalizationService: SettingsNormalizationService) => {
+                normalizationService: SettingsNormalizationService, tanksService: TanksService) => {
                 units.imperialUnits = true;
                 options.diver.rmv = 29.998867;
                 normalizationService.apply();
@@ -176,6 +175,7 @@ describe('PreferencesService', () => {
                 service.loadDefaults();
 
                 expect(options.diver.rmv).toBeCloseTo(29.998867, 6);
+                expect(tanksService.tanks[0].workingPressureBars).toBeCloseTo(237.317546, 6);
                 expect(units.imperialUnits).toBeTruthy();
             }));
     });

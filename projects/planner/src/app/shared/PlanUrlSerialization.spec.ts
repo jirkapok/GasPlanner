@@ -158,7 +158,7 @@ describe('Url Serialization', () => {
             expect(firstTank.size).toBeCloseTo(240, 3);
         });
 
-        xit('Switching units corrects out of range values', () => {
+        it('Switching units corrects out of metric range values', () => {
             const current = createSut(true);
             // still valid value in imperial, but not in metric
             current.tanksService.firstTank.size = 1;

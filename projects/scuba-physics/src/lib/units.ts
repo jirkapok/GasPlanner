@@ -93,6 +93,8 @@ export class MetricUnits implements Units {
 export class ImperialUnits implements Units {
     private static readonly psiRate = 14.503773773022;
     private static readonly cftRate = 28.316846592;
+    // TODO consider distinguish m and ft from msw and fsw https://en.wikipedia.org/wiki/Metre_sea_water
+    // 1 fsw equals 0.30643 msw
     private static readonly footRate = 0.3048;
 
     public get name(): string{

@@ -17,7 +17,6 @@ Following list of features and improvements ordered by priority is under develop
   * Add test, that with imperial units gas switches will be for oxygen at 10 and Ean50 at 70 feet
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
   * fix warnings calculation in corresponding units
-  * fix recommended and recreational buttons in options to apply rounded values
 * UI: Add Dropdown for well known tank sizes (to reduce the work to sort all the fields on the page)
 * Settings
   * Apply settings after each change and distinguish from default settings

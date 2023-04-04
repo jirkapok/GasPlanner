@@ -43,29 +43,12 @@ export class OptionDefaults {
         options.gfHigh = OptionDefaults.gfHigh;
     }
 
-    public static useRecreational(options: Options): void {
-        OptionDefaults.useGeneralRecommended(options);
-        options.ascentSpeed50perc = OptionDefaults.ascentSpeed50perc;
-        options.ascentSpeed50percTo6m = OptionDefaults.ascentSpeed50perc;
-        options.ascentSpeed6m = OptionDefaults.ascentSpeed50perc;
-        options.lastStopDepth = OptionDefaults.lastStopDepthRecre;
-    }
-
-    public static useRecommended(options: Options): void {
-        OptionDefaults.useGeneralRecommended(options);
-        options.ascentSpeed50perc = OptionDefaults.ascentSpeed50perc;
-        options.ascentSpeed50percTo6m = OptionDefaults.ascentSpeed50percTo6m;
-        options.ascentSpeed6m = OptionDefaults.ascentSpeed6m;
-        options.lastStopDepth = OptionDefaults.lastStopDepth;
-    }
-
-    private static useGeneralRecommended(options: Options): void {
+    /** Without speeds, last stop depth, narcotic depth and gradients */
+    public static useGeneralRecommended(options: Options): void {
         options.safetyStop = OptionDefaults.safetyStopRecre;
         options.roundStopsToMinutes = OptionDefaults.roundStopsToMinutes;
         options.gasSwitchDuration = OptionDefaults.gasSwitchDuration;
-        options.descentSpeed = OptionDefaults.descentSpeed;
         options.oxygenNarcotic = OptionDefaults.oxygenNarcotic;
-        options.maxEND = OptionDefaults.maxEND;
     }
 }
 

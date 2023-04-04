@@ -1,3 +1,4 @@
+import { UnitConversion } from './UnitConversion';
 import { NitroxCalculatorService } from './nitrox-calculator.service';
 import { OptionsService } from './options.service';
 
@@ -5,7 +6,8 @@ describe('NitroxCalculatorService', () => {
     let service: NitroxCalculatorService;
 
     beforeEach(() => {
-        service = new NitroxCalculatorService(new OptionsService());
+        const options = new OptionsService(new UnitConversion());
+        service = new NitroxCalculatorService(options);
     });
 
     describe('Maximum operational depth (MOD)', () => {

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { Diver, OptionDefaults, Options, SafetyStop, Salinity } from 'scuba-physics';
+import { DefaultOptions, Diver, OptionDefaults, Options, SafetyStop, Salinity } from 'scuba-physics';
 import { GasToxicity } from './gasToxicity.service';
 import { StandardGradientsService } from './standard-gradients.service';
+import { UnitConversion } from './UnitConversion';
 
 /** All options stored in metric units */
 @Injectable()
@@ -14,7 +15,7 @@ export class OptionsService {
     private _diver: Diver = new Diver();
     private _toxicity = new GasToxicity(this.options);
 
-    constructor() {
+    constructor(private units: UnitConversion) {
         this.options.salinity = Salinity.fresh;
         this.options.safetyStop = SafetyStop.auto;
         // units rounded default values aren't provided,
@@ -202,11 +203,14 @@ export class OptionsService {
     }
 
     public useRecreational(): void {
-        OptionDefaults.useRecreational(this.options);
+        const newValues = this.units.defaults.recreationalOptions;
+        this.applyValues(newValues);
     }
 
     public useRecommended(): void {
-        OptionDefaults.useRecommended(this.options);
+        // TODO fix usage of ascent speeds - last ascent speed isn`t used
+        const newValues = this.units.defaults.recommendedOptions;
+        this.applyValues(newValues);
     }
 
     public useSafetyOff(): void {
@@ -244,5 +248,15 @@ export class OptionsService {
     // can be considered later
     public getOptions(): Options {
         return this.options;
+    }
+
+    private applyValues(newValues: DefaultOptions): void {
+        this.options.ascentSpeed50perc = this.units.toMeters(newValues.ascentSpeed50perc);
+        this.options.ascentSpeed50percTo6m = this.units.toMeters(newValues.ascentSpeed50percTo6m);
+        this.options.ascentSpeed6m = this.units.toMeters(newValues.ascentSpeed6m);
+        this.options.descentSpeed = this.units.toMeters(newValues.descentSpeed);
+        this.options.lastStopDepth = this.units.toMeters(newValues.lastStopDepth);
+        this.options.maxEND =this.units.toMeters( newValues.maxEND);
+        OptionDefaults.useGeneralRecommended(this.options);
     }
 }

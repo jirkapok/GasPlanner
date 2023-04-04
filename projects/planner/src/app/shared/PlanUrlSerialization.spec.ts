@@ -23,9 +23,9 @@ describe('Url Serialization', () => {
 
     // because we need custom instances to compare
     const createSut = (imperial = false): TestSut => {
-        const options = new OptionsService();
-        const plan = new Plan();
         const units = new UnitConversion();
+        const options = new OptionsService(units);
+        const plan = new Plan();
         units.imperialUnits = imperial;
         const tanksService = new TanksService(units);
         const planner = new PlannerService(irrelevantFactory, tanksService, plan, options);

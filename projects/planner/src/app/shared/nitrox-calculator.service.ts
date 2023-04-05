@@ -12,7 +12,7 @@ export class NitroxCalculatorService {
 
     constructor(options: OptionsService) {
         const depthConverter = DepthConverter.simple();
-        const depthLevels = new DepthLevels(depthConverter, options);
+        const depthLevels = new DepthLevels(depthConverter, options.getOptions());
         this.nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);
         this.calculate = this.calculateCurrentMod;
     }

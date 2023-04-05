@@ -63,5 +63,10 @@ describe('App settings component', () => {
             (units: UnitConversion) => {
                 expect(units.imperialUnits).toBeTruthy();
             }));
+
+        it('Applies recreational options', inject([OptionsService],
+            (options: OptionsService) => {
+                expect(options.maxEND).toBeCloseTo(100, 4);
+            }));
     });
 });

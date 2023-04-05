@@ -36,19 +36,17 @@ export class SettingsNormalizationService {
     private applyOptionsCalculationValues(): void {
         const defaults = this.units.defaults;
         // options need to be in metrics only
-        this.options.decoStopDistance = this.units.toMeters(defaults.stopsDistance);
+        const targetOptions = this.options.getOptions();
+        targetOptions.decoStopDistance = this.units.toMeters(defaults.stopsDistance);
+        targetOptions.minimumAutoStopDepth = this.units.toMeters(defaults.autoStopLevel);
         // unable to fit the stop, the lowest value is always the minimum distance
-        this.options.lastStopDepth = this.units.toMeters(defaults.stopsDistance);
-        this.options.minimumAutoStopDepth = this.units.toMeters(defaults.autoStopLevel);
+        targetOptions.lastStopDepth = this.units.toMeters(defaults.stopsDistance);
     }
 
     private normalizeOptions(): void {
-        this.options.maxEND = this.fitLengthToRange(this.options.maxEND, this.ranges.narcoticDepth);
-        this.options.altitude = this.fitLengthToRange(this.options.altitude, this.ranges.altitude);
-        this.options.ascentSpeed50perc = this.fitLengthToRange(this.options.ascentSpeed50perc, this.ranges.speed);
-        this.options.ascentSpeed50percTo6m = this.fitLengthToRange(this.options.ascentSpeed50percTo6m, this.ranges.speed);
-        this.options.ascentSpeed6m = this.fitLengthToRange(this.options.ascentSpeed6m, this.ranges.speed);
-        this.options.descentSpeed = this.fitLengthToRange(this.options.descentSpeed, this.ranges.speed);
+        const altitudeRange = this.ranges.altitude;
+        this.options.altitude = this.fitUnit(u => u, v => v, this.options.altitude, altitudeRange);
+        this.options.useRecreational(); // to round usage of options to nice values
     }
 
     private normalizeTanks(): void {

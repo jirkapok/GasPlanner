@@ -12,6 +12,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveOptionsComponent } from './diveoptions.component';
+import { Options } from 'scuba-physics';
 
 describe('DepthComponent', () => {
     let component: DiveOptionsComponent;
@@ -37,39 +38,42 @@ describe('DepthComponent', () => {
     });
 
     describe('Imperial units', () => {
+        let options: Options;
+
         beforeEach(() => {
             component.units.imperialUnits = true;
             fixture.detectChanges();
+            options = component.options.getOptions();
         });
 
         it('Altitude bound to imperial', () => {
-            component.options.maxEND = 30;
+            options.maxEND = 30;
             expect(component.maxEND).toBeCloseTo(98.425197, 6);
         });
 
         it('Last stop depth bound to imperial', () => {
             component.lastStopDepth = 10;
-            expect(component.options.lastStopDepth).toBeCloseTo(3.048, 6);
+            expect(options.lastStopDepth).toBeCloseTo(3.048, 6);
         });
 
         it('Descent speed bound to imperial', () => {
             component.descentSpeed = 10;
-            expect(component.options.descentSpeed).toBeCloseTo(3.048, 6);
+            expect(options.descentSpeed).toBeCloseTo(3.048, 6);
         });
 
         it('Ascent speed to 50% bound to imperial', () => {
             component.ascentSpeed50perc = 10;
-            expect(component.options.ascentSpeed50perc).toBeCloseTo(3.048, 6);
+            expect(options.ascentSpeed50perc).toBeCloseTo(3.048, 6);
         });
 
         it('Ascent speed 50% to 6 m bound to imperial', () => {
             component.ascentSpeed50percTo6m = 10;
-            expect(component.options.ascentSpeed50percTo6m).toBeCloseTo(3.048, 6);
+            expect(options.ascentSpeed50percTo6m).toBeCloseTo(3.048, 6);
         });
 
         it('Ascent speed from 6 m bound to imperial', () => {
             component.ascentSpeed6m = 10;
-            expect(component.options.ascentSpeed6m).toBeCloseTo(3.048, 6);
+            expect(options.ascentSpeed6m).toBeCloseTo(3.048, 6);
         });
     });
 

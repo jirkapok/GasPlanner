@@ -32,28 +32,39 @@ export class OptionsService {
         return this._diver;
     }
 
-    public get altitude(): number {
-        return this.options.altitude;
+    public get maxEND(): number {
+        const source = this.options.maxEND;
+        return this.units.fromMeters(source);
     }
 
-    public get ascentSpeed50perc(): number {
-        return this.options.ascentSpeed50perc;
-    }
-
-    public get ascentSpeed50percTo6m(): number {
-        return this.options.ascentSpeed50percTo6m;
-    }
-
-    public get ascentSpeed6m(): number {
-        return this.options.ascentSpeed6m;
-    }
-
-    public get decoStopDistance(): number {
-        return this.options.decoStopDistance;
+    public get lastStopDepth(): number {
+        const source = this.options.lastStopDepth;
+        return this.units.fromMeters(source);
     }
 
     public get descentSpeed(): number {
-        return this.options.descentSpeed;
+        const source = this.options.descentSpeed;
+        return this.units.fromMeters(source);
+    }
+
+    public get ascentSpeed6m(): number {
+        const source = this.options.ascentSpeed6m;
+        return this.units.fromMeters(source);
+    }
+
+    public get ascentSpeed50percTo6m(): number {
+        const source = this.options.ascentSpeed50percTo6m;
+        return this.units.fromMeters(source);
+    }
+
+    public get ascentSpeed50perc(): number {
+        const source = this.options.ascentSpeed50perc;
+        return this.units.fromMeters(source);
+    }
+
+    public get altitude(): number {
+        const source = this.options.altitude;
+        return this.units.fromMeters(source);
     }
 
     public get gasSwitchDuration(): number {
@@ -68,24 +79,12 @@ export class OptionsService {
         return this.options.gfHigh;
     }
 
-    public get lastStopDepth(): number {
-        return this.options.lastStopDepth;
-    }
-
     public get maxDecoPpO2(): number {
         return this.options.maxDecoPpO2;
     }
 
-    public get maxEND(): number {
-        return this.options.maxEND;
-    }
-
     public get maxPpO2(): number {
         return this.options.maxPpO2;
-    }
-
-    public get minimumAutoStopDepth(): number {
-        return this.options.minimumAutoStopDepth;
     }
 
     public get oxygenNarcotic(): boolean {
@@ -108,46 +107,57 @@ export class OptionsService {
         return this.options.salinity;
     }
 
-    public set altitude(newValue: number) {
-        this.options.altitude = newValue;
+    public set maxEND(newValue: number) {
+        this.options.maxEND = this.units.toMeters(newValue);
     }
 
-    public set ascentSpeed50perc(newValue: number) {
-        // somehow noticed frozen UI in case copy/paste 0 into the asc/desc fields
-        // not need to be converted by units since for our use case need at least some finite value
-        if (newValue < 1) {
+    public set lastStopDepth(newValue: number) {
+        this.options.lastStopDepth = this.units.toMeters(newValue);
+    }
+
+    // TODO check 1 ft setter and limits in the UI
+    // TODO allow in the UI to set lower speed as 0.1 m/min. for last 6 m on hard deco
+    public set descentSpeed(newValue: number) {
+        const converted = this.units.toMeters(newValue);
+        if (converted < 1) {
             return;
         }
 
-        this.options.ascentSpeed50perc = newValue;
-    }
-
-    public set ascentSpeed50percTo6m(newValue: number) {
-        if (newValue < 1) {
-            return;
-        }
-
-        this.options.ascentSpeed50percTo6m = newValue;
+        this.options.descentSpeed = converted;
     }
 
     public set ascentSpeed6m(newValue: number) {
-        if (newValue < 1) {
+        const converted = this.units.toMeters(newValue);
+        if (converted < 1) {
             return;
         }
 
-        this.options.ascentSpeed6m = newValue;
+        this.options.ascentSpeed6m = converted;
     }
 
-    public set decoStopDistance(newValue: number) {
-        this.options.decoStopDistance = newValue;
-    }
-
-    public set descentSpeed(newValue: number) {
-        if (newValue < 1) {
+    public set ascentSpeed50percTo6m(newValue: number) {
+        const converted = this.units.toMeters(newValue);
+        if (converted < 1) {
             return;
         }
 
-        this.options.descentSpeed = newValue;
+        this.options.ascentSpeed50percTo6m = converted;
+    }
+
+    public set ascentSpeed50perc(newValue: number) {
+        const converted = this.units.toMeters(newValue);
+
+        // somehow noticed frozen UI in case copy/paste 0 into the asc/desc fields
+        // not need to be converted by units since for our use case need at least some finite value
+        if (converted < 1) {
+            return;
+        }
+
+        this.options.ascentSpeed50perc = converted;
+    }
+
+    public set altitude(newValue: number) {
+        this.options.altitude = this.units.toMeters(newValue);
     }
 
     public set gasSwitchDuration(newValue: number) {
@@ -162,24 +172,12 @@ export class OptionsService {
         this.options.gfHigh = newValue;
     }
 
-    public set lastStopDepth(newValue: number) {
-        this.options.lastStopDepth = newValue;
-    }
-
     public set maxDecoPpO2(newValue: number) {
         this.options.maxDecoPpO2 = newValue;
     }
 
-    public set maxEND(newValue: number) {
-        this.options.maxEND = newValue;
-    }
-
     public set maxPpO2(newValue: number) {
         this.options.maxPpO2 = newValue;
-    }
-
-    public set minimumAutoStopDepth(newValue: number) {
-        this.options.minimumAutoStopDepth = newValue;
     }
 
     public set oxygenNarcotic(newValue: boolean) {
@@ -208,7 +206,7 @@ export class OptionsService {
     }
 
     public useRecommended(): void {
-        // TODO fix usage of ascent speeds - last ascent speed isn`t used
+        // TODO fix usage of ascent speeds - last ascent speed isn`t used in imperial as seen in chart
         const newValues = this.units.defaults.recommendedOptions;
         this.applyValues(newValues);
     }
@@ -256,7 +254,7 @@ export class OptionsService {
         this.options.ascentSpeed6m = this.units.toMeters(newValues.ascentSpeed6m);
         this.options.descentSpeed = this.units.toMeters(newValues.descentSpeed);
         this.options.lastStopDepth = this.units.toMeters(newValues.lastStopDepth);
-        this.options.maxEND =this.units.toMeters( newValues.maxEND);
+        this.options.maxEND =this.units.toMeters(newValues.maxEND);
         OptionDefaults.useGeneralRecommended(this.options);
     }
 }

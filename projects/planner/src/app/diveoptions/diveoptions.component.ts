@@ -59,22 +59,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         return this.units.ranges;
     }
 
-    public get safetyAutoName(): string {
-        const level = this.units.defaults.autoStopLevel;
-        return `Auto (> ${level} ${this.units.length})`;
-    }
-
-    public get safetyStopOption(): string {
-        switch (this.options.safetyStop) {
-            case SafetyStop.never:
-                return this.safetyOffName;
-            case SafetyStop.always:
-                return this.safetyOnName;
-            default:
-                return this.safetyAutoName;
-        }
-    }
-
     public get narcoticDepthInvalid(): boolean {
         const narcoticDepth = this.optionsForm.controls.maxEND;
         return this.inputs.controlInValid(narcoticDepth);
@@ -115,59 +99,75 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         return this.inputs.controlInValid(ascentSpeed50perc);
     }
 
+    // TODO consider move to options service
+    public get safetyAutoName(): string {
+        const level = this.units.defaults.autoStopLevel;
+        return `Auto (> ${level} ${this.units.length})`;
+    }
+
+    public get safetyStopOption(): string {
+        switch (this.options.safetyStop) {
+            case SafetyStop.never:
+                return this.safetyOffName;
+            case SafetyStop.always:
+                return this.safetyOnName;
+            default:
+                return this.safetyAutoName;
+        }
+    }
+
     public get maxEND(): number {
-        const source = this.options.maxEND;
-        return this.units.fromMeters(source);
+        return this.options.maxEND;
     }
 
     public get lastStopDepth(): number {
-        const source = this.options.lastStopDepth;
-        return this.units.fromMeters(source);
+        return this.options.lastStopDepth;
     }
 
     public get descentSpeed(): number {
-        const source = this.options.descentSpeed;
-        return this.units.fromMeters(source);
+        return this.options.descentSpeed;
     }
 
     public get ascentSpeed6m(): number {
-        const source = this.options.ascentSpeed6m;
-        return this.units.fromMeters(source);
+        return this.options.ascentSpeed6m;
     }
 
     public get ascentSpeed50percTo6m(): number {
-        const source = this.options.ascentSpeed50percTo6m;
-        return this.units.fromMeters(source);
+        return this.options.ascentSpeed50percTo6m;
     }
 
     public get ascentSpeed50perc(): number {
-        const source = this.options.ascentSpeed50perc;
-        return this.units.fromMeters(source);
+        return this.options.ascentSpeed50perc;
     }
 
     public set maxEND(newValue: number) {
-        this.options.maxEND = this.units.toMeters(newValue);
+        this.options.maxEND = newValue;
     }
 
     public set lastStopDepth(newValue: number) {
-        this.options.lastStopDepth = this.units.toMeters(newValue);
+        this.options.lastStopDepth = newValue;
     }
 
     public set descentSpeed(newValue: number) {
-        this.options.descentSpeed = this.units.toMeters(newValue);
+        this.options.descentSpeed = newValue;
     }
 
     public set ascentSpeed6m(newValue: number) {
-        this.options.ascentSpeed6m = this.units.toMeters(newValue);
+        this.options.ascentSpeed6m = newValue;
     }
 
     public set ascentSpeed50percTo6m(newValue: number) {
-        this.options.ascentSpeed50percTo6m = this.units.toMeters(newValue);
+        this.options.ascentSpeed50percTo6m = newValue;
     }
 
     public set ascentSpeed50perc(newValue: number) {
-        this.options.ascentSpeed50perc = this.units.toMeters(newValue);
+        this.options.ascentSpeed50perc = newValue;
     }
+
+
+
+
+
 
     public set isComplex(newValue: boolean) {
         if (!newValue) {

@@ -62,7 +62,7 @@ describe('Options Service', () => {
             });
 
             it('Applies recre imperial values', () => {
-                expect(service.ascentSpeed6m).toBeCloseTo(9.144, 3);
+                expect(service.ascentSpeed6m).toBeCloseTo(30, 3);
             });
 
             it('Applies common recre imperial values', () => {
@@ -76,7 +76,7 @@ describe('Options Service', () => {
             });
 
             it('Applies recommended imperial values', () => {
-                expect(service.ascentSpeed6m).toBeCloseTo(3.048, 3);
+                expect(service.ascentSpeed6m).toBeCloseTo(10, 3);
             });
 
             it('Applies common recommended imperial values', () => {

@@ -8,6 +8,8 @@ import { UnitConversion } from './UnitConversion';
 /** All options stored in metric units */
 @Injectable()
 export class OptionsService {
+    public readonly safetyOffName = 'Never';
+    public readonly safetyOnName = 'Always';
     public reloaded$: Observable<unknown>;
     private standardGradients = new StandardGradientsService();
     private options = new Options();
@@ -105,6 +107,22 @@ export class OptionsService {
 
     public get salinity(): Salinity {
         return this.options.salinity;
+    }
+
+    public get safetyAutoName(): string {
+        const level = this.units.defaults.autoStopLevel;
+        return `Auto (> ${level} ${this.units.length})`;
+    }
+
+    public get safetyStopOption(): string {
+        switch (this.options.safetyStop) {
+            case SafetyStop.never:
+                return this.safetyOffName;
+            case SafetyStop.always:
+                return this.safetyOnName;
+            default:
+                return this.safetyAutoName;
+        }
     }
 
     public set maxEND(newValue: number) {

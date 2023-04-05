@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
-import { SafetyStop, Salinity, Precision } from 'scuba-physics';
+import { Salinity, Precision } from 'scuba-physics';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { Strategies } from '../shared/models';
@@ -25,8 +25,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     public readonly allUsableName = 'All usable';
     public readonly halfUsableName = 'Half usable';
     public readonly thirdUsableName = 'Thirds usable';
-    public readonly safetyOffName = 'Never';
-    public readonly safetyOnName = 'Always';
     public strategy = this.allUsableName;
     public icon = faCog;
     public optionsForm!: FormGroup<{
@@ -99,76 +97,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         return this.inputs.controlInValid(ascentSpeed50perc);
     }
 
-    // TODO consider move to options service
-    public get safetyAutoName(): string {
-        const level = this.units.defaults.autoStopLevel;
-        return `Auto (> ${level} ${this.units.length})`;
-    }
-
-    public get safetyStopOption(): string {
-        switch (this.options.safetyStop) {
-            case SafetyStop.never:
-                return this.safetyOffName;
-            case SafetyStop.always:
-                return this.safetyOnName;
-            default:
-                return this.safetyAutoName;
-        }
-    }
-
-    public get maxEND(): number {
-        return this.options.maxEND;
-    }
-
-    public get lastStopDepth(): number {
-        return this.options.lastStopDepth;
-    }
-
-    public get descentSpeed(): number {
-        return this.options.descentSpeed;
-    }
-
-    public get ascentSpeed6m(): number {
-        return this.options.ascentSpeed6m;
-    }
-
-    public get ascentSpeed50percTo6m(): number {
-        return this.options.ascentSpeed50percTo6m;
-    }
-
-    public get ascentSpeed50perc(): number {
-        return this.options.ascentSpeed50perc;
-    }
-
-    public set maxEND(newValue: number) {
-        this.options.maxEND = newValue;
-    }
-
-    public set lastStopDepth(newValue: number) {
-        this.options.lastStopDepth = newValue;
-    }
-
-    public set descentSpeed(newValue: number) {
-        this.options.descentSpeed = newValue;
-    }
-
-    public set ascentSpeed6m(newValue: number) {
-        this.options.ascentSpeed6m = newValue;
-    }
-
-    public set ascentSpeed50percTo6m(newValue: number) {
-        this.options.ascentSpeed50percTo6m = newValue;
-    }
-
-    public set ascentSpeed50perc(newValue: number) {
-        this.options.ascentSpeed50perc = newValue;
-    }
-
-
-
-
-
-
     public set isComplex(newValue: boolean) {
         if (!newValue) {
             this.setAllUsable();
@@ -182,14 +110,14 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     public ngOnInit(): void {
         this.optionsForm = this.fb.group({
-            maxEND: [Precision.round(this.maxEND, 1), this.validators.maxEnd],
+            maxEND: [Precision.round(this.options.maxEND, 1), this.validators.maxEnd],
             problem: [Precision.round(this.options.problemSolvingDuration, 1), this.validators.problemSolvingDuration],
             gasSwitch: [Precision.round(this.options.gasSwitchDuration, 1), this.validators.gasSwitchDuration],
-            lastStopDepth: [Precision.round(this.lastStopDepth, 1), this.validators.lastStopDepth],
-            descentSpeed: [Precision.round(this.descentSpeed, 1), this.validators.speed],
-            ascentSpeed6m: [Precision.round(this.ascentSpeed6m, 1), this.validators.speed],
-            ascentSpeed50percTo6m: [Precision.round(this.ascentSpeed50percTo6m, 1), this.validators.speed],
-            ascentSpeed50perc: [Precision.round(this.ascentSpeed50perc, 1), this.validators.speed],
+            lastStopDepth: [Precision.round(this.options.lastStopDepth, 1), this.validators.lastStopDepth],
+            descentSpeed: [Precision.round(this.options.descentSpeed, 1), this.validators.speed],
+            ascentSpeed6m: [Precision.round(this.options.ascentSpeed6m, 1), this.validators.speed],
+            ascentSpeed50percTo6m: [Precision.round(this.options.ascentSpeed50percTo6m, 1), this.validators.speed],
+            ascentSpeed50perc: [Precision.round(this.options.ascentSpeed50perc, 1), this.validators.speed],
         });
 
         this.options.reloaded$.pipe(takeUntil(this.unsubscribe$))
@@ -294,14 +222,14 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         }
 
         const values = this.optionsForm.value;
-        this.maxEND = Number(values.maxEND);
+        this.options.maxEND = Number(values.maxEND);
         this.options.problemSolvingDuration = Number(values.problem);
         this.options.gasSwitchDuration = Number(values.gasSwitch);
-        this.lastStopDepth = Number(values.lastStopDepth);
-        this.descentSpeed = Number(values.descentSpeed);
-        this.ascentSpeed6m = Number(values.ascentSpeed6m);
-        this.ascentSpeed50percTo6m = Number(values.ascentSpeed50percTo6m);
-        this.ascentSpeed50perc = Number(values.ascentSpeed50perc);
+        this.options.lastStopDepth = Number(values.lastStopDepth);
+        this.options.descentSpeed = Number(values.descentSpeed);
+        this.options.ascentSpeed6m = Number(values.ascentSpeed6m);
+        this.options.ascentSpeed50percTo6m = Number(values.ascentSpeed50percTo6m);
+        this.options.ascentSpeed50perc = Number(values.ascentSpeed50perc);
 
         this.fireCalculation();
     }
@@ -312,14 +240,14 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     private reloadForm(): void {
         this.optionsForm.patchValue({
-            maxEND: Precision.round(this.maxEND, 1),
+            maxEND: Precision.round(this.options.maxEND, 1),
             problem: Precision.round(this.options.problemSolvingDuration, 1),
             gasSwitch: Precision.round(this.options.gasSwitchDuration, 1),
-            lastStopDepth: Precision.round(this.lastStopDepth, 1),
-            descentSpeed: Precision.round(this.descentSpeed, 1),
-            ascentSpeed6m: Precision.round(this.ascentSpeed6m, 1),
-            ascentSpeed50percTo6m: Precision.round(this.ascentSpeed50percTo6m, 1),
-            ascentSpeed50perc: Precision.round(this.ascentSpeed50perc, 1),
+            lastStopDepth: Precision.round(this.options.lastStopDepth, 1),
+            descentSpeed: Precision.round(this.options.descentSpeed, 1),
+            ascentSpeed6m: Precision.round(this.options.ascentSpeed6m, 1),
+            ascentSpeed50percTo6m: Precision.round(this.options.ascentSpeed50percTo6m, 1),
+            ascentSpeed50perc: Precision.round(this.options.ascentSpeed50perc, 1),
         });
     }
 }

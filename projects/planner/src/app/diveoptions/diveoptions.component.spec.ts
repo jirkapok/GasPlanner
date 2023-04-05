@@ -37,46 +37,6 @@ describe('DepthComponent', () => {
         component = fixture.componentInstance;
     });
 
-    describe('Imperial units', () => {
-        let options: Options;
-
-        beforeEach(() => {
-            component.units.imperialUnits = true;
-            fixture.detectChanges();
-            options = component.options.getOptions();
-        });
-
-        it('Altitude bound to imperial', () => {
-            options.maxEND = 30;
-            expect(component.maxEND).toBeCloseTo(98.425197, 6);
-        });
-
-        it('Last stop depth bound to imperial', () => {
-            component.lastStopDepth = 10;
-            expect(options.lastStopDepth).toBeCloseTo(3.048, 6);
-        });
-
-        it('Descent speed bound to imperial', () => {
-            component.descentSpeed = 10;
-            expect(options.descentSpeed).toBeCloseTo(3.048, 6);
-        });
-
-        it('Ascent speed to 50% bound to imperial', () => {
-            component.ascentSpeed50perc = 10;
-            expect(options.ascentSpeed50perc).toBeCloseTo(3.048, 6);
-        });
-
-        it('Ascent speed 50% to 6 m bound to imperial', () => {
-            component.ascentSpeed50percTo6m = 10;
-            expect(options.ascentSpeed50percTo6m).toBeCloseTo(3.048, 6);
-        });
-
-        it('Ascent speed from 6 m bound to imperial', () => {
-            component.ascentSpeed6m = 10;
-            expect(options.ascentSpeed6m).toBeCloseTo(3.048, 6);
-        });
-    });
-
     it('Set complex calls wiew switch', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
         const spy = spyOnProperty(viewSwitch, 'isComplex', 'set')
             .and.callThrough();

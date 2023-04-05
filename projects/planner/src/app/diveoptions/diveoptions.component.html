@@ -99,17 +99,17 @@
                                 <label for="safetyStop" class="form-label" mdbLabel>Add 3 min safety
                                     stop:</label>
                                 <div class="input-group dropdown" mdbDropdown>
-                                    <input id="safetyStop" [value]="safetyStopOption" class="form-control" type="text"
+                                    <input id="safetyStop" [value]="options.safetyStopOption" class="form-control" type="text"
                                         [readonly]="true" />
                                     <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
                                         id="safetyStopMenu" aria-expanded="false" data-mdb-toggle="dropdown"
                                         mdbDropdownToggle></button>
                                     <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                                        <li (click)="useSafetyOff()"><a class="dropdown-item">{{safetyOffName}}</a>
+                                        <li (click)="useSafetyOff()"><a class="dropdown-item">{{options.safetyOffName}}</a>
                                         </li>
-                                        <li (click)="useSafetyAuto()"><a class="dropdown-item">{{safetyAutoName}}</a>
+                                        <li (click)="useSafetyAuto()"><a class="dropdown-item">{{options.safetyAutoName}}</a>
                                         </li>
-                                        <li (click)="useSafetyOn()"><a class="dropdown-item">{{safetyOnName}}</a>
+                                        <li (click)="useSafetyOn()"><a class="dropdown-item">{{options.safetyOnName}}</a>
                                         </li>
                                     </ul>
                                 </div>

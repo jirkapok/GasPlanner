@@ -8,6 +8,8 @@ import { UnitConversion } from './UnitConversion';
 /** All options stored in metric units */
 @Injectable()
 export class OptionsService {
+    /** Allows set lower speed as 0.1 m/min. for last 6 m on hard deco */
+    private static readonly minimumSpeed = 0.1;
     public readonly safetyOffName = 'Never';
     public readonly safetyOnName = 'Always';
     public reloaded$: Observable<unknown>;
@@ -133,11 +135,9 @@ export class OptionsService {
         this.options.lastStopDepth = this.units.toMeters(newValue);
     }
 
-    // TODO check 1 ft setter and limits in the UI
-    // TODO allow in the UI to set lower speed as 0.1 m/min. for last 6 m on hard deco
     public set descentSpeed(newValue: number) {
         const converted = this.units.toMeters(newValue);
-        if (converted < 1) {
+        if (converted < OptionsService.minimumSpeed) {
             return;
         }
 
@@ -146,7 +146,7 @@ export class OptionsService {
 
     public set ascentSpeed6m(newValue: number) {
         const converted = this.units.toMeters(newValue);
-        if (converted < 1) {
+        if (converted < OptionsService.minimumSpeed) {
             return;
         }
 
@@ -155,7 +155,7 @@ export class OptionsService {
 
     public set ascentSpeed50percTo6m(newValue: number) {
         const converted = this.units.toMeters(newValue);
-        if (converted < 1) {
+        if (converted < OptionsService.minimumSpeed) {
             return;
         }
 
@@ -167,7 +167,7 @@ export class OptionsService {
 
         // somehow noticed frozen UI in case copy/paste 0 into the asc/desc fields
         // not need to be converted by units since for our use case need at least some finite value
-        if (converted < 1) {
+        if (converted < OptionsService.minimumSpeed) {
             return;
         }
 
@@ -224,7 +224,6 @@ export class OptionsService {
     }
 
     public useRecommended(): void {
-        // TODO fix usage of ascent speeds - last ascent speed isn`t used in imperial as seen in chart
         const newValues = this.units.defaults.recommendedOptions;
         this.applyValues(newValues);
     }

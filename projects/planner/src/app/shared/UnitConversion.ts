@@ -185,7 +185,7 @@ class MetricRanges implements RangeConstants {
     public readonly tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
     public readonly trimixOxygen: [number, number] = [1, 100];
     public readonly trimixOxygenLabel: string = toLabel(this.trimixOxygen, '%');
-    public readonly speed: [number, number] = [1, 100];
+    public readonly speed: [number, number] = [0.1, 100];
     public readonly speedLabel: string = toLabel(this.speed, this.units.lengthShortcut + perMinute);
 
     constructor() { }

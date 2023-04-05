@@ -120,6 +120,11 @@ describe('Options Service', () => {
                 service.ascentSpeed6m = 10;
                 expect(options.ascentSpeed6m).toBeCloseTo(3.048, 6);
             });
+
+            it('Allows set speed 1 ft/min', () => {
+                service.descentSpeed = 1;
+                expect(options.descentSpeed).toBeCloseTo(0.3048, 6);
+            });
         });
     });
 

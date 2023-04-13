@@ -20,6 +20,7 @@ import { OptionsService } from './options.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
+import { SettingsNormalizationService } from './settings-normalization.service';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -32,7 +33,7 @@ describe('PlannerService', () => {
             providers: [WorkersFactoryCommon,
                 PlannerService, UnitConversion,
                 TanksService, ViewSwitchService,
-                OptionsService, Plan,
+                OptionsService, Plan, SettingsNormalizationService,
                 DepthsService, DelayedScheduleService
             ],
             imports: []
@@ -66,6 +67,25 @@ describe('PlannerService', () => {
             expect(cnsLimit).toBeCloseTo(0.025702, 6);
         });
     });
+
+    describe('Imperial units are used', () => {
+        it('Stops reflect units', inject([UnitConversion, SettingsNormalizationService],
+            (units: UnitConversion, normalization: SettingsNormalizationService) => {
+                units.imperialUnits = true;
+                normalization.apply();
+                // no changes in settings nor profile needed
+                tanksService.addTank();
+                tanksService.tanks[1].o2 = 50;
+                tanksService.addTank();
+                tanksService.tanks[2].o2 = 100;
+                planner.calculate();
+
+                const wayPoints = planner.dive.wayPoints;
+                expect(wayPoints[3].endDepth).toBeCloseTo(21.336, 4); // Ean50 switch
+                expect(wayPoints[5].endDepth).toBeCloseTo(6.096, 4); // O2 switch
+            }));
+    });
+
 
     describe('30m for 15 minutes Calculates (defaults)', () => {
         it('8 minutes time to surface', () => {

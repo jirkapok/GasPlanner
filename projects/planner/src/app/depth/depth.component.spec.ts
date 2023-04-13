@@ -14,6 +14,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DepthComponent } from './depth.component';
+import { WayPointsService } from '../shared/waypoints.service';
 
 export class DepthPage {
     constructor(private fixture: ComponentFixture<DepthComponent>) { }
@@ -43,7 +44,8 @@ describe('DepthComponent Imperial units', () => {
                 UnitConversion, ValidatorGroups,
                 DepthsService, DelayedScheduleService,
                 InputControls, TanksService,
-                Plan, ViewSwitchService, OptionsService
+                Plan, ViewSwitchService, OptionsService,
+                WayPointsService
             ]
         })
             .compileComponents();

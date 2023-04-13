@@ -12,9 +12,9 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveOptionsComponent } from './diveoptions.component';
-import { Options } from 'scuba-physics';
+import { WayPointsService } from '../shared/waypoints.service';
 
-describe('DepthComponent', () => {
+describe('Dive options component', () => {
     let component: DiveOptionsComponent;
     let fixture: ComponentFixture<DiveOptionsComponent>;
 
@@ -26,7 +26,8 @@ describe('DepthComponent', () => {
                 OptionsService, InputControls,
                 ValidatorGroups, PlannerService,
                 DelayedScheduleService, UnitConversion,
-                TanksService, Plan, ViewSwitchService
+                TanksService, Plan, ViewSwitchService,
+                WayPointsService
             ]
         })
             .compileComponents();

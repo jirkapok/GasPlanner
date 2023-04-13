@@ -18,6 +18,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { TanksComplexComponent } from './tanks-complex.component';
+import { WayPointsService } from '../shared/waypoints.service';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -61,7 +62,8 @@ describe('Tanks Complex component', () => {
                 PlannerService, InputControls,
                 ValidatorGroups, DelayedScheduleService,
                 DecimalPipe, TanksService, ViewSwitchService,
-                OptionsService, Plan],
+                OptionsService, Plan, WayPointsService
+            ],
             imports: [ReactiveFormsModule]
         })
             .compileComponents();

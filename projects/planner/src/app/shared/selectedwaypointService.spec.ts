@@ -11,22 +11,26 @@ import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { OptionsService } from './options.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
+import { WayPointsService } from './waypoints.service';
 
 describe('Selected Waypoint', () => {
+    const segment = new Segment(5, 10, StandardGases.air, 60);
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, TanksService,
-                Plan, DepthsService, DelayedScheduleService, OptionsService]
+                Plan, DepthsService, DelayedScheduleService,
+                OptionsService, WayPointsService]
         });
 
         TestBedExtensions.initPlan();
     });
 
-    it('Selected assigned fires event', inject([PlannerService],
-        (planner: PlannerService) => {
-            const expected = WayPoint.fromSegment(new Segment(5, 10, StandardGases.air, 60));
+    it('Selected assigned fires event', inject([PlannerService, UnitConversion],
+        (planner: PlannerService, units: UnitConversion) => {
+            const expected = WayPoint.fromSegment(units, segment);
             let received: WayPoint | undefined;
 
             const sut = new SelectedWaypoint(planner);
@@ -66,10 +70,10 @@ describe('Selected Waypoint', () => {
             expect(received).toEqual(expected);
         }));
 
-    it('Selected assigned marks item as selected', inject([PlannerService],
-        (planner: PlannerService) => {
-            const first = WayPoint.fromSegment(new Segment(5, 10, StandardGases.air, 60));
-            const second = WayPoint.fromSegment(new Segment(5, 10, StandardGases.air, 60));
+    it('Selected assigned marks item as selected', inject([PlannerService, UnitConversion],
+        (planner: PlannerService, units: UnitConversion) => {
+            const first = WayPoint.fromSegment(units, segment);
+            const second = WayPoint.fromSegment(units, segment);
             const sut = new SelectedWaypoint(planner);
             sut.selected = first;
             sut.selected = second;

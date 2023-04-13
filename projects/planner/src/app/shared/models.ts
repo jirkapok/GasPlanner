@@ -225,7 +225,7 @@ export class WayPoint {
      * @param newDepth in meters
      * @param previousDepth in meters
      */
-    private constructor(public duration: number, newDepth: number, previousDepth: number = 0) {
+    private constructor(private units: UnitConversion, public duration: number, newDepth: number, previousDepth: number = 0) {
         this.endTime = Precision.roundTwoDecimals(duration);
         this._endDepth = newDepth;
         this._startDepth = previousDepth;
@@ -266,8 +266,8 @@ export class WayPoint {
         return `${depth},${durationText}`;
     }
 
-    public static fromSegment(segment: Segment): WayPoint {
-        const newWayPoint = new WayPoint(segment.duration, segment.endDepth);
+    public static fromSegment(units: UnitConversion, segment: Segment): WayPoint {
+        const newWayPoint = new WayPoint(units, segment.duration, segment.endDepth);
         const gasName = StandardGases.nameFor(segment.gas.fO2, segment.gas.fHe);
         newWayPoint._gasName = gasName;
         newWayPoint.speed = segment.speed;
@@ -279,7 +279,7 @@ export class WayPoint {
     }
 
     public toLevel(segment: Segment): WayPoint {
-        const result = WayPoint.fromSegment(segment);
+        const result = WayPoint.fromSegment(this.units, segment);
         result.startTime = this.endTime;
         const end = this.endTime + segment.duration;
         result.endTime = Precision.roundTwoDecimals(end);

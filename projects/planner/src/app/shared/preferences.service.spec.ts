@@ -14,6 +14,7 @@ import { DelayedScheduleService } from './delayedSchedule.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
 import { PreferencesFactory } from './preferences.factory';
 import { SettingsNormalizationService } from './settings-normalization.service';
+import { WayPointsService } from './waypoints.service';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -23,7 +24,9 @@ describe('PreferencesService', () => {
                 UnitConversion, TanksService,
                 ViewSwitchService, DepthsService,
                 OptionsService, Plan, PreferencesFactory,
-                DelayedScheduleService, SettingsNormalizationService]
+                DelayedScheduleService, SettingsNormalizationService,
+                WayPointsService
+            ]
         });
 
         localStorage.clear();

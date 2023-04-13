@@ -9,6 +9,7 @@ import { DelayedScheduleService } from './delayedSchedule.service';
 import { OptionsService } from './options.service';
 import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
 import { SafetyStop } from 'scuba-physics';
+import { WayPointsService } from './waypoints.service';
 
 describe('Depths service', () => {
     let depthService: DepthsService;
@@ -19,7 +20,7 @@ describe('Depths service', () => {
             imports: [],
             providers: [WorkersFactoryCommon, PlannerService,
                 UnitConversion, DelayedScheduleService,
-                OptionsService, Plan,
+                OptionsService, Plan, WayPointsService,
                 DepthsService, TanksService
             ]
         })

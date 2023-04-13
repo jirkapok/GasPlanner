@@ -1,3 +1,5 @@
+import { Injectable } from '@angular/core';
+import { UnitConversion } from './UnitConversion';
 import { WayPoint } from './models';
 import {
     Segment, Event, CalculatedProfile,
@@ -22,8 +24,11 @@ export class Profile {
     }
 }
 
+@Injectable()
 export class WayPointsService {
-    public static calculateWayPoints(profile: CalculatedProfile, events: Events): Profile {
+    constructor(private units: UnitConversion){}
+
+    public calculateWayPoints(profile: CalculatedProfile, events: Events): Profile {
         const wayPoints = [];
 
         // not propagated to the UI
@@ -32,7 +37,7 @@ export class WayPointsService {
         }
 
         const descent = profile.segments[0];
-        let lastWayPoint = WayPoint.fromSegment(descent);
+        let lastWayPoint = WayPoint.fromSegment(this.units, descent);
         let lastSegment = descent;
         wayPoints.push(lastWayPoint);
         const exceptDescend = profile.segments.slice(1);
@@ -47,7 +52,7 @@ export class WayPointsService {
         return new Profile(profile.segments, wayPoints, profile.ceilings, events.items);
     }
 
-    private static toWayPoint(segment: Segment, lastWayPoint: WayPoint, lastSegment: Segment): WayPoint {
+    private toWayPoint(segment: Segment, lastWayPoint: WayPoint, lastSegment: Segment): WayPoint {
         const waypoint = lastWayPoint.toLevel(segment);
         const hasSwitch = !segment.gas.compositionEquals(lastSegment.gas);
 

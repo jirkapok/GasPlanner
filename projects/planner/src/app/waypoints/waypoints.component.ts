@@ -56,6 +56,7 @@ export class WayPointsComponent {
         }
     }
 
+    // TODO Move to waypoint
     public toEndDepth(point: WayPoint): number {
         return this.units.fromMeters(point.endDepth);
     }

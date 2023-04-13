@@ -11,6 +11,7 @@ import { SettingsNormalizationService } from './settings-normalization.service';
 import { TanksService } from './tanks.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
 import { UnitConversion } from './UnitConversion';
+import { WayPointsService } from './waypoints.service';
 
 describe('SettingsNormalizationService', () => {
     let service: SettingsNormalizationService;
@@ -27,7 +28,9 @@ describe('SettingsNormalizationService', () => {
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, RouterTestingModule, OptionsService,
                 SettingsNormalizationService, TanksService,
-                Plan, DepthsService, DelayedScheduleService],
+                Plan, DepthsService, DelayedScheduleService,
+                WayPointsService
+            ],
             imports: [RouterTestingModule.withRoutes([])]
         });
 

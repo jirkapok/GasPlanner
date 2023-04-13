@@ -15,6 +15,7 @@ import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { Plan } from '../shared/plan.service';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+import { WayPointsService } from '../shared/waypoints.service';
 
 export class ComplexDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
@@ -57,7 +58,7 @@ describe('Depths Complex Component', () => {
                 UnitConversion, InputControls, DelayedScheduleService,
                 OptionsService, ValidatorGroups,
                 DepthsService, DecimalPipe, TanksService,
-                ViewSwitchService, Plan
+                ViewSwitchService, Plan, WayPointsService
             ]
         })
             .compileComponents();

@@ -66,6 +66,7 @@ import { OxygenDropDownComponent } from './oxygen-dropdown/oxygen-dropdown.compo
 import { Plan } from './shared/plan.service';
 import { PreferencesFactory } from './shared/preferences.factory';
 import { PlanUrlSerialization } from './shared/PlanUrlSerialization';
+import { WayPointsService } from './shared/waypoints.service';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -146,6 +147,7 @@ const MDB_MODULES = [
         TanksService,
         NdlService,
         ViewSwitchService,
+        WayPointsService,
         InputControls,
         ValidatorGroups,
         DatePipe,

@@ -323,6 +323,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         yValues.push(endDepth);
     }
 
+    // TODO move to waypoint
     private convertDepth(metersDepth: number): number {
         const converted = this.units.fromMeters(metersDepth);
         return Precision.round(converted, 1);

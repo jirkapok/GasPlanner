@@ -14,6 +14,7 @@ import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { Plan } from '../shared/plan.service';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+import { WayPointsService } from '../shared/waypoints.service';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
@@ -45,7 +46,7 @@ describe('Depths Simple Component', () => {
                 UnitConversion, InputControls, DelayedScheduleService,
                 OptionsService, ValidatorGroups,
                 DepthsService, DecimalPipe, TanksService,
-                ViewSwitchService, Plan
+                ViewSwitchService, Plan, WayPointsService
             ]
         })
             .compileComponents();

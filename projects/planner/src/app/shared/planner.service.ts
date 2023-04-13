@@ -37,7 +37,8 @@ export class PlannerService extends Streamed {
     constructor(private workerFactory: WorkersFactoryCommon,
         private tanks: TanksService,
         private plan: Plan,
-        private optionsService: OptionsService) {
+        private optionsService: OptionsService,
+        private waypoints: WayPointsService) {
         super();
 
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
@@ -122,7 +123,7 @@ export class PlannerService extends Streamed {
         const serializedTanks = DtoSerialization.fromTanks(this.serializableTanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
-        const profile = WayPointsService.calculateWayPoints(calculatedProfile, events);
+        const profile = this.waypoints.calculateWayPoints(calculatedProfile, events);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;
         this.dive.events = profile.events;

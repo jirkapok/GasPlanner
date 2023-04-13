@@ -7,6 +7,7 @@ import { WorkersFactoryCommon } from './serial.workers.factory';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
+import { WayPointsService } from './waypoints.service';
 
 interface TestSut {
     options: OptionsService;
@@ -28,7 +29,8 @@ describe('Url Serialization', () => {
         const plan = new Plan();
         units.imperialUnits = imperial;
         const tanksService = new TanksService(units);
-        const planner = new PlannerService(irrelevantFactory, tanksService, plan, options);
+        const wayPoints = new WayPointsService(units);
+        const planner = new PlannerService(irrelevantFactory, tanksService, plan, options, wayPoints);
         plan.setSimple(30, 12, tanksService.firstTank.tank, options.getOptions());
         const viewSwitch = new ViewSwitchService(plan, options, tanksService);
         const preferencesFactory = new PreferencesFactory(viewSwitch, units, tanksService, plan, options);

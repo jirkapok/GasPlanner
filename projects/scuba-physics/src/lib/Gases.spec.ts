@@ -1,5 +1,5 @@
 import { Gases, Gas, GasesValidator, GasMixtures, GasOptions, BestGasOptions, StandardGases } from './Gases';
-import { DepthConverter } from './depth-converter';
+import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { DepthLevels } from './DepthLevels';
 import { SafetyStop } from './Options';
 import { Precision } from './precision';
@@ -310,6 +310,17 @@ describe('Gases', () => {
                 bestGasOptions.currentGas = StandardGases.trimix1070;
                 const found = gases.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
                 expect(found).toBe(StandardGases.trimix1845);
+            });
+
+            it('Altitude does not affect Ean50 switch in 21 m', () => {
+                gases.add(StandardGases.air);
+                gases.add(StandardGases.ean50);
+                // const depthConverter = DepthConverter.forFreshWater(800);
+                const depthConverter = DepthConverter.simple();
+                bestGasOptions.currentDepth = 24;
+                const levels = new DepthLevels(depthConverter, levelOptions);
+                const found = gases.bestGas(levels, depthConverter, bestGasOptions);
+                expect(found).toBe(StandardGases.air);
             });
 
             describe('By content', () => {

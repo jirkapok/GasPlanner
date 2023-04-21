@@ -42,7 +42,7 @@ class AlgorithmContext {
             currentDepth: this.currentDepth,
             maxDecoPpO2: this.options.maxDecoPpO2,
             oxygenNarcotic: this.options.oxygenNarcotic,
-            maxEndPressure: this.depthConverter.toBar(this.options.maxEND),
+            maxEnd: this.options.maxEND,
             currentGas: this.currentGas
         };
 

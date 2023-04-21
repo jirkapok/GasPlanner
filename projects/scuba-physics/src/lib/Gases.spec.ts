@@ -317,15 +317,6 @@ describe('Gases', () => {
                 expect(found).toBe(StandardGases.trimix1845);
             });
 
-            it('Altitude does not affect Ean50 switch in 21 m', () => {
-                gases.add(StandardGases.air);
-                gases.add(StandardGases.ean50);
-                bestGasOptions.currentDepth = 24;
-                const found = gasSource.bestGas(bestGasOptions);
-                // fixes case where there was a switch at 24 m instead of 21 m.
-                expect(found).toBe(StandardGases.air);
-            });
-
             describe('By content', () => {
                 beforeEach(() => {
                     gases.add(StandardGases.air);

@@ -167,6 +167,18 @@ describe('PlannerService', () => {
             depthService.applyNdlDuration();
             expect(planner.dive.emergencyAscentStart).toEqual(Time.oneMinute * 12);
         }));
+
+        it('Altitude does not affect Ean50 switch in 21 m', inject([TanksService, OptionsService],
+            (tanks: TanksService, options: OptionsService) => {
+                tanks.addTank();
+                tanks.tanks[1].o2 = 50;
+                // changing altitude changes surface pressure used to convert depths in algorithm
+                // in case it would take effect, the switch depth would be 24 m
+                options.altitude = 800;
+                planner.calculate();
+                // 4. segment - gas switch
+                expect(planner.dive.wayPoints[3].endDepth).toBe(21);
+            }));
     });
 
     describe('Errors', () => {

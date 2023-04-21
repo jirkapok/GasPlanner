@@ -16,7 +16,7 @@ export class Profile {
 
     public get endsOnSurface(): boolean {
         const count = this.wayPoints.length;
-        return count > 0 && this.wayPoints[count - 1].endDepth === 0;
+        return count > 0 && this.wayPoints[count - 1].endDepthMeters === 0;
     }
 
     public static newEmpty(errors: Event[]): Profile {

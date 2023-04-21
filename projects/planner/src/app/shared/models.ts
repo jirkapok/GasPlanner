@@ -16,7 +16,7 @@ export class Level {
         private units: UnitConversion,
         public segment: Segment,
         private tankBound: TankBound
-    ){
+    ) {
     }
 
     public get duration(): number {
@@ -236,13 +236,23 @@ export class WayPoint {
         return this._gasName;
     }
 
-    /** in meters */
+    /** in respective units */
     public get startDepth(): number {
-        return this._startDepth;
+        return this.units.fromMeters(this._startDepth);
     }
 
     /** in meters */
+    public get startDepthMeters(): number {
+        return this._startDepth;
+    }
+
+    /** in respective units */
     public get endDepth(): number {
+        return this.units.fromMeters(this._endDepth);
+    }
+
+    /** in meters */
+    public get endDepthMeters(): number {
         return this._endDepth;
     }
 

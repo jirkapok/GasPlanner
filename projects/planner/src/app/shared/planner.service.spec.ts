@@ -82,8 +82,8 @@ describe('PlannerService', () => {
                 planner.calculate();
 
                 const wayPoints = planner.dive.wayPoints;
-                expect(wayPoints[3].endDepth).toBeCloseTo(21.336, 4); // Ean50 switch
-                expect(wayPoints[5].endDepth).toBeCloseTo(6.096, 4); // O2 switch
+                expect(wayPoints[3].endDepth).toBeCloseTo(70, 4); // Ean50 switch
+                expect(wayPoints[5].endDepth).toBeCloseTo(20, 4); // O2 switch
             }));
     });
 

@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
-import { NitroxCalculator, DepthConverter, DepthLevels } from 'scuba-physics';
+import { NitroxCalculator, DepthConverter, DepthLevels, StandardGases } from 'scuba-physics';
 import { OptionsService } from './options.service';
 
 @Injectable()
 export class NitroxCalculatorService {
-    private _pO2 = 1.6;
-    private _fO2 = 50;
-    private _mod = 22;
+    private _pO2 = 1.4;
+    private _fO2 = 21;
+    private _mod = 30;
     private calculate: () => void;
     private nitroxCalculator: NitroxCalculator;
 
     constructor(options: OptionsService) {
         const depthConverter = DepthConverter.simple();
         const depthLevels = new DepthLevels(depthConverter, options.getOptions());
-        this.nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);
+        // providing rounded value for o2 in air to be aligned with UI
+        this.nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter, .21);
         this.calculate = this.calculateCurrentMod;
     }
 

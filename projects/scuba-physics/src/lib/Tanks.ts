@@ -72,14 +72,7 @@ export class Tank {
 
     /** o2 content in percent adjusted to iterate to Air*/
     public get o2(): number {
-        const current = this.gas.fO2 * 100;
-
-        if (this.isInAirRange(current)) {
-            return Precision.round(current);
-        }
-
-        // for both o2 and he, we are fixing the javascript precision
-        return Precision.roundTwoDecimals(current);
+        return AirO2Pin.getO2(this.gas.fO2, this.gas.fHe);
     }
 
     /** The helium part of tank gas in percents */
@@ -133,11 +126,7 @@ export class Tank {
 
     /** o2 content in percent adjusted to iterate to Air*/
     public set o2(newValue: number) {
-        if (this.isInAirRange(newValue)) {
-            this.gas.fO2 = StandardGases.o2InAir;
-        } else {
-            this._gas.fO2 = newValue / 100;
-        }
+        this._gas.fO2 = AirO2Pin.setO2(newValue, this.gas.fHe);
     }
 
     /** The helium part of tank gas in percents */
@@ -173,5 +162,39 @@ export class Tank {
 
     private isInAirRange(newO2: number): boolean {
         return 20.9 <= newO2 && newO2 <= 21 && this.gas.fHe === 0;
+    }
+}
+
+
+/**
+ * Fix for O2 from 21 % in the UI to 20.9 stored for Air.
+ * Does not affect another value ranges.
+ */
+export class AirO2Pin {
+    private static readonly pinnedO2 = 21;
+    private static readonly o2InAirPercent = StandardGases.o2InAir * 100;
+
+    public static getO2(fO2: number, fHe: number): number {
+        const current = fO2 * 100;
+
+        // TODO move rounding to tank
+        if (this.isInAirRange(current, fHe)) {
+            return AirO2Pin.pinnedO2;
+        }
+
+        // for both o2 and he, we are fixing the javascript precision
+        return Precision.roundTwoDecimals(current);
+    }
+
+    public static setO2(newO2: number, fHe: number): number {
+        if (this.isInAirRange(newO2, fHe)) {
+            return StandardGases.o2InAir;
+        }
+
+        return newO2 / 100;
+    }
+
+    private static isInAirRange(newO2: number, fHe: number): boolean {
+        return AirO2Pin.o2InAirPercent <= newO2 && newO2 <= AirO2Pin.pinnedO2 && fHe === 0;
     }
 }

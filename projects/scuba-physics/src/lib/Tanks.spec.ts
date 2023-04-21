@@ -18,6 +18,32 @@ describe('Tank', () => {
             tank.he = 29;
             expect(tank.he).toBe(29);
         });
+
+        describe('Pins Air O2', () => {
+            it('Pins 21 % to 0.209 fO2', () => {
+                tank.o2 = 21;
+                expect(tank.gas.fO2).toBeCloseTo(0.209, 3);
+            });
+
+            it('Unpins from 0.209 fO2 to 21 %', () => {
+                tank.gas.fO2 = 0.209;
+                expect(tank.o2).toBeCloseTo(21, 3);
+            });
+        });
+
+        describe('Not pining Air O2 for trimix', () => {
+            it('Does not apply 21 % 02', () => {
+                tank.he = 10;
+                tank.o2 = 21;
+                expect(tank.gas.fO2).toBeCloseTo(0.21, 3);
+            });
+
+            it('0.209 O2 is not affected', () => {
+                tank.he = 10;
+                tank.gas.fO2 = 0.209;
+                expect(tank.o2).toBeCloseTo(20.9, 3);
+            });
+        });
     });
 
     describe('Full', () => {

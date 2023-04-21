@@ -2,9 +2,11 @@ import { Precision } from './precision';
 import { DepthConverter } from './depth-converter';
 import { DepthLevels } from './DepthLevels';
 import { GasMixtures } from './Gases';
+import { StandardGases } from './Gases';
 
 export class NitroxCalculator {
-    constructor(private depthLevels: DepthLevels, private depthConverter: DepthConverter) {
+    constructor(private depthLevels: DepthLevels, private depthConverter: DepthConverter,
+        private o2InAir = StandardGases.o2InAir) {
     }
 
     /**
@@ -17,7 +19,7 @@ export class NitroxCalculator {
     public ead(percentO2: number, depth: number): number {
         const fO2 = percentO2 / 100;
         const bars = this.depthConverter.toBar(depth);
-        const result = GasMixtures.ead(fO2, bars);
+        const result = GasMixtures.ead(fO2, bars, this.o2InAir);
 
         if(result <= this.depthConverter.surfacePressure) {
             return 0;

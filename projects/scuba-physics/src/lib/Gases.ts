@@ -160,9 +160,10 @@ export class GasMixtures {
     * @param depth - Current depth in bars.
     * @returns Depth in bars.
     */
-    public static ead(fO2: number, depth: number): number {
+    public static ead(fO2: number, depth: number, o2InAir: number = StandardGases.o2InAir): number {
         const fN2 = 1 - fO2; // here we are interested only in nitrogen toxicity
-        const result = GasMixtures.end(depth, fN2) / StandardGases.nitroxInAir;
+        const nitroxInAir = 1 - o2InAir;
+        const result = GasMixtures.end(depth, fN2) / nitroxInAir;
         return result;
     }
 

@@ -8,6 +8,9 @@ describe('NitroxCalculatorService', () => {
     beforeEach(() => {
         const options = new OptionsService(new UnitConversion());
         service = new NitroxCalculatorService(options);
+        service.fO2 = 50;
+        service.pO2 = 1.6;
+        service.mod = 30;
     });
 
     describe('Maximum operational depth (MOD)', () => {
@@ -24,7 +27,13 @@ describe('NitroxCalculatorService', () => {
 
     describe('Equivalent Air depth (EAD)', () => {
         it('50% fO2 at 22 m has EAD 10.26 (defaults)', () => {
-            expect(service.ead).toBe(10.23);
+            expect(service.ead).toBe(10.26);
+        });
+
+        it('Air MOD is equal to Air EAD', () => {
+            service.fO2 = 21;
+            service.pO2 = 1.4;
+            expect(service.ead).toBeCloseTo(service.mod, 3);
         });
     });
 

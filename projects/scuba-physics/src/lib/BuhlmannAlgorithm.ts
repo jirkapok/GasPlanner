@@ -49,7 +49,7 @@ class AlgorithmContext {
 
         this.speeds = new AscentSpeeds(this.options);
         this.levels = new DepthLevels(depthConverter, options);
-        this.gasSource = new OCGasSource(gases);
+        this.gasSource = new OCGasSource(gases, options);
     }
 
     public get ascentSpeed(): number {
@@ -94,7 +94,7 @@ class AlgorithmContext {
     public bestDecoGas(): Gas {
         this.bestGasOptions.currentDepth = this.currentDepth;
         this.bestGasOptions.currentGas = this.currentGas;
-        const newGas = this.gasSource.bestGas(this.levels, this.depthConverter, this.bestGasOptions);
+        const newGas = this.gasSource.bestGas(this.bestGasOptions);
         return newGas;
     }
 

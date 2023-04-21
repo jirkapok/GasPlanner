@@ -1,5 +1,5 @@
 import { Tissues, LoadSegment, Tissue } from './Tissues';
-import { Gases, Gas, BestGasOptions, GasesValidator } from './Gases';
+import { Gases, Gas, BestGasOptions, GasesValidator, OCGasSource } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Time } from './Time';
@@ -29,6 +29,7 @@ class AlgorithmContext {
     private bestGasOptions: BestGasOptions;
     private speeds: AscentSpeeds;
     private levels: DepthLevels;
+    private gasSource: OCGasSource;
 
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
         // TODO reuse tissues for repetitive dives
@@ -48,6 +49,7 @@ class AlgorithmContext {
 
         this.speeds = new AscentSpeeds(this.options);
         this.levels = new DepthLevels(depthConverter, options);
+        this.gasSource = new OCGasSource(gases);
     }
 
     public get ascentSpeed(): number {
@@ -92,7 +94,7 @@ class AlgorithmContext {
     public bestDecoGas(): Gas {
         this.bestGasOptions.currentDepth = this.currentDepth;
         this.bestGasOptions.currentGas = this.currentGas;
-        const newGas = this.gases.bestGas(this.levels, this.depthConverter, this.bestGasOptions);
+        const newGas = this.gasSource.bestGas(this.levels, this.depthConverter, this.bestGasOptions);
         return newGas;
     }
 

@@ -50,6 +50,38 @@ export interface BestGasOptions {
     currentGas: Gas;
 }
 
+export class OCGasSource {
+    constructor(private gases: Gases) { }
+
+    /**
+    * Finds better gas to switch to from current depth. Returns current gas, if no better gas was found.
+    * Better gas is breathable at current depth and with higher O2, because during decompression we need to offgass both He and N2.
+    * Use this method to find decompression gas during ascent.
+    */
+    public bestGas(depthLevels: DepthLevels, depthConverter: DepthConverter, options: BestGasOptions): Gas {
+        const currentPressure = depthConverter.toBar(options.currentDepth);
+        const maxEndPressure = depthConverter.toBar(options.maxEnd);
+        let found = options.currentGas;
+
+        this.gases.all.forEach((candidate: Gas) => {
+            const modPressure = candidate.mod(options.maxDecoPpO2);
+            // e.g. oxygen at 6m wouldn't be best for 6m without rounding
+            const mod = depthLevels.toDecoStop(modPressure);
+            const end = candidate.end(currentPressure, options.oxygenNarcotic);
+
+            // We allow switch to gas with higher nitrogen content, if no better gas is available, but at least show warning
+            if (options.currentDepth <= mod && end <= maxEndPressure) {
+                // We don't care about gas ceiling, because it is covered by higher O2 content
+                // only oxygen content is relevant for decompression => EAN50 is better than TRIMIX 25/25
+                if (!found || found.fO2 < candidate.fO2) {
+                    found = candidate;
+                }
+            }
+        });
+        return found;
+    }
+}
+
 export class Gases {
     private bottomGases: Gas[] = [];
 
@@ -70,34 +102,6 @@ export class Gases {
         });
 
         return gases;
-    }
-
-    /**
-    * Finds better gas to switch to from current depth. Returns current gas, if no better gas was found.
-    * Better gas is breathable at current depth and with higher O2, because during decompression we need to offgass both He and N2.
-    * Use this method to find decompression gas during ascent.
-    */
-    public bestGas(depthLevels: DepthLevels, depthConverter: DepthConverter, options: BestGasOptions): Gas {
-        const currentPressure = depthConverter.toBar(options.currentDepth);
-        const maxEndPressure = depthConverter.toBar(options.maxEnd);
-        let found = options.currentGas;
-
-        this.bottomGases.forEach((candidate: Gas) => {
-            const modPressure = candidate.mod(options.maxDecoPpO2);
-            // e.g. oxygen at 6m wouldn't be best for 6m without rounding
-            const mod = depthLevels.toDecoStop(modPressure);
-            const end = candidate.end(currentPressure, options.oxygenNarcotic);
-
-            // We allow switch to gas with higher nitrogen content, if no better gas is available, but at least show warning
-            if (options.currentDepth <= mod && end <= maxEndPressure) {
-                // We don't care about gas ceiling, because it is covered by higher O2 content
-                // only oxygen content is relevant for decompression => EAN50 is better than TRIMIX 25/25
-                if (!found || found.fO2 < candidate.fO2) {
-                    found = candidate;
-                }
-            }
-        });
-        return found;
     }
 
     public add(gas: Gas): void {

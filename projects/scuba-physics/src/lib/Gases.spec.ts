@@ -1,4 +1,4 @@
-import { Gases, Gas, GasesValidator, GasMixtures, GasOptions, BestGasOptions, StandardGases } from './Gases';
+import { Gases, Gas, GasesValidator, GasMixtures, GasOptions, BestGasOptions, StandardGases, OCGasSource } from './Gases';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { DepthLevels } from './DepthLevels';
 import { SafetyStop } from './Options';
@@ -270,27 +270,30 @@ describe('Gases', () => {
             const bestGasOptions: BestGasOptions = {
                 currentDepth: 0,
                 maxDecoPpO2: options.maxDecoPpO2,
-                maxEndPressure: 4,
+                maxEnd: 30,
                 oxygenNarcotic: true,
                 currentGas: StandardGases.air
             };
 
+            let gasSource: OCGasSource;
+
             beforeEach(() => {
                 bestGasOptions.currentGas = StandardGases.air;
+                gasSource = new OCGasSource(gases);
             });
 
             it('The only deco gas is found', () => {
                 gases.add(StandardGases.air);
                 gases.add(StandardGases.ean50);
                 bestGasOptions.currentDepth = 20;
-                const found = gases.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
+                const found = gasSource.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
                 expect(found).toBe(StandardGases.ean50);
             });
 
             it('No deco gas, bottom gas is found', () => {
                 gases.add(StandardGases.air);
                 bestGasOptions.currentDepth = 20;
-                const found = gases.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
+                const found = gasSource.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
                 expect(found).toBe(StandardGases.air);
             });
 
@@ -299,7 +302,7 @@ describe('Gases', () => {
                 gases.add(StandardGases.ean50);
                 gases.add(StandardGases.trimix1845);
                 bestGasOptions.currentDepth = 20;
-                const found = gases.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
+                const found = gasSource.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
                 expect(found).toBe(StandardGases.ean50);
             });
 
@@ -308,7 +311,7 @@ describe('Gases', () => {
                 gases.add(StandardGases.trimix1845);
                 bestGasOptions.currentDepth = 3;
                 bestGasOptions.currentGas = StandardGases.trimix1070;
-                const found = gases.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
+                const found = gasSource.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
                 expect(found).toBe(StandardGases.trimix1845);
             });
 
@@ -319,7 +322,7 @@ describe('Gases', () => {
                 const depthConverter = DepthConverter.simple();
                 bestGasOptions.currentDepth = 24;
                 const levels = new DepthLevels(depthConverter, levelOptions);
-                const found = gases.bestGas(levels, depthConverter, bestGasOptions);
+                const found = gasSource.bestGas(levels, depthConverter, bestGasOptions);
                 expect(found).toBe(StandardGases.air);
             });
 
@@ -334,37 +337,38 @@ describe('Gases', () => {
 
                 it('Oxygen for 6m', () => {
                     bestGasOptions.currentDepth = 6;
-                    const found = gases.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
+                    const found = gasSource.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
                     expect(found).toBe(StandardGases.oxygen);
                 });
 
                 it('Air for 30m', () => {
                     bestGasOptions.currentDepth = 30;
-                    const found = gases.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
+                    const found = gasSource.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
                     expect(found).toBe(StandardGases.air);
                 });
 
                 it('Trimix 18/45 for 40m', () => {
                     bestGasOptions.currentDepth = 40;
                     bestGasOptions.currentGas = new Gas(0, 0);
-                    const found = gases.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
+                    const found = gasSource.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
                     expect(found).toBe(StandardGases.trimix1845);
                 });
 
                 // Yes, because we want to offgas both He and N2 fractions, so only oxygen matters
                 it('Air is better than trimix 18/45 for 40m', () => {
                     bestGasOptions.currentDepth = 40;
-                    const found = gases.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
+                    const found = gasSource.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
                     expect(found).toBe(StandardGases.air);
                 });
 
                 it('Current ean32 is better than air for 30m', () => {
                     bestGasOptions.currentDepth = 30;
                     const gases2 = new Gases();
+                    const gasSource2 = new OCGasSource(gases2);
                     const ean32 = new Gas(.32, 0);
                     gases2.add(ean32);
                     gases2.add(StandardGases.air);
-                    const found = gases2.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
+                    const found = gasSource2.bestGas(depthLevels, freshWaterConverter, bestGasOptions);
                     expect(found).toBe(ean32);
                 });
             });

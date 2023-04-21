@@ -39,6 +39,8 @@ export class DashboardComponent extends Streamed implements OnInit {
 
         if (query !== '') {
             this.urlSerialization.fromUrl(query);
+            // in case it fails we need to reset the parameters
+            this.updateQueryParams();
         } else {
             this.delayedCalc.schedule();
         }

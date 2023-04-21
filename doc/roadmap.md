@@ -6,7 +6,6 @@ Following list of features and improvements ordered by priority is under develop
 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
-* When changing altitude, the switch depth changes for EAN50 from 21 m to 24 m. (It looks like we need to use simple depth converter when searching for switch depth)
 * Oxygen at 4 m shows MOD 4 meters, but there is still warning about exceeded MOD. (Consider rule for pure O2 only, to use only deco ppO2 as limit)
 
 ## Improvements / Features

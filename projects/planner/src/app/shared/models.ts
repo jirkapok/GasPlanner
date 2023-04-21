@@ -246,24 +246,8 @@ export class WayPoint {
         return this._endDepth;
     }
 
-    /** in meters */
-    public get averageDepth(): number {
-        return (this.startDepth + this.endDepth) / 2;
-    }
-
     public get swimAction(): SwimAction {
         return this.action;
-    }
-
-    public get label(): string {
-        if (this.startDepth !== this.endDepth) {
-            return '';
-        }
-
-        const depth = `${this.endDepth} m`;
-        let durationText = Precision.round(this.duration).toString();
-        durationText += ' min.';
-        return `${depth},${durationText}`;
     }
 
     public static fromSegment(units: UnitConversion, segment: Segment): WayPoint {
@@ -283,7 +267,7 @@ export class WayPoint {
         result.startTime = this.endTime;
         const end = this.endTime + segment.duration;
         result.endTime = Precision.roundTwoDecimals(end);
-        result._startDepth = this.endDepth;
+        result._startDepth = this._endDepth;
         result.updateSwimAction();
         return result;
     }
@@ -293,17 +277,17 @@ export class WayPoint {
     }
 
     public depthAt(duration: number): number {
-        return Segment.depthAt(this.startDepth, this.speed, duration);
+        return Segment.depthAt(this._startDepth, this.speed, duration);
     }
 
     private updateSwimAction(): void {
         this.action = SwimAction.hover;
 
-        if (this.startDepth < this.endDepth) {
+        if (this._startDepth < this._endDepth) {
             this.action = SwimAction.descent;
         }
 
-        if (this.startDepth > this.endDepth) {
+        if (this._startDepth > this._endDepth) {
             this.action = SwimAction.ascent;
         }
     }

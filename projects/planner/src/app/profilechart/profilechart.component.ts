@@ -4,7 +4,7 @@ import { Dive, WayPoint } from '../shared/models';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js';
 import { takeUntil } from 'rxjs';
-import { EventType, Time, StandardGases, Precision } from 'scuba-physics';
+import { Event, EventType, Time, StandardGases, Precision, Ceiling } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
@@ -51,6 +51,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     };
 
     private layout: any;
+    private resampling: ResamplingService;
 
     constructor(private planer: PlannerService,
         private units: UnitConversion,
@@ -58,6 +59,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         private plan: Plan) {
         super();
         this.dive = this.planer.dive;
+        this.resampling = new ResamplingService(units);
 
         this.layout = {
             autosize: true,
@@ -127,8 +129,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         if (wayPoint) {
             this.cursor1.x0 = Time.toDate(wayPoint.startTime);
             this.cursor1.x1 = Time.toDate(wayPoint.endTime);
-            this.cursor1.y0 = this.convertDepth(wayPoint.startDepth);
-            this.cursor1.y1 = this.convertDepth(wayPoint.endDepth);
+            this.cursor1.y0 = this.resampling.convertDepth(wayPoint.startDepth);
+            this.cursor1.y1 = this.resampling.convertDepth(wayPoint.endDepth);
             update.shapes.push(this.cursor1);
         }
 
@@ -160,17 +162,11 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     private plotAverageDepth(): any {
-        const xDepthValues: Date[] = [];
-        const yDepthValues: number[] = [];
-
-        if (this.dive.wayPoints.length > 0) {
-            const wayPoints = this.dive.wayPoints;
-            this.transformAverageDepth(wayPoints, xDepthValues, yDepthValues);
-        }
+        const resampled = this.resampling.resampleAverageDepth(this.dive.wayPoints);
 
         const dataAverageDepths = {
-            x: xDepthValues,
-            y: yDepthValues,
+            x: resampled.xValues,
+            y: resampled.yValues,
             type: 'scatter',
             line: {
                 dash: 'dot'
@@ -185,39 +181,12 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         return dataAverageDepths;
     }
 
-    private transformAverageDepth(waiPoints: WayPoint[], xDepthValues: Date[], yDepthValues: number[]): number {
-        if (waiPoints.length <= 0) {
-            return 0;
-        }
-
-        let cumulativeAverage = 0;
-        let totalDuration = 0;
-
-        // Uses cumulative average to prevent number overflow for large segment durations
-        waiPoints.forEach(wayPoint => {
-            if (wayPoint.duration > 0) {
-                for (let seconds = 0; seconds < wayPoint.duration; seconds++) {
-                    xDepthValues.push(Time.toDate(totalDuration));
-                    const depth = wayPoint.depthAt(seconds);
-                    const cumulativeWeight = depth + totalDuration * cumulativeAverage;
-                    totalDuration++;
-                    cumulativeAverage = cumulativeWeight / totalDuration;
-                    const rounded = this.convertDepth(cumulativeAverage);
-                    yDepthValues.push(rounded);
-                }
-            }
-        });
-
-        return cumulativeAverage;
-    }
-
     private plotDepths(): any {
-        const xValues: Date[] = [];
-        const yValues: number[] = [];
+        const resampled = this.resampling.resampleWaypoints(this.dive.wayPoints);
 
         const data = {
-            x: xValues,
-            y: yValues,
+            x: resampled.xValues,
+            y: resampled.yValues,
             type: 'scatter',
             name: 'Depth',
             marker: {
@@ -226,27 +195,15 @@ export class ProfileChartComponent extends Streamed implements OnInit {
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
 
-        this.dive.wayPoints.forEach((item, index, waypoints) => {
-            this.resampleDepthsToSeconds(xValues, yValues, item);
-        });
-
         return data;
     }
 
     private plotCeilings(): any {
-        const xCeilingValues: Date[] = [];
-        const yCeilingValues: number[] = [];
-
-        // possible performance optimization = remove all waypoints, where ceiling = 0 and depth didn't change
-        this.dive.ceilings.forEach((item, index, ceilings) => {
-            xCeilingValues.push(Time.toDate(item.time));
-            const depth = this.convertDepth(item.depth);
-            yCeilingValues.push(depth);
-        });
+        const resampled = this.resampling.resampleCeilings(this.dive.ceilings);
 
         const dataCeilings = {
-            x: xCeilingValues,
-            y: yCeilingValues,
+            x: resampled.xValues,
+            y: resampled.yValues,
             type: 'scatter',
             fill: 'tozeroy',
             name: 'Ceiling',
@@ -260,15 +217,13 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     private plotEvents(): any {
-        const x: Date[] = [];
-        const y: number[] = [];
-        const labels: string[] = [];
+        const resampled = this.resampling.convertEvents(this.dive.events);
 
         const dataEvents = {
-            x: x,
-            y: y,
-            labels: labels,
-            text: labels,
+            x: resampled.xValues,
+            y: resampled.yValues,
+            labels: resampled.labels,
+            text: resampled.labels,
             type: 'scatter',
             mode: 'text+markers',
             fill: 'tozeroy',
@@ -289,16 +244,54 @@ export class ProfileChartComponent extends Streamed implements OnInit {
             showlegend: false
         };
 
-        this.convertEvents(x, y, labels);
+
         return dataEvents;
     }
+}
 
-    private convertEvents(x: Date[], y: number[], labels: string[]): void {
-        this.dive.events.forEach((event, index, events) => {
+export interface AxisValues {
+    xValues: Date[];
+    yValues: number[];
+}
+
+export interface EventValues extends AxisValues {
+    labels: string[];
+}
+
+export class ResamplingService {
+    constructor(private units: UnitConversion) {
+    }
+
+    // TODO move to waypoint
+    public convertDepth(metersDepth: number): number {
+        const converted = this.units.fromMeters(metersDepth);
+        return Precision.round(converted, 1);
+    }
+
+    public resampleAverageDepth(wayPoints: WayPoint[]): AxisValues {
+        const xValues: Date[] = [];
+        const yValues: number[] = [];
+
+        if (wayPoints.length > 0) {
+            this.transformAverageDepth(wayPoints, xValues, yValues);
+        }
+
+        return {
+            xValues,
+            yValues
+        };
+    }
+
+    public convertEvents(events: Event[]): EventValues {
+        const xValues: Date[] = [];
+        const yValues: number[] = [];
+        const labels: string[] = [];
+
+        events.forEach((event) => {
             if (event.type === EventType.gasSwitch) {
-                x.push(Time.toDate(event.timeStamp));
+                xValues.push(Time.toDate(event.timeStamp));
                 const convertedDepth = this.convertDepth(event.depth);
-                y.push(convertedDepth);
+                yValues.push(convertedDepth);
                 const gas = event.gas;
                 if (gas) {
                     const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
@@ -306,6 +299,43 @@ export class ProfileChartComponent extends Streamed implements OnInit {
                 }
             }
         });
+
+        return {
+            xValues,
+            yValues,
+            labels
+        };
+    }
+
+    public resampleCeilings(ceilings: Ceiling[]): AxisValues {
+        const xValues: Date[] = [];
+        const yValues: number[] = [];
+
+        // possible performance optimization = remove all waypoints, where ceiling = 0 and depth didn't change
+        ceilings.forEach((item) => {
+            xValues.push(Time.toDate(item.time));
+            const depth = this.convertDepth(item.depth);
+            yValues.push(depth);
+        });
+
+        return {
+            xValues,
+            yValues
+        };
+    }
+
+    public resampleWaypoints(wayPoints: WayPoint[]): AxisValues {
+        const xValues: Date[] = [];
+        const yValues: number[] = [];
+
+        wayPoints.forEach((item) => {
+            this.resampleDepthsToSeconds(xValues, yValues, item);
+        });
+
+        return {
+            xValues,
+            yValues
+        };
     }
 
     private resampleDepthsToSeconds(xValues: Date[], yValues: number[], item: WayPoint) {
@@ -323,9 +353,29 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         yValues.push(endDepth);
     }
 
-    // TODO move to waypoint
-    private convertDepth(metersDepth: number): number {
-        const converted = this.units.fromMeters(metersDepth);
-        return Precision.round(converted, 1);
+    private transformAverageDepth(waiPoints: WayPoint[], xValues: Date[], yValues: number[]): number {
+        if (waiPoints.length <= 0) {
+            return 0;
+        }
+
+        let cumulativeAverage = 0;
+        let totalDuration = 0;
+
+        // Uses cumulative average to prevent number overflow for large segment durations
+        waiPoints.forEach(wayPoint => {
+            if (wayPoint.duration > 0) {
+                for (let seconds = 0; seconds < wayPoint.duration; seconds++) {
+                    xValues.push(Time.toDate(totalDuration));
+                    const depth = wayPoint.depthAt(seconds);
+                    const cumulativeWeight = depth + totalDuration * cumulativeAverage;
+                    totalDuration++;
+                    cumulativeAverage = cumulativeWeight / totalDuration;
+                    const rounded = this.convertDepth(cumulativeAverage);
+                    yValues.push(rounded);
+                }
+            }
+        });
+
+        return cumulativeAverage;
     }
 }

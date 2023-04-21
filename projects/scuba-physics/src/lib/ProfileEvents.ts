@@ -107,7 +107,8 @@ export class ProfileEvents {
      * @param options User options used to create the profile
      */
     public static fromProfile(startAscentIndex: number, profile: Segment[], ceilings: Ceiling[], options: Options): Events {
-        const depthConverter = new DepthConverterFactory(options).create();
+        const depthConverter = DepthConverter.simple(); // because of UI, e.g. depths for MOD
+
         const context = new EventsContext(startAscentIndex, profile, depthConverter, options);
         const ceilingContext = new BrokenCeilingContext(context.events);
 

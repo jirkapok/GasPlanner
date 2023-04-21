@@ -67,6 +67,16 @@ describe('Profile Events', () => {
     });
 
     describe('High ppO2', () => {
+        it('No high ppO2 event for oxygen at 4 m', () => {
+            const segments = new Segments();
+            segments.add(0, 4, StandardGases.oxygen, Time.oneMinute * 1);
+            segments.add(4, 4, StandardGases.oxygen, Time.oneMinute * 1);
+            segments.add(4, 0, StandardGases.oxygen, Time.oneMinute * 1);
+
+            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            expect(events.items.length).toBe(0);
+        });
+
         it('Adds high ppO2 event during decent only once', () => {
             const segments = new Segments();
             segments.add(0, 70, StandardGases.air, Time.oneMinute * 3.5);

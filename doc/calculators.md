@@ -15,7 +15,7 @@ These calculations can help you to answer following questions:
 
 Formulas used to calculate RMV and SAC:
 
-```
+```text
 SAC = consumed gas / (average depth in bars * duration)
 RMV = SAC * tank size
 
@@ -31,7 +31,7 @@ RMV = 1.333 * 15 = 20 liters/minute
 
 Use Nitrox calculator to select correct gas for required dive. This calculator is the example where we use simplified depth conversion considering air pressure at sea level is 1 bar. Nitrox calculations triangle is as follows:
 
-```
+```text
 partial pressure O2 = pressure at depth * O2 fraction in mix
 
 Example: What is the partial pressure O2 for Ean50 at 22 meters?
@@ -47,6 +47,6 @@ You can calculate one fo these values by providing the remaining two to answer f
 * `ppO2`: What is the current partial pressure when breathing the gas at given depth? Always know your partial pressure, so you know limits of your gas. This calculation can be omitted in case of using standard gases, which are defined for each depth range in safe ppO2 limit. Standard gases are used by training agencies like GUE, UTD or ISE.
 * `EAD`: Shows [Equivalent Air depth](https://en.wikipedia.org/wiki/Equivalent_air_depth). It is depths at which the nitrox has equivalent narcotic effect of nitrogen as breathing Air. This value is always lower than MOD.
 
-> Even you can use Air at depths higher than 30 meters, there is still narcotic effect which increases for most people in depths bellow 30 meters. For such depths gases replacing nitrogen by helium like Trimix should be used.
+> Even you can use Air at depths higher than 30 meters (100 ft), there is still narcotic effect which increases for most people in depths bellow 30 meters. For such depths gases replacing nitrogen by helium like Trimix should be used.
 
 > Hit the `Use` button to apply current ppO2 to diver application settings.

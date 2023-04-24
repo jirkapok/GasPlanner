@@ -13,3 +13,9 @@ Here you can find default options used when you open the application and plan ne
 * `Maximum deco ppO2`: Used only in case of calculated ascent or in case of rock bottom calculation to choose best decompression mix. For decompression 1.6 is common recommended value.
 
 > In both cases the ppO2 value should never be higher than 1.6 for recreational divers.
+
+## Units
+
+> We strongly encourage to use metric system, which is easy to use.
+
+In case you prefer to use Imperial units the app will switch to that system and all values will use feet, cubic feet, feet above sea water and psi. The default value is metric system. Keep mind that the app primary uses metric system and different values than expected may be caused by rounding.

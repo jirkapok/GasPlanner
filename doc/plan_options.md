@@ -2,12 +2,12 @@
 
 For faster customization or to be able reset options to default values, you can use two buttons.
 
-* `Recreational`: Options taught in basic open water courses for most training agencies. This will switch e.g. safety stop to 5 meters and ascent speeds to 9 meters/minute.
+* `Recreational`: Options taught in basic open water courses for most training agencies. This will switch e.g. safety stop to 5 meters (15 ft) and ascent speeds to 9 meters/minute (30 ft/min).
 * `Recommended`: We strongly encourage you to use these values instead of recreational values, because we thing they are safer and they are the default values for this application. This sets e.g. slower ascent closer to surface.
 
 ## Environment
 
-* `Salinity`: Because salinity of water changes its density and it means also pressure of the water column at depth. In result it affects the tissues loading. See also wiki for [brine](https://en.wikipedia.org/wiki/Brine). Eg. 22 meters corresponds to 3.222 bar in salt water. You can choose from fresh water, salt (sea) water and Brackish (EN13319) water. Brackish water is somewhere between salt and fresh. It is used by some computers as the only one option (Suunto). In case your dive computer doesn't contain Brackish water use salt water (value with higher content of salt).
+* `Salinity`: Because salinity of water changes its density and it means also pressure of the water column at depth. In result it affects the tissues loading. See also wiki for [brine](https://en.wikipedia.org/wiki/Brine). Eg. 22 meters (73 ft) corresponds to 3.222 bar (46.7 psi) in salt water. You can choose from fresh water, salt (sea) water and Brackish (EN13319) water. Brackish water is somewhere between salt and fresh. It is used by some computers as the only one option (Suunto). In case your dive computer doesn't contain Brackish water use salt water (value with higher content of salt).
 
 | Salinity | Location | Salinity [gram/liter] | Density [kg/m3] |
 | --- | --- | --- | --- |
@@ -17,12 +17,12 @@ For faster customization or to be able reset options to default values, you can 
 
 * `Altitude`: Similar effect on decompression like salinity has diving at higher altitude. The higher you are, the lower is the atmospheric pressure around you. 0 m.a.s.l. means sea level, e.g. 1.0132 bar. Diving at higher altitude results in higher decompression (e.g. shorten no decompression limit).
 
-| Altitude [m.a.s.l.] | Air pressure [bar] |
-| --- | --- |
-| 0 | 1.01 |
-| 400 | 0.97 |
-| 700 | 0.93 |
-| 2000 | 0.79 |
+| Altitude [m.a.s.l.] | Imperial [f.a.s.l.] | Air pressure [bar] |
+| ---  | ---  | ---  |
+| 0    | 0    | 1.01 |
+| 400  | 1312 | 0.97 |
+| 700  | 2297 | 0.93 |
+| 2000 | 6562 | 0.79 |
 
 ## Conservatism - Gradient Factors
 
@@ -33,7 +33,7 @@ You can use predefined group of values, which correspond with values used by She
 
 * `Gradient factor High` (GF High): Is applied on tissue supersaturation level. The higher value you define, the higher allowed pressure in body tissues you allow when surfacing. The moment at which you surface is defined by duration of last stop, which this value controls. The higher value you define, the shorter will be the last stop duration.
 
-Following chart shows how different gradient factors apply to ascent profile. Legend shows gradients as GFLow/GFHigh. As you can see gf Low 20 % starts stops deeper, than GF Low 40 %. Similar GF High 70 % means longer stop at 3 meters than GF High 90 %, in which case you reach the surfaces faster. 100/100 means pure Bühlmann, with no additional safety margin.
+Following chart shows how different gradient factors apply to ascent profile. Legend shows gradients as GFLow/GFHigh. As you can see gf Low 20 % starts stops deeper, than GF Low 40 %. Similar GF High 70 % means longer stop at 3 meters (10 ft) than GF High 90 %, in which case you reach the surfaces faster. 100/100 means pure Bühlmann, with no additional safety margin.
 
 ![Gradient factors comparison chart](./gf_profile_comparison.png)
 
@@ -47,7 +47,7 @@ Which values to apply? Here are recommended values explained:
 
 ## Gases
 
-* `Maximum narcotic depth` [m]: Limits, at which depth gas mixture is considered to be narcotic. Exceeding this depth means the risk of narcosis significantly increases. Default value is 30 meters. Increasing this values allows you to use also nitrox mixes to higher depth, which is not recommended.
+* `Maximum narcotic depth` [m]: Limits, at which depth gas mixture is considered to be narcotic. Exceeding this depth means the risk of narcosis significantly increases. Default value is 30 meters (100 ft). Increasing this values allows you to use also nitrox mixes to higher depth, which is not recommended.
 * `Is oxygen narcotic`: If enabled (default), counts also oxygen as narcotic gas, otherwise only nitrogen is considered to be narcotic. Most agencies count both oxygen and nitrogen as narcotic gases. Disabling this option allows to you to use gases deeper, but is less safer.
 
 ## Stops
@@ -55,7 +55,7 @@ Which values to apply? Here are recommended values explained:
 * `Problem solving duration` [min]: Usually 1-2 minutes added to the bottom time to solve issues causing emergency ascent. This value is used only for Rock bottom calculation.
 * `Gas switch duration` [min]: Usually 1-3 minutes added as stop for gas switch. During this time the body has time to start consume less nitrogen under high pressure causing higher volume of nitrogen to be released from tissues and start [oxygen window](https://en.wikipedia.org/wiki/Oxygen_window).
 * `Round deco stops to minutes`: By default stops are calculated in seconds. In case you wan't them rounded up to minutes, enable this options. This affects only stops duration not ascent between stops.
-* `Last stop depth` [m]: Allows 3-6 meters, depending on conditions. Most agencies train to do 3 minutes stop at 5 meters, which doesn't have to be precise enough for more complex dives. E.g. In higher waves you want the stop at deeper depth. At the other hand some dive site conditions require you to do the stop close to the surface at 3 m depth.
+* `Last stop depth` [m]: Allows 3-6 meters (10-20 ft), depending on conditions. Most agencies train to do 3 minutes stop at 5 meters (15 ft), which doesn't have to be precise enough for more complex dives. E.g. In higher waves you want the stop at deeper depth. At the other hand some dive site conditions require you to do the stop close to the surface at 3 m depth.
 * `Add 3 min safety stop`: You can choose when the algorithm adds additional 3 minutes to last decompression stop. The safety stop is always added to the last stop duration (if any) at depth of defined last stop (see above).
   * `Never`: The safety stop is not added, the last stop is only controlled by decompression
   * `Auto (> 10m)`: The safety stop is added only in case the planned depth is deeper than 10 meters. This option is default and is suitable for recreational divers.
@@ -68,19 +68,18 @@ Which values to apply? Here are recommended values explained:
 
 * `Descent speed` [m/min]: Used in case user defines target depth only. In such case this value is used to calculate the descent.
 * `Ascent up to 50% depth` [m/min]: Is speed used to calculate ascent from target depth up to 50% of average depth.
-* `Ascent up to 6 m depth` [m/min]: Is speed used to calculate ascent from 50% average depth up to 6 m.
-* `Ascent 6 m to surface` [m/min]: Is speed used to calculate ascent from 6 m up to the surface.
+* `Ascent up to 6 m depth` [m/min]: Is speed used to calculate ascent from 50% average depth up to 6 m (20 ft).
+* `Ascent 6 m to surface` [m/min]: Is speed used to calculate ascent from 6 m (20 ft) up to the surface.
 
 > All the ascent speeds are used for both planned ascent and emergency ascent used to calculate the rock bottom.
 
 All the speeds are used also in user defined ascents or descents by checking, if the plan is within the speeds range.
 Change of ascent speeds apply at 3 m intervals, the same applies to decompression stops. It is recommended to use lower values closer to the surface. Use Recommended button to apply default values 9, 6 and 3 meters/min. For recreational dives used by most agencies, all are set to 9 meters/min.
 
-Following table shows example dive to 30 meters with average depth 28.6 meters and recommended speeds at moment the diver starts ascent. 50 % of average depth is rounded to 12 meters.
+Following table shows example dive to 30 meters (100 ft) with average depth 28.6 meters (94 ft) and recommended speeds at moment the diver starts ascent. 50 % of average depth is rounded to 12 meters.
 
-| Depth range [m] | Ascent speed [m/min] |
-| --- | --- |
-| 30 - 12 m | 9 |
-| 12 - 6 | 6 |
-| 6 - 0 | 3 |
-
+| Depth range [m] | Depth range [ft]  | Ascent speed [m/min] | Ascent speed [ft/min] |
+| ---             | ---                 | ---                  | ---                 |
+| 30 - 12         | 100 - 40            | 9                    | 30                  |
+| 12 - 6          | 40 - 20             | 6                    | 20                  |
+| 6 - 0           | 20 - 0              | 3                    | 10                  |

@@ -177,7 +177,6 @@ export class AirO2Pin {
     public static getO2(fO2: number, fHe: number): number {
         const current = fO2 * 100;
 
-        // TODO move rounding to tank
         if (this.isInAirRange(current, fHe)) {
             return AirO2Pin.pinnedO2;
         }

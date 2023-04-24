@@ -58,7 +58,7 @@ export class Segment {
      * meters per second, positive for descent, negative for ascent
      */
     public get speed(): number {
-        return (this.endDepth - this.startDepth) / this.duration;
+        return Segment.speed(this.startDepth, this.endDepth, this.duration);
     }
 
     /** in meters */
@@ -87,8 +87,29 @@ export class Segment {
         return copy;
     }
 
+    /**
+     * We don't care about the units, this is still valid for both meter and bars.
+     * Duration in seconds.
+     */
+    public static speed(startDepth: number, endDepth: number, duration: number): number {
+        return (endDepth - startDepth) / duration;
+    }
+
+    /**
+     * We don't care about the units, this is still valid for both meter and bars.
+     * Duration in seconds.
+     */
     public static depthAt(startDepth: number, speed: number, duration: number): number {
         return startDepth + speed * duration;
+    }
+
+    /**
+     * Returns number of seconds it takes to reach currentDepth from start depth.
+     * We don't care about the units, this is still valid for both meter and bars.
+     * Duration in seconds.
+     */
+    public static timeAt(startDepth: number, speed: number, currentDepth: number): number {
+        return Math.abs(currentDepth - startDepth) / speed;
     }
 
     public contentEquals(toCompare: Segment): boolean {

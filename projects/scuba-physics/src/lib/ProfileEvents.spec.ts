@@ -64,6 +64,42 @@ describe('Profile Events', () => {
             expect(events.items.length).toBe(2); // second is gas switch
             expect(events.items[0].type).toBe(EventType.lowPpO2);
         });
+
+        it('Started dive with 10/70 assigns correct depth and time', () => {
+            const segments = new Segments();
+            segments.add(0, 4, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(4, 4, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(4, 0, StandardGases.oxygen, Time.oneMinute);
+
+            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            expect(events.items.length).toBe(2); // last one is gas switch
+            expect(events.items[0].timeStamp).toBe(0);
+            expect(events.items[0].depth).toBeCloseTo(0);
+        });
+
+        it('Gas switch to 10/70 assigns correct depth and time', () => {
+            const segments = new Segments();
+            segments.add(0, 3, StandardGases.air, Time.oneMinute * 3);
+            segments.add(3, 3, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(3, 0, StandardGases.trimix1070, Time.oneMinute);
+
+            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            expect(events.items.length).toBe(2); // last one is gas switch
+            expect(events.items[0].timeStamp).toBe(180);
+            expect(events.items[0].depth).toBeCloseTo(3);
+        });
+
+        it('Ascent to 3 m with 10/70 assigns correct depth and time', () => {
+            const segments = new Segments();
+            segments.add(0, 10, StandardGases.air, Time.oneMinute);
+            segments.add(10, 3, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(3, 0, StandardGases.trimix1070, Time.oneMinute);
+
+            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            expect(events.items.length).toBe(2); // last one is gas switch
+            expect(events.items[0].timeStamp).toBe(43);
+            expect(events.items[0].depth).toBeCloseTo(8);
+        });
     });
 
     describe('High ppO2', () => {
@@ -138,6 +174,30 @@ describe('Profile Events', () => {
             expect(events.items.length).toBe(2);
             expect(events.items[0].type).toBe(EventType.highPpO2);
             expect(events.items[1].type).toBe(EventType.highPpO2);
+        });
+
+        it('Assigns correct depth and time for gas switch', () => {
+            const segments = new Segments();
+            segments.add(0, 10, StandardGases.ean50, Time.oneMinute * 3);
+            segments.add(10, 10, StandardGases.oxygen, Time.oneMinute);
+            segments.add(10, 0, StandardGases.oxygen, Time.oneMinute * 2);
+
+            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            expect(events.items.length).toBe(2); // last one is gas switch
+            expect(events.items[0].depth).toBe(10);
+            expect(events.items[0].timeStamp).toBe(180);
+        });
+
+        it('Assigns correct depth and time during decent', () => {
+            const segments = new Segments();
+            segments.add(0, 2, StandardGases.oxygen, Time.oneMinute * 1);
+            segments.add(2, 10, StandardGases.oxygen, Time.oneMinute * 4);
+            segments.add(10, 0, StandardGases.oxygen, Time.oneMinute * 2);
+
+            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            expect(events.items.length).toBe(1);
+            expect(events.items[0].depth).toBeCloseTo(4);
+            expect(events.items[0].timeStamp).toBe(120);
         });
     });
 

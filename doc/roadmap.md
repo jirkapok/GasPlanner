@@ -12,7 +12,6 @@ Following list of features and improvements ordered by priority is under develop
 * Add imperial units option
   * Add working pressure to complex tanks UI
   * Add examples to the documentation in Imperial units (Depths, calculators, standard gases)
-  * fix warnings calculation in corresponding units
 * UI: Add Dropdown for well known tank sizes (to reduce the work to sort all the fields on the page)
 * Settings
   * Apply settings after each change and distinguish from default settings

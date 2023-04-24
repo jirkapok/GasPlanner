@@ -1,6 +1,6 @@
 import { Options } from './Options';
-import { DepthConverter, DepthConverterFactory } from './depth-converter';
-import { Ceiling, EventsFactory, Events, Event } from './Profile';
+import { DepthConverter } from './depth-converter';
+import { Ceiling, EventsFactory, Events } from './Profile';
 import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { AscentSpeeds } from './speeds';
@@ -10,7 +10,8 @@ import { Precision } from './precision';
 class PressureSegment {
     constructor(
         public startDepth: number,
-        public endDepth: number
+        public endDepth: number,
+        public duration: number
     ) { }
 
     public get minDepth(): number {
@@ -31,6 +32,12 @@ class PressureSegment {
 
     public get isAscent(): boolean {
         return this.startDepth > this.endDepth;
+    }
+
+    public timeAt(currentDepth: number): number {
+        const speed = Segment.speed(this.startDepth, this.endDepth, this.duration);
+        const time = Segment.timeAt(this.startDepth, speed, currentDepth);
+        return Precision.round(time);
     }
 }
 
@@ -82,7 +89,7 @@ class EventsContext {
     /** Tank is only assigned by user */
     public get switchingTank(): boolean {
         return !!this.previous && !!this.previous.tank && !!this.current.tank &&
-               this.previous.tank !== this.current.tank;
+            this.previous.tank !== this.current.tank;
     }
 
     /** Gets maximum narcotic depth in bars */
@@ -95,6 +102,10 @@ class EventsContext {
         const gas = this.current.gas;
         const oxygenNarcotic = this.options.oxygenNarcotic;
         return gas.end(depth, oxygenNarcotic);
+    }
+
+    public addElapsed(): void {
+        this.elapsed += this.current.duration;
     }
 }
 
@@ -127,7 +138,7 @@ export class ProfileEvents {
             ceilingContext.assignSegment(context.current);
             ProfileEvents.addBrokenCeiling(ceilingContext, ceilings, context.current);
 
-            context.elapsed += context.current.duration;
+            context.addElapsed();
         }
 
         return context.events;
@@ -176,7 +187,7 @@ export class ProfileEvents {
     private static toPressureSegment(segment: Segment, depthConverter: DepthConverter) {
         const startPressure = depthConverter.toBar(segment.startDepth);
         const endPressure = depthConverter.toBar(segment.endDepth);
-        return new PressureSegment(startPressure, endPressure);
+        return new PressureSegment(startPressure, endPressure, segment.duration);
     }
 
     private static addHighPpO2(context: EventsContext, segment: PressureSegment): void {
@@ -186,8 +197,16 @@ export class ProfileEvents {
             const gasMod = context.current.gas.mod(context.maxPpo);
 
             if (segment.maxDepth > gasMod) {
-                const highDepth = context.depthConverter.fromBar(gasMod);
-                const event = EventsFactory.createHighPpO2(context.elapsed, highDepth);
+                let highDepth = segment.startDepth; // gas switch
+                let timeStamp = context.elapsed;
+
+                if (segment.startDepth < gasMod) { // ascent
+                    highDepth = gasMod;
+                    timeStamp += segment.timeAt(highDepth);
+                }
+
+                const depth = context.depthConverter.fromBar(highDepth);
+                const event = EventsFactory.createHighPpO2(timeStamp, depth);
                 context.events.add(event);
             }
         }
@@ -200,10 +219,18 @@ export class ProfileEvents {
             // only at beginning of a dive
             (context.current.startDepth === 0 && segment.startDepth < gasCeiling && segment.isDescent);
 
-        // only crossing the line or gas switch
         if (shouldAdd) {
-            const lowDepth = context.depthConverter.fromBar(gasCeiling);
-            const event = EventsFactory.createLowPpO2(context.elapsed, lowDepth);
+            // start of dive or gas switch
+            let lowDepth = segment.startDepth;
+            let timeStamp = context.elapsed;
+
+            if (segment.startDepth > gasCeiling) { // ascent
+                lowDepth = gasCeiling;
+                timeStamp += segment.timeAt(lowDepth);
+            }
+
+            const depth = context.depthConverter.fromBar(lowDepth);
+            const event = EventsFactory.createLowPpO2(timeStamp, depth);
             context.events.add(event);
         }
     }
@@ -222,7 +249,7 @@ export class ProfileEvents {
                 break;
             }
 
-            if(ceilingOk && !context.fixedBrokenCeiling) {
+            if (ceilingOk && !context.fixedBrokenCeiling) {
                 context.fixedBrokenCeiling = true;
             }
 
@@ -252,7 +279,7 @@ export class ProfileEvents {
         // we need to check both start and end, because next segment may use another gas
         const startEnd = context.gasEnd(pressureSegment.startDepth);
 
-        if (context.maxMnd < startEnd  && context.fixedMnd) {
+        if (context.maxMnd < startEnd && context.fixedMnd) {
             this.addMndEvent(context, context.elapsed, current.startDepth);
         }
 

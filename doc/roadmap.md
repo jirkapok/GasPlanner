@@ -12,6 +12,8 @@ Following list of features and improvements ordered by priority is under develop
 * Add imperial units option
   * Add working pressure to complex tanks UI
 * UI: Add Dropdown for well known tank sizes (to reduce the work to sort all the fields on the page)
+* Add option to define repetitive dives
+* Fix Cns/Otu calculation
 * Settings
   * Apply settings after each change and distinguish from default settings
   * Create default dive options
@@ -45,7 +47,6 @@ Following list of features and improvements ordered by priority is under develop
     * <https://www.npmjs.com/package/ngx-markdown>
     * <https://stackblitz.com/edit/angular-azjfgh?file=src%2Fapp%2Fapp.component.html>
     * <https://stackoverflow.com/questions/53416871/routing-to-static-html-page-in-angular-6>
-* Add option to define repetitive dives
 * Add localizations
 * Allow user to compare multiple plans side by side
 * Fix PWA issues https://www.pwabuilder.com/

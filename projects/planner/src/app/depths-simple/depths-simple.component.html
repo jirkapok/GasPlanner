@@ -3,9 +3,9 @@
         <fa-icon [icon]="cardIcon" class="me-3"></fa-icon>
         <span>Depth</span>
     </div>
-    <div class="card-body row">
-        <form [formGroup]="simpleForm">
-            <div class="mb-4 col col-12 col-md-6">
+    <form [formGroup]="simpleForm">
+        <div class="card-body row">
+            <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
                 <label for="duration" class="form-label" mdbLabel>Bottom time [min]:</label>
                 <input id="duration" formControlName="planDuration" class="form-control" (input)="durationChanged()"
                     type="number" required [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
@@ -20,9 +20,9 @@
                 <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="depths.applyNdlDuration()"
                     [class.invisible]="!planner.ndlValid" id="btnApplyNdl">No deco</button>
             </div>
-            <div class="col col-12 col-md-6">
+            <div class="col col-12 col-md-6 col-lg-12 col-xl-6">
                 <app-depth></app-depth>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>

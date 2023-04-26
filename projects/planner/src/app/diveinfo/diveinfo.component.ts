@@ -18,7 +18,7 @@ import { Plan } from '../shared/plan.service';
 import { OptionsService } from '../shared/options.service';
 
 @Component({
-    selector: 'app-consumption',
+    selector: 'app-diveinfo',
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss']
 })

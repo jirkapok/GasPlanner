@@ -20,7 +20,7 @@ None of the authors, contributors, administrators, or anyone else connected with
 * Share dive plan using url address
 * Nitrox and RMV/SAC calculators
 * No decompression limits table
-* See more in **[Application help](./doc/help.md)**
+* See more in **[Application help](./doc/readme.md)**
 * See also [Road map of planned features](./doc/roadmap.md)
 
 ## Donate

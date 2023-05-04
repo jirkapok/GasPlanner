@@ -11,6 +11,7 @@ export * from './lib/depth-converter';
 export * from './lib/DepthLevels';
 export * from './lib/Diver';
 export * from './lib/Gases';
+export * from './lib/GasDensity';
 export * from './lib/NitroxCalculator';
 export * from './lib/Options';
 export * from './lib/OtuCalculator';

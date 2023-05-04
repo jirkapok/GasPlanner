@@ -1,7 +1,7 @@
 import {
     Ceiling, Time, Event, Segment,
     StandardGases, Tank, OtuCalculator,
-    Precision, Gas
+    Precision, HighestDensity
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -135,14 +135,6 @@ export class TankBound {
     }
 }
 
-export class HighestDensity {
-    public gas: Gas = StandardGases.air;
-    /** gram/liter */
-    public density = 0;
-    /** meters */
-    public depth = 0;
-}
-
 export class Dive {
     public calculated = false;
     public diveInfoCalculated = false;
@@ -161,7 +153,7 @@ export class Dive {
     // TODO add event in case otu and CNS reached 80% of single exposure limits
     public otu = 0;
     public cns = 0;
-    public highestDensity = new HighestDensity();
+    public highestDensity = HighestDensity.createDefault();
     public wayPoints: WayPoint[] = [];
     public ceilings: Ceiling[] = [];
     public events: Event[] = [];

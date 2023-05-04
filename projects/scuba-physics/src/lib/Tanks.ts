@@ -159,10 +159,6 @@ export class Tank {
         this.gas.fO2 = other._gas.fO2;
         this.gas.fHe = other._gas.fHe;
     }
-
-    private isInAirRange(newO2: number): boolean {
-        return 20.9 <= newO2 && newO2 <= 21 && this.gas.fHe === 0;
-    }
 }
 
 

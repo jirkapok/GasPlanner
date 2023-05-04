@@ -36,14 +36,14 @@ To work on the application install NodeJs, AngularCli and TypeScript. Recommende
 ## Build
 
 To compile the application compile, first you need to install the dependency from local directory. To do so run `npm run build-lib`.
-Than compile solution by `npm run build` to deploy `dist` directory. To start the app use `npm run start` for debugging purpose. See also `build.ps1` build script.
+Than compile solution by `npm run build` to deploy `dist` directory. To start the app use `npm start` for debugging purpose. See also `build.ps1` build script.
 Development state of the art can also be checked using Github Actions:
 
 [![Build status](https://github.com/jirkapok/GasPlanner/actions/workflows/main.yml/badge.svg)](https://github.com/jirkapok/GasPlanner/actions)
 
 ## Running the tests
 
-Angular recommended testing environment is used, to run test use `npm run test-lib`, `npm run test`. To test the progressive web application behavior use `npm run start-pwa`.
+Angular recommended testing environment is used, to run test use `npm run test-lib`, `npm test`. To test the progressive web application behavior use `npm run start-pwa`.
 
 ## Contributing
 

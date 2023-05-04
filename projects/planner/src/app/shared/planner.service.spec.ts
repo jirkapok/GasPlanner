@@ -1,6 +1,6 @@
 import {
     Time, SafetyStop, Segment, Event,
-    EventType, CalculatedProfile, Events
+    EventType, CalculatedProfile, Events, StandardGases
 } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
@@ -66,6 +66,13 @@ describe('PlannerService', () => {
         it('CNS limit is calculated', () => {
             const cnsLimit = planner.dive.cns;
             expect(cnsLimit).toBeCloseTo(0.025702, 6);
+        });
+
+        it('Highest density is calculated', () => {
+            const highestDensity = planner.dive.highestDensity;
+            expect(highestDensity.gas).toEqual(StandardGases.air);
+            expect(highestDensity.depth).toEqual(30);
+            expect(highestDensity.density).toBeCloseTo(5.094, 3);
         });
     });
 

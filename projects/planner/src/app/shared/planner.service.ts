@@ -131,12 +131,12 @@ export class PlannerService extends Streamed {
         const optionsDto = DtoSerialization.fromOptions(this.optionsService.getOptions());
 
         if (profile.endsOnSurface) {
-            const noDecoRequest = {
+            const infoRequest = {
                 tanks: serializedTanks,
                 plan: serializedPlan,
                 options: optionsDto
             };
-            this.diveInfoTask.calculate(noDecoRequest);
+            this.diveInfoTask.calculate(infoRequest);
 
             const consumptionRequest = {
                 plan: serializedPlan,
@@ -174,6 +174,7 @@ export class PlannerService extends Streamed {
         this.dive.cns = diveInfo.cns;
         this.dive.noDecoExceeded = this.plan.noDecoExceeded;
         this.dive.notEnoughTime = this.plan.notEnoughTime;
+        this.dive.highestDensity = DtoSerialization.toDensity(diveInfo.density);
         this.dive.diveInfoCalculated = true;
         this.calculatingDiveInfo = false;
     }

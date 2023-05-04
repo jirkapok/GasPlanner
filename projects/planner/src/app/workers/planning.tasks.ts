@@ -1,6 +1,6 @@
 import {
     Segments, Gases, BuhlmannAlgorithm, ProfileEvents, DepthConverterFactory,
-    Consumption, Time, Diver, OtuCalculator, CnsCalculator
+    Consumption, Time, Diver, OtuCalculator, CnsCalculator, DensityAtDepth
 } from 'scuba-physics';
 import {
     DtoSerialization,
@@ -9,6 +9,7 @@ import {
 } from '../shared/serialization.model';
 
 export class PlanningTasks {
+    /** 1. Calculate profile */
     public static calculateDecompression(data: ProfileRequestDto): ProfileResultDto {
         const tanks = DtoSerialization.toTanks(data.tanks);
         const segments = DtoSerialization.toSegments(data.plan, tanks);
@@ -27,6 +28,7 @@ export class PlanningTasks {
         };
     }
 
+    /** 2.A calculate dive results */
     public static diveInfo(task: ProfileRequestDto): DiveInfoResultDto {
         // we can't speedup the prediction from already obtained profile,
         // since it may happen, the deco starts during ascent.
@@ -42,14 +44,17 @@ export class PlanningTasks {
         const depthConverter = new DepthConverterFactory(task.options).create();
         const otu = new OtuCalculator(depthConverter).calculateForProfile(originProfile);
         const cns = new CnsCalculator(depthConverter).calculateForProfile(originProfile);
+        const density = new DensityAtDepth(depthConverter).forProfile(originProfile);
 
         return {
             noDeco: noDecoLimit,
             otu: otu,
-            cns: cns
+            cns: cns,
+            density: DtoSerialization.fromDensity(density)
         };
     }
 
+    /** 2.B calculate consumption only as the most time consuming operation */
     public static calculateConsumption(task: ConsumptionRequestDto): ConsumptionResultDto {
         const depthConverter = new DepthConverterFactory(task.options).create();
         const consumption = new Consumption(depthConverter);

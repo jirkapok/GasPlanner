@@ -29,26 +29,34 @@ describe('Gas Density', () => {
         });
     });
 
-    describe('For Profile', () => {
+    describe('At depth', () => {
         const sut = new DensityAtDepth(DepthConverter.simple());
 
-        it('No segments return empty density', () => {
-            const density = sut.forProfile([]);
-            const expected = HighestDensity.createDefault();
-            expect(density).toEqual(expected);
+        it('Air at 30 m is 5', () => {
+            const calc = new DensityAtDepth(DepthConverter.forFreshWater());
+            const density = calc.atDepth(StandardGases.air, 30);
+            expect(density).toBeCloseTo(5.094, 3);
         });
 
-        it('Segments return density', () => {
-            const profile: Segment[] = [
-                new Segment(0, 2, StandardGases.air, Time.oneMinute),
-                new Segment(2, 20, StandardGases.trimix1845, Time.oneMinute),
-                new Segment(20, 0, StandardGases.ean32, Time.oneMinute),
-            ];
+        describe('For Profile', () => {
+            it('No segments return empty density', () => {
+                const density = sut.forProfile([]);
+                const expected = HighestDensity.createDefault();
+                expect(density).toEqual(expected);
+            });
 
-            const density = sut.forProfile(profile);
-            expect(density.gas).toEqual(StandardGases.ean32);
-            expect(density.depth).toBeCloseTo(20);
-            expect(density.density).toBeCloseTo(3.923, 3);
+            it('Segments return density', () => {
+                const profile: Segment[] = [
+                    new Segment(0, 2, StandardGases.air, Time.oneMinute),
+                    new Segment(2, 20, StandardGases.trimix1845, Time.oneMinute),
+                    new Segment(20, 0, StandardGases.ean32, Time.oneMinute),
+                ];
+
+                const density = sut.forProfile(profile);
+                expect(density.gas).toEqual(StandardGases.ean32);
+                expect(density.depth).toBeCloseTo(20);
+                expect(density.density).toBeCloseTo(3.923, 3);
+            });
         });
     });
 });

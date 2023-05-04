@@ -1,7 +1,7 @@
 import {
-    Options, Segment, StandardGases, Tank, Tanks,
+    Options, Segment, Tank, Tanks,
     CalculatedProfile, Ceiling, EventType,
-    Event, Events, Gas, Diver, Salinity, SafetyStop
+    Event, Events, Gas, Diver, Salinity, SafetyStop, HighestDensity
 } from 'scuba-physics';
 
 /**
@@ -58,6 +58,13 @@ export interface DiveInfoResultDto {
     noDeco: number;
     otu: number;
     cns: number;
+    density: DensityDto;
+}
+
+export interface DensityDto {
+    gas: GasDto;
+    depth: number;
+    density: number;
 }
 
 export interface ProfileResultDto {
@@ -181,10 +188,7 @@ export class DtoSerialization {
                 size: tank.size,
                 workPressure: t.workingPressureBars,
                 startPressure: tank.startPressure,
-                gas: {
-                    fO2: tank.gas.fO2,
-                    fHe: tank.gas.fHe
-                }
+                gas: DtoSerialization.fromGas(tank.gas)
             };
             result.push(serialized);
         });
@@ -211,9 +215,8 @@ export class DtoSerialization {
 
         for (let index = 0; index < source.length; index++) {
             const loaded = source[index];
-            const gas = StandardGases.air.copy();
-            gas.fO2 = loaded.gas.fO2; // segment always has gas
-            gas.fHe = loaded.gas.fHe;
+            // segment always has gas
+            const gas = DtoSerialization.toGas(loaded.gas);
             const converted = new Segment(loaded.startDepth, loaded.endDepth, gas, loaded.duration);
 
             if (loaded.tankId > 0 && loaded.tankId <= tanks.length) {
@@ -236,10 +239,7 @@ export class DtoSerialization {
                 endDepth: segment.endDepth,
                 duration: segment.duration,
                 tankId: tankId,
-                gas: {
-                    fO2: segment.gas.fO2,
-                    fHe: segment.gas.fHe
-                }
+                gas: DtoSerialization.fromGas(segment.gas)
             };
             result.push(serialized);
         });
@@ -267,7 +267,7 @@ export class DtoSerialization {
         dto.forEach(d => {
             const e = new Event(d.timeStamp, d.depth, d.type, d.message);
             if (d.gas) {
-                e.gas = new Gas(d.gas?.fO2, d.gas?.fHe);
+                e.gas = DtoSerialization.toGas(d.gas);
             }
 
             result.add(e);
@@ -286,10 +286,7 @@ export class DtoSerialization {
             };
 
             if (e.gas) {
-                dto.gas = {
-                    fO2: e.gas.fO2,
-                    fHe: e.gas.fHe,
-                };
+                dto.gas = DtoSerialization.fromGas(e.gas);
             }
             result.push(dto);
         });
@@ -351,5 +348,29 @@ export class DtoSerialization {
         options.descentSpeed = dto.descentSpeed;
         options.problemSolvingDuration = dto.problemSolvingDuration;
         return options;
+    }
+
+    public static fromDensity(density: HighestDensity): DensityDto {
+        return {
+            gas: DtoSerialization.fromGas(density.gas),
+            depth: density.depth,
+            density: density.density
+        };
+    }
+
+    public static toDensity(dto: DensityDto): HighestDensity {
+        const gas = DtoSerialization.toGas(dto.gas);
+        return new HighestDensity(gas, dto.depth, dto.density);
+    }
+
+    public static toGas(dto: GasDto): Gas {
+        return new Gas(dto.fO2, dto.fHe);
+    }
+
+    public static fromGas(gas: Gas): GasDto {
+        return {
+            fO2: gas.fO2,
+            fHe: gas.fHe
+        };
     }
 }

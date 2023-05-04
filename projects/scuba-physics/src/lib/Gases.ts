@@ -247,16 +247,24 @@ export class Gas {
         }
     }
 
+    /** Nitrox fraction in range 0 - 1 */
     public get fN2(): number {
         return 1 - this._fO2 - this._fHe;
     }
 
+    /** Oxygen fraction in range 0 - 1 */
     public get fO2(): number {
         return this._fO2;
     }
 
+    /** Helium fraction in range 0 - 1 */
     public get fHe(): number {
         return this._fHe;
+    }
+
+    /** Gets not null name of the content gas based on O2 and he fractions */
+    public get name(): string {
+        return StandardGases.nameFor(this.fO2, this.fHe);
     }
 
     public set fO2(newValue: number) {

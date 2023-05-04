@@ -86,9 +86,9 @@ export class Tank {
         return this.size * this.startPressure;
     }
 
-    /** Gets not null name of the content gas based on O2 fraction */
+    /** Gets not null name of the content gas based on O2 and he fractions */
     public get name(): string {
-        return StandardGases.nameFor(this._gas.fO2, this._gas.fHe);
+        return this._gas.name;
     }
 
     /** calculated value in range 0 - start pressure in bars  */

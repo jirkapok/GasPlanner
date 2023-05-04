@@ -53,12 +53,12 @@ export class DiveInfoComponent extends Streamed {
             });
     }
 
-    public get tanks(): Tank[] {
-        return this.tanksService.tankData;
+    public get isComplex(): boolean {
+        return this.viewSwitch.isComplex;
     }
 
-    public get showTankId(): boolean {
-        return this.viewSwitch.isComplex;
+    public get tanks(): Tank[] {
+        return this.tanksService.tankData;
     }
 
     public get showMaxBottomTime(): boolean {
@@ -74,11 +74,23 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get showApply(): boolean {
-        return !this.viewSwitch.isComplex;
+        return !this.isComplex && this.dive.calculated;
     }
 
     public get averageDepth(): number {
         return this.units.fromMeters(this.dive.averageDepth);
+    }
+
+    // TODO fix density units
+    public get highestDensity(): number {
+        return this.dive.highestDensity.density;
+    }
+
+    // TODO propagate gas density to dive info
+    public get densityText(): string {
+        const gas = this.dive.highestDensity.gas.name;
+        const depth = this.units.fromMeters(this.dive.highestDensity.depth);
+        return `${gas} at ${depth} ${this.units.length}`;
     }
 
     public applyMaxDuration(): void {

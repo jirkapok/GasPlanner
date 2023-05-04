@@ -53,7 +53,7 @@
                             <td>No decompression time [min]:
                                 <button type="button" class="btn btn-secondary btn-sm ml-2"
                                     (click)="applyNdlDuration()"
-                                    *ngIf="showApply && dive.diveInfoCalculated">Use</button>
+                                    *ngIf="showApply">Use</button>
                             </td>
                             <td class="table-active">
                                 <strong *ngIf="dive.diveInfoCalculated">{{ noDeco | number:'1.0-0' }}</strong>
@@ -63,10 +63,19 @@
                             <td>Maximum bottom time [min]:
                                 <button type="button" class="btn btn-secondary btn-sm ml-2"
                                     (click)="applyMaxDuration()"
-                                    *ngIf="showApply && dive.calculated">Use</button>
+                                    *ngIf="showApply">Use</button>
                             </td>
                             <td class="table-active">
                                 <strong *ngIf="dive.calculated">{{ dive.maxTime | number:'1.0-0' }}</strong>
+                            </td>
+                        </tr>
+                        <tr *ngIf="isComplex && false">
+                            <td>
+                                Highest gas density [g/l]:<br>
+                                ({{densityText}})
+                            </td>
+                            <td class="table-active">
+                                <strong *ngIf="dive.calculated">{{ highestDensity | number:'1.0-0' }}</strong>
                             </td>
                         </tr>
                         <tr *ngIf="dive.needsReturn">
@@ -98,7 +107,7 @@
                     </tbody>
                 </table>
                 <div *ngIf="dive.showResults">
-                    <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="showTankId" [toxicity]="toxicity">
+                    <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="isComplex" [toxicity]="toxicity">
                     </app-tankchart>
                 </div>
             </div>

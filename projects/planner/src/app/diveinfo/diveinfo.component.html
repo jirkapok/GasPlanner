@@ -69,13 +69,13 @@
                                 <strong *ngIf="dive.calculated">{{ dive.maxTime | number:'1.0-0' }}</strong>
                             </td>
                         </tr>
-                        <tr *ngIf="isComplex && false">
+                        <tr *ngIf="isComplex">
                             <td>
                                 Highest gas density [g/l]:<br>
                                 ({{densityText}})
                             </td>
                             <td class="table-active">
-                                <strong *ngIf="dive.calculated">{{ highestDensity | number:'1.0-0' }}</strong>
+                                <strong *ngIf="dive.calculated">{{ highestDensity | number:'1.0-2' }}</strong>
                             </td>
                         </tr>
                         <tr *ngIf="dive.needsReturn">

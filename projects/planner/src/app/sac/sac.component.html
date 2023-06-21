@@ -80,21 +80,21 @@
                         <ng-container *ngIf="calc.inSac">
                             <div class="pt-2 mb-4">
                                 <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                                <input class="form-control" [readonly]="true" [value]="calcRmv"/>
+                                <input class="form-control" [readonly]="true" [value]="calcRmv" id="sac"/>
                                 <small class="form-text text-muted">SAC: {{ gasSac | number:'1.0-2'}}
                                     {{units.sac}}</small>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="calc.inUsed">
                             <div class="pt-2 mb-4">
-                                <label for="sac" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
-                                <input class="form-control" [readonly]="true" [value]="calcUsed" />
+                                <label for="used" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
+                                <input class="form-control" [readonly]="true" [value]="calcUsed" id="used"/>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="calc.inDuration">
                             <div class="pt-2 mb-4">
-                                <label for="sac" class="form-label" mdbLabel>Dive time [min]:</label>
-                                <input class="form-control" [readonly]="true" [value]="calcDuration" />
+                                <label for="duration" class="form-label" mdbLabel>Dive time [min]:</label>
+                                <input class="form-control" [readonly]="true" [value]="calcDuration" id="duration"/>
                             </div>
                         </ng-container>
                     </form>

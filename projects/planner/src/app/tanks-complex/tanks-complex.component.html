@@ -34,31 +34,31 @@
                 <div class="row p-0">
                     <div class="col col-12 col-sm-1 m-0 pb-0 px-1 text-end d-none d-md-block align-self-center">{{ tanks[i].id }}.</div>
                     <div class="col col-12 col-sm-4 col-md-2 m-0 pb-0 px-1">
-                        <label for="sizeItem" class="form-label d-md-none d-block mt-2">Size
+                        <label for="{{ i }}-sizeItem" class="form-label d-md-none d-block mt-2">Size
                             [{{units.volume}}]:</label>
                         <input formControlName="tankSize" class="form-control" type="number" (input)="tankChanged(i)"
                             required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-                            [class.is-invalid]="tankSizeInvalid(i)" id="sizeItem" />
+                            [class.is-invalid]="tankSizeInvalid(i)" id="{{ i }}-sizeItem" />
                         <div class="text-danger" *ngIf="tankSizeInvalid(i)">Needs to be number
                             {{ranges.tankSizeLabel}}
                         </div>
                     </div>
                     <div class="col col-12 col-sm-4 col-md-2 m-0 pb-0 px-1" *ngIf="units.imperialUnits">
-                        <label for="workPressureItem" class="form-label d-md-none d-block mt-2">Work p.
+                        <label for="{{ i }}-workPressureItem" class="form-label d-md-none d-block mt-2">Work p.
                             [{{units.pressure}}]:</label>
                         <input formControlName="tankWorkPressure" class="form-control" type="number"
                             (input)="tankChanged(i)" required [min]="ranges.tankPressure[0]"
-                            [max]="ranges.tankPressure[1]" step="1" id="workPressureItem"
+                            [max]="ranges.tankPressure[1]" step="1" id="{{ i }}-workPressureItem"
                             [class.is-invalid]="workPressureInvalid(i)" />
                         <div class="text-danger" *ngIf="workPressureInvalid(i)">
                             Needs to be number {{ranges.tankPressureLabel}}</div>
                     </div>
                     <div class="col col-12 col-sm-4 col-md-2 m-0 pb-0 px-1">
-                        <label for="pressureItem" class="form-label d-md-none d-block mt-2">Pressure
+                        <label for="{{ i }}-pressureItem" class="form-label d-md-none d-block mt-2">Pressure
                             [{{units.pressure}}]:</label>
                         <input formControlName="tankStartPressure" class="form-control" type="number"
                             (input)="tankChanged(i)" required [min]="ranges.tankPressure[0]"
-                            [max]="ranges.tankPressure[1]" step="1" id="pressureItem"
+                            [max]="ranges.tankPressure[1]" step="1" id="{{ i }}-pressureItem"
                             [class.is-invalid]="startPressureInvalid(i)" />
                         <div class="text-danger" *ngIf="startPressureInvalid(i)">
                             Needs to be number {{ranges.tankPressureLabel}}</div>
@@ -68,7 +68,7 @@
                         <div class="input-group dropdown" mdbDropdown>
                             <input formControlName="tankO2" class="form-control" type="number" (input)="tankChanged(i)"
                                 required [min]="ranges.trimixOxygen[0]" [max]="ranges.trimixOxygen[1]" step="1"
-                                [class.is-invalid]="gasO2Invalid(i)" id="o2Item" />
+                                [class.is-invalid]="gasO2Invalid(i)" id="{{ i }}-o2Item" />
                             <button class="btn btn-default dropdown-toggle dropdown-toggle-split" id="o2Menu"
                                 type="button" aria-expanded="false" data-mdb-toggle="dropdown"
                                 mdbDropdownToggle></button>
@@ -82,10 +82,10 @@
                             {{ranges.trimixOxygenLabel}}</div>
                     </div>
                     <div class="col col-12 col-sm-5 col-md-2 m-0 pb-0 px-1">
-                        <label for="o2Item" class="form-label d-md-none d-block mt-2">He [%]:</label>
+                        <label for="{{ i }}-o2Item" class="form-label d-md-none d-block mt-2">He [%]:</label>
                         <input formControlName="tankHe" class="form-control" type="number" (input)="tankChanged(i)"
                             [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1" required
-                            [class.is-invalid]="gasHeInvalid(i)" id="heItem" />
+                            [class.is-invalid]="gasHeInvalid(i)" id="{{ i }}-heItem" />
                         <div class="text-danger" *ngIf="gasHeInvalid(i)">Needs to be number
                             {{ranges.tankHeLabel}}</div>
                     </div>

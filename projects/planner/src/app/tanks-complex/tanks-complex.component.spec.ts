@@ -1,5 +1,4 @@
 import { DecimalPipe } from '@angular/common';
-import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -23,28 +22,35 @@ import { WayPointsService } from '../shared/waypoints.service';
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
 
-    public get sizeDebugs(): DebugElement[] {
-        const all = this.fixture.debugElement.queryAll(By.css('#sizeItem'));
-        return all;
+    public debugElement(id: string): HTMLInputElement {
+        const found = this.fixture.debugElement.query(By.css(id));
+        return found.nativeElement as HTMLInputElement;
     }
 
     public sizeInput(index: number): HTMLInputElement {
-        return this.sizeDebugs[index].nativeElement as HTMLInputElement;
+        const id = `#sizeItem-${index}`;
+        return this.debugElement(id);
     }
 
     public pressureInput(index: number): HTMLInputElement {
-        const all = this.fixture.debugElement.queryAll(By.css('#pressureItem'));
-        return all[index].nativeElement as HTMLInputElement;
+        const id = `#pressureItem-${index}`;
+        return this.debugElement(id);
     }
 
     public o2Input(index: number): HTMLInputElement {
-        const all = this.fixture.debugElement.queryAll(By.css('#o2Item'));
-        return all[index].nativeElement as HTMLInputElement;
+        const id = `#o2Item-${index}`;
+        return this.debugElement(id);
     }
 
     public heInput(index: number): HTMLInputElement {
-        const all = this.fixture.debugElement.queryAll(By.css('#heItem'));
-        return all[index].nativeElement as HTMLInputElement;
+        const id = `#heItem-${index}`;
+        return this.debugElement(id);
+    }
+
+    public removeButtons(): number {
+        const idPrefix = '[id^="removeTank"]';
+        const found = this.fixture.debugElement.queryAll(By.css(idPrefix));
+        return found.length;
     }
 }
 
@@ -100,7 +106,9 @@ describe('Tanks Complex component', () => {
     it('Adds tank', () => {
         fixture.detectChanges();
         component.addTank();
+        fixture.detectChanges();
         expect(component.tanks.length).toBe(2);
+        expect(complexPage.removeButtons()).toBe(1);
     });
 
     it('Removes tank', () => {
@@ -109,8 +117,10 @@ describe('Tanks Complex component', () => {
         component.addTank();
         component.addTank();
         component.removeTank(3);
+        fixture.detectChanges();
 
         expect(component.tanks.length).toBe(3);
+        expect(complexPage.removeButtons()).toBe(2);
     });
 
     it('Invalid change in complex mode prevents calculate', () => {

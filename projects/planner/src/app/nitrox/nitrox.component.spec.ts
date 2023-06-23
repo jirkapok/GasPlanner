@@ -19,7 +19,7 @@ export class NitroxPage {
     constructor(private fixture: ComponentFixture<NitroxComponent>) { }
 
     public get fO2Input(): HTMLInputElement {
-        return this.fixture.debugElement.query(By.css('#fO2')).nativeElement as HTMLInputElement;
+        return this.fixture.debugElement.query(By.css('#gasO2')).nativeElement as HTMLInputElement;
     }
 
     public get ppO2Input(): HTMLInputElement {

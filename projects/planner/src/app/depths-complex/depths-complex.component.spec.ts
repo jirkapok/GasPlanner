@@ -24,23 +24,31 @@ export class ComplexDepthsPage {
         return this.fixture.debugElement.query(By.css('#addLevel')).nativeElement as HTMLButtonElement;
     }
 
-    public get durationDebugs(): DebugElement[] {
-        const all = this.fixture.debugElement.queryAll(By.css('#durationItem'));
-        return all;
+    public debugElement(id: string): HTMLInputElement {
+        const found = this.fixture.debugElement.query(By.css(id));
+        return found.nativeElement as HTMLInputElement;
     }
 
     public removeLevelButton(index: number): HTMLButtonElement {
-        const all = this.fixture.debugElement.queryAll(By.css('#removeLevel'));
-        return all[index].nativeElement as HTMLButtonElement;
+        const id = `#removeLevel-${ index }`;
+        const debugElement = this.fixture.debugElement.query(By.css(id));
+        return debugElement.nativeElement as HTMLButtonElement;
     }
 
     public durationInput(index: number): HTMLInputElement {
-        return this.durationDebugs[index].nativeElement as HTMLInputElement;
+        const id = `#durationItem-${ index }`;
+        return this.debugElement(id);
     }
 
     public depthInput(index: number): HTMLInputElement {
-        const all = this.fixture.debugElement.queryAll(By.css('#depthItem'));
-        return all[index].nativeElement as HTMLInputElement;
+        const id = `#depthItem-${ index }`;
+        return this.debugElement(id);
+    }
+
+    public removeButtons(): number{
+        const id = '[id^="removeLevel"]';
+        const found = this.fixture.debugElement.queryAll(By.css(id));
+        return found.length;
     }
 }
 
@@ -98,14 +106,14 @@ describe('Depths Complex Component', () => {
             complexPage.addLevelButton.click();
             fixture.detectChanges();
             expect(depths.levels.length).toBe(3);
-            expect(complexPage.durationDebugs.length).toBe(3);
+            expect(complexPage.removeButtons()).toBe(3);
         });
 
         it('Is removed from correct position', () => {
             complexPage.removeLevelButton(1).click();
             fixture.detectChanges();
             expect(depths.levels.length).toBe(1);
-            expect(complexPage.durationDebugs.length).toBe(1);
+            expect(complexPage.removeButtons()).toBe(0);
         });
     });
 

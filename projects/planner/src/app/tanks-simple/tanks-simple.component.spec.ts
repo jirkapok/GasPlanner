@@ -32,7 +32,7 @@ export class SimpleTanksPage {
     }
 
     public get oxygenDebug(): DebugElement {
-        return this.fixture.debugElement.query(By.css('#fO2'));
+        return this.fixture.debugElement.query(By.css('#gasO2'));
     }
 
     public get oxygenInput(): HTMLInputElement {

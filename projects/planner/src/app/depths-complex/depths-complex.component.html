@@ -33,24 +33,24 @@
                     <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block text-end align-self-center">{{
                         startDepth(i) | number:'1.0-0' }}</div>
                     <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
-                        <input formControlName="endDepth" class="form-control" type="number" id="{{ i }}-depthItem"
+                        <input formControlName="endDepth" class="form-control" type="number" id="depthItem-{{ i }}"
                             (input)="levelChanged(i)" required [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
                             [class.is-invalid]="depthItemInvalid(i)" />
                         <div class="text-danger" *ngIf="depthItemInvalid(i)">
                             Needs to be number {{ranges.depthLabel}}</div>
                     </div>
                     <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
-                        <label for="{{ i }}-durationItem" class="form-label d-sm-none d-block mt-2">Duration [min]:</label>
-                        <input formControlName="duration" class="form-control" type="number" id="{{ i }}-durationItem"
+                        <label for="durationItem-{{ i }}" class="form-label d-sm-none d-block mt-2">Duration [min]:</label>
+                        <input formControlName="duration" class="form-control" type="number" id="durationItem-{{ i }}"
                             (input)="levelChanged(i)" required [min]="ranges.duration[0]" [max]="ranges.duration[1]"
                             step="1" [class.is-invalid]="durationItemInvalid(i)" />
                         <div class="text-danger" *ngIf="durationItemInvalid(i)">Needs to be number
                             {{ ranges.durationLabel }}</div>
                     </div>
                     <div class="col col-12 col-sm-6 m-0 pb-0 px-1">
-                        <label for="{{ i }}-tanks" class="form-label d-sm-none d-block mt-2">Tank:</label>
+                        <label for="tanks-{{ i }}" class="form-label d-sm-none d-block mt-2">Tank:</label>
                         <div mdbDropdown class="input-group dropdown">
-                            <input id="{{ i }}-tanks" [value]="tankLabelFor(i)" class="form-control" type="text" readonly />
+                            <input id="tanks-{{ i }}" [value]="tankLabelFor(i)" class="form-control" type="text" readonly />
                             <button class="btn btn-default dropdown-toggle dropdown-toggle-split" id="tankMenu"
                                 type="button" mdbDropdownToggle aria-expanded="false"
                                 data-mdb-toggle="dropdown"></button>
@@ -63,7 +63,7 @@
                     </div>
                     <div class="col col-12 col-sm-1 m-0 pb-0 px-1 d-none d-sm-block align-self-center">
                         <button *ngIf="minimumSegments" type="button" class="m-0 p-1 btn btn-secondary"
-                            (click)="removeLevel(i)" id="removeLevel">
+                            (click)="removeLevel(i)" id="removeLevel-{{ i }}">
                             <fa-icon [icon]="removeIcon" class="p-0 m-0 fa-xl"></fa-icon>
                         </button>
                     </div>

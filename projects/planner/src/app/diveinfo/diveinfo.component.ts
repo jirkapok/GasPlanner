@@ -81,12 +81,11 @@ export class DiveInfoComponent extends Streamed {
         return this.units.fromMeters(this.dive.averageDepth);
     }
 
-    // TODO fix density units
     public get highestDensity(): number {
-        return this.dive.highestDensity.density;
+        const density = this.dive.highestDensity.density;
+        return this.units.fromGramPerLiter(density);
     }
 
-    // TODO propagate gas density to dive info
     public get densityText(): string {
         const gas = this.dive.highestDensity.gas.name;
         const depth = this.units.fromMeters(this.dive.highestDensity.depth);

@@ -58,6 +58,10 @@ export class UnitConversion {
         return this.volume + perMinute;
     }
 
+    public get density(): string {
+        return this.current.densityShortcut;
+    }
+
     public get imperialUnits(): boolean {
         return this._imperialUnits;
     }
@@ -120,6 +124,10 @@ export class UnitConversion {
     /** working pressure in bars */
     public toTankLiters(cuftVolume: number, workingPressure: number): number {
         return this.current.toTankLiters(cuftVolume, workingPressure);
+    }
+
+    public fromGramPerLiter(density: number): number {
+        return this.current.fromGramPerLiter(density);
     }
 }
 

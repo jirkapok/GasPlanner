@@ -65,4 +65,6 @@ export class DiveIssuesComponent {
     public eventDepthFor(event: Event): number {
         return this.units.fromMeters(event.depth);
     }
+
+    // TODO add density warning
 }

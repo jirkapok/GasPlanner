@@ -101,6 +101,13 @@ describe('Metric units', () => {
             expect(result).toBe(1);
         });
     });
+
+    describe('Density - Gram per iter', () => {
+        it('From 1 g/l returns identical value', () => {
+            const result = units.fromGramPerLiter(1.234);
+            expect(result).toBeCloseTo(1.234, 3);
+        });
+    });
 });
 
 describe('Imperial units', () => {
@@ -222,6 +229,18 @@ describe('Imperial units', () => {
         it('11 liter size at 207 bars working pressure is 80 cuft', () => {
             const result = units.fromTankLiters(10.952031314, defaultWorkingPressure);
             expect(result).toBeCloseTo(80, 8);
+        });
+    });
+
+    describe('Density - pound per cubic foot', () => {
+        it('From 0 g/l returns identical value', () => {
+            const result = units.fromGramPerLiter(0);
+            expect(result).toBeCloseTo(0);
+        });
+
+        it('From 1 g/l returns expect', () => {
+            const result = units.fromGramPerLiter(1);
+            expect(result).toBeCloseTo(0.06242796, 8);
         });
     });
 });

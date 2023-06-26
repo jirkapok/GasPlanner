@@ -5,6 +5,7 @@ export interface Units {
     pressureShortcut: string;
     volumeShortcut: string;
     altitudeShortcut: string;
+    densityShortcut: string;
     toMeters(length: number): number;
     fromMeters(meters: number): number;
     toBar(pressure: number): number;
@@ -15,6 +16,8 @@ export interface Units {
     fromTankLiters(liters: number, workingPressure: number): number;
     /** Converts volume of tank based on working pressure in bars */
     toTankLiters(cuftVolume: number, workingPressure: number): number;
+
+    fromGramPerLiter(density: number): number;
 }
 
 /**
@@ -40,6 +43,10 @@ export class MetricUnits implements Units {
 
     public get altitudeShortcut(): string{
         return 'm.a.s.l';
+    }
+
+    public get densityShortcut(): string{
+        return 'g/l';
     }
 
     public toMeters(length: number): number {
@@ -73,6 +80,10 @@ export class MetricUnits implements Units {
     public toTankLiters(cuftVolume: number, workingPressure: number): number {
         return cuftVolume;
     }
+
+    public fromGramPerLiter(density: number): number {
+        return density;
+    }
 }
 
 /**
@@ -93,9 +104,16 @@ export class MetricUnits implements Units {
 export class ImperialUnits implements Units {
     private static readonly psiRate = 14.503773773022;
     private static readonly cftRate = 28.316846592;
-    // consider distinguish m and ft from msw and fsw https://en.wikipedia.org/wiki/Metre_sea_water
-    // 1 fsw equals 0.30643 msw
+
+    /**
+     * 1 fsw equals 0.30643 msw
+     * consider distinguish m and ft from msw and fsw https://en.wikipedia.org/wiki/Metre_sea_water
+     */
     private static readonly footRate = 0.3048;
+    /** 1 gram to pound */
+    private static readonly poundRate = 0.00220462262;
+    /** 1 g/l  = cca 0.06242796 lb/cuft */
+    private static readonly lbPerCuftRate = ImperialUnits.poundRate * ImperialUnits.cftRate;
 
     public get name(): string{
         return 'Imperial';
@@ -115,6 +133,10 @@ export class ImperialUnits implements Units {
 
     public get altitudeShortcut(): string{
         return 'ft.a.s.l';
+    }
+
+    public get densityShortcut(): string{
+        return 'lb/cuft';
     }
 
     public toMeters(length: number): number {
@@ -153,5 +175,9 @@ export class ImperialUnits implements Units {
         const absoluteLiters = this.toLiter(cuftVolume);
         const newLiters = absoluteLiters / workingPressure;
         return newLiters;
+    }
+
+    public fromGramPerLiter(density: number): number {
+        return density * ImperialUnits.lbPerCuftRate;
     }
 }

@@ -108,14 +108,23 @@
                 </div>
                 <app-calculating [show]="!dive.calculated"></app-calculating>
             </mdb-tab>
-            <mdb-tab title="Consumed">
+            <mdb-tab>
+                <ng-template mdbTabTitle>
+                    <span>Consumed</span> <span *ngIf="dive.notEnoughGas" class="badge badge-danger ms-2"><strong>!</strong></span>
+                </ng-template>
                 <ng-container *ngIf="dive.showResults">
                     <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="isComplex" [toxicity]="toxicity">
                     </app-tankchart>
                 </ng-container>
                 <app-calculating [show]="!dive.calculated"></app-calculating>
             </mdb-tab>
-            <mdb-tab title="Issues">
+            <mdb-tab>
+                <ng-template mdbTabTitle>
+                    <span>Issues</span> <span *ngIf="dive.hasErrorEvent || dive.hasWarningEvent"
+                       class="badge ms-2" [class.badge-danger]="dive.hasErrorEvent"
+                       [class.badge-warning]="!dive.hasErrorEvent && dive.hasWarningEvent"><strong>!</strong>
+                    </span>
+                </ng-template>
                 <app-dive-issues></app-dive-issues>
             </mdb-tab>
         </mdb-tabs>

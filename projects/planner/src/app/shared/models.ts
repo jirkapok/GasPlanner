@@ -1,7 +1,7 @@
 import {
     Ceiling, Time, Event, Segment,
     StandardGases, Tank, OtuCalculator,
-    Precision, HighestDensity
+    Precision, HighestDensity, EventType
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -179,12 +179,36 @@ export class Dive {
         return this.otu > (.8 * OtuCalculator.dailyLimit);
     }
 
-    public get cnsExeeded(): boolean {
+    public get cnsExceeded(): boolean {
         return this.cns > 0.8;
     }
 
     public get showMaxDuration(): boolean {
         return this.calculated && this.maxTime > 0;
+    }
+
+    public get hasErrorEvent(): boolean {
+        return this.hasErrors || this.notEnoughGas;
+    }
+
+    public get hasWarningEvent(): boolean {
+        // TODO move csn and otu to events
+        return this.otuExceeded ||
+            this.cnsExceeded ||
+            !this.events.every(e => {
+                switch (e.type) {
+                    case EventType.lowPpO2:
+                    case EventType.highPpO2:
+                    case EventType.highAscentSpeed:
+                    case EventType.highDescentSpeed:
+                    case EventType.brokenCeiling:
+                    case EventType.switchToHigherN2:
+                    case EventType.maxEndExceeded:
+                    case EventType.highGasDensity:
+                        return false;
+                    default: return true;
+                }
+            });
     }
 
     public emptyProfile(): void {

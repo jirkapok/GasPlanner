@@ -9,6 +9,7 @@ import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { Streamed } from '../shared/streamed';
 import { takeUntil } from 'rxjs';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import { UnitConversion } from '../shared/UnitConversion';
 
 @Component({
     selector: 'app-dashboard',
@@ -25,12 +26,17 @@ export class DashboardComponent extends Streamed implements OnInit {
         private planner: PlannerService,
         private viewSwitch: ViewSwitchService,
         private delayedCalc: DelayedScheduleService,
-        private urlSerialization: PlanUrlSerialization) {
+        private urlSerialization: PlanUrlSerialization,
+        private units: UnitConversion) {
         super();
     }
 
     public get isComplex(): boolean {
         return this.viewSwitch.isComplex;
+    }
+
+    public get imperialUnits(): boolean {
+        return this.units.imperialUnits;
     }
 
     public ngOnInit(): void {

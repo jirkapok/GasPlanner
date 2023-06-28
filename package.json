@@ -1,10 +1,10 @@
 {
   "name": "planner",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "license": "MIT",
   "scripts": {
     "start": "ng build scuba-physics && ng serve --host 0.0.0.0",
-    "start-pwa": "ng build && http-server -p 9090 -c-1 dist/planner",
+    "start-pwa": "ng build planner && http-server -p 9090 -c-1 dist/planner",
     "build": "ng build --configuration production planner",
     "build-lib": "ng build scuba-physics",
     "test": "ng test",

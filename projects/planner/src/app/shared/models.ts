@@ -1,7 +1,7 @@
 import {
     Ceiling, Time, Event, Segment,
     StandardGases, Tank, OtuCalculator,
-    Precision, HighestDensity, EventType
+    Precision, HighestDensity, EventType, DefaultTank
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -133,6 +133,11 @@ export class TankBound {
 
     public set he(newValue: number) {
         this.tank.he = newValue;
+    }
+
+    public assignTemplate(template: DefaultTank): void {
+        this.workingPressure = template.workingPressure;
+        this.size = template.size;
     }
 }
 

@@ -2,7 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Options } from 'scuba-physics';
+import { DefaultTank, Options } from 'scuba-physics';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../oxygen/oxygen.component';
@@ -144,6 +144,19 @@ describe('Tanks Complex component', () => {
         component.assignStandardGas(0, 'Ean36');
         fixture.detectChanges();
         expect(complexPage.o2Input(0).value).toBe('36');
+    });
+
+    it('Assign tank template rebinds new size and working pressure', () => {
+        fixture.detectChanges();
+
+        const template: DefaultTank = {
+            name: 'irrelevant',
+            size: 30,
+            workingPressure: 100
+        };
+        component.assignTankTemplate(0, template);
+        fixture.detectChanges();
+        expect(complexPage.sizeInput(0).value).toBe('30');
     });
 
     it('He field affects O2 field tank is reloaded', () => {

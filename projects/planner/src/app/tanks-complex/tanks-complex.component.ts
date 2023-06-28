@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { PlannerService } from '../shared/planner.service';
-import { StandardGases, Precision } from 'scuba-physics';
+import { StandardGases, Precision, DefaultTank } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
@@ -32,7 +31,7 @@ interface TanksForm {
     styleUrls: ['./tanks-complex.component.scss']
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
-    public allNames: string[];
+    public allGasNames: string[];
     public icon = faBatteryHalf;
     public plusIcon = faPlus;
     public minusIcon = faMinus;
@@ -49,7 +48,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         private delayedCalc: DelayedScheduleService) {
         super();
         this.toxicity = this.options.toxicity;
-        this.allNames = StandardGases.allNames();
+        this.allGasNames = StandardGases.allNames();
     }
 
     public get ranges(): RangeConstants {
@@ -58,6 +57,10 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     public get tanks(): TankBound[] {
         return this.tanksService.tanks;
+    }
+
+    public get allDefaultTanks(): DefaultTank[] {
+        return this.units.defaults.tanks.available;
     }
 
     public get tanksGroup(): FormArray<FormGroup<TankRow>> {
@@ -128,9 +131,18 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.delayedCalc.schedule();
     }
 
+    // TODO replace o2 dropdowns by control
     public assignStandardGas(index: number, gasName: string): void {
         const bound = this.tanks[index];
         bound.tank.assignStandardGas(gasName);
+        this.reload(bound, index);
+        this.delayedCalc.schedule();
+    }
+
+    // TODO extract tank dropdown control
+    public assignTankTemplate(index: number, template: DefaultTank): void {
+        const bound = this.tanks[index];
+        bound.assignTemplate(template);
         this.reload(bound, index);
         this.delayedCalc.schedule();
     }

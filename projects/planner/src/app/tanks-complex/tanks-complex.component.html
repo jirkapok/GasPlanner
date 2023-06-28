@@ -67,7 +67,7 @@
                                         type="button" aria-expanded="false" data-mdb-toggle="dropdown"
                                         mdbDropdownToggle></button>
                                     <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                                        <li *ngFor="let stgas of this.allNames" (click)="assignStandardGas(i, stgas)">
+                                        <li *ngFor="let stgas of this.allGasNames" (click)="assignStandardGas(i, stgas)">
                                             <a class="dropdown-item">{{stgas}}</a>
                                         </li>
                                     </ul>
@@ -128,10 +128,20 @@
                                 {{ tanks[i].id }}.
                             </div>
                             <div class="col ps-0">
-                                <input formControlName="tankSize" class="form-control" type="number"
-                                    (input)="tankChanged(i)" required [min]="ranges.tankSize[0]"
-                                    [max]="ranges.tankSize[1]" step="1" [class.is-invalid]="tankSizeInvalid(i)"
-                                    id="sizeItem-{{ i }}" />
+                                <div class="input-group dropdown" mdbDropdown>
+                                    <input formControlName="tankSize" class="form-control" type="number"
+                                        (input)="tankChanged(i)" required [min]="ranges.tankSize[0]"
+                                        [max]="ranges.tankSize[1]" step="1" [class.is-invalid]="tankSizeInvalid(i)"
+                                        id="sizeItem-{{ i }}" />
+                                    <button class="btn btn-default dropdown-toggle dropdown-toggle-split" id="sizeMenu"
+                                        type="button" aria-expanded="false" data-mdb-toggle="dropdown"
+                                        mdbDropdownToggle></button>
+                                    <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+                                        <li *ngFor="let defTank of this.allDefaultTanks" (click)="assignTankTemplate(i, defTank)">
+                                            <a class="dropdown-item">{{defTank.name}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="text-danger" *ngIf="tankSizeInvalid(i)">Needs to be number
                                     {{ranges.tankSizeLabel}}
                                 </div>
@@ -163,7 +173,7 @@
                                 type="button" aria-expanded="false" data-mdb-toggle="dropdown"
                                 mdbDropdownToggle></button>
                             <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                                <li *ngFor="let stgas of this.allNames" (click)="assignStandardGas(i, stgas)">
+                                <li *ngFor="let stgas of this.allGasNames" (click)="assignStandardGas(i, stgas)">
                                     <a class="dropdown-item">{{stgas}}</a>
                                 </li>
                             </ul>

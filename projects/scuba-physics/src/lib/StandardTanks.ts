@@ -23,7 +23,7 @@ class TankConstants {
 }
 
 
-export interface DefaultTank {
+export interface TankTemplate {
     /** Common label of the cylinder */
     name: string;
     /** Ideal capacity in respective liters/cuft */
@@ -33,13 +33,13 @@ export interface DefaultTank {
 }
 
 export interface StandardTanks {
-    available: DefaultTank[];
-    primary: DefaultTank;
-    stage: DefaultTank;
+    available: TankTemplate[];
+    primary: TankTemplate;
+    stage: TankTemplate;
 }
 
 export class ImperialTanks implements StandardTanks {
-    public get available(): DefaultTank[] {
+    public get available(): TankTemplate[] {
         return [
             this.primary,
             this.stage,
@@ -71,7 +71,7 @@ export class ImperialTanks implements StandardTanks {
         ];
     }
 
-    public get primary(): DefaultTank {
+    public get primary(): TankTemplate {
         return {
             name: 'HP117',
             size: TankConstants.imperialTankSize,
@@ -79,7 +79,7 @@ export class ImperialTanks implements StandardTanks {
         };
     }
 
-    public get stage(): DefaultTank {
+    public get stage(): TankTemplate {
         return {
             name: 'S80',
             size: TankConstants.imperialStageSize,
@@ -89,7 +89,7 @@ export class ImperialTanks implements StandardTanks {
 }
 
 export class MetricTanks implements StandardTanks {
-    public get available(): DefaultTank[] {
+    public get available(): TankTemplate[] {
         return [
             this.primary,
             this.stage,
@@ -116,7 +116,7 @@ export class MetricTanks implements StandardTanks {
         ];
     }
 
-    public get primary(): DefaultTank {
+    public get primary(): TankTemplate {
         return {
             name: '15 L',
             size: TankConstants.mertricTankSize,
@@ -124,7 +124,7 @@ export class MetricTanks implements StandardTanks {
         };
     }
 
-    public get stage(): DefaultTank {
+    public get stage(): TankTemplate {
         return {
             name: 'S80',
             size: TankConstants.metricStageSize,

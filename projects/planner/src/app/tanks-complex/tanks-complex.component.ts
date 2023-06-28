@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { StandardGases, Precision, DefaultTank } from 'scuba-physics';
+import { StandardGases, Precision, TankTemplate } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
@@ -59,7 +59,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         return this.tanksService.tanks;
     }
 
-    public get allDefaultTanks(): DefaultTank[] {
+    public get allDefaultTanks(): TankTemplate[] {
         return this.units.defaults.tanks.available;
     }
 
@@ -140,7 +140,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     // TODO extract tank dropdown control
-    public assignTankTemplate(index: number, template: DefaultTank): void {
+    // TODO rounding for HP100 size
+    public assignTankTemplate(index: number, template: TankTemplate): void {
         const bound = this.tanks[index];
         bound.assignTemplate(template);
         this.reload(bound, index);

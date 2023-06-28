@@ -2,7 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { DefaultTank, Options } from 'scuba-physics';
+import { TankTemplate, Options } from 'scuba-physics';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../oxygen/oxygen.component';
@@ -149,7 +149,7 @@ describe('Tanks Complex component', () => {
     it('Assign tank template rebinds new size and working pressure', () => {
         fixture.detectChanges();
 
-        const template: DefaultTank = {
+        const template: TankTemplate = {
             name: 'irrelevant',
             size: 30,
             workingPressure: 100

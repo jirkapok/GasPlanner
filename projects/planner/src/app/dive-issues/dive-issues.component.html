@@ -80,5 +80,12 @@
                 {{units.length}} at {{ event.timeStamp | duration:event.timeStamp
                 }} min! Reduce the depth or use gas with higher helium content.</span>
         </div>
+
+        <div *ngIf="isHighDensity(event)" class="alert alert-warning">
+            <fa-icon [icon]="warning" class="me-2"></fa-icon>
+            <span>Exceeded maximum recommended gas density in {{ eventDepthFor(event) | number:'1.0-0' }}
+                {{units.length}} at {{ event.timeStamp | duration:event.timeStamp
+                }} min! Reduce the depth or use gas with higher helium content (i.e. lower density).</span>
+        </div>
     </ng-container>
 </ng-container>

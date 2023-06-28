@@ -32,6 +32,7 @@ In case of any issue with the plan, Notification messages are shown bellow the d
 | Switch to gas with higher N2 content | There is a risk of Isobaric counter diffusion | Choose another decompression gas with lower nitrogen content |
 | Long oxygen exposure causing 80 % of CNS limit reached | There is a risk of CNS toxicity symptoms | Choose gases with lower oxygen content or reduce target depth |
 | Long oxygen exposure causing 80 % of OTU limit reached (260 OTU) | There is a risk of OTU toxicity symptoms | Choose gases with lower oxygen content or reduce target depth |
+| High gas density | Causes high work of breathing and results in high partial pressures of arterial CO2, which can cause narcosis, hypercapnia and loss of consciousness. | Reduce target depth or use gas with higher helium content (i.e. lower density). |
 
 > This is the main purpose of this application: to reduce these risks!
 
@@ -42,6 +43,7 @@ Read more about
 * [Oxygen toxicity](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater)
 * [Hypooxia](https://en.wikipedia.org/wiki/Hypoxia_(medical))
 * [Isobaric counter diffusion](https://en.wikipedia.org/wiki/Isobaric_counterdiffusion)
+* [Gas density](https://dan.org/alert-diver/article/performance-under-pressure/)
 
 ## Consumed gas charts
 

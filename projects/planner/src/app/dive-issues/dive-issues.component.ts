@@ -62,9 +62,11 @@ export class DiveIssuesComponent {
         return event.type === EventType.maxEndExceeded;
     }
 
+    public isHighDensity(event: Event): boolean {
+        return event.type === EventType.highGasDensity;
+    }
+
     public eventDepthFor(event: Event): number {
         return this.units.fromMeters(event.depth);
     }
-
-    // TODO add density warning
 }

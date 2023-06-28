@@ -9,10 +9,8 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Add imperial units option
-  * Add working pressure to complex tanks UI
-* UI: Add Dropdown for well known tank sizes (to reduce the work to sort all the fields on the page)
 * Add option to define repetitive dives
+* UI: Add Dropdown for well known tank sizes (to reduce the work to sort all the fields on the page)
 * Fix Cns/Otu calculation
 * Settings
   * Apply settings after each change and distinguish from default settings
@@ -28,6 +26,7 @@ Following list of features and improvements ordered by priority is under develop
     * Add option to reduce waypoints table only to list of stops
     * Waypoints table: add switch in case user is switching to tank with the same gas
     * Add other events to profile chart like gas switch
+  * Add option to define custom maximum gas density
   * move the tank and depth validation messages to separate row in complex view
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Restore state on all pages from last known

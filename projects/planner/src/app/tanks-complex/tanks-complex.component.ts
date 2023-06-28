@@ -39,7 +39,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     public toxicity: GasToxicity;
     public tanksForm!: FormGroup<TanksForm>;
 
-    constructor(private planner: PlannerService,
+    constructor(
         private options: OptionsService,
         private tanksService: TanksService,
         public units: UnitConversion,

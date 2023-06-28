@@ -11,6 +11,7 @@ import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
+import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -80,7 +81,8 @@ const MDB_MODULES = [
     MdbCollapseModule,
     MdbDropdownModule,
     MdbFormsModule,
-    MdbTabsModule
+    MdbTabsModule,
+    MdbAccordionModule
 ];
 
 @NgModule({

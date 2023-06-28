@@ -5,7 +5,7 @@
             <span>Tanks</span>
         </div>
 
-<!-- Small devices -->
+        <!-- Small devices -->
         <div class="card-body d-md-none d-block" formArrayName="boundTanks">
             <mdb-accordion [flush]="true">
                 <mdb-accordion-item *ngFor="let bound of tanksGroup.controls; let i = index" [formGroupName]="i">
@@ -96,15 +96,22 @@
             </div>
         </div>
 
-<!-- Large devices -->
+        <!-- Large devices -->
         <div class="card-body d-none d-md-block" formArrayName="boundTanks">
             <div class="row pb-2">
-                <div class="col col-1 m-0 px-1"></div>
-                <div class="col col-2 m-0 px-1">Size [{{units.volume}}]</div>
+                <div class="col col-3 m-0 px-1">
+                    <div class="row">
+                        <div class="col col-1 p-0 m-0">
+                        </div>
+                        <div class="col ps-0">
+                            Size [{{units.volume}}]
+                        </div>
+                    </div>
+                </div>
                 <div class="col col-2 m-0 px-1" *ngIf="units.imperialUnits">Work p.
                     [{{units.pressure}}]</div>
                 <div class="col col-2 m-0 px-1">Pressure [{{units.pressure}}]</div>
-                <div class="col col-2 m-0 px-1"  [class.col-4]="!units.imperialUnits">O2 [%]</div>
+                <div class="col col-2 m-0 px-1" [class.col-4]="!units.imperialUnits">O2 [%]</div>
                 <div class="col col-2 m-0 px-1">He [%]</div>
                 <div class="col col-1 m-0 px-1">
                     <button class="p-1 btn btn-secondary" type="button" (click)="addTank()">
@@ -115,14 +122,20 @@
 
             <div *ngFor="let bound of tanksGroup.controls; let i = index" [formGroupName]="i">
                 <div class="row p-0">
-                    <div class="col col-1 m-0 pb-0 px-1 text-end align-self-center">{{
-                        tanks[i].id }}.</div>
-                    <div class="col col-12 col-sm-4 col-md-2 m-0 pb-0 px-1">
-                        <input formControlName="tankSize" class="form-control" type="number" (input)="tankChanged(i)"
-                            required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-                            [class.is-invalid]="tankSizeInvalid(i)" id="sizeItem-{{ i }}" />
-                        <div class="text-danger" *ngIf="tankSizeInvalid(i)">Needs to be number
-                            {{ranges.tankSizeLabel}}
+                    <div class="col col-3 m-0 pb-0 px-1">
+                        <div class="row">
+                            <div class="col col-1 p-0 m-0">
+                                {{ tanks[i].id }}.
+                            </div>
+                            <div class="col ps-0">
+                                <input formControlName="tankSize" class="form-control" type="number"
+                                    (input)="tankChanged(i)" required [min]="ranges.tankSize[0]"
+                                    [max]="ranges.tankSize[1]" step="1" [class.is-invalid]="tankSizeInvalid(i)"
+                                    id="sizeItem-{{ i }}" />
+                                <div class="text-danger" *ngIf="tankSizeInvalid(i)">Needs to be number
+                                    {{ranges.tankSizeLabel}}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col col-2 m-0 pb-0 px-1" *ngIf="units.imperialUnits">
@@ -173,12 +186,17 @@
                     </div>
                 </div>
                 <div class="row p-0 pb-2">
-                    <div class="col col-1"></div>
-                    <div class="col col-10 m-0 px-1">
-                        <small class="form-text text-muted">SAC: {{gasSac(i) | number:'1.0-2'}}
-                            {{units.sac}}</small>
-                        <app-gaslabel [tank]="tanks[i].tank" [toxicity]="toxicity" class="float-end">
-                        </app-gaslabel>
+                    <div class="col col-11">
+                        <div class="row">
+                            <div class="col col-1">
+                            </div>
+                            <div class="col m-0 px-1">
+                                <small class="form-text text-muted">SAC: {{gasSac(i) | number:'1.0-2'}}
+                                    {{units.sac}}</small>
+                                <app-gaslabel [tank]="tanks[i].tank" [toxicity]="toxicity" class="float-end">
+                                </app-gaslabel>
+                            </div>
+                        </div>
                     </div>
                     <div class="col col-1"></div>
                 </div>

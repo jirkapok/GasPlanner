@@ -30,6 +30,8 @@ export class HighestDensity {
  * https://dan.org/alert-diver/article/performance-under-pressure/
  */
 export class GasDensity {
+    /** In gram / liter as middle of ideal gas density of 5.2 g/L, with an absolute maximum of 6.2 g/L. */
+    public static readonly recommendedMaximum = 5.7;
     // Constants as g/l at 1 ATA
     private helium = 0.179;
     private nitrogen = 1.251;

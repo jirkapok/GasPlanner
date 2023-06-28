@@ -50,20 +50,27 @@ class EventsContext {
     public densityAtDepth: DensityAtDepth;
     public events: Events = new Events();
     public speeds: AscentSpeeds;
+    public options: Options;
     /** total duration in seconds at beginning of current segment */
     public elapsed = 0;
     public index = 0;
     public fixedMnd = true;
+    public maxDensity: number;
+    private startAscentIndex: number;
+    private profile: Segment[];
     private _mndBars = 0;
 
-    constructor(private startAscentIndex: number, private profile: Segment[],
-        public options: Options) {
+    constructor(eventOptions: EventOptions) {
+        this.profile = eventOptions.profile;
+        this.options = eventOptions.profileOptions;
+        this.startAscentIndex = eventOptions.startAscentIndex;
+        this.maxDensity = eventOptions.maxDensity;
         this.exactDepths = new DepthConverterFactory(this.options).create();
         this.densityAtDepth = new DensityAtDepth(this.exactDepths);
-        this.speeds = new AscentSpeeds(options);
-        const segments = Segments.fromCollection(profile);
+        this.speeds = new AscentSpeeds(this.options);
+        const segments = Segments.fromCollection(this.profile);
         this.speeds.markAverageDepth(segments);
-        this._mndBars = this.simpleDepths.toBar(options.maxEND);
+        this._mndBars = this.simpleDepths.toBar(this.options.maxEND);
     }
 
     public get previous(): Segment | null {
@@ -147,7 +154,7 @@ export class ProfileEvents {
      * Generates events for calculated profile
      */
     public static fromProfile(eventOptions: EventOptions): Events {
-        const context = new EventsContext(eventOptions.startAscentIndex, eventOptions.profile, eventOptions.profileOptions);
+        const context = new EventsContext(eventOptions);
         const ceilingContext = new BrokenCeilingContext(context.events);
 
         for (context.index = 0; context.index < eventOptions.profile.length; context.index++) {
@@ -329,8 +336,6 @@ export class ProfileEvents {
     }
 
     private static addDensityExceeded(context: EventsContext): void {
-        // TODO make maxDensity configurable
-        const maxDensity = 5.5; // g/l
         const current = context.current;
         const currentGas = current.gas;
         const startDepth = current.startDepth;
@@ -346,10 +351,10 @@ export class ProfileEvents {
         // add if there is a gas switch to different gas
         // ignore switch to the same gas
         // descent => density is higher at end
-        if (switchToDifferentDensity && startDensity > maxDensity) {
+        if (switchToDifferentDensity && startDensity > context.maxDensity) {
             const event = EventsFactory.createHighDensity(context.elapsed, current.startDepth, current.gas);
             context.events.add(event);
-        } else if (isDescent && endDensity > maxDensity) {
+        } else if (isDescent && endDensity > context.maxDensity) {
             // TODO fix depth and timestamp at exact depth the high density occurred.
             const timeStamp = context.elapsed + current.duration;
             const event = EventsFactory.createHighDensity(timeStamp, current.endDepth, current.gas);

@@ -1,6 +1,6 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Salinity } from './pressure-converter';
-import { Gases, StandardGases, Gas } from './Gases';
+import { Gases, StandardGases } from './Gases';
 import { Options, SafetyStop } from './Options';
 import { OptionExtensions } from './Options.spec';
 import { Ceiling, EventType, Events, Event } from './Profile';
@@ -8,6 +8,7 @@ import { EventOptions, ProfileEvents } from './ProfileEvents';
 import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { Tank } from './Tanks';
+import { GasDensity } from './GasDensity';
 
 describe('Profile Events', () => {
 
@@ -483,6 +484,7 @@ describe('Profile Events', () => {
             segments.add(maxDepth, 0, StandardGases.air, Time.oneMinute * 10);
 
             const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            eventOptions.maxDensity = GasDensity.recommendedMaximum;
             const events = ProfileEvents.fromProfile(eventOptions);
             return events;
         };
@@ -509,6 +511,7 @@ describe('Profile Events', () => {
             segments.add(40, 0, StandardGases.air, Time.oneMinute * 10);
 
             const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            eventOptions.maxDensity = GasDensity.recommendedMaximum;
             const events = ProfileEvents.fromProfile(eventOptions);
 
             expect(events.items.length).toEqual(3); // gasswitch, idc, high density

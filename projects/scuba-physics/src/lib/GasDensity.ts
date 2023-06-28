@@ -61,6 +61,11 @@ export class DensityAtDepth {
 
     constructor(private depthConverter: DepthConverter) { }
 
+    /**
+     * Finds highest density of all profile segments.
+     * @param profile not null collection of segments representing expected profile
+     * @returns Highest density found
+     */
     public forProfile(profile: Segment[]): HighestDensity {
         const result = HighestDensity.createDefault();
 

@@ -24,12 +24,14 @@ export enum EventType {
     brokenCeiling = 8,
     /** Gas used at the depth exceeds the maximum narcotic depth */
     maxEndExceeded = 9,
-    /** User switched to gas with higher N2 content */
-    switchToHigherN2 = 10
+    /** User switched to gas with higher N2 content (isobaric counter diffusion - ICD) */
+    switchToHigherN2 = 10,
+    /** Exceeded maximum gas density at depth */
+    highGasDensity = 11,
 }
 
 export class Event {
-    constructor(
+    private constructor(
         /** The number of seconds since dive begin the event occurred */
         public timeStamp: number,
         /** depth in meters, at which the diver was, when the event occurred */
@@ -41,83 +43,55 @@ export class Event {
         /** Optional data associated with the event, e.g. Gas for gas switch */
         public gas?: Gas
     ) { }
-}
 
-export class EventsFactory {
-    public static createGasSwitch(timeStamp: number, depth: number, gas: Gas): Event {
-        return {
-            timeStamp: timeStamp,
-            depth: depth,
-            type: EventType.gasSwitch,
-            gas: gas
-        };
+    public static create(type: EventType, timeStamp: number, depth: number, gas?: Gas): Event {
+        return new Event(timeStamp, depth, type, '', gas);
     }
 
     public static createError(message: string): Event {
-        return {
-            timeStamp: 0,
-            depth: 0,
-            type: EventType.error,
-            message: message
-        };
+        return new Event(0, 0, EventType.error, message);
+    }
+}
+
+export class EventsFactory {
+    public static createError(message: string): Event {
+        return Event.createError(message);
     }
 
-    public static createLowPpO2(timestamp: number, depth: number): Event {
-        return {
-            timeStamp: timestamp,
-            depth: depth,
-            type: EventType.lowPpO2
-        };
+    public static createGasSwitch(timeStamp: number, depth: number, gas: Gas): Event {
+        return Event.create(EventType.gasSwitch, timeStamp, depth, gas);
     }
 
-    public static createHighPpO2(timestamp: number, depth: number): Event {
-        return {
-            timeStamp: timestamp,
-            depth: depth,
-            type: EventType.highPpO2
-        };
+    public static createLowPpO2(timeStamp: number, depth: number): Event {
+        return Event.create(EventType.lowPpO2, timeStamp, depth);
     }
 
-    public static createHighAscentSpeed(timestamp: number, depth: number): Event {
-        return {
-            timeStamp: timestamp,
-            depth: depth,
-            type: EventType.highAscentSpeed
-        };
+    public static createHighPpO2(timeStamp: number, depth: number): Event {
+        return Event.create(EventType.highPpO2, timeStamp, depth);
     }
 
-    public static createHighDescentSpeed(timestamp: number, depth: number): Event {
-        return {
-            timeStamp: timestamp,
-            depth: depth,
-            type: EventType.highDescentSpeed
-        };
+    public static createHighAscentSpeed(timeStamp: number, depth: number): Event {
+        return Event.create(EventType.highAscentSpeed, timeStamp, depth);
+    }
+
+    public static createHighDescentSpeed(timeStamp: number, depth: number): Event {
+        return Event.create(EventType.highDescentSpeed, timeStamp, depth);
     }
 
     public static createBrokenCeiling(timeStamp: number, depth: number): Event {
-        return {
-            timeStamp: timeStamp,
-            depth: depth,
-            type: EventType.brokenCeiling
-        };
+        return Event.create(EventType.brokenCeiling, timeStamp, depth);
     }
 
     public static createMaxEndExceeded(timeStamp: number, depth: number, gas: Gas): Event {
-        return {
-            timeStamp: timeStamp,
-            depth: depth,
-            type: EventType.maxEndExceeded,
-            gas: gas
-        };
+        return Event.create(EventType.maxEndExceeded, timeStamp, depth, gas);
     }
 
     public static createSwitchToHigherN2(timeStamp: number, depth: number, gas: Gas): Event {
-        return {
-            timeStamp: timeStamp,
-            depth: depth,
-            type: EventType.switchToHigherN2,
-            gas: gas
-        };
+        return Event.create(EventType.switchToHigherN2, timeStamp, depth, gas);
+    }
+
+    public static createHighDensity(timeStamp: number, depth: number, gas: Gas): Event {
+        return Event.create(EventType.highGasDensity, timeStamp, depth, gas);
     }
 }
 
@@ -167,6 +141,8 @@ export class Ceiling {
  * Result of the Algorithm calculation
  */
 export class CalculatedProfile {
+    private constructor(private seg: Segment[], private ceil: Ceiling[], private err: Event[]) { }
+
     /**
      * Not null collection of segments filled whole dive profile.
      */
@@ -187,8 +163,6 @@ export class CalculatedProfile {
     public get errors(): Event[] {
         return this.err;
     }
-
-    private constructor(private seg: Segment[], private ceil: Ceiling[], private err: Event[]) { }
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
         return new CalculatedProfile(segments, [], errors);

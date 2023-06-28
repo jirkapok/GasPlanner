@@ -1,18 +1,28 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Salinity } from './pressure-converter';
 import { Gases, StandardGases, Gas } from './Gases';
-import { SafetyStop } from './Options';
+import { Options, SafetyStop } from './Options';
 import { OptionExtensions } from './Options.spec';
-import { Ceiling, EventType } from './Profile';
-import { ProfileEvents } from './ProfileEvents';
-import { Segments } from './Segments';
+import { Ceiling, EventType, Events, Event } from './Profile';
+import { EventOptions, ProfileEvents } from './ProfileEvents';
+import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { Tank } from './Tanks';
 
 describe('Profile Events', () => {
+
+    const createEventOption = (startAscentIndex: number,
+        profile: Segment[], ceilings: Ceiling[], profileOptions: Options): EventOptions => ({
+        maxDensity: 50, // prevent event generation
+        startAscentIndex: startAscentIndex,
+        profile: profile,
+        ceilings: ceilings,
+        profileOptions: profileOptions
+    });
+
     const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
     const emptyCeilings: Ceiling[] = [];
-    beforeEach(()=>{
+    beforeEach(() => {
         options.maxEND = 100; // to eliminate all other events
     });
 
@@ -21,7 +31,8 @@ describe('Profile Events', () => {
             const segments = new Segments();
             segments.add(0, 30, StandardGases.trimix1070, Time.oneMinute);
 
-            const events = ProfileEvents.fromProfile(1, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items[0].type).toBe(EventType.lowPpO2);
         });
 
@@ -29,7 +40,8 @@ describe('Profile Events', () => {
             const segments = new Segments();
             segments.add(30, 0, StandardGases.trimix1070, 1 * Time.oneMinute);
 
-            const events = ProfileEvents.fromProfile(0, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(0, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items[0].type).toBe(EventType.lowPpO2);
         });
 
@@ -44,7 +56,8 @@ describe('Profile Events', () => {
             // Profile:
             // \   _  /
             //  \s/ \/
-            const events = ProfileEvents.fromProfile(4, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(4, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             // two assent crossings and gas switch
             expect(events.items.length).toBe(3);
             expect(events.items[0].type).toBe(EventType.lowPpO2);
@@ -60,7 +73,8 @@ describe('Profile Events', () => {
 
             // Profile:
             // \_ s_ /
-            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(2); // second is gas switch
             expect(events.items[0].type).toBe(EventType.lowPpO2);
         });
@@ -71,7 +85,8 @@ describe('Profile Events', () => {
             segments.add(4, 4, StandardGases.trimix1070, Time.oneMinute);
             segments.add(4, 0, StandardGases.oxygen, Time.oneMinute);
 
-            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(2); // last one is gas switch
             expect(events.items[0].timeStamp).toBe(0);
             expect(events.items[0].depth).toBeCloseTo(0);
@@ -83,7 +98,8 @@ describe('Profile Events', () => {
             segments.add(3, 3, StandardGases.trimix1070, Time.oneMinute);
             segments.add(3, 0, StandardGases.trimix1070, Time.oneMinute);
 
-            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(2); // last one is gas switch
             expect(events.items[0].timeStamp).toBe(180);
             expect(events.items[0].depth).toBeCloseTo(3);
@@ -95,7 +111,8 @@ describe('Profile Events', () => {
             segments.add(10, 3, StandardGases.trimix1070, Time.oneMinute);
             segments.add(3, 0, StandardGases.trimix1070, Time.oneMinute);
 
-            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(2); // last one is gas switch
             expect(events.items[0].timeStamp).toBe(43);
             expect(events.items[0].depth).toBeCloseTo(8);
@@ -109,7 +126,8 @@ describe('Profile Events', () => {
             segments.add(4, 4, StandardGases.oxygen, Time.oneMinute * 1);
             segments.add(4, 0, StandardGases.oxygen, Time.oneMinute * 1);
 
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(0);
         });
 
@@ -122,7 +140,8 @@ describe('Profile Events', () => {
             // Profile:
             //   \   /
             //    \_/
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(1);
             expect(events.items[0].type).toBe(EventType.highPpO2);
         });
@@ -141,7 +160,8 @@ describe('Profile Events', () => {
             //  \       _/ safety stop
             //   \   s_/   switch
             //    \_/
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(1);
             expect(events.items[0].type).toBe(EventType.gasSwitch);
         });
@@ -155,7 +175,8 @@ describe('Profile Events', () => {
 
             // Profile:
             //    \_s_/
-            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(2); // last one is gas switch
             expect(events.items[0].type).toBe(EventType.highPpO2);
         });
@@ -170,7 +191,8 @@ describe('Profile Events', () => {
 
             // Profile: high ppO2 reached during the descents
             //    \_/\_/
-            const events = ProfileEvents.fromProfile(4, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(4, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(2);
             expect(events.items[0].type).toBe(EventType.highPpO2);
             expect(events.items[1].type).toBe(EventType.highPpO2);
@@ -182,7 +204,8 @@ describe('Profile Events', () => {
             segments.add(10, 10, StandardGases.oxygen, Time.oneMinute);
             segments.add(10, 0, StandardGases.oxygen, Time.oneMinute * 2);
 
-            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(2); // last one is gas switch
             expect(events.items[0].depth).toBe(10);
             expect(events.items[0].timeStamp).toBe(180);
@@ -194,7 +217,8 @@ describe('Profile Events', () => {
             segments.add(2, 10, StandardGases.oxygen, Time.oneMinute * 4);
             segments.add(10, 0, StandardGases.oxygen, Time.oneMinute * 2);
 
-            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(1);
             expect(events.items[0].depth).toBeCloseTo(4);
             expect(events.items[0].timeStamp).toBe(120);
@@ -210,14 +234,12 @@ describe('Profile Events', () => {
             segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
             segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
 
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items[0]).toEqual({
-                type: EventType.gasSwitch,
-                timeStamp: 480,
-                depth: 21,
-                gas: StandardGases.ean50
-            });
+            expect(events.items[0]).toEqual(
+                Event.create(EventType.gasSwitch, 480, 21, StandardGases.ean50)
+            );
         });
 
         it('Adds event user defined switch at bottom', () => {
@@ -228,14 +250,12 @@ describe('Profile Events', () => {
             segments.add(15, 15, StandardGases.ean50, Time.oneMinute);
             segments.add(15, 0, StandardGases.ean50, Time.oneMinute * 2);
 
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items[0]).toEqual({
-                type: EventType.gasSwitch,
-                timeStamp: 300,
-                depth: 15,
-                gas: StandardGases.ean50
-            });
+            expect(events.items[0]).toEqual(
+                Event.create(EventType.gasSwitch, 300, 15, StandardGases.ean50)
+            );
         });
 
         it('User defined switch to another tank with the same gas', () => {
@@ -252,14 +272,12 @@ describe('Profile Events', () => {
             segments.add(15, 15, StandardGases.air, Time.oneMinute);
             segments.add(15, 0, StandardGases.air, Time.oneMinute * 2);
 
-            const events = ProfileEvents.fromProfile(3, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items[0]).toEqual({
-                type: EventType.gasSwitch,
-                timeStamp: 300,
-                depth: 15,
-                gas: StandardGases.air
-            });
+            expect(events.items[0]).toEqual(
+                Event.create(EventType.gasSwitch, 300, 15, StandardGases.air)
+            );
         });
     });
 
@@ -269,13 +287,12 @@ describe('Profile Events', () => {
             segments.add(0, 20, StandardGases.air, Time.oneMinute * 2);
             segments.add(20, 0, StandardGases.air, Time.oneMinute);
 
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items[0]).toEqual({
-                type: EventType.highAscentSpeed,
-                timeStamp: 120,
-                depth: 20
-            });
+            expect(events.items[0]).toEqual(
+                Event.create(EventType.highAscentSpeed, 120, 20)
+            );
         });
 
         it('High ascent speed rounds precision', () => {
@@ -286,7 +303,8 @@ describe('Profile Events', () => {
 
             const recommendedOptions = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
             recommendedOptions.ascentSpeed50perc = 9;
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, recommendedOptions);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, recommendedOptions);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(0);
         });
 
@@ -296,13 +314,12 @@ describe('Profile Events', () => {
             segments.add(10, 40, StandardGases.air, Time.oneMinute);
             segments.add(40, 0, StandardGases.air, Time.oneMinute * 20);
 
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items[0]).toEqual({
-                type: EventType.highDescentSpeed,
-                timeStamp: 60,
-                depth: 10
-            });
+            expect(events.items[0]).toEqual(
+                Event.create(EventType.highDescentSpeed, 60, 10)
+            );
         });
     });
 
@@ -320,7 +337,8 @@ describe('Profile Events', () => {
             const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
             defaultOptions.safetyStop = SafetyStop.always;
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
-            const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+            const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+            const events = ProfileEvents.fromProfile(eventOptions);
             const firstError = events.items[0];
 
             // during this dive on second level we are already decompressing anyway,
@@ -341,7 +359,8 @@ describe('Profile Events', () => {
             const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
             defaultOptions.safetyStop = SafetyStop.always;
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
-            const events = ProfileEvents.fromProfile(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+            const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(0);
         });
 
@@ -360,7 +379,8 @@ describe('Profile Events', () => {
             const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
             defaultOptions.safetyStop = SafetyStop.always;
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
-            const events = ProfileEvents.fromProfile(5, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+            const eventOptions = createEventOption(5, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+            const events = ProfileEvents.fromProfile(eventOptions);
             expect(events.items.length).toBe(2);
         });
     });
@@ -379,15 +399,13 @@ describe('Profile Events', () => {
                 new Ceiling(Time.oneMinute * 6, 0)
             ];
 
-            const events = ProfileEvents.fromProfile(1, segments.items, ceilings, options);
+            const eventOptions = createEventOption(1, segments.items, ceilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
 
             expect(events.items.length).toEqual(2); // first event is gas switch
-            expect(events.items[1]).toEqual({
-                type: EventType.switchToHigherN2,
-                timeStamp: Time.oneMinute * 3,
-                depth: 21,
-                gas: StandardGases.ean50
-            });
+            expect(events.items[1]).toEqual(
+                Event.create(EventType.switchToHigherN2, Time.oneMinute * 3, 21, StandardGases.ean50)
+            );
         });
 
         it('21/35 to 35/25 doesn\'t add the event', () => {
@@ -396,7 +414,8 @@ describe('Profile Events', () => {
             segments.add(15, 15, StandardGases.trimix2135, Time.oneMinute);
             segments.add(15, 0, StandardGases.trimix3525, Time.oneMinute * 6);
 
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
 
             expect(events.items.length).toEqual(1); // only the gas switch event
             expect(events.items[0].type).not.toEqual(EventType.switchToHigherN2);
@@ -408,7 +427,8 @@ describe('Profile Events', () => {
             segments.add(15, 15, StandardGases.ean50, Time.oneMinute);
             segments.add(15, 0, StandardGases.air, Time.oneMinute * 6);
 
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
 
             expect(events.items.length).toEqual(1); // only the gas switch event
             expect(events.items[0].type).not.toEqual(EventType.switchToHigherN2);
@@ -416,7 +436,7 @@ describe('Profile Events', () => {
     });
 
     describe('Maximum narcotic depth exceeded', () => {
-        beforeEach(()=>{
+        beforeEach(() => {
             options.maxEND = 30; // only for these tests
         });
 
@@ -426,15 +446,13 @@ describe('Profile Events', () => {
             segments.add(45, 45, StandardGases.trimix1845, Time.oneMinute);
             segments.add(45, 0, StandardGases.trimix3525, Time.oneMinute * 20);
 
-            const events = ProfileEvents.fromProfile(1, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
 
             expect(events.items.length).toEqual(2);  // first event is gas switch
-            expect(events.items[1]).toEqual({
-                type: EventType.maxEndExceeded,
-                timeStamp: 300,
-                depth: 45,
-                gas: StandardGases.trimix3525
-            });
+            expect(events.items[1]).toEqual(
+                Event.create(EventType.maxEndExceeded, 300, 45, StandardGases.trimix3525)
+            );
         });
 
         it('Swim deeper than gas narcotic depth', () => {
@@ -443,15 +461,60 @@ describe('Profile Events', () => {
             segments.add(40, 40, StandardGases.air, Time.oneMinute);
             segments.add(40, 0, StandardGases.air, Time.oneMinute * 20);
 
-            const events = ProfileEvents.fromProfile(2, segments.items, emptyCeilings, options);
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
 
             expect(events.items.length).toEqual(1);// only one event for multiple segments
-            expect(events.items[0]).toEqual({
-                type: EventType.maxEndExceeded,
-                timeStamp: 240,
-                depth: 40,
-                gas: StandardGases.air
-            });
+            expect(events.items[0]).toEqual(
+                Event.create(EventType.maxEndExceeded, 240, 40, StandardGases.air)
+            );
+        });
+    });
+
+    describe('Gas density exceeded', () => {
+        beforeEach(() => {
+            options.maxEND = 50; // to remove narcosis event
+        });
+
+        const findProfileEvents = (maxDepth: number): Events => {
+            const segments = new Segments();
+            segments.add(0, maxDepth, StandardGases.air, Time.oneMinute * 4);
+            segments.add(maxDepth, maxDepth, StandardGases.air, Time.oneMinute * 10);
+            segments.add(maxDepth, 0, StandardGases.air, Time.oneMinute * 10);
+
+            const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
+            return events;
+        };
+
+        it('No event is generated for max. density', () => {
+            const events = findProfileEvents(30);
+
+            expect(events.items.length).toEqual(0);
+        });
+
+        it('Event is generated only once for max. density', () => {
+            const events = findProfileEvents(40);
+
+            expect(events.items.length).toEqual(1);
+            expect(events.items[0]).toEqual(
+                Event.create(EventType.highGasDensity, 240, 40, StandardGases.air)
+            );
+        });
+
+        it('Gas switch to high density generates event', () => {
+            const segments = new Segments();
+            segments.add(0, 40, StandardGases.trimix2525, Time.oneMinute * 4);
+            segments.add(40, 40, StandardGases.air, Time.oneMinute * 10);
+            segments.add(40, 0, StandardGases.air, Time.oneMinute * 10);
+
+            const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
+
+            expect(events.items.length).toEqual(3); // gasswitch, idc, high density
+            expect(events.items[2]).toEqual(
+                Event.create(EventType.highGasDensity, 240, 40, StandardGases.air)
+            );
         });
     });
 });

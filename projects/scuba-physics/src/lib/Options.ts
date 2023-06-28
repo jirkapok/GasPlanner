@@ -52,7 +52,10 @@ export class OptionDefaults {
     }
 }
 
-/** All the units defined here need to be used only in metric system */
+/**
+ * Configuration used customize profile generation.
+ * All the units defined here need to be used only in metric system.
+ * */
 export class Options implements GasOptions, DepthOptions, DepthLevelOptions, SpeedOptions {
     /**
      * meters above see level, 0 for see level (default)

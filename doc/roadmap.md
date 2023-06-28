@@ -19,7 +19,7 @@ Following list of features and improvements ordered by priority is under develop
     * Put diver under all other options
 * Add gas depth range/properties/trimix calculator
 * Events:
-  * Add time to all events warning/error messages where it makes sense
+  * Add time and exact depth to all events warning/error messages where it makes sense (density, mnd, low or high pO2)
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * UI Tweaks
   * Profile:

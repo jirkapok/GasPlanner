@@ -355,7 +355,6 @@ export class ProfileEvents {
             const event = EventsFactory.createHighDensity(context.elapsed, current.startDepth, current.gas);
             context.events.add(event);
         } else if (isDescent && endDensity > context.maxDensity) {
-            // TODO fix depth and timestamp at exact depth the high density occurred.
             const timeStamp = context.elapsed + current.duration;
             const event = EventsFactory.createHighDensity(timeStamp, current.endDepth, current.gas);
             context.events.add(event);

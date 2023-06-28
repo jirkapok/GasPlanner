@@ -25,7 +25,7 @@ describe('WayPointsService', () => {
         const plan = new Plan();
         plan.setSimple(30, 10, airTank, options);
         const profile = CalculatedProfile.fromErrors(plan.segments, [
-            new Event(0,0, EventType.error)
+            Event.createError('')
         ]);
 
         const wayPoints = sut.calculateWayPoints(profile, new Events());

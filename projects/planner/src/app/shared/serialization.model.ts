@@ -52,6 +52,11 @@ export interface ProfileRequestDto {
     tanks: TankDto[];
     plan: SegmentDto[];
     options: OptionsDto;
+    eventOptions: EventOptionsDto;
+}
+
+export interface EventOptionsDto {
+    maxDensity: number;
 }
 
 export interface DiveInfoResultDto {
@@ -265,7 +270,9 @@ export class DtoSerialization {
     public static toEvents(dto: EventDto[]): Events {
         const result = new Events();
         dto.forEach(d => {
-            const e = new Event(d.timeStamp, d.depth, d.type, d.message);
+            const e = Event.create(d.type, d.timeStamp, d.depth);
+            e.message = d.message;
+
             if (d.gas) {
                 e.gas = DtoSerialization.toGas(d.gas);
             }

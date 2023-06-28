@@ -1,6 +1,6 @@
 import {
     Segments, Gases, BuhlmannAlgorithm, ProfileEvents, DepthConverterFactory,
-    Consumption, Time, Diver, OtuCalculator, CnsCalculator, DensityAtDepth
+    Consumption, Time, Diver, OtuCalculator, CnsCalculator, DensityAtDepth, EventOptions, GasDensity
 } from 'scuba-physics';
 import {
     DtoSerialization,
@@ -19,7 +19,14 @@ export class PlanningTasks {
         const options = DtoSerialization.toOptions(data.options);
         const profile = algorithm.calculateDecompression(options, gases, plan);
         const profileDto = DtoSerialization.fromProfile(profile);
-        const events = ProfileEvents.fromProfile(plan.startAscentIndex, profile.segments, profile.ceilings, options);
+        const eventOptions: EventOptions = {
+            maxDensity: data.eventOptions.maxDensity,
+            startAscentIndex: plan.startAscentIndex,
+            profile: profile.segments,
+            ceilings: profile.ceilings,
+            profileOptions: options
+        };
+        const events = ProfileEvents.fromProfile(eventOptions);
         const eventsDto = DtoSerialization.fromEvents(events.items);
 
         return {

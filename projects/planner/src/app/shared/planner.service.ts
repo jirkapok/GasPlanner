@@ -6,11 +6,12 @@ import { Plan } from '../shared/plan.service';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
+    GasDensity,
     Precision, Segments
 } from 'scuba-physics';
 import {
     DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
-    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto, ITankBound
+    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto, ITankBound, EventOptionsDto
 } from './serialization.model';
 import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
@@ -82,7 +83,8 @@ export class PlannerService extends Streamed {
         const profileRequest = {
             tanks: DtoSerialization.fromTanks(this.serializableTanks),
             plan: DtoSerialization.fromSegments(this.plan.segments),
-            options: DtoSerialization.fromOptions(this.optionsService.getOptions())
+            options: DtoSerialization.fromOptions(this.optionsService.getOptions()),
+            eventOptions: this.createEventOptions()
         };
         this.profileTask.calculate(profileRequest);
     }
@@ -134,7 +136,8 @@ export class PlannerService extends Streamed {
             const infoRequest = {
                 tanks: serializedTanks,
                 plan: serializedPlan,
-                options: optionsDto
+                options: optionsDto,
+                eventOptions: this.createEventOptions()
             };
             this.diveInfoTask.calculate(infoRequest);
 
@@ -196,5 +199,12 @@ export class PlannerService extends Streamed {
         this.dive.calculationFailed = false;
         this.calculating = false;
         this.onInfoCalculated.next();
+    }
+
+    private createEventOptions(): EventOptionsDto {
+        return {
+            // TODO make maxDensity configurable
+            maxDensity: GasDensity.recommendedMaximum
+        };
     }
 }

@@ -191,7 +191,7 @@ describe('PlannerService', () => {
     describe('Errors', () => {
         const createProfileResultDto = (): ProfileResultDto => {
             const events = new Events();
-            events.add(new Event(0, 0, EventType.error));
+            events.add(Event.createError(''));
             const profile = CalculatedProfile.fromErrors(plan.segments, []);
             const profileDto = DtoSerialization.fromProfile(profile);
             return {

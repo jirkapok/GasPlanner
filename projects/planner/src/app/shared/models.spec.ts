@@ -20,7 +20,7 @@ describe('Bound tank', () => {
         const units = new UnitConversion();
         units.imperialUnits = true;
         const tank = new TankBound(Tank.createDefault(), units);
-        const expectedSize = units.defaults.primaryTankSize;
+        const expectedSize = 160;
         tank.size = expectedSize;
         tank.workingPressure = 3000;
         expect(tank.size).toBeCloseTo(expectedSize, 6);

@@ -51,12 +51,14 @@ export class SettingsNormalizationService {
 
     private normalizeTanks(): void {
         const tanks = this.tanksService.tanks;
+        const defaultTanks = this.units.defaults.tanks;
+
         tanks.forEach(t => {
             const tank = t.tank;
             // otherwise loosing precision in metric, where the value is even not relevant
             if(this.units.imperialUnits) {
                 const size = tank.size;
-                t.workingPressure = this.units.defaults.primaryTankWorkPressure;
+                t.workingPressure = defaultTanks.primary.workingPressure;
                 // to keep it aligned with previous value in bars
                 t.size = this.units.fromTankLiters(size, t.workingPressureBars);
             } else {

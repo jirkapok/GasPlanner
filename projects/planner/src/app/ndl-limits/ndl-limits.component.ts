@@ -27,8 +27,9 @@ export class NdlLimitsComponent {
     constructor(private router: Router, public units: UnitConversion,
         private ndl: NdlService, optionsService: OptionsService) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
-        this.tank.workingPressure = this.units.defaults.primaryTankWorkPressure;
-        this.tank.size = this.units.defaults.primaryTankSize;
+        const defaultTanks = this.units.defaults.tanks;
+        this.tank.workingPressure = defaultTanks.primary.workingPressure;
+        this.tank.size = defaultTanks.primary.size;
         this.options = new Options();
         this.options.loadFrom(optionsService.getOptions());
         this.toxicity = new GasToxicity(this.options);

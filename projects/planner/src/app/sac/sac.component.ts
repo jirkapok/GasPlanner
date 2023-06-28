@@ -208,9 +208,10 @@ export class SacComponent implements OnInit {
         // depth adjusted to cca 15 meters
         const stopDistance = this.units.defaults.stopsDistance;
         this.calc.depth = this.units.toMeters(stopDistance * 5);
-        const workPressure = this.units.defaults.primaryTankWorkPressure;
+        const defaultTanks = this.units.defaults.tanks;
+        const workPressure = defaultTanks.primary.workingPressure;
         this.workingPressure = this.units.toBar(workPressure);
-        const tankSize = this.units.defaults.primaryTankSize;
+        const tankSize = defaultTanks.primary.size;
         this.calc.tankSize = this.units.toTankLiters(tankSize, this.workingPressure);
 
         // rmv is calculated and duration is units independent

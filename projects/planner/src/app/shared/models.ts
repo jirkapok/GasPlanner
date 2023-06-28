@@ -61,7 +61,8 @@ export class TankBound {
     private _workingPressure: number;
 
     constructor(public tank: Tank, private units: UnitConversion) {
-        const newWorkPressure = this.units.defaults.primaryTankWorkPressure;
+        const defaultTanks = this.units.defaults.tanks;
+        const newWorkPressure = defaultTanks.primary.workingPressure;
         this._workingPressure = this.units.toBar(newWorkPressure);
     }
 

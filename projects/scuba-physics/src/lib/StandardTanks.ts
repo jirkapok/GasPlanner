@@ -1,11 +1,8 @@
-import { ImperialUnits } from './units';
-import { Precision } from './precision';
-
 /**
  *  Unit dependent default cylinder values
  *  https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities
  */
-export class TankConstants {
+class TankConstants {
     /** HP117 124 cuft tank as default single cylinder */
     public static readonly imperialTankSize = 124.1;
 
@@ -23,22 +20,6 @@ export class TankConstants {
 
     /** S80 aluminum 11L cylinder default single tank cylinder */
     public static readonly metricStageSize = 11.1;
-
-    /** Default working pressure in bars for single cylinder */
-    public static readonly metricTankWorkPressure = TankConstants.fromImperial(TankConstants.imperialTankWorkPressure);
-
-    /** Default working pressure in bars for stage cylinder */
-    public static readonly metricStageWorkPressure = TankConstants.fromImperial(TankConstants.imperialStageWorkPressure);
-
-    /**
-     * Template for calculating rounded metric working pressure from imperial in psi.
-     * Returns bars rounded to 3 decimals.
-     **/
-    public static fromImperial(sourcePsi: number): number {
-        const units = new ImperialUnits();
-        const bars = units.toBar(sourcePsi);
-        return Precision.round(bars, 3);
-    }
 }
 
 

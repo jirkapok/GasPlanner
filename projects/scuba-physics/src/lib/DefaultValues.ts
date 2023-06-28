@@ -1,12 +1,9 @@
-import { TankConstants } from './StandardTanks';
+import { ImperialTanks, MetricTanks, StandardTanks } from './StandardTanks';
 import { OptionDefaults } from './Options';
 
 /** Tank and depths default values, when creating new data in respective units */
 export interface DefaultValues {
-    primaryTankSize: number;
-    primaryTankWorkPressure: number;
-    stageTankSize: number;
-    stageTankWorkPressure: number;
+    tanks: StandardTanks;
 
     /** Depth at which last speed change occurs */
     lastSpeedLevel: number;
@@ -30,20 +27,8 @@ export interface DefaultOptions {
 
 /** Default values of tanks and depths in metric system */
 export class MetricDefaults implements DefaultValues {
-    public get primaryTankSize(): number {
-        return TankConstants.mertricTankSize;
-    }
-
-    public get primaryTankWorkPressure(): number {
-        return 0;
-    }
-
-    public get stageTankSize(): number {
-        return TankConstants.metricStageSize;
-    }
-
-    public get stageTankWorkPressure(): number {
-        return 0;
+    public get tanks(): StandardTanks {
+        return new MetricTanks();
     }
 
     public get lastSpeedLevel(): number {
@@ -90,20 +75,8 @@ export class ImperialDefaults implements DefaultValues {
     private static readonly recreSpeed = ImperialDefaults.depthDistance * 3;
     private static readonly maxEnd = ImperialDefaults.depthDistance * 10;
 
-    public get primaryTankSize(): number {
-        return TankConstants.imperialTankSize;
-    }
-
-    public get primaryTankWorkPressure(): number {
-        return TankConstants.imperialTankWorkPressure;
-    }
-
-    public get stageTankSize(): number {
-        return TankConstants.imperialStageSize;
-    }
-
-    public get stageTankWorkPressure(): number {
-        return TankConstants.imperialStageWorkPressure;
+    public get tanks(): StandardTanks {
+        return new ImperialTanks();
     }
 
     public get lastSpeedLevel(): number {

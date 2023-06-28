@@ -20,7 +20,8 @@ export class TanksService {
     private onTankRemoved = new Subject<Tank>();
 
     constructor(private units: UnitConversion) {
-        this.addTankBy(this.defaults.primaryTankSize, this.defaults.primaryTankWorkPressure);
+        const defaultTanks = this.units.defaults.tanks;
+        this.addTankBy(defaultTanks.primary.size, defaultTanks.primary.workingPressure);
         this.tanksReloaded = this.onTanksReloaded.asObservable();
         this.tankRemoved = this.onTankRemoved.asObservable();
     }
@@ -52,7 +53,8 @@ export class TanksService {
     }
 
     public addTank(): void {
-        this.addTankBy(this.defaults.stageTankSize, this.defaults.stageTankWorkPressure);
+        const defaultTanks = this.units.defaults.tanks;
+        this.addTankBy(defaultTanks.stage.size, defaultTanks.stage.workingPressure);
     }
 
     public removeTank(tank: TankBound): void {

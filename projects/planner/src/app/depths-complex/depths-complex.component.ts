@@ -84,6 +84,11 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         return this.levelAt(index).startDepth;
     }
 
+    public labelFor(index: number): string {
+        const level = this.levelAt(index);
+        return `${level.startDepth}-${level.endDepth} ${this.units.length} ${level.duration} min`;
+    }
+
     public tankLabelFor(index: number): string {
         return this.levelAt(index).tankLabel;
     }

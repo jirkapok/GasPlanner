@@ -64,15 +64,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         return this.tanksForm.controls.boundTanks;
     }
 
-    public get rowClasses(): string {
-        // TODO finish complex tanks layout
-        if (this.units.imperialUnits) {
-            return '';
-        }
-
-        return '';
-    }
-
     public ngOnInit(): void {
         const rows = this.fb.array(this.createTankControls());
         this.tanksForm = this.fb.group({

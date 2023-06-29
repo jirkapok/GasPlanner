@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
 import { Dive, WayPoint } from '../shared/models';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
-import * as Plotly from 'plotly.js';
+import * as Plotly from 'plotly.js-basic-dist';
 import { takeUntil } from 'rxjs';
 import { Time } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';

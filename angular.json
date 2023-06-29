@@ -35,8 +35,7 @@
                             "projects/planner/src/styles.scss"
                         ],
                         "scripts": [
-                            "node_modules/bootstrap/dist/js/bootstrap.min.js",
-                            "projects/planner/src/types/plotly.js/plotly-basic.min.js"
+                            "node_modules/bootstrap/dist/js/bootstrap.min.js"
                         ],
                         "serviceWorker": true,
                         "ngswConfigPath": "projects/planner/ngsw-config.json",

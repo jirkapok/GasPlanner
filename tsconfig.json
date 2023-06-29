@@ -20,6 +20,9 @@
       "scuba-physics": [
         "dist/scuba-physics/scuba-physics",
         "dist/scuba-physics"
+      ],
+      "plotly.js-basic-dist": [
+        "node_modules/@types/plotly.js"
       ]
     },
     "target": "ES2022",

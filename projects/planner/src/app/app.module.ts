@@ -68,6 +68,7 @@ import { Plan } from './shared/plan.service';
 import { PreferencesFactory } from './shared/preferences.factory';
 import { PlanUrlSerialization } from './shared/PlanUrlSerialization';
 import { WayPointsService } from './shared/waypoints.service';
+import { PlanTabsComponent } from './plan.tabs/plan.tabs.component';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -117,7 +118,8 @@ const MDB_MODULES = [
         OxygenDropDownComponent,
         PpO2Component,
         AppinfoComponent,
-        DiveIssuesComponent
+        DiveIssuesComponent,
+        PlanTabsComponent
     ],
     imports: [
         ...ANGULAR_MODULES,

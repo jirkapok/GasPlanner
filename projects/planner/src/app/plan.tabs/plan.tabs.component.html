@@ -1,0 +1,18 @@
+<div>
+    <mdb-tabs (activeTabChange)="selectedChanged($event)" #tabs [pills]="true">
+        <mdb-tab *ngFor="let diveTab of this.tabNames; let i = index">
+            <ng-template mdbTabTitle>
+                <div class="d-flex align-items-center">
+                    <div class="justifycontent-center">{{diveTab}}</div>
+                    <button *ngIf="tabNames.length > 1" type="button" class="btn-close ms-2" aria-label="Close" (click)="closeTab(i)"></button>
+                </div>
+            </ng-template>
+        </mdb-tab>
+        <mdb-tab>
+            <ng-template mdbTabTitle>
+                <fa-icon [icon]="addIcon" class="p-0 m-0 fa-xl" (click)="addTab()"></fa-icon>
+            </ng-template>
+        </mdb-tab>
+    </mdb-tabs>
+</div>
+<div>{{selectedTab}}</div>

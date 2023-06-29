@@ -39,7 +39,11 @@
                         ],
                         "serviceWorker": true,
                         "ngswConfigPath": "projects/planner/ngsw-config.json",
-                        "webWorkerTsConfig": "projects/planner/tsconfig.worker.json"
+                        "webWorkerTsConfig": "projects/planner/tsconfig.worker.json",
+                        "allowedCommonJsDependencies":[
+                            "lodash",
+                            "plotly.js-basic-dist"
+                        ]
                     },
                     "configurations": {
                         "production": {

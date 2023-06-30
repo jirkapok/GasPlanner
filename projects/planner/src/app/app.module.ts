@@ -69,6 +69,7 @@ import { PreferencesFactory } from './shared/preferences.factory';
 import { PlanUrlSerialization } from './shared/PlanUrlSerialization';
 import { WayPointsService } from './shared/waypoints.service';
 import { PlanTabsComponent } from './plan.tabs/plan.tabs.component';
+import { TankSizeComponent } from './tank.size/tank.size.component';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -119,7 +120,8 @@ const MDB_MODULES = [
         PpO2Component,
         AppinfoComponent,
         DiveIssuesComponent,
-        PlanTabsComponent
+        PlanTabsComponent,
+        TankSizeComponent
     ],
     imports: [
         ...ANGULAR_MODULES,

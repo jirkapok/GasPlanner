@@ -27,13 +27,7 @@
                             <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2">
                                 <label for="sizeItemB-{{ i }}" class="form-label">Size
                                     [{{units.volume}}]:</label>
-                                <input formControlName="tankSize" class="form-control" type="number"
-                                    (input)="tankChanged(i)" required [min]="ranges.tankSize[0]"
-                                    [max]="ranges.tankSize[1]" step="1" [class.is-invalid]="tankSizeInvalid(i)"
-                                    id="sizeItemB-{{ i }}" />
-                                <div class="text-danger" *ngIf="tankSizeInvalid(i)">Needs to be number
-                                    {{ranges.tankSizeLabel}}
-                                </div>
+                                <app-tank-size [sizeForm]="bound" (sizeChange)="tankChanged(i)" id="sizeItemB-{{ i }}"></app-tank-size>
                             </div>
                             <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2" *ngIf="units.imperialUnits">
                                 <label for="workPressureItemB-{{ i }}" class="form-label">Work p.

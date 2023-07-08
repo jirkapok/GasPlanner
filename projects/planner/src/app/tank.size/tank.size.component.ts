@@ -1,19 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { TankTemplate } from 'scuba-physics';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Tank, TankTemplate } from 'scuba-physics';
+import { AbstractControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { TankBound } from '../shared/models';
+import { InputControls } from '../shared/inputcontrols';
 
 @Component({
     selector: 'app-tank-size',
     templateUrl: './tank.size.component.html',
     styleUrls: ['./tank.size.component.scss']
 })
-export class TankSizeComponent {
-    public sizeForm = new FormGroup({
-        tankSize: new FormControl('')
-    });
+export class TankSizeComponent implements OnInit {
+    @Input() public sizeForm!: FormGroup;
+    @Input() public controlName = 'tankSize';
+    @Input() public tank: TankBound;
+    @Output() public sizeChange = new EventEmitter<number>();
 
-    constructor(private units: UnitConversion) { }
+    constructor(private units: UnitConversion,
+        private fb: NonNullableFormBuilder,
+        private inputs: InputControls,
+        private validators: ValidatorGroups) {
+        const source = Tank.createDefault();
+        this.tank = new TankBound(source, this.units);
+        const tankDefaults = this.units.defaults.tanks;
+        this.tank.workingPressure = tankDefaults.primary.workingPressure;
+        this.tank.size = tankDefaults.primary.size;
+    }
 
     public get ranges(): RangeConstants {
         return this.units.ranges;
@@ -23,19 +36,34 @@ export class TankSizeComponent {
         return this.units.defaults.tanks.available;
     }
 
-    public tankSizeInvalid(): boolean {
-        // const tank = this.tanksGroup.at(index);
-        // return this.inputs.controlInValid(tank.controls.tankSize);
-        return false;
+    public get tankSizeInvalid(): boolean {
+        const tankSize = this.sizeForm.get(this.controlName) as AbstractControl;
+        return this.inputs.controlInValid(tankSize);
+    }
+
+    public ngOnInit(): void {
+        if (!this.sizeForm) {
+            this.sizeForm = this.fb.group({});
+        }
+
+        const sizeControl = this.fb.control(this.tank.size, this.validators.tankSize);
+        this.sizeForm.addControl(this.controlName, sizeControl);
     }
 
     public sizeChanged(): void {
+        if (this.sizeForm.invalid) {
+            return;
+        }
+
+        const sizeField = this.sizeForm.get(this.controlName);
+        const newValue = Number(sizeField?.value);
+        this.tank.size = newValue;
+        this.sizeChange.emit(newValue);
     }
 
     public assignTankTemplate(template: TankTemplate): void {
-        // const bound = this.tanks[index];
-        // bound.assignTemplate(template);
-        // this.reload(bound, index);
-        // this.delayedCalc.schedule();
+        this.tank.assignTemplate(template);
+        // side effect, it didn't change the size only, but the working pressure too
+        this.sizeChange.emit(template.size);
     }
 }

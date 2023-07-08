@@ -63,6 +63,9 @@ export class TankSizeComponent implements OnInit {
 
     public assignTankTemplate(template: TankTemplate): void {
         this.tank.assignTemplate(template);
+        this.sizeForm.patchValue({
+            [this.controlName]: this.tank.size
+        });
         // side effect, it didn't change the size only, but the working pressure too
         this.sizeChange.emit(template.size);
     }

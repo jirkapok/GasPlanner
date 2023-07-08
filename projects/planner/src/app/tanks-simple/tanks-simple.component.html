@@ -7,9 +7,7 @@
         <div class="card-body row">
             <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
                 <label for="sizeFirstTank" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>
-                <input formControlName="firstTankSize" class="form-control" type="number" (input)="applySimple()"
-                    required [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1"
-                    [class.is-invalid]="firstTankSizeInvalid" id="sizeFirstTank" />
+                <app-tank-size [sizeForm]="tanksForm" [tank]="firstTank" controlName="firstTankSize" (sizeChange)="applySimple()"></app-tank-size>
                 <div class="invalid-feedback position-absolute">Needs to be number {{ranges.tankSizeLabel}}</div>
                 <div class="form-text text-muted" [class.invisible]="firstTankSizeInvalid">SAC: {{gasSac() |
                     number:'1.0-2'}} {{units.sac}}</div>

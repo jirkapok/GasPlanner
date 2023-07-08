@@ -139,7 +139,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.delayedCalc.schedule();
     }
 
-    // TODO extract tank dropdown control
+    // TODO fix wrong label for attribute of size control
+    // TODO fix validation for size control
     // TODO rounding for HP100 size
     public assignTankTemplate(index: number, template: TankTemplate): void {
         const bound = this.tanks[index];

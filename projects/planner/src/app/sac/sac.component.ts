@@ -5,11 +5,12 @@ import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { Diver, Precision } from 'scuba-physics';
+import { Diver, Precision, Tank } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { OptionsService } from '../shared/options.service';
+import { TankBound } from '../shared/models';
 
 interface SacForm {
     depth: FormControl<number>;
@@ -29,7 +30,8 @@ export class SacComponent implements OnInit {
     public calcIcon = faCalculator;
     public formSac!: FormGroup<SacForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
-    private workingPressure = 0;
+    // used as store for working pressure, keep in mind to sync size
+    public tank: TankBound;
     private durationControl!: FormControl<number>;
     private rmvControl!: FormControl<number>;
     private usedControl!: FormControl<number>;
@@ -43,6 +45,7 @@ export class SacComponent implements OnInit {
         private cd: ChangeDetectorRef,
         public calc: SacCalculatorService,
         public units: UnitConversion) {
+        this.tank = new TankBound(Tank.createDefault(), this.units);
     }
 
     public get ranges(): RangeConstants {
@@ -85,12 +88,12 @@ export class SacComponent implements OnInit {
     }
 
     public get calcTankSize(): number {
-        const tank = this.units.fromTankLiters(this.calc.tankSize, this.workingPressure);
-        return Precision.round(tank, 1);
+        const tankSize = this.tank.size;
+        return Precision.round(tankSize, 1);
     }
 
     public get calcWorkingPressure(): number {
-        const workPressure = this.units.fromBar(this.workingPressure);
+        const workPressure = this.tank.workingPressure;
         return Precision.round(workPressure, 1);
     }
 
@@ -127,8 +130,8 @@ export class SacComponent implements OnInit {
             tankSize: [this.calcTankSize, this.validators.tankSize]
         });
 
-        if(this.units.imperialUnits) {
-            const workPressureControl  = this.formBuilder.control(this.calcWorkingPressure, this.validators.tankPressure);
+        if (this.units.imperialUnits) {
+            const workPressureControl = this.formBuilder.control(this.calcWorkingPressure, this.validators.tankPressure);
             this.formSac.addControl('workPressure', workPressureControl);
         }
 
@@ -141,8 +144,10 @@ export class SacComponent implements OnInit {
         }
 
         const values = this.formSac.value;
-        this.workingPressure = this.units.toBar(Number(values.workPressure));
-        this.calc.tankSize = this.units.toTankLiters(Number(values.tankSize), this.workingPressure);
+        // TODO distinguish template applied and load from input field
+        this.tank.workingPressure = Number(values.workPressure);
+        this.tank.size = Number(values.tankSize);
+        this.calc.tankSize = this.tank.tank.size;
         this.calc.depth = this.units.toMeters(Number(values.depth));
         this.calc.used = this.units.toBar(Number(values.used));
         this.calc.rmv = this.units.toLiter(Number(values.rmv));
@@ -209,13 +214,12 @@ export class SacComponent implements OnInit {
         const stopDistance = this.units.defaults.stopsDistance;
         this.calc.depth = this.units.toMeters(stopDistance * 5);
         const defaultTanks = this.units.defaults.tanks;
-        const workPressure = defaultTanks.primary.workingPressure;
-        this.workingPressure = this.units.toBar(workPressure);
-        const tankSize = defaultTanks.primary.size;
-        this.calc.tankSize = this.units.toTankLiters(tankSize, this.workingPressure);
+        this.tank.workingPressure = defaultTanks.primary.workingPressure;
+        this.tank.size = defaultTanks.primary.size;
+        this.calc.tankSize = this.tank.tank.size;
 
         // rmv is calculated and duration is units independent
-        if(this.units.imperialUnits) {
+        if (this.units.imperialUnits) {
             this.calc.used = this.units.toBar(2200);
         } else {
             this.calc.used = 150;

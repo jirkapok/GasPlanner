@@ -19,12 +19,13 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { TanksSimpleComponent } from './tanks-simple.component';
 import { WayPointsService } from '../shared/waypoints.service';
+import { TankSizeComponent } from '../tank.size/tank.size.component';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
 
     public get sizeInput(): HTMLInputElement {
-        return this.fixture.debugElement.query(By.css('#sizeFirstTank')).nativeElement as HTMLInputElement;
+        return this.fixture.debugElement.query(By.css('#tankSize')).nativeElement as HTMLInputElement;
     }
 
     public get startPressureInput(): HTMLInputElement {
@@ -53,7 +54,7 @@ describe('Tanks Simple component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [TanksSimpleComponent, GaslabelComponent,
-                OxygenComponent, OxygenDropDownComponent],
+                OxygenComponent, OxygenDropDownComponent, TankSizeComponent],
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls,
                 ValidatorGroups, DelayedScheduleService,

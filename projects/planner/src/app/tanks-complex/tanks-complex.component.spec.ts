@@ -18,6 +18,7 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { TanksComplexComponent } from './tanks-complex.component';
 import { WayPointsService } from '../shared/waypoints.service';
+import { TankSizeComponent } from '../tank.size/tank.size.component';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -28,7 +29,7 @@ export class ComplexTanksPage {
     }
 
     public sizeInput(index: number): HTMLInputElement {
-        const id = `#sizeItem-${index}`;
+        const id = `#sizeItemB-${index} input`; // we check on large display only
         return this.debugElement(id);
     }
 
@@ -63,7 +64,7 @@ describe('Tanks Complex component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [TanksComplexComponent, GaslabelComponent,
-                OxygenComponent, OxygenDropDownComponent],
+                OxygenComponent, OxygenDropDownComponent, TankSizeComponent],
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls,
                 ValidatorGroups, DelayedScheduleService,

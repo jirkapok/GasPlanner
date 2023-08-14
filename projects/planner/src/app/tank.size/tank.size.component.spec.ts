@@ -61,7 +61,7 @@ describe('TankSizeComponent', () => {
 
     it('Assign standard tank applies impoerial values', () => {
         fixture.detectChanges();
-        spyOn(component.sizeChange, 'emit');
+        spyOn(component.applyTemplate, 'emit');
         const templateButtons = page.templateButtons[2].nativeElement as HTMLInputElement;
         templateButtons.dispatchEvent(new Event('click'));
 
@@ -69,6 +69,6 @@ describe('TankSizeComponent', () => {
 
         expect(component.tank.size).toBeCloseTo(165);
         expect(component.tank.workingPressure).toBeCloseTo(2640);
-        expect(component.sizeChange.emit).toHaveBeenCalledTimes(1);
+        expect(component.applyTemplate.emit).toHaveBeenCalledTimes(1);
     });
 });

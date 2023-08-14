@@ -16,6 +16,7 @@ export class TankSizeComponent implements OnInit {
     @Input() public controlName = 'tankSize';
     @Input() public tank: TankBound;
     @Output() public sizeChange = new EventEmitter<number>();
+    @Output() public applyTemplate = new EventEmitter<TankTemplate>();
 
     constructor(private units: UnitConversion,
         private fb: NonNullableFormBuilder,
@@ -67,6 +68,6 @@ export class TankSizeComponent implements OnInit {
             [this.controlName]: this.tank.size
         });
         // side effect, it didn't change the size only, but the working pressure too
-        this.sizeChange.emit(template.size);
+        this.applyTemplate.emit(template);
     }
 }

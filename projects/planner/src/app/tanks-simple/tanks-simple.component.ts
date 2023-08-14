@@ -11,7 +11,7 @@ import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
 import { Plan } from '../shared/plan.service';
-import { Precision } from 'scuba-physics';
+import { Precision, TankTemplate } from 'scuba-physics';
 import { OptionsService } from '../shared/options.service';
 
 interface TankForm {
@@ -92,6 +92,18 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         const maxDepth = this.plan.maxDepth;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
         this.delayedCalc.schedule();
+    }
+
+    public applyTemplate(template: TankTemplate): void {
+        if (this.tanksForm.invalid) {
+            return;
+        }
+
+        this.tanksForm.patchValue({
+            workPressure: template.workingPressure,
+        });
+
+        this.applySimple();
     }
 
     public applySimple(): void {

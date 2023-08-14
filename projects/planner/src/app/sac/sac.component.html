@@ -27,16 +27,20 @@
                         </div>
                         <div class="pt-2 mb-4">
                             <label for="tank" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
-                            <app-tank-size [tank]="tank" [sizeForm]="formSac" controlName="tankSize" (sizeChange)="inputChanged()"></app-tank-size>
+                            <app-tank-size [tank]="tank" [sizeForm]="formSac" controlName="tankSize"
+                                (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event)">
+                            </app-tank-size>
                             <div class="invalid-feedback position-absolute">Needs to be number {{ranges.tankSizeLabel}}
                             </div>
                         </div>
                         <div class="pt-2 mb-4" *ngIf="units.imperialUnits">
                             <label for="tank" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:</label>
-                            <input formControlName="workPressure" class="form-control" name="workPressure" id="workPressure" type="number"
-                                [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1" (input)="inputChanged()"
+                            <input formControlName="workPressure" class="form-control" name="workPressure"
+                                id="workPressure" type="number" [min]="ranges.tankPressure[0]"
+                                [max]="ranges.tankPressure[1]" step="1" (input)="inputChanged()"
                                 [class.is-invalid]="workPressureInvalid" />
-                            <div class="invalid-feedback position-absolute">Needs to be number {{ranges.tankPressureLabel}}
+                            <div class="invalid-feedback position-absolute">Needs to be number
+                                {{ranges.tankPressureLabel}}
                             </div>
                         </div>
                         <ng-container *ngIf="!calc.inDuration">
@@ -78,7 +82,7 @@
                         <ng-container *ngIf="calc.inSac">
                             <div class="pt-2 mb-4">
                                 <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                                <input class="form-control" [readonly]="true" [value]="calcRmv" id="sac"/>
+                                <input class="form-control" [readonly]="true" [value]="calcRmv" id="sac" />
                                 <small class="form-text text-muted">SAC: {{ gasSac | number:'1.0-2'}}
                                     {{units.sac}}</small>
                             </div>
@@ -86,13 +90,13 @@
                         <ng-container *ngIf="calc.inUsed">
                             <div class="pt-2 mb-4">
                                 <label for="used" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
-                                <input class="form-control" [readonly]="true" [value]="calcUsed" id="used"/>
+                                <input class="form-control" [readonly]="true" [value]="calcUsed" id="used" />
                             </div>
                         </ng-container>
                         <ng-container *ngIf="calc.inDuration">
                             <div class="pt-2 mb-4">
                                 <label for="duration" class="form-label" mdbLabel>Dive time [min]:</label>
-                                <input class="form-control" [readonly]="true" [value]="calcDuration" id="duration"/>
+                                <input class="form-control" [readonly]="true" [value]="calcDuration" id="duration" />
                             </div>
                         </ng-container>
                     </form>

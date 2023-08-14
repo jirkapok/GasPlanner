@@ -5,7 +5,7 @@ import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { Diver, Precision, Tank } from 'scuba-physics';
+import { Diver, Precision, Tank, TankTemplate } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -138,13 +138,24 @@ export class SacComponent implements OnInit {
         this.toSac();
     }
 
+    public applyTemplate(template: TankTemplate): void {
+        if (this.formSac.invalid) {
+            return;
+        }
+
+        this.formSac.patchValue({
+            workPressure: template.workingPressure,
+        });
+
+        this.inputChanged();
+    }
+
     public inputChanged(): void {
         if (this.formSac.invalid) {
             return;
         }
 
         const values = this.formSac.value;
-        // TODO distinguish template applied and load from input field
         this.tank.workingPressure = Number(values.workPressure);
         this.tank.size = Number(values.tankSize);
         this.calc.tankSize = this.tank.tank.size;

@@ -12,12 +12,22 @@ import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { SacComponent } from './sac.component';
+import { TankSizeComponent } from '../tank.size/tank.size.component';
+import _ from 'lodash';
 
 class SacPage {
     constructor(private fixture: ComponentFixture<SacComponent>) { }
 
     public get workingPressure(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#workPressure'))?.nativeElement as HTMLInputElement;
+    }
+
+    public applyTemplateButton(text: string): HTMLLinkElement {
+        const allButtons = this.fixture.debugElement.queryAll(By.css('.dropdown-item'));
+        const button = _(allButtons)
+            .filter(de => (<HTMLElement>de.nativeElement).innerText === text)
+            .head()?.nativeElement as HTMLLinkElement;
+        return button;
     }
 }
 
@@ -28,7 +38,7 @@ describe('Sac component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SacComponent],
+            declarations: [SacComponent, TankSizeComponent],
             providers: [
                 WorkersFactoryCommon, UnitConversion,
                 OptionsService, DecimalPipe,
@@ -102,7 +112,7 @@ describe('Sac component', () => {
         });
 
         it('adjusts rmv', () => {
-            expect(component.calcRmv).toBeCloseTo(0.6985 , 4);
+            expect(component.calcRmv).toBeCloseTo(0.6985, 4);
         });
 
         it('adjusts sac', () => {
@@ -118,5 +128,14 @@ describe('Sac component', () => {
             sacPage.workingPressure.dispatchEvent(new Event('input'));
             expect(component.calc.tankSize).toBeCloseTo(12.742, 3);
         });
+
+        it('Apply S40 tank template changes size and working pressure', () => {
+            const s40Button = sacPage.applyTemplateButton('S40');
+            s40Button.click();
+
+            expect(component.calc.tankSize).toBeCloseTo(5.654, 3);
+            expect(component.tank.workingPressure).toBeCloseTo(3000);
+        });
+
     });
 });

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { Tank, TankTemplate } from 'scuba-physics';
+import { Precision, Tank, TankTemplate } from 'scuba-physics';
 import { AbstractControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TankBound } from '../shared/models';
@@ -65,7 +65,7 @@ export class TankSizeComponent implements OnInit {
     public assignTankTemplate(template: TankTemplate): void {
         this.tank.assignTemplate(template);
         this.sizeForm.patchValue({
-            [this.controlName]: this.tank.size
+            [this.controlName]: Precision.round(this.tank.size, 1) // because of precission for HP100
         });
         // side effect, it didn't change the size only, but the working pressure too
         this.applyTemplate.emit(template);

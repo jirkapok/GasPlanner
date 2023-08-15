@@ -139,7 +139,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.delayedCalc.schedule();
     }
 
-    // TODO rounding for HP100 size
     public assignTankTemplate(index: number, template: TankTemplate): void {
         const bound = this.tanks[index];
         bound.assignTemplate(template);
@@ -176,7 +175,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     private reload(bound: TankBound, index: number): void {
         const tankControl = this.tanksGroup.at(index);
         tankControl.patchValue({
-            tankSize: bound.size,
+            tankSize: Precision.round(bound.size, 1), // because of HP100
             tankWorkPressure: bound.workingPressure,
             tankStartPressure: bound.startPressure,
             tankO2: bound.o2,

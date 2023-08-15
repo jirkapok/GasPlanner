@@ -131,13 +131,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.delayedCalc.schedule();
     }
 
-    // TODO replace o2 dropdowns by control
-    public assignStandardGas(index: number, gasName: string): void {
-        const bound = this.tanks[index];
-        bound.tank.assignStandardGas(gasName);
-        this.reload(bound, index);
-        this.delayedCalc.schedule();
-    }
+    // TODO add switch to choose from all or nitrox only gases
 
     public assignTankTemplate(index: number, template: TankTemplate): void {
         const bound = this.tanks[index];

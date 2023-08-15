@@ -13,6 +13,7 @@ import { TankBound } from '../shared/models';
 })
 export class OxygenDropDownComponent implements OnInit {
     @Input() public showBestMix = true;
+    @Input() public showTitle = true;
     @Input() public controlName = 'o2';
     @Input() public tank = new TankBound(new Tank(15, 200, 21), this.units);
     @Input() public nitroxForm!: FormGroup;

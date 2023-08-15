@@ -19,39 +19,57 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { TanksComplexComponent } from './tanks-complex.component';
 import { WayPointsService } from '../shared/waypoints.service';
 import { TankSizeComponent } from '../tank.size/tank.size.component';
+import { DebugElement } from '@angular/core';
+import _ from 'lodash';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
 
-    public debugElement(id: string): HTMLInputElement {
-        const found = this.fixture.debugElement.query(By.css(id));
-        return found.nativeElement as HTMLInputElement;
-    }
-
     public sizeInput(index: number): HTMLInputElement {
         const id = `#sizeItemB-${index} input`; // we check on large display only
-        return this.debugElement(id);
+        return this.htmlElement(id);
     }
 
     public pressureInput(index: number): HTMLInputElement {
         const id = `#pressureItem-${index}`;
-        return this.debugElement(id);
+        return this.htmlElement(id);
     }
 
     public o2Input(index: number): HTMLInputElement {
         const id = `#o2Item-${index}`;
-        return this.debugElement(id);
+        const o2DropDown = this.debugElement(id);
+        return o2DropDown.query(By.css('input')).nativeElement as HTMLInputElement;
     }
 
     public heInput(index: number): HTMLInputElement {
         const id = `#heItem-${index}`;
-        return this.debugElement(id);
+        return this.htmlElement(id);
     }
 
     public removeButtons(): number {
         const idPrefix = '[id^="removeTank"]';
         const found = this.fixture.debugElement.queryAll(By.css(idPrefix));
         return found.length;
+    }
+
+    public applyGasButton(index: number, text: string): HTMLLinkElement {
+        const id = `#o2Item-${index}`;
+        const o2Element = this.debugElement(id);
+
+        const allButtons = o2Element.queryAll(By.css('.dropdown-item'));
+        const button = _(allButtons)
+            .filter(de => (<HTMLElement>de.nativeElement).innerText === text)
+            .head()?.nativeElement as HTMLLinkElement;
+        return button;
+    }
+
+    private htmlElement(id: string): HTMLInputElement {
+        const found = this.debugElement(id);
+        return found.nativeElement as HTMLInputElement;
+    }
+    private debugElement(id: string): DebugElement {
+        const found = this.fixture.debugElement.query(By.css(id));
+        return found;
     }
 }
 
@@ -142,7 +160,8 @@ describe('Tanks Complex component', () => {
 
     it('Assign gas name tank rebinds new o2 value', () => {
         fixture.detectChanges();
-        component.assignStandardGas(0, 'Ean36');
+        const applyEan36 = complexPage.applyGasButton(0, 'EAN36');
+        applyEan36.click();
         fixture.detectChanges();
         expect(complexPage.o2Input(0).value).toBe('36');
     });
@@ -162,7 +181,9 @@ describe('Tanks Complex component', () => {
 
     it('He field affects O2 field tank is reloaded', () => {
         fixture.detectChanges();
-        component.assignStandardGas(0, 'Oxygen');
+        const applyOxygen = complexPage.applyGasButton(0, 'Oxygen');
+        applyOxygen.click();
+
         complexPage.heInput(0).value = '70';
         complexPage.heInput(0).dispatchEvent(new Event('input'));
 

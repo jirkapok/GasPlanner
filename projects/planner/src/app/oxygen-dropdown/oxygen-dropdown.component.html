@@ -1,5 +1,5 @@
 <ng-container [formGroup]="nitroxForm">
-    <label for="gasO2" class="form-label" mdbLabel>Percent O2:</label>
+    <label for="gasO2" class="form-label" mdbLabel *ngIf="showTitle">Percent O2:</label>
     <div class="input-group dropdown" mdbDropdown>
         <input class="form-control" type="number" (input)="fireGasChanged()" [formControlName]="this.controlName" required
             [min]="units.ranges.nitroxOxygen[0]" [max]="units.ranges.nitroxOxygen[1]" step="1" id="gasO2"
@@ -15,5 +15,5 @@
             </li>
         </ul>
     </div>
-    <div class="text-danger form-text position-absolute" *ngIf="gasO2Invalid" >Needs to be number {{units.ranges.nitroxOxygenLabel}}</div>
+    <div class="text-danger form-text position-absolute" *ngIf="showTitle && gasO2Invalid" >Needs to be number {{units.ranges.nitroxOxygenLabel}}</div>
 </ng-container>

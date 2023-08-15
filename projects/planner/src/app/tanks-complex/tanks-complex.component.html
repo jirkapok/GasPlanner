@@ -55,24 +55,9 @@
                             </div>
                             <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2" *ngIf="units.imperialUnits"></div>
                             <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2">
-                                <label for="o2ItemB-{{ i }}" class="form-label">O2 [%]:</label>
-                                <div class="input-group dropdown" mdbDropdown>
-                                    <input formControlName="tankO2" class="form-control" type="number"
-                                        (input)="tankChanged(i)" required [min]="ranges.trimixOxygen[0]"
-                                        [max]="ranges.trimixOxygen[1]" step="1" [class.is-invalid]="gasO2Invalid(i)"
-                                        id="o2ItemB-{{ i }}" />
-                                    <button class="btn btn-default dropdown-toggle dropdown-toggle-split" id="o2Menu"
-                                        type="button" aria-expanded="false" data-mdb-toggle="dropdown"
-                                        mdbDropdownToggle></button>
-                                    <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                                        <li *ngFor="let stgas of this.allGasNames"
-                                            (click)="assignStandardGas(i, stgas)">
-                                            <a class="dropdown-item">{{stgas}}</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="text-danger" *ngIf="gasO2Invalid(i)">Needs to be number
-                                    {{ranges.trimixOxygenLabel}}</div>
+                                <app-oxygen-dropdown [tank]="tanks[i]" (gasChange)="tankChanged(i)" id="o2Item-{{ i }}"
+                                    [nitroxForm]="bound" controlName="tankO2"
+                                    [showBestMix]="false"></app-oxygen-dropdown>
                             </div>
                             <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2">
                                 <label for="heItemB-{{ i }}" class="form-label">He [%]:</label>
@@ -152,19 +137,9 @@
                             Needs to be number {{ranges.tankPressureLabel}}</div>
                     </div>
                     <div class="col col-2 m-0 pb-0 px-1" [class.col-4]="!units.imperialUnits">
-                        <div class="input-group dropdown" mdbDropdown>
-                            <input formControlName="tankO2" class="form-control" type="number" (input)="tankChanged(i)"
-                                required [min]="ranges.trimixOxygen[0]" [max]="ranges.trimixOxygen[1]" step="1"
-                                [class.is-invalid]="gasO2Invalid(i)" id="o2Item-{{ i }}" />
-                            <button class="btn btn-default dropdown-toggle dropdown-toggle-split" id="o2Menu"
-                                type="button" aria-expanded="false" data-mdb-toggle="dropdown"
-                                mdbDropdownToggle></button>
-                            <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                                <li *ngFor="let stgas of this.allGasNames" (click)="assignStandardGas(i, stgas)">
-                                    <a class="dropdown-item">{{stgas}}</a>
-                                </li>
-                            </ul>
-                        </div>
+                        <app-oxygen-dropdown [tank]="tanks[i]" (gasChange)="tankChanged(i)" id="o2Item-{{ i }}"
+                            [nitroxForm]="bound" controlName="tankO2" [showBestMix]="false"
+                            [showTitle]="false"></app-oxygen-dropdown>
                         <div class="text-danger" *ngIf="gasO2Invalid(i)">Needs to be number
                             {{ranges.trimixOxygenLabel}}</div>
                     </div>

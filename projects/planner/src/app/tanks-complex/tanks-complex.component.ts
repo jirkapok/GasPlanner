@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { StandardGases, Precision, TankTemplate } from 'scuba-physics';
+import { Precision, TankTemplate } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { GasToxicity } from '../shared/gasToxicity.service';
@@ -154,6 +154,17 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.reload(bound, index);
 
         this.delayedCalc.schedule();
+    }
+
+    public standardGasApplied(index: number): void {
+        const tankControl = this.tanksGroup.at(index);
+        const bound = this.tanks[index];
+
+        tankControl.patchValue({
+            tankHe: bound.he
+        });
+
+        this.tankChanged(index);
     }
 
     private reloadAll(): void {

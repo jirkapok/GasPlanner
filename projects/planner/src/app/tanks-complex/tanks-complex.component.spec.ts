@@ -166,6 +166,14 @@ describe('Tanks Complex component', () => {
         expect(complexPage.o2Input(0).value).toBe('36');
     });
 
+    it('Assign gas name tank rebinds new He value', () => {
+        fixture.detectChanges();
+        const apply1845 = complexPage.applyGasButton(0, 'Trimix 18/45');
+        apply1845.click();
+        fixture.detectChanges();
+        expect(complexPage.heInput(0).value).toBe('45');
+    });
+
     it('Assign tank template rebinds new size and working pressure', () => {
         fixture.detectChanges();
 

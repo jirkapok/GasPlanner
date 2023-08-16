@@ -56,7 +56,7 @@
                             <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2" *ngIf="units.imperialUnits"></div>
                             <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2">
                                 <app-oxygen-dropdown [tank]="tanks[i]" id="o2Item-{{ i }}" (gasChange)="tankChanged(i)"
-                                    (standardGasApplied)="tankChanged(i)" [nitroxForm]="bound" controlName="tankO2"
+                                    (standardGasApplied)="standardGasApplied(i)" [nitroxForm]="bound" controlName="tankO2"
                                     [showBestMix]="false" [showTrimixGases]="true"></app-oxygen-dropdown>
                             </div>
                             <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2">
@@ -138,7 +138,7 @@
                     </div>
                     <div class="col col-2 m-0 pb-0 px-1" [class.col-4]="!units.imperialUnits">
                         <app-oxygen-dropdown [tank]="tanks[i]" id="o2Item-{{ i }}" (gasChange)="tankChanged(i)"
-                            (standardGasApplied)="tankChanged(i)" [nitroxForm]="bound" controlName="tankO2"
+                            (standardGasApplied)="standardGasApplied(i)" [nitroxForm]="bound" controlName="tankO2"
                             [showBestMix]="false" [showTitle]="false" [showTrimixGases]="true"></app-oxygen-dropdown>
                         <div class="text-danger" *ngIf="gasO2Invalid(i)">Needs to be number
                             {{ranges.trimixOxygenLabel}}</div>

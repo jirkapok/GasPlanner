@@ -20,6 +20,7 @@ export class OxygenDropDownComponent implements OnInit {
     @Input() public nitroxForm!: FormGroup;
     @Output() public gasChange = new EventEmitter<number>();
     @Output() public assignBestMix = new EventEmitter();
+    @Output() public standardGasApplied = new EventEmitter<string>();
 
     constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
@@ -72,21 +73,25 @@ export class OxygenDropDownComponent implements OnInit {
         this.reload();
     }
 
-    public fireGasChanged(): void {
+    public gasInputChanged(): void {
         if (this.gasO2Invalid) {
             return;
         }
 
-        const o2Field = this.nitroxForm.get(this.controlName);
-        const newValue = Number(o2Field?.value);
-        this.tank.o2 = newValue;
-        this.gasChange.emit(newValue);
+        this.updateOxygenValue();
+        this.gasChange.emit(this.tank.o2);
     }
 
     public assignStandardGas(gasName: string): void {
         this.tank.tank.assignStandardGas(gasName);
         this.reload();
-        this.fireGasChanged();
+        this.standardGasApplied.emit(gasName);
+    }
+
+    public updateOxygenValue(): void {
+        const o2Field = this.nitroxForm.get(this.controlName);
+        const newValue = Number(o2Field?.value);
+        this.tank.o2 = newValue;
     }
 
     private reload(): void {

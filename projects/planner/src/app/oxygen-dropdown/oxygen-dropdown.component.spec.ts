@@ -81,6 +81,19 @@ describe('Oxygen DropDown component', () => {
         });
     });
 
+    describe('Apply Standard gas', () => {
+        beforeEach(() => {
+            fixture.detectChanges();
+            spyOn(component.standardGasApplied, 'emit');
+            component.assignStandardGas('Oxygen');
+        });
 
+        it('Aplies template', () => {
+            expect(component.tank.o2).toEqual(100);
+        });
 
+        it('Fires event', () => {
+            expect(component.standardGasApplied.emit).toHaveBeenCalledOnceWith('Oxygen');
+        });
+    });
 });

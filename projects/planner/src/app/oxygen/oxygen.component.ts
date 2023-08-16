@@ -22,7 +22,10 @@ export class OxygenComponent {
     public nitroxForm!: FormGroup;
 
     @Output()
-    public gasChange = new EventEmitter();
+    public gasChange = new EventEmitter<number>();
+
+    @Output()
+    public standardGasApplied = new EventEmitter<string>();
 
     @Output()
     public assignBestMix = new EventEmitter();
@@ -40,14 +43,7 @@ export class OxygenComponent {
 
     public fireAssignBestMix(): void {
         this.assignBestMix.emit();
-        this.reload();
-    }
 
-    public fireGasChanged(): void {
-        this.gasChange.emit();
-    }
-
-    private reload(): void {
         this.nitroxForm.patchValue({
             o2: Precision.round(this.tank.o2, 1)
         });

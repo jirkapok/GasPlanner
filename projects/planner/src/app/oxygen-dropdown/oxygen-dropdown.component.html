@@ -1,7 +1,7 @@
 <ng-container [formGroup]="nitroxForm">
     <label for="gasO2" class="form-label" mdbLabel *ngIf="showTitle">Percent O2:</label>
     <div class="input-group dropdown" mdbDropdown>
-        <input class="form-control" type="number" (input)="fireGasChanged()" [formControlName]="this.controlName"
+        <input class="form-control" type="number" (input)="gasInputChanged()" [formControlName]="this.controlName"
             required [min]="o2Ranges[0]" [max]="o2Ranges[1]" step="1" id="gasO2" [class.is-invalid]="gasO2Invalid" />
         <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="o2Menu"
             type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>

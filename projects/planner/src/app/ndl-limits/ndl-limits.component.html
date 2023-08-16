@@ -8,7 +8,7 @@
             <div class="card-body">
                 <div class="pt-2 mb-4">
                     <app-oxygen [tank]="tank" [showBestMix]="false" (gasChange)="calculate()"
-                        [toxicity]="toxicity"></app-oxygen>
+                        (standardGasApplied)="calculate()" [toxicity]="toxicity"></app-oxygen>
                 </div>
                 <div class="pt-2 mb-4">
                     <app-pp-o2 [maxPpO2]="options.maxPpO2" (ppO2Change)="ppO2Changed($event)" label="Maximum ppO2:">

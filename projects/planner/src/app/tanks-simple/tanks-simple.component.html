@@ -34,7 +34,8 @@
             </div>
             <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
                 <app-oxygen [tank]="firstTank" [toxicity]="toxicity" (gasChange)="applySimple()"
-                    (assignBestMix)="assignBestMix()" [nitroxForm]="tanksForm"></app-oxygen>
+                    (assignBestMix)="assignBestMix()" (standardGasApplied)="applySimple()"
+                    [nitroxForm]="tanksForm"></app-oxygen>
             </div>
         </div>
     </form>

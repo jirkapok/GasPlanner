@@ -1,19 +1,19 @@
 <ng-container [formGroup]="nitroxForm">
     <label for="gasO2" class="form-label" mdbLabel *ngIf="showTitle">Percent O2:</label>
     <div class="input-group dropdown" mdbDropdown>
-        <input class="form-control" type="number" (input)="fireGasChanged()" [formControlName]="this.controlName" required
-            [min]="units.ranges.nitroxOxygen[0]" [max]="units.ranges.nitroxOxygen[1]" step="1" id="gasO2"
-            [class.is-invalid]="gasO2Invalid" />
+        <input class="form-control" type="number" (input)="fireGasChanged()" [formControlName]="this.controlName"
+            required [min]="o2Ranges[0]" [max]="o2Ranges[1]" step="1" id="gasO2" [class.is-invalid]="gasO2Invalid" />
         <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="o2Menu"
             type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>
         <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
             <li (click)="fireAssignBestMix()" *ngIf="showBestMix" id="btnBestMix">
                 <a class="dropdown-item">Best mix</a>
             </li>
-            <li *ngFor="let stgas of nitroxNames" (click)="assignStandardGas(stgas)">
+            <li *ngFor="let stgas of standardGases" (click)="assignStandardGas(stgas)">
                 <a class="dropdown-item">{{stgas}}</a>
             </li>
         </ul>
     </div>
-    <div class="text-danger form-text position-absolute" *ngIf="showTitle && gasO2Invalid" >Needs to be number {{units.ranges.nitroxOxygenLabel}}</div>
+    <div class="text-danger form-text position-absolute" *ngIf="showTitle && gasO2Invalid">Needs to be number {{
+        o2RangeLabel }}</div>
 </ng-container>

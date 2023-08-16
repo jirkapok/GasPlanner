@@ -31,7 +31,6 @@ interface TanksForm {
     styleUrls: ['./tanks-complex.component.scss']
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
-    public allGasNames: string[];
     public icon = faBatteryHalf;
     public plusIcon = faPlus;
     public minusIcon = faMinus;
@@ -48,7 +47,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         private delayedCalc: DelayedScheduleService) {
         super();
         this.toxicity = this.options.toxicity;
-        this.allGasNames = StandardGases.allNames();
     }
 
     public get ranges(): RangeConstants {
@@ -130,8 +128,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.tanksGroup.removeAt(index);
         this.delayedCalc.schedule();
     }
-
-    // TODO add switch to choose from all or nitrox only gases
 
     public assignTankTemplate(index: number, template: TankTemplate): void {
         const bound = this.tanks[index];

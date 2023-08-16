@@ -14,19 +14,43 @@ import { TankBound } from '../shared/models';
 export class OxygenDropDownComponent implements OnInit {
     @Input() public showBestMix = true;
     @Input() public showTitle = true;
+    @Input() public showTrimixGases = false;
     @Input() public controlName = 'o2';
     @Input() public tank = new TankBound(new Tank(15, 200, 21), this.units);
     @Input() public nitroxForm!: FormGroup;
     @Output() public gasChange = new EventEmitter<number>();
     @Output() public assignBestMix = new EventEmitter();
 
-    public nitroxNames: string[];
-
     constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) {
-        this.nitroxNames = StandardGases.nitroxNames();
+    }
+
+    public get standardGases(): string[] {
+        if (this.showTrimixGases) {
+            return StandardGases.allNames();
+        }
+
+        return StandardGases.nitroxNames();
+    }
+
+    public get o2Ranges(): [number, number] {
+        const ranges = this.units.ranges;
+        if (this.showTrimixGases) {
+            return ranges.trimixOxygen;
+        }
+
+        return ranges.nitroxOxygen;
+    }
+
+    public get o2RangeLabel(): string {
+        const ranges = this.units.ranges;
+        if (this.showTrimixGases) {
+            return ranges.trimixOxygenLabel;
+        }
+
+        return ranges.nitroxOxygenLabel;
     }
 
     public get gasO2Invalid(): boolean {
@@ -49,7 +73,7 @@ export class OxygenDropDownComponent implements OnInit {
     }
 
     public fireGasChanged(): void {
-        if(this.gasO2Invalid) {
+        if (this.gasO2Invalid) {
             return;
         }
 

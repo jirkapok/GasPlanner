@@ -10,7 +10,6 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add option to define repetitive dives
-* UI: Add Dropdown for well known tank sizes (to reduce the work to sort all the fields on the page)
 * Fix Cns/Otu calculation
 * Settings
   * Apply settings after each change and distinguish from default settings

@@ -186,7 +186,7 @@ export class Dive {
     }
 
     public get cnsExceeded(): boolean {
-        return this.cns > 0.8;
+        return this.cns > 80;
     }
 
     public get showMaxDuration(): boolean {

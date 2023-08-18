@@ -27,6 +27,7 @@ export class CnsCalculator {
     }
 
     /**
+     * Calculates CNS in % for provided profile segment
      * @param fO2 oxygen fraction
      * @param startDepth starting depth in meters
      * @param endDepth end depth in meters
@@ -45,7 +46,7 @@ export class CnsCalculator {
         const exponent = this.exponentByPpO2(ppO2);
         const rate =  Math.exp(exponent);
         const cns = duration * rate;
-        return cns;
+        return cns * 100;
     }
 
     // slope function as mentioned from the paper above

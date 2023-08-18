@@ -65,7 +65,7 @@ describe('PlannerService', () => {
 
         it('CNS limit is calculated', () => {
             const cnsLimit = planner.dive.cns;
-            expect(cnsLimit).toBeCloseTo(0.025702, 6);
+            expect(cnsLimit).toBeCloseTo(2.570248, 6);
         });
 
         it('Highest density is calculated', () => {

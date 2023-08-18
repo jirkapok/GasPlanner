@@ -11,7 +11,6 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add option to define repetitive dives
-* Fix Cns/Otu calculation
 * Settings
   * Apply settings after each change and distinguish from default settings
   * Create default dive options

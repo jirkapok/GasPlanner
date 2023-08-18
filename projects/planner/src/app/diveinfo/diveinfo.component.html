@@ -89,20 +89,18 @@
                                     <strong *ngIf="dive.calculated">{{ dive.turnPressure | number:'1.0-0' }}</strong>
                                 </td>
                             </tr>
-                            <ng-container *ngIf="false">
-                                <tr *ngIf="dive.profileCalculated">
-                                    <td>OTU toxicity [OTU]:</td>
-                                    <td class="table-active">
-                                        <strong *ngIf="dive.calculated">{{ dive.otu | number:'1.0-0' }}</strong>
-                                    </td>
-                                </tr>
-                                <tr *ngIf="dive.profileCalculated">
-                                    <td>CNS toxicity [%]:</td>
-                                    <td class="table-active">
-                                        <strong *ngIf="dive.calculated">{{ dive.cns * 100 | number:'1.0-0' }}</strong>
-                                    </td>
-                                </tr>
-                            </ng-container>
+                            <tr *ngIf="dive.profileCalculated">
+                                <td>OTU toxicity [OTU]:</td>
+                                <td class="table-active">
+                                    <strong *ngIf="dive.calculated">{{ dive.otu | number:'1.0-0' }}</strong>
+                                </td>
+                            </tr>
+                            <tr *ngIf="dive.profileCalculated">
+                                <td>CNS toxicity [%]:</td>
+                                <td class="table-active">
+                                    <strong *ngIf="dive.calculated">{{ dive.cns * 100 | number:'1.0-0' }}</strong>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -110,7 +108,8 @@
             </mdb-tab>
             <mdb-tab>
                 <ng-template mdbTabTitle>
-                    <span>Consumed</span> <span *ngIf="dive.notEnoughGas" class="badge badge-danger ms-2"><strong>!</strong></span>
+                    <span>Consumed</span> <span *ngIf="dive.notEnoughGas"
+                        class="badge badge-danger ms-2"><strong>!</strong></span>
                 </ng-template>
                 <ng-container *ngIf="dive.showResults">
                     <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="isComplex" [toxicity]="toxicity">
@@ -120,9 +119,9 @@
             </mdb-tab>
             <mdb-tab>
                 <ng-template mdbTabTitle>
-                    <span>Issues</span> <span *ngIf="dive.hasErrorEvent || dive.hasWarningEvent"
-                       class="badge ms-2" [class.badge-danger]="dive.hasErrorEvent"
-                       [class.badge-warning]="!dive.hasErrorEvent && dive.hasWarningEvent"><strong>!</strong>
+                    <span>Issues</span> <span *ngIf="dive.hasErrorEvent || dive.hasWarningEvent" class="badge ms-2"
+                        [class.badge-danger]="dive.hasErrorEvent"
+                        [class.badge-warning]="!dive.hasErrorEvent && dive.hasWarningEvent"><strong>!</strong>
                     </span>
                 </ng-template>
                 <app-dive-issues></app-dive-issues>

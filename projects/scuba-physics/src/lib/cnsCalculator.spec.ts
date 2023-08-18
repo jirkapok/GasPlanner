@@ -1,6 +1,7 @@
 import { CnsCalculator } from './cnsCalculator';
 import { DepthConverter } from './depth-converter';
 import { StandardGases } from './Gases';
+import { ToxicityProfiles } from './OtuCalculator.spec';
 import { Segment } from './Segments';
 import { Time } from './Time';
 
@@ -57,6 +58,30 @@ describe('CNSCalculatorService', () => {
             const calculator = new CnsCalculator(DepthConverter.forSaltWater());
             const cns = calculator.calculateForProfile(profile);
             expect(cns).toBeCloseTo(0.276516, 6);
+        });
+    });
+
+    describe('Complex profiles', () => {
+        const calculator = new CnsCalculator(DepthConverter.forFreshWater());
+
+        it('Ean32 at 36 m - 25 %', () => {
+            const otu = calculator.calculateForProfile(ToxicityProfiles.ean32At36m);
+            expect(otu).toBeCloseTo(0.2529828, 7);
+        });
+
+        it('Oxygen at 6 m - 127 %%', () => {
+            const otu = calculator.calculateForProfile(ToxicityProfiles.oxygenAt6m);
+            expect(otu).toBeCloseTo(1.2692788, 7);
+        });
+
+        it('Air at 40 m - 21 %', () => {
+            const otu = calculator.calculateForProfile(ToxicityProfiles.airAt40m);
+            expect(otu).toBeCloseTo(0.0693881, 7);
+        });
+
+        it('Trimix 18/45 at 50 m - 64 %', () => {
+            const otu = calculator.calculateForProfile(ToxicityProfiles.trimixAt50m);
+            expect(otu).toBeCloseTo(0.4102131, 7);
         });
     });
 });

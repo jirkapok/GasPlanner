@@ -78,7 +78,6 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(4, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
             // two assent crossings and gas switch
-            // TODO fix lowPPO2 timestamp
             assertEvents(events.items, [
                 { type: EventType.lowPpO2, depth: 8, timeStamp: 267, gas: undefined },
                 { type: EventType.gasSwitch, depth: 30, timeStamp: 120, gas: StandardGases.trimix1070 },
@@ -150,7 +149,10 @@ describe('Profile Events', () => {
         });
     });
 
-    describe('High ppO2', () => {
+    // TODO air, 30 m, 13 minutes (11.3 min descent) - results in deco event depth wrong value
+    // TODO add event times to the UI
+
+    fdescribe('High ppO2', () => {
         it('No high ppO2 event for oxygen at 4 m', () => {
             const segments = new Segments();
             segments.add(0, 4, StandardGases.oxygen, Time.oneMinute * 1);
@@ -173,8 +175,10 @@ describe('Profile Events', () => {
             //    \_/
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
-            expect(events.items.length).toBe(1);
-            expect(events.items[0].type).toBe(EventType.highPpO2);
+
+            assertEvents(events.items, [
+                { type: EventType.highPpO2, depth: 56.99, timeStamp: 171, gas: undefined },
+            ]);
         });
 
         it('NO high PpO2 event is added, when deco ppO2 limit is used during automatically created ascent', () => {
@@ -193,8 +197,10 @@ describe('Profile Events', () => {
             //    \_/
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
-            expect(events.items.length).toBe(1);
-            expect(events.items[0].type).toBe(EventType.gasSwitch);
+
+            assertEvents(events.items, [
+                { type: EventType.gasSwitch, depth: 21, timeStamp: 300, gas: StandardGases.ean50 },
+            ]);
         });
 
         it('User defined gas switch to high ppO2 at depth', () => {
@@ -208,8 +214,11 @@ describe('Profile Events', () => {
             //    \_s_/
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
-            expect(events.items.length).toBe(2); // last one is gas switch
-            expect(events.items[0].type).toBe(EventType.highPpO2);
+
+            assertEvents(events.items, [
+                { type: EventType.highPpO2, depth: 20, timeStamp: 120, gas: undefined },
+                { type: EventType.gasSwitch, depth: 20, timeStamp: 120, gas: StandardGases.ean50 },
+            ]);
         });
 
         it('Multiple events are added for multilevel dives', () => {
@@ -224,9 +233,11 @@ describe('Profile Events', () => {
             //    \_/\_/
             const eventOptions = createEventOption(4, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
-            expect(events.items.length).toBe(2);
-            expect(events.items[0].type).toBe(EventType.highPpO2);
-            expect(events.items[1].type).toBe(EventType.highPpO2);
+
+            assertEvents(events.items, [
+                { type: EventType.highPpO2, depth: 18, timeStamp: 54, gas: undefined },
+                { type: EventType.highPpO2, depth: 18, timeStamp: 216, gas: undefined },
+            ]);
         });
 
         it('Assigns correct depth and time for gas switch', () => {
@@ -237,9 +248,11 @@ describe('Profile Events', () => {
 
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
-            expect(events.items.length).toBe(2); // last one is gas switch
-            expect(events.items[0].depth).toBe(10);
-            expect(events.items[0].timeStamp).toBe(180);
+
+            assertEvents(events.items, [
+                { type: EventType.highPpO2, depth: 10, timeStamp: 180, gas: undefined },
+                { type: EventType.gasSwitch, depth: 10, timeStamp: 180, gas: StandardGases.oxygen },
+            ]);
         });
 
         it('Assigns correct depth and time during decent', () => {

@@ -150,7 +150,6 @@ describe('Profile Events', () => {
     });
 
     // TODO air, 30 m, 13 minutes (11.3 min descent) - results in deco event depth wrong value
-    // TODO add event times to the UI
 
     describe('High ppO2', () => {
         it('No high ppO2 event for oxygen at 4 m', () => {

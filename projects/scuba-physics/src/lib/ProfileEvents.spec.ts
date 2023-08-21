@@ -336,16 +336,15 @@ describe('Profile Events', () => {
 
             const algorithm = new BuhlmannAlgorithm();
             const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
-            defaultOptions.safetyStop = SafetyStop.always;
+            defaultOptions.safetyStop = SafetyStop.never;
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             const events = ProfileEvents.fromProfile(eventOptions);
-            const firstError = events.items[0];
 
             // during this dive on second level we are already decompressing anyway,
             // so once the ceiling should be lower than current depth.
             expect(events.items.length).toBe(1);
-            expect(firstError.type).toBe(EventType.brokenCeiling);
+            expect(events.items[0].type).toBe(EventType.brokenCeiling);
         });
 
         it('Long shallow dive doesn\'t break ceiling', () => {
@@ -358,7 +357,7 @@ describe('Profile Events', () => {
 
             const algorithm = new BuhlmannAlgorithm();
             const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
-            defaultOptions.safetyStop = SafetyStop.always;
+            defaultOptions.safetyStop = SafetyStop.never;
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             const events = ProfileEvents.fromProfile(eventOptions);

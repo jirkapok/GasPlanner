@@ -170,7 +170,7 @@ export class ProfileEvents {
      */
     public static fromProfile(eventOptions: EventOptions): Events {
         const context = new EventsContext(eventOptions);
-        const ceilingContext = new BrokenCeilingContext(context.events, context.current);
+        const ceilingContext = new CeilingContext(context.events, context.current);
 
         for (context.index = 0; context.index < eventOptions.profile.length; context.index++) {
             // nice to have calculate exact time and depth of the events, it is enough it happened
@@ -189,7 +189,6 @@ export class ProfileEvents {
             ceilingContext.assignSegment(context.current);
             ProfileEvents.addBrokenCeiling(ceilingContext, eventOptions.ceilings);
 
-            this.addNdlEnd(ceilingContext);
             context.addElapsed();
         }
 
@@ -288,10 +287,11 @@ export class ProfileEvents {
     }
 
     /** Check only user defined segments break ceiling, because we trust the algorithm never breaks ceiling */
-    private static addBrokenCeiling(context: BrokenCeilingContext, ceilings: Ceiling[]): void {
+    private static addBrokenCeiling(context: CeilingContext, ceilings: Ceiling[]): void {
         while (context.lastCeilingIndex < context.currentSegmentEndTime && context.lastCeilingIndex < ceilings.length - 1) {
             const ceiling = ceilings[context.lastCeilingIndex];
             context.lastCeilingIndex++;
+            this.addNdlEnd(context, ceiling);
 
             const ceilingOk = context.belowCeiling(ceiling);
             if (!ceilingOk && context.fixedBrokenCeiling) {
@@ -308,6 +308,16 @@ export class ProfileEvents {
             if (ceiling.time > context.currentSegmentEndTime) {
                 break;
             }
+        }
+    }
+
+    private static addNdlEnd(context: CeilingContext, ceiling: Ceiling): void {
+        if(!context.ndlCeilingMarked && ceiling.depth > 0) {
+            context.ndlCeilingMarked = true;
+            const timeStamp = ceiling.time - context.current.duration;
+            const depth = context.current.depthAt(timeStamp);
+            const event = EventsFactory.createNoDecoEnd(ceiling.time, depth);
+            context.events.add(event);
         }
     }
 
@@ -386,32 +396,33 @@ export class ProfileEvents {
             context.events.add(event);
         }
     }
-
-    private static addNdlEnd(context: BrokenCeilingContext): void {
-
-    }
 }
 
-class BrokenCeilingContext {
+class CeilingContext {
     public lastCeilingIndex = 0; // prevents search in past ceilings
     public currentSegmentStartTime = 0;
     public currentSegmentEndTime = 0;
     public fixedBrokenCeiling = true;
-    private current: Segment;
+    public ndlCeilingMarked = false;
+    private _current: Segment;
 
     constructor(public events: Events, current: Segment) {
-        this.current = current;
+        this._current = current;
+    }
+
+    public get current(): Segment {
+        return this._current;
     }
 
     public assignSegment(newSegment: Segment): void {
         this.currentSegmentStartTime = this.currentSegmentEndTime;
         this.currentSegmentEndTime = this.currentSegmentStartTime + newSegment.duration;
-        this.current = newSegment;
+        this._current = newSegment;
     }
 
     public belowCeiling(ceiling: Ceiling): boolean {
         const duration = ceiling.time - this.currentSegmentStartTime;
-        const diverDepth = this.current.depthAt(duration);
+        const diverDepth = this._current.depthAt(duration);
         return diverDepth >= ceiling.depth;
     }
 }

@@ -343,8 +343,10 @@ describe('Profile Events', () => {
 
             // during this dive on second level we are already decompressing anyway,
             // so once the ceiling should be lower than current depth.
-            expect(events.items.length).toBe(1);
-            expect(events.items[0].type).toBe(EventType.brokenCeiling);
+            expect(events.items).toEqual([
+                Event.create(EventType.noDecoEnd, 743, 30),
+                Event.create(EventType.brokenCeiling, 1534, 5.955836304445452)
+            ]);
         });
 
         it('Long shallow dive doesn\'t break ceiling', () => {
@@ -361,7 +363,9 @@ describe('Profile Events', () => {
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             const events = ProfileEvents.fromProfile(eventOptions);
-            expect(events.items.length).toBe(0);
+            expect(events.items).toEqual([
+                Event.create(EventType.noDecoEnd, 3444, 16)
+            ]);
         });
 
         it('Broken ceiling is added multiple times', () => {
@@ -381,7 +385,12 @@ describe('Profile Events', () => {
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const eventOptions = createEventOption(5, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             const events = ProfileEvents.fromProfile(eventOptions);
-            expect(events.items.length).toBe(2);
+
+            expect(events.items).toEqual([
+                Event.create(EventType.noDecoEnd, 794, 30),
+                Event.create(EventType.brokenCeiling, 1850, 7.006583311828507),
+                Event.create(EventType.brokenCeiling, 2030, 3.7904291762033906)
+            ]);
         });
     });
 
@@ -402,10 +411,11 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(1, segments.items, ceilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items.length).toEqual(2); // first event is gas switch
-            expect(events.items[1]).toEqual(
+            expect(events.items).toEqual([
+                Event.create(EventType.noDecoEnd, Time.oneMinute * 4, 27, undefined),
+                Event.create(EventType.gasSwitch, Time.oneMinute * 3, 21, StandardGases.ean50),
                 Event.create(EventType.switchToHigherN2, Time.oneMinute * 3, 21, StandardGases.ean50)
-            );
+            ]);
         });
 
         it('21/35 to 35/25 doesn\'t add the event', () => {
@@ -559,9 +569,24 @@ describe('Profile Events', () => {
 
 
         it('Adds end of NDL', () => {
-            // const events = findProfileEvents(30);
+            const gases = new Gases();
+            gases.add(StandardGases.air);
 
-            expect(0).toEqual(0);
+            const segments = new Segments();
+            segments.add(0, 30, StandardGases.air, Time.oneMinute * 3);
+            segments.add(30, 30, StandardGases.air, Time.oneMinute * 12);
+            segments.add(30, 0, StandardGases.air, Time.oneMinute * 4);
+
+            const algorithm = new BuhlmannAlgorithm();
+            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
+            defaultOptions.safetyStop = SafetyStop.never;
+            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
+            const eventOptions = createEventOption(5, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+            const events = ProfileEvents.fromProfile(eventOptions);
+
+            expect(events.items).toEqual([
+                Event.create(EventType.noDecoEnd, 826, 30),
+            ]);
         });
     });
 });

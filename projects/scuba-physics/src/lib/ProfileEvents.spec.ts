@@ -9,7 +9,7 @@ import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { Tank } from './Tanks';
 import { GasDensity } from './GasDensity';
-import { Precision } from 'scuba-physics';
+import { Precision } from './precision';
 
 interface EventAssert {
     depth: number;
@@ -152,7 +152,7 @@ describe('Profile Events', () => {
     // TODO air, 30 m, 13 minutes (11.3 min descent) - results in deco event depth wrong value
     // TODO add event times to the UI
 
-    fdescribe('High ppO2', () => {
+    describe('High ppO2', () => {
         it('No high ppO2 event for oxygen at 4 m', () => {
             const segments = new Segments();
             segments.add(0, 4, StandardGases.oxygen, Time.oneMinute * 1);

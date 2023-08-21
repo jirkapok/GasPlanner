@@ -229,7 +229,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
             mode: 'text+markers',
             fill: 'tozeroy',
             name: 'Event',
-            hovertemplate: 'Switch to %{text}',
+            hovertemplate: '%{text}',
             texttemplate: '%{text}',
             textposition: 'top center',
             fillcolor: 'rgba(0, 0, 0, 0)',

@@ -37,15 +37,12 @@ export class ResamplingService {
         const labels: string[] = [];
 
         events.forEach((event) => {
-            if (event.type === EventType.gasSwitch) {
+            if (this.isSupportedEvent(event)) {
                 xValues.push(Time.toDate(event.timeStamp));
                 const convertedDepth = this.convertDepth(event.depth);
                 yValues.push(convertedDepth);
-                const gas = event.gas;
-                if (gas) {
-                    const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
-                    labels.push(`${gasName}`);
-                }
+                const text = this.formatChartEventText(event);
+                labels.push(text);
             }
         });
 
@@ -131,5 +128,34 @@ export class ResamplingService {
     private convertDepth(metersDepth: number): number {
         const converted = this.units.fromMeters(metersDepth);
         return Precision.round(converted, 1);
+    }
+
+    private isSupportedEvent(event: Event): boolean {
+        switch (event.type) {
+            case EventType.gasSwitch:
+            case EventType.noDecoEnd:
+            case EventType.safetyStop:
+                return true;
+            default: return false;
+        }
+    }
+
+    private formatChartEventText(event: Event): string {
+        switch (event.type) {
+            case EventType.gasSwitch: {
+                const gas = event.gas;
+                if (gas) {
+                    const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
+                    return gasName;
+                }
+
+                return '';
+            }
+            case EventType.noDecoEnd:
+                return 'Deco';
+            case EventType.safetyStop:
+                return 'Safety stop';
+            default: return '';
+        }
     }
 }

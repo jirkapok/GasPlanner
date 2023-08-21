@@ -6,28 +6,30 @@ export interface Range {
 export class LinearFunction {
     public static speed(x: Range, y: Range): number {
         const xChange = x.end - x.start;
-        return this.speedByXChange(y, xChange);
+        return LinearFunction.speedByXChange(y.start, y.end, xChange);
     }
 
-    public static speedByXChange(y: Range, xChange: number): number {
-        return (y.end - y.start) / xChange;
+    public static speedByXChange(yStart: number, yEnd: number, xChange: number): number {
+        return (yEnd - yStart) / xChange;
     }
 
-    public static yValueAt(x: Range, y: Range, xValue: number): number {
-        const xChange = xValue - x.start;
+    public static yValueAt(yStart: number, speed: number, xChange: number): number {
+        return yStart + speed * xChange;
+    }
+
+    /** Returns absolute x value */
+    public static xValueAtAbsolute(x: Range, y: Range, yValue: number): number {
         const speed = this.speed(x, y);
-        return y.start + speed * xChange;
+        return x.start + LinearFunction.xValueAt(y.start, speed, yValue);
     }
 
-    public static xValueAt(x: Range, y: Range, yValue: number): number {
-        const yChange = yValue - y.start;
-        const speed = this.speed(x, y);
-
+    /** Returns relative value, because the xStart is unknown */
+    public static xValueAt(yStart: number, speed: number, yValue: number): number {
         if(speed === 0) {
-            return x.start;
+            return 0;
         }
 
-        return x.start + yChange / speed;
+        return (yValue - yStart) / speed;
     }
 }
 

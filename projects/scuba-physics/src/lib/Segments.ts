@@ -4,6 +4,7 @@ import { Options } from './Options';
 import { Time } from './Time';
 import { Tank } from './Tanks';
 import { Precision } from './precision';
+import { LinearFunction } from './linearFunction';
 
 export class SegmentsValidator {
     public static validate(segments: Segments, gases: Gases): Event[] {
@@ -92,7 +93,7 @@ export class Segment {
      * Duration in seconds.
      */
     public static speed(startDepth: number, endDepth: number, duration: number): number {
-        return (endDepth - startDepth) / duration;
+        return LinearFunction.speedByXChange(startDepth, endDepth, duration);
     }
 
     /**
@@ -100,17 +101,16 @@ export class Segment {
      * Duration in seconds.
      */
     public static depthAt(startDepth: number, speed: number, duration: number): number {
-        return startDepth + speed * duration;
+        return LinearFunction.yValueAt(startDepth, speed, duration);
     }
 
-    // TODO replace by LinearFunction
     /**
      * Returns number of seconds it takes to reach currentDepth from start depth.
      * We don't care about the units, this is still valid for both meter and bars.
      * Duration in seconds.
      */
     public static timeAt(startDepth: number, speed: number, currentDepth: number): number {
-        return (currentDepth - startDepth) / speed;
+        return LinearFunction.xValueAt(startDepth, speed, currentDepth);
     }
 
     public contentEquals(toCompare: Segment): boolean {

@@ -45,7 +45,7 @@ describe('Profile Events', () => {
         options.maxEND = 100; // to eliminate all other events
     });
 
-    fdescribe('Low ppO2', () => {
+    describe('Low ppO2', () => {
         it('User defines 10/70 at beginning of dive', () => {
             const segments = new Segments();
             segments.add(0, 30, StandardGases.trimix1070, Time.oneMinute);

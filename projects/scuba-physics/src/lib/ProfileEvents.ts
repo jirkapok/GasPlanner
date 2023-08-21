@@ -348,7 +348,7 @@ export class ProfileEvents {
             context.maxMnd < endEnd && context.fixedMnd) {
             const mndRange = { start: startEnd, end: endEnd };
             const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
-            const timeStamp = LinearFunction.xValueAt(timeRange, mndRange, context.maxMnd);
+            const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, mndRange, context.maxMnd);
             const depth = current.depthAt(timeStamp);
             this.addMndEvent(context, timeStamp, depth);
         }
@@ -383,7 +383,7 @@ export class ProfileEvents {
             (isDescent && endDensity > context.maxDensity)) {
             const densityRange = { start: startDensity, end: endDensity };
             const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
-            const timeStamp = LinearFunction.xValueAt(timeRange, densityRange, context.maxDensity);
+            const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, densityRange, context.maxDensity);
             const depth = current.depthAt(timeStamp);
             const event = EventsFactory.createHighDensity(timeStamp, depth, current.gas);
             context.events.add(event);

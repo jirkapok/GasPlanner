@@ -1,6 +1,6 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Salinity } from './pressure-converter';
-import { Gases, StandardGases } from './Gases';
+import { Gas, Gases, StandardGases } from './Gases';
 import { Options, SafetyStop } from './Options';
 import { OptionExtensions } from './Options.spec';
 import { Ceiling, EventType, Events, Event } from './Profile';
@@ -9,6 +9,14 @@ import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { Tank } from './Tanks';
 import { GasDensity } from './GasDensity';
+import { Precision } from 'scuba-physics';
+
+interface EventAssert {
+    depth: number;
+    timeStamp: number;
+    type: EventType;
+    gas?: Gas;
+}
 
 describe('Profile Events', () => {
 
@@ -20,6 +28,16 @@ describe('Profile Events', () => {
             ceilings: ceilings,
             profileOptions: profileOptions
         });
+
+    const assertEvents = (current: Event[], expected: EventAssert[]) => {
+        const filtered: EventAssert[] = current.map(e => ({
+            depth: Precision.round(e.depth, 2),
+            timeStamp: Precision.round(e.timeStamp, 1),
+            type: e.type,
+            gas: e.gas
+        }));
+        expect(filtered).toEqual(expected);
+    };
 
     const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
     const emptyCeilings: Ceiling[] = [];
@@ -343,9 +361,9 @@ describe('Profile Events', () => {
 
             // during this dive on second level we are already decompressing anyway,
             // so once the ceiling should be lower than current depth.
-            expect(events.items).toEqual([
-                Event.create(EventType.noDecoEnd, 743, 30),
-                Event.create(EventType.brokenCeiling, 1534, 5.955836304445452)
+            assertEvents(events.items, [
+                { type: EventType.noDecoEnd, timeStamp: 743, depth: 30, gas: undefined },
+                { type: EventType.brokenCeiling, timeStamp: 1534, depth: 5.96, gas: undefined }
             ]);
         });
 
@@ -363,8 +381,8 @@ describe('Profile Events', () => {
             const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
             const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             const events = ProfileEvents.fromProfile(eventOptions);
-            expect(events.items).toEqual([
-                Event.create(EventType.noDecoEnd, 3444, 16)
+            assertEvents(events.items, [
+                { type: EventType.noDecoEnd, timeStamp: 3444, depth: 16, gas: undefined}
             ]);
         });
 
@@ -386,10 +404,10 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(5, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items).toEqual([
-                Event.create(EventType.noDecoEnd, 794, 30),
-                Event.create(EventType.brokenCeiling, 1850, 7.006583311828507),
-                Event.create(EventType.brokenCeiling, 2030, 3.7904291762033906)
+            assertEvents(events.items, [
+                { type: EventType.noDecoEnd, timeStamp: 794, depth: 30, gas: StandardGases.air },
+                { type: EventType.brokenCeiling, timeStamp: 1850, depth: 7.01, gas: StandardGases.air },
+                { type: EventType.brokenCeiling, timeStamp: 2030, depth: 3.79, gas: StandardGases.air}
             ]);
         });
     });
@@ -411,10 +429,10 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(1, segments.items, ceilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items).toEqual([
-                Event.create(EventType.noDecoEnd, Time.oneMinute * 4, 27, undefined),
-                Event.create(EventType.gasSwitch, Time.oneMinute * 3, 21, StandardGases.ean50),
-                Event.create(EventType.switchToHigherN2, Time.oneMinute * 3, 21, StandardGases.ean50)
+            assertEvents(events.items, [
+                { type: EventType.noDecoEnd, timeStamp: Time.oneMinute * 4, depth: 27, gas: undefined },
+                { type: EventType.gasSwitch, timeStamp: Time.oneMinute * 3, depth: 21, gas:  StandardGases.ean50 },
+                { type: EventType.switchToHigherN2, timeStamp: Time.oneMinute * 3, depth: 21, gas: StandardGases.ean50 }
             ]);
         });
 
@@ -507,10 +525,9 @@ describe('Profile Events', () => {
         it('Event is generated only once for max. density', () => {
             const events = findProfileEvents(40);
 
-            expect(events.items.length).toEqual(1);
-            expect(events.items[0]).toEqual(
-                Event.create(EventType.highGasDensity, 240, 40, StandardGases.air)
-            );
+            assertEvents(events.items, [
+                { type: EventType.highGasDensity, timeStamp: 208.8, depth: 34.8, gas: StandardGases.air }
+            ]);
         });
 
         it('Gas switch to high density generates event', () => {

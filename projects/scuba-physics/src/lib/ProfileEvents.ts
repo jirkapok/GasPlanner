@@ -312,7 +312,7 @@ export class ProfileEvents {
     }
 
     private static addNdlEnd(context: CeilingContext, ceiling: Ceiling): void {
-        if(!context.ndlCeilingMarked && ceiling.depth > 0) {
+        if (!context.ndlCeilingMarked && ceiling.depth > 0) {
             context.ndlCeilingMarked = true;
             const timeStamp = ceiling.time - context.current.duration;
             const depth = context.current.depthAt(timeStamp);
@@ -369,7 +369,6 @@ export class ProfileEvents {
         const endDepth = current.endDepth;
         const isDescent = current.endDepth > current.startDepth;
         const switchToDifferentDensity = context.switchingGas;
-
         const startDensity = context.densityAtDepth.atDepth(currentGas, startDepth);
         const endDensity = context.densityAtDepth.atDepth(currentGas, endDepth);
 
@@ -378,12 +377,13 @@ export class ProfileEvents {
         // add if there is a gas switch to different gas
         // ignore switch to the same gas
         // descent => density is higher at end
-        if (switchToDifferentDensity && startDensity > context.maxDensity) {
-            const event = EventsFactory.createHighDensity(context.elapsed, current.startDepth, current.gas);
-            context.events.add(event);
-        } else if (isDescent && endDensity > context.maxDensity) {
-            const timeStamp = context.elapsed + current.duration;
-            const event = EventsFactory.createHighDensity(timeStamp, current.endDepth, current.gas);
+        if ((switchToDifferentDensity && startDensity > context.maxDensity) ||
+            (isDescent && endDensity > context.maxDensity)) {
+            const densityRange = { start: startDensity, end: endDensity };
+            const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
+            const timeStamp = LinearFunction.xValueAt(timeRange, densityRange, context.maxDensity);
+            const depth = current.depthAt(timeStamp);
+            const event = EventsFactory.createHighDensity(timeStamp, depth, current.gas);
             context.events.add(event);
         }
     }
@@ -396,6 +396,39 @@ export class ProfileEvents {
             context.events.add(event);
         }
     }
+}
+
+class LinearFunction {
+    public static speed(x: Range, y: Range): number {
+        const xChange = x.end - x.start;
+        return this.speedByXChange(y, xChange);
+    }
+
+    public static speedByXChange(y: Range, xChange: number): number {
+        return (y.end - y.start) / xChange;
+    }
+
+    public static yValueAt(x: Range, y: Range, xValue: number): number {
+        const xChange = xValue - x.start;
+        const speed = this.speed(x, y);
+        return y.start + speed * xChange;
+    }
+
+    public static xValueAt(x: Range, y: Range, yValue: number): number {
+        const yChange = yValue - y.start;
+        const speed = this.speed(x, y);
+
+        if(speed === 0) {
+            return x.start;
+        }
+
+        return x.start + yChange / speed;
+    }
+}
+
+interface Range {
+    start: number;
+    end: number;
 }
 
 class CeilingContext {

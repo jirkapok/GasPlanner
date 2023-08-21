@@ -341,15 +341,15 @@ export class ProfileEvents {
         const current = context.current;
         // we need to check both start and end, because next segment may use another gas
         const startEnd = context.gasEnd(pressureSegment.startDepth);
-
-        if (context.maxMnd < startEnd && context.fixedMnd) {
-            this.addMndEvent(context, context.elapsed, current.startDepth);
-        }
-
         const endEnd = context.gasEnd(pressureSegment.endDepth);
-        if (context.maxMnd < endEnd && context.fixedMnd) {
-            const timeStamp = context.elapsed + current.duration;
-            this.addMndEvent(context, timeStamp, current.endDepth);
+
+        if (context.maxMnd < startEnd && context.fixedMnd ||
+            context.maxMnd < endEnd && context.fixedMnd) {
+            const mndRange = { start: startEnd, end: endEnd };
+            const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
+            const timeStamp = LinearFunction.xValueAt(timeRange, mndRange, context.maxMnd);
+            const depth = current.depthAt(timeStamp);
+            this.addMndEvent(context, timeStamp, depth);
         }
 
         // we can add the event multiple times, only after it is fixed

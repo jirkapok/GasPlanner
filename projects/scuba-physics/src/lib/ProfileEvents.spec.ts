@@ -238,9 +238,10 @@ describe('Profile Events', () => {
 
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
-            expect(events.items.length).toBe(1);
-            expect(events.items[0].depth).toBeCloseTo(4);
-            expect(events.items[0].timeStamp).toBe(120);
+
+            assertEvents(events.items, [
+                { type: EventType.highPpO2, timeStamp: 120, depth: 4, gas: undefined  }
+            ]);
         });
     });
 
@@ -477,10 +478,10 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items.length).toEqual(2);  // first event is gas switch
-            expect(events.items[1]).toEqual(
-                Event.create(EventType.maxEndExceeded, 300, 45, StandardGases.trimix3525)
-            );
+            assertEvents(events.items, [
+                { type: EventType.gasSwitch, timeStamp: 300, depth: 45, gas: StandardGases.trimix3525 },
+                { type: EventType.maxEndExceeded, depth: 32.08, timeStamp: 344.4, gas: StandardGases.trimix3525 },
+            ]);
         });
 
         it('Swim deeper than gas narcotic depth', () => {
@@ -492,10 +493,10 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items.length).toEqual(1);// only one event for multiple segments
-            expect(events.items[0]).toEqual(
-                Event.create(EventType.maxEndExceeded, 240, 40, StandardGases.air)
-            );
+            // only one event for multiple segments
+            assertEvents(events.items, [
+                { type: EventType.maxEndExceeded, timeStamp: 180, depth: 30, gas: StandardGases.air }
+            ]);
         });
     });
 

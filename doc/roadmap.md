@@ -18,7 +18,7 @@ Following list of features and improvements ordered by priority is under develop
     * Put diver under all other options
 * Add gas depth range/properties/trimix calculator
 * Events:
-  * Add time and exact depth to all events warning/error messages where it makes sense (density, mnd, low or high pO2)
+  * Add time and exact depth to all events warning/error messages where it makes sense (low or high pO2)
 * UI Tweaks
   * Profile:
     * Waypoints table: add switch in case user is switching to tank with the same gas

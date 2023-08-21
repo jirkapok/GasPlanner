@@ -1,4 +1,4 @@
-import { Options } from './Options';
+import { Options, SafetyStop } from './Options';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Ceiling, EventsFactory, Events } from './Profile';
 import { Segment, Segments } from './Segments';
@@ -6,6 +6,7 @@ import { Time } from './Time';
 import { AscentSpeeds } from './speeds';
 import { Precision } from './precision';
 import { DensityAtDepth } from './GasDensity';
+import { DepthLevels } from './DepthLevels';
 
 /** all values in bar */
 class PressureSegment {
@@ -56,9 +57,11 @@ class EventsContext {
     public index = 0;
     public fixedMnd = true;
     public maxDensity: number;
+    private levels: DepthLevels;
     private startAscentIndex: number;
     private profile: Segment[];
-    private _mndBars = 0;
+    private _mndBars: number;
+    private maxDepth: number;
 
     constructor(eventOptions: EventOptions) {
         this.profile = eventOptions.profile;
@@ -66,10 +69,12 @@ class EventsContext {
         this.startAscentIndex = eventOptions.startAscentIndex;
         this.maxDensity = eventOptions.maxDensity;
         this.exactDepths = new DepthConverterFactory(this.options).create();
+        this.levels = new DepthLevels(this.exactDepths, this.options);
         this.densityAtDepth = new DensityAtDepth(this.exactDepths);
         this.speeds = new AscentSpeeds(this.options);
         const segments = Segments.fromCollection(this.profile);
         this.speeds.markAverageDepth(segments);
+        this.maxDepth = segments.maxDepth;
         this._mndBars = this.simpleDepths.toBar(this.options.maxEND);
     }
 
@@ -114,6 +119,16 @@ class EventsContext {
 
     public get currentEndTime(): number {
         return this.elapsed + this.current.duration;
+    }
+
+    public get atSafetyStop(): boolean {
+        // safety stop is always the last hover segment before last ascent to surface
+        if (this.index !== this.profile.length - 2) {
+            return false;
+        }
+
+        const currentDepth = this.current.startDepth;
+        return this.levels.addSafetyStop(currentDepth, this.maxDepth);
     }
 
     /** For depth in bars calculates the current equivalent narcotic depth in bars */
@@ -169,6 +184,7 @@ export class ProfileEvents {
             this.addSwitchHighN2(context);
             this.addMndExceeded(context, pressureSegment);
             this.addDensityExceeded(context);
+            this.addSafetyStop(context);
 
             ceilingContext.assignSegment(context.current);
             ProfileEvents.addBrokenCeiling(ceilingContext, eventOptions.ceilings, context.current);
@@ -357,6 +373,15 @@ export class ProfileEvents {
         } else if (isDescent && endDensity > context.maxDensity) {
             const timeStamp = context.elapsed + current.duration;
             const event = EventsFactory.createHighDensity(timeStamp, current.endDepth, current.gas);
+            context.events.add(event);
+        }
+    }
+
+    private static addSafetyStop(context: EventsContext): void {
+        const current = context.current;
+        if (context.atSafetyStop && current.duration >= Time.safetyStopDuration) {
+            const timeStamp = context.elapsed + current.duration - Time.safetyStopDuration;
+            const event = EventsFactory.createSafetyStopStart(timeStamp, current.endDepth);
             context.events.add(event);
         }
     }

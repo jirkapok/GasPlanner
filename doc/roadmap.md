@@ -19,11 +19,12 @@ Following list of features and improvements ordered by priority is under develop
 * Add gas depth range/properties/trimix calculator
 * Events:
   * Add time and exact depth to all events warning/error messages where it makes sense (density, mnd, low or high pO2)
-  * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
+  * Add more events from algorithm: end of NDL, safety stop
 * UI Tweaks
   * Profile:
     * Waypoints table: add switch in case user is switching to tank with the same gas
     * Add other events to profile chart like gas switch
+  * Allow user defined segments up to the surface
   * Add option to define custom maximum gas density
   * move the tank and depth validation messages to separate row in complex view
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)

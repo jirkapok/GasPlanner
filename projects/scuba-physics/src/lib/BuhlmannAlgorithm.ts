@@ -137,7 +137,7 @@ class AlgorithmContext {
     }
 
     public addSafetyStopSegment(): Segment {
-        const duration = Time.oneMinute * 3;
+        const duration = Time.safetyStopDuration;
         return this.addStopSegment(duration);
     }
 

@@ -9,6 +9,9 @@ export class Time {
     /** Maximum deco stop duration one day */
     public static readonly oneDay = 24 * 60 * Time.oneMinute;
 
+    /** Default duration of the safety stop */
+    public static readonly safetyStopDuration = Time.oneMinute * 3;
+
     /**
      * Converts duration in minutes to seconds
      *

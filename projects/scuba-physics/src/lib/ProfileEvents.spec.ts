@@ -14,12 +14,12 @@ describe('Profile Events', () => {
 
     const createEventOption = (startAscentIndex: number,
         profile: Segment[], ceilings: Ceiling[], profileOptions: Options): EventOptions => ({
-        maxDensity: 50, // prevent event generation
-        startAscentIndex: startAscentIndex,
-        profile: profile,
-        ceilings: ceilings,
-        profileOptions: profileOptions
-    });
+            maxDensity: 50, // prevent event generation
+            startAscentIndex: startAscentIndex,
+            profile: profile,
+            ceilings: ceilings,
+            profileOptions: profileOptions
+        });
 
     const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
     const emptyCeilings: Ceiling[] = [];
@@ -518,6 +518,51 @@ describe('Profile Events', () => {
             expect(events.items[2]).toEqual(
                 Event.create(EventType.highGasDensity, 240, 40, StandardGases.air)
             );
+        });
+    });
+
+    describe('Common events', () => {
+        beforeEach(() => {
+            options.maxEND = 50; // to remove narcosis event
+        });
+
+        it('Adds start of safety stop', () => {
+            const segments = new Segments();
+            segments.add(0, 30, StandardGases.air, Time.oneMinute * 2);
+            segments.add(30, 30, StandardGases.air, Time.oneMinute * 10);
+            segments.add(30, 3, StandardGases.air, Time.oneMinute * 3);
+            segments.add(3, 3, StandardGases.air, Time.oneMinute * 3);
+            segments.add(3, 0, StandardGases.air, Time.oneMinute * 1);
+
+            const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            options.safetyStop = SafetyStop.always;
+            const events = ProfileEvents.fromProfile(eventOptions);
+
+            expect(events.items).toEqual([
+                Event.create(EventType.safetyStop, 900, 3),
+            ]);
+        });
+
+        it('Safety stop not present event not created', () => {
+            const segments = new Segments();
+            segments.add(0, 30, StandardGases.air, Time.oneMinute * 2);
+            segments.add(30, 30, StandardGases.air, Time.oneMinute * 10);
+            segments.add(30, 3, StandardGases.air, Time.oneMinute * 3);
+            segments.add(3, 3, StandardGases.air, Time.oneMinute * 1);
+            segments.add(3, 0, StandardGases.air, Time.oneMinute * 1);
+
+            const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            options.safetyStop = SafetyStop.always;
+            const events = ProfileEvents.fromProfile(eventOptions);
+
+            expect(events.items).toEqual([]);
+        });
+
+
+        it('Adds end of NDL', () => {
+            // const events = findProfileEvents(30);
+
+            expect(0).toEqual(0);
         });
     });
 });

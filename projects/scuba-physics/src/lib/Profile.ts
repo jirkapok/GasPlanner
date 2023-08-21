@@ -8,7 +8,7 @@ export enum EventType {
     /** Gas switch happened at this moment */
     gasSwitch = 2,
     /** At this moment, diver reached end of no deco limit */
-    reachedNoDeco = 3, // TODO add usage of event reached no deco limit
+    noDecoEnd = 3,
     /** when breathing gas at this depth, it leads to Hypoxia */
     lowPpO2 = 4,
     /** breathing gas with high ppO2 can lead to oxygen toxicity */
@@ -28,6 +28,8 @@ export enum EventType {
     switchToHigherN2 = 10,
     /** Exceeded maximum gas density at depth */
     highGasDensity = 11,
+    /* Marks start of additional safety stop */
+    safetyStop = 12,
 }
 
 export class Event {
@@ -56,6 +58,14 @@ export class Event {
 export class EventsFactory {
     public static createError(message: string): Event {
         return Event.createError(message);
+    }
+
+    public static createSafetyStopStart(timeStamp: number, depth: number): Event {
+        return Event.create(EventType.safetyStop, timeStamp, depth);
+    }
+
+    public static createNoDecoEnd(timeStamp: number, depth: number): Event {
+        return Event.create(EventType.noDecoEnd, timeStamp, depth);
     }
 
     public static createGasSwitch(timeStamp: number, depth: number, gas: Gas): Event {

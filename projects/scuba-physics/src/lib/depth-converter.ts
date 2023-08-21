@@ -1,4 +1,3 @@
-import { DepthLevels } from './DepthLevels';
 import { Density, Gravity, AltitudePressure, PressureConverter, Salinity } from './pressure-converter';
 
 export interface DepthOptions {

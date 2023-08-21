@@ -265,11 +265,12 @@ export class ProfileEvents {
     }
 
     private static addLowPpO2(context: EventsContext, segment: PressureSegment): void {
-        const gasCeiling = context.current.gas.ceiling(context.simpleDepths.surfacePressure);
+        const current = context.current;
+        const gasCeiling = current.gas.ceiling(context.simpleDepths.surfacePressure);
         const shouldAdd = (segment.minDepth < gasCeiling && context.switchingGas) ||
             (segment.startDepth > gasCeiling && gasCeiling > segment.endDepth && segment.isAscent) ||
             // only at beginning of a dive
-            (context.current.startDepth === 0 && segment.startDepth < gasCeiling && segment.isDescent);
+            (current.startDepth === 0 && segment.startDepth < gasCeiling && segment.isDescent);
 
         if (shouldAdd) {
             // start of dive or gas switch

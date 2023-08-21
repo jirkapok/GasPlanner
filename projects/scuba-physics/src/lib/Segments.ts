@@ -110,7 +110,7 @@ export class Segment {
      * Duration in seconds.
      */
     public static timeAt(startDepth: number, speed: number, currentDepth: number): number {
-        return Math.abs(currentDepth - startDepth) / speed;
+        return (currentDepth - startDepth) / speed;
     }
 
     public contentEquals(toCompare: Segment): boolean {

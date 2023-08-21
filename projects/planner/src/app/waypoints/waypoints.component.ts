@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
-import { PlannerService } from '../shared/planner.service';
-import { Dive, WayPoint, SwimAction } from '../shared/models';
-import { faArrowDown, faArrowUp, faArrowRight, faTasks, faRandom, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { WayPoint, SwimAction } from '../shared/models';
+import {
+    faArrowDown, faArrowUp, faArrowRight, faTasks,
+    faRandom, IconDefinition, faFilter
+} from '@fortawesome/free-solid-svg-icons';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import { StopsFilter } from '../shared/stopsFilter.service';
 
 @Component({
     selector: 'app-waypoints',
@@ -12,26 +15,21 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
     styleUrls: ['./waypoints.component.scss']
 })
 export class WayPointsComponent {
-    public dive: Dive;
     public down = faArrowDown;
     public up = faArrowUp;
     public hover = faArrowRight;
     public tasks = faTasks;
     public switch = faRandom;
+    public filterIcon = faFilter;
 
-    constructor(private planner: PlannerService,
+    constructor(
         public units: UnitConversion,
         private selectedWaypoint: SelectedWaypoint,
-        private viewSwitch: ViewSwitchService) {
-        this.dive = this.planner.dive;
-    }
+        private viewSwitch: ViewSwitchService,
+        public stops: StopsFilter) { }
 
     public get isComplex(): boolean {
         return this.viewSwitch.isComplex;
-    }
-
-    public get totalDuration(): number {
-        return this.dive.totalDuration;
     }
 
     public swimActionIcon(point: WayPoint): IconDefinition {

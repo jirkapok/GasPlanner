@@ -22,7 +22,6 @@ Following list of features and improvements ordered by priority is under develop
   * Add more events from algorithm: end of NDL, exceeded max. stop duration, safety stop
 * UI Tweaks
   * Profile:
-    * Add option to reduce waypoints table only to list of stops
     * Waypoints table: add switch in case user is switching to tank with the same gas
     * Add other events to profile chart like gas switch
   * Add option to define custom maximum gas density

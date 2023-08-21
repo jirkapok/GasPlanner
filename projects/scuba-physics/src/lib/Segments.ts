@@ -103,6 +103,7 @@ export class Segment {
         return startDepth + speed * duration;
     }
 
+    // TODO replace by LinearFunction
     /**
      * Returns number of seconds it takes to reach currentDepth from start depth.
      * We don't care about the units, this is still valid for both meter and bars.

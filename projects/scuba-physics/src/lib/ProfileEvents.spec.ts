@@ -382,7 +382,7 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
             const events = ProfileEvents.fromProfile(eventOptions);
             assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: 3444, depth: 16, gas: undefined}
+                { type: EventType.noDecoEnd, timeStamp: 3444, depth: 16, gas: undefined }
             ]);
         });
 
@@ -405,9 +405,9 @@ describe('Profile Events', () => {
             const events = ProfileEvents.fromProfile(eventOptions);
 
             assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: 794, depth: 30, gas: StandardGases.air },
-                { type: EventType.brokenCeiling, timeStamp: 1850, depth: 7.01, gas: StandardGases.air },
-                { type: EventType.brokenCeiling, timeStamp: 2030, depth: 3.79, gas: StandardGases.air}
+                { type: EventType.noDecoEnd, timeStamp: 794, depth: 30, gas: undefined },
+                { type: EventType.brokenCeiling, timeStamp: 1850, depth: 7.01, gas: undefined },
+                { type: EventType.brokenCeiling, timeStamp: 2030, depth: 3.79, gas: undefined }
             ]);
         });
     });
@@ -431,7 +431,7 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.noDecoEnd, timeStamp: Time.oneMinute * 4, depth: 27, gas: undefined },
-                { type: EventType.gasSwitch, timeStamp: Time.oneMinute * 3, depth: 21, gas:  StandardGases.ean50 },
+                { type: EventType.gasSwitch, timeStamp: Time.oneMinute * 3, depth: 21, gas: StandardGases.ean50 },
                 { type: EventType.switchToHigherN2, timeStamp: Time.oneMinute * 3, depth: 21, gas: StandardGases.ean50 }
             ]);
         });

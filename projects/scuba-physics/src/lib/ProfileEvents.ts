@@ -1,4 +1,4 @@
-import { Options, SafetyStop } from './Options';
+import { Options } from './Options';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Ceiling, EventsFactory, Events } from './Profile';
 import { Segment, Segments } from './Segments';
@@ -7,6 +7,7 @@ import { AscentSpeeds } from './speeds';
 import { Precision } from './precision';
 import { DensityAtDepth } from './GasDensity';
 import { DepthLevels } from './DepthLevels';
+import { LinearFunction } from './linearFunction';
 
 /** all values in bar */
 class PressureSegment {
@@ -396,39 +397,6 @@ export class ProfileEvents {
             context.events.add(event);
         }
     }
-}
-
-class LinearFunction {
-    public static speed(x: Range, y: Range): number {
-        const xChange = x.end - x.start;
-        return this.speedByXChange(y, xChange);
-    }
-
-    public static speedByXChange(y: Range, xChange: number): number {
-        return (y.end - y.start) / xChange;
-    }
-
-    public static yValueAt(x: Range, y: Range, xValue: number): number {
-        const xChange = xValue - x.start;
-        const speed = this.speed(x, y);
-        return y.start + speed * xChange;
-    }
-
-    public static xValueAt(x: Range, y: Range, yValue: number): number {
-        const yChange = yValue - y.start;
-        const speed = this.speed(x, y);
-
-        if(speed === 0) {
-            return x.start;
-        }
-
-        return x.start + yChange / speed;
-    }
-}
-
-interface Range {
-    start: number;
-    end: number;
 }
 
 class CeilingContext {

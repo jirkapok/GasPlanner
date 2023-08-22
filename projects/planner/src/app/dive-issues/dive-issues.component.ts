@@ -7,6 +7,7 @@ import {
 import { Event, EventType, OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import { Plan } from '../shared/plan.service';
+import _ from 'lodash';
 
 @Component({
     selector: 'app-dive-issues',
@@ -24,6 +25,11 @@ export class DiveIssuesComponent {
         public units: UnitConversion,
         private plan: Plan) {
         this.dive = this.planner.dive;
+    }
+
+    public get events(): Event[] {
+        return _(this.dive.events).sortBy(e => e.timeStamp)
+            .value();
     }
 
     public get minimumDuration(): number {

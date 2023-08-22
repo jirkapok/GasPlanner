@@ -36,7 +36,7 @@
             Reduce amount of oxygen in your gases, dive duration or target depths.</span>
     </div>
 
-    <ng-container *ngFor="let event of dive.events">
+    <ng-container *ngFor="let event of events">
         <div *ngIf="isLowPpO2(event)" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp

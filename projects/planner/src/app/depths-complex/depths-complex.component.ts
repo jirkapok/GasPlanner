@@ -165,7 +165,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     private createLevelControl(level: Level): FormGroup<LevelRow> {
         return this.fb.group({
             duration: [Precision.round(level.duration, 1), this.validators.duration],
-            endDepth: [Precision.round(level.endDepth, 1), this.validators.depth]
+            endDepth: [Precision.round(level.endDepth, 1), this.validators.depthFromSurface]
         });
     }
 

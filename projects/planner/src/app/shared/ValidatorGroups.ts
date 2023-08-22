@@ -27,6 +27,14 @@ export class ValidatorGroups {
         return this.rangeFor(this.ranges.depth);
     }
 
+    /**
+     * Special use case in complex view, where makes sense allow 0 m or 0 ft as minimum depth
+     * to allow user custom ascent to the surface.
+     */
+    public get depthFromSurface(): ValidatorFn[] {
+        return this.rangeFor([0, this.ranges.depth[1]]);
+    }
+
     public get duration(): ValidatorFn[] {
         return this.rangeFor(this.ranges.duration);
     }

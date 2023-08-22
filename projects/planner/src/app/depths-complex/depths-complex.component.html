@@ -28,7 +28,7 @@
                             <div class="col col-6 m-0 pb-0 px-1">
                                 <label for="depthItemB-{{ i }}" class="form-label mt-2">From {{startDepth(i)}} To [{{units.length}}]:</label>
                                 <input formControlName="endDepth" class="form-control" type="number"
-                                    id="depthItemB-{{ i }}" (input)="levelChanged(i)" required [min]="ranges.depth[0]"
+                                    id="depthItemB-{{ i }}" (input)="levelChanged(i)" required [min]="0"
                                     [max]="ranges.depth[1]" step="1" [class.is-invalid]="depthItemInvalid(i)" />
                                 <div class="text-danger" *ngIf="depthItemInvalid(i)">
                                     Needs to be number {{ranges.depthLabel}}</div>
@@ -90,7 +90,7 @@
                         startDepth(i) | number:'1.0-0' }}</div>
                     <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
                         <input formControlName="endDepth" class="form-control" type="number" id="depthItem-{{ i }}"
-                            (input)="levelChanged(i)" required [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
+                            (input)="levelChanged(i)" required [min]="0" [max]="ranges.depth[1]" step="1"
                             [class.is-invalid]="depthItemInvalid(i)" />
                         <div class="text-danger" *ngIf="depthItemInvalid(i)">
                             Needs to be number {{ranges.depthLabel}}</div>

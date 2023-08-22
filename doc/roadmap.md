@@ -20,7 +20,6 @@ Following list of features and improvements ordered by priority is under develop
 * UI Tweaks
   * Profile:
     * Waypoints table: add switch in case user is switching to tank with the same gas
-  * Allow user defined segments up to the surface
   * Add option to define custom maximum gas density
   * move the tank and depth validation messages to separate row in complex view
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)

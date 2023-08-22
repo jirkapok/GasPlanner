@@ -29,6 +29,16 @@ describe('Profile Events', () => {
             profileOptions: profileOptions
         });
 
+    const calculateEvents = (gases: Gases, segments: Segments, salinity: Salinity, safetyStop: SafetyStop): Events => {
+        const algorithm = new BuhlmannAlgorithm();
+        const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, salinity);
+        defaultOptions.safetyStop = safetyStop;
+        const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
+        const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+        const events = ProfileEvents.fromProfile(eventOptions);
+        return events;
+    };
+
     const assertEvents = (current: Event[], expected: EventAssert[]) => {
         const filtered: EventAssert[] = current.map(e => ({
             depth: Precision.round(e.depth, 2),
@@ -375,12 +385,7 @@ describe('Profile Events', () => {
             segments.addFlat(30, StandardGases.air, 20 * Time.oneMinute);
             segments.add(30, 3, StandardGases.air, 4 * Time.oneMinute);
 
-            const algorithm = new BuhlmannAlgorithm();
-            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
-            defaultOptions.safetyStop = SafetyStop.never;
-            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
-            const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
-            const events = ProfileEvents.fromProfile(eventOptions);
+            const events = calculateEvents(gases, segments, Salinity.salt, SafetyStop.never);
 
             // during this dive on second level we are already decompressing anyway,
             // so once the ceiling should be lower than current depth.
@@ -398,12 +403,8 @@ describe('Profile Events', () => {
             segments.add(0, 16, StandardGases.air, 1.25 * Time.oneMinute);
             segments.addFlat(16, StandardGases.air, 118.75 * Time.oneMinute);
 
-            const algorithm = new BuhlmannAlgorithm();
-            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
-            defaultOptions.safetyStop = SafetyStop.never;
-            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
-            const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
-            const events = ProfileEvents.fromProfile(eventOptions);
+            const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
+
             assertEvents(events.items, [
                 { type: EventType.noDecoEnd, timeStamp: 3444, depth: 16, gas: undefined }
             ]);
@@ -420,12 +421,7 @@ describe('Profile Events', () => {
             segments.addFlat(6, StandardGases.air, 2 * Time.oneMinute);
             segments.add(6, 2, StandardGases.air, 1.5 * Time.oneMinute);
 
-            const algorithm = new BuhlmannAlgorithm();
-            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
-            defaultOptions.safetyStop = SafetyStop.always;
-            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
-            const eventOptions = createEventOption(5, decoPlan.segments, decoPlan.ceilings, defaultOptions);
-            const events = ProfileEvents.fromProfile(eventOptions);
+            const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.always);
 
             assertEvents(events.items, [
                 { type: EventType.noDecoEnd, timeStamp: 794, depth: 30, gas: undefined },
@@ -448,12 +444,7 @@ describe('Profile Events', () => {
             segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
             segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
 
-            const algorithm = new BuhlmannAlgorithm();
-            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
-            defaultOptions.safetyStop = SafetyStop.never;
-            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
-            const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, options);
-            const events = ProfileEvents.fromProfile(eventOptions);
+            const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
             assertEvents(events.items, [
                 { type: EventType.noDecoEnd, timeStamp: 551, depth: 30, gas: undefined },
@@ -620,12 +611,7 @@ describe('Profile Events', () => {
             segments.add(30, 30, StandardGases.air, Time.oneMinute * 12);
             segments.add(30, 0, StandardGases.air, Time.oneMinute * 4);
 
-            const algorithm = new BuhlmannAlgorithm();
-            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
-            defaultOptions.safetyStop = SafetyStop.never;
-            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
-            const eventOptions = createEventOption(5, decoPlan.segments, decoPlan.ceilings, defaultOptions);
-            const events = ProfileEvents.fromProfile(eventOptions);
+            const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
             expect(events.items).toEqual([
                 Event.create(EventType.noDecoEnd, 826, 30),
@@ -641,12 +627,7 @@ describe('Profile Events', () => {
             segments.add(30, 30, StandardGases.air, 678);
             segments.add(30, 0, StandardGases.air, Time.oneMinute * 4);
 
-            const algorithm = new BuhlmannAlgorithm();
-            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
-            defaultOptions.safetyStop = SafetyStop.never;
-            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
-            const eventOptions = createEventOption(5, decoPlan.segments, decoPlan.ceilings, defaultOptions);
-            const events = ProfileEvents.fromProfile(eventOptions);
+            const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
             assertEvents(events.items, [
                 { type: EventType.noDecoEnd, timeStamp: 786, depth: 29.25, gas: undefined },

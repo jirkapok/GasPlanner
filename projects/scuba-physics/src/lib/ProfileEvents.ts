@@ -316,7 +316,7 @@ export class ProfileEvents {
     private static addNdlEnd(context: CeilingContext, ceiling: Ceiling): void {
         if (!context.ndlCeilingMarked && ceiling.depth > 0) {
             context.ndlCeilingMarked = true;
-            const timeStamp = ceiling.time - context.current.duration;
+            const timeStamp = ceiling.time - context.currentSegmentStartTime;
             const depth = context.current.depthAt(timeStamp);
             const event = EventsFactory.createNoDecoEnd(ceiling.time, depth);
             context.events.add(event);

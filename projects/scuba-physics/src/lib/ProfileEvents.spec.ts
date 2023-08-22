@@ -149,8 +149,6 @@ describe('Profile Events', () => {
         });
     });
 
-    // TODO air, 30 m, 13 minutes (11.3 min descent) - results in deco event depth wrong value
-
     describe('High ppO2', () => {
         it('No high ppO2 event for oxygen at 4 m', () => {
             const segments = new Segments();
@@ -439,25 +437,28 @@ describe('Profile Events', () => {
 
     describe('ICD - Switch to higher N2 on deco dive', () => {
         it('from 18/45 to Ean50', () => {
+            const gases = new Gases();
+            gases.add(StandardGases.trimix1845);
+            gases.add(StandardGases.ean50);
+
             const segments = new Segments();
-            segments.add(30, 21, StandardGases.trimix1845, Time.oneMinute * 3);
+            segments.add(0, 30, StandardGases.trimix1845, Time.oneMinute * 2);
+            segments.add(30, 30, StandardGases.trimix1845, Time.oneMinute * 10);
+            segments.add(30, 21, StandardGases.trimix1845, Time.oneMinute * 2);
             segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
             segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
 
-            const ceilings: Ceiling[] = [
-                new Ceiling(0, 0),
-                new Ceiling(Time.oneMinute * 3, 0),
-                new Ceiling(Time.oneMinute * 4, 1), // not a real dive we only need the ceiling
-                new Ceiling(Time.oneMinute * 6, 0)
-            ];
-
-            const eventOptions = createEventOption(1, segments.items, ceilings, options);
+            const algorithm = new BuhlmannAlgorithm();
+            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
+            defaultOptions.safetyStop = SafetyStop.never;
+            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
+            const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
             assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: Time.oneMinute * 4, depth: 27, gas: undefined },
-                { type: EventType.gasSwitch, timeStamp: Time.oneMinute * 3, depth: 21, gas: StandardGases.ean50 },
-                { type: EventType.switchToHigherN2, timeStamp: Time.oneMinute * 3, depth: 21, gas: StandardGases.ean50 }
+                { type: EventType.noDecoEnd, timeStamp: 551, depth: 30, gas: undefined },
+                { type: EventType.gasSwitch, timeStamp: Time.oneMinute * 14, depth: 21, gas: StandardGases.ean50 },
+                { type: EventType.switchToHigherN2, timeStamp: Time.oneMinute * 14, depth: 21, gas: StandardGases.ean50 }
             ]);
         });
 
@@ -628,6 +629,27 @@ describe('Profile Events', () => {
 
             expect(events.items).toEqual([
                 Event.create(EventType.noDecoEnd, 826, 30),
+            ]);
+        });
+
+        it('Adds end of NDL during ascent with correct depth', () => {
+            const gases = new Gases();
+            gases.add(StandardGases.air);
+
+            const segments = new Segments();
+            segments.add(0, 30, StandardGases.air, 102);
+            segments.add(30, 30, StandardGases.air, 678);
+            segments.add(30, 0, StandardGases.air, Time.oneMinute * 4);
+
+            const algorithm = new BuhlmannAlgorithm();
+            const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
+            defaultOptions.safetyStop = SafetyStop.never;
+            const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
+            const eventOptions = createEventOption(5, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+            const events = ProfileEvents.fromProfile(eventOptions);
+
+            assertEvents(events.items, [
+                { type: EventType.noDecoEnd, timeStamp: 786, depth: 29.25, gas: undefined },
             ]);
         });
     });

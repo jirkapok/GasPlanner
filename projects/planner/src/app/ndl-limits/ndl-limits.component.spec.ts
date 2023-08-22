@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Salinity } from 'scuba-physics';
 import { NdlService } from '../shared/ndl.service';
@@ -73,11 +73,11 @@ describe('NdlLimits component', () => {
             }));
 
         it('Uses default tank size', inject(
-            [Router, NdlService, OptionsService],
-            (router: Router, ndlService: NdlService, options: OptionsService) => {
+            [Location, NdlService, OptionsService],
+            (location: Location, ndlService: NdlService, options: OptionsService) => {
                 const units = new UnitConversion();
                 units.imperialUnits = true;
-                const sut = new NdlLimitsComponent(router, units, ndlService, options);
+                const sut = new NdlLimitsComponent(units, ndlService, options, location);
                 expect(sut.tank.size).toBe(124.1);
             }));
     });

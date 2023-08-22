@@ -23,7 +23,6 @@ Following list of features and improvements ordered by priority is under develop
   * Add option to define custom maximum gas density
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Restore state on all pages from last known
-  * Back should navigate to last known view, not only to planner (switch from settings back to nitrox calc)
   * Support screen rotation when installed as pwa
 * Add undo/redo to all pages
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>

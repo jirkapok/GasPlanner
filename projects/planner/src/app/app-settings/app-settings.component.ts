@@ -2,19 +2,20 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
     NonNullableFormBuilder, FormGroup, Validators, FormControl
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { Diver } from 'scuba-physics';
 import { OptionsService } from '../shared/options.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { UnitConversion } from '../shared/UnitConversion';
+import { SubViewComponent } from '../shared/subView';
 
 @Component({
     selector: 'app-app-settings',
     templateUrl: './app-settings.component.html',
     styleUrls: ['./app-settings.component.scss']
 })
-export class AppSettingsComponent implements OnInit {
+export class AppSettingsComponent extends SubViewComponent implements OnInit {
     public flagIcon = faFlag;
     public diver = new Diver();
     public settingsForm!: FormGroup<{
@@ -24,9 +25,10 @@ export class AppSettingsComponent implements OnInit {
     constructor(public units: UnitConversion,
         private settingsNormalization: SettingsNormalizationService,
         private formBuilder: NonNullableFormBuilder,
-        private router: Router,
         private cd: ChangeDetectorRef,
-        private options: OptionsService) {
+        private options: OptionsService,
+        location: Location) {
+        super(location);
         this.diver.loadFrom(this.options.diver);
     }
 
@@ -36,12 +38,8 @@ export class AppSettingsComponent implements OnInit {
         });
     }
 
-    public async goBack(): Promise<boolean> {
-        return await this.router.navigateByUrl('/');
-    }
-
     public use(): void {
-        if(this.settingsForm.invalid) {
+        if (this.settingsForm.invalid) {
             return;
         }
 

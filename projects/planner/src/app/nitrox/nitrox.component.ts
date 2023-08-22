@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import {
     FormControl, NonNullableFormBuilder, FormGroup
@@ -15,6 +15,7 @@ import { TankBound } from '../shared/models';
 import { Precision, Tank } from 'scuba-physics';
 import { TanksService } from '../shared/tanks.service';
 import { OptionsService } from '../shared/options.service';
+import { SubViewComponent } from '../shared/subView';
 
 
 interface NitroxForm {
@@ -28,7 +29,7 @@ interface NitroxForm {
     templateUrl: './nitrox.component.html',
     styleUrls: ['./nitrox.component.scss']
 })
-export class NitroxComponent implements OnInit {
+export class NitroxComponent extends SubViewComponent implements OnInit {
     public calcIcon = faCalculator;
     public nitroxForm!: FormGroup<NitroxForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
@@ -44,9 +45,10 @@ export class NitroxComponent implements OnInit {
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        private router: Router,
         private options: OptionsService,
-        private tanksService: TanksService) {
+        private tanksService: TanksService,
+        location: Location) {
+        super(location);
         this.calc.fO2 = this.tanksService.firstTank.tank.o2;
         this.calc.pO2 = this.options.diver.maxPpO2;
         this.tank = new TankBound(new Tank(15, 200, 21), this.units);
@@ -114,10 +116,6 @@ export class NitroxComponent implements OnInit {
             this.failingMod = true;
             this.nitroxForm.updateValueAndValidity();
         }
-    }
-
-    public async goBack(): Promise<boolean> {
-        return await this.router.navigateByUrl('/');
     }
 
     public use(): void {

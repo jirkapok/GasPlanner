@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,6 +11,7 @@ import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { OptionsService } from '../shared/options.service';
 import { TankBound } from '../shared/models';
+import { SubViewComponent } from '../shared/subView';
 
 interface SacForm {
     depth: FormControl<number>;
@@ -26,7 +27,7 @@ interface SacForm {
     templateUrl: './sac.component.html',
     styleUrls: ['./sac.component.scss']
 })
-export class SacComponent implements OnInit {
+export class SacComponent extends SubViewComponent implements OnInit {
     public calcIcon = faCalculator;
     public formSac!: FormGroup<SacForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
@@ -40,11 +41,12 @@ export class SacComponent implements OnInit {
         private validators: ValidatorGroups,
         private inputs: InputControls,
         private formBuilder: NonNullableFormBuilder,
-        private router: Router,
         private options: OptionsService,
         private cd: ChangeDetectorRef,
         public calc: SacCalculatorService,
-        public units: UnitConversion) {
+        public units: UnitConversion,
+        location: Location) {
+        super(location);
         this.tank = new TankBound(Tank.createDefault(), this.units);
     }
 
@@ -186,10 +188,6 @@ export class SacComponent implements OnInit {
         this.enableAll();
         this.formSac.removeControl('rmv');
         this.cd.detectChanges();
-    }
-
-    public async goBack(): Promise<boolean> {
-        return await this.router.navigateByUrl('/');
     }
 
     public use(): void {

@@ -98,7 +98,7 @@
                             <tr *ngIf="dive.profileCalculated">
                                 <td>CNS toxicity [%]:</td>
                                 <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ dive.cns | number:'1.0-0' }}</strong>
+                                    <strong *ngIf="dive.calculated">{{cnsText}}</strong>
                                 </td>
                             </tr>
                         </tbody>

@@ -16,6 +16,7 @@ import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { Plan } from '../shared/plan.service';
 import { OptionsService } from '../shared/options.service';
+import { formatNumber } from '@angular/common';
 
 @Component({
     selector: 'app-diveinfo',
@@ -90,6 +91,14 @@ export class DiveInfoComponent extends Streamed {
         const gas = this.dive.highestDensity.gas.name;
         const depth = this.units.fromMeters(this.dive.highestDensity.depth);
         return `${gas} at ${depth} ${this.units.length}`;
+    }
+
+    public get cnsText(): string {
+        if(this.dive.cns >= 1000) {
+            return '> 1000';
+        }
+
+        return formatNumber(this.dive.cns, 'en', '1.0-0');
     }
 
     public applyMaxDuration(): void {

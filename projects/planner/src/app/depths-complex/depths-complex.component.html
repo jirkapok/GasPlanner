@@ -26,7 +26,8 @@
                     <ng-template mdbAccordionItemBody>
                         <div class="row">
                             <div class="col col-6 m-0 pb-0 px-1">
-                                <label for="depthItemB-{{ i }}" class="form-label mt-2">From {{startDepth(i)}} To [{{units.length}}]:</label>
+                                <label for="depthItemB-{{ i }}" class="form-label mt-2">From {{startDepth(i)}} To
+                                    [{{units.length}}]:</label>
                                 <input formControlName="endDepth" class="form-control" type="number"
                                     id="depthItemB-{{ i }}" (input)="levelChanged(i)" required [min]="0"
                                     [max]="ranges.depth[1]" step="1" [class.is-invalid]="depthItemInvalid(i)" />
@@ -46,8 +47,8 @@
                             <div class="col col-12 m-0 pb-0 px-1">
                                 <label for="tanksB-{{ i }}" class="form-label mt-2">Tank:</label>
                                 <div mdbDropdown class="input-group dropdown">
-                                    <input id="tanksB-{{ i }}" [value]="tankLabelFor(i)" class="form-control" type="text"
-                                        readonly />
+                                    <input id="tanksB-{{ i }}" [value]="tankLabelFor(i)" class="form-control"
+                                        type="text" readonly />
                                     <button class="btn btn-default dropdown-toggle dropdown-toggle-split" id="tankMenu"
                                         type="button" mdbDropdownToggle aria-expanded="false"
                                         data-mdb-toggle="dropdown"></button>
@@ -85,22 +86,18 @@
                 </div>
             </div>
             <div *ngFor="let level of levelControls.controls; let i = index" [formGroupName]="i" class="px-0 pb-2">
-                <div class="row p-0 pb-2">
+                <div class="row p-0 pb-1">
                     <div class="col col-12 col-sm-1 m-0 pb-0 px-1  text-end align-self-center">{{
                         startDepth(i) | number:'1.0-0' }}</div>
                     <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
                         <input formControlName="endDepth" class="form-control" type="number" id="depthItem-{{ i }}"
                             (input)="levelChanged(i)" required [min]="0" [max]="ranges.depth[1]" step="1"
                             [class.is-invalid]="depthItemInvalid(i)" />
-                        <div class="text-danger" *ngIf="depthItemInvalid(i)">
-                            Needs to be number {{ranges.depthLabel}}</div>
                     </div>
                     <div class="col col-12 col-sm-2 m-0 pb-0 px-1">
                         <input formControlName="duration" class="form-control" type="number" id="durationItem-{{ i }}"
                             (input)="levelChanged(i)" required [min]="ranges.duration[0]" [max]="ranges.duration[1]"
                             step="1" [class.is-invalid]="durationItemInvalid(i)" />
-                        <div class="text-danger" *ngIf="durationItemInvalid(i)">Needs to be number
-                            {{ ranges.durationLabel }}</div>
                     </div>
                     <div class="col col-6 m-0 pb-0 px-1">
                         <div mdbDropdown class="input-group dropdown">
@@ -122,6 +119,21 @@
                             <fa-icon [icon]="removeIcon" class="p-0 m-0 fa-xl"></fa-icon>
                         </button>
                     </div>
+                </div>
+                <div class="row p-0 pb-2">
+                    <div class="col col-11">
+                        <div class="row">
+                            <div class="col col-1">
+                            </div>
+                            <div class="col m-0 px-0">
+                                <small class="text-danger" *ngIf="depthItemInvalid(i)">
+                                    End depth needs to be number {{ranges.depthLabel}}. </small>
+                                <small class="text-danger" *ngIf="durationItemInvalid(i)">
+                                    Duration needs to be number {{ ranges.durationLabel }}.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-1"></div>
                 </div>
             </div>
         </div>

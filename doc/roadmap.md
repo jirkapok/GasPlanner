@@ -21,7 +21,6 @@ Following list of features and improvements ordered by priority is under develop
   * Profile:
     * Waypoints table: add switch in case user is switching to tank with the same gas
   * Add option to define custom maximum gas density
-  * move the tank and depth validation messages to separate row in complex view
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Restore state on all pages from last known
   * Back should navigate to last known view, not only to planner (switch from settings back to nitrox calc)

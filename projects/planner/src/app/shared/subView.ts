@@ -16,7 +16,7 @@ export abstract class SubViewComponent {
 
 @Injectable()
 export abstract class PersistedSubViewComponent<TView extends ViewState> extends SubViewComponent {
-    constructor(public view: TView,
+    constructor(public viewState: TView,
         private viewId: string,
         private views: ViewStates,
         private preferences: PreferencesService,
@@ -25,14 +25,14 @@ export abstract class PersistedSubViewComponent<TView extends ViewState> extends
     }
 
     public saveView(): void {
-        this.views.set(this.viewId, this.view);
+        this.views.set(this.viewId, this.viewState);
         this.preferences.saveDefaults();
     }
 
     public loadView(): void {
         const loaded = this.views.get<TView>(this.viewId);
         if (loaded) {
-            this.view = loaded;
+            this.viewState = loaded;
         }
     }
 }

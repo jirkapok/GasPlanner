@@ -8,6 +8,7 @@ import {
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
+import { ViewStates } from './viewStates';
 
 @Injectable()
 export class PreferencesFactory {
@@ -16,7 +17,8 @@ export class PreferencesFactory {
         private units: UnitConversion,
         private tanksService: TanksService,
         private plan: Plan,
-        private options: OptionsService
+        private options: OptionsService,
+        private viewStates: ViewStates
     ){}
 
     public toPreferences(): AppPreferences {
@@ -29,7 +31,7 @@ export class PreferencesFactory {
 
     public applyApp(loaded: AppPreferences): void {
         this.applyLoaded(loaded);
-        this.applyStates();
+        this.applyStates(loaded.states);
     }
 
     public applyLoaded(loaded: AppPreferencesDto): void {
@@ -71,14 +73,14 @@ export class PreferencesFactory {
     }
 
     private toStates(): AppStates {
-        // not implemented yet, restore last known app state. Used for pwa
+        // TODO not implemented lastScreen usage
         return {
             lastScreen: '/',
-            states: []
+            states: this.viewStates.all
         };
     }
 
-    private applyStates(): void {
-        // not implemented yet
+    private applyStates(loaded: AppStates): void {
+        this.viewStates.loadFrom(loaded.states);
     }
 }

@@ -15,6 +15,7 @@ import { TestBedExtensions } from './TestBedCommon.spec';
 import { PreferencesFactory } from './preferences.factory';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { WayPointsService } from './waypoints.service';
+import { ViewStates } from './viewStates';
 
 describe('PreferencesService', () => {
     beforeEach(() => {
@@ -25,7 +26,7 @@ describe('PreferencesService', () => {
                 ViewSwitchService, DepthsService,
                 OptionsService, Plan, PreferencesFactory,
                 DelayedScheduleService, SettingsNormalizationService,
-                WayPointsService
+                WayPointsService, ViewStates
             ]
         });
 

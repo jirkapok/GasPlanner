@@ -115,6 +115,10 @@ export class TankBound {
     }
 
     public set workingPressure(newValue: number) {
+        if(isNaN(newValue)) {
+            return;
+        }
+
         const sizeBackup = this.size;
         this._workingPressure = this.units.toBar(newValue);
         this.size = sizeBackup;
@@ -122,6 +126,10 @@ export class TankBound {
 
     /** For serialization purpose only */
     public set workingPressureBars(newValue: number) {
+        if(isNaN(newValue)) {
+            return;
+        }
+
         const sizeBackup = this.size;
         this._workingPressure = newValue;
         this.size = sizeBackup;

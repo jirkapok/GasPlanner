@@ -150,12 +150,20 @@ describe('Tanks Complex component', () => {
         expect(schedulerSpy).not.toHaveBeenCalled();
     });
 
-    it('Valid change triggers planner calculate', () => {
-        fixture.detectChanges();
-        complexPage.sizeInput(0).value = '24';
-        complexPage.sizeInput(0).dispatchEvent(new Event('input'));
+    describe('Valid change', () => {
+        beforeEach(() => {
+            fixture.detectChanges();
+            complexPage.sizeInput(0).value = '24';
+            complexPage.sizeInput(0).dispatchEvent(new Event('input'));
+        });
 
-        expect(schedulerSpy).toHaveBeenCalledTimes(1);
+        it('triggers calculate', () => {
+            expect(schedulerSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('doesn\'t break working pressure', () => {
+            expect(component.tanks[0].workingPressure).not.toBeNaN();
+        });
     });
 
     it('Assign gas name tank rebinds new o2 value', () => {

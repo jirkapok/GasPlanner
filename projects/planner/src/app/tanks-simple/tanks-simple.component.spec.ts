@@ -88,13 +88,6 @@ describe('Tanks Simple component', () => {
         expect(simplePage.sizeInput.value).toBe('24');
     });
 
-    it('Imperial units adjusts sac', inject([UnitConversion],
-        (units: UnitConversion) => {
-            units.imperialUnits = true;
-            const sac = component.gasSac();
-            expect(sac).toBeCloseTo(19.33836, 5);
-        }));
-
     it('Invalid change prevents calculate', () => {
         fixture.detectChanges();
         simplePage.sizeInput.value = 'aaa';
@@ -102,11 +95,20 @@ describe('Tanks Simple component', () => {
         expect(schedulerSpy).not.toHaveBeenCalled();
     });
 
-    it('Valid change triggers calculate', () => {
-        fixture.detectChanges();
-        simplePage.sizeInput.value = '12';
-        simplePage.sizeInput.dispatchEvent(new Event('input'));
-        expect(schedulerSpy).toHaveBeenCalledTimes(1);
+    describe('Valid change', () => {
+        beforeEach(() => {
+            fixture.detectChanges();
+            simplePage.sizeInput.value = '12';
+            simplePage.sizeInput.dispatchEvent(new Event('input'));
+        });
+
+        it('triggers calculate', () => {
+            expect(schedulerSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('doesn\'t break working pressure', () => {
+            expect(component.firstTank.workingPressure).not.toBeNaN();
+        });
     });
 
     it('Assign best mix rebinds the control', () => {
@@ -117,5 +119,14 @@ describe('Tanks Simple component', () => {
         const newO2 = simplePage.oxygenInput.value;
         expect(newO2).toBe('35');
         expect(component.firstTank.o2).toBe(35);
+    });
+
+    describe('Imperial units', () => {
+        it('adjusts sac', inject([UnitConversion],
+            (units: UnitConversion) => {
+                units.imperialUnits = true;
+                const sac = component.gasSac();
+                expect(sac).toBeCloseTo(19.33836, 5);
+            }));
     });
 });

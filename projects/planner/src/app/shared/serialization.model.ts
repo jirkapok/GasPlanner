@@ -4,15 +4,32 @@ import {
     Event, Events, Gas, Diver, Salinity, SafetyStop, HighestDensity
 } from 'scuba-physics';
 
-/**
- *  We can't us TankBound from models directly,
- *  because it will cause unresolved dependency in background tasks
- **/
-export interface ITankBound {
-    id: number;
-    /** in bars to avoid conversions */
-    workingPressureBars: number;
-    tank: Tank;
+export interface AppPreferences extends AppPreferencesDto {
+    states: AppStates;
+}
+
+export interface AppStates {
+    /** route to the last page opened */
+    lastScreen: string;
+    states: ViewState[];
+}
+
+export interface NitroxViewState extends ViewState {
+    ppO2: number;
+}
+
+export interface SacViewState extends ViewState {
+    sac: number;
+}
+
+export interface ViewState {
+    id: string;
+}
+
+/** Only for url serialization */
+export interface AppPreferencesDto {
+    options: AppOptionsDto;
+    dives: DiveDto[];
 }
 
 export interface DiveDto {
@@ -32,20 +49,15 @@ export interface AppOptionsDto {
     language: string;
 }
 
-export interface AppStates {
-    /** last page opened */
-    lastScreen: string;
-    state: unknown;
-}
-
-export interface AppPreferences extends AppPreferencesDto {
-    states: AppStates;
-}
-
-/** Only for url serialization */
-export interface AppPreferencesDto {
-    options: AppOptionsDto;
-    dives: DiveDto[];
+/**
+ *  We can't us TankBound from models directly,
+ *  because it will cause unresolved dependency in background tasks
+ **/
+export interface ITankBound {
+    id: number;
+    /** in bars to avoid conversions */
+    workingPressureBars: number;
+    tank: Tank;
 }
 
 export interface ProfileRequestDto {

@@ -74,7 +74,7 @@ export class PreferencesFactory {
         // not implemented yet, restore last known app state. Used for pwa
         return {
             lastScreen: '/',
-            state: {}
+            states: []
         };
     }
 

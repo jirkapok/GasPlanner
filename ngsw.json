@@ -1,7 +1,7 @@
 {
   "configVersion": 1,
-  "timestamp": 1687969951304,
-  "index": "/https://jirkapok.github.io/GasPlanner/index.html",
+  "timestamp": 1692812548073,
+  "index": "/https://dugong.online/index.html",
   "assetGroups": [
     {
       "name": "app",
@@ -11,18 +11,17 @@
         "ignoreVary": true
       },
       "urls": [
-        "/39.2117171d67fd3f3a.js",
-        "/481.4d444a1ebd6a8763.js",
-        "/626.e08c16c9bfa128f1.js",
-        "/691.d1b0df8e5bc9815f.js",
+        "/102.7a0bff2378d709e0.js",
+        "/172.16ff98cad728c14a.js",
+        "/524.0a32cb686abda660.js",
+        "/841.c27b92dca2c7096c.js",
         "/favicon.ico",
         "/index.html",
-        "/main.914ee7eceb00bd88.js",
+        "/main.877a05b062d8f2ea.js",
         "/manifest.webmanifest",
-        "/polyfills.fec798c751a9d170.js",
-        "/runtime.6dfee77b4e3f88a0.js",
-        "/scripts.69f070dfc5825405.js",
-        "/styles.ddc78dee30163787.css"
+        "/polyfills.b5dea9118b55af63.js",
+        "/runtime.ca33061a9431b0ad.js",
+        "/styles.faffc457875badde.css"
       ],
       "patterns": []
     },
@@ -48,10 +47,10 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/39.2117171d67fd3f3a.js": "843c843df5ebe9184ab38ad29dc326b182633ff2",
-    "/481.4d444a1ebd6a8763.js": "2f304b371be14f8ebf31f04ea85a836feef95c0c",
-    "/626.e08c16c9bfa128f1.js": "6109f970d1500d0a644cc5e3801b19e02071a669",
-    "/691.d1b0df8e5bc9815f.js": "e98980f258c41e88678b835882926a4ccc915cd6",
+    "/102.7a0bff2378d709e0.js": "2205142bdb816d2bb05bbab79088cd9d3802affe",
+    "/172.16ff98cad728c14a.js": "dd4d55ed169ee10b431599faf843001566d21fa7",
+    "/524.0a32cb686abda660.js": "329255a730929b78b10c14ebe033b9b4e4513ec0",
+    "/841.c27b92dca2c7096c.js": "946e070b56a26a42d9998af2c07007f1d00e3d37",
     "/assets/icons/icon-128x128.png": "ff40289d8a8f61e85436fd7f5f42c7c5d9e55589",
     "/assets/icons/icon-144x144.png": "5e3d0cc7d9a497058e6f87c817c821b7fb4a5bc3",
     "/assets/icons/icon-152x152.png": "d36c00962cfc95ce49600cfd281b421f1d944ccd",
@@ -61,13 +60,12 @@
     "/assets/icons/icon-72x72.png": "bbf3a0e1d4a961f7360746df724533232813649a",
     "/assets/icons/icon-96x96.png": "2c1540d7bb572d2178c2ded3f45adc0cf19fbc6a",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "8cf49c70fb3cc9f3f407477c6feb3529a09157a7",
-    "/main.914ee7eceb00bd88.js": "9715015291c0f579e11d9052399c37bfedb1291a",
+    "/index.html": "a4be602480086ad1726a2333384fd2a489460d3a",
+    "/main.877a05b062d8f2ea.js": "b743c8b3283c1230ead471c5566d3bfc2b5d0d00",
     "/manifest.webmanifest": "8e6296cf5d7bd1aadaef5e749f1ed9f6b461dc62",
-    "/polyfills.fec798c751a9d170.js": "b05d0c904aa43133427b8a6a5d2499ff52bb8cff",
-    "/runtime.6dfee77b4e3f88a0.js": "c95a0c2436dde44b6571cc7099c8f4b0ddd36213",
-    "/scripts.69f070dfc5825405.js": "b25c9627bf0db5bfc61bfd3b9d85560c41a80f55",
-    "/styles.ddc78dee30163787.css": "03484d039588bb80a4e924a8e9efedac6f574151"
+    "/polyfills.b5dea9118b55af63.js": "cb89f98ea109a284e9aa664e1b164c5c1bc7e267",
+    "/runtime.ca33061a9431b0ad.js": "9442fb51f48d0485f571b0e6e90209f87026ac5f",
+    "/styles.faffc457875badde.css": "bf426e7f4b28908156b431995738d3a217fe86c3"
   },
   "navigationUrls": [
     {

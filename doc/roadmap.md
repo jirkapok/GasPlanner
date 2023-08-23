@@ -6,7 +6,6 @@ Following list of features and improvements ordered by priority is under develop
 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
-* Fix align of dropdown menus
 
 ## Improvements / Features
 
@@ -23,7 +22,7 @@ Following list of features and improvements ordered by priority is under develop
   * Add option to define custom maximum gas density
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Restore state on all pages from last known
-  * Support screen rotation when installed as pwa
+  * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
 * Add undo/redo to all pages
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Add gas density calculator (to be able understand to don't breath gas with higher density than 5.7 g/l):

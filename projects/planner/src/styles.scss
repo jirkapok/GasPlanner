@@ -9,4 +9,7 @@
     min-height: 485px;
 }
 
-
+// Fix for mdb dropdown, since ti doesn't respect parent element
+.dropdown-menu {
+    position: relative !important;
+}

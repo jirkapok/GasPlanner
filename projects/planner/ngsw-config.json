@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/@angular/service-worker/config/schema.json",
-  "index": "https://jirkapok.github.io/GasPlanner/index.html",
+  "index": "https://dugong.online/index.html",
   "assetGroups": [
     {
       "name": "app",

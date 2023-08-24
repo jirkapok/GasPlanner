@@ -74,7 +74,7 @@ import { StopsFilter } from './shared/stopsFilter.service';
 import { ViewStates } from './shared/viewStates';
 import { Urls } from './shared/navigation.service';
 import { SubViewStorage } from './shared/subViewStorage';
-import { StartUp } from './shared/startUp';
+import { DashboardStartUp } from './shared/startUp';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -164,7 +164,7 @@ const MDB_MODULES = [
         ValidatorGroups,
         ViewStates,
         SubViewStorage,
-        StartUp,
+        DashboardStartUp,
         Urls,
         DatePipe,
         DecimalPipe

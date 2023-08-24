@@ -3,7 +3,9 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { Streamed } from '../shared/streamed';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { UnitConversion } from '../shared/UnitConversion';
-import { StartUp } from '../shared/startUp';
+import { DashboardStartUp } from '../shared/startUp';
+import { PlannerService } from '../shared/planner.service';
+import { takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-dashboard',
@@ -15,8 +17,9 @@ export class DashboardComponent extends Streamed implements OnInit {
 
     constructor(
         private viewSwitch: ViewSwitchService,
+        private planner: PlannerService,
         private units: UnitConversion,
-        public startup: StartUp) {
+        public startup: DashboardStartUp) {
         super();
     }
 
@@ -30,5 +33,10 @@ export class DashboardComponent extends Streamed implements OnInit {
 
     public ngOnInit(): void {
         this.startup.onDashboard();
+
+        // because the calculation runs in background first it subscribes,
+        // than it starts to receive the event. Even for the initial calls.
+        this.planner.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.startup.updateQueryParams());
     }
 }

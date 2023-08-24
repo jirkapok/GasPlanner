@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AppStates, ViewState } from './serialization.model';
 
+// TODO create list of known viewIds
+
 @Injectable()
 export class ViewStates {
     private states = new Map<string, ViewState>();

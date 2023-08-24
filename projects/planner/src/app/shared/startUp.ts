@@ -27,7 +27,16 @@ export class StartUp extends Streamed {
     }
 
     public onStart(): void {
+        this.preferences.load();
         this._showDisclaimer = this.preferences.disclaimerEnabled();
+
+        // because the calculation runs in background first it subscribes,
+        // than it starts to receive the event. Even for the initial calls.
+        this.planner.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.updateQueryParams());
+    }
+
+    public onDashboard(): void {
         const query = window.location.search;
 
         if (query !== '') {
@@ -38,11 +47,6 @@ export class StartUp extends Streamed {
             // TODO redirect to last known view
             this.delayedCalc.schedule();
         }
-
-        // because the calculation runs in background first it subscribes,
-        // than it starts to receive the event. Even for the initial calls.
-        this.planner.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.updateQueryParams());
     }
 
     public stopDisclaimer(): void {

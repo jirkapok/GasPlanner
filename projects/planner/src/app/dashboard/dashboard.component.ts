@@ -29,6 +29,6 @@ export class DashboardComponent extends Streamed implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.startup.onStart();
+        this.startup.onDashboard();
     }
 }

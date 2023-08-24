@@ -10,7 +10,5 @@ import { Urls } from '../shared/navigation.service';
 export class AboutComponent {
     public exclamation = faExclamationTriangle;
 
-    public get projectUrl(): string {
-        return Urls.rootUrl;
-    }
+    constructor(public urls: Urls) {}
 }

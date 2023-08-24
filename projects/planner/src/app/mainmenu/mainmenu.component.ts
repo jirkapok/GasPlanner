@@ -14,11 +14,7 @@ export class MainMenuComponent {
     public showInstallButton = false;
     private deferredPrompt: any;
 
-    constructor(private preferences: PreferencesService) { }
-
-    public get mainHelpUrl(): string {
-        return Urls.mainHelpUrl;
-    }
+    constructor(private preferences: PreferencesService, public urls: Urls) { }
 
     @HostListener('window:beforeinstallprompt', ['$event'])
     public onbeforeinstallprompt(e: Event): void {

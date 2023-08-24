@@ -72,6 +72,7 @@ import { PlanTabsComponent } from './plan.tabs/plan.tabs.component';
 import { TankSizeComponent } from './tank.size/tank.size.component';
 import { StopsFilter } from './shared/stopsFilter.service';
 import { ViewStates } from './shared/viewStates';
+import { Urls } from './shared/navigation.service';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -160,6 +161,7 @@ const MDB_MODULES = [
         InputControls,
         ValidatorGroups,
         ViewStates,
+        Urls,
         DatePipe,
         DecimalPipe
     ],

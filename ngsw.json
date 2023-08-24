@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1692812548073,
+  "timestamp": 1692868624975,
   "index": "/https://dugong.online/index.html",
   "assetGroups": [
     {
@@ -17,7 +17,7 @@
         "/841.c27b92dca2c7096c.js",
         "/favicon.ico",
         "/index.html",
-        "/main.877a05b062d8f2ea.js",
+        "/main.307d34680e070c28.js",
         "/manifest.webmanifest",
         "/polyfills.b5dea9118b55af63.js",
         "/runtime.ca33061a9431b0ad.js",
@@ -60,8 +60,8 @@
     "/assets/icons/icon-72x72.png": "bbf3a0e1d4a961f7360746df724533232813649a",
     "/assets/icons/icon-96x96.png": "2c1540d7bb572d2178c2ded3f45adc0cf19fbc6a",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "a4be602480086ad1726a2333384fd2a489460d3a",
-    "/main.877a05b062d8f2ea.js": "b743c8b3283c1230ead471c5566d3bfc2b5d0d00",
+    "/index.html": "3f058ad372544df21111d836327edee6314db1f9",
+    "/main.307d34680e070c28.js": "764135280bc5b7ba4e8c9229a131d9e931f039d5",
     "/manifest.webmanifest": "8e6296cf5d7bd1aadaef5e749f1ed9f6b461dc62",
     "/polyfills.b5dea9118b55af63.js": "cb89f98ea109a284e9aa664e1b164c5c1bc7e267",
     "/runtime.ca33061a9431b0ad.js": "9442fb51f48d0485f571b0e6e90209f87026ac5f",

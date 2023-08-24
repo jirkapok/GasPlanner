@@ -10,8 +10,8 @@
       ],
       "parserOptions": {
         "project": [
-          "projects/scuba-physics/tsconfig.lib.json",
-          "projects/scuba-physics/tsconfig.spec.json"
+          "tsconfig.lib.json",
+          "tsconfig.spec.json"
         ],
         "createDefaultProgram": true
       },

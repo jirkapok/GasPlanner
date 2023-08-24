@@ -1,6 +1,6 @@
 import {
     Segments, Gases, BuhlmannAlgorithm, ProfileEvents, DepthConverterFactory,
-    Consumption, Time, Diver, OtuCalculator, CnsCalculator, DensityAtDepth, EventOptions, GasDensity
+    Consumption, Time, Diver, OtuCalculator, CnsCalculator, DensityAtDepth, EventOptions
 } from 'scuba-physics';
 import {
     DtoSerialization,

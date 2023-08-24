@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TankSizeComponent } from './tank.size.component';
 import { UnitConversion } from '../shared/UnitConversion';

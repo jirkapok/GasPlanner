@@ -1,6 +1,6 @@
 import {
     Time, SafetyStop, Segment, Event,
-    EventType, CalculatedProfile, Events, StandardGases
+    CalculatedProfile, Events, StandardGases
 } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';

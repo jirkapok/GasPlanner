@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Options, Salinity, StandardGases } from 'scuba-physics';
+import { Options, StandardGases } from 'scuba-physics';
 
 import { NdlService } from './ndl.service';
 

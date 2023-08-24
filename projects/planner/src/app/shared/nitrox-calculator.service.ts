@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NitroxCalculator, DepthConverter, DepthLevels, StandardGases } from 'scuba-physics';
+import { NitroxCalculator, DepthConverter, DepthLevels } from 'scuba-physics';
 import { OptionsService } from './options.service';
 
 @Injectable()

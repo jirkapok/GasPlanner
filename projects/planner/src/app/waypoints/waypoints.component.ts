@@ -54,7 +54,7 @@ export class WayPointsComponent {
         }
     }
 
-    public iconClasses(point: WayPoint): any {
+    public iconClasses(point: WayPoint): object {
         const classes = {
             'swim-down': point.swimAction === SwimAction.descent,
             'swim-up': point.swimAction === SwimAction.ascent,

@@ -8,7 +8,7 @@ describe('Binary interval search', () => {
             estimationStep: 20,
             initialValue: 11,
             maxValue: 30,
-            doWork: (newValue: number) => { },
+            doWork: () => { },
             meetsCondition: () => true
         };
 
@@ -20,7 +20,7 @@ describe('Binary interval search', () => {
             estimationStep: 1,
             initialValue: 40,
             maxValue: 30,
-            doWork: (newValue: number) => { },
+            doWork: () => { },
             meetsCondition: () => true
         };
 
@@ -32,7 +32,7 @@ describe('Binary interval search', () => {
             estimationStep: 1,
             initialValue: 10,
             maxValue: 1000,
-            doWork: (newValue: number) => { },
+            doWork: () => { },
             meetsCondition: () => false
         };
 
@@ -45,7 +45,7 @@ describe('Binary interval search', () => {
             estimationStep: 1,
             initialValue: 0,
             maxValue: 1000,
-            doWork: (newValue: number) => { },
+            doWork: () => { },
             meetsCondition: () => true
         };
 

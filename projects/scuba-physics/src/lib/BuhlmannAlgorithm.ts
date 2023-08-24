@@ -180,13 +180,13 @@ export class BuhlmannAlgorithm {
     public noDecoLimitMultiLevel(segments: Segments, gases: Gases, options: Options): number {
         const depthConverter = new DepthConverterFactory(options).create();
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
-        return this.swimNoDecoLimit(segments, gases, context, options);
+        return this.swimNoDecoLimit(segments, gases, context);
     }
 
     public calculateDecompression(options: Options, gases: Gases, originSegments: Segments): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
         const segments = originSegments.copy();
-        const errors = this.validate(segments, gases, options, depthConverter);
+        const errors = this.validate(segments, gases);
         if (errors.length > 0) {
             const origProfile = segments.mergeFlat(originSegments.length);
             return CalculatedProfile.fromErrors(origProfile, errors);
@@ -281,13 +281,13 @@ export class BuhlmannAlgorithm {
         this.swim(context, ascent);
     }
 
-    private validate(segments: Segments, gases: Gases, options: Options, depthConverter: DepthConverter): Event[] {
+    private validate(segments: Segments, gases: Gases): Event[] {
         const segmentErrors = SegmentsValidator.validate(segments, gases);
         if (segmentErrors.length > 0) {
             return segmentErrors;
         }
 
-        const gasMessages = GasesValidator.validate(gases, options, depthConverter.surfacePressure);
+        const gasMessages = GasesValidator.validate(gases);
         if (gasMessages.length > 0) {
             return gasMessages;
         }
@@ -332,8 +332,8 @@ export class BuhlmannAlgorithm {
     /**
      * Simply continue from currently planned segments, expecting diver stays in the same depth breathing the same gas.
      */
-    private swimNoDecoLimit(segments: Segments, gases: Gases, context: AlgorithmContext, options: Options): number {
-        const errorMessages = this.validate(segments, gases, options, context.depthConverter);
+    private swimNoDecoLimit(segments: Segments, gases: Gases, context: AlgorithmContext): number {
+        const errorMessages = this.validate(segments, gases);
         if (errorMessages.length > 0) {
             return 0;
         }

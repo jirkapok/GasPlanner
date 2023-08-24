@@ -14,7 +14,7 @@ export class GasesValidator {
      * @param gases not null list of gases to validate
      * @param surfacePressure surfaces pressure in bars
      */
-    public static validate(gases: Gases, options: GasOptions, surfacePressure: number): Event[] {
+    public static validate(gases: Gases): Event[] {
         const events: Event[] = [];
 
         if (!gases.hasBottomGas) {

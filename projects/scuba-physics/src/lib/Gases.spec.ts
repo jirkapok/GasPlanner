@@ -367,9 +367,8 @@ describe('Gases', () => {
     });
 
     describe('Validator', () => {
-        const surfacePressure = freshWaterConverter.surfacePressure;
         it('No gas defined', () => {
-            const messages = GasesValidator.validate(new Gases(), options, surfacePressure);
+            const messages = GasesValidator.validate(new Gases());
             expect(messages.length).toBe(1);
         });
     });

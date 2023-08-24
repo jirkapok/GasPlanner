@@ -73,11 +73,11 @@ export class MetricUnits implements Units {
         return liters;
     }
 
-    public fromTankLiters(liters: number, workingPressure: number): number {
+    public fromTankLiters(liters: number): number {
         return liters;
     }
 
-    public toTankLiters(cuftVolume: number, workingPressure: number): number {
+    public toTankLiters(cuftVolume: number): number {
         return cuftVolume;
     }
 

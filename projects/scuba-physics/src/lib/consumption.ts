@@ -175,7 +175,7 @@ export class Consumption {
     private updateReserve(ascent: Segment[], tanks: Tank[], stressSac: number): void {
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
-        const gasesConsumed: Map<number, number> = this.toBeConsumed(ascent, stressSac, (s) => true);
+        const gasesConsumed: Map<number, number> = this.toBeConsumed(ascent, stressSac, () => true);
 
         // add the reserve from opposite order than consumed gas
         for (let index = 0; index <= tanks.length - 1; index++) {

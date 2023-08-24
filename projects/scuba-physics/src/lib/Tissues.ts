@@ -135,8 +135,8 @@ export class Tissues {
     public static createFromSurfacePressure(surfacePressure: number) {
         const created = new Tissues();
 
-        for (let index = 0; index < Compartments.Buhlmann_ZHL16C.length; index++) {
-            const compartment = Compartments.Buhlmann_ZHL16C[index];
+        for (let index = 0; index < Compartments.buhlmannZHL16C.length; index++) {
+            const compartment = Compartments.buhlmannZHL16C[index];
             const tissue = new Tissue(compartment, surfacePressure);
             created.compartments.push(tissue);
         }

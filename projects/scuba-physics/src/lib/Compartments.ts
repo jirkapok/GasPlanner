@@ -35,7 +35,7 @@ export class Compartments {
     *  Using values from Subsurface
     *  Not implementing version A (not conservative), nor B (for tables)
     */
-    public static readonly Buhlmann_ZHL16C: Compartment[] = [
+    public static readonly buhlmannZHL16C: Compartment[] = [
         new Compartment(5.0, 1.1696, 0.5578, 1.88, 1.6189, 0.4770),
         new Compartment(8.0, 1.0000, 0.6514, 3.02, 1.3830, 0.5747),
         new Compartment(12.5, 0.8618, 0.7222, 4.72, 1.1919, 0.6527),

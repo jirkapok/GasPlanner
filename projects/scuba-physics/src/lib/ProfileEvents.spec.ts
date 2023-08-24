@@ -22,12 +22,12 @@ describe('Profile Events', () => {
 
     const createEventOption = (startAscentIndex: number,
         profile: Segment[], ceilings: Ceiling[], profileOptions: Options): EventOptions => ({
-            maxDensity: 50, // prevent event generation
-            startAscentIndex: startAscentIndex,
-            profile: profile,
-            ceilings: ceilings,
-            profileOptions: profileOptions
-        });
+        maxDensity: 50, // prevent event generation
+        startAscentIndex: startAscentIndex,
+        profile: profile,
+        ceilings: ceilings,
+        profileOptions: profileOptions
+    });
 
     const calculateEvents = (gases: Gases, segments: Segments, salinity: Salinity, safetyStop: SafetyStop): Events => {
         const algorithm = new BuhlmannAlgorithm();

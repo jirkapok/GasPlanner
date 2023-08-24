@@ -1,10 +1,27 @@
-import { ViewStates } from './viewStates';
+import { KnownViews, ViewStates } from './viewStates';
 import { ViewState } from './serialization.model';
 import { PreferencesStore } from './preferencesStore';
 import { Injectable } from '@angular/core';
 
+/**
+* workflows
+* 1. Startup:
+* - AppComponent: loads preferences
+* - Router: user enters any url angular router redirects to correct component based on lastView
+*   A dashboard (loaded as default route or started as mobile app):
+*     A with url arguments: loads state
+*     B no url arguments : loads default state
+*   B subview: load state
+*
+* 2. Navigation (or redirect from Router):
+* - save state directly in component constructor
+ */
 @Injectable()
 export class SubViewStorage<TView extends ViewState> {
+    private _mainViewState: ViewState = {
+        id: KnownViews.dashboard
+    };
+
     constructor(
         private views: ViewStates,
         private preferences: PreferencesStore) {
@@ -20,17 +37,8 @@ export class SubViewStorage<TView extends ViewState> {
         return loaded as TView;
     }
 
-    // workflow:
-    // App start: user enters any url angular router redirects to correct component:
-    // - loads preferences - DONE
-    // A dashboard:
-    //   A with url arguments: loads state - DONE
-    //   B no url arguments (loaded as default route or started as mobile app):
-    //     - checks for saved lastView:
-    //        A redirects to subview
-    //        B loads default state - DONE
-    // B subview: load state - DONE
-
-    // navigation (or redirect from dashboard)
-    // - On change save state
+    public saveMainView() {
+        this.views.set(this._mainViewState);
+        this.preferences.save();
+    }
 }

@@ -1,19 +1,26 @@
 import { Injectable } from '@angular/core';
 import { AppStates, ViewState } from './serialization.model';
 
-// TODO create list of known viewIds
+export class KnownViews {
+    public static readonly dashboard = 'dashboard';
+    public static readonly nitrox = 'nitrox';
+    public static readonly sac = 'sac';
+    public static readonly ndl = 'ndl';
+    public static readonly settings = 'settings';
+    public static readonly about = 'about';
+}
 
 @Injectable()
 export class ViewStates {
     private states = new Map<string, ViewState>();
-    private _lastView = '';
+    private _lastView = KnownViews.dashboard;
 
     public get lastView(): string {
         return this._lastView;
     }
 
     public get redirectToView(): boolean {
-        return this._lastView !== '/';
+        return this._lastView !== KnownViews.dashboard;
     }
 
     public get all(): ViewState[] {

@@ -7,7 +7,7 @@ import { NitroxComponent } from './nitrox/nitrox.component';
 import { AboutComponent } from './about/about.component';
 import { NdlLimitsComponent } from './ndl-limits/ndl-limits.component';
 import { NgModule, inject } from '@angular/core';
-import { ViewStates } from './shared/viewStates';
+import { KnownViews, ViewStates } from './shared/viewStates';
 
 const canActivateDashboard: CanActivateFn = (): boolean | UrlTree => {
     const router = inject(Router);
@@ -24,11 +24,11 @@ const canActivateDashboard: CanActivateFn = (): boolean | UrlTree => {
 };
 
 const routes: Routes = [
-    { path: 'settings', component: AppSettingsComponent },
-    { path: 'sac', component: SacComponent },
-    { path: 'nitrox', component: NitroxComponent },
-    { path: 'ndl', component: NdlLimitsComponent },
-    { path: 'about', component: AboutComponent },
+    { path: KnownViews.settings, component: AppSettingsComponent },
+    { path: KnownViews.sac, component: SacComponent },
+    { path: KnownViews.nitrox, component: NitroxComponent },
+    { path: KnownViews.ndl, component: NdlLimitsComponent },
+    { path: KnownViews.about, component: AboutComponent },
     {
         path: '**',
         component: DashboardComponent,

@@ -16,6 +16,7 @@ import { TanksService } from '../shared/tanks.service';
 import { OptionsService } from '../shared/options.service';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { NitroxViewState } from '../shared/serialization.model';
+import { KnownViews } from '../shared/viewStates';
 
 interface NitroxForm {
     mod?: FormControl<number>;
@@ -48,6 +49,7 @@ export class NitroxComponent implements OnInit {
         private tanksService: TanksService,
         private viewStates: SubViewStorage<NitroxViewState>) {
         this.loadState();
+        this.saveState();
     }
 
     public get ranges(): RangeConstants {
@@ -158,7 +160,7 @@ export class NitroxComponent implements OnInit {
     }
 
     private loadState(): void {
-        const state = this.viewStates.loadView('nitrox');
+        const state = this.viewStates.loadView(KnownViews.nitrox);
 
         if (state) {
             // this.calc.fO2 = state.ppO2;
@@ -173,7 +175,7 @@ export class NitroxComponent implements OnInit {
     private saveState(): void {
         const viewState = {
             ppO2: 1.4,
-            id: 'nitrox'
+            id: KnownViews.nitrox
         };
 
         this.viewStates.saveView(viewState);

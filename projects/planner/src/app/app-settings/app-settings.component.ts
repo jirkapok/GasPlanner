@@ -8,14 +8,13 @@ import { Diver } from 'scuba-physics';
 import { OptionsService } from '../shared/options.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { UnitConversion } from '../shared/UnitConversion';
-import { SubViewComponent } from '../shared/subView';
 
 @Component({
     selector: 'app-app-settings',
     templateUrl: './app-settings.component.html',
     styleUrls: ['./app-settings.component.scss']
 })
-export class AppSettingsComponent extends SubViewComponent implements OnInit {
+export class AppSettingsComponent implements OnInit {
     public flagIcon = faFlag;
     public diver = new Diver();
     public settingsForm!: FormGroup<{
@@ -27,8 +26,7 @@ export class AppSettingsComponent extends SubViewComponent implements OnInit {
         private formBuilder: NonNullableFormBuilder,
         private cd: ChangeDetectorRef,
         private options: OptionsService,
-        location: Location) {
-        super(location);
+        public location: Location) {
         this.diver.loadFrom(this.options.diver);
     }
 

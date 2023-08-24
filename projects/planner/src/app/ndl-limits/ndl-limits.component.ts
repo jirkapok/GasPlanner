@@ -8,14 +8,13 @@ import { OptionsService } from '../shared/options.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { TankBound } from '../shared/models';
-import { SubViewComponent } from '../shared/subView';
 
 @Component({
     selector: 'app-ndl-limits',
     templateUrl: './ndl-limits.component.html',
     styleUrls: ['./ndl-limits.component.scss']
 })
-export class NdlLimitsComponent extends SubViewComponent {
+export class NdlLimitsComponent {
     public icon = faTable;
     public iconConfig = faCog;
     public tank: TankBound;
@@ -29,8 +28,7 @@ export class NdlLimitsComponent extends SubViewComponent {
         public units: UnitConversion,
         private ndl: NdlService,
         optionsService: OptionsService,
-        location: Location) {
-        super(location);
+        public location: Location) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
         const defaultTanks = this.units.defaults.tanks;
         this.tank.workingPressure = defaultTanks.primary.workingPressure;

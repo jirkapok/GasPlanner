@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PlannerService } from './planner.service';
-import { PreferencesFactory } from './preferences.factory';
+import { Preferences } from './preferences';
 import { AppPreferences } from './serialization.model';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class PreferencesService {
 
     constructor(
         private planner: PlannerService,
-        private preferencesFactory: PreferencesFactory) {}
+        private preferencesFactory: Preferences) {}
 
     // TODO distinguish load/save of defaults vs. last known
     public loadDefaults(): void {

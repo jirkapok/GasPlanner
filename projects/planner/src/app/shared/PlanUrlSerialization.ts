@@ -7,7 +7,7 @@ import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';
-import { PreferencesFactory } from './preferences.factory';
+import { Preferences } from './preferences';
 import {
     AppPreferencesDto, DiverDto, OptionsDto, SegmentDto, TankDto
 } from './serialization.model';
@@ -77,7 +77,7 @@ export class PlanUrlSerialization {
         private tanksService: TanksService,
         private plan: Plan,
         private options: OptionsService,
-        private preferences: PreferencesFactory
+        private preferences: Preferences
     ) { }
 
     private static parseDto(url: string): AppPreferencesDto {

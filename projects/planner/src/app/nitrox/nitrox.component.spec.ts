@@ -17,7 +17,7 @@ import { NitroxComponent } from './nitrox.component';
 import { ViewStates } from '../shared/viewStates';
 import { PreferencesService } from '../shared/preferences.service';
 import { WayPointsService } from '../shared/waypoints.service';
-import { PreferencesFactory } from '../shared/preferences.factory';
+import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { SubViewStorage } from '../shared/subViewStorage';
 
@@ -45,7 +45,7 @@ describe('Nitrox component', () => {
                 PlannerService, InputControls, DecimalPipe,
                 NitroxCalculatorService, ValidatorGroups,
                 OptionsService, ViewStates, PreferencesService,
-                TanksService, Plan, WayPointsService, PreferencesFactory,
+                TanksService, Plan, WayPointsService, Preferences,
                 ViewSwitchService, SubViewStorage
             ],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]

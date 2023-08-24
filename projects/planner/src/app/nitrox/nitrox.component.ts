@@ -16,7 +16,6 @@ import { TanksService } from '../shared/tanks.service';
 import { OptionsService } from '../shared/options.service';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { NitroxViewState } from '../shared/serialization.model';
-import { SubViewComponent } from '../shared/subView';
 
 interface NitroxForm {
     mod?: FormControl<number>;
@@ -29,7 +28,7 @@ interface NitroxForm {
     templateUrl: './nitrox.component.html',
     styleUrls: ['./nitrox.component.scss']
 })
-export class NitroxComponent extends SubViewComponent implements OnInit {
+export class NitroxComponent implements OnInit {
     public calcIcon = faCalculator;
     public nitroxForm!: FormGroup<NitroxForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
@@ -41,14 +40,13 @@ export class NitroxComponent extends SubViewComponent implements OnInit {
     constructor(
         public calc: NitroxCalculatorService,
         public units: UnitConversion,
+        public location: Location,
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private options: OptionsService,
         private tanksService: TanksService,
-        private viewStates: SubViewStorage<NitroxViewState>,
-        location: Location) {
-        super(location);
+        private viewStates: SubViewStorage<NitroxViewState>) {
         this.loadState();
     }
 

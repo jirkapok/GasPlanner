@@ -8,7 +8,7 @@ import { UnitConversion } from './UnitConversion';
 import { Plan } from './plan.service';
 import { OptionsService } from './options.service';
 import { WayPointsService } from './waypoints.service';
-import { PreferencesFactory } from './preferences.factory';
+import { Preferences } from './preferences';
 import { ViewSwitchService } from './viewSwitchService';
 import { ViewState } from './serialization.model';
 import { SubViewStorage } from './subViewStorage';
@@ -43,7 +43,7 @@ describe('SubView', () => {
                 ViewStates, PreferencesService, SubViewStorage,
                 PlannerService, WorkersFactoryCommon, TanksService,
                 UnitConversion, Plan, OptionsService, WayPointsService,
-                PreferencesFactory, ViewSwitchService
+                Preferences, ViewSwitchService
             ],
             imports: []
         }).compileComponents();

@@ -2,7 +2,7 @@ import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
-import { PreferencesFactory } from './preferences.factory';
+import { Preferences } from './preferences';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
@@ -34,7 +34,7 @@ describe('Url Serialization', () => {
         const planner = new PlannerService(irrelevantFactory, tanksService, plan, options, wayPoints);
         plan.setSimple(30, 12, tanksService.firstTank.tank, options.getOptions());
         const viewSwitch = new ViewSwitchService(plan, options, tanksService);
-        const preferencesFactory = new PreferencesFactory(viewSwitch, units, tanksService, plan, options, new ViewStates());
+        const preferencesFactory = new Preferences(viewSwitch, units, tanksService, plan, options, new ViewStates());
         const urlSerialization = new PlanUrlSerialization(planner, viewSwitch,
             units, tanksService, plan, options, preferencesFactory);
 

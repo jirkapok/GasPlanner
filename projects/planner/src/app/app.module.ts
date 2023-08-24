@@ -65,7 +65,7 @@ import { SettingsNormalizationService } from './shared/settings-normalization.se
 import { ViewSwitchService } from './shared/viewSwitchService';
 import { OxygenDropDownComponent } from './oxygen-dropdown/oxygen-dropdown.component';
 import { Plan } from './shared/plan.service';
-import { PreferencesFactory } from './shared/preferences.factory';
+import { Preferences } from './shared/preferences';
 import { PlanUrlSerialization } from './shared/PlanUrlSerialization';
 import { WayPointsService } from './shared/waypoints.service';
 import { PlanTabsComponent } from './plan.tabs/plan.tabs.component';
@@ -144,7 +144,7 @@ const MDB_MODULES = [
         PlannerService,
         Plan,
         PlanUrlSerialization,
-        PreferencesFactory,
+        Preferences,
         PreferencesService,
         UnitConversion,
         SelectedWaypoint,

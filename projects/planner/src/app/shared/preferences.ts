@@ -12,7 +12,7 @@ import { ViewStates } from './viewStates';
 
 // TODO rename PreferencesFactory to Preferences and PreferencesService to PreferencesStore
 @Injectable()
-export class PreferencesFactory {
+export class Preferences {
     constructor(
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,

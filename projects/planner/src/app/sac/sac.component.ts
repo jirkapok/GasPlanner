@@ -11,7 +11,6 @@ import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { OptionsService } from '../shared/options.service';
 import { TankBound } from '../shared/models';
-import { SubViewComponent } from '../shared/subView';
 
 interface SacForm {
     depth: FormControl<number>;
@@ -27,7 +26,7 @@ interface SacForm {
     templateUrl: './sac.component.html',
     styleUrls: ['./sac.component.scss']
 })
-export class SacComponent extends SubViewComponent implements OnInit {
+export class SacComponent implements OnInit {
     public calcIcon = faCalculator;
     public formSac!: FormGroup<SacForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
@@ -45,8 +44,7 @@ export class SacComponent extends SubViewComponent implements OnInit {
         private cd: ChangeDetectorRef,
         public calc: SacCalculatorService,
         public units: UnitConversion,
-        location: Location) {
-        super(location);
+        public location: Location) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
     }
 

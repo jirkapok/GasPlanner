@@ -12,7 +12,7 @@ import { Plan } from './plan.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
-import { PreferencesFactory } from './preferences.factory';
+import { Preferences } from './preferences';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { WayPointsService } from './waypoints.service';
 import { ViewStates } from './viewStates';
@@ -24,7 +24,7 @@ describe('PreferencesService', () => {
                 PreferencesService, PlannerService,
                 UnitConversion, TanksService,
                 ViewSwitchService, DepthsService,
-                OptionsService, Plan, PreferencesFactory,
+                OptionsService, Plan, Preferences,
                 DelayedScheduleService, SettingsNormalizationService,
                 WayPointsService, ViewStates
             ]

@@ -1,13 +1,13 @@
 import { ViewStates } from './viewStates';
 import { ViewState } from './serialization.model';
-import { PreferencesService } from './preferences.service';
+import { PreferencesStore } from './preferencesStore';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class SubViewStorage<TView extends ViewState> {
     constructor(
         private views: ViewStates,
-        private preferences: PreferencesService) {
+        private preferences: PreferencesStore) {
     }
 
     public saveView(viewState: TView): void {

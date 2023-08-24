@@ -4,7 +4,7 @@ import { Preferences } from './preferences';
 import { AppPreferences } from './serialization.model';
 
 @Injectable()
-export class PreferencesService {
+export class PreferencesStore {
     private static readonly disclaimerValue = 'confirmed';
     private static readonly storageKey = 'preferences';
     private static readonly disclaimerKey = 'disclaimer';
@@ -15,7 +15,7 @@ export class PreferencesService {
 
     // TODO distinguish load/save of defaults vs. last known
     public loadDefaults(): void {
-        const toParse = localStorage.getItem(PreferencesService.storageKey);
+        const toParse = localStorage.getItem(PreferencesStore.storageKey);
         if (!toParse) {
             return;
         }
@@ -28,15 +28,15 @@ export class PreferencesService {
     public saveDefaults(): void {
         const toSave = this.preferencesFactory.toPreferences();
         const serialized = JSON.stringify(toSave);
-        localStorage.setItem(PreferencesService.storageKey, serialized);
+        localStorage.setItem(PreferencesStore.storageKey, serialized);
     }
 
     public disableDisclaimer(): void {
-        localStorage.setItem(PreferencesService.disclaimerKey, PreferencesService.disclaimerValue);
+        localStorage.setItem(PreferencesStore.disclaimerKey, PreferencesStore.disclaimerValue);
     }
 
     public disclaimerEnabled(): boolean {
-        const saved = localStorage.getItem(PreferencesService.disclaimerKey);
-        return saved !== PreferencesService.disclaimerValue;
+        const saved = localStorage.getItem(PreferencesStore.disclaimerKey);
+        return saved !== PreferencesStore.disclaimerValue;
     }
 }

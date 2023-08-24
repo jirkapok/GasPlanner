@@ -44,7 +44,7 @@ import { OxygenComponent } from './oxygen/oxygen.component';
 
 import { DurationPipe } from './pipes/duration.pipe';
 import { PlannerService } from './shared/planner.service';
-import { PreferencesService } from './shared/preferences.service';
+import { PreferencesStore } from './shared/preferencesStore';
 import { UnitConversion } from './shared/UnitConversion';
 import { SelectedWaypoint } from './shared/selectedwaypointService';
 import { WorkersFactory } from './shared/workers.factory';
@@ -145,7 +145,7 @@ const MDB_MODULES = [
         Plan,
         PlanUrlSerialization,
         Preferences,
-        PreferencesService,
+        PreferencesStore,
         UnitConversion,
         SelectedWaypoint,
         OptionsService,

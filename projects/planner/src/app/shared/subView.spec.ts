@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { ViewStates } from './viewStates';
-import { PreferencesService } from './preferences.service';
+import { PreferencesStore } from './preferencesStore';
 import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { TanksService } from './tanks.service';
@@ -40,7 +40,7 @@ describe('SubView', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
-                ViewStates, PreferencesService, SubViewStorage,
+                ViewStates, PreferencesStore, SubViewStorage,
                 PlannerService, WorkersFactoryCommon, TanksService,
                 UnitConversion, Plan, OptionsService, WayPointsService,
                 Preferences, ViewSwitchService
@@ -52,8 +52,8 @@ describe('SubView', () => {
     beforeEach(() => {
     });
 
-    it('Saves view state', inject([SubViewStorage<TestView>, ViewStates, PreferencesService],
-        (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates, preferences: PreferencesService) => {
+    it('Saves view state', inject([SubViewStorage<TestView>, ViewStates, PreferencesStore],
+        (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates, preferences: PreferencesStore) => {
             spyOn(viewStates, 'set');
             spyOn(preferences, 'saveDefaults');
 
@@ -63,7 +63,7 @@ describe('SubView', () => {
             expect(preferences.saveDefaults).toHaveBeenCalledWith();
         }));
 
-    it('Loads view state', inject([SubViewStorage<TestView>, ViewStates, PreferencesService],
+    it('Loads view state', inject([SubViewStorage<TestView>, ViewStates, PreferencesStore],
         (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates) => {
             loadViews(viewStates);
 

@@ -10,7 +10,6 @@ import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 import { ViewStates } from './viewStates';
 
-// TODO rename PreferencesFactory to Preferences and PreferencesService to PreferencesStore
 @Injectable()
 export class Preferences {
     constructor(

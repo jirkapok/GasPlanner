@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { environment } from '../../environments/environment';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { PreferencesService } from '../shared/preferences.service';
+import { PreferencesStore } from '../shared/preferencesStore';
 import { PlannerService } from '../shared/planner.service';
 import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
@@ -22,7 +22,7 @@ export class DashboardComponent extends Streamed implements OnInit {
 
     constructor(
         private location: Location,
-        private preferences: PreferencesService,
+        private preferences: PreferencesStore,
         private planner: PlannerService,
         private viewSwitch: ViewSwitchService,
         private delayedCalc: DelayedScheduleService,

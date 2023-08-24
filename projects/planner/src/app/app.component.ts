@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PreferencesService } from './shared/preferences.service';
+import { PreferencesStore } from './shared/preferencesStore';
 
 @Component({
     selector: 'app-root',
@@ -7,7 +7,7 @@ import { PreferencesService } from './shared/preferences.service';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    constructor(preferences: PreferencesService) {
+    constructor(preferences: PreferencesStore) {
         preferences.loadDefaults();
     }
 }

@@ -15,7 +15,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { NitroxComponent } from './nitrox.component';
 import { ViewStates } from '../shared/viewStates';
-import { PreferencesService } from '../shared/preferences.service';
+import { PreferencesStore } from '../shared/preferencesStore';
 import { WayPointsService } from '../shared/waypoints.service';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
@@ -44,7 +44,7 @@ describe('Nitrox component', () => {
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls, DecimalPipe,
                 NitroxCalculatorService, ValidatorGroups,
-                OptionsService, ViewStates, PreferencesService,
+                OptionsService, ViewStates, PreferencesStore,
                 TanksService, Plan, WayPointsService, Preferences,
                 ViewSwitchService, SubViewStorage
             ],

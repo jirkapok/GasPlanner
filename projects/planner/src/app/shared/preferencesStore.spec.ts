@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { PreferencesService } from './preferences.service';
+import { PreferencesStore } from './preferencesStore';
 import { PlannerService } from './planner.service';
 import { Diver, Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
@@ -17,11 +17,11 @@ import { SettingsNormalizationService } from './settings-normalization.service';
 import { WayPointsService } from './waypoints.service';
 import { ViewStates } from './viewStates';
 
-describe('PreferencesService', () => {
+describe('PreferencesStore', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [WorkersFactoryCommon,
-                PreferencesService, PlannerService,
+                PreferencesStore, PlannerService,
                 UnitConversion, TanksService,
                 ViewSwitchService, DepthsService,
                 OptionsService, Plan, Preferences,
@@ -34,16 +34,16 @@ describe('PreferencesService', () => {
         TestBedExtensions.initPlan();
     });
 
-    it('loads saved disclaimer', inject([PreferencesService, PlannerService],
-        (service: PreferencesService) => {
+    it('loads saved disclaimer', inject([PreferencesStore, PlannerService],
+        (service: PreferencesStore) => {
             service.disableDisclaimer();
             const enabled = service.disclaimerEnabled();
             expect(enabled).toBeFalsy();
         }));
 
     describe('Preferences', () => {
-        it('Diver values are loaded after save', inject([PreferencesService, OptionsService],
-            (service: PreferencesService, options: OptionsService) => {
+        it('Diver values are loaded after save', inject([PreferencesStore, OptionsService],
+            (service: PreferencesStore, options: OptionsService) => {
                 const diver = options.diver;
                 diver.rmv = 10;
                 diver.maxPpO2 = 1.1;
@@ -60,8 +60,8 @@ describe('PreferencesService', () => {
                 expect(diver).toEqual(expected);
             }));
 
-        it('Options values are loaded after save', inject([PreferencesService, OptionsService, ViewSwitchService],
-            (service: PreferencesService, options: OptionsService, viewSwitch: ViewSwitchService) => {
+        it('Options values are loaded after save', inject([PreferencesStore, OptionsService, ViewSwitchService],
+            (service: PreferencesStore, options: OptionsService, viewSwitch: ViewSwitchService) => {
                 // not going to test all options, since it is a flat structure
                 options.gfLow = 0.3;
                 options.descentSpeed = 15;
@@ -79,9 +79,9 @@ describe('PreferencesService', () => {
             }));
 
         it('Tanks are loaded after save', inject(
-            [PreferencesService, PlannerService, TanksService,
+            [PreferencesStore, PlannerService, TanksService,
                 OptionsService, ViewSwitchService, Plan],
-            (service: PreferencesService, planner: PlannerService,
+            (service: PreferencesStore, planner: PlannerService,
                 tanksService: TanksService, options: OptionsService,
                 viewSwitch: ViewSwitchService, plan: Plan) => {
                 // setup needed for consumed calculation
@@ -121,8 +121,8 @@ describe('PreferencesService', () => {
             }));
 
         it('Plan is loaded after save', inject(
-            [PreferencesService, PlannerService, TanksService, ViewSwitchService, DepthsService, Plan],
-            (service: PreferencesService, planner: PlannerService,
+            [PreferencesStore, PlannerService, TanksService, ViewSwitchService, DepthsService, Plan],
+            (service: PreferencesStore, planner: PlannerService,
                 tanksService: TanksService, viewSwitch: ViewSwitchService,
                 depthsService: DepthsService, plan: Plan) => {
                 tanksService.addTank();
@@ -145,8 +145,8 @@ describe('PreferencesService', () => {
             }));
 
         it('Simple profile is loaded after save and trims tank', inject(
-            [PreferencesService, PlannerService, TanksService, DepthsService, Plan, OptionsService],
-            (service: PreferencesService, planner: PlannerService, tanksService: TanksService,
+            [PreferencesStore, PlannerService, TanksService, DepthsService, Plan, OptionsService],
+            (service: PreferencesStore, planner: PlannerService, tanksService: TanksService,
                 depthsService: DepthsService, plan: Plan, options: OptionsService) => {
                 const optionsResetToSimple = spyOn(options, 'resetToSimple').and.callThrough();
 
@@ -165,8 +165,8 @@ describe('PreferencesService', () => {
             }));
 
         it('Applies imperial units', inject(
-            [PreferencesService, UnitConversion, OptionsService, SettingsNormalizationService, TanksService],
-            (service: PreferencesService, units: UnitConversion, options: OptionsService,
+            [PreferencesStore, UnitConversion, OptionsService, SettingsNormalizationService, TanksService],
+            (service: PreferencesStore, units: UnitConversion, options: OptionsService,
                 normalizationService: SettingsNormalizationService, tanksService: TanksService) => {
                 units.imperialUnits = true;
                 options.diver.rmv = 29.998867;

@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { Urls } from '../shared/navigation.service';
-import { PreferencesService } from '../shared/preferences.service';
+import { PreferencesStore } from '../shared/preferencesStore';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -14,7 +14,7 @@ export class MainMenuComponent {
     public showInstallButton = false;
     private deferredPrompt: any;
 
-    constructor(private preferences: PreferencesService, public urls: Urls) { }
+    constructor(private preferences: PreferencesStore, public urls: Urls) { }
 
     @HostListener('window:beforeinstallprompt', ['$event'])
     public onbeforeinstallprompt(e: Event): void {

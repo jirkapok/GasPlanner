@@ -12,7 +12,7 @@ export class SubViewStorage<TView extends ViewState> {
 
     public saveView(viewState: TView): void {
         this.views.set(viewState);
-        this.preferences.saveDefaults();
+        this.preferences.save();
     }
 
     public loadView(viewId: string): TView {

@@ -8,6 +8,6 @@ import { PreferencesStore } from './shared/preferencesStore';
 })
 export class AppComponent {
     constructor(preferences: PreferencesStore) {
-        preferences.loadDefaults();
+        preferences.load();
     }
 }

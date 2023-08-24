@@ -48,12 +48,12 @@ describe('PreferencesStore', () => {
                 diver.rmv = 10;
                 diver.maxPpO2 = 1.1;
                 diver.maxDecoPpO2 = 1.5;
-                service.saveDefaults();
+                service.save();
 
                 diver.rmv = 10;
                 diver.maxPpO2 = 1.3;
                 diver.maxDecoPpO2 = 1.4;
-                service.loadDefaults();
+                service.load();
 
                 const expected = new Diver(10, 1.1);
                 expected.maxDecoPpO2 = 1.5;
@@ -66,11 +66,11 @@ describe('PreferencesStore', () => {
                 options.gfLow = 0.3;
                 options.descentSpeed = 15;
                 viewSwitch.isComplex = true; // otherwise reset of GF.
-                service.saveDefaults();
+                service.save();
 
                 options.gfLow = 0.35;
                 options.descentSpeed = 17;
-                service.loadDefaults();
+                service.load();
 
                 const expected = new Options(0.3, 0.85, 1.4, 1.6, Salinity.fresh);
                 expected.descentSpeed = 15;
@@ -98,12 +98,12 @@ describe('PreferencesStore', () => {
                 tanks[1].o2 = 50;
                 viewSwitch.isComplex = true; // otherwise the tank will be removed.
                 planner.calculate();
-                service.saveDefaults();
+                service.save();
 
                 tanks[0].startPressure = 130;
                 tanks[1].o2 = 32;
                 tanks[1].workingPressure = 0;
-                service.loadDefaults();
+                service.load();
 
                 const expected1 = new Tank(15, 150, 21);
                 expected1.id = 1;
@@ -133,11 +133,11 @@ describe('PreferencesStore', () => {
                 lastSegment.tank = secondTank.tank;
                 viewSwitch.isComplex = true;
                 planner.calculate();
-                service.saveDefaults();
+                service.save();
 
                 plan.removeSegment(lastSegment);
                 tanksService.removeTank(secondTank);
-                service.loadDefaults();
+                service.load();
 
                 expect(tanksService.tanks.length).toEqual(3);
                 expect(plan.length).toEqual(3);
@@ -155,9 +155,9 @@ describe('PreferencesStore', () => {
                 tanksService.addTank();
                 depthsService.addSegment();
                 planner.calculate();
-                service.saveDefaults();
+                service.save();
 
-                service.loadDefaults();
+                service.load();
 
                 expect(tanksService.tanks.length).toEqual(1);
                 expect(plan.length).toEqual(2);
@@ -171,12 +171,12 @@ describe('PreferencesStore', () => {
                 units.imperialUnits = true;
                 options.diver.rmv = 29.998867;
                 normalizationService.apply();
-                service.saveDefaults();
+                service.save();
 
                 units.imperialUnits = false;
                 options.diver.rmv = 19.6;
                 normalizationService.apply();
-                service.loadDefaults();
+                service.load();
 
                 expect(options.diver.rmv).toBeCloseTo(29.998867, 6);
                 expect(tanksService.tanks[0].workingPressureBars).toBeCloseTo(237.317546, 6);

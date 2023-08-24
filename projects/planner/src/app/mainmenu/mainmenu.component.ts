@@ -24,11 +24,11 @@ export class MainMenuComponent {
     }
 
     public saveDefaults(): void {
-        this.preferences.saveDefaults();
+        this.preferences.saveDefault();
     }
 
     public loadDefaults(): void {
-        this.preferences.loadDefaults();
+        this.preferences.loadDefault();
     }
 
     public addToHomeScreen(): void {

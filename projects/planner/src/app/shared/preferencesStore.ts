@@ -13,8 +13,7 @@ export class PreferencesStore {
         private planner: PlannerService,
         private preferencesFactory: Preferences) {}
 
-    // TODO distinguish load/save of defaults vs. last known
-    public loadDefaults(): void {
+    public load(): void {
         const toParse = localStorage.getItem(PreferencesStore.storageKey);
         if (!toParse) {
             return;
@@ -25,10 +24,18 @@ export class PreferencesStore {
         this.planner.calculate();
     }
 
-    public saveDefaults(): void {
+    public loadDefault(): void {
+        // TODO load default
+    }
+
+    public save(): void {
         const toSave = this.preferencesFactory.toPreferences();
         const serialized = JSON.stringify(toSave);
         localStorage.setItem(PreferencesStore.storageKey, serialized);
+    }
+
+    public saveDefault(): void {
+        // TODO save default
     }
 
     public disableDisclaimer(): void {

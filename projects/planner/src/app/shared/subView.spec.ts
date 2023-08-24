@@ -60,7 +60,7 @@ describe('SubView', () => {
             viewStorage.saveView(changedSate);
 
             expect(viewStates.set).toHaveBeenCalledOnceWith(changedSate);
-            expect(preferences.saveDefaults).toHaveBeenCalledWith();
+            expect(preferences.save).toHaveBeenCalledWith();
         }));
 
     it('Loads view state', inject([SubViewStorage<TestView>, ViewStates, PreferencesStore],

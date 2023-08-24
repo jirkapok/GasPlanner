@@ -11,7 +11,8 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add option to define repetitive dives
 * Settings
-  * Apply settings after each change and distinguish from default settings
+  * Load and Save view in constructor (nitox, sac, ndl)
+  * And save view state after each change
   * Create default dive options
     * Add button to dive options
     * Put diver under all other options
@@ -22,7 +23,6 @@ Following list of features and improvements ordered by priority is under develop
     * Waypoints table: add switch in case user is switching to tank with the same gas
   * Add option to define custom maximum gas density
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
-  * Restore state on all pages from last known
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
 * Add undo/redo to all pages
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>

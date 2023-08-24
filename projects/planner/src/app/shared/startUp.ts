@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+import { SubViewStorage } from './subViewStorage';
+import { ViewState } from './serialization.model';
 
 @Injectable()
 export class DashboardStartUp {
@@ -13,7 +15,8 @@ export class DashboardStartUp {
         private location: Location,
         private preferences: PreferencesStore,
         private delayedCalc: DelayedScheduleService,
-        private urlSerialization: PlanUrlSerialization) {
+        private urlSerialization: PlanUrlSerialization,
+        private views: SubViewStorage<ViewState>) {
         this._showDisclaimer = this.preferences.disclaimerEnabled();
     }
 
@@ -24,12 +27,16 @@ export class DashboardStartUp {
     public onDashboard(): void {
         const query = window.location.search;
 
-        if (query !== '') {
+        if (query === '') {
+            // no need to restore the state, since dives are kept in service states
+            this.delayedCalc.schedule();
+        } else {
+            // the only view which loads from parameters instead of view state
             this.urlSerialization.fromUrl(query);
+            // cant do in constructor, since the state may be changed
+            this.views.saveMainView();
             // in case it fails we need to reset the parameters
             this.updateQueryParams();
-        } else {
-            this.delayedCalc.schedule();
         }
     }
 
@@ -38,7 +45,6 @@ export class DashboardStartUp {
         this.preferences.disableDisclaimer();
     }
 
-    // TODO load of dashboard component should set its state
     public updateQueryParams(): void {
         if (!environment.production) {
             console.log('Planner calculated');

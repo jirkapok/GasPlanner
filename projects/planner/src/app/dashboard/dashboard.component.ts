@@ -6,8 +6,6 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { DashboardStartUp } from '../shared/startUp';
 import { PlannerService } from '../shared/planner.service';
 import { takeUntil } from 'rxjs';
-import { SubViewStorage } from '../shared/subViewStorage';
-import { ViewState } from '../shared/serialization.model';
 
 @Component({
     selector: 'app-dashboard',
@@ -21,10 +19,8 @@ export class DashboardComponent extends Streamed implements OnInit {
         private viewSwitch: ViewSwitchService,
         private planner: PlannerService,
         private units: UnitConversion,
-        private views: SubViewStorage<ViewState>,
         public startup: DashboardStartUp) {
         super();
-        this.views.saveMainView();
     }
 
     public get isComplex(): boolean {

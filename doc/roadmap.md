@@ -15,6 +15,7 @@ Following list of features and improvements ordered by priority is under develop
   * Create default dive options
     * Add button to dive options
     * Put diver under all other options
+    * restore load adn save defaults in menu
 * Add gas depth range/properties/trimix calculator
 * UI Tweaks
   * Profile:

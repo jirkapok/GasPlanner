@@ -1,14 +1,14 @@
 <div class="mt-5">
     <div class="row">
         <div>
-            <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert" *ngIf="showDisclaimer">
+            <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert" *ngIf="startup.showDisclaimer">
                 <fa-icon [icon]="exclamation" class="me-2 fa-lg"></fa-icon>
                 <span><strong>Disclaimer:</strong> None of the authors, contributors, administrators, or anyone else
                     connected with this project can be responsible
                     for your use of the information provided by this application or linked from these web pages. Use
                     the results at your own risk.</span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-                    (click)="stopDisclaimer()"></button>
+                    (click)="startup.stopDisclaimer()"></button>
             </div>
         </div>
 

@@ -55,7 +55,7 @@ describe('SubView', () => {
     it('Saves view state', inject([SubViewStorage<TestView>, ViewStates, PreferencesStore],
         (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates, preferences: PreferencesStore) => {
             spyOn(viewStates, 'set');
-            spyOn(preferences, 'saveDefaults');
+            spyOn(preferences, 'save');
 
             viewStorage.saveView(changedSate);
 

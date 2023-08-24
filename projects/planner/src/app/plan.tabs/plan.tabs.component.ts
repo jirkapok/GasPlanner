@@ -3,9 +3,9 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
 
 @Component({
-  selector: 'app-plan-tabs',
-  templateUrl: './plan.tabs.component.html',
-  styleUrls: ['./plan.tabs.component.scss']
+    selector: 'app-plan-tabs',
+    templateUrl: './plan.tabs.component.html',
+    styleUrls: ['./plan.tabs.component.scss']
 })
 export class PlanTabsComponent {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
@@ -27,7 +27,7 @@ export class PlanTabsComponent {
 
     public selectedChanged(e: MdbTabChange): void {
         let newIndex = e.index;
-        if(e.index === this.tabNames.length) {
+        if (e.index === this.tabNames.length) {
             newIndex = e.index - 1;
             this.tabs?.setActiveTab(newIndex);
         }

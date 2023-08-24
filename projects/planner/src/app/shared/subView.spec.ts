@@ -1,9 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { Location } from '@angular/common';
 import { ViewStates } from './viewStates';
-import { PersistedSubViewComponent } from './subView';
 import { PreferencesService } from './preferences.service';
-import { Injectable } from '@angular/core';
 import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { TanksService } from './tanks.service';
@@ -14,39 +11,36 @@ import { WayPointsService } from './waypoints.service';
 import { PreferencesFactory } from './preferences.factory';
 import { ViewSwitchService } from './viewSwitchService';
 import { ViewState } from './serialization.model';
+import { SubViewStorage } from './subViewStorage';
 
-const viweId = 'testView';
+const viewId = 'testView';
 interface TestView extends ViewState {
     propertyA: string;
-}
-
-@Injectable()
-class TestSubViewComponent extends PersistedSubViewComponent<TestView> {
-    constructor(views: ViewStates, preferences: PreferencesService, location: Location) {
-        super({
-            propertyA: 'propA',
-            id: viweId
-        }, viweId, views, preferences, location);
-    }
 }
 
 describe('SubView', () => {
     const changedSate: TestView = {
         propertyA: 'changed',
-        id: viweId
+        id: viewId
     };
 
     const originalSate: TestView = {
         propertyA: 'original',
-        id: viweId
+        id: viewId
+    };
+
+    const loadViews = (v: ViewStates) => {
+        v.loadFrom({
+            lastScreen: '/',
+            states: [originalSate]
+        });
     };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
-                TestSubViewComponent,
-                ViewStates, PreferencesService,
+                ViewStates, PreferencesService, SubViewStorage,
                 PlannerService, WorkersFactoryCommon, TanksService,
                 UnitConversion, Plan, OptionsService, WayPointsService,
                 PreferencesFactory, ViewSwitchService
@@ -56,31 +50,46 @@ describe('SubView', () => {
     });
 
     beforeEach(() => {
-        const viewStates = TestBed.inject(ViewStates);
-        viewStates.set('testView', originalSate);
-        const preferences = TestBed.inject(PreferencesService);
-        preferences.saveDefaults();
     });
 
-    it('Saves view state', inject([TestSubViewComponent, ViewStates, PreferencesService],
-        (subView: TestSubViewComponent, viewStates: ViewStates, preferences: PreferencesService) => {
+    it('Saves view state', inject([SubViewStorage<TestView>, ViewStates, PreferencesService],
+        (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates, preferences: PreferencesService) => {
             spyOn(viewStates, 'set');
             spyOn(preferences, 'saveDefaults');
-            subView.viewState = changedSate;
 
-            subView.saveView();
+            viewStorage.saveView(changedSate);
 
-            expect(viewStates.set).toHaveBeenCalledOnceWith('testView', changedSate);
+            expect(viewStates.set).toHaveBeenCalledOnceWith(changedSate);
             expect(preferences.saveDefaults).toHaveBeenCalledWith();
         }));
 
-    it('Loads view state', inject([TestSubViewComponent, ViewStates, PreferencesService],
-        (subView: TestSubViewComponent, viewStates: ViewStates, preferences: PreferencesService) => {
-            spyOn(preferences, 'saveDefaults');
-            subView.viewState = changedSate;
+    it('Loads view state', inject([SubViewStorage<TestView>, ViewStates, PreferencesService],
+        (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates) => {
+            loadViews(viewStates);
 
-            subView.loadView();
+            const subView = viewStorage.loadView(viewId);
 
-            expect(subView.viewState).toEqual(originalSate);
+            expect(subView).toEqual(originalSate);
+        }));
+
+    it('No initial loadView returns undefined', inject([SubViewStorage<TestView>, ViewStates],
+        (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates) => {
+            viewStates.loadFrom({
+                lastScreen: '/',
+                states: []
+            });
+
+            const subView = viewStorage.loadView(viewId);
+
+            expect(subView).toBeUndefined();
+        }));
+
+    it('Set view replaces lastView', inject([SubViewStorage<TestView>, ViewStates],
+        (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates) => {
+            loadViews(viewStates);
+
+            viewStorage.saveView(changedSate);
+
+            expect(viewStates.lastView).toEqual(viewId);
         }));
 });

@@ -73,6 +73,7 @@ import { TankSizeComponent } from './tank.size/tank.size.component';
 import { StopsFilter } from './shared/stopsFilter.service';
 import { ViewStates } from './shared/viewStates';
 import { Urls } from './shared/navigation.service';
+import { SubViewStorage } from './shared/subViewStorage';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -161,6 +162,7 @@ const MDB_MODULES = [
         InputControls,
         ValidatorGroups,
         ViewStates,
+        SubViewStorage,
         Urls,
         DatePipe,
         DecimalPipe

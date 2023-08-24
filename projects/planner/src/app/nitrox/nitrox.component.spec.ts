@@ -14,6 +14,12 @@ import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { NitroxComponent } from './nitrox.component';
+import { ViewStates } from '../shared/viewStates';
+import { PreferencesService } from '../shared/preferences.service';
+import { WayPointsService } from '../shared/waypoints.service';
+import { PreferencesFactory } from '../shared/preferences.factory';
+import { ViewSwitchService } from '../shared/viewSwitchService';
+import { SubViewStorage } from '../shared/subViewStorage';
 
 export class NitroxPage {
     constructor(private fixture: ComponentFixture<NitroxComponent>) { }
@@ -38,8 +44,9 @@ describe('Nitrox component', () => {
             providers: [WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls, DecimalPipe,
                 NitroxCalculatorService, ValidatorGroups,
-                OptionsService,
-                TanksService, Plan
+                OptionsService, ViewStates, PreferencesService,
+                TanksService, Plan, WayPointsService, PreferencesFactory,
+                ViewSwitchService, SubViewStorage
             ],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         })

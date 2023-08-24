@@ -11,12 +11,12 @@ import { InputControls } from '../shared/inputcontrols';
 import { NitroxValidators } from '../shared/NitroxValidators';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { TankBound } from '../shared/models';
-import { Precision, Tank } from 'scuba-physics';
+import { Precision } from 'scuba-physics';
 import { TanksService } from '../shared/tanks.service';
 import { OptionsService } from '../shared/options.service';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { NitroxViewState } from '../shared/serialization.model';
 import { SubViewComponent } from '../shared/subView';
-
 
 interface NitroxForm {
     mod?: FormControl<number>;
@@ -33,7 +33,6 @@ export class NitroxComponent extends SubViewComponent implements OnInit {
     public calcIcon = faCalculator;
     public nitroxForm!: FormGroup<NitroxForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
-    public tank: TankBound;
     private fO2Control!: FormControl<number>;
     private pO2Control!: FormControl<number>;
     private modControl!: FormControl<number>;
@@ -47,11 +46,10 @@ export class NitroxComponent extends SubViewComponent implements OnInit {
         private validators: ValidatorGroups,
         private options: OptionsService,
         private tanksService: TanksService,
+        private viewStates: SubViewStorage<NitroxViewState>,
         location: Location) {
         super(location);
-        this.calc.fO2 = this.tanksService.firstTank.tank.o2;
-        this.calc.pO2 = this.options.diver.maxPpO2;
-        this.tank = new TankBound(new Tank(15, 200, 21), this.units);
+        this.loadState();
     }
 
     public get ranges(): RangeConstants {
@@ -111,6 +109,7 @@ export class NitroxComponent extends SubViewComponent implements OnInit {
             const newMod = Number(values.mod);
             this.calc.mod = this.units.toMeters(newMod);
 
+            this.saveState();
             this.reload();
         } catch (e) {
             this.failingMod = true;
@@ -158,5 +157,27 @@ export class NitroxComponent extends SubViewComponent implements OnInit {
             pO2: Precision.round(this.calc.pO2, 2),
             mod: Precision.round(this.calcMod, 1)
         });
+    }
+
+    private loadState(): void {
+        const state = this.viewStates.loadView('nitrox');
+
+        if (state) {
+            // this.calc.fO2 = state.ppO2;
+            // this.calc.pO2 = state.ppO2;
+        }
+
+        // TODO remove and always replace by state
+        this.calc.fO2 = this.tanksService.firstTank.tank.o2;
+        this.calc.pO2 = this.options.diver.maxPpO2;
+    }
+
+    private saveState(): void {
+        const viewState = {
+            ppO2: 1.4,
+            id: 'nitrox'
+        };
+
+        this.viewStates.saveView(viewState);
     }
 }

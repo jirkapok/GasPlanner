@@ -11,6 +11,7 @@ export interface AppPreferences extends AppPreferencesDto {
 export interface AppStates {
     /** route to the last page opened */
     lastScreen: string;
+    /** all other views than plan, because its state are dives */
     states: ViewState[];
 }
 
@@ -23,6 +24,7 @@ export interface SacViewState extends ViewState {
 }
 
 export interface ViewState {
+    /** case sensitive id as view key */
     id: string;
 }
 

@@ -48,6 +48,7 @@ export class DashboardComponent extends Streamed implements OnInit {
             // in case it fails we need to reset the parameters
             this.updateQueryParams();
         } else {
+            // TODO redirect to last known view
             this.delayedCalc.schedule();
         }
 

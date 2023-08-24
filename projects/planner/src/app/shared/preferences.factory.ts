@@ -10,6 +10,7 @@ import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 import { ViewStates } from './viewStates';
 
+// TODO rename PreferencesFactory to Preferences and PreferencesService to PreferencesStore
 @Injectable()
 export class PreferencesFactory {
     constructor(
@@ -31,7 +32,7 @@ export class PreferencesFactory {
 
     public applyApp(loaded: AppPreferences): void {
         this.applyLoaded(loaded);
-        this.applyStates(loaded.states);
+        this.viewStates.loadFrom(loaded.states);
     }
 
     public applyLoaded(loaded: AppPreferencesDto): void {
@@ -73,14 +74,9 @@ export class PreferencesFactory {
     }
 
     private toStates(): AppStates {
-        // TODO not implemented lastScreen usage
         return {
-            lastScreen: '/',
+            lastScreen:  this.viewStates.lastView,
             states: this.viewStates.all
         };
-    }
-
-    private applyStates(loaded: AppStates): void {
-        this.viewStates.loadFrom(loaded.states);
     }
 }

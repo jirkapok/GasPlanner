@@ -13,6 +13,7 @@ export class PreferencesService {
         private planner: PlannerService,
         private preferencesFactory: PreferencesFactory) {}
 
+    // TODO distinguish load/save of defaults vs. last known
     public loadDefaults(): void {
         const toParse = localStorage.getItem(PreferencesService.storageKey);
         if (!toParse) {

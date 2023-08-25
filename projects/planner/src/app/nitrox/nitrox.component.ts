@@ -124,6 +124,7 @@ export class NitroxComponent implements OnInit {
 
         this.tanksService.firstTank.tank.o2 = this.calc.fO2;
         this.options.diver.maxPpO2 = this.calc.pO2;
+        // TODO doesn\'t refresh url for dashborad - probably caused by location.back()
     }
 
     public toMod(): void {

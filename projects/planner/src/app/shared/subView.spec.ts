@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { ViewStates } from './viewStates';
+import { KnownViews, ViewStates } from './viewStates';
 import { PreferencesStore } from './preferencesStore';
 import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
@@ -31,7 +31,7 @@ describe('SubView', () => {
 
     const loadViews = (v: ViewStates) => {
         v.loadFrom({
-            lastScreen: '/',
+            lastScreen: KnownViews.nitrox,
             states: [originalSate]
         });
     };
@@ -92,4 +92,21 @@ describe('SubView', () => {
 
             expect(viewStates.lastView).toEqual(viewId);
         }));
+
+    describe('Start up', () => {
+        it('Initial navigates to last sub view', inject([ViewStates],
+            (viewStates: ViewStates) => {
+                loadViews(viewStates);
+
+                expect(viewStates.redirectToView).toBeTruthy();
+            }));
+
+        it('Repeated Navigates to last sub view', inject([SubViewStorage, ViewStates],
+            (viewStorage: SubViewStorage, viewStates: ViewStates) => {
+                loadViews(viewStates);
+                viewStorage.saveView(changedSate);
+
+                expect(viewStates.redirectToView).toBeFalse();
+            }));
+    });
 });

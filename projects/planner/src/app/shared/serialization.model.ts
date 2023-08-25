@@ -15,8 +15,10 @@ export interface AppStates {
     states: ViewState[];
 }
 
+/** We don\'t need mod, since it is calculated */
 export interface NitroxViewState extends ViewState {
-    ppO2: number;
+    fO2: number;
+    pO2: number;
 }
 
 export interface SacViewState extends ViewState {

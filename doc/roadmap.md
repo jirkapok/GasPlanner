@@ -11,7 +11,7 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add option to define repetitive dives
 * Settings
-  * Load and Save view in constructor (nitox, sac, ndl)
+  * Load and Save view in constructor (sac, ndl)
   * And save view state after each change
   * Create default dive options
     * Add button to dive options

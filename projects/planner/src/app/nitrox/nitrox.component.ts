@@ -160,24 +160,26 @@ export class NitroxComponent implements OnInit {
     }
 
     private loadState(): void {
-        const state: NitroxViewState = this.viewStates.loadView(KnownViews.nitrox);
+        let state: NitroxViewState = this.viewStates.loadView(KnownViews.nitrox);
 
-        if (state) {
-            // this.calc.fO2 = state.ppO2;
-            // this.calc.pO2 = state.ppO2;
+        if (!state) {
+            state = this.createState();
         }
 
-        // TODO remove and always replace by state
-        this.calc.fO2 = this.tanksService.firstTank.tank.o2;
-        this.calc.pO2 = this.options.diver.maxPpO2;
+        this.calc.fO2 = state.fO2;
+        this.calc.pO2 = state.pO2;
     }
 
     private saveState(): void {
-        const viewState: NitroxViewState = {
-            ppO2: 1.4,
+        const viewState = this.createState(this.calc.fO2, this.calc.pO2);
+        this.viewStates.saveView(viewState);
+    }
+
+    private createState(fO2 = 21, pO2 = 1.4): NitroxViewState {
+        return {
+            fO2: fO2,
+            pO2: pO2,
             id: KnownViews.nitrox
         };
-
-        this.viewStates.saveView(viewState);
     }
 }

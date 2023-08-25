@@ -4,6 +4,7 @@ import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
+import { ViewStates } from './viewStates';
 
 @Injectable()
 export class SettingsNormalizationService {
@@ -11,7 +12,8 @@ export class SettingsNormalizationService {
         private options: OptionsService,
         private units: UnitConversion,
         private tanksService: TanksService,
-        private plan: Plan) { }
+        private plan: Plan,
+        private views: ViewStates) { }
 
     private get ranges(): RangeConstants {
         return this.units.ranges;
@@ -21,6 +23,7 @@ export class SettingsNormalizationService {
         this.applyToOptions();
         this.normalizeTanks();
         this.normalizeSegments();
+        this.views.reset();
     }
 
     private applyToOptions(): void {

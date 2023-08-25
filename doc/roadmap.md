@@ -11,7 +11,8 @@ Following list of features and improvements ordered by priority is under develop
 
 * Add option to define repetitive dives
 * Settings
-  * Load and Save view in constructor (sac, ndl)
+  * Load and Save view in constructor (ndl)
+  * Reset view states after units are switched
   * And save view state after each change
   * Create default dive options
     * Add button to dive options
@@ -21,7 +22,6 @@ Following list of features and improvements ordered by priority is under develop
 * UI Tweaks
   * Profile:
     * Waypoints table: add switch in case user is switching to tank with the same gas
-  * Add option to define custom maximum gas density
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
 * Add undo/redo to all pages
@@ -54,3 +54,4 @@ Following list of features and improvements ordered by priority is under develop
 * TRIMIX support
   * Add air breaks
 * Add CCR support
+* Add option to define custom maximum gas density

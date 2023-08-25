@@ -74,10 +74,7 @@ describe('SubView', () => {
 
     it('No initial loadView returns undefined', inject([SubViewStorage, ViewStates],
         (viewStorage: SubViewStorage, viewStates: ViewStates) => {
-            viewStates.loadFrom({
-                lastScreen: '/',
-                states: []
-            });
+            viewStates.reset();
 
             const subView = viewStorage.loadView(viewId);
 

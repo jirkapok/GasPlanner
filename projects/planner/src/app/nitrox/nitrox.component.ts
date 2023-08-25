@@ -109,8 +109,8 @@ export class NitroxComponent implements OnInit {
             const newMod = Number(values.mod);
             this.calc.mod = this.units.toMeters(newMod);
 
-            this.saveState();
             this.reload();
+            this.saveState();
         } catch (e) {
             this.failingMod = true;
             this.nitroxForm.updateValueAndValidity();

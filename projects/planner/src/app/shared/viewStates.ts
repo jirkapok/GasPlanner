@@ -45,6 +45,13 @@ export class ViewStates {
         this._lastView = view.id;
     }
 
+    public reset(): void {
+        this.loadFrom({
+            lastScreen: KnownViews.dashboard,
+            states: []
+        });
+    }
+
     public loadFrom(source: AppStates): void {
         if (!source || !source.states) {
             return;

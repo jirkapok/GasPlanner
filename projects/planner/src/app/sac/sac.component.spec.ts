@@ -14,6 +14,13 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { SacComponent } from './sac.component';
 import { TankSizeComponent } from '../tank.size/tank.size.component';
 import _ from 'lodash';
+import { ViewStates } from '../shared/viewStates';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { Preferences } from '../shared/preferences';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { PlannerService } from '../shared/planner.service';
+import { WayPointsService } from '../shared/waypoints.service';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 class SacPage {
     constructor(private fixture: ComponentFixture<SacComponent>) { }
@@ -43,7 +50,9 @@ describe('Sac component', () => {
                 WorkersFactoryCommon, UnitConversion,
                 OptionsService, DecimalPipe,
                 ValidatorGroups, InputControls, SacCalculatorService,
-                TanksService, Plan
+                TanksService, Plan, SubViewStorage, ViewStates,
+                Preferences, PreferencesStore, PlannerService,
+                WayPointsService, ViewSwitchService
             ],
             imports: [
                 RouterTestingModule.withRoutes([]),
@@ -55,6 +64,8 @@ describe('Sac component', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(SacComponent);
         component = fixture.componentInstance;
+        const viewStates = TestBed.inject(ViewStates);
+        viewStates.reset();
         fixture.detectChanges();
         sacPage = new SacPage(fixture);
     });
@@ -96,6 +107,8 @@ describe('Sac component', () => {
     describe('Imperial units', () => {
         beforeEach(() => {
             component.units.imperialUnits = true;
+            const views = TestBed.inject(ViewStates);
+            views.reset(); // simulates normalization service applied
             component.ngOnInit();
         });
 

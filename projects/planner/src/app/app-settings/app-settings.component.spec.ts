@@ -12,6 +12,7 @@ import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { AppSettingsComponent } from './app-settings.component';
+import { ViewStates } from '../shared/viewStates';
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
@@ -34,7 +35,8 @@ describe('App settings component', () => {
                 SettingsNormalizationService,
                 UnitConversion, ValidatorGroups,
                 InputControls, OptionsService, Plan,
-                PlannerService, WorkersFactoryCommon, TanksService
+                PlannerService, WorkersFactoryCommon,
+                TanksService, ViewStates
             ]
         })
             .compileComponents();

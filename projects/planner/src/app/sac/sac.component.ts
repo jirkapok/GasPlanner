@@ -11,6 +11,9 @@ import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { OptionsService } from '../shared/options.service';
 import { TankBound } from '../shared/models';
+import { SacViewState } from '../shared/serialization.model';
+import { KnownViews } from '../shared/viewStates';
+import { SubViewStorage } from '../shared/subViewStorage';
 
 interface SacForm {
     depth: FormControl<number>;
@@ -44,7 +47,8 @@ export class SacComponent implements OnInit {
         private cd: ChangeDetectorRef,
         public calc: SacCalculatorService,
         public units: UnitConversion,
-        public location: Location) {
+        public location: Location,
+        private viewStates: SubViewStorage) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
     }
 
@@ -120,6 +124,8 @@ export class SacComponent implements OnInit {
 
     public ngOnInit(): void {
         this.setDefaultValues();
+        this.loadState();
+        this.saveState();
 
         this.durationControl = this.formBuilder.control(this.calcDuration, this.validators.duration);
         this.usedControl = this.formBuilder.control(this.calcUsed, this.validators.tankPressure);
@@ -165,6 +171,7 @@ export class SacComponent implements OnInit {
         this.calc.duration = Number(values.duration);
 
         this.reload();
+        this.saveState();
     }
 
     public toDuration(): void {
@@ -231,5 +238,38 @@ export class SacComponent implements OnInit {
         } else {
             this.calc.used = 150;
         }
+    }
+
+    private loadState(): void {
+        let state: SacViewState = this.viewStates.loadView(KnownViews.sac);
+
+        if (!state) {
+            state = this.createState();
+        }
+
+        this.calc.depth = state.avgDepth;
+        this.tank.workingPressureBars = state.workPressure;
+        this.calc.tankSize = state.tankSize;
+        // TODO introduce property for tank.sizeBars
+        this.tank.tank.size = this.calc.tankSize;
+        this.calc.used = state.used;
+        this.calc.duration = state.duration;
+    }
+
+    private saveState(): void {
+        const viewState = this.createState();
+        this.viewStates.saveView(viewState);
+    }
+
+    private createState(): SacViewState {
+        // since we need to respect units we use current state as default
+        return {
+            avgDepth: this.calc.depth,
+            tankSize: this.calc.tankSize,
+            workPressure: this.tank.workingPressureBars,
+            used: this.calc.used,
+            duration: this.calc.duration,
+            id: KnownViews.sac
+        };
     }
 }

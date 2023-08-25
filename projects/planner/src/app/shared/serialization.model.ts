@@ -21,10 +21,16 @@ export interface NitroxViewState extends ViewState {
     pO2: number;
 }
 
+/** rmv is calculated */
 export interface SacViewState extends ViewState {
-    sac: number;
+    avgDepth: number;
+    tankSize: number;
+    workPressure: number;
+    used: number;
+    duration: number;
 }
 
+/** all data are stored in metric */
 export interface ViewState {
     /** case sensitive id as view key */
     id: string;

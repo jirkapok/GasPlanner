@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { Precision, StandardGases, Tank } from 'scuba-physics';
 import { GasToxicity } from '../shared/gasToxicity.service';
@@ -11,7 +11,7 @@ import { TankBound } from '../shared/models';
     templateUrl: './oxygen.component.html',
     styleUrls: ['./oxygen.component.scss']
 })
-export class OxygenComponent {
+export class OxygenComponent implements OnInit {
     @Input()
     public tank = new TankBound(new Tank(15, 200, 21), this.units);
     @Input()
@@ -36,6 +36,9 @@ export class OxygenComponent {
         private validators: ValidatorGroups,
         public units: UnitConversion) {
         this.nitroxNames = StandardGases.nitroxNames();
+    }
+
+    public ngOnInit(): void {
         this.nitroxForm = this.fb.group({
             o2: [Precision.round(this.tank.o2, 1), this.validators.nitroxOxygen]
         });

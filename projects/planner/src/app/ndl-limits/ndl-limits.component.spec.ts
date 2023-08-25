@@ -7,6 +7,16 @@ import { NdlService } from '../shared/ndl.service';
 import { OptionsService } from '../shared/options.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { NdlLimitsComponent } from './ndl-limits.component';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { ViewStates } from '../shared/viewStates';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { Preferences } from '../shared/preferences';
+import { PlannerService } from '../shared/planner.service';
+import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
+import { TanksService } from '../shared/tanks.service';
+import { Plan } from '../shared/plan.service';
+import { WayPointsService } from '../shared/waypoints.service';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 describe('NdlLimits component', () => {
     let component: NdlLimitsComponent;
@@ -15,8 +25,13 @@ describe('NdlLimits component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [NdlLimitsComponent],
-            providers: [FormsModule, UnitConversion,
-                NdlService, OptionsService],
+            providers: [
+                FormsModule, UnitConversion,
+                NdlService, OptionsService, SubViewStorage, ViewStates,
+                PreferencesStore, Preferences, PlannerService,
+                WorkersFactoryCommon, TanksService, Plan,
+                WayPointsService, ViewSwitchService
+            ],
             imports: [RouterTestingModule.withRoutes([])]
         })
             .compileComponents();
@@ -73,11 +88,11 @@ describe('NdlLimits component', () => {
             }));
 
         it('Uses default tank size', inject(
-            [Location, NdlService, OptionsService],
-            (location: Location, ndlService: NdlService, options: OptionsService) => {
+            [Location, NdlService, OptionsService, SubViewStorage],
+            (location: Location, ndlService: NdlService, options: OptionsService, views: SubViewStorage) => {
                 const units = new UnitConversion();
                 units.imperialUnits = true;
-                const sut = new NdlLimitsComponent(units, ndlService, options, location);
+                const sut = new NdlLimitsComponent(units, ndlService, options, location, views);
                 expect(sut.tank.size).toBe(124.1);
             }));
     });

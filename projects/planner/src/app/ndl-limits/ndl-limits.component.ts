@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
 import { Options, Salinity, Tank, Time } from 'scuba-physics';
@@ -8,13 +8,16 @@ import { OptionsService } from '../shared/options.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { TankBound } from '../shared/models';
+import { NdlViewState } from '../shared/serialization.model';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { KnownViews } from '../shared/viewStates';
 
 @Component({
     selector: 'app-ndl-limits',
     templateUrl: './ndl-limits.component.html',
     styleUrls: ['./ndl-limits.component.scss']
 })
-export class NdlLimitsComponent {
+export class NdlLimitsComponent implements OnInit {
     public icon = faTable;
     public iconConfig = faCog;
     public tank: TankBound;
@@ -28,19 +31,25 @@ export class NdlLimitsComponent {
         public units: UnitConversion,
         private ndl: NdlService,
         optionsService: OptionsService,
-        public location: Location) {
+        public location: Location,
+        private viewStates: SubViewStorage) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
         const defaultTanks = this.units.defaults.tanks;
+        // size of the tank is irrelevant in this view
         this.tank.workingPressure = defaultTanks.primary.workingPressure;
         this.tank.size = defaultTanks.primary.size;
         this.options = new Options();
         this.options.loadFrom(optionsService.getOptions());
         this.toxicity = new GasToxicity(this.options);
-        this.calculate();
     }
 
     public get noResults(): boolean {
         return this.limits.length === 0;
+    }
+
+    public ngOnInit(): void {
+        this.loadState();
+        this.calculate();
     }
 
     public calculate(): void {
@@ -52,6 +61,8 @@ export class NdlLimitsComponent {
             const limit = this.limits[index];
             limit.depth = this.units.defaults.stopsDistance * (index + indexOffset);
         }
+
+        this.saveState();
     }
 
     public ppO2Changed(newValue: number): void {
@@ -73,5 +84,37 @@ export class NdlLimitsComponent {
         this.options.gfLow = gf.gfLow;
         this.options.gfHigh = gf.gfHeigh;
         this.calculate();
+    }
+
+    private loadState(): void {
+        let state: NdlViewState = this.viewStates.loadView(KnownViews.ndl);
+
+        if (!state) {
+            state = this.createState();
+        }
+
+        this.tank.o2 = state.fO2;
+        this.options.maxPpO2 = state.pO2;
+        this.options.altitude = state.altitude;
+        this.options.salinity = state.salinity;
+        this.options.gfLow = state.gfLow;
+        this.options.gfHigh = state.gfHigh;
+    }
+
+    private saveState(): void {
+        const viewState = this.createState();
+        this.viewStates.saveView(viewState);
+    }
+
+    private createState(): NdlViewState {
+        return {
+            fO2: this.tank.o2,
+            pO2: this.options.maxPpO2,
+            altitude: this.options.altitude,
+            salinity: this.options.salinity,
+            gfLow: this.options.gfLow,
+            gfHigh: this.options.gfHigh,
+            id: KnownViews.ndl
+        };
     }
 }

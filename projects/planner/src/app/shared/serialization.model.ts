@@ -30,6 +30,15 @@ export interface SacViewState extends ViewState {
     duration: number;
 }
 
+export interface NdlViewState extends ViewState {
+    fO2: number;
+    pO2: number;
+    altitude: number;
+    salinity: Salinity;
+    gfLow: number;
+    gfHigh: number;
+}
+
 /** all data are stored in metric */
 export interface ViewState {
     /** case sensitive id as view key */

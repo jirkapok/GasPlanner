@@ -13,6 +13,11 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { AppSettingsComponent } from './app-settings.component';
 import { ViewStates } from '../shared/viewStates';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { Preferences } from '../shared/preferences';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { WayPointsService } from '../shared/waypoints.service';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
@@ -36,7 +41,9 @@ describe('App settings component', () => {
                 UnitConversion, ValidatorGroups,
                 InputControls, OptionsService, Plan,
                 PlannerService, WorkersFactoryCommon,
-                TanksService, ViewStates
+                TanksService, ViewStates, SubViewStorage,
+                PreferencesStore, Preferences, WayPointsService,
+                ViewSwitchService
             ]
         })
             .compileComponents();

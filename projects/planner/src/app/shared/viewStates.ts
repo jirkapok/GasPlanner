@@ -14,16 +14,20 @@ export class KnownViews {
 export class ViewStates {
     private states = new Map<string, ViewState>();
     private _lastView = KnownViews.dashboard;
-    private started = false;
+    private _started = false;
 
     public get lastView(): string {
         return this._lastView;
     }
 
+    public get started(): boolean {
+        return this._started;
+    }
+
     /** Redirect to sub view only during application start.
      * After that (Any view already saved state) don\'t redirect. */
     public get redirectToView(): boolean {
-        return this._lastView !== KnownViews.dashboard && !this.started;
+        return !this._started && this._lastView !== KnownViews.dashboard;
     }
 
     public get all(): ViewState[] {
@@ -40,7 +44,7 @@ export class ViewStates {
     }
 
     public set<TView extends ViewState>(view: TView): void {
-        this.started = true;
+        this._started = true;
         this.states.set(view.id, view);
         this._lastView = view.id;
     }

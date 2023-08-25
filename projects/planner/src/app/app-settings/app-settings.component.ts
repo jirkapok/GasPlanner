@@ -8,6 +8,7 @@ import { Diver } from 'scuba-physics';
 import { OptionsService } from '../shared/options.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { UnitConversion } from '../shared/UnitConversion';
+import { SubViewStorage } from '../shared/subViewStorage';
 
 @Component({
     selector: 'app-app-settings',
@@ -26,6 +27,7 @@ export class AppSettingsComponent implements OnInit {
         private formBuilder: NonNullableFormBuilder,
         private cd: ChangeDetectorRef,
         private options: OptionsService,
+        private views: SubViewStorage,
         public location: Location) {
         this.diver.loadFrom(this.options.diver);
     }
@@ -45,6 +47,7 @@ export class AppSettingsComponent implements OnInit {
         this.options.applyDiver(this.diver);
         this.units.imperialUnits = imperialUnits;
         this.settingsNormalization.apply();
+        this.views.saveMainView();
         // only to recheck the form validity
         this.cd.detectChanges();
     }

@@ -6,14 +6,12 @@ Following list of features and improvements ordered by priority is under develop
 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
+* Altitude doesn't refresh units in dive options after units are changed
 
 ## Improvements / Features
 
 * Add option to define repetitive dives
 * Settings
-  * Load and Save view in constructor (ndl)
-  * Reset view states after units are switched
-  * And save view state after each change
   * Create default dive options
     * Add button to dive options
     * Put diver under all other options

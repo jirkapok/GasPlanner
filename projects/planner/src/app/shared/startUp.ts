@@ -5,6 +5,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { SubViewStorage } from './subViewStorage';
+import { ViewStates } from './viewStates';
 
 @Injectable()
 export class DashboardStartUp {
@@ -15,7 +16,8 @@ export class DashboardStartUp {
         private preferences: PreferencesStore,
         private delayedCalc: DelayedScheduleService,
         private urlSerialization: PlanUrlSerialization,
-        private views: SubViewStorage) {
+        private viewStore: SubViewStorage,
+        private views: ViewStates) {
         this._showDisclaimer = this.preferences.disclaimerEnabled();
     }
 
@@ -26,14 +28,14 @@ export class DashboardStartUp {
     public onDashboard(): void {
         const query = window.location.search;
 
-        if (query === '') {
+        if (query === '' || this.views.started) {
             // no need to restore the state, since dives are kept in service states
             this.delayedCalc.schedule();
         } else {
             // the only view which loads from parameters instead of view state
             this.urlSerialization.fromUrl(query);
             // cant do in constructor, since the state may be changed
-            this.views.saveMainView();
+            this.viewStore.saveMainView();
             // in case it fails we need to reset the parameters
             this.updateQueryParams();
         }

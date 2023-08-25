@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { PlannerService } from './planner.service';
-import { ViewState } from './serialization.model';
 import { SubViewStorage } from './subViewStorage';
 
 @Injectable()
@@ -9,7 +8,7 @@ export class DelayedScheduleService {
 
     constructor(
         private planner: PlannerService,
-        private views: SubViewStorage<ViewState>) {}
+        private views: SubViewStorage) {}
 
     public schedule(): void {
         this.views.saveMainView();

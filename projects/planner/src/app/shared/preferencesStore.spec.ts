@@ -16,6 +16,7 @@ import { Preferences } from './preferences';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { WayPointsService } from './waypoints.service';
 import { ViewStates } from './viewStates';
+import { SubViewStorage } from './subViewStorage';
 
 describe('PreferencesStore', () => {
     beforeEach(() => {
@@ -26,7 +27,7 @@ describe('PreferencesStore', () => {
                 ViewSwitchService, DepthsService,
                 OptionsService, Plan, Preferences,
                 DelayedScheduleService, SettingsNormalizationService,
-                WayPointsService, ViewStates
+                WayPointsService, ViewStates, SubViewStorage
             ]
         });
 

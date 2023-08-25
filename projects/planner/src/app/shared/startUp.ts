@@ -5,7 +5,6 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { SubViewStorage } from './subViewStorage';
-import { ViewState } from './serialization.model';
 
 @Injectable()
 export class DashboardStartUp {
@@ -16,7 +15,7 @@ export class DashboardStartUp {
         private preferences: PreferencesStore,
         private delayedCalc: DelayedScheduleService,
         private urlSerialization: PlanUrlSerialization,
-        private views: SubViewStorage<ViewState>) {
+        private views: SubViewStorage) {
         this._showDisclaimer = this.preferences.disclaimerEnabled();
     }
 

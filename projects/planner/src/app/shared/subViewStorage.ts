@@ -17,7 +17,7 @@ import { Injectable } from '@angular/core';
 * - save state directly in component constructor
  */
 @Injectable()
-export class SubViewStorage<TView extends ViewState> {
+export class SubViewStorage {
     private _mainViewState: ViewState = {
         id: KnownViews.dashboard
     };
@@ -27,12 +27,12 @@ export class SubViewStorage<TView extends ViewState> {
         private preferences: PreferencesStore) {
     }
 
-    public saveView(viewState: TView): void {
+    public saveView<TView extends ViewState>(viewState: TView): void {
         this.views.set(viewState);
         this.preferences.save();
     }
 
-    public loadView(viewId: string): TView {
+    public loadView<TView extends ViewState>(viewId: string): TView {
         const loaded = this.views.get<TView>(viewId);
         return loaded as TView;
     }

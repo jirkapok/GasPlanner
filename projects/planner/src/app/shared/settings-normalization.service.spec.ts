@@ -12,6 +12,11 @@ import { TanksService } from './tanks.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
 import { UnitConversion } from './UnitConversion';
 import { WayPointsService } from './waypoints.service';
+import { ViewStates } from './viewStates';
+import { PreferencesStore } from './preferencesStore';
+import { Preferences } from './preferences';
+import { SubViewStorage } from './subViewStorage';
+import { ViewSwitchService } from './viewSwitchService';
 
 describe('SettingsNormalizationService', () => {
     let service: SettingsNormalizationService;
@@ -29,7 +34,8 @@ describe('SettingsNormalizationService', () => {
                 PlannerService, RouterTestingModule, OptionsService,
                 SettingsNormalizationService, TanksService,
                 Plan, DepthsService, DelayedScheduleService,
-                WayPointsService
+                WayPointsService, SubViewStorage, ViewStates,
+                PreferencesStore, Preferences, ViewSwitchService
             ],
             imports: [RouterTestingModule.withRoutes([])]
         });

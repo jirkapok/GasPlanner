@@ -10,6 +10,11 @@ import { WayPointsService } from './waypoints.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
+import { SubViewStorage } from './subViewStorage';
+import { ViewStates } from './viewStates';
+import { Preferences } from './preferences';
+import { PreferencesStore } from './preferencesStore';
+import { ViewSwitchService } from './viewSwitchService';
 
 describe('Stops filter', () => {
     let service: StopsFilter;
@@ -19,7 +24,10 @@ describe('Stops filter', () => {
             providers: [StopsFilter, PlannerService, Plan,
                 WorkersFactoryCommon, TanksService, UnitConversion,
                 OptionsService, WayPointsService, DepthsService,
-                DelayedScheduleService]
+                DelayedScheduleService, SubViewStorage,
+                ViewStates, PreferencesStore, Preferences,
+                ViewSwitchService
+            ]
         });
         service = TestBed.inject(StopsFilter);
         TestBedExtensions.initPlan();

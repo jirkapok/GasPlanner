@@ -47,7 +47,7 @@ export class NitroxComponent implements OnInit {
         private validators: ValidatorGroups,
         private options: OptionsService,
         private tanksService: TanksService,
-        private viewStates: SubViewStorage<NitroxViewState>) {
+        private viewStates: SubViewStorage) {
         this.loadState();
         this.saveState();
     }
@@ -160,7 +160,7 @@ export class NitroxComponent implements OnInit {
     }
 
     private loadState(): void {
-        const state = this.viewStates.loadView(KnownViews.nitrox);
+        const state: NitroxViewState = this.viewStates.loadView(KnownViews.nitrox);
 
         if (state) {
             // this.calc.fO2 = state.ppO2;
@@ -173,7 +173,7 @@ export class NitroxComponent implements OnInit {
     }
 
     private saveState(): void {
-        const viewState = {
+        const viewState: NitroxViewState = {
             ppO2: 1.4,
             id: KnownViews.nitrox
         };

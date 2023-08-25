@@ -12,6 +12,11 @@ import { DelayedScheduleService } from './delayedSchedule.service';
 import { OptionsService } from './options.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
 import { WayPointsService } from './waypoints.service';
+import { PreferencesStore } from './preferencesStore';
+import { Preferences } from './preferences';
+import { SubViewStorage } from './subViewStorage';
+import { ViewStates } from './viewStates';
+import { ViewSwitchService } from './viewSwitchService';
 
 describe('Selected Waypoint', () => {
     const segment = new Segment(5, 10, StandardGases.air, 60);
@@ -22,7 +27,8 @@ describe('Selected Waypoint', () => {
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, TanksService,
                 Plan, DepthsService, DelayedScheduleService,
-                OptionsService, WayPointsService]
+                OptionsService, WayPointsService, PreferencesStore,
+                Preferences, SubViewStorage, ViewStates, ViewSwitchService]
         });
 
         TestBedExtensions.initPlan();

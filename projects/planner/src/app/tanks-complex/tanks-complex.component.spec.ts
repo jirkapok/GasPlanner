@@ -21,6 +21,10 @@ import { WayPointsService } from '../shared/waypoints.service';
 import { TankSizeComponent } from '../tank.size/tank.size.component';
 import { DebugElement } from '@angular/core';
 import _ from 'lodash';
+import { ViewStates } from '../shared/viewStates';
+import { Preferences } from '../shared/preferences';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { SubViewStorage } from '../shared/subViewStorage';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -87,7 +91,8 @@ describe('Tanks Complex component', () => {
                 PlannerService, InputControls,
                 ValidatorGroups, DelayedScheduleService,
                 DecimalPipe, TanksService, ViewSwitchService,
-                OptionsService, Plan, WayPointsService
+                OptionsService, Plan, WayPointsService,
+                SubViewStorage, ViewStates, Preferences, PreferencesStore
             ],
             imports: [ReactiveFormsModule]
         })

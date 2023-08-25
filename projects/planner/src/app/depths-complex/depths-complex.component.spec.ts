@@ -1,5 +1,4 @@
 import { DecimalPipe } from '@angular/common';
-import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -16,6 +15,10 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { Plan } from '../shared/plan.service';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { WayPointsService } from '../shared/waypoints.service';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { ViewStates } from '../shared/viewStates';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { Preferences } from '../shared/preferences';
 
 export class ComplexDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
@@ -66,7 +69,8 @@ describe('Depths Complex Component', () => {
                 UnitConversion, InputControls, DelayedScheduleService,
                 OptionsService, ValidatorGroups,
                 DepthsService, DecimalPipe, TanksService,
-                ViewSwitchService, Plan, WayPointsService
+                ViewSwitchService, Plan, WayPointsService,
+                SubViewStorage, ViewStates, PreferencesStore, Preferences
             ]
         })
             .compileComponents();

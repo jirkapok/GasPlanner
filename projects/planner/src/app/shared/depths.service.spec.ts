@@ -10,6 +10,11 @@ import { OptionsService } from './options.service';
 import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
 import { SafetyStop } from 'scuba-physics';
 import { WayPointsService } from './waypoints.service';
+import { SubViewStorage } from './subViewStorage';
+import { ViewStates } from './viewStates';
+import { PreferencesStore } from './preferencesStore';
+import { Preferences } from './preferences';
+import { ViewSwitchService } from './viewSwitchService';
 
 describe('Depths service', () => {
     let depthService: DepthsService;
@@ -21,7 +26,9 @@ describe('Depths service', () => {
             providers: [WorkersFactoryCommon, PlannerService,
                 UnitConversion, DelayedScheduleService,
                 OptionsService, Plan, WayPointsService,
-                DepthsService, TanksService
+                DepthsService, TanksService, SubViewStorage,
+                ViewStates, PreferencesStore, Preferences,
+                ViewSwitchService
             ]
         })
             .compileComponents();

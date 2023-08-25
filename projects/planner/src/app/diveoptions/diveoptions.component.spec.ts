@@ -13,6 +13,10 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveOptionsComponent } from './diveoptions.component';
 import { WayPointsService } from '../shared/waypoints.service';
+import { ViewStates } from '../shared/viewStates';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { Preferences } from '../shared/preferences';
+import { PreferencesStore } from '../shared/preferencesStore';
 
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
@@ -27,7 +31,8 @@ describe('Dive options component', () => {
                 ValidatorGroups, PlannerService,
                 DelayedScheduleService, UnitConversion,
                 TanksService, Plan, ViewSwitchService,
-                WayPointsService
+                WayPointsService, ViewStates, SubViewStorage,
+                Preferences, PreferencesStore
             ]
         })
             .compileComponents();

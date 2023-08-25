@@ -15,6 +15,10 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DepthComponent } from './depth.component';
 import { WayPointsService } from '../shared/waypoints.service';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { Preferences } from '../shared/preferences';
+import { ViewStates } from '../shared/viewStates';
 
 export class DepthPage {
     constructor(private fixture: ComponentFixture<DepthComponent>) { }
@@ -31,7 +35,6 @@ export class DepthPage {
 describe('DepthComponent Imperial units', () => {
     let component: DepthComponent;
     let fixture: ComponentFixture<DepthComponent>;
-    let planner: PlannerService;
     let depths: DepthsService;
     let page: DepthPage;
 
@@ -45,7 +48,8 @@ describe('DepthComponent Imperial units', () => {
                 DepthsService, DelayedScheduleService,
                 InputControls, TanksService,
                 Plan, ViewSwitchService, OptionsService,
-                WayPointsService
+                WayPointsService, SubViewStorage, ViewStates,
+                PreferencesStore, Preferences
             ]
         })
             .compileComponents();
@@ -57,7 +61,6 @@ describe('DepthComponent Imperial units', () => {
         component = fixture.componentInstance;
         component.units.imperialUnits = true;
         depths = component.depths;
-        planner = TestBed.inject(PlannerService);
         fixture.detectChanges();
         page.depthInput.value = '70';
         page.depthInput.dispatchEvent(new Event('input'));

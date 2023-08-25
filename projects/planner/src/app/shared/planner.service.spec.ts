@@ -22,6 +22,10 @@ import { DelayedScheduleService } from './delayedSchedule.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { WayPointsService } from './waypoints.service';
+import { SubViewStorage } from './subViewStorage';
+import { ViewStates } from './viewStates';
+import { Preferences } from './preferences';
+import { PreferencesStore } from './preferencesStore';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -35,7 +39,9 @@ describe('PlannerService', () => {
                 PlannerService, UnitConversion,
                 TanksService, ViewSwitchService,
                 OptionsService, Plan, SettingsNormalizationService,
-                DepthsService, DelayedScheduleService, WayPointsService
+                DepthsService, DelayedScheduleService, WayPointsService,
+                SubViewStorage, SubViewStorage, ViewStates,
+                Preferences, PreferencesStore
             ],
             imports: []
         }).compileComponents();

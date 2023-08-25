@@ -52,8 +52,8 @@ describe('SubView', () => {
     beforeEach(() => {
     });
 
-    it('Saves view state', inject([SubViewStorage<TestView>, ViewStates, PreferencesStore],
-        (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates, preferences: PreferencesStore) => {
+    it('Saves view state', inject([SubViewStorage, ViewStates, PreferencesStore],
+        (viewStorage: SubViewStorage, viewStates: ViewStates, preferences: PreferencesStore) => {
             spyOn(viewStates, 'set');
             spyOn(preferences, 'save');
 
@@ -63,8 +63,8 @@ describe('SubView', () => {
             expect(preferences.save).toHaveBeenCalledWith();
         }));
 
-    it('Loads view state', inject([SubViewStorage<TestView>, ViewStates, PreferencesStore],
-        (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates) => {
+    it('Loads view state', inject([SubViewStorage, ViewStates, PreferencesStore],
+        (viewStorage: SubViewStorage, viewStates: ViewStates) => {
             loadViews(viewStates);
 
             const subView = viewStorage.loadView(viewId);
@@ -72,8 +72,8 @@ describe('SubView', () => {
             expect(subView).toEqual(originalSate);
         }));
 
-    it('No initial loadView returns undefined', inject([SubViewStorage<TestView>, ViewStates],
-        (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates) => {
+    it('No initial loadView returns undefined', inject([SubViewStorage, ViewStates],
+        (viewStorage: SubViewStorage, viewStates: ViewStates) => {
             viewStates.loadFrom({
                 lastScreen: '/',
                 states: []
@@ -84,8 +84,8 @@ describe('SubView', () => {
             expect(subView).toBeUndefined();
         }));
 
-    it('Set view replaces lastView', inject([SubViewStorage<TestView>, ViewStates],
-        (viewStorage: SubViewStorage<TestView>, viewStates: ViewStates) => {
+    it('Set view replaces lastView', inject([SubViewStorage, ViewStates],
+        (viewStorage: SubViewStorage, viewStates: ViewStates) => {
             loadViews(viewStates);
 
             viewStorage.saveView(changedSate);

@@ -20,6 +20,10 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { TanksSimpleComponent } from './tanks-simple.component';
 import { WayPointsService } from '../shared/waypoints.service';
 import { TankSizeComponent } from '../tank.size/tank.size.component';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { ViewStates } from '../shared/viewStates';
+import { Preferences } from '../shared/preferences';
+import { PreferencesStore } from '../shared/preferencesStore';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -59,7 +63,8 @@ describe('Tanks Simple component', () => {
                 PlannerService, InputControls,
                 ValidatorGroups, DelayedScheduleService,
                 DecimalPipe, TanksService, ViewSwitchService,
-                OptionsService, Plan, WayPointsService
+                OptionsService, Plan, WayPointsService,
+                SubViewStorage, ViewStates, PreferencesStore, Preferences
             ],
             imports: [ReactiveFormsModule]
         })

@@ -15,6 +15,10 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { Plan } from '../shared/plan.service';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { WayPointsService } from '../shared/waypoints.service';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { ViewStates } from '../shared/viewStates';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { Preferences } from '../shared/preferences';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
@@ -46,7 +50,8 @@ describe('Depths Simple Component', () => {
                 UnitConversion, InputControls, DelayedScheduleService,
                 OptionsService, ValidatorGroups,
                 DepthsService, DecimalPipe, TanksService,
-                ViewSwitchService, Plan, WayPointsService
+                ViewSwitchService, Plan, WayPointsService,
+                SubViewStorage, ViewStates, PreferencesStore, Preferences
             ]
         })
             .compileComponents();

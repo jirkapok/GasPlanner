@@ -27,7 +27,7 @@ export class DepthConverter {
     private _gravity = Gravity.standard;
 
     private constructor(private density: number, altitude: number) {
-        const pressureInPascals = AltitudePressure.atAltitude(altitude);
+        const pressureInPascals = AltitudePressure.pressure(altitude);
         this._surfacePressure = PressureConverter.pascalToBar(pressureInPascals);
     }
 

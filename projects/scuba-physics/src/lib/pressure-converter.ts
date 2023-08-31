@@ -67,25 +67,42 @@ export class PressureConverter {
  * https://en.wikipedia.org/wiki/Barometric_formula#Derivation
  */
 export class AltitudePressure {
+    /** Standard pressure in bars */
     public static readonly standard: number = 1.01325;
+    private static readonly standardPascals = PressureConverter.barToPascal(AltitudePressure.standard);
+
+    // https://en.wikipedia.org/wiki/Barometric_formula
+    // https://en.wikipedia.org/wiki/International_Standard_Atmosphere
+    private static readonly gasConstant = 8.31432; // J/(mol·K) for air
+    private static readonly temperature = 288.15; // kelvin = 15°C
+    private static readonly lapsRate = -0.0065;  // kelvin/meter
+    private static readonly molarMass = 0.0289644; // kg/mol
+    private static readonly exponent = (Gravity.standard * AltitudePressure.molarMass) /
+        (AltitudePressure.gasConstant * AltitudePressure.lapsRate);
+    private static readonly invertedExponent = 1 / AltitudePressure.exponent;
 
     /**
      * Calculates pressure at altitude in pascals
      *
      * @param altitude Positive number in meters representing the altitude
      */
-    public static atAltitude(altitude: number): number {
-        // https://en.wikipedia.org/wiki/Barometric_formula
-        // https://en.wikipedia.org/wiki/International_Standard_Atmosphere
-        const gasConstant = 8.31432; // J/(mol·K) for air
-        const temperature = 288.15; // kelvin = 15°C
-        const lapsRate = -0.0065;  // kelvin/meter
-        const molarMass = 0.0289644; // kg/mol
+    public static pressure(altitude: number): number {
+        const base = AltitudePressure.temperature / (AltitudePressure.temperature + AltitudePressure.lapsRate * altitude);
+        return AltitudePressure.standardPascals * Math.pow(base, AltitudePressure.exponent);
+    }
 
-        const standardPressure = PressureConverter.barToPascal(this.standard);
-        const gravity = Gravity.standard;
-        const base = temperature / (temperature + lapsRate * altitude);
-        const exponent = (gravity * molarMass) / (gasConstant * lapsRate);
-        return standardPressure * Math.pow(base, exponent);
+    /**
+     * Returns altitude in meters calculated from atmospheric pressure.
+     * Returns 0, if pressure is lower than standard pressure
+     * @param pressure in pascals
+     */
+    public static altitude(pressure: number): number {
+        if(pressure >= AltitudePressure.standardPascals) {
+            return 0;
+        }
+
+        const pressureNormalized = pressure / AltitudePressure.standardPascals;
+        const base = Math.pow(pressureNormalized, AltitudePressure.invertedExponent);
+        return (AltitudePressure.temperature / base - AltitudePressure.temperature) / AltitudePressure.lapsRate;
     }
 }

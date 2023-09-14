@@ -8,6 +8,7 @@ export class KnownViews {
     public static readonly ndl = 'ndl';
     public static readonly settings = 'settings';
     public static readonly about = 'about';
+    public static readonly altitude = 'altitude';
 }
 
 @Injectable()

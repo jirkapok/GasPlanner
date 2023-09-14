@@ -75,6 +75,7 @@ import { ViewStates } from './shared/viewStates';
 import { Urls } from './shared/navigation.service';
 import { SubViewStorage } from './shared/subViewStorage';
 import { DashboardStartUp } from './shared/startUp';
+import { AltitudeCalcComponent } from './altitude-calc/altitude-calc.component';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -126,7 +127,8 @@ const MDB_MODULES = [
         AppinfoComponent,
         DiveIssuesComponent,
         PlanTabsComponent,
-        TankSizeComponent
+        TankSizeComponent,
+        AltitudeCalcComponent
     ],
     imports: [
         ...ANGULAR_MODULES,

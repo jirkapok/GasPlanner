@@ -8,6 +8,7 @@ import { AboutComponent } from './about/about.component';
 import { NdlLimitsComponent } from './ndl-limits/ndl-limits.component';
 import { NgModule, inject } from '@angular/core';
 import { KnownViews, ViewStates } from './shared/viewStates';
+import { AltitudeCalcComponent } from './altitude-calc/altitude-calc.component';
 
 const canActivateDashboard: CanActivateFn = (): boolean | UrlTree => {
     const router = inject(Router);
@@ -28,6 +29,7 @@ const routes: Routes = [
     { path: KnownViews.sac, component: SacComponent },
     { path: KnownViews.nitrox, component: NitroxComponent },
     { path: KnownViews.ndl, component: NdlLimitsComponent },
+    { path: KnownViews.altitude, component: AltitudeCalcComponent },
     { path: KnownViews.about, component: AboutComponent },
     {
         path: '**',

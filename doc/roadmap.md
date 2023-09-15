@@ -53,3 +53,21 @@ Following list of features and improvements ordered by priority is under develop
   * Add air breaks
 * Add CCR support
 * Add option to define custom maximum gas density
+
+## Compare dives specification
+
+* Design and implement comparison of two different complex dive profiles including consumed gas based on reserve calculation strategy. From the presented results, diver should be able identify potential risks associated with the difference and needs to be able apply safe decisions.
+* Analyze possible options from use ability perspective and responsiveness and design responsive UI.
+* Measure and compare implemented algorithms performance and propose memory and CPU optimizations.
+
+* Business scenarios:
+  * 1. Dive > user surface rest (minutes delay/surface interval) > 2. dive
+  * I want to plan a dive and choose from two plans
+    (or I have a plan and i want to plan emergency ascent)
+
+
+DiveToCompare {
+  wayPoint/Segment[]
+  TankBound/Tank[]
+  Info {}
+}

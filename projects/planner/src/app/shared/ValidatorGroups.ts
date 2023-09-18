@@ -79,6 +79,10 @@ export class ValidatorGroups {
         return [Validators.required, this.validateMinRmv, this.validateMaxRmv];
     }
 
+    public rangeFor(range: [number, number]): ValidatorFn[] {
+        return [Validators.required, Validators.min(range[0]), Validators.max(range[1])];
+    }
+
     private get ranges(): RangeConstants {
         return this.units.ranges;
     }
@@ -90,9 +94,5 @@ export class ValidatorGroups {
 
     private validateMaxRmv(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => Validators.max(this.ranges.diverRmv[1])(control);
-    }
-
-    private rangeFor(range: [number, number]): ValidatorFn[] {
-        return [Validators.required, Validators.min(range[0]), Validators.max(range[1])];
     }
 }

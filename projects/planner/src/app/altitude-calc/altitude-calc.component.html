@@ -6,14 +6,31 @@
                 <span>Altitude calculator</span>
             </div>
             <div class="card-body">
-                <!-- <form [formGroup]="nitroxForm">
-                </form> -->
+                <form [formGroup]="altitudeForm">
+                    <div>
+                        <div class="pt-2 mb-4">
+                            <label for="pressure" class="form-label" mdbLabel>Atmospheric pressure
+                                [{{units.pressure}}]:</label>
+                            <input class="form-control" name="pressure" id="pressure" type="number"
+                                formControlName="pressure" (input)="inputChanged()" [min]="0.7" [max]="1.2" step="0.01"
+                                [class.is-invalid]="pressureInvalid" />
+                            <div class="invalid-feedback position-absolute">Needs to be number 0.7 - 1.2 b
+                            </div>
+                        </div>
+                    </div>
+                    <div>Actual depth [{{units.length}}]:
+                        <input class="form-control" name="actualDepth" id="actualDepth" type="number"
+                        formControlName="actualDepth" (input)="inputChanged()" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
+                        [class.is-invalid]="actualDepthInvalid" />
+                    </div>
+                    <div>Altitude [{{units.altitude}}]: {{calc.altitude}}
+                        <!-- <input class="form-control" name="altitude" id="altitude" type="number" formControlName="altitude"
+                                (input)="inputChanged()" [min]="ranges.altitude[1]" [max]="ranges.altitude[1]" step="1"
+                                [class.is-invalid]="altitudeInvalid" /> -->
+                    </div>
+                    <div>Theoretical salt water depth [{{units.length}}]: {{calc.theoreticalDepth}}</div>
 
-                <div>Pressure</div>
-                <div>Planned depth</div>
-                <div>Salinity</div>
-                <div>Altitude</div>
-                <div>Adjusted depth</div>
+                </form>
             </div>
         </div>
         <div class="form-group mt-3">

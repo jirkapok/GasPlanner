@@ -12,8 +12,8 @@
                             <label for="pressure" class="form-label" mdbLabel>Atmospheric pressure
                                 [{{units.pressure}}]:</label>
                             <input class="form-control" name="pressure" id="pressure" type="number"
-                                formControlName="pressure" (input)="inputChanged()" [min]="0.7" [max]="1.2" step="0.01"
-                                [class.is-invalid]="pressureInvalid" />
+                                formControlName="pressure" (input)="pressureChanged()" [min]="0.7" [max]="1.2" step="0.01"
+                                [class.is-invalid]="pressureInvalid" [value]="calc.pressure" />
                             <div class="invalid-feedback position-absolute">Needs to be number 0.7 - 1.2 b
                             </div>
                         </div>
@@ -24,6 +24,7 @@
                         [class.is-invalid]="actualDepthInvalid" />
                     </div>
                     <div>Altitude [{{units.altitude}}]: {{calc.altitude}}
+                        <app-altitude [altitude]="calc.altitude" (inputChange)="altitudeChanged($event)"/>
                         <!-- <input class="form-control" name="altitude" id="altitude" type="number" formControlName="altitude"
                                 (input)="inputChanged()" [min]="ranges.altitude[1]" [max]="ranges.altitude[1]" step="1"
                                 [class.is-invalid]="altitudeInvalid" /> -->

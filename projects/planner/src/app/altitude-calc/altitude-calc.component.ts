@@ -55,7 +55,7 @@ export class AltitudeCalcComponent implements OnInit {
         });
     }
 
-    public inputChanged(): void {
+    public pressureChanged(): void {
         if (this.altitudeForm.invalid) {
             return;
         }
@@ -63,6 +63,24 @@ export class AltitudeCalcComponent implements OnInit {
         const values = this.altitudeForm.value;
         // TODO imperial units
         this.calc.pressure = Number(values.pressure);
+    }
+
+    public altitudeChanged(newValue: number): void {
+        if (this.altitudeForm.invalid) {
+            return;
+        }
+
+        // TODO imperial units
+        this.calc.altitude = newValue;
+    }
+
+    public inputChanged(): void {
+        if (this.altitudeForm.invalid) {
+            return;
+        }
+
+        const values = this.altitudeForm.value;
+        // TODO imperial units
         this.calc.altitudeDepth = Number(values.actualDepth);
     }
 }

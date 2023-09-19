@@ -1,59 +1,97 @@
 {
-  "name": "Gas planner",
-  "short_name": "Gas planner",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
-  "display": "standalone",
-  "scope": "./",
-  "start_url": "./",
-  "icons": [
-    {
-      "src": "assets/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "maskable any"
+    "name": "Gas planner",
+    "short_name": "Gas planner",
+    "description": "Simple scuba diving gas planning calculator. Calculates decompression and dive ascent based on Bühlmann ZHL-16 model.",
+    "categories": ["utilities", "sports", "education", "navigation"],
+    "theme_color": "#1976d2",
+    "background_color": "#fafafa",
+    "lang": "en",
+    "dir": "ltr",
+    "display": "standalone",
+    "id": "/",
+    "scope": "./",
+    "start_url": "./",
+    "orientation": "portrait-primary",
+    "display_override": [
+        "window-controls-overlay",
+        "standalone",
+        "browser"
+    ],
+    "shortcuts": [
+        {
+            "name": "Nitrox calculator",
+            "url": "/nitrox"
+        },
+        {
+            "name": "Sac/RMV calculator",
+            "url": "/sac"
+        },
+        {
+            "name": "No deco limits calculator",
+            "url": "/ndl"
+        }
+    ],
+    "file_handlers": [],
+    "edge_side_panel": {
+        "preferred_width": 400
     },
-    {
-      "src": "assets/icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable any"
-    }
-  ]
+    "handle_links": "preferred",
+    "screenshots": [
+        {
+            "src": "assets/screenshot.jpg",
+            "sizes": "1280x720",
+            "type": "image/jpg",
+            "platform": "wide"
+        }
+    ],
+    "icons": [
+        {
+            "src": "assets/icons/icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
 }

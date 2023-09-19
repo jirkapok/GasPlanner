@@ -22,6 +22,10 @@ Following list of features and improvements ordered by priority is under develop
     * Waypoints table: add switch in case user is switching to tank with the same gas
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
+  * Add total dive time to results
+  * Add to documentation:
+    * that this app doesn't work in  Opera and FireFox
+    * "Add to home screen" doesn't work in Apple Safari (iPhone). (https://love2dev.com/pwa/add-to-homescreen/)
 * Add undo/redo to all pages
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Add gas density calculator (to be able understand to don't breath gas with higher density than 5.7 g/l):
@@ -59,6 +63,7 @@ Following list of features and improvements ordered by priority is under develop
 * Design and implement comparison of two different complex dive profiles including consumed gas based on reserve calculation strategy. From the presented results, diver should be able identify potential risks associated with the difference and needs to be able apply safe decisions.
 * Analyze possible options from use ability perspective and responsiveness and design responsive UI.
 * Measure and compare implemented algorithms performance and propose memory and CPU optimizations.
+* Provide screenshots from consumption diff in concurrent apps
 
 * Business scenarios:
   * 1. Dive > user surface rest (minutes delay/surface interval) > 2. dive

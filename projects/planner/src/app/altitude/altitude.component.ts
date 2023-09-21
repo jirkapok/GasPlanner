@@ -4,6 +4,10 @@ import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 
+export interface AltitudeForm {
+    altitude: FormControl<number>;
+}
+
 @Component({
     selector: 'app-altitude',
     templateUrl: './altitude.component.html',
@@ -17,9 +21,8 @@ export class AltitudeComponent implements OnInit {
     @Input()
     public altitude = 0;
 
-    public altitudeForm!: FormGroup<{
-        altitude: FormControl<number>;
-    }>;
+    @Input()
+    public altitudeForm!: FormGroup;
 
     private metricLevels = [0, 300, 800, 1500];
     private imperialLevels = [0, 1000, 2600, 5000];
@@ -51,9 +54,11 @@ export class AltitudeComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.altitudeForm = this.fb.group({
-            altitude: [this.altitudeBound, this.validators.altitude]
-        });
+        if(!this.altitudeForm) {
+            this.altitudeForm = this.fb.group({
+                altitude: [this.altitudeBound, this.validators.altitude]
+            });
+        }
     }
 
     public altitudeChanged(): void {
@@ -61,7 +66,8 @@ export class AltitudeComponent implements OnInit {
             return;
         }
 
-        const newValue = Number(this.altitudeForm.value.altitude);
+        const typedForm = this.altitudeForm as FormGroup<AltitudeForm>;
+        const newValue = Number(typedForm.value.altitude);
         this.altitude = this.units.toMeters(newValue);
         this.inputChange.emit(this.altitude);
     }

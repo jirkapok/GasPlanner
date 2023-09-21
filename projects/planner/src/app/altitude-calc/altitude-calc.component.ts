@@ -8,10 +8,11 @@ import {
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
 import { AltitudeCalculator } from '../shared/altitudeCalculator';
+import { AltitudeForm } from '../altitude/altitude.component';
+import { Precision } from 'scuba-physics';
 
-interface AltitudeForm {
+interface AltitudeDepthForm extends AltitudeForm {
     pressure: FormControl<number>;
-    altitude: FormControl<number>;
     actualDepth: FormControl<number>;
 }
 
@@ -22,7 +23,7 @@ interface AltitudeForm {
 })
 export class AltitudeCalcComponent implements OnInit {
     public calcIcon = faCalculator;
-    public altitudeForm!: FormGroup<AltitudeForm>;
+    public altitudeForm!: FormGroup<AltitudeDepthForm>;
     public calc = new AltitudeCalculator();
 
     constructor(
@@ -51,7 +52,7 @@ export class AltitudeCalcComponent implements OnInit {
 
         this.altitudeForm = this.fb.group({
             // TODO define correct range for altitude pressure
-            pressure: [this.calc.pressure, this.validators.rangeFor([0.7, 1.2])],
+            pressure: [Precision.round(this.calc.pressure, 6), this.validators.rangeFor([0.7, 1.2])],
             altitude: [this.calc.altitude, this.validators.altitude],
             actualDepth: [this.calc.altitudeDepth, this.validators.depth]
         });
@@ -65,6 +66,10 @@ export class AltitudeCalcComponent implements OnInit {
         const values = this.altitudeForm.value;
         // TODO imperial units
         this.calc.pressure = Number(values.pressure);
+
+        this.altitudeForm.patchValue({
+            altitude: Precision.round(this.calc.altitude)
+        });
     }
 
     public altitudeChanged(newValue: number): void {

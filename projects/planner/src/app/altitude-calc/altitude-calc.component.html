@@ -13,24 +13,26 @@
                                 [{{units.pressure}}]:</label>
                             <input class="form-control" name="pressure" id="pressure" type="number"
                                 formControlName="pressure" (input)="pressureChanged()" [min]="0.7" [max]="1.2" step="0.01"
-                                [class.is-invalid]="pressureInvalid" [value]="calc.pressure" />
+                                [class.is-invalid]="pressureInvalid" [value]="calc.pressure | number: '1.0-6'" />
                             <div class="invalid-feedback position-absolute">Needs to be number 0.7 - 1.2 b
                             </div>
                         </div>
                     </div>
-                    <div>Actual depth [{{units.length}}]:
+                    <div>
+                        <app-altitude [altitude]="calc.altitude" [altitudeForm]="altitudeForm" (inputChange)="altitudeChanged($event)"/>
+                    </div>
+                    <div class="pt-2 mb-4">
+                        <label for="actualDepth" class="form-label" mdbLabel>Actual depth [{{units.length}}]:</label>
                         <input class="form-control" name="actualDepth" id="actualDepth" type="number"
                         formControlName="actualDepth" (input)="inputChanged()" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
                         [class.is-invalid]="actualDepthInvalid" />
                     </div>
-                    <div>Altitude [{{units.altitude}}]: {{calc.altitude}}
-                        <app-altitude [altitude]="calc.altitude" (inputChange)="altitudeChanged($event)"/>
-                        <!-- <input class="form-control" name="altitude" id="altitude" type="number" formControlName="altitude"
-                                (input)="inputChanged()" [min]="ranges.altitude[1]" [max]="ranges.altitude[1]" step="1"
-                                [class.is-invalid]="altitudeInvalid" /> -->
-                    </div>
-                    <div>Theoretical salt water depth [{{units.length}}]: {{calc.theoreticalDepth}}</div>
 
+                    <div class="pt-2 mb-4">
+                        <label for="actualDepth" class="form-label" mdbLabel>Theoretical salt water depth [{{units.length}}]:</label>
+                        <input class="form-control readonly" name="theoreticalDepth" id="theoreticalDepth" type="number"
+                        [readonly]="true" [value]="calc.theoreticalDepth | number: '1.0-2'" readonly/>
+                    </div>
                 </form>
             </div>
         </div>

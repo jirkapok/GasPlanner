@@ -71,8 +71,7 @@ export class AltitudeCalcComponent implements OnInit {
         // TODO add load/save view state
 
         this.altitudeForm = this.fb.group({
-            // TODO define correct range for altitude pressure in both unit systems
-            pressure: [this.calcPressure, this.validators.rangeFor([0.7, 1.2])],
+            pressure: [this.calcPressure, this.validators.rangeFor(this.ranges.altitudePressure)],
             altitude: [this.calcAltitude, this.validators.altitude],
             actualDepth: [this.calcAltitudeDepth, this.validators.depth]
         });

@@ -160,6 +160,7 @@ export interface RangeConstants {
     durationLabel: string;
     altitude: [number, number];
     altitudeLabel: string;
+    altitudePressure: [number, number];
     speed: [number, number];
     speedLabel: string;
 }
@@ -171,6 +172,7 @@ class MetricRanges implements RangeConstants {
     public readonly units = new MetricUnits();
     public readonly altitude: [number, number] = [0, 5000];
     public readonly altitudeLabel: string = toLabel(this.altitude, this.units.altitudeShortcut);
+    public readonly altitudePressure: [number, number] = [0.7, 1.2];
     public readonly depth: [number, number] = [1, 350];
     public readonly depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
     public readonly diverRmv: [number, number] = [5, 90];
@@ -203,6 +205,7 @@ class ImperialRanges implements RangeConstants {
     public readonly units = new ImperialUnits();
     public readonly altitude: [number, number] = [0, 16500];
     public readonly altitudeLabel: string = toLabel(this.altitude, this.units.altitudeShortcut);
+    public readonly altitudePressure: [number, number] = [10, 18];
     public readonly depth: [number, number] = [3, 1150];
     public readonly depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
     public readonly diverRmv: [number, number] = [0.17, 3.178];

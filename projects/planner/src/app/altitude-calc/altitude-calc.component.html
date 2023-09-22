@@ -12,10 +12,10 @@
                             <label for="pressure" class="form-label" mdbLabel>Atmospheric pressure
                                 [{{units.pressure}}]:</label>
                             <input class="form-control" name="pressure" id="pressure" type="number"
-                                formControlName="pressure" (input)="pressureChanged()" [min]="0.7" [max]="1.2"
+                                formControlName="pressure" (input)="pressureChanged()" [min]="ranges.altitudePressure[0]" [max]="ranges.altitudePressure[1]"
                                 step="0.01" [class.is-invalid]="pressureInvalid"
                                 [value]="calc.pressure | number: '1.0-6'" />
-                            <div class="invalid-feedback position-absolute">Needs to be number 0.7 - 1.2 b
+                            <div class="invalid-feedback position-absolute">Needs to be number {{ranges.altitudePressure[0]}} - {{ranges.altitudePressure[1]}} {{units.pressure}}
                             </div>
                         </div>
                     </div>

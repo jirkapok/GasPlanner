@@ -58,15 +58,20 @@ export class AltitudeCalcComponent implements OnInit {
     }
 
     public get calcAltitudeDepth(): number {
-        const altitudeDepth = this.units.fromMeters(this.calc.pressure);
+        const altitudeDepth = this.units.fromMeters(this.calc.altitudeDepth);
         return Precision.round(altitudeDepth, 0);
+    }
+
+    public get theoreticalDepth(): number {
+        const depth = this.units.fromMeters(this.calc.theoreticalDepth);
+        return Precision.round(depth, 2);
     }
 
     public ngOnInit(): void {
         // TODO add load/save view state
 
         this.altitudeForm = this.fb.group({
-            // TODO define correct range for altitude pressure
+            // TODO define correct range for altitude pressure in both unit systems
             pressure: [this.calcPressure, this.validators.rangeFor([0.7, 1.2])],
             altitude: [this.calcAltitude, this.validators.altitude],
             actualDepth: [this.calcAltitudeDepth, this.validators.depth]

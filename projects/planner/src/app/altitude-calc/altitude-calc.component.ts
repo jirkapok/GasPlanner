@@ -47,14 +47,29 @@ export class AltitudeCalcComponent implements OnInit {
         return this.inputs.controlInValid(depthControl);
     }
 
+    public get calcAltitude(): number {
+        const uiAltitude = this.units.fromMeters(this.calc.altitude);
+        return Precision.round(uiAltitude);
+    }
+
+    public get calcPressure(): number {
+        const uiPressure = this.units.fromBar(this.calc.pressure);
+        return Precision.round(uiPressure, 6);
+    }
+
+    public get calcAltitudeDepth(): number {
+        const altitudeDepth = this.units.fromMeters(this.calc.pressure);
+        return Precision.round(altitudeDepth, 0);
+    }
+
     public ngOnInit(): void {
         // TODO add load/save view state
 
         this.altitudeForm = this.fb.group({
             // TODO define correct range for altitude pressure
-            pressure: [Precision.round(this.calc.pressure, 6), this.validators.rangeFor([0.7, 1.2])],
-            altitude: [this.calc.altitude, this.validators.altitude],
-            actualDepth: [this.calc.altitudeDepth, this.validators.depth]
+            pressure: [this.calcPressure, this.validators.rangeFor([0.7, 1.2])],
+            altitude: [this.calcAltitude, this.validators.altitude],
+            actualDepth: [this.calcAltitudeDepth, this.validators.depth]
         });
     }
 
@@ -64,11 +79,11 @@ export class AltitudeCalcComponent implements OnInit {
         }
 
         const values = this.altitudeForm.value;
-        // TODO imperial units
-        this.calc.pressure = Number(values.pressure);
+        const metricPressure = this.units.toBar(Number(values.pressure));
+        this.calc.pressure = metricPressure;
 
         this.altitudeForm.patchValue({
-            altitude: Precision.round(this.calc.altitude)
+            altitude: this.calcAltitude
         });
     }
 
@@ -77,7 +92,7 @@ export class AltitudeCalcComponent implements OnInit {
             return;
         }
 
-        // TODO imperial units
+        // already in metric
         this.calc.altitude = newValue;
     }
 
@@ -87,7 +102,7 @@ export class AltitudeCalcComponent implements OnInit {
         }
 
         const values = this.altitudeForm.value;
-        // TODO imperial units
-        this.calc.altitudeDepth = Number(values.actualDepth);
+        const metricDepth = this.units.toMeters(Number(values.actualDepth));
+        this.calc.altitudeDepth = metricDepth;
     }
 }

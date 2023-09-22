@@ -10,6 +10,9 @@ import { InputControls } from '../shared/inputcontrols';
 import { AltitudeCalculator } from '../shared/altitudeCalculator';
 import { AltitudeForm } from '../altitude/altitude.component';
 import { Precision } from 'scuba-physics';
+import { KnownViews } from '../shared/viewStates';
+import { AltitudeViewState } from '../shared/serialization.model';
+import { SubViewStorage } from '../shared/subViewStorage';
 
 interface AltitudeDepthForm extends AltitudeForm {
     pressure: FormControl<number>;
@@ -31,7 +34,11 @@ export class AltitudeCalcComponent implements OnInit {
         private validators: ValidatorGroups,
         private inputs: InputControls,
         public units: UnitConversion,
-        public location: Location) { }
+        public location: Location,
+        private viewStates: SubViewStorage) {
+        this.loadState();
+        this.saveState();
+    }
 
     public get ranges(): RangeConstants {
         return this.units.ranges;
@@ -68,8 +75,6 @@ export class AltitudeCalcComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        // TODO add load/save view state
-
         this.altitudeForm = this.fb.group({
             pressure: [this.calcPressure, this.validators.rangeFor(this.ranges.altitudePressure)],
             altitude: [this.calcAltitude, this.validators.altitude],
@@ -89,6 +94,8 @@ export class AltitudeCalcComponent implements OnInit {
         this.altitudeForm.patchValue({
             altitude: this.calcAltitude
         });
+
+        this.saveState();
     }
 
     public altitudeChanged(newValue: number): void {
@@ -98,6 +105,7 @@ export class AltitudeCalcComponent implements OnInit {
 
         // already in metric
         this.calc.altitude = newValue;
+        this.saveState();
     }
 
     public inputChanged(): void {
@@ -108,5 +116,30 @@ export class AltitudeCalcComponent implements OnInit {
         const values = this.altitudeForm.value;
         const metricDepth = this.units.toMeters(Number(values.actualDepth));
         this.calc.altitudeDepth = metricDepth;
+        this.saveState();
+    }
+
+    private loadState(): void {
+        let state: AltitudeViewState = this.viewStates.loadView(KnownViews.altitude);
+
+        if (!state) {
+            state = this.createState();
+        }
+
+        this.calc.altitudeDepth = state.actualDepth;
+        this.calc.altitude = state.altitude;
+    }
+
+    private saveState(): void {
+        const viewState = this.createState();
+        this.viewStates.saveView(viewState);
+    }
+
+    private createState(): AltitudeViewState {
+        return {
+            altitude: this.calc.altitude,
+            actualDepth: this.calc.altitudeDepth,
+            id: KnownViews.altitude
+        };
     }
 }

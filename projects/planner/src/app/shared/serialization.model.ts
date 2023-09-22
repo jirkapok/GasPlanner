@@ -15,6 +15,12 @@ export interface AppStates {
     states: ViewState[];
 }
 
+export interface AltitudeViewState extends ViewState {
+    /** pressure is calculated from altitude */
+    altitude: number;
+    actualDepth: number;
+}
+
 /** We don\'t need mod, since it is calculated */
 export interface NitroxViewState extends ViewState {
     fO2: number;

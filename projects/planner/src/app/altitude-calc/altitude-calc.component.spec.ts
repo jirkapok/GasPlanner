@@ -37,7 +37,7 @@ describe('AltitudeCalcComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
+    it('Calculates theoretical depth', () => {
+        expect(component.theoreticalDepth).toBeCloseTo(20.73, 3);
     });
 });

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { PlannerService } from './planner.service';
 import { Preferences } from './preferences';
-import { AppPreferences } from './serialization.model';
+import { AppPreferences, DiveDto } from './serialization.model';
 
 @Injectable()
 export class PreferencesStore {
     private static readonly disclaimerValue = 'confirmed';
     private static readonly storageKey = 'preferences';
+    private static readonly storageDefaultsKey = 'defaults';
     private static readonly disclaimerKey = 'disclaimer';
 
     constructor(
@@ -25,7 +26,14 @@ export class PreferencesStore {
     }
 
     public loadDefault(): void {
-        // TODO load default
+        const toParse = localStorage.getItem(PreferencesStore.storageDefaultsKey);
+        if (!toParse) {
+            return;
+        }
+
+        const loaded = JSON.parse(toParse) as DiveDto;
+        this.preferencesFactory.loadDive(loaded);
+        this.planner.calculate();
     }
 
     public save(): void {
@@ -35,7 +43,9 @@ export class PreferencesStore {
     }
 
     public saveDefault(): void {
-        // TODO save default
+        const toSave = this.preferencesFactory.toDive();
+        const serialized = JSON.stringify(toSave);
+        localStorage.setItem(PreferencesStore.storageDefaultsKey, serialized);
     }
 
     public disableDisclaimer(): void {

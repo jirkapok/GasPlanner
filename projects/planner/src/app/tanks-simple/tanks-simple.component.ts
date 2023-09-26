@@ -119,6 +119,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     }
 
     private reloadAll(): void {
+        // TODO O2 is not reloaded
         this.tanksForm.patchValue({
             firstTankSize: Precision.round(this.firstTank.size, 1),
             workPressure: Precision.round(this.firstTank.workingPressure, 1),

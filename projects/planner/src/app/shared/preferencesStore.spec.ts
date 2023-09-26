@@ -184,4 +184,21 @@ describe('PreferencesStore', () => {
                 expect(units.imperialUnits).toBeTruthy();
             }));
     });
+
+    it('Save and Load Defaults - First dive is updated from default', inject(
+        [PreferencesStore, TanksService, Plan],
+        (service: PreferencesStore, tanksService: TanksService, plan: Plan) => {
+            const options = OptionExtensions.createOptions(1, 1, 1, 1, Salinity.fresh);
+            tanksService.firstTank.size = 20;
+            plan.assignDepth(21, tanksService.firstTank.tank, options);
+
+            service.saveDefault();
+            tanksService.firstTank.size = 22;
+            plan.assignDepth(23, tanksService.firstTank.tank, options);
+
+            service.loadDefault();
+
+            expect(tanksService.firstTank.size).toBeCloseTo(20, 1);
+            expect(plan.maxDepth).toBeCloseTo(21, 1);
+        }));
 });

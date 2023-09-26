@@ -19,7 +19,7 @@ export class Preferences {
         private plan: Plan,
         private options: OptionsService,
         private viewStates: ViewStates
-    ){}
+    ) { }
 
     public toPreferences(): AppPreferences {
         return {
@@ -43,6 +43,26 @@ export class Preferences {
         // not using normalization to fix values here, because expecting they are valid
     }
 
+    public toDive(): DiveDto {
+        return {
+            options: DtoSerialization.fromOptions(this.options.getOptions()),
+            diver: DtoSerialization.fromDiver(this.options.diver),
+            tanks: DtoSerialization.fromTanks(this.tanksService.tanks as ITankBound[]),
+            plan: DtoSerialization.fromSegments(this.plan.segments),
+        };
+    }
+
+    public loadDive(loadedDive: DiveDto): void {
+        const tanks = DtoSerialization.toTanks(loadedDive.tanks);
+        const segments = DtoSerialization.toSegments(loadedDive.plan, tanks);
+        const diver = DtoSerialization.toDiver(loadedDive.diver);
+        const options = DtoSerialization.toOptions(loadedDive.options);
+        this.tanksService.loadFrom(tanks);
+        DtoSerialization.loadWorkingPressure(loadedDive.tanks, this.tanksService.tanks);
+        this.options.loadFrom(options, diver);
+        this.plan.loadFrom(segments);
+    }
+
     private toAppSettings(viewSwitch: ViewSwitchService): AppOptionsDto {
         return {
             imperialUnits: this.units.imperialUnits,
@@ -52,29 +72,19 @@ export class Preferences {
     }
 
     private toDives(): DiveDto[] {
-        return [{
-            options: DtoSerialization.fromOptions(this.options.getOptions()),
-            diver: DtoSerialization.fromDiver(this.options.diver),
-            tanks: DtoSerialization.fromTanks(this.tanksService.tanks as ITankBound[]),
-            plan: DtoSerialization.fromSegments(this.plan.segments),
-        }];
+        return [
+            this.toDive()
+        ];
     }
 
     private applyDives(loaded: AppPreferencesDto): void {
         const firstDive = loaded.dives[0];
-        const tanks = DtoSerialization.toTanks(firstDive.tanks);
-        const segments = DtoSerialization.toSegments(firstDive.plan, tanks);
-        const diver = DtoSerialization.toDiver(firstDive.diver);
-        const options = DtoSerialization.toOptions(firstDive.options);
-        this.tanksService.loadFrom(tanks);
-        DtoSerialization.loadWorkingPressure(firstDive.tanks, this.tanksService.tanks);
-        this.options.loadFrom(options, diver);
-        this.plan.loadFrom(segments);
+        this.loadDive(firstDive);
     }
 
     private toStates(): AppStates {
         return {
-            lastScreen:  this.viewStates.lastView,
+            lastScreen: this.viewStates.lastView,
             states: this.viewStates.all
         };
     }

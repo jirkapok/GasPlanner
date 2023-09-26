@@ -1,27 +1,19 @@
 <div class="mt-3">
-    <div class="card">
-        <div class="card-header">
-            <fa-icon [icon]="icon" class="me-3"></fa-icon>
-            <span>Diver</span>
+    <ng-container [formGroup]="diverForm">
+        <div class="mt-2">
+            <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
+            <input class="form-control" id="sac" formControlName="rmv" type="number" (input)="inputChanged()"
+                [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" [step]="rmvStep"
+                [class.is-invalid]="rmvInvalid" />
+            <div class="invalid-feedback position-absolute">Needs to be number {{ranges.diverRmvLabel}}</div>
         </div>
-        <div class="card-body">
-            <ng-container [formGroup]="diverForm">
-                <div class="mt-2">
-                    <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                    <input class="form-control" id="sac" formControlName="rmv" type="number" (input)="inputChanged()"
-                        [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" [step]="rmvStep"
-                        [class.is-invalid]="rmvInvalid" />
-                    <div class="invalid-feedback position-absolute">Needs to be number {{ranges.diverRmvLabel}}</div>
-                </div>
-                <div class="pt-2 mt-4">
-                    <app-pp-o2 [maxPpO2]="diver.maxPpO2" (ppO2Change)="maxPpO2Changed($event)" label="Maximum ppO2:"
-                        [pO2Form]="diverForm" controlName="maxPO2"></app-pp-o2>
-                </div>
-                <div class="pt-2 my-4">
-                    <app-pp-o2 [maxPpO2]="diver.maxDecoPpO2" (ppO2Change)="maxDecoPpO2Changed($event)"
-                        label="Maximum deco ppO2:" [pO2Form]="diverForm" controlName="maxDecoPO2"></app-pp-o2>
-                </div>
-            </ng-container>
+        <div class="pt-2 mt-4">
+            <app-pp-o2 [maxPpO2]="diver.maxPpO2" (ppO2Change)="maxPpO2Changed($event)" label="Maximum ppO2:"
+                [pO2Form]="diverForm" controlName="maxPO2"></app-pp-o2>
         </div>
-    </div>
+        <div class="pt-2 my-4">
+            <app-pp-o2 [maxPpO2]="diver.maxDecoPpO2" (ppO2Change)="maxDecoPpO2Changed($event)"
+                label="Maximum deco ppO2:" [pO2Form]="diverForm" controlName="maxDecoPO2"></app-pp-o2>
+        </div>
+    </ng-container>
 </div>

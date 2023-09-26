@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
     NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
-import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import { Diver, Precision } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
@@ -18,7 +17,6 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 export class DiverComponent extends Streamed implements OnInit {
     @Input() public diver: Diver = new Diver();
     @Input() public diverForm!: FormGroup;
-    public icon = faUserCog;
 
     private _rmvStep = 2;
 

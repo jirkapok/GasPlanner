@@ -99,17 +99,20 @@
                                 <label for="safetyStop" class="form-label" mdbLabel>Add 3 min safety
                                     stop:</label>
                                 <div class="input-group dropdown" mdbDropdown>
-                                    <input id="safetyStop" [value]="options.safetyStopOption" class="form-control" type="text"
-                                        [readonly]="true" />
+                                    <input id="safetyStop" [value]="options.safetyStopOption" class="form-control"
+                                        type="text" [readonly]="true" />
                                     <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
                                         id="safetyStopMenu" aria-expanded="false" data-mdb-toggle="dropdown"
                                         mdbDropdownToggle></button>
                                     <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                                        <li (click)="useSafetyOff()"><a class="dropdown-item">{{options.safetyOffName}}</a>
+                                        <li (click)="useSafetyOff()"><a
+                                                class="dropdown-item">{{options.safetyOffName}}</a>
                                         </li>
-                                        <li (click)="useSafetyAuto()"><a class="dropdown-item">{{options.safetyAutoName}}</a>
+                                        <li (click)="useSafetyAuto()"><a
+                                                class="dropdown-item">{{options.safetyAutoName}}</a>
                                         </li>
-                                        <li (click)="useSafetyOn()"><a class="dropdown-item">{{options.safetyOnName}}</a>
+                                        <li (click)="useSafetyOn()"><a
+                                                class="dropdown-item">{{options.safetyOnName}}</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -169,7 +172,8 @@
                                 </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <label for="ascSpeed" class="form-label" mdbLabel>Ascent {{units.defaults.lastSpeedLevel}}
+                                <label for="ascSpeed" class="form-label" mdbLabel>Ascent
+                                    {{units.defaults.lastSpeedLevel}}
                                     {{units.length}} to surface [{{units.speed}}]:</label>
                                 <input id="ascSpeed" formControlName="ascentSpeed6m" class="form-control" type="number"
                                     (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
@@ -179,6 +183,10 @@
                                 </div>
                             </div>
                         </div>
+                    </mdb-tab>
+                    <mdb-tab title="Diver">
+                        <app-diver class="col col-12 col-sm-5 col-lg-4 col-xl-3 col-xxl-2" [diver]="options.diver"
+                            [diverForm]="optionsForm"></app-diver>
                     </mdb-tab>
                 </mdb-tabs>
             </div>

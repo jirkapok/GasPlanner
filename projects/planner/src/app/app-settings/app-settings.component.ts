@@ -4,6 +4,7 @@ import {
 } from '@angular/forms';
 import { Location } from '@angular/common';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
+import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { Diver } from 'scuba-physics';
 import { OptionsService } from '../shared/options.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
@@ -17,6 +18,8 @@ import { SubViewStorage } from '../shared/subViewStorage';
 })
 export class AppSettingsComponent implements OnInit {
     public flagIcon = faFlag;
+    public diverIcon = faUserCog;
+
     public diver = new Diver();
     public settingsForm!: FormGroup<{
         imperialUnits: FormControl<boolean>;

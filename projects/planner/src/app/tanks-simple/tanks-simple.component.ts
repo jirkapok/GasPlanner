@@ -18,6 +18,7 @@ interface TankForm {
     firstTankSize: FormControl<number>;
     firstTankStartPressure: FormControl<number>;
     workPressure?: FormControl<number>;
+    o2: FormControl<number>;
 }
 
 @Component({
@@ -69,7 +70,8 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     public ngOnInit(): void {
         this.tanksForm = this.fb.group({
             firstTankSize: [Precision.round(this.firstTank.size, 1), this.validators.tankSize],
-            firstTankStartPressure: [Precision.round(this.firstTank.startPressure, 1), this.validators.tankPressure]
+            firstTankStartPressure: [Precision.round(this.firstTank.startPressure, 1), this.validators.tankPressure],
+            o2: [Precision.round(this.firstTank.o2, 1), this.validators.nitroxOxygen]
         });
 
         if (this.units.imperialUnits) {
@@ -119,11 +121,11 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     }
 
     private reloadAll(): void {
-        // TODO O2 is not reloaded
         this.tanksForm.patchValue({
             firstTankSize: Precision.round(this.firstTank.size, 1),
             workPressure: Precision.round(this.firstTank.workingPressure, 1),
             firstTankStartPressure: Precision.round(this.firstTank.startPressure, 1),
+            o2: Precision.round(this.firstTank.o2, 1)
         });
     }
 }

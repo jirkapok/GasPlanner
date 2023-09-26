@@ -39,9 +39,11 @@ export class OxygenComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.nitroxForm = this.fb.group({
-            o2: [Precision.round(this.tank.o2, 1), this.validators.nitroxOxygen]
-        });
+        if (!this.nitroxForm) {
+            this.nitroxForm = this.fb.group({
+                o2: [Precision.round(this.tank.o2, 1), this.validators.nitroxOxygen]
+            });
+        }
     }
 
     public fireAssignBestMix(): void {

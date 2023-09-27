@@ -58,7 +58,7 @@ export class Level {
 }
 
 export class DiverOptions {
-    constructor(private options: Options, private diver: Diver) {}
+    constructor(private options: Options = new Options(), private diver: Diver = new Diver()) {}
 
     public get maxPpO2(): number {
         return this.options.maxPpO2;

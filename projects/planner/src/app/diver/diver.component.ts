@@ -3,7 +3,7 @@ import {
     NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
 import { takeUntil } from 'rxjs';
-import { Diver, Options, Precision } from 'scuba-physics';
+import { Precision } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -16,7 +16,7 @@ import { DiverOptions } from '../shared/models';
     styleUrls: ['./diver.component.scss']
 })
 export class DiverComponent extends Streamed implements OnInit {
-    @Input() public diver: DiverOptions = new DiverOptions(new Options(), new Diver());
+    @Input() public diver: DiverOptions = new DiverOptions();
     @Input() public diverForm!: FormGroup;
     @Output()public changed = new EventEmitter();
 

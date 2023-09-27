@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Diver, Options } from 'scuba-physics';
+import { Options } from 'scuba-physics';
 import { OptionsService } from './options.service';
 import { UnitConversion } from './UnitConversion';
 import { DiverOptions } from './models';
@@ -164,7 +164,7 @@ describe('Options Service', () => {
         });
 
         it('Apply diver updates ppO2 limits', () => {
-            const diver = new DiverOptions(new Options(), new Diver());
+            const diver = new DiverOptions();
             diver.maxPpO2 = 1.22;
             diver.maxDecoPpO2 = 1.45;
             service.applyDiver(diver);

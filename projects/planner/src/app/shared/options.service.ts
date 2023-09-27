@@ -248,7 +248,6 @@ export class OptionsService {
 
     public loadFrom(newOptions: Options, diver: Diver): void {
         this.options.loadFrom(newOptions);
-        // TODO replace by directly using arguments
         const newDiver = new DiverOptions(newOptions, diver);
         this.applyDiver(newDiver);
         this.onReloaded.next();

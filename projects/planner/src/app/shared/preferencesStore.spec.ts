@@ -45,7 +45,7 @@ describe('PreferencesStore', () => {
     describe('Preferences', () => {
         it('Diver values are loaded after save', inject([PreferencesStore, OptionsService],
             (service: PreferencesStore, options: OptionsService) => {
-                const diver = options.diver;
+                const diver = options.diverOptions;
                 diver.rmv = 10;
                 diver.maxPpO2 = 1.1;
                 diver.maxDecoPpO2 = 1.5;
@@ -56,9 +56,16 @@ describe('PreferencesStore', () => {
                 diver.maxDecoPpO2 = 1.4;
                 service.load();
 
-                const expected = new Diver(10, 1.1);
-                expected.maxDecoPpO2 = 1.5;
-                expect(diver).toEqual(expected);
+                const expected = {
+                    rmv: 10,
+                    maxPpO2: 1.1,
+                    maxDecoPpO2: 1.5
+                };
+                expect({
+                    rmv: diver.rmv,
+                    maxPpO2: diver.maxPpO2,
+                    maxDecoPpO2: diver.maxDecoPpO2
+                }).toEqual(expected);
             }));
 
         it('Options values are loaded after save', inject([PreferencesStore, OptionsService, ViewSwitchService],

@@ -34,7 +34,7 @@ export class AppSettingsComponent implements OnInit {
         private views: SubViewStorage,
         public location: Location) {
         this.diver = new DiverOptions(new Options(), new Diver());
-        this.diver.loadFrom(this.options.diver);
+        this.diver.loadFrom(this.options.diverOptions);
     }
 
     public ngOnInit(): void {
@@ -49,7 +49,7 @@ export class AppSettingsComponent implements OnInit {
         }
 
         const imperialUnits = Boolean(this.settingsForm.controls.imperialUnits.value);
-        this.options.applyDiver(this.diver.diver);
+        this.options.applyDiver(this.diver);
         this.units.imperialUnits = imperialUnits;
         this.settingsNormalization.apply();
         this.views.saveMainView();

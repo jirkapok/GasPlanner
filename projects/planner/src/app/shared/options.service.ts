@@ -248,14 +248,14 @@ export class OptionsService {
 
     public loadFrom(newOptions: Options, diver: Diver): void {
         this.options.loadFrom(newOptions);
-        this.applyDiver(diver);
+        // TODO replace by directly using arguments
+        const newDiver = new DiverOptions(newOptions, diver);
+        this.applyDiver(newDiver);
         this.onReloaded.next();
     }
 
-    public applyDiver(diver: Diver): void {
-        this.options.maxPpO2 = diver.maxPpO2;
-        this.options.maxDecoPpO2 = diver.maxDecoPpO2;
-        this.diver.loadFrom(diver);
+    public applyDiver(diver: DiverOptions): void {
+        this.diverOptions.loadFrom(diver);
     }
 
     public resetToSimple(): void {

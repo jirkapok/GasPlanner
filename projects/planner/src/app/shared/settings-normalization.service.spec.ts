@@ -17,13 +17,15 @@ import { PreferencesStore } from './preferencesStore';
 import { Preferences } from './preferences';
 import { SubViewStorage } from './subViewStorage';
 import { ViewSwitchService } from './viewSwitchService';
+import { DiverOptions } from './models';
 
 describe('SettingsNormalizationService', () => {
     let service: SettingsNormalizationService;
     let diver: Diver;
+    let diverOptions: DiverOptions;
 
     const applySut = (options: OptionsService) => {
-        options.applyDiver(diver);
+        options.applyDiver(diverOptions);
         service.apply();
     };
 
@@ -43,29 +45,17 @@ describe('SettingsNormalizationService', () => {
         TestBedExtensions.initPlan();
         service = TestBed.inject(SettingsNormalizationService);
         diver = new Diver();
+        diverOptions = new DiverOptions(new Options(), diver);
     });
 
     describe('Diver', () => {
         it('RMV applies to planner', inject([OptionsService],
             (options: OptionsService) => {
-                diver.rmv = 18;
+                diverOptions.rmv = 100;
                 applySut(options);
-                expect(options.diver.rmv).toBe(18);
+                expect(options.diver.rmv).toBe(90);
             }));
 
-        it('ppO2 applies to planner', inject([OptionsService],
-            (options: OptionsService) => {
-                diver.maxPpO2 = 1.1;
-                applySut(options);
-                expect(options.maxPpO2).toBe(1.1);
-            }));
-
-        it('Deco ppO2 applies to planner', inject([OptionsService],
-            (options: OptionsService) => {
-                diver.maxDecoPpO2 = 1.5;
-                applySut(options);
-                expect(options.maxDecoPpO2).toBe(1.5);
-            }));
     });
 
     describe('Imperial units', () => {

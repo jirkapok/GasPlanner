@@ -58,8 +58,7 @@ export class Level {
 }
 
 export class DiverOptions {
-    // TODO make diver private
-    constructor(private options: Options, public diver: Diver) {}
+    constructor(private options: Options, private diver: Diver) {}
 
     public get maxPpO2(): number {
         return this.options.maxPpO2;
@@ -87,7 +86,7 @@ export class DiverOptions {
         this.diver.rmv = newValue;
     }
 
-    public loadFrom(other: Diver): void {
+    public loadFrom(other: DiverOptions): void {
         this.rmv = other.rmv;
         this.maxPpO2 = other.maxPpO2;
         this.maxDecoPpO2 = other.maxDecoPpO2;

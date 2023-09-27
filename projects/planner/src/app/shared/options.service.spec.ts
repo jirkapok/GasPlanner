@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Diver, Options } from 'scuba-physics';
 import { OptionsService } from './options.service';
 import { UnitConversion } from './UnitConversion';
+import { DiverOptions } from './models';
 
 describe('Options Service', () => {
     let service: OptionsService;
@@ -128,14 +129,7 @@ describe('Options Service', () => {
         });
     });
 
-    it('Apply diver updates ppO2 limits', () => {
-        const diver = new Diver();
-        diver.maxPpO2 = 1.22;
-        diver.maxDecoPpO2 = 1.45;
-        service.applyDiver(diver);
-        expect(service.maxPpO2).toBe(1.22);
-        expect(service.maxDecoPpO2).toBe(1.45);
-    });
+
 
     describe('Diver', () => {
         it('Max ppO2 updates diver ppO2', () => {
@@ -162,6 +156,20 @@ describe('Options Service', () => {
             const options = service.getOptions();
             service.diverOptions.maxDecoPpO2 = 1.3;
             expect(options.maxDecoPpO2).toBeCloseTo(1.3, 6);
+        });
+
+        it('RMV applies to diver', () => {
+            service.diverOptions.rmv = 18;
+            expect(service.diver.rmv).toBe(18);
+        });
+
+        it('Apply diver updates ppO2 limits', () => {
+            const diver = new DiverOptions(new Options(), new Diver());
+            diver.maxPpO2 = 1.22;
+            diver.maxDecoPpO2 = 1.45;
+            service.applyDiver(diver);
+            expect(service.maxPpO2).toBe(1.22);
+            expect(service.maxDecoPpO2).toBe(1.45);
         });
     });
 });

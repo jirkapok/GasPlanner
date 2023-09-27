@@ -148,9 +148,7 @@ export class PlanValidation {
     }
 
     private diverValid(diver: DiverDto): boolean {
-        return this.isRmvValid(diver.rmv) &&
-            this.isInRange(diver.maxPpO2, this.ranges.ppO2) &&
-            this.isInRange(diver.maxDecoPpO2, this.ranges.ppO2);
+        return this.isRmvValid(diver.rmv);
     }
 
     private complexModeValid(app: AppPreferencesDto): boolean {

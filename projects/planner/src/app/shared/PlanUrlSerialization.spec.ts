@@ -183,19 +183,19 @@ describe('Url Serialization', () => {
         it('Invalid url values', () => {
             // 2 tanks in simple mode, which isn't valid
             const urlParams = 't=1-15-0-210-0.209-0,2-11-0-200-0.5-0&de=0-30-102-1,30-30-618-1&' +
-                'di=20,1.4,1.6&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=0,0';
+                'di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=0,0';
             assertImported(urlParams);
         });
 
         it('Invalid working pressure in metric', () => {
             const urlParams = 't=1-15-220-210-0.209-0,2-11.1-0-200-0.209-0&de=0-30-102-1,30-30-618-1,30-30-600-1&' +
-                'di=20,1.4,1.6&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0';
+                'di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0';
             assertImported(urlParams);
         });
 
         it('Invalid working pressure in imperial', () => {
             const urlParams = 't=1-15-220-210-0.209-0,2-11.1-0-200-0.209-0&de=0-30-102-1,30-30-618-1,30-30-600-1&' +
-                'di=20,1.4,1.6&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,1';
+                'di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,1';
             const current = createCustomSut();
             current.urlSerialization.fromUrl(urlParams);
             expectParsedEquals(current);

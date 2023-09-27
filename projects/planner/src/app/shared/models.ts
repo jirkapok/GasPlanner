@@ -74,12 +74,10 @@ export class DiverOptions {
 
     public set maxPpO2(newValue: number) {
         this.options.maxPpO2 = newValue;
-        this.diver.maxPpO2 = newValue;
     }
 
     public set maxDecoPpO2(newValue: number) {
         this.options.maxDecoPpO2 = newValue;
-        this.diver.maxDecoPpO2 = newValue;
     }
 
     public set rmv(newValue: number) {

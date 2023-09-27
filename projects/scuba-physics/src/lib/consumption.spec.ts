@@ -10,7 +10,7 @@ import { Salinity } from './pressure-converter';
 import { Precision } from './precision';
 
 describe('Consumption', () => {
-    const diver = new Diver(20, 1.6);
+    const diver = new Diver(20);
     const consumption = new Consumption(DepthConverter.forFreshWater());
     const options2 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
     options2.safetyStop = SafetyStop.never;

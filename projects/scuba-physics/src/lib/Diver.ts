@@ -1,17 +1,13 @@
-import { OptionDefaults } from './Options';
 import { Tank } from './Tanks';
 
 export class Diver {
     // liters/min
     public static readonly defaultSac = 20;
-    /** Maximum ppO2 during decompression */
-    public maxDecoPpO2 = OptionDefaults.maxDecoPpO2;
 
     /**
      * @param rmv liter/min
-     * @param maxPpO2 maximal partial pressure of o2 in range 0-3
      */
-    constructor(public rmv: number = Diver.defaultSac, public maxPpO2: number = OptionDefaults.maxPpO2) {
+    constructor(public rmv: number = Diver.defaultSac) {
     }
 
     /** liter/min as 3x sac */
@@ -37,7 +33,5 @@ export class Diver {
 
     public loadFrom(other: Diver): void {
         this.rmv = other.rmv;
-        this.maxPpO2 = other.maxPpO2;
-        this.maxDecoPpO2 = other.maxDecoPpO2;
     }
 }

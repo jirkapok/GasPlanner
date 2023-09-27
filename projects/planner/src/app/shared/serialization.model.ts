@@ -173,8 +173,6 @@ export interface GasDto {
 
 export interface DiverDto {
     rmv: number;
-    maxPpO2: number;
-    maxDecoPpO2: number;
 }
 
 export interface OptionsDto {
@@ -340,14 +338,11 @@ export class DtoSerialization {
     public static fromDiver(diver: Diver): DiverDto {
         return {
             rmv: diver.rmv,
-            maxPpO2: diver.maxPpO2,
-            maxDecoPpO2: diver.maxDecoPpO2
         };
     }
 
     public static toDiver(dto: DiverDto): Diver {
-        const diver = new Diver(dto.rmv, dto.maxPpO2);
-        diver.maxDecoPpO2 = dto.maxDecoPpO2;
+        const diver = new Diver(dto.rmv);
         return diver;
     }
 

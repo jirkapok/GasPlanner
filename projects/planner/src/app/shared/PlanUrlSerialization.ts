@@ -154,16 +154,14 @@ export class PlanUrlSerialization {
     private static fromDiverParam(parseParam: string): DiverDto {
         const context = new ParseContext(parseParam, ',');
         const result: DiverDto = {
-            rmv: context.parseNumber(0),
-            maxPpO2: context.parseNumber(1),
-            maxDecoPpO2: context.parseNumber(2)
+            rmv: context.parseNumber(0)
         };
 
         return result;
     }
 
     private static toDiverParam(di: Diver): string {
-        const result = `${di.rmv},${di.maxPpO2},${di.maxDecoPpO2}`;
+        const result = `${di.rmv}`;
         return result;
     }
 

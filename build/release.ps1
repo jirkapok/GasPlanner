@@ -1,5 +1,9 @@
 # use this script as automation for release at github
-param([String]$tag)
+param(
+    [Parameter(Mandatory=$true)]
+    [String]$tag
+)
+
 Write-Host "Preparing version $($tag)"
 
 git checkout master

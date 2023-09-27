@@ -77,7 +77,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     public gasSac(index: number): number {
         const bound = this.tanks[index];
-        const sac = this.options.diver.gasSac(bound.tank);
+        const sac = this.options.diverOptions.gasSac(bound.tank);
         return this.units.fromBar(sac);
     }
 

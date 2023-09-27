@@ -65,7 +65,7 @@ describe('App settings component', () => {
 
         it('Normalize rmv to imperial', inject([OptionsService],
             (options: OptionsService) => {
-                expect(options.diver.rmv).toBeCloseTo(29.998867, 6);
+                expect(options.diverOptions.rmv).toBeCloseTo(29.998867, 6);
             }));
 
         it('Applies units change', inject([UnitConversion],

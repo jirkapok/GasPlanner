@@ -86,7 +86,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
 
     public gasSac(): number {
         const tank = this.firstTank.tank;
-        const sac = this.options.diver.gasSac(tank);
+        const sac = this.options.diverOptions.gasSac(tank);
         return this.units.fromBar(sac);
     }
 

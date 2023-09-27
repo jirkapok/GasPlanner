@@ -260,7 +260,7 @@ export class PlanUrlSerialization {
     public toUrl(): string {
         const tanksParam = PlanUrlSerialization.toTanksParam(this.tanksService.tanks);
         const depthsParam = PlanUrlSerialization.toDepthsParam(this.plan.segments);
-        const diParam = PlanUrlSerialization.toDiverParam(this.options.diver);
+        const diParam = PlanUrlSerialization.toDiverParam(this.options.getDiver());
         const optionsParam = PlanUrlSerialization.toOptionsParam(this.options.getOptions());
         const appOptions = this.toAppOptions();
         const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&ao=${appOptions}`;

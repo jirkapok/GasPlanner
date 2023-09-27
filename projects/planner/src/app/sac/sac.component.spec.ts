@@ -72,9 +72,9 @@ describe('Sac component', () => {
 
     it('use applies rmv to diver', inject([OptionsService, SacCalculatorService],
         (options: OptionsService) => {
-            options.diver.rmv = 30;
+            options.diverOptions.rmv = 30;
             component.use();
-            const applied = options.diver.rmv;
+            const applied = options.diverOptions.rmv;
             expect(applied).toBeCloseTo(20, 5);
         }));
 

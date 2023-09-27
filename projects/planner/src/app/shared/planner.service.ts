@@ -145,7 +145,7 @@ export class PlannerService extends Streamed {
                 plan: serializedPlan,
                 profile: DtoSerialization.fromSegments(profile.origin),
                 options: optionsDto,
-                diver: DtoSerialization.fromDiver(this.optionsService.diver),
+                diver: DtoSerialization.fromDiver(this.optionsService.getDiver()),
                 tanks: serializedTanks
             };
             this.consumptionTask.calculate(consumptionRequest);

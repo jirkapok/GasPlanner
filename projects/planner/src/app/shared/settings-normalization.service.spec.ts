@@ -53,7 +53,7 @@ describe('SettingsNormalizationService', () => {
             (options: OptionsService) => {
                 diverOptions.rmv = 100;
                 applySut(options);
-                expect(options.diver.rmv).toBe(90);
+                expect(options.diverOptions.rmv).toBe(90);
             }));
 
     });
@@ -65,7 +65,7 @@ describe('SettingsNormalizationService', () => {
         beforeEach(() => {
             sourceOptions = TestBed.inject(OptionsService);
             sourceOptions.altitude = 100;
-            sourceOptions.diver.rmv = 19.837563;
+            sourceOptions.diverOptions.rmv = 19.837563;
             const units = TestBed.inject(UnitConversion);
             units.imperialUnits = true;
             service.apply();
@@ -80,7 +80,7 @@ describe('SettingsNormalizationService', () => {
 
         it('Updates diver rounded rmv', () => {
             const units = TestBed.inject(UnitConversion);
-            const rmv = units.fromLiter(sourceOptions.diver.rmv);
+            const rmv = units.fromLiter(sourceOptions.diverOptions.rmv);
             expect(rmv).toBeCloseTo(0.70060, 5);
         });
 
@@ -141,7 +141,7 @@ describe('SettingsNormalizationService', () => {
         });
 
         it('Updates diver rounded rmv liters', () => {
-            expect(sourceOptions.diver.rmv).toBeCloseTo(19.84000, 5);
+            expect(sourceOptions.diverOptions.rmv).toBeCloseTo(19.84000, 5);
         });
 
         it('Rounds options meters using recreational values', () => {

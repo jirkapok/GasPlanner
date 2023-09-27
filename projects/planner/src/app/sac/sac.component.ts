@@ -200,7 +200,7 @@ export class SacComponent implements OnInit {
             return;
         }
 
-        this.options.diver.rmv = this.calc.rmv;
+        this.options.diverOptions.rmv = this.calc.rmv;
     }
 
     private enableAll(): void {

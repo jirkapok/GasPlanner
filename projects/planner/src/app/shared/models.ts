@@ -91,6 +91,10 @@ export class DiverOptions {
         this.maxPpO2 = other.maxPpO2;
         this.maxDecoPpO2 = other.maxDecoPpO2;
     }
+
+    public gasSac(tank: Tank): number {
+        return this.diver.gasSac(tank);
+    }
 }
 
 export class TankBound {

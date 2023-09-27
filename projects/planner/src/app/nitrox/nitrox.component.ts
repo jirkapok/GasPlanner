@@ -123,7 +123,7 @@ export class NitroxComponent implements OnInit {
         }
 
         this.tanksService.firstTank.tank.o2 = this.calc.fO2;
-        this.options.diver.maxPpO2 = this.calc.pO2;
+        this.options.diverOptions.maxPpO2 = this.calc.pO2;
     }
 
     public toMod(): void {

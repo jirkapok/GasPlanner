@@ -46,7 +46,7 @@ export class Preferences {
     public toDive(): DiveDto {
         return {
             options: DtoSerialization.fromOptions(this.options.getOptions()),
-            diver: DtoSerialization.fromDiver(this.options.diver),
+            diver: DtoSerialization.fromDiver(this.options.getDiver()),
             tanks: DtoSerialization.fromTanks(this.tanksService.tanks as ITankBound[]),
             plan: DtoSerialization.fromSegments(this.plan.segments),
         };

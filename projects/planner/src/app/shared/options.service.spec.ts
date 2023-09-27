@@ -160,7 +160,7 @@ describe('Options Service', () => {
 
         it('RMV applies to diver', () => {
             service.diverOptions.rmv = 18;
-            expect(service.diver.rmv).toBe(18);
+            expect(service.getDiver().rmv).toBe(18);
         });
 
         it('Apply diver updates ppO2 limits', () => {

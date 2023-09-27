@@ -177,16 +177,16 @@ describe('PreferencesStore', () => {
             (service: PreferencesStore, units: UnitConversion, options: OptionsService,
                 normalizationService: SettingsNormalizationService, tanksService: TanksService) => {
                 units.imperialUnits = true;
-                options.diver.rmv = 29.998867;
+                options.diverOptions.rmv = 29.998867;
                 normalizationService.apply();
                 service.save();
 
                 units.imperialUnits = false;
-                options.diver.rmv = 19.6;
+                options.diverOptions.rmv = 19.6;
                 normalizationService.apply();
                 service.load();
 
-                expect(options.diver.rmv).toBeCloseTo(29.998867, 6);
+                expect(options.diverOptions.rmv).toBeCloseTo(29.998867, 6);
                 expect(tanksService.tanks[0].workingPressureBars).toBeCloseTo(237.317546, 6);
                 expect(units.imperialUnits).toBeTruthy();
             }));

@@ -33,11 +33,6 @@ export class OptionsService {
         return this._toxicity;
     }
 
-    // TODO remove, use diverOptions instead
-    public get diver(): Diver {
-        return this._diver;
-    }
-
     public get diverOptions(): DiverOptions {
         return new DiverOptions(this.options, this._diver);
     }
@@ -268,6 +263,10 @@ export class OptionsService {
     // can be considered later
     public getOptions(): Options {
         return this.options;
+    }
+
+    public getDiver(): Diver {
+        return this._diver;
     }
 
     private applyValues(newValues: DefaultOptions): void {

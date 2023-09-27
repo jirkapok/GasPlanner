@@ -27,9 +27,9 @@ export class SettingsNormalizationService {
     }
 
     private applyToOptions(): void {
-        const oDiver = this.options.diver;
+        const oDiver = this.options.diverOptions;
         const rmvRounding = this.units.ranges.rmvRounding;
-        this.options.diver.rmv = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
+        this.options.diverOptions.rmv = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
             oDiver.rmv, this.units.ranges.diverRmv, rmvRounding);
 
         this.applyOptionsCalculationValues();

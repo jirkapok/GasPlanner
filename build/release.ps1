@@ -1,6 +1,15 @@
-# use this script as automation for release at github
+<#
+    .SYNOPSIS
+        use this script as automation for release at github
+
+    .EXAMPLE
+        ./release.ps1 v1.0
+
+        Publishes new version to github pages with tag "v1.0".
+#>
+
 param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [String]$tag
 )
 

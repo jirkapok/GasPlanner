@@ -14,11 +14,13 @@ param(
 )
 
 Write-Host "Preparing version $($tag)"
+Set-Location $PSScriptRoot
+Set-Location ..
 
 git checkout master
 git merge develop
 
-./build.ps1
+./build/build.ps1
 
 git checkout gh-pages
 

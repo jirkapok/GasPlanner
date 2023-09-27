@@ -1,5 +1,9 @@
 # Application help
 
+## Supported platforms
+
+This application works in Edge, Chrome, Safari and doesnt work in Firefox and Opera. Currently you can use it offline mode using "Add to home screen" in Edge or Chrome browsers. On mobile devices this feature works only on Android.
+
 ## Calculations Background
 
 For some calculations it is necessary to measure precise values. Earths physical model is simulated, but not to all details. In such cases some constants are used. Together with different rounding during the calculations, this is why diving software implementations differ and mainly also why some simplifications was used during your scuba diving courses. For example we count with sea level atmospheric pressure 1.01325 bar, but usually everybody counts with 1 bar only, which makes 1.325% deviation. We use such simplifications only in Nitrox calculator. Similar results you see in this application you should see in other applications or dive computers.

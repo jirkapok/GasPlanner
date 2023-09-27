@@ -11,6 +11,7 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add option to define repetitive dives
+* Allow user to compare multiple plans side by side
 * Add gas depth range/properties/trimix calculator
 * UI Tweaks
   * Profile:
@@ -18,9 +19,6 @@ Following list of features and improvements ordered by priority is under develop
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
   * Add total dive time to results
-  * Add to documentation:
-    * that this app doesn't work in  Opera and FireFox
-    * "Add to home screen" doesn't work in Apple Safari (iPhone). (https://love2dev.com/pwa/add-to-homescreen/)
 * Add undo/redo to all pages
 * Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Add gas density calculator (to be able understand to don't breath gas with higher density than 5.7 g/l):
@@ -36,8 +34,8 @@ Following list of features and improvements ordered by priority is under develop
     * <https://stackblitz.com/edit/angular-azjfgh?file=src%2Fapp%2Fapp.component.html>
     * <https://stackoverflow.com/questions/53416871/routing-to-static-html-page-in-angular-6>
 * Add localizations
-* Allow user to compare multiple plans side by side
 * Fix PWA issues https://www.pwabuilder.com/
+  * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
 * Add export of the plan to pdf
 * Import/Export dive to compare from well known file format see also <https://www.npmjs.com/package/xml-js>
 * Gas consumption:
@@ -65,9 +63,10 @@ Following list of features and improvements ordered by priority is under develop
   * I want to plan a dive and choose from two plans
     (or I have a plan and i want to plan emergency ascent)
 
-
+```javascript
 DiveToCompare {
   wayPoint/Segment[]
   TankBound/Tank[]
   Info {}
 }
+```

@@ -1,7 +1,7 @@
 import {
     Ceiling, Time, Event, Segment,
     StandardGases, Tank, OtuCalculator,
-    Precision, HighestDensity, EventType, TankTemplate
+    Precision, HighestDensity, EventType, TankTemplate, Options, Diver
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -54,6 +54,43 @@ export class Level {
     public set tank(newValue: TankBound) {
         this.segment.tank = newValue.tank;
         this.tankBound = newValue;
+    }
+}
+
+export class DiverOptions {
+    // TODO make diver private
+    constructor(private options: Options, public diver: Diver) {}
+
+    public get maxPpO2(): number {
+        return this.options.maxPpO2;
+    }
+
+    public get maxDecoPpO2(): number {
+        return this.options.maxDecoPpO2;
+    }
+
+    public get rmv(): number {
+        return this.diver.rmv;
+    }
+
+    public set maxPpO2(newValue: number) {
+        this.options.maxPpO2 = newValue;
+        this.diver.maxPpO2 = newValue;
+    }
+
+    public set maxDecoPpO2(newValue: number) {
+        this.options.maxDecoPpO2 = newValue;
+        this.diver.maxDecoPpO2 = newValue;
+    }
+
+    public set rmv(newValue: number) {
+        this.diver.rmv = newValue;
+    }
+
+    public loadFrom(other: Diver): void {
+        this.rmv = other.rmv;
+        this.maxPpO2 = other.maxPpO2;
+        this.maxDecoPpO2 = other.maxDecoPpO2;
     }
 }
 

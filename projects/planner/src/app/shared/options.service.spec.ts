@@ -136,4 +136,32 @@ describe('Options Service', () => {
         expect(service.maxPpO2).toBe(1.22);
         expect(service.maxDecoPpO2).toBe(1.45);
     });
+
+    describe('Diver', () => {
+        it('Max ppO2 updates diver ppO2', () => {
+            const options = service.getOptions();
+            const diver = service.diverOptions;
+            options.maxPpO2 = 1.0;
+            expect(diver.maxPpO2).toBeCloseTo(1.0, 6);
+        });
+
+        it('Max deco ppO2 updates diver deco ppO2', () => {
+            const options = service.getOptions();
+            const diver = service.diverOptions;
+            options.maxDecoPpO2 = 1.1;
+            expect(diver.maxDecoPpO2).toBeCloseTo(1.1, 6);
+        });
+
+        it('Max ppO2 updates options ppO2', () => {
+            const options = service.getOptions();
+            service.diverOptions.maxPpO2 = 1.2;
+            expect(options.maxPpO2).toBeCloseTo(1.2, 6);
+        });
+
+        it('Max deco ppO2 updates options deco ppO2', () => {
+            const options = service.getOptions();
+            service.diverOptions.maxDecoPpO2 = 1.3;
+            expect(options.maxDecoPpO2).toBeCloseTo(1.3, 6);
+        });
+    });
 });

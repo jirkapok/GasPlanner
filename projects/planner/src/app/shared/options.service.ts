@@ -4,6 +4,7 @@ import { DefaultOptions, Diver, OptionDefaults, Options, SafetyStop, Salinity } 
 import { GasToxicity } from './gasToxicity.service';
 import { StandardGradientsService } from './standard-gradients.service';
 import { UnitConversion } from './UnitConversion';
+import { DiverOptions } from './models';
 
 /** All options stored in metric units */
 @Injectable()
@@ -32,8 +33,13 @@ export class OptionsService {
         return this._toxicity;
     }
 
+    // TODO remove, use diverOptions instead
     public get diver(): Diver {
         return this._diver;
+    }
+
+    public get diverOptions(): DiverOptions {
+        return new DiverOptions(this.options, this._diver);
     }
 
     public get maxEND(): number {

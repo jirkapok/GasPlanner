@@ -11,9 +11,6 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add option to define repetitive dives
-* Settings
-  * Create default dive options
-    * Put diver under all other options
 * Add gas depth range/properties/trimix calculator
 * UI Tweaks
   * Profile:

@@ -1,13 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
     NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
 import { takeUntil } from 'rxjs';
-import { Diver, Precision } from 'scuba-physics';
+import { Diver, Options, Precision } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { DiverOptions } from '../shared/models';
 
 @Component({
     selector: 'app-diver',
@@ -15,8 +16,9 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
     styleUrls: ['./diver.component.scss']
 })
 export class DiverComponent extends Streamed implements OnInit {
-    @Input() public diver: Diver = new Diver();
+    @Input() public diver: DiverOptions = new DiverOptions(new Options(), new Diver());
     @Input() public diverForm!: FormGroup;
+    @Output()public changed = new EventEmitter();
 
     private _rmvStep = 2;
 
@@ -66,14 +68,17 @@ export class DiverComponent extends Streamed implements OnInit {
 
         const rmv = Number(this.diverForm.value.rmv);
         this.diver.rmv = this.units.toLiter(rmv);
+        this.changed.emit();
     }
 
     public maxPpO2Changed(newValue: number): void {
         this.diver.maxPpO2 = newValue;
+        this.changed.emit();
     }
 
     public maxDecoPpO2Changed(newValue: number): void {
         this.diver.maxDecoPpO2 = newValue;
+        this.changed.emit();
     }
 
     private rangeChanged(ranges: RangeConstants): void {

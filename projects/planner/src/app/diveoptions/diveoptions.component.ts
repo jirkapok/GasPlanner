@@ -234,7 +234,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         this.fireCalculation();
     }
 
-    private fireCalculation(): void {
+    public fireCalculation(): void {
         this.delayedCalc.schedule();
     }
 

@@ -5,11 +5,12 @@ import {
 import { Location } from '@angular/common';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
-import { Diver } from 'scuba-physics';
+import { Diver, Options } from 'scuba-physics';
 import { OptionsService } from '../shared/options.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SubViewStorage } from '../shared/subViewStorage';
+import { DiverOptions } from '../shared/models';
 
 @Component({
     selector: 'app-app-settings',
@@ -20,7 +21,7 @@ export class AppSettingsComponent implements OnInit {
     public flagIcon = faFlag;
     public diverIcon = faUserCog;
 
-    public diver = new Diver();
+    public diver: DiverOptions;
     public settingsForm!: FormGroup<{
         imperialUnits: FormControl<boolean>;
     }>;
@@ -32,6 +33,7 @@ export class AppSettingsComponent implements OnInit {
         private options: OptionsService,
         private views: SubViewStorage,
         public location: Location) {
+        this.diver = new DiverOptions(new Options(), new Diver());
         this.diver.loadFrom(this.options.diver);
     }
 
@@ -47,7 +49,7 @@ export class AppSettingsComponent implements OnInit {
         }
 
         const imperialUnits = Boolean(this.settingsForm.controls.imperialUnits.value);
-        this.options.applyDiver(this.diver);
+        this.options.applyDiver(this.diver.diver);
         this.units.imperialUnits = imperialUnits;
         this.settingsNormalization.apply();
         this.views.saveMainView();

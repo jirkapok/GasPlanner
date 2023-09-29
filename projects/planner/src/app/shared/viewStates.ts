@@ -28,7 +28,8 @@ export class ViewStates {
     /** Redirect to sub view only during application start.
      * After that (Any view already saved state) don\'t redirect. */
     public get redirectToView(): boolean {
-        return !this._started && this._lastView !== KnownViews.dashboard;
+        return !this._started && this._lastView !== KnownViews.dashboard &&
+            this._lastView !== '/'; // upgrade scenario from v0.1.20
     }
 
     public get all(): ViewState[] {

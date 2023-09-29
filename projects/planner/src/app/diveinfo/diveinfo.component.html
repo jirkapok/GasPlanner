@@ -32,6 +32,13 @@
                     <table class="table table-sm">
                         <tbody>
                             <tr>
+                                <td>Total dive time [min]:</td>
+                                <td class="table-active">
+                                    <strong *ngIf="dive.calculated">{{ dive.totalDuration | duration:dive.totalDuration
+                                        }} </strong>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Time to surface [min]:</td>
                                 <td class="table-active">
                                     <strong *ngIf="dive.calculated">{{ dive.timeToSurface | number:'1.0-0' }}</strong>
@@ -44,7 +51,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Rock bottom at:</td>
+                                <td>Rock bottom at [min]:</td>
                                 <td class="table-active">
                                     <strong *ngIf="dive.calculated">{{ dive.emergencyAscentStart |
                                         duration:dive.emergencyAscentStart }} </strong>

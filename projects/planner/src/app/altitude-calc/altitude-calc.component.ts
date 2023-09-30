@@ -7,9 +7,8 @@ import {
 } from '@angular/forms';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
-import { AltitudeCalculator } from '../shared/altitudeCalculator';
 import { AltitudeForm } from '../altitude/altitude.component';
-import { Precision } from 'scuba-physics';
+import { Precision, AltitudeCalculator } from 'scuba-physics';
 import { KnownViews } from '../shared/viewStates';
 import { AltitudeViewState } from '../shared/serialization.model';
 import { SubViewStorage } from '../shared/subViewStorage';

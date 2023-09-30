@@ -1,11 +1,9 @@
-import { Injectable } from '@angular/core';
 import {
     AltitudePressure, PressureConverter
-} from 'scuba-physics';
+} from './pressure-converter';
 
 
 /** Inspired by https://www.divebuddy.com/calculator/ */
-@Injectable()
 export class AltitudeCalculator {
     public altitudeDepth = 20;
     private _altitude = 300;

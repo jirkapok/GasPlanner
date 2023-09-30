@@ -2,6 +2,7 @@
  * Public API Surface of scuba-physics
  */
 
+export * from './lib/altitudeCalculator';
 export * from './lib/BuhlmannAlgorithm';
 export * from './lib/consumption';
 export * from './lib/Compartments';

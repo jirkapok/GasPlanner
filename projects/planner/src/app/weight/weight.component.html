@@ -3,35 +3,40 @@
         <div class="card">
             <div class="card-header">
                 <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
-                <span>Altitude calculator</span>
+                <span>Weight calculator</span>
             </div>
             <div class="card-body">
-                <form [formGroup]="altitudeForm">
+                <form [formGroup]="weightForm">
                     <div>
                         <div class="pt-2 mb-4">
-                            <label for="pressure" class="form-label" mdbLabel>Atmospheric pressure
-                                [{{units.pressure}}]:</label>
-                            <input class="form-control" name="pressure" id="pressure" type="number"
-                                formControlName="pressure" (input)="pressureChanged()" [min]="ranges.altitudePressure[0]" [max]="ranges.altitudePressure[1]"
-                                step="0.01" [class.is-invalid]="pressureInvalid"
-                                [value]="calc.pressure | number: '1.0-6'" />
-                            <div class="invalid-feedback position-absolute">Needs to be number {{ranges.altitudePressure[0]}} - {{ranges.altitudePressure[1]}} {{units.pressure}}
-                            </div>
+                            <label for="sizeFirstTank" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
+                            <app-tank-size [sizeForm]="weightForm" [tank]="tank" controlName="firstTankSize"
+                                (sizeChange)="sizeChanged()" (applyTemplate)="applyTemplate($event)">
+                            </app-tank-size>
+                            <div class="invalid-feedback position-absolute">Needs to be number {{ranges.tankSizeLabel}}</div>
                         </div>
                     </div>
+                    <div class="pt-2 mb-4" *ngIf="units.imperialUnits">
+                        <label for="workPressureFirstTank" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
+                        </label>
+                        <input class="form-control" type="number" (input)="inputChanged()" id="workPressureFirstTank"
+                            formControlName="workPressure" required [min]="ranges.tankPressure[0]"
+                            [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="workPressureInvalid" />
+                        <div class="invalid-feedback position-absolute">Needs to be number
+                            {{ranges.tankPressureLabel}}</div>
+                    </div>
                     <div>
-                        <app-altitude [altitude]="calc.altitude" [altitudeForm]="altitudeForm"
-                            (inputChange)="altitudeChanged($event)" />
+                        <label for="startPressureFirstTank" class="form-label" mdbLabel>Consumed [{{units.pressure}}]:
+                        </label>
+                        <input class="form-control" type="number" (input)="inputChanged()" id="startPressureFirstTank"
+                            formControlName="firstTankStartPressure" required [min]="ranges.tankPressure[0]"
+                            [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="pressureInvalid" />
+                        <div class="invalid-feedback position-absolute">Needs to be number
+                            {{ranges.tankPressureLabel}}</div>
                     </div>
                     <div class="pt-2 mb-4">
-                        <label for="actualDepth" class="form-label" mdbLabel>Actual depth [{{units.length}}]:</label>
-                        <input class="form-control" name="actualDepth" id="actualDepth" type="number"
-                            formControlName="actualDepth" (input)="inputChanged()" [min]="ranges.depth[0]"
-                            [max]="ranges.depth[1]" step="1" [class.is-invalid]="actualDepthInvalid" />
-                    </div>
-
-                    <div class="pt-2 mb-4">
-                        <label for="actualDepth" class="form-label" mdbLabel>Theoretical sea level depth
+                        Lost weight [kg]:
+                        <label for="actualDepth" class="form-label" mdbLabel>Lost weight
                             [{{units.length}}]:</label>
                         <input class="form-control readonly" name="theoreticalDepth" id="theoreticalDepth" type="number"
                             [readonly]="true" [value]="theoreticalDepth | number: '1.0-2'" readonly />

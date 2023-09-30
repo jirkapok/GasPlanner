@@ -9,6 +9,7 @@ export class KnownViews {
     public static readonly settings = 'settings';
     public static readonly about = 'about';
     public static readonly altitude = 'altitude';
+    public static readonly weight = 'weight';
 }
 
 @Injectable()

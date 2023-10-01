@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import {
-    AppOptionsDto,
-    AppPreferences, AppPreferencesDto, AppStates, DiveDto, DtoSerialization, ITankBound
+    AppOptionsDto, AppPreferences, AppPreferencesDto,
+    AppStates, DiveDto, ITankBound
 } from './serialization.model';
+import { DtoSerialization } from './dtoSerialization';
+
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';

@@ -9,9 +9,9 @@ import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
 import {
     ConsumptionRequestDto, ConsumptionResultDto,
-    DiveInfoResultDto, DtoSerialization,
-    ProfileRequestDto, ProfileResultDto
+    DiveInfoResultDto, ProfileRequestDto, ProfileResultDto
 } from './serialization.model';
+import { DtoSerialization } from '../shared/dtoSerialization';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';

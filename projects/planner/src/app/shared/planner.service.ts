@@ -10,9 +10,10 @@ import {
     Precision, Segments
 } from 'scuba-physics';
 import {
-    DtoSerialization, ConsumptionResultDto, ConsumptionRequestDto,
-    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto, ITankBound, EventOptionsDto
+    ConsumptionResultDto, ConsumptionRequestDto, EventOptionsDto,
+    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto, ITankBound
 } from './serialization.model';
+import { DtoSerialization } from './dtoSerialization';
 import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
 import { TanksService } from './tanks.service';

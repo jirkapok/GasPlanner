@@ -3,10 +3,10 @@ import {
     Consumption, Time, Diver, OtuCalculator, CnsCalculator, DensityAtDepth, EventOptions
 } from 'scuba-physics';
 import {
-    DtoSerialization,
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
     ConsumptionResultDto, DiveInfoResultDto
 } from '../shared/serialization.model';
+import { DtoSerialization } from '../shared/dtoSerialization';
 
 export class PlanningTasks {
     /** 1. Calculate profile */

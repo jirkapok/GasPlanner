@@ -16,6 +16,10 @@ describe('Metric units', () => {
         it('Volume is liter', () => {
             expect(units.volumeShortcut).toBe('l');
         });
+
+        it('Weight is kilogram', () => {
+            expect(units.weightShortcut).toBe('kg');
+        });
     });
 
     describe('Metric - Meters', () => {
@@ -108,6 +112,18 @@ describe('Metric units', () => {
             expect(result).toBeCloseTo(1.234, 3);
         });
     });
+
+    describe('Weight - kilogram', () => {
+        it('From 1 kg returns identical value', () => {
+            const result = units.fromKilogram(2.365);
+            expect(result).toBeCloseTo(2.365, 3);
+        });
+
+        it('To 1 kg returns identical value', () => {
+            const result = units.toKilogram(2.365);
+            expect(result).toBeCloseTo(2.365, 3);
+        });
+    });
 });
 
 describe('Imperial units', () => {
@@ -124,6 +140,10 @@ describe('Imperial units', () => {
 
         it('Volume is cubic feet', () => {
             expect(units.volumeShortcut).toBe('cuft');
+        });
+
+        it('Weight is pound', () => {
+            expect(units.weightShortcut).toBe('lb');
         });
     });
 
@@ -241,6 +261,18 @@ describe('Imperial units', () => {
         it('From 1 g/l returns expect', () => {
             const result = units.fromGramPerLiter(1);
             expect(result).toBeCloseTo(0.06242796, 8);
+        });
+    });
+
+    describe('Weight - pounds', () => {
+        it('From 1 kg returns 2.2 lb', () => {
+            const result = units.fromKilogram(1);
+            expect(result).toBeCloseTo(2.2046226, 7);
+        });
+
+        it('2.4 lb To kg returns 2 kg', () => {
+            const result = units.toKilogram(4.4092452437);
+            expect(result).toBeCloseTo(2, 6);
         });
     });
 });

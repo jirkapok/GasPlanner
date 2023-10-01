@@ -4,6 +4,7 @@ export interface Units {
     lengthShortcut: string;
     pressureShortcut: string;
     volumeShortcut: string;
+    weightShortcut: string;
     altitudeShortcut: string;
     densityShortcut: string;
     toMeters(length: number): number;
@@ -18,6 +19,10 @@ export interface Units {
     toTankLiters(cuftVolume: number, workingPressure: number): number;
 
     fromGramPerLiter(density: number): number;
+
+    fromKilogram(weight: number): number;
+
+    toKilogram(weight: number): number;
 }
 
 /**
@@ -39,6 +44,10 @@ export class MetricUnits implements Units {
 
     public get volumeShortcut(): string{
         return 'l';
+    }
+
+    public get weightShortcut(): string{
+        return 'kg';
     }
 
     public get altitudeShortcut(): string{
@@ -84,6 +93,14 @@ export class MetricUnits implements Units {
     public fromGramPerLiter(density: number): number {
         return density;
     }
+
+    public fromKilogram(weight: number): number {
+        return weight;
+    }
+
+    public toKilogram(weight: number): number {
+        return weight;
+    }
 }
 
 /**
@@ -104,6 +121,7 @@ export class MetricUnits implements Units {
 export class ImperialUnits implements Units {
     private static readonly psiRate = 14.503773773022;
     private static readonly cftRate = 28.316846592;
+    private static readonly lbRate = 2.20462262185;
 
     /**
      * 1 fsw equals 0.30643 msw
@@ -129,6 +147,10 @@ export class ImperialUnits implements Units {
 
     public get volumeShortcut(): string{
         return 'cuft';
+    }
+
+    public get weightShortcut(): string{
+        return 'lb';
     }
 
     public get altitudeShortcut(): string{
@@ -179,5 +201,13 @@ export class ImperialUnits implements Units {
 
     public fromGramPerLiter(density: number): number {
         return density * ImperialUnits.lbPerCuftRate;
+    }
+
+    public fromKilogram(weight: number): number {
+        return weight * ImperialUnits.lbRate;
+    }
+
+    public toKilogram(weight: number): number {
+        return weight / ImperialUnits.lbRate;
     }
 }

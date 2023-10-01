@@ -58,7 +58,7 @@ export class WeightCalcComponent implements OnInit {
 
     public get weight(): number {
         let result = AirWeight.tankVolumeWeight(this.tank.tank);
-        result = this.units.fromBar(result);
+        result = this.units.fromKilogram(result);
         return Precision.round(result, 1);
     }
 
@@ -69,7 +69,7 @@ export class WeightCalcComponent implements OnInit {
 
     public ngOnInit(): void {
         this.weightForm = this.fb.group({
-            consumed: [this.consumed, this.validators.rangeFor(this.ranges.tankPressure)],
+            consumed: [this.consumed, this.validators.rangeFor(this.ranges.consumed)],
         });
 
         if(this.units.imperialUnits) {
@@ -97,12 +97,12 @@ export class WeightCalcComponent implements OnInit {
         }
 
         const values = this.weightForm.value;
-        this.tank.tank.consumed = Number(values.consumed);
+        const consumed = Number(values.consumed);
+        this.tank.tank.consumed = this.units.toBar(consumed);
         this.saveState();
     }
 
-    // TODO fix consumed range for both weight and sac component
-    // TODO add weight to the units
+    // TODO fix consumed range in sac component
     // TODO fix tank size validation message, check also in sac and simple component
     // TODO implement save/load of state
     private loadState(): void {

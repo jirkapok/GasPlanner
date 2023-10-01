@@ -42,6 +42,10 @@ export class UnitConversion {
         return this.current.volumeShortcut;
     }
 
+    public get weight(): string {
+        return this.current.weightShortcut;
+    }
+
     public get altitude(): string {
         return this.current.altitudeShortcut;
     }
@@ -129,6 +133,14 @@ export class UnitConversion {
     public fromGramPerLiter(density: number): number {
         return this.current.fromGramPerLiter(density);
     }
+
+    public fromKilogram(weight: number): number {
+        return this.current.fromKilogram(weight);
+    }
+
+    public toKilogram(weight: number): number {
+        return this.current.toKilogram(weight);
+    }
 }
 
 
@@ -139,6 +151,8 @@ export interface RangeConstants {
     tankSizeLabel: string;
     tankPressure: [number, number];
     tankPressureLabel: string;
+    consumed: [number, number];
+    consumedLabel: string;
     nitroxOxygen: [number, number];
     nitroxOxygenLabel: string;
     trimixOxygen: [number, number];
@@ -173,6 +187,8 @@ class MetricRanges implements RangeConstants {
     public readonly altitude: [number, number] = [0, 5000];
     public readonly altitudeLabel: string = toLabel(this.altitude, this.units.altitudeShortcut);
     public readonly altitudePressure: [number, number] = [0.7, 1.2];
+    public readonly consumed: [number, number] = [0, 350];
+    public readonly consumedLabel: string = toLabel(this.consumed, this.units.pressureShortcut);
     public readonly depth: [number, number] = [1, 350];
     public readonly depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
     public readonly diverRmv: [number, number] = [5, 90];
@@ -206,6 +222,8 @@ class ImperialRanges implements RangeConstants {
     public readonly altitude: [number, number] = [0, 16500];
     public readonly altitudeLabel: string = toLabel(this.altitude, this.units.altitudeShortcut);
     public readonly altitudePressure: [number, number] = [10, 18];
+    public readonly consumed: [number, number] = [0, 5100];
+    public readonly consumedLabel: string = toLabel(this.consumed, this.units.pressureShortcut);
     public readonly depth: [number, number] = [3, 1150];
     public readonly depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
     public readonly diverRmv: [number, number] = [0.17, 3.178];

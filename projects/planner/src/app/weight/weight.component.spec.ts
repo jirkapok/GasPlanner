@@ -37,7 +37,8 @@ describe('WeightCalcComponent', () => {
         fixture.detectChanges();
     });
 
-    fit('Calculates theoretical depth', () => {
-        expect(component.theoreticalDepth).toBeCloseTo(20.73, 3);
+    it('Calculates theoretical depth', () => {
+        component.tank.tank.consumed = 150;
+        expect(component.weight).toBeCloseTo(2.8, 3);
     });
 });

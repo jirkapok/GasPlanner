@@ -10,6 +10,7 @@ import { NgModule, inject } from '@angular/core';
 import { KnownViews, ViewStates } from './shared/viewStates';
 import { AltitudeCalcComponent } from './altitude-calc/altitude-calc.component';
 import { WeightCalcComponent } from './weight/weight.component';
+import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
 
 const canActivateDashboard: CanActivateFn = (): boolean | UrlTree => {
     const router = inject(Router);
@@ -32,6 +33,7 @@ const routes: Routes = [
     { path: KnownViews.ndl, component: NdlLimitsComponent },
     { path: KnownViews.altitude, component: AltitudeCalcComponent },
     { path: KnownViews.weight, component: WeightCalcComponent },
+    { path: KnownViews.gas, component: GasPropertiesCalcComponent },
     { path: KnownViews.about, component: AboutComponent },
     {
         path: '**',

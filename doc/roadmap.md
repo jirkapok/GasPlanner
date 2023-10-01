@@ -9,7 +9,6 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Add documentation about altitude and weight calculator
 * Add option to define repetitive dives
 * Allow user to compare multiple plans side by side
 * Fix PWA issues https://www.pwabuilder.com/

@@ -15,7 +15,7 @@ import { Precision } from 'scuba-physics';
 import { TanksService } from '../shared/tanks.service';
 import { OptionsService } from '../shared/options.service';
 import { SubViewStorage } from '../shared/subViewStorage';
-import { NitroxViewState } from '../shared/serialization.model';
+import { NitroxViewState } from '../shared/views.model';
 import { KnownViews } from '../shared/viewStates';
 
 interface NitroxForm {

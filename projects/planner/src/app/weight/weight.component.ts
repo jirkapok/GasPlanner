@@ -11,7 +11,7 @@ import {
     Precision, Tank, TankTemplate, AirWeight
 } from 'scuba-physics';
 import { KnownViews } from '../shared/viewStates';
-import { AltitudeViewState } from '../shared/serialization.model';
+import { AltitudeViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { TankBound } from '../shared/models';
 

@@ -8,7 +8,7 @@ import { OptionsService } from '../shared/options.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { TankBound } from '../shared/models';
-import { NdlViewState } from '../shared/serialization.model';
+import { NdlViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { KnownViews } from '../shared/viewStates';
 

@@ -10,7 +10,7 @@ import { OptionsService } from './options.service';
 import { WayPointsService } from './waypoints.service';
 import { Preferences } from './preferences';
 import { ViewSwitchService } from './viewSwitchService';
-import { ViewState } from './serialization.model';
+import { ViewState } from './views.model';
 import { SubViewStorage } from './subViewStorage';
 
 const viewId = 'testView';

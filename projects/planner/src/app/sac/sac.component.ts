@@ -11,7 +11,7 @@ import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { OptionsService } from '../shared/options.service';
 import { TankBound } from '../shared/models';
-import { SacViewState } from '../shared/serialization.model';
+import { SacViewState } from '../shared/views.model';
 import { KnownViews } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
 

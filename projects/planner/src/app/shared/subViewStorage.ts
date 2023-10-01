@@ -1,5 +1,5 @@
 import { KnownViews, ViewStates } from './viewStates';
-import { ViewState } from './serialization.model';
+import { ViewState } from './views.model';
 import { PreferencesStore } from './preferencesStore';
 import { Injectable } from '@angular/core';
 

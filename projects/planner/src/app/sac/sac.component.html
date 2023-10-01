@@ -57,10 +57,10 @@
                             <div class="pt-2 mb-4">
                                 <label for="used" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
                                 <input formControlName="used" class="form-control" name="used" id="used" type="number"
-                                    [min]="ranges.tankPressure[0]" [max]="ranges.tankPressure[1]" step="1"
+                                    [min]="ranges.consumed[0]" [max]="ranges.consumed[1]" step="1"
                                     (input)="inputChanged()" [class.is-invalid]="usedInvalid" />
                                 <div class="invalid-feedback position-absolute">Needs to be number
-                                    {{ranges.tankPressureLabel}}
+                                    {{ranges.consumedLabel}}
                                 </div>
                             </div>
                         </ng-container>

@@ -102,7 +102,6 @@ export class WeightCalcComponent implements OnInit {
         this.saveState();
     }
 
-    // TODO fix consumed range in sac component
     // TODO fix tank size validation message, check also in sac and simple component
     // TODO implement save/load of state
     private loadState(): void {

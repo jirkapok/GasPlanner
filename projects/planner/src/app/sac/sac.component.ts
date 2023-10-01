@@ -128,7 +128,7 @@ export class SacComponent implements OnInit {
         this.saveState();
 
         this.durationControl = this.formBuilder.control(this.calcDuration, this.validators.duration);
-        this.usedControl = this.formBuilder.control(this.calcUsed, this.validators.tankPressure);
+        this.usedControl = this.formBuilder.control(this.calcUsed, this.validators.tankConsumed);
         this.rmvControl = this.formBuilder.control(this.calcRmv, this.validators.diverRmv);
 
         this.formSac = this.formBuilder.group({

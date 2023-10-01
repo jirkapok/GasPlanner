@@ -43,6 +43,10 @@ export class ValidatorGroups {
         return this.rangeFor(this.ranges.tankPressure);
     }
 
+    public get tankConsumed(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.consumed);
+    }
+
     public get tankSize(): ValidatorFn[] {
         return this.rangeFor(this.ranges.tankSize);
     }

@@ -22,6 +22,7 @@ git merge develop
 
 ./build/build.ps1
 
+git checkout .  # prevent failed gh-pages checkout because of any file changed during the build
 git checkout gh-pages
 
 # merge files

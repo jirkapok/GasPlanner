@@ -19,6 +19,7 @@ Following list of features and improvements ordered by priority is under develop
   * <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/>
 * Redundancies calculator - when filling one tank from second. What is the target pressure in both.
 * UI Tweaks
+  * Read only fields should be distinguish able
   * Profile:
     * Waypoints table: add switch in case user is switching to tank with the same gas
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faCalculator, faTable } from '@fortawesome/free-solid-svg-icons';
 import {
     NonNullableFormBuilder, FormGroup, FormControl, AbstractControl
 } from '@angular/forms';
@@ -27,6 +27,7 @@ interface WeightForm {
 })
 export class GasPropertiesCalcComponent implements OnInit {
     public calcIcon = faCalculator;
+    public tableIcon = faTable;
     public weightForm!: FormGroup<WeightForm>;
     public tank: TankBound;
 
@@ -109,32 +110,32 @@ export class GasPropertiesCalcComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: WeightViewState = this.viewStates.loadView(KnownViews.weight);
+        // let state: WeightViewState = this.viewStates.loadView(KnownViews.weight);
 
-        if (!state) {
-            state = this.createState();
-        }
+        // if (!state) {
+        //     state = this.createState();
+        // }
 
-        this.tank.tank.size = state.tankSize;
-        const workPressure = this.units.fromBar(state.workPressure);
-        this.setWorkingPressure(workPressure);
-        this.tank.tank.consumed = state.consumed;
+        // this.tank.tank.size = state.tankSize;
+        // const workPressure = this.units.fromBar(state.workPressure);
+        // this.setWorkingPressure(workPressure);
+        // this.tank.tank.consumed = state.consumed;
     }
 
     private saveState(): void {
-        const viewState = this.createState();
-        this.viewStates.saveView(viewState);
+        // const viewState = this.createState();
+        // this.viewStates.saveView(viewState);
     }
 
-    private createState(): WeightViewState {
-        const tank = this.tank.tank;
-        return {
-            tankSize: tank.size,
-            workPressure: this.tank.workingPressureBars,
-            consumed: tank.consumed,
-            id: KnownViews.weight
-        };
-    }
+    // private createState(): WeightViewState {
+    //     const tank = this.tank.tank;
+    //     return {
+    //         tankSize: tank.size,
+    //         workPressure: this.tank.workingPressureBars,
+    //         consumed: tank.consumed,
+    //         id: KnownViews.weight
+    //     };
+    // }
 
     private setWorkingPressure(newValue: number): void {
         if(this.units.imperialUnits) {

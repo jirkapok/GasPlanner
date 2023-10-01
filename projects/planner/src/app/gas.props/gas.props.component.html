@@ -3,47 +3,71 @@
         <div class="card">
             <div class="card-header">
                 <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
-                <span>Weight calculator</span>
+                <span>Gas mixture</span>
             </div>
             <div class="card-body">
                 <form [formGroup]="weightForm">
                     <div>
                         <div class="pt-2 mb-4">
-                            <label for="tankSize" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
-                            <app-tank-size [sizeForm]="weightForm" [tank]="tank" controlName="tankSize"
+                            Oxygen [%]
+                            <!-- <label for="tankSize" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
+                           <app-tank-size [sizeForm]="weightForm" [tank]="tank" controlName="tankSize"
                                 (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event)">
                             </app-tank-size>
-                            <div class="text-danger form-text position-absolute" *ngIf="tankSizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>
+                            <div class="text-danger form-text position-absolute" *ngIf="tankSizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>-->
                         </div>
                     </div>
-                    <div class="pt-2 mb-4" *ngIf="units.imperialUnits">
-                        <label for="workPressure" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
+                    <div class="pt-2 mb-4">
+                        Helium [%]
+                        <!-- <label for="workPressure" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
                         </label>
                         <input class="form-control" type="number" (input)="inputChanged()" id="workPressure"
                             formControlName="workPressure" required [min]="ranges.tankPressure[0]"
                             [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="workPressureInvalid" />
                         <div class="invalid-feedback position-absolute">Needs to be number
-                            {{ranges.tankPressureLabel}}</div>
+                            {{ranges.tankPressureLabel}}</div> -->
                     </div>
                     <div class="pt-2 mb-4">
-                        <label for="consumed" class="form-label" mdbLabel>Consumed [{{units.pressure}}]:
+                        Properties at depth [m]
+                        <!-- <label for="consumed" class="form-label" mdbLabel>Consumed [{{units.pressure}}]:
                         </label>
                         <input class="form-control" type="number" (input)="inputChanged()" id="consumed"
                             formControlName="consumed" required [min]="ranges.consumed[0]"
                             [max]="ranges.consumed[1]" step="1" [class.is-invalid]="consumedInvalid" />
                         <div class="invalid-feedback position-absolute">Needs to be number
-                            {{ranges.consumedLabel}}</div>
+                            {{ranges.consumedLabel}}</div> -->
                     </div>
                     <div class="pt-2 mb-4">
-                        <label for="weight" class="form-label" mdbLabel>Lost weight [{{units.weight}}]:</label>
+                        <!-- <label for="weight" class="form-label" mdbLabel>Lost weight [{{units.weight}}]:</label>
                         <input class="form-control readonly" name="weight" id="weight" type="number"
-                            [readonly]="true" [value]="weight | number: '1.0-2'" readonly />
+                            [readonly]="true" [value]="weight | number: '1.0-2'" readonly /> -->
                     </div>
                 </form>
             </div>
         </div>
-        <div class="form-group mt-3">
-            <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
+    </div>
+    <div class="col col-12 col-sm-5 col-md-5 col-lg-3 col-xxl-2 mt-3">
+        <div class="card ndl-minheight">
+            <div class="card-header">
+                <fa-icon [icon]="tableIcon" class="me-3"></fa-icon>
+                <span>Gas properties</span>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm p-0">
+                    <tbody>
+                        <tr>
+                            <td>Nitrogen [%]</td>
+                            <td class="table-active"></td>
+                        </tr>
+                    </tbody>
+                    <!-- ( ppN2, ppHe, ppO2, total pp, minOD, MOD, MND, density) -->
+                </table>
+            </div>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group mt-3">
+        <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
     </div>
 </div>

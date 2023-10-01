@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WeightCalcComponent } from './weight.component';
+import { GasPropertiesCalcComponent } from './gas.props.component';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
@@ -18,12 +18,12 @@ import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 
 describe('WeightCalcComponent', () => {
-    let component: WeightCalcComponent;
-    let fixture: ComponentFixture<WeightCalcComponent>;
+    let component: GasPropertiesCalcComponent;
+    let fixture: ComponentFixture<GasPropertiesCalcComponent>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [WeightCalcComponent],
+            declarations: [GasPropertiesCalcComponent],
             providers: [
                 UnitConversion, ValidatorGroups, InputControls,
                 DecimalPipe, SubViewStorage, ViewStates,
@@ -32,7 +32,7 @@ describe('WeightCalcComponent', () => {
                 Preferences, ViewSwitchService
             ]
         });
-        fixture = TestBed.createComponent(WeightCalcComponent);
+        fixture = TestBed.createComponent(GasPropertiesCalcComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

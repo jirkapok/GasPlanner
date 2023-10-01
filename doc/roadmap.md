@@ -6,13 +6,14 @@ Following list of features and improvements ordered by priority is under develop
 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
-* Altitude doesn't refresh units in dive options after units are changed
 
 ## Improvements / Features
 
+* Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
+* Add documentation about altitude calculator
 * Add option to define repetitive dives
 * Allow user to compare multiple plans side by side
-* Add gas depth range/properties/trimix calculator
+* Add gas depth range/properties/trimix calculator at depth (fN2, ppN2, ppHe, ppO2, total pp, minOD, MOD, MND, density)
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
 * UI Tweaks
@@ -21,7 +22,6 @@ Following list of features and improvements ordered by priority is under develop
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
 * Add undo/redo to all pages
-* Add weighting calculator, see <https://www.facebook.com/watch/?v=400481725415718> (air weight is 1.225 g/l), see also <https://www.omnicalculator.com/physics/air-density> and <https://en.wikipedia.org/wiki/Density_of_air#Temperature>
 * Add gas density calculator (to be able understand to don't breath gas with higher density than 5.7 g/l):
   * <https://www.thoughtco.com/how-to-calculate-density-of-a-gas-607847>
   * <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/>

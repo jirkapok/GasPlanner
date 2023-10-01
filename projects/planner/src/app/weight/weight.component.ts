@@ -104,6 +104,7 @@ export class WeightCalcComponent implements OnInit {
     }
 
     // TODO fix tank size validation message, check also in sac and simple component
+    // TODO Fix tank size and working pressure reload to their precision
     private loadState(): void {
         let state: WeightViewState = this.viewStates.loadView(KnownViews.weight);
 

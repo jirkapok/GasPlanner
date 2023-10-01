@@ -28,6 +28,12 @@
                             {{ranges.tankPressureLabel}}</div> -->
                     </div>
                     <div class="pt-2 mb-4">
+                        Nitrogen [%]
+                        <!-- <label for="weight" class="form-label" mdbLabel>Lost weight [{{units.weight}}]:</label>
+                        <input class="form-control readonly" name="weight" id="weight" type="number"
+                            [readonly]="true" [value]="weight | number: '1.0-2'" readonly /> -->
+                    </div>
+                    <div class="pt-2 mb-4">
                         Properties at depth [m]
                         <!-- <label for="consumed" class="form-label" mdbLabel>Consumed [{{units.pressure}}]:
                         </label>
@@ -36,11 +42,6 @@
                             [max]="ranges.consumed[1]" step="1" [class.is-invalid]="consumedInvalid" />
                         <div class="invalid-feedback position-absolute">Needs to be number
                             {{ranges.consumedLabel}}</div> -->
-                    </div>
-                    <div class="pt-2 mb-4">
-                        <!-- <label for="weight" class="form-label" mdbLabel>Lost weight [{{units.weight}}]:</label>
-                        <input class="form-control readonly" name="weight" id="weight" type="number"
-                            [readonly]="true" [value]="weight | number: '1.0-2'" readonly /> -->
                     </div>
                 </form>
             </div>
@@ -56,11 +57,38 @@
                 <table class="table table-sm p-0">
                     <tbody>
                         <tr>
-                            <td>Nitrogen [%]</td>
-                            <td class="table-active"></td>
+                            <td>Oxygen partial pressure</td>
+                            <td class="table-active">00</td>
+                        </tr>
+                        <tr>
+                            <td>Helium partial pressure</td>
+                            <td class="table-active">00</td>
+                        </tr>
+                        <tr>
+                            <td>Nitrogen partial pressure</td>
+                            <td class="table-active">00</td>
+                        </tr>
+                        <tr>
+                            <td>Total partial pressure</td>
+                            <td class="table-active">00</td>
+                        </tr>
+                        <tr>
+                            <td>Minimum depth [m]</td>
+                            <td class="table-active">00</td>
+                        </tr>
+                        <tr>
+                            <td>Maximum depth [m]</td>
+                            <td class="table-active">00</td>
+                        </tr>
+                        <tr>
+                            <td>Equivalent narcotic depth [m]</td>
+                            <td class="table-active">00</td>
+                        </tr>
+                        <tr>
+                            <td>Density [g/l]</td>
+                            <td class="table-active">00</td>
                         </tr>
                     </tbody>
-                    <!-- ( ppN2, ppHe, ppO2, total pp, minOD, MOD, MND, density) -->
                 </table>
             </div>
         </div>

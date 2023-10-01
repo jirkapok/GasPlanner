@@ -7,15 +7,17 @@ import {
 } from '@angular/forms';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
-import { Precision, AltitudeCalculator, Tank, TankTemplate } from 'scuba-physics';
+import {
+    Precision, Tank, TankTemplate, AirWeight
+} from 'scuba-physics';
 import { KnownViews } from '../shared/viewStates';
 import { AltitudeViewState } from '../shared/serialization.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { TankBound } from '../shared/models';
 
 interface WeightForm {
-    pressure: FormControl<number>;
-    actualDepth: FormControl<number>;
+    workPressure?: FormControl<number>;
+    consumed: FormControl<number>;
 }
 
 @Component({
@@ -26,7 +28,6 @@ interface WeightForm {
 export class WeightCalcComponent implements OnInit {
     public calcIcon = faCalculator;
     public weightForm!: FormGroup<WeightForm>;
-    public calc = new AltitudeCalculator();
     public tank: TankBound;
 
     constructor(
@@ -45,97 +46,64 @@ export class WeightCalcComponent implements OnInit {
         return this.units.ranges;
     }
 
-    // TODO
-    public get workPressureInvalid(): boolean {
-        const pressureControl = this.weightForm.controls.pressure;
-        return this.inputs.controlInValid(pressureControl);
-    }
-
-    // TODO
-    public get pressureInvalid(): boolean {
-        const depthControl = this.weightForm.controls.actualDepth;
+    public get consumedInvalid(): boolean {
+        const depthControl = this.weightForm.controls.consumed;
         return this.inputs.controlInValid(depthControl);
     }
 
-    public get calcAltitude(): number {
-        const uiAltitude = this.units.fromMeters(this.calc.altitude);
-        return Precision.round(uiAltitude);
+    public get workPressureInvalid(): boolean {
+        const pressureControl = this.weightForm.controls.workPressure;
+        return this.inputs.controlInValid(pressureControl);
     }
 
-    public get calcPressure(): number {
-        const uiPressure = this.units.fromBar(this.calc.pressure);
-        return Precision.round(uiPressure, 6);
+    public get weight(): number {
+        let result = AirWeight.tankVolumeWeight(this.tank.tank);
+        result = this.units.fromBar(result);
+        return Precision.round(result, 1);
     }
 
-    public get calcAltitudeDepth(): number {
-        const altitudeDepth = this.units.fromMeters(this.calc.altitudeDepth);
-        return Precision.round(altitudeDepth, 0);
-    }
-
-    public get theoreticalDepth(): number {
-        const depth = this.units.fromMeters(this.calc.theoreticalDepth);
-        return Precision.round(depth, 2);
-    }
-
-    public firstTankSizeInvalid(): boolean {
-        return false; // TODO tank size invalid
+    public get consumed(): number {
+        const bars = this.tank.tank.consumed;
+        return this.units.fromBar(bars);
     }
 
     public ngOnInit(): void {
         this.weightForm = this.fb.group({
-            pressure: [this.calcPressure, this.validators.rangeFor(this.ranges.altitudePressure)],
-            actualDepth: [this.calcAltitudeDepth, this.validators.depth]
+            consumed: [this.consumed, this.validators.rangeFor(this.ranges.tankPressure)],
         });
-    }
 
-    public sizeChanged(): void {
-        // TODO sizeChanged
+        if(this.units.imperialUnits) {
+            const workPressureControl = this.fb.control(
+                Precision.round(this.tank.workingPressure, 1), this.validators.tankPressure);
+            this.weightForm.addControl('workPressure', workPressureControl);
+        }
     }
 
     public applyTemplate(template: TankTemplate): void {
-        // TODO apply tank size template
-    }
-
-    // TODO replace
-    public pressureChanged(): void {
         if (this.weightForm.invalid) {
             return;
         }
 
-        const values = this.weightForm.value;
-        const metricPressure = this.units.toBar(Number(values.pressure));
-        this.calc.pressure = metricPressure;
+        this.weightForm.patchValue({
+            workPressure: template.workingPressure,
+        });
 
-        // this.weightForm.patchValue({
-        //     altitude: this.calcAltitude
-        // });
-
-        this.saveState();
+        this.inputChanged();
     }
 
-    // TODO replace
-    public altitudeChanged(newValue: number): void {
-        if (this.weightForm.invalid) {
-            return;
-        }
-
-        // already in metric
-        // this.calc.altitude = newValue;
-        this.saveState();
-    }
-
-    // TODO replace
     public inputChanged(): void {
         if (this.weightForm.invalid) {
             return;
         }
 
         const values = this.weightForm.value;
-        const metricDepth = this.units.toMeters(Number(values.actualDepth));
-        // this.calc.altitudeDepth = metricDepth;
+        this.tank.tank.consumed = Number(values.consumed);
         this.saveState();
     }
 
+    // TODO fix consumed range for both weight and sac component
+    // TODO add weight to the units
+    // TODO fix tank size validation message, check also in sac and simple component
     // TODO implement save/load of state
     private loadState(): void {
         // let state: AltitudeViewState = this.viewStates.loadView(KnownViews.altitude);

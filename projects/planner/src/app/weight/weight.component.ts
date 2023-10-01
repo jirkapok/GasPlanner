@@ -108,7 +108,6 @@ export class WeightCalcComponent implements OnInit {
         this.saveState();
     }
 
-    // TODO Fix tank size and working pressure reload to their precision
     private loadState(): void {
         let state: WeightViewState = this.viewStates.loadView(KnownViews.weight);
 
@@ -139,7 +138,7 @@ export class WeightCalcComponent implements OnInit {
 
     private setWorkingPressure(newValue: number): void {
         if(this.units.imperialUnits) {
-            this.tank.workingPressure = newValue;
+            this.tank.workingPressure = Precision.round(newValue, 1);
         }
     }
 }

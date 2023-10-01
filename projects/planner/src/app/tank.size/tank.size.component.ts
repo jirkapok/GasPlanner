@@ -47,7 +47,8 @@ export class TankSizeComponent implements OnInit {
             this.sizeForm = this.fb.group({});
         }
 
-        const sizeControl = this.fb.control(this.tank.size, this.validators.tankSize);
+        const initSize = Precision.round(this.tank.size, 1);
+        const sizeControl = this.fb.control(initSize, this.validators.tankSize);
         this.sizeForm.addControl(this.controlName, sizeControl);
     }
 
@@ -65,7 +66,7 @@ export class TankSizeComponent implements OnInit {
     public assignTankTemplate(template: TankTemplate): void {
         this.tank.assignTemplate(template);
         this.sizeForm.patchValue({
-            [this.controlName]: Precision.round(this.tank.size, 1) // because of precission for HP100
+            [this.controlName]: Precision.round(this.tank.size, 1) // because of precision for HP100
         });
         // side effect, it didn't change the size only, but the working pressure too
         this.applyTemplate.emit(template);

@@ -10,7 +10,7 @@
                 <app-tank-size [sizeForm]="tanksForm" [tank]="firstTank" controlName="firstTankSize"
                     (sizeChange)="applySimple()" (applyTemplate)="applyTemplate($event)">
                 </app-tank-size>
-                <div class="invalid-feedback position-absolute">Needs to be number {{ranges.tankSizeLabel}}</div>
+                <div class="text-danger form-text position-absolute" *ngIf="firstTankSizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>
                 <div class="form-text text-muted" [class.invisible]="firstTankSizeInvalid">SAC: {{gasSac() |
                     number:'1.0-2'}} {{units.sac}}</div>
             </div>

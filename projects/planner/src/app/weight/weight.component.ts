@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import {
-    NonNullableFormBuilder, FormGroup, FormControl
+    NonNullableFormBuilder, FormGroup, FormControl, AbstractControl
 } from '@angular/forms';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
@@ -56,6 +56,11 @@ export class WeightCalcComponent implements OnInit {
         return this.inputs.controlInValid(pressureControl);
     }
 
+    public get tankSizeInvalid(): boolean {
+        const tankSize = this.weightForm.get('tankSize') as AbstractControl;
+        return this.inputs.controlInValid(tankSize);
+    }
+
     public get weight(): number {
         let result = AirWeight.tankVolumeWeight(this.tank.tank);
         result = this.units.fromKilogram(result);
@@ -103,7 +108,6 @@ export class WeightCalcComponent implements OnInit {
         this.saveState();
     }
 
-    // TODO fix tank size validation message, check also in sac and simple component
     // TODO Fix tank size and working pressure reload to their precision
     private loadState(): void {
         let state: WeightViewState = this.viewStates.loadView(KnownViews.weight);

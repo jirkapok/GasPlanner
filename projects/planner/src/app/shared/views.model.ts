@@ -30,6 +30,12 @@ export interface NdlViewState extends ViewState {
     gfHigh: number;
 }
 
+export interface WeightViewState extends ViewState {
+    tankSize: number;
+    workPressure: number;
+    consumed: number;
+}
+
 /** all data are stored in metric */
 export interface ViewState {
     /** case sensitive id as view key */

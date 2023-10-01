@@ -11,7 +11,7 @@ import {
     Precision, Tank, TankTemplate, AirWeight
 } from 'scuba-physics';
 import { KnownViews } from '../shared/viewStates';
-import { AltitudeViewState } from '../shared/views.model';
+import { WeightViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { TankBound } from '../shared/models';
 
@@ -99,32 +99,42 @@ export class WeightCalcComponent implements OnInit {
         const values = this.weightForm.value;
         const consumed = Number(values.consumed);
         this.tank.tank.consumed = this.units.toBar(consumed);
+        this.setWorkingPressure(Number(values.workPressure));
         this.saveState();
     }
 
     // TODO fix tank size validation message, check also in sac and simple component
-    // TODO implement save/load of state
     private loadState(): void {
-        // let state: AltitudeViewState = this.viewStates.loadView(KnownViews.altitude);
+        let state: WeightViewState = this.viewStates.loadView(KnownViews.weight);
 
-        // if (!state) {
-        //     state = this.createState();
-        // }
+        if (!state) {
+            state = this.createState();
+        }
 
-        // this.calc.altitudeDepth = state.actualDepth;
-        // this.calc.altitude = state.altitude;
+        this.tank.tank.size = state.tankSize;
+        const workPressure = this.units.fromBar(state.workPressure);
+        this.setWorkingPressure(workPressure);
+        this.tank.tank.consumed = state.consumed;
     }
 
     private saveState(): void {
-    //     const viewState = this.createState();
-    //     this.viewStates.saveView(viewState);
+        const viewState = this.createState();
+        this.viewStates.saveView(viewState);
     }
 
-    // private createState(): AltitudeViewState {
-    //     return {
-    //         altitude: this.calc.altitude,
-    //         actualDepth: this.calc.altitudeDepth,
-    //         id: KnownViews.altitude
-    //     };
-    // }
+    private createState(): WeightViewState {
+        const tank = this.tank.tank;
+        return {
+            tankSize: tank.size,
+            workPressure: this.tank.workingPressureBars,
+            consumed: tank.consumed,
+            id: KnownViews.weight
+        };
+    }
+
+    private setWorkingPressure(newValue: number): void {
+        if(this.units.imperialUnits) {
+            this.tank.workingPressure = newValue;
+        }
+    }
 }

@@ -78,6 +78,7 @@ import { DashboardStartUp } from './shared/startUp';
 import { AltitudeCalcComponent } from './altitude-calc/altitude-calc.component';
 import { WeightCalcComponent } from './weight/weight.component';
 import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
+import { DiffComponent } from './diff/diff.component';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -132,7 +133,8 @@ const MDB_MODULES = [
         TankSizeComponent,
         AltitudeCalcComponent,
         WeightCalcComponent,
-        GasPropertiesCalcComponent
+        GasPropertiesCalcComponent,
+        DiffComponent
     ],
     imports: [
         ...ANGULAR_MODULES,

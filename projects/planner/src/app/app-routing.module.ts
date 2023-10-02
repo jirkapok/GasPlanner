@@ -11,6 +11,7 @@ import { KnownViews, ViewStates } from './shared/viewStates';
 import { AltitudeCalcComponent } from './altitude-calc/altitude-calc.component';
 import { WeightCalcComponent } from './weight/weight.component';
 import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
+import { DiffComponent } from './diff/diff.component';
 
 const canActivateDashboard: CanActivateFn = (): boolean | UrlTree => {
     const router = inject(Router);
@@ -35,6 +36,7 @@ const routes: Routes = [
     { path: KnownViews.weight, component: WeightCalcComponent },
     { path: KnownViews.gas, component: GasPropertiesCalcComponent },
     { path: KnownViews.about, component: AboutComponent },
+    { path: KnownViews.diff, component: DiffComponent },
     {
         path: '**',
         component: DashboardComponent,

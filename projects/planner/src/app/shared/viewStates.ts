@@ -12,6 +12,7 @@ export class KnownViews {
     public static readonly altitude = 'altitude';
     public static readonly weight = 'weight';
     public static readonly gas = 'gas';
+    public static readonly diff = 'diff';
 }
 
 @Injectable()

@@ -2,19 +2,30 @@ import { Component } from '@angular/core';
 import { Profile, WayPointsService } from '../shared/waypoints.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import {
-    CalculatedProfile, Ceiling, Events, Segments, StandardGases, Time
+    CalculatedProfile, Ceiling, Events, Segments, StandardGases, Tank, Time
 } from 'scuba-physics';
 
 
 class TestData {
     public readonly profileA: Profile;
+    public readonly tanksA: Tank[];
 
     public readonly profileB: Profile;
+    public readonly tanksB: Tank[];
 
     constructor() {
         const units = new UnitConversion();
         const emptyEvents = new Events();
         const waypointService = new WayPointsService(units);
+
+        this.tanksA = [
+            new Tank(24, 200, 21),
+            new Tank(11, 200, 50),
+            new Tank(11, 150, 100),
+        ];
+        this.tanksA[0].consumed = 120;
+        this.tanksA[1].consumed = 80;
+        this.tanksA[2].consumed = 60;
 
         const ceilingsA: Ceiling[] = [];
         const segmentsA = new Segments();
@@ -27,6 +38,14 @@ class TestData {
         segmentsA.add(3, 0, StandardGases.oxygen, Time.oneMinute);
         const calculatedA = CalculatedProfile.fromProfile(segmentsA.items, ceilingsA);
         this.profileA = waypointService.calculateWayPoints(calculatedA, emptyEvents);
+
+
+        this.tanksB = [
+            new Tank(24, 200, 21),
+            new Tank(11, 200, 50)
+        ];
+        this.tanksB[0].consumed = 90;
+        this.tanksB[1].consumed = 40;
 
         const ceilingsB: Ceiling[] = [];
         const segmentsB = new Segments();
@@ -46,6 +65,7 @@ class TestData {
     styleUrls: ['./diff.component.scss']
 })
 export class DiffComponent {
+    public data = new TestData();
 
     // run: npm start
     // Navigate to the component: http://localhost:4200/diff

@@ -1,19 +1,15 @@
 import { UnitConversion } from './UnitConversion';
-import { GasProperties } from './gas.properties';
+import { BoundGasProperties, GasProperties } from './gas.properties';
 
-describe('Gas properties calculator', () => {
+describe('Gas properties bound', () => {
     const units: UnitConversion = new UnitConversion();
-    let sut: GasProperties;
-
-    beforeEach(() => {
-        units.imperialUnits = false;
-        sut = new GasProperties(units);
-        sut.depth = 30;
-    });
+    let sut: BoundGasProperties;
 
     describe('Imperial', () => {
         beforeEach(() => {
             units.imperialUnits = true;
+            sut = new BoundGasProperties(units);
+            sut.depth = 30;
             sut.tank.o2 = 10;
             sut.tank.he = 70;
         });
@@ -37,6 +33,15 @@ describe('Gas properties calculator', () => {
         it('Density is 2 what ever', () => {
             expect(sut.density).toBeCloseTo(2.0732, 6);
         });
+    });
+});
+
+describe('Gas properties calculator', () => {
+    let sut: GasProperties;
+
+    beforeEach(() => {
+        sut = new GasProperties();
+        sut.depth = 30;
     });
 
     describe('Air at 30 m', () => {

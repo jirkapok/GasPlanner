@@ -11,7 +11,7 @@ import { KnownViews } from '../shared/viewStates';
 import { WeightViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { TankBound } from '../shared/models';
-import { GasProperties } from '../shared/gas.properties';
+import { BoundGasProperties } from '../shared/gas.properties';
 
 interface GasForm {
     o2: FormControl<number>;
@@ -28,7 +28,7 @@ export class GasPropertiesCalcComponent implements OnInit {
     public calcIcon = faCalculator;
     public tableIcon = faTable;
     public gasForm!: FormGroup<GasForm>;
-    public calc: GasProperties;
+    public calc: BoundGasProperties;
 
     constructor(
         private fb: NonNullableFormBuilder,
@@ -37,7 +37,7 @@ export class GasPropertiesCalcComponent implements OnInit {
         public units: UnitConversion,
         public location: Location,
         private viewStates: SubViewStorage) {
-        this.calc = new GasProperties(this.units);
+        this.calc = new BoundGasProperties(this.units);
         this.loadState();
         this.saveState();
     }

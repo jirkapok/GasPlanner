@@ -31,6 +31,19 @@ describe('Tank', () => {
             });
         });
 
+        describe('N2 content', () => {
+            it('N2 fills rest of the content for pinned O2', () => {
+                tank.o2 = 21;
+                expect(tank.n2).toBeCloseTo(79, 3);
+            });
+
+            it('N2 fills rest of the content', () => {
+                tank.o2 = 10;
+                tank.he = 70;
+                expect(tank.n2).toBeCloseTo(20, 3);
+            });
+        });
+
         describe('Not pining Air O2 for trimix', () => {
             it('Does not apply 21 % 02', () => {
                 tank.he = 10;

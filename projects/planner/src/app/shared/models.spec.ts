@@ -38,16 +38,4 @@ describe('Bound tank', () => {
             expect(tank.size).toBeCloseTo(expectedSize, 6);
         });
     });
-
-    describe('N2 content', () => {
-        it('N2 fills rest of the content for pinned O2', () => {
-            expect(tank.n2).toBeCloseTo(79, 3);
-        });
-
-        it('N2 fills rest of the content', () => {
-            tank.o2 = 10;
-            tank.he = 70;
-            expect(tank.n2).toBeCloseTo(20, 3);
-        });
-    });
 });

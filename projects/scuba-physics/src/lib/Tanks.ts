@@ -83,7 +83,8 @@ export class Tank {
 
     /** The nitrogen part of tank gas in percents */
     public get n2(): number {
-        const current = this.gas.fN2 * 100;
+        // calculation needs to reflect o2 pin.
+        const current = 100 - this.o2 - this.he;
         return Precision.roundTwoDecimals(current);
     }
 

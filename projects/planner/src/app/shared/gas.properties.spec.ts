@@ -1,7 +1,7 @@
 import { UnitConversion } from './UnitConversion';
 import { GasProperties } from './gas.properties';
 
-fdescribe('Gas properties calculator', () => {
+describe('Gas properties calculator', () => {
     const units: UnitConversion = new UnitConversion();
     let sut: GasProperties;
 
@@ -36,19 +36,6 @@ fdescribe('Gas properties calculator', () => {
 
         it('Density is 2 what ever', () => {
             expect(sut.density).toBeCloseTo(2.0732, 6);
-        });
-    });
-
-    // TODO move to model TankBound tests
-    describe('N2 content', () => {
-        xit('N2 fills rest of the content', () => {
-            expect(sut.tank.n2).toBeCloseTo(79, 3);
-        });
-
-        it('N2 fills rest of the content', () => {
-            sut.tank.o2 = 10;
-            sut.tank.he = 70;
-            expect(sut.tank.n2).toBeCloseTo(20, 3);
         });
     });
 

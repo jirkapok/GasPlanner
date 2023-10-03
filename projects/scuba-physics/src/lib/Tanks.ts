@@ -81,6 +81,12 @@ export class Tank {
         return Precision.roundTwoDecimals(current);
     }
 
+    /** The nitrogen part of tank gas in percents */
+    public get n2(): number {
+        const current = this.gas.fN2 * 100;
+        return Precision.roundTwoDecimals(current);
+    }
+
     /** Gets total volume at start pressure in liters */
     public get volume(): number {
         return this.size * this.startPressure;

@@ -6,42 +6,36 @@
                 <span>Gas mixture</span>
             </div>
             <div class="card-body">
-                <form [formGroup]="weightForm">
+                <form [formGroup]="gasForm">
                     <div>
                         <div class="pt-2 mb-4">
-                            Oxygen [%]
-                            <!-- <label for="tankSize" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
-                           <app-tank-size [sizeForm]="weightForm" [tank]="tank" controlName="tankSize"
-                                (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event)">
-                            </app-tank-size>
-                            <div class="text-danger form-text position-absolute" *ngIf="tankSizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>-->
+                            <app-oxygen-dropdown [tank]="tank" id="o2Item" (gasChange)="inputChanged()"
+                            (standardGasApplied)="standardGasApplied()" [nitroxForm]="gasForm"
+                            controlName="o2" [showBestMix]="false"
+                            [showTrimixGases]="true"></app-oxygen-dropdown>
                         </div>
                     </div>
                     <div class="pt-2 mb-4">
-                        Helium [%]
-                        <!-- <label for="workPressure" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
-                        </label>
-                        <input class="form-control" type="number" (input)="inputChanged()" id="workPressure"
-                            formControlName="workPressure" required [min]="ranges.tankPressure[0]"
-                            [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="workPressureInvalid" />
-                        <div class="invalid-feedback position-absolute">Needs to be number
-                            {{ranges.tankPressureLabel}}</div> -->
+                        <label for="heItem" class="form-label">He [%]:</label>
+                                <input formControlName="he" class="form-control" type="number"
+                                    (input)="inputChanged()" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
+                                    required [class.is-invalid]="gasHeInvalid" id="heItem" />
+                                <div class="text-danger" *ngIf="gasHeInvalid">Needs to be number
+                                    {{ranges.tankHeLabel}}</div>
                     </div>
                     <div class="pt-2 mb-4">
-                        Nitrogen [%]
-                        <!-- <label for="weight" class="form-label" mdbLabel>Lost weight [{{units.weight}}]:</label>
-                        <input class="form-control readonly" name="weight" id="weight" type="number"
-                            [readonly]="true" [value]="weight | number: '1.0-2'" readonly /> -->
+                        <label for="nitrox" class="form-label" mdbLabel>Nitrogen [%]:</label>
+                        <input class="form-control readonly" name="nitrox" id="nitrox" type="number"
+                            [readonly]="true" [value]="nitrox | number: '1.0-2'" readonly />
                     </div>
                     <div class="pt-2 mb-4">
-                        Properties at depth [m]
-                        <!-- <label for="consumed" class="form-label" mdbLabel>Consumed [{{units.pressure}}]:
+                        <label for="depth" class="form-label" mdbLabel>Properties at depth [{{units.length}}]:
                         </label>
-                        <input class="form-control" type="number" (input)="inputChanged()" id="consumed"
-                            formControlName="consumed" required [min]="ranges.consumed[0]"
-                            [max]="ranges.consumed[1]" step="1" [class.is-invalid]="consumedInvalid" />
+                        <input class="form-control" type="number" (input)="inputChanged()" id="depth"
+                            formControlName="depth" required [min]="ranges.depth[0]"
+                            [max]="ranges.depth[1]" step="1" [class.is-invalid]="depthInvalid" />
                         <div class="invalid-feedback position-absolute">Needs to be number
-                            {{ranges.consumedLabel}}</div> -->
+                            {{ranges.depth}}</div>
                     </div>
                 </form>
             </div>

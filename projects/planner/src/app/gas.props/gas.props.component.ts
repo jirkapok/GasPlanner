@@ -8,16 +8,17 @@ import {
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
 import {
-    Precision, Tank, TankTemplate, AirWeight
+    Precision, Tank, AirWeight
 } from 'scuba-physics';
 import { KnownViews } from '../shared/viewStates';
 import { WeightViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { TankBound } from '../shared/models';
 
-interface WeightForm {
-    workPressure?: FormControl<number>;
-    consumed: FormControl<number>;
+interface GasForm {
+    o2: FormControl<number>;
+    he: FormControl<number>;
+    depth: FormControl<number>;
 }
 
 @Component({
@@ -28,7 +29,7 @@ interface WeightForm {
 export class GasPropertiesCalcComponent implements OnInit {
     public calcIcon = faCalculator;
     public tableIcon = faTable;
-    public weightForm!: FormGroup<WeightForm>;
+    public gasForm!: FormGroup<GasForm>;
     public tank: TankBound;
 
     constructor(
@@ -47,25 +48,18 @@ export class GasPropertiesCalcComponent implements OnInit {
         return this.units.ranges;
     }
 
-    public get consumedInvalid(): boolean {
-        const depthControl = this.weightForm.controls.consumed;
+    public get gasHeInvalid(): boolean {
+        const heControl = this.gasForm.controls.he;
+        return this.inputs.controlInValid(heControl);
+    }
+
+    public get depthInvalid(): boolean {
+        const depthControl = this.gasForm.controls.depth;
         return this.inputs.controlInValid(depthControl);
     }
 
-    public get workPressureInvalid(): boolean {
-        const pressureControl = this.weightForm.controls.workPressure;
-        return this.inputs.controlInValid(pressureControl);
-    }
-
-    public get tankSizeInvalid(): boolean {
-        const tankSize = this.weightForm.get('tankSize') as AbstractControl;
-        return this.inputs.controlInValid(tankSize);
-    }
-
-    public get weight(): number {
-        let result = AirWeight.tankVolumeWeight(this.tank.tank);
-        result = this.units.fromKilogram(result);
-        return Precision.round(result, 1);
+    public get nitrox(): number {
+        return this.tank.n2;
     }
 
     public get consumed(): number {
@@ -74,39 +68,42 @@ export class GasPropertiesCalcComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.weightForm = this.fb.group({
-            consumed: [this.consumed, this.validators.rangeFor(this.ranges.consumed)],
+        this.gasForm = this.fb.group({
+            o2: [this.tank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
+            he: [this.tank.he, this.validators.rangeFor(this.ranges.tankHe)],
+            depth: [1, this.validators.rangeFor(this.ranges.depth)], // TDDO consider change range from 0
         });
-
-        if(this.units.imperialUnits) {
-            const workPressureControl = this.fb.control(
-                Precision.round(this.tank.workingPressure, 1), this.validators.tankPressure);
-            this.weightForm.addControl('workPressure', workPressureControl);
-        }
     }
 
-    public applyTemplate(template: TankTemplate): void {
-        if (this.weightForm.invalid) {
+    public standardGasApplied(): void {
+        if (this.gasForm.invalid) {
             return;
         }
 
-        this.weightForm.patchValue({
-            workPressure: template.workingPressure,
-        });
-
-        this.inputChanged();
+        this.reloadContent();
+        this.saveState();
     }
 
     public inputChanged(): void {
-        if (this.weightForm.invalid) {
+        if (this.gasForm.invalid) {
             return;
         }
 
-        const values = this.weightForm.value;
-        const consumed = Number(values.consumed);
-        this.tank.tank.consumed = this.units.toBar(consumed);
-        this.setWorkingPressure(Number(values.workPressure));
+        const values = this.gasForm.value;
+        this.tank.o2 = Number(values.o2);
+        this.tank.he = Number(values.he);
+        this.reloadContent();
         this.saveState();
+    }
+
+    // TODO snap nitrox to reflect air 20.9% but showing 21
+    // TODO fix validation of depth from 0
+    private reloadContent(): void {
+        // because they affect each other
+        this.gasForm.patchValue({
+            o2: this.tank.o2,
+            he: this.tank.he,
+        });
     }
 
     private loadState(): void {
@@ -136,10 +133,4 @@ export class GasPropertiesCalcComponent implements OnInit {
     //         id: KnownViews.weight
     //     };
     // }
-
-    private setWorkingPressure(newValue: number): void {
-        if(this.units.imperialUnits) {
-            this.tank.workingPressure = Precision.round(newValue, 1);
-        }
-    }
 }

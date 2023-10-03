@@ -132,6 +132,10 @@ export class TankBound {
         return this.tank.he;
     }
 
+    public get n2(): number {
+        return this.tank.n2;
+    }
+
     public get label(): string {
         let volume = this.units.fromTankLiters(this.tank.size, this._workingPressure);
         volume = Precision.round(volume, 1);

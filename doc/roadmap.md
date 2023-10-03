@@ -9,21 +9,24 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Add option to define repetitive dives
-* Allow user to compare multiple plans side by side
-* Fix PWA issues https://www.pwabuilder.com/
-  * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
 * Add gas depth range/properties/trimix calculator at depth (fN2, ppN2, ppHe, ppO2, total pp, minOD, MOD, MND, density)
   * Add gas density calculator (to be able understand to don't breath gas with higher density than 5.7 g/l):
   * <https://www.thoughtco.com/how-to-calculate-density-of-a-gas-607847>
   * <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/>
-* Redundancies calculator - when filling one tank from second. What is the target pressure in both.
+* Add option to define repetitive dives
+* Allow user to compare multiple plans side by side
+* Fix PWA issues https://www.pwabuilder.com/
+  * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
+* Gas blender features
+  * Redundancies calculator - when filling one tank from second. What is the target pressure in both.
+  * Gas blender calculator
 * UI Tweaks
   * Read only fields should be distinguish able
   * Profile:
     * Waypoints table: add switch in case user is switching to tank with the same gas
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
+  * Add option to ignore some warnings
 * Add undo/redo to all pages
 * Add calculation trainings
 * Help

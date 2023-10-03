@@ -1,5 +1,5 @@
 <div class="row mt-5">
-    <div class="col col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+    <div class="col col-12 col-sm-5 col-md-4 col-lg-3 col-xxl-2 mt-3">
         <div class="card">
             <div class="card-header">
                 <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
@@ -41,8 +41,8 @@
             </div>
         </div>
     </div>
-    <div class="col col-12 col-sm-5 col-md-5 col-lg-3 col-xxl-2 mt-3">
-        <div class="card ndl-minheight">
+    <div class="col col-12 col-sm-7 col-md-5 col-lg-4 col-xxl-3 mt-3">
+        <div class="card">
             <div class="card-header">
                 <fa-icon [icon]="tableIcon" class="me-3"></fa-icon>
                 <span>Gas properties</span>
@@ -52,35 +52,39 @@
                     <tbody>
                         <tr>
                             <td>Oxygen partial pressure</td>
-                            <td class="table-active">00</td>
+                            <td class="table-active">{{ calc.ppO2 | number: '1.0-2' }}</td>
                         </tr>
                         <tr>
                             <td>Helium partial pressure</td>
-                            <td class="table-active">00</td>
+                            <td class="table-active">{{ calc.ppHe | number: '1.0-2'}}</td>
                         </tr>
                         <tr>
                             <td>Nitrogen partial pressure</td>
-                            <td class="table-active">00</td>
+                            <td class="table-active">{{ calc.ppN2 | number: '1.0-2' }}</td>
                         </tr>
                         <tr>
                             <td>Total partial pressure</td>
-                            <td class="table-active">00</td>
+                            <td class="table-active">{{ calc.totalPp | number: '1.0-2' }}</td>
                         </tr>
                         <tr>
                             <td>Minimum depth [m]</td>
-                            <td class="table-active">00</td>
+                            <td class="table-active">{{ calc.minDepth  | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
                             <td>Maximum depth [m]</td>
-                            <td class="table-active">00</td>
+                            <td class="table-active">{{ calc.maxDepth  | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
                             <td>Equivalent narcotic depth [m]</td>
-                            <td class="table-active">00</td>
+                            <td class="table-active">{{ calc.end  | number: '1.0-1' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Maximum narcotic depth [m]</td>
+                            <td class="table-active">{{ calc.maxDepth  | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
                             <td>Density [g/l]</td>
-                            <td class="table-active">00</td>
+                            <td class="table-active">{{ calc.density  | number: '1.0-2' }}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -16,6 +16,7 @@ import { OptionsService } from '../shared/options.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import { StandardGases } from 'scuba-physics';
 
 describe('WeightCalcComponent', () => {
     let component: GasPropertiesCalcComponent;
@@ -38,7 +39,8 @@ describe('WeightCalcComponent', () => {
     });
 
     it('Calculates theoretical depth', () => {
-        component.tank.tank.consumed = 150;
-        expect(component.weight).toBeCloseTo(2.8, 3);
+        component.tank.tank.assignStandardGas(StandardGases.trimix1845.name);
+        component.calc.depth = 30;
+        expect(component.calc.density).toBeCloseTo(3.20184, 3);
     });
 });

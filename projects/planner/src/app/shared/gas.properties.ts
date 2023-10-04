@@ -5,7 +5,6 @@ import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
 
 // TODO apply units
-// TODO split to library
 // TODO add warning to the UI about simple depth converter
 export class BoundGasProperties {
     // TODO consider reduce dependency from tank to gas only

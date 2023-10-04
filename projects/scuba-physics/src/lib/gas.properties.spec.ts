@@ -15,6 +15,28 @@ describe('Gas properties calculator', () => {
         expect(sut.end).toBeCloseTo(0, 3);
     });
 
+    describe('Settings', () => {
+        it('Narcotic depth is used', () => {
+            sut.narcoticDepth = 40;
+            expect(sut.mnd).toBeCloseTo(40, 3);
+        });
+
+        it('Maximum partial pressure is used', () => {
+            sut.maxPpO2 = 1.3;
+            expect(sut.maxDepth).toBeCloseTo(52.201, 3);
+        });
+
+        it('Is oxygen narcotic is used for mnd', () => {
+            sut.oxygenNarcotic = false;
+            expect(sut.mnd).toBeCloseTo(40.569, 3);
+        });
+
+        it('Is oxygen narcotic is used for end', () => {
+            sut.oxygenNarcotic = false;
+            expect(sut.end).toBeCloseTo(21.64, 3);
+        });
+    });
+
     describe('Air at 30 m', () => {
         beforeEach(() => {
             sut.tank.o2 = 21;

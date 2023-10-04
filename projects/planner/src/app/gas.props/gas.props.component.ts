@@ -12,6 +12,7 @@ import { WeightViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { TankBound } from '../shared/models';
 import { BoundGasProperties } from '../shared/gas.properties';
+import { TextConstants } from '../shared/TextConstants';
 
 interface GasForm {
     o2: FormControl<number>;
@@ -29,6 +30,7 @@ export class GasPropertiesCalcComponent implements OnInit {
     public tableIcon = faTable;
     public gasForm!: FormGroup<GasForm>;
     public calc: BoundGasProperties;
+    public depthConverterWarning = TextConstants.depthConverterWarning;
 
     constructor(
         private fb: NonNullableFormBuilder,

@@ -6,34 +6,34 @@
                 <span>Gas mixture</span>
             </div>
             <div class="card-body">
+                <div class="mb-4">{{ depthConverterWarning }}</div>
                 <form [formGroup]="gasForm">
                     <div>
                         <div class="pt-2 mb-4">
                             <app-oxygen-dropdown [tank]="tank" id="o2Item" (gasChange)="inputChanged()"
-                            (standardGasApplied)="standardGasApplied()" [nitroxForm]="gasForm"
-                            controlName="o2" [showBestMix]="false"
-                            [showTrimixGases]="true"></app-oxygen-dropdown>
+                                (standardGasApplied)="standardGasApplied()" [nitroxForm]="gasForm" controlName="o2"
+                                [showBestMix]="false" [showTrimixGases]="true"></app-oxygen-dropdown>
                         </div>
                     </div>
                     <div class="pt-2 mb-4">
                         <label for="heItem" class="form-label">He [%]:</label>
-                                <input formControlName="he" class="form-control" type="number"
-                                    (input)="inputChanged()" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
-                                    required [class.is-invalid]="gasHeInvalid" id="heItem" />
-                                <div class="text-danger" *ngIf="gasHeInvalid">Needs to be number
-                                    {{ranges.tankHeLabel}}</div>
+                        <input formControlName="he" class="form-control" type="number" (input)="inputChanged()"
+                            [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1" required
+                            [class.is-invalid]="gasHeInvalid" id="heItem" />
+                        <div class="text-danger" *ngIf="gasHeInvalid">Needs to be number
+                            {{ranges.tankHeLabel}}</div>
                     </div>
                     <div class="pt-2 mb-4">
                         <label for="nitrox" class="form-label" mdbLabel>Nitrogen [%]:</label>
-                        <input class="form-control readonly" name="nitrox" id="nitrox" type="number"
-                            [readonly]="true" [value]="nitrox | number: '1.0-2'" readonly />
+                        <input class="form-control readonly" name="nitrox" id="nitrox" type="number" [readonly]="true"
+                            [value]="nitrox | number: '1.0-2'" readonly />
                     </div>
                     <div class="pt-2 mb-4">
                         <label for="depth" class="form-label" mdbLabel>Properties at depth [{{units.length}}]:
                         </label>
                         <input class="form-control" type="number" (input)="inputChanged()" id="depth"
-                            formControlName="depth" required [min]="ranges.depth[0]"
-                            [max]="ranges.depth[1]" step="1" [class.is-invalid]="depthInvalid" />
+                            formControlName="depth" required [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
+                            [class.is-invalid]="depthInvalid" />
                         <div class="invalid-feedback position-absolute">Needs to be number
                             {{ranges.depth}}</div>
                     </div>
@@ -67,24 +67,24 @@
                             <td class="table-active">{{ calc.totalPp | number: '1.0-2' }}</td>
                         </tr>
                         <tr>
-                            <td>Minimum depth [m]</td>
-                            <td class="table-active">{{ calc.minDepth  | number: '1.0-1' }}</td>
+                            <td>Minimum depth [{{units.length}}]</td>
+                            <td class="table-active">{{ calc.minDepth | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
-                            <td>Maximum depth [m]</td>
-                            <td class="table-active">{{ calc.maxDepth  | number: '1.0-1' }}</td>
+                            <td>Maximum depth [{{units.length}}]</td>
+                            <td class="table-active">{{ calc.maxDepth | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
-                            <td>Equivalent narcotic depth [m]</td>
-                            <td class="table-active">{{ calc.end  | number: '1.0-1' }}</td>
+                            <td>Equivalent narcotic depth [{{units.length}}]</td>
+                            <td class="table-active">{{ calc.end | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
-                            <td>Maximum narcotic depth [m]</td>
-                            <td class="table-active">{{ calc.maxDepth  | number: '1.0-1' }}</td>
+                            <td>Maximum narcotic depth [{{units.length}}]</td>
+                            <td class="table-active">{{ calc.maxDepth | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
-                            <td>Density [g/l]</td>
-                            <td class="table-active">{{ calc.density  | number: '1.0-2' }}</td>
+                            <td>Density [{{units.density}}]</td>
+                            <td class="table-active">{{ calc.density | number: '1.0-2' }}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -3,6 +3,7 @@ import { Gas, GasMixtures } from './Gases';
 import { Tank } from './Tanks';
 import { DepthConverter } from './depth-converter';
 
+// TODO add documentation to all properties
 export class GasProperties {
     /** in meters */
     public depth = 0;
@@ -46,7 +47,12 @@ export class GasProperties {
     }
 
     public get end(): number {
-        const endDepthPressure = GasMixtures.end(this.depthPressure, this.gas.fN2, this.gas.fO2);
+        let endDepthPressure = GasMixtures.end(this.depthPressure, this.gas.fN2, this.gas.fO2);
+
+        if(endDepthPressure < this.depthConverter.surfacePressure) {
+            endDepthPressure = this.depthConverter.surfacePressure;
+        }
+
         return this.depthConverter.fromBar(endDepthPressure);
     }
 

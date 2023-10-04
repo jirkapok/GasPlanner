@@ -169,7 +169,7 @@ export class GasMixtures {
     *
     * @param fO2 - Fraction of Oxygen in gas mix (0-1).
     * @param depth - Current depth in bars.
-    * @returns Depth in bars.
+    * @returns Depth in bars. May return pressure lower than surface pressure!
     */
     public static ead(fO2: number, depth: number, o2InAir: number = StandardGases.o2InAir): number {
         const fN2 = 1 - fO2; // here we are interested only in nitrogen toxicity
@@ -187,7 +187,7 @@ export class GasMixtures {
      * @param currentDepth Current depth in bars for which you want to calculate the end.
      * @param fN2 Fraction of nitrogen in gas mix (0-1).
      * @param fO2 Fraction of oxygen in gas mix (0-1).
-     * @returns Depth in bars.
+     * @returns Depth in bars. May return pressure lower than surface pressure!
      */
     public static end(currentDepth: number, fN2: number, fO2: number = 0): number {
         const narcIndex = this.narcoticIndex(fO2, fN2);
@@ -302,7 +302,7 @@ export class Gas {
      *
      * @param currentDepth Current depth in bars for which you want to calculate the end.
      * @param oxygenNarcotic True, if oxygen is considered narcotic, otherwise false.
-     * @returns Depth in bars.
+     * @returns Depth in bars. May return pressure lower than surface pressure!
      */
     public end(currentDepth: number, oxygenNarcotic: boolean): number {
         const fO2 = oxygenNarcotic ? this._fO2 : 0;

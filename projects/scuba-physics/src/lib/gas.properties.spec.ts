@@ -8,6 +8,13 @@ describe('Gas properties calculator', () => {
         sut.depth = 30;
     });
 
+    it('Trimix 18/45 at surface END is 0 m', () => {
+        sut.depth = 0;
+        sut.tank.o2 = 18;
+        sut.tank.he = 45;
+        expect(sut.end).toBeCloseTo(0, 3);
+    });
+
     describe('Air at 30 m', () => {
         beforeEach(() => {
             sut.tank.o2 = 21;

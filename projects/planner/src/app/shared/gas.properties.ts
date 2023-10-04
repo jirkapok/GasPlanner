@@ -4,7 +4,6 @@ import {
 import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
 
-// TODO apply units
 // TODO add warning to the UI about simple depth converter
 export class BoundGasProperties {
     // TODO consider reduce dependency from tank to gas only
@@ -36,31 +35,30 @@ export class BoundGasProperties {
     }
 
     public get minDepth(): number {
-        return this.calc.minDepth;
+        return this.units.fromMeters(this.calc.minDepth);
     }
 
     public get maxDepth(): number {
-        return this.calc.maxDepth;
+        return this.units.fromMeters(this.calc.maxDepth);
     }
 
     public get end(): number {
-        return this.calc.end;
+        return this.units.fromMeters(this.calc.end);
     }
 
     public get mnd(): number {
-        return this.calc.mnd;
+        return this.units.fromMeters(this.calc.mnd);
     }
 
     public get density(): number {
-        return this.calc.density;
+        return this.units.fromGramPerLiter(this.calc.density);
     }
 
-    /** in meters */
     public get depth(): number {
-        return this.calc.depth;
+        return this.units.fromMeters(this.calc.depth);
     }
 
     public set depth(newValue: number) {
-        this.calc.depth = newValue;
+        this.calc.depth = this.units.toMeters(newValue);
     }
 }

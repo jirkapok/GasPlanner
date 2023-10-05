@@ -9,10 +9,6 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Add gas depth range/properties/trimix calculator at depth (fN2, ppN2, ppHe, ppO2, total pp, minOD, MOD, MND, density)
-  * Add gas density calculator (to be able understand to don't breath gas with higher density than 5.7 g/l):
-  * <https://www.thoughtco.com/how-to-calculate-density-of-a-gas-607847>
-  * <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/>
 * Add option to define repetitive dives
 * Allow user to compare multiple plans side by side
 * Fix PWA issues https://www.pwabuilder.com/

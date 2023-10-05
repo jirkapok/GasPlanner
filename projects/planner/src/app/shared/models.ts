@@ -95,7 +95,13 @@ export class DiverOptions {
     }
 }
 
-export class TankBound {
+export interface IGasContent {
+    o2: number;
+    he: number;
+    assignStandardGas(gasName: string): void;
+}
+
+export class TankBound implements IGasContent{
     private _workingPressure: number;
 
     constructor(public tank: Tank, private units: UnitConversion) {
@@ -188,6 +194,10 @@ export class TankBound {
     public assignTemplate(template: TankTemplate): void {
         this.workingPressure = template.workingPressure;
         this.size = template.size;
+    }
+
+    public assignStandardGas(gasName: string): void {
+        this.tank.assignStandardGas(gasName);
     }
 }
 

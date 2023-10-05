@@ -146,15 +146,8 @@ export class Tank {
         return new Tank(15, 200, StandardGases.o2InAir * 100);
     }
 
-    public assignStandardGas(standard: string): void {
-        const found = StandardGases.byName(standard);
-
-        if (!found) {
-            return;
-        }
-
-        this._gas.fO2 = found.fO2;
-        this._gas.fHe = found.fHe;
+    public assignStandardGas(gasName: string): void {
+        this.gas.assignStandardGas(gasName);
     }
 
     public loadFrom(other: Tank): void {

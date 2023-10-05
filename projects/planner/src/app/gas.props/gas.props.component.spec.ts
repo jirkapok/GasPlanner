@@ -39,7 +39,7 @@ describe('WeightCalcComponent', () => {
     });
 
     it('Calculates theoretical depth', () => {
-        component.tank.tank.assignStandardGas(StandardGases.trimix1845.name);
+        component.tank.assignStandardGas(StandardGases.trimix1845.name);
         component.calc.depth = 30;
         expect(component.calc.density).toBeCloseTo(3.20184, 3);
     });

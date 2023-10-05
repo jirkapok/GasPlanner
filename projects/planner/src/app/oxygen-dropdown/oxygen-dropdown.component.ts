@@ -4,7 +4,7 @@ import { Precision, StandardGases, Tank } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { TankBound } from '../shared/models';
+import { IGasContent } from '../shared/models';
 
 @Component({
     selector: 'app-oxygen-dropdown',
@@ -16,7 +16,8 @@ export class OxygenDropDownComponent implements OnInit {
     @Input() public showTitle = true;
     @Input() public showTrimixGases = false;
     @Input() public controlName = 'o2';
-    @Input() public tank = new TankBound(new Tank(15, 200, 21), this.units);
+    // cant use gas directly, since tank content properties contain pinning logic
+    @Input() public tank: IGasContent = Tank.createDefault();
     @Input() public nitroxForm!: FormGroup;
     @Output() public gasChange = new EventEmitter<number>();
     @Output() public assignBestMix = new EventEmitter();
@@ -83,7 +84,7 @@ export class OxygenDropDownComponent implements OnInit {
     }
 
     public assignStandardGas(gasName: string): void {
-        this.tank.tank.assignStandardGas(gasName);
+        this.tank.assignStandardGas(gasName);
         this.reload();
         this.standardGasApplied.emit(gasName);
     }

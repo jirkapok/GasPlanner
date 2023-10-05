@@ -1,20 +1,16 @@
 import {
-    GasProperties
+    GasProperties, Tank
 } from 'scuba-physics';
-import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
 
 export class BoundGasProperties {
-    // TODO consider reduce dependency from tank to gas only
-    private readonly _tank: TankBound;
     private readonly calc = new GasProperties();
 
     constructor(private units: UnitConversion) {
-        this._tank = new TankBound(this.calc.tank, this.units);
     }
 
-    public get tank(): TankBound {
-        return this._tank;
+    public get tank(): Tank {
+        return this.calc.tank;
     }
 
     public get ppO2(): number {

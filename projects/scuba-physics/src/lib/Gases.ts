@@ -345,6 +345,17 @@ export class Gas {
             Precision.round(this._fHe * fourK);
     }
 
+    public assignStandardGas(gasName: string): void {
+        const found = StandardGases.byName(gasName);
+
+        if (!found) {
+            return;
+        }
+
+        this.fO2 = found.fO2;
+        this.fHe = found.fHe;
+    }
+
     private contentExceeds100percent(): boolean {
         return this._fO2 + this._fHe > 1;
     }
@@ -409,8 +420,8 @@ export class StandardGases {
     public static readonly trimix1070 = new Gas(0.1, 0.7);
 
 
-    private static readonly airName = 'Air';
-    private static readonly oxygenName = 'Oxygen';
+    public static readonly airName = 'Air';
+    public static readonly oxygenName = 'Oxygen';
 
     /** Parse EanXX group as oxygen of nitrox (e.g. Ean50) or O2 and He fractions of trimix (e.g. 10/70) */
     private static readonly namesRegEx = /[EAN](?<fO2>\d{2})|(?<fO2b>\d{2})\/(?<fHe>\d{2})/i;

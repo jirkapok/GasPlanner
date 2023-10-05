@@ -57,7 +57,23 @@ export class BoundGasProperties {
         return this.units.fromMeters(this.calc.depth);
     }
 
+    public get maxPpO2(): number {
+        return this.calc.maxPpO2;
+    }
+
+    public get oxygenNarcotic(): boolean {
+        return this.calc.oxygenNarcotic;
+    }
+
     public set depth(newValue: number) {
         this.calc.depth = this.units.toMeters(newValue);
+    }
+
+    public set maxPpO2(newValue: number) {
+        this.calc.maxPpO2 = newValue;
+    }
+
+    public switchOxygenNarcotic(): void {
+        this.calc.oxygenNarcotic = !this.calc.oxygenNarcotic;
     }
 }

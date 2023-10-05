@@ -63,5 +63,10 @@ describe('Gas properties bound', () => {
         it('Density is 2 g/l', () => {
             expect(sut.density).toBeCloseTo(2.0732, 6);
         });
+
+        it('Switch O2 narcotic changes MND', () => {
+            sut.switchOxygenNarcotic();
+            expect(sut.mnd).toBeCloseTo(190, 3);
+        });
     });
 });

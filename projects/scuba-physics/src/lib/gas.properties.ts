@@ -8,9 +8,9 @@ export class GasProperties {
     /** Gets or sets current in meters */
     public depth = 0;
     /** Gets or sets the maximum partial pressure of the mix. Default is 1.4, recommended range 1-3 */
-    public maxPpO2 = 1.4; // TODO add to UI
-    public oxygenNarcotic = true; // TODO Add to UI
-    private narcDepthBars = 4; // TODO add to UI
+    public maxPpO2 = 1.4;
+    public oxygenNarcotic = true;
+    private narcDepthBars = 4;
     private readonly _tank = Tank.createDefault();
     private readonly depthConverter = DepthConverter.simple();
     private readonly densityCalc = new DensityAtDepth(this.depthConverter);

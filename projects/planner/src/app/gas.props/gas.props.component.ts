@@ -17,6 +17,7 @@ import { TextConstants } from '../shared/TextConstants';
 interface GasForm {
     o2: FormControl<number>;
     he: FormControl<number>;
+    maxPO2: FormControl<number>;
     depth: FormControl<number>;
 }
 
@@ -70,6 +71,7 @@ export class GasPropertiesCalcComponent implements OnInit {
         this.gasForm = this.fb.group({
             o2: [this.tank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
             he: [this.tank.he, this.validators.rangeFor(this.ranges.tankHe)],
+            maxPO2: [this.calc.maxPpO2, this.validators.rangeFor(this.ranges.ppO2)],
             depth: [1, this.validators.rangeFor(this.ranges.depth)], // TDDO consider change range from 0
         });
     }
@@ -92,8 +94,14 @@ export class GasPropertiesCalcComponent implements OnInit {
         const values = this.gasForm.value;
         this.tank.o2 = Number(values.o2);
         this.tank.he = Number(values.he);
+        this.calc.maxPpO2 = Number(values.maxPO2);
         this.calc.depth = Number(values.depth);
         this.reloadContent();
+        this.saveState();
+    }
+
+    public switchOxygenNarcotic(): void {
+        this.calc.switchOxygenNarcotic();
         this.saveState();
     }
 

@@ -13,6 +13,7 @@
                             <app-oxygen-dropdown [tank]="tank" id="o2Item" (gasChange)="inputChanged()"
                                 (standardGasApplied)="standardGasApplied()" [nitroxForm]="gasForm" controlName="o2"
                                 [showBestMix]="false" [showTrimixGases]="true"></app-oxygen-dropdown>
+                            <small class="text-muted">Nitrox {{ nitrox | number: '1.0-2' }} [%]</small>
                         </div>
                     </div>
                     <div class="pt-2 mb-4">
@@ -24,9 +25,15 @@
                             {{ranges.tankHeLabel}}</div>
                     </div>
                     <div class="pt-2 mb-4">
-                        <label for="nitrox" class="form-label" mdbLabel>Nitrogen [%]:</label>
-                        <input class="form-control readonly" name="nitrox" id="nitrox" type="number" [readonly]="true"
-                            [value]="nitrox | number: '1.0-2'" readonly />
+                        <app-pp-o2 [maxPpO2]="calc.maxPpO2" (ppO2Change)="inputChanged()" label="Maximum ppO2:"
+                            [pO2Form]="gasForm" controlName="maxPO2"></app-pp-o2>
+                    </div>
+                    <div class="pt-2 mb-4">
+                        <div class="form-check form-switch pb-1">
+                            <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
+                                [checked]="calc.oxygenNarcotic" (change)="switchOxygenNarcotic()" />
+                            <label class="form-check-label" for="roundStops">Oxygen is narcotic</label>
+                        </div>
                     </div>
                     <div class="pt-2 mb-4">
                         <label for="depth" class="form-label" mdbLabel>Properties at depth [{{units.length}}]:
@@ -80,7 +87,7 @@
                         </tr>
                         <tr>
                             <td>Maximum narcotic depth [{{units.length}}]</td>
-                            <td class="table-active">{{ calc.maxDepth | number: '1.0-1' }}</td>
+                            <td class="table-active">{{ calc.mnd | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
                             <td>Density [{{units.density}}]</td>

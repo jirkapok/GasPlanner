@@ -1,5 +1,13 @@
 import { Salinity } from 'scuba-physics';
 
+export interface GasViewState extends ViewState {
+    o2: number;
+    he: number;
+    maxPO2: number;
+    depth: number;
+    oxygenNarcotic: boolean;
+}
+
 export interface AltitudeViewState extends ViewState {
     /** pressure is calculated from altitude */
     altitude: number;

@@ -8,7 +8,7 @@ import {
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
 import { KnownViews } from '../shared/viewStates';
-import { WeightViewState } from '../shared/views.model';
+import { GasViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { BoundGasProperties } from '../shared/gas.properties';
 import { TextConstants } from '../shared/TextConstants';
@@ -72,7 +72,8 @@ export class GasPropertiesCalcComponent implements OnInit {
             o2: [this.tank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
             he: [this.tank.he, this.validators.rangeFor(this.ranges.tankHe)],
             maxPO2: [this.calc.maxPpO2, this.validators.rangeFor(this.ranges.ppO2)],
-            depth: [1, this.validators.rangeFor(this.ranges.depth)], // TDDO consider change range from 0
+            // TODO consider change range from 0
+            depth: [this.calc.depth, this.validators.rangeFor(this.ranges.depth)],
         });
     }
 
@@ -105,7 +106,6 @@ export class GasPropertiesCalcComponent implements OnInit {
         this.saveState();
     }
 
-    // TODO snap nitrox to reflect air 20.9% but showing 21
     private reloadContent(): void {
         // because they affect each other
         this.gasForm.patchValue({
@@ -114,32 +114,36 @@ export class GasPropertiesCalcComponent implements OnInit {
         });
     }
 
-    // TODO restore load/save state
     private loadState(): void {
-        // let state: WeightViewState = this.viewStates.loadView(KnownViews.weight);
+        let state: GasViewState = this.viewStates.loadView(KnownViews.gas);
 
-        // if (!state) {
-        //     state = this.createState();
-        // }
+        if (!state) {
+            state = this.createState();
+        }
 
-        // this.tank.tank.size = state.tankSize;
-        // const workPressure = this.units.fromBar(state.workPressure);
-        // this.setWorkingPressure(workPressure);
-        // this.tank.tank.consumed = state.consumed;
+        this.tank.he = state.he;
+        this.tank.o2 =  state.o2;
+        this.calc.maxPpO2 = state.maxPO2;
+        this.calc.depth = this.units.fromMeters(state.depth);
+
+        if(this.calc.oxygenNarcotic !== state.oxygenNarcotic) {
+            this.calc.switchOxygenNarcotic();
+        }
     }
 
     private saveState(): void {
-        // const viewState = this.createState();
-        // this.viewStates.saveView(viewState);
+        const viewState = this.createState();
+        this.viewStates.saveView(viewState);
     }
 
-    // private createState(): WeightViewState {
-    //     const tank = this.tank.tank;
-    //     return {
-    //         tankSize: tank.size,
-    //         workPressure: this.tank.workingPressureBars,
-    //         consumed: tank.consumed,
-    //         id: KnownViews.weight
-    //     };
-    // }
+    private createState(): GasViewState {
+        return {
+            o2: this.tank.o2,
+            he: this.tank.he,
+            maxPO2: this.calc.maxPpO2,
+            depth: this.units.toMeters(this.calc.depth),
+            oxygenNarcotic: this.calc.oxygenNarcotic,
+            id: KnownViews.gas
+        };
+    }
 }

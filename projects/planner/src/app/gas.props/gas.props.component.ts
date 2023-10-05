@@ -72,7 +72,6 @@ export class GasPropertiesCalcComponent implements OnInit {
             o2: [this.tank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
             he: [this.tank.he, this.validators.rangeFor(this.ranges.tankHe)],
             maxPO2: [this.calc.maxPpO2, this.validators.rangeFor(this.ranges.ppO2)],
-            // TODO consider change range from 0
             depth: [this.calc.depth, this.validators.rangeFor(this.ranges.depth)],
         });
     }

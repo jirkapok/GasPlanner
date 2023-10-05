@@ -189,7 +189,7 @@ class MetricRanges implements RangeConstants {
     public readonly altitudePressure: [number, number] = [0.7, 1.2];
     public readonly consumed: [number, number] = [0, 350];
     public readonly consumedLabel: string = toLabel(this.consumed, this.units.pressureShortcut);
-    public readonly depth: [number, number] = [1, 350];
+    public readonly depth: [number, number] = [0, 350];
     public readonly depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
     public readonly diverRmv: [number, number] = [5, 90];
     public readonly diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
@@ -224,7 +224,7 @@ class ImperialRanges implements RangeConstants {
     public readonly altitudePressure: [number, number] = [10, 18];
     public readonly consumed: [number, number] = [0, 5100];
     public readonly consumedLabel: string = toLabel(this.consumed, this.units.pressureShortcut);
-    public readonly depth: [number, number] = [3, 1150];
+    public readonly depth: [number, number] = [0, 1150];
     public readonly depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
     public readonly diverRmv: [number, number] = [0.17, 3.178];
     public readonly diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);

@@ -37,7 +37,7 @@ export class DiveIssuesComponent {
     }
 
     public get noDeco(): number {
-        return this.plan.noDecoTime;
+        return this.planner.dive.noDecoTime;
     }
 
     public isLowPpO2(event: Event): boolean {

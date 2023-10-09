@@ -95,7 +95,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     public get noDecoTime(): number {
-        return this.plan.noDecoTime;
+        return this.planer.dive.noDecoTime;
     }
 
     public ngOnInit(): void {

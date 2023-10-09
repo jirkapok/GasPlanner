@@ -47,7 +47,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     }
 
     public get noDecoTime(): number {
-        return this.plan.noDecoTime;
+        return this.planner.dive.noDecoTime;
     }
 
     public get durationInvalid(): boolean {

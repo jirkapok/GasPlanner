@@ -21,7 +21,6 @@ import { OptionsService } from './options.service';
 
 @Injectable()
 export class PlannerService extends Streamed {
-    public static readonly maxAcceptableNdl = 1000;
     // there always needs to be at least one
     public dive: Dive = new Dive();
     public infoCalculated$: Observable<void>;
@@ -63,10 +62,6 @@ export class PlannerService extends Streamed {
             .subscribe((data) => this.finishCalculation(data));
         this.consumptionTask.failed$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.profileFailed());
-    }
-
-    public get ndlValid(): boolean {
-        return this.dive.diveInfoCalculated && this.plan.noDecoTime < PlannerService.maxAcceptableNdl;
     }
 
     private get serializableTanks(): ITankBound[] {
@@ -173,10 +168,10 @@ export class PlannerService extends Streamed {
     }
 
     private finishDiveInfo(diveInfo: DiveInfoResultDto): void {
-        this.plan.noDecoTime = diveInfo.noDeco;
+        this.dive.noDecoTime = diveInfo.noDeco;
         this.dive.otu = diveInfo.otu;
         this.dive.cns = diveInfo.cns;
-        this.dive.noDecoExceeded = this.plan.noDecoExceeded;
+        this.dive.planDuration = this.plan.duration;
         this.dive.notEnoughTime = this.plan.notEnoughTime;
         this.dive.highestDensity = DtoSerialization.toDensity(diveInfo.density);
         this.dive.diveInfoCalculated = true;

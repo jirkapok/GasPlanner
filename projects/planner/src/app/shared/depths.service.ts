@@ -93,7 +93,7 @@ export class DepthsService extends Streamed {
     }
 
     public applyNdlDuration(): void {
-        const newValue = this.plan.noDecoTime;
+        const newValue = this.planner.dive.noDecoTime;
         this.assignDuration(newValue);
         this.apply();
     }

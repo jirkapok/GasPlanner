@@ -58,7 +58,7 @@ export class Level {
 }
 
 export class DiverOptions {
-    constructor(private options: Options = new Options(), private diver: Diver = new Diver()) {}
+    constructor(private options: Options = new Options(), private diver: Diver = new Diver()) { }
 
     public get maxPpO2(): number {
         return this.options.maxPpO2;
@@ -101,7 +101,7 @@ export interface IGasContent {
     assignStandardGas(gasName: string): void;
 }
 
-export class TankBound implements IGasContent{
+export class TankBound implements IGasContent {
     private _workingPressure: number;
 
     constructor(public tank: Tank, private units: UnitConversion) {
@@ -163,7 +163,7 @@ export class TankBound implements IGasContent{
     }
 
     public set workingPressure(newValue: number) {
-        if(isNaN(newValue)) {
+        if (isNaN(newValue)) {
             return;
         }
 
@@ -174,7 +174,7 @@ export class TankBound implements IGasContent{
 
     /** For serialization purpose only */
     public set workingPressureBars(newValue: number) {
-        if(isNaN(newValue)) {
+        if (isNaN(newValue)) {
             return;
         }
 
@@ -202,6 +202,8 @@ export class TankBound implements IGasContent{
 }
 
 export class Dive {
+    private static readonly maxAcceptableNdl = 1000;
+    public noDecoTime = 0;
     public calculated = false;
     public diveInfoCalculated = false;
     public profileCalculated = false;
@@ -213,7 +215,7 @@ export class Dive {
     public needsReturn = false;
     public notEnoughGas = false;
     public notEnoughTime = false;
-    public noDecoExceeded = false;
+    public planDuration = 0;
     public emergencyAscentStart = 0;
     public averageDepth = 0;
     public otu = 0;
@@ -230,6 +232,14 @@ export class Dive {
         }
 
         return this.wayPoints[this.wayPoints.length - 1].endTime;
+    }
+
+    public get ndlValid(): boolean {
+        return this.diveInfoCalculated && this.noDecoTime < Dive.maxAcceptableNdl;
+    }
+
+    public get noDecoExceeded(): boolean {
+        return this.planDuration > this.noDecoTime;
     }
 
     /** the only errors preventing draw chart */

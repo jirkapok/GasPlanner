@@ -7,7 +7,6 @@ import { Strategies } from './models';
 @Injectable()
 export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
-    public noDecoTime = 0;
     // TODO move strategy to Consumption algorithm selection
     public strategy: Strategies = Strategies.ALL;
     /** Event fired only in case of segments rebuild. Not fired when adding or removing. */
@@ -59,10 +58,6 @@ export class Plan {
 
     public get needsReturn(): boolean {
         return this.strategy !== Strategies.ALL;
-    }
-
-    public get noDecoExceeded(): boolean {
-        return this.duration > this.noDecoTime;
     }
 
     public copySegments(): Segments {

@@ -40,7 +40,6 @@ describe('Scheduled dives', () => {
         expect(sut.dives.includes(second)).toBeFalsy();
     });
 
-    // TODO planner.isNdlValid needs to be removed from planner
     // TODO depthService.applyMaxDuration needs to be removed from depthsService to be able remove planner dependency
     // TODO Scheduled dives test cases:
     // * any change in dive list triggers save preferences

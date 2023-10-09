@@ -21,7 +21,7 @@ import { OptionsService } from './options.service';
 
 @Injectable()
 export class PlannerService extends Streamed {
-    // there always needs to be at least one
+    // TODO extract as separate service, there always needs to be at least one
     public dive: Dive = new Dive();
     public infoCalculated$: Observable<void>;
     public wayPointsCalculated$: Observable<void>;

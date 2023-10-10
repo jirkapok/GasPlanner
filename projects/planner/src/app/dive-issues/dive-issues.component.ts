@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DiveResults } from '../shared/models';
+import { DiveResults } from '../shared/diveresults';
 import { PlannerService } from '../shared/planner.service';
 import {
     faExclamationCircle, faExclamationTriangle, faInfoCircle

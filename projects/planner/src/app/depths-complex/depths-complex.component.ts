@@ -6,7 +6,8 @@ import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons
 import { takeUntil } from 'rxjs';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
-import { Level, DiveResults, TankBound } from '../shared/models';
+import { Level, TankBound } from '../shared/models';
+import {DiveResults } from '../shared/diveresults';
 import { PlannerService } from '../shared/planner.service';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';

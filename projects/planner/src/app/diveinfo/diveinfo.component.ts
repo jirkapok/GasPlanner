@@ -5,7 +5,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
-import { DiveResults } from '../shared/models';
+import { DiveResults } from '../shared/diveresults';
 import { Tank } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import { GasToxicity } from '../shared/gasToxicity.service';

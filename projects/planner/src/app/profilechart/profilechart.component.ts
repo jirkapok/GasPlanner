@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { DiveResults, WayPoint } from '../shared/models';
+import { WayPoint } from '../shared/models';
+import { DiveResults } from '../shared/diveresults';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-basic-dist';
 import { takeUntil } from 'rxjs';

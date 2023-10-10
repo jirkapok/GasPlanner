@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { DiveResults } from '../shared/diveresults';
-import { PlannerService } from '../shared/planner.service';
 import {
     faExclamationCircle, faExclamationTriangle, faInfoCircle
 } from '@fortawesome/free-solid-svg-icons';
@@ -15,16 +14,14 @@ import _ from 'lodash';
     styleUrls: ['./dive-issues.component.scss']
 })
 export class DiveIssuesComponent {
-    public dive: DiveResults;
     public exclamation = faExclamationCircle;
     public warning = faExclamationTriangle;
     public info = faInfoCircle;
     public otuLimit = OtuCalculator.dailyLimit;
 
-    constructor(private planner: PlannerService,
+    constructor(public dive: DiveResults,
         public units: UnitConversion,
         private plan: Plan) {
-        this.dive = this.planner.dive;
     }
 
     public get events(): Event[] {
@@ -37,7 +34,7 @@ export class DiveIssuesComponent {
     }
 
     public get noDeco(): number {
-        return this.planner.dive.noDecoTime;
+        return this.dive.noDecoTime;
     }
 
     public isLowPpO2(event: Event): boolean {

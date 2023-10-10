@@ -19,7 +19,6 @@ import { ResamplingService } from '../shared/ResamplingService';
     styleUrls: ['./profilechart.component.scss']
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
-    public dive: DiveResults;
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
     private chartElement: any;
@@ -55,12 +54,13 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private layout: any;
     private resampling: ResamplingService;
 
-    constructor(private planer: PlannerService,
+    constructor(
+        public dive: DiveResults,
+        private planer: PlannerService,
         private units: UnitConversion,
         private selectedWaypoint: SelectedWaypoint,
         private plan: Plan) {
         super();
-        this.dive = this.planer.dive;
         this.resampling = new ResamplingService(units);
 
         this.layout = {
@@ -96,7 +96,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     public get noDecoTime(): number {
-        return this.planer.dive.noDecoTime;
+        return this.dive.noDecoTime;
     }
 
     public ngOnInit(): void {

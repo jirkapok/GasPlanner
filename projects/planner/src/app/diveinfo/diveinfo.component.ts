@@ -4,7 +4,6 @@ import {
     faSlidersH, faShareFromSquare
 } from '@fortawesome/free-solid-svg-icons';
 
-import { PlannerService } from '../shared/planner.service';
 import { DiveResults } from '../shared/diveresults';
 import { Tank } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -25,7 +24,6 @@ import { formatNumber } from '@angular/common';
 })
 export class DiveInfoComponent extends Streamed {
     public toxicity: GasToxicity;
-    public dive: DiveResults;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
     public toastVisible = false;
@@ -33,13 +31,12 @@ export class DiveInfoComponent extends Streamed {
     constructor(private clipboard: ClipboardService,
         private depthsService: DepthsService,
         private tanksService: TanksService,
-        public planner: PlannerService,
+        public dive: DiveResults,
         private options: OptionsService,
         private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         private plan: Plan) {
         super();
-        this.dive = this.planner.dive;
         this.toxicity = this.options.toxicity;
 
         this.clipboard.copyResponse$.pipe(takeUntil(this.unsubscribe$))
@@ -71,7 +68,7 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get noDeco(): number {
-        return this.planner.dive.noDecoTime;
+        return this.dive.noDecoTime;
     }
 
     public get showApply(): boolean {

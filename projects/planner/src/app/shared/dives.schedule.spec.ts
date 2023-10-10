@@ -26,6 +26,7 @@ describe('Scheduled dives', () => {
         });
 
         it('has title', () => {
+            // this means it has depths and time configured
             expect(sut.dives[1].title).toEqual('12 min/30 m');
         });
     });
@@ -40,7 +41,6 @@ describe('Scheduled dives', () => {
         expect(sut.dives.includes(second)).toBeFalsy();
     });
 
-    // TODO depthService.applyMaxDuration needs to be removed from depthsService to be able remove planner dependency
     // TODO Scheduled dives test cases:
     // * any change in dive list triggers save preferences
     // * New dive is loaded from default dive

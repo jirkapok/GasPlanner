@@ -35,8 +35,7 @@ export class DiveSchedule {
 }
 
 export class DivesSchedule {
-    private _dives: DiveSchedule[] = [
-    ];
+    private _dives: DiveSchedule[] = [];
 
     constructor(private units: UnitConversion) {
         this.add();

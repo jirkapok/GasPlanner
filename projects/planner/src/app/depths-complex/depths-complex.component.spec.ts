@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DepthsService } from '../shared/depths.service';
@@ -19,6 +19,7 @@ import { SubViewStorage } from '../shared/subViewStorage';
 import { ViewStates } from '../shared/viewStates';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
+import { DiveResults } from '../shared/diveresults';
 
 export class ComplexDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
@@ -33,22 +34,22 @@ export class ComplexDepthsPage {
     }
 
     public removeLevelButton(index: number): HTMLButtonElement {
-        const id = `#removeLevel-${ index }`;
+        const id = `#removeLevel-${index}`;
         const debugElement = this.fixture.debugElement.query(By.css(id));
         return debugElement.nativeElement as HTMLButtonElement;
     }
 
     public durationInput(index: number): HTMLInputElement {
-        const id = `#durationItem-${ index }`;
+        const id = `#durationItem-${index}`;
         return this.debugElement(id);
     }
 
     public depthInput(index: number): HTMLInputElement {
-        const id = `#depthItem-${ index }`;
+        const id = `#depthItem-${index}`;
         return this.debugElement(id);
     }
 
-    public removeButtons(): number{
+    public removeButtons(): number {
         const id = '[id^="removeLevel"]';
         const found = this.fixture.debugElement.queryAll(By.css(id));
         return found.length;
@@ -70,7 +71,8 @@ describe('Depths Complex Component', () => {
                 OptionsService, ValidatorGroups,
                 DepthsService, DecimalPipe, TanksService,
                 ViewSwitchService, Plan, WayPointsService,
-                SubViewStorage, ViewStates, PreferencesStore, Preferences
+                SubViewStorage, ViewStates, PreferencesStore, Preferences,
+                DiveResults
             ]
         })
             .compileComponents();
@@ -80,13 +82,14 @@ describe('Depths Complex Component', () => {
         fixture = TestBed.createComponent(DepthsComplexComponent);
         component = fixture.componentInstance;
         depths = component.depths;
-        component.planner.calculate();
+        const planner = TestBed.inject(PlannerService);
+        planner.calculate();
         fixture.detectChanges();
         complexPage = new ComplexDepthsPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
         spyOn(scheduler, 'schedule')
             .and.callFake(() => {
-                component.planner.calculate();
+                planner.calculate();
             });
     });
 
@@ -98,12 +101,13 @@ describe('Depths Complex Component', () => {
         expect(depths.planDuration).toBe(21.7);
     });
 
-    it('Change depth calculates profile correctly', () => {
-        complexPage.durationInput(1).value = '5';
-        complexPage.durationInput(1).dispatchEvent(new Event('input'));
-        // in case of wrong binding, the algorithm ads segment with 0 duration
-        expect(component.planner.dive.totalDuration).toBe(882);
-    });
+    it('Change depth calculates profile correctly', inject([DiveResults],
+        (dive: DiveResults) => {
+            complexPage.durationInput(1).value = '5';
+            complexPage.durationInput(1).dispatchEvent(new Event('input'));
+            // in case of wrong binding, the algorithm ads segment with 0 duration
+            expect(dive.totalDuration).toBe(882);
+        }));
 
     describe('Levels enforce calculation', () => {
         it('Adds level to end of profile segments', () => {

@@ -79,6 +79,7 @@ import { AltitudeCalcComponent } from './altitude-calc/altitude-calc.component';
 import { WeightCalcComponent } from './weight/weight.component';
 import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
 import { DiffComponent } from './diff/diff.component';
+import { DiveResults } from './shared/diveresults';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -152,6 +153,7 @@ const MDB_MODULES = [
         { provide: WorkersFactoryCommon, useClass: WorkersFactory },
         PlannerService,
         Plan,
+        DiveResults,
         PlanUrlSerialization,
         Preferences,
         PreferencesStore,

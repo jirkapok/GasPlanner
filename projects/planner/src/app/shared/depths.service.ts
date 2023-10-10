@@ -3,13 +3,13 @@ import { DelayedScheduleService } from './delayedSchedule.service';
 import { GasToxicity } from './gasToxicity.service';
 import { Level, TankBound } from './models';
 import { Plan } from '../shared/plan.service';
-import { PlannerService } from './planner.service';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { Streamed } from './streamed';
 import { takeUntil } from 'rxjs';
 import { OptionsService } from './options.service';
 import { Tank, Segment, StandardGases, Precision } from 'scuba-physics';
+import { DiveResults } from './diveresults';
 
 @Injectable()
 export class DepthsService extends Streamed {
@@ -18,10 +18,10 @@ export class DepthsService extends Streamed {
 
     constructor(
         private units: UnitConversion,
-        private planner: PlannerService,
         private tanksService: TanksService,
         private delayedCalc: DelayedScheduleService,
         private plan: Plan,
+        private dive: DiveResults,
         private optionsService: OptionsService) {
         super();
 
@@ -87,13 +87,13 @@ export class DepthsService extends Streamed {
     }
 
     public applyMaxDuration(): void {
-        const newValue = this.planner.dive.maxTime;
+        const newValue = this.dive.maxTime;
         this.assignDuration(newValue);
         this.apply();
     }
 
     public applyNdlDuration(): void {
-        const newValue = this.planner.dive.noDecoTime;
+        const newValue = this.dive.noDecoTime;
         this.assignDuration(newValue);
         this.apply();
     }

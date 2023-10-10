@@ -20,6 +20,7 @@ import { WayPointsService } from '../shared/waypoints.service';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { SubViewStorage } from '../shared/subViewStorage';
+import { DiveResults } from '../shared/diveresults';
 
 export class NitroxPage {
     constructor(private fixture: ComponentFixture<NitroxComponent>) { }
@@ -41,12 +42,13 @@ describe('Nitrox component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [NitroxComponent, OxygenDropDownComponent],
-            providers: [WorkersFactoryCommon, UnitConversion,
+            providers: [
+                WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls, DecimalPipe,
                 NitroxCalculatorService, ValidatorGroups,
                 OptionsService, ViewStates, PreferencesStore,
                 TanksService, Plan, WayPointsService, Preferences,
-                ViewSwitchService, SubViewStorage
+                ViewSwitchService, SubViewStorage, DiveResults
             ],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         })

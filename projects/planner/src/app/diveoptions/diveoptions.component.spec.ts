@@ -17,6 +17,7 @@ import { ViewStates } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { Preferences } from '../shared/preferences';
 import { PreferencesStore } from '../shared/preferencesStore';
+import { DiveResults } from '../shared/diveresults';
 
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
@@ -32,7 +33,7 @@ describe('Dive options component', () => {
                 DelayedScheduleService, UnitConversion,
                 TanksService, Plan, ViewSwitchService,
                 WayPointsService, ViewStates, SubViewStorage,
-                Preferences, PreferencesStore
+                Preferences, PreferencesStore, DiveResults
             ]
         })
             .compileComponents();

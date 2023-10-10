@@ -7,7 +7,6 @@ import { takeUntil } from 'rxjs';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { DiveResults } from '../shared/diveresults';
-import { PlannerService } from '../shared/planner.service';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -26,18 +25,16 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     public simpleForm!: FormGroup<{
         planDuration: FormControl<number>;
     }>;
-    public dive: DiveResults;
 
     constructor(
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public planner: PlannerService,
+        public dive: DiveResults,
         public depths: DepthsService,
         public units: UnitConversion,
         private plan: Plan) {
         super();
-        this.dive = this.planner.dive;
         // data are already available, it is ok to generate the levels.
         this.depths.updateLevels();
     }
@@ -47,7 +44,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     }
 
     public get noDecoTime(): number {
-        return this.planner.dive.noDecoTime;
+        return this.dive.noDecoTime;
     }
 
     public get durationInvalid(): boolean {

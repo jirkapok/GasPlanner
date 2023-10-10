@@ -18,6 +18,7 @@ import { Preferences } from './preferences';
 import { SubViewStorage } from './subViewStorage';
 import { ViewSwitchService } from './viewSwitchService';
 import { DiverOptions } from './models';
+import { DiveResults } from './diveresults';
 
 describe('SettingsNormalizationService', () => {
     let service: SettingsNormalizationService;
@@ -32,12 +33,14 @@ describe('SettingsNormalizationService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [],
-            providers: [WorkersFactoryCommon, UnitConversion,
+            providers: [
+                WorkersFactoryCommon, UnitConversion,
                 PlannerService, RouterTestingModule, OptionsService,
                 SettingsNormalizationService, TanksService,
                 Plan, DepthsService, DelayedScheduleService,
-                WayPointsService, SubViewStorage, ViewStates,
-                PreferencesStore, Preferences, ViewSwitchService
+                SubViewStorage, ViewStates, ViewSwitchService,
+                WayPointsService, DiveResults,
+                PreferencesStore, Preferences
             ],
             imports: [RouterTestingModule.withRoutes([])]
         });

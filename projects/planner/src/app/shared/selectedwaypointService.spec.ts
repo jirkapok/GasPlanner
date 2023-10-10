@@ -17,6 +17,7 @@ import { Preferences } from './preferences';
 import { SubViewStorage } from './subViewStorage';
 import { ViewStates } from './viewStates';
 import { ViewSwitchService } from './viewSwitchService';
+import { DiveResults } from './diveresults';
 
 describe('Selected Waypoint', () => {
     const segment = new Segment(5, 10, StandardGases.air, 60);
@@ -28,18 +29,20 @@ describe('Selected Waypoint', () => {
                 UnitConversion, TanksService,
                 Plan, DepthsService, DelayedScheduleService,
                 OptionsService, WayPointsService, PreferencesStore,
-                Preferences, SubViewStorage, ViewStates, ViewSwitchService]
+                SubViewStorage, ViewStates, ViewSwitchService,
+                Preferences, DiveResults
+            ]
         });
 
         TestBedExtensions.initPlan();
     });
 
-    it('Selected assigned fires event', inject([PlannerService, UnitConversion],
-        (planner: PlannerService, units: UnitConversion) => {
+    it('Selected assigned fires event', inject([DiveResults, UnitConversion],
+        (dive: DiveResults, units: UnitConversion) => {
             const expected = WayPoint.fromSegment(units, segment);
             let received: WayPoint | undefined;
 
-            const sut = new SelectedWaypoint(planner);
+            const sut = new SelectedWaypoint(dive);
             sut.selectedChanged.subscribe((wayPoint) => {
                 received = wayPoint;
             });
@@ -48,11 +51,11 @@ describe('Selected Waypoint', () => {
             expect(received).toEqual(expected);
         }));
 
-    it('Undefined assigned fires event', inject([PlannerService],
-        (planner: PlannerService) => {
+    it('Undefined assigned fires event', inject([DiveResults],
+        (dive: DiveResults) => {
             let received: WayPoint | undefined;
 
-            const sut = new SelectedWaypoint(planner);
+            const sut = new SelectedWaypoint(dive);
             sut.selectedChanged.subscribe((wayPoint) => {
                 received = wayPoint;
             });
@@ -61,26 +64,26 @@ describe('Selected Waypoint', () => {
             expect(received).toEqual(undefined);
         }));
 
-    it('Select by time stamp fires event', inject([PlannerService],
-        (planner: PlannerService) => {
+    it('Select by time stamp fires event', inject([PlannerService, DiveResults],
+        (planner: PlannerService, dive: DiveResults) => {
             let received: WayPoint | undefined;
 
-            const sut = new SelectedWaypoint(planner);
+            const sut = new SelectedWaypoint(dive);
             sut.selectedChanged.subscribe((wayPoint) => {
                 received = wayPoint;
             });
 
             planner.calculate();
             sut.selectedTimeStamp = '1/1/1970 0:8:00';
-            const expected = planner.dive.wayPoints[1];
+            const expected = dive.wayPoints[1];
             expect(received).toEqual(expected);
         }));
 
-    it('Selected assigned marks item as selected', inject([PlannerService, UnitConversion],
-        (planner: PlannerService, units: UnitConversion) => {
+    it('Selected assigned marks item as selected', inject([DiveResults, UnitConversion],
+        (dive: DiveResults, units: UnitConversion) => {
             const first = WayPoint.fromSegment(units, segment);
             const second = WayPoint.fromSegment(units, segment);
-            const sut = new SelectedWaypoint(planner);
+            const sut = new SelectedWaypoint(dive);
             sut.selected = first;
             sut.selected = second;
             expect(first.selected).toBeFalsy();

@@ -24,6 +24,7 @@ import { SubViewStorage } from '../shared/subViewStorage';
 import { ViewStates } from '../shared/viewStates';
 import { Preferences } from '../shared/preferences';
 import { PreferencesStore } from '../shared/preferencesStore';
+import { DiveResults } from '../shared/diveresults';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -64,7 +65,8 @@ describe('Tanks Simple component', () => {
                 ValidatorGroups, DelayedScheduleService,
                 DecimalPipe, TanksService, ViewSwitchService,
                 OptionsService, Plan, WayPointsService,
-                SubViewStorage, ViewStates, PreferencesStore, Preferences
+                SubViewStorage, ViewStates, DiveResults,
+                PreferencesStore, Preferences
             ],
             imports: [ReactiveFormsModule]
         })

@@ -21,6 +21,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { PlannerService } from '../shared/planner.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import { DiveResults } from '../shared/diveresults';
 
 class SacPage {
     constructor(private fixture: ComponentFixture<SacComponent>) { }
@@ -52,7 +53,7 @@ describe('Sac component', () => {
                 ValidatorGroups, InputControls, SacCalculatorService,
                 TanksService, Plan, SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, PlannerService,
-                WayPointsService, ViewSwitchService
+                WayPointsService, ViewSwitchService, DiveResults
             ],
             imports: [
                 RouterTestingModule.withRoutes([]),

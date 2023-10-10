@@ -18,7 +18,7 @@
                     (click)="depths.applyMaxDuration()" [class.invisible]="!dive.showMaxDuration"
                     id="btnApplyDuration">Max</button>
                 <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="depths.applyNdlDuration()"
-                    [class.invisible]="!planner.dive.ndlValid" id="btnApplyNdl">No deco</button>
+                    [class.invisible]="!dive.ndlValid" id="btnApplyNdl">No deco</button>
             </div>
             <div class="col col-12 col-md-6 col-lg-12 col-xl-6">
                 <app-depth></app-depth>

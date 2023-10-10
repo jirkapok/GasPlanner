@@ -25,6 +25,7 @@ import { ViewStates } from '../shared/viewStates';
 import { Preferences } from '../shared/preferences';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { SubViewStorage } from '../shared/subViewStorage';
+import { DiveResults } from '../shared/diveresults';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -85,14 +86,18 @@ describe('Tanks Complex component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TanksComplexComponent, GaslabelComponent,
-                OxygenComponent, OxygenDropDownComponent, TankSizeComponent],
-            providers: [WorkersFactoryCommon, UnitConversion,
+            declarations: [
+                TanksComplexComponent, GaslabelComponent,
+                OxygenComponent, OxygenDropDownComponent, TankSizeComponent
+            ],
+            providers: [
+                WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls,
                 ValidatorGroups, DelayedScheduleService,
                 DecimalPipe, TanksService, ViewSwitchService,
                 OptionsService, Plan, WayPointsService,
-                SubViewStorage, ViewStates, Preferences, PreferencesStore
+                SubViewStorage, ViewStates, DiveResults,
+                Preferences, PreferencesStore
             ],
             imports: [ReactiveFormsModule]
         })

@@ -17,6 +17,7 @@ import { TanksService } from '../shared/tanks.service';
 import { Plan } from '../shared/plan.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import { DiveResults } from '../shared/diveresults';
 
 describe('NdlLimits component', () => {
     let component: NdlLimitsComponent;
@@ -27,9 +28,10 @@ describe('NdlLimits component', () => {
             declarations: [NdlLimitsComponent],
             providers: [
                 FormsModule, UnitConversion,
-                NdlService, OptionsService, SubViewStorage, ViewStates,
-                PreferencesStore, Preferences, PlannerService,
-                WorkersFactoryCommon, TanksService, Plan,
+                NdlService, OptionsService, PlannerService,
+                SubViewStorage, ViewStates, DiveResults,
+                PreferencesStore, Preferences, Plan,
+                WorkersFactoryCommon, TanksService,
                 WayPointsService, ViewSwitchService
             ],
             imports: [RouterTestingModule.withRoutes([])]

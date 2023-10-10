@@ -19,6 +19,7 @@ import { SubViewStorage } from '../shared/subViewStorage';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { ViewStates } from '../shared/viewStates';
+import { DiveResults } from '../shared/diveresults';
 
 export class DepthPage {
     constructor(private fixture: ComponentFixture<DepthComponent>) { }
@@ -42,12 +43,13 @@ describe('DepthComponent Imperial units', () => {
         await TestBed.configureTestingModule({
             declarations: [DepthComponent],
             imports: [ReactiveFormsModule],
-            providers: [ DecimalPipe,
+            providers: [
+                DecimalPipe, Plan, DiveResults,
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, ValidatorGroups,
                 DepthsService, DelayedScheduleService,
                 InputControls, TanksService,
-                Plan, ViewSwitchService, OptionsService,
+                ViewSwitchService, OptionsService,
                 WayPointsService, SubViewStorage, ViewStates,
                 PreferencesStore, Preferences
             ]

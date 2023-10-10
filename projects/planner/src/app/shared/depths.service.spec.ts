@@ -15,6 +15,7 @@ import { ViewStates } from './viewStates';
 import { PreferencesStore } from './preferencesStore';
 import { Preferences } from './preferences';
 import { ViewSwitchService } from './viewSwitchService';
+import { DiveResults } from './diveresults';
 
 describe('Depths service', () => {
     let depthService: DepthsService;
@@ -28,7 +29,7 @@ describe('Depths service', () => {
                 OptionsService, Plan, WayPointsService,
                 DepthsService, TanksService, SubViewStorage,
                 ViewStates, PreferencesStore, Preferences,
-                ViewSwitchService
+                ViewSwitchService, DiveResults
             ]
         })
             .compileComponents();
@@ -156,16 +157,16 @@ describe('Depths service', () => {
         });
 
         it('Defaults to 100 tf', inject(
-            [PlannerService, TanksService, DelayedScheduleService, OptionsService],
-            (planner: PlannerService,
+            [DiveResults, TanksService, DelayedScheduleService, OptionsService],
+            (dive: DiveResults,
                 tanksService: TanksService,
                 delayedCalc: DelayedScheduleService,
                 optionsService: OptionsService) => {
                 const units = new UnitConversion();
                 units.imperialUnits = true; // before the depths service was even created
                 const plan = new Plan(); // to prevent reuse of plans
-                const sut = new DepthsService(units, planner, tanksService,
-                    delayedCalc, plan, optionsService);
+                const sut = new DepthsService(units, tanksService,
+                    delayedCalc, plan, dive, optionsService);
                 expect(sut.plannedDepth).toBeCloseTo(100, 6);
             }));
     });

@@ -19,6 +19,7 @@ import { SubViewStorage } from '../shared/subViewStorage';
 import { ViewStates } from '../shared/viewStates';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
+import { DiveResults } from '../shared/diveresults';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
@@ -51,7 +52,8 @@ describe('Depths Simple Component', () => {
                 OptionsService, ValidatorGroups,
                 DepthsService, DecimalPipe, TanksService,
                 ViewSwitchService, Plan, WayPointsService,
-                SubViewStorage, ViewStates, PreferencesStore, Preferences
+                SubViewStorage, ViewStates, PreferencesStore, Preferences,
+                DiveResults
             ]
         })
             .compileComponents();
@@ -61,13 +63,14 @@ describe('Depths Simple Component', () => {
         fixture = TestBed.createComponent(DepthsSimpleComponent);
         component = fixture.componentInstance;
         depths = component.depths;
-        component.planner.calculate();
+        const planner = TestBed.inject(PlannerService);
+        planner.calculate();
         fixture.detectChanges();
         simplePage = new SimpleDepthsPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
         spyOn(scheduler, 'schedule')
             .and.callFake(() => {
-                component.planner.calculate();
+                planner.calculate();
             });
     });
 

@@ -1,28 +1,28 @@
 import { Injectable } from '@angular/core';
 import { SwimAction, WayPoint } from './models';
-import { PlannerService } from './planner.service';
 import { Plan } from './plan.service';
+import { DiveResults } from './diveresults';
 
 @Injectable()
 export class StopsFilter {
     public _stopsOnly = false;
 
-    constructor(private planner: PlannerService, private plan: Plan) { }
+    constructor(private dive: DiveResults, private plan: Plan) { }
 
     public get stopsOnly(): boolean {
         return this._stopsOnly;
     }
 
     public get totalDuration(): number {
-        return this.planner.dive.totalDuration;
+        return this.dive.totalDuration;
     }
 
     public get profileCalculated(): boolean {
-        return this.planner.dive.profileCalculated;
+        return this.dive.profileCalculated;
     }
 
     public get wayPoints(): WayPoint[] {
-        const allWayPoints = this.planner.dive.wayPoints;
+        const allWayPoints = this.dive.wayPoints;
 
         if(!this.stopsOnly) {
             return allWayPoints;

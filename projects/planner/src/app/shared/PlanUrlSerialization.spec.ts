@@ -1,3 +1,4 @@
+import { DiveResults } from './diveresults';
 import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
@@ -31,7 +32,8 @@ describe('Url Serialization', () => {
         units.imperialUnits = imperial;
         const tanksService = new TanksService(units);
         const wayPoints = new WayPointsService(units);
-        const planner = new PlannerService(irrelevantFactory, tanksService, plan, options, wayPoints);
+        const dive = new DiveResults();
+        const planner = new PlannerService(irrelevantFactory, tanksService, plan, dive, options, wayPoints);
         plan.setSimple(30, 12, tanksService.firstTank.tank, options.getOptions());
         const viewSwitch = new ViewSwitchService(plan, options, tanksService);
         const preferencesFactory = new Preferences(viewSwitch, units, tanksService, plan, options, new ViewStates());

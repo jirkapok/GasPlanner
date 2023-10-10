@@ -12,6 +12,7 @@ import { Preferences } from './preferences';
 import { ViewSwitchService } from './viewSwitchService';
 import { ViewState } from './views.model';
 import { SubViewStorage } from './subViewStorage';
+import { DiveResults } from './diveresults';
 
 const viewId = 'testView';
 interface TestView extends ViewState {
@@ -43,7 +44,7 @@ describe('SubView', () => {
                 ViewStates, PreferencesStore, SubViewStorage,
                 PlannerService, WorkersFactoryCommon, TanksService,
                 UnitConversion, Plan, OptionsService, WayPointsService,
-                Preferences, ViewSwitchService
+                Preferences, ViewSwitchService, DiveResults
             ],
             imports: []
         }).compileComponents();

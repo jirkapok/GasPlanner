@@ -21,8 +21,6 @@ import { OptionsService } from './options.service';
 
 @Injectable()
 export class PlannerService extends Streamed {
-    // TODO extract as separate service, there always needs to be at least one
-    public dive: DiveResults = new DiveResults();
     public infoCalculated$: Observable<void>;
     public wayPointsCalculated$: Observable<void>;
 
@@ -38,6 +36,7 @@ export class PlannerService extends Streamed {
     constructor(private workerFactory: WorkersFactoryCommon,
         private tanks: TanksService,
         private plan: Plan,
+        private dive: DiveResults,
         private optionsService: OptionsService,
         private waypoints: WayPointsService) {
         super();

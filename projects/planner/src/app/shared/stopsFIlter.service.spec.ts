@@ -15,6 +15,7 @@ import { ViewStates } from './viewStates';
 import { Preferences } from './preferences';
 import { PreferencesStore } from './preferencesStore';
 import { ViewSwitchService } from './viewSwitchService';
+import { DiveResults } from './diveresults';
 
 describe('Stops filter', () => {
     let service: StopsFilter;
@@ -25,8 +26,8 @@ describe('Stops filter', () => {
                 WorkersFactoryCommon, TanksService, UnitConversion,
                 OptionsService, WayPointsService, DepthsService,
                 DelayedScheduleService, SubViewStorage,
-                ViewStates, PreferencesStore, Preferences,
-                ViewSwitchService
+                PreferencesStore, Preferences, DiveResults,
+                ViewStates, ViewSwitchService
             ]
         });
         service = TestBed.inject(StopsFilter);

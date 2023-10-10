@@ -1,21 +1,21 @@
 import { EventEmitter, Injectable, Input, Output } from '@angular/core';
 import { Time } from 'scuba-physics';
 import { WayPoint } from './models';
-import { PlannerService } from './planner.service';
+import { DiveResults } from './diveresults';
 
 @Injectable()
 export class SelectedWaypoint {
     @Output() public selectedChanged = new EventEmitter<WayPoint>();
     private lastSelected: WayPoint | undefined;
 
-    constructor(private plannerService: PlannerService) {}
+    constructor(private dive: DiveResults) {}
 
     @Input()
     public set selectedTimeStamp(newValue: string) {
         let found: WayPoint | undefined;
         if (newValue) {
             const newTimeStamp = Time.secondsFromDate(newValue);
-            found = this.plannerService.dive.wayPoints.find(p => p.fits(newTimeStamp));
+            found = this.dive.wayPoints.find(p => p.fits(newTimeStamp));
         }
 
         this.selected = found;

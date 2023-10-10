@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { PreferencesStore } from './preferencesStore';
 import { PlannerService } from './planner.service';
-import { Diver, Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
+import { Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { OptionsService } from './options.service';
@@ -17,6 +17,7 @@ import { SettingsNormalizationService } from './settings-normalization.service';
 import { WayPointsService } from './waypoints.service';
 import { ViewStates } from './viewStates';
 import { SubViewStorage } from './subViewStorage';
+import { DiveResults } from './diveresults';
 
 describe('PreferencesStore', () => {
     beforeEach(() => {
@@ -25,7 +26,7 @@ describe('PreferencesStore', () => {
                 PreferencesStore, PlannerService,
                 UnitConversion, TanksService,
                 ViewSwitchService, DepthsService,
-                OptionsService, Plan, Preferences,
+                OptionsService, Plan, Preferences, DiveResults,
                 DelayedScheduleService, SettingsNormalizationService,
                 WayPointsService, ViewStates, SubViewStorage
             ]

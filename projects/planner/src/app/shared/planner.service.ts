@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
-import { Dive } from './models';
+import { DiveResults } from './models';
 import { Plan } from '../shared/plan.service';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
@@ -22,7 +22,7 @@ import { OptionsService } from './options.service';
 @Injectable()
 export class PlannerService extends Streamed {
     // TODO extract as separate service, there always needs to be at least one
-    public dive: Dive = new Dive();
+    public dive: DiveResults = new DiveResults();
     public infoCalculated$: Observable<void>;
     public wayPointsCalculated$: Observable<void>;
 

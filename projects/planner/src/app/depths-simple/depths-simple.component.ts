@@ -6,7 +6,7 @@ import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons
 import { takeUntil } from 'rxjs';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
-import { Dive } from '../shared/models';
+import { DiveResults } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -26,7 +26,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     public simpleForm!: FormGroup<{
         planDuration: FormControl<number>;
     }>;
-    public dive: Dive;
+    public dive: DiveResults;
 
     constructor(
         private fb: NonNullableFormBuilder,

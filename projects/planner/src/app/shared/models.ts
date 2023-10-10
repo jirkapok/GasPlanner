@@ -201,7 +201,7 @@ export class TankBound implements IGasContent {
     }
 }
 
-export class Dive {
+export class DiveResults {
     private static readonly maxAcceptableNdl = 1000;
     public noDecoTime = 0;
     public calculated = false;
@@ -235,7 +235,7 @@ export class Dive {
     }
 
     public get ndlValid(): boolean {
-        return this.diveInfoCalculated && this.noDecoTime < Dive.maxAcceptableNdl;
+        return this.diveInfoCalculated && this.noDecoTime < DiveResults.maxAcceptableNdl;
     }
 
     public get noDecoExceeded(): boolean {

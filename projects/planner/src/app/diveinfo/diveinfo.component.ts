@@ -5,7 +5,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { PlannerService } from '../shared/planner.service';
-import { Dive } from '../shared/models';
+import { DiveResults } from '../shared/models';
 import { Tank } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import { GasToxicity } from '../shared/gasToxicity.service';
@@ -25,7 +25,7 @@ import { formatNumber } from '@angular/common';
 })
 export class DiveInfoComponent extends Streamed {
     public toxicity: GasToxicity;
-    public dive: Dive;
+    public dive: DiveResults;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
     public toastVisible = false;

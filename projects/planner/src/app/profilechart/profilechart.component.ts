@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PlannerService } from '../shared/planner.service';
-import { Dive, WayPoint } from '../shared/models';
+import { DiveResults, WayPoint } from '../shared/models';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-basic-dist';
 import { takeUntil } from 'rxjs';
@@ -18,7 +18,7 @@ import { ResamplingService } from '../shared/ResamplingService';
     styleUrls: ['./profilechart.component.scss']
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
-    public dive: Dive;
+    public dive: DiveResults;
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
     private chartElement: any;

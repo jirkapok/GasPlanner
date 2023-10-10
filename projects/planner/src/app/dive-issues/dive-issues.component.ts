@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Dive } from '../shared/models';
+import { DiveResults } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 import {
     faExclamationCircle, faExclamationTriangle, faInfoCircle
@@ -15,7 +15,7 @@ import _ from 'lodash';
     styleUrls: ['./dive-issues.component.scss']
 })
 export class DiveIssuesComponent {
-    public dive: Dive;
+    public dive: DiveResults;
     public exclamation = faExclamationCircle;
     public warning = faExclamationTriangle;
     public info = faInfoCircle;

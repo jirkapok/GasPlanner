@@ -6,7 +6,7 @@ import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons
 import { takeUntil } from 'rxjs';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
-import { Level, Dive, TankBound } from '../shared/models';
+import { Level, DiveResults, TankBound } from '../shared/models';
 import { PlannerService } from '../shared/planner.service';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -34,7 +34,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     public addIcon = faPlus;
     public removeIcon = faMinus;
     public complexForm!: FormGroup<DepthsForm>;
-    public dive: Dive;
+    public dive: DiveResults;
 
     constructor(
         private fb: NonNullableFormBuilder,

@@ -12,6 +12,7 @@ export class PlanTabsComponent {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
     public addIcon = faPlus;
 
+    // TODO move selected item in DivesSchedule
     public selected: DiveSchedule;
 
     constructor(public schedule: DivesSchedule) {
@@ -26,6 +27,7 @@ export class PlanTabsComponent {
         this.schedule.add();
     }
 
+    // TODO main menu overlaps the tab, when text is wrapped on two rows
     public selectedChanged(e: MdbTabChange): void {
         let newIndex = e.index;
         if (e.index === this.schedule.dives.length) {

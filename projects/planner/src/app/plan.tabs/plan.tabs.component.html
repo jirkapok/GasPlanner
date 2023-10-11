@@ -1,4 +1,4 @@
-<div>
+<div class="mt-2">
     <mdb-tabs (activeTabChange)="selectedChanged($event)" #tabs [pills]="true">
         <mdb-tab *ngFor="let dive of this.schedule.dives; let i = index">
             <ng-template mdbTabTitle>

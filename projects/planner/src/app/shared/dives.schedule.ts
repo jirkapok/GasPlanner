@@ -44,22 +44,46 @@ export class DiveSchedule {
 
 export class DivesSchedule {
     private _dives: DiveSchedule[] = [];
+    private _selected: DiveSchedule;
 
     constructor(private units: UnitConversion) {
         this.add();
+        this._selected = this._dives[0];
     }
 
     public get dives(): DiveSchedule[] {
         return this._dives.slice();
     }
 
+    public get selected(): DiveSchedule {
+        return this._selected;
+    }
+
+    public get length(): number {
+        return this._dives.length;
+    }
+
+    public get empty(): boolean {
+        return this.length <= 1;
+    }
+
+    public set selected(newValue: DiveSchedule) {
+        if (this._dives.includes(newValue)) {
+            this._selected = newValue;
+        }
+    }
+
     public add(): void {
         const newDive = this.createDiveSchedule();
         this._dives.push(newDive);
+        this._selected = newDive;
     }
 
     public remove(dive: DiveSchedule): void {
-        this._dives = this._dives.filter(g => g !== dive);
+        if (!this.empty) {
+            this._dives = this._dives.filter(g => g !== dive);
+            this._selected = this._dives[0];
+        }
     }
 
     private createDiveSchedule(): DiveSchedule {

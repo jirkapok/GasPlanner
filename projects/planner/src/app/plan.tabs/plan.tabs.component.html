@@ -4,7 +4,7 @@
             <ng-template mdbTabTitle>
                 <div class="d-flex align-items-center">
                     <div class="justifycontent-center">{{dive.title}}</div>
-                    <button *ngIf="schedule.dives.length > 1" type="button" class="btn-close ms-2" aria-label="Close" (click)="closeTab(dive)"></button>
+                    <button *ngIf="schedule.empty" type="button" class="btn-close ms-2" aria-label="Close" (click)="closeTab(dive)"></button>
                 </div>
             </ng-template>
         </mdb-tab>

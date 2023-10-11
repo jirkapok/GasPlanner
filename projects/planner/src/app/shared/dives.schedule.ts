@@ -3,6 +3,7 @@ import { UnitConversion } from './UnitConversion';
 import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
+import { Injectable } from '@angular/core';
 
 export class DiveSchedule {
     /** In minutes or undefined in case it is the first dive */
@@ -15,6 +16,7 @@ export class DiveSchedule {
         this._tanks = new TanksService(units);
         this.optionsService = new OptionsService(this.units);
 
+        // TODO load from default dive
         // this enforces to initialize the levels, needs to be called after subscribe to plan
         if (this.plan.maxDepth === 0) {
             let requiredDepth = this.units.defaults.stopsDistance * 10; // 30 m or 100 ft
@@ -25,6 +27,10 @@ export class DiveSchedule {
         }
     }
 
+    // TODO add dive number
+    // TODO add load/save preferences
+    // TODO planner needs to recalculate line after dive is added or removed
+    // TODO add correct units behavior
     public get title(): string {
         return `${this.plan.duration} min/${this.plan.maxDepth} m`;
     }
@@ -33,6 +39,8 @@ export class DiveSchedule {
         return this._tanks.firstTank.tank;
     }
 }
+
+@Injectable()
 
 export class DivesSchedule {
     private _dives: DiveSchedule[] = [];

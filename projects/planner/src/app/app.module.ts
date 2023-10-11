@@ -80,6 +80,7 @@ import { WeightCalcComponent } from './weight/weight.component';
 import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
 import { DiffComponent } from './diff/diff.component';
 import { DiveResults } from './shared/diveresults';
+import { DivesSchedule } from './shared/dives.schedule';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -154,6 +155,7 @@ const MDB_MODULES = [
         PlannerService,
         Plan,
         DiveResults,
+        DivesSchedule,
         PlanUrlSerialization,
         Preferences,
         PreferencesStore,

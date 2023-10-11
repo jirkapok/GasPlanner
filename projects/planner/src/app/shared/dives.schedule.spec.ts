@@ -14,6 +14,13 @@ describe('Scheduled dives', () => {
         expect(emptySut.length).toEqual(1);
     });
 
+    fit('Dive title respects imperial units setting', () => {
+        const units = new UnitConversion();
+        units.imperialUnits = true;
+        const dive = new DiveSchedule(units);
+        expect(dive.title).toEqual('12 min/100 ft');
+    });
+
     describe('Selected dive', () => {
         it('it is first by default', () => {
             expect(sut.selected).toEqual(sut.dives[0]);

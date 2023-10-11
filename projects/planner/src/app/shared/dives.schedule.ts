@@ -30,9 +30,11 @@ export class DiveSchedule {
     // TODO add dive number
     // TODO add load/save preferences
     // TODO planner needs to recalculate line after dive is added or removed
-    // TODO add correct units behavior
     public get title(): string {
-        return `${this.plan.duration} min/${this.plan.maxDepth} m`;
+        const depth = this.units.fromMeters(this.plan.maxDepth);
+        const depthUnits = this.units.length;
+        const duration = this.plan.duration;
+        return `${duration} min/${depth} ${depthUnits}`;
     }
 
     private get firstTank(): Tank {

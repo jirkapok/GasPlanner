@@ -12,12 +12,7 @@ export class PlanTabsComponent {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
     public addIcon = faPlus;
 
-    // TODO move selected item in DivesSchedule
-    public selected: DiveSchedule;
-
-    constructor(public schedule: DivesSchedule) {
-        this.selected = this.schedule.dives[0];
-    }
+    constructor(public schedule: DivesSchedule) { }
 
     public closeTab(dive: DiveSchedule): void {
         this.schedule.remove(dive);
@@ -35,6 +30,6 @@ export class PlanTabsComponent {
             this.tabs?.setActiveTab(newIndex);
         }
 
-        this.selected = this.schedule.dives[newIndex];
+        this.schedule.selected = this.schedule.dives[newIndex];
     }
 }

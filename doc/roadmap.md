@@ -46,6 +46,7 @@ Following list of features and improvements ordered by priority is under develop
   * Add air breaks
 * Add CCR support
 * Add option to define custom maximum gas density
+* Add more variables to weight calculator (suits, BMI, tank material, water type)
 
 ## Compare dives specification
 

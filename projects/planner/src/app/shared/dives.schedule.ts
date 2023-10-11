@@ -8,11 +8,13 @@ import { Injectable } from '@angular/core';
 export class DiveSchedule {
     /** In minutes or undefined in case it is the first dive */
     public surfaceInterval?: number;
+    public _id = 0;
     private optionsService: OptionsService;
     private _tanks: TanksService;
     private plan: Plan = new Plan(); // Depths service
 
-    constructor(private units: UnitConversion) {
+    constructor(index: number, private units: UnitConversion) {
+        this.assignIndex(index);
         this._tanks = new TanksService(units);
         this.optionsService = new OptionsService(this.units);
 
@@ -27,18 +29,25 @@ export class DiveSchedule {
         }
     }
 
-    // TODO add dive number
+    public get id(): number {
+        return this._id;
+    }
+
     // TODO add load/save preferences
     // TODO planner needs to recalculate line after dive is added or removed
     public get title(): string {
         const depth = this.units.fromMeters(this.plan.maxDepth);
         const depthUnits = this.units.length;
         const duration = this.plan.duration;
-        return `${duration} min/${depth} ${depthUnits}`;
+        return `${this.id}. ${duration} min/${depth} ${depthUnits}`;
     }
 
     private get firstTank(): Tank {
         return this._tanks.firstTank.tank;
+    }
+
+    public assignIndex(index: number): void {
+        this._id = index + 1;
     }
 }
 
@@ -84,11 +93,18 @@ export class DivesSchedule {
     public remove(dive: DiveSchedule): void {
         if (!this.empty) {
             this._dives = this._dives.filter(g => g !== dive);
+            this.renumber();
             this._selected = this._dives[0];
         }
     }
 
     private createDiveSchedule(): DiveSchedule {
-        return new DiveSchedule(this.units);
+        return new DiveSchedule(this.length, this.units);
+    }
+
+    private renumber(): void {
+        this._dives.forEach((dive, index) => {
+            dive.assignIndex(index);
+        });
     }
 }

@@ -14,16 +14,17 @@ describe('Scheduled dives', () => {
         expect(emptySut.length).toEqual(1);
     });
 
-    fit('Dive title respects imperial units setting', () => {
+    it('Dive title respects imperial units setting', () => {
         const units = new UnitConversion();
         units.imperialUnits = true;
-        const dive = new DiveSchedule(units);
-        expect(dive.title).toEqual('12 min/100 ft');
+        const dive = new DiveSchedule(0, units);
+        expect(dive.title).toEqual('1. 12 min/100 ft');
     });
 
     describe('Selected dive', () => {
         it('it is first by default', () => {
-            expect(sut.selected).toEqual(sut.dives[0]);
+            const emptySut = new DivesSchedule(new UnitConversion());
+            expect(emptySut.selected).toBe(emptySut.dives[0]);
         });
 
         it('sets first after remove', () => {
@@ -40,7 +41,7 @@ describe('Scheduled dives', () => {
         });
 
         it('Does not change selected if not in current list', () => {
-            const toBeSelected = new DiveSchedule(new UnitConversion());
+            const toBeSelected = new DiveSchedule(0, new UnitConversion());
             sut.selected = toBeSelected;
             expect(sut.selected).not.toBe(toBeSelected);
         });
@@ -57,7 +58,11 @@ describe('Scheduled dives', () => {
 
         it('has title', () => {
             // this means it has depths and time configured
-            expect(sut.dives[1].title).toEqual('12 min/30 m');
+            expect(sut.dives[1].title).toEqual('2. 12 min/30 m');
+        });
+
+        it('Assigns dive number', () => {
+            expect(sut.dives[1].id).toEqual(2);
         });
     });
 
@@ -83,6 +88,12 @@ describe('Scheduled dives', () => {
             sut.remove(sut.dives[0]);
             sut.remove(sut.dives[0]);
             expect(sut.length).toEqual(1);
+        });
+
+        it('Updates ids', () => {
+            sut.add();
+            sut.remove(sut.dives[1]);
+            expect(sut.dives[1].id).toEqual(2);
         });
     });
 

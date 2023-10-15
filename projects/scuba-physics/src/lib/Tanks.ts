@@ -1,5 +1,6 @@
 import { Precision } from './precision';
 import { Gas, StandardGases } from './Gases';
+import { TankFill } from './gasBlender';
 
 export class Tanks {
     /**
@@ -43,7 +44,7 @@ export class Tanks {
     }
 }
 
-export class Tank {
+export class Tank implements TankFill {
     /** Gets or sets a unique identifier of the tank in its collection */
     public id = 0;
     /** Gets or sets the consumed pressure of gas in bars */

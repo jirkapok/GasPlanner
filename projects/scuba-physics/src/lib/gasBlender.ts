@@ -1,5 +1,3 @@
-import { StandardGases } from "./Gases";
-
 export interface TankFill {
     /** start pressure in bars as non zero positive number.*/
     startPressure: number;
@@ -32,9 +30,14 @@ export interface MixRequest {
 
 export class GasBlender {
     public static mix(request: MixRequest): MixProcess {
-        const o2diff = request.target.o2 - request.source.o2;
-        const addO2 = request.target.pressure * o2diff / StandardGases.nitroxInAir;
-        const addTop = request.target.pressure - addO2;
+        const o2diff = request.target.o2 - request.topMix.o2;
+        const topNitrox = 1 - request.topMix.o2;
+        const addO2 = request.target.pressure * o2diff / topNitrox;
+        let addTop = request.target.pressure - addO2 - request.source.pressure;
+
+        if (addO2 < 0) {
+            addTop = 0;
+        }
 
         return {
             addO2: addO2,

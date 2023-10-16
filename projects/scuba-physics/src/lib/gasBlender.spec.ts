@@ -88,7 +88,7 @@ describe('Gas Blender', () => {
         });
     });
 
-    const createValidRequest = (): MixRequest => ({
+    const createValidEmptyRequest = (): MixRequest => ({
         source: {
             pressure: 0,
             o2: .21,
@@ -107,14 +107,97 @@ describe('Gas Blender', () => {
         useHe: false
     });
 
-    describe('Mix', () => {
-        it('Ean32 from O2 and air to empty tank', () => {
-            const request = createValidRequest();
-            request.target.o2 = .32;
+    const createValidNonEmptyRequest = (): MixRequest => {
+        const result = createValidEmptyRequest();
+        result.source.pressure = 50;
+        return result;
+    };
 
-            const mixProcess = GasBlender.mix(request);
-            expect(mixProcess.addO2).toBeCloseTo(27.812895, 6);
-            expect(mixProcess.addTop).toBeCloseTo( 172.187105, 6);
+    describe('Mix', () => {
+        describe('Ean', () => {
+            describe('into Empty tank', () => {
+                it('Air from Air to empty tank', () => {
+                    const request = createValidEmptyRequest();
+                    request.target.o2 = 0.21;
+                    request.topMix.o2 = 0.21;
+
+                    const mixProcess = GasBlender.mix(request);
+                    expect(mixProcess.addO2).toBeCloseTo(0, 6);
+                    expect(mixProcess.addTop).toBeCloseTo(200, 6);
+                });
+
+                it('Ean32 from O2 and air to empty tank', () => {
+                    const request = createValidEmptyRequest();
+                    request.topMix.o2 = 0.21;
+                    request.target.o2 = 0.32;
+
+                    const mixProcess = GasBlender.mix(request);
+                    expect(mixProcess.addO2).toBeCloseTo(27.848101, 6);
+                    expect(mixProcess.addTop).toBeCloseTo(172.151899, 6);
+                });
+
+                it('Ean50 from O2 and Ean32 to empty tank', () => {
+                    const request = createValidEmptyRequest();
+                    request.topMix.o2 = 0.32;
+                    request.target.o2 = 0.5;
+
+                    const mixProcess = GasBlender.mix(request);
+                    expect(mixProcess.addO2).toBeCloseTo(52.941176, 6);
+                    expect(mixProcess.addTop).toBeCloseTo(147.058824, 6);
+                });
+
+                it('Cant create Air from Ean32 to empty tank', () => {
+                    const request = createValidEmptyRequest();
+                    request.topMix.o2 = 0.32;
+                    request.target.o2 = 0.21;
+
+                    const mixProcess = GasBlender.mix(request);
+                    expect(mixProcess.addO2).toBeCloseTo(-32.352941, 6);
+                    expect(mixProcess.addTop).toBeCloseTo(0, 6);
+                });
+            });
+
+            fdescribe('into NON Empty tank', () => {
+                it('Air from Air to non empty tank', () => {
+                    const request = createValidNonEmptyRequest();
+                    request.target.o2 = 0.21;
+                    request.topMix.o2 = 0.21;
+
+                    const mixProcess = GasBlender.mix(request);
+                    expect(mixProcess.addO2).toBeCloseTo(0, 6);
+                    expect(mixProcess.addTop).toBeCloseTo(150, 6);
+                });
+
+                fit('Ean32 from O2 and air to non empty tank', () => {
+                    const request = createValidNonEmptyRequest();
+                    request.topMix.o2 = 0.21;
+                    request.target.o2 = 0.32;
+
+                    const mixProcess = GasBlender.mix(request);
+                    expect(mixProcess.addO2).toBeCloseTo(27.848101, 6);
+                    expect(mixProcess.addTop).toBeCloseTo(172.151899, 6);
+                });
+
+                it('Ean50 from O2 and Ean32 to non empty tank', () => {
+                    const request = createValidNonEmptyRequest();
+                    request.topMix.o2 = 0.32;
+                    request.target.o2 = 0.5;
+
+                    const mixProcess = GasBlender.mix(request);
+                    expect(mixProcess.addO2).toBeCloseTo(52.941176, 6);
+                    expect(mixProcess.addTop).toBeCloseTo(147.058824, 6);
+                });
+
+                it('Cant create Air from Ean32 to non empty tank', () => {
+                    const request = createValidNonEmptyRequest();
+                    request.topMix.o2 = 0.32;
+                    request.target.o2 = 0.21;
+
+                    const mixProcess = GasBlender.mix(request);
+                    expect(mixProcess.addO2).toBeCloseTo(-32.352941, 6);
+                    expect(mixProcess.addTop).toBeCloseTo(0, 6);
+                });
+            });
         });
 
         // TODO add Mix test cases:

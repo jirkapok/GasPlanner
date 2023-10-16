@@ -1,3 +1,4 @@
+import { StandardGases } from "./Gases";
 
 export interface TankFill {
     /** start pressure in bars as non zero positive number.*/
@@ -6,14 +7,48 @@ export interface TankFill {
     volume: number;
 }
 
+export interface MixProcess {
+    addO2: number;
+    addTop: number;
+}
+
+
+export interface TankMix extends Mix {
+    pressure: number;
+}
+
+export interface Mix {
+    o2: number;
+    he: number;
+}
+
+export interface MixRequest {
+    source: TankMix;
+    target: TankMix;
+    topMix: Mix;
+    useO2: boolean;
+    useHe: boolean;
+}
+
 export class GasBlender {
+    public static mix(request: MixRequest): MixProcess {
+        const o2diff = request.target.o2 - request.source.o2;
+        const addO2 = request.target.pressure * o2diff / StandardGases.nitroxInAir;
+        const addTop = request.target.pressure - addO2;
+
+        return {
+            addO2: addO2,
+            addTop: addTop
+        };
+    }
+
     /**
      * Calculates final pressure combining two tanks A and B with different volume and start pressure using ideal gas law.
      *
      * @returns final pressure in both tanks in bars
      */
     public static redundancies(tankA: TankFill, tankB: TankFill): number {
-        if(tankA.volume === 0 && tankB.volume === 0) {
+        if (tankA.volume === 0 && tankB.volume === 0) {
             return 0;
         }
 

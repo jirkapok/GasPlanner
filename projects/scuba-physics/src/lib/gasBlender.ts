@@ -5,11 +5,11 @@ export interface TankFill {
     volume: number;
 }
 
-export interface MixProcess {
+export interface MixResult {
     addO2: number;
+    addHe: number;
     addTop: number;
 }
-
 
 export interface TankMix extends Mix {
     pressure: number;
@@ -24,23 +24,25 @@ export interface MixRequest {
     source: TankMix;
     target: TankMix;
     topMix: Mix;
-    useO2: boolean;
-    useHe: boolean;
 }
 
 export class GasBlender {
-    public static mix(request: MixRequest): MixProcess {
-        const o2diff = request.target.o2 - request.topMix.o2;
-        const topNitrox = 1 - request.topMix.o2;
-        const addO2 = request.target.pressure * o2diff / topNitrox;
-        let addTop = request.target.pressure - addO2 - request.source.pressure;
+    public static mix(request: MixRequest): MixResult {
+        const finalfN2 = GasBlender.n2(request.target);
+        const finalN2  = finalfN2 * request.target.pressure;
+        const currentfN2 = GasBlender.n2(request.source);
+        const currentN2 = currentfN2 * request.source.pressure;
+        const addN2 = finalN2 - currentN2;
+        const topfN2 = GasBlender.n2(request.topMix);
+        const addTop = addN2 / topfN2;
+        const topHe = addTop * request.topMix.he;
 
-        if (addO2 < 0) {
-            addTop = 0;
-        }
+        const addHe = request.target.pressure * request.target.he - topHe;
+        const addO2 = request.target.pressure - request.source.pressure - addHe - addTop;
 
         return {
             addO2: addO2,
+            addHe: addHe,
             addTop: addTop
         };
     }
@@ -64,5 +66,9 @@ export class GasBlender {
 
     private static tankGasVolume(tank: TankFill): number {
         return tank.startPressure * tank.volume;
+    }
+
+    private static n2(mix: Mix): number {
+        return 1 - mix.o2 - mix.he;
     }
 }

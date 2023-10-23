@@ -35,9 +35,11 @@ export class GasBlender {
         const addN2 = finalN2 - currentN2;
         const topfN2 = GasBlender.n2(request.topMix);
         const addTop = addN2 / topfN2;
+        const targetHe = request.target.pressure * request.target.he;
+        const sourceHe = request.source.pressure * request.source.he;
         const topHe = addTop * request.topMix.he;
 
-        const addHe = request.target.pressure * request.target.he - topHe;
+        const addHe = targetHe - sourceHe - topHe;
         const addO2 = request.target.pressure - request.source.pressure - addHe - addTop;
 
         return {

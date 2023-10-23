@@ -88,7 +88,7 @@ describe('Gas Blender', () => {
         });
     });
 
-    const createValidEmptyRequest = (): MixRequest => ({
+    const createEmptyRequest = (): MixRequest => ({
         source: {
             pressure: 0,
             o2: .21,
@@ -105,8 +105,8 @@ describe('Gas Blender', () => {
         }
     });
 
-    const createValidNonEmptyRequest = (): MixRequest => {
-        const result = createValidEmptyRequest();
+    const createNonEmptyRequest = (): MixRequest => {
+        const result = createEmptyRequest();
         result.source.pressure = 50;
         return result;
     };
@@ -133,7 +133,7 @@ describe('Gas Blender', () => {
         describe('Ean', () => {
             describe('into Empty tank', () => {
                 it('Air from Air to empty tank', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.target.o2 = 0.21;
                     request.topMix.o2 = 0.21;
 
@@ -141,7 +141,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('Ean32 from O2 and air to empty tank', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.topMix.o2 = 0.21;
                     request.target.o2 = 0.32;
 
@@ -149,7 +149,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('Ean50 from O2 and Ean32 to empty tank', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.topMix.o2 = 0.32;
                     request.target.o2 = 0.5;
 
@@ -157,7 +157,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('Can`t create Air from Ean32 to empty tank', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.topMix.o2 = 0.32;
                     request.target.o2 = 0.21;
 
@@ -169,7 +169,7 @@ describe('Gas Blender', () => {
 
             describe('into NON Empty tank', () => {
                 it('Air from Air to non empty tank', () => {
-                    const request = createValidNonEmptyRequest();
+                    const request = createNonEmptyRequest();
                     request.target.o2 = 0.21;
                     request.topMix.o2 = 0.21;
 
@@ -177,7 +177,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('Ean32 from O2 and air to non empty tank', () => {
-                    const request = createValidNonEmptyRequest();
+                    const request = createNonEmptyRequest();
                     request.topMix.o2 = 0.21;
                     request.target.o2 = 0.32;
 
@@ -185,7 +185,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('Ean50 from O2 and air to Ean32 tank', () => {
-                    const request = createValidNonEmptyRequest();
+                    const request = createNonEmptyRequest();
                     request.source.o2 = 0.32;
                     request.topMix.o2 = 0.21;
                     request.target.o2 = 0.5;
@@ -194,7 +194,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('Can`t create Air from Ean32 to non empty tank', () => {
-                    const request = createValidNonEmptyRequest();
+                    const request = createNonEmptyRequest();
                     request.topMix.o2 = 0.32;
                     request.target.o2 = 0.21;
 
@@ -208,7 +208,7 @@ describe('Gas Blender', () => {
         describe('Trimix', () => {
             describe('he into Empty tank', () => {
                 it('25/25 using 25/25 to empty tank', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.target.o2 = 0.25;
                     request.target.he = 0.25;
                     request.topMix.o2 = 0.25;
@@ -218,7 +218,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('21/35 using O2, he and air to empty tank', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.target.o2 = 0.21;
                     request.target.he = 0.35;
                     request.topMix.o2 = 0.21;
@@ -227,7 +227,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('18/45 using O2, he and Ean32 to empty tank', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.target.o2 = 0.18;
                     request.target.he = 0.45;
                     request.topMix.o2 = 0.32;
@@ -236,7 +236,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('21/35 using 23/25 to empty tank', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.target.o2 = 0.21;
                     request.target.he = 0.35;
                     request.topMix.o2 = 0.23;
@@ -246,7 +246,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('35/25 using 25/25', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.target.o2 = 0.35;
                     request.target.he = 0.25;
                     request.topMix.o2 = 0.25;
@@ -256,7 +256,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('Can`t create 18/45 using 25/25', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.target.o2 = 0.18;
                     request.target.he = 0.45;
                     request.topMix.o2 = 0.25;
@@ -266,7 +266,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('Can`t create 21/35 using 17/45', () => {
-                    const request = createValidEmptyRequest();
+                    const request = createEmptyRequest();
                     request.target.o2 = 0.21;
                     request.target.he = 0.35;
                     request.topMix.o2 = 0.17;
@@ -279,7 +279,7 @@ describe('Gas Blender', () => {
             describe('he into non empty tank', () => {
                 describe('from trimix', () => {
                     it('25/25 from 25/25 using 25/25', () => {
-                        const request = createValidNonEmptyRequest();
+                        const request = createNonEmptyRequest();
                         request.source.o2 = 0.25;
                         request.source.he = 0.25;
                         request.target.o2 = 0.25;
@@ -291,7 +291,7 @@ describe('Gas Blender', () => {
                     });
 
                     it('21/35 from 21/35 using O2, he and air', () => {
-                        const request = createValidNonEmptyRequest();
+                        const request = createNonEmptyRequest();
                         request.source.o2 = 0.21;
                         request.source.he = 0.35;
                         request.target.o2 = 0.21;
@@ -301,7 +301,7 @@ describe('Gas Blender', () => {
                     });
 
                     it('18/45 from 21/35 using 25/25', () => {
-                        const request = createValidNonEmptyRequest();
+                        const request = createNonEmptyRequest();
                         request.source.o2 = 0.25;
                         request.source.he = 0.25;
                         request.target.o2 = 0.18;
@@ -315,7 +315,7 @@ describe('Gas Blender', () => {
 
                 describe('from air', () => {
                     it('18/45 using O2, he and Ean32', () => {
-                        const request = createValidNonEmptyRequest();
+                        const request = createNonEmptyRequest();
                         request.target.o2 = 0.18;
                         request.target.he = 0.45;
                         request.topMix.o2 = 0.32;
@@ -324,7 +324,7 @@ describe('Gas Blender', () => {
                     });
 
                     it('21/35 using 23/25', () => {
-                        const request = createValidNonEmptyRequest();
+                        const request = createNonEmptyRequest();
                         request.target.o2 = 0.21;
                         request.target.he = 0.35;
                         request.topMix.o2 = 0.23;
@@ -335,7 +335,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('Can`t create 25/25 from 35/25 using 18/45', () => {
-                    const request = createValidNonEmptyRequest();
+                    const request = createNonEmptyRequest();
                     request.source.o2 = 0.35;
                     request.source.he = 0.25;
                     request.target.o2 = 0.25;
@@ -347,7 +347,7 @@ describe('Gas Blender', () => {
                 });
 
                 it('Can`t create 21/35 from 25/25 using 17/45', () => {
-                    const request = createValidNonEmptyRequest();
+                    const request = createNonEmptyRequest();
                     request.source.o2 = 0.25;
                     request.source.he = 0.25;
                     request.target.o2 = 0.21;
@@ -363,7 +363,7 @@ describe('Gas Blender', () => {
 
         describe('Heliox', () => {
             it('Create 10/90 without top mix to empty tank', () => {
-                const request = createValidEmptyRequest();
+                const request = createEmptyRequest();
                 request.target.o2 = 0.1;
                 request.target.he = 0.9;
                 request.topMix.o2 = 0.25;
@@ -373,7 +373,7 @@ describe('Gas Blender', () => {
             });
 
             it('Create 5/95 without top mix to non empty tank', () => {
-                const request = createValidNonEmptyRequest();
+                const request = createNonEmptyRequest();
                 request.source.o2 = 0.10;
                 request.source.he = 0.90;
                 request.target.o2 = 0.05;
@@ -385,7 +385,7 @@ describe('Gas Blender', () => {
             });
 
             it('Can`t create heliox from mix with nitrox in empty tank', () => {
-                const request = createValidNonEmptyRequest();
+                const request = createNonEmptyRequest();
                 request.source.o2 = 0.10;
                 request.source.he = 0.70;
                 request.target.o2 = 0.1;

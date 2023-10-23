@@ -81,6 +81,7 @@ import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
 import { DiffComponent } from './diff/diff.component';
 import { DiveResults } from './shared/diveresults';
 import { DivesSchedule } from './shared/dives.schedule';
+import { RedundanciesComponent } from './redundancies/redundancies.component';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -136,7 +137,8 @@ const MDB_MODULES = [
         AltitudeCalcComponent,
         WeightCalcComponent,
         GasPropertiesCalcComponent,
-        DiffComponent
+        DiffComponent,
+        RedundanciesComponent
     ],
     imports: [
         ...ANGULAR_MODULES,

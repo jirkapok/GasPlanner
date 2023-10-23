@@ -13,6 +13,7 @@ export class KnownViews {
     public static readonly weight = 'weight';
     public static readonly gas = 'gas';
     public static readonly diff = 'diff';
+    public static readonly redundancies = 'redundancies';
 }
 
 @Injectable()

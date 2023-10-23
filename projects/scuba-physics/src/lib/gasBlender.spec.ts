@@ -207,7 +207,7 @@ describe('Gas Blender', () => {
 
         describe('Trimix', () => {
             describe('he into Empty tank', () => {
-                it('25/25 from 25/25 to empty tank', () => {
+                it('25/25 using 25/25 to empty tank', () => {
                     const request = createValidEmptyRequest();
                     request.target.o2 = 0.25;
                     request.target.he = 0.25;
@@ -217,7 +217,7 @@ describe('Gas Blender', () => {
                     assertResult(request, 200, 0, 0);
                 });
 
-                it('21/35 from O2, he and air to empty tank', () => {
+                it('21/35 using O2, he and air to empty tank', () => {
                     const request = createValidEmptyRequest();
                     request.target.o2 = 0.21;
                     request.target.he = 0.35;
@@ -226,7 +226,7 @@ describe('Gas Blender', () => {
                     assertResult(request, 111.392405, 18.607595, 70);
                 });
 
-                it('18/45 from O2, he and Ean32 to empty tank', () => {
+                it('18/45 using O2, he and Ean32 to empty tank', () => {
                     const request = createValidEmptyRequest();
                     request.target.o2 = 0.18;
                     request.target.he = 0.45;
@@ -235,7 +235,7 @@ describe('Gas Blender', () => {
                     assertResult(request, 108.823529, 1.176471, 90);
                 });
 
-                it('21/35 from 23/25 to empty tank', () => {
+                it('21/35 using 23/25 to empty tank', () => {
                     const request = createValidEmptyRequest();
                     request.target.o2 = 0.21;
                     request.target.he = 0.35;
@@ -245,7 +245,7 @@ describe('Gas Blender', () => {
                     assertResult(request, 169.230769, 3.076923, 27.6923076);
                 });
 
-                it('35/25 from 25/25 to empty tank', () => {
+                it('35/25 using 25/25', () => {
                     const request = createValidEmptyRequest();
                     request.target.o2 = 0.35;
                     request.target.he = 0.25;
@@ -255,7 +255,7 @@ describe('Gas Blender', () => {
                     assertResult(request, 160, 30, 10);
                 });
 
-                it('Can`t create 18/45 from 25/25 to empty tank', () => {
+                it('Can`t create 18/45 using 25/25', () => {
                     const request = createValidEmptyRequest();
                     request.target.o2 = 0.18;
                     request.target.he = 0.45;
@@ -265,7 +265,7 @@ describe('Gas Blender', () => {
                     assertResult(request, 148, -1, 53);
                 });
 
-                it('Can`t create 21/35 from 10/45 to empty tank', () => {
+                it('Can`t create 21/35 using 17/45', () => {
                     const request = createValidEmptyRequest();
                     request.target.o2 = 0.21;
                     request.target.he = 0.35;
@@ -277,84 +277,90 @@ describe('Gas Blender', () => {
             });
 
             describe('he into non empty tank', () => {
-                it('25/25 from 25/25 to non empty tank', () => {
+                describe('from trimix', () => {
+                    it('25/25 from 25/25 using 25/25', () => {
+                        const request = createValidNonEmptyRequest();
+                        request.source.o2 = 0.25;
+                        request.source.he = 0.25;
+                        request.target.o2 = 0.25;
+                        request.target.he = 0.25;
+                        request.topMix.o2 = 0.25;
+                        request.topMix.he = 0.25;
+
+                        assertResult(request, 150, 0, 0);
+                    });
+
+                    it('21/35 from 21/35 using O2, he and air', () => {
+                        const request = createValidNonEmptyRequest();
+                        request.source.o2 = 0.21;
+                        request.source.he = 0.35;
+                        request.target.o2 = 0.21;
+                        request.target.he = 0.35;
+
+                        assertResult(request, 83.544304, 13.955696, 52.5);
+                    });
+
+                    it('18/45 from 21/35 using 25/25', () => {
+                        const request = createValidNonEmptyRequest();
+                        request.source.o2 = 0.25;
+                        request.source.he = 0.25;
+                        request.target.o2 = 0.18;
+                        request.target.he = 0.45;
+                        request.topMix.o2 = 0.21;
+                        request.topMix.he = 0.25;
+
+                        assertResult(request, 90.740741, 4.444444, 54.814815);
+                    });
+                });
+
+                describe('from air', () => {
+                    it('18/45 using O2, he and Ean32', () => {
+                        const request = createValidNonEmptyRequest();
+                        request.target.o2 = 0.18;
+                        request.target.he = 0.45;
+                        request.topMix.o2 = 0.32;
+
+                        assertResult(request, 50.735294, 9.264706, 90);
+                    });
+
+                    it('21/35 using 23/25', () => {
+                        const request = createValidNonEmptyRequest();
+                        request.target.o2 = 0.21;
+                        request.target.he = 0.35;
+                        request.topMix.o2 = 0.23;
+                        request.topMix.he = 0.25;
+
+                        assertResult(request, 93.269231, 10.048077,  46.682692);
+                    });
+                });
+
+                it('Can`t create 25/25 from 35/25 using 18/45', () => {
                     const request = createValidNonEmptyRequest();
-                    request.source.o2 = 0.25;
+                    request.source.o2 = 0.35;
                     request.source.he = 0.25;
                     request.target.o2 = 0.25;
                     request.target.he = 0.25;
-                    request.topMix.o2 = 0.25;
-                    request.topMix.he = 0.25;
+                    request.topMix.o2 = 0.18;
+                    request.topMix.he = 0.45;
 
-                    assertResult(request, 150, 0, 0);
+                    assertResult(request, 216.216216, -6.418919, -59.797297);
                 });
 
-                it('21/35 from O2, he and air to non empty tank', () => {
+                it('Can`t create 21/35 from 25/25 using 17/45', () => {
                     const request = createValidNonEmptyRequest();
-                    request.source.o2 = 0.21;
-                    request.source.he = 0.35;
+                    request.source.o2 = 0.25;
+                    request.source.he = 0.25;
                     request.target.o2 = 0.21;
                     request.target.he = 0.35;
+                    request.topMix.o2 = 0.17;
+                    request.topMix.he = 0.45;
 
-                    assertResult(request, 83.544304, 13.955696, 52.5);
+                    assertResult(request, 165.789474, 1.315789, -17.105263);
                 });
-
-                // it('18/45 from O2, he and Ean32 to empty tank', () => {
-                //     const request = createValidEmptyRequest();
-                //     request.target.o2 = 0.18;
-                //     request.target.he = 0.45;
-                //     request.topMix.o2 = 0.32;
-
-                //     assertResult(request, 108.823529, 1.176471, 90);
-                // });
-
-                // it('21/35 from 23/25 to empty tank', () => {
-                //     const request = createValidEmptyRequest();
-                //     request.target.o2 = 0.21;
-                //     request.target.he = 0.35;
-                //     request.topMix.o2 = 0.23;
-                //     request.topMix.he = 0.25;
-
-                //     assertResult(request, 169.230769, 3.076923, 27.6923076);
-                // });
-
-                // it('35/25 from 25/25 to empty tank', () => {
-                //     const request = createValidEmptyRequest();
-                //     request.target.o2 = 0.35;
-                //     request.target.he = 0.25;
-                //     request.topMix.o2 = 0.25;
-                //     request.topMix.he = 0.25;
-
-                //     assertResult(request, 160, 30, 10);
-                // });
-
-                // it('Can`t create 18/45 from 25/25 to empty tank', () => {
-                //     const request = createValidEmptyRequest();
-                //     request.target.o2 = 0.18;
-                //     request.target.he = 0.45;
-                //     request.topMix.o2 = 0.25;
-                //     request.topMix.he = 0.25;
-
-                //     assertResult(request, 148, -1, 53);
-                // });
-
-                // it('Can`t create 21/35 from 10/45 to empty tank', () => {
-                //     const request = createValidEmptyRequest();
-                //     request.target.o2 = 0.21;
-                //     request.target.he = 0.35;
-                //     request.topMix.o2 = 0.17;
-                //     request.topMix.he = 0.45;
-
-                //     assertResult(request, 231.578947, 2.631579, -34.210526);
-                // });
             });
         });
 
         // TODO add Mix test cases:
-        // - Trimix into empty and non empty tank with the same and different content:
         // - Heliox where there is 0 % fN2 still calculates (division by 0 exception)
-
-        // 8 bar 25/25 v 50L -> 200 bar 18/45:
-        // 200*,18 - 8 * ,25 = 36-2 = 34b He
     });
 });

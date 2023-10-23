@@ -372,7 +372,7 @@ describe('Gas Blender', () => {
                 assertResult(request, 0, 20, 180);
             });
 
-            it('Create 10/90 without top mix to non empty tank', () => {
+            it('Create 5/95 without top mix to non empty tank', () => {
                 const request = createValidNonEmptyRequest();
                 request.source.o2 = 0.10;
                 request.source.he = 0.90;
@@ -382,6 +382,18 @@ describe('Gas Blender', () => {
                 request.topMix.he = 0.25;
 
                 assertResult(request, 0, 5, 145);
+            });
+
+            it('Can`t create heliox from mix with nitrox in empty tank', () => {
+                const request = createValidNonEmptyRequest();
+                request.source.o2 = 0.10;
+                request.source.he = 0.70;
+                request.target.o2 = 0.1;
+                request.target.he = 0.9;
+                request.topMix.o2 = 0.25;
+                request.topMix.he = 0.25;
+
+                assertResult(request, -20, 20, 150);
             });
         });
     });

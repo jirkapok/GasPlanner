@@ -360,7 +360,29 @@ describe('Gas Blender', () => {
             });
         });
 
-        // TODO add Mix test cases:
-        // - Heliox where there is 0 % fN2 still calculates (division by 0 exception)
+
+        describe('Heliox', () => {
+            it('Create 10/90 without top mix to empty tank', () => {
+                const request = createValidEmptyRequest();
+                request.target.o2 = 0.1;
+                request.target.he = 0.9;
+                request.topMix.o2 = 0.25;
+                request.topMix.he = 0.25;
+
+                assertResult(request, 0, 20, 180);
+            });
+
+            it('Create 10/90 without top mix to non empty tank', () => {
+                const request = createValidNonEmptyRequest();
+                request.source.o2 = 0.10;
+                request.source.he = 0.90;
+                request.target.o2 = 0.05;
+                request.target.he = 0.95;
+                request.topMix.o2 = 0.25;
+                request.topMix.he = 0.25;
+
+                assertResult(request, 0, 5, 145);
+            });
+        });
     });
 });

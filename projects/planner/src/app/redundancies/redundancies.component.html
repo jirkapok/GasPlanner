@@ -1,1 +1,47 @@
-<div class="mt-5">redundancies works!</div>
+<div class="row mt-5">
+    <div class="col col-12 col-sm-5 col-md-4 col-lg-3 col-xxl-2 mt-3">
+        <div class="card">
+            <div class="card-header">
+                <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
+                <span>Gas mixture</span>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="redForm">
+                    <div>
+                        <div>
+                            <div class="pt-2 mb-4">
+                                <label for="tankSize" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
+                                <app-tank-size [sizeForm]="redForm" [tank]="tankA" controlName="tankSize"
+                                    (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event)">
+                                </app-tank-size>
+                                <div class="text-danger form-text position-absolute" *ngIf="tankASizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>
+                            </div>
+                        </div>
+                        <div>
+                            Pressure
+                        </div>
+                    </div>
+                    <div>
+                        Second tank
+                        <div>
+                            Volume
+                        </div>
+                        <div>
+                            Pressure
+                        </div>
+                    </div>
+                    <div>
+                    <label for="finalPressure" class="form-label" mdbLabel>Final pressure [{{units.pressure}}]:</label>
+                    <input class="form-control readonly" name="finalPressure" id="finalPressure" type="number"
+                        [readonly]="true" [value]="finalPressure | number: '1.0-0'" readonly />
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group mt-3">
+        <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
+    </div>
+</div>

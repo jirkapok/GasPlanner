@@ -82,6 +82,7 @@ import { DiffComponent } from './diff/diff.component';
 import { DiveResults } from './shared/diveresults';
 import { DivesSchedule } from './shared/dives.schedule';
 import { RedundanciesComponent } from './redundancies/redundancies.component';
+import {RedundanciesService} from './shared/redundancies.service';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -168,6 +169,7 @@ const MDB_MODULES = [
         SacCalculatorService,
         NitroxCalculatorService,
         SettingsNormalizationService,
+        RedundanciesService,
         DepthsService,
         TanksService,
         NdlService,

@@ -4,9 +4,10 @@ import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder} from '@angular/forms';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { TankBound } from '../shared/models';
-import { TankTemplate, Tank, Precision } from 'scuba-physics';
+import { TankTemplate, Precision } from 'scuba-physics';
 import {ValidatorGroups} from '../shared/ValidatorGroups';
 import {InputControls} from '../shared/inputcontrols';
+import {RedundanciesService} from '../shared/redundancies.service';
 
 interface RedundanciesForm {
     firstTankSize: FormControl<number>;
@@ -24,26 +25,26 @@ interface RedundanciesForm {
 export class RedundanciesComponent implements OnInit {
     public calcIcon = faCalculator;
     public redForm!: FormGroup<RedundanciesForm>;
-    public firstTank: TankBound;
-    public secondTank: TankBound;
+    public calc: RedundanciesService;
 
     constructor(public location: Location,
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
         private inputs: InputControls,) {
-        this.firstTank = new TankBound(Tank.createDefault(), this.units);
-        this.secondTank = new TankBound(Tank.createDefault(), this.units);
-        this.secondTank.size = 10;
-        this.secondTank.startPressure = 100;
+        this.calc = new RedundanciesService(this.units);
     }
 
     public get ranges(): RangeConstants {
         return this.units.ranges;
     }
 
-    public get finalPressure(): number {
-        return 0;
+    public get firstTank(): TankBound {
+        return this.calc.firstTank;
+    }
+
+    public get secondTank(): TankBound {
+        return this.calc.secondTank;
     }
 
     public get firstTankSizeInvalid(): boolean {
@@ -117,6 +118,11 @@ export class RedundanciesComponent implements OnInit {
         }
 
         const values = this.redForm.value;
-        // TODO apply all values
+        this.calc.firstTank.size = Number(values.firstTankSize);
+        this.calc.firstTank.startPressure = Number(values.firstTankPressure);
+        this.calc.firstTank.workingPressure = Number(values.firstTankWorkPressure);
+        this.calc.secondTank.size = Number(values.secondTankSize);
+        this.calc.secondTank.startPressure = Number(values.secondTankPressure);
+        this.calc.secondTank.workingPressure = Number(values.secondTankWorkPressure);
     }
 }

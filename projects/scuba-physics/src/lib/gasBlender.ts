@@ -5,28 +5,49 @@ export interface TankFill {
     volume: number;
 }
 
+/**
+ * Blending result showing amount of each component used
+ * All values in bars.
+ */
 export interface MixResult {
     addO2: number;
     addHe: number;
     addTop: number;
 }
 
+/**
+ * Crate for tank used to mix gases.
+ */
 export interface TankMix extends Mix {
+    /** current pressure in bars */
     pressure: number;
 }
 
+/**
+ * Crate for gas, both values in range 0-1.
+ */
 export interface Mix {
     o2: number;
     he: number;
 }
 
+/**
+ * Crate for gas mix parameters.
+ */
 export interface MixRequest {
+    /** Tank start situation before mix */
     source: TankMix;
+    /** Tank end situation after mix */
     target: TankMix;
+    /** Available topping mixture */
     topMix: Mix;
 }
 
+/** Gas mix blending math */
 export class GasBlender {
+    /**
+     * Math describing to create required amount of mixture from current tank content using o2, he and topping mix.
+     */
     public static mix(request: MixRequest): MixResult {
         const finalfN2 = GasBlender.n2(request.target);
         const finalN2  = finalfN2 * request.target.pressure;

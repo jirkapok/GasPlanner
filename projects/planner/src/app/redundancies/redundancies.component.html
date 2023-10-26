@@ -8,33 +8,70 @@
             <div class="card-body">
                 <form [formGroup]="redForm">
                     <div>
+                        <div>First tank</div>
                         <div>
                             <div class="pt-2 mb-4">
-                                <label for="tankSize" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
-                                <app-tank-size [sizeForm]="redForm" [tank]="tankA" controlName="tankSize"
-                                    (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event)">
+                                <label for="tankSize" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>
+                                <app-tank-size [sizeForm]="redForm" [tank]="firstTank" controlName="firstTankSize"
+                                               (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event, firstTank)">
                                 </app-tank-size>
-                                <div class="text-danger form-text position-absolute" *ngIf="tankASizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>
+                                <div class="text-danger form-text position-absolute" *ngIf="firstTankSizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>
                             </div>
                         </div>
-                        <div>
-                            Pressure
+                        <div class="mb-4" *ngIf="units.imperialUnits">
+                            <label for="firstTankWorkPressure" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
+                            </label>
+                            <input class="form-control" type="number" (input)="inputChanged()" id="firstTankWorkPressure"
+                                   formControlName="firstTankWorkPressure" required [min]="ranges.tankPressure[0]"
+                                   [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankWorkPressureInvalid" />
+                            <div class="invalid-feedback position-absolute">Needs to be number
+                                {{ranges.tankPressureLabel}}</div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="firstTankPressure" class="form-label" mdbLabel>Start pressure [{{units.pressure}}]:
+                            </label>
+                            <input class="form-control" type="number" (input)="inputChanged()" id="firstTankPressure"
+                                   formControlName="firstTankPressure" required [min]="ranges.tankPressure[0]"
+                                   [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankPressureInvalid" />
+                            <div class="invalid-feedback position-absolute">Needs to be number
+                                {{ranges.tankPressureLabel}}</div>
                         </div>
                     </div>
                     <div>
-                        Second tank
+                        <div>Second tank</div>
                         <div>
-                            Volume
+                            <div class="pt-2 mb-4">
+                                <label for="tankSize" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>
+                                <app-tank-size [sizeForm]="redForm" [tank]="secondTank" controlName="secondTankSize"
+                                               (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event, secondTank)">
+                                </app-tank-size>
+                                <div class="text-danger form-text position-absolute" *ngIf="secondTankSizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>
+                            </div>
                         </div>
-                        <div>
-                            Pressure
+                        <div class="mb-4" *ngIf="units.imperialUnits">
+                            <label for="secondTankWorkPressure" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
+                            </label>
+                            <input class="form-control" type="number" (input)="inputChanged()" id="secondTankWorkPressure"
+                                   formControlName="secondTankWorkPressure" required [min]="ranges.tankPressure[0]"
+                                   [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="secondTankWorkPressureInvalid" />
+                            <div class="invalid-feedback position-absolute">Needs to be number
+                                {{ranges.tankPressureLabel}}</div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="secondTankPressure" class="form-label" mdbLabel>Start pressure [{{units.pressure}}]:
+                            </label>
+                            <input class="form-control" type="number" (input)="inputChanged()" id="secondTankPressure"
+                                   formControlName="secondTankPressure" required [min]="ranges.tankPressure[0]"
+                                   [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="secondTankPressureInvalid" />
+                            <div class="invalid-feedback position-absolute">Needs to be number
+                                {{ranges.tankPressureLabel}}</div>
                         </div>
                     </div>
                     <div>
-                    <label for="finalPressure" class="form-label" mdbLabel>Final pressure [{{units.pressure}}]:</label>
-                    <input class="form-control readonly" name="finalPressure" id="finalPressure" type="number"
-                        [readonly]="true" [value]="finalPressure | number: '1.0-0'" readonly />
-                </div>
+                        <label for="finalPressure" class="form-label" mdbLabel>Final pressure [{{units.pressure}}]:</label>
+                        <input class="form-control readonly" name="finalPressure" id="finalPressure" type="number"
+                            [readonly]="true" [value]="finalPressure | number: '1.0-0'" readonly />
+                    </div>
                 </form>
             </div>
         </div>

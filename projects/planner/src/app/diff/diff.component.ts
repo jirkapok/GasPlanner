@@ -63,17 +63,4 @@ class TestData {
 })
 export class DiffComponent {
     public data = new TestData();
-
-    constructor(
-        private viewSwitch: ViewSwitchService,
-        private units: UnitConversion
-    ){}
-
-    public get isComplex(): boolean {
-        return this.viewSwitch.isComplex;
-    }
-
-    public get imperialUnits(): boolean {
-        return this.units.imperialUnits;
-    }
 }

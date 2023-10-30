@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProfileDifferenceChartComponent } from './diff-profilechart.component';
 
-describe('ProfilechartComponent', () => {
+describe('ProfileDifferenceChartComponent', () => {
     let component: ProfileDifferenceChartComponent;
     let fixture: ComponentFixture<ProfileDifferenceChartComponent>;
 

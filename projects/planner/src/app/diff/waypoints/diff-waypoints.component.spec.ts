@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {WaypointsDifferenceComponent} from './diff-waypoints.component';
 
-describe('ProfilechartComponent', () => {
+describe('WaypointsDifferenceComponent', () => {
     let component: WaypointsDifferenceComponent;
     let fixture: ComponentFixture<WaypointsDifferenceComponent>;
 

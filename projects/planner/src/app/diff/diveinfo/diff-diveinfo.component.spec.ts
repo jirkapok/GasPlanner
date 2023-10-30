@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DiveInfoDifferenceComponent } from './diff-diveinfo.component';
 
-describe('DiveinfoComponent', () => {
+describe('DiveInfoDifferenceComponent', () => {
     let component: DiveInfoDifferenceComponent;
     let fixture: ComponentFixture<DiveInfoDifferenceComponent>;
 

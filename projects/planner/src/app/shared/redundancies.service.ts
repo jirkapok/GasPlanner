@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {TankBound} from './models';
-import {Tank, GasBlender } from 'scuba-physics';
+import {ITankSize, TankBound} from './models';
+import {Tank, GasBlender, TankFill } from 'scuba-physics';
 import {UnitConversion} from './UnitConversion';
 
 @Injectable()
@@ -12,17 +12,28 @@ export class RedundanciesService {
         this._firstTank = new TankBound(Tank.createDefault(), this.units);
         this._secondTank = new TankBound(Tank.createDefault(), this.units);
     }
-    public get firstTank(): TankBound {
+    public get firstTank(): ITankSize {
         return this._firstTank;
     }
 
-    public get secondTank(): TankBound {
+    public get secondTank(): ITankSize {
         return this._secondTank;
     }
 
     public get finalPressure(): number {
-        // TODO recalculate the results by each tank working pressure
-        // e.g. we probably cant use BoundTank
-        return 0; //GasBlender.redundancies(this.firstTank, this.secondTank);
+        const tankA= this.toFill(this._firstTank);
+        const tankB= this.toFill(this._secondTank);
+        let result = GasBlender.redundancies(tankA, tankB);
+        result = this.units.fromBar(result);
+        return result;
+    }
+
+    private toFill(tank: TankBound): TankFill {
+        // the bound tank handles the unit conversion
+        const metricTank = tank.tank;
+        return {
+            startPressure: metricTank.startPressure,
+            volume: metricTank.size
+        };
     }
 }

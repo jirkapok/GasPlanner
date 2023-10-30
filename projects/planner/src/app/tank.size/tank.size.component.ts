@@ -3,7 +3,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { Precision, Tank, TankTemplate } from 'scuba-physics';
 import { AbstractControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { TankBound } from '../shared/models';
+import {ITankSize, TankBound} from '../shared/models';
 import { InputControls } from '../shared/inputcontrols';
 
 @Component({
@@ -14,7 +14,7 @@ import { InputControls } from '../shared/inputcontrols';
 export class TankSizeComponent implements OnInit {
     @Input() public sizeForm!: FormGroup;
     @Input() public controlName = 'tankSize';
-    @Input() public tank: TankBound;
+    @Input() public tank: ITankSize;
     @Output() public sizeChange = new EventEmitter<number>();
     @Output() public applyTemplate = new EventEmitter<TankTemplate>();
 

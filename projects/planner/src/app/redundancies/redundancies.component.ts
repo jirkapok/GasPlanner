@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder} from '@angular/forms';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { TankBound } from '../shared/models';
+import { ITankSize } from '../shared/models';
 import { TankTemplate, Precision } from 'scuba-physics';
 import {ValidatorGroups} from '../shared/ValidatorGroups';
 import {InputControls} from '../shared/inputcontrols';
@@ -39,11 +39,11 @@ export class RedundanciesComponent implements OnInit {
         return this.units.ranges;
     }
 
-    public get firstTank(): TankBound {
+    public get firstTank(): ITankSize {
         return this.calc.firstTank;
     }
 
-    public get secondTank(): TankBound {
+    public get secondTank(): ITankSize {
         return this.calc.secondTank;
     }
 
@@ -97,7 +97,7 @@ export class RedundanciesComponent implements OnInit {
         }
     }
 
-    public applyTemplate(template: TankTemplate, tank: TankBound): void {
+    public applyTemplate(template: TankTemplate, tank: ITankSize): void {
         if(this.redForm.invalid) {
             return;
         }

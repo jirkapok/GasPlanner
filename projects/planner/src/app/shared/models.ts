@@ -97,12 +97,24 @@ export class DiverOptions {
 }
 
 export interface IGasContent {
+    /** In percents */
     o2: number;
+    /** In percents */
     he: number;
     assignStandardGas(gasName: string): void;
 }
 
-export class TankBound implements IGasContent {
+export interface ITankSize {
+    /** In respective volume units */
+    size: number;
+    /** In respective pressure units */
+    workingPressure: number;
+    /** In respective pressure units */
+    startPressure: number;
+    assignTemplate(template: TankTemplate): void;
+}
+
+export class TankBound implements IGasContent, ITankSize {
     private _workingPressure: number;
 
     constructor(public tank: Tank, private units: UnitConversion) {

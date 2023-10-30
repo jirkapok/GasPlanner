@@ -1,1 +1,35 @@
-<app-waypoints></app-waypoints>
+<!--<app-waypoints></app-waypoints>-->
+
+<div class="card">
+    <div class="card-header">
+        <div class="float-start">
+            <fa-icon [icon]="tasks" class="me-3"></fa-icon>
+            <span>Dive way points</span>
+        </div>
+    </div>
+    <div class="card-body card-minheight table-responsive">
+        <table class="table table-sm p-0">
+            <thead class="table-light">
+            <tr>
+                <th></th>
+                <th class="fw-bold px-1">Depth [{{units.length}}]</th>
+                <th class="fw-bold px-1">Duration [min]</th>
+                <th class="fw-bold px-1">Run [min]</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let point of stops()" [ngClass]="{'table-active': point.selected }"
+                (mouseover)="highlightRow(point)" (mouseleave)="highlightRow(undefined)">
+                <td class="px-1 text-center">
+                    <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)"
+                             [title]="iconTitle(point)"></fa-icon>
+                </td>
+                <td class="px-1">{{ point.endDepth | number:'1.0-0' }}</td>
+                <td class="px-1">{{ point.duration / 60 }}</td>
+                <td class="px-1">{{ point.endTime  / 60 }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

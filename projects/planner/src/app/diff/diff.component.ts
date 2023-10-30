@@ -2,14 +2,12 @@ import { Component } from '@angular/core';
 import { WayPointsService } from '../shared/waypoints.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import {
-    Ceiling, Segments, StandardGases,
-    Tank, Time, Event
+    Segments, StandardGases,
+    Tank, Time
 } from 'scuba-physics';
 import { WayPoint } from '../shared/models';
-import { ViewSwitchService } from '../shared/viewSwitchService';
 
-
-class TestData {
+export class TestData {
     public readonly profileA: WayPoint[];
     public readonly tanksA: Tank[];
 
@@ -62,5 +60,5 @@ class TestData {
     styleUrls: ['./diff.component.scss']
 })
 export class DiffComponent {
-    public data = new TestData();
+    public testData = new TestData();
 }

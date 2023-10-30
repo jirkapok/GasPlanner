@@ -85,7 +85,7 @@ import { RedundanciesService } from './shared/redundancies.service';
 import { ReloadDispatcher } from './shared/reloadDispatcher';
 import { ManagedDiveSchedules } from './shared/managedDiveSchedules';
 import { WaypointsDifferenceComponent } from './diff/waypoints/diff-waypoints.component';
-import { DiveinfoDifferenceComponent } from './diff/diveinfo/diff-diveinfo.component';
+import { DiveInfoDifferenceComponent } from './diff/diveinfo/diff-diveinfo.component';
 import { ProfileDifferenceChartComponent } from './diff/profilechart/diff-profilechart.component';
 import { MaskitoModule } from '@maskito/angular';
 import { SurfaceIntervalComponent } from './surface-interval/surface-interval.component';
@@ -147,7 +147,7 @@ const COMPONENTS = [
     WayPointsComponent,
     WeightCalcComponent,
     WaypointsDifferenceComponent,
-    DiveinfoDifferenceComponent,
+    DiveInfoDifferenceComponent,
     ProfileDifferenceChartComponent
 ];
 

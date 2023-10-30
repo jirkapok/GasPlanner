@@ -1,18 +1,9 @@
-import { Component } from "@angular/core";
-import { UnitConversion } from "../../shared/UnitConversion";
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-diff-waypoints',
     templateUrl: './diff-waypoints.component.html',
     styleUrls: ['./diff-waypoints.component.scss']
 })
-export class WaypointsDifferenceComponent{
-
-    constructor(
-        private units: UnitConversion
-   ){}
-
-    public get imperialUnits(): boolean {
-        return this.units.imperialUnits;
-    }
+export class WaypointsDifferenceComponent {
 }

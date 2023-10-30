@@ -6,6 +6,7 @@ import {
     Tank, Time, Event
 } from 'scuba-physics';
 import { WayPoint } from '../shared/models';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 
 class TestData {
@@ -61,7 +62,23 @@ class TestData {
     styleUrls: ['./diff.component.scss']
 })
 export class DiffComponent {
+
+    constructor(
+        private viewSwitch: ViewSwitchService,
+        private units: UnitConversion
+   ){}
+
     public data = new TestData();
+
+    public get isComplex(): boolean {
+        return this.viewSwitch.isComplex;
+    }
+
+    public get imperialUnits(): boolean {
+        return this.units.imperialUnits;
+    }
+
+
 
     // run: npm start
     // Navigate to the component: http://localhost:4200/diff

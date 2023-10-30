@@ -62,13 +62,12 @@ class TestData {
     styleUrls: ['./diff.component.scss']
 })
 export class DiffComponent {
+    public data = new TestData();
 
     constructor(
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion
-   ){}
-
-    public data = new TestData();
+    ){}
 
     public get isComplex(): boolean {
         return this.viewSwitch.isComplex;
@@ -77,9 +76,4 @@ export class DiffComponent {
     public get imperialUnits(): boolean {
         return this.units.imperialUnits;
     }
-
-
-
-    // run: npm start
-    // Navigate to the component: http://localhost:4200/diff
 }

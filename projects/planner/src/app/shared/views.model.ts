@@ -14,6 +14,17 @@ export interface AltitudeViewState extends ViewState {
     actualDepth: number;
 }
 
+export interface RedundanciesViewState extends ViewState {
+    firstTank: TankFillState;
+    secondTank: TankFillState;
+}
+
+export interface TankFillState {
+    startPressure: number;
+    workingPressure: number;
+    size: number;
+}
+
 /** We don\'t need mod, since it is calculated */
 export interface NitroxViewState extends ViewState {
     fO2: number;

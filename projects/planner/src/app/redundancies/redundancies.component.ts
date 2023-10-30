@@ -8,6 +8,9 @@ import { TankTemplate, Precision } from 'scuba-physics';
 import {ValidatorGroups} from '../shared/ValidatorGroups';
 import {InputControls} from '../shared/inputcontrols';
 import {RedundanciesService} from '../shared/redundancies.service';
+import {RedundanciesViewState, TankFillState} from '../shared/views.model';
+import {KnownViews} from '../shared/viewStates';
+import {SubViewStorage} from '../shared/subViewStorage';
 
 interface RedundanciesForm {
     firstTankSize: FormControl<number>;
@@ -29,9 +32,10 @@ export class RedundanciesComponent implements OnInit {
 
     constructor(public location: Location,
         public units: UnitConversion,
+        private viewStates: SubViewStorage,
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        private inputs: InputControls,) {
+        private inputs: InputControls) {
         this.calc = new RedundanciesService(this.units);
     }
 
@@ -78,7 +82,8 @@ export class RedundanciesComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        // TODO load/save viewState
+        this.loadState();
+        this.saveState();
 
         this.redForm = this.fb.group({
             firstTankSize: [Precision.round(this.firstTank.size, 1), this.validators.tankSize],
@@ -124,5 +129,58 @@ export class RedundanciesComponent implements OnInit {
         this.calc.secondTank.size = Number(values.secondTankSize);
         this.calc.secondTank.startPressure = Number(values.secondTankPressure);
         this.calc.secondTank.workingPressure = Number(values.secondTankWorkPressure);
+
+        this.saveState();
+    }
+
+    private loadState(): void {
+        let state: RedundanciesViewState = this.viewStates.loadView(KnownViews.redundancies);
+
+        if (!state) {
+            state = this.createDefaultState();
+        }
+
+        this.loadTank(this.calc.firstTank, state.firstTank);
+        this.loadTank(this.calc.secondTank, state.secondTank);
+    }
+
+    private loadTank(target: ITankSize, state: TankFillState): void {
+        target.startPressure = this.units.fromBar(state.startPressure);
+        target.workingPressure = this.units.fromBar(state.workingPressure);
+        target.size = this.units.fromLiter(state.size);
+    }
+
+    private saveState(): void {
+        const first = this.createTankStateFrom(this.calc.firstTank);
+        const second = this.createTankStateFrom(this.calc.secondTank);
+        const viewState = this.createState(first, second);
+        this.viewStates.saveView(viewState);
+    }
+
+    private createDefaultState(): RedundanciesViewState {
+        return this.createState(this.createTankState(), this.createTankState());
+    }
+
+    private createState(first: TankFillState, second: TankFillState): RedundanciesViewState {
+        return {
+            id: KnownViews.redundancies,
+            firstTank: first,
+            secondTank: second
+        };
+    }
+
+    private createTankStateFrom(tank: ITankSize): TankFillState {
+        const startPressure = this.units.toBar(tank.startPressure);
+        const workingPressure = this.units.toBar(tank.workingPressure);
+        const size = this.units.toLiter(tank.size);
+        return this.createTankState(startPressure, workingPressure, size);
+    }
+
+    private createTankState(startPressure = 200, workingPressure = 0, size = 15): TankFillState {
+        return {
+            startPressure: startPressure,
+            workingPressure: workingPressure,
+            size: size
+        };
     }
 }

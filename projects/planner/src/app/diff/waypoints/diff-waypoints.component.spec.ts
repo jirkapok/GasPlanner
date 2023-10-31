@@ -1,8 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {WaypointsDifferenceComponent} from './diff-waypoints.component';
 import {UnitConversion} from '../../shared/UnitConversion';
-import {SelectedWaypoint} from '../../shared/selectedwaypointService';
-import {DiveResults} from '../../shared/diveresults';
+import {TestData} from '../diff.component';
 
 describe('WaypointsDifferenceComponent', () => {
     let component: WaypointsDifferenceComponent;
@@ -11,10 +10,11 @@ describe('WaypointsDifferenceComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [WaypointsDifferenceComponent],
-            providers: [UnitConversion, SelectedWaypoint, DiveResults]
+            providers: [UnitConversion]
         });
         fixture = TestBed.createComponent(WaypointsDifferenceComponent);
         component = fixture.componentInstance;
+        component.data = new TestData();
         fixture.detectChanges();
     });
 

@@ -1,17 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {TestData} from '../diff.component';
-import {
-    faArrowDown,
-    faArrowRight,
-    faArrowUp,
-    faFilter,
-    faRandom,
-    faTasks,
-    IconDefinition
-} from '@fortawesome/free-solid-svg-icons';
-import {SwimAction, WayPoint} from '../../shared/models';
-import {SelectedWaypoint} from '../../shared/selectedwaypointService';
-import {UnitConversion} from "../../shared/UnitConversion";
+import {faTasks} from '@fortawesome/free-solid-svg-icons';
+import {WayPoint} from '../../shared/models';
+import {UnitConversion} from '../../shared/UnitConversion';
 
 @Component({
     selector: 'app-diff-waypoints',
@@ -19,57 +10,28 @@ import {UnitConversion} from "../../shared/UnitConversion";
     styleUrls: ['./diff-waypoints.component.scss']
 })
 export class WaypointsDifferenceComponent {
-    @Input() data: TestData | null = null;
-    public down = faArrowDown;
-    public up = faArrowUp;
-    public hover = faArrowRight;
+    @Input({required: true}) data!: TestData;
     public tasks = faTasks;
-    public switch = faRandom;
-    public filterIcon = faFilter;
-
     constructor(
-        private selectedWaypoint: SelectedWaypoint,
         public units: UnitConversion
     ) {
     }
 
-    public swimActionIcon(point: WayPoint): IconDefinition {
-        switch (point.swimAction) {
-            case SwimAction.ascent: return this.up;
-            case SwimAction.descent: return this.down;
-            case SwimAction.switch: return this.switch;
-            default: return this.hover;
+    public wayPointsOfProfileA(): WayPoint[] {
+        return this.data.profileA.wayPoints;
+    }
+
+    public wayPointsOfProfileB(): WayPoint[] {
+        return this.data.profileB.wayPoints;
+    }
+
+    public lengthOfLargestProfile(): number[]  {
+        if (this.wayPointsOfProfileA().length > this.wayPointsOfProfileB().length) {
+            return Array.from({ length: this.wayPointsOfProfileA().length },
+                (_, index) => index + 1);
         }
-    }
 
-    public iconTitle(point: WayPoint): string {
-        switch (point.swimAction) {
-            case SwimAction.ascent:
-                return 'ascent';
-            case SwimAction.descent:
-                return 'descent';
-            case SwimAction.switch:
-                return 'switch';
-            default:
-                return 'hover';
-        }
-    }
-
-    public iconClasses(point: WayPoint): object {
-        const classes = {
-            'swimDown': point.swimAction === SwimAction.descent,
-            'swimHover': point.swimAction === SwimAction.hover || point.swimAction === SwimAction.switch,
-            'swimUp': point.swimAction === SwimAction.ascent
-        };
-
-        return classes;
-    }
-
-    public highlightRow(point: WayPoint | undefined): void {
-        this.selectedWaypoint.selected = point;
-    }
-
-    public stops(): WayPoint[] | undefined {
-        return this.data?.profileA.wayPoints;
+        return Array.from({ length: this.wayPointsOfProfileB().length },
+            (_, index) => index + 1);
     }
 }

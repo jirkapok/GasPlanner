@@ -1,5 +1,3 @@
-<!--<app-waypoints></app-waypoints>-->
-
 <div class="card">
     <div class="card-header">
         <div class="float-start">
@@ -11,23 +9,35 @@
         <table class="table table-sm p-0">
             <thead class="table-light">
             <tr>
-                <th></th>
-                <th class="fw-bold px-1">Depth [{{units.length}}]</th>
-                <th class="fw-bold px-1">Duration [min]</th>
-                <th class="fw-bold px-1">Run [min]</th>
+                <th class="fw-bold px-1">Depth [{{units.length}}] (Profile A)</th>
+                <th class="fw-bold px-1">Duration [min] (Profile A)</th>
+                <th class="fw-bold px-1">Run [min] (Profile A)</th>
+                <th class="fw-bold px-1">Depth [{{units.length}}] (Profile B)</th>
+                <th class="fw-bold px-1">Duration [min] (Profile B)</th>
+                <th class="fw-bold px-1">Run [min] (Profile B)</th>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let point of stops()" [ngClass]="{'table-active': point.selected }"
-                (mouseover)="highlightRow(point)" (mouseleave)="highlightRow(undefined)">
-                <td class="px-1 text-center">
-                    <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)"
-                             [title]="iconTitle(point)"></fa-icon>
-                </td>
-                <td class="px-1">{{ point.endDepth | number:'1.0-0' }}</td>
-                <td class="px-1">{{ point.duration / 60 }}</td>
-                <td class="px-1">{{ point.endTime  / 60 }}</td>
-            </tr>
+                <tr *ngFor="let number of lengthOfLargestProfile()">
+                    <td *ngIf="number < this.wayPointsOfProfileA().length" class="px-1">
+                        {{ wayPointsOfProfileA()[number].duration / 60  | number :'0.0'}}
+                    </td>
+                    <td *ngIf="number < this.wayPointsOfProfileA().length" class="px-1">
+                        {{ wayPointsOfProfileA()[number].endDepth | number:'1.0-0' }}
+                    </td>
+                    <td *ngIf="number < this.wayPointsOfProfileA().length" class="px-1">
+                        {{ wayPointsOfProfileA()[number].endTime  / 60  | number: '0.0'}}
+                    </td>
+                    <td *ngIf="number < this.wayPointsOfProfileB().length" class="px-1">
+                        {{ wayPointsOfProfileB()[number].duration / 60  | number :'0.0'}}
+                    </td>
+                    <td *ngIf="number < this.wayPointsOfProfileB().length" class="px-1">
+                        {{ wayPointsOfProfileB()[number].endDepth | number:'1.0-0' }}
+                    </td>
+                    <td *ngIf="number < this.wayPointsOfProfileB().length" class="px-1">
+                        {{ wayPointsOfProfileB()[number].endTime  / 60  | number: '0.0'}}
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

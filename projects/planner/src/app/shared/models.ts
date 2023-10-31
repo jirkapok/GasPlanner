@@ -12,6 +12,13 @@ export enum Strategies {
     THIRD = 3
 }
 
+export interface DiveSetup {
+    tanks: Tank[];
+    segments: Segment[];
+    diver: Diver;
+    options: Options;
+}
+
 export class Level {
     constructor(
         private units: UnitConversion,

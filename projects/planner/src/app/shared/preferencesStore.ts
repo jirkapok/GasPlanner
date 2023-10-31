@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { PlannerService } from './planner.service';
 import { Preferences } from './preferences';
 import { AppPreferences, DiveDto } from './serialization.model';
+import {DiveSetup} from './models';
 
 @Injectable()
 export class PreferencesStore {
@@ -36,6 +37,17 @@ export class PreferencesStore {
         this.planner.calculate();
     }
 
+    // TODO replace loadDefault by loadDefaultTo
+    public loadDefaultTo(): DiveSetup | null {
+        const toParse = localStorage.getItem(PreferencesStore.storageDefaultsKey);
+        if (!toParse) {
+            return null;
+        }
+
+        const loaded = JSON.parse(toParse) as DiveDto;
+        return this.preferencesFactory.loadDive(loaded);
+    }
+
     public save(): void {
         const toSave = this.preferencesFactory.toPreferences();
         const serialized = JSON.stringify(toSave);
@@ -46,6 +58,10 @@ export class PreferencesStore {
         const toSave = this.preferencesFactory.toDive();
         const serialized = JSON.stringify(toSave);
         localStorage.setItem(PreferencesStore.storageDefaultsKey, serialized);
+    }
+
+    public saveDefaultFrom(index: number): void {
+        // TODO replace saveDefault by saveDefaultFroms
     }
 
     public disableDisclaimer(): void {

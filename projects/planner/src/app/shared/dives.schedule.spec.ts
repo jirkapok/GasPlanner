@@ -1,16 +1,21 @@
 import { UnitConversion } from './UnitConversion';
-import { DiveSchedule, DivesSchedule } from './dives.schedule';
+import {DiveSchedule, DivesSchedule} from './dives.schedule';
 
 describe('Scheduled dives', () => {
     let sut: DivesSchedule;
 
-    beforeEach(() => {
+    const createSut = (): DivesSchedule => {
         sut = new DivesSchedule(new UnitConversion());
+        return sut;
+    };
+
+    beforeEach(() => {
+        sut = createSut();
         sut.add();
     });
 
     it('Has default dive', () => {
-        const emptySut = new DivesSchedule(new UnitConversion());
+        const emptySut = createSut();
         expect(emptySut.length).toEqual(1);
     });
 
@@ -23,7 +28,7 @@ describe('Scheduled dives', () => {
 
     describe('Selected dive', () => {
         it('it is first by default', () => {
-            const emptySut = new DivesSchedule(new UnitConversion());
+            const emptySut = createSut();
             expect(emptySut.selected).toBe(emptySut.dives[0]);
         });
 
@@ -96,9 +101,5 @@ describe('Scheduled dives', () => {
             expect(sut.dives[1].id).toEqual(2);
         });
     });
-
-    // TODO Scheduled dives test cases:
-    // * any change in dive list triggers save preferences
-    // * New dive is loaded from default dive
-    // * Dives are loaded from saved storage
 });
+

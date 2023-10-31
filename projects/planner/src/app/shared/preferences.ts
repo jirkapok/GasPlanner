@@ -11,6 +11,7 @@ import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 import { ViewStates } from './viewStates';
+import {DiveSetup} from './models';
 
 @Injectable()
 export class Preferences {
@@ -54,7 +55,7 @@ export class Preferences {
         };
     }
 
-    public loadDive(loadedDive: DiveDto): void {
+    public loadDive(loadedDive: DiveDto): DiveSetup {
         const tanks = DtoSerialization.toTanks(loadedDive.tanks);
         const segments = DtoSerialization.toSegments(loadedDive.plan, tanks);
         const diver = DtoSerialization.toDiver(loadedDive.diver);
@@ -63,6 +64,13 @@ export class Preferences {
         DtoSerialization.loadWorkingPressure(loadedDive.tanks, this.tanksService.tanks);
         this.options.loadFrom(options, diver);
         this.plan.loadFrom(segments);
+
+        return {
+            diver: diver,
+            options: options,
+            tanks: tanks,
+            segments: segments
+        };
     }
 
     private toAppSettings(viewSwitch: ViewSwitchService): AppOptionsDto {

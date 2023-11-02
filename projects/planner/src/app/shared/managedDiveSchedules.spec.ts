@@ -1,4 +1,4 @@
-import {DivesSchedule} from './dives.schedule';
+import {DiveSchedules} from './dive.schedules';
 import {inject, TestBed} from '@angular/core/testing';
 import {UnitConversion} from './UnitConversion';
 import {TanksService} from './tanks.service';
@@ -29,7 +29,7 @@ describe('Managed Schedules Loads default dive settings', () => {
         await TestBed.configureTestingModule({
             providers: [
                 ManagedDiveSchedules, UnitConversion,
-                TanksService, DivesSchedule, PreferencesStore,
+                TanksService, DiveSchedules, PreferencesStore,
                 PlannerService, WorkersFactoryCommon,
                 Plan, DiveResults, OptionsService,
                 WayPointsService, Preferences, ViewSwitchService,
@@ -58,23 +58,23 @@ describe('Managed Schedules Loads default dive settings', () => {
         TestBedExtensions.initPlan();
     });
 
-    xit('Loads tanks', inject([DivesSchedule],
-        (schedules: DivesSchedule) => {
+    xit('Loads tanks', inject([DiveSchedules],
+        (schedules: DiveSchedules) => {
 
             const secondDiveTanks = schedules.dives[1].tanksService.tanks;
             expect(secondDiveTanks.length).toEqual(2);
             expect(secondDiveTanks[1].size).toEqual(24);
         }));
 
-    xit('Loads Profile', inject([DivesSchedule],
-        (schedules: DivesSchedule) => {
+    xit('Loads Profile', inject([DiveSchedules],
+        (schedules: DiveSchedules) => {
             const maxDepth = schedules.dives[1].plan.maxDepth;
             expect(maxDepth).toEqual(25);
         }));
 
 
-    xit('Loads dive options', inject([DivesSchedule],
-        (schedules: DivesSchedule) => {
+    xit('Loads dive options', inject([DiveSchedules],
+        (schedules: DiveSchedules) => {
             const options = schedules.dives[1].optionsService;
             expect(options.maxEND).toEqual(27);
         }));

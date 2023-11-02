@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {PreferencesStore} from './preferencesStore';
-import {DivesSchedule} from './dives.schedule';
+import {DiveSchedules} from './dive.schedules';
 
 @Injectable()
 export class ManagedDiveSchedules {
-    constructor(private schedules: DivesSchedule, private preferences: PreferencesStore) {
+    constructor(private schedules: DiveSchedules, private preferences: PreferencesStore) {
     }
 
     // TODO Implement Add, Remove

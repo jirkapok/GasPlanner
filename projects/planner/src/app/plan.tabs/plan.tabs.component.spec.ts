@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PlanTabsComponent } from './plan.tabs.component';
-import { DivesSchedule } from '../shared/dives.schedule';
+import { DiveSchedules } from '../shared/dive.schedules';
 import { UnitConversion } from '../shared/UnitConversion';
 
 describe('PlanTabsComponent', () => {
@@ -12,7 +12,7 @@ describe('PlanTabsComponent', () => {
         TestBed.configureTestingModule({
             declarations: [PlanTabsComponent],
             providers: [
-                DivesSchedule, UnitConversion,
+                DiveSchedules, UnitConversion,
             ]
         });
         fixture = TestBed.createComponent(PlanTabsComponent);

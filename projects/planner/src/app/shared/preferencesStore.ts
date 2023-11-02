@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PlannerService } from './planner.service';
 import { Preferences } from './preferences';
 import { AppPreferences, DiveDto } from './serialization.model';
-import {DiveSchedule} from './dives.schedule';
+import {DiveSchedule} from './dive.schedules';
 
 @Injectable()
 export class PreferencesStore {

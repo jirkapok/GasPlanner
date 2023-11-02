@@ -12,7 +12,7 @@ import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 import { ViewStates } from './viewStates';
 import {DiveSetup} from './models';
-import {DiveSchedule} from './dives.schedule';
+import {DiveSchedule} from './dive.schedules';
 
 @Injectable()
 export class Preferences {

@@ -1,11 +1,11 @@
 import { UnitConversion } from './UnitConversion';
-import {DiveSchedule, DivesSchedule} from './dives.schedule';
+import {DiveSchedule, DiveSchedules} from './dive.schedules';
 
 describe('Scheduled dives', () => {
-    let sut: DivesSchedule;
+    let sut: DiveSchedules;
 
-    const createSut = (): DivesSchedule => {
-        sut = new DivesSchedule(new UnitConversion());
+    const createSut = (): DiveSchedules => {
+        sut = new DiveSchedules(new UnitConversion());
         return sut;
     };
 

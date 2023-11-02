@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
-import { DiveSchedule, DivesSchedule } from '../shared/dives.schedule';
+import { DiveSchedule, DiveSchedules } from '../shared/dive.schedules';
 
 @Component({
     selector: 'app-plan-tabs',
@@ -12,7 +12,7 @@ export class PlanTabsComponent {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
     public addIcon = faPlus;
 
-    constructor(public schedule: DivesSchedule) { }
+    constructor(public schedule: DiveSchedules) { }
 
     public closeTab(dive: DiveSchedule): void {
         this.schedule.remove(dive);

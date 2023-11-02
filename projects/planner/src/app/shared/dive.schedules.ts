@@ -61,7 +61,7 @@ export class DiveSchedule {
 }
 
 @Injectable()
-export class DivesSchedule {
+export class DiveSchedules {
     private _dives: DiveSchedule[] = [];
     private _selected: DiveSchedule;
 

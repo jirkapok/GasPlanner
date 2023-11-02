@@ -1,4 +1,4 @@
-import {DiveSchedules} from './dive.schedules';
+import {DiveSchedule, DiveSchedules} from './dive.schedules';
 import {inject, TestBed} from '@angular/core/testing';
 import {UnitConversion} from './UnitConversion';
 import {TanksService} from './tanks.service';
@@ -38,44 +38,50 @@ describe('Managed Schedules Loads default dive settings', () => {
             ],
         }).compileComponents();
 
-        const tankService = TestBed.inject(TanksService);
-        tankService.addTank();
-        tankService.tankData[1].size = 24;
-
-        const optionsService = TestBed.inject(OptionsService);
-        optionsService.maxEND = 27;
-
-        const plan = TestBed.inject(Plan);
-        plan.assignDepth(25, tankService.firstTank.tank, optionsService.getOptions());
-
-        const preferencesStore = TestBed.inject(PreferencesStore);
-        preferencesStore.saveDefault();
-
         sut = TestBed.inject(ManagedDiveSchedules);
-        sut.add();
-
-        localStorage.clear();
-        TestBedExtensions.initPlan();
     });
 
-    xit('Loads tanks', inject([DiveSchedules],
-        (schedules: DiveSchedules) => {
+    describe('Add new dive loads defaults', () => {
+        let lastDive: DiveSchedule;
 
-            const secondDiveTanks = schedules.dives[1].tanksService.tanks;
+        beforeEach(() => {
+            localStorage.clear();
+
+            // TODO replace initialization by saving from managed schedule first dive
+            TestBedExtensions.initPlan();
+
+            const tankService = TestBed.inject(TanksService);
+            tankService.addTank();
+            tankService.tankData[1].size = 24;
+
+            const optionsService = TestBed.inject(OptionsService);
+            optionsService.maxEND = 27;
+
+            const plan = TestBed.inject(Plan);
+            plan.assignDepth(25, tankService.firstTank.tank, optionsService.getOptions());
+
+            const preferencesStore = TestBed.inject(PreferencesStore);
+            preferencesStore.saveDefault();
+
+            sut.add();
+            const schedules = TestBed.inject(DiveSchedules);
+            lastDive = schedules.dives[1];
+        });
+
+        it('Loads tanks', () => {
+            const secondDiveTanks = lastDive.tanksService.tanks;
             expect(secondDiveTanks.length).toEqual(2);
             expect(secondDiveTanks[1].size).toEqual(24);
-        }));
+        });
 
-    xit('Loads Profile', inject([DiveSchedules],
-        (schedules: DiveSchedules) => {
-            const maxDepth = schedules.dives[1].plan.maxDepth;
+        it('Loads Profile',() => {
+            const maxDepth = lastDive.plan.maxDepth;
             expect(maxDepth).toEqual(25);
-        }));
+        });
 
-
-    xit('Loads dive options', inject([DiveSchedules],
-        (schedules: DiveSchedules) => {
-            const options = schedules.dives[1].optionsService;
+        it('Loads dive options', () => {
+            const options = lastDive.optionsService;
             expect(options.maxEND).toEqual(27);
-        }));
+        });
+    });
 });

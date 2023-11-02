@@ -24,12 +24,6 @@ export class DtoSerialization {
         return result;
     }
 
-    public static loadWorkingPressure(source: TankDto[], target: ITankBound[]): void {
-        for (let index = 0; index < target.length; index++) {
-            target[index].workingPressureBars = source[index].workPressure;
-        }
-    }
-
     public static fromTanks(tanks: ITankBound[]): TankDto[] {
         const result: TankDto[] = [];
         tanks.forEach(t => {

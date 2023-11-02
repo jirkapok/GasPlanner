@@ -3,7 +3,7 @@ import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import {
     AppOptionsDto, AppPreferences, AppPreferencesDto,
-    AppStates, DiveDto, ITankBound
+    AppStates, DiveDto, ITankBound, TankDto
 } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
 
@@ -12,6 +12,7 @@ import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 import { ViewStates } from './viewStates';
 import {DiveSetup} from './models';
+import {DiveSchedule} from './dives.schedule';
 
 @Injectable()
 export class Preferences {
@@ -23,6 +24,12 @@ export class Preferences {
         private options: OptionsService,
         private viewStates: ViewStates
     ) { }
+
+    private static loadWorkingPressure(source: TankDto[], target: ITankBound[]): void {
+        for (let index = 0; index < target.length; index++) {
+            target[index].workingPressureBars = source[index].workPressure;
+        }
+    }
 
     public toPreferences(): AppPreferences {
         return {
@@ -55,16 +62,28 @@ export class Preferences {
         };
     }
 
-    public loadDive(loadedDive: DiveDto): DiveSetup {
+    // TODO replace loadDive by loadTo
+    public loadDive(loadedDive: DiveDto): void {
+        const setup = this.toDiveSetup(loadedDive);
+        this.tanksService.loadFrom(setup.tanks);
+        Preferences.loadWorkingPressure(loadedDive.tanks, this.tanksService.tanks);
+        this.options.loadFrom(setup.options, setup.diver);
+        this.plan.loadFrom(setup.segments);
+    }
+
+    public loadTo(diveSchedule: DiveSchedule, loadedDive: DiveDto): void {
+        const setup = this.toDiveSetup(loadedDive);
+        diveSchedule.optionsService.loadFrom(setup.options, setup.diver);
+        diveSchedule.tanksService.loadFrom(setup.tanks);
+        Preferences.loadWorkingPressure(loadedDive.tanks, diveSchedule.tanksService.tanks);
+        diveSchedule.plan.loadFrom(setup.segments);
+    }
+
+    private toDiveSetup(loadedDive: DiveDto): DiveSetup {
         const tanks = DtoSerialization.toTanks(loadedDive.tanks);
         const segments = DtoSerialization.toSegments(loadedDive.plan, tanks);
         const diver = DtoSerialization.toDiver(loadedDive.diver);
         const options = DtoSerialization.toOptions(loadedDive.options);
-        this.tanksService.loadFrom(tanks);
-        DtoSerialization.loadWorkingPressure(loadedDive.tanks, this.tanksService.tanks);
-        this.options.loadFrom(options, diver);
-        this.plan.loadFrom(segments);
-
         return {
             diver: diver,
             options: options,

@@ -20,13 +20,60 @@ import {ManagedDiveSchedules} from './managedDiveSchedules';
 import Spy = jasmine.Spy;
 
 // TODO Scheduled dives test cases:
-// * Dives are loaded from saved storage on creation
-describe('Managed Schedules Loads default dive settings', () => {
+// * Dives are loaded from saved storage at start
+describe('Managed Schedules', () => {
+    const expectedSecondTankSize = 24;
+    const expectedMaxEnd = 27;
+    const expectedMaxDepth = 25;
     let sut: ManagedDiveSchedules;
     let preferencesStore: PreferencesStore;
     let schedules: DiveSchedules;
     let savePreferencesSpy: Spy<() => void>;
     let schedulerSpy: Spy<() => void>;
+
+    const changeDive = (dive: DiveSchedule) => {
+        const tankService = dive.tanksService;
+        tankService.addTank();
+        tankService.tankData[1].size = expectedSecondTankSize;
+
+        const optionsService = dive.optionsService;
+        optionsService.maxEND = expectedMaxEnd;
+
+        const plan = dive.plan;
+        plan.assignDepth(expectedMaxDepth, tankService.firstTank.tank, optionsService.getOptions());
+    };
+
+    const saveDiveAsDefault = (dive: DiveSchedule) => {
+        changeDive(dive);
+        preferencesStore.saveDefaultFrom(dive);
+    };
+
+    const saveFirstDiveAsDefault = () => {
+        // TODO replace initialization by saving from managed schedule first dive
+        TestBedExtensions.initPlan();
+
+        const tankService = TestBed.inject(TanksService);
+        tankService.addTank();
+        tankService.tankData[1].size = 24;
+
+        const optionsService = TestBed.inject(OptionsService);
+        optionsService.maxEND = 27;
+
+        const plan = TestBed.inject(Plan);
+        plan.assignDepth(25, tankService.firstTank.tank, optionsService.getOptions());
+
+        preferencesStore.saveDefault();
+    };
+
+    const assertDive = (dive: DiveSchedule) => {
+        const tanks = dive.tanksService.tanks;
+        expect(tanks.length).toEqual(2);
+        expect(tanks[1].size).toEqual(expectedSecondTankSize);
+        const maxDepth = dive.plan.maxDepth;
+        expect(maxDepth).toEqual(expectedMaxDepth);
+        const options = dive.optionsService;
+        expect(options.maxEND).toEqual(expectedMaxEnd);
+    };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -50,43 +97,18 @@ describe('Managed Schedules Loads default dive settings', () => {
     });
 
     describe('Add new dive', () => {
-        let lastDive: DiveSchedule;
-
         beforeEach(() => {
             localStorage.clear();
-
-            // TODO replace initialization by saving from managed schedule first dive
-            TestBedExtensions.initPlan();
-
-            const tankService = TestBed.inject(TanksService);
-            tankService.addTank();
-            tankService.tankData[1].size = 24;
-
-            const optionsService = TestBed.inject(OptionsService);
-            optionsService.maxEND = 27;
-
-            const plan = TestBed.inject(Plan);
-            plan.assignDepth(25, tankService.firstTank.tank, optionsService.getOptions());
-
+            const firstDive = schedules.dives[0];
+            // saveDiveAsDefault(firstDive);
+            saveFirstDiveAsDefault();
             preferencesStore.saveDefault();
             sut.add();
-            lastDive = schedules.dives[1];
         });
 
-        it('Loads tanks', () => {
-            const secondDiveTanks = lastDive.tanksService.tanks;
-            expect(secondDiveTanks.length).toEqual(2);
-            expect(secondDiveTanks[1].size).toEqual(24);
-        });
-
-        it('Loads Profile',() => {
-            const maxDepth = lastDive.plan.maxDepth;
-            expect(maxDepth).toEqual(25);
-        });
-
-        it('Loads dive options', () => {
-            const options = lastDive.optionsService;
-            expect(options.maxEND).toEqual(27);
+        it('Loads default dive setup', () => {
+            const lastDive = schedules.dives[1];
+            assertDive(lastDive);
         });
 
         it('Saves new dive in preferences', () => {
@@ -121,6 +143,40 @@ describe('Managed Schedules Loads default dive settings', () => {
 
         it('Calls scheduler after remove', () => {
             expect(schedulerSpy).toHaveBeenCalledWith();
+        });
+    });
+
+    describe('Load default dive', () => {
+        let secondDive: DiveSchedule;
+
+        beforeEach(() => {
+            const firstDive = schedules.dives[0];
+            // saveDiveAsDefault(firstDive);
+            saveFirstDiveAsDefault();
+            sut.add();
+            secondDive = schedules.dives[1];
+            schedules.selected = secondDive;
+            sut.loadDefaults();
+        });
+
+        it('Loads dive setup to currently selected dive', () => {
+            assertDive(secondDive);
+        });
+
+        it('Calls scheduled to recalculate selected dive', () => {
+            expect(schedulerSpy).toHaveBeenCalledWith();
+        });
+    });
+
+    describe('Save dive as default', () => {
+        it('Calls save preferences with selected dive', () => {
+            const saveDefaultSpy = spyOn(preferencesStore, 'saveDefaultFrom').and.callThrough();
+            sut.add();
+            const secondDive = schedules.dives[1];
+            schedules.selected = secondDive;
+            changeDive(secondDive);
+            sut.saveDefaults();
+            expect(saveDefaultSpy).toHaveBeenCalledWith(secondDive);
         });
     });
 });

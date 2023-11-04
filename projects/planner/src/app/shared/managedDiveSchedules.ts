@@ -11,20 +11,34 @@ export class ManagedDiveSchedules {
         private schedule: DelayedScheduleService
     ) { }
 
-    // TODO Implement LoadDefault, SaveDefault, LoadAll
+    // TODO Implement LoadAll
     // TODO Replace obsolete methods in PreferencesStorage and Preferences
     // TODO Implement line of calculations in PlannerService.calculate(diveId)
     // TODO Implement UI with all controls bound to the schedules
 
     public add(): void {
         const added = this.schedules.add();
-        this.preferences.loadDefaultTo(added);
-        this.preferences.save();
-        this.schedule.schedule();
+        this.loadDefaultTo(added);
     }
 
     public remove(dive: DiveSchedule): void {
         this.schedules.remove(dive);
+        this.preferences.save();
+        this.schedule.schedule();
+    }
+
+    public loadDefaults(): void {
+        const current = this.schedules.selected;
+        this.loadDefaultTo(current);
+    }
+
+    public saveDefaults(): void {
+        const current = this.schedules.selected;
+        this.preferences.saveDefaultFrom(current);
+    }
+
+    private loadDefaultTo(dive: DiveSchedule) {
+        this.preferences.loadDefaultTo(dive);
         this.preferences.save();
         this.schedule.schedule();
     }

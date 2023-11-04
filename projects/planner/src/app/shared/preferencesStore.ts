@@ -38,7 +38,7 @@ export class PreferencesStore {
     }
 
     // TODO replace loadDefault by loadDefaultTo
-    public loadDefaultTo(diveSchedule: DiveSchedule): void {
+    public loadDefaultTo(current: DiveSchedule): void {
         const toParse = localStorage.getItem(PreferencesStore.storageDefaultsKey);
         if (!toParse) {
             return;
@@ -47,7 +47,7 @@ export class PreferencesStore {
         const loaded = JSON.parse(toParse) as DiveDto;
 
         if(loaded) {
-            this.preferencesFactory.loadTo(diveSchedule, loaded);
+            this.preferencesFactory.loadTo(current, loaded);
         }
 
         return this.preferencesFactory.loadDive(loaded);
@@ -65,7 +65,7 @@ export class PreferencesStore {
         localStorage.setItem(PreferencesStore.storageDefaultsKey, serialized);
     }
 
-    public saveDefaultFrom(index: number): void {
+    public saveDefaultFrom(current: DiveSchedule): void {
         // TODO replace saveDefault by saveDefaultFroms
     }
 

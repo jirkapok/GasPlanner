@@ -20,14 +20,13 @@ import {ManagedDiveSchedules} from './managedDiveSchedules';
 import Spy = jasmine.Spy;
 
 // TODO Scheduled dives test cases:
-// * any change in dive list triggers save preferences
-// * Dives are loaded from saved storage
-// * any change triggers planner recalculate
+// * Dives are loaded from saved storage on creation
 describe('Managed Schedules Loads default dive settings', () => {
     let sut: ManagedDiveSchedules;
     let preferencesStore: PreferencesStore;
     let schedules: DiveSchedules;
     let savePreferencesSpy: Spy<() => void>;
+    let schedulerSpy: Spy<() => void>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -45,10 +44,12 @@ describe('Managed Schedules Loads default dive settings', () => {
         sut = TestBed.inject(ManagedDiveSchedules);
         preferencesStore = TestBed.inject(PreferencesStore);
         savePreferencesSpy = spyOn(preferencesStore, 'save').and.callThrough();
+        const scheduler = TestBed.inject(DelayedScheduleService);
+        schedulerSpy = spyOn(scheduler, 'schedule').and.callThrough();
         schedules = TestBed.inject(DiveSchedules);
     });
 
-    describe('Add new dive loads defaults', () => {
+    describe('Add new dive', () => {
         let lastDive: DiveSchedule;
 
         beforeEach(() => {
@@ -91,9 +92,13 @@ describe('Managed Schedules Loads default dive settings', () => {
         it('Saves new dive in preferences', () => {
             expect(savePreferencesSpy).toHaveBeenCalledWith();
         });
+
+        it('Calls scheduler after add', () => {
+            expect(schedulerSpy).toHaveBeenCalledWith();
+        });
     });
 
-    describe('Remove dive saves preferences', () => {
+    describe('Remove dive', () => {
         let scheduleRemoveSpy: Spy<(d: DiveSchedule) => void>;
         let toRemove: DiveSchedule;
 
@@ -110,8 +115,12 @@ describe('Managed Schedules Loads default dive settings', () => {
             expect(savePreferencesSpy).toHaveBeenCalledWith();
         });
 
-        it('Removes dive', () => {
+        it('Is removed from dives', () => {
             expect(scheduleRemoveSpy).toHaveBeenCalledWith(toRemove);
+        });
+
+        it('Calls scheduler after remove', () => {
+            expect(schedulerSpy).toHaveBeenCalledWith();
         });
     });
 });

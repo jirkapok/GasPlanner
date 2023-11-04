@@ -32,6 +32,7 @@ export class DashboardStartUp {
             // no need to restore the state, since dives are kept in service states
             this.delayedCalc.schedule();
         } else {
+            // TODO load from url only in case there is only one dive or starting the app
             // the only view which loads from parameters instead of view state
             this.urlSerialization.fromUrl(query);
             // cant do in constructor, since the state may be changed

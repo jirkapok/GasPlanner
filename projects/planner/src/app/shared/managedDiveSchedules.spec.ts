@@ -17,6 +17,7 @@ import {DelayedScheduleService} from './delayedSchedule.service';
 import {SubViewStorage} from './subViewStorage';
 import {TestBedExtensions} from './TestBedCommon.spec';
 import {ManagedDiveSchedules} from './managedDiveSchedules';
+import Spy = jasmine.Spy;
 
 // TODO Scheduled dives test cases:
 // * any change in dive list triggers save preferences
@@ -24,6 +25,9 @@ import {ManagedDiveSchedules} from './managedDiveSchedules';
 // * any change triggers planner recalculate
 describe('Managed Schedules Loads default dive settings', () => {
     let sut: ManagedDiveSchedules;
+    let preferencesStore: PreferencesStore;
+    let schedules: DiveSchedules;
+    let savePreferencesSpy: Spy<() => void>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -39,6 +43,9 @@ describe('Managed Schedules Loads default dive settings', () => {
         }).compileComponents();
 
         sut = TestBed.inject(ManagedDiveSchedules);
+        preferencesStore = TestBed.inject(PreferencesStore);
+        savePreferencesSpy = spyOn(preferencesStore, 'save').and.callThrough();
+        schedules = TestBed.inject(DiveSchedules);
     });
 
     describe('Add new dive loads defaults', () => {
@@ -60,11 +67,8 @@ describe('Managed Schedules Loads default dive settings', () => {
             const plan = TestBed.inject(Plan);
             plan.assignDepth(25, tankService.firstTank.tank, optionsService.getOptions());
 
-            const preferencesStore = TestBed.inject(PreferencesStore);
             preferencesStore.saveDefault();
-
             sut.add();
-            const schedules = TestBed.inject(DiveSchedules);
             lastDive = schedules.dives[1];
         });
 
@@ -82,6 +86,32 @@ describe('Managed Schedules Loads default dive settings', () => {
         it('Loads dive options', () => {
             const options = lastDive.optionsService;
             expect(options.maxEND).toEqual(27);
+        });
+
+        it('Saves new dive in preferences', () => {
+            expect(savePreferencesSpy).toHaveBeenCalledWith();
+        });
+    });
+
+    describe('Remove dive saves preferences', () => {
+        let scheduleRemoveSpy: Spy<(d: DiveSchedule) => void>;
+        let toRemove: DiveSchedule;
+
+        beforeEach(() => {
+            sut.add();
+            sut.add();
+
+            scheduleRemoveSpy = spyOn(schedules, 'remove').and.callThrough();
+            toRemove = schedules.dives[1];
+            sut.remove(toRemove);
+        });
+
+        it('Saves state in preferences', () => {
+            expect(savePreferencesSpy).toHaveBeenCalledWith();
+        });
+
+        it('Removes dive', () => {
+            expect(scheduleRemoveSpy).toHaveBeenCalledWith(toRemove);
         });
     });
 });

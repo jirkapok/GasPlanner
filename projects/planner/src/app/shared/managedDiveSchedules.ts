@@ -1,13 +1,12 @@
 import {Injectable} from '@angular/core';
 import {PreferencesStore} from './preferencesStore';
-import {DiveSchedules} from './dive.schedules';
+import {DiveSchedule, DiveSchedules} from './dive.schedules';
 
 @Injectable()
 export class ManagedDiveSchedules {
     constructor(private schedules: DiveSchedules, private preferences: PreferencesStore) {
     }
 
-    // TODO Implement Add, Remove
     // TODO Implement LoadDefault, SaveDefault, LoadAll
     // TODO Replace obsolete methods in PreferencesStorage and Preferences
     // TODO Implement line of calculations in PlannerService.calculate(diveId)
@@ -16,6 +15,11 @@ export class ManagedDiveSchedules {
     public add(): void {
         const added = this.schedules.add();
         this.preferences.loadDefaultTo(added);
+        this.preferences.save();
+    }
+
+    public remove(dive: DiveSchedule): void {
+        this.schedules.remove(dive);
         this.preferences.save();
     }
 }

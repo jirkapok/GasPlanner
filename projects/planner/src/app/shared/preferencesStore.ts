@@ -59,6 +59,7 @@ export class PreferencesStore {
         localStorage.setItem(PreferencesStore.storageKey, serialized);
     }
 
+    // TODO replace saveDefault by saveDefaultFroms
     public saveDefault(): void {
         const toSave = this.preferencesFactory.toDive();
         const serialized = JSON.stringify(toSave);
@@ -66,7 +67,9 @@ export class PreferencesStore {
     }
 
     public saveDefaultFrom(current: DiveSchedule): void {
-        // TODO replace saveDefault by saveDefaultFroms
+        const toSave = this.preferencesFactory.toDiveFrom(current);
+        const serialized = JSON.stringify(toSave);
+        localStorage.setItem(PreferencesStore.storageDefaultsKey, serialized);
     }
 
     public disableDisclaimer(): void {

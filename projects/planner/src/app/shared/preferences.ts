@@ -62,6 +62,16 @@ export class Preferences {
         };
     }
 
+    // TODO replace toDive by toDiveFrom
+    public toDiveFrom(dive: DiveSchedule): DiveDto {
+        return {
+            options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
+            diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
+            tanks: DtoSerialization.fromTanks(dive.tanksService.tanks as ITankBound[]),
+            plan: DtoSerialization.fromSegments(dive.plan.segments),
+        };
+    }
+
     // TODO replace loadDive by loadTo
     public loadDive(loadedDive: DiveDto): void {
         const setup = this.toDiveSetup(loadedDive);

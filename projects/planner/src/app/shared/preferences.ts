@@ -13,6 +13,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { ViewStates } from './viewStates';
 import {DiveSetup} from './models';
 import {DiveSchedule} from './dive.schedules';
+import _ from 'lodash';
 
 @Injectable()
 export class Preferences {
@@ -36,6 +37,15 @@ export class Preferences {
             states: this.toStates(),
             options: this.toAppSettings(this.viewSwitch),
             dives: this.toDives()
+        };
+    }
+
+    // TODO replace toPreferences by toPreferencesFrom
+    public toPreferencesFrom(dives: DiveSchedule[]): AppPreferences {
+        return {
+            states: this.toStates(),
+            options: this.toAppSettings(this.viewSwitch),
+            dives: _(dives).map(d => this.toDiveFrom(d)).value()
         };
     }
 

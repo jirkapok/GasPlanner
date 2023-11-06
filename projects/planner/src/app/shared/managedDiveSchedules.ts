@@ -11,7 +11,6 @@ export class ManagedDiveSchedules {
         private schedule: DelayedScheduleService
     ) { }
 
-    // TODO Implement LoadAll
     // TODO Replace obsolete methods in PreferencesStorage and Preferences
     // TODO Implement line of calculations in PlannerService.calculate(diveId)
     // TODO Implement UI with all controls bound to the schedules
@@ -35,6 +34,10 @@ export class ManagedDiveSchedules {
     public saveDefaults(): void {
         const current = this.schedules.selected;
         this.preferences.saveDefaultFrom(current);
+    }
+
+    public loadAll(){
+        this.preferences.loadAll(this.schedules);
     }
 
     private loadDefaultTo(dive: DiveSchedule) {

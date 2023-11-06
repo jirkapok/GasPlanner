@@ -179,4 +179,19 @@ describe('Managed Schedules', () => {
             expect(saveDefaultSpy).toHaveBeenCalledWith(secondDive);
         });
     });
+
+    describe('Load all', () => {
+        it('Loads all dives data', () => {
+            // TODO add dive and change its settings
+            const second = schedules.add();
+            changeDive(second);
+
+            preferencesStore.saveAll(schedules.dives);
+            schedules.clear();
+            sut.loadAll();
+
+            expect(schedules.length).toEqual(2);
+            assertDive(schedules.dives[1]);
+        });
+    });
 });

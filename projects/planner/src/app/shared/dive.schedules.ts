@@ -107,6 +107,11 @@ export class DiveSchedules {
         }
     }
 
+    public clear(): void {
+        // there should always be at least one dive
+        this._dives.splice(1, this._dives.length);
+    }
+
     private createDiveSchedule(): DiveSchedule {
         return new DiveSchedule(this.length, this.units);
     }

@@ -80,7 +80,7 @@ import { WeightCalcComponent } from './weight/weight.component';
 import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
 import { DiffComponent } from './diff/diff.component';
 import { DiveResults } from './shared/diveresults';
-import { DivesSchedule } from './shared/dives.schedule';
+import { DiveSchedules } from './shared/dive.schedules';
 import { RedundanciesComponent } from './redundancies/redundancies.component';
 import {RedundanciesService} from './shared/redundancies.service';
 
@@ -158,7 +158,7 @@ const MDB_MODULES = [
         PlannerService,
         Plan,
         DiveResults,
-        DivesSchedule,
+        DiveSchedules,
         PlanUrlSerialization,
         Preferences,
         PreferencesStore,

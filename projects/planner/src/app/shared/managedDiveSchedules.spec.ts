@@ -182,7 +182,6 @@ describe('Managed Schedules', () => {
 
     describe('Load all', () => {
         it('Loads all dives data', () => {
-            // TODO add dive and change its settings
             const second = schedules.add();
             changeDive(second);
 

@@ -11,9 +11,9 @@ export class ManagedDiveSchedules {
         private schedule: DelayedScheduleService
     ) { }
 
-    // TODO Replace obsolete methods in PreferencesStorage and Preferences
-    // TODO Implement line of calculations in PlannerService.calculate(diveId)
     // TODO Implement UI with all controls bound to the schedules
+    // TODO Implement line of calculations in PlannerService.calculate(diveId)
+    // TODO Replace obsolete methods in PreferencesStorage and Preferences
 
     public add(): void {
         const added = this.schedules.add();

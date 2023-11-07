@@ -84,6 +84,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
             this.tanksForm.addControl('workPressure', workPressureControl);
         }
 
+        // TODO selected may change we need to update the binding
         this.selected.tanksService.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
     }

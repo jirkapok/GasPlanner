@@ -61,7 +61,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
             planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
         });
 
-        // TODO selected may change, fix the eventing
+        // TODO selected may change, values arent updated, fix the eventing
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
         this.schedules.selected.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))

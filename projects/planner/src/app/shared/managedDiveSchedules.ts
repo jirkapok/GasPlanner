@@ -11,9 +11,11 @@ export class ManagedDiveSchedules {
         private schedule: DelayedScheduleService
     ) { }
 
-    // TODO Implement UI with all controls bound to the schedules
+    // TODO Implement UI with all controls bound to the schedules (complex depths, complex tanks, complex settings,
+    //  profile chart, profile table, dive results)
     // TODO Implement line of calculations in PlannerService.calculate(diveId)
     // TODO Replace obsolete methods in PreferencesStorage and Preferences
+    // TODO implement restore if last selected dive
 
     public add(): void {
         const added = this.schedules.add();

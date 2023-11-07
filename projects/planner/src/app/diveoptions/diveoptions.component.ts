@@ -13,6 +13,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Plan } from '../shared/plan.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import {DiveSchedules} from '../shared/dive.schedules';
 
 @Component({
     selector: 'app-diveoptions',
@@ -39,13 +40,12 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }>;
 
     constructor(public units: UnitConversion,
-        public options: OptionsService,
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private viewSwitch: ViewSwitchService,
         private delayedCalc: DelayedScheduleService,
-        private plan: Plan) {
+        private schedules: DiveSchedules) {
         super();
     }
 
@@ -95,6 +95,14 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     public get ascentSpeed50percInvalid(): boolean {
         const ascentSpeed50perc = this.optionsForm.controls.ascentSpeed50perc;
         return this.inputs.controlInValid(ascentSpeed50perc);
+    }
+
+    public get options(): OptionsService {
+        return this.schedules.selected.optionsService;
+    }
+
+    private get plan(): Plan {
+        return this.schedules.selected.plan;
     }
 
     public set isComplex(newValue: boolean) {

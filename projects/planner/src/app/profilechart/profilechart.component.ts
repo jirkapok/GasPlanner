@@ -12,6 +12,7 @@ import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { Streamed } from '../shared/streamed';
 import { Plan } from '../shared/plan.service';
 import { ResamplingService } from '../shared/ResamplingService';
+import {DiveSchedules} from '../shared/dive.schedules';
 
 @Component({
     selector: 'app-profilechart',
@@ -55,11 +56,10 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private resampling: ResamplingService;
 
     constructor(
-        public dive: DiveResults,
         private planer: PlannerService,
         private units: UnitConversion,
         private selectedWaypoint: SelectedWaypoint,
-        private plan: Plan) {
+        private schedules: DiveSchedules) {
         super();
         this.resampling = new ResamplingService(units);
 
@@ -95,8 +95,16 @@ export class ProfileChartComponent extends Streamed implements OnInit {
             .subscribe((wayPoint) => this.selectWayPoint(wayPoint));
     }
 
-    public get noDecoTime(): number {
-        return this.dive.noDecoTime;
+    public get profileCalculated(): boolean {
+        return this.dive.profileCalculated;
+    }
+
+    private get dive(): DiveResults {
+        return this.schedules.selected.diveResult;
+    }
+
+    private get plan(): Plan {
+        return this.schedules.selected.plan;
     }
 
     public ngOnInit(): void {

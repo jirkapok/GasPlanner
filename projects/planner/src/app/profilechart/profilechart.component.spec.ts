@@ -10,6 +10,8 @@ import { Plan } from '../shared/plan.service';
 import { OptionsService } from '../shared/options.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
+import {DiveSchedules} from '../shared/dive.schedules';
+import {TestBedExtensions} from "../shared/TestBedCommon.spec";
 
 describe('ProfileChartComponent', () => {
     let component: ProfileChartComponent;
@@ -21,9 +23,10 @@ describe('ProfileChartComponent', () => {
             providers: [
                 PlannerService, WorkersFactoryCommon, TanksService,
                 OptionsService, WayPointsService, SelectedWaypoint,
-                UnitConversion, Plan, DiveResults
+                UnitConversion, Plan, DiveResults, DiveSchedules
             ]
         });
+
         fixture = TestBed.createComponent(ProfileChartComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

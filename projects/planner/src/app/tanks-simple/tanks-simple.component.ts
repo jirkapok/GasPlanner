@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { faBatteryHalf } from '@fortawesome/free-solid-svg-icons';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
@@ -13,6 +13,7 @@ import { TanksService } from '../shared/tanks.service';
 import { Plan } from '../shared/plan.service';
 import { Precision, TankTemplate } from 'scuba-physics';
 import { OptionsService } from '../shared/options.service';
+import {DiveSchedule, DiveSchedules} from "../shared/dive.schedules";
 
 interface TankForm {
     firstTankSize: FormControl<number>;
@@ -28,24 +29,23 @@ interface TankForm {
 })
 export class TanksSimpleComponent extends Streamed implements OnInit {
     public icon = faBatteryHalf;
-    public toxicity: GasToxicity;
     public tanksForm!: FormGroup<TankForm>;
-
     constructor(
-        private options: OptionsService,
-        private tanksService: TanksService,
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private delayedCalc: DelayedScheduleService,
-        private plan: Plan) {
+        private diveSchedules: DiveSchedules) {
         super();
-        this.toxicity = this.options.toxicity;
+    }
+
+    public get toxicity(): GasToxicity {
+        return this.selected.optionsService.toxicity;
     }
 
     public get firstTank(): TankBound {
-        return this.tanksService.firstTank;
+        return this.selected.tanksService.firstTank;
     }
 
     public get ranges(): RangeConstants {
@@ -67,6 +67,10 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         return this.inputs.controlInValid(firstTankStartPressure);
     }
 
+    private get selected(): DiveSchedule {
+        return this.diveSchedules.selected;
+    }
+
     public ngOnInit(): void {
         this.tanksForm = this.fb.group({
             firstTankSize: [Precision.round(this.firstTank.size, 1), this.validators.tankSize],
@@ -80,18 +84,18 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
             this.tanksForm.addControl('workPressure', workPressureControl);
         }
 
-        this.tanksService.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
+        this.selected.tanksService.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
     }
 
     public gasSac(): number {
         const tank = this.firstTank.tank;
-        const sac = this.options.diverOptions.gasSac(tank);
+        const sac = this.selected.optionsService.diverOptions.gasSac(tank);
         return this.units.fromBar(sac);
     }
 
     public assignBestMix(): void {
-        const maxDepth = this.plan.maxDepth;
+        const maxDepth = this.selected.plan.maxDepth;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
         this.delayedCalc.schedule();
     }

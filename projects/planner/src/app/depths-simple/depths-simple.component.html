@@ -15,10 +15,10 @@
                 <div class="text-muted form-text" [class.invisible]="durationInvalid">No deco limit {{ noDecoTime |
                     number:'1.0-0' }} min</div>
                 <button type="button" class="btn btn-secondary mt-2 me-2 col col-auto"
-                    (click)="depths.applyMaxDuration()" [class.invisible]="!dive.showMaxDuration"
+                    (click)="depths.applyMaxDuration()" [class.invisible]="!diveResult.showMaxDuration"
                     id="btnApplyDuration">Max</button>
                 <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="depths.applyNdlDuration()"
-                    [class.invisible]="!dive.ndlValid" id="btnApplyNdl">No deco</button>
+                    [class.invisible]="!diveResult.ndlValid" id="btnApplyNdl">No deco</button>
             </div>
             <div class="col col-12 col-md-6 col-lg-12 col-xl-6">
                 <app-depth></app-depth>

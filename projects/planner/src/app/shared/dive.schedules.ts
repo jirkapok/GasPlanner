@@ -4,19 +4,24 @@ import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 import { Injectable } from '@angular/core';
+import {DiveResults} from "./diveresults";
+import {DepthsService} from "./depths.service";
 
 export class DiveSchedule {
     /** In minutes or undefined in case it is the first dive */
     public surfaceInterval?: number;
     public _id = 0;
-    private _optionsService: OptionsService;
-    private _tanks: TanksService;
-    private _plan: Plan = new Plan(); // Depths service
+    private readonly _diveResult = new DiveResults();
+    private readonly _plan: Plan = new Plan();
+    private readonly _optionsService: OptionsService;
+    private readonly _tanks: TanksService;
+    private readonly _depths: DepthsService;
 
     constructor(index: number, private units: UnitConversion) {
         this.assignIndex(index);
         this._tanks = new TanksService(units);
         this._optionsService = new OptionsService(this.units);
+        this._depths = new DepthsService(this.units, this.tanksService, this.plan, this._diveResult, this._optionsService);
 
         // this enforces to initialize the levels, needs to be called after subscribe to plan
         if (this.plan.maxDepth === 0) {
@@ -38,6 +43,14 @@ export class DiveSchedule {
 
     public get plan(): Plan {
         return this._plan;
+    }
+
+    public get diveResult(): DiveResults {
+        return this._diveResult;
+    }
+
+    public get depths(): DepthsService {
+        return this._depths;
     }
 
     public get optionsService(): OptionsService {

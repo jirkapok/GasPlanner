@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
     NonNullableFormBuilder, FormGroup, FormControl
 } from '@angular/forms';
-import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
@@ -10,8 +10,8 @@ import { DiveResults } from '../shared/diveresults';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { Plan } from '../shared/plan.service';
 import { Precision } from 'scuba-physics';
+import {DiveSchedules} from '../shared/dive.schedules';
 
 @Component({
     selector: 'app-depths-simple',
@@ -20,8 +20,6 @@ import { Precision } from 'scuba-physics';
 })
 export class DepthsSimpleComponent extends Streamed implements OnInit {
     public cardIcon = faLayerGroup;
-    public addIcon = faPlus;
-    public removeIcon = faMinus;
     public simpleForm!: FormGroup<{
         planDuration: FormControl<number>;
     }>;
@@ -30,13 +28,11 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public dive: DiveResults,
-        public depths: DepthsService,
         public units: UnitConversion,
-        private plan: Plan) {
+        private schedules: DiveSchedules) {
         super();
         // data are already available, it is ok to generate the levels.
-        this.depths.updateLevels();
+        this.schedules.selected.depths.updateLevels();
     }
 
     public get ranges(): RangeConstants {
@@ -44,7 +40,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     }
 
     public get noDecoTime(): number {
-        return this.dive.noDecoTime;
+        return this.diveResult.noDecoTime;
     }
 
     public get durationInvalid(): boolean {
@@ -52,14 +48,23 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         return this.inputs.controlInValid(duration);
     }
 
+    public get depths(): DepthsService {
+        return this.schedules.selected.depths;
+    }
+
+    public get diveResult(): DiveResults {
+        return this.schedules.selected.diveResult;
+    }
+
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({
             planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
         });
 
+        // TODO selected may change, fix the eventing
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
-        this.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
+        this.schedules.selected.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.depths.updateLevels();
                 this.reloadSimple();

@@ -1,30 +1,31 @@
 import { Injectable } from '@angular/core';
-import { DelayedScheduleService } from './delayedSchedule.service';
 import { GasToxicity } from './gasToxicity.service';
 import { Level, TankBound } from './models';
 import { Plan } from '../shared/plan.service';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { Streamed } from './streamed';
-import { takeUntil } from 'rxjs';
+import {Observable, Subject, takeUntil} from 'rxjs';
 import { OptionsService } from './options.service';
 import { Tank, Segment, StandardGases, Precision } from 'scuba-physics';
 import { DiveResults } from './diveresults';
 
 @Injectable()
 export class DepthsService extends Streamed {
+    public changed$: Observable<void>;
     private _levels: Level[] = [];
     private toxicity: GasToxicity;
+    private onChanged = new Subject<void>();
 
     constructor(
         private units: UnitConversion,
         private tanksService: TanksService,
-        private delayedCalc: DelayedScheduleService,
         private plan: Plan,
         private dive: DiveResults,
         private optionsService: OptionsService) {
         super();
 
+        this.changed$ = this.onChanged.asObservable();
         this.toxicity = this.optionsService.toxicity;
         const firstTank = this.firstTank;
         const options = this.optionsService.getOptions();
@@ -121,6 +122,7 @@ export class DepthsService extends Streamed {
         this.apply();
     }
 
+    // TODO replace by stream
     public updateLevels(): void {
         const segments: Segment[] = this.plan.segments;
         const converted: Level[] = [];
@@ -147,6 +149,6 @@ export class DepthsService extends Streamed {
     }
 
     private apply(): void {
-        this.delayedCalc.schedule();
+        this.onChanged.next();
     }
 }

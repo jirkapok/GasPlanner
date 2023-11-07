@@ -25,6 +25,7 @@ import { ViewStates } from '../shared/viewStates';
 import { Preferences } from '../shared/preferences';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { DiveResults } from '../shared/diveresults';
+import {DiveSchedules} from "../shared/dive.schedules";
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -61,7 +62,7 @@ describe('Tanks Simple component', () => {
             declarations: [TanksSimpleComponent, GaslabelComponent,
                 OxygenComponent, OxygenDropDownComponent, TankSizeComponent],
             providers: [WorkersFactoryCommon, UnitConversion,
-                PlannerService, InputControls,
+                PlannerService, InputControls, DiveSchedules,
                 ValidatorGroups, DelayedScheduleService,
                 DecimalPipe, TanksService, ViewSwitchService,
                 OptionsService, Plan, WayPointsService,

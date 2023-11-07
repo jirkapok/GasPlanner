@@ -157,16 +157,12 @@ describe('Depths service', () => {
         });
 
         it('Defaults to 100 tf', inject(
-            [DiveResults, TanksService, DelayedScheduleService, OptionsService],
-            (dive: DiveResults,
-                tanksService: TanksService,
-                delayedCalc: DelayedScheduleService,
-                optionsService: OptionsService) => {
+            [DiveResults, TanksService, OptionsService],
+            (dive: DiveResults, tanksService: TanksService, optionsService: OptionsService) => {
                 const units = new UnitConversion();
                 units.imperialUnits = true; // before the depths service was even created
                 const plan = new Plan(); // to prevent reuse of plans
-                const sut = new DepthsService(units, tanksService,
-                    delayedCalc, plan, dive, optionsService);
+                const sut = new DepthsService(units, tanksService, plan, dive, optionsService);
                 expect(sut.plannedDepth).toBeCloseTo(100, 6);
             }));
     });

@@ -20,6 +20,7 @@ import { ViewStates } from '../shared/viewStates';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { DiveResults } from '../shared/diveresults';
+import {DiveSchedules} from '../shared/dive.schedules';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
@@ -48,8 +49,8 @@ describe('Depths Simple Component', () => {
             declarations: [DepthsSimpleComponent],
             imports: [ReactiveFormsModule],
             providers: [WorkersFactoryCommon, PlannerService,
-                UnitConversion, InputControls, DelayedScheduleService,
-                OptionsService, ValidatorGroups,
+                UnitConversion, InputControls, DiveSchedules,
+                OptionsService, ValidatorGroups, DelayedScheduleService,
                 DepthsService, DecimalPipe, TanksService,
                 ViewSwitchService, Plan, WayPointsService,
                 SubViewStorage, ViewStates, PreferencesStore, Preferences,
@@ -102,17 +103,18 @@ describe('Depths Simple Component', () => {
     });
 
     describe('Max narcotic depth', () => {
-        it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject([Plan],
-            (plan: Plan) => {
+        it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject([DiveSchedules],
+            (schedules: DiveSchedules) => {
                 depths.applyMaxDepth();
-                expect(plan.maxDepth).toBe(30);
+                expect(schedules.selected.plan.maxDepth).toBe(30);
             }));
 
-        it('Max narcotic depth is applied', inject([TanksService, Plan],
-            (tanksService: TanksService, plan: Plan) => {
-                tanksService.firstTank.o2 = 50;
-                depths.applyMaxDepth();
-                expect(plan.maxDepth).toBe(18);
+        it('Max narcotic depth is applied', inject([DiveSchedules],
+            (schedules: DiveSchedules) => {
+                const selected = schedules.selected;
+                selected.tanksService.firstTank.o2 = 50;
+                selected.depths.applyMaxDepth();
+                expect(selected.plan.maxDepth).toBe(18);
             }));
     });
 });

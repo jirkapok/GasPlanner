@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { takeUntil } from 'rxjs';
 import { Streamed } from '../shared/streamed';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { UnitConversion } from '../shared/UnitConversion';
 import { DashboardStartUp } from '../shared/startUp';
 import { PlannerService } from '../shared/planner.service';
-import { takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-dashboard',

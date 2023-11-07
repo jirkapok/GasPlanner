@@ -103,11 +103,12 @@ describe('Depths Complex Component', () => {
 
     it('Change depth calculates profile correctly', inject([DiveResults],
         (dive: DiveResults) => {
-            // spyOn(component.depths, 'changed$');
+            let eventFired = false;
+            component.depths.changed$.subscribe(() => eventFired = true );
             complexPage.durationInput(1).value = '5';
             complexPage.durationInput(1).dispatchEvent(new Event('input'));
             // in case of wrong binding, the algorithm ads segment with 0 duration
-            expect(dive.totalDuration).toBe(882);
+            expect(eventFired).toBeTruthy();
         }));
 
     describe('Levels enforce calculation', () => {

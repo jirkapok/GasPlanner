@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { faBatteryHalf } from '@fortawesome/free-solid-svg-icons';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
@@ -9,11 +9,8 @@ import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
-import { TanksService } from '../shared/tanks.service';
-import { Plan } from '../shared/plan.service';
 import { Precision, TankTemplate } from 'scuba-physics';
-import { OptionsService } from '../shared/options.service';
-import {DiveSchedule, DiveSchedules} from "../shared/dive.schedules";
+import {DiveSchedule, DiveSchedules} from '../shared/dive.schedules';
 
 interface TankForm {
     firstTankSize: FormControl<number>;

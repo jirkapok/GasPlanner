@@ -103,21 +103,9 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         return this.schedules.selected.diveResult;
     }
 
-    private get plan(): Plan {
-        return this.schedules.selected.plan;
-    }
-
     public ngOnInit(): void {
         this.plotCharts();
         this.hookChartEvents();
-    }
-
-    public scaleWidth(x: number, graphWidth: number): number {
-        return x * graphWidth / this.dive.totalDuration;
-    }
-
-    public scaleHeight(y: number, graphHeight: number): number {
-        return y * (graphHeight - 10) / this.plan.maxDepth;
     }
 
     public plotlyHover(data: any): void {

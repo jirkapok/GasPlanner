@@ -78,7 +78,7 @@ export class Preferences {
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
             diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
             tanks: DtoSerialization.fromTanks(dive.tanksService.tanks as ITankBound[]),
-            plan: DtoSerialization.fromSegments(dive.plan.segments),
+            plan: DtoSerialization.fromSegments(dive.depths.segments),
         };
     }
 
@@ -96,7 +96,7 @@ export class Preferences {
         diveSchedule.optionsService.loadFrom(setup.options, setup.diver);
         diveSchedule.tanksService.loadFrom(setup.tanks);
         Preferences.loadWorkingPressure(loadedDive.tanks, diveSchedule.tanksService.tanks);
-        diveSchedule.plan.loadFrom(setup.segments);
+        diveSchedule.depths.loadFrom(setup.segments);
     }
 
     private toDiveSetup(loadedDive: DiveDto): DiveSetup {

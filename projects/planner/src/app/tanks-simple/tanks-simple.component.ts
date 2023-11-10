@@ -93,7 +93,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     }
 
     public assignBestMix(): void {
-        const maxDepth = this.selected.plan.maxDepth;
+        const maxDepth = this.selected.depths.plannedDepthMeters;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
         this.delayedCalc.schedule();
     }

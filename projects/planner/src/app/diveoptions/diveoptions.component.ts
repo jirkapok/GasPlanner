@@ -101,10 +101,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         return this.schedules.selected.optionsService;
     }
 
-    private get plan(): Plan {
-        return this.schedules.selected.plan;
-    }
-
     public set isComplex(newValue: boolean) {
         if (!newValue) {
             this.setAllUsable();
@@ -132,44 +128,44 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             .subscribe(() => this.reloadForm());
     }
 
-    public reset(): void {
-        switch (this.plan.strategy) {
-            case Strategies.HALF: {
-                this.halfUsable();
-                break;
-            }
-            case Strategies.THIRD: {
-                this.thirdUsable();
-                break;
-            }
-            default: {
-                this.allUsable();
-                break;
-            }
-        }
-    }
+    // public reset(): void {
+    //     switch (this.plan.strategy) {
+    //         case Strategies.HALF: {
+    //             this.halfUsable();
+    //             break;
+    //         }
+    //         case Strategies.THIRD: {
+    //             this.thirdUsable();
+    //             break;
+    //         }
+    //         default: {
+    //             this.allUsable();
+    //             break;
+    //         }
+    //     }
+    // }
 
-    public allUsable(): void {
-        this.setAllUsable();
-        this.applyOptions();
-    }
+    // public allUsable(): void {
+    //     this.setAllUsable();
+    //     this.applyOptions();
+    // }
 
     public setAllUsable(): void {
-        this.plan.strategy = Strategies.ALL;
+        // this.plan.strategy = Strategies.ALL;
         this.strategy = this.allUsableName;
     }
 
-    public halfUsable(): void {
-        this.plan.strategy = Strategies.HALF;
-        this.strategy = this.halfUsableName;
-        this.applyOptions();
-    }
+    // public halfUsable(): void {
+    //     this.plan.strategy = Strategies.HALF;
+    //     this.strategy = this.halfUsableName;
+    //     this.applyOptions();
+    // }
 
-    public thirdUsable(): void {
-        this.plan.strategy = Strategies.THIRD;
-        this.strategy = this.thirdUsableName;
-        this.applyOptions();
-    }
+    // public thirdUsable(): void {
+    //     this.plan.strategy = Strategies.THIRD;
+    //     this.strategy = this.thirdUsableName;
+    //     this.applyOptions();
+    // }
 
     public useRecreational(): void {
         this.options.useRecreational();

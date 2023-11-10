@@ -17,6 +17,7 @@ import { WayPointsService } from '../shared/waypoints.service';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveResults } from '../shared/diveresults';
+import {DepthsService} from '../shared/depths.service';
 
 describe('WeightCalcComponent', () => {
     let component: WeightCalcComponent;
@@ -27,7 +28,7 @@ describe('WeightCalcComponent', () => {
             declarations: [WeightCalcComponent],
             providers: [
                 UnitConversion, ValidatorGroups, InputControls,
-                DecimalPipe, SubViewStorage, ViewStates,
+                DecimalPipe, SubViewStorage, ViewStates, DepthsService,
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
                 TanksService, Plan, OptionsService, WayPointsService,
                 Preferences, ViewSwitchService, DiveResults

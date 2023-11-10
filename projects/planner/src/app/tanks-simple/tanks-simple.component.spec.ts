@@ -25,7 +25,8 @@ import { ViewStates } from '../shared/viewStates';
 import { Preferences } from '../shared/preferences';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { DiveResults } from '../shared/diveresults';
-import {DiveSchedules} from "../shared/dive.schedules";
+import {DiveSchedules} from '../shared/dive.schedules';
+import {DepthsService} from "../shared/depths.service";
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -67,7 +68,7 @@ describe('Tanks Simple component', () => {
                 DecimalPipe, TanksService, ViewSwitchService,
                 OptionsService, Plan, WayPointsService,
                 SubViewStorage, ViewStates, DiveResults,
-                PreferencesStore, Preferences
+                PreferencesStore, Preferences, DepthsService
             ],
             imports: [ReactiveFormsModule]
         })

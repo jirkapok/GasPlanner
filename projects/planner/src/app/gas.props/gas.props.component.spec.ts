@@ -18,6 +18,7 @@ import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { StandardGases } from 'scuba-physics';
 import { DiveResults } from '../shared/diveresults';
+import {DepthsService} from '../shared/depths.service';
 
 describe('GasPropertiesCalcComponent', () => {
     let component: GasPropertiesCalcComponent;
@@ -31,7 +32,8 @@ describe('GasPropertiesCalcComponent', () => {
                 DecimalPipe, SubViewStorage, ViewStates,
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
                 TanksService, Plan, OptionsService, WayPointsService,
-                Preferences, ViewSwitchService, DiveResults
+                Preferences, ViewSwitchService, DiveResults,
+                DepthsService
             ]
         });
         fixture = TestBed.createComponent(GasPropertiesCalcComponent);

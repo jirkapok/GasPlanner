@@ -26,13 +26,12 @@ describe('Depths service', () => {
             imports: [],
             providers: [WorkersFactoryCommon, PlannerService,
                 UnitConversion, DelayedScheduleService,
-                OptionsService, Plan, WayPointsService,
+                OptionsService, WayPointsService, Plan,
                 DepthsService, TanksService, SubViewStorage,
                 ViewStates, PreferencesStore, Preferences,
                 ViewSwitchService, DiveResults
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
 
         depthService = TestBed.inject(DepthsService);
     });
@@ -42,18 +41,16 @@ describe('Depths service', () => {
         // with default speed to default depth 30m.
         const descentOnly = 1.7;
 
-        it('Max bottom time is NOT applied', inject([Plan],
-            (plan: Plan) => {
-                depthService.applyMaxDuration();
-                expect(plan.duration).toBe(descentOnly);
-            }));
+        it('Max bottom time is NOT applied', () => {
+            depthService.applyMaxDuration();
+            expect(depthService.planDuration).toBe(descentOnly);
+        });
 
         // Plan needs to be already calculated because NDL is needed
-        it('No deco limit is NOT applied', inject([Plan],
-            (plan: Plan) => {
-                depthService.applyNdlDuration();
-                expect(plan.duration).toBe(descentOnly);
-            }));
+        it('No deco limit is NOT applied', () => {
+            depthService.applyNdlDuration();
+            expect(depthService.planDuration).toBe(descentOnly);
+        });
     });
 
     describe('Apply plan limits', () => {
@@ -63,41 +60,37 @@ describe('Depths service', () => {
             OptionExtensions.applySimpleSpeeds(options.getOptions());
             options.problemSolvingDuration = 2;
             options.safetyStop = SafetyStop.always;
-            const tanksService = TestBed.inject(TanksService);
-            const plan = TestBed.inject(Plan);
-            plan.assignDepth(30, tanksService.firstTank.tank, options.getOptions());
+            depthService.assignDepth(30);
             planner.calculate();
         });
 
         describe('When Calculated', () => {
-            it('Max bottom time is applied', inject([PlannerService, Plan],
-                (planner: PlannerService, plan: Plan) => {
-                    planner.calculate();
+            it('Max bottom time is applied', inject([PlannerService],
+                (planner: PlannerService) => {
+                    // planner.calculate();
                     depthService.applyMaxDuration();
-                    expect(plan.duration).toBe(18);
+                    expect(depthService.planDuration).toBe(18);
                 }));
 
-            it('No deco limit is applied', inject([PlannerService, Plan],
-                (planner: PlannerService, plan: Plan) => {
-                    planner.calculate();
+            it('No deco limit is applied', inject([PlannerService],
+                (planner: PlannerService) => {
+                    // planner.calculate();
                     depthService.applyNdlDuration();
-                    expect(plan.duration).toBe(12);
+                    expect(depthService.planDuration).toBe(12);
                 }));
         });
     });
 
     describe('Depths', () => {
-        let plan: Plan;
         let tanksService: TanksService;
 
         beforeEach(() => {
-            plan = TestBed.inject(Plan);
             tanksService = TestBed.inject(TanksService);
         });
 
         it('Add correct segment to the end', () => {
             depthService.addSegment();
-            const added = plan.segments[2];
+            const added = depthService.segments[2];
             expect(added.endDepth).toBe(30);
             expect(added.duration).toBe(600);
         });
@@ -105,25 +98,25 @@ describe('Depths service', () => {
         it('Added segment has previous segment tank', () => {
             depthService.addSegment();
             tanksService.addTank();
-            plan.segments[2].tank = tanksService.tankData[1];
+            depthService.segments[2].tank = tanksService.tankData[1];
             depthService.addSegment();
-            expect(plan.segments[3].tank).toBe(tanksService.tankData[1]);
+            expect(depthService.segments[3].tank).toBe(tanksService.tankData[1]);
         });
 
         it('Remove first segment sets initial depth to 0m', () => {
             depthService.addSegment();
-            let first = plan.segments[0];
-            plan.removeSegment(first);
-            first = plan.segments[0];
-            expect(first.startDepth).toBe(0);
+            const first = depthService.levels[0];
+            depthService.removeSegment(first);
+            const firstSegment = depthService.segments[0];
+            expect(firstSegment.startDepth).toBe(0);
         });
 
         it('Remove middle segment corrects start depths', () => {
-            plan.segments[1].endDepth = 40;
+            depthService.segments[1].endDepth = 40;
             depthService.addSegment();
-            let middle = plan.segments[1];
-            plan.removeSegment(middle);
-            middle = plan.segments[1];
+            const middleSegment = depthService.levels[1];
+            depthService.removeSegment(middleSegment);
+            const middle = depthService.segments[1];
             expect(middle.startDepth).toBe(30);
         });
     });
@@ -161,8 +154,7 @@ describe('Depths service', () => {
             (dive: DiveResults, tanksService: TanksService, optionsService: OptionsService) => {
                 const units = new UnitConversion();
                 units.imperialUnits = true; // before the depths service was even created
-                const plan = new Plan(); // to prevent reuse of plans
-                const sut = new DepthsService(units, tanksService, plan, dive, optionsService);
+                const sut = new DepthsService(units, tanksService, dive, optionsService);
                 expect(sut.plannedDepth).toBeCloseTo(100, 6);
             }));
     });

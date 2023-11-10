@@ -11,7 +11,7 @@ import {
     ConsumptionRequestDto, ConsumptionResultDto,
     DiveInfoResultDto, ProfileRequestDto, ProfileResultDto
 } from './serialization.model';
-import { DtoSerialization } from '../shared/dtoSerialization';
+import { DtoSerialization } from './dtoSerialization';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
@@ -31,31 +31,32 @@ import { DiveResults } from './diveresults';
 describe('PlannerService', () => {
     let planner: PlannerService;
     let tanksService: TanksService;
-    let plan: Plan;
+    let plan: DepthsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
-            providers: [WorkersFactoryCommon,
+            providers: [
+                WorkersFactoryCommon,
                 PlannerService, UnitConversion,
-                TanksService, ViewSwitchService,
-                OptionsService, Plan, SettingsNormalizationService,
-                DepthsService, DelayedScheduleService, WayPointsService,
+                TanksService, ViewSwitchService, Plan,
+                OptionsService, SettingsNormalizationService,
+                DelayedScheduleService, WayPointsService,
                 SubViewStorage, SubViewStorage, ViewStates,
-                Preferences, PreferencesStore, DiveResults
+                Preferences, PreferencesStore, DiveResults,
+                DepthsService
             ],
             imports: []
         }).compileComponents();
 
         planner = TestBed.inject(PlannerService);
         tanksService = TestBed.inject(TanksService);
-        TestBedExtensions.initPlan();
-        plan = TestBed.inject(Plan);
         const options = TestBed.inject(OptionsService);
+        plan = TestBed.inject(DepthsService);
         OptionExtensions.applySimpleSpeeds(options.getOptions());
         options.problemSolvingDuration = 2;
         options.safetyStop = SafetyStop.always;
-        plan.assignDepth(30, tanksService.firstTank.tank, options.getOptions());
+        plan.assignDepth(30);
         planner.calculate();
     });
 
@@ -133,7 +134,7 @@ describe('PlannerService', () => {
     describe('Shows errors', () => {
         it('60m for 50 minutes maximum depth exceeded', inject([OptionsService, DiveResults],
             (options: OptionsService, dive: DiveResults) => {
-                plan.assignDepth(60, tanksService.firstTank.tank, options.getOptions());
+                plan.assignDepth(60);
                 planner.calculate();
                 const hasEvents = dive.events.length > 0;
                 expect(hasEvents).toBeTruthy();

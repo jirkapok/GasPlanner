@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { DiveResults } from './diveresults';
-import { Plan } from '../shared/plan.service';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
@@ -18,6 +17,7 @@ import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
 import { TanksService } from './tanks.service';
 import { OptionsService } from './options.service';
+import {DepthsService} from './depths.service';
 
 @Injectable()
 export class PlannerService extends Streamed {
@@ -35,7 +35,7 @@ export class PlannerService extends Streamed {
 
     constructor(private workerFactory: WorkersFactoryCommon,
         private tanks: TanksService,
-        private plan: Plan,
+        private depths: DepthsService,
         private dive: DiveResults,
         private optionsService: OptionsService,
         private waypoints: WayPointsService) {
@@ -77,7 +77,7 @@ export class PlannerService extends Streamed {
 
         const profileRequest = {
             tanks: DtoSerialization.fromTanks(this.serializableTanks),
-            plan: DtoSerialization.fromSegments(this.plan.segments),
+            plan: DtoSerialization.fromSegments(this.depths.segments),
             options: DtoSerialization.fromOptions(this.optionsService.getOptions()),
             eventOptions: this.createEventOptions()
         };
@@ -115,7 +115,7 @@ export class PlannerService extends Streamed {
     }
 
     private continueCalculation(result: ProfileResultDto): void {
-        const serializedPlan = DtoSerialization.fromSegments(this.plan.segments);
+        const serializedPlan = DtoSerialization.fromSegments(this.depths.segments);
         const tankData = this.tanks.tankData;
         const serializedTanks = DtoSerialization.fromTanks(this.serializableTanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
@@ -170,8 +170,8 @@ export class PlannerService extends Streamed {
         this.dive.noDecoTime = diveInfo.noDeco;
         this.dive.otu = diveInfo.otu;
         this.dive.cns = diveInfo.cns;
-        this.dive.planDuration = this.plan.duration;
-        this.dive.notEnoughTime = this.plan.notEnoughTime;
+        this.dive.planDuration = this.depths.planDuration;
+        this.dive.notEnoughTime = this.depths.notEnoughTime;
         this.dive.highestDensity = DtoSerialization.toDensity(diveInfo.density);
         this.dive.diveInfoCalculated = true;
         this.calculatingDiveInfo = false;
@@ -182,11 +182,11 @@ export class PlannerService extends Streamed {
         this.dive.maxTime = result.maxTime;
         this.dive.timeToSurface = result.timeToSurface;
 
-        this.dive.emergencyAscentStart = this.plan.startAscentTime;
+        this.dive.emergencyAscentStart = this.depths.startAscentTime;
         this.dive.turnPressure = this.tanks.calculateTurnPressure();
-        this.dive.turnTime = Precision.floor(this.plan.duration / 2);
+        this.dive.turnTime = Precision.floor(this.depths.planDuration / 2);
         // this needs to be moved to each gas or do we have other option?
-        this.dive.needsReturn = this.plan.needsReturn && this.tanks.singleTank;
+        this.dive.needsReturn = this.depths.needsReturn && this.tanks.singleTank;
         this.dive.notEnoughGas = !this.tanks.enoughGas;
 
         // TODO still there is an option, that some calculation is still running.

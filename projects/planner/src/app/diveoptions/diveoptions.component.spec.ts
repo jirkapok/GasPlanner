@@ -19,6 +19,7 @@ import { Preferences } from '../shared/preferences';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { DiveResults } from '../shared/diveresults';
 import {DiveSchedules} from '../shared/dive.schedules';
+import {DepthsService} from '../shared/depths.service';
 
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
@@ -30,7 +31,7 @@ describe('Dive options component', () => {
             imports: [ReactiveFormsModule],
             providers: [WorkersFactoryCommon, DecimalPipe,
                 OptionsService, InputControls, DiveSchedules,
-                ValidatorGroups, PlannerService,
+                ValidatorGroups, PlannerService, DepthsService,
                 DelayedScheduleService, UnitConversion,
                 TanksService, Plan, ViewSwitchService,
                 WayPointsService, ViewStates, SubViewStorage,

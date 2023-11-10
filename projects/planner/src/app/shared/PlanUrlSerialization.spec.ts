@@ -10,6 +10,7 @@ import { UnitConversion } from './UnitConversion';
 import { ViewStates } from './viewStates';
 import { ViewSwitchService } from './viewSwitchService';
 import { WayPointsService } from './waypoints.service';
+import {DepthsService} from "./depths.service";
 
 interface TestSut {
     options: OptionsService;
@@ -28,12 +29,13 @@ describe('Url Serialization', () => {
     const createSut = (imperial = false): TestSut => {
         const units = new UnitConversion();
         const options = new OptionsService(units);
-        const plan = new Plan();
+        const plan = new Plan(); // TODO replace plan
         units.imperialUnits = imperial;
         const tanksService = new TanksService(units);
         const wayPoints = new WayPointsService(units);
         const dive = new DiveResults();
-        const planner = new PlannerService(irrelevantFactory, tanksService, plan, dive, options, wayPoints);
+        const depths = new DepthsService(units, tanksService, dive, options);
+        const planner = new PlannerService(irrelevantFactory, tanksService, depths, dive, options, wayPoints);
         plan.setSimple(30, 12, tanksService.firstTank.tank, options.getOptions());
         const viewSwitch = new ViewSwitchService(plan, options, tanksService);
         const preferencesFactory = new Preferences(viewSwitch, units, tanksService, plan, options, new ViewStates());

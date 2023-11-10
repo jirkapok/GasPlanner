@@ -27,6 +27,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { DiveResults } from '../shared/diveresults';
 import {DiveSchedules} from '../shared/dive.schedules';
+import {DepthsService} from "../shared/depths.service";
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -93,7 +94,7 @@ describe('Tanks Complex component', () => {
             ],
             providers: [
                 WorkersFactoryCommon, UnitConversion,
-                PlannerService, InputControls,
+                PlannerService, InputControls, DepthsService,
                 ValidatorGroups, DelayedScheduleService,
                 DecimalPipe, TanksService, ViewSwitchService,
                 OptionsService, Plan, WayPointsService,

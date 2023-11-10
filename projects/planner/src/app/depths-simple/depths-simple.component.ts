@@ -64,7 +64,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         // TODO selected may change, values arent updated, fix the eventing
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
-        this.schedules.selected.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
+        this.depths.changed$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.depths.updateLevels();
                 this.reloadSimple();

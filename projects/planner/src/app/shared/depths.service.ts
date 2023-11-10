@@ -17,34 +17,38 @@ export class DepthsService extends Streamed {
     private _levels: Level[] = [];
     private toxicity: GasToxicity;
     private onChanged = new Subject<void>();
+    private plan = new Plan();
 
     constructor(
         private units: UnitConversion,
         private tanksService: TanksService,
-        private plan: Plan,
         private dive: DiveResults,
         private optionsService: OptionsService) {
         super();
 
         this.changed$ = this.onChanged.asObservable();
         this.toxicity = this.optionsService.toxicity;
-        const firstTank = this.firstTank;
-        const options = this.optionsService.getOptions();
         this.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.updateLevels());
+
         // this enforces to initialize the levels, needs to be called after subscribe to plan
         if(this.plan.maxDepth === 0) {
             let requiredDepth = this.units.defaults.stopsDistance * 10; // 30 m or 100 ft
             requiredDepth = this.units.toMeters(requiredDepth);
-            this.plan.setSimple(requiredDepth, 12, firstTank, options);
+            const options = this.optionsService.getOptions();
+            this.plan.setSimple(requiredDepth, 12,  this.firstTank, options);
         }
 
         this.tanksService.tankRemoved.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((removed: Tank) => this.plan.resetSegments(removed, firstTank));
+            .subscribe((removed: Tank) => this.plan.resetSegments(removed, this.firstTank));
     }
 
     public get levels(): Level[] {
         return this._levels;
+    }
+
+    public get segments(): Segment[] {
+        return this.plan.segments;
     }
 
     public get bestNitroxMix(): string {
@@ -53,12 +57,31 @@ export class DepthsService extends Streamed {
     }
 
     public get plannedDepth(): number {
-        const depth = this.plan.maxDepth;
-        return this.units.fromMeters(depth);
+        return this.units.fromMeters(this.plannedDepthMeters);
+    }
+
+    public get plannedDepthMeters(): number {
+        return this.plan.maxDepth;
     }
 
     public get planDuration(): number {
         return this.plan.duration;
+    }
+
+    public get notEnoughTime(): boolean {
+        return this.plan.notEnoughTime;
+    }
+
+    public get startAscentTime(): number {
+        return this.plan.startAscentTime;
+    }
+
+    public get needsReturn(): boolean {
+        return this.plan.needsReturn;
+    }
+
+    public get startAscentIndex(): number {
+        return this.plan.startAscentIndex;
     }
 
     private get firstTank(): Tank {
@@ -140,6 +163,10 @@ export class DepthsService extends Streamed {
     public assignDepth(newDepth: number): void {
         const options = this.optionsService.getOptions();
         this.plan.assignDepth(newDepth, this.firstTank, options);
+    }
+
+    public loadFrom(other: Segment[]): void {
+        this.plan.loadFrom(other);
     }
 
     private addSegmentToPlan(): void {

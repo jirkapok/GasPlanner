@@ -19,6 +19,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { WayPointsService } from '../shared/waypoints.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveResults } from '../shared/diveresults';
+import {DepthsService} from "../shared/depths.service";
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
@@ -44,7 +45,7 @@ describe('App settings component', () => {
                 PlannerService, WorkersFactoryCommon,
                 TanksService, ViewStates, SubViewStorage,
                 PreferencesStore, Preferences, ViewSwitchService,
-                WayPointsService, DiveResults
+                WayPointsService, DiveResults, DepthsService
             ]
         })
             .compileComponents();

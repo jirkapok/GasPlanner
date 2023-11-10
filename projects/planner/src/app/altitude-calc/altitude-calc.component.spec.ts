@@ -17,6 +17,7 @@ import { WayPointsService } from '../shared/waypoints.service';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveResults } from '../shared/diveresults';
+import {DepthsService} from '../shared/depths.service';
 
 describe('AltitudeCalcComponent', () => {
     let component: AltitudeCalcComponent;
@@ -30,7 +31,8 @@ describe('AltitudeCalcComponent', () => {
                 DecimalPipe, SubViewStorage, ViewStates,
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
                 TanksService, Plan, OptionsService, WayPointsService,
-                Preferences, ViewSwitchService, DiveResults
+                Preferences, ViewSwitchService, DiveResults,
+                DepthsService
             ]
         });
         fixture = TestBed.createComponent(AltitudeCalcComponent);

@@ -1,7 +1,6 @@
 import { Tank } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import { OptionsService } from './options.service';
-import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 import { Injectable } from '@angular/core';
 import {DiveResults} from './diveresults';
@@ -12,7 +11,6 @@ export class DiveSchedule {
     public surfaceInterval?: number;
     public _id = 0;
     private readonly _diveResult = new DiveResults();
-    private readonly _plan: Plan = new Plan();
     private readonly _optionsService: OptionsService;
     private readonly _tanks: TanksService;
     private readonly _depths: DepthsService;
@@ -21,16 +19,7 @@ export class DiveSchedule {
         this.assignIndex(index);
         this._tanks = new TanksService(units);
         this._optionsService = new OptionsService(this.units);
-        this._depths = new DepthsService(this.units, this.tanksService, this.plan, this._diveResult, this._optionsService);
-
-        // this enforces to initialize the levels, needs to be called after subscribe to plan
-        if (this.plan.maxDepth === 0) {
-            let requiredDepth = this.units.defaults.stopsDistance * 10; // 30 m or 100 ft
-            requiredDepth = this.units.toMeters(requiredDepth);
-            const firstTank = this.firstTank;
-            const options = this.optionsService.getOptions();
-            this.plan.setSimple(requiredDepth, 12, firstTank, options);
-        }
+        this._depths = new DepthsService(this.units, this.tanksService, this._diveResult, this._optionsService);
     }
 
     public get id(): number {
@@ -39,11 +28,6 @@ export class DiveSchedule {
 
     public get tanksService(): TanksService {
         return this._tanks;
-    }
-
-    // TODO wrap Plan completely to DepthsService, so it is hidden
-    public get plan(): Plan {
-        return this._plan;
     }
 
     public get diveResult(): DiveResults {
@@ -59,9 +43,9 @@ export class DiveSchedule {
     }
 
     public get title(): string {
-        const depth = this.units.fromMeters(this.plan.maxDepth);
+        const depth = this.depths.plannedDepth;
         const depthUnits = this.units.length;
-        const duration = this.plan.duration;
+        const duration = this.depths.planDuration;
         return `${this.id}. ${duration} min/${depth} ${depthUnits}`;
     }
 

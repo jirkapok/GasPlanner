@@ -21,6 +21,7 @@ import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { DiveResults } from '../shared/diveresults';
+import {DepthsService} from '../shared/depths.service';
 
 export class NitroxPage {
     constructor(private fixture: ComponentFixture<NitroxComponent>) { }
@@ -48,7 +49,8 @@ describe('Nitrox component', () => {
                 NitroxCalculatorService, ValidatorGroups,
                 OptionsService, ViewStates, PreferencesStore,
                 TanksService, Plan, WayPointsService, Preferences,
-                ViewSwitchService, SubViewStorage, DiveResults
+                ViewSwitchService, SubViewStorage, DiveResults,
+                DepthsService
             ],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         })

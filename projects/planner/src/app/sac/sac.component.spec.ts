@@ -22,6 +22,7 @@ import { PlannerService } from '../shared/planner.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveResults } from '../shared/diveresults';
+import {DepthsService} from '../shared/depths.service';
 
 class SacPage {
     constructor(private fixture: ComponentFixture<SacComponent>) { }
@@ -49,7 +50,7 @@ describe('Sac component', () => {
             declarations: [SacComponent, TankSizeComponent],
             providers: [
                 WorkersFactoryCommon, UnitConversion,
-                OptionsService, DecimalPipe,
+                OptionsService, DecimalPipe, DepthsService,
                 ValidatorGroups, InputControls, SacCalculatorService,
                 TanksService, Plan, SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, PlannerService,

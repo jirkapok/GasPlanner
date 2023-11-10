@@ -39,8 +39,7 @@ describe('Managed Schedules', () => {
         const optionsService = dive.optionsService;
         optionsService.maxEND = expectedMaxEnd;
 
-        const plan = dive.plan;
-        plan.assignDepth(expectedMaxDepth, tankService.firstTank.tank, optionsService.getOptions());
+        dive.depths.assignDepth(expectedMaxDepth);
     };
 
     const saveDiveAsDefault = (dive: DiveSchedule) => {
@@ -69,7 +68,7 @@ describe('Managed Schedules', () => {
         const tanks = dive.tanksService.tanks;
         expect(tanks.length).toEqual(2);
         expect(tanks[1].size).toEqual(expectedSecondTankSize);
-        const maxDepth = dive.plan.maxDepth;
+        const maxDepth = dive.depths.plannedDepthMeters;
         expect(maxDepth).toEqual(expectedMaxDepth);
         const options = dive.optionsService;
         expect(options.maxEND).toEqual(expectedMaxEnd);

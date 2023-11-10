@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { SwimAction, WayPoint } from './models';
-import { Plan } from './plan.service';
 import { DiveResults } from './diveresults';
+import {DepthsService} from './depths.service';
 
 @Injectable()
 export class StopsFilter {
     public _stopsOnly = false;
 
-    constructor(private dive: DiveResults, private plan: Plan) { }
+    constructor(private dive: DiveResults, private depths: DepthsService) { }
 
     public get stopsOnly(): boolean {
         return this._stopsOnly;
@@ -29,7 +29,7 @@ export class StopsFilter {
         }
 
         return allWayPoints.filter((item, index) =>
-            index < this.plan.startAscentIndex ||
+            index < this.depths.startAscentIndex ||
             index === allWayPoints.length - 1 ||
             item.swimAction === SwimAction.hover
         );

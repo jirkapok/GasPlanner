@@ -4,8 +4,8 @@ import { OptionsService } from './options.service';
 import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 import { Injectable } from '@angular/core';
-import {DiveResults} from "./diveresults";
-import {DepthsService} from "./depths.service";
+import {DiveResults} from './diveresults';
+import {DepthsService} from './depths.service';
 
 export class DiveSchedule {
     /** In minutes or undefined in case it is the first dive */
@@ -41,6 +41,7 @@ export class DiveSchedule {
         return this._tanks;
     }
 
+    // TODO wrap Plan completely to DepthsService, so it is hidden
     public get plan(): Plan {
         return this._plan;
     }

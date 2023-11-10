@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GasToxicity } from './gasToxicity.service';
 import { Level, TankBound } from './models';
-import { Plan } from '../shared/plan.service';
+import { Plan } from './plan.service';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { Streamed } from './streamed';
@@ -12,6 +12,7 @@ import { DiveResults } from './diveresults';
 
 @Injectable()
 export class DepthsService extends Streamed {
+    // TODO rebind changed$ to delayedCalc.schedule()
     public changed$: Observable<void>;
     private _levels: Level[] = [];
     private toxicity: GasToxicity;

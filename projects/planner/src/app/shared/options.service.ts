@@ -13,7 +13,7 @@ export class OptionsService {
     private static readonly minimumSpeed = 0.1;
     public readonly safetyOffName = 'Never';
     public readonly safetyOnName = 'Always';
-    public reloaded$: Observable<unknown>;
+    public reloaded$: Observable<void>;
     private standardGradients = new StandardGradientsService();
     private options = new Options();
     private onReloaded = new Subject<void>();

@@ -6,6 +6,7 @@ Following list of features and improvements ordered by priority is under develop
 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
+* TTS is calculated from last used defined point, not from the deepest point
 
 ## Improvements / Features
 
@@ -17,6 +18,7 @@ Following list of features and improvements ordered by priority is under develop
 * Gas blender features
   * Redundancies calculator - when filling one tank from second. What is the target pressure in both.
   * Gas blender calculator
+    * Add use case, if we need release some pressure from the tanks, because otherwise we are unable mix
 * UI Tweaks
   * Read only fields should be distinguish able
   * Profile:

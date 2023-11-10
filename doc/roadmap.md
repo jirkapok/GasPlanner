@@ -10,6 +10,7 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Add option to define repetitive dives
+* Add documentation for gas properties and redundancies calculator
 * Allow user to compare multiple plans side by side
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
@@ -23,6 +24,7 @@ Following list of features and improvements ordered by priority is under develop
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
   * Add option to ignore some warnings
+  * Add warnings to gas properties calc for properties exceeding recommended maximum
 * Add undo/redo to all pages
 * Add calculation trainings
 * Help

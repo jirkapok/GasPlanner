@@ -33,8 +33,8 @@ Example: Maxim deco ppO2 is 1.6, for bottom gas is maximum ppO2 only 1.4. For Ea
 [Trimix or Helitrox](https://en.wikipedia.org/wiki/Trimix_(breathing_gas)) are gas mixtures, which add Helium as third significant component into the mixture. So the gas typically consist of oxygen, helium and nitrogen. These gases are usually expensive because of helium price. It is the reason why usually deeper dives are done nowadays using closed circuit (CCR). Our planner currently supports planning only for open circuit (OC). We distinguish all the gases by amount of oxygen.
 
 | Category  | Oxygen content | Example      |
-| ---       | ---            | ---          |
-| Hypoxic   | < 18 %         | Trimix 18/45 |
+| ---       | ---            |--------------|
+| Hypoxic   | < 18 %         | Trimix 15/55 |
 | Normooxic | 18 - 21 %      | Air          |
 | Hyperoxic | > 21 %         | EAN50        |
 

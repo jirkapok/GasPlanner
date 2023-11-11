@@ -13,6 +13,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import {DiveSchedules} from '../shared/dive.schedules';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 @Component({
     selector: 'app-diveoptions',
@@ -44,7 +45,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         private viewSwitch: ViewSwitchService,
         private delayedCalc: DelayedScheduleService,
-        private schedules: DiveSchedules) {
+        private schedules: DiveSchedules,
+        private dispatcher: ReloadDispatcher) {
         super();
     }
 
@@ -123,7 +125,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             ascentSpeed50perc: [Precision.round(this.options.ascentSpeed50perc, 1), this.validators.speed],
         });
 
-        this.options.reloaded$.pipe(takeUntil(this.unsubscribe$))
+        this.dispatcher.optionsReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadForm());
     }
 

@@ -10,6 +10,7 @@ import { ViewStates } from './viewStates';
 import { ViewSwitchService } from './viewSwitchService';
 import { WayPointsService } from './waypoints.service';
 import {DepthsService} from './depths.service';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 interface TestSut {
     options: OptionsService;
@@ -27,7 +28,8 @@ describe('Url Serialization', () => {
     // because we need custom instances to compare
     const createSut = (imperial = false): TestSut => {
         const units = new UnitConversion();
-        const options = new OptionsService(units);
+        const dispatcher = new ReloadDispatcher();
+        const options = new OptionsService(units, dispatcher);
         units.imperialUnits = imperial;
         const tanksService = new TanksService(units);
         const wayPoints = new WayPointsService(units);

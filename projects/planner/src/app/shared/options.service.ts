@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
 import { DefaultOptions, Diver, OptionDefaults, Options, SafetyStop, Salinity } from 'scuba-physics';
 import { GasToxicity } from './gasToxicity.service';
 import { StandardGradientsService } from './standard-gradients.service';
 import { UnitConversion } from './UnitConversion';
 import { DiverOptions } from './models';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 /** All options stored in metric units */
 @Injectable()
@@ -13,20 +13,17 @@ export class OptionsService {
     private static readonly minimumSpeed = 0.1;
     public readonly safetyOffName = 'Never';
     public readonly safetyOnName = 'Always';
-    public reloaded$: Observable<void>;
     private standardGradients = new StandardGradientsService();
     private options = new Options();
-    private onReloaded = new Subject<void>();
     private _diver: Diver = new Diver();
     private _toxicity = new GasToxicity(this.options);
 
-    constructor(private units: UnitConversion) {
+    constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher) {
         this.options.salinity = Salinity.fresh;
         this.options.safetyStop = SafetyStop.auto;
         // units rounded default values aren't provided,
         // because there is no real use case where this service
         // is created with imperial units by default
-        this.reloaded$ = this.onReloaded.asObservable();
     }
 
     public get toxicity(): GasToxicity {
@@ -245,7 +242,7 @@ export class OptionsService {
         this.options.loadFrom(newOptions);
         const newDiver = new DiverOptions(newOptions, diver);
         this.applyDiver(newDiver);
-        this.onReloaded.next();
+        this.dispatcher.sendOptionsReloaded();
     }
 
     public applyDiver(diver: DiverOptions): void {

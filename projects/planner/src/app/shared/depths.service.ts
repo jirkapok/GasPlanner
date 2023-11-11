@@ -9,6 +9,7 @@ import {Observable, Subject, takeUntil} from 'rxjs';
 import { OptionsService } from './options.service';
 import { Tank, Segment, StandardGases, Precision } from 'scuba-physics';
 import { DiveResults } from './diveresults';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 @Injectable()
 export class DepthsService extends Streamed {
@@ -23,13 +24,12 @@ export class DepthsService extends Streamed {
         private units: UnitConversion,
         private tanksService: TanksService,
         private dive: DiveResults,
-        private optionsService: OptionsService) {
+        private optionsService: OptionsService,
+        private dispatcher: ReloadDispatcher) {
         super();
 
         this.changed$ = this.onChanged.asObservable();
         this.toxicity = this.optionsService.toxicity;
-        this.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.updateLevels());
 
         // this enforces to initialize the levels, needs to be called after subscribe to plan
         if(this.plan.maxDepth === 0) {
@@ -40,7 +40,7 @@ export class DepthsService extends Streamed {
         }
 
         this.tanksService.tankRemoved.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((removed: Tank) => this.plan.resetSegments(removed, this.firstTank));
+            .subscribe((removed: Tank) => this.tankRemoved(removed));
     }
 
     public get levels(): Level[] {
@@ -129,6 +129,7 @@ export class DepthsService extends Streamed {
 
     public assignDuration(newDuration: number): void {
         this.plan.assignDuration(newDuration, this.firstTank, this.optionsService.getOptions());
+        this.depthsReloaded();
     }
 
     public applyMaxDepth(): void {
@@ -168,14 +169,17 @@ export class DepthsService extends Streamed {
     public assignDepth(newDepth: number): void {
         const options = this.optionsService.getOptions();
         this.plan.assignDepth(newDepth, this.firstTank, options);
+        this.depthsReloaded();
     }
 
     public loadFrom(other: Segment[]): void {
         this.plan.loadFrom(other);
+        this.depthsReloaded();
     }
 
     public setSimple(): void {
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.optionsService.getOptions());
+        this.depthsReloaded();
     }
 
     public fixDepths(): void {
@@ -191,5 +195,15 @@ export class DepthsService extends Streamed {
 
     private apply(): void {
         this.onChanged.next();
+    }
+
+    private tankRemoved(removed: Tank): void {
+        this.plan.resetSegments(removed, this.firstTank);
+        this.depthsReloaded();
+    }
+
+    private depthsReloaded(): void {
+        this.updateLevels();
+        this.dispatcher.sendDepthsReloaded();
     }
 }

@@ -9,13 +9,9 @@ export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     // TODO move strategy to Consumption algorithm selection
     public strategy: Strategies = Strategies.ALL;
-    /** Event fired only in case of segments rebuild. Not fired when adding or removing. */
-    public reloaded$: Observable<void>;
     private _segments: Segments = new Segments();
-    private onReloaded = new Subject<void>();
 
     constructor() {
-        this.reloaded$ = this.onReloaded.asObservable();
     }
 
     public get length(): number {
@@ -66,18 +62,15 @@ export class Plan {
 
     public setSimple(depth: number, duration: number, tank: Tank, options: Options): void {
         this.reset(depth, duration, tank, options);
-        this.onReloaded.next();
     }
 
 
     public assignDepth(newDepth: number, tank: Tank, options: Options): void {
         this._segments = SegmentsFactory.createForPlan(newDepth, this.duration, tank, options);
-        this.onReloaded.next();
     }
 
     public assignDuration(newDuration: number, tank: Tank, options: Options): void {
         this._segments = SegmentsFactory.createForPlan(this.maxDepth, newDuration, tank, options);
-        this.onReloaded.next();
     }
 
     public addSegment(tank: Tank): void {
@@ -103,7 +96,6 @@ export class Plan {
         // this.strategy = other.strategy;
         // cant use copy, since deserialized objects wouldn't have one.
         this._segments = Segments.fromCollection(other);
-        this.onReloaded.next();
     }
 
     public resetSegments(removed: Tank, replacement: Tank): void {
@@ -112,7 +104,6 @@ export class Plan {
                 segment.tank = replacement;
             }
         });
-        this.onReloaded.next();
     }
 
     private reset(depth: number, duration: number, tank: Tank, options: Options): void {

@@ -11,7 +11,6 @@ import {DiveResults } from '../shared/diveresults';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { Plan } from '../shared/plan.service';
 import { TanksService } from '../shared/tanks.service';
 import { Precision } from 'scuba-physics';
 
@@ -41,9 +40,8 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         public dive: DiveResults,
         private tanksService: TanksService,
-        public depths: DepthsService,
         public units: UnitConversion,
-        private plan: Plan) {
+        public depths: DepthsService) {
         super();
         // data are already available, it is ok to generate the levels.
         this.depths.updateLevels();
@@ -54,7 +52,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     }
 
     public get minimumSegments(): boolean {
-        return this.plan.minimumSegments;
+        return this.depths.minimumSegments;
     }
 
     // only to get their label, formatted in the tankLabel
@@ -103,7 +101,8 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
 
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
-        this.plan.reloaded$.pipe(takeUntil(this.unsubscribe$))
+        // TODO replace changed$ by dispatcher reloaded
+        this.depths.changed$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.depths.updateLevels();
                 this.reloadComplex();

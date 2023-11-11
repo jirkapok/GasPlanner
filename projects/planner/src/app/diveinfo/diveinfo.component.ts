@@ -13,7 +13,6 @@ import { Streamed } from '../shared/streamed';
 import { DepthsService } from '../shared/depths.service';
 import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import { Plan } from '../shared/plan.service';
 import { OptionsService } from '../shared/options.service';
 import { formatNumber } from '@angular/common';
 
@@ -35,7 +34,7 @@ export class DiveInfoComponent extends Streamed {
         private options: OptionsService,
         private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
-        private plan: Plan) {
+        private depths: DepthsService) {
         super();
         this.toxicity = this.options.toxicity;
 
@@ -64,7 +63,7 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get needsReturn(): boolean {
-        return this.plan.needsReturn;
+        return this.depths.needsReturn;
     }
 
     public get noDeco(): number {

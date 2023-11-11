@@ -11,7 +11,6 @@ import { Gradients } from '../shared/standard-gradients.service';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { Plan } from '../shared/plan.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import {DiveSchedules} from '../shared/dive.schedules';
 

@@ -84,6 +84,10 @@ export class DepthsService extends Streamed {
         return this.plan.startAscentIndex;
     }
 
+    public get minimumSegments(): boolean {
+        return this.plan.minimumSegments;
+    }
+
     private get firstTank(): Tank {
         return this.tanksService.firstTank.tank;
     }

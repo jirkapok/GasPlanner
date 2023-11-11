@@ -10,7 +10,6 @@ import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { Streamed } from '../shared/streamed';
-import { Plan } from '../shared/plan.service';
 import { ResamplingService } from '../shared/ResamplingService';
 import {DiveSchedules} from '../shared/dive.schedules';
 

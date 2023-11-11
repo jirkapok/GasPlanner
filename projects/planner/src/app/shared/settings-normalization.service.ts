@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Precision } from 'scuba-physics';
 import { OptionsService } from './options.service';
-import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 import { ViewStates } from './viewStates';
-import {DepthsService} from "./depths.service";
+import {DepthsService} from './depths.service';
 
 @Injectable()
 export class SettingsNormalizationService {

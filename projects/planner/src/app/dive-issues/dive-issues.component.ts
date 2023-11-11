@@ -5,8 +5,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Event, EventType, OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
-import { Plan } from '../shared/plan.service';
 import _ from 'lodash';
+import {DepthsService} from '../shared/depths.service';
 
 @Component({
     selector: 'app-dive-issues',
@@ -21,7 +21,7 @@ export class DiveIssuesComponent {
 
     constructor(public dive: DiveResults,
         public units: UnitConversion,
-        private plan: Plan) {
+        private depths: DepthsService) {
     }
 
     public get events(): Event[] {
@@ -30,7 +30,7 @@ export class DiveIssuesComponent {
     }
 
     public get minimumDuration(): number {
-        return this.plan.duration + 1;
+        return this.depths.planDuration + 1;
     }
 
     public get noDeco(): number {

@@ -4,7 +4,6 @@ import { Diver, Options } from 'scuba-physics';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { DepthsService } from './depths.service';
 import { OptionsService } from './options.service';
-import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { SettingsNormalizationService } from './settings-normalization.service';
@@ -37,7 +36,7 @@ describe('SettingsNormalizationService', () => {
                 WorkersFactoryCommon, UnitConversion,
                 PlannerService, RouterTestingModule, OptionsService,
                 SettingsNormalizationService, TanksService,
-                Plan, DepthsService, DelayedScheduleService,
+                DepthsService, DelayedScheduleService,
                 SubViewStorage, ViewStates, ViewSwitchService,
                 WayPointsService, DiveResults,
                 PreferencesStore, Preferences

@@ -173,6 +173,10 @@ export class DepthsService extends Streamed {
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.optionsService.getOptions());
     }
 
+    public fixDepths(): void {
+        this.plan.fixDepths();
+    }
+
     private addSegmentToPlan(): void {
         const segments = this.plan.segments;
         const lastUsedTank = segments[segments.length - 1].tank;

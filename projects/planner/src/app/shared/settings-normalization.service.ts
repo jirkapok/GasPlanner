@@ -5,6 +5,7 @@ import { Plan } from './plan.service';
 import { TanksService } from './tanks.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 import { ViewStates } from './viewStates';
+import {DepthsService} from "./depths.service";
 
 @Injectable()
 export class SettingsNormalizationService {
@@ -12,7 +13,7 @@ export class SettingsNormalizationService {
         private options: OptionsService,
         private units: UnitConversion,
         private tanksService: TanksService,
-        private plan: Plan,
+        private depths: DepthsService,
         private views: ViewStates) { }
 
     private get ranges(): RangeConstants {
@@ -76,7 +77,7 @@ export class SettingsNormalizationService {
     }
 
     private normalizeSegments(): void {
-        const segments = this.plan.segments;
+        const segments = this.depths.segments;
         // rounding to imperial units rounds 30 m to 98 ft.
         segments.forEach(s => {
             s.startDepth = this.fitLengthToRange(s.startDepth, this.ranges.depth);
@@ -84,7 +85,7 @@ export class SettingsNormalizationService {
         });
 
         // fixes start depth back to surface after moved to UI range.
-        this.plan.fixDepths();
+        this.depths.fixDepths();
     }
 
     private fitLengthToRange(meters: number, range: [number, number]): number {

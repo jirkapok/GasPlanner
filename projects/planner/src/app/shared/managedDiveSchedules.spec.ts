@@ -5,7 +5,6 @@ import {TanksService} from './tanks.service';
 import {PreferencesStore} from './preferencesStore';
 import {PlannerService} from './planner.service';
 import {WorkersFactoryCommon} from './serial.workers.factory';
-import {Plan} from './plan.service';
 import {DiveResults} from './diveresults';
 import {OptionsService} from './options.service';
 import {WayPointsService} from './waypoints.service';
@@ -49,9 +48,6 @@ describe('Managed Schedules', () => {
     };
 
     const saveFirstDiveAsDefault = () => {
-        // TODO replace initialization by saving from managed schedule first dive
-        TestBedExtensions.initPlan();
-
         const tankService = TestBed.inject(TanksService);
         tankService.addTank();
         tankService.tankData[1].size = 24;
@@ -59,8 +55,8 @@ describe('Managed Schedules', () => {
         const optionsService = TestBed.inject(OptionsService);
         optionsService.maxEND = 27;
 
-        const plan = TestBed.inject(Plan);
-        plan.assignDepth(25, tankService.firstTank.tank, optionsService.getOptions());
+        const dephts = TestBed.inject(DepthsService);
+        dephts.assignDepth(25);
 
         preferencesStore.saveDefault();
     };
@@ -81,10 +77,10 @@ describe('Managed Schedules', () => {
                 ManagedDiveSchedules, UnitConversion,
                 TanksService, DiveSchedules, PreferencesStore,
                 PlannerService, WorkersFactoryCommon,
-                Plan, DiveResults, OptionsService,
+                DiveResults, OptionsService, ReloadDispatcher,
                 WayPointsService, Preferences, ViewSwitchService,
                 ViewStates, DepthsService, DelayedScheduleService,
-                SubViewStorage, ReloadDispatcher
+                SubViewStorage,
             ],
         }).compileComponents();
 

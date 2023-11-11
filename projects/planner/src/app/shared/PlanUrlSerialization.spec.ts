@@ -1,6 +1,5 @@
 import { DiveResults } from './diveresults';
 import { OptionsService } from './options.service';
-import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
 import { Preferences } from './preferences';
@@ -10,11 +9,11 @@ import { UnitConversion } from './UnitConversion';
 import { ViewStates } from './viewStates';
 import { ViewSwitchService } from './viewSwitchService';
 import { WayPointsService } from './waypoints.service';
-import {DepthsService} from "./depths.service";
+import {DepthsService} from './depths.service';
 
 interface TestSut {
     options: OptionsService;
-    plan: Plan;
+    depths: DepthsService;
     tanksService: TanksService;
     planner: PlannerService;
     viewSwitch: ViewSwitchService;
@@ -29,22 +28,21 @@ describe('Url Serialization', () => {
     const createSut = (imperial = false): TestSut => {
         const units = new UnitConversion();
         const options = new OptionsService(units);
-        const plan = new Plan(); // TODO replace plan
         units.imperialUnits = imperial;
         const tanksService = new TanksService(units);
         const wayPoints = new WayPointsService(units);
         const dive = new DiveResults();
         const depths = new DepthsService(units, tanksService, dive, options);
         const planner = new PlannerService(irrelevantFactory, tanksService, depths, dive, options, wayPoints);
-        plan.setSimple(30, 12, tanksService.firstTank.tank, options.getOptions());
+        depths.setSimple();
         const viewSwitch = new ViewSwitchService(depths, options, tanksService);
-        const preferencesFactory = new Preferences(viewSwitch, units, tanksService, plan, options, new ViewStates());
+        const preferencesFactory = new Preferences(viewSwitch, units, tanksService, depths, options, new ViewStates());
         const urlSerialization = new PlanUrlSerialization(planner, viewSwitch,
-            units, tanksService, plan, options, preferencesFactory);
+            units, tanksService, depths, options, preferencesFactory);
 
         return {
             options: options,
-            plan: plan,
+            depths: depths,
             tanksService: tanksService,
             planner: planner,
             viewSwitch: viewSwitch,
@@ -57,7 +55,7 @@ describe('Url Serialization', () => {
         const created = createSut();
         created.viewSwitch.isComplex = true;
         created.tanksService.addTank();
-        created.plan.addSegment(created.tanksService.firstTank.tank);
+        created.depths.addSegment();
         created.planner.calculate();
         return created;
     };
@@ -73,7 +71,7 @@ describe('Url Serialization', () => {
 
     const expectParsedEquals = (current: TestSut): void => {
         const toExpect = {
-            plan: sut.plan.segments,
+            plan: sut.depths.segments,
             tansk: sut.tanksService.tankData,
             diver: sut.options.getDiver(),
             options: sut.options.getOptions(),
@@ -81,7 +79,7 @@ describe('Url Serialization', () => {
         };
 
         const toCompare = {
-            plan: current.plan.segments,
+            plan: current.depths.segments,
             tansk: current.tanksService.tankData,
             diver: current.options.getDiver(),
             options: current.options.getOptions(),
@@ -133,7 +131,7 @@ describe('Url Serialization', () => {
         // since it leads to not loosing precision on tank size on first 3 decimals
         for (let index = 0; index < 22; index++) {
             current.tanksService.addTank();
-            current.plan.addSegment(current.tanksService.firstTank.tank);
+            current.depths.addSegment();
         }
 
         const result = current.urlSerialization.toUrl();

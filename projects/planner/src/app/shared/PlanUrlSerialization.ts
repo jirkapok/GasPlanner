@@ -4,7 +4,6 @@ import {
     Diver, Options, SafetyStop, Salinity, Segment
 } from 'scuba-physics';
 import { OptionsService } from './options.service';
-import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';
 import { Preferences } from './preferences';
@@ -15,6 +14,7 @@ import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
+import {DepthsService} from './depths.service';
 
 class ParseContext {
     private static readonly trueValue = '1';
@@ -75,7 +75,7 @@ export class PlanUrlSerialization {
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
         private tanksService: TanksService,
-        private plan: Plan,
+        private depths: DepthsService,
         private options: OptionsService,
         private preferences: Preferences
     ) { }
@@ -257,7 +257,7 @@ export class PlanUrlSerialization {
 
     public toUrl(): string {
         const tanksParam = PlanUrlSerialization.toTanksParam(this.tanksService.tanks);
-        const depthsParam = PlanUrlSerialization.toDepthsParam(this.plan.segments);
+        const depthsParam = PlanUrlSerialization.toDepthsParam(this.depths.segments);
         const diParam = PlanUrlSerialization.toDiverParam(this.options.getDiver());
         const optionsParam = PlanUrlSerialization.toOptionsParam(this.options.getOptions());
         const appOptions = this.toAppOptions();

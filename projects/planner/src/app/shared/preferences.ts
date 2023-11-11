@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { OptionsService } from './options.service';
-import { Plan } from './plan.service';
 import {
     AppOptionsDto, AppPreferences, AppPreferencesDto,
     AppStates, DiveDto, ITankBound, TankDto
@@ -14,6 +13,7 @@ import { ViewStates } from './viewStates';
 import {DiveSetup} from './models';
 import {DiveSchedule} from './dive.schedules';
 import _ from 'lodash';
+import {DepthsService} from './depths.service';
 
 @Injectable()
 export class Preferences {
@@ -21,7 +21,7 @@ export class Preferences {
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
         private tanksService: TanksService,
-        private plan: Plan,
+        private depths: DepthsService,
         private options: OptionsService,
         private viewStates: ViewStates
     ) { }
@@ -68,7 +68,7 @@ export class Preferences {
             options: DtoSerialization.fromOptions(this.options.getOptions()),
             diver: DtoSerialization.fromDiver(this.options.getDiver()),
             tanks: DtoSerialization.fromTanks(this.tanksService.tanks as ITankBound[]),
-            plan: DtoSerialization.fromSegments(this.plan.segments),
+            plan: DtoSerialization.fromSegments(this.depths.segments),
         };
     }
 
@@ -88,7 +88,7 @@ export class Preferences {
         this.tanksService.loadFrom(setup.tanks);
         Preferences.loadWorkingPressure(loadedDive.tanks, this.tanksService.tanks);
         this.options.loadFrom(setup.options, setup.diver);
-        this.plan.loadFrom(setup.segments);
+        this.depths.loadFrom(setup.segments);
     }
 
     public loadTo(diveSchedule: DiveSchedule, loadedDive: DiveDto): void {

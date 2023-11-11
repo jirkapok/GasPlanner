@@ -1,5 +1,5 @@
 import {DiveSchedule, DiveSchedules} from './dive.schedules';
-import {inject, TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import {UnitConversion} from './UnitConversion';
 import {TanksService} from './tanks.service';
 import {PreferencesStore} from './preferencesStore';
@@ -18,6 +18,7 @@ import {SubViewStorage} from './subViewStorage';
 import {TestBedExtensions} from './TestBedCommon.spec';
 import {ManagedDiveSchedules} from './managedDiveSchedules';
 import Spy = jasmine.Spy;
+import {ReloadDispatcher} from './reloadDispatcher';
 
 // TODO Scheduled dives test cases:
 // * Dives are loaded from saved storage at start
@@ -83,7 +84,7 @@ describe('Managed Schedules', () => {
                 Plan, DiveResults, OptionsService,
                 WayPointsService, Preferences, ViewSwitchService,
                 ViewStates, DepthsService, DelayedScheduleService,
-                SubViewStorage
+                SubViewStorage, ReloadDispatcher
             ],
         }).compileComponents();
 

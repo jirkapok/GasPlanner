@@ -20,6 +20,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { DiveResults } from '../shared/diveresults';
 import {DiveSchedules} from '../shared/dive.schedules';
 import {DepthsService} from '../shared/depths.service';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
@@ -35,7 +36,8 @@ describe('Dive options component', () => {
                 DelayedScheduleService, UnitConversion,
                 TanksService, Plan, ViewSwitchService,
                 WayPointsService, ViewStates, SubViewStorage,
-                Preferences, PreferencesStore, DiveResults
+                Preferences, PreferencesStore, DiveResults,
+                ReloadDispatcher
             ]
         })
             .compileComponents();

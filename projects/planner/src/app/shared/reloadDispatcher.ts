@@ -1,9 +1,11 @@
 import {Observable, Subject} from 'rxjs';
 import {Tank} from 'scuba-physics';
+import {Injectable} from '@angular/core';
 
 /**
  * Since we show only the selected dive schedule, we are always reloading properties of selected dive.
  */
+@Injectable()
 export class ReloadDispatcher {
     /**
      *  Event fired only in case of tanks rebuild (loadFrom or resetToSimple).
@@ -19,6 +21,11 @@ export class ReloadDispatcher {
 
     private onTanksReloaded = new Subject<void>();
     private onTankRemoved = new Subject<Tank>();
+
+    constructor() {
+        this.tanksReloaded$ = this.onTanksReloaded.asObservable();
+        this.tankRemoved$ = this.onTankRemoved.asObservable();
+    }
 
     public sendTanksReloaded(): void {
         this.onTanksReloaded.next();

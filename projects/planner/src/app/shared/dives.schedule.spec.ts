@@ -1,11 +1,12 @@
 import { UnitConversion } from './UnitConversion';
 import {DiveSchedule, DiveSchedules} from './dive.schedules';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 describe('Scheduled dives', () => {
     let sut: DiveSchedules;
 
     const createSut = (): DiveSchedules => {
-        sut = new DiveSchedules(new UnitConversion());
+        sut = new DiveSchedules(new UnitConversion(), new ReloadDispatcher());
         return sut;
     };
 
@@ -22,7 +23,7 @@ describe('Scheduled dives', () => {
     it('Dive title respects imperial units setting', () => {
         const units = new UnitConversion();
         units.imperialUnits = true;
-        const dive = new DiveSchedule(0, units);
+        const dive = new DiveSchedule(0, units, new ReloadDispatcher());
         expect(dive.title).toEqual('1. 12 min/100 ft');
     });
 
@@ -46,7 +47,7 @@ describe('Scheduled dives', () => {
         });
 
         it('Does not change selected if not in current list', () => {
-            const toBeSelected = new DiveSchedule(0, new UnitConversion());
+            const toBeSelected = new DiveSchedule(0, new UnitConversion(), new ReloadDispatcher());
             sut.selected = toBeSelected;
             expect(sut.selected).not.toBe(toBeSelected);
         });

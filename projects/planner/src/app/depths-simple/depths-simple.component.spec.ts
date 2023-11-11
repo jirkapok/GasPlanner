@@ -21,6 +21,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { DiveResults } from '../shared/diveresults';
 import {DiveSchedules} from '../shared/dive.schedules';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
@@ -54,7 +55,7 @@ describe('Depths Simple Component', () => {
                 DepthsService, DecimalPipe, TanksService,
                 ViewSwitchService,  WayPointsService, Preferences,
                 SubViewStorage, ViewStates, PreferencesStore,
-                DiveResults, Plan
+                DiveResults, Plan, ReloadDispatcher
             ]
         })
             .compileComponents();

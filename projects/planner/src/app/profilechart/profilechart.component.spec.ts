@@ -12,6 +12,7 @@ import { WayPointsService } from '../shared/waypoints.service';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import {DiveSchedules} from '../shared/dive.schedules';
 import {DepthsService} from '../shared/depths.service';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 describe('ProfileChartComponent', () => {
     let component: ProfileChartComponent;
@@ -24,7 +25,7 @@ describe('ProfileChartComponent', () => {
                 PlannerService, WorkersFactoryCommon, TanksService,
                 OptionsService, WayPointsService, SelectedWaypoint,
                 UnitConversion, Plan, DiveResults, DiveSchedules,
-                DepthsService
+                DepthsService, ReloadDispatcher
             ]
         });
 

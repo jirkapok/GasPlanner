@@ -5,6 +5,7 @@ import { TanksService } from './tanks.service';
 import { Injectable } from '@angular/core';
 import {DiveResults} from './diveresults';
 import {DepthsService} from './depths.service';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 export class DiveSchedule {
     /** In minutes or undefined in case it is the first dive */
@@ -15,7 +16,7 @@ export class DiveSchedule {
     private readonly _tanks: TanksService;
     private readonly _depths: DepthsService;
 
-    constructor(index: number, private units: UnitConversion) {
+    constructor(index: number, private units: UnitConversion, private dispatcher: ReloadDispatcher) {
         this.assignIndex(index);
         this._tanks = new TanksService(units);
         this._optionsService = new OptionsService(this.units);
@@ -63,7 +64,7 @@ export class DiveSchedules {
     private _dives: DiveSchedule[] = [];
     private _selected: DiveSchedule;
 
-    constructor(private units: UnitConversion) {
+    constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher) {
         this.add();
         this._selected = this._dives[0];
     }
@@ -111,7 +112,7 @@ export class DiveSchedules {
     }
 
     private createDiveSchedule(): DiveSchedule {
-        return new DiveSchedule(this.length, this.units);
+        return new DiveSchedule(this.length, this.units, this.dispatcher);
     }
 
     private renumber(): void {

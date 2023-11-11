@@ -83,6 +83,7 @@ import { DiveResults } from './shared/diveresults';
 import { DiveSchedules } from './shared/dive.schedules';
 import { RedundanciesComponent } from './redundancies/redundancies.component';
 import {RedundanciesService} from './shared/redundancies.service';
+import {ReloadDispatcher} from './shared/reloadDispatcher';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -181,6 +182,7 @@ const MDB_MODULES = [
         ViewStates,
         SubViewStorage,
         DashboardStartUp,
+        ReloadDispatcher,
         Urls,
         DatePipe,
         DecimalPipe

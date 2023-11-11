@@ -38,7 +38,7 @@ describe('Managed Schedules', () => {
         const optionsService = dive.optionsService;
         optionsService.maxEND = expectedMaxEnd;
 
-        dive.depths.assignDepth(expectedMaxDepth);
+        dive.depths.plannedDepth = expectedMaxDepth;
     };
 
     const saveDiveAsDefault = (dive: DiveSchedule) => {
@@ -55,7 +55,7 @@ describe('Managed Schedules', () => {
         optionsService.maxEND = 27;
 
         const dephts = TestBed.inject(DepthsService);
-        dephts.assignDepth(25);
+        dephts.plannedDepth = 25;
 
         preferencesStore.saveDefault();
     };

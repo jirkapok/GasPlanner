@@ -59,7 +59,7 @@ describe('Depths service', () => {
             OptionExtensions.applySimpleSpeeds(options.getOptions());
             options.problemSolvingDuration = 2;
             options.safetyStop = SafetyStop.always;
-            depthService.assignDepth(30);
+            depthService.plannedDepth = 30;
             planner.calculate();
         });
 

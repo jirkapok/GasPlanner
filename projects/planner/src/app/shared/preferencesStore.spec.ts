@@ -197,11 +197,11 @@ describe('PreferencesStore', () => {
         [PreferencesStore, TanksService, DepthsService],
         (service: PreferencesStore, tanksService: TanksService, depths: DepthsService) => {
             tanksService.firstTank.size = 20;
-            depths.assignDepth(21);
+            depths.plannedDepth = 21;
 
             service.saveDefault();
             tanksService.firstTank.size = 22;
-            depths.assignDepth(23);
+            depths.plannedDepth = 23;
 
             service.loadDefault();
 

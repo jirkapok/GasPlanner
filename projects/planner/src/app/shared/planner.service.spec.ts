@@ -30,7 +30,7 @@ import {ReloadDispatcher} from './reloadDispatcher';
 describe('PlannerService', () => {
     let planner: PlannerService;
     let tanksService: TanksService;
-    let plan: DepthsService;
+    let depthsService: DepthsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -51,11 +51,11 @@ describe('PlannerService', () => {
         planner = TestBed.inject(PlannerService);
         tanksService = TestBed.inject(TanksService);
         const options = TestBed.inject(OptionsService);
-        plan = TestBed.inject(DepthsService);
+        depthsService = TestBed.inject(DepthsService);
         OptionExtensions.applySimpleSpeeds(options.getOptions());
         options.problemSolvingDuration = 2;
         options.safetyStop = SafetyStop.always;
-        plan.assignDepth(30);
+        depthsService.plannedDepth = 30;
         planner.calculate();
     });
 
@@ -133,7 +133,7 @@ describe('PlannerService', () => {
     describe('Shows errors', () => {
         it('60m for 50 minutes maximum depth exceeded', inject([OptionsService, DiveResults],
             (options: OptionsService, dive: DiveResults) => {
-                plan.assignDepth(60);
+                depthsService.plannedDepth =60;
                 planner.calculate();
                 const hasEvents = dive.events.length > 0;
                 expect(hasEvents).toBeTruthy();
@@ -165,7 +165,7 @@ describe('PlannerService', () => {
 
                 const depthsService = TestBed.inject(DepthsService);
                 depthsService.addSegment();
-                const segments = plan.segments;
+                const segments = depthsService.segments;
                 lastSegment = segments[1];
                 lastSegment.tank = secondTank.tank;
                 tanksService.removeTank(secondTank);
@@ -208,7 +208,7 @@ describe('PlannerService', () => {
         const createProfileResultDto = (): ProfileResultDto => {
             const events = new Events();
             events.add(Event.createError(''));
-            const profile = CalculatedProfile.fromErrors(plan.segments, []);
+            const profile = CalculatedProfile.fromErrors(depthsService.segments, []);
             const profileDto = DtoSerialization.fromProfile(profile);
             return {
                 profile: profileDto,

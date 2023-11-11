@@ -127,18 +127,18 @@ describe('PreferencesStore', () => {
                 expect(tanksService.tanks[1].workingPressureBars).toBeCloseTo(0, 6);
             }));
 
-        xit('Plan is loaded after save', inject(
+        it('Plan is loaded after save', inject(
             [PreferencesStore, PlannerService, TanksService, ViewSwitchService, DepthsService],
             (service: PreferencesStore, planner: PlannerService,
                 tanksService: TanksService, viewSwitch: ViewSwitchService,
                 depthsService: DepthsService) => {
+                viewSwitch.isComplex = true;
                 tanksService.addTank();
                 tanksService.addTank();
                 depthsService.addSegment();
                 const lastSegment = depthsService.levels[2];
                 const secondTank = tanksService.tanks[1];
-                lastSegment.tank.tank = secondTank.tank;
-                viewSwitch.isComplex = true;
+                lastSegment.tank = secondTank;
                 planner.calculate();
                 service.save();
 
@@ -151,7 +151,7 @@ describe('PreferencesStore', () => {
                 expect(depthsService.segments[2].tank?.id).toEqual(2);
             }));
 
-        xit('Simple profile is loaded after save and trims tank', inject(
+        it('Simple profile is loaded after save and trims tank', inject(
             [PreferencesStore, PlannerService, TanksService, DepthsService, OptionsService],
             (service: PreferencesStore, planner: PlannerService, tanksService: TanksService,
                 depthsService: DepthsService, options: OptionsService) => {
@@ -191,7 +191,7 @@ describe('PreferencesStore', () => {
             }));
     });
 
-    xit('Save and Load Defaults - First dive is updated from default', inject(
+    it('Save and Load Defaults - First dive is updated from default', inject(
         [PreferencesStore, TanksService, DepthsService],
         (service: PreferencesStore, tanksService: TanksService, depths: DepthsService) => {
             tanksService.firstTank.size = 20;

@@ -93,7 +93,7 @@ describe('SettingsNormalizationService', () => {
             expect(options.descentSpeed).toBeCloseTo(18.288, 4);
         });
 
-        xit('Rounds segments to feet', inject([DepthsService],
+        it('Rounds segments to feet', inject([DepthsService],
             (depths: DepthsService) => {
                 const segment = depths.segments[1];
                 // 30 m flat segment rounded to 98 feet

@@ -102,11 +102,11 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
         // TODO replace changed$ by dispatcher reloaded
-        this.depths.changed$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                this.depths.updateLevels();
-                this.reloadComplex();
-            });
+        // this.depths.changed$.pipe(takeUntil(this.unsubscribe$))
+        //     .subscribe(() => {
+        //         this.depths.updateLevels();
+        //         this.reloadComplex();
+        //     });
     }
 
     public addLevel(): void {

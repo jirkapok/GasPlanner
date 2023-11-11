@@ -38,7 +38,7 @@ describe('Stops filter', () => {
         expect(count).toEqual(7);
     });
 
-    xit('Default profile filters ascent', () => {
+    it('Default profile filters ascent', () => {
         service.switchFilter();
         const count = service.wayPoints.length;
 

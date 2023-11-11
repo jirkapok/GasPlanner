@@ -111,14 +111,15 @@ describe('Depths Complex Component', () => {
         }));
 
     describe('Levels enforce calculation', () => {
-        xit('Adds level to end of profile segments', () => {
+        it('Adds level to end of profile segments', () => {
             complexPage.addLevelButton.click();
+
             fixture.detectChanges();
             expect(depths.levels.length).toBe(3);
             expect(complexPage.removeButtons()).toBe(3);
         });
 
-        xit('Is removed from correct position', () => {
+        it('Is removed from correct position', () => {
             complexPage.removeLevelButton(1).click();
             fixture.detectChanges();
             expect(depths.levels.length).toBe(1);

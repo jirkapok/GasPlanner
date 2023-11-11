@@ -3,13 +3,17 @@ import { Options } from 'scuba-physics';
 import { OptionsService } from './options.service';
 import { UnitConversion } from './UnitConversion';
 import { DiverOptions } from './models';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 describe('Options Service', () => {
     let service: OptionsService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [OptionsService, UnitConversion]
+            providers: [
+                OptionsService, UnitConversion,
+                ReloadDispatcher
+            ]
         });
         service = TestBed.inject(OptionsService);
     });

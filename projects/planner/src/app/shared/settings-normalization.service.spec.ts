@@ -17,6 +17,7 @@ import { SubViewStorage } from './subViewStorage';
 import { ViewSwitchService } from './viewSwitchService';
 import { DiverOptions } from './models';
 import { DiveResults } from './diveresults';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 describe('SettingsNormalizationService', () => {
     let service: SettingsNormalizationService;
@@ -37,7 +38,7 @@ describe('SettingsNormalizationService', () => {
                 SettingsNormalizationService, TanksService,
                 DepthsService, DelayedScheduleService,
                 SubViewStorage, ViewStates, ViewSwitchService,
-                WayPointsService, DiveResults,
+                WayPointsService, DiveResults, ReloadDispatcher,
                 PreferencesStore, Preferences
             ],
             imports: [RouterTestingModule.withRoutes([])]

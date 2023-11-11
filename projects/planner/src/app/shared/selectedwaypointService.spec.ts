@@ -16,6 +16,7 @@ import { SubViewStorage } from './subViewStorage';
 import { ViewStates } from './viewStates';
 import { ViewSwitchService } from './viewSwitchService';
 import { DiveResults } from './diveresults';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 describe('Selected Waypoint', () => {
     const segment = new Segment(5, 10, StandardGases.air, 60);
@@ -28,7 +29,7 @@ describe('Selected Waypoint', () => {
                 DepthsService, DelayedScheduleService,
                 OptionsService, WayPointsService, PreferencesStore,
                 SubViewStorage, ViewStates, ViewSwitchService,
-                Preferences, DiveResults
+                Preferences, DiveResults, ReloadDispatcher
             ]
         });
     });

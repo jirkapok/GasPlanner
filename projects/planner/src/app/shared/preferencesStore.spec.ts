@@ -16,6 +16,7 @@ import { WayPointsService } from './waypoints.service';
 import { ViewStates } from './viewStates';
 import { SubViewStorage } from './subViewStorage';
 import { DiveResults } from './diveresults';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 describe('PreferencesStore', () => {
     beforeEach(() => {
@@ -27,6 +28,7 @@ describe('PreferencesStore', () => {
                 OptionsService, Preferences, DiveResults,
                 DelayedScheduleService, SettingsNormalizationService,
                 WayPointsService, ViewStates, SubViewStorage,
+                ReloadDispatcher
             ]
         });
 

@@ -25,6 +25,7 @@ import { ViewStates } from './viewStates';
 import { Preferences } from './preferences';
 import { PreferencesStore } from './preferencesStore';
 import { DiveResults } from './diveresults';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -42,7 +43,7 @@ describe('PlannerService', () => {
                 DelayedScheduleService, WayPointsService,
                 SubViewStorage, SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, DiveResults,
-                DepthsService
+                DepthsService, ReloadDispatcher
             ],
             imports: []
         }).compileComponents();

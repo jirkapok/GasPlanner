@@ -17,6 +17,7 @@ import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveResults } from '../shared/diveresults';
 import {DepthsService} from '../shared/depths.service';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 describe('WeightCalcComponent', () => {
     let component: WeightCalcComponent;
@@ -30,7 +31,8 @@ describe('WeightCalcComponent', () => {
                 DecimalPipe, SubViewStorage, ViewStates, DepthsService,
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
                 TanksService, OptionsService, WayPointsService,
-                Preferences, ViewSwitchService, DiveResults
+                Preferences, ViewSwitchService, DiveResults,
+                ReloadDispatcher
             ]
         });
         fixture = TestBed.createComponent(WeightCalcComponent);

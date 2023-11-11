@@ -19,6 +19,7 @@ import { ViewStates } from '../shared/viewStates';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { DiveResults } from '../shared/diveresults';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 export class ComplexDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
@@ -71,7 +72,7 @@ describe('Depths Complex Component', () => {
                 DepthsService, DecimalPipe, TanksService,
                 ViewSwitchService, WayPointsService,
                 SubViewStorage, ViewStates, PreferencesStore, Preferences,
-                DiveResults
+                DiveResults, ReloadDispatcher
             ]
         })
             .compileComponents();

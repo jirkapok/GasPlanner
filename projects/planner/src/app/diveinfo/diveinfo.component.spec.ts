@@ -15,6 +15,7 @@ import { ViewStates } from '../shared/viewStates';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 describe('DiveInfoComponent', () => {
     let component: DiveInfoComponent;
@@ -31,7 +32,7 @@ describe('DiveInfoComponent', () => {
                 WorkersFactoryCommon, DiveResults,
                 OptionsService, WayPointsService, SubViewStorage,
                 ViewStates, PreferencesStore, Preferences,
-                ViewSwitchService
+                ViewSwitchService, ReloadDispatcher
             ]
         });
         fixture = TestBed.createComponent(DiveInfoComponent);

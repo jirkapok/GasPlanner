@@ -17,6 +17,7 @@ import {WayPointsService} from '../shared/waypoints.service';
 import {Preferences} from '../shared/preferences';
 import {ViewSwitchService} from '../shared/viewSwitchService';
 import {DepthsService} from '../shared/depths.service';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 describe('RedundanciesComponent', () => {
     let component: RedundanciesComponent;
@@ -31,7 +32,7 @@ describe('RedundanciesComponent', () => {
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
                 TanksService, DiveResults, OptionsService,
                 WayPointsService, Preferences, ViewSwitchService,
-                DepthsService
+                DepthsService, ReloadDispatcher
             ]
         });
         fixture = TestBed.createComponent(RedundanciesComponent);

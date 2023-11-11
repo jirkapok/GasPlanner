@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
@@ -19,6 +19,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { ViewStates } from '../shared/viewStates';
 import { DiveResults } from '../shared/diveresults';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 export class DepthPage {
     constructor(private fixture: ComponentFixture<DepthComponent>) { }
@@ -50,7 +51,7 @@ describe('DepthComponent Imperial units', () => {
                 InputControls, TanksService,
                 ViewSwitchService, OptionsService,
                 WayPointsService, SubViewStorage, ViewStates,
-                PreferencesStore, Preferences
+                PreferencesStore, Preferences, ReloadDispatcher
             ]
         })
             .compileComponents();

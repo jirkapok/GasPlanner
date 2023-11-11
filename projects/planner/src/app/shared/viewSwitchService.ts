@@ -12,7 +12,7 @@ export class ViewSwitchService {
     private onViewSwitched = new Subject<void>();
 
     constructor(
-        // needs to be replaced for all schedules
+        // TODO needs to be replaced for all schedules
         private depths: DepthsService,
         private options: OptionsService,
         private tanks: TanksService) {

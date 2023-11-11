@@ -15,6 +15,7 @@ import { PreferencesStore } from './preferencesStore';
 import { Preferences } from './preferences';
 import { ViewSwitchService } from './viewSwitchService';
 import { DiveResults } from './diveresults';
+import {ReloadDispatcher} from './reloadDispatcher';
 
 describe('Depths service', () => {
     let depthService: DepthsService;
@@ -28,7 +29,7 @@ describe('Depths service', () => {
                 OptionsService, WayPointsService,
                 DepthsService, TanksService, SubViewStorage,
                 ViewStates, PreferencesStore, Preferences,
-                ViewSwitchService, DiveResults
+                ViewSwitchService, DiveResults, ReloadDispatcher
             ]
         }).compileComponents();
 

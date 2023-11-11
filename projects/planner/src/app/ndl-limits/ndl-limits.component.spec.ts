@@ -18,6 +18,7 @@ import { WayPointsService } from '../shared/waypoints.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveResults } from '../shared/diveresults';
 import {DepthsService} from '../shared/depths.service';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 describe('NdlLimits component', () => {
     let component: NdlLimitsComponent;
@@ -33,7 +34,7 @@ describe('NdlLimits component', () => {
                 PreferencesStore, Preferences,
                 WorkersFactoryCommon, TanksService,
                 WayPointsService, ViewSwitchService,
-                DepthsService
+                DepthsService, ReloadDispatcher
             ],
             imports: [RouterTestingModule.withRoutes([])]
         })

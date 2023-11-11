@@ -6,6 +6,7 @@ import { DiveResults } from '../shared/diveresults';
 import {DepthsService} from '../shared/depths.service';
 import {TanksService} from '../shared/tanks.service';
 import {OptionsService} from '../shared/options.service';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 describe('DiveIssuesComponent', () => {
     let component: DiveIssuesComponent;
@@ -17,7 +18,7 @@ describe('DiveIssuesComponent', () => {
             providers: [
                 OptionsService, UnitConversion,
                 TanksService, DiveResults,
-                DepthsService
+                DepthsService, ReloadDispatcher
             ]
         });
         fixture = TestBed.createComponent(DiveIssuesComponent);

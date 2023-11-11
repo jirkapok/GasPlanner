@@ -14,7 +14,6 @@ import {ViewStates} from './viewStates';
 import {DepthsService} from './depths.service';
 import {DelayedScheduleService} from './delayedSchedule.service';
 import {SubViewStorage} from './subViewStorage';
-import {TestBedExtensions} from './TestBedCommon.spec';
 import {ManagedDiveSchedules} from './managedDiveSchedules';
 import Spy = jasmine.Spy;
 import {ReloadDispatcher} from './reloadDispatcher';

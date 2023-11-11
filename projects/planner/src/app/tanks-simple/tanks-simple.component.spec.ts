@@ -26,7 +26,6 @@ import { DiveResults } from '../shared/diveresults';
 import {DiveSchedules} from '../shared/dive.schedules';
 import {DepthsService} from '../shared/depths.service';
 import {ReloadDispatcher} from '../shared/reloadDispatcher';
-import {TestBedExtensions} from '../shared/TestBedCommon.spec';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -78,10 +77,7 @@ describe('Tanks Simple component', () => {
 
     beforeEach(() => {
         fixture = TestBed.createComponent(TanksSimpleComponent);
-
         component = fixture.componentInstance;
-
-        TestBedExtensions.initPlan();
         simplePage = new SimpleTanksPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
         schedulerSpy = spyOn(scheduler, 'schedule')

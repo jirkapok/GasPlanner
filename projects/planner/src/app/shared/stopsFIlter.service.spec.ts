@@ -6,7 +6,6 @@ import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { OptionsService } from './options.service';
 import { WayPointsService } from './waypoints.service';
-import { TestBedExtensions } from './TestBedCommon.spec';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { SubViewStorage } from './subViewStorage';
@@ -30,7 +29,6 @@ describe('Stops filter', () => {
             ]
         });
         service = TestBed.inject(StopsFilter);
-        TestBedExtensions.initPlan();
         const planner = TestBed.inject(PlannerService);
         planner.calculate();
     });

@@ -9,7 +9,6 @@ import { TanksService } from './tanks.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { OptionsService } from './options.service';
-import { TestBedExtensions } from './TestBedCommon.spec';
 import { WayPointsService } from './waypoints.service';
 import { PreferencesStore } from './preferencesStore';
 import { Preferences } from './preferences';
@@ -32,8 +31,6 @@ describe('Selected Waypoint', () => {
                 Preferences, DiveResults
             ]
         });
-
-        TestBedExtensions.initPlan();
     });
 
     it('Selected assigned fires event', inject([DiveResults, UnitConversion],

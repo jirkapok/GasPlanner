@@ -27,7 +27,6 @@ import { SubViewStorage } from '../shared/subViewStorage';
 import { DiveResults } from '../shared/diveresults';
 import {DiveSchedules} from '../shared/dive.schedules';
 import {DepthsService} from '../shared/depths.service';
-import {TestBedExtensions} from '../shared/TestBedCommon.spec';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -109,7 +108,6 @@ describe('Tanks Complex component', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(TanksComplexComponent);
         component = fixture.componentInstance;
-        TestBedExtensions.initPlan();
         complexPage = new ComplexTanksPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
         schedulerSpy = spyOn(scheduler, 'schedule')

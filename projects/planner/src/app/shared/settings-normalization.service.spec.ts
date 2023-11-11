@@ -8,7 +8,6 @@ import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { TanksService } from './tanks.service';
-import { TestBedExtensions } from './TestBedCommon.spec';
 import { UnitConversion } from './UnitConversion';
 import { WayPointsService } from './waypoints.service';
 import { ViewStates } from './viewStates';
@@ -44,7 +43,6 @@ describe('SettingsNormalizationService', () => {
             imports: [RouterTestingModule.withRoutes([])]
         });
 
-        TestBedExtensions.initPlan();
         service = TestBed.inject(SettingsNormalizationService);
         diver = new Diver();
         diverOptions = new DiverOptions(new Options(), diver);

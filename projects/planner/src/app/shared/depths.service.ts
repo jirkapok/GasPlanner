@@ -164,6 +164,7 @@ export class DepthsService extends Streamed {
         this._levels = converted;
     }
 
+    // TODO merge with depth setter
     public assignDepth(newDepth: number): void {
         const options = this.optionsService.getOptions();
         this.plan.assignDepth(newDepth, this.firstTank, options);

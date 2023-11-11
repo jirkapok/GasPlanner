@@ -10,7 +10,6 @@ import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
-import { TestBedExtensions } from './TestBedCommon.spec';
 import { Preferences } from './preferences';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { WayPointsService } from './waypoints.service';
@@ -32,7 +31,6 @@ describe('PreferencesStore', () => {
         });
 
         localStorage.clear();
-        TestBedExtensions.initPlan();
     });
 
     it('loads saved disclaimer', inject([PreferencesStore, PlannerService],

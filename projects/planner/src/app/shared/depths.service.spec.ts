@@ -64,19 +64,15 @@ describe('Depths service', () => {
         });
 
         describe('When Calculated', () => {
-            it('Max bottom time is applied', inject([PlannerService],
-                (planner: PlannerService) => {
-                    // planner.calculate();
-                    depthService.applyMaxDuration();
-                    expect(depthService.planDuration).toBe(18);
-                }));
+            it('Max bottom time is applied', () => {
+                depthService.applyMaxDuration();
+                expect(depthService.planDuration).toBe(18);
+            });
 
-            it('No deco limit is applied', inject([PlannerService],
-                (planner: PlannerService) => {
-                    // planner.calculate();
-                    depthService.applyNdlDuration();
-                    expect(depthService.planDuration).toBe(12);
-                }));
+            it('No deco limit is applied', () => {
+                depthService.applyNdlDuration();
+                expect(depthService.planDuration).toBe(12);
+            });
         });
     });
 
@@ -126,20 +122,20 @@ describe('Depths service', () => {
             units.imperialUnits = true;
         });
 
-        xit('Updates end depth', () => {
+        it('Updates end depth', () => {
             const last = depthService.levels[1];
             last.endDepth = 70;
             const result = last.segment.endDepth;
             expect(result).toBeCloseTo(21.336, 6);
         });
 
-        xit('Converts start depth', () => {
+        it('Converts start depth', () => {
             const last = depthService.levels[1];
             last.segment.startDepth = 6.096;
             expect(last.startDepth).toBeCloseTo(20, 6);
         });
 
-        xit('Adjusts tank label', () => {
+        it('Adjusts tank label', () => {
             const last = depthService.levels[1];
             const tank = last.tank;
             tank.startPressure = 3000;

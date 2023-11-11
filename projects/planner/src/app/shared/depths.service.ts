@@ -36,6 +36,8 @@ export class DepthsService extends Streamed {
 
         this.tanksService.tankRemoved.pipe(takeUntil(this.unsubscribe$))
             .subscribe((removed: Tank) => this.tankRemoved(removed));
+
+        this.updateLevels();
     }
 
     public get levels(): Level[] {

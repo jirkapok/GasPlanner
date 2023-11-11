@@ -141,14 +141,14 @@ describe('PlannerService', () => {
 
         it('60m for 50 minutes not enough gas', inject([DepthsService, DiveResults],
             (depthService: DepthsService, dive: DiveResults) => {
-                depthService.assignDuration(50);
+                depthService.planDuration = 50;
                 planner.calculate();
                 expect(dive.notEnoughGas).toBeTruthy();
             }));
 
         it('30m for 20 minutes no decompression time exceeded', inject([DepthsService, DiveResults],
             (depthService: DepthsService, dive: DiveResults) => {
-                depthService.assignDuration(20);
+                depthService.planDuration = 20;
                 planner.calculate();
                 expect(dive.noDecoExceeded).toBeTruthy();
             }));

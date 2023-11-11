@@ -113,20 +113,11 @@ export class DepthsService extends Streamed {
     }
 
     public applyMaxDuration(): void {
-        const newValue = this.dive.maxTime;
-        this.assignDuration(newValue);
-        this.apply();
+        this.planDuration = this.dive.maxTime;
     }
 
     public applyNdlDuration(): void {
-        const newValue = this.dive.noDecoTime;
-        this.assignDuration(newValue);
-        this.apply();
-    }
-
-    public assignDuration(newDuration: number): void {
-        this.plan.assignDuration(newDuration, this.firstTank, this.optionsService.getOptions());
-        this.depthsReloaded();
+        this.planDuration = this.dive.noDecoTime;
     }
 
     public applyMaxDepth(): void {
@@ -181,6 +172,11 @@ export class DepthsService extends Streamed {
 
     public fixDepths(): void {
         this.plan.fixDepths();
+    }
+
+    private assignDuration(newDuration: number): void {
+        this.plan.assignDuration(newDuration, this.firstTank, this.optionsService.getOptions());
+        this.depthsReloaded();
     }
 
     private addSegmentToPlan(): void {

@@ -5,6 +5,9 @@ export class TestBedExtensions {
     /** Enforces to create the DepthsService instance, which sets the plan */
     public static initPlan() {
         // TODO remove TestBedExtensions.initPlan
-        TestBed.inject(DepthsService);
+        const depths = TestBed.inject(DepthsService);
+        depths.plannedDepth = 30;
+        depths.planDuration = 12;
+        depths.setSimple();
     }
 }

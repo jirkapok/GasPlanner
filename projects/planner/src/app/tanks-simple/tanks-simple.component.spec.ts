@@ -3,14 +3,12 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Options } from 'scuba-physics';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../oxygen/oxygen.component';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { OptionsService } from '../shared/options.service';
-import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
@@ -28,6 +26,7 @@ import { DiveResults } from '../shared/diveresults';
 import {DiveSchedules} from '../shared/dive.schedules';
 import {DepthsService} from '../shared/depths.service';
 import {ReloadDispatcher} from '../shared/reloadDispatcher';
+import {TestBedExtensions} from '../shared/TestBedCommon.spec';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -67,7 +66,7 @@ describe('Tanks Simple component', () => {
                 PlannerService, InputControls, DiveSchedules,
                 ValidatorGroups, DelayedScheduleService,
                 DecimalPipe, TanksService, ViewSwitchService,
-                OptionsService, Plan, WayPointsService,
+                OptionsService, WayPointsService,
                 SubViewStorage, ViewStates, DiveResults,
                 PreferencesStore, Preferences, DepthsService,
                 ReloadDispatcher
@@ -79,10 +78,10 @@ describe('Tanks Simple component', () => {
 
     beforeEach(() => {
         fixture = TestBed.createComponent(TanksSimpleComponent);
-        const plan = TestBed.inject(Plan);
+
         component = fixture.componentInstance;
-        const firstTank = fixture.componentInstance.firstTank.tank;
-        plan.setSimple(30, 12, firstTank, new Options());
+
+        TestBedExtensions.initPlan();
         simplePage = new SimpleTanksPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
         schedulerSpy = spyOn(scheduler, 'schedule')

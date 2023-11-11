@@ -2,14 +2,13 @@ import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { TankTemplate, Options } from 'scuba-physics';
+import { TankTemplate } from 'scuba-physics';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../oxygen/oxygen.component';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { OptionsService } from '../shared/options.service';
-import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
@@ -27,7 +26,8 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { DiveResults } from '../shared/diveresults';
 import {DiveSchedules} from '../shared/dive.schedules';
-import {DepthsService} from "../shared/depths.service";
+import {DepthsService} from '../shared/depths.service';
+import {TestBedExtensions} from '../shared/TestBedCommon.spec';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -97,7 +97,7 @@ describe('Tanks Complex component', () => {
                 PlannerService, InputControls, DepthsService,
                 ValidatorGroups, DelayedScheduleService,
                 DecimalPipe, TanksService, ViewSwitchService,
-                OptionsService, Plan, WayPointsService,
+                OptionsService, WayPointsService,
                 SubViewStorage, ViewStates, DiveResults,
                 Preferences, PreferencesStore, DiveSchedules
             ],
@@ -108,11 +108,8 @@ describe('Tanks Complex component', () => {
 
     beforeEach(() => {
         fixture = TestBed.createComponent(TanksComplexComponent);
-        const plan = TestBed.inject(Plan);
         component = fixture.componentInstance;
-        const tanksService = TestBed.inject(TanksService);
-        const firstTank = tanksService.firstTank.tank;
-        plan.setSimple(30, 12, firstTank, new Options());
+        TestBedExtensions.initPlan();
         complexPage = new ComplexTanksPage(fixture);
         const scheduler = TestBed.inject(DelayedScheduleService);
         schedulerSpy = spyOn(scheduler, 'schedule')

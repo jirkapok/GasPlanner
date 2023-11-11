@@ -6,7 +6,6 @@ import { WayPoint } from './models';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
-import { Plan } from './plan.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { OptionsService } from './options.service';
@@ -27,7 +26,7 @@ describe('Selected Waypoint', () => {
             providers: [
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, TanksService,
-                Plan, DepthsService, DelayedScheduleService,
+                DepthsService, DelayedScheduleService,
                 OptionsService, WayPointsService, PreferencesStore,
                 SubViewStorage, ViewStates, ViewSwitchService,
                 Preferences, DiveResults

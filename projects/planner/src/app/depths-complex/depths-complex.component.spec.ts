@@ -12,7 +12,6 @@ import { DepthsComplexComponent } from './depths-complex.component';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import { Plan } from '../shared/plan.service';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { SubViewStorage } from '../shared/subViewStorage';
@@ -70,7 +69,7 @@ describe('Depths Complex Component', () => {
                 UnitConversion, InputControls, DelayedScheduleService,
                 OptionsService, ValidatorGroups,
                 DepthsService, DecimalPipe, TanksService,
-                ViewSwitchService, Plan, WayPointsService,
+                ViewSwitchService, WayPointsService,
                 SubViewStorage, ViewStates, PreferencesStore, Preferences,
                 DiveResults
             ]

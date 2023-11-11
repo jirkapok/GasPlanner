@@ -1,7 +1,6 @@
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { PlannerService } from './planner.service';
-import { Plan } from './plan.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { DepthsService } from './depths.service';
 import { inject, TestBed } from '@angular/core/testing';
@@ -26,7 +25,7 @@ describe('Depths service', () => {
             imports: [],
             providers: [WorkersFactoryCommon, PlannerService,
                 UnitConversion, DelayedScheduleService,
-                OptionsService, WayPointsService, Plan,
+                OptionsService, WayPointsService,
                 DepthsService, TanksService, SubViewStorage,
                 ViewStates, PreferencesStore, Preferences,
                 ViewSwitchService, DiveResults

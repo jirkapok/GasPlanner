@@ -14,7 +14,6 @@ import { Preferences } from '../shared/preferences';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
-import { Plan } from '../shared/plan.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveResults } from '../shared/diveresults';
@@ -31,7 +30,7 @@ describe('NdlLimits component', () => {
                 FormsModule, UnitConversion,
                 NdlService, OptionsService, PlannerService,
                 SubViewStorage, ViewStates, DiveResults,
-                PreferencesStore, Preferences, Plan,
+                PreferencesStore, Preferences,
                 WorkersFactoryCommon, TanksService,
                 WayPointsService, ViewSwitchService,
                 DepthsService

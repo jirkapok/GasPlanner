@@ -5,7 +5,6 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { InputControls } from '../shared/inputcontrols';
 import { OptionsService } from '../shared/options.service';
-import { Plan } from '../shared/plan.service';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
@@ -52,7 +51,7 @@ describe('Sac component', () => {
                 WorkersFactoryCommon, UnitConversion,
                 OptionsService, DecimalPipe, DepthsService,
                 ValidatorGroups, InputControls, SacCalculatorService,
-                TanksService, Plan, SubViewStorage, ViewStates,
+                TanksService, SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, PlannerService,
                 WayPointsService, ViewSwitchService, DiveResults
             ],

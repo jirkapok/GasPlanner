@@ -7,7 +7,6 @@ import { TanksService } from '../shared/tanks.service';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
-import { Plan } from '../shared/plan.service';
 import { DiveResults } from '../shared/diveresults';
 import { OptionsService } from '../shared/options.service';
 import { WayPointsService } from '../shared/waypoints.service';
@@ -29,7 +28,7 @@ describe('DiveInfoComponent', () => {
             providers: [
                 DepthsService, UnitConversion, TanksService,
                 DelayedScheduleService, PlannerService,
-                WorkersFactoryCommon, Plan, DiveResults,
+                WorkersFactoryCommon, DiveResults,
                 OptionsService, WayPointsService, SubViewStorage,
                 ViewStates, PreferencesStore, Preferences,
                 ViewSwitchService

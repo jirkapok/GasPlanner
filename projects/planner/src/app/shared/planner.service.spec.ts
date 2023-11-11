@@ -15,11 +15,9 @@ import { DtoSerialization } from './dtoSerialization';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
-import { Plan } from './plan.service';
 import { OptionsService } from './options.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
-import { TestBedExtensions } from './TestBedCommon.spec';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { WayPointsService } from './waypoints.service';
 import { SubViewStorage } from './subViewStorage';
@@ -39,7 +37,7 @@ describe('PlannerService', () => {
             providers: [
                 WorkersFactoryCommon,
                 PlannerService, UnitConversion,
-                TanksService, ViewSwitchService, Plan,
+                TanksService, ViewSwitchService,
                 OptionsService, SettingsNormalizationService,
                 DelayedScheduleService, WayPointsService,
                 SubViewStorage, SubViewStorage, ViewStates,

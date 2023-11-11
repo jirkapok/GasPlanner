@@ -7,7 +7,6 @@ import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.comp
 import { InputControls } from '../shared/inputcontrols';
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { OptionsService } from '../shared/options.service';
-import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
@@ -48,7 +47,7 @@ describe('Nitrox component', () => {
                 PlannerService, InputControls, DecimalPipe,
                 NitroxCalculatorService, ValidatorGroups,
                 OptionsService, ViewStates, PreferencesStore,
-                TanksService, Plan, WayPointsService, Preferences,
+                TanksService, WayPointsService, Preferences,
                 ViewSwitchService, SubViewStorage, DiveResults,
                 DepthsService
             ],

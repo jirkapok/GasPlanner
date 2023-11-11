@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { OptionsService } from '../shared/options.service';
-import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
@@ -34,7 +33,7 @@ describe('Dive options component', () => {
                 OptionsService, InputControls, DiveSchedules,
                 ValidatorGroups, PlannerService, DepthsService,
                 DelayedScheduleService, UnitConversion,
-                TanksService, Plan, ViewSwitchService,
+                TanksService, ViewSwitchService,
                 WayPointsService, ViewStates, SubViewStorage,
                 Preferences, PreferencesStore, DiveResults,
                 ReloadDispatcher

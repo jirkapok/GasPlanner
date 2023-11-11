@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { StopsFilter } from './stopsFilter.service';
-import { Plan } from './plan.service';
 import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { TanksService } from './tanks.service';
@@ -22,7 +21,7 @@ describe('Stops filter', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [StopsFilter, PlannerService, Plan,
+            providers: [StopsFilter, PlannerService,
                 WorkersFactoryCommon, TanksService, UnitConversion,
                 OptionsService, WayPointsService, DepthsService,
                 DelayedScheduleService, SubViewStorage,

@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { InputControls } from '../shared/inputcontrols';
 import { OptionsService } from '../shared/options.service';
-import { Plan } from '../shared/plan.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
@@ -19,7 +18,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { WayPointsService } from '../shared/waypoints.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveResults } from '../shared/diveresults';
-import {DepthsService} from "../shared/depths.service";
+import {DepthsService} from '../shared/depths.service';
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
@@ -41,7 +40,7 @@ describe('App settings component', () => {
             providers: [DecimalPipe,
                 SettingsNormalizationService,
                 UnitConversion, ValidatorGroups,
-                InputControls, OptionsService, Plan,
+                InputControls, OptionsService,
                 PlannerService, WorkersFactoryCommon,
                 TanksService, ViewStates, SubViewStorage,
                 PreferencesStore, Preferences, ViewSwitchService,

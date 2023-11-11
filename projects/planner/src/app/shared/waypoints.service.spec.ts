@@ -14,6 +14,7 @@ describe('WayPointsService', () => {
 
     it('No errors converts waypoints', () => {
         const plan = new Plan();
+        // TODO remove setSimple
         plan.setSimple(40, 20, airTank, options);
         const profile = CalculatedProfile.fromProfile(plan.segments, []);
 

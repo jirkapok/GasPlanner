@@ -11,7 +11,6 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
-import { Plan } from '../shared/plan.service';
 import { OptionsService } from '../shared/options.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { Preferences } from '../shared/preferences';
@@ -30,7 +29,7 @@ describe('AltitudeCalcComponent', () => {
                 UnitConversion, ValidatorGroups, InputControls,
                 DecimalPipe, SubViewStorage, ViewStates,
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
-                TanksService, Plan, OptionsService, WayPointsService,
+                TanksService, OptionsService, WayPointsService,
                 Preferences, ViewSwitchService, DiveResults,
                 DepthsService
             ]

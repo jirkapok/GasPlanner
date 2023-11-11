@@ -6,7 +6,6 @@ import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
-import { Plan } from '../shared/plan.service';
 import { OptionsService } from '../shared/options.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
@@ -24,7 +23,7 @@ describe('ProfileChartComponent', () => {
             providers: [
                 PlannerService, WorkersFactoryCommon, TanksService,
                 OptionsService, WayPointsService, SelectedWaypoint,
-                UnitConversion, Plan, DiveResults, DiveSchedules,
+                UnitConversion, DiveResults, DiveSchedules,
                 DepthsService, ReloadDispatcher
             ]
         });

@@ -5,7 +5,6 @@ import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
-import { Plan } from './plan.service';
 import { OptionsService } from './options.service';
 import { WayPointsService } from './waypoints.service';
 import { Preferences } from './preferences';
@@ -44,7 +43,7 @@ describe('SubView', () => {
             providers: [
                 ViewStates, PreferencesStore, SubViewStorage,
                 PlannerService, WorkersFactoryCommon, TanksService,
-                UnitConversion, Plan, OptionsService, WayPointsService,
+                UnitConversion, OptionsService, WayPointsService,
                 Preferences, ViewSwitchService, DiveResults, DepthsService
             ],
             imports: []

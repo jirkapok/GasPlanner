@@ -64,7 +64,6 @@ import { NitroxCalculatorService } from './shared/nitrox-calculator.service';
 import { SettingsNormalizationService } from './shared/settings-normalization.service';
 import { ViewSwitchService } from './shared/viewSwitchService';
 import { OxygenDropDownComponent } from './oxygen-dropdown/oxygen-dropdown.component';
-import { Plan } from './shared/plan.service';
 import { Preferences } from './shared/preferences';
 import { PlanUrlSerialization } from './shared/PlanUrlSerialization';
 import { WayPointsService } from './shared/waypoints.service';
@@ -157,7 +156,6 @@ const MDB_MODULES = [
     providers: [
         { provide: WorkersFactoryCommon, useClass: WorkersFactory },
         PlannerService,
-        Plan,
         DiveResults,
         DiveSchedules,
         PlanUrlSerialization,

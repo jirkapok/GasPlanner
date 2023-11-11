@@ -8,7 +8,6 @@ import { OptionsService } from './options.service';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
-import { Plan } from './plan.service';
 import { DepthsService } from './depths.service';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { TestBedExtensions } from './TestBedCommon.spec';
@@ -18,6 +17,7 @@ import { WayPointsService } from './waypoints.service';
 import { ViewStates } from './viewStates';
 import { SubViewStorage } from './subViewStorage';
 import { DiveResults } from './diveresults';
+import {Plan} from './plan.service';
 
 describe('PreferencesStore', () => {
     beforeEach(() => {
@@ -26,9 +26,10 @@ describe('PreferencesStore', () => {
                 PreferencesStore, PlannerService,
                 UnitConversion, TanksService,
                 ViewSwitchService, DepthsService,
-                OptionsService, Plan, Preferences, DiveResults,
+                OptionsService, Preferences, DiveResults,
                 DelayedScheduleService, SettingsNormalizationService,
-                WayPointsService, ViewStates, SubViewStorage
+                WayPointsService, ViewStates, SubViewStorage,
+                Plan
             ]
         });
 
@@ -89,17 +90,18 @@ describe('PreferencesStore', () => {
 
         it('Tanks are loaded after save', inject(
             [PreferencesStore, PlannerService, TanksService,
-                OptionsService, ViewSwitchService, Plan],
+                OptionsService, ViewSwitchService, DepthsService],
             (service: PreferencesStore, planner: PlannerService,
                 tanksService: TanksService, options: OptionsService,
-                viewSwitch: ViewSwitchService, plan: Plan) => {
+                viewSwitch: ViewSwitchService, plan: DepthsService) => {
                 // setup needed for consumed calculation
                 const oValues = options.getOptions();
                 OptionExtensions.applySimpleSpeeds(oValues);
                 options.safetyStop = SafetyStop.always;
                 options.gasSwitchDuration = 1;
                 options.problemSolvingDuration = 2;
-                plan.setSimple(30, 12, tanksService.firstTank.tank, oValues);
+                plan.plannedDepth = 30;
+                plan.planDuration = 12;
 
                 tanksService.addTank();
                 const tanks = tanksService.tanks;

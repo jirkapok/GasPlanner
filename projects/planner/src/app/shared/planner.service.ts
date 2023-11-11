@@ -18,6 +18,7 @@ import { Streamed } from './streamed';
 import { TanksService } from './tanks.service';
 import { OptionsService } from './options.service';
 import {DepthsService} from './depths.service';
+import {DiveSchedules} from "./dive.schedules";
 
 @Injectable()
 export class PlannerService extends Streamed {
@@ -34,10 +35,7 @@ export class PlannerService extends Streamed {
     private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
 
     constructor(private workerFactory: WorkersFactoryCommon,
-        private tanks: TanksService,
-        private depths: DepthsService,
-        private dive: DiveResults,
-        private optionsService: OptionsService,
+        private schedules: DiveSchedules,
         private waypoints: WayPointsService) {
         super();
 
@@ -61,6 +59,22 @@ export class PlannerService extends Streamed {
             .subscribe((data) => this.finishCalculation(data));
         this.consumptionTask.failed$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.profileFailed());
+    }
+
+    private get tanks(): TanksService {
+        return this.schedules.selected.tanksService;
+    }
+
+    private get depths(): DepthsService {
+        return this.schedules.selected.depths;
+    }
+
+    private get optionsService(): OptionsService {
+        return this.schedules.selected.optionsService;
+    }
+
+    private get dive(): DiveResults {
+        return this.schedules.selected.diveResult;
     }
 
     private get serializableTanks(): ITankBound[] {

@@ -26,6 +26,7 @@ import { Preferences } from './preferences';
 import { PreferencesStore } from './preferencesStore';
 import { DiveResults } from './diveresults';
 import {ReloadDispatcher} from './reloadDispatcher';
+import {DiveSchedules} from './dive.schedules';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -39,11 +40,10 @@ describe('PlannerService', () => {
                 WorkersFactoryCommon,
                 PlannerService, UnitConversion,
                 TanksService, ViewSwitchService,
-                OptionsService, SettingsNormalizationService,
-                DelayedScheduleService, WayPointsService,
+                OptionsService, DelayedScheduleService, WayPointsService,
                 SubViewStorage, SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, DiveResults,
-                DepthsService, ReloadDispatcher
+                DepthsService, ReloadDispatcher, DiveSchedules
             ],
             imports: []
         }).compileComponents();
@@ -163,9 +163,9 @@ describe('PlannerService', () => {
                 tanksService.addTank();
                 const secondTank = tanksService.tanks[1];
 
-                const depthsService = TestBed.inject(DepthsService);
-                depthsService.addSegment();
-                const segments = depthsService.segments;
+                const depths = TestBed.inject(DepthsService);
+                depths.addSegment();
+                const segments = depths.segments;
                 lastSegment = segments[1];
                 lastSegment.tank = secondTank.tank;
                 tanksService.removeTank(secondTank);

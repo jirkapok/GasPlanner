@@ -11,6 +11,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { WayPointsService } from './waypoints.service';
 import {DepthsService} from './depths.service';
 import {ReloadDispatcher} from './reloadDispatcher';
+import {DiveSchedules} from "./dive.schedules";
 
 interface TestSut {
     options: OptionsService;
@@ -34,8 +35,9 @@ describe('Url Serialization', () => {
         const tanksService = new TanksService(units);
         const wayPoints = new WayPointsService(units);
         const dive = new DiveResults();
+        const schedules = new DiveSchedules(units, dispatcher);
         const depths = new DepthsService(units, tanksService, dive, options, dispatcher);
-        const planner = new PlannerService(irrelevantFactory, tanksService, depths, dive, options, wayPoints);
+        const planner = new PlannerService(irrelevantFactory, schedules, wayPoints);
         depths.setSimple();
         const viewSwitch = new ViewSwitchService(depths, options, tanksService);
         const preferencesFactory = new Preferences(viewSwitch, units, tanksService, depths, options, new ViewStates());

@@ -4,15 +4,14 @@ import { OptionsService } from './options.service';
 import { TanksService } from './tanks.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 import { ViewStates } from './viewStates';
-import {DepthsService} from './depths.service';
+import { DepthsService } from './depths.service';
+import { DiveSchedules } from './dive.schedules';
 
 @Injectable()
 export class SettingsNormalizationService {
     constructor(
-        private options: OptionsService,
         private units: UnitConversion,
-        private tanksService: TanksService,
-        private depths: DepthsService,
+        private schedules: DiveSchedules,
         private views: ViewStates) { }
 
     private get ranges(): RangeConstants {
@@ -20,40 +19,43 @@ export class SettingsNormalizationService {
     }
 
     public apply(): void {
-        this.applyToOptions();
-        this.normalizeTanks();
-        this.normalizeSegments();
+        this.schedules.dives.forEach(d => {
+            this.applyToOptions(d.optionsService);
+            this.normalizeTanks(d.tanksService);
+            this.normalizeSegments(d.depths);
+        });
+
         this.views.reset();
     }
 
-    private applyToOptions(): void {
-        const oDiver = this.options.diverOptions;
+    private applyToOptions(options: OptionsService): void {
+        const oDiver = options.diverOptions;
         const rmvRounding = this.units.ranges.rmvRounding;
-        this.options.diverOptions.rmv = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
+        options.diverOptions.rmv = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
             oDiver.rmv, this.units.ranges.diverRmv, rmvRounding);
 
-        this.applyOptionsCalculationValues();
-        this.normalizeOptions();
+        this.applyOptionsCalculationValues(options);
+        this.normalizeOptions(options);
     }
 
-    private applyOptionsCalculationValues(): void {
+    private applyOptionsCalculationValues(options: OptionsService): void {
         const defaults = this.units.defaults;
         // options need to be in metrics only
-        const targetOptions = this.options.getOptions();
+        const targetOptions = options.getOptions();
         targetOptions.decoStopDistance = this.units.toMeters(defaults.stopsDistance);
         targetOptions.minimumAutoStopDepth = this.units.toMeters(defaults.autoStopLevel);
         // unable to fit the stop, the lowest value is always the minimum distance
         targetOptions.lastStopDepth = this.units.toMeters(defaults.stopsDistance);
     }
 
-    private normalizeOptions(): void {
+    private normalizeOptions(options: OptionsService): void {
         const altitudeRange = this.ranges.altitude;
-        this.options.altitude = this.fitUnit(u => u, v => v, this.options.altitude, altitudeRange);
-        this.options.useRecreational(); // to round usage of options to nice values
+        options.altitude = this.fitUnit(u => u, v => v, options.altitude, altitudeRange);
+        options.useRecreational(); // to round usage of options to nice values
     }
 
-    private normalizeTanks(): void {
-        const tanks = this.tanksService.tanks;
+    private normalizeTanks(tanksService: TanksService): void {
+        const tanks = tanksService.tanks;
         const defaultTanks = this.units.defaults.tanks;
 
         tanks.forEach(t => {
@@ -75,8 +77,8 @@ export class SettingsNormalizationService {
         });
     }
 
-    private normalizeSegments(): void {
-        const segments = this.depths.segments;
+    private normalizeSegments(depthsService: DepthsService): void {
+        const segments = depthsService.segments;
         // rounding to imperial units rounds 30 m to 98 ft.
         segments.forEach(s => {
             s.startDepth = this.fitLengthToRange(s.startDepth, this.ranges.depth);
@@ -84,7 +86,7 @@ export class SettingsNormalizationService {
         });
 
         // fixes start depth back to surface after moved to UI range.
-        this.depths.fixDepths();
+        depthsService.fixDepths();
     }
 
     private fitLengthToRange(meters: number, range: [number, number]): number {

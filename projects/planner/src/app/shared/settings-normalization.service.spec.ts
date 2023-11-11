@@ -1,22 +1,14 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Diver, Options } from 'scuba-physics';
-import { DelayedScheduleService } from './delayedSchedule.service';
 import { DepthsService } from './depths.service';
 import { OptionsService } from './options.service';
-import { PlannerService } from './planner.service';
-import { WorkersFactoryCommon } from './serial.workers.factory';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
-import { WayPointsService } from './waypoints.service';
-import { ViewStates } from './viewStates';
-import { PreferencesStore } from './preferencesStore';
-import { Preferences } from './preferences';
-import { SubViewStorage } from './subViewStorage';
-import { ViewSwitchService } from './viewSwitchService';
 import { DiverOptions } from './models';
-import { DiveResults } from './diveresults';
+import {DiveSchedules} from './dive.schedules';
+import {ViewStates} from './viewStates';
 import {ReloadDispatcher} from './reloadDispatcher';
 
 describe('SettingsNormalizationService', () => {
@@ -33,13 +25,9 @@ describe('SettingsNormalizationService', () => {
         TestBed.configureTestingModule({
             declarations: [],
             providers: [
-                WorkersFactoryCommon, UnitConversion,
-                PlannerService, RouterTestingModule, OptionsService,
-                SettingsNormalizationService, TanksService,
-                DepthsService, DelayedScheduleService,
-                SubViewStorage, ViewStates, ViewSwitchService,
-                WayPointsService, DiveResults, ReloadDispatcher,
-                PreferencesStore, Preferences
+                RouterTestingModule, UnitConversion,
+                SettingsNormalizationService, ReloadDispatcher,
+                ViewStates, DiveSchedules, OptionsService
             ],
             imports: [RouterTestingModule.withRoutes([])]
         });

@@ -101,10 +101,10 @@ describe('Depths Complex Component', () => {
         expect(depths.planDuration).toBe(21.7);
     });
 
-    it('Change depth calculates profile correctly', inject([DiveResults],
-        (dive: DiveResults) => {
+    it('Change depth calculates profile correctly', inject([DiveResults, ReloadDispatcher],
+        (dive: DiveResults, dispatcher: ReloadDispatcher) => {
             let eventFired = false;
-            component.depths.changed$.subscribe(() => eventFired = true );
+            dispatcher.depthChanged$.subscribe(() => eventFired = true );
             complexPage.durationInput(1).value = '5';
             complexPage.durationInput(1).dispatchEvent(new Event('input'));
             // in case of wrong binding, the algorithm ads segment with 0 duration

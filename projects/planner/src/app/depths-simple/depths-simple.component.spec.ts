@@ -73,34 +73,36 @@ describe('Depths Simple Component', () => {
             });
     });
 
-    it('Duration change enforces calculation', () => {
+    it('Duration change enforces calculation', inject([ReloadDispatcher], (dispatcher: ReloadDispatcher) => {
         let eventFired = false;
-        component.depths.changed$.subscribe(() => eventFired = true);
+        dispatcher.depthChanged$.subscribe(() => eventFired = true);
         simplePage.durationInput.value = '20';
         simplePage.durationInput.dispatchEvent(new Event('input'));
         expect(eventFired).toBeTruthy();
-    });
+    }));
 
     describe('Duration reloaded enforced by', () => {
-        it('Apply max NDL', inject([DiveSchedules], (schedule: DiveSchedules) => {
-            let eventFired = false;
-            component.depths.changed$.subscribe(() => eventFired = true );
-            schedule.selected.diveResult.noDecoTime = 21;
-            const assignDurationSpy = spyOn(schedule.selected.depths, 'applyNdlDuration').and.callThrough();
-            simplePage.applyNdlButton.click();
-            expect(assignDurationSpy).toHaveBeenCalledWith();
-            expect(schedule.selected.depths.planDuration).toBe(21);
-            expect(eventFired).toBeTruthy();
-        }));
+        it('Apply max NDL', inject([DiveSchedules, ReloadDispatcher],
+            (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {
+                let eventFired = false;
+                dispatcher.depthChanged$.subscribe(() => eventFired = true );
+                schedule.selected.diveResult.noDecoTime = 21;
+                const assignDurationSpy = spyOn(schedule.selected.depths, 'applyNdlDuration').and.callThrough();
+                simplePage.applyNdlButton.click();
+                expect(assignDurationSpy).toHaveBeenCalledWith();
+                expect(schedule.selected.depths.planDuration).toBe(21);
+                expect(eventFired).toBeTruthy();
+            }));
 
-        it('Apply max duration', inject([DiveSchedules], (schedule: DiveSchedules) => {
-            let eventFired = false;
-            schedule.selected.diveResult.maxTime = 19;
-            component.depths.changed$.subscribe(() => eventFired = true );
-            simplePage.applyMaxDurationButton.click();
-            expect(eventFired).toBeTruthy();
-            expect(simplePage.durationInput.value).toBe('19');
-        }));
+        it('Apply max duration', inject([DiveSchedules, ReloadDispatcher],
+            (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {
+                let eventFired = false;
+                schedule.selected.diveResult.maxTime = 19;
+                dispatcher.depthChanged$.subscribe(() => eventFired = true );
+                simplePage.applyMaxDurationButton.click();
+                expect(eventFired).toBeTruthy();
+                expect(simplePage.durationInput.value).toBe('19');
+            }));
     });
 
     it('wrong duration doesn\'t call calculate', () => {

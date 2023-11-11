@@ -5,19 +5,16 @@ import { Plan } from './plan.service';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { Streamed } from './streamed';
-import {Observable, Subject, takeUntil} from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { OptionsService } from './options.service';
 import { Tank, Segment, StandardGases, Precision } from 'scuba-physics';
 import { DiveResults } from './diveresults';
-import {ReloadDispatcher} from './reloadDispatcher';
+import { ReloadDispatcher } from './reloadDispatcher';
 
 @Injectable()
 export class DepthsService extends Streamed {
-    // TODO rebind changed$ to delayedCalc.schedule()
-    public changed$: Observable<void>;
     private _levels: Level[] = [];
     private toxicity: GasToxicity;
-    private onChanged = new Subject<void>();
     private plan = new Plan();
 
     constructor(
@@ -27,8 +24,6 @@ export class DepthsService extends Streamed {
         private optionsService: OptionsService,
         private dispatcher: ReloadDispatcher) {
         super();
-
-        this.changed$ = this.onChanged.asObservable();
         this.toxicity = this.optionsService.toxicity;
 
         // this enforces to initialize the levels, needs to be called after subscribe to plan
@@ -194,7 +189,7 @@ export class DepthsService extends Streamed {
     }
 
     private apply(): void {
-        this.onChanged.next();
+        this.dispatcher.sendDepthChanged();
     }
 
     private tankRemoved(removed: Tank): void {

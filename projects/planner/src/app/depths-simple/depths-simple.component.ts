@@ -12,6 +12,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
 import {DiveSchedules} from '../shared/dive.schedules';
+import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 @Component({
     selector: 'app-depths-simple',
@@ -29,7 +30,8 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion,
-        private schedules: DiveSchedules) {
+        private schedules: DiveSchedules,
+        private dispatcher: ReloadDispatcher) {
         super();
         // data are already available, it is ok to generate the levels.
         this.schedules.selected.depths.updateLevels();
@@ -61,10 +63,10 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
             planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
         });
 
-        // TODO selected may change, values arent updated, fix the eventing
+        // Reload is not relevant here
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
-        this.depths.changed$.pipe(takeUntil(this.unsubscribe$))
+        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.depths.updateLevels();
                 this.reloadSimple();

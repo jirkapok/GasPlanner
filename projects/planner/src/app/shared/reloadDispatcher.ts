@@ -15,6 +15,9 @@ export class ReloadDispatcher {
     public tankRemoved$: Observable<Tank>;
     /** Event fired only in case of segments rebuild. Not fired when adding or removing. */
     public depthsReloaded$: Observable<void>;
+    // TODO rebind changed$ to delayedCalc.schedule()
+    public depthChanged$: Observable<void>;
+
     public optionsReloaded$: Observable<void>;
 
     // TODO how to prevent fire the event multiple times, in case of reloadAll? we filter,
@@ -23,12 +26,14 @@ export class ReloadDispatcher {
     private onTanksReloaded = new Subject<void>();
     private onTankRemoved = new Subject<Tank>();
     private onDepthsReloaded = new Subject<void>();
+    private onDepthChanged = new Subject<void>();
     private onOptionsReloaded = new Subject<void>();
 
     constructor() {
         this.tanksReloaded$ = this.onTanksReloaded.asObservable();
         this.tankRemoved$ = this.onTankRemoved.asObservable();
         this.depthsReloaded$ = this.onDepthsReloaded.asObservable();
+        this.depthChanged$ = this.onDepthChanged.asObservable();
         this.optionsReloaded$ = this.onOptionsReloaded.asObservable();
     }
 
@@ -41,6 +46,10 @@ export class ReloadDispatcher {
     }
     public sendDepthsReloaded(): void {
         this.onDepthsReloaded.next();
+    }
+
+    public sendDepthChanged(): void {
+        this.onDepthChanged.next();
     }
 
     public sendOptionsReloaded(): void {

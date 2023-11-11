@@ -20,7 +20,7 @@ export class DiveSchedule {
         this.assignIndex(index);
         this._tanks = new TanksService(units);
         this._optionsService = new OptionsService(this.units, this.dispatcher);
-        this._depths = new DepthsService(this.units, this.tanksService, this._diveResult, this._optionsService);
+        this._depths = new DepthsService(this.units, this.tanksService, this._diveResult, this._optionsService, this.dispatcher);
     }
 
     public get id(): number {

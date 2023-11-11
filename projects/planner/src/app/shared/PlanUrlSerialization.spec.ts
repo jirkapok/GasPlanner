@@ -34,7 +34,7 @@ describe('Url Serialization', () => {
         const tanksService = new TanksService(units);
         const wayPoints = new WayPointsService(units);
         const dive = new DiveResults();
-        const depths = new DepthsService(units, tanksService, dive, options);
+        const depths = new DepthsService(units, tanksService, dive, options, dispatcher);
         const planner = new PlannerService(irrelevantFactory, tanksService, depths, dive, options, wayPoints);
         depths.setSimple();
         const viewSwitch = new ViewSwitchService(depths, options, tanksService);

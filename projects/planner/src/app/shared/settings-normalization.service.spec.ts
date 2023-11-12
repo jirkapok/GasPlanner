@@ -1,4 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Diver, Options } from 'scuba-physics';
 import { DepthsService } from './depths.service';
@@ -7,14 +7,17 @@ import { SettingsNormalizationService } from './settings-normalization.service';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { DiverOptions } from './models';
-import {DiveSchedules} from './dive.schedules';
-import {ViewStates} from './viewStates';
-import {ReloadDispatcher} from './reloadDispatcher';
+import { DiveSchedules } from './dive.schedules';
+import { ViewStates } from './viewStates';
+import { ReloadDispatcher } from './reloadDispatcher';
 
 describe('SettingsNormalizationService', () => {
     let service: SettingsNormalizationService;
     let diver: Diver;
     let diverOptions: DiverOptions;
+    let optionsService: OptionsService;
+    let depths: DepthsService;
+    let tankService: TanksService;
 
     const applySut = (options: OptionsService) => {
         options.applyDiver(diverOptions);
@@ -27,7 +30,7 @@ describe('SettingsNormalizationService', () => {
             providers: [
                 RouterTestingModule, UnitConversion,
                 SettingsNormalizationService, ReloadDispatcher,
-                ViewStates, DiveSchedules, OptionsService
+                ViewStates, DiveSchedules
             ],
             imports: [RouterTestingModule.withRoutes([])]
         });
@@ -35,30 +38,32 @@ describe('SettingsNormalizationService', () => {
         service = TestBed.inject(SettingsNormalizationService);
         diver = new Diver();
         diverOptions = new DiverOptions(new Options(), diver);
+        const schedules = TestBed.inject(DiveSchedules);
+        const firstDive = schedules.dives[0];
+        optionsService = firstDive.optionsService;
+        depths = firstDive.depths;
+        tankService = firstDive.tanksService;
     });
 
     describe('Diver', () => {
-        it('RMV applies to planner', inject([OptionsService],
-            (options: OptionsService) => {
-                diverOptions.rmv = 100;
-                applySut(options);
-                expect(options.diverOptions.rmv).toBe(90);
-            }));
+        it('RMV applies to planner', () => {
+            diverOptions.rmv = 100;
+            applySut(optionsService);
+            expect(optionsService.diverOptions.rmv).toBe(90);
+        });
 
     });
 
     describe('Imperial units', () => {
         let options: Options;
-        let sourceOptions: OptionsService;
 
         beforeEach(() => {
-            sourceOptions = TestBed.inject(OptionsService);
-            sourceOptions.altitude = 100;
-            sourceOptions.diverOptions.rmv = 19.837563;
+            optionsService.altitude = 100;
+            optionsService.diverOptions.rmv = 19.837563;
             const units = TestBed.inject(UnitConversion);
             units.imperialUnits = true;
             service.apply();
-            options = sourceOptions.getOptions();
+            options = optionsService.getOptions();
         });
 
         it('Updates depth level options to 10 feet', () => {
@@ -69,7 +74,7 @@ describe('SettingsNormalizationService', () => {
 
         it('Updates diver rounded rmv', () => {
             const units = TestBed.inject(UnitConversion);
-            const rmv = units.fromLiter(sourceOptions.diverOptions.rmv);
+            const rmv = units.fromLiter(optionsService.diverOptions.rmv);
             expect(rmv).toBeCloseTo(0.70060, 5);
         });
 
@@ -82,45 +87,40 @@ describe('SettingsNormalizationService', () => {
             expect(options.descentSpeed).toBeCloseTo(18.288, 4);
         });
 
-        it('Rounds segments to feet', inject([DepthsService],
-            (depths: DepthsService) => {
-                const segment = depths.segments[1];
-                // 30 m flat segment rounded to 98 feet
-                expect(segment.startDepth).toBeCloseTo(29.8704, 4);
-                expect(segment.endDepth).toBeCloseTo(29.8704, 4);
-            }));
+        it('Rounds segments to feet', () => {
+            const segment = depths.segments[1];
+            // 30 m flat segment rounded to 98 feet
+            expect(segment.startDepth).toBeCloseTo(29.8704, 4);
+            expect(segment.endDepth).toBeCloseTo(29.8704, 4);
+        });
 
-        it('Rounds tank properties', inject([TanksService],
-            (tanks: TanksService) => {
-                const bound = tanks.firstTank;
-                expect(bound.startPressure).toBeCloseTo(2901, 6);
-                expect(bound.size).toBeCloseTo(125.7, 3);
-            }));
+        it('Rounds tank properties', () => {
+            const bound = tankService.firstTank;
+            expect(bound.startPressure).toBeCloseTo(2901, 6);
+            expect(bound.size).toBeCloseTo(125.7, 3);
+        });
 
-        it('Sets working pressure', inject([TanksService],
-            (tanks: TanksService) => {
-                // tank was created before switch to imperial,
-                // so it still has valid working pressure even it wasn't used in metric
-                const workingPressure = tanks.firstTank.workingPressure;
-                expect(workingPressure).toBeCloseTo(3442, 6);
-            }));
+        it('Sets working pressure', () => {
+            // tank was created before switch to imperial,
+            // so it still has valid working pressure even it wasn't used in metric
+            const workingPressure = tankService.firstTank.workingPressure;
+            expect(workingPressure).toBeCloseTo(3442, 6);
+        });
     });
 
     describe('Metric units', () => {
         let options: Options;
-        let sourceOptions: OptionsService;
 
         beforeEach(() => {
-            sourceOptions = TestBed.inject(OptionsService);
-            sourceOptions.altitude = 100;
+            optionsService.altitude = 100;
             diver.rmv = 19.837563;
-            applySut(sourceOptions);
+            applySut(optionsService);
             const units = TestBed.inject(UnitConversion);
             units.imperialUnits = true;
-            applySut(sourceOptions);
+            applySut(optionsService);
             units.imperialUnits = false;
-            applySut(sourceOptions);
-            options = sourceOptions.getOptions();
+            applySut(optionsService);
+            options = optionsService.getOptions();
         });
 
         it('Updates depth level options to 3 m', () => {
@@ -130,7 +130,7 @@ describe('SettingsNormalizationService', () => {
         });
 
         it('Updates diver rounded rmv liters', () => {
-            expect(sourceOptions.diverOptions.rmv).toBeCloseTo(19.84000, 5);
+            expect(optionsService.diverOptions.rmv).toBeCloseTo(19.84000, 5);
         });
 
         it('Rounds options meters using recreational values', () => {
@@ -142,26 +142,23 @@ describe('SettingsNormalizationService', () => {
             expect(options.descentSpeed).toBe(18);
         });
 
-        it('Rounds segments to meters', inject([DepthsService],
-            (depths: DepthsService) => {
-                const segment = depths.segments[1];
-                expect(segment.startDepth).toBe(30);
-                expect(segment.endDepth).toBe(30);
-            }));
+        it('Rounds segments to meters', () => {
+            const segment = depths.segments[1];
+            expect(segment.startDepth).toBe(30);
+            expect(segment.endDepth).toBe(30);
+        });
 
-        it('Rounds tank properties without change', inject([TanksService],
-            (tanks: TanksService) => {
-                const tank = tanks.firstTank.tank;
-                expect(tank.startPressure).toBe(200);
-                expect(tank.size).toBe(15);
-            }));
+        it('Rounds tank properties without change', () => {
+            const tank = tankService.firstTank.tank;
+            expect(tank.startPressure).toBe(200);
+            expect(tank.size).toBe(15);
+        });
 
-        it('Sets working pressure without affecting size', inject([TanksService],
-            (tanks: TanksService) => {
-                // tank was created before switch to imperial,
-                // so it still has valid working pressure even it wasn't used in metric
-                const workingPressure = tanks.firstTank.workingPressure;
-                expect(workingPressure).toBeCloseTo(0, 6);
-            }));
+        it('Sets working pressure without affecting size', () => {
+            // tank was created before switch to imperial,
+            // so it still has valid working pressure even it wasn't used in metric
+            const workingPressure = tankService.firstTank.workingPressure;
+            expect(workingPressure).toBeCloseTo(0, 6);
+        });
     });
 });

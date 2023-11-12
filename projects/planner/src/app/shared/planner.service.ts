@@ -18,7 +18,8 @@ import { Streamed } from './streamed';
 import { TanksService } from './tanks.service';
 import { OptionsService } from './options.service';
 import {DepthsService} from './depths.service';
-import {DiveSchedules} from "./dive.schedules";
+import {DiveSchedules} from './dive.schedules';
+import {UnitConversion} from './UnitConversion';
 
 @Injectable()
 export class PlannerService extends Streamed {
@@ -33,12 +34,14 @@ export class PlannerService extends Streamed {
     private profileTask: IBackgroundTask<ProfileRequestDto, ProfileResultDto>;
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
     private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
+    private waypoints: WayPointsService;
 
     constructor(private workerFactory: WorkersFactoryCommon,
         private schedules: DiveSchedules,
-        private waypoints: WayPointsService) {
+        units: UnitConversion) {
         super();
 
+        this.waypoints = new WayPointsService(units);
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
 

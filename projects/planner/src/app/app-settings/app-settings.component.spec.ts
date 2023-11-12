@@ -20,6 +20,7 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveResults } from '../shared/diveresults';
 import {DepthsService} from '../shared/depths.service';
 import {ReloadDispatcher} from '../shared/reloadDispatcher';
+import {DiveSchedules} from '../shared/dive.schedules';
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
@@ -46,7 +47,7 @@ describe('App settings component', () => {
                 TanksService, ViewStates, SubViewStorage,
                 PreferencesStore, Preferences, ViewSwitchService,
                 WayPointsService, DiveResults, DepthsService,
-                ReloadDispatcher
+                ReloadDispatcher, DiveSchedules
             ]
         })
             .compileComponents();

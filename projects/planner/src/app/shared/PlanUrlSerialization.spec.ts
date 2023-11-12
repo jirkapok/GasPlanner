@@ -8,10 +8,9 @@ import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewStates } from './viewStates';
 import { ViewSwitchService } from './viewSwitchService';
-import { WayPointsService } from './waypoints.service';
 import {DepthsService} from './depths.service';
 import {ReloadDispatcher} from './reloadDispatcher';
-import {DiveSchedules} from "./dive.schedules";
+import {DiveSchedules} from './dive.schedules';
 
 interface TestSut {
     options: OptionsService;
@@ -33,11 +32,10 @@ describe('Url Serialization', () => {
         const options = new OptionsService(units, dispatcher);
         units.imperialUnits = imperial;
         const tanksService = new TanksService(units);
-        const wayPoints = new WayPointsService(units);
         const dive = new DiveResults();
         const schedules = new DiveSchedules(units, dispatcher);
         const depths = new DepthsService(units, tanksService, dive, options, dispatcher);
-        const planner = new PlannerService(irrelevantFactory, schedules, wayPoints);
+        const planner = new PlannerService(irrelevantFactory, schedules, units);
         depths.setSimple();
         const viewSwitch = new ViewSwitchService(depths, options, tanksService);
         const preferencesFactory = new Preferences(viewSwitch, units, tanksService, depths, options, new ViewStates());

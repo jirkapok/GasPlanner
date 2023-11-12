@@ -23,6 +23,7 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveResults } from '../shared/diveresults';
 import {DepthsService} from '../shared/depths.service';
 import {ReloadDispatcher} from '../shared/reloadDispatcher';
+import {DiveSchedules} from '../shared/dive.schedules';
 
 class SacPage {
     constructor(private fixture: ComponentFixture<SacComponent>) { }
@@ -55,7 +56,7 @@ describe('Sac component', () => {
                 TanksService, SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, PlannerService,
                 WayPointsService, ViewSwitchService, DiveResults,
-                ReloadDispatcher
+                ReloadDispatcher, DiveSchedules
             ],
             imports: [
                 RouterTestingModule.withRoutes([]),

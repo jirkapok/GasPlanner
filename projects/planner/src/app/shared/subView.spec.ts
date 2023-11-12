@@ -14,6 +14,7 @@ import { SubViewStorage } from './subViewStorage';
 import { DiveResults } from './diveresults';
 import {DepthsService} from './depths.service';
 import {ReloadDispatcher} from './reloadDispatcher';
+import {DiveSchedules} from './dive.schedules';
 
 const viewId = 'testView';
 interface TestView extends ViewState {
@@ -46,7 +47,7 @@ describe('SubView', () => {
                 PlannerService, WorkersFactoryCommon, TanksService,
                 UnitConversion, OptionsService, WayPointsService,
                 Preferences, ViewSwitchService, DiveResults, DepthsService,
-                ReloadDispatcher
+                ReloadDispatcher, DiveSchedules
             ],
             imports: []
         }).compileComponents();

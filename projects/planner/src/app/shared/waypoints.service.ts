@@ -49,6 +49,7 @@ export class WayPointsService {
             wayPoints.push(waypoint);
         });
 
+        // TODO replace Events parameter by events array directly
         return new Profile(profile.segments, wayPoints, profile.ceilings, events.items);
     }
 

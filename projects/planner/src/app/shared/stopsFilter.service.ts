@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { SwimAction, WayPoint } from './models';
 import { DiveResults } from './diveresults';
-import {DepthsService} from './depths.service';
+import { DiveSchedules } from './dive.schedules';
 
 @Injectable()
 export class StopsFilter {
     public _stopsOnly = false;
 
-    constructor(private dive: DiveResults, private depths: DepthsService) { }
+    constructor(private schedules: DiveSchedules) { }
 
     public get stopsOnly(): boolean {
         return this._stopsOnly;
@@ -20,7 +20,6 @@ export class StopsFilter {
     public get profileCalculated(): boolean {
         return this.dive.profileCalculated;
     }
-
     public get wayPoints(): WayPoint[] {
         const allWayPoints = this.dive.wayPoints;
 
@@ -28,11 +27,16 @@ export class StopsFilter {
             return allWayPoints;
         }
 
+        const depths = this.schedules.selected.depths;
         return allWayPoints.filter((item, index) =>
-            index < this.depths.startAscentIndex ||
+            index < depths.startAscentIndex ||
             index === allWayPoints.length - 1 ||
             item.swimAction === SwimAction.hover
         );
+    }
+
+    private get dive(): DiveResults {
+        return this.schedules.selected.diveResult;
     }
 
     public switchFilter(): void {

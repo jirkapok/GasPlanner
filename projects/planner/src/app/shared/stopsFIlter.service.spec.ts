@@ -1,38 +1,39 @@
 import { TestBed } from '@angular/core/testing';
 import { StopsFilter } from './stopsFilter.service';
-import { PlannerService } from './planner.service';
-import { WorkersFactoryCommon } from './serial.workers.factory';
-import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
-import { OptionsService } from './options.service';
+import { ReloadDispatcher } from './reloadDispatcher';
+import { DiveSchedules } from './dive.schedules';
 import { WayPointsService } from './waypoints.service';
-import { DepthsService } from './depths.service';
-import { DelayedScheduleService } from './delayedSchedule.service';
-import { SubViewStorage } from './subViewStorage';
-import { ViewStates } from './viewStates';
-import { Preferences } from './preferences';
-import { PreferencesStore } from './preferencesStore';
-import { ViewSwitchService } from './viewSwitchService';
-import { DiveResults } from './diveresults';
-import {ReloadDispatcher} from './reloadDispatcher';
+import {
+    CalculatedProfile, Events, Segment, StandardGases
+} from 'scuba-physics';
 
 describe('Stops filter', () => {
     let service: StopsFilter;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [StopsFilter, PlannerService,
-                WorkersFactoryCommon, TanksService, UnitConversion,
-                OptionsService, WayPointsService, DepthsService,
-                DelayedScheduleService, SubViewStorage,
-                PreferencesStore, Preferences, DiveResults,
-                ViewStates, ViewSwitchService, DepthsService,
-                ReloadDispatcher
+            providers: [
+                StopsFilter, UnitConversion,
+                DiveSchedules, ReloadDispatcher,
             ]
         });
+
         service = TestBed.inject(StopsFilter);
-        const planner = TestBed.inject(PlannerService);
-        planner.calculate();
+        const segments: Segment[] = [
+            new Segment(0,30, StandardGases.air, 102),
+            new Segment(30,30, StandardGases.air, 618),
+            new Segment(30,12, StandardGases.air, 120),
+            new Segment(12,6, StandardGases.air, 60),
+            new Segment(6,3, StandardGases.air, 60),
+            new Segment(3,3, StandardGases.air, 180),
+            new Segment(3,0, StandardGases.air, 60),
+        ];
+        const profile = CalculatedProfile.fromErrors(segments, []);
+        const wayPoints = new WayPointsService(new UnitConversion());
+        const schedules = TestBed.inject(DiveSchedules);
+        const dive = schedules.dives[0].diveResult;
+        dive.wayPoints = wayPoints.calculateWayPoints(profile, new Events()).wayPoints;
     });
 
     it('When disabled returns all waypoints', () => {

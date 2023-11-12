@@ -2,10 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 import { UnitConversion } from './UnitConversion';
-import { OptionsService } from './options.service';
-import {DepthsService} from './depths.service';
-import {DiveResults} from './diveresults';
-import {ReloadDispatcher} from './reloadDispatcher';
+import { DepthsService } from './depths.service';
+import { ReloadDispatcher } from './reloadDispatcher';
+import { DiveSchedules } from './dive.schedules';
 
 describe('View Switch service', () => {
     const o2Expected = 50;
@@ -17,20 +16,20 @@ describe('View Switch service', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
-                TanksService, ViewSwitchService,
-                OptionsService, UnitConversion,
-                DepthsService, DiveResults, ReloadDispatcher
+                ViewSwitchService, UnitConversion,
+                DiveSchedules, ReloadDispatcher
             ],
             imports: []
         }).compileComponents();
     });
 
     beforeEach(() => {
-        tanksService = TestBed.inject(TanksService);
+        const selectedDive = TestBed.inject(DiveSchedules).selected;
+        tanksService = selectedDive.tanksService;
         tanksService.firstTank.o2 = o2Expected;
         tanksService.addTank();
 
-        plan = TestBed.inject(DepthsService);
+        plan = selectedDive.depths
         plan.plannedDepth = 7;
         plan.setSimple();
         plan.segments[1].endDepth = 5;

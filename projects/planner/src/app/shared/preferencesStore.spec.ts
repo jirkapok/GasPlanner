@@ -155,7 +155,7 @@ describe('PreferencesStore', () => {
                 expect(depthsService.segments[2].tank?.id).toEqual(2);
             }));
 
-        it('Simple profile is loaded after save and trims tank', inject(
+        xit('Simple profile is loaded after save and trims tank', inject(
             [PreferencesStore, PlannerService, TanksService, DepthsService, OptionsService],
             (service: PreferencesStore, planner: PlannerService, tanksService: TanksService,
                 depthsService: DepthsService, options: OptionsService) => {

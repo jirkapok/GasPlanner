@@ -1,20 +1,11 @@
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
-import { PlannerService } from './planner.service';
-import { WorkersFactoryCommon } from './serial.workers.factory';
 import { DepthsService } from './depths.service';
 import { inject, TestBed } from '@angular/core/testing';
 import { OptionsService } from './options.service';
-import { OptionExtensions } from 'projects/scuba-physics/src/lib/Options.spec';
-import { SafetyStop } from 'scuba-physics';
-import { WayPointsService } from './waypoints.service';
-import { SubViewStorage } from './subViewStorage';
-import { ViewStates } from './viewStates';
-import { PreferencesStore } from './preferencesStore';
-import { Preferences } from './preferences';
-import { ViewSwitchService } from './viewSwitchService';
 import { DiveResults } from './diveresults';
-import {ReloadDispatcher} from './reloadDispatcher';
+import { ReloadDispatcher } from './reloadDispatcher';
+import { DiveSchedules } from './dive.schedules';
 
 describe('Depths service', () => {
     let depthService: DepthsService;
@@ -25,10 +16,9 @@ describe('Depths service', () => {
             imports: [],
             providers: [
                 UnitConversion, OptionsService,
-                DepthsService, TanksService, SubViewStorage,
-                ViewStates, PreferencesStore, Preferences,
-                ViewSwitchService, DiveResults, ReloadDispatcher,
-                PlannerService, WayPointsService, WorkersFactoryCommon
+                DepthsService, TanksService,
+                DiveResults, ReloadDispatcher,
+                DiveSchedules
             ]
         }).compileComponents();
 
@@ -53,25 +43,24 @@ describe('Depths service', () => {
     });
 
     describe('Apply plan limits', () => {
+        const expectedDuration = 18;
+        const expectedNdl = 12;
         beforeEach(() => {
-            const planner = TestBed.inject(PlannerService);
-            const options = TestBed.inject(OptionsService);
-            OptionExtensions.applySimpleSpeeds(options.getOptions());
-            options.problemSolvingDuration = 2;
-            options.safetyStop = SafetyStop.always;
-            depthService.plannedDepth = 30;
-            planner.calculate();
+            const diveResults = TestBed.inject(DiveResults);
+            diveResults.noDecoTime = expectedNdl;
+            diveResults.maxTime = expectedDuration;
         });
 
         describe('When Calculated', () => {
             it('Max bottom time is applied', () => {
+                console.log(depthService.segments);
                 depthService.applyMaxDuration();
-                expect(depthService.planDuration).toBe(18);
+                expect(depthService.planDuration).toBe(expectedDuration);
             });
 
             it('No deco limit is applied', () => {
                 depthService.applyNdlDuration();
-                expect(depthService.planDuration).toBe(12);
+                expect(depthService.planDuration).toBe(expectedNdl);
             });
         });
     });

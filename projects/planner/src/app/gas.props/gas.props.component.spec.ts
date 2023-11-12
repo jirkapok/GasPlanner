@@ -19,6 +19,7 @@ import { StandardGases } from 'scuba-physics';
 import { DiveResults } from '../shared/diveresults';
 import {DepthsService} from '../shared/depths.service';
 import {ReloadDispatcher} from '../shared/reloadDispatcher';
+import {DiveSchedules} from '../shared/dive.schedules';
 
 describe('GasPropertiesCalcComponent', () => {
     let component: GasPropertiesCalcComponent;
@@ -33,7 +34,7 @@ describe('GasPropertiesCalcComponent', () => {
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
                 TanksService, OptionsService, WayPointsService,
                 Preferences, ViewSwitchService, DiveResults,
-                DepthsService, ReloadDispatcher
+                DepthsService, ReloadDispatcher, DiveSchedules
             ]
         });
         fixture = TestBed.createComponent(GasPropertiesCalcComponent);

@@ -7,7 +7,6 @@ import { OptionsService } from '../shared/options.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
-import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { AppSettingsComponent } from './app-settings.component';
@@ -15,12 +14,13 @@ import { ViewStates } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { Preferences } from '../shared/preferences';
 import { PreferencesStore } from '../shared/preferencesStore';
-import { WayPointsService } from '../shared/waypoints.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
+import { WayPointsService } from '../shared/waypoints.service';
+import { TanksService } from '../shared/tanks.service';
 import { DiveResults } from '../shared/diveresults';
-import {DepthsService} from '../shared/depths.service';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
-import {DiveSchedules} from '../shared/dive.schedules';
+import { DepthsService } from '../shared/depths.service';
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
@@ -39,18 +39,20 @@ describe('App settings component', () => {
         await TestBed.configureTestingModule({
             declarations: [AppSettingsComponent],
             imports: [ReactiveFormsModule],
-            providers: [DecimalPipe,
+            providers: [
+                DecimalPipe,
                 SettingsNormalizationService,
                 UnitConversion, ValidatorGroups,
-                InputControls, OptionsService,
+                InputControls, ViewStates, SubViewStorage,
+                DiveSchedules, ReloadDispatcher,
+                PreferencesStore, Preferences,
                 PlannerService, WorkersFactoryCommon,
-                TanksService, ViewStates, SubViewStorage,
-                PreferencesStore, Preferences, ViewSwitchService,
+                ViewSwitchService,
+                OptionsService, TanksService,
                 WayPointsService, DiveResults, DepthsService,
-                ReloadDispatcher, DiveSchedules
+                ReloadDispatcher,
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     });
 
     beforeEach(() => {
@@ -61,25 +63,27 @@ describe('App settings component', () => {
     });
 
     describe('Imperial units', () => {
+        let options: OptionsService;
+
         beforeEach(() => {
             component.diver.rmv = 30;
             page.imperialRadio.click();
             component.use();
+            const schedules = TestBed.inject(DiveSchedules);
+            options = schedules.selected.optionsService;
         });
 
-        it('Normalize rmv to imperial', inject([OptionsService],
-            (options: OptionsService) => {
-                expect(options.diverOptions.rmv).toBeCloseTo(29.998867, 6);
-            }));
+        it('Normalize rmv to imperial', () => {
+            expect(options.diverOptions.rmv).toBeCloseTo(29.998867, 6);
+        });
+
+        it('Applies recreational options', () => {
+            expect(options.maxEND).toBeCloseTo(100, 4);
+        });
 
         it('Applies units change', inject([UnitConversion],
             (units: UnitConversion) => {
                 expect(units.imperialUnits).toBeTruthy();
-            }));
-
-        it('Applies recreational options', inject([OptionsService],
-            (options: OptionsService) => {
-                expect(options.maxEND).toBeCloseTo(100, 4);
             }));
     });
 });

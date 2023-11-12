@@ -10,6 +10,7 @@ import { SettingsNormalizationService } from '../shared/settings-normalization.s
 import { UnitConversion } from '../shared/UnitConversion';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { DiverOptions } from '../shared/models';
+import {DiveSchedules} from '../shared/dive.schedules';
 
 @Component({
     selector: 'app-app-settings',
@@ -25,15 +26,21 @@ export class AppSettingsComponent implements OnInit {
         imperialUnits: FormControl<boolean>;
     }>;
 
-    constructor(public units: UnitConversion,
+    constructor(
+        public units: UnitConversion,
         private settingsNormalization: SettingsNormalizationService,
         private formBuilder: NonNullableFormBuilder,
         private cd: ChangeDetectorRef,
-        private options: OptionsService,
+        private schedules: DiveSchedules,
         private views: SubViewStorage,
         public location: Location) {
         this.diver = new DiverOptions();
-        this.diver.loadFrom(this.options.diverOptions);
+        this.diver.loadFrom(this.selectedOptions.diverOptions);
+    }
+
+    // consider use to all dives not only to currently selected
+    private get selectedOptions(): OptionsService {
+        return this.schedules.selected.optionsService;
     }
 
     public ngOnInit(): void {
@@ -48,7 +55,7 @@ export class AppSettingsComponent implements OnInit {
         }
 
         const imperialUnits = Boolean(this.settingsForm.controls.imperialUnits.value);
-        this.options.applyDiver(this.diver);
+        this.selectedOptions.applyDiver(this.diver);
         this.units.imperialUnits = imperialUnits;
         this.settingsNormalization.apply();
         this.views.saveMainView();

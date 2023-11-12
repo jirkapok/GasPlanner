@@ -14,16 +14,10 @@ import {
 import { DtoSerialization } from './dtoSerialization';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
-import { ViewSwitchService } from './viewSwitchService';
 import { OptionsService } from './options.service';
 import { DepthsService } from './depths.service';
-import { DelayedScheduleService } from './delayedSchedule.service';
 import { SettingsNormalizationService } from './settings-normalization.service';
-import { WayPointsService } from './waypoints.service';
-import { SubViewStorage } from './subViewStorage';
 import { ViewStates } from './viewStates';
-import { Preferences } from './preferences';
-import { PreferencesStore } from './preferencesStore';
 import { DiveResults } from './diveresults';
 import {ReloadDispatcher} from './reloadDispatcher';
 import {DiveSchedules} from './dive.schedules';
@@ -32,6 +26,8 @@ describe('PlannerService', () => {
     let planner: PlannerService;
     let tanksService: TanksService;
     let depthsService: DepthsService;
+    let dive: DiveResults;
+    let optionsService: OptionsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -39,57 +35,52 @@ describe('PlannerService', () => {
             providers: [
                 WorkersFactoryCommon,
                 PlannerService, UnitConversion,
-                TanksService, ViewSwitchService,
-                OptionsService, DelayedScheduleService, WayPointsService,
-                SubViewStorage, SubViewStorage, ViewStates,
-                Preferences, PreferencesStore, DiveResults,
-                DepthsService, ReloadDispatcher, DiveSchedules
+                DiveSchedules, ReloadDispatcher,
+                SettingsNormalizationService, ViewStates
             ],
             imports: []
         }).compileComponents();
 
         planner = TestBed.inject(PlannerService);
-        tanksService = TestBed.inject(TanksService);
-        const options = TestBed.inject(OptionsService);
-        depthsService = TestBed.inject(DepthsService);
-        OptionExtensions.applySimpleSpeeds(options.getOptions());
-        options.problemSolvingDuration = 2;
-        options.safetyStop = SafetyStop.always;
+        const selectedDive = TestBed.inject(DiveSchedules).selected;
+        tanksService = selectedDive.tanksService;
+        optionsService = selectedDive.optionsService;
+        depthsService = selectedDive.depths;
+        dive = selectedDive.diveResult;
+        OptionExtensions.applySimpleSpeeds(optionsService.getOptions());
+        optionsService.problemSolvingDuration = 2;
+        optionsService.safetyStop = SafetyStop.always;
         depthsService.plannedDepth = 30;
         planner.calculate();
     });
 
     describe('Dive info calculated', () => {
-        it('No deco limit is calculated', inject([DiveResults],
-            (dive: DiveResults) => {
-                const noDecoLimit = dive.noDecoTime;
-                expect(noDecoLimit).toBe(12);
-            }));
+        it('No deco limit is calculated', () => {
+            const noDecoLimit = dive.noDecoTime;
+            expect(noDecoLimit).toBe(12);
+        });
 
-        it('OTU limit is calculated', inject([DiveResults],
-            (dive: DiveResults) => {
-                const otuLimit = dive.otu;
-                expect(otuLimit).toBeCloseTo(7.6712, 4);
-            }));
+        it('OTU limit is calculated', () => {
+            const otuLimit = dive.otu;
+            expect(otuLimit).toBeCloseTo(7.6712, 4);
+        });
 
-        it('CNS limit is calculated', inject([DiveResults],
-            (dive: DiveResults) => {
-                const cnsLimit = dive.cns;
-                expect(cnsLimit).toBeCloseTo(2.570248, 6);
-            }));
+        it('CNS limit is calculated', () => {
+            const cnsLimit = dive.cns;
+            expect(cnsLimit).toBeCloseTo(2.570248, 6);
+        });
 
-        it('Highest density is calculated', inject([DiveResults],
-            (dive: DiveResults) => {
-                const highestDensity = dive.highestDensity;
-                expect(highestDensity.gas).toEqual(StandardGases.air);
-                expect(highestDensity.depth).toEqual(30);
-                expect(highestDensity.density).toBeCloseTo(5.094, 3);
-            }));
+        it('Highest density is calculated', () => {
+            const highestDensity = dive.highestDensity;
+            expect(highestDensity.gas).toEqual(StandardGases.air);
+            expect(highestDensity.depth).toEqual(30);
+            expect(highestDensity.density).toBeCloseTo(5.094, 3);
+        });
     });
 
     describe('Imperial units are used', () => {
-        it('Stops reflect units', inject([UnitConversion, SettingsNormalizationService, DiveResults],
-            (units: UnitConversion, normalization: SettingsNormalizationService, dive: DiveResults) => {
+        it('Stops reflect units', inject([UnitConversion, SettingsNormalizationService],
+            (units: UnitConversion, normalization: SettingsNormalizationService) => {
                 units.imperialUnits = true;
                 normalization.apply();
                 // no changes in settings nor profile needed
@@ -107,17 +98,15 @@ describe('PlannerService', () => {
 
 
     describe('30m for 15 minutes Calculates (defaults)', () => {
-        it('8 minutes time to surface', inject([DiveResults],
-            (dive: DiveResults) => {
-                planner.calculate();
-                expect(dive.timeToSurface).toBe(8);
-            }));
+        it('8 minutes time to surface', () => {
+            planner.calculate();
+            expect(dive.timeToSurface).toBe(8);
+        });
 
-        it('18 minutes maximum dive time', inject([DiveResults],
-            (dive: DiveResults) => {
-                planner.calculate();
-                expect(dive.maxTime).toBe(18);
-            }));
+        it('18 minutes maximum dive time', () => {
+            planner.calculate();
+            expect(dive.maxTime).toBe(18);
+        });
 
         it('74 bar rock bottom', () => {
             planner.calculate();
@@ -131,77 +120,62 @@ describe('PlannerService', () => {
     });
 
     describe('Shows errors', () => {
-        it('60m for 50 minutes maximum depth exceeded', inject([OptionsService, DiveResults],
-            (options: OptionsService, dive: DiveResults) => {
-                depthsService.plannedDepth =60;
-                planner.calculate();
-                const hasEvents = dive.events.length > 0;
-                expect(hasEvents).toBeTruthy();
-            }));
+        it('60m for 50 minutes maximum depth exceeded', () => {
+            depthsService.plannedDepth =60;
+            planner.calculate();
+            const hasEvents = dive.events.length > 0;
+            expect(hasEvents).toBeTruthy();
+        });
 
-        it('60m for 50 minutes not enough gas', inject([DepthsService, DiveResults],
-            (depthService: DepthsService, dive: DiveResults) => {
-                depthService.planDuration = 50;
-                planner.calculate();
-                expect(dive.notEnoughGas).toBeTruthy();
-            }));
+        it('60m for 50 minutes not enough gas', () => {
+            depthsService.planDuration = 50;
+            planner.calculate();
+            expect(dive.notEnoughGas).toBeTruthy();
+        });
 
-        it('30m for 20 minutes no decompression time exceeded', inject([DepthsService, DiveResults],
-            (depthService: DepthsService, dive: DiveResults) => {
-                depthService.planDuration = 20;
-                planner.calculate();
-                expect(dive.noDecoExceeded).toBeTruthy();
-            }));
+        it('30m for 20 minutes no decompression time exceeded', () => {
+            depthsService.planDuration = 20;
+            planner.calculate();
+            expect(dive.noDecoExceeded).toBeTruthy();
+        });
     });
 
     describe('Manage tanks', () => {
-        describe('Remove', () => {
-            let lastSegment: Segment;
+        it('Remove Updates segment reference to first tank', () => {
+            tanksService.addTank();
+            tanksService.addTank();
+            const secondTank = tanksService.tanks[1];
+            depthsService.addSegment();
+            const lastSegment = depthsService.segments[1];
+            lastSegment.tank = secondTank.tank;
+            tanksService.removeTank(secondTank);
 
-            beforeEach(() => {
-                tanksService.addTank();
-                tanksService.addTank();
-                const secondTank = tanksService.tanks[1];
-
-                const depths = TestBed.inject(DepthsService);
-                depths.addSegment();
-                const segments = depths.segments;
-                lastSegment = segments[1];
-                lastSegment.tank = secondTank.tank;
-                tanksService.removeTank(secondTank);
-            });
-
-            it('Updates segment reference to first tank', () => {
-                expect(lastSegment.tank).toEqual(tanksService.firstTank.tank);
-            });
+            expect(lastSegment.tank).toEqual(tanksService.firstTank.tank);
         });
     });
 
     describe('Updates dive', () => {
-        it('Average depth is calculated', inject([DiveResults],
-            (dive: DiveResults) => {
-                planner.calculate();
-                expect(dive.averageDepth).toBe(21.75);
-            }));
+        it('Average depth is calculated', () => {
+            planner.calculate();
+            expect(dive.averageDepth).toBe(21.75);
+        });
 
-        it('Start ascent is updated', inject([DepthsService, DiveResults],
-            (depthService: DepthsService, dive: DiveResults) => {
-                planner.calculate();
-                depthService.applyNdlDuration();
-                expect(dive.emergencyAscentStart).toEqual(Time.oneMinute * 12);
-            }));
+        it('Start ascent is updated', () => {
+            planner.calculate();
+            depthsService.applyNdlDuration();
+            expect(dive.emergencyAscentStart).toEqual(Time.oneMinute * 12);
+        });
 
-        it('Altitude does not affect Ean50 switch in 21 m', inject([TanksService, OptionsService, DiveResults],
-            (tanks: TanksService, options: OptionsService, dive: DiveResults) => {
-                tanks.addTank();
-                tanks.tanks[1].o2 = 50;
-                // changing altitude changes surface pressure used to convert depths in algorithm
-                // in case it would take effect, the switch depth would be 24 m
-                options.altitude = 800;
-                planner.calculate();
-                // 4. segment - gas switch
-                expect(dive.wayPoints[3].endDepth).toBe(21);
-            }));
+        it('Altitude does not affect Ean50 switch in 21 m', () => {
+            tanksService.addTank();
+            tanksService.tanks[1].o2 = 50;
+            // changing altitude changes surface pressure used to convert depths in algorithm
+            // in case it would take effect, the switch depth would be 24 m
+            optionsService.altitude = 800;
+            planner.calculate();
+            // 4. segment - gas switch
+            expect(dive.wayPoints[3].endDepth).toBe(21);
+        });
     });
 
     describe('Errors', () => {
@@ -216,10 +190,10 @@ describe('PlannerService', () => {
             };
         };
 
-        const expectDiveMarkedAsCalculated = (dive: DiveResults): void => {
-            expect(dive.diveInfoCalculated).toBeTruthy();
-            expect(dive.calculated).toBeTruthy();
-            expect(dive.profileCalculated).toBeTruthy();
+        const expectDiveMarkedAsCalculated = (diveToCheck: DiveResults): void => {
+            expect(diveToCheck.diveInfoCalculated).toBeTruthy();
+            expect(diveToCheck.calculated).toBeTruthy();
+            expect(diveToCheck.profileCalculated).toBeTruthy();
         };
 
         describe('Profile calculated with errors', () => {
@@ -239,10 +213,9 @@ describe('PlannerService', () => {
                 planner.calculate();
             });
 
-            it('Fallback to error state', inject([DiveResults],
-                (dive: DiveResults) => {
-                    expect(dive.hasErrors).toBeTruthy();
-                }));
+            it('Fallback to error state', () => {
+                expect(dive.hasErrors).toBeTruthy();
+            });
 
             it('Still fires waypoints calculated event', () => {
                 expect(wayPointsFinished).toBeTruthy();
@@ -252,10 +225,9 @@ describe('PlannerService', () => {
                 expect(infoFinished).toBeTruthy();
             });
 
-            it('Sets all progress properties to true', inject([DiveResults],
-                (dive: DiveResults) => {
-                    expectDiveMarkedAsCalculated(dive);
-                }));
+            it('Sets all progress properties to true', () => {
+                expectDiveMarkedAsCalculated(dive);
+            });
 
             it('Doesn\'t call no deco task', () => {
                 expect(noDecoSpy).not.toHaveBeenCalled();
@@ -291,10 +263,9 @@ describe('PlannerService', () => {
                 expect(infoFinished).toBeTruthy();
             });
 
-            it('Sets calculation to failed', inject([DiveResults],
-                (dive: DiveResults) => {
-                    expectDiveMarkedAsCalculated(dive);
-                }));
+            it('Sets calculation to failed', () => {
+                expectDiveMarkedAsCalculated(dive);
+            });
 
             it('Skips no deco task', () => {
                 expect(noDecoSpy).not.toHaveBeenCalled();
@@ -320,10 +291,9 @@ describe('PlannerService', () => {
                 expect(infoFinished).toBeTruthy();
             });
 
-            it('Sets calculation to resolved failed', inject([DiveResults],
-                (dive: DiveResults) => {
-                    expectDiveMarkedAsCalculated(dive);
-                }));
+            it('Sets calculation to resolved failed', () => {
+                expectDiveMarkedAsCalculated(dive);
+            });
         });
 
         describe('Consumption task failed', () => {
@@ -341,10 +311,9 @@ describe('PlannerService', () => {
                 expect(infoFinished).toBeTruthy();
             });
 
-            it('Sets consumption to resolved failed', inject([DiveResults],
-                (dive: DiveResults) => {
-                    expectDiveMarkedAsCalculated(dive);
-                }));
+            it('Sets consumption to resolved failed', () => {
+                expectDiveMarkedAsCalculated(dive);
+            });
         });
     });
 });

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { OptionsService } from './options.service';
-import { TanksService } from './tanks.service';
-import {DepthsService} from './depths.service';
+import { DiveSchedules } from './dive.schedules';
 
 @Injectable()
 export class ViewSwitchService {
@@ -11,11 +9,7 @@ export class ViewSwitchService {
     private _isComplex = false;
     private onViewSwitched = new Subject<void>();
 
-    constructor(
-        // TODO needs to be replaced for all schedules
-        private depths: DepthsService,
-        private options: OptionsService,
-        private tanks: TanksService) {
+    constructor(private schedules: DiveSchedules) {
         this.viewSwitched = this.onViewSwitched.asObservable();
     }
 
@@ -35,8 +29,9 @@ export class ViewSwitchService {
 
     /* reset only gas and depths to values valid for simple view. */
     private resetToSimple(): void {
-        this.options.resetToSimple();
-        this.tanks.resetToSimple();
-        this.depths.setSimple();
+        const selectedDive = this.schedules.selected;
+        selectedDive.optionsService.resetToSimple();
+        selectedDive.tanksService.resetToSimple();
+        selectedDive.depths.setSimple();
     }
 }

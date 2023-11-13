@@ -12,6 +12,7 @@ import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
 import { OptionsService } from '../shared/options.service';
+import {ReloadDispatcher} from "../shared/reloadDispatcher";
 
 interface TankRow {
     tankSize: FormControl<number>;
@@ -44,7 +45,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        private delayedCalc: DelayedScheduleService) {
+        private delayedCalc: DelayedScheduleService,
+        private dispatcher: ReloadDispatcher) {
         super();
         this.toxicity = this.options.toxicity;
     }
@@ -71,7 +73,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
             boundTanks: rows
         });
 
-        this.tanksService.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
+        this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
     }
 

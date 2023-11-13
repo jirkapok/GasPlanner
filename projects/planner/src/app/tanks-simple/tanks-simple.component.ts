@@ -10,7 +10,8 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { Precision, TankTemplate } from 'scuba-physics';
-import {DiveSchedule, DiveSchedules} from '../shared/dive.schedules';
+import { DiveSchedule, DiveSchedules } from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 interface TankForm {
     firstTankSize: FormControl<number>;
@@ -33,7 +34,8 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private delayedCalc: DelayedScheduleService,
-        private diveSchedules: DiveSchedules) {
+        private diveSchedules: DiveSchedules,
+        private dispatcher: ReloadDispatcher) {
         super();
     }
 
@@ -81,8 +83,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
             this.tanksForm.addControl('workPressure', workPressureControl);
         }
 
-        // TODO selected may change we need to update the binding
-        this.selected.tanksService.tanksReloaded.pipe(takeUntil(this.unsubscribe$))
+        this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
     }
 

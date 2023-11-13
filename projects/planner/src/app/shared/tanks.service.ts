@@ -1,29 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
 import { DefaultValues, Precision, StandardGases, Tank, Tanks } from 'scuba-physics';
 import { TankBound } from './models';
 import { ConsumedDto } from './serialization.model';
 import { UnitConversion } from './UnitConversion';
 import _ from 'lodash';
+import { ReloadDispatcher } from './reloadDispatcher';
 
 @Injectable()
 export class TanksService {
-    /** Event fired only in case of tanks rebuild (loadFrom or resetToSimple).
-     *  Not fired when adding or removing tanks.
-     **/
-    public tanksReloaded: Observable<void>;
-
-    public tankRemoved: Observable<Tank>;
-
     private _tanks: TankBound[] = [];
-    private onTanksReloaded = new Subject<void>();
-    private onTankRemoved = new Subject<Tank>();
 
-    constructor(private units: UnitConversion) {
+    constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher) {
         const defaultTanks = this.units.defaults.tanks;
         this.addTankBy(defaultTanks.primary.size, defaultTanks.primary.workingPressure);
-        this.tanksReloaded = this.onTanksReloaded.asObservable();
-        this.tankRemoved = this.onTankRemoved.asObservable();
     }
 
     public get defaults(): DefaultValues {
@@ -60,7 +49,7 @@ export class TanksService {
     public removeTank(tank: TankBound): void {
         this._tanks = this._tanks.filter(g => g !== tank);
         this.renumberIds();
-        this.onTankRemoved.next(tank.tank);
+        this.dispatcher.sendTanksRemoved(tank.tank);
     }
 
     public loadFrom(tanks: Tank[]): void {
@@ -74,7 +63,7 @@ export class TanksService {
             this._tanks = newTanks;
         }
 
-        this.onTanksReloaded.next();
+        this.dispatcher.sendTanksReloaded();
     }
 
     public copyTanksConsumption(tanks: ConsumedDto[]) {
@@ -99,7 +88,7 @@ export class TanksService {
             this.firstTank.tank.assignStandardGas(StandardGases.airName);
         }
 
-        this.onTanksReloaded.next();
+        this.dispatcher.sendTanksReloaded();
     }
 
     public firstBy(tank: Tank): TankBound | undefined {

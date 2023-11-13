@@ -34,7 +34,7 @@ export class DepthsService extends Streamed {
             this.plan.setSimple(requiredDepth, 12,  this.firstTank, options);
         }
 
-        this.tanksService.tankRemoved.pipe(takeUntil(this.unsubscribe$))
+        this.dispatcher.tankRemoved$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((removed: Tank) => this.tankRemoved(removed));
 
         this.updateLevels();

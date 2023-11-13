@@ -18,7 +18,7 @@ export class DiveSchedule {
 
     constructor(index: number, private units: UnitConversion, private dispatcher: ReloadDispatcher) {
         this.assignIndex(index);
-        this._tanks = new TanksService(units);
+        this._tanks = new TanksService(units, dispatcher);
         this._optionsService = new OptionsService(this.units, this.dispatcher);
         this._depths = new DepthsService(this.units, this.tanksService, this._diveResult, this._optionsService, this.dispatcher);
     }

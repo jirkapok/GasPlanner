@@ -3,13 +3,16 @@ import { Tank } from 'scuba-physics';
 import { TankBound } from './models';
 import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
+import { ReloadDispatcher } from './reloadDispatcher';
 
 describe('TanksService', () => {
     let service: TanksService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [TanksService, UnitConversion]
+            providers: [
+                UnitConversion, TanksService, ReloadDispatcher
+            ]
         });
         service = TestBed.inject(TanksService);
     });
@@ -60,7 +63,8 @@ describe('TanksService', () => {
             let tanksReloaded = false;
 
             beforeEach(() => {
-                service.tanksReloaded.subscribe(() => tanksReloaded = true);
+                const dispatcher = TestBed.inject(ReloadDispatcher);
+                dispatcher.tanksReloaded$.subscribe(() => tanksReloaded = true);
 
                 const newTanks = [
                     Tank.createDefault(),
@@ -89,12 +93,13 @@ describe('TanksService', () => {
         let tanksReloaded = false;
 
         beforeEach(() => {
+            const dispatcher = TestBed.inject(ReloadDispatcher);
             service.addTank();
             service.addTank();
             firstTank = service.firstTank;
             firstTank.he = 45;
             firstTank.o2 = 18;
-            service.tanksReloaded.subscribe(() => tanksReloaded = true);
+            dispatcher.tanksReloaded$.subscribe(() => tanksReloaded = true);
             service.resetToSimple();
         });
 
@@ -150,7 +155,7 @@ describe('TanksService', () => {
             beforeEach(() => {
                 const units = TestBed.inject(UnitConversion);
                 units.imperialUnits = true;
-                service = new TanksService(units);
+                service = new TanksService(units, new ReloadDispatcher());
             });
 
             it('Default tanks is 117 cuft', () => {

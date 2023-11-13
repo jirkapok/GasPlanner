@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { PlannerService } from './planner.service';
 import { SubViewStorage } from './subViewStorage';
 
+// TODO remove usage from components and hook on dispatcher events instead
 @Injectable()
 export class DelayedScheduleService {
     private scheduled = false;

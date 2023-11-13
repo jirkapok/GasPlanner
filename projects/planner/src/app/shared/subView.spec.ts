@@ -3,18 +3,14 @@ import { KnownViews, ViewStates } from './viewStates';
 import { PreferencesStore } from './preferencesStore';
 import { PlannerService } from './planner.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
-import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
-import { OptionsService } from './options.service';
 import { WayPointsService } from './waypoints.service';
 import { Preferences } from './preferences';
 import { ViewSwitchService } from './viewSwitchService';
 import { ViewState } from './views.model';
 import { SubViewStorage } from './subViewStorage';
-import { DiveResults } from './diveresults';
-import {DepthsService} from './depths.service';
-import {ReloadDispatcher} from './reloadDispatcher';
-import {DiveSchedules} from './dive.schedules';
+import { ReloadDispatcher } from './reloadDispatcher';
+import { DiveSchedules } from './dive.schedules';
 
 const viewId = 'testView';
 interface TestView extends ViewState {
@@ -44,9 +40,9 @@ describe('SubView', () => {
             declarations: [],
             providers: [
                 ViewStates, PreferencesStore, SubViewStorage,
-                PlannerService, WorkersFactoryCommon, TanksService,
-                UnitConversion, OptionsService, WayPointsService,
-                Preferences, ViewSwitchService, DiveResults, DepthsService,
+                PlannerService, WorkersFactoryCommon,
+                UnitConversion, WayPointsService,
+                Preferences, ViewSwitchService,
                 ReloadDispatcher, DiveSchedules
             ],
             imports: []

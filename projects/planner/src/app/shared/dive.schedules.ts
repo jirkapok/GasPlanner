@@ -88,6 +88,7 @@ export class DiveSchedules {
     public set selected(newValue: DiveSchedule) {
         if (this._dives.includes(newValue)) {
             this._selected = newValue;
+            this.dispatcher.sendSelectedChanged();
         }
     }
 

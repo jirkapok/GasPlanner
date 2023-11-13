@@ -22,12 +22,14 @@ export class ReloadDispatcher {
 
     // TODO how to prevent fire the event multiple times, in case of reloadAll? we filter,
     //      in case the reload isn't done for selected diveSchedule
+    public selectedChanged$: Observable<void>;
 
     private onTanksReloaded = new Subject<void>();
     private onTankRemoved = new Subject<Tank>();
     private onDepthsReloaded = new Subject<void>();
     private onDepthChanged = new Subject<void>();
     private onOptionsReloaded = new Subject<void>();
+    private onSelectedChanged = new Subject<void>();
 
     constructor() {
         this.tanksReloaded$ = this.onTanksReloaded.asObservable();
@@ -35,6 +37,7 @@ export class ReloadDispatcher {
         this.depthsReloaded$ = this.onDepthsReloaded.asObservable();
         this.depthChanged$ = this.onDepthChanged.asObservable();
         this.optionsReloaded$ = this.onOptionsReloaded.asObservable();
+        this.selectedChanged$ = this.onSelectedChanged.asObservable();
     }
 
     public sendTanksReloaded(): void {
@@ -54,5 +57,9 @@ export class ReloadDispatcher {
 
     public sendOptionsReloaded(): void {
         this.onOptionsReloaded.next();
+    }
+
+    public sendSelectedChanged(): void {
+        this.onSelectedChanged.next();
     }
 }

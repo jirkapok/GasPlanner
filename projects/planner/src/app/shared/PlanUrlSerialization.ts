@@ -3,18 +3,16 @@ import _ from 'lodash';
 import {
     Diver, Options, SafetyStop, Salinity, Segment
 } from 'scuba-physics';
-import { OptionsService } from './options.service';
 import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';
 import { Preferences } from './preferences';
 import {
     AppPreferencesDto, DiverDto, OptionsDto, SegmentDto, TankDto
 } from './serialization.model';
-import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
-import {DepthsService} from './depths.service';
+import { DiveSchedules } from './dive.schedules';
 
 class ParseContext {
     private static readonly trueValue = '1';
@@ -74,9 +72,7 @@ export class PlanUrlSerialization {
         private planner: PlannerService,
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
-        private tanksService: TanksService,
-        private depths: DepthsService,
-        private options: OptionsService,
+        private schedules: DiveSchedules,
         private preferences: Preferences
     ) { }
 
@@ -256,10 +252,12 @@ export class PlanUrlSerialization {
     }
 
     public toUrl(): string {
-        const tanksParam = PlanUrlSerialization.toTanksParam(this.tanksService.tanks);
-        const depthsParam = PlanUrlSerialization.toDepthsParam(this.depths.segments);
-        const diParam = PlanUrlSerialization.toDiverParam(this.options.getDiver());
-        const optionsParam = PlanUrlSerialization.toOptionsParam(this.options.getOptions());
+        // always use first dive, in case of multiple dives, we are unable to show the complete url
+        const dive = this.schedules.dives[0];
+        const tanksParam = PlanUrlSerialization.toTanksParam(dive.tanksService.tanks);
+        const depthsParam = PlanUrlSerialization.toDepthsParam(dive.depths.segments);
+        const diParam = PlanUrlSerialization.toDiverParam(dive.optionsService.getDiver());
+        const optionsParam = PlanUrlSerialization.toOptionsParam(dive.optionsService.getOptions());
         const appOptions = this.toAppOptions();
         const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&ao=${appOptions}`;
         return result;

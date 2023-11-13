@@ -1,4 +1,3 @@
-import { DiveResults } from './diveresults';
 import { OptionsService } from './options.service';
 import { PlannerService } from './planner.service';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
@@ -8,9 +7,9 @@ import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewStates } from './viewStates';
 import { ViewSwitchService } from './viewSwitchService';
-import {DepthsService} from './depths.service';
-import {ReloadDispatcher} from './reloadDispatcher';
-import {DiveSchedules} from './dive.schedules';
+import { DepthsService } from './depths.service';
+import { ReloadDispatcher } from './reloadDispatcher';
+import { DiveSchedules } from './dive.schedules';
 
 interface TestSut {
     options: OptionsService;
@@ -29,23 +28,19 @@ describe('Url Serialization', () => {
     const createSut = (imperial = false): TestSut => {
         const units = new UnitConversion();
         const dispatcher = new ReloadDispatcher();
-        const options = new OptionsService(units, dispatcher);
         units.imperialUnits = imperial;
-        const tanksService = new TanksService(units);
-        const dive = new DiveResults();
         const schedules = new DiveSchedules(units, dispatcher);
-        const depths = new DepthsService(units, tanksService, dive, options, dispatcher);
         const planner = new PlannerService(irrelevantFactory, schedules, units);
-        depths.setSimple();
         const viewSwitch = new ViewSwitchService(schedules);
-        const preferencesFactory = new Preferences(viewSwitch, units, schedules, new ViewStates());
-        const urlSerialization = new PlanUrlSerialization(planner, viewSwitch,
-            units, tanksService, depths, options, preferencesFactory);
+        const preferences = new Preferences(viewSwitch, units, schedules, new ViewStates());
+        const urlSerialization = new PlanUrlSerialization(planner, viewSwitch, units, schedules, preferences);
+        const firstDive = schedules.dives[0];
+        firstDive.depths.setSimple();
 
         return {
-            options: options,
-            depths: depths,
-            tanksService: tanksService,
+            options: firstDive.optionsService,
+            depths: firstDive.depths,
+            tanksService: firstDive.tanksService,
             planner: planner,
             viewSwitch: viewSwitch,
             units: units,
@@ -103,13 +98,13 @@ describe('Url Serialization', () => {
         expect(url).toContain('ao=1,1');
     });
 
-    xit('Serialize and deserialize complex plan', () => {
+    it('Serialize and deserialize complex plan', () => {
         const current = createSut();
         current.urlSerialization.fromUrl(customizedUrl);
         expectParsedEquals(current);
     });
 
-    xit('Serialize and deserialize simple plan', () => {
+    it('Serialize and deserialize simple plan', () => {
         const simpleSut = createSut();
         simpleSut.tanksService.tanks[0].size = 18;
         simpleSut.planner.calculate();
@@ -118,7 +113,7 @@ describe('Url Serialization', () => {
         expectParsedEquals(simpleSut);
     });
 
-    xit('Decodes url for facebook link', () => {
+    it('Decodes url for facebook link', () => {
         const encodedParams = encodeURIComponent(customizedUrl);
         const current = createSut();
         current.urlSerialization.fromUrl(encodedParams);
@@ -140,7 +135,7 @@ describe('Url Serialization', () => {
         expect(result.length).toBeLessThan(2048);
     });
 
-    xdescribe('Restore switching units', () => {
+    describe('Restore switching units', () => {
         it('From metric units', () => {
             sut.tanksService.firstTank.size = 24;
             const url = sut.urlSerialization.toUrl();

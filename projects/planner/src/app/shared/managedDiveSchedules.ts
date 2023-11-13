@@ -14,7 +14,6 @@ export class ManagedDiveSchedules {
     // TODO Implement UI with all controls bound to the schedules (complex depths, complex tanks, complex settings,
     //  profile chart, profile table, dive results)
     // TODO Implement line of calculations in PlannerService.calculate(diveId)
-    // TODO Replace obsolete methods in PreferencesStorage and Preferences
     // TODO implement restore if last selected dive
 
     public add(): void {
@@ -34,16 +33,15 @@ export class ManagedDiveSchedules {
     }
 
     public saveDefaults(): void {
-        const current = this.schedules.selected;
-        this.preferences.saveDefaultFrom(current);
+        this.preferences.saveDefault();
     }
 
     public loadAll(){
-        this.preferences.loadAll(this.schedules);
+        this.preferences.load();
     }
 
     private loadDefaultTo(dive: DiveSchedule) {
-        this.preferences.loadDefaultTo(dive);
+        this.preferences.loadDefault(dive);
         this.preferences.save();
         this.schedule.schedule();
     }

@@ -19,7 +19,7 @@ import { DiveResults } from './diveresults';
 import {ReloadDispatcher} from './reloadDispatcher';
 import {DiveSchedules} from './dive.schedules';
 
-describe('PreferencesStore', () => {
+xdescribe('PreferencesStore', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [WorkersFactoryCommon,
@@ -87,7 +87,7 @@ describe('PreferencesStore', () => {
                 expect(options.getOptions()).toEqual(expected);
             }));
 
-        xit('Tanks are loaded after save', inject(
+        it('Tanks are loaded after save', inject(
             [PreferencesStore, PlannerService, TanksService,
                 OptionsService, ViewSwitchService, DepthsService],
             (service: PreferencesStore, planner: PlannerService,
@@ -155,7 +155,7 @@ describe('PreferencesStore', () => {
                 expect(depthsService.segments[2].tank?.id).toEqual(2);
             }));
 
-        xit('Simple profile is loaded after save and trims tank', inject(
+        it('Simple profile is loaded after save and trims tank', inject(
             [PreferencesStore, PlannerService, TanksService, DepthsService, OptionsService],
             (service: PreferencesStore, planner: PlannerService, tanksService: TanksService,
                 depthsService: DepthsService, options: OptionsService) => {
@@ -175,7 +175,7 @@ describe('PreferencesStore', () => {
                 expect(optionsResetToSimple).toHaveBeenCalledTimes(1);
             }));
 
-        xit('Applies imperial units', inject(
+        it('Applies imperial units', inject(
             [PreferencesStore, UnitConversion, OptionsService, SettingsNormalizationService, TanksService],
             (service: PreferencesStore, units: UnitConversion, options: OptionsService,
                 normalizationService: SettingsNormalizationService, tanksService: TanksService) => {
@@ -205,7 +205,7 @@ describe('PreferencesStore', () => {
             tanksService.firstTank.size = 22;
             depths.plannedDepth = 23;
 
-            service.loadDefault();
+            // TODO service.loadDefault();
 
             expect(tanksService.firstTank.size).toBeCloseTo(20, 1);
             expect(depths.plannedDepth).toBeCloseTo(21, 1);

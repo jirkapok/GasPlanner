@@ -1,5 +1,5 @@
 import {DiveSchedule, DiveSchedules} from './dive.schedules';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
 import {UnitConversion} from './UnitConversion';
 import {TanksService} from './tanks.service';
 import {PreferencesStore} from './preferencesStore';
@@ -41,22 +41,8 @@ describe('Managed Schedules', () => {
         dive.depths.plannedDepth = expectedMaxDepth;
     };
 
-    const saveDiveAsDefault = (dive: DiveSchedule) => {
-        changeDive(dive);
-        preferencesStore.saveDefaultFrom(dive);
-    };
-
     const saveFirstDiveAsDefault = () => {
-        const tankService = TestBed.inject(TanksService);
-        tankService.addTank();
-        tankService.tankData[1].size = 24;
-
-        const optionsService = TestBed.inject(OptionsService);
-        optionsService.maxEND = 27;
-
-        const dephts = TestBed.inject(DepthsService);
-        dephts.plannedDepth = 25;
-
+        changeDive(schedules.selected);
         preferencesStore.saveDefault();
     };
 
@@ -94,10 +80,7 @@ describe('Managed Schedules', () => {
     describe('Add new dive', () => {
         beforeEach(() => {
             localStorage.clear();
-            const firstDive = schedules.dives[0];
-            // saveDiveAsDefault(firstDive);
             saveFirstDiveAsDefault();
-            preferencesStore.saveDefault();
             sut.add();
         });
 
@@ -145,8 +128,6 @@ describe('Managed Schedules', () => {
         let secondDive: DiveSchedule;
 
         beforeEach(() => {
-            const firstDive = schedules.dives[0];
-            // saveDiveAsDefault(firstDive);
             saveFirstDiveAsDefault();
             sut.add();
             secondDive = schedules.dives[1];
@@ -165,27 +146,29 @@ describe('Managed Schedules', () => {
 
     describe('Save dive as default', () => {
         it('Calls save preferences with selected dive', () => {
-            const saveDefaultSpy = spyOn(preferencesStore, 'saveDefaultFrom').and.callThrough();
+            const saveDefaultSpy = spyOn(preferencesStore, 'saveDefault').and.callThrough();
             sut.add();
             const secondDive = schedules.dives[1];
             schedules.selected = secondDive;
             changeDive(secondDive);
             sut.saveDefaults();
-            expect(saveDefaultSpy).toHaveBeenCalledWith(secondDive);
+            expect(saveDefaultSpy).toHaveBeenCalledWith();
         });
     });
 
     describe('Load all', () => {
-        it('Loads all dives data', () => {
-            const second = schedules.add();
-            changeDive(second);
+        it('Loads all dives data', inject([ViewSwitchService],
+            (viewSwitch: ViewSwitchService) => {
+                viewSwitch.isComplex = true; // to prevent shrink of tanks while loading
+                const second = schedules.add();
+                changeDive(second);
 
-            preferencesStore.saveAll(schedules.dives);
-            schedules.clear();
-            sut.loadAll();
+                preferencesStore.save();
+                schedules.clear();
+                sut.loadAll();
 
-            expect(schedules.length).toEqual(2);
-            assertDive(schedules.dives[1]);
-        });
+                expect(schedules.length).toEqual(2);
+                assertDive(schedules.dives[1]);
+            }));
     });
 });

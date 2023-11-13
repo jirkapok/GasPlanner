@@ -1,28 +1,22 @@
 import { Injectable } from '@angular/core';
-import { OptionsService } from './options.service';
 import {
     AppOptionsDto, AppPreferences, AppPreferencesDto,
     AppStates, DiveDto, ITankBound, TankDto
 } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
-
-import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 import { ViewStates } from './viewStates';
-import {DiveSetup} from './models';
-import {DiveSchedule} from './dive.schedules';
+import { DiveSetup } from './models';
+import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import _ from 'lodash';
-import {DepthsService} from './depths.service';
 
 @Injectable()
 export class Preferences {
     constructor(
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
-        private tanksService: TanksService,
-        private depths: DepthsService,
-        private options: OptionsService,
+        private schedules: DiveSchedules,
         private viewStates: ViewStates
     ) { }
 
@@ -35,17 +29,8 @@ export class Preferences {
     public toPreferences(): AppPreferences {
         return {
             states: this.toStates(),
-            options: this.toAppSettings(this.viewSwitch),
+            options: this.toAppSettings(),
             dives: this.toDives()
-        };
-    }
-
-    // TODO replace toPreferences by toPreferencesFrom
-    public toPreferencesFrom(dives: DiveSchedule[]): AppPreferences {
-        return {
-            states: this.toStates(),
-            options: this.toAppSettings(this.viewSwitch),
-            dives: _(dives).map(d => this.toDiveFrom(d)).value()
         };
     }
 
@@ -57,23 +42,56 @@ export class Preferences {
     public applyLoaded(loaded: AppPreferencesDto): void {
         // first apply units to prevent loading of invalid values
         this.units.imperialUnits = loaded.options.imperialUnits;
-        this.applyDives(loaded);
+        this.applyDives(loaded.dives);
         // now we are able to switch the view
         this.viewSwitch.isComplex = loaded.options.isComplex;
         // not using normalization to fix values here, because expecting they are valid
     }
 
     public toDive(): DiveDto {
+        return this.toDiveFrom(this.schedules.selected);
+    }
+
+    public loadDive(diveSchedule: DiveSchedule, loadedDive: DiveDto): void {
+        const setup = this.toDiveSetup(loadedDive);
+        diveSchedule.optionsService.loadFrom(setup.options, setup.diver);
+        diveSchedule.tanksService.loadFrom(setup.tanks);
+        Preferences.loadWorkingPressure(loadedDive.tanks, diveSchedule.tanksService.tanks);
+        diveSchedule.depths.loadFrom(setup.segments);
+    }
+
+    private applyDives(loaded: DiveDto[]): void {
+        if(loaded.length > 0) {
+            // consider better way than rebuild dives from scratch
+            this.schedules.clear();
+            this.loadDive(this.schedules.dives[0], loaded[0]);
+
+            for (let index = 1; index < loaded.length; index++) {
+                const added = this.schedules.add();
+                this.loadDive(added, loaded[index]);
+            }
+        }
+    }
+
+    private toDiveSetup(loadedDive: DiveDto): DiveSetup {
+        const tanks = DtoSerialization.toTanks(loadedDive.tanks);
         return {
-            options: DtoSerialization.fromOptions(this.options.getOptions()),
-            diver: DtoSerialization.fromDiver(this.options.getDiver()),
-            tanks: DtoSerialization.fromTanks(this.tanksService.tanks as ITankBound[]),
-            plan: DtoSerialization.fromSegments(this.depths.segments),
+            diver: DtoSerialization.toDiver(loadedDive.diver),
+            options: DtoSerialization.toOptions(loadedDive.options),
+            tanks: tanks,
+            segments: DtoSerialization.toSegments(loadedDive.plan, tanks)
         };
     }
 
-    // TODO replace toDive by toDiveFrom
-    public toDiveFrom(dive: DiveSchedule): DiveDto {
+    private toAppSettings(): AppOptionsDto {
+        return {
+            imperialUnits: this.units.imperialUnits,
+            isComplex: this.viewSwitch.isComplex,
+            language: 'en'
+        };
+    }
+
+    private toDiveFrom(dive: DiveSchedule): DiveDto {
         return {
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
             diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
@@ -82,53 +100,10 @@ export class Preferences {
         };
     }
 
-    // TODO replace loadDive by loadTo
-    public loadDive(loadedDive: DiveDto): void {
-        const setup = this.toDiveSetup(loadedDive);
-        this.tanksService.loadFrom(setup.tanks);
-        Preferences.loadWorkingPressure(loadedDive.tanks, this.tanksService.tanks);
-        this.options.loadFrom(setup.options, setup.diver);
-        this.depths.loadFrom(setup.segments);
-    }
-
-    public loadTo(diveSchedule: DiveSchedule, loadedDive: DiveDto): void {
-        const setup = this.toDiveSetup(loadedDive);
-        diveSchedule.optionsService.loadFrom(setup.options, setup.diver);
-        diveSchedule.tanksService.loadFrom(setup.tanks);
-        Preferences.loadWorkingPressure(loadedDive.tanks, diveSchedule.tanksService.tanks);
-        diveSchedule.depths.loadFrom(setup.segments);
-    }
-
-    private toDiveSetup(loadedDive: DiveDto): DiveSetup {
-        const tanks = DtoSerialization.toTanks(loadedDive.tanks);
-        const segments = DtoSerialization.toSegments(loadedDive.plan, tanks);
-        const diver = DtoSerialization.toDiver(loadedDive.diver);
-        const options = DtoSerialization.toOptions(loadedDive.options);
-        return {
-            diver: diver,
-            options: options,
-            tanks: tanks,
-            segments: segments
-        };
-    }
-
-    private toAppSettings(viewSwitch: ViewSwitchService): AppOptionsDto {
-        return {
-            imperialUnits: this.units.imperialUnits,
-            isComplex: viewSwitch.isComplex,
-            language: 'en'
-        };
-    }
-
     private toDives(): DiveDto[] {
-        return [
-            this.toDive()
-        ];
-    }
-
-    private applyDives(loaded: AppPreferencesDto): void {
-        const firstDive = loaded.dives[0];
-        this.loadDive(firstDive);
+        return _(this.schedules.dives)
+            .map(d => this.toDiveFrom(d))
+            .value();
     }
 
     private toStates(): AppStates {

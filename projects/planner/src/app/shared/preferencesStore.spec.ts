@@ -16,10 +16,10 @@ import { WayPointsService } from './waypoints.service';
 import { ViewStates } from './viewStates';
 import { SubViewStorage } from './subViewStorage';
 import { DiveResults } from './diveresults';
-import {ReloadDispatcher} from './reloadDispatcher';
-import {DiveSchedules} from './dive.schedules';
+import { ReloadDispatcher } from './reloadDispatcher';
+import { DiveSchedules } from './dive.schedules';
 
-xdescribe('PreferencesStore', () => {
+describe('PreferencesStore', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [WorkersFactoryCommon,
@@ -44,42 +44,54 @@ xdescribe('PreferencesStore', () => {
         }));
 
     describe('Preferences', () => {
-        it('Diver values are loaded after save', inject([PreferencesStore, OptionsService],
-            (service: PreferencesStore, options: OptionsService) => {
-                const diver = options.diverOptions;
-                diver.rmv = 10;
-                diver.maxPpO2 = 1.1;
-                diver.maxDecoPpO2 = 1.5;
-                service.save();
+        let options: OptionsService;
+        let tanksService: TanksService;
+        let depthsService: DepthsService;
+        let sut: PreferencesStore;
 
-                diver.rmv = 10;
-                diver.maxPpO2 = 1.3;
-                diver.maxDecoPpO2 = 1.4;
-                service.load();
+        beforeEach(() => {
+            const firstDive = TestBed.inject(DiveSchedules).dives[0];
+            sut = TestBed.inject(PreferencesStore);
+            options = firstDive.optionsService;
+            tanksService = firstDive.tanksService;
+            depthsService = firstDive.depths;
+        });
 
-                const expected = {
-                    rmv: 10,
-                    maxPpO2: 1.1,
-                    maxDecoPpO2: 1.5
-                };
-                expect({
-                    rmv: diver.rmv,
-                    maxPpO2: diver.maxPpO2,
-                    maxDecoPpO2: diver.maxDecoPpO2
-                }).toEqual(expected);
-            }));
+        it('Diver values are loaded after save', () => {
+            const diver = options.diverOptions;
+            diver.rmv = 10;
+            diver.maxPpO2 = 1.1;
+            diver.maxDecoPpO2 = 1.5;
+            sut.save();
 
-        it('Options values are loaded after save', inject([PreferencesStore, OptionsService, ViewSwitchService],
-            (service: PreferencesStore, options: OptionsService, viewSwitch: ViewSwitchService) => {
+            diver.rmv = 10;
+            diver.maxPpO2 = 1.3;
+            diver.maxDecoPpO2 = 1.4;
+            sut.load();
+
+            const expected = {
+                rmv: 10,
+                maxPpO2: 1.1,
+                maxDecoPpO2: 1.5
+            };
+            expect({
+                rmv: diver.rmv,
+                maxPpO2: diver.maxPpO2,
+                maxDecoPpO2: diver.maxDecoPpO2
+            }).toEqual(expected);
+        });
+
+        it('Options values are loaded after save', inject([ViewSwitchService],
+            (viewSwitch: ViewSwitchService) => {
                 // not going to test all options, since it is a flat structure
                 options.gfLow = 0.3;
                 options.descentSpeed = 15;
                 viewSwitch.isComplex = true; // otherwise reset of GF.
-                service.save();
+                sut.save();
 
                 options.gfLow = 0.35;
                 options.descentSpeed = 17;
-                service.load();
+                sut.load();
 
                 const expected = new Options(0.3, 0.85, 1.4, 1.6, Salinity.fresh);
                 expected.descentSpeed = 15;
@@ -88,19 +100,16 @@ xdescribe('PreferencesStore', () => {
             }));
 
         it('Tanks are loaded after save', inject(
-            [PreferencesStore, PlannerService, TanksService,
-                OptionsService, ViewSwitchService, DepthsService],
-            (service: PreferencesStore, planner: PlannerService,
-                tanksService: TanksService, options: OptionsService,
-                viewSwitch: ViewSwitchService, plan: DepthsService) => {
+            [PlannerService, ViewSwitchService],
+            (planner: PlannerService, viewSwitch: ViewSwitchService) => {
                 // setup needed for consumed calculation
                 const oValues = options.getOptions();
                 OptionExtensions.applySimpleSpeeds(oValues);
                 options.safetyStop = SafetyStop.always;
                 options.gasSwitchDuration = 1;
                 options.problemSolvingDuration = 2;
-                plan.plannedDepth = 30;
-                plan.planDuration = 12;
+                depthsService.plannedDepth = 30;
+                depthsService.planDuration = 12;
 
                 tanksService.addTank();
                 const tanks = tanksService.tanks;
@@ -108,12 +117,12 @@ xdescribe('PreferencesStore', () => {
                 tanks[1].o2 = 50;
                 viewSwitch.isComplex = true; // otherwise the tank will be removed.
                 planner.calculate();
-                service.save();
+                sut.save();
 
                 tanks[0].startPressure = 130;
                 tanks[1].o2 = 32;
                 tanks[1].workingPressure = 0;
-                service.load();
+                sut.load();
 
                 planner.calculate(); // not called automatically
                 const expected1 = new Tank(15, 150, 21);
@@ -131,11 +140,8 @@ xdescribe('PreferencesStore', () => {
                 expect(tanksService.tanks[1].workingPressureBars).toBeCloseTo(0, 6);
             }));
 
-        it('Plan is loaded after save', inject(
-            [PreferencesStore, PlannerService, TanksService, ViewSwitchService, DepthsService],
-            (service: PreferencesStore, planner: PlannerService,
-                tanksService: TanksService, viewSwitch: ViewSwitchService,
-                depthsService: DepthsService) => {
+        it('Plan is loaded after save', inject([PlannerService, ViewSwitchService],
+            (planner: PlannerService, viewSwitch: ViewSwitchService) => {
                 viewSwitch.isComplex = true;
                 tanksService.addTank();
                 tanksService.addTank();
@@ -144,31 +150,30 @@ xdescribe('PreferencesStore', () => {
                 const secondTank = tanksService.tanks[1];
                 lastSegment.tank = secondTank;
                 planner.calculate();
-                service.save();
+                sut.save();
 
                 depthsService.removeSegment(lastSegment);
                 tanksService.removeTank(secondTank);
-                service.load();
+                sut.load();
 
                 expect(tanksService.tanks.length).toEqual(3);
                 expect(depthsService.segments.length).toEqual(3);
                 expect(depthsService.segments[2].tank?.id).toEqual(2);
             }));
 
-        it('Simple profile is loaded after save and trims tank', inject(
-            [PreferencesStore, PlannerService, TanksService, DepthsService, OptionsService],
-            (service: PreferencesStore, planner: PlannerService, tanksService: TanksService,
-                depthsService: DepthsService, options: OptionsService) => {
+        it('Simple profile is loaded after save and trims tank', inject([PlannerService],
+            (planner: PlannerService) => {
                 const optionsResetToSimple = spyOn(options, 'resetToSimple').and.callThrough();
 
                 // invalid operations for simple profile simulate wrong data
                 tanksService.addTank();
                 tanksService.addTank();
+
                 depthsService.addSegment();
                 planner.calculate();
-                service.save();
+                sut.save();
 
-                service.load();
+                sut.load();
 
                 expect(tanksService.tanks.length).toEqual(1);
                 expect(depthsService.segments.length).toEqual(2);
@@ -176,9 +181,8 @@ xdescribe('PreferencesStore', () => {
             }));
 
         it('Applies imperial units', inject(
-            [PreferencesStore, UnitConversion, OptionsService, SettingsNormalizationService, TanksService],
-            (service: PreferencesStore, units: UnitConversion, options: OptionsService,
-                normalizationService: SettingsNormalizationService, tanksService: TanksService) => {
+            [PreferencesStore, UnitConversion, SettingsNormalizationService],
+            (service: PreferencesStore, units: UnitConversion, normalizationService: SettingsNormalizationService) => {
                 units.imperialUnits = true;
                 options.diverOptions.rmv = 29.998867;
                 normalizationService.apply();
@@ -193,21 +197,21 @@ xdescribe('PreferencesStore', () => {
                 expect(tanksService.tanks[0].workingPressureBars).toBeCloseTo(237.317546, 6);
                 expect(units.imperialUnits).toBeTruthy();
             }));
+
+        it('Save and Load Defaults - First dive is updated from default', inject(
+            [DiveSchedules],
+            (schedules: DiveSchedules) => {
+                tanksService.firstTank.size = 20;
+                depthsService.plannedDepth = 21;
+
+                sut.saveDefault();
+                tanksService.firstTank.size = 22;
+                depthsService.plannedDepth = 23;
+
+                sut.loadDefault(schedules.selected);
+
+                expect(tanksService.firstTank.size).toBeCloseTo(20, 1);
+                expect(depthsService.plannedDepth).toBeCloseTo(21, 1);
+            }));
     });
-
-    it('Save and Load Defaults - First dive is updated from default', inject(
-        [PreferencesStore, TanksService, DepthsService],
-        (service: PreferencesStore, tanksService: TanksService, depths: DepthsService) => {
-            tanksService.firstTank.size = 20;
-            depths.plannedDepth = 21;
-
-            service.saveDefault();
-            tanksService.firstTank.size = 22;
-            depths.plannedDepth = 23;
-
-            // TODO service.loadDefault();
-
-            expect(tanksService.firstTank.size).toBeCloseTo(20, 1);
-            expect(depths.plannedDepth).toBeCloseTo(21, 1);
-        }));
 });

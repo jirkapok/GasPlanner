@@ -28,7 +28,7 @@ export class MainMenuComponent {
     }
 
     public loadDefaults(): void {
-        this.preferences.loadDefault();
+        // TODO this.preferences.loadDefault();
     }
 
     public addToHomeScreen(): void {

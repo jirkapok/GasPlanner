@@ -50,10 +50,6 @@ export class DiveSchedule {
         return `${this.id}. ${duration} min/${depth} ${depthUnits}`;
     }
 
-    private get firstTank(): Tank {
-        return this.tanksService.firstTank.tank;
-    }
-
     public assignIndex(index: number): void {
         this._id = index + 1;
     }

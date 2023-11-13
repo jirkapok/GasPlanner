@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Precision } from 'scuba-physics';
-import { DepthsService } from '../shared/depths.service';
+import {DepthsService, IDepths} from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -16,15 +16,30 @@ export class DepthComponent implements OnInit {
         depth: FormControl<number>;
     }>;
 
+    private _depths: IDepths = {
+        plannedDepth: 0,
+        bestNitroxMix: '',
+        applyMaxDepth: () => {},
+    };
+
     constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public units: UnitConversion,
-        public depths: DepthsService) { }
+        public units: UnitConversion) { }
 
     public get depthInvalid(): boolean {
         const depthField = this.depthForm.controls.depth;
         return this.inputs.controlInValid(depthField);
+    }
+
+    public get depths(): IDepths {
+        return this._depths;
+    }
+
+    @Input()
+    public set depths(newValue: IDepths) {
+        this._depths = newValue;
+        this.patchDepth();
     }
 
     public depthChanged() {
@@ -38,14 +53,22 @@ export class DepthComponent implements OnInit {
 
     public applyMaxDepth(): void {
         this.depths.applyMaxDepth();
-        this.depthForm.patchValue({
-            depth: Precision.round(this.depths.plannedDepth, 1)
-        });
+        this.patchDepth();
     }
 
     public ngOnInit(): void {
         this.depthForm = this.fb.group({
             depth: [Precision.round(this.depths.plannedDepth, 1), this.validators.depth]
+        });
+    }
+
+    private patchDepth(): void {
+        if(!this.depthForm) {
+            return;
+        }
+
+        this.depthForm.patchValue({
+            depth: Precision.round(this.depths.plannedDepth, 1)
         });
     }
 }

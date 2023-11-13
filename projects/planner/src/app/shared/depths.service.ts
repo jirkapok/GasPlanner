@@ -11,8 +11,14 @@ import { Tank, Segment, StandardGases, Precision } from 'scuba-physics';
 import { DiveResults } from './diveresults';
 import { ReloadDispatcher } from './reloadDispatcher';
 
+export interface IDepths {
+    plannedDepth: number;
+    bestNitroxMix: string;
+    applyMaxDepth(): void;
+}
+
 @Injectable()
-export class DepthsService extends Streamed {
+export class DepthsService extends Streamed implements IDepths {
     private _levels: Level[] = [];
     private toxicity: GasToxicity;
     private plan = new Plan();

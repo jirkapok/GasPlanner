@@ -11,8 +11,8 @@ import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
-import {DiveSchedules} from '../shared/dive.schedules';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 @Component({
     selector: 'app-depths-simple',
@@ -67,10 +67,10 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                this.depths.updateLevels();
-                this.reloadSimple();
-            });
+            .subscribe(() => this.reloadSimple());
+
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.reloadSimple());
     }
 
     public durationChanged(): void {
@@ -83,6 +83,8 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     }
 
     private reloadSimple(): void {
+        this.depths.updateLevels();
+
         // depth is reloaded in its nested component
         this.simpleForm.patchValue({
             planDuration: Precision.round(this.depths.planDuration, 1)

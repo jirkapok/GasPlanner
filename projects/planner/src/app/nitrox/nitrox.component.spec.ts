@@ -15,14 +15,11 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { NitroxComponent } from './nitrox.component';
 import { ViewStates } from '../shared/viewStates';
 import { PreferencesStore } from '../shared/preferencesStore';
-import { WayPointsService } from '../shared/waypoints.service';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { SubViewStorage } from '../shared/subViewStorage';
-import { DiveResults } from '../shared/diveresults';
-import {DepthsService} from '../shared/depths.service';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
-import {DiveSchedules} from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
 
 export class NitroxPage {
     constructor(private fixture: ComponentFixture<NitroxComponent>) { }
@@ -45,17 +42,16 @@ describe('Nitrox component', () => {
         await TestBed.configureTestingModule({
             declarations: [NitroxComponent, OxygenDropDownComponent],
             providers: [
-                WorkersFactoryCommon, UnitConversion,
-                PlannerService, InputControls, DecimalPipe,
+                UnitConversion, InputControls, DecimalPipe,
                 NitroxCalculatorService, ValidatorGroups,
-                OptionsService, ViewStates, PreferencesStore,
-                TanksService, WayPointsService, Preferences,
-                ViewSwitchService, SubViewStorage, DiveResults,
-                DepthsService, ReloadDispatcher, DiveSchedules
+                ViewStates, PreferencesStore, Preferences,
+                PlannerService, WorkersFactoryCommon,
+                ViewSwitchService, SubViewStorage,
+                ReloadDispatcher, DiveSchedules,
+                OptionsService, TanksService
             ],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
-        })
-            .compileComponents();
+        }).compileComponents();
     });
 
     beforeEach(() => {

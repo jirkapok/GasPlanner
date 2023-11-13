@@ -10,16 +10,11 @@ import { ViewStates } from '../shared/viewStates';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
-import { TanksService } from '../shared/tanks.service';
-import { OptionsService } from '../shared/options.service';
-import { WayPointsService } from '../shared/waypoints.service';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { StandardGases } from 'scuba-physics';
-import { DiveResults } from '../shared/diveresults';
-import {DepthsService} from '../shared/depths.service';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
-import {DiveSchedules} from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
 
 describe('GasPropertiesCalcComponent', () => {
     let component: GasPropertiesCalcComponent;
@@ -32,9 +27,8 @@ describe('GasPropertiesCalcComponent', () => {
                 UnitConversion, ValidatorGroups, InputControls,
                 DecimalPipe, SubViewStorage, ViewStates,
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
-                TanksService, OptionsService, WayPointsService,
-                Preferences, ViewSwitchService, DiveResults,
-                DepthsService, ReloadDispatcher, DiveSchedules
+                Preferences, ViewSwitchService,
+                ReloadDispatcher, DiveSchedules
             ]
         });
         fixture = TestBed.createComponent(GasPropertiesCalcComponent);

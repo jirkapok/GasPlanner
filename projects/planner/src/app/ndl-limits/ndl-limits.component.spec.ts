@@ -13,13 +13,9 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
-import { TanksService } from '../shared/tanks.service';
-import { WayPointsService } from '../shared/waypoints.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import { DiveResults } from '../shared/diveresults';
-import {DepthsService} from '../shared/depths.service';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
-import {DiveSchedules} from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
 
 describe('NdlLimits component', () => {
     let component: NdlLimitsComponent;
@@ -30,12 +26,12 @@ describe('NdlLimits component', () => {
             declarations: [NdlLimitsComponent],
             providers: [
                 FormsModule, UnitConversion,
-                NdlService, OptionsService, PlannerService,
-                SubViewStorage, ViewStates, DiveResults,
+                NdlService, PlannerService,
+                SubViewStorage, ViewStates,
                 PreferencesStore, Preferences,
-                WorkersFactoryCommon, TanksService,
-                WayPointsService, ViewSwitchService,
-                DepthsService, ReloadDispatcher, DiveSchedules
+                WorkersFactoryCommon, ViewSwitchService,
+                ReloadDispatcher, DiveSchedules,
+                OptionsService
             ],
             imports: [RouterTestingModule.withRoutes([])]
         })

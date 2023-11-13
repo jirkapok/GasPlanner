@@ -7,7 +7,6 @@ import { InputControls } from '../shared/inputcontrols';
 import { OptionsService } from '../shared/options.service';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
-import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { SacComponent } from './sac.component';
@@ -18,12 +17,9 @@ import { SubViewStorage } from '../shared/subViewStorage';
 import { Preferences } from '../shared/preferences';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { PlannerService } from '../shared/planner.service';
-import { WayPointsService } from '../shared/waypoints.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import { DiveResults } from '../shared/diveresults';
-import {DepthsService} from '../shared/depths.service';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
-import {DiveSchedules} from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
 
 class SacPage {
     constructor(private fixture: ComponentFixture<SacComponent>) { }
@@ -51,12 +47,11 @@ describe('Sac component', () => {
             declarations: [SacComponent, TankSizeComponent],
             providers: [
                 WorkersFactoryCommon, UnitConversion,
-                OptionsService, DecimalPipe, DepthsService,
+                OptionsService, DecimalPipe,
                 ValidatorGroups, InputControls, SacCalculatorService,
-                TanksService, SubViewStorage, ViewStates,
+                SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, PlannerService,
-                WayPointsService, ViewSwitchService, DiveResults,
-                ReloadDispatcher, DiveSchedules
+                ViewSwitchService, ReloadDispatcher, DiveSchedules
             ],
             imports: [
                 RouterTestingModule.withRoutes([]),

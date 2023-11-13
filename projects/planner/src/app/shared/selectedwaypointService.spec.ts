@@ -5,6 +5,7 @@ import { WayPoint } from './models';
 import { UnitConversion } from './UnitConversion';
 import {ReloadDispatcher} from './reloadDispatcher';
 import {DiveSchedules} from './dive.schedules';
+import {TestBedExtensions} from './TestbedExtensions.spec';
 
 describe('Selected Waypoint', () => {
     const segment = new Segment(5, 10, StandardGases.air, 60);
@@ -46,7 +47,7 @@ describe('Selected Waypoint', () => {
         expect(received).toEqual(undefined);
     });
 
-    xit('Select by time stamp fires event', inject([DiveSchedules],
+    it('Select by time stamp fires event', inject([DiveSchedules],
         (schedules: DiveSchedules) => {
             let received: WayPoint | undefined;
 
@@ -54,8 +55,8 @@ describe('Selected Waypoint', () => {
                 received = wayPoint;
             });
 
-            // TODO provide waypoints: planner.calculate();
-            console.table(schedules.selected.diveResult.wayPoints);
+            const dive = schedules.selected.diveResult;
+            dive.wayPoints = TestBedExtensions.sampleWayPoints();
             sut.selectedTimeStamp = '1/1/1970 0:8:00';
             const expected = schedules.selected.diveResult.wayPoints[1];
 

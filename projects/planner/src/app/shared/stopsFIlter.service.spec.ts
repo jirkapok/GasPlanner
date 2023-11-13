@@ -3,10 +3,7 @@ import { StopsFilter } from './stopsFilter.service';
 import { UnitConversion } from './UnitConversion';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
-import { WayPointsService } from './waypoints.service';
-import {
-    CalculatedProfile, Events, Segment, StandardGases
-} from 'scuba-physics';
+import {TestBedExtensions} from './TestbedExtensions.spec';
 
 describe('Stops filter', () => {
     let service: StopsFilter;
@@ -20,20 +17,9 @@ describe('Stops filter', () => {
         });
 
         service = TestBed.inject(StopsFilter);
-        const segments: Segment[] = [
-            new Segment(0,30, StandardGases.air, 102),
-            new Segment(30,30, StandardGases.air, 618),
-            new Segment(30,12, StandardGases.air, 120),
-            new Segment(12,6, StandardGases.air, 60),
-            new Segment(6,3, StandardGases.air, 60),
-            new Segment(3,3, StandardGases.air, 180),
-            new Segment(3,0, StandardGases.air, 60),
-        ];
-        const profile = CalculatedProfile.fromErrors(segments, []);
-        const wayPoints = new WayPointsService(new UnitConversion());
         const schedules = TestBed.inject(DiveSchedules);
         const dive = schedules.dives[0].diveResult;
-        dive.wayPoints = wayPoints.calculateWayPoints(profile, new Events()).wayPoints;
+        dive.wayPoints = TestBedExtensions.sampleWayPoints();
     });
 
     it('When disabled returns all waypoints', () => {

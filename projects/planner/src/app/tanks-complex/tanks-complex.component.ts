@@ -12,7 +12,8 @@ import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
 import { OptionsService } from '../shared/options.service';
-import {ReloadDispatcher} from "../shared/reloadDispatcher";
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
 
 interface TankRow {
     tankSize: FormControl<number>;
@@ -35,20 +36,17 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     public icon = faBatteryHalf;
     public plusIcon = faPlus;
     public minusIcon = faMinus;
-    public toxicity: GasToxicity;
     public tanksForm!: FormGroup<TanksForm>;
 
     constructor(
-        private options: OptionsService,
-        private tanksService: TanksService,
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private delayedCalc: DelayedScheduleService,
-        private dispatcher: ReloadDispatcher) {
+        private dispatcher: ReloadDispatcher,
+        private schedules: DiveSchedules) {
         super();
-        this.toxicity = this.options.toxicity;
     }
 
     public get ranges(): RangeConstants {
@@ -59,12 +57,20 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         return this.tanksService.tanks;
     }
 
-    public get allDefaultTanks(): TankTemplate[] {
-        return this.units.defaults.tanks.available;
-    }
-
     public get tanksGroup(): FormArray<FormGroup<TankRow>> {
         return this.tanksForm.controls.boundTanks;
+    }
+
+    public get toxicity(): GasToxicity {
+        return this.optionsService.toxicity;
+    }
+
+    private get tanksService(): TanksService {
+        return this.schedules.selected.tanksService;
+    }
+
+    private get optionsService(): OptionsService {
+        return this.schedules.selected.optionsService;
     }
 
     public ngOnInit(): void {
@@ -79,7 +85,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     public gasSac(index: number): number {
         const bound = this.tanks[index];
-        const sac = this.options.diverOptions.gasSac(bound.tank);
+        const sac = this.optionsService.diverOptions.gasSac(bound.tank);
         return this.units.fromBar(sac);
     }
 

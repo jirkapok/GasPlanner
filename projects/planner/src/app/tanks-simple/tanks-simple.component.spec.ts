@@ -8,10 +8,8 @@ import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.comp
 import { OxygenComponent } from '../oxygen/oxygen.component';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
-import { OptionsService } from '../shared/options.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
-import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
@@ -22,10 +20,8 @@ import { SubViewStorage } from '../shared/subViewStorage';
 import { ViewStates } from '../shared/viewStates';
 import { Preferences } from '../shared/preferences';
 import { PreferencesStore } from '../shared/preferencesStore';
-import { DiveResults } from '../shared/diveresults';
-import {DiveSchedules} from '../shared/dive.schedules';
-import {DepthsService} from '../shared/depths.service';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -61,14 +57,13 @@ describe('Tanks Simple component', () => {
         await TestBed.configureTestingModule({
             declarations: [TanksSimpleComponent, GaslabelComponent,
                 OxygenComponent, OxygenDropDownComponent, TankSizeComponent],
-            providers: [WorkersFactoryCommon, UnitConversion,
+            providers: [
+                WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls, DiveSchedules,
                 ValidatorGroups, DelayedScheduleService,
-                DecimalPipe, TanksService, ViewSwitchService,
-                OptionsService, WayPointsService,
-                SubViewStorage, ViewStates, DiveResults,
-                PreferencesStore, Preferences, DepthsService,
-                ReloadDispatcher
+                DecimalPipe, ViewSwitchService, WayPointsService,
+                SubViewStorage, ViewStates, ReloadDispatcher,
+                PreferencesStore, Preferences,
             ],
             imports: [ReactiveFormsModule]
         })

@@ -8,10 +8,8 @@ import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.comp
 import { OxygenComponent } from '../oxygen/oxygen.component';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
-import { OptionsService } from '../shared/options.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
-import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
@@ -24,9 +22,7 @@ import { ViewStates } from '../shared/viewStates';
 import { Preferences } from '../shared/preferences';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { SubViewStorage } from '../shared/subViewStorage';
-import { DiveResults } from '../shared/diveresults';
 import {DiveSchedules} from '../shared/dive.schedules';
-import {DepthsService} from '../shared/depths.service';
 import {ReloadDispatcher} from '../shared/reloadDispatcher';
 
 export class ComplexTanksPage {
@@ -94,11 +90,10 @@ describe('Tanks Complex component', () => {
             ],
             providers: [
                 WorkersFactoryCommon, UnitConversion,
-                PlannerService, InputControls, DepthsService,
+                PlannerService, InputControls,
                 ValidatorGroups, DelayedScheduleService,
-                DecimalPipe, TanksService, ViewSwitchService,
-                OptionsService, WayPointsService,
-                SubViewStorage, ViewStates, DiveResults,
+                DecimalPipe, ViewSwitchService,
+                WayPointsService, SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, DiveSchedules,
                 ReloadDispatcher
             ],
@@ -116,8 +111,9 @@ describe('Tanks Complex component', () => {
             .and.callFake(() => { });
     });
 
-    it('Switch to complex view rebinds all tanks', inject([TanksService],
-        (tanksService: TanksService) => {
+    it('Switch to complex view rebinds all tanks', inject([DiveSchedules],
+        (schedules: DiveSchedules) => {
+            const tanksService = schedules.selected.tanksService;
             tanksService.addTank();
             const secondTank = tanksService.tanks[1];
             secondTank.startPressure = 150;

@@ -2,11 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DiveIssuesComponent } from './dive-issues.component';
 import { UnitConversion } from '../shared/UnitConversion';
-import { DiveResults } from '../shared/diveresults';
-import {DepthsService} from '../shared/depths.service';
-import {TanksService} from '../shared/tanks.service';
-import {OptionsService} from '../shared/options.service';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
 
 describe('DiveIssuesComponent', () => {
     let component: DiveIssuesComponent;
@@ -16,9 +13,8 @@ describe('DiveIssuesComponent', () => {
         TestBed.configureTestingModule({
             declarations: [DiveIssuesComponent],
             providers: [
-                OptionsService, UnitConversion,
-                TanksService, DiveResults,
-                DepthsService, ReloadDispatcher
+                UnitConversion, DiveSchedules,
+                ReloadDispatcher
             ]
         });
         fixture = TestBed.createComponent(DiveIssuesComponent);

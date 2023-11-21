@@ -6,7 +6,7 @@ import {
 import { Event, EventType, OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import _ from 'lodash';
-import {DepthsService} from '../shared/depths.service';
+import {DiveSchedules} from '../shared/dive.schedules';
 
 @Component({
     selector: 'app-dive-issues',
@@ -19,9 +19,9 @@ export class DiveIssuesComponent {
     public info = faInfoCircle;
     public otuLimit = OtuCalculator.dailyLimit;
 
-    constructor(public dive: DiveResults,
+    constructor(
         public units: UnitConversion,
-        private depths: DepthsService) {
+        private schedules: DiveSchedules) {
     }
 
     public get events(): Event[] {
@@ -30,11 +30,15 @@ export class DiveIssuesComponent {
     }
 
     public get minimumDuration(): number {
-        return this.depths.planDuration + 1;
+        return this.schedules.selected.depths.planDuration + 1;
     }
 
     public get noDeco(): number {
         return this.dive.noDecoTime;
+    }
+
+    public get dive(): DiveResults {
+        return this.schedules.selected.diveResult;
     }
 
     public isLowPpO2(event: Event): boolean {

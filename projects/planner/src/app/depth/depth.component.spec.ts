@@ -29,7 +29,7 @@ export class DepthPage {
     }
 }
 
-xdescribe('DepthComponent Imperial units', () => {
+describe('DepthComponent Imperial units', () => {
     let component: DepthComponent;
     let fixture: ComponentFixture<DepthComponent>;
     let depths: DepthsService;
@@ -57,6 +57,7 @@ xdescribe('DepthComponent Imperial units', () => {
         component = fixture.componentInstance;
         component.units.imperialUnits = true;
         depths = TestBed.inject(DiveSchedules).selected.depths;
+        component.depths = depths;
         fixture.detectChanges();
         page.depthInput.value = '70';
         page.depthInput.dispatchEvent(new Event('input'));

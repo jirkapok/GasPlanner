@@ -2,17 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray,  FormControl,
     NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
-import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
-import { DepthsService } from '../shared/depths.service';
+import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { InputControls } from '../shared/inputcontrols';
 import { Level, TankBound } from '../shared/models';
-import {DiveResults } from '../shared/diveresults';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { TanksService } from '../shared/tanks.service';
 import { Precision } from 'scuba-physics';
+import { DiveSchedule, DiveSchedules } from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 interface LevelRow {
     duration: FormControl<number>;
@@ -38,13 +37,12 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public dive: DiveResults,
-        private tanksService: TanksService,
         public units: UnitConversion,
-        public depths: DepthsService) {
+        private schedules: DiveSchedules,
+        private dispatcher: ReloadDispatcher) {
         super();
         // data are already available, it is ok to generate the levels.
-        this.depths.updateLevels();
+        this.selected.depths.updateLevels();
     }
 
     public get ranges(): RangeConstants {
@@ -52,16 +50,20 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     }
 
     public get minimumSegments(): boolean {
-        return this.depths.minimumSegments;
+        return this.selected.depths.minimumSegments;
     }
 
     // only to get their label, formatted in the tankLabel
     public get tanks(): TankBound[] {
-        return this.tanksService.tanks;
+        return this.selected.tanksService.tanks;
     }
 
     public get levelControls(): FormArray<FormGroup<LevelRow>> {
         return this.complexForm.controls.levels;
+    }
+
+    private get selected(): DiveSchedule {
+        return this.schedules.selected;
     }
 
     public depthItemInvalid(index: number): boolean {
@@ -91,7 +93,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
 
     public assignTank(index: number, tank: TankBound): void {
         const level = this.levelAt(index);
-        this.depths.assignTank(level, tank);
+        this.selected.depths.assignTank(level, tank);
     }
 
     public ngOnInit(): void {
@@ -101,12 +103,11 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
 
         // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
-        // TODO replace changed$ by dispatcher reloaded
-        // this.depths.changed$.pipe(takeUntil(this.unsubscribe$))
-        //     .subscribe(() => {
-        //         this.depths.updateLevels();
-        //         this.reloadComplex();
-        //     });
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                this.selected.depths.updateLevels();
+                this.reloadComplex();
+            });
     }
 
     public addLevel(): void {
@@ -114,8 +115,8 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
             return;
         }
 
-        this.depths.addSegment();
-        const index = this.depths.levels.length - 1;
+        this.selected.depths.addSegment();
+        const index = this.selected.depths.levels.length - 1;
         const newLevel = this.levelAt(index);
         const levelControls = this.createLevelControl(newLevel);
         this.levelControls.push(levelControls);
@@ -127,7 +128,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         }
 
         const level = this.levelAt(index);
-        this.depths.removeSegment(level);
+        this.selected.depths.removeSegment(level);
         this.levelControls.removeAt(index);
     }
 
@@ -141,7 +142,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         const levelValue = levelControl.value;
         level.duration = Number(levelValue.duration);
         level.endDepth = Number(levelValue.endDepth);
-        this.depths.levelChanged();
+        this.selected.depths.levelChanged();
     }
 
     private reloadComplex(): void {
@@ -151,7 +152,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
 
     private createLevelControls(): FormGroup<LevelRow>[] {
         const created: FormGroup<LevelRow>[] = [];
-        for (const level of this.depths.levels) {
+        for (const level of this.selected.depths.levels) {
             const newControl = this.createLevelControl(level);
             created.push(newControl);
         }
@@ -167,6 +168,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     }
 
     private levelAt(index: number): Level {
-        return this.depths.levels[index];
+        return this.selected.depths.levels[index];
     }
 }

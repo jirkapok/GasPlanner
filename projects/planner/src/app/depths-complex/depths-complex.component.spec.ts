@@ -4,13 +4,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
-import { OptionsService } from '../shared/options.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
 import { DepthsComplexComponent } from './depths-complex.component';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { WayPointsService } from '../shared/waypoints.service';
@@ -58,7 +56,6 @@ export class ComplexDepthsPage {
 }
 
 describe('Depths Complex Component', () => {
-    let component: DepthsComplexComponent;
     let depths: DepthsService;
     let fixture: ComponentFixture<DepthsComplexComponent>;
     let complexPage: ComplexDepthsPage;
@@ -69,8 +66,7 @@ describe('Depths Complex Component', () => {
             imports: [ReactiveFormsModule],
             providers: [WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls, DelayedScheduleService,
-                OptionsService, ValidatorGroups,
-                DepthsService, DecimalPipe, TanksService,
+                ValidatorGroups, DecimalPipe,
                 ViewSwitchService, WayPointsService,
                 SubViewStorage, ViewStates, PreferencesStore, Preferences,
                 DiveResults, ReloadDispatcher, DiveSchedules
@@ -81,8 +77,7 @@ describe('Depths Complex Component', () => {
 
     beforeEach(() => {
         fixture = TestBed.createComponent(DepthsComplexComponent);
-        component = fixture.componentInstance;
-        depths = component.depths;
+        depths = TestBed.inject(DiveSchedules).selected.depths;
         const planner = TestBed.inject(PlannerService);
         planner.calculate();
         fixture.detectChanges();

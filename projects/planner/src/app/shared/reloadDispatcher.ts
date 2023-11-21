@@ -13,9 +13,9 @@ export class ReloadDispatcher {
      **/
     public tanksReloaded$: Observable<void>;
     public tankRemoved$: Observable<Tank>;
+    // TODO rebind depths reloaded
     /** Event fired only in case of segments rebuild. Not fired when adding or removing. */
     public depthsReloaded$: Observable<void>;
-    // TODO rebind changed$ to delayedCalc.schedule()
     public depthChanged$: Observable<void>;
 
     public optionsReloaded$: Observable<void>;

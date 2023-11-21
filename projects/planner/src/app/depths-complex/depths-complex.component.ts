@@ -12,6 +12,7 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
 import { DiveSchedule, DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 
 interface LevelRow {
     duration: FormControl<number>;
@@ -39,7 +40,8 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         public units: UnitConversion,
         private schedules: DiveSchedules,
-        private dispatcher: ReloadDispatcher) {
+        private dispatcher: ReloadDispatcher,
+        private delayedCalc: DelayedScheduleService) {
         super();
         // data are already available, it is ok to generate the levels.
         this.selected.depths.updateLevels();
@@ -108,6 +110,9 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
                 this.selected.depths.updateLevels();
                 this.reloadComplex();
             });
+
+        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.delayedCalc.schedule());
     }
 
     public addLevel(): void {

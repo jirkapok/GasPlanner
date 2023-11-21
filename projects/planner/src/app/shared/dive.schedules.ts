@@ -1,11 +1,10 @@
-import { Tank } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import { OptionsService } from './options.service';
 import { TanksService } from './tanks.service';
 import { Injectable } from '@angular/core';
-import {DiveResults} from './diveresults';
-import {DepthsService} from './depths.service';
-import {ReloadDispatcher} from './reloadDispatcher';
+import { DiveResults } from './diveresults';
+import { DepthsService } from './depths.service';
+import { ReloadDispatcher } from './reloadDispatcher';
 
 export class DiveSchedule {
     /** In minutes or undefined in case it is the first dive */
@@ -52,6 +51,11 @@ export class DiveSchedule {
 
     public assignIndex(index: number): void {
         this._id = index + 1;
+    }
+
+    public applyNitrox(fO2: number, pO2: number): void {
+        this.tanksService.firstTank.tank.o2 = fO2;
+        this.optionsService.diverOptions.maxPpO2 = pO2;
     }
 }
 

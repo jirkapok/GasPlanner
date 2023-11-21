@@ -9,7 +9,6 @@ import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { OptionsService } from '../shared/options.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
-import { TanksService } from '../shared/tanks.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { NitroxComponent } from './nitrox.component';
@@ -48,7 +47,7 @@ describe('Nitrox component', () => {
                 PlannerService, WorkersFactoryCommon,
                 ViewSwitchService, SubViewStorage,
                 ReloadDispatcher, DiveSchedules,
-                OptionsService, TanksService
+                OptionsService
             ],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         }).compileComponents();

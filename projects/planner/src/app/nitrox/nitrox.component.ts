@@ -12,11 +12,10 @@ import { NitroxValidators } from '../shared/NitroxValidators';
 import { TextConstants } from '../shared/TextConstants';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
-import { TanksService } from '../shared/tanks.service';
-import { OptionsService } from '../shared/options.service';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { NitroxViewState } from '../shared/views.model';
 import { KnownViews } from '../shared/viewStates';
+import {DiveSchedules} from '../shared/dive.schedules';
 
 interface NitroxForm {
     mod?: FormControl<number>;
@@ -39,14 +38,14 @@ export class NitroxComponent implements OnInit {
     private failingMod = false;
 
     constructor(
+        // TODO nitrox calculator service has different options than currently selected dive
         public calc: NitroxCalculatorService,
         public units: UnitConversion,
         public location: Location,
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        private options: OptionsService,
-        private tanksService: TanksService,
+        private schedules: DiveSchedules,
         private viewStates: SubViewStorage) {
         this.loadState();
         this.saveState();
@@ -122,8 +121,8 @@ export class NitroxComponent implements OnInit {
             return;
         }
 
-        this.tanksService.firstTank.tank.o2 = this.calc.fO2;
-        this.options.diverOptions.maxPpO2 = this.calc.pO2;
+        const selected = this.schedules.selected;
+        selected.applyNitrox(this.calc.fO2, this.calc.pO2);
     }
 
     public toMod(): void {

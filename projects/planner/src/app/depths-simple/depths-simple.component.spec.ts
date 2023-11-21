@@ -10,7 +10,6 @@ import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
 import { DepthsSimpleComponent } from './depths-simple.component';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { WayPointsService } from '../shared/waypoints.service';
@@ -18,9 +17,8 @@ import { SubViewStorage } from '../shared/subViewStorage';
 import { ViewStates } from '../shared/viewStates';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
-import { DiveResults } from '../shared/diveresults';
-import {DiveSchedules} from '../shared/dive.schedules';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
@@ -48,13 +46,13 @@ describe('Depths Simple Component', () => {
         await TestBed.configureTestingModule({
             declarations: [DepthsSimpleComponent],
             imports: [ReactiveFormsModule],
-            providers: [WorkersFactoryCommon, PlannerService,
+            providers: [
+                WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls, DiveSchedules,
                 OptionsService, ValidatorGroups, DelayedScheduleService,
-                DepthsService, DecimalPipe, TanksService,
-                ViewSwitchService,  WayPointsService, Preferences,
+                DecimalPipe, ViewSwitchService,  WayPointsService,
                 SubViewStorage, ViewStates, PreferencesStore,
-                DiveResults, ReloadDispatcher
+                Preferences, ReloadDispatcher
             ]
         })
             .compileComponents();

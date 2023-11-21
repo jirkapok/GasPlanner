@@ -22,12 +22,12 @@ import { DiveSchedules } from './dive.schedules';
 describe('PreferencesStore', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [WorkersFactoryCommon,
+            providers: [
+                WorkersFactoryCommon,
                 PreferencesStore, PlannerService,
-                UnitConversion, TanksService,
-                ViewSwitchService, DepthsService,
-                OptionsService, Preferences, DiveResults,
-                DelayedScheduleService, SettingsNormalizationService,
+                UnitConversion, ViewSwitchService,
+                Preferences, DelayedScheduleService,
+                SettingsNormalizationService,
                 WayPointsService, ViewStates, SubViewStorage,
                 ReloadDispatcher, DiveSchedules
             ]

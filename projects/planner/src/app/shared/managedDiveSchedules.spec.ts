@@ -1,17 +1,13 @@
 import {DiveSchedule, DiveSchedules} from './dive.schedules';
 import { TestBed, inject } from '@angular/core/testing';
 import {UnitConversion} from './UnitConversion';
-import {TanksService} from './tanks.service';
 import {PreferencesStore} from './preferencesStore';
 import {PlannerService} from './planner.service';
 import {WorkersFactoryCommon} from './serial.workers.factory';
-import {DiveResults} from './diveresults';
-import {OptionsService} from './options.service';
 import {WayPointsService} from './waypoints.service';
 import {Preferences} from './preferences';
 import {ViewSwitchService} from './viewSwitchService';
 import {ViewStates} from './viewStates';
-import {DepthsService} from './depths.service';
 import {DelayedScheduleService} from './delayedSchedule.service';
 import {SubViewStorage} from './subViewStorage';
 import {ManagedDiveSchedules} from './managedDiveSchedules';
@@ -60,11 +56,11 @@ describe('Managed Schedules', () => {
         await TestBed.configureTestingModule({
             providers: [
                 ManagedDiveSchedules, UnitConversion,
-                TanksService, DiveSchedules, PreferencesStore,
+                DiveSchedules, PreferencesStore,
                 PlannerService, WorkersFactoryCommon,
-                DiveResults, OptionsService, ReloadDispatcher,
-                WayPointsService, Preferences, ViewSwitchService,
-                ViewStates, DepthsService, DelayedScheduleService,
+                ReloadDispatcher, WayPointsService,
+                Preferences, ViewSwitchService,
+                ViewStates, DelayedScheduleService,
                 SubViewStorage,
             ],
         }).compileComponents();

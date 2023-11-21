@@ -29,7 +29,7 @@ describe('View Switch service', () => {
         tanksService.firstTank.o2 = o2Expected;
         tanksService.addTank();
 
-        plan = selectedDive.depths
+        plan = selectedDive.depths;
         plan.plannedDepth = 7;
         plan.setSimple();
         plan.segments[1].endDepth = 5;

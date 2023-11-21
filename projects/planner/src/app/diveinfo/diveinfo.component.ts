@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { formatNumber } from '@angular/common';
+import { takeUntil } from 'rxjs';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import {
     faSlidersH, faShareFromSquare
@@ -8,13 +10,10 @@ import { DiveResults } from '../shared/diveresults';
 import { Tank } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import { GasToxicity } from '../shared/gasToxicity.service';
-import { takeUntil } from 'rxjs';
 import { Streamed } from '../shared/streamed';
 import { DepthsService } from '../shared/depths.service';
-import { TanksService } from '../shared/tanks.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import { OptionsService } from '../shared/options.service';
-import { formatNumber } from '@angular/common';
+import { DiveSchedules } from '../shared/dive.schedules';
 
 @Component({
     selector: 'app-diveinfo',
@@ -22,21 +21,16 @@ import { formatNumber } from '@angular/common';
     styleUrls: ['./diveinfo.component.scss']
 })
 export class DiveInfoComponent extends Streamed {
-    public toxicity: GasToxicity;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
     public toastVisible = false;
 
-    constructor(private clipboard: ClipboardService,
-        private depthsService: DepthsService,
-        private tanksService: TanksService,
-        public dive: DiveResults,
-        private options: OptionsService,
+    constructor(
+        private clipboard: ClipboardService,
         private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
-        private depths: DepthsService) {
+        private schedules: DiveSchedules) {
         super();
-        this.toxicity = this.options.toxicity;
 
         this.clipboard.copyResponse$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((res: IClipboardResponse) => {
@@ -55,15 +49,11 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get tanks(): Tank[] {
-        return this.tanksService.tankData;
+        return this.schedules.selected.tanksService.tankData;
     }
 
     public get showMaxBottomTime(): boolean {
         return this.dive.maxTime > 0;
-    }
-
-    public get needsReturn(): boolean {
-        return this.depths.needsReturn;
     }
 
     public get noDeco(): number {
@@ -95,6 +85,18 @@ export class DiveInfoComponent extends Streamed {
         }
 
         return formatNumber(this.dive.cns, 'en', '1.0-0');
+    }
+
+    public get dive(): DiveResults {
+        return this.schedules.selected.diveResult;
+    }
+
+    public get toxicity(): GasToxicity {
+        return this.schedules.selected.optionsService.toxicity;
+    }
+
+    private get depthsService(): DepthsService {
+        return this.schedules.selected.depths;
     }
 
     public applyMaxDuration(): void {

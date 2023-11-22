@@ -10,7 +10,7 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { Precision, TankTemplate } from 'scuba-physics';
-import { DiveSchedule, DiveSchedules } from '../shared/dive.schedules';
+import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 interface TankForm {
@@ -40,11 +40,11 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     }
 
     public get toxicity(): GasToxicity {
-        return this.selected.optionsService.toxicity;
+        return this.diveSchedules.selectedToxicity;
     }
 
     public get firstTank(): TankBound {
-        return this.selected.tanksService.firstTank;
+        return this.diveSchedules.selectedTansks.firstTank;
     }
 
     public get ranges(): RangeConstants {
@@ -64,10 +64,6 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     public get firstTankStartPressureInvalid(): boolean {
         const firstTankStartPressure = this.tanksForm.controls.firstTankStartPressure;
         return this.inputs.controlInValid(firstTankStartPressure);
-    }
-
-    private get selected(): DiveSchedule {
-        return this.diveSchedules.selected;
     }
 
     public ngOnInit(): void {
@@ -92,12 +88,12 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
 
     public gasSac(): number {
         const tank = this.firstTank.tank;
-        const sac = this.selected.optionsService.diverOptions.gasSac(tank);
+        const sac = this.diveSchedules.selectedOptions.diverOptions.gasSac(tank);
         return this.units.fromBar(sac);
     }
 
     public assignBestMix(): void {
-        const maxDepth = this.selected.depths.plannedDepthMeters;
+        const maxDepth = this.diveSchedules.selectedDepths.plannedDepthMeters;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
         this.delayedCalc.schedule();
     }

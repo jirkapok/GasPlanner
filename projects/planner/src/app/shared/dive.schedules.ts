@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
+import {GasToxicity} from './gasToxicity.service';
 
 export class DiveSchedule {
     /** In minutes or undefined in case it is the first dive */
@@ -83,6 +84,26 @@ export class DiveSchedules {
 
     public get empty(): boolean {
         return this.length <= 1;
+    }
+
+    public get selectedTansks(): TanksService {
+        return this.selected.tanksService;
+    }
+
+    public get selectedResult(): DiveResults {
+        return this.selected.diveResult;
+    }
+
+    public get selectedDepths(): DepthsService {
+        return this.selected.depths;
+    }
+
+    public get selectedOptions(): OptionsService {
+        return this.selected.optionsService;
+    }
+
+    public get selectedToxicity(): GasToxicity {
+        return this.selected.optionsService.toxicity;
     }
 
     public set selected(newValue: DiveSchedule) {

@@ -11,7 +11,6 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Streamed } from '../shared/streamed';
 import { TankBound } from '../shared/models';
 import { TanksService } from '../shared/tanks.service';
-import { OptionsService } from '../shared/options.service';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { DiveSchedules } from '../shared/dive.schedules';
 
@@ -62,15 +61,11 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     public get toxicity(): GasToxicity {
-        return this.optionsService.toxicity;
+        return this.schedules.selectedToxicity;
     }
 
     private get tanksService(): TanksService {
-        return this.schedules.selected.tanksService;
-    }
-
-    private get optionsService(): OptionsService {
-        return this.schedules.selected.optionsService;
+        return this.schedules.selectedTansks;
     }
 
     public ngOnInit(): void {
@@ -85,7 +80,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     public gasSac(index: number): number {
         const bound = this.tanks[index];
-        const sac = this.optionsService.diverOptions.gasSac(bound.tank);
+        const sac = this.schedules.selectedOptions.diverOptions.gasSac(bound.tank);
         return this.units.fromBar(sac);
     }
 

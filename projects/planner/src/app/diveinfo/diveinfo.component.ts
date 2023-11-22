@@ -49,7 +49,7 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get tanks(): Tank[] {
-        return this.schedules.selected.tanksService.tankData;
+        return this.schedules.selectedTansks.tankData;
     }
 
     public get showMaxBottomTime(): boolean {
@@ -88,15 +88,15 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get dive(): DiveResults {
-        return this.schedules.selected.diveResult;
+        return this.schedules.selectedResult;
     }
 
     public get toxicity(): GasToxicity {
-        return this.schedules.selected.optionsService.toxicity;
+        return this.schedules.selectedToxicity;
     }
 
     private get depthsService(): DepthsService {
-        return this.schedules.selected.depths;
+        return this.schedules.selectedDepths;
     }
 
     public applyMaxDuration(): void {

@@ -99,7 +99,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     public get options(): OptionsService {
-        return this.schedules.selected.optionsService;
+        return this.schedules.selectedOptions;
     }
 
     public set isComplex(newValue: boolean) {

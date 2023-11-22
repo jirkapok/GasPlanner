@@ -30,7 +30,7 @@ export class DiveIssuesComponent {
     }
 
     public get minimumDuration(): number {
-        return this.schedules.selected.depths.planDuration + 1;
+        return this.schedules.selectedDepths.planDuration + 1;
     }
 
     public get noDeco(): number {
@@ -38,7 +38,7 @@ export class DiveIssuesComponent {
     }
 
     public get dive(): DiveResults {
-        return this.schedules.selected.diveResult;
+        return this.schedules.selectedResult;
     }
 
     public isLowPpO2(event: Event): boolean {

@@ -27,7 +27,7 @@ export class StopsFilter {
             return allWayPoints;
         }
 
-        const depths = this.schedules.selected.depths;
+        const depths = this.schedules.selectedDepths;
         return allWayPoints.filter((item, index) =>
             index < depths.startAscentIndex ||
             index === allWayPoints.length - 1 ||
@@ -36,7 +36,7 @@ export class StopsFilter {
     }
 
     private get dive(): DiveResults {
-        return this.schedules.selected.diveResult;
+        return this.schedules.selectedResult;
     }
 
     public switchFilter(): void {

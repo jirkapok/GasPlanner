@@ -36,7 +36,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         private delayedCalc: DelayedScheduleService) {
         super();
         // data are already available, it is ok to generate the levels.
-        this.schedules.selected.depths.updateLevels();
+        this.depths.updateLevels();
     }
 
     public get ranges(): RangeConstants {
@@ -53,11 +53,11 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     }
 
     public get depths(): DepthsService {
-        return this.schedules.selected.depths;
+        return this.schedules.selectedDepths;
     }
 
     public get diveResult(): DiveResults {
-        return this.schedules.selected.diveResult;
+        return this.schedules.selectedResult;
     }
 
     public ngOnInit(): void {

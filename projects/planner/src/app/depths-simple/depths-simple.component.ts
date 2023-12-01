@@ -32,8 +32,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         public units: UnitConversion,
         private schedules: DiveSchedules,
-        private dispatcher: ReloadDispatcher,
-        private delayedCalc: DelayedScheduleService) {
+        private dispatcher: ReloadDispatcher) {
         super();
     }
 
@@ -69,7 +68,6 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.reloadSimple();
-                this.delayedCalc.schedule();
             });
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))

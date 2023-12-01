@@ -41,8 +41,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         public units: UnitConversion,
         private schedules: DiveSchedules,
-        public dispatcher: ReloadDispatcher,
-        private delayedCalc: DelayedScheduleService) {
+        public dispatcher: ReloadDispatcher) {
         super();
     }
 
@@ -108,9 +107,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
             .subscribe(() => {
                 this.reloadComplex();
             });
-
-        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.delayedCalc.schedule());
     }
 
     public addLevel(): void {

@@ -11,7 +11,6 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { DepthsSimpleComponent } from './depths-simple.component';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { ViewStates } from '../shared/viewStates';
@@ -49,7 +48,7 @@ describe('Depths Simple Component', () => {
             providers: [
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls, DiveSchedules,
-                OptionsService, ValidatorGroups, DelayedScheduleService,
+                OptionsService, ValidatorGroups,
                 DecimalPipe, ViewSwitchService,  WayPointsService,
                 SubViewStorage, ViewStates, PreferencesStore,
                 Preferences, ReloadDispatcher
@@ -64,11 +63,6 @@ describe('Depths Simple Component', () => {
         depths = component.depths;
         fixture.detectChanges();
         simplePage = new SimpleDepthsPage(fixture);
-        const scheduler = TestBed.inject(DelayedScheduleService);
-        spyOn(scheduler, 'schedule')
-            .and.callFake(() => {
-                // planner.calculate();
-            });
     });
 
     it('Duration change enforces calculation', inject([ReloadDispatcher], (dispatcher: ReloadDispatcher) => {

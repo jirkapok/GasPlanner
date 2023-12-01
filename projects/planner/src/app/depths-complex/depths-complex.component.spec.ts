@@ -10,7 +10,6 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { DepthsComplexComponent } from './depths-complex.component';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { WayPointsService } from '../shared/waypoints.service';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { ViewStates } from '../shared/viewStates';
@@ -64,12 +63,14 @@ describe('Depths Complex Component', () => {
         await TestBed.configureTestingModule({
             declarations: [DepthsComplexComponent],
             imports: [ReactiveFormsModule],
-            providers: [WorkersFactoryCommon, PlannerService,
-                UnitConversion, InputControls, DelayedScheduleService,
+            providers: [
+                WorkersFactoryCommon, PlannerService,
+                UnitConversion, InputControls,
                 ValidatorGroups, DecimalPipe,
                 ViewSwitchService, WayPointsService,
-                SubViewStorage, ViewStates, PreferencesStore, Preferences,
-                DiveResults, ReloadDispatcher, DiveSchedules
+                SubViewStorage, ViewStates, DiveSchedules,
+                PreferencesStore, Preferences,
+                DiveResults, ReloadDispatcher,
             ]
         })
             .compileComponents();
@@ -82,11 +83,6 @@ describe('Depths Complex Component', () => {
         planner.calculate();
         fixture.detectChanges();
         complexPage = new ComplexDepthsPage(fixture);
-        const scheduler = TestBed.inject(DelayedScheduleService);
-        spyOn(scheduler, 'schedule')
-            .and.callFake(() => {
-                planner.calculate();
-            });
     });
 
     it('Switch to simple view', () => {

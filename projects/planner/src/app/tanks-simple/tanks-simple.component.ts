@@ -119,6 +119,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         this.firstTank.workingPressure = Number(values.workPressure);
         this.firstTank.startPressure = Number(values.firstTankStartPressure);
         this.delayedCalc.schedule();
+        this.dispatcher.sendTankChanged();
     }
 
     private reloadAll(): void {

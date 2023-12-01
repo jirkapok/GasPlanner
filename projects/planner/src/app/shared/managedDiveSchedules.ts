@@ -13,6 +13,9 @@ export class ManagedDiveSchedules {
 
     // TODO Implement line of calculations in PlannerService.calculate(diveId)
     // TODO implement restore of last selected dive on page reload
+    // TODO consider speedup start by storing calculated final tissues to prevent calculation of all dives
+    // TODO what happens if we switch to siple view?
+    // Do we need to recalculate all dives? Or switch only current?
 
     public add(): void {
         const added = this.schedules.add();

@@ -104,20 +104,18 @@ export class DepthsService extends Streamed implements IDepths {
 
     public set planDuration(newValue: number) {
         this.plan.assignDuration(newValue, this.firstTank, this.optionsService.getOptions());
-        this.depthsReloaded();
+        this.updateLevels();
         this.apply();
     }
 
     public addSegment(): void {
         this.addSegmentToPlan();
         this.depthsReloaded();
-        this.apply();
     }
 
     public removeSegment(level: Level): void {
         this.plan.removeSegment(level.segment);
         this.depthsReloaded();
-        this.apply();
     }
 
     public applyMaxDuration(): void {
@@ -154,7 +152,8 @@ export class DepthsService extends Streamed implements IDepths {
 
     public setSimple(): void {
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.optionsService.getOptions());
-        this.depthsReloaded();
+        this.updateLevels();
+        this.apply();
     }
 
     public fixDepths(): void {
@@ -164,7 +163,7 @@ export class DepthsService extends Streamed implements IDepths {
     private assignDepth(newDepth: number): void {
         const options = this.optionsService.getOptions();
         this.plan.assignDepth(newDepth, this.firstTank, options);
-        this.depthsReloaded();
+        this.updateLevels();
     }
 
     private addSegmentToPlan(): void {

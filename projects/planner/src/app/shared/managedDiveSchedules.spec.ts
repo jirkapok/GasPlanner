@@ -14,8 +14,7 @@ import {ManagedDiveSchedules} from './managedDiveSchedules';
 import Spy = jasmine.Spy;
 import {ReloadDispatcher} from './reloadDispatcher';
 
-// TODO Scheduled dives test cases:
-// * Dives are loaded from saved storage at start
+// TODO Scheduled dives test cases: Dives are loaded from saved storage at start
 describe('Managed Schedules', () => {
     const expectedSecondTankSize = 24;
     const expectedMaxEnd = 27;

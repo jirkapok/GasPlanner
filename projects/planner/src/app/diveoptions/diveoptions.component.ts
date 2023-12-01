@@ -170,13 +170,13 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     public useRecreational(): void {
         this.options.useRecreational();
-        this.fireCalculation();
+        this.fireChanged();
         this.reloadForm();
     }
 
     public useRecommended(): void {
         this.options.useRecommended();
-        this.fireCalculation();
+        this.fireChanged();
         this.reloadForm();
     }
 
@@ -236,11 +236,12 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         this.options.ascentSpeed50percTo6m = Number(values.ascentSpeed50percTo6m);
         this.options.ascentSpeed50perc = Number(values.ascentSpeed50perc);
 
-        this.fireCalculation();
+        this.fireChanged();
     }
 
-    public fireCalculation(): void {
+    public fireChanged(): void {
         this.delayedCalc.schedule();
+        this.dispatcher.sendOptionsChanged();
     }
 
     private reloadForm(): void {

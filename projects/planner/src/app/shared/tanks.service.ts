@@ -44,6 +44,8 @@ export class TanksService {
     public addTank(): void {
         const defaultTanks = this.units.defaults.tanks;
         this.addTankBy(defaultTanks.stage.size, defaultTanks.stage.workingPressure);
+        this.dispatcher.sendTanksReloaded();
+        // TODO errors in console after binding of the tank controls
     }
 
     public removeTank(tank: TankBound): void {

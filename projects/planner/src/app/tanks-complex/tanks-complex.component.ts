@@ -136,6 +136,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         bound.assignTemplate(template);
         this.reload(bound, index);
         this.delayedCalc.schedule();
+        this.dispatcher.sendTankChanged();
     }
 
     public tankChanged(index: number): void {
@@ -156,6 +157,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.reload(bound, index);
 
         this.delayedCalc.schedule();
+        this.dispatcher.sendTankChanged();
     }
 
     public standardGasApplied(index: number): void {

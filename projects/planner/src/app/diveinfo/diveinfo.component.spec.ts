@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DiveInfoComponent } from './diveinfo.component';
 import { UnitConversion } from '../shared/UnitConversion';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { WayPointsService } from '../shared/waypoints.service';
@@ -24,8 +23,8 @@ describe('DiveInfoComponent', () => {
                 DiveInfoComponent,
             ],
             providers: [
-                UnitConversion, DelayedScheduleService, PlannerService,
-                WorkersFactoryCommon, WayPointsService, SubViewStorage,
+                UnitConversion, PlannerService, SubViewStorage,
+                WorkersFactoryCommon, WayPointsService,
                 ViewStates, PreferencesStore, Preferences,
                 ViewSwitchService, ReloadDispatcher,
                 DiveSchedules

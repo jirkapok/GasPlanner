@@ -9,7 +9,6 @@ import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 import { DepthsService } from './depths.service';
-import { DelayedScheduleService } from './delayedSchedule.service';
 import { Preferences } from './preferences';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { WayPointsService } from './waypoints.service';
@@ -25,10 +24,10 @@ describe('PreferencesStore', () => {
                 WorkersFactoryCommon,
                 PreferencesStore, PlannerService,
                 UnitConversion, ViewSwitchService,
-                Preferences, DelayedScheduleService,
+                Preferences, ViewStates, SubViewStorage,
                 SettingsNormalizationService,
-                WayPointsService, ViewStates, SubViewStorage,
-                ReloadDispatcher, DiveSchedules
+                WayPointsService, DiveSchedules,
+                ReloadDispatcher
             ]
         });
 

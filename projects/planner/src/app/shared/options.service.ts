@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DefaultOptions, Diver, OptionDefaults, Options, SafetyStop, Salinity } from 'scuba-physics';
-import { GasToxicity } from './gasToxicity.service';
+import {
+    DefaultOptions, Diver, OptionDefaults,
+    Options, SafetyStop, Salinity, GasToxicity
+} from 'scuba-physics';
 import { StandardGradientsService } from './standard-gradients.service';
 import { UnitConversion } from './UnitConversion';
 import { DiverOptions } from './models';

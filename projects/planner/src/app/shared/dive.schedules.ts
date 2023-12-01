@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
-import {GasToxicity} from './gasToxicity.service';
+import { GasToxicity } from 'scuba-physics';
 
 export class DiveSchedule {
     /** In minutes or undefined in case it is the first dive */

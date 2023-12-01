@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
-import { Precision, StandardGases, Tank } from 'scuba-physics';
-import { GasToxicity } from '../shared/gasToxicity.service';
+import { Precision, StandardGases, Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TankBound } from '../shared/models';

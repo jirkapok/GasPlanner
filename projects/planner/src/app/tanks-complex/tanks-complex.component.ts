@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { Precision, TankTemplate } from 'scuba-physics';
+import { Precision, TankTemplate, GasToxicity } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
-import { GasToxicity } from '../shared/gasToxicity.service';
 import { takeUntil } from 'rxjs';
 import { FormArray, NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';

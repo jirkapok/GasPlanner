@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
-import { Options, Salinity, Tank, Time } from 'scuba-physics';
-import { GasToxicity } from '../shared/gasToxicity.service';
+import { Options, Salinity, Tank, Time, GasToxicity } from 'scuba-physics';
 import { NdlLimit, NdlService } from '../shared/ndl.service';
 import { OptionsService } from '../shared/options.service';
 import { Gradients } from '../shared/standard-gradients.service';

@@ -7,9 +7,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { DiveResults } from '../shared/diveresults';
-import { Tank } from 'scuba-physics';
+import { Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
-import { GasToxicity } from '../shared/gasToxicity.service';
 import { Streamed } from '../shared/streamed';
 import { DepthsService } from '../shared/depths.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';

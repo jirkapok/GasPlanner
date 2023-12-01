@@ -15,6 +15,7 @@ export * from './lib/Gases';
 export * from './lib/gasBlender';
 export * from './lib/GasDensity';
 export * from './lib/gas.properties';
+export * from './lib/gasToxicity';
 export * from './lib/NitroxCalculator';
 export * from './lib/Options';
 export * from './lib/OtuCalculator';

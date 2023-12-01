@@ -38,7 +38,6 @@ export class NitroxComponent implements OnInit {
     private failingMod = false;
 
     constructor(
-        // TODO nitrox calculator service has different options than currently selected dive
         public calc: NitroxCalculatorService,
         public units: UnitConversion,
         public location: Location,

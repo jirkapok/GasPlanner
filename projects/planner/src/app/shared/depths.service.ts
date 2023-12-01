@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { GasToxicity } from './gasToxicity.service';
 import { Level, TankBound } from './models';
 import { Plan } from './plan.service';
 import { UnitConversion } from './UnitConversion';
@@ -7,7 +6,9 @@ import { TanksService } from './tanks.service';
 import { Streamed } from './streamed';
 import { takeUntil } from 'rxjs';
 import { OptionsService } from './options.service';
-import { Tank, Segment, StandardGases, Precision } from 'scuba-physics';
+import {
+    Tank, Segment, StandardGases, Precision, GasToxicity
+} from 'scuba-physics';
 import { DiveResults } from './diveresults';
 import { ReloadDispatcher } from './reloadDispatcher';
 

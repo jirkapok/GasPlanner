@@ -1,7 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -29,11 +28,10 @@ describe('Dive options component', () => {
                 WorkersFactoryCommon, DecimalPipe,
                 InputControls, DiveSchedules,
                 ValidatorGroups, PlannerService,
-                DelayedScheduleService, UnitConversion,
+                UnitConversion, ReloadDispatcher,
                 ViewSwitchService, WayPointsService,
                 ViewStates, SubViewStorage,
-                Preferences, PreferencesStore,
-                ReloadDispatcher
+                Preferences, PreferencesStore
             ]
         })
             .compileComponents();

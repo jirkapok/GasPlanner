@@ -44,7 +44,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private viewSwitch: ViewSwitchService,
-        private delayedCalc: DelayedScheduleService,
         private schedules: DiveSchedules,
         private dispatcher: ReloadDispatcher) {
         super();
@@ -238,7 +237,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     public fireChanged(): void {
-        this.delayedCalc.schedule();
         this.dispatcher.sendOptionsChanged();
     }
 

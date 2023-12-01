@@ -137,7 +137,7 @@ export class PlannerService extends Streamed {
         const serializedTanks = DtoSerialization.fromTanks(this.serializableTanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
-        const profile = this.waypoints.calculateWayPoints(calculatedProfile, events);
+        const profile = this.waypoints.calculateWayPoints(calculatedProfile, events.items);
         this.dive.wayPoints = profile.wayPoints;
         this.dive.ceilings = profile.ceilings;
         this.dive.events = profile.events;

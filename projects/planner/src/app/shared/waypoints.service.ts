@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 import { WayPoint } from './models';
 import {
-    Segment, Event, CalculatedProfile,
-    Ceiling, Events
+    Segment, Event, CalculatedProfile, Ceiling
 } from 'scuba-physics';
 
 export class Profile {
@@ -28,7 +27,7 @@ export class Profile {
 export class WayPointsService {
     constructor(private units: UnitConversion){}
 
-    public calculateWayPoints(profile: CalculatedProfile, events: Events): Profile {
+    public calculateWayPoints(profile: CalculatedProfile, events: Event[]): Profile {
         const wayPoints = [];
 
         // not propagated to the UI
@@ -49,8 +48,7 @@ export class WayPointsService {
             wayPoints.push(waypoint);
         });
 
-        // TODO replace Events parameter by events array directly
-        return new Profile(profile.segments, wayPoints, profile.ceilings, events.items);
+        return new Profile(profile.segments, wayPoints, profile.ceilings, events);
     }
 
     private toWayPoint(segment: Segment, lastWayPoint: WayPoint, lastSegment: Segment): WayPoint {

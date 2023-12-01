@@ -1,7 +1,9 @@
 import { WayPointsService } from './waypoints.service';
 import { SwimAction } from './models';
 import { Plan } from './plan.service';
-import { Tank, Salinity, CalculatedProfile, Events, Event, SafetyStop } from 'scuba-physics';
+import {
+    Tank, Salinity, CalculatedProfile, Event, SafetyStop
+} from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { UnitConversion } from './UnitConversion';
 
@@ -17,7 +19,7 @@ describe('WayPointsService', () => {
         plan.setSimple(40, 20, airTank, options);
         const profile = CalculatedProfile.fromProfile(plan.segments, []);
 
-        const wayPoints = sut.calculateWayPoints(profile, new Events());
+        const wayPoints = sut.calculateWayPoints(profile, []);
         expect(wayPoints.wayPoints.length).toBe(2);
     });
 
@@ -28,7 +30,7 @@ describe('WayPointsService', () => {
             Event.createError('')
         ]);
 
-        const wayPoints = sut.calculateWayPoints(profile, new Events());
+        const wayPoints = sut.calculateWayPoints(profile, []);
         expect(wayPoints.wayPoints.length).toBe(0);
     });
 
@@ -38,7 +40,7 @@ describe('WayPointsService', () => {
         plan.addSegment(new Tank(10, 0, 50));
         const profile = CalculatedProfile.fromProfile(plan.segments, []);
 
-        const wayPoints = sut.calculateWayPoints(profile, new Events());
+        const wayPoints = sut.calculateWayPoints(profile, []);
         expect(wayPoints.wayPoints[2].swimAction).toBe(SwimAction.switch);
     });
 });

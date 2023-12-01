@@ -18,7 +18,7 @@ export class TestBedExtensions {
         ];
         const profile = CalculatedProfile.fromErrors(segments, []);
         const wayPoints = new WayPointsService(new UnitConversion());
-        const result = wayPoints.calculateWayPoints(profile, new Events());
+        const result = wayPoints.calculateWayPoints(profile, []);
         return result.wayPoints;
     }
 }

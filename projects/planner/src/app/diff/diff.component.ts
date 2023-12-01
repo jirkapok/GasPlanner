@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { Profile, WayPointsService } from '../shared/waypoints.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import {
-    CalculatedProfile, Ceiling, Events, Segments, StandardGases, Tank, Time
+    CalculatedProfile, Ceiling, Segments, StandardGases,
+    Tank, Time, Event
 } from 'scuba-physics';
 
 
@@ -15,7 +16,7 @@ class TestData {
 
     constructor() {
         const units = new UnitConversion();
-        const emptyEvents = new Events();
+        const emptyEvents: Event[] = [];
         const waypointService = new WayPointsService(units);
 
         this.tanksA = [

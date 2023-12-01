@@ -1,14 +1,10 @@
-import { UnitConversion } from './UnitConversion';
 import { NitroxCalculatorService } from './nitrox-calculator.service';
-import { OptionsService } from './options.service';
-import {ReloadDispatcher} from './reloadDispatcher';
 
 describe('NitroxCalculatorService', () => {
     let service: NitroxCalculatorService;
 
     beforeEach(() => {
-        const options = new OptionsService(new UnitConversion(), new ReloadDispatcher());
-        service = new NitroxCalculatorService(options);
+        service = new NitroxCalculatorService();
         service.fO2 = 50;
         service.pO2 = 1.6;
         service.mod = 30;

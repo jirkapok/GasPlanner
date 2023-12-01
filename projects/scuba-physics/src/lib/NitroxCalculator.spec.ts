@@ -1,18 +1,28 @@
-import { NitroxCalculator } from './NitroxCalculator';
+import {GasSwitchCalculator, NitroxCalculator} from './NitroxCalculator';
 import { DepthConverter } from './depth-converter';
 import { DepthLevels } from './DepthLevels';
 import { SafetyStop } from './Options';
 
+describe('GasSwitchCalculator', () => {
+    it('Sets switch depth for Ean50 to 21 m', () => {
+        const options = {
+            lastStopDepth: 6,
+            safetyStop: SafetyStop.never,
+            decoStopDistance: 3,
+            minimumAutoStopDepth: 10
+        };
+
+        const depthConverter = DepthConverter.forFreshWater();
+        const depthLevels = new DepthLevels(depthConverter, options);
+        const sut = new GasSwitchCalculator(depthLevels);
+        const mod = sut.gasSwitch(1.6, 50);
+        expect(mod).toBe(21);
+    });
+});
+
 describe('NitroxCalculatorService', () => {
     const depthConverter = DepthConverter.forFreshWater();
-    const options = {
-        lastStopDepth: 6,
-        safetyStop: SafetyStop.never,
-        decoStopDistance: 3,
-        minimumAutoStopDepth: 10
-    };
-    const depthLevels = new DepthLevels(depthConverter, options);
-    const nitroxCalculator = new NitroxCalculator(depthLevels, depthConverter);
+    const nitroxCalculator = new NitroxCalculator(depthConverter);
 
     describe('Maximum operational depth (MOD)', () => {
         it('pO2 1.6 with 50% fO2 has MOD 22.29 m (defaults)', () => {

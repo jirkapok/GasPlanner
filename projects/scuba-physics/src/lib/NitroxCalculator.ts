@@ -4,9 +4,30 @@ import { DepthLevels } from './DepthLevels';
 import { GasMixtures } from './Gases';
 import { StandardGases } from './Gases';
 
+export class GasSwitchCalculator {
+    constructor(private depthLevels: DepthLevels) {
+    }
+
+    /**
+     * Calculates recommended switch depth for given gas rounded to meters.
+     *
+     * @param ppO2 - Partial pressure constant.
+     * @param percentO2 - Percents of Oxygen fraction in gas.
+     * @returns Depth in meters.
+     */
+    public gasSwitch(ppO2: number, percentO2: number): number {
+        const fO2 = percentO2 / 100;
+        const result = GasMixtures.mod(ppO2, fO2);
+        return this.depthLevels.toDecoStop(result);
+    }
+}
+
+/**
+ * Calculates all Nitrox related values (ead, mod, ppO2, best mix)
+ * except gas switch depth (see GasSwitchCalculator).
+ */
 export class NitroxCalculator {
-    constructor(private depthLevels: DepthLevels, private depthConverter: DepthConverter,
-        private o2InAir = StandardGases.o2InAir) {
+    constructor(private depthConverter: DepthConverter, private o2InAir = StandardGases.o2InAir) {
     }
 
     /**
@@ -56,19 +77,6 @@ export class NitroxCalculator {
         result = this.depthConverter.fromBar(result);
         result = Precision.fix(result);
         return Precision.floor(result, 2);
-    }
-
-    /**
-     * Calculates recommended switch depth for given gas rounded to meters.
-     *
-     * @param ppO2 - Partial pressure constant.
-     * @param percentO2 - Percents of Oxygen fraction in gas.
-     * @returns Depth in meters.
-     */
-    public gasSwitch(ppO2: number, percentO2: number): number {
-        const fO2 = percentO2 / 100;
-        const result = GasMixtures.mod(ppO2, fO2);
-        return this.depthLevels.toDecoStop(result);
     }
 
     /**

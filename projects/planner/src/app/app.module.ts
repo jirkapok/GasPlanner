@@ -81,8 +81,9 @@ import { DiffComponent } from './diff/diff.component';
 import { DiveResults } from './shared/diveresults';
 import { DiveSchedules } from './shared/dive.schedules';
 import { RedundanciesComponent } from './redundancies/redundancies.component';
-import {RedundanciesService} from './shared/redundancies.service';
-import {ReloadDispatcher} from './shared/reloadDispatcher';
+import { RedundanciesService } from './shared/redundancies.service';
+import { ReloadDispatcher } from './shared/reloadDispatcher';
+import { ManagedDiveSchedules } from './shared/managedDiveSchedules';
 
 const ANGULAR_MODULES = [
     BrowserModule,
@@ -158,6 +159,7 @@ const MDB_MODULES = [
         PlannerService,
         DiveResults,
         DiveSchedules,
+        ManagedDiveSchedules,
         PlanUrlSerialization,
         Preferences,
         PreferencesStore,

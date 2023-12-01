@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { Urls } from '../shared/navigation.service';
-import { PreferencesStore } from '../shared/preferencesStore';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 
 @Component({
     selector: 'app-mainmenu',
@@ -14,7 +14,7 @@ export class MainMenuComponent {
     public showInstallButton = false;
     private deferredPrompt: any;
 
-    constructor(private preferences: PreferencesStore, public urls: Urls) { }
+    constructor(private schedules: ManagedDiveSchedules, public urls: Urls) { }
 
     @HostListener('window:beforeinstallprompt', ['$event'])
     public onbeforeinstallprompt(e: Event): void {
@@ -24,11 +24,11 @@ export class MainMenuComponent {
     }
 
     public saveDefaults(): void {
-        this.preferences.saveDefault();
+        this.schedules.saveDefaults();
     }
 
     public loadDefaults(): void {
-        // TODO this.preferences.loadDefault();
+        this.schedules.loadDefaults();
     }
 
     public addToHomeScreen(): void {

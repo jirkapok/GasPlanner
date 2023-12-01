@@ -35,8 +35,6 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         private dispatcher: ReloadDispatcher,
         private delayedCalc: DelayedScheduleService) {
         super();
-        // data are already available, it is ok to generate the levels.
-        this.depths.updateLevels();
     }
 
     public get ranges(): RangeConstants {
@@ -88,8 +86,6 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     }
 
     private reloadSimple(): void {
-        this.depths.updateLevels();
-
         // depth is reloaded in its nested component
         this.simpleForm.patchValue({
             planDuration: Precision.round(this.depths.planDuration, 1)

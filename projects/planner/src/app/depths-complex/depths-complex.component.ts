@@ -41,11 +41,9 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         public units: UnitConversion,
         private schedules: DiveSchedules,
-        private dispatcher: ReloadDispatcher,
+        public dispatcher: ReloadDispatcher,
         private delayedCalc: DelayedScheduleService) {
         super();
-        // data are already available, it is ok to generate the levels.
-        this.depths.updateLevels();
     }
 
     public get ranges(): RangeConstants {
@@ -65,7 +63,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         return this.complexForm.controls.levels;
     }
 
-    private get depths(): DepthsService {
+    public get depths(): DepthsService {
         return this.schedules.selectedDepths;
     }
 
@@ -108,7 +106,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         // for simple view, this is also kicked of when switching to simple view
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
-                this.depths.updateLevels();
                 this.reloadComplex();
             });
 

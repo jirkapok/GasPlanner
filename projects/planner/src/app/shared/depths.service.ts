@@ -102,19 +102,20 @@ export class DepthsService extends Streamed implements IDepths {
     }
 
     public set planDuration(newValue: number) {
-        this.assignDuration(newValue);
+        this.plan.assignDuration(newValue, this.firstTank, this.optionsService.getOptions());
+        this.depthsReloaded();
         this.apply();
     }
 
     public addSegment(): void {
         this.addSegmentToPlan();
-        this.updateLevels();
+        this.depthsReloaded();
         this.apply();
     }
 
     public removeSegment(level: Level): void {
         this.plan.removeSegment(level.segment);
-        this.updateLevels();
+        this.depthsReloaded();
         this.apply();
     }
 
@@ -145,20 +146,6 @@ export class DepthsService extends Streamed implements IDepths {
         this.apply();
     }
 
-    // TODO replace by stream
-    public updateLevels(): void {
-        const segments: Segment[] = this.plan.segments;
-        const converted: Level[] = [];
-        segments.forEach(segment => {
-            const tank = segment.tank as Tank;
-            const boundTank = this.tanksService.firstBy(tank) as TankBound;
-            const level = new Level(this.units, segment, boundTank);
-            converted.push(level);
-        });
-
-        this._levels = converted;
-    }
-
     public loadFrom(other: Segment[]): void {
         this.plan.loadFrom(other);
         this.depthsReloaded();
@@ -179,11 +166,6 @@ export class DepthsService extends Streamed implements IDepths {
         this.depthsReloaded();
     }
 
-    private assignDuration(newDuration: number): void {
-        this.plan.assignDuration(newDuration, this.firstTank, this.optionsService.getOptions());
-        this.depthsReloaded();
-    }
-
     private addSegmentToPlan(): void {
         const segments = this.plan.segments;
         const lastUsedTank = segments[segments.length - 1].tank;
@@ -198,6 +180,19 @@ export class DepthsService extends Streamed implements IDepths {
     private tankRemoved(removed: Tank): void {
         this.plan.resetSegments(removed, this.firstTank);
         this.depthsReloaded();
+    }
+
+    private updateLevels(): void {
+        const segments: Segment[] = this.plan.segments;
+        const converted: Level[] = [];
+        segments.forEach(segment => {
+            const tank = segment.tank as Tank;
+            const boundTank = this.tanksService.firstBy(tank) as TankBound;
+            const level = new Level(this.units, segment, boundTank);
+            converted.push(level);
+        });
+
+        this._levels = converted;
     }
 
     private depthsReloaded(): void {

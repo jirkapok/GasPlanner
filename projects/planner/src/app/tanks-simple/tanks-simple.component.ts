@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { faBatteryHalf } from '@fortawesome/free-solid-svg-icons';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { takeUntil } from 'rxjs';
 import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
@@ -32,7 +31,6 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        private delayedCalc: DelayedScheduleService,
         private diveSchedules: DiveSchedules,
         private dispatcher: ReloadDispatcher) {
         super();
@@ -94,7 +92,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     public assignBestMix(): void {
         const maxDepth = this.diveSchedules.selectedDepths.plannedDepthMeters;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
-        this.delayedCalc.schedule();
+        this.dispatcher.sendTankChanged();
     }
 
     public applyTemplate(template: TankTemplate): void {
@@ -118,7 +116,6 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         this.firstTank.size = Number(values.firstTankSize);
         this.firstTank.workingPressure = Number(values.workPressure);
         this.firstTank.startPressure = Number(values.firstTankStartPressure);
-        this.delayedCalc.schedule();
         this.dispatcher.sendTankChanged();
     }
 

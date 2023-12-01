@@ -6,7 +6,6 @@ import { TankTemplate } from 'scuba-physics';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../oxygen/oxygen.component';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -80,7 +79,7 @@ describe('Tanks Complex component', () => {
     let component: TanksComplexComponent;
     let fixture: ComponentFixture<TanksComplexComponent>;
     let complexPage: ComplexTanksPage;
-    let schedulerSpy: jasmine.Spy<() => void>;
+    let dispatcherSpy: jasmine.Spy<() => void>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -91,8 +90,7 @@ describe('Tanks Complex component', () => {
             providers: [
                 WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls,
-                ValidatorGroups, DelayedScheduleService,
-                DecimalPipe, ViewSwitchService,
+                ValidatorGroups, DecimalPipe, ViewSwitchService,
                 WayPointsService, SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, DiveSchedules,
                 ReloadDispatcher
@@ -106,8 +104,8 @@ describe('Tanks Complex component', () => {
         fixture = TestBed.createComponent(TanksComplexComponent);
         component = fixture.componentInstance;
         complexPage = new ComplexTanksPage(fixture);
-        const scheduler = TestBed.inject(DelayedScheduleService);
-        schedulerSpy = spyOn(scheduler, 'schedule')
+        const dispatcher = TestBed.inject(ReloadDispatcher);
+        dispatcherSpy = spyOn(dispatcher, 'sendTankChanged')
             .and.callFake(() => { });
     });
 
@@ -152,7 +150,7 @@ describe('Tanks Complex component', () => {
         complexPage.sizeInput(0).value = 'aaa';
         complexPage.sizeInput(0).dispatchEvent(new Event('input'));
 
-        expect(schedulerSpy).not.toHaveBeenCalled();
+        expect(dispatcherSpy).not.toHaveBeenCalled();
     });
 
     describe('Valid change', () => {
@@ -163,7 +161,7 @@ describe('Tanks Complex component', () => {
         });
 
         it('triggers calculate', () => {
-            expect(schedulerSpy).toHaveBeenCalledTimes(1);
+            expect(dispatcherSpy).toHaveBeenCalledTimes(1);
         });
 
         it('doesn\'t break working pressure', () => {

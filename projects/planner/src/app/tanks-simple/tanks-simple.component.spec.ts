@@ -6,7 +6,6 @@ import { By } from '@angular/platform-browser';
 import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../oxygen/oxygen.component';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
@@ -51,7 +50,7 @@ describe('Tanks Simple component', () => {
     let component: TanksSimpleComponent;
     let fixture: ComponentFixture<TanksSimpleComponent>;
     let simplePage: SimpleTanksPage;
-    let schedulerSpy: jasmine.Spy<() => void>;
+    let dispatcherSpy: jasmine.Spy<() => void>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -60,10 +59,9 @@ describe('Tanks Simple component', () => {
             providers: [
                 WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls, DiveSchedules,
-                ValidatorGroups, DelayedScheduleService,
+                ValidatorGroups, PreferencesStore, Preferences,
                 DecimalPipe, ViewSwitchService, WayPointsService,
-                SubViewStorage, ViewStates, ReloadDispatcher,
-                PreferencesStore, Preferences,
+                SubViewStorage, ViewStates, ReloadDispatcher
             ],
             imports: [ReactiveFormsModule]
         })
@@ -74,8 +72,8 @@ describe('Tanks Simple component', () => {
         fixture = TestBed.createComponent(TanksSimpleComponent);
         component = fixture.componentInstance;
         simplePage = new SimpleTanksPage(fixture);
-        const scheduler = TestBed.inject(DelayedScheduleService);
-        schedulerSpy = spyOn(scheduler, 'schedule')
+        const dispatcher = TestBed.inject(ReloadDispatcher);
+        dispatcherSpy = spyOn(dispatcher, 'sendTankChanged')
             .and.callFake(() => { });
     });
 
@@ -93,7 +91,7 @@ describe('Tanks Simple component', () => {
         fixture.detectChanges();
         simplePage.sizeInput.value = 'aaa';
         simplePage.sizeInput.dispatchEvent(new Event('input'));
-        expect(schedulerSpy).not.toHaveBeenCalled();
+        expect(dispatcherSpy).not.toHaveBeenCalled();
     });
 
     describe('Valid change', () => {
@@ -104,7 +102,7 @@ describe('Tanks Simple component', () => {
         });
 
         it('triggers calculate', () => {
-            expect(schedulerSpy).toHaveBeenCalledTimes(1);
+            expect(dispatcherSpy).toHaveBeenCalledTimes(1);
         });
 
         it('doesn\'t break working pressure', () => {

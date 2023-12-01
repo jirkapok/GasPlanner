@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { Precision, TankTemplate, GasToxicity } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { takeUntil } from 'rxjs';
 import { FormArray, NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
@@ -41,7 +40,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        private delayedCalc: DelayedScheduleService,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
         super();
@@ -117,7 +115,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         const lastTank = this.tanks[this.tanks.length - 1];
         const levelControls = this.createTankControl(lastTank);
         this.tanksGroup.push(levelControls);
-        this.delayedCalc.schedule();
     }
 
     public removeTank(index: number): void {
@@ -128,14 +125,12 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         const bound = this.tanks[index];
         this.tanksService.removeTank(bound);
         this.tanksGroup.removeAt(index);
-        this.delayedCalc.schedule();
     }
 
     public assignTankTemplate(index: number, template: TankTemplate): void {
         const bound = this.tanks[index];
         bound.assignTemplate(template);
         this.reload(bound, index);
-        this.delayedCalc.schedule();
         this.dispatcher.sendTankChanged();
     }
 
@@ -156,7 +151,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         // to enforce reload he and O2 fields in case the affected each other
         this.reload(bound, index);
 
-        this.delayedCalc.schedule();
         this.dispatcher.sendTankChanged();
     }
 

@@ -110,12 +110,14 @@ export class DepthsService extends Streamed implements IDepths {
 
     public addSegment(): void {
         this.addSegmentToPlan();
-        this.depthsReloaded();
+        this.updateLevels();
+        this.levelChanged();
     }
 
     public removeSegment(level: Level): void {
         this.plan.removeSegment(level.segment);
-        this.depthsReloaded();
+        this.updateLevels();
+        this.levelChanged();
     }
 
     public applyMaxDuration(): void {

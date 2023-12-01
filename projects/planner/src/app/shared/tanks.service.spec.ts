@@ -90,16 +90,13 @@ describe('TanksService', () => {
 
     describe('Switch to simple', () => {
         let firstTank: TankBound;
-        let tanksReloaded = false;
 
         beforeEach(() => {
-            const dispatcher = TestBed.inject(ReloadDispatcher);
             service.addTank();
             service.addTank();
             firstTank = service.firstTank;
             firstTank.he = 45;
             firstTank.o2 = 18;
-            dispatcher.tanksReloaded$.subscribe(() => tanksReloaded = true);
             service.resetToSimple();
         });
 
@@ -118,10 +115,6 @@ describe('TanksService', () => {
         it('Resets gas content to editable gas', () => {
             expect(firstTank.o2).toBe(21);
             expect(firstTank.he).toBe(0);
-        });
-
-        it('Fires tanks reloaded', () => {
-            expect(tanksReloaded).toBeTruthy();
         });
     });
 

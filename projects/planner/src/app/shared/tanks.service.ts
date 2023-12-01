@@ -44,8 +44,7 @@ export class TanksService {
     public addTank(): void {
         const defaultTanks = this.units.defaults.tanks;
         this.addTankBy(defaultTanks.stage.size, defaultTanks.stage.workingPressure);
-        this.dispatcher.sendTanksReloaded();
-        // TODO errors in console after binding of the tank controls
+        this.dispatcher.sendTankChanged();
     }
 
     public removeTank(tank: TankBound): void {
@@ -89,8 +88,6 @@ export class TanksService {
         if (this.firstTank.he > 0) {
             this.firstTank.tank.assignStandardGas(StandardGases.airName);
         }
-
-        this.dispatcher.sendTanksReloaded();
     }
 
     public firstBy(tank: Tank): TankBound | undefined {

@@ -88,8 +88,6 @@ export class ReloadDispatcher {
     // TODO when reloading all profiles we need to kick of recalculation from first dive
     // so first we need to select first dive and then reload
     // TODO register to all events changing data in Delayed schedule
-    // TODO check, if tank removed does not fire reload tanks and also tank removed
-    // the same for all other events
     // TODO we dont need to calculate on tank remove, because it kicks of depths reload
     public sendSelectedChanged(newSelected: DiveSchedule): void {
         this.lastSelected = newSelected;

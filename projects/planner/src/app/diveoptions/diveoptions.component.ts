@@ -3,7 +3,6 @@ import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import { Salinity, Precision } from 'scuba-physics';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { InputControls } from '../shared/inputcontrols';
 import { Strategies } from '../shared/models';
 import { OptionsService } from '../shared/options.service';
@@ -12,8 +11,9 @@ import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { ViewSwitchService } from '../shared/viewSwitchService';
-import {DiveSchedules} from '../shared/dive.schedules';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
+import { DiveSchedules } from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { PreferencesStore } from '../shared/preferencesStore';
 
 @Component({
     selector: 'app-diveoptions',
@@ -45,6 +45,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         private viewSwitch: ViewSwitchService,
         private schedules: DiveSchedules,
+        private preferences: PreferencesStore,
         private dispatcher: ReloadDispatcher) {
         super();
     }
@@ -107,9 +108,13 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             this.setAllUsable();
         }
 
-        // TODO check, if switch fires save preferences and calculation
-        this.viewSwitch.isComplex = newValue;
         // we don't need to propagate the calculation, because it is triggered by depths
+        this.viewSwitch.isComplex = newValue;
+
+        if(newValue) {
+            // no data changed, we don't need to trigger calculation
+            this.preferences.save();
+        }
     }
 
     public ngOnInit(): void {

@@ -173,6 +173,7 @@ export interface RangeConstants {
     duration: [number, number];
     durationLabel: string;
     altitude: [number, number];
+    altitudeLevels: [number, number, number, number]
     altitudeLabel: string;
     altitudePressure: [number, number];
     speed: [number, number];
@@ -185,6 +186,7 @@ const toLabel = (range: [number, number], unit: string): string => `${range[0]} 
 class MetricRanges implements RangeConstants {
     public readonly units = new MetricUnits();
     public readonly altitude: [number, number] = [0, 5000];
+    public readonly altitudeLevels: [number, number, number, number] = [0, 300, 800, 1500];
     public readonly altitudeLabel: string = toLabel(this.altitude, this.units.altitudeShortcut);
     public readonly altitudePressure: [number, number] = [0.7, 1.2];
     public readonly consumed: [number, number] = [0, 350];
@@ -220,6 +222,7 @@ class MetricRanges implements RangeConstants {
 class ImperialRanges implements RangeConstants {
     public readonly units = new ImperialUnits();
     public readonly altitude: [number, number] = [0, 16500];
+    public readonly altitudeLevels: [number, number, number, number] = [0, 1000, 2600, 5000];
     public readonly altitudeLabel: string = toLabel(this.altitude, this.units.altitudeShortcut);
     public readonly altitudePressure: [number, number] = [10, 18];
     public readonly consumed: [number, number] = [0, 5100];

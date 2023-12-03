@@ -24,10 +24,6 @@ export class AltitudeComponent implements OnInit {
     @Input()
     public altitudeForm!: FormGroup;
 
-    // TODO move to unit defaults
-    private metricLevels = [0, 300, 800, 1500];
-    private imperialLevels = [0, 1000, 2600, 5000];
-
     constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
@@ -106,10 +102,6 @@ export class AltitudeComponent implements OnInit {
     }
 
     private selectLevels(): number[] {
-        if (this.units.imperialUnits) {
-            return this.imperialLevels;
-        }
-
-        return this.metricLevels;
+        return this.units.ranges.altitudeLevels;
     }
 }

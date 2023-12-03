@@ -9,10 +9,11 @@ export class ManagedDiveSchedules {
         private schedules: DiveSchedules,
         private preferences: PreferencesStore,
         private schedule: DelayedScheduleService
-    ) { }
+    ) {
+        this.loadAll();
+    }
 
     // TODO Implement line of calculations in PlannerService.calculate(diveId)
-    // TODO implement restore of last selected dive on page reload
     // TODO consider speedup start by storing calculated final tissues to prevent calculation of all dives
     // TODO what happens if we switch to siple view?
     // Do we need to recalculate all dives? Or switch only current?
@@ -39,11 +40,13 @@ export class ManagedDiveSchedules {
 
     public loadAll(){
         this.preferences.load();
+        // TODO implement restore of last selected dive on page reload
+        // there is always at least one.
+        this.schedules.selected = this.schedules.dives[0];
     }
 
     private loadDefaultTo(dive: DiveSchedule) {
         this.preferences.loadDefault(dive);
         this.preferences.save();
-        this.schedule.schedule();
     }
 }

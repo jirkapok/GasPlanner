@@ -11,9 +11,7 @@ export class PreferencesStore {
     private static readonly storageDefaultsKey = 'defaults';
     private static readonly disclaimerKey = 'disclaimer';
 
-    constructor(
-        private planner: PlannerService,
-        private preferencesFactory: Preferences) {}
+    constructor(private preferencesFactory: Preferences) {}
 
     public load(): void {
         const toParse = localStorage.getItem(PreferencesStore.storageKey);
@@ -23,7 +21,6 @@ export class PreferencesStore {
 
         const loaded = JSON.parse(toParse) as AppPreferences;
         this.preferencesFactory.applyApp(loaded);
-        this.planner.calculate();
     }
 
     public loadDefault(dive: DiveSchedule): void {
@@ -36,7 +33,6 @@ export class PreferencesStore {
 
         if(loaded) {
             this.preferencesFactory.loadDive(dive, loaded);
-            this.planner.calculate();
         }
     }
 

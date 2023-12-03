@@ -73,6 +73,9 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
         this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
+
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.reloadAll());
     }
 
     public gasSac(index: number): number {

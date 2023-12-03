@@ -97,6 +97,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         return this.inputs.controlInValid(ascentSpeed50perc);
     }
 
+    // TODO fix property binding when changing selected dive
     public get options(): OptionsService {
         return this.schedules.selectedOptions;
     }
@@ -123,7 +124,10 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         });
 
         this.dispatcher.optionsReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reloadForm());
+            .subscribe(() => this.reload());
+
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.reload());
     }
 
     // public reset(): void {
@@ -168,13 +172,13 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     public useRecreational(): void {
         this.options.useRecreational();
         this.fireChanged();
-        this.reloadForm();
+        this.reload();
     }
 
     public useRecommended(): void {
         this.options.useRecommended();
         this.fireChanged();
-        this.reloadForm();
+        this.reload();
     }
 
     public switchStopsRounding(): void {
@@ -240,7 +244,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         this.dispatcher.sendOptionsChanged();
     }
 
-    private reloadForm(): void {
+    private reload(): void {
         this.optionsForm.patchValue({
             maxEND: Precision.round(this.options.maxEND, 1),
             problem: Precision.round(this.options.problemSolvingDuration, 1),

@@ -24,6 +24,7 @@ export class AltitudeComponent implements OnInit {
     @Input()
     public altitudeForm!: FormGroup;
 
+    // TODO move to unit defaults
     private metricLevels = [0, 300, 800, 1500];
     private imperialLevels = [0, 1000, 2600, 5000];
 

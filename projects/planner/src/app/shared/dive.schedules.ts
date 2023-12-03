@@ -58,6 +58,12 @@ export class DiveSchedule {
         this.tanksService.firstTank.tank.o2 = fO2;
         this.optionsService.diverOptions.maxPpO2 = pO2;
     }
+
+    public setSimple(): void {
+        this.optionsService.resetToSimple();
+        this.tanksService.resetToSimple();
+        this.depths.setSimple();
+    }
 }
 
 @Injectable()
@@ -131,6 +137,15 @@ export class DiveSchedules {
     public clear(): void {
         // there should always be at least one dive
         this._dives.splice(1, this._dives.length);
+    }
+
+    /**
+     * Since the View switch is global, we need to switch all dives.
+     */
+    public setSimple(): void {
+        this._dives.forEach((dive) => {
+            dive.setSimple();
+        });
     }
 
     private createDiveSchedule(): DiveSchedule {

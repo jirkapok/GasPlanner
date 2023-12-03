@@ -17,16 +17,7 @@ export class ViewSwitchService {
         // not preventing repetitive updates, because it would block settings reload
         this._isComplex = newValue;
         if (!newValue) {
-            this.resetToSimple();
+            this.schedules.setSimple();
         }
-    }
-
-    /* reset only gas and depths to values valid for simple view. */
-    private resetToSimple(): void {
-        // TODO since the switch is global, we need to switch all dives => and also recalculate all
-        const selectedDive = this.schedules.selected;
-        selectedDive.optionsService.resetToSimple();
-        selectedDive.tanksService.resetToSimple();
-        selectedDive.depths.setSimple();
     }
 }

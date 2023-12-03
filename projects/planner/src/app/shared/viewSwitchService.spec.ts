@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 import { UnitConversion } from './UnitConversion';
@@ -40,19 +40,25 @@ describe('View Switch service', () => {
     });
 
     describe('Switch to simple view', () => {
-        beforeEach(() => {
-            viewSwitch.isComplex = false;
-        });
-
         it('Sets simple profile', () => {
+            viewSwitch.isComplex = false;
             expect(plan.planDuration).toBe(22);
         });
 
         it('Plan has correct depths', () => {
+            viewSwitch.isComplex = false;
             const segments = plan.segments;
             expect(segments.length).toBe(2);
             expect(segments[0].endDepth).toBe(7);
             expect(segments[1].endDepth).toBe(7);
         });
+
+        it('Sets simple profile to all dives', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            schedules.add();
+            const schedulesSpy = spyOn(schedules, 'setSimple');
+            viewSwitch.isComplex = false;
+
+            expect(schedulesSpy).toHaveBeenCalledWith();
+        }));
     });
 });

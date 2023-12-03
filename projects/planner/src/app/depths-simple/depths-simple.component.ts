@@ -67,11 +67,11 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         // for simple view, this is also kicked of when switching to simple view
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
-                this.reloadSimple();
+                this.reload();
             });
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reloadSimple());
+            .subscribe(() => this.reload());
     }
 
     public durationChanged(): void {
@@ -83,7 +83,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         this.depths.planDuration = Number(newValue);
     }
 
-    private reloadSimple(): void {
+    private reload(): void {
         // depth is reloaded in its nested component
         this.simpleForm.patchValue({
             planDuration: Precision.round(this.depths.planDuration, 1)

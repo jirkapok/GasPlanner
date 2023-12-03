@@ -77,10 +77,10 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         }
 
         this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reloadAll());
+            .subscribe(() => this.reload());
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reloadAll());
+            .subscribe(() => this.reload());
     }
 
     public gasSac(): number {
@@ -119,7 +119,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         this.dispatcher.sendTankChanged();
     }
 
-    private reloadAll(): void {
+    private reload(): void {
         this.tanksForm.patchValue({
             firstTankSize: Precision.round(this.firstTank.size, 1),
             workPressure: Precision.round(this.firstTank.workingPressure, 1),

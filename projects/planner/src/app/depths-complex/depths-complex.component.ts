@@ -105,7 +105,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         // for simple view, this is also kicked of when switching to simple view
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
-                this.reloadComplex();
+                this.reload();
             });
     }
 
@@ -144,7 +144,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         this.depths.levelChanged();
     }
 
-    private reloadComplex(): void {
+    private reload(): void {
         this.levelControls.clear();
         this.createLevelControls().forEach(c => this.levelControls.push(c));
     }

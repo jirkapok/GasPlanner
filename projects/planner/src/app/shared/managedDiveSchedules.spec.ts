@@ -14,7 +14,6 @@ import {ManagedDiveSchedules} from './managedDiveSchedules';
 import Spy = jasmine.Spy;
 import {ReloadDispatcher} from './reloadDispatcher';
 
-// TODO Scheduled dives test cases: Dives are loaded from saved storage at start
 describe('Managed Schedules', () => {
     const expectedSecondTankSize = 24;
     const expectedMaxEnd = 27;
@@ -24,6 +23,7 @@ describe('Managed Schedules', () => {
     let schedules: DiveSchedules;
     let savePreferencesSpy: Spy<() => void>;
     let schedulerSpy: Spy<() => void>;
+    let loadPreferencesSpy: Spy<() => void>;
 
     const changeDive = (dive: DiveSchedule) => {
         const tankService = dive.tanksService;
@@ -64,12 +64,21 @@ describe('Managed Schedules', () => {
             ],
         }).compileComponents();
 
-        sut = TestBed.inject(ManagedDiveSchedules);
+        localStorage.clear();
         preferencesStore = TestBed.inject(PreferencesStore);
-        savePreferencesSpy = spyOn(preferencesStore, 'save').and.callThrough();
+        loadPreferencesSpy = spyOn(preferencesStore, 'load').and.callThrough();
         const scheduler = TestBed.inject(DelayedScheduleService);
         schedulerSpy = spyOn(scheduler, 'schedule').and.callThrough();
         schedules = TestBed.inject(DiveSchedules);
+        sut = TestBed.inject(ManagedDiveSchedules);
+        savePreferencesSpy = spyOn(preferencesStore, 'save').and.callThrough();
+    });
+
+    describe('Application startup', () => {
+        it('Loads all dives data',  () => {
+            expect(loadPreferencesSpy).toHaveBeenCalledWith();
+            // but doesn't schedule calculation, because no dive was loaded
+        });
     });
 
     describe('Add new dive', () => {
@@ -85,11 +94,13 @@ describe('Managed Schedules', () => {
         });
 
         it('Saves new dive in preferences', () => {
-            expect(savePreferencesSpy).toHaveBeenCalledWith();
+            // 3x data initialization
+            expect(savePreferencesSpy).toHaveBeenCalledTimes(4);
         });
 
         it('Calls scheduler after add', () => {
-            expect(schedulerSpy).toHaveBeenCalledWith();
+            // 2x data initialization
+            expect(schedulerSpy).toHaveBeenCalledTimes(3);
         });
     });
 
@@ -107,7 +118,7 @@ describe('Managed Schedules', () => {
         });
 
         it('Saves state in preferences', () => {
-            expect(savePreferencesSpy).toHaveBeenCalledWith();
+            expect(savePreferencesSpy).toHaveBeenCalledTimes(4);
         });
 
         it('Is removed from dives', () => {
@@ -115,7 +126,7 @@ describe('Managed Schedules', () => {
         });
 
         it('Calls scheduler after remove', () => {
-            expect(schedulerSpy).toHaveBeenCalledWith();
+            expect(schedulerSpy).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -147,7 +158,7 @@ describe('Managed Schedules', () => {
             schedules.selected = secondDive;
             changeDive(secondDive);
             sut.saveDefaults();
-            expect(saveDefaultSpy).toHaveBeenCalledWith();
+            expect(saveDefaultSpy).toHaveBeenCalledTimes(1);
         });
     });
 

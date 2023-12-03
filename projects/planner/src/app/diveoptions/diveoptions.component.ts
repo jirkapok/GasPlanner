@@ -107,6 +107,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             this.setAllUsable();
         }
 
+        // TODO check, if switch fires save preferences and calculation
         this.viewSwitch.isComplex = newValue;
         // we don't need to propagate the calculation, because it is triggered by depths
     }

@@ -55,12 +55,4 @@ describe('View Switch service', () => {
             expect(segments[1].endDepth).toBe(7);
         });
     });
-
-    it('Fires event when value not changed', () => {
-        let firedTimes = 0;
-        viewSwitch.viewSwitched.subscribe(() => firedTimes++);
-        viewSwitch.isComplex = false;
-        viewSwitch.isComplex = false;
-        expect(firedTimes).toBe(2);
-    });
 });

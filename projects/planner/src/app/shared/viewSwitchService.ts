@@ -4,13 +4,9 @@ import { DiveSchedules } from './dive.schedules';
 
 @Injectable()
 export class ViewSwitchService {
-    /** when switching between simple and complex view */
-    public viewSwitched: Observable<void>;
     private _isComplex = false;
-    private onViewSwitched = new Subject<void>();
 
     constructor(private schedules: DiveSchedules) {
-        this.viewSwitched = this.onViewSwitched.asObservable();
     }
 
     public get isComplex(): boolean {
@@ -23,8 +19,6 @@ export class ViewSwitchService {
         if (!newValue) {
             this.resetToSimple();
         }
-
-        this.onViewSwitched.next();
     }
 
     /* reset only gas and depths to values valid for simple view. */

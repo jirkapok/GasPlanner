@@ -29,6 +29,7 @@ export class ViewSwitchService {
 
     /* reset only gas and depths to values valid for simple view. */
     private resetToSimple(): void {
+        // TODO since the switch is global, we need to switch all dives => and also recalculate all
         const selectedDive = this.schedules.selected;
         selectedDive.optionsService.resetToSimple();
         selectedDive.tanksService.resetToSimple();

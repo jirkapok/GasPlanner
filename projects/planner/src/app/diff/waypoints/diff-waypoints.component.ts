@@ -35,6 +35,58 @@ export class WaypointsDifferenceComponent {
         return Array.from({ length: this.wayPointsOfProfileB().length },
             (_, index) => index + 1);
     }
+    // USING IS DESTRUCTIVE TO WAYPOINT ARRAYS BECAUSE OF Array.pop()!
+    private populateWaypointRows() {
+        const MAX_SAFETY_LIMIT = 65536; // 2**16
+        let waypointA: WayPoint | undefined = this.data.profileA.wayPoints.pop();
+        let waypointB: WayPoint | undefined = this.data.profileB.wayPoints.pop();
+
+        for(let i = 0; i < MAX_SAFETY_LIMIT; i++) {
+            let row: WaypointsTableRow;
+            if(waypointA === undefined && waypointB === undefined){
+                break;
+            }
+
+            if((waypointA?.endTime || -1) > (waypointB?.endTime || -1)){
+                row = {
+                    runTime: waypointA!.endTime,
+                    durationA: waypointA?.duration,
+                    depthA: waypointA?.endDepth,
+                    durationB: undefined,
+                    depthB: undefined
+                };
+                waypointA = this.data.profileA.wayPoints.pop();
+                this.waypointRows.unshift(row);
+                continue;
+            }
+
+            if((waypointA?.endTime || -1) < (waypointB?.endTime || -1)) {
+                row = {
+                    runTime: waypointB!.endTime,
+                    durationA: undefined,
+                    depthA: undefined,
+                    durationB: waypointB?.duration,
+                    depthB: waypointB?.endDepth
+                };
+                waypointB = this.data.profileB.wayPoints.pop();
+                this.waypointRows.unshift(row);
+                continue;
+            }
+
+
+            row = {
+                runTime: waypointA!.endTime,
+                durationA: waypointA?.duration,
+                depthA: waypointA?.endDepth,
+                durationB: waypointB?.duration,
+                depthB: waypointB?.endDepth
+            };
+            waypointA = this.data.profileA.wayPoints.pop();
+            waypointB = this.data.profileB.wayPoints.pop();
+            this.waypointRows.unshift(row);
+        }
+        console.log(this.waypointRows);
+    }
 
 }
 

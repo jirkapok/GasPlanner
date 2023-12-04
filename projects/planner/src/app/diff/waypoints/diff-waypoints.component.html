@@ -20,22 +20,22 @@
             <tbody>
                 <tr *ngFor="let number of lengthOfLargestProfile()">
                     <td *ngIf="number < this.wayPointsOfProfileA().length" class="px-1">
-                        {{ wayPointsOfProfileA()[number].duration / 60  | number :'0.0'}}
-                    </td>
-                    <td *ngIf="number < this.wayPointsOfProfileA().length" class="px-1">
                         {{ wayPointsOfProfileA()[number].endDepth | number:'1.0-0' }}
                     </td>
                     <td *ngIf="number < this.wayPointsOfProfileA().length" class="px-1">
-                        {{ wayPointsOfProfileA()[number].endTime  / 60  | number: '0.0'}}
+                        {{ wayPointsOfProfileA()[number].duration * 1000  | date: 'mm:ss'}}
                     </td>
-                    <td *ngIf="number < this.wayPointsOfProfileB().length" class="px-1">
-                        {{ wayPointsOfProfileB()[number].duration / 60  | number :'0.0'}}
+                    <td *ngIf="number < this.wayPointsOfProfileA().length" class="px-1">
+                        {{ wayPointsOfProfileA()[number].endTime * 1000  | date: 'mm:ss'}}
                     </td>
                     <td *ngIf="number < this.wayPointsOfProfileB().length" class="px-1">
                         {{ wayPointsOfProfileB()[number].endDepth | number:'1.0-0' }}
                     </td>
                     <td *ngIf="number < this.wayPointsOfProfileB().length" class="px-1">
-                        {{ wayPointsOfProfileB()[number].endTime  / 60  | number: '0.0'}}
+                        {{ wayPointsOfProfileB()[number].duration * 1000 | date: 'mm:ss'}}
+                    </td>
+                    <td *ngIf="number < this.wayPointsOfProfileB().length" class="px-1">
+                        {{ wayPointsOfProfileB()[number].endTime  * 1000  | date: 'mm:ss'}}
                     </td>
                 </tr>
             </tbody>

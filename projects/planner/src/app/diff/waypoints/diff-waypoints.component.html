@@ -9,37 +9,35 @@
         <table class="table table-sm p-0">
             <thead class="table-light">
             <tr>
+                <th class="fw-bold px-1">Run [min]</th>
                 <th class="fw-bold px-1">Depth [{{units.length}}] (Profile A)</th>
                 <th class="fw-bold px-1">Duration [min] (Profile A)</th>
-                <th class="fw-bold px-1">Run [min] (Profile A)</th>
                 <th class="fw-bold px-1">Depth [{{units.length}}] (Profile B)</th>
                 <th class="fw-bold px-1">Duration [min] (Profile B)</th>
-                <th class="fw-bold px-1">Run [min] (Profile B)</th>
             </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let number of lengthOfLargestProfile()">
-                    <td *ngIf="number < this.wayPointsOfProfileA().length" class="px-1">
-                        {{ wayPointsOfProfileA()[number].endDepth | number:'1.0-0' }}
+                <tr *ngFor="let row of waypointRows">
+                    <td class="px-1">
+                        {{ row.runTime * 1000 | date:'mm:ss' }}
                     </td>
-                    <td *ngIf="number < this.wayPointsOfProfileA().length" class="px-1">
-                        {{ wayPointsOfProfileA()[number].duration * 1000  | date: 'mm:ss'}}
+                    <td *ngIf="row.depthA !== undefined; else emptyRow" class="px-1">
+                        {{ row.depthA  | number: '1.0-0'}}
                     </td>
-                    <td *ngIf="number < this.wayPointsOfProfileA().length" class="px-1">
-                        {{ wayPointsOfProfileA()[number].endTime * 1000  | date: 'mm:ss'}}
+                    <td *ngIf="row.durationA !== undefined else emptyRow" class="px-1">
+                        {{ row.durationA * 1000 | date: 'mm:ss'}}
                     </td>
-                    <td *ngIf="number < this.wayPointsOfProfileB().length" class="px-1">
-                        {{ wayPointsOfProfileB()[number].endDepth | number:'1.0-0' }}
+                    <td *ngIf="row.depthB !== undefined else emptyRow" class="px-1">
+                        {{ row.depthB | number:'1.0-0' }}
                     </td>
-                    <td *ngIf="number < this.wayPointsOfProfileB().length" class="px-1">
-                        {{ wayPointsOfProfileB()[number].duration * 1000 | date: 'mm:ss'}}
-                    </td>
-                    <td *ngIf="number < this.wayPointsOfProfileB().length" class="px-1">
-                        {{ wayPointsOfProfileB()[number].endTime  * 1000  | date: 'mm:ss'}}
+                    <td *ngIf="row.durationB !== undefined else emptyRow" class="px-1">
+                        {{ row.durationB * 1000 | date: 'mm:ss'}}
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<ng-template #emptyRow><td></td></ng-template>
 

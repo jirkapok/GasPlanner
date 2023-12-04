@@ -9,7 +9,7 @@ import {UnitConversion} from '../../shared/UnitConversion';
     templateUrl: './diff-waypoints.component.html',
     styleUrls: ['./diff-waypoints.component.scss']
 })
-export class WaypointsDifferenceComponent {
+export class WaypointsDifferenceComponent implements OnInit {
     @Input({required: true}) data!: TestData;
     public tasks = faTasks;
     public waypointRows: WaypointsTableRow[] = [];
@@ -18,25 +18,7 @@ export class WaypointsDifferenceComponent {
     ) {
     }
 
-    public wayPointsOfProfileA(): WayPoint[] {
-        return this.data.profileA.wayPoints;
-    }
-
-    public wayPointsOfProfileB(): WayPoint[] {
-        return this.data.profileB.wayPoints;
-    }
-
-    public lengthOfLargestProfile(): number[]  {
-        if (this.wayPointsOfProfileA().length > this.wayPointsOfProfileB().length) {
-            return Array.from({ length: this.wayPointsOfProfileA().length },
-                (_, index) => index + 1);
-        }
-
-        return Array.from({ length: this.wayPointsOfProfileB().length },
-            (_, index) => index + 1);
-    }
-    // USING IS DESTRUCTIVE TO WAYPOINT ARRAYS BECAUSE OF Array.pop()!
-    private populateWaypointRows() {
+    ngOnInit(): void {
         const MAX_SAFETY_LIMIT = 65536; // 2**16
         let waypointA: WayPoint | undefined = this.data.profileA.wayPoints.pop();
         let waypointB: WayPoint | undefined = this.data.profileB.wayPoints.pop();

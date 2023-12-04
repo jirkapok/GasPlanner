@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {TestData} from '../diff.component';
 import {faTasks} from '@fortawesome/free-solid-svg-icons';
 import {WayPoint} from '../../shared/models';
@@ -12,6 +12,7 @@ import {UnitConversion} from '../../shared/UnitConversion';
 export class WaypointsDifferenceComponent {
     @Input({required: true}) data!: TestData;
     public tasks = faTasks;
+    public waypointRows: WaypointsTableRow[] = [];
     constructor(
         public units: UnitConversion
     ) {
@@ -34,4 +35,13 @@ export class WaypointsDifferenceComponent {
         return Array.from({ length: this.wayPointsOfProfileB().length },
             (_, index) => index + 1);
     }
+
+}
+
+interface WaypointsTableRow {
+    runTime: number;
+    depthA: number | undefined;
+    durationA: number | undefined;
+    depthB: number | undefined;
+    durationB: number | undefined;
 }

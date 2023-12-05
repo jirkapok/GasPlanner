@@ -1,5 +1,6 @@
 import { Gas } from './Gases';
 import { Segment } from './Segments';
+import { LoadedTissues, Tissues } from './Tissues';
 
 export enum EventType {
     noAction = 0,
@@ -151,34 +152,46 @@ export class Ceiling {
  * Result of the Algorithm calculation
  */
 export class CalculatedProfile {
-    private constructor(private seg: Segment[], private ceil: Ceiling[], private err: Event[]) { }
+    private constructor(
+        private seg: Segment[],
+        private ceil: Ceiling[],
+        private tiss: LoadedTissues,
+        private err: Event[]) { }
 
     /**
-     * Not null collection of segments filled whole dive profile.
+     * Not null collection of segments filled whole calculated dive profile.
+     * Or user defined part of the profile in case of error.
      */
     public get segments(): Segment[] {
         return this.seg;
     }
 
     /**
-     * Not null collection of ceilings.
+     * Not null collection of ceilings. Empty in case of error.
      */
     public get ceilings(): Ceiling[] {
         return this.ceil;
     }
 
     /**
-     * Not null collection of errors.
+     * Not null tissues state at end of the dive or irrelevant tissues in case of error.
+     */
+    public get tissues(): LoadedTissues {
+        return this.tiss;
+    }
+
+    /**
+     * Not null collection of errors. Or empty in case of successfully calculated profile.
      */
     public get errors(): Event[] {
         return this.err;
     }
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
-        return new CalculatedProfile(segments, [], errors);
+        return new CalculatedProfile(segments, [], Tissues.create(1).finalState(), errors);
     }
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[]): CalculatedProfile {
-        return new CalculatedProfile(segments, ceilings, []);
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissues: LoadedTissues): CalculatedProfile {
+        return new CalculatedProfile(segments, ceilings, tissues, []);
     }
 }

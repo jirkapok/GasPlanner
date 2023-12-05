@@ -1,6 +1,6 @@
-import { Tissues, LoadSegment, Tissue, LoadedTissues } from './Tissues';
-import { Gases, Gas, BestGasOptions, GasesValidator, OCGasSource } from './Gases';
-import { Segments, Segment, SegmentsValidator } from './Segments';
+import { LoadedTissues, LoadSegment, Tissue, Tissues } from './Tissues';
+import { BestGasOptions, Gas, Gases, GasesValidator, OCGasSource, StandardGases } from './Gases';
+import { Segment, Segments, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Time } from './Time';
 import { CalculatedProfile, Ceiling, Event } from './Profile';
@@ -10,6 +10,7 @@ import { AscentSpeeds } from './speeds';
 import { DepthLevels } from './DepthLevels';
 import { Precision } from './precision';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
+import { Salinity } from './pressure-converter';
 
 interface ContextMemento {
     tissues: Tissue[];
@@ -31,9 +32,13 @@ class AlgorithmContext {
     private levels: DepthLevels;
     private gasSource: OCGasSource;
 
-    constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
-        // TODO reuse tissues for repetitive dives
-        this.tissues = Tissues.create(depthConverter.surfacePressure);
+    constructor(
+        public gases: Gases,
+        public segments: Segments,
+        public options: Options,
+        public depthConverter: DepthConverter,
+        currentTissues: Tissues | null = null) {
+        this.tissues = currentTissues || Tissues.create(depthConverter.surfacePressure);
         // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
         const last = segments.last();
@@ -209,15 +214,28 @@ export class BuhlmannAlgorithm {
         }
 
         const merged = context.segments.mergeFlat(originSegments.length);
-        return CalculatedProfile.fromProfile(merged, context.ceilings);
+        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissues.finalState());
     }
 
     /**
+     * @param altitude in meters
      * @param surfaceInterval in seconds to align units with segments
      */
-    public applySurfaceInterval(currentTissues: LoadedTissues, surfaceInterval: number): LoadedTissues {
+    public applySurfaceInterval(currentTissues: LoadedTissues, altitude: number, surfaceInterval: number): LoadedTissues {
+        // TODO add tissues validation
         const tissues = Tissues.createLoaded(currentTissues);
-        return tissues.finalState();
+        // at surface, there is no depth change, even we are at different elevation and we are always breathing air
+        const segments = new Segments();
+        const restingSegment = segments.addFlat(0, StandardGases.air, surfaceInterval);
+        const gases = new Gases();
+        gases.add(StandardGases.air);
+        // the only option affecting depth converter is current altitude
+        const options = new Options(1, 1, 1.6, 1.6, Salinity.salt);
+        options.altitude = altitude;
+        const depthConverter = new DepthConverterFactory(options).create();
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, tissues);
+        this.swim(context, restingSegment);
+        return context.tissues.finalState();
     }
 
     private tryGasSwitch(context: AlgorithmContext) {

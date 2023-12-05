@@ -1,5 +1,6 @@
 import { Compartments, Compartment } from './Compartments';
 import { GasMixtures, Gas } from './Gases';
+import _ from 'lodash';
 
 /**
  * Represents transition between depths during dive
@@ -21,6 +22,7 @@ export class LoadSegment {
     public speed = 0;
 }
 
+// TODO consider Hiding Tissue from public API
 export class Tissue extends Compartment {
     // initial tissue loading is needed
     private _pN2 = 0;
@@ -122,26 +124,42 @@ export class Tissue extends Compartment {
 }
 
 export class Tissues {
-    public compartments: Tissue[] = [];
+    private constructor(private _compartments: Tissue[]){}
 
-    private constructor(){}
-
-    public static createFromOther(other: Tissue[]): Tissues {
-        const created = new Tissues();
-        created.compartments = Tissues.copy(other);
-        return created;
+    public get compartments(): Tissue[] {
+        return this._compartments;
     }
 
-    public static createFromSurfacePressure(surfacePressure: number) {
-        const created = new Tissues();
+    /**
+     * Creates new instance of tissues already loaded by nitrogen and helium.
+     * Should be used only for repetitive dive.
+     * @param current not null instance of currently loaded tissues.
+     * Can be obtained from algorithm calculated dive profile.
+     */
+    public static createLoaded(current: LoadedTissues): Tissues {
+        if(current.tissues.length !== Compartments.buhlmannZHL16C.length) {
+            throw new Error('Provided incompatible count of tissues');
+        }
+
+        const tissues = Tissues.copy(current.tissues);
+        return new Tissues(tissues);
+    }
+
+    /**
+     * Creates new instance of tissues adopted for current surface pressure.
+     * Should be used only for first dive.
+     * @param surfacePressure in bars
+     */
+    public static create(surfacePressure: number) {
+        const created: Tissue[] = [];
 
         for (let index = 0; index < Compartments.buhlmannZHL16C.length; index++) {
             const compartment = Compartments.buhlmannZHL16C[index];
             const tissue = new Tissue(compartment, surfacePressure);
-            created.compartments.push(tissue);
+            created.push(tissue);
         }
 
-        return created;
+        return new Tissues(created);
     }
 
     public static copy(source: Tissue[]): Tissue[] {
@@ -154,6 +172,14 @@ export class Tissues {
         return backup;
     }
 
+    public restoreFrom(source: Tissue[]): void {
+        this._compartments = Tissues.copy(source);
+    }
+
+    public finalState(): LoadedTissues {
+        return new LoadedTissues(Tissues.copy(this._compartments));
+    }
+
     /**
     * Returns pressure in bars of the depth representing maximum ceiling of all tissues
     * reduced by the provided gradient.
@@ -164,8 +190,8 @@ export class Tissues {
     public ceiling(gradient: number): number {
         let ceiling = 0;
 
-        for (let index = 0; index < this.compartments.length; index++) {
-            const tissueCeiling = this.compartments[index].ceiling(gradient);
+        for (let index = 0; index < this._compartments.length; index++) {
+            const tissueCeiling = this._compartments[index].ceiling(gradient);
             if (tissueCeiling > ceiling) {
                 ceiling = tissueCeiling;
             }
@@ -176,11 +202,23 @@ export class Tissues {
 
     public load(segment: LoadSegment, gas: Gas): number {
         let loadChange = 0.0;
-        for (let index = 0; index < this.compartments.length; index++) {
-            const tissue = this.compartments[index];
+        for (let index = 0; index < this._compartments.length; index++) {
+            const tissue = this._compartments[index];
             const tissueChange = tissue.load(segment, gas);
             loadChange = loadChange + tissueChange;
         }
         return loadChange;
+    }
+}
+
+/**
+ * Represents state of the body after performed dive.
+ */
+export class LoadedTissues {
+    public constructor(private _tissues: Tissue[]) {
+    }
+
+    public get tissues(): Tissue[] {
+        return this._tissues;
     }
 }

@@ -1,4 +1,4 @@
-import { Tissues, LoadSegment, Tissue } from './Tissues';
+import { Tissues, LoadSegment, Tissue, LoadedTissues } from './Tissues';
 import { Gases, Gas, BestGasOptions, GasesValidator, OCGasSource } from './Gases';
 import { Segments, Segment, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
@@ -33,7 +33,7 @@ class AlgorithmContext {
 
     constructor(public gases: Gases, public segments: Segments, public options: Options, public depthConverter: DepthConverter) {
         // TODO reuse tissues for repetitive dives
-        this.tissues = Tissues.createFromSurfacePressure(depthConverter.surfacePressure);
+        this.tissues = Tissues.create(depthConverter.surfacePressure);
         // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
         const last = segments.last();
@@ -110,7 +110,7 @@ class AlgorithmContext {
 
     public restore(memento: ContextMemento): void {
         // here we don't copy, since we expect it wasn't touched
-        this.tissues.compartments = Tissues.copy(memento.tissues);
+        this.tissues.restoreFrom(memento.tissues);
         this.gradients.lowestCeiling = memento.lowestCeiling;
         this.runTime = memento.runTime;
         // ceilings and segments are only added
@@ -210,6 +210,14 @@ export class BuhlmannAlgorithm {
 
         const merged = context.segments.mergeFlat(originSegments.length);
         return CalculatedProfile.fromProfile(merged, context.ceilings);
+    }
+
+    /**
+     * @param surfaceInterval in seconds to align units with segments
+     */
+    public applySurfaceInterval(currentTissues: LoadedTissues, surfaceInterval: number): LoadedTissues {
+        const tissues = Tissues.createLoaded(currentTissues);
+        return tissues.finalState();
     }
 
     private tryGasSwitch(context: AlgorithmContext) {

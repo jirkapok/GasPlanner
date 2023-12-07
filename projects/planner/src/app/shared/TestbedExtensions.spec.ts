@@ -1,6 +1,6 @@
 import { WayPoint } from './models';
 import {
-    CalculatedProfile, Events, Segment, StandardGases
+    CalculatedProfile, Segment, StandardGases
 } from 'scuba-physics';
 import { WayPointsService } from './waypoints.service';
 import { UnitConversion } from './UnitConversion';
@@ -16,9 +16,8 @@ export class TestBedExtensions {
             new Segment(3,3, StandardGases.air, 180),
             new Segment(3,0, StandardGases.air, 60),
         ];
-        const profile = CalculatedProfile.fromErrors(segments, []);
         const wayPoints = new WayPointsService(new UnitConversion());
-        const result = wayPoints.calculateWayPoints(profile, []);
-        return result.wayPoints;
+        const result = wayPoints.calculateWayPoints(segments);
+        return result;
     }
 }

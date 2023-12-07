@@ -5,7 +5,7 @@ import { DiveResults } from './diveresults';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
-    GasDensity,
+    GasDensity, CalculatedProfile,
     Precision, Segments
 } from 'scuba-physics';
 import {
@@ -17,9 +17,11 @@ import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
 import { TanksService } from './tanks.service';
 import { OptionsService } from './options.service';
-import {DepthsService} from './depths.service';
-import {DiveSchedules} from './dive.schedules';
-import {UnitConversion} from './UnitConversion';
+import { DepthsService } from './depths.service';
+import { DiveSchedules } from './dive.schedules';
+import { UnitConversion } from './UnitConversion';
+import { WayPoint } from './models';
+
 
 @Injectable()
 export class PlannerService extends Streamed {
@@ -137,14 +139,13 @@ export class PlannerService extends Streamed {
         const serializedTanks = DtoSerialization.fromTanks(this.serializableTanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
-        const profile = this.waypoints.calculateWayPoints(calculatedProfile, events.items);
-        this.dive.wayPoints = profile.wayPoints;
-        this.dive.ceilings = profile.ceilings;
-        this.dive.events = profile.events;
-        this.dive.averageDepth = Segments.averageDepth(profile.origin);
+        this.dive.wayPoints = this.wayPointsFromResult(calculatedProfile);
+        this.dive.ceilings = calculatedProfile.ceilings;
+        this.dive.events = events.items;
+        this.dive.averageDepth = Segments.averageDepth(calculatedProfile.segments);
         const optionsDto = DtoSerialization.fromOptions(this.optionsService.getOptions());
 
-        if (profile.endsOnSurface) {
+        if (this.dive.endsOnSurface) {
             const infoRequest = {
                 tanks: serializedTanks,
                 plan: serializedPlan,
@@ -155,7 +156,7 @@ export class PlannerService extends Streamed {
 
             const consumptionRequest = {
                 plan: serializedPlan,
-                profile: DtoSerialization.fromSegments(profile.origin),
+                profile: DtoSerialization.fromSegments(calculatedProfile.segments),
                 options: optionsDto,
                 diver: DtoSerialization.fromDiver(this.optionsService.getDiver()),
                 tanks: serializedTanks
@@ -170,6 +171,14 @@ export class PlannerService extends Streamed {
             this.profileFailed();
             console.table(calculatedProfile.errors);
         }
+    }
+
+    private wayPointsFromResult(calculatedProfile: CalculatedProfile): WayPoint[] {
+        if(calculatedProfile.errors.length > 0) {
+            return [];
+        }
+
+        return this.waypoints.calculateWayPoints(calculatedProfile.segments);
     }
 
     private profileFailed(): void {

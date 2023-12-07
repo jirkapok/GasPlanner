@@ -188,7 +188,7 @@ export class CalculatedProfile {
     }
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
-        return new CalculatedProfile(segments, [], Tissues.create(1).finalState(), errors);
+        return new CalculatedProfile(segments, [], LoadedTissues.default(), errors);
     }
 
     public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissues: LoadedTissues): CalculatedProfile {

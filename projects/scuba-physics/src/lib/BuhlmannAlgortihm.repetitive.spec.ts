@@ -29,7 +29,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         sut.applySurfaceInterval(loaded, altitude, duration);
 
     // used enough long interval, so the tissues are stable on 8 dicimal places
-    const stableTissues = applySurfaceInterval(Tissues.create(1).finalState(), 0, Time.oneDay * 9);
+    const stableTissues = applySurfaceInterval(LoadedTissues.default(), 0, Time.oneDay * 9);
 
     describe('Surface interval', () => {
         it('Doesn\'t change not loaded tissues.', () => {

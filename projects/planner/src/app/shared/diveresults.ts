@@ -91,6 +91,11 @@ export class DiveResults {
             });
     }
 
+    public get endsOnSurface(): boolean {
+        const count = this.wayPoints.length;
+        return count > 0 && this.wayPoints[count - 1].endDepthMeters === 0;
+    }
+
     public emptyProfile(): void {
         this.wayPoints = [];
         this.ceilings = [];

@@ -221,4 +221,11 @@ export class LoadedTissues {
     public get tissues(): Tissue[] {
         return this._tissues;
     }
+
+    /**
+     * Creates default not stable tissues set. Only for testing purposes
+     */
+    public static default(): LoadedTissues {
+        return Tissues.create(1).finalState();
+    }
 }

@@ -2,7 +2,7 @@ import { WayPointsService } from './waypoints.service';
 import { SwimAction } from './models';
 import { Plan } from './plan.service';
 import {
-    Tank, Salinity, CalculatedProfile, Event, SafetyStop
+    Tank, Salinity, SafetyStop
 } from 'scuba-physics';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { UnitConversion } from './UnitConversion';
@@ -17,30 +17,17 @@ describe('WayPointsService', () => {
     it('No errors converts waypoints', () => {
         const plan = new Plan();
         plan.setSimple(40, 20, airTank, options);
-        const profile = CalculatedProfile.fromProfile(plan.segments, []);
 
-        const wayPoints = sut.calculateWayPoints(profile, []);
-        expect(wayPoints.wayPoints.length).toBe(2);
-    });
-
-    it('With errors generates empty waypoints', () => {
-        const plan = new Plan();
-        plan.setSimple(30, 10, airTank, options);
-        const profile = CalculatedProfile.fromErrors(plan.segments, [
-            Event.createError('')
-        ]);
-
-        const wayPoints = sut.calculateWayPoints(profile, []);
-        expect(wayPoints.wayPoints.length).toBe(0);
+        const wayPoints = sut.calculateWayPoints(plan.segments);
+        expect(wayPoints.length).toBe(2);
     });
 
     it('With gas switch adds event', () => {
         const plan = new Plan();
         plan.setSimple(40, 20, airTank, options);
         plan.addSegment(new Tank(10, 0, 50));
-        const profile = CalculatedProfile.fromProfile(plan.segments, []);
 
-        const wayPoints = sut.calculateWayPoints(profile, []);
-        expect(wayPoints.wayPoints[2].swimAction).toBe(SwimAction.switch);
+        const wayPoints = sut.calculateWayPoints(plan.segments);
+        expect(wayPoints[2].swimAction).toBe(SwimAction.switch);
     });
 });

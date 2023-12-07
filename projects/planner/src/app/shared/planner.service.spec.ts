@@ -1,6 +1,6 @@
 import {
-    Time, SafetyStop, Segment, Event,
-    CalculatedProfile, Events, StandardGases
+    Time, SafetyStop, StandardGases,
+    CalculatedProfile, Event
 } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
@@ -19,8 +19,8 @@ import { DepthsService } from './depths.service';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { ViewStates } from './viewStates';
 import { DiveResults } from './diveresults';
-import {ReloadDispatcher} from './reloadDispatcher';
-import {DiveSchedules} from './dive.schedules';
+import { ReloadDispatcher } from './reloadDispatcher';
+import { DiveSchedules } from './dive.schedules';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -97,7 +97,7 @@ describe('PlannerService', () => {
     });
 
 
-    describe('30m for 15 minutes Calculates (defaults)', () => {
+    describe('Successfully calculates 30m for 15 minutes (defaults)', () => {
         it('8 minutes time to surface', () => {
             planner.calculate();
             expect(dive.timeToSurface).toBe(8);
@@ -119,7 +119,7 @@ describe('PlannerService', () => {
         });
     });
 
-    describe('Shows errors', () => {
+    describe('Shows Warnings', () => {
         it('60m for 50 minutes maximum depth exceeded', () => {
             depthsService.plannedDepth =60;
             planner.calculate();
@@ -160,6 +160,11 @@ describe('PlannerService', () => {
             expect(dive.averageDepth).toBe(21.75);
         });
 
+        it('Waypoints are calculated', () => {
+            planner.calculate();
+            expect(dive.wayPoints.length).toBe(5);
+        });
+
         it('Start ascent is updated', () => {
             planner.calculate();
             depthsService.applyNdlDuration();
@@ -180,13 +185,12 @@ describe('PlannerService', () => {
 
     describe('Errors', () => {
         const createProfileResultDto = (): ProfileResultDto => {
-            const events = new Events();
-            events.add(Event.createError(''));
-            const profile = CalculatedProfile.fromErrors(depthsService.segments, []);
+            const events: Event[] = [ Event.createError('') ];
+            const profile = CalculatedProfile.fromErrors(depthsService.segments, events);
             const profileDto = DtoSerialization.fromProfile(profile);
             return {
                 profile: profileDto,
-                events: DtoSerialization.fromEvents(events.items)
+                events: []
             };
         };
 
@@ -215,6 +219,10 @@ describe('PlannerService', () => {
 
             it('Fallback to error state', () => {
                 expect(dive.hasErrors).toBeTruthy();
+            });
+
+            it('Sets waypoints to empty', () => {
+                expect(dive.wayPoints.length).toBe(0);
             });
 
             it('Still fires waypoints calculated event', () => {

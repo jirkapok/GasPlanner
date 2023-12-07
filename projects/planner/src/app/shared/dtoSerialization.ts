@@ -1,6 +1,7 @@
 import {
     CalculatedProfile, Diver, Events, Event, Gas,
-    HighestDensity, Options, Segment, Tank, Tanks
+    HighestDensity, Options, Segment, Tank, Tanks,
+    LoadedTissues
 } from 'scuba-physics';
 import {
     CalculatedProfileDto, ConsumedDto, DensityDto,
@@ -93,8 +94,14 @@ export class DtoSerialization {
 
     public static toProfile(profile: CalculatedProfileDto, tanks: Tank[]): CalculatedProfile {
         const segments = DtoSerialization.toSegments(profile.segments, tanks);
+
+        if(profile.errors.length > 0) {
+            const events = DtoSerialization.toEvents(profile.errors);
+            return CalculatedProfile.fromErrors(segments, events.items);
+        }
+
         // ceilings have simple data, no custom conversion needed
-        return CalculatedProfile.fromProfile(segments, profile.ceilings);
+        return CalculatedProfile.fromProfile(segments, profile.ceilings, LoadedTissues.default()); // TODO serialize loaded tissues
     }
 
     public static fromProfile(profile: CalculatedProfile): CalculatedProfileDto {

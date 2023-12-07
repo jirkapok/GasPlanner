@@ -28,6 +28,6 @@ export * from './lib/Segments';
 export * from './lib/StandardTanks';
 export * from './lib/Tanks';
 export * from './lib/Time';
-export { LoadedTissues, Tissue } from './lib/Tissues';
+export { LoadedTissue } from './lib/Tissues';
 export * from './lib/units';
 export * from './lib/weight';

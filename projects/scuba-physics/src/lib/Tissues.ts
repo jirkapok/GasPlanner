@@ -22,8 +22,7 @@ export class LoadSegment {
     public speed = 0;
 }
 
-// TODO consider Hiding Tissue from public API
-export class Tissue extends Compartment {
+export class Tissue extends Compartment implements LoadedTissue {
     // initial tissue loading is needed
     private _pN2 = 0;
     private _pHe = 0;
@@ -61,14 +60,18 @@ export class Tissue extends Compartment {
         return this._b;
     }
 
+    public static fromCurrent(loaded: LoadedTissue, compartment: Compartment): Tissue {
+        const copy = new Tissue(compartment, 1); // irrelevant pressure wouldn't be used
+        copy._pN2 = loaded.pN2;
+        copy._pHe = loaded.pHe;
+        copy._a = loaded.a;
+        copy._b = loaded.b;
+        copy.updateTotal();
+        return copy;
+    }
+
     public copy(): Tissue {
-        const backup = new Tissue(this, 1); // irrelevant pressure wouldn't be used
-        backup._pN2 = this._pN2;
-        backup._pHe = this._pHe;
-        backup._pTotal = this._pTotal;
-        backup._a = this._a;
-        backup._b = this._b;
-        return backup;
+        return Tissue.fromCurrent(this, this);
     }
 
     /**
@@ -87,7 +90,7 @@ export class Tissue extends Compartment {
         this._pN2 = this.loadGas(segment, gas.fN2, this.pN2, this.n2HalfTime);
         this._pHe = this.loadGas(segment, gas.fHe, this.pHe, this.heHalfTime);
         const prevTotal = this.pTotal;
-        this._pTotal = this.pN2 + this.pHe;
+        this.updateTotal();
 
         this._a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
         this._b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
@@ -121,6 +124,10 @@ export class Tissue extends Compartment {
         const exp = Math.exp(-timeConstant * time);
         return (pGas + (gasRate * (time - (1.0 / timeConstant))) - ((pGas - pBegin - (gasRate / timeConstant)) * exp));
     }
+
+    private updateTotal(): void {
+        this._pTotal = this.pN2 + this.pHe;
+    }
 }
 
 export class Tissues {
@@ -136,12 +143,15 @@ export class Tissues {
      * @param current not null instance of currently loaded tissues.
      * Can be obtained from algorithm calculated dive profile.
      */
-    public static createLoaded(current: LoadedTissues): Tissues {
-        if(current.tissues.length !== Compartments.buhlmannZHL16C.length) {
+    public static createLoaded(current: LoadedTissue[]): Tissues {
+        if(current.length !== Compartments.buhlmannZHL16C.length) {
             throw new Error('Provided incompatible count of tissues');
         }
 
-        const tissues = Tissues.copy(current.tissues);
+        const tissues = _(current).map((t, index) => {
+            const compartment = Compartments.buhlmannZHL16C[index];
+            return Tissue.fromCurrent(t, compartment);
+        }).value();
         return new Tissues(tissues);
     }
 
@@ -176,8 +186,8 @@ export class Tissues {
         this._compartments = Tissues.copy(source);
     }
 
-    public finalState(): LoadedTissues {
-        return new LoadedTissues(Tissues.copy(this._compartments));
+    public finalState(): LoadedTissue[] {
+        return Tissues.copy(this._compartments);
     }
 
     /**
@@ -214,18 +224,24 @@ export class Tissues {
 /**
  * Represents state of the body after performed dive.
  */
-export class LoadedTissues {
-    public constructor(private _tissues: Tissue[]) {
-    }
-
-    public get tissues(): Tissue[] {
-        return this._tissues;
-    }
+export interface LoadedTissue {
+    /**
+     * partial pressure of nitrogen in bars
+     */
+    pN2: number;
 
     /**
-     * Creates default not stable tissues set. Only for testing purposes
+     * partial pressure of helium in bars
      */
-    public static default(): LoadedTissues {
-        return Tissues.create(1).finalState();
-    }
+    pHe: number;
+
+    /**
+     * Buhlmann m-value constant a
+     */
+    a: number;
+
+    /**
+     * Buhlmann m-value constant b
+     */
+    b: number;
 }

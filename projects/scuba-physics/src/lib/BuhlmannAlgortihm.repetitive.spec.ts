@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Time } from './Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
-import { LoadedTissues, Tissues } from './Tissues';
+import { LoadedTissue, Tissues } from './Tissues';
 import { Precision } from './precision';
 import { Gases, StandardGases } from './Gases';
 import { Segments } from './Segments';
@@ -18,18 +18,18 @@ import { Options } from './Options';
 
 describe('Buhlmann Algorithm - Repetitive dives', () => {
     const sut = new BuhlmannAlgorithm();
-    const toTissueResult = (loaded: LoadedTissues) => _(loaded.tissues)
+    const toTissueResult = (loaded: LoadedTissue[]) => _(loaded)
         .map(t => ({
             pN2: Precision.round(t.pN2, 8),
             pHe: Precision.round(t.pHe, 8)
         }))
         .value();
 
-    const applySurfaceInterval = (loaded: LoadedTissues, altitude: number, duration: number): LoadedTissues =>
+    const applySurfaceInterval = (loaded: LoadedTissue[], altitude: number, duration: number): LoadedTissue[] =>
         sut.applySurfaceInterval(loaded, altitude, duration);
 
     // used enough long interval, so the tissues are stable on 8 dicimal places
-    const stableTissues = applySurfaceInterval(LoadedTissues.default(), 0, Time.oneDay * 9);
+    const stableTissues = applySurfaceInterval(Tissues.create(1).finalState(), 0, Time.oneDay * 9);
 
     describe('Surface interval', () => {
         it('Doesn\'t change not loaded tissues.', () => {

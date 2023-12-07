@@ -1,6 +1,6 @@
 import { Gas } from './Gases';
 import { Segment } from './Segments';
-import { LoadedTissues, Tissues } from './Tissues';
+import { LoadedTissue } from './Tissues';
 
 export enum EventType {
     noAction = 0,
@@ -155,8 +155,9 @@ export class CalculatedProfile {
     private constructor(
         private seg: Segment[],
         private ceil: Ceiling[],
-        private tiss: LoadedTissues,
-        private err: Event[]) { }
+        private tiss: LoadedTissue[],
+        private err: Event[]
+    ) { }
 
     /**
      * Not null collection of segments filled whole calculated dive profile.
@@ -174,9 +175,11 @@ export class CalculatedProfile {
     }
 
     /**
-     * Not null tissues state at end of the dive or irrelevant tissues in case of error.
+     * Not null tissues state at end of the dive or empty in case of error.
+     * Items are ordered as Compartments by their half time Buhlmann m-values table.
+     * See Compartments class.
      */
-    public get tissues(): LoadedTissues {
+    public get tissues(): LoadedTissue[] {
         return this.tiss;
     }
 
@@ -188,10 +191,10 @@ export class CalculatedProfile {
     }
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
-        return new CalculatedProfile(segments, [], LoadedTissues.default(), errors);
+        return new CalculatedProfile(segments, [], [], errors);
     }
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissues: LoadedTissues): CalculatedProfile {
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissues: LoadedTissue[]): CalculatedProfile {
         return new CalculatedProfile(segments, ceilings, tissues, []);
     }
 }

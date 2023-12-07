@@ -67,22 +67,22 @@ export class BuhlmannAlgorithm {
      * Returns positive number or Infinity, in case there is no more tissues loading.
      * Usually at small depths (bellow 10 meters).
      */
-    public noDecoLimit(parameters: AlgorithmParams): number {
-        const depthConverter = new DepthConverterFactory(parameters.options).create();
-        const context = new AlgorithmContext(parameters.gases, parameters.segments, parameters.options, depthConverter);
-        return this.swimNoDecoLimit(parameters.segments, parameters.gases, context);
+    public noDecoLimit({ segments, gases, options }: AlgorithmParams): number {
+        const depthConverter = new DepthConverterFactory(options).create();
+        const context = new AlgorithmContext(gases, segments, options, depthConverter);
+        return this.swimNoDecoLimit(segments, gases, context);
     }
 
-    public calculateDecompression(options: Options, gases: Gases, originSegments: Segments): CalculatedProfile {
+    public calculateDecompression({ segments, gases, options }: AlgorithmParams): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
-        const segments = originSegments.copy();
+        const newSegments = segments.copy();
         const errors = this.validate(segments, gases);
         if (errors.length > 0) {
-            const origProfile = segments.mergeFlat(originSegments.length);
+            const origProfile = newSegments.mergeFlat(segments.length);
             return CalculatedProfile.fromErrors(origProfile, errors);
         }
 
-        const context = new AlgorithmContext(gases, segments, options, depthConverter);
+        const context = new AlgorithmContext(gases, newSegments, options, depthConverter);
         this.swimPlan(context);
         context.markAverageDepth();
         let nextStop = context.nextStop(context.currentDepth);
@@ -98,7 +98,7 @@ export class BuhlmannAlgorithm {
             nextStop = context.nextStop(nextStop);
         }
 
-        const merged = context.segments.mergeFlat(originSegments.length);
+        const merged = context.segments.mergeFlat(segments.length);
         return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissues.finalState());
     }
 

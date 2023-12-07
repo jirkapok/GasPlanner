@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { Time } from './Time';
-import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import {AlgorithmParams, BuhlmannAlgorithm} from './BuhlmannAlgorithm';
 import { LoadedTissue, Tissues } from './Tissues';
 import { Precision } from './precision';
 import { Gases, StandardGases } from './Gases';
@@ -17,7 +17,8 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         segments.add(0, 20, StandardGases.trimix1845, Time.oneMinute * 2);
         segments.addFlat(40, StandardGases.trimix1845, Time.oneMinute * 60);
         const options = new Options(1, 1, 1.6, 1.6);
-        const diveResult = sut.calculateDecompression(options, gases, segments);
+        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
+        const diveResult = sut.calculateDecompression(parameters);
         return diveResult;
     };
 

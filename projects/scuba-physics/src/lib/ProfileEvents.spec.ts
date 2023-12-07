@@ -1,4 +1,4 @@
-import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import {AlgorithmParams, BuhlmannAlgorithm} from './BuhlmannAlgorithm';
 import { Salinity } from './pressure-converter';
 import { Gas, Gases, StandardGases } from './Gases';
 import { Options, SafetyStop } from './Options';
@@ -33,7 +33,8 @@ describe('Profile Events', () => {
         const algorithm = new BuhlmannAlgorithm();
         const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, salinity);
         defaultOptions.safetyStop = safetyStop;
-        const decoPlan = algorithm.calculateDecompression(defaultOptions, gases, segments);
+        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, defaultOptions);
+        const decoPlan = algorithm.calculateDecompression(parameters);
         const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
         const events = ProfileEvents.fromProfile(eventOptions);
         return events;

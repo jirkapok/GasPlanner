@@ -1,5 +1,5 @@
 import { Precision } from './precision';
-import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import {AlgorithmParams, BuhlmannAlgorithm} from './BuhlmannAlgorithm';
 import { DepthConverter } from './depth-converter';
 import { Diver } from './Diver';
 import { Gases } from './Gases';
@@ -65,7 +65,8 @@ export class Consumption {
 
         const algorithm = new BuhlmannAlgorithm();
         const segmentsCopy = segments.copy();
-        const profile = algorithm.calculateDecompression(options, bGases, segmentsCopy);
+        const parameters = AlgorithmParams.forMultilevelDive(segmentsCopy, bGases, options);
+        const profile = algorithm.calculateDecompression(parameters);
         return profile;
     }
 
@@ -115,7 +116,8 @@ export class Consumption {
         const deepestProfile = Segments.fromCollection(deepestPart);
         const gases = Gases.fromTanks(tanks);
         const algorithm = new BuhlmannAlgorithm();
-        const emergencyProfile = algorithm.calculateDecompression(options, gases, deepestProfile);
+        const parameters = AlgorithmParams.forMultilevelDive(deepestProfile, gases, options);
+        const emergencyProfile = algorithm.calculateDecompression(parameters);
         const emergencySegments = emergencyProfile.segments;
         const ascent = emergencySegments.slice(deepestPart.length, emergencySegments.length);
         this.addSolvingSegment(ascent, options.problemSolvingDuration);

@@ -1,5 +1,5 @@
 import { Time } from './Time';
-import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import {AlgorithmParams, BuhlmannAlgorithm} from './BuhlmannAlgorithm';
 import { Gas, Gases, StandardGases } from './Gases';
 import { Segment, Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
@@ -22,7 +22,8 @@ describe('Buhlmann Algorithm - Plan', () => {
 
     const calculatePlan = (gases: Gases, source: Segments): string => {
         const algorithm = new BuhlmannAlgorithm();
-        const decoPlan = algorithm.calculateDecompression(options, gases, source);
+        const parameters = AlgorithmParams.forMultilevelDive(source, gases, options);
+        const decoPlan = algorithm.calculateDecompression(parameters);
         const planText = concatenatePlan(decoPlan.segments);
         return planText;
     };

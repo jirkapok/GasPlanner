@@ -19,7 +19,7 @@ export class PlanningTasks {
         const algorithm = new BuhlmannAlgorithm();
         const options = DtoSerialization.toOptions(data.options);
         const parameters = AlgorithmParams.forMultilevelDive(plan, gases, options);
-        const profile = algorithm.calculateDecompression(parameters);
+        const profile = algorithm.decompression(parameters);
         const profileDto = DtoSerialization.fromProfile(profile);
         const eventOptions: EventOptions = {
             maxDensity: data.eventOptions.maxDensity,

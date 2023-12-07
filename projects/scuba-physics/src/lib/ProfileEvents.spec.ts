@@ -34,7 +34,7 @@ describe('Profile Events', () => {
         const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, salinity);
         defaultOptions.safetyStop = safetyStop;
         const parameters = AlgorithmParams.forMultilevelDive(segments, gases, defaultOptions);
-        const decoPlan = algorithm.calculateDecompression(parameters);
+        const decoPlan = algorithm.decompression(parameters);
         const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
         const events = ProfileEvents.fromProfile(eventOptions);
         return events;

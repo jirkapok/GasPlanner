@@ -66,7 +66,7 @@ export class Consumption {
         const algorithm = new BuhlmannAlgorithm();
         const segmentsCopy = segments.copy();
         const parameters = AlgorithmParams.forMultilevelDive(segmentsCopy, bGases, options);
-        const profile = algorithm.calculateDecompression(parameters);
+        const profile = algorithm.decompression(parameters);
         return profile;
     }
 
@@ -117,7 +117,7 @@ export class Consumption {
         const gases = Gases.fromTanks(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const parameters = AlgorithmParams.forMultilevelDive(deepestProfile, gases, options);
-        const emergencyProfile = algorithm.calculateDecompression(parameters);
+        const emergencyProfile = algorithm.decompression(parameters);
         const emergencySegments = emergencyProfile.segments;
         const ascent = emergencySegments.slice(deepestPart.length, emergencySegments.length);
         this.addSolvingSegment(ascent, options.problemSolvingDuration);

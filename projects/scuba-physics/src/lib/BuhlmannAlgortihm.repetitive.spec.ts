@@ -18,7 +18,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         segments.addFlat(40, StandardGases.trimix1845, Time.oneMinute * 60);
         const options = new Options(1, 1, 1.6, 1.6);
         const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
-        const diveResult = sut.calculateDecompression(parameters);
+        const diveResult = sut.decompression(parameters);
         return diveResult;
     };
 
@@ -76,7 +76,6 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
     // TODO Buhlmann repetitive dive test cases:
     // * Tissues are loaded after dive (all values higher then at beginning)
     // * no deco is lower, if there is residual nitrogen from previous dive
-    // TODO Bulhmann create parameters crate
 
     xdescribe('Following dive', () => {
         it('Has higher tissues loading', () => {

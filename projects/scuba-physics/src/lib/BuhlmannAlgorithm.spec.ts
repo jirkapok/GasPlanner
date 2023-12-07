@@ -23,7 +23,7 @@ describe('Buhlmann Algorithm - Plan', () => {
     const calculatePlan = (gases: Gases, source: Segments): string => {
         const algorithm = new BuhlmannAlgorithm();
         const parameters = AlgorithmParams.forMultilevelDive(source, gases, options);
-        const decoPlan = algorithm.calculateDecompression(parameters);
+        const decoPlan = algorithm.decompression(parameters);
         const planText = concatenatePlan(decoPlan.segments);
         return planText;
     };

@@ -56,7 +56,6 @@ export class AlgorithmParams {
      * @param options conservatism options to be used
      */
     public static forMultilevelDive(segments: Segments, gases: Gases, options: Options): AlgorithmParams {
-        // TODO consider get rid of the gases parameter, since it is irrelevant for no deco limit
         return new AlgorithmParams(segments, gases, options);
     }
 }
@@ -73,7 +72,7 @@ export class BuhlmannAlgorithm {
         return this.swimNoDecoLimit(segments, gases, context);
     }
 
-    public calculateDecompression({ segments, gases, options }: AlgorithmParams): CalculatedProfile {
+    public decompression({ segments, gases, options }: AlgorithmParams): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
         const newSegments = segments.copy();
         const errors = this.validate(segments, gases);

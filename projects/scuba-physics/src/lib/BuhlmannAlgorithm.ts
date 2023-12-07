@@ -10,38 +10,67 @@ import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
 import { Salinity } from './pressure-converter';
 import { AlgorithmContext, ContextMemento } from './AlgorithmContext';
 
+// Speed in meters / min.
+const durationFor = (depthDifference: number, speed: number): number => {
+    const meterPerSec = Time.toMinutes(speed);
+    return depthDifference / meterPerSec;
+};
+
+export class AlgorithmParams {
+    private constructor(private _segments: Segments, private _gases: Gases, private _options: Options) {
+    }
+
+    public get segments(): Segments {
+        return this._segments;
+    }
+
+    public get gases(): Gases {
+        return this._gases;
+    }
+
+    public get options(): Options {
+        return this._options;
+    }
+
+    /**
+     * Creates not null new instance of parameters.
+     * @param depth depth below surface in meters
+     * @param gas gas to use as the only one during the plan
+     * @param options conservatism options to be used
+     */
+    public static forSimpleDive(depth: number, gas: Gas, options: Options): AlgorithmParams {
+        const gases = new Gases();
+        gases.add(gas);
+
+        const segments = new Segments();
+        const duration = durationFor(depth, options.descentSpeed);
+        segments.add(0, depth, gas, duration);
+
+        return new AlgorithmParams(segments, gases, options);
+    }
+
+    /**
+     * Creates not null new instance of parameters.
+     * @param segments Already realized part of the dive
+     * @param gases Gases used during the dive, only need to contain gases used in segments.
+     * @param options conservatism options to be used
+     */
+    public static forMultilevelDive(segments: Segments, gases: Gases, options: Options): AlgorithmParams {
+        // TODO consider get rid of the gases parameter, since it is irrelevant for no deco limit
+        return new AlgorithmParams(segments, gases, options);
+    }
+}
 
 export class BuhlmannAlgorithm {
     /**
      * Calculates no decompression limit in minutes.
      * Returns positive number or Infinity, in case there is no more tissues loading.
      * Usually at small depths (bellow 10 meters).
-     * @param depth depth below surface in meters
-     * @param gas gas to use as the only one during the plan
-     * @param options conservatism options to be used
      */
-    public noDecoLimit(depth: number, gas: Gas, options: Options): number {
-        const gases = new Gases();
-        gases.add(gas);
-
-        const segments = new Segments();
-        const duration = this.duration(depth, options.descentSpeed);
-        segments.add(0, depth, gas, duration);
-
-        return this.noDecoLimitMultiLevel(segments, gases, options);
-    }
-
-    /**
-     * Calculates no decompression limit in minutes.
-     * Returns positive number or Infinity, in case there is no more tissues loading.
-     * Usually at small depths (bellow 10 meters).
-     * @param segments Already realized part of the dive
-     * @param options conservatism options to be used
-     */
-    public noDecoLimitMultiLevel(segments: Segments, gases: Gases, options: Options): number {
-        const depthConverter = new DepthConverterFactory(options).create();
-        const context = new AlgorithmContext(gases, segments, options, depthConverter);
-        return this.swimNoDecoLimit(segments, gases, context);
+    public noDecoLimit(parameters: AlgorithmParams): number {
+        const depthConverter = new DepthConverterFactory(parameters.options).create();
+        const context = new AlgorithmContext(parameters.gases, parameters.segments, parameters.options, depthConverter);
+        return this.swimNoDecoLimit(parameters.segments, parameters.gases, context);
     }
 
     public calculateDecompression(options: Options, gases: Gases, originSegments: Segments): CalculatedProfile {
@@ -171,7 +200,7 @@ export class BuhlmannAlgorithm {
 
     private ascentToNextStop(context: AlgorithmContext, nextStop: number): void {
         const depthDifference = context.currentDepth - nextStop;
-        const duration = this.duration(depthDifference, context.ascentSpeed);
+        const duration = durationFor(depthDifference, context.ascentSpeed);
         const ascent = context.addAscentSegment(nextStop, duration);
         this.swim(context, ascent);
     }
@@ -188,12 +217,6 @@ export class BuhlmannAlgorithm {
         }
 
         return [];
-    }
-
-    // Speed in meters / min.
-    private duration(depthDifference: number, speed: number): number {
-        const meterPerSec = Time.toMinutes(speed);
-        return depthDifference / meterPerSec;
     }
 
     private swimPlan(context: AlgorithmContext): void {

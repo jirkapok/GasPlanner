@@ -1,5 +1,5 @@
 import { Time } from './Time';
-import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm, AlgorithmParams } from './BuhlmannAlgorithm';
 import { Gases, StandardGases } from './Gases';
 import { Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
@@ -10,7 +10,8 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         const depth = 0;
         const options = OptionExtensions.createOptions(1, 1, 1.6, 1.6, Salinity.fresh);
         const algorithm = new BuhlmannAlgorithm();
-        const ndl = algorithm.noDecoLimit(depth, StandardGases.air, options);
+        const simpleDive = AlgorithmParams.forSimpleDive(depth, StandardGases.air, options);
+        const ndl = algorithm.noDecoLimit(simpleDive);
         expect(ndl).toBe(Infinity);
     });
 
@@ -27,7 +28,8 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         segments.addFlat(depth, air, Time.oneMinute * 1440);
 
         const algorithm = new BuhlmannAlgorithm();
-        const ndl = algorithm.noDecoLimitMultiLevel(segments, gases, options);
+        const multilevelDive = AlgorithmParams.forMultilevelDive(segments, gases, options);
+        const ndl = algorithm.noDecoLimit(multilevelDive);
         expect(ndl).toBe(Infinity);
     });
 
@@ -35,7 +37,8 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         const depth = 60;
         const options = OptionExtensions.createOptions(1, 1, 1.4, 1.4, Salinity.fresh);
         const algorithm = new BuhlmannAlgorithm();
-        const ndl = algorithm.noDecoLimit(depth, StandardGases.air, options);
+        const simpleDive = AlgorithmParams.forSimpleDive(depth, StandardGases.air, options);
+        const ndl = algorithm.noDecoLimit(simpleDive);
         expect(ndl).toBe(6);
     });
 
@@ -51,8 +54,10 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             segments.addFlat(30, air, Time.oneMinute);
 
             const algorithm = new BuhlmannAlgorithm();
-            const multiLevelNdl = algorithm.noDecoLimitMultiLevel(segments, gases, options);
-            const ndl = algorithm.noDecoLimit(30, air, options);
+            const multilevelDive = AlgorithmParams.forMultilevelDive(segments, gases, options);
+            const multiLevelNdl = algorithm.noDecoLimit(multilevelDive);
+            const simpleDive = AlgorithmParams.forMultilevelDive(segments, gases, options);
+            const ndl = algorithm.noDecoLimit(simpleDive);
             expect(ndl).toBe(multiLevelNdl);
         });
 
@@ -64,7 +69,8 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             segments.addFlat(20, air, Time.oneMinute * 40);
 
             const algorithm = new BuhlmannAlgorithm();
-            const ndl = algorithm.noDecoLimitMultiLevel(segments, gases, options);
+            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
+            const ndl = algorithm.noDecoLimit(parameters);
             expect(ndl).toBe(36);
         });
 
@@ -76,7 +82,8 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             segments.addFlat(20, air, Time.oneMinute * 5);
 
             const algorithm = new BuhlmannAlgorithm();
-            const ndl = algorithm.noDecoLimitMultiLevel(segments, gases, options);
+            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
+            const ndl = algorithm.noDecoLimit(parameters);
             expect(ndl).toBe(36);
         });
     });
@@ -89,7 +96,8 @@ describe('Buhlmann Algorithm - No decompression times', () => {
                 const algorithm = new BuhlmannAlgorithm();
                 const depth = testCase[0];
                 options.salinity = salinity;
-                const ndl = algorithm.noDecoLimit(depth, StandardGases.air, options);
+                const parameters = AlgorithmParams.forSimpleDive(depth, StandardGases.air, options);
+                const ndl = algorithm.noDecoLimit(parameters);
                 expect(ndl).toBe(testCase[1], `No deco limit for ${depth} failed`);
             });
         };

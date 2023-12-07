@@ -1,6 +1,7 @@
 import {
-    Segments, Gases, BuhlmannAlgorithm, ProfileEvents, DepthConverterFactory,
-    Consumption, Time, Diver, OtuCalculator, CnsCalculator, DensityAtDepth, EventOptions
+    Segments, Gases, ProfileEvents, DepthConverterFactory,
+    Consumption, Time, Diver, OtuCalculator, CnsCalculator, DensityAtDepth, EventOptions,
+    AlgorithmParams, BuhlmannAlgorithm
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
@@ -46,7 +47,8 @@ export class PlanningTasks {
         const segments = Segments.fromCollection(originProfile);
         const algorithm = new BuhlmannAlgorithm();
         const options = DtoSerialization.toOptions(task.options);
-        const noDecoLimit = algorithm.noDecoLimitMultiLevel(segments, gases, options);
+        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
+        const noDecoLimit = algorithm.noDecoLimit(parameters);
 
         const depthConverter = new DepthConverterFactory(task.options).create();
         const otu = new OtuCalculator(depthConverter).calculateForProfile(originProfile);

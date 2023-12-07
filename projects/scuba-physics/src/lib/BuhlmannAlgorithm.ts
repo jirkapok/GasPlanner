@@ -1,161 +1,15 @@
-import {
-    LoadedTissue, LoadSegment, Tissue, Tissues, TissuesValidator
-} from './Tissues';
-import { BestGasOptions, Gas, Gases, GasesValidator, OCGasSource, StandardGases } from './Gases';
+import { LoadedTissue, LoadSegment, Tissues, TissuesValidator } from './Tissues';
+import { Gas, Gases, GasesValidator, StandardGases } from './Gases';
 import { Segment, Segments, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Time } from './Time';
 import { CalculatedProfile, Ceiling, Event } from './Profile';
-import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
 import { Options } from './Options';
-import { AscentSpeeds } from './speeds';
-import { DepthLevels } from './DepthLevels';
 import { Precision } from './precision';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
 import { Salinity } from './pressure-converter';
+import { AlgorithmContext, ContextMemento } from './AlgorithmContext';
 
-interface ContextMemento {
-    tissues: Tissue[];
-    ceilings: number;
-    segments: number;
-    runTime: number;
-    lowestCeiling: number;
-}
-
-class AlgorithmContext {
-    public tissues: Tissues;
-    public ceilings: Ceiling[] = [];
-    public currentGas: Gas;
-    /** in seconds */
-    public runTime = 0;
-    private gradients: GradientFactors;
-    private bestGasOptions: BestGasOptions;
-    private speeds: AscentSpeeds;
-    private levels: DepthLevels;
-    private gasSource: OCGasSource;
-
-    constructor(
-        public gases: Gases,
-        public segments: Segments,
-        public options: Options,
-        public depthConverter: DepthConverter,
-        currentTissues: Tissues | null = null) {
-        this.tissues = currentTissues || Tissues.create(depthConverter.surfacePressure);
-        // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
-        this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
-        const last = segments.last();
-        this.currentGas = last.gas;
-
-        this.bestGasOptions = {
-            currentDepth: this.currentDepth,
-            maxDecoPpO2: this.options.maxDecoPpO2,
-            oxygenNarcotic: this.options.oxygenNarcotic,
-            maxEnd: this.options.maxEND,
-            currentGas: this.currentGas
-        };
-
-        this.speeds = new AscentSpeeds(this.options);
-        this.levels = new DepthLevels(depthConverter, options);
-        this.gasSource = new OCGasSource(gases, options);
-    }
-
-    public get ascentSpeed(): number {
-        return this.speeds.ascent(this.currentDepth);
-    }
-
-    public get currentDepth(): number {
-        return this.segments.currentDepth;
-    }
-
-    public get ambientPressure(): number {
-        return this.depthConverter.toBar(this.currentDepth);
-    }
-
-    public get addSafetyStop(): boolean {
-        return this.levels.addSafetyStop(this.currentDepth, this.segments.maxDepth);
-    }
-
-    public get decoStopDuration(): number {
-        return this.options.roundStopsToMinutes ? Time.oneMinute : Time.oneSecond;
-    }
-
-    public get isAtSurface(): boolean {
-        return this.segments.last().endDepth === 0;
-    }
-
-    /** use this just before calculating ascent to be able calculate correct speeds */
-    public markAverageDepth(): void {
-        this.speeds.markAverageDepth(this.segments);
-    }
-
-    public addCeiling() {
-        const depth = this.ceiling();
-        const newCeiling = new Ceiling(this.runTime, depth);
-        this.ceilings.push(newCeiling);
-    }
-
-    public ceiling(): number {
-        return this.gradients.ceiling();
-    }
-
-    public bestDecoGas(): Gas {
-        this.bestGasOptions.currentDepth = this.currentDepth;
-        this.bestGasOptions.currentGas = this.currentGas;
-        const newGas = this.gasSource.bestGas(this.bestGasOptions);
-        return newGas;
-    }
-
-    public createMemento(): ContextMemento {
-        return {
-            runTime: this.runTime,
-            tissues: Tissues.copy(this.tissues.compartments),
-            ceilings: this.ceilings.length,
-            segments: this.segments.length,
-            lowestCeiling: this.gradients.lowestCeiling
-        };
-    }
-
-    public restore(memento: ContextMemento): void {
-        // here we don't copy, since we expect it wasn't touched
-        this.tissues.restoreFrom(memento.tissues);
-        this.gradients.lowestCeiling = memento.lowestCeiling;
-        this.runTime = memento.runTime;
-        // ceilings and segments are only added
-        this.ceilings = this.ceilings.slice(0, memento.ceilings);
-        const toCut = this.segments.length - memento.segments;
-        this.segments.cutDown(toCut);
-    }
-
-    public nextStop(currentStop: number): number {
-        return this.levels.nextStop(currentStop);
-    }
-
-    public shouldSwitchTo(newGas: Gas): boolean {
-        return newGas && !this.currentGas.compositionEquals(newGas);
-    }
-
-    public addGasSwitchSegment(): Segment {
-        const duration = this.options.gasSwitchDuration * Time.oneMinute;
-        return this.addStopSegment(duration);
-    }
-
-    public addDecoStopSegment(): Segment {
-        return this.addStopSegment(0);
-    }
-
-    public addSafetyStopSegment(): Segment {
-        const duration = Time.safetyStopDuration;
-        return this.addStopSegment(duration);
-    }
-
-    public addAscentSegment(nextStop: number, duration: number): Segment {
-        return this.segments.add(this.currentDepth, nextStop, this.currentGas, duration);
-    }
-
-    private addStopSegment(duration: number): Segment {
-        return this.segments.add(this.currentDepth, this.currentDepth, this.currentGas, duration);
-    }
-}
 
 export class BuhlmannAlgorithm {
     /**
@@ -225,9 +79,17 @@ export class BuhlmannAlgorithm {
      * @param altitude in meters
      * @param surfaceInterval in seconds to align units with segments
      */
-    public applySurfaceInterval(current: LoadedTissue[], altitude: number, surfaceInterval: number): LoadedTissue[] {
+    public applySurfaceInterval(current: LoadedTissue[], altitude: number = 0, surfaceInterval: number = 0): LoadedTissue[] {
         if(!TissuesValidator.valid(current)) {
             throw Error('Provided tissues collection isn`t valid. It needs have valid items of 16 compartments ordered by halftime.');
+        }
+
+        if(altitude < 0) {
+            throw Error('Altitude needs to be positive number or 0.');
+        }
+
+        if(surfaceInterval < 0) {
+            throw Error('Surface interval needs to be positive number or 0.');
         }
 
         const tissues = Tissues.createLoaded(current);

@@ -7,7 +7,7 @@ import { CalculatedProfile, Ceiling, Event } from './Profile';
 import { Options } from './Options';
 import { Precision } from './precision';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
-import { Salinity } from './pressure-converter';
+import { AltitudePressure, Salinity } from './pressure-converter';
 import { AlgorithmContext, ContextMemento } from './AlgorithmContext';
 
 // Speed in meters / min.
@@ -16,8 +16,39 @@ const durationFor = (depthDifference: number, speed: number): number => {
     return depthDifference / meterPerSec;
 };
 
+export class RestingParameters {
+    /**
+     * Creates new instance of algorithm parameters representing surface interval between two dives.
+     * Used as input for repetitive dives.
+     * @param current Not empty collection of tissues at end of previous dive (when surfacing).
+     * @param surfaceInterval Duration of diver rest between two dives in seconds.
+     */
+    constructor(public current: LoadedTissue[], public surfaceInterval: number) {
+    }
+}
+
+export class SurfaceIntervalParameters {
+    /**
+     * Creates new instance of algorithm parameters representing surface interval between two dives.
+     * Used as input for repetitive dives.
+     * @param previousTissues Not empty collection of tissues at end of previous dive (when surfacing).
+     * @param altitude Altitude at which the surface interval (resting) happened in m.a.s.l.
+     * Usually altitude of the following dive.
+     * @param surfaceInterval Duration of diver rest between two dives in seconds.
+     */
+    constructor(public previousTissues: LoadedTissue[], public altitude: number, public surfaceInterval: number) {
+    }
+}
+
 export class AlgorithmParams {
-    private constructor(private _segments: Segments, private _gases: Gases, private _options: Options) {
+    private readonly _surface: RestingParameters;
+    private constructor(
+        private _segments: Segments,
+        private _gases: Gases,
+        private _options: Options,
+        surface?: RestingParameters
+    ) {
+        this._surface = this.resolveSurfaceParameters(surface);
     }
 
     public get segments(): Segments {
@@ -32,13 +63,18 @@ export class AlgorithmParams {
         return this._options;
     }
 
+    public get surfaceInterval(): SurfaceIntervalParameters {
+        return new SurfaceIntervalParameters(this._surface.current, this.options.altitude, this._surface.surfaceInterval);
+    }
+
     /**
      * Creates not null new instance of parameters.
      * @param depth depth below surface in meters
      * @param gas gas to use as the only one during the plan
      * @param options conservatism options to be used
+     * @param surface Surface resting definition, in case on repetitive dives. Undefined for first dive.
      */
-    public static forSimpleDive(depth: number, gas: Gas, options: Options): AlgorithmParams {
+    public static forSimpleDive(depth: number, gas: Gas, options: Options, surface?: RestingParameters): AlgorithmParams {
         const gases = new Gases();
         gases.add(gas);
 
@@ -46,17 +82,29 @@ export class AlgorithmParams {
         const duration = durationFor(depth, options.descentSpeed);
         segments.add(0, depth, gas, duration);
 
-        return new AlgorithmParams(segments, gases, options);
+        return new AlgorithmParams(segments, gases, options, surface);
     }
 
     /**
      * Creates not null new instance of parameters.
      * @param segments Already realized part of the dive
-     * @param gases Gases used during the dive, only need to contain gases used in segments.
+     * @param gases Gases used during the dive + additional gases to be considered during decompression ascent.
+     * For nodeco limit only need to contain gases used in segments.
      * @param options conservatism options to be used
+     * @param surface Surface resting definition, in case on repetitive dives. Undefined for first dive.
      */
-    public static forMultilevelDive(segments: Segments, gases: Gases, options: Options): AlgorithmParams {
-        return new AlgorithmParams(segments, gases, options);
+    public static forMultilevelDive(segments: Segments, gases: Gases, options: Options, surface?: RestingParameters): AlgorithmParams {
+        return new AlgorithmParams(segments, gases, options, surface);
+    }
+
+    private resolveSurfaceParameters(provided?: RestingParameters): RestingParameters {
+        if(provided) {
+            return provided;
+        }
+
+        const surfacePressure = AltitudePressure.pressure(this.options.altitude);
+        const tissues = Tissues.create(surfacePressure).finalState();
+        return new RestingParameters(tissues, Number.POSITIVE_INFINITY);
     }
 }
 
@@ -107,8 +155,8 @@ export class BuhlmannAlgorithm {
      * @param altitude in meters
      * @param surfaceInterval in seconds to align units with segments
      */
-    public applySurfaceInterval(current: LoadedTissue[], altitude: number = 0, surfaceInterval: number = 0): LoadedTissue[] {
-        if(!TissuesValidator.valid(current)) {
+    public applySurfaceInterval({ previousTissues, altitude, surfaceInterval }: SurfaceIntervalParameters): LoadedTissue[] {
+        if(!TissuesValidator.valid(previousTissues)) {
             throw Error('Provided tissues collection isn`t valid. It needs have valid items of 16 compartments ordered by halftime.');
         }
 
@@ -120,7 +168,7 @@ export class BuhlmannAlgorithm {
             throw Error('Surface interval needs to be positive number or 0.');
         }
 
-        const tissues = Tissues.createLoaded(current);
+        const tissues = Tissues.createLoaded(previousTissues);
         // at surface, there is no depth change, even we are at different elevation and we are always breathing air
         const segments = new Segments();
         const restingSegment = segments.addFlat(0, StandardGases.air, surfaceInterval);

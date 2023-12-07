@@ -1,4 +1,6 @@
-import { LoadedTissue, LoadSegment, Tissue, Tissues } from './Tissues';
+import {
+    LoadedTissue, LoadSegment, Tissue, Tissues, TissuesValidator
+} from './Tissues';
 import { BestGasOptions, Gas, Gases, GasesValidator, OCGasSource, StandardGases } from './Gases';
 import { Segment, Segments, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
@@ -218,14 +220,17 @@ export class BuhlmannAlgorithm {
     }
 
     /**
-     * @param currentTissues not empty collection of valid tissues ordered by compartment half time.
+     * @param current not empty collection of valid tissues ordered by compartment half time.
      * See Compartments class.
      * @param altitude in meters
      * @param surfaceInterval in seconds to align units with segments
      */
-    public applySurfaceInterval(currentTissues: LoadedTissue[], altitude: number, surfaceInterval: number): LoadedTissue[] {
-        // TODO add tissues validation
-        const tissues = Tissues.createLoaded(currentTissues);
+    public applySurfaceInterval(current: LoadedTissue[], altitude: number, surfaceInterval: number): LoadedTissue[] {
+        if(!TissuesValidator.valid(current)) {
+            throw Error('Provided tissues collection isn`t valid. It needs have valid items of 16 compartments ordered by halftime.');
+        }
+
+        const tissues = Tissues.createLoaded(current);
         // at surface, there is no depth change, even we are at different elevation and we are always breathing air
         const segments = new Segments();
         const restingSegment = segments.addFlat(0, StandardGases.air, surfaceInterval);

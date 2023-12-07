@@ -9,8 +9,6 @@ import { Options } from './Options';
 
 
 // TODO Buhlmann repetitive dive test cases:
-// * Tissues parameters have meaningful values at beginning of the dive
-//   * All 16 tissues with positive non zero partial pressure of nitrogen and positive or zero helium
 // * Tissues are loaded after dive (all values higher then at beginning)
 // * no deco is lower, if there is residual nitrogen from previous dive
 

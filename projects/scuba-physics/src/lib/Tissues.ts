@@ -6,20 +6,22 @@ import _ from 'lodash';
  * Represents transition between depths during dive
  */
 export class LoadSegment {
-    /**
-     * Depth in pressure (bars) at beginning of the segment
-     */
-    public startPressure = 0;
+    constructor(
+        /**
+         * Depth in pressure (bars) at beginning of the segment
+         */
+        public startPressure: number,
 
-    /**
-     * Duration in seconds of the transition
-     */
-    public duration = 0;
+        /**
+         * Duration in seconds of the transition
+         */
+        public duration: number,
 
-    /**
-     * Direction of the swim in bars/second
-     */
-    public speed = 0;
+        /**
+         * Direction of the swim in bars/second
+         */
+        public speed: number,
+    ) {}
 }
 
 export class Tissue extends Compartment implements LoadedTissue {
@@ -244,4 +246,23 @@ export interface LoadedTissue {
      * Buhlmann m-value constant b
      */
     b: number;
+}
+
+export class TissuesValidator {
+    public static validTissue(item: LoadedTissue): boolean {
+        return item.pN2 > 0 &&
+               item.pHe >= 0 &&
+               // a and b may be 0 in case no loading of the tissues was performed yet.
+               item.a >= 0 &&
+               item.b >= 0;
+    }
+
+    public static valid(current: LoadedTissue[]) {
+        if(!current || current.length !== Compartments.buhlmannZHL16C.length) {
+            return false;
+        }
+
+        const allItemsValid = _(current).every(t => TissuesValidator.validTissue(t));
+        return allItemsValid;
+    }
 }

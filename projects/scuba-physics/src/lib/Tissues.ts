@@ -36,10 +36,13 @@ export class Tissue extends Compartment implements LoadedTissue {
         super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
             compartment.heHalfTime, compartment.heA, compartment.heB);
 
+        // TODO verify, if we need to adjust waterVapourPressure by surface pressure e.g. altitude
+        // and should we also subtract it from partial pressure during the dive?
+        // because after some surface interval, the tissues are still ongasing, but should be stable
         const waterVapourPressure = 0.0627; // as constant for body temperature 37°C
         this._pN2 = GasMixtures.partialPressure(surfacePressure, 0.79) - waterVapourPressure;
         this._pHe = 0;
-        this._pTotal = this.pN2 + this.pHe;
+        this.updateTotal();
     }
 
     public get pN2(): number {

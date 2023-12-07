@@ -114,13 +114,14 @@ export class BuhlmannAlgorithm {
      * Returns positive number or Infinity, in case there is no more tissues loading.
      * Usually at small depths (bellow 10 meters).
      */
-    public noDecoLimit({ segments, gases, options }: AlgorithmParams): number {
+    public noDecoLimit({ segments, gases, options, surfaceInterval }: AlgorithmParams): number {
         const depthConverter = new DepthConverterFactory(options).create();
+        // const rested = this.applySurfaceInterval(surfaceInterval);
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
         return this.swimNoDecoLimit(segments, gases, context);
     }
 
-    public decompression({ segments, gases, options }: AlgorithmParams): CalculatedProfile {
+    public decompression({ segments, gases, options, surfaceInterval }: AlgorithmParams): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
         const newSegments = segments.copy();
         const errors = this.validate(segments, gases);
@@ -129,6 +130,7 @@ export class BuhlmannAlgorithm {
             return CalculatedProfile.fromErrors(origProfile, errors);
         }
 
+        const relaxedTissues = this.applySurfaceInterval(surfaceInterval);
         const context = new AlgorithmContext(gases, newSegments, options, depthConverter);
         this.swimPlan(context);
         context.markAverageDepth();
@@ -168,7 +170,10 @@ export class BuhlmannAlgorithm {
             throw Error('Surface interval needs to be positive number or 0.');
         }
 
-        const tissues = Tissues.createLoaded(previousTissues);
+        if(surfaceInterval === Number.POSITIVE_INFINITY || surfaceInterval <= 0) {
+            return previousTissues;
+        }
+
         // at surface, there is no depth change, even we are at different elevation and we are always breathing air
         const segments = new Segments();
         const restingSegment = segments.addFlat(0, StandardGases.air, surfaceInterval);
@@ -178,7 +183,7 @@ export class BuhlmannAlgorithm {
         const options = new Options(1, 1, 1.6, 1.6, Salinity.salt);
         options.altitude = altitude;
         const depthConverter = new DepthConverterFactory(options).create();
-        const context = new AlgorithmContext(gases, segments, options, depthConverter, tissues);
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, previousTissues);
         this.swim(context, restingSegment);
         return context.tissues.finalState();
     }

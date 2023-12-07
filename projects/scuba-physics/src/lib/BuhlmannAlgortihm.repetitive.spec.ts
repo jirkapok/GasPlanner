@@ -38,6 +38,20 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
     const stableTissues = applySurfaceInterval(Tissues.create(1).finalState(), 0, Time.oneDay * 9);
 
     describe('Surface interval', () => {
+        it('Isn\'t applied for 0 seconds surface interval duration.', () => {
+            const r1 = toTissueResult(stableTissues);
+            const result = applySurfaceInterval(stableTissues, 0, 0);
+            const r2 = toTissueResult(result);
+            expect(r1).toEqual(r2);
+        });
+
+        it('Isn\'t applied for Infinite surface interval duration.', () => {
+            const r1 = toTissueResult(stableTissues);
+            const result = applySurfaceInterval(stableTissues, 0, Number.POSITIVE_INFINITY);
+            const r2 = toTissueResult(result);
+            expect(r1).toEqual(r2);
+        });
+
         it('Doesn\'t change not loaded tissues.', () => {
             const r1 = toTissueResult(stableTissues);
             const result = applySurfaceInterval(stableTissues, 0, Time.oneMinute * 10);

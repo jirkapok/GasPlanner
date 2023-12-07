@@ -1,4 +1,4 @@
-import { Tissue, Tissues } from './Tissues';
+import { LoadedTissue, Tissue, Tissues } from './Tissues';
 import { Ceiling } from './Profile';
 import { BestGasOptions, Gas, Gases, OCGasSource } from './Gases';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
@@ -34,8 +34,8 @@ export class AlgorithmContext {
         public segments: Segments,
         public options: Options,
         public depthConverter: DepthConverter,
-        currentTissues: Tissues | null = null) {
-        this.tissues = currentTissues || Tissues.create(depthConverter.surfacePressure);
+        currentTissues: LoadedTissue[] | null = null) {
+        this.tissues = currentTissues ? Tissues.createLoaded(currentTissues) : Tissues.create(depthConverter.surfacePressure);
         // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
         const last = segments.last();

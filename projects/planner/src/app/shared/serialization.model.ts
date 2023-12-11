@@ -53,7 +53,9 @@ export interface ProfileRequestDto {
     tanks: TankDto[];
     plan: SegmentDto[];
     options: OptionsDto;
+    tissues: LoadedTissueDto[];
     eventOptions: EventOptionsDto;
+    surfaceInterval: number;
 }
 
 export interface EventOptionsDto {
@@ -89,7 +91,15 @@ export interface EventDto {
 export interface CalculatedProfileDto {
     segments: SegmentDto[];
     ceilings: Ceiling[];
+    tissues: LoadedTissueDto[];
     errors: EventDto[];
+}
+
+export interface LoadedTissueDto {
+    pHe: number;
+    pN2: number;
+    a: number;
+    b: number;
 }
 
 export interface ConsumptionRequestDto {

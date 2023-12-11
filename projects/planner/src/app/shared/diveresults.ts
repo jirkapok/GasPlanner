@@ -1,5 +1,5 @@
 import {
-    Ceiling, EventType, Event, HighestDensity, OtuCalculator
+    Ceiling, EventType, Event, HighestDensity, OtuCalculator, LoadedTissue
 } from 'scuba-physics';
 import { WayPoint } from './models';
 import { Injectable } from '@angular/core';
@@ -27,6 +27,7 @@ export class DiveResults {
     public highestDensity = HighestDensity.createDefault();
     public wayPoints: WayPoint[] = [];
     public ceilings: Ceiling[] = [];
+    public finalTissues: LoadedTissue[] = [];
     public events: Event[] = [];
 
     /** can't use plan duration, because it doesn't contain ascent */

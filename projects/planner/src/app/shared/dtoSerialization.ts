@@ -1,11 +1,11 @@
+import _ from 'lodash';
 import {
     CalculatedProfile, Diver, Events, Event, Gas,
-    HighestDensity, Options, Segment, Tank, Tanks,
-    LoadedTissue
+    HighestDensity, Options, Segment, Tank, Tanks, LoadedTissue
 } from 'scuba-physics';
 import {
     CalculatedProfileDto, ConsumedDto, DensityDto,
-    DiverDto, EventDto, GasDto, ITankBound,
+    DiverDto, EventDto, GasDto, ITankBound, LoadedTissueDto,
     OptionsDto, SegmentDto, TankDto
 } from './serialization.model';
 
@@ -101,7 +101,8 @@ export class DtoSerialization {
         }
 
         // ceilings have simple data, no custom conversion needed
-        return CalculatedProfile.fromProfile(segments, profile.ceilings, []); // TODO serialize loaded tissues
+        const tissues = DtoSerialization.toTissues(profile.tissues);
+        return CalculatedProfile.fromProfile(segments, profile.ceilings, tissues);
     }
 
     public static fromProfile(profile: CalculatedProfile): CalculatedProfileDto {
@@ -110,8 +111,27 @@ export class DtoSerialization {
         return {
             segments: segments,
             ceilings: profile.ceilings,
+            tissues: DtoSerialization.fromTissues(profile.tissues),
             errors: DtoSerialization.fromEvents(profile.errors)
         };
+    }
+
+    public static toTissues(tissues: LoadedTissueDto[]): LoadedTissue[] {
+        return _(tissues).map(t => ({
+            pN2: t.pN2,
+            pHe: t.pHe,
+            a: t.a,
+            b: t.b
+        })).value();
+    }
+
+    public static fromTissues(tissues: LoadedTissue[]): LoadedTissueDto[] {
+        return _(tissues).map(t => ({
+            pN2: t.pN2,
+            pHe: t.pHe,
+            a: t.a,
+            b: t.b
+        })).value();
     }
 
     public static toEvents(dto: EventDto[]): Events {

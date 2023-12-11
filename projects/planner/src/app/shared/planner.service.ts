@@ -94,12 +94,7 @@ export class PlannerService extends Streamed {
             this.showStillRunning();
         }, 500);
 
-        const profileRequest = {
-            tanks: DtoSerialization.fromTanks(this.serializableTanks),
-            plan: DtoSerialization.fromSegments(this.depths.segments),
-            options: DtoSerialization.fromOptions(this.optionsService.getOptions()),
-            eventOptions: this.createEventOptions()
-        };
+        const profileRequest = this.createProfileRequest();
         this.profileTask.calculate(profileRequest);
     }
 
@@ -134,32 +129,25 @@ export class PlannerService extends Streamed {
     }
 
     private continueCalculation(result: ProfileResultDto): void {
-        const serializedPlan = DtoSerialization.fromSegments(this.depths.segments);
         const tankData = this.tanks.tankData;
-        const serializedTanks = DtoSerialization.fromTanks(this.serializableTanks);
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
         this.dive.wayPoints = this.wayPointsFromResult(calculatedProfile);
         this.dive.ceilings = calculatedProfile.ceilings;
         this.dive.events = events.items;
+        this.dive.finalTissues = calculatedProfile.tissues;
         this.dive.averageDepth = Segments.averageDepth(calculatedProfile.segments);
-        const optionsDto = DtoSerialization.fromOptions(this.optionsService.getOptions());
 
         if (this.dive.endsOnSurface) {
-            const infoRequest = {
-                tanks: serializedTanks,
-                plan: serializedPlan,
-                options: optionsDto,
-                eventOptions: this.createEventOptions()
-            };
+            const infoRequest = this.createProfileRequest();
             this.diveInfoTask.calculate(infoRequest);
 
             const consumptionRequest = {
-                plan: serializedPlan,
+                plan: infoRequest.plan,
                 profile: DtoSerialization.fromSegments(calculatedProfile.segments),
-                options: optionsDto,
+                options: infoRequest.options,
                 diver: DtoSerialization.fromDiver(this.optionsService.getDiver()),
-                tanks: serializedTanks
+                tanks: infoRequest.tanks
             };
             this.consumptionTask.calculate(consumptionRequest);
 
@@ -171,6 +159,17 @@ export class PlannerService extends Streamed {
             this.profileFailed();
             console.table(calculatedProfile.errors);
         }
+    }
+
+    private createProfileRequest(): ProfileRequestDto {
+        return {
+            tanks: DtoSerialization.fromTanks(this.serializableTanks),
+            plan: DtoSerialization.fromSegments(this.depths.segments),
+            options: DtoSerialization.fromOptions(this.optionsService.getOptions()),
+            tissues: DtoSerialization.fromTissues(this.dive.finalTissues),
+            surfaceInterval: this.depths.surfaceInterval,
+            eventOptions: this.createEventOptions()
+        };
     }
 
     private wayPointsFromResult(calculatedProfile: CalculatedProfile): WayPoint[] {

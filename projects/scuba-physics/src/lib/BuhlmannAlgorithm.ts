@@ -98,7 +98,8 @@ export class AlgorithmParams {
     }
 
     private resolveSurfaceParameters(provided?: RestingParameters): RestingParameters {
-        if(provided) {
+        // helps calculator to dont generate issues for first dive
+        if(provided && provided.current.length > 0) {
             return provided;
         }
 

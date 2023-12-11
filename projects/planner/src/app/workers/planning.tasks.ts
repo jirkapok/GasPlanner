@@ -1,7 +1,7 @@
 import {
     Segments, Gases, ProfileEvents, DepthConverterFactory,
     Consumption, Time, Diver, OtuCalculator, CnsCalculator, DensityAtDepth, EventOptions,
-    AlgorithmParams, BuhlmannAlgorithm
+    AlgorithmParams, BuhlmannAlgorithm, RestingParameters
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
@@ -18,7 +18,9 @@ export class PlanningTasks {
         const gases = Gases.fromTanks(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const options = DtoSerialization.toOptions(data.options);
-        const parameters = AlgorithmParams.forMultilevelDive(plan, gases, options);
+        const tissues = DtoSerialization.toTissues(data.tissues);
+        const rest = new RestingParameters(tissues, data.surfaceInterval);
+        const parameters = AlgorithmParams.forMultilevelDive(plan, gases, options, rest);
         const profile = algorithm.decompression(parameters);
         const profileDto = DtoSerialization.fromProfile(profile);
         const eventOptions: EventOptions = {
@@ -46,9 +48,11 @@ export class PlanningTasks {
         const gases = Gases.fromTanks(tanks);
         const originProfile = DtoSerialization.toSegments(task.plan, tanks);
         const segments = Segments.fromCollection(originProfile);
-        const algorithm = new BuhlmannAlgorithm();
         const options = DtoSerialization.toOptions(task.options);
-        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
+        const tissues = DtoSerialization.toTissues(task.tissues);
+        const rest = new RestingParameters(tissues, task.surfaceInterval);
+        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options, rest);
+        const algorithm = new BuhlmannAlgorithm();
         const noDecoLimit = algorithm.noDecoLimit(parameters);
 
         const depthConverter = new DepthConverterFactory(task.options).create();

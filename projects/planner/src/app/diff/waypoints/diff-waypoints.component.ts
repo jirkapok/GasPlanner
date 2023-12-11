@@ -68,13 +68,4 @@ export class WaypointsDifferenceComponent implements OnInit {
             this.waypointRows.unshift(row);
         }
     }
-
-}
-
-interface WaypointsTableRow {
-    runTime: number;
-    depthA: number | undefined;
-    durationA: number | undefined;
-    depthB: number | undefined;
-    durationB: number | undefined;
 }

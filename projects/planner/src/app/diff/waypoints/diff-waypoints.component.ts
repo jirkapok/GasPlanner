@@ -20,8 +20,8 @@ export class WaypointsDifferenceComponent implements OnInit {
 
     ngOnInit(): void {
         const MAX_SAFETY_LIMIT = 65536; // 2**16
-        let waypointA: WayPoint | undefined = this.data.profileA.wayPoints.pop();
-        let waypointB: WayPoint | undefined = this.data.profileB.wayPoints.pop();
+        let waypointA: WayPoint | undefined = this.data.wayPointsA.pop();
+        let waypointB: WayPoint | undefined = this.data.wayPointsB.pop();
 
         for(let i = 0; i < MAX_SAFETY_LIMIT; i++) {
             let row: WaypointsTableRow;
@@ -37,7 +37,7 @@ export class WaypointsDifferenceComponent implements OnInit {
                     durationB: undefined,
                     depthB: undefined
                 };
-                waypointA = this.data.profileA.wayPoints.pop();
+                waypointA = this.data.wayPointsA.pop();
                 this.waypointRows.unshift(row);
                 continue;
             }
@@ -50,7 +50,7 @@ export class WaypointsDifferenceComponent implements OnInit {
                     durationB: waypointB?.duration,
                     depthB: waypointB?.endDepth
                 };
-                waypointB = this.data.profileB.wayPoints.pop();
+                waypointB = this.data.wayPointsB.pop();
                 this.waypointRows.unshift(row);
                 continue;
             }
@@ -63,11 +63,10 @@ export class WaypointsDifferenceComponent implements OnInit {
                 durationB: waypointB?.duration,
                 depthB: waypointB?.endDepth
             };
-            waypointA = this.data.profileA.wayPoints.pop();
-            waypointB = this.data.profileB.wayPoints.pop();
+            waypointA = this.data.wayPointsA.pop();
+            waypointB = this.data.wayPointsB.pop();
             this.waypointRows.unshift(row);
         }
-        console.log(this.waypointRows);
     }
 
 }

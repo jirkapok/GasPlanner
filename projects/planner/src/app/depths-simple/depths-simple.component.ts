@@ -10,15 +10,14 @@ import { DiveResults } from '../shared/diveresults';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { Precision } from 'scuba-physics';
+import { Precision, Time } from 'scuba-physics';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 
 interface SimpleDepthsForm {
     planDuration: FormControl<number>;
-    surfaceInterval: FormControl<number>;
-    mask: FormControl<Date>;
+    surfaceInterval: FormControl<Date>;
 }
 
 @Component({
@@ -69,19 +68,32 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         return false;
     }
 
-    private get surfaceInterval(): number {
-        return this.schedules.selected.surfaceInterval;
+    public get surfaceReadOnly(): boolean {
+        return this.schedules.selected.surfaceInterval === Number.POSITIVE_INFINITY;
     }
 
-    private set surfaceInterval(newValue: number) {
-        this.schedules.selected.surfaceInterval = newValue;
+    public get isFirstDive(): boolean {
+        return this.schedules.selected.isFirst;
+    }
+
+    public get placeHolder(): string {
+        return this.surfaceReadOnly ? 'First dive' : 'HH:MM';
+    }
+
+    private get surfaceInterval(): Date {
+        const currentSeconds = this.schedules.selected.surfaceInterval;
+        return new Date(1970, 1,1, 0, 0, currentSeconds, 0);
+    }
+
+    private set surfaceInterval(newValue: Date | undefined) {
+        const newSeconds = newValue ? newValue.getSeconds() : Number.POSITIVE_INFINITY;
+        this.setSurfaceIntervalSeconds(newSeconds);
     }
 
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({
             planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
-            surfaceInterval: [this.surfaceInterval, this.validators.duration],
-            mask: [new Date(), []]
+            surfaceInterval: [this.surfaceInterval]
         });
 
         // Reload is not relevant here
@@ -102,9 +114,16 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         }
 
         const newValue = this.simpleForm.value;
-        this.surfaceInterval = Number(newValue.surfaceInterval);
+        this.surfaceInterval = newValue.surfaceInterval;
         this.depths.planDuration = Number(newValue.planDuration);
-        console.log(newValue.mask);
+    }
+
+    public applyFirst(): void {
+        this.setSurfaceIntervalSeconds(Number.POSITIVE_INFINITY);
+    }
+
+    public applyOneHour(): void {
+        this.setSurfaceIntervalSeconds(Time.oneMinute * 60);
     }
 
     private reload(): void {
@@ -113,5 +132,10 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
             planDuration: Precision.round(this.depths.planDuration, 1),
             surfaceInterval: this.surfaceInterval
         });
+    }
+
+    private setSurfaceIntervalSeconds(newValue: number) {
+        this.schedules.selected.surfaceInterval = newValue;
+        this.reload();
     }
 }

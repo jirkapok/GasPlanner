@@ -26,6 +26,10 @@ export class DiveSchedule {
         return this._id;
     }
 
+    public get isFirst(): boolean {
+        return this.id === 1;
+    }
+
     public get surfaceInterval(): number {
         return this._surfaceInterval;
     }
@@ -59,7 +63,7 @@ export class DiveSchedule {
      * For first dive it is always POSITIVE_INFINITY.
      */
     public set surfaceInterval(newValue: number) {
-        if(this.id === 1 || newValue < 0) {
+        if(this.isFirst || newValue < 0) {
             return;
         }
 

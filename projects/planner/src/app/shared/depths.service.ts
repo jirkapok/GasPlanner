@@ -55,11 +55,6 @@ export class DepthsService extends Streamed implements IDepths {
         return this.plan.segments;
     }
 
-    // TODO set the surface interval from UI
-    public get surfaceInterval(): number {
-        return Number.POSITIVE_INFINITY;
-    }
-
     public get bestNitroxMix(): string {
         const o2 = this.toxicity.bestNitroxMix(this.plan.maxDepth) / 100;
         return StandardGases.nameFor(o2);

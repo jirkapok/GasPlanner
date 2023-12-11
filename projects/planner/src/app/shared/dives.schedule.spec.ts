@@ -1,6 +1,7 @@
 import { UnitConversion } from './UnitConversion';
-import {DiveSchedule, DiveSchedules} from './dive.schedules';
-import {ReloadDispatcher} from './reloadDispatcher';
+import { DiveSchedule, DiveSchedules } from './dive.schedules';
+import { ReloadDispatcher } from './reloadDispatcher';
+import { Time } from 'scuba-physics';
 
 describe('Scheduled dives', () => {
     let sut: DiveSchedules;
@@ -18,6 +19,12 @@ describe('Scheduled dives', () => {
     it('Has default dive', () => {
         const emptySut = createSut();
         expect(emptySut.length).toEqual(1);
+    });
+
+    it('First dive is never repetitive with surface interval POSITIVE_INFINITY', () => {
+        const emptySut = createSut();
+        emptySut.selected.surfaceInterval = Time.oneMinute * 30;
+        expect(emptySut.selected.surfaceInterval).toEqual(Number.POSITIVE_INFINITY);
     });
 
     it('Dive title respects imperial units setting', () => {
@@ -59,7 +66,7 @@ describe('Scheduled dives', () => {
         });
 
         it('is added as First dive', () => {
-            expect(sut.dives[1].surfaceInterval).toBeUndefined();
+            expect(sut.dives[1].surfaceInterval).toEqual(Number.POSITIVE_INFINITY);
         });
 
         it('has title', () => {

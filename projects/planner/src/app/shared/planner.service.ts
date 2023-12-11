@@ -167,7 +167,7 @@ export class PlannerService extends Streamed {
             plan: DtoSerialization.fromSegments(this.depths.segments),
             options: DtoSerialization.fromOptions(this.optionsService.getOptions()),
             tissues: DtoSerialization.fromTissues(previousDivetissues),
-            surfaceInterval: this.depths.surfaceInterval,
+            surfaceInterval: this.schedules.selected.surfaceInterval,
             eventOptions: this.createEventOptions()
         };
     }

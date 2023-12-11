@@ -8,9 +8,8 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { GasToxicity } from 'scuba-physics';
 
 export class DiveSchedule {
-    /** In minutes or undefined in case it is the first dive */
-    public surfaceInterval?: number;
-    public _id = 0;
+    private _id = 0;
+    private _surfaceInterval = Number.POSITIVE_INFINITY;
     private readonly _diveResult = new DiveResults();
     private readonly _optionsService: OptionsService;
     private readonly _tanks: TanksService;
@@ -25,6 +24,10 @@ export class DiveSchedule {
 
     public get id(): number {
         return this._id;
+    }
+
+    public get surfaceInterval(): number {
+        return this._surfaceInterval;
     }
 
     public get tanksService(): TanksService {
@@ -48,6 +51,19 @@ export class DiveSchedule {
         const depthUnits = this.units.length;
         const duration = this.depths.planDuration;
         return `${this.id}. ${duration} min/${depth} ${depthUnits}`;
+    }
+
+    // TODO use from UI, consider move to DiveSchedule
+    /**
+     * Gets or sets number of seconds diver rested at surface from previous dive.
+     * For first dive it is always POSITIVE_INFINITY.
+     */
+    public set surfaceInterval(newValue: number) {
+        if(this.id === 1 || newValue < 0) {
+            return;
+        }
+
+        this._surfaceInterval = newValue;
     }
 
     public assignIndex(index: number): void {

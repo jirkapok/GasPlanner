@@ -7,7 +7,7 @@
         <div class="card-body row">
             <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
                 <label for="duration" class="form-label" mdbLabel>Bottom time [min]:</label>
-                <input id="duration" formControlName="planDuration" class="form-control" (input)="durationChanged()"
+                <input id="duration" formControlName="planDuration" class="form-control" (input)="valuesChanged()"
                     type="number" required [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
                     [class.is-invalid]="durationInvalid" />
                 <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.durationLabel }}
@@ -22,6 +22,13 @@
             </div>
             <div class="col col-12 col-md-6 col-lg-12 col-xl-6">
                 <app-depth [depths]="depths" ></app-depth>
+            </div>
+            <div *ngIf="true" class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
+                <label for="duration" class="form-label" mdbLabel>Surface interval [min]:</label>
+                <input id="surfaceInterval" formControlName="surfaceInterval" class="form-control" (input)="valuesChanged()"
+                       type="text" required [class.is-invalid]="surfaceIntervalInvalid" />
+                <div class="invalid-feedback position-absolute">Needs to text in form hh:mm
+                </div>
             </div>
         </div>
     </form>

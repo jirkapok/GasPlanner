@@ -13,7 +13,11 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+
+interface SimpleDepthsForm {
+    planDuration: FormControl<number>;
+    surfaceInterval: FormControl<number>;
+}
 
 @Component({
     selector: 'app-depths-simple',
@@ -22,9 +26,7 @@ import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 })
 export class DepthsSimpleComponent extends Streamed implements OnInit {
     public cardIcon = faLayerGroup;
-    public simpleForm!: FormGroup<{
-        planDuration: FormControl<number>;
-    }>;
+    public simpleForm!: FormGroup<SimpleDepthsForm>;
 
     constructor(
         private fb: NonNullableFormBuilder,
@@ -57,9 +59,22 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         return this.schedules.selectedResult;
     }
 
+    public get surfaceIntervalInvalid(): boolean {
+        return false;
+    }
+
+    private get surfaceInterval(): number {
+        return this.schedules.selected.surfaceInterval;
+    }
+
+    private set surfaceInterval(newValue: number) {
+        this.schedules.selected.surfaceInterval = newValue;
+    }
+
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({
             planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
+            surfaceInterval: [this.surfaceInterval, this.validators.duration],
         });
 
         // Reload is not relevant here
@@ -74,19 +89,21 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
             .subscribe(() => this.reload());
     }
 
-    public durationChanged(): void {
+    public valuesChanged(): void {
         if (this.simpleForm.invalid) {
             return;
         }
 
-        const newValue = this.simpleForm.value.planDuration;
-        this.depths.planDuration = Number(newValue);
+        const newValue = this.simpleForm.value;
+        this.surfaceInterval = Number(newValue.surfaceInterval);
+        this.depths.planDuration = Number(newValue.planDuration);
     }
 
     private reload(): void {
         // depth is reloaded in its nested component
         this.simpleForm.patchValue({
-            planDuration: Precision.round(this.depths.planDuration, 1)
+            planDuration: Precision.round(this.depths.planDuration, 1),
+            surfaceInterval: this.surfaceInterval
         });
     }
 }

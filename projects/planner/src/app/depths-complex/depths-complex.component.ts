@@ -12,7 +12,6 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { DepthsService } from '../shared/depths.service';
 
 interface LevelRow {

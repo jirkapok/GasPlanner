@@ -117,7 +117,8 @@ export class BuhlmannAlgorithm {
      */
     public noDecoLimit({ segments, gases, options, surfaceInterval }: AlgorithmParams): number {
         const depthConverter = new DepthConverterFactory(options).create();
-        // const rested = this.applySurfaceInterval(surfaceInterval);
+        // TODO apply rested surface tissues
+        const rested = this.applySurfaceInterval(surfaceInterval);
         const context = new AlgorithmContext(gases, segments, options, depthConverter);
         return this.swimNoDecoLimit(segments, gases, context);
     }
@@ -131,7 +132,7 @@ export class BuhlmannAlgorithm {
             return CalculatedProfile.fromErrors(origProfile, errors);
         }
 
-        const relaxedTissues = this.applySurfaceInterval(surfaceInterval);
+        const rested = this.applySurfaceInterval(surfaceInterval);
         const context = new AlgorithmContext(gases, newSegments, options, depthConverter);
         this.swimPlan(context);
         context.markAverageDepth();

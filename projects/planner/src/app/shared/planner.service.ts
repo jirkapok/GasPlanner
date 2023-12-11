@@ -6,7 +6,7 @@ import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
     GasDensity, CalculatedProfile,
-    Precision, Segments
+    Precision, Segments, LoadedTissue
 } from 'scuba-physics';
 import {
     ConsumptionResultDto, ConsumptionRequestDto, EventOptionsDto,
@@ -94,7 +94,7 @@ export class PlannerService extends Streamed {
             this.showStillRunning();
         }, 500);
 
-        const profileRequest = this.createProfileRequest();
+        const profileRequest = this.createProfileRequest(this.dive.finalTissues);
         this.profileTask.calculate(profileRequest);
     }
 
@@ -139,7 +139,7 @@ export class PlannerService extends Streamed {
         this.dive.averageDepth = Segments.averageDepth(calculatedProfile.segments);
 
         if (this.dive.endsOnSurface) {
-            const infoRequest = this.createProfileRequest();
+            const infoRequest = this.createProfileRequest(calculatedProfile.tissues);
             this.diveInfoTask.calculate(infoRequest);
 
             const consumptionRequest = {
@@ -161,12 +161,12 @@ export class PlannerService extends Streamed {
         }
     }
 
-    private createProfileRequest(): ProfileRequestDto {
+    private createProfileRequest(previousDivetissues: LoadedTissue[]): ProfileRequestDto {
         return {
             tanks: DtoSerialization.fromTanks(this.serializableTanks),
             plan: DtoSerialization.fromSegments(this.depths.segments),
             options: DtoSerialization.fromOptions(this.optionsService.getOptions()),
-            tissues: DtoSerialization.fromTissues(this.dive.finalTissues),
+            tissues: DtoSerialization.fromTissues(previousDivetissues),
             surfaceInterval: this.depths.surfaceInterval,
             eventOptions: this.createEventOptions()
         };

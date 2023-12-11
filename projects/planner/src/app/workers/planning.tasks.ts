@@ -11,24 +11,17 @@ import { DtoSerialization } from '../shared/dtoSerialization';
 
 export class PlanningTasks {
     /** 1. Calculate profile */
-    public static calculateDecompression(data: ProfileRequestDto): ProfileResultDto {
-        const tanks = DtoSerialization.toTanks(data.tanks);
-        const segments = DtoSerialization.toSegments(data.plan, tanks);
-        const plan = Segments.fromCollection(segments);
-        const gases = Gases.fromTanks(tanks);
+    public static calculateDecompression(task: ProfileRequestDto): ProfileResultDto {
+        const parameters = this.profileParametersFromTask(task);
         const algorithm = new BuhlmannAlgorithm();
-        const options = DtoSerialization.toOptions(data.options);
-        const tissues = DtoSerialization.toTissues(data.tissues);
-        const rest = new RestingParameters(tissues, data.surfaceInterval);
-        const parameters = AlgorithmParams.forMultilevelDive(plan, gases, options, rest);
         const profile = algorithm.decompression(parameters);
         const profileDto = DtoSerialization.fromProfile(profile);
         const eventOptions: EventOptions = {
-            maxDensity: data.eventOptions.maxDensity,
-            startAscentIndex: plan.startAscentIndex,
+            maxDensity: task.eventOptions.maxDensity,
+            startAscentIndex: parameters.segments.startAscentIndex,
             profile: profile.segments,
             ceilings: profile.ceilings,
-            profileOptions: options
+            profileOptions: parameters.options
         };
         const events = ProfileEvents.fromProfile(eventOptions);
         const eventsDto = DtoSerialization.fromEvents(events.items);
@@ -44,21 +37,14 @@ export class PlanningTasks {
         // we can't speedup the prediction from already obtained profile,
         // since it may happen, the deco starts during ascent.
         // we cant use the maxDepth, because its purpose is only for single level dives
-        const tanks = DtoSerialization.toTanks(task.tanks);
-        const gases = Gases.fromTanks(tanks);
-        const originProfile = DtoSerialization.toSegments(task.plan, tanks);
-        const segments = Segments.fromCollection(originProfile);
-        const options = DtoSerialization.toOptions(task.options);
-        const tissues = DtoSerialization.toTissues(task.tissues);
-        const rest = new RestingParameters(tissues, task.surfaceInterval);
-        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options, rest);
+        const parameters = this.profileParametersFromTask(task);
         const algorithm = new BuhlmannAlgorithm();
         const noDecoLimit = algorithm.noDecoLimit(parameters);
-
         const depthConverter = new DepthConverterFactory(task.options).create();
-        const otu = new OtuCalculator(depthConverter).calculateForProfile(originProfile);
-        const cns = new CnsCalculator(depthConverter).calculateForProfile(originProfile);
-        const density = new DensityAtDepth(depthConverter).forProfile(originProfile);
+        const originalProfile = parameters.segments.items;
+        const otu = new OtuCalculator(depthConverter).calculateForProfile(originalProfile);
+        const cns = new CnsCalculator(depthConverter).calculateForProfile(originalProfile);
+        const density = new DensityAtDepth(depthConverter).forProfile(originalProfile);
 
         return {
             noDeco: noDecoLimit,
@@ -94,5 +80,16 @@ export class PlanningTasks {
             timeToSurface,
             tanks: DtoSerialization.toConsumed(tanks),
         };
+    }
+
+    private static profileParametersFromTask(task: ProfileRequestDto): AlgorithmParams {
+        const tanks = DtoSerialization.toTanks(task.tanks);
+        const gases = Gases.fromTanks(tanks);
+        const originProfile = DtoSerialization.toSegments(task.plan, tanks);
+        const segments = Segments.fromCollection(originProfile);
+        const options = DtoSerialization.toOptions(task.options);
+        const tissues = DtoSerialization.toTissues(task.tissues);
+        const rest = new RestingParameters(tissues, task.surfaceInterval);
+        return AlgorithmParams.forMultilevelDive(segments, gases, options, rest);
     }
 }

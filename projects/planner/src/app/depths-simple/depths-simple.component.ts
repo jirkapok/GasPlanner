@@ -13,10 +13,12 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 
 interface SimpleDepthsForm {
     planDuration: FormControl<number>;
     surfaceInterval: FormControl<number>;
+    mask: FormControl<Date>;
 }
 
 @Component({
@@ -27,6 +29,10 @@ interface SimpleDepthsForm {
 export class DepthsSimpleComponent extends Streamed implements OnInit {
     public cardIcon = faLayerGroup;
     public simpleForm!: FormGroup<SimpleDepthsForm>;
+    public readonly maskitoTimeOptions = maskitoTimeOptionsGenerator({
+        mode: 'HH:MM',
+        timeSegmentMaxValues: { hours: 48 }
+    });
 
     constructor(
         private fb: NonNullableFormBuilder,
@@ -75,6 +81,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         this.simpleForm = this.fb.group({
             planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
             surfaceInterval: [this.surfaceInterval, this.validators.duration],
+            mask: [new Date(), []]
         });
 
         // Reload is not relevant here
@@ -97,6 +104,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         const newValue = this.simpleForm.value;
         this.surfaceInterval = Number(newValue.surfaceInterval);
         this.depths.planDuration = Number(newValue.planDuration);
+        console.log(newValue.mask);
     }
 
     private reload(): void {

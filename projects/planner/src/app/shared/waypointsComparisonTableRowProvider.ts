@@ -26,7 +26,7 @@ export class WaypointsComparisonTableRowProvider {
 
             if ((waypointA?.endTime || -1) > (waypointB?.endTime || -1)) {
                 row = {
-                    runTime: waypointA.endTime,
+                    runTime: waypointA!.endTime,
                     durationA: waypointA?.duration,
                     depthA: waypointA?.endDepth,
                     durationB: undefined,
@@ -39,7 +39,7 @@ export class WaypointsComparisonTableRowProvider {
 
             if ((waypointA?.endTime || -1) < (waypointB?.endTime || -1)) {
                 row = {
-                    runTime: waypointB.endTime,
+                    runTime: waypointB!.endTime,
                     durationA: undefined,
                     depthA: undefined,
                     durationB: waypointB?.duration,
@@ -51,7 +51,7 @@ export class WaypointsComparisonTableRowProvider {
             }
 
             row = {
-                runTime: waypointA.endTime,
+                runTime: waypointA!.endTime,
                 durationA: waypointA?.duration,
                 depthA: waypointA?.endDepth,
                 durationB: waypointB?.duration,

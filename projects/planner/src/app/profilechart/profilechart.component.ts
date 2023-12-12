@@ -5,13 +5,12 @@ import { DiveResults } from '../shared/diveresults';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-basic-dist';
 import { takeUntil } from 'rxjs';
-import { Time } from 'scuba-physics';
 import { DateFormats } from '../shared/formaters';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { Streamed } from '../shared/streamed';
 import { ResamplingService } from '../shared/ResamplingService';
-import {DiveSchedules} from '../shared/dive.schedules';
+import { DiveSchedules } from '../shared/dive.schedules';
 
 @Component({
     selector: 'app-profilechart',
@@ -124,8 +123,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         };
 
         if (wayPoint) {
-            this.cursor1.x0 = Time.toDate(wayPoint.startTime);
-            this.cursor1.x1 = Time.toDate(wayPoint.endTime);
+            this.cursor1.x0 = DateFormats.toDate(wayPoint.startTime);
+            this.cursor1.x1 = DateFormats.toDate(wayPoint.endTime);
             this.cursor1.y0 = wayPoint.startDepth;
             this.cursor1.y1 = wayPoint.endDepth;
             update.shapes.push(this.cursor1);

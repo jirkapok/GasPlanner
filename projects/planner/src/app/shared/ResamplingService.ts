@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { WayPoint } from '../shared/models';
-import { Event, EventType, Time, StandardGases, Precision, Ceiling } from 'scuba-physics';
-import { UnitConversion } from '../shared/UnitConversion';
+import { WayPoint } from './models';
+import { Event, EventType, StandardGases, Precision, Ceiling } from 'scuba-physics';
+import { UnitConversion } from './UnitConversion';
+import { DateFormats } from './formaters';
 
 export interface AxisValues {
     xValues: Date[];
@@ -38,7 +39,7 @@ export class ResamplingService {
 
         events.forEach((event) => {
             if (this.isSupportedEvent(event)) {
-                xValues.push(Time.toDate(event.timeStamp));
+                xValues.push(DateFormats.toDate(event.timeStamp));
                 const convertedDepth = this.convertDepth(event.depth);
                 yValues.push(convertedDepth);
                 const text = this.formatChartEventText(event);
@@ -59,7 +60,7 @@ export class ResamplingService {
 
         // possible performance optimization = remove all waypoints, where ceiling = 0 and depth didn't change
         ceilings.forEach((item) => {
-            xValues.push(Time.toDate(item.time));
+            xValues.push(DateFormats.toDate(item.time));
             const depth = this.convertDepth(item.depth);
             yValues.push(depth);
         });
@@ -87,14 +88,14 @@ export class ResamplingService {
     private resampleDepthsToSeconds(xValues: Date[], yValues: number[], item: WayPoint) {
         const speed = (item.endDepthMeters - item.startDepthMeters) / item.duration;
         for (let timeStamp = item.startTime; timeStamp < item.endTime; timeStamp++) {
-            xValues.push(Time.toDate(timeStamp));
+            xValues.push(DateFormats.toDate(timeStamp));
             const depth = item.startDepthMeters + (timeStamp - item.startTime) * speed;
             const rounded = this.convertDepth(depth);
             yValues.push(rounded);
         }
 
         // fix end of the dive
-        xValues.push(Time.toDate(item.endTime));
+        xValues.push(DateFormats.toDate(item.endTime));
         const endDepth = this.convertDepth(item.endDepthMeters);
         yValues.push(endDepth);
     }
@@ -111,7 +112,7 @@ export class ResamplingService {
         waiPoints.forEach(wayPoint => {
             if (wayPoint.duration > 0) {
                 for (let seconds = 0; seconds < wayPoint.duration; seconds++) {
-                    xValues.push(Time.toDate(totalDuration));
+                    xValues.push(DateFormats.toDate(totalDuration));
                     const depth = wayPoint.depthAt(seconds);
                     const cumulativeWeight = depth + totalDuration * cumulativeAverage;
                     totalDuration++;

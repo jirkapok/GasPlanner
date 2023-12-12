@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable, Input, Output } from '@angular/core';
-import { Time } from 'scuba-physics';
 import { WayPoint } from './models';
-import {DiveSchedules} from './dive.schedules';
+import { DiveSchedules } from './dive.schedules';
+import { DateFormats } from './formaters';
 
 @Injectable()
 export class SelectedWaypoint {
@@ -14,7 +14,7 @@ export class SelectedWaypoint {
     public set selectedTimeStamp(newValue: string) {
         let found: WayPoint | undefined;
         if (newValue) {
-            const newTimeStamp = Time.secondsFromDate(newValue);
+            const newTimeStamp = DateFormats.secondsFromDate(newValue);
             const dive = this.schedules.selected.diveResult;
             found = dive.wayPoints.find(p => p.fits(newTimeStamp));
         }

@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AlgorithmParams, BuhlmannAlgorithm, DepthConverter, Gas, Options } from 'scuba-physics';
+import {
+    AlgorithmParams, BuhlmannAlgorithm, DepthConverter, Gas, Options, Time
+} from 'scuba-physics';
 
 export class NdlLimit {
     public depth = 0;
-    public limit = 3600;
+    public limit = Time.oneHour;
 }
 
 @Injectable()

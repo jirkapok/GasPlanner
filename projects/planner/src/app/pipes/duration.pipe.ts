@@ -10,10 +10,10 @@ export class DurationPipe implements PipeTransform {
     constructor(private datePipe: DatePipe) {}
 
     transform(value: number, maxValue: number): unknown {
-        const duration = Time.toDate(value);
+        const duration = DateFormats.toDate(value);
         const format = DateFormats.selectTimeFormat(maxValue);
         const minutesPart = this.datePipe.transform(duration, format) || '';
-        let hours = DateFormats.hoursDuration(value);
+        let hours = Time.toHours(value);
         hours = Math.trunc(hours);
 
         if(hours >= 1) {

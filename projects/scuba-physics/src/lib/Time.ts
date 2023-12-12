@@ -6,8 +6,11 @@ export class Time {
     /** One minute is 60 seconds */
     public static readonly oneMinute = 60;
 
-    /** Maximum deco stop duration one day */
-    public static readonly oneDay = 24 * 60 * Time.oneMinute;
+    /** One hour is 3600 seconds */
+    public static readonly oneHour = Time.oneMinute * 60;
+
+    /** Maximum deco stop duration one day (86400 seconds) */
+    public static readonly oneDay = Time.oneHour * 24;
 
     /** Default duration of the safety stop */
     public static readonly safetyStopDuration = Time.oneMinute * 3;
@@ -35,27 +38,13 @@ export class Time {
     }
 
     /**
-     * Converts duration in seconds to Date structure
+     * Converts duration in seconds to hours
      *
      * @param seconds duration in seconds
      *
-     * @returns amount seconds calculated from current duration
+     * @returns amount hours calculated from seconds duration
      */
-    public static toDate(seconds: number): Date {
-        // we don't care about UTC, because we don't handle date, only relative time
-        return new Date(1970, 1, 1, 0, 0, seconds, 0);
-    }
-
-    /**
-     * Extracts number of seconds from date parameter
-     *
-     * @param date text containing data value
-     */
-    public static secondsFromDate(date: string): number {
-        const newValue = new Date(date);
-        let result = newValue.getSeconds();
-        result += newValue.getMinutes() * Time.oneMinute;
-        result += newValue.getHours() * Math.pow(Time.oneMinute, 2);
-        return result;
+    public static toHours(seconds: number): number {
+        return seconds / Time.oneHour;
     }
 }

@@ -3,7 +3,7 @@ import {TestData} from '../diff.component';
 import {faTasks} from '@fortawesome/free-solid-svg-icons';
 import {WayPoint} from '../../shared/models';
 import {UnitConversion} from '../../shared/UnitConversion';
-import {WaypointsTableRow} from '../../shared/WaypointsTableRow';
+import {WaypointsComparisonTableRow} from '../../shared/WaypointsComparisonTableRow';
 
 @Component({
     selector: 'app-diff-waypoints',
@@ -13,7 +13,7 @@ import {WaypointsTableRow} from '../../shared/WaypointsTableRow';
 export class WaypointsDifferenceComponent implements OnInit {
     @Input({ required: true }) data!: TestData;
     public tasks = faTasks;
-    public waypointRows: WaypointsTableRow[] = [];
+    public waypointRows: WaypointsComparisonTableRow[] = [];
     constructor(public units: UnitConversion) {}
 
     ngOnInit(): void {
@@ -22,7 +22,7 @@ export class WaypointsDifferenceComponent implements OnInit {
         let waypointB: WayPoint | undefined = this.data.wayPointsB.pop();
 
         for (let i = 0; i < MAX_SAFETY_LIMIT; i++) {
-            let row: WaypointsTableRow;
+            let row: WaypointsComparisonTableRow;
             if (waypointA === undefined && waypointB === undefined) {
                 break;
             }

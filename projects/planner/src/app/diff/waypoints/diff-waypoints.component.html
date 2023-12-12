@@ -22,7 +22,7 @@
             </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let row of waypointRows">
+                <tr *ngFor="let row of tableRowProvider.getRows()">
                     <td class="px-1 vertical-right-border">
                         {{ row.runTime * 1000 | date:'mm:ss' }}
                     </td>

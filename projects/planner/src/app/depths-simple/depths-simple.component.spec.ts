@@ -73,6 +73,8 @@ describe('Depths Simple Component', () => {
         expect(eventFired).toBeTruthy();
     }));
 
+    // TODO test for surface interval validation
+
     describe('Duration reloaded enforced by', () => {
         it('Apply max NDL', inject([DiveSchedules, ReloadDispatcher],
             (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {

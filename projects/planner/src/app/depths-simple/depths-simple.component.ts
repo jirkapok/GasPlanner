@@ -17,7 +17,7 @@ import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 
 interface SimpleDepthsForm {
     planDuration: FormControl<number>;
-    surfaceInterval: FormControl<Date>;
+    surfaceInterval: FormControl<string>;
 }
 
 @Component({
@@ -80,14 +80,19 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         return this.surfaceReadOnly ? 'First dive' : 'HH:MM';
     }
 
-    private get surfaceInterval(): Date {
+    private get surfaceInterval(): string {
         const currentSeconds = this.schedules.selected.surfaceInterval;
-        return new Date(1970, 1,1, 0, 0, currentSeconds, 0);
-    }
+        if(currentSeconds === Number.POSITIVE_INFINITY) {
+            return '00:00';
+        }
 
-    private set surfaceInterval(newValue: Date | undefined) {
-        const newSeconds = newValue ? newValue.getSeconds() : Number.POSITIVE_INFINITY;
-        this.setSurfaceIntervalSeconds(newSeconds);
+        const resultHours = Math.floor(currentSeconds / (Time.oneMinute * 60));
+        const resultHoursPad = resultHours.toString().padStart(2, '0');
+        const resultMinutes = (currentSeconds % (Time.oneMinute * 60)) / Time.oneMinute;
+        const resultMinutesPad = resultMinutes.toString().padStart(2, '0');
+        const result = `${resultHoursPad}:${resultMinutesPad}`;
+        console.log(`surface interval: ${ result }`);
+        return result;
     }
 
     public ngOnInit(): void {
@@ -108,22 +113,32 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
             .subscribe(() => this.reload());
     }
 
-    public valuesChanged(): void {
+    public durationChanged(): void {
         if (this.simpleForm.invalid) {
             return;
         }
 
         const newValue = this.simpleForm.value;
-        this.surfaceInterval = newValue.surfaceInterval;
         this.depths.planDuration = Number(newValue.planDuration);
+    }
+
+    public surfaceIntervalChanged(): void {
+        if (this.simpleForm.invalid) {
+            return;
+        }
+
+        const newValue = this.simpleForm.value;
+        this.setSurfaceInterval(newValue.surfaceInterval);
     }
 
     public applyFirst(): void {
         this.setSurfaceIntervalSeconds(Number.POSITIVE_INFINITY);
+        this.reload();
     }
 
     public applyOneHour(): void {
         this.setSurfaceIntervalSeconds(Time.oneMinute * 60);
+        this.reload();
     }
 
     private reload(): void {
@@ -134,8 +149,21 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         });
     }
 
+    // TODO it is really time to use moment.js - parse short time string in UTC
+    private setSurfaceInterval(newValue: string | undefined) {
+        const timeFormat = /(\d{2})[:](\d{2})/;
+        const candidate = newValue || '00:00';
+        const parsed = candidate.match(timeFormat);
+        if(parsed) {
+            const newHours = Number(parsed[1]) * Time.oneMinute * 60;
+            const newMinutes = Number(parsed[2]) * Time.oneMinute;
+            const newSeconds = newHours + newMinutes;
+            this.setSurfaceIntervalSeconds(newSeconds);
+        }
+    }
+
     private setSurfaceIntervalSeconds(newValue: number) {
         this.schedules.selected.surfaceInterval = newValue;
-        this.reload();
+        console.log(`SET surface intreval: ${ newValue }`);
     }
 }

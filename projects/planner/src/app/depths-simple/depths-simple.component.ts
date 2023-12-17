@@ -17,7 +17,7 @@ import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 
 interface SimpleDepthsForm {
     planDuration: FormControl<number>;
-    surfaceInterval: FormControl<string>;
+    surfaceInterval: FormControl<string | undefined>;
 }
 
 @Component({
@@ -80,15 +80,15 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         return this.surfaceReadOnly ? 'First dive' : 'HH:MM';
     }
 
-    private get surfaceInterval(): string {
+    private get surfaceInterval(): string | undefined {
         const currentSeconds = this.schedules.selected.surfaceInterval;
         if(currentSeconds === Number.POSITIVE_INFINITY) {
-            return '00:00';
+            return undefined;
         }
 
-        const resultHours = Math.floor(currentSeconds / (Time.oneMinute * 60));
+        const resultHours = Math.floor(currentSeconds / (Time.oneHour));
         const resultHoursPad = resultHours.toString().padStart(2, '0');
-        const resultMinutes = (currentSeconds % (Time.oneMinute * 60)) / Time.oneMinute;
+        const resultMinutes = (currentSeconds % (Time.oneHour)) / Time.oneMinute;
         const resultMinutesPad = resultMinutes.toString().padStart(2, '0');
         const result = `${resultHoursPad}:${resultMinutesPad}`;
         console.log(`surface interval: ${ result }`);
@@ -137,7 +137,17 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     }
 
     public applyOneHour(): void {
-        this.setSurfaceIntervalSeconds(Time.oneMinute * 60);
+        this.setSurfaceIntervalSeconds(Time.oneHour);
+        this.reload();
+    }
+
+    public apply30Minutes(): void {
+        this.setSurfaceIntervalSeconds(Time.oneMinute * 30);
+        this.reload();
+    }
+
+    public apply2Hour(): void {
+        this.setSurfaceIntervalSeconds(Time.oneHour * 2);
         this.reload();
     }
 
@@ -155,7 +165,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         const candidate = newValue || '00:00';
         const parsed = candidate.match(timeFormat);
         if(parsed) {
-            const newHours = Number(parsed[1]) * Time.oneMinute * 60;
+            const newHours = Number(parsed[1]) * Time.oneHour;
             const newMinutes = Number(parsed[2]) * Time.oneMinute;
             const newSeconds = newHours + newMinutes;
             this.setSurfaceIntervalSeconds(newSeconds);

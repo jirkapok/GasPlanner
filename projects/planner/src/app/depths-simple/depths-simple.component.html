@@ -26,7 +26,7 @@
             <div *ngIf="true" class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
                 <label for="duration" class="form-label" mdbLabel>Surface interval [min]:</label>
                 <input id="surfaceInterval" formControlName="surfaceInterval" class="form-control" (input)="surfaceIntervalChanged()"
-                       type="text" required [class.is-invalid]="surfaceIntervalInvalid"
+                       type="text" [class.is-invalid]="surfaceIntervalInvalid"
                        [maskito]="maskitoTimeOptions"  [placeholder]="placeHolder" [readonly]="surfaceReadOnly" />
                 <div class="invalid-feedback position-absolute">Needs to text in form hh:mm
                 </div>

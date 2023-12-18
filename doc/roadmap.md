@@ -27,6 +27,7 @@ Following list of features and improvements ordered by priority is under develop
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
   * Add option to ignore some warnings
   * Add warnings to gas properties calc for properties exceeding recommended maximum
+  * Allow Gradients over 100%
 * Add undo/redo to all pages
 * Add calculation trainings
 * Help
@@ -49,7 +50,7 @@ Following list of features and improvements ordered by priority is under develop
 * TRIMIX support
   * Add air breaks
 * Add CCR support
-* Add application settings:
+* Extend application settings:
   * to define custom maximum gas density
   * Custom diver stress sac rate ratio
 * Add more variables to weight calculator (suits, BMI, tank material, water type)

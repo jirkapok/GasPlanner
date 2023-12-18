@@ -57,7 +57,7 @@ export class DiveSchedule {
         return `${this.id}. ${duration} min/${depth} ${depthUnits}`;
     }
 
-    // TODO use from UI, consider move to DiveSchedule
+    // TODO use from UI
     /**
      * Gets or sets number of seconds diver rested at surface from previous dive.
      * For first dive it is always POSITIVE_INFINITY.

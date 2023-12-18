@@ -17,7 +17,7 @@ import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 
 interface SimpleDepthsForm {
     planDuration: FormControl<number>;
-    surfaceInterval: FormControl<string | undefined>;
+    surfaceInterval: FormControl<string | null>;
 }
 
 @Component({
@@ -80,10 +80,10 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         return this.surfaceReadOnly ? 'First dive' : 'HH:MM';
     }
 
-    private get surfaceInterval(): string | undefined {
+    private get surfaceInterval(): string | null {
         const currentSeconds = this.schedules.selected.surfaceInterval;
         if(currentSeconds === Number.POSITIVE_INFINITY) {
-            return undefined;
+            return null;
         }
 
         const resultHours = Math.floor(currentSeconds / (Time.oneHour));
@@ -97,8 +97,8 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
 
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({
-            planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
-            surfaceInterval: [this.surfaceInterval]
+            planDuration: [ Precision.round(this.depths.planDuration, 1), this.validators.duration ],
+            surfaceInterval: [ this.surfaceInterval ]
         });
 
         // Reload is not relevant here
@@ -160,7 +160,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     }
 
     // TODO it is really time to use moment.js - parse short time string in UTC
-    private setSurfaceInterval(newValue: string | undefined) {
+    private setSurfaceInterval(newValue?: string | null) {
         const timeFormat = /(\d{2})[:](\d{2})/;
         const candidate = newValue || '00:00';
         const parsed = candidate.match(timeFormat);

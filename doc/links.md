@@ -30,6 +30,7 @@ At time of development also other implementations are available:
 * <https://github.com/igaponov/deco-model>
 * <https://github.com/oliverjohnstone/npm-buhlmann-ZH-L16>
 * Gas mixture calculator: <https://github.com/eianlei/pydplan>
+* Mobile first DiveProMe+ <https://vlasovalexey.github.io/DiveProMe/>
 
 Alternatives
 

@@ -48,7 +48,38 @@ export class DateFormats {
         const newValue = new Date(date);
         let result = newValue.getSeconds();
         result += newValue.getMinutes() * Time.oneMinute;
-        result += newValue.getHours() * Math.pow(Time.oneMinute, 2);
+        result += newValue.getHours() * Time.oneHour;
+        return result;
+    }
+
+    // TODO add tests for surface interval formatting
+    /**
+     * Converts string in form "HH:MM" to number of seconds
+     */
+    public static parseToShortTime(newValue?: string | null): number | null {
+        const timeFormat = /(\d{2})[:](\d{2})/;
+        // the only way how set first dive is by using the applyFirst method
+        const candidate = newValue || '00:00';
+        const parsed = candidate.match(timeFormat);
+        if(parsed) {
+            const newHours = Number(parsed[1]) * Time.oneHour;
+            const newMinutes = Number(parsed[2]) * Time.oneMinute;
+            const newSeconds = newHours + newMinutes;
+            return newSeconds;
+        }
+
+        return null;
+    }
+
+    /**
+     *  Converts to number of seconds to string in form "HH:MM"
+     */
+    public static formatShortTime(seconds: number): string | null {
+        const resultHours = Math.floor(seconds / (Time.oneHour));
+        const resultHoursPad = resultHours.toString().padStart(2, '0');
+        const resultMinutes = (seconds % (Time.oneHour)) / Time.oneMinute;
+        const resultMinutesPad = resultMinutes.toString().padStart(2, '0');
+        const result = `${resultHoursPad}:${resultMinutesPad}`;
         return result;
     }
 

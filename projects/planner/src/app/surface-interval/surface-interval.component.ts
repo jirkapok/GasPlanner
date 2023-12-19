@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
+import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { Time } from 'scuba-physics';
 import { takeUntil } from 'rxjs';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { Streamed } from '../shared/streamed';
+import { DateFormats } from '../shared/formaters';
 
 @Component({
     selector: 'app-surface-interval',
@@ -50,13 +51,7 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
             return null;
         }
 
-        const resultHours = Math.floor(currentSeconds / (Time.oneHour));
-        const resultHoursPad = resultHours.toString().padStart(2, '0');
-        const resultMinutes = (currentSeconds % (Time.oneHour)) / Time.oneMinute;
-        const resultMinutesPad = resultMinutes.toString().padStart(2, '0');
-        const result = `${resultHoursPad}:${resultMinutesPad}`;
-        console.log(`surface interval: ${ result }`);
-        return result;
+        return DateFormats.formatShortTime(currentSeconds);
     }
 
     public ngOnInit(): void {
@@ -98,27 +93,20 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
             return;
         }
 
-        const field = this.form.get(this.controlName);
-        const newValue: string | null = field?.value;
-        this.setSurfaceInterval(newValue);
+        const field = this.form.get(this.controlName) as FormControl<string | null>;
+        this.setSurfaceInterval(field?.value);
     }
 
     private setSurfaceInterval(newValue?: string | null) {
-        const timeFormat = /(\d{2})[:](\d{2})/;
-        // the only way how set first dive is by using the applyFirst method
-        const candidate = newValue || '00:00';
-        const parsed = candidate.match(timeFormat);
+        const parsed = DateFormats.parseToShortTime(newValue);
+
         if(parsed) {
-            const newHours = Number(parsed[1]) * Time.oneHour;
-            const newMinutes = Number(parsed[2]) * Time.oneMinute;
-            const newSeconds = newHours + newMinutes;
-            this.setSurfaceIntervalSeconds(newSeconds);
+            this.setSurfaceIntervalSeconds(parsed);
         }
     }
 
     private setSurfaceIntervalSeconds(newValue: number) {
         this.schedules.selected.surfaceInterval = newValue;
-        console.log(`SET surface interval: ${ newValue }`);
     }
 
     private reload(): void {

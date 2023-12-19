@@ -15,7 +15,6 @@ export class ManagedDiveSchedules {
     }
 
     // TODO Implement line of calculations in PlannerService.calculate(diveId)
-    // TODO Implement surface interval UI
 
     public add(): void {
         const added = this.schedules.add();

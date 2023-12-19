@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 import { DiveSchedules } from '../shared/dive.schedules';
-import { Time } from 'scuba-physics';
 import { takeUntil } from 'rxjs';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { Streamed } from '../shared/streamed';
@@ -34,7 +33,7 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
     }
 
     public get surfaceReadOnly(): boolean {
-        return this.schedules.selected.surfaceInterval === Number.POSITIVE_INFINITY;
+        return this.schedules.selected.primary;
     }
 
     public get placeHolder(): string {
@@ -46,11 +45,11 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
     }
 
     private get surfaceInterval(): string | null {
-        const currentSeconds = this.schedules.selected.surfaceInterval;
-        if(currentSeconds === Number.POSITIVE_INFINITY) {
+        if(this.schedules.selected.primary) {
             return null;
         }
 
+        const currentSeconds = this.schedules.selected.surfaceInterval;
         return DateFormats.formatShortTime(currentSeconds);
     }
 
@@ -68,23 +67,23 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
             });
     }
 
-    public applyFirst(): void {
-        this.setSurfaceIntervalSeconds(Number.POSITIVE_INFINITY);
+    public applyPrimary(): void {
+        this.schedules.selected.applyPrimarySurfaceInterval();
         this.reload();
     }
 
     public applyOneHour(): void {
-        this.setSurfaceIntervalSeconds(Time.oneHour);
+        this.schedules.selected.applyOneHourSurfaceInterval();
         this.reload();
     }
 
     public apply30Minutes(): void {
-        this.setSurfaceIntervalSeconds(Time.oneMinute * 30);
+        this.schedules.selected.apply30MinutesSurfaceInterval();
         this.reload();
     }
 
     public apply2Hour(): void {
-        this.setSurfaceIntervalSeconds(Time.oneHour * 2);
+        this.schedules.selected.apply2HourSurfaceInterval();
         this.reload();
     }
 
@@ -101,12 +100,8 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
         const parsed = DateFormats.parseToShortTime(newValue);
 
         if(parsed) {
-            this.setSurfaceIntervalSeconds(parsed);
+            this.schedules.selected.surfaceInterval = parsed;
         }
-    }
-
-    private setSurfaceIntervalSeconds(newValue: number) {
-        this.schedules.selected.surfaceInterval = newValue;
     }
 
     private reload(): void {

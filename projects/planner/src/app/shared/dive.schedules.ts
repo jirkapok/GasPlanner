@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
-import { GasToxicity } from 'scuba-physics';
+import { GasToxicity, Time } from 'scuba-physics';
 
 export class DiveSchedule {
     private _id = 0;
@@ -26,12 +26,24 @@ export class DiveSchedule {
         return this._id;
     }
 
+    /**
+     * In meaning first in collection of dives.
+     * Distinguish from primary property.
+     */
     public get isFirst(): boolean {
         return this.id === 1;
     }
 
     public get surfaceInterval(): number {
         return this._surfaceInterval;
+    }
+
+    /**
+     * It is the first dive of the day, e.g. it is not repetitive dive.
+     * Distinguish from isFirst property.
+     */
+    public get primary(): boolean {
+        return this.surfaceInterval === Number.POSITIVE_INFINITY;
     }
 
     public get tanksService(): TanksService {
@@ -82,6 +94,22 @@ export class DiveSchedule {
         this.optionsService.resetToSimple();
         this.tanksService.resetToSimple();
         this.depths.setSimple();
+    }
+
+    public applyPrimarySurfaceInterval(): void {
+        this.surfaceInterval = Number.POSITIVE_INFINITY;
+    }
+
+    public applyOneHourSurfaceInterval(): void {
+        this.surfaceInterval = Time.oneHour;
+    }
+
+    public apply30MinutesSurfaceInterval(): void {
+        this.surfaceInterval = Time.oneMinute * 30;
+    }
+
+    public apply2HourSurfaceInterval(): void {
+        this.surfaceInterval = Time.oneHour * 2;
     }
 }
 

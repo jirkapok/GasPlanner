@@ -5,7 +5,7 @@
            [maskito]="maskitoTimeOptions"  [placeholder]="placeHolder" [readonly]="surfaceReadOnly" />
     <div class="invalid-feedback position-absolute">Needs to text in form hh:mm
     </div>
-    <button type="button" class="btn btn-secondary mt-2 me-2 col col-auto" (click)="applyFirst()"
+    <button type="button" class="btn btn-secondary mt-2 me-2 col col-auto" (click)="applyPrimary()"
             [class.invisible]="isFirstDive" id="btnApplyFirst">First dive</button>
     <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="apply30Minutes()"
             [class.invisible]="isFirstDive" id="btnApply30Minutes">30 minutes</button>

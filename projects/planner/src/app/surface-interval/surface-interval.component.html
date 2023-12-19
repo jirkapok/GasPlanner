@@ -1,16 +1,25 @@
-<div class="" [formGroup]="form">
+<ng-container [formGroup]="form">
     <label for="surfaceInterval" class="form-label" mdbLabel>Surface interval [min]:</label>
-    <input id="surfaceInterval" [formControlName]="this.controlName" class="form-control" (input)="surfaceIntervalChanged()"
-           type="text" [class.is-invalid]="surfaceIntervalInvalid"
-           [maskito]="maskitoTimeOptions"  [placeholder]="placeHolder" [readonly]="surfaceReadOnly" />
-    <div class="invalid-feedback position-absolute">Needs to text in form hh:mm
+    <div class="input-group dropdown" mdbDropdown>
+        <input id="surfaceInterval" [formControlName]="this.controlName" class="form-control" (input)="surfaceIntervalChanged()"
+               type="text" [class.is-invalid]="surfaceIntervalInvalid"
+               [maskito]="maskitoTimeOptions"  [placeholder]="placeHolder" [readonly]="surfaceReadOnly" />
+        <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="surfaceIntervalMenu"
+                type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>
+        <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+            <li  (click)="applyPrimary()" id="btnApplyFirst">
+                <a class="dropdown-item">First dive</a>
+            </li>
+            <li (click)="apply30Minutes()" id="btnApply30Minutes">
+                <a class="dropdown-item">30 minutes</a>
+            </li>
+            <li  (click)="applyOneHour()" id="btnApplyOneHour">
+                <a class="dropdown-item">1 Hour</a>
+            </li>
+            <li (click)="apply2Hour()" id="btnApply2Hour">
+                <a class="dropdown-item">2 Hours</a>
+            </li>
+        </ul>
     </div>
-    <button type="button" class="btn btn-secondary mt-2 me-2 col col-auto" (click)="applyPrimary()"
-            [class.invisible]="isFirstDive" id="btnApplyFirst">First dive</button>
-    <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="apply30Minutes()"
-            [class.invisible]="isFirstDive" id="btnApply30Minutes">30 minutes</button>
-    <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="applyOneHour()"
-            [class.invisible]="isFirstDive" id="btnApplyOneHour">1 Hour</button>
-    <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="apply2Hour()"
-            [class.invisible]="isFirstDive" id="btnApply2Hour">2 Hours</button>
-</div>
+    <div class="text-danger form-text position-absolute" *ngIf="surfaceIntervalInvalid">Needs to be a text in form hh:mm</div>
+</ng-container>

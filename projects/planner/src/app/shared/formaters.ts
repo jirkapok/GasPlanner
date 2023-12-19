@@ -54,7 +54,8 @@ export class DateFormats {
 
     // TODO add tests for surface interval formatting
     /**
-     * Converts string in form "HH:MM" to number of seconds
+     * Converts string in form "HH:MM" to number of seconds.
+     * Returns null, if value cant be parsed.
      */
     public static parseToShortTime(newValue?: string | null): number | null {
         const timeFormat = /(\d{2})[:](\d{2})/;
@@ -72,9 +73,9 @@ export class DateFormats {
     }
 
     /**
-     *  Converts to number of seconds to string in form "HH:MM"
+     *  Converts to number of seconds to string in form "HH:MM".
      */
-    public static formatShortTime(seconds: number): string | null {
+    public static formatShortTime(seconds: number): string {
         const resultHours = Math.floor(seconds / (Time.oneHour));
         const resultHoursPad = resultHours.toString().padStart(2, '0');
         const resultMinutes = (seconds % (Time.oneHour)) / Time.oneMinute;

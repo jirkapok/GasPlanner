@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DecimalPipe } from '@angular/common';
 import { SurfaceIntervalComponent } from './surface-interval.component';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { InputControls } from '../shared/inputcontrols';
 
 describe('SurfaceIntervalComponent', () => {
     let component: SurfaceIntervalComponent;
@@ -11,7 +13,10 @@ describe('SurfaceIntervalComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [SurfaceIntervalComponent],
-            providers: [DiveSchedules, UnitConversion, ReloadDispatcher]
+            providers: [
+                DiveSchedules, UnitConversion, DecimalPipe,
+                ReloadDispatcher, InputControls,
+            ]
         });
         fixture = TestBed.createComponent(SurfaceIntervalComponent);
         component = fixture.componentInstance;

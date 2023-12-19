@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { takeUntil } from 'rxjs';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { Streamed } from '../shared/streamed';
 import { DateFormats } from '../shared/formaters';
+import { InputControls } from '../shared/inputcontrols';
 
 @Component({
     selector: 'app-surface-interval',
@@ -24,12 +25,15 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
     constructor(
         private schedules: DiveSchedules,
         private fb: NonNullableFormBuilder,
-        private dispatcher: ReloadDispatcher) {
+        private dispatcher: ReloadDispatcher,
+        private inputs: InputControls) {
         super();
     }
 
     public get surfaceIntervalInvalid(): boolean {
-        return false; // TODO surfaceIntervalInvalid
+        const surfaceControl = this.form.get(this.controlName) as AbstractControl;
+        const parsed = DateFormats.parseToShortTime(this.formControlValue);
+        return this.inputs.controlInValid(surfaceControl) || (!parsed && !this.schedules.selected.primary);
     }
 
     public get surfaceReadOnly(): boolean {
@@ -51,6 +55,11 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
 
         const currentSeconds = this.schedules.selected.surfaceInterval;
         return DateFormats.formatShortTime(currentSeconds);
+    }
+
+    private get formControlValue(): string | null {
+        const field = this.form.get(this.controlName) as FormControl<string | null>;
+        return field?.value;
     }
 
     public ngOnInit(): void {
@@ -92,8 +101,7 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
             return;
         }
 
-        const field = this.form.get(this.controlName) as FormControl<string | null>;
-        this.setSurfaceInterval(field?.value);
+        this.setSurfaceInterval(this.formControlValue);
     }
 
     private setSurfaceInterval(newValue?: string | null) {

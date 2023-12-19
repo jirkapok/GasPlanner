@@ -1,4 +1,4 @@
-import { Time } from 'scuba-physics';
+import { Time, Precision } from 'scuba-physics';
 
 export class DateFormats {
     /**
@@ -58,10 +58,14 @@ export class DateFormats {
      * Returns null, if value cant be parsed.
      */
     public static parseToShortTime(newValue?: string | null): number | null {
+        if(!newValue) {
+            return null;
+        }
+
         const timeFormat = /(\d{2})[:](\d{2})/;
         // the only way how set first dive is by using the applyFirst method
-        const candidate = newValue || '00:00';
-        const parsed = candidate.match(timeFormat);
+        // const candidate = newValue || '00:00';
+        const parsed = newValue.match(timeFormat);
         if(parsed) {
             const newHours = Number(parsed[1]) * Time.oneHour;
             const newMinutes = Number(parsed[2]) * Time.oneMinute;
@@ -76,9 +80,10 @@ export class DateFormats {
      *  Converts to number of seconds to string in form "HH:MM".
      */
     public static formatShortTime(seconds: number): string {
-        const resultHours = Math.floor(seconds / (Time.oneHour));
+        const resultHours = Precision.floor(seconds / (Time.oneHour));
         const resultHoursPad = resultHours.toString().padStart(2, '0');
-        const resultMinutes = (seconds % (Time.oneHour)) / Time.oneMinute;
+        let resultMinutes = (seconds % (Time.oneHour)) / Time.oneMinute;
+        resultMinutes = Precision.floor(resultMinutes);
         const resultMinutesPad = resultMinutes.toString().padStart(2, '0');
         const result = `${resultHoursPad}:${resultMinutesPad}`;
         return result;

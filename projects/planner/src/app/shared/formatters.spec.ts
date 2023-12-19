@@ -24,4 +24,50 @@ describe('Date formatters', () => {
             expect(result).toEqual('mm:ss');
         });
     });
+
+    describe('Short time', () => {
+        describe('From seconds', () => {
+            it('Rounds to minutes', () => {
+                const result = DateFormats.formatShortTime(3794);
+                expect(result).toEqual('01:03');
+            });
+
+            it('Pads minutes', () => {
+                const result = DateFormats.formatShortTime(7200);
+                expect(result).toEqual('02:00');
+            });
+
+            it('Pads hours', () => {
+                const result = DateFormats.formatShortTime(0);
+                expect(result).toEqual('00:00');
+            });
+        });
+
+        describe('To seconds', () => {
+            it('Parses exact value', () => {
+                const result = DateFormats.parseToShortTime('23:53');
+                expect(result).toBe(85980);
+            });
+
+            it('Parse empty returns 0', () => {
+                const result = DateFormats.parseToShortTime('00:00');
+                expect(result).toBe(0);
+            });
+
+            it('Parse invalid returns null', () => {
+                const result = DateFormats.parseToShortTime('7');
+                expect(result).toBeNull();
+            });
+
+            it('Parse invalid with text returns null', () => {
+                const result = DateFormats.parseToShortTime('a:12');
+                expect(result).toBeNull();
+            });
+
+            it('Parse null returns null', () => {
+                const result = DateFormats.parseToShortTime(null);
+                expect(result).toBeNull();
+            });
+        });
+    });
 });

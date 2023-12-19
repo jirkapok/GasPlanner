@@ -24,20 +24,7 @@
                 <app-depth [depths]="depths" ></app-depth>
             </div>
             <div *ngIf="true" class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
-                <label for="duration" class="form-label" mdbLabel>Surface interval [min]:</label>
-                <input id="surfaceInterval" formControlName="surfaceInterval" class="form-control" (input)="surfaceIntervalChanged()"
-                       type="text" [class.is-invalid]="surfaceIntervalInvalid"
-                       [maskito]="maskitoTimeOptions"  [placeholder]="placeHolder" [readonly]="surfaceReadOnly" />
-                <div class="invalid-feedback position-absolute">Needs to text in form hh:mm
-                </div>
-                <button type="button" class="btn btn-secondary mt-2 me-2 col col-auto" (click)="applyFirst()"
-                        [class.invisible]="isFirstDive" id="btnApplyFirst">First dive</button>
-                <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="applyOneHour()"
-                        [class.invisible]="isFirstDive" id="btnApply30Minutes">30 minutes</button>
-                <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="apply30Minutes()"
-                        [class.invisible]="isFirstDive" id="btnApplyOneHour">1 Hour</button>
-                <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="apply2Hour()"
-                        [class.invisible]="isFirstDive" id="btnApply2Hour">2 Hours</button>
+                <app-surface-interval [form]="simpleForm" controlName="surfaceInterval"/>
             </div>
         </div>
     </form>

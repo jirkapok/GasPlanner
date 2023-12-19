@@ -10,14 +10,12 @@ import { DiveResults } from '../shared/diveresults';
 import { Streamed } from '../shared/streamed';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { Precision, Time } from 'scuba-physics';
+import { Precision } from 'scuba-physics';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
-import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 
 interface SimpleDepthsForm {
     planDuration: FormControl<number>;
-    surfaceInterval: FormControl<string | null>;
 }
 
 @Component({
@@ -28,10 +26,6 @@ interface SimpleDepthsForm {
 export class DepthsSimpleComponent extends Streamed implements OnInit {
     public cardIcon = faLayerGroup;
     public simpleForm!: FormGroup<SimpleDepthsForm>;
-    public readonly maskitoTimeOptions = maskitoTimeOptionsGenerator({
-        mode: 'HH:MM',
-        timeSegmentMaxValues: { hours: 48 }
-    });
 
     constructor(
         private fb: NonNullableFormBuilder,
@@ -64,41 +58,9 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         return this.schedules.selectedResult;
     }
 
-    public get surfaceIntervalInvalid(): boolean {
-        return false;
-    }
-
-    public get surfaceReadOnly(): boolean {
-        return this.schedules.selected.surfaceInterval === Number.POSITIVE_INFINITY;
-    }
-
-    public get isFirstDive(): boolean {
-        return this.schedules.selected.isFirst;
-    }
-
-    public get placeHolder(): string {
-        return this.surfaceReadOnly ? 'First dive' : 'HH:MM';
-    }
-
-    private get surfaceInterval(): string | null {
-        const currentSeconds = this.schedules.selected.surfaceInterval;
-        if(currentSeconds === Number.POSITIVE_INFINITY) {
-            return null;
-        }
-
-        const resultHours = Math.floor(currentSeconds / (Time.oneHour));
-        const resultHoursPad = resultHours.toString().padStart(2, '0');
-        const resultMinutes = (currentSeconds % (Time.oneHour)) / Time.oneMinute;
-        const resultMinutesPad = resultMinutes.toString().padStart(2, '0');
-        const result = `${resultHoursPad}:${resultMinutesPad}`;
-        console.log(`surface interval: ${ result }`);
-        return result;
-    }
-
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({
-            planDuration: [ Precision.round(this.depths.planDuration, 1), this.validators.duration ],
-            surfaceInterval: [ this.surfaceInterval ]
+            planDuration: [ Precision.round(this.depths.planDuration, 1), this.validators.duration ]
         });
 
         // Reload is not relevant here
@@ -122,58 +84,10 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         this.depths.planDuration = Number(newValue.planDuration);
     }
 
-    public surfaceIntervalChanged(): void {
-        if (this.simpleForm.invalid) {
-            return;
-        }
-
-        const newValue = this.simpleForm.value;
-        this.setSurfaceInterval(newValue.surfaceInterval);
-    }
-
-    public applyFirst(): void {
-        this.setSurfaceIntervalSeconds(Number.POSITIVE_INFINITY);
-        this.reload();
-    }
-
-    public applyOneHour(): void {
-        this.setSurfaceIntervalSeconds(Time.oneHour);
-        this.reload();
-    }
-
-    public apply30Minutes(): void {
-        this.setSurfaceIntervalSeconds(Time.oneMinute * 30);
-        this.reload();
-    }
-
-    public apply2Hour(): void {
-        this.setSurfaceIntervalSeconds(Time.oneHour * 2);
-        this.reload();
-    }
-
     private reload(): void {
         // depth is reloaded in its nested component
         this.simpleForm.patchValue({
             planDuration: Precision.round(this.depths.planDuration, 1),
-            surfaceInterval: this.surfaceInterval
         });
-    }
-
-    // TODO it is really time to use moment.js - parse short time string in UTC
-    private setSurfaceInterval(newValue?: string | null) {
-        const timeFormat = /(\d{2})[:](\d{2})/;
-        const candidate = newValue || '00:00';
-        const parsed = candidate.match(timeFormat);
-        if(parsed) {
-            const newHours = Number(parsed[1]) * Time.oneHour;
-            const newMinutes = Number(parsed[2]) * Time.oneMinute;
-            const newSeconds = newHours + newMinutes;
-            this.setSurfaceIntervalSeconds(newSeconds);
-        }
-    }
-
-    private setSurfaceIntervalSeconds(newValue: number) {
-        this.schedules.selected.surfaceInterval = newValue;
-        console.log(`SET surface intreval: ${ newValue }`);
     }
 }

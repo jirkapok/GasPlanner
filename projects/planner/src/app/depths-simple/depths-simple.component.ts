@@ -58,6 +58,10 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         return this.schedules.selectedResult;
     }
 
+    public get isFirstDive(): boolean {
+        return this.schedules.selected.isFirst;
+    }
+
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({
             planDuration: [ Precision.round(this.depths.planDuration, 1), this.validators.duration ]

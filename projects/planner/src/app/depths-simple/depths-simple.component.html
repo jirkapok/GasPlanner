@@ -23,7 +23,7 @@
             <div class="col col-12 col-md-6 col-lg-12 col-xl-6">
                 <app-depth [depths]="depths" ></app-depth>
             </div>
-            <div *ngIf="true" class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
+            <div *ngIf="!isFirstDive" class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
                 <app-surface-interval [form]="simpleForm" controlName="surfaceInterval"/>
             </div>
         </div>

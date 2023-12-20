@@ -7,6 +7,7 @@ import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { Streamed } from '../shared/streamed';
 import { DateFormats } from '../shared/formaters';
 import { InputControls } from '../shared/inputcontrols';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-surface-interval',
@@ -26,14 +27,14 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
         private schedules: DiveSchedules,
         private fb: NonNullableFormBuilder,
         private dispatcher: ReloadDispatcher,
-        private inputs: InputControls) {
+        private inputs: InputControls,
+        private validators: ValidatorGroups) {
         super();
     }
 
     public get surfaceIntervalInvalid(): boolean {
         const surfaceControl = this.form.get(this.controlName) as AbstractControl;
-        const parsed = DateFormats.parseToShortTime(this.formControlValue);
-        return this.inputs.controlInValid(surfaceControl) || (!parsed && !this.schedules.selected.primary);
+        return this.inputs.controlInValid(surfaceControl);
     }
 
     public get surfaceReadOnly(): boolean {
@@ -42,10 +43,6 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
 
     public get placeHolder(): string {
         return this.surfaceReadOnly ? 'First dive' : 'HH:MM';
-    }
-
-    public get isFirstDive(): boolean {
-        return this.schedules.selected.isFirst;
     }
 
     private get surfaceInterval(): string | null {
@@ -57,17 +54,14 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
         return DateFormats.formatShortTime(currentSeconds);
     }
 
-    private get formControlValue(): string | null {
-        const field = this.form.get(this.controlName) as FormControl<string | null>;
-        return field?.value;
-    }
-
     public ngOnInit(): void {
         if(!this.form) {
-            this.form = new FormGroup([]);
+            this.form = this.fb.group([]);
         }
 
-        const control = this.fb.control(this.surfaceInterval);
+        const control = this.fb.control(this.surfaceInterval, [
+            this.validators.surfaceInterval()
+        ]);
         this.form.addControl(this.controlName, control);
 
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
@@ -101,7 +95,8 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
             return;
         }
 
-        this.setSurfaceInterval(this.formControlValue);
+        const field = this.form.get(this.controlName) as FormControl<string | null>;
+        this.setSurfaceInterval(field?.value);
     }
 
     private setSurfaceInterval(newValue?: string | null) {

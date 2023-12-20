@@ -18,12 +18,19 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { Time } from 'scuba-physics';
+import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
+import { MaskitoModule } from '@maskito/angular';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
 
     public get durationInput(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#duration')).nativeElement as HTMLInputElement;
+    }
+
+    public get surfaceIntervalInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#surfaceInterval')).nativeElement as HTMLInputElement;
     }
 
     public get applyMaxDurationButton(): HTMLButtonElement {
@@ -43,8 +50,8 @@ describe('Depths Simple Component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DepthsSimpleComponent],
-            imports: [ReactiveFormsModule],
+            declarations: [ DepthsSimpleComponent, SurfaceIntervalComponent ],
+            imports: [ ReactiveFormsModule, MaskitoModule ],
             providers: [
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls, DiveSchedules,
@@ -72,8 +79,6 @@ describe('Depths Simple Component', () => {
         simplePage.durationInput.dispatchEvent(new Event('input'));
         expect(eventFired).toBeTruthy();
     }));
-
-    // TODO test for surface interval validation
 
     describe('Duration reloaded enforced by', () => {
         it('Apply max NDL', inject([DiveSchedules, ReloadDispatcher],
@@ -121,6 +126,28 @@ describe('Depths Simple Component', () => {
                 selected.tanksService.firstTank.o2 = 50;
                 selected.depths.applyMaxDepth();
                 expect(selected.depths.plannedDepthMeters).toBe(18);
+            }));
+    });
+
+    describe('Surface interval validation', () => {
+        it('Does apply valid value', inject([DiveSchedules],
+            (schedules: DiveSchedules) => {
+                schedules.add();
+                fixture.detectChanges();
+                simplePage.surfaceIntervalInput.value = '02:30';
+                simplePage.surfaceIntervalInput.dispatchEvent(new Event('input'));
+                expect(schedules.selected.surfaceInterval).toBe(Time.oneMinute * 150);
+            }));
+
+        it('Does not apply invalid value', inject([DiveSchedules],
+            (schedules: DiveSchedules) => {
+                schedules.add();
+                schedules.selected.surfaceInterval = Time.oneHour; // to switch from readonly
+                fixture.detectChanges();
+                simplePage.surfaceIntervalInput.value = '02:aa';
+                simplePage.surfaceIntervalInput.dispatchEvent(new Event('input'));
+                expect(schedules.selected.surfaceInterval).toEqual(Time.oneHour);
+                expect(component.simpleForm.invalid).toBeTruthy();
             }));
     });
 });

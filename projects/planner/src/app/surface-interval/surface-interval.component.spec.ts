@@ -5,6 +5,7 @@ import { DiveSchedules } from '../shared/dive.schedules';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { InputControls } from '../shared/inputcontrols';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 describe('SurfaceIntervalComponent', () => {
     let component: SurfaceIntervalComponent;
@@ -15,7 +16,7 @@ describe('SurfaceIntervalComponent', () => {
             declarations: [SurfaceIntervalComponent],
             providers: [
                 DiveSchedules, UnitConversion, DecimalPipe,
-                ReloadDispatcher, InputControls,
+                ReloadDispatcher, InputControls, ValidatorGroups
             ]
         });
         fixture = TestBed.createComponent(SurfaceIntervalComponent);

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Validators, ValidatorFn, AbstractControl, ValidationErrors, FormControl } from '@angular/forms';
 import { RangeConstants, UnitConversion } from './UnitConversion';
+import { DateFormats } from './formaters';
 
 @Injectable()
 export class ValidatorGroups {
@@ -83,12 +84,28 @@ export class ValidatorGroups {
         return [Validators.required, this.validateMinRmv, this.validateMaxRmv];
     }
 
+    private get ranges(): RangeConstants {
+        return this.units.ranges;
+    }
+
     public rangeFor(range: [number, number]): ValidatorFn[] {
         return [Validators.required, Validators.min(range[0]), Validators.max(range[1])];
     }
 
-    private get ranges(): RangeConstants {
-        return this.units.ranges;
+    public surfaceInterval(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            const field = control as FormControl<string | null>;
+            const value = field?.value;
+            const parsed = DateFormats.parseToShortTime(value);
+
+            if(value !== null && (value.length === 0 || !parsed)) {
+                return {
+                    surfaceInterval: true
+                };
+            }
+
+            return null;
+        };
     }
 
     // only these RMV methods needs direct access to the range without component reload

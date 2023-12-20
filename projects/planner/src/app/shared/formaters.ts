@@ -52,7 +52,6 @@ export class DateFormats {
         return result;
     }
 
-    // TODO add tests for surface interval formatting
     /**
      * Converts string in form "HH:MM" to number of seconds.
      * Returns null, if value cant be parsed.

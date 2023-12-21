@@ -87,6 +87,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         };
 
         this.updateLayoutThickFormat();
+        // TODO remove, since we dont know which dive was calculated
         this.planer.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.plotCharts());
         this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))

@@ -19,6 +19,7 @@ Following list of features and improvements ordered by priority is under develop
   * Redundancies calculator - when filling one tank from second. What is the target pressure in both.
   * Gas blender calculator
     * Add use case, if we need release some pressure from the tanks, because otherwise we are unable mix
+    * Check https://github.com/atdotde/realblender, https://github.com/subsurface/subsurface/blob/master/core/gas-model.c, https://thetheoreticaldiver.org/wordpress/index.php/2021/11/16/blending-real-gases/
 * UI Tweaks
   * Read only fields should be distinguish able
   * Profile:

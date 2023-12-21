@@ -277,6 +277,7 @@ export class PlanUrlSerialization {
 
             if (isValid) {
                 this.preferences.applyLoaded(parsed);
+                // TODO verify, if calculation needs to be triggered manually
                 this.planner.calculate();
             } else {
                 console.log('Unable to load planner from url parameters, due to invalid data.');

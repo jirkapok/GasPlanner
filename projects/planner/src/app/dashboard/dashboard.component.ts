@@ -5,7 +5,7 @@ import { Streamed } from '../shared/streamed';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { UnitConversion } from '../shared/UnitConversion';
 import { DashboardStartUp } from '../shared/startUp';
-import { PlannerService } from '../shared/planner.service';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 @Component({
     selector: 'app-dashboard',
@@ -17,8 +17,8 @@ export class DashboardComponent extends Streamed implements OnInit {
 
     constructor(
         private viewSwitch: ViewSwitchService,
-        private planner: PlannerService,
         private units: UnitConversion,
+        private dispatcher: ReloadDispatcher,
         public startup: DashboardStartUp) {
         super();
     }
@@ -36,8 +36,7 @@ export class DashboardComponent extends Streamed implements OnInit {
 
         // because the calculation runs in background first it subscribes,
         // than it starts to receive the event.
-        // TODO remove, since we dont know which dive was calculated
-        this.planner.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
+        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.startup.updateQueryParams());
     }
 }

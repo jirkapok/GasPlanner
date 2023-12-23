@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProfileChartComponent } from './profilechart.component';
-import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
 import { WayPointsService } from '../shared/waypoints.service';
@@ -17,10 +15,9 @@ describe('ProfileChartComponent', () => {
         TestBed.configureTestingModule({
             declarations: [ProfileChartComponent],
             providers: [
-                PlannerService, WorkersFactoryCommon,
+                WorkersFactoryCommon, ReloadDispatcher,
                 WayPointsService, SelectedWaypoint,
-                UnitConversion, DiveSchedules,
-                ReloadDispatcher
+                UnitConversion, DiveSchedules
             ]
         });
 

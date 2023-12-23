@@ -28,6 +28,7 @@ describe('PlannerService', () => {
     let depthsService: DepthsService;
     let dive: DiveResults;
     let optionsService: OptionsService;
+    let dispatcher: ReloadDispatcher;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -51,6 +52,7 @@ describe('PlannerService', () => {
         optionsService.problemSolvingDuration = 2;
         optionsService.safetyStop = SafetyStop.always;
         depthsService.plannedDepth = 30;
+        dispatcher = TestBed.inject(ReloadDispatcher);
         planner.calculate();
     });
 
@@ -210,8 +212,8 @@ describe('PlannerService', () => {
                 spyOn(PlanningTasks, 'calculateDecompression')
                     .and.callFake(() => createProfileResultDto());
 
-                planner.wayPointsCalculated$.subscribe(() => wayPointsFinished = true);
-                planner.infoCalculated$.subscribe(() => infoFinished = true);
+                dispatcher.wayPointsCalculated$.subscribe(() => wayPointsFinished = true);
+                dispatcher.infoCalculated$.subscribe(() => infoFinished = true);
                 noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
                 consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
                 planner.calculate();
@@ -256,8 +258,8 @@ describe('PlannerService', () => {
                 spyOn(PlanningTasks, 'calculateDecompression')
                     .and.throwError('Profile failed');
 
-                planner.wayPointsCalculated$.subscribe(() => wayPointsFinished = true);
-                planner.infoCalculated$.subscribe(() => infoFinished = true);
+                dispatcher.wayPointsCalculated$.subscribe(() => wayPointsFinished = true);
+                dispatcher.infoCalculated$.subscribe(() => infoFinished = true);
                 noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
                 consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
                 planner.calculate();
@@ -291,7 +293,7 @@ describe('PlannerService', () => {
                 spyOn(PlanningTasks, 'diveInfo')
                     .and.throwError('No deco failed');
 
-                planner.infoCalculated$.subscribe(() => infoFinished = true);
+                dispatcher.infoCalculated$.subscribe(() => infoFinished = true);
                 planner.calculate();
             });
 
@@ -311,7 +313,7 @@ describe('PlannerService', () => {
                 spyOn(PlanningTasks, 'calculateConsumption')
                     .and.throwError('Consumption failed');
 
-                planner.infoCalculated$.subscribe(() => infoFinished = true);
+                dispatcher.infoCalculated$.subscribe(() => infoFinished = true);
                 planner.calculate();
             });
 

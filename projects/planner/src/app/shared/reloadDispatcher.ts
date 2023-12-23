@@ -22,6 +22,9 @@ export class ReloadDispatcher {
     public optionsReloaded$: Observable<void>;
     public optionsChanged$: Observable<void>;
     public selectedChanged$: Observable<void>;
+    public infoCalculated$: Observable<void>;
+    public wayPointsCalculated$: Observable<void>;
+
     private onTanksReloaded = new Subject<void>();
     private onTankChanged = new Subject<void>();
     private onTankRemoved = new Subject<Tank>();
@@ -30,6 +33,8 @@ export class ReloadDispatcher {
     private onOptionsReloaded = new Subject<void>();
     private onOptionsChanged = new Subject<void>();
     private onSelectedChanged = new Subject<void>();
+    private onInfoCalculated = new Subject<void>();
+    private onWayPointsCalculated = new Subject<void>();
 
     /**
     * to prevent circular dependency on DiveSchedules,
@@ -47,6 +52,8 @@ export class ReloadDispatcher {
         this.optionsReloaded$ = this.onOptionsReloaded.asObservable();
         this.optionsChanged$ = this.onOptionsChanged.asObservable();
         this.selectedChanged$ = this.onSelectedChanged.asObservable();
+        this.infoCalculated$ = this.onInfoCalculated.asObservable();
+        this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
     }
 
     public sendTanksReloaded(): void {
@@ -89,5 +96,13 @@ export class ReloadDispatcher {
         this.lastSelected = newSelected;
         console.log(`Selected dive changed to ${newSelected.id}`);
         this.onSelectedChanged.next();
+    }
+
+    public sendWayPointsCalculated(): void {
+        this.onWayPointsCalculated.next();
+    }
+
+    public sendInfoCalculated(): void {
+        this.onInfoCalculated.next();
     }
 }

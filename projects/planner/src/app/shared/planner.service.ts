@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 import { DiveResults } from './diveresults';
 import { WayPointsService } from './waypoints.service';
@@ -21,32 +21,27 @@ import { DepthsService } from './depths.service';
 import { DiveSchedules } from './dive.schedules';
 import { UnitConversion } from './UnitConversion';
 import { WayPoint } from './models';
+import { ReloadDispatcher } from './reloadDispatcher';
 
 
 @Injectable()
 export class PlannerService extends Streamed {
-    public infoCalculated$: Observable<void>;
-    public wayPointsCalculated$: Observable<void>;
-
     private calculating = false;
     private calculatingDiveInfo = false;
     private calculatingProfile = false;
-    private onInfoCalculated = new Subject<void>();
-    private onWayPointsCalculated = new Subject<void>();
     private profileTask: IBackgroundTask<ProfileRequestDto, ProfileResultDto>;
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
     private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
     private waypoints: WayPointsService;
 
-    constructor(private workerFactory: WorkersFactoryCommon,
+    constructor(
+        private workerFactory: WorkersFactoryCommon,
         private schedules: DiveSchedules,
+        private dispatcher: ReloadDispatcher,
         units: UnitConversion) {
         super();
 
         this.waypoints = new WayPointsService(units);
-        this.infoCalculated$ = this.onInfoCalculated.asObservable();
-        this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
-
         this.profileTask = this.workerFactory.createProfileWorker();
         this.profileTask.calculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((data) => this.continueCalculation(data));
@@ -153,7 +148,7 @@ export class PlannerService extends Streamed {
 
             this.dive.profileCalculated = true;
             this.calculatingProfile = false;
-            this.onWayPointsCalculated.next();
+            this.dispatcher.sendWayPointsCalculated();
         } else {
             // fires info finished before the profile finished, case of error it doesn't matter
             this.profileFailed();
@@ -187,8 +182,8 @@ export class PlannerService extends Streamed {
         this.dive.ceilings = [];
         this.endCalculatingState();
         // fire events, because there will be no continuation
-        this.onWayPointsCalculated.next();
-        this.onInfoCalculated.next();
+        this.dispatcher.sendWayPointsCalculated();
+        this.dispatcher.sendInfoCalculated();
     }
 
     private finishDiveInfo(diveInfo: DiveInfoResultDto): void {
@@ -218,7 +213,7 @@ export class PlannerService extends Streamed {
         this.dive.calculated = true;
         this.dive.calculationFailed = false;
         this.calculating = false;
-        this.onInfoCalculated.next();
+        this.dispatcher.sendInfoCalculated();
     }
 
     private createEventOptions(): EventOptionsDto {

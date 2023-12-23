@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { PlannerService } from '../shared/planner.service';
 import { WayPoint } from '../shared/models';
 import { DiveResults } from '../shared/diveresults';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +10,7 @@ import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { Streamed } from '../shared/streamed';
 import { ResamplingService } from '../shared/ResamplingService';
 import { DiveSchedules } from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 @Component({
     selector: 'app-profilechart',
@@ -54,9 +54,9 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private resampling: ResamplingService;
 
     constructor(
-        private planer: PlannerService,
         private units: UnitConversion,
         private selectedWaypoint: SelectedWaypoint,
+        private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
         super();
         this.resampling = new ResamplingService(units);
@@ -87,8 +87,9 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         };
 
         this.updateLayoutThickFormat();
-        // TODO remove, since we dont know which dive was calculated
-        this.planer.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
+        this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.plotCharts());
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.plotCharts());
         this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))
             .subscribe((wayPoint) => this.selectWayPoint(wayPoint));

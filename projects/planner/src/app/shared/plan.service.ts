@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
 import { Time, Segment, Segments, SegmentsFactory,
     Options, Tank } from 'scuba-physics';
 import { Strategies } from './models';

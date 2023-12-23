@@ -33,7 +33,7 @@ describe('Url Serialization', () => {
         const planner = new PlannerService(irrelevantFactory, schedules, dispatcher, units);
         const viewSwitch = new ViewSwitchService(schedules);
         const preferences = new Preferences(viewSwitch, units, schedules, new ViewStates());
-        const urlSerialization = new PlanUrlSerialization(planner, viewSwitch, units, schedules, preferences);
+        const urlSerialization = new PlanUrlSerialization(viewSwitch, units, schedules, preferences);
         const firstDive = schedules.dives[0];
         firstDive.depths.setSimple();
 
@@ -69,7 +69,7 @@ describe('Url Serialization', () => {
     const expectParsedEquals = (current: TestSut): void => {
         const toExpect = {
             plan: sut.depths.segments,
-            tansk: sut.tanksService.tankData,
+            tanks: sut.tanksService.tankData,
             diver: sut.options.getDiver(),
             options: sut.options.getOptions(),
             isComplex: sut.viewSwitch.isComplex
@@ -77,7 +77,7 @@ describe('Url Serialization', () => {
 
         const toCompare = {
             plan: current.depths.segments,
-            tansk: current.tanksService.tankData,
+            tanks: current.tanksService.tankData,
             diver: current.options.getDiver(),
             options: current.options.getOptions(),
             isComplex: current.viewSwitch.isComplex
@@ -98,9 +98,10 @@ describe('Url Serialization', () => {
         expect(url).toContain('ao=1,1');
     });
 
-    it('Serialize and deserialize complex plan', () => {
+    it('Serialize and deserialize complex plan',() => {
         const current = createSut();
         current.urlSerialization.fromUrl(customizedUrl);
+        current.planner.calculate();
         expectParsedEquals(current);
     });
 
@@ -110,6 +111,7 @@ describe('Url Serialization', () => {
         simpleSut.planner.calculate();
         const urlParams = simpleSut.urlSerialization.toUrl();
         sut.urlSerialization.fromUrl(urlParams);
+        sut.planner.calculate();
         expectParsedEquals(simpleSut);
     });
 
@@ -117,6 +119,7 @@ describe('Url Serialization', () => {
         const encodedParams = encodeURIComponent(customizedUrl);
         const current = createSut();
         current.urlSerialization.fromUrl(encodedParams);
+        current.planner.calculate();
         expectParsedEquals(current);
     });
 

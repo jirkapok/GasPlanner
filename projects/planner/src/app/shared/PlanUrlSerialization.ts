@@ -3,7 +3,6 @@ import _ from 'lodash';
 import {
     Diver, Options, SafetyStop, Salinity, Segment
 } from 'scuba-physics';
-import { PlannerService } from './planner.service';
 import { PlanValidation } from './PlanValidation';
 import { Preferences } from './preferences';
 import {
@@ -69,7 +68,6 @@ class ParseContext {
 @Injectable()
 export class PlanUrlSerialization {
     constructor(
-        private planner: PlannerService,
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
         private schedules: DiveSchedules,
@@ -277,8 +275,6 @@ export class PlanUrlSerialization {
 
             if (isValid) {
                 this.preferences.applyLoaded(parsed);
-                // TODO verify, if calculation needs to be triggered manually
-                this.planner.calculate();
             } else {
                 console.log('Unable to load planner from url parameters, due to invalid data.');
             }

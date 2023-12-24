@@ -16,7 +16,6 @@ import {
 import { DtoSerialization } from './dtoSerialization';
 import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
-import { OptionsService } from './options.service';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { UnitConversion } from './UnitConversion';
 import { WayPoint } from './models';
@@ -59,10 +58,6 @@ export class PlannerService extends Streamed {
             .subscribe((data) => this.finishCalculation(data));
         this.consumptionTask.failed$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.profileFailed());
-    }
-
-    private get optionsService(): OptionsService {
-        return this.schedules.selected.optionsService;
     }
 
     /** Not called by default, needs to be called manually */
@@ -112,17 +107,18 @@ export class PlannerService extends Streamed {
     }
 
     private continueCalculation(result: ProfileResultDto): void {
-        const tankData = this.diveBy(result.diveId).tanksService.tankData;
+        const dive = this.diveBy(result.diveId);
+        const tankData = dive.tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
-        const dive = this.diveResult(result.diveId);
-        dive.wayPoints = this.wayPointsFromResult(calculatedProfile);
-        dive.ceilings = calculatedProfile.ceilings;
-        dive.events = events.items;
-        dive.finalTissues = calculatedProfile.tissues;
-        dive.averageDepth = Segments.averageDepth(calculatedProfile.segments);
+        const diveResult = this.diveResult(result.diveId);
+        diveResult.wayPoints = this.wayPointsFromResult(calculatedProfile);
+        diveResult.ceilings = calculatedProfile.ceilings;
+        diveResult.events = events.items;
+        diveResult.finalTissues = calculatedProfile.tissues;
+        diveResult.averageDepth = Segments.averageDepth(calculatedProfile.segments);
 
-        if (dive.endsOnSurface) {
+        if (diveResult.endsOnSurface) {
             const infoRequest = this.createProfileRequest(calculatedProfile.tissues, result.diveId);
             this.diveInfoTask.calculate(infoRequest);
 
@@ -131,12 +127,12 @@ export class PlannerService extends Streamed {
                 plan: infoRequest.plan,
                 profile: DtoSerialization.fromSegments(calculatedProfile.segments),
                 options: infoRequest.options,
-                diver: DtoSerialization.fromDiver(this.optionsService.getDiver()),
+                diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
                 tanks: infoRequest.tanks
             };
             this.consumptionTask.calculate(consumptionRequest);
 
-            dive.profileCalculated = true;
+            diveResult.profileCalculated = true;
             this.calculatingProfile = false;
             this.dispatcher.sendWayPointsCalculated();
         } else {
@@ -155,7 +151,7 @@ export class PlannerService extends Streamed {
             plan: DtoSerialization.fromSegments(dive.depths.segments),
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
             tissues: DtoSerialization.fromTissues(previousDivetissues),
-            surfaceInterval: this.schedules.selected.surfaceInterval,
+            surfaceInterval: dive.surfaceInterval,
             eventOptions: this.createEventOptions()
         };
     }
@@ -169,7 +165,7 @@ export class PlannerService extends Streamed {
     }
 
     // TODO profileFailed, but for which dive?
-    private profileFailed(diveId: number = 0): void {
+    private profileFailed(diveId: number = 1): void {
         const dive = this.diveResult(diveId);
         dive.calculationFailed = true;
         dive.events = [];

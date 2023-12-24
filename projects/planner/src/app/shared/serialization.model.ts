@@ -50,6 +50,7 @@ export interface ITankBound {
 }
 
 export interface ProfileRequestDto {
+    diveId: number;
     tanks: TankDto[];
     plan: SegmentDto[];
     options: OptionsDto;
@@ -63,6 +64,7 @@ export interface EventOptionsDto {
 }
 
 export interface DiveInfoResultDto {
+    diveId: number;
     noDeco: number;
     otu: number;
     cns: number;
@@ -76,6 +78,7 @@ export interface DensityDto {
 }
 
 export interface ProfileResultDto {
+    diveId: number;
     profile: CalculatedProfileDto;
     events: EventDto[];
 }
@@ -103,6 +106,7 @@ export interface LoadedTissueDto {
 }
 
 export interface ConsumptionRequestDto {
+    diveId: number;
     plan: SegmentDto[];
     profile: SegmentDto[];
     options: OptionsDto;
@@ -118,6 +122,7 @@ export interface ConsumedDto {
 }
 
 export interface ConsumptionResultDto {
+    diveId: number;
     maxTime: number;
     timeToSurface: number;
     tanks: ConsumedDto[];

@@ -27,6 +27,7 @@ export class PlanningTasks {
         const eventsDto = DtoSerialization.fromEvents(events.items);
 
         return {
+            diveId: task.diveId,
             profile: profileDto,
             events: eventsDto
         };
@@ -47,6 +48,7 @@ export class PlanningTasks {
         const density = new DensityAtDepth(depthConverter).forProfile(originalProfile);
 
         return {
+            diveId: task.diveId,
             noDeco: noDecoLimit,
             otu: otu,
             cns: cns,
@@ -76,8 +78,9 @@ export class PlanningTasks {
         consumption.consumeFromTanks2(originProfile, emergencyAscent, options, tanks, diver);
 
         return {
-            maxTime,
-            timeToSurface,
+            diveId: task.diveId,
+            maxTime: maxTime,
+            timeToSurface: timeToSurface,
             tanks: DtoSerialization.toConsumed(tanks),
         };
     }

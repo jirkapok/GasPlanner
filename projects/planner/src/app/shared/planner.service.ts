@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { takeUntil } from 'rxjs';
+import _ from 'lodash';
 
 import { DiveResults } from './diveresults';
 import { WayPointsService } from './waypoints.service';
@@ -18,7 +19,7 @@ import { Streamed } from './streamed';
 import { TanksService } from './tanks.service';
 import { OptionsService } from './options.service';
 import { DepthsService } from './depths.service';
-import { DiveSchedules } from './dive.schedules';
+import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { UnitConversion } from './UnitConversion';
 import { WayPoint } from './models';
 import { ReloadDispatcher } from './reloadDispatcher';
@@ -26,6 +27,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 
 @Injectable()
 export class PlannerService extends Streamed {
+    // TODO move calculating flags to dive
     private calculating = false;
     private calculatingDiveInfo = false;
     private calculatingProfile = false;
@@ -82,15 +84,15 @@ export class PlannerService extends Streamed {
     }
 
     /** Not called by default, needs to be called manually */
-    public calculate(diveIndex: number = 0): void {
+    public calculate(diveId: number = 1): void {
         this.startCalculatingState();
 
         setTimeout(() => {
             this.showStillRunning();
         }, 500);
 
-        const diveResult = this.diveResult(diveIndex);
-        const profileRequest = this.createProfileRequest(diveResult.finalTissues);
+        const diveResult = this.diveResult(diveId);
+        const profileRequest = this.createProfileRequest(diveResult.finalTissues, diveId);
         this.profileTask.calculate(profileRequest);
     }
 
@@ -100,11 +102,11 @@ export class PlannerService extends Streamed {
         this.calculatingDiveInfo = true;
     }
 
-    private endCalculatingState(): void {
+    private endCalculatingState(diveId: number): void {
         this.calculating = false;
         this.calculatingProfile = false;
         this.calculatingDiveInfo = false;
-        const dive = this.dive;
+        const dive = this.diveResult(diveId);
         dive.profileCalculated = true;
         dive.diveInfoCalculated = true;
         dive.calculated = true;
@@ -139,10 +141,11 @@ export class PlannerService extends Streamed {
         dive.averageDepth = Segments.averageDepth(calculatedProfile.segments);
 
         if (dive.endsOnSurface) {
-            const infoRequest = this.createProfileRequest(calculatedProfile.tissues);
+            const infoRequest = this.createProfileRequest(calculatedProfile.tissues, result.diveId);
             this.diveInfoTask.calculate(infoRequest);
 
             const consumptionRequest = {
+                diveId: result.diveId,
                 plan: infoRequest.plan,
                 profile: DtoSerialization.fromSegments(calculatedProfile.segments),
                 options: infoRequest.options,
@@ -156,13 +159,14 @@ export class PlannerService extends Streamed {
             this.dispatcher.sendWayPointsCalculated();
         } else {
             // fires info finished before the profile finished, case of error it doesn't matter
-            this.profileFailed();
+            this.profileFailed(result.diveId);
             console.table(calculatedProfile.errors);
         }
     }
 
-    private createProfileRequest(previousDivetissues: LoadedTissue[]): ProfileRequestDto {
+    private createProfileRequest(previousDivetissues: LoadedTissue[], diveId: number): ProfileRequestDto {
         return {
+            diveId: diveId,
             tanks: DtoSerialization.fromTanks(this.serializableTanks),
             plan: DtoSerialization.fromSegments(this.depths.segments),
             options: DtoSerialization.fromOptions(this.optionsService.getOptions()),
@@ -180,13 +184,14 @@ export class PlannerService extends Streamed {
         return this.waypoints.calculateWayPoints(calculatedProfile.segments);
     }
 
-    private profileFailed(): void {
+    // TODO profileFailed, but for which dive?
+    private profileFailed(diveId: number = 0): void {
         const dive = this.dive;
         dive.calculationFailed = true;
         dive.events = [];
         dive.wayPoints = [];
         dive.ceilings = [];
-        this.endCalculatingState();
+        this.endCalculatingState(diveId);
         // fire events, because there will be no continuation
         this.dispatcher.sendWayPointsCalculated();
         this.dispatcher.sendInfoCalculated();
@@ -231,7 +236,18 @@ export class PlannerService extends Streamed {
         };
     }
 
-    private diveResult(diveIndex: number): DiveResults {
-        return this.schedules.dives[diveIndex].diveResult;
+    private diveResult(diveId: number): DiveResults {
+        return this.diveBy(diveId).diveResult;
+    }
+    private diveBy(diveId: number): DiveSchedule {
+        const found = _(this.schedules.dives)
+            .filter(d => d.id === diveId)
+            .first();
+
+        if(found) {
+            return found;
+        }
+
+        return this.schedules.dives[0];
     }
 }

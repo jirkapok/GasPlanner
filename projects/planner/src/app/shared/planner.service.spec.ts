@@ -191,6 +191,7 @@ describe('PlannerService', () => {
             const profile = CalculatedProfile.fromErrors(depthsService.segments, events);
             const profileDto = DtoSerialization.fromProfile(profile);
             return {
+                diveId: 1,
                 profile: profileDto,
                 events: []
             };

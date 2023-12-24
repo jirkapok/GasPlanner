@@ -75,10 +75,6 @@ export class PlannerService extends Streamed {
         return this.schedules.selected.optionsService;
     }
 
-    private get dive(): DiveResults {
-        return this.schedules.selected.diveResult;
-    }
-
     private get serializableTanks(): ITankBound[] {
         return this.tanks.tanks as ITankBound[];
     }
@@ -88,7 +84,7 @@ export class PlannerService extends Streamed {
         this.startCalculatingState();
 
         setTimeout(() => {
-            this.showStillRunning();
+            this.showStillRunning(diveId);
         }, 500);
 
         const diveResult = this.diveResult(diveId);
@@ -112,8 +108,8 @@ export class PlannerService extends Streamed {
         dive.calculated = true;
     }
 
-    private showStillRunning(): void {
-        const dive = this.dive;
+    private showStillRunning(diveId: number): void {
+        const dive = this.diveResult(diveId);
 
         if (this.calculatingProfile) {
             dive.profileCalculated = false;
@@ -133,7 +129,7 @@ export class PlannerService extends Streamed {
         const tankData = this.tanks.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
-        const dive = this.dive;
+        const dive = this.diveResult(result.diveId);
         dive.wayPoints = this.wayPointsFromResult(calculatedProfile);
         dive.ceilings = calculatedProfile.ceilings;
         dive.events = events.items;
@@ -186,7 +182,7 @@ export class PlannerService extends Streamed {
 
     // TODO profileFailed, but for which dive?
     private profileFailed(diveId: number = 0): void {
-        const dive = this.dive;
+        const dive = this.diveResult(diveId);
         dive.calculationFailed = true;
         dive.events = [];
         dive.wayPoints = [];
@@ -198,7 +194,7 @@ export class PlannerService extends Streamed {
     }
 
     private finishDiveInfo(diveInfo: DiveInfoResultDto): void {
-        const dive = this.dive;
+        const dive = this.diveResult(diveInfo.diveId);
         dive.noDecoTime = diveInfo.noDeco;
         dive.otu = diveInfo.otu;
         dive.cns = diveInfo.cns;
@@ -211,7 +207,7 @@ export class PlannerService extends Streamed {
 
     private finishCalculation(result: ConsumptionResultDto): void {
         this.tanks.copyTanksConsumption(result.tanks);
-        const dive = this.dive;
+        const dive = this.diveResult(result.diveId);
         dive.maxTime = result.maxTime;
         dive.timeToSurface = result.timeToSurface;
 

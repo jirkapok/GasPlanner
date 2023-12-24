@@ -82,14 +82,15 @@ export class PlannerService extends Streamed {
     }
 
     /** Not called by default, needs to be called manually */
-    public calculate(): void {
+    public calculate(diveIndex: number = 0): void {
         this.startCalculatingState();
 
         setTimeout(() => {
             this.showStillRunning();
         }, 500);
 
-        const profileRequest = this.createProfileRequest(this.dive.finalTissues);
+        const diveResult = this.diveResult(diveIndex);
+        const profileRequest = this.createProfileRequest(diveResult.finalTissues);
         this.profileTask.calculate(profileRequest);
     }
 
@@ -103,23 +104,26 @@ export class PlannerService extends Streamed {
         this.calculating = false;
         this.calculatingProfile = false;
         this.calculatingDiveInfo = false;
-        this.dive.profileCalculated = true;
-        this.dive.diveInfoCalculated = true;
-        this.dive.calculated = true;
+        const dive = this.dive;
+        dive.profileCalculated = true;
+        dive.diveInfoCalculated = true;
+        dive.calculated = true;
     }
 
     private showStillRunning(): void {
+        const dive = this.dive;
+
         if (this.calculatingProfile) {
-            this.dive.profileCalculated = false;
-            this.dive.emptyProfile();
+            dive.profileCalculated = false;
+            dive.emptyProfile();
         }
 
         if (this.calculatingDiveInfo) {
-            this.dive.diveInfoCalculated = false;
+            dive.diveInfoCalculated = false;
         }
 
         if (this.calculating) {
-            this.dive.calculated = false;
+            dive.calculated = false;
         }
     }
 
@@ -127,13 +131,14 @@ export class PlannerService extends Streamed {
         const tankData = this.tanks.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
-        this.dive.wayPoints = this.wayPointsFromResult(calculatedProfile);
-        this.dive.ceilings = calculatedProfile.ceilings;
-        this.dive.events = events.items;
-        this.dive.finalTissues = calculatedProfile.tissues;
-        this.dive.averageDepth = Segments.averageDepth(calculatedProfile.segments);
+        const dive = this.dive;
+        dive.wayPoints = this.wayPointsFromResult(calculatedProfile);
+        dive.ceilings = calculatedProfile.ceilings;
+        dive.events = events.items;
+        dive.finalTissues = calculatedProfile.tissues;
+        dive.averageDepth = Segments.averageDepth(calculatedProfile.segments);
 
-        if (this.dive.endsOnSurface) {
+        if (dive.endsOnSurface) {
             const infoRequest = this.createProfileRequest(calculatedProfile.tissues);
             this.diveInfoTask.calculate(infoRequest);
 
@@ -146,7 +151,7 @@ export class PlannerService extends Streamed {
             };
             this.consumptionTask.calculate(consumptionRequest);
 
-            this.dive.profileCalculated = true;
+            dive.profileCalculated = true;
             this.calculatingProfile = false;
             this.dispatcher.sendWayPointsCalculated();
         } else {
@@ -176,10 +181,11 @@ export class PlannerService extends Streamed {
     }
 
     private profileFailed(): void {
-        this.dive.calculationFailed = true;
-        this.dive.events = [];
-        this.dive.wayPoints = [];
-        this.dive.ceilings = [];
+        const dive = this.dive;
+        dive.calculationFailed = true;
+        dive.events = [];
+        dive.wayPoints = [];
+        dive.ceilings = [];
         this.endCalculatingState();
         // fire events, because there will be no continuation
         this.dispatcher.sendWayPointsCalculated();
@@ -187,31 +193,33 @@ export class PlannerService extends Streamed {
     }
 
     private finishDiveInfo(diveInfo: DiveInfoResultDto): void {
-        this.dive.noDecoTime = diveInfo.noDeco;
-        this.dive.otu = diveInfo.otu;
-        this.dive.cns = diveInfo.cns;
-        this.dive.planDuration = this.depths.planDuration;
-        this.dive.notEnoughTime = this.depths.notEnoughTime;
-        this.dive.highestDensity = DtoSerialization.toDensity(diveInfo.density);
-        this.dive.diveInfoCalculated = true;
+        const dive = this.dive;
+        dive.noDecoTime = diveInfo.noDeco;
+        dive.otu = diveInfo.otu;
+        dive.cns = diveInfo.cns;
+        dive.planDuration = this.depths.planDuration;
+        dive.notEnoughTime = this.depths.notEnoughTime;
+        dive.highestDensity = DtoSerialization.toDensity(diveInfo.density);
+        dive.diveInfoCalculated = true;
         this.calculatingDiveInfo = false;
     }
 
     private finishCalculation(result: ConsumptionResultDto): void {
         this.tanks.copyTanksConsumption(result.tanks);
-        this.dive.maxTime = result.maxTime;
-        this.dive.timeToSurface = result.timeToSurface;
+        const dive = this.dive;
+        dive.maxTime = result.maxTime;
+        dive.timeToSurface = result.timeToSurface;
 
-        this.dive.emergencyAscentStart = this.depths.startAscentTime;
-        this.dive.turnPressure = this.tanks.calculateTurnPressure();
-        this.dive.turnTime = Precision.floor(this.depths.planDuration / 2);
+        dive.emergencyAscentStart = this.depths.startAscentTime;
+        dive.turnPressure = this.tanks.calculateTurnPressure();
+        dive.turnTime = Precision.floor(this.depths.planDuration / 2);
         // this needs to be moved to each gas or do we have other option?
-        this.dive.needsReturn = this.depths.needsReturn && this.tanks.singleTank;
-        this.dive.notEnoughGas = !this.tanks.enoughGas;
+        dive.needsReturn = this.depths.needsReturn && this.tanks.singleTank;
+        dive.notEnoughGas = !this.tanks.enoughGas;
 
         // TODO still there is an option, that some calculation is still running.
-        this.dive.calculated = true;
-        this.dive.calculationFailed = false;
+        dive.calculated = true;
+        dive.calculationFailed = false;
         this.calculating = false;
         this.dispatcher.sendInfoCalculated();
     }
@@ -221,5 +229,9 @@ export class PlannerService extends Streamed {
             // TODO make maxDensity configurable
             maxDensity: GasDensity.recommendedMaximum
         };
+    }
+
+    private diveResult(diveIndex: number): DiveResults {
+        return this.schedules.dives[diveIndex].diveResult;
     }
 }

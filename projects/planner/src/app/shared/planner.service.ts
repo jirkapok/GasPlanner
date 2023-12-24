@@ -63,10 +63,6 @@ export class PlannerService extends Streamed {
             .subscribe(() => this.profileFailed());
     }
 
-    private get tanks(): TanksService {
-        return this.schedules.selected.tanksService;
-    }
-
     private get depths(): DepthsService {
         return this.schedules.selected.depths;
     }
@@ -122,7 +118,7 @@ export class PlannerService extends Streamed {
     }
 
     private continueCalculation(result: ProfileResultDto): void {
-        const tankData = this.tanks.tankData;
+        const tankData = this.diveBy(result.diveId).tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
         const dive = this.diveResult(result.diveId);
@@ -157,7 +153,7 @@ export class PlannerService extends Streamed {
     }
 
     private createProfileRequest(previousDivetissues: LoadedTissue[], diveId: number): ProfileRequestDto {
-        const serializableTanks = this.tanks.tanks as ITankBound[];
+        const serializableTanks = this.diveBy(diveId).tanksService.tanks as ITankBound[];
         return {
             diveId: diveId,
             tanks: DtoSerialization.fromTanks(serializableTanks),
@@ -204,17 +200,18 @@ export class PlannerService extends Streamed {
 
     // TODO add testcase: dive is removed before its info is calculated
     private finishCalculation(result: ConsumptionResultDto): void {
-        this.tanks.copyTanksConsumption(result.tanks);
+        const tanks = this.diveBy(result.diveId).tanksService;
+        tanks.copyTanksConsumption(result.tanks);
         const dive = this.diveResult(result.diveId);
         dive.maxTime = result.maxTime;
         dive.timeToSurface = result.timeToSurface;
 
         dive.emergencyAscentStart = this.depths.startAscentTime;
-        dive.turnPressure = this.tanks.calculateTurnPressure();
+        dive.turnPressure = tanks.calculateTurnPressure();
         dive.turnTime = Precision.floor(this.depths.planDuration / 2);
         // this needs to be moved to each gas or do we have other option?
-        dive.needsReturn = this.depths.needsReturn && this.tanks.singleTank;
-        dive.notEnoughGas = !this.tanks.enoughGas;
+        dive.needsReturn = this.depths.needsReturn && tanks.singleTank;
+        dive.notEnoughGas = !tanks.enoughGas;
 
         // TODO still there is an option, that some calculation is still running.
         dive.calculated = true;

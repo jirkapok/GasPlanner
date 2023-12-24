@@ -75,10 +75,6 @@ export class PlannerService extends Streamed {
         return this.schedules.selected.optionsService;
     }
 
-    private get serializableTanks(): ITankBound[] {
-        return this.tanks.tanks as ITankBound[];
-    }
-
     /** Not called by default, needs to be called manually */
     public calculate(diveId: number = 1): void {
         this.startCalculatingState();
@@ -161,9 +157,10 @@ export class PlannerService extends Streamed {
     }
 
     private createProfileRequest(previousDivetissues: LoadedTissue[], diveId: number): ProfileRequestDto {
+        const serializableTanks = this.tanks.tanks as ITankBound[];
         return {
             diveId: diveId,
-            tanks: DtoSerialization.fromTanks(this.serializableTanks),
+            tanks: DtoSerialization.fromTanks(serializableTanks),
             plan: DtoSerialization.fromSegments(this.depths.segments),
             options: DtoSerialization.fromOptions(this.optionsService.getOptions()),
             tissues: DtoSerialization.fromTissues(previousDivetissues),
@@ -193,18 +190,19 @@ export class PlannerService extends Streamed {
         this.dispatcher.sendInfoCalculated();
     }
 
-    private finishDiveInfo(diveInfo: DiveInfoResultDto): void {
-        const dive = this.diveResult(diveInfo.diveId);
-        dive.noDecoTime = diveInfo.noDeco;
-        dive.otu = diveInfo.otu;
-        dive.cns = diveInfo.cns;
+    private finishDiveInfo(diveInfoResultDto: DiveInfoResultDto): void {
+        const dive = this.diveResult(diveInfoResultDto.diveId);
+        dive.noDecoTime = diveInfoResultDto.noDeco;
+        dive.otu = diveInfoResultDto.otu;
+        dive.cns = diveInfoResultDto.cns;
         dive.planDuration = this.depths.planDuration;
         dive.notEnoughTime = this.depths.notEnoughTime;
-        dive.highestDensity = DtoSerialization.toDensity(diveInfo.density);
+        dive.highestDensity = DtoSerialization.toDensity(diveInfoResultDto.density);
         dive.diveInfoCalculated = true;
         this.calculatingDiveInfo = false;
     }
 
+    // TODO add testcase: dive is removed before its info is calculated
     private finishCalculation(result: ConsumptionResultDto): void {
         this.tanks.copyTanksConsumption(result.tanks);
         const dive = this.diveResult(result.diveId);

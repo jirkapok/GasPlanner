@@ -62,6 +62,10 @@ export class PlannerService extends Streamed {
 
     /** Not called by default, needs to be called manually */
     public calculate(diveId: number = 1): void {
+        if(!this.schedules.validId(diveId)) {
+            return;
+        }
+
         this.startCalculatingState();
 
         setTimeout(() => {
@@ -107,6 +111,10 @@ export class PlannerService extends Streamed {
     }
 
     private continueCalculation(result: ProfileResultDto): void {
+        if(!this.schedules.validId(result.diveId)) {
+            return;
+        }
+
         const dive = this.diveBy(result.diveId);
         const tankData = dive.tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
@@ -178,6 +186,10 @@ export class PlannerService extends Streamed {
     }
 
     private finishDiveInfo(diveInfoResult: DiveInfoResultDto): void {
+        if(!this.schedules.validId(diveInfoResult.diveId)) {
+            return;
+        }
+
         const dive = this.diveBy(diveInfoResult.diveId);
         const diveResult = dive.diveResult;
         diveResult.noDecoTime = diveInfoResult.noDeco;
@@ -190,8 +202,11 @@ export class PlannerService extends Streamed {
         this.calculatingDiveInfo = false;
     }
 
-    // TODO add testcase: dive is removed before its info is calculated
     private finishCalculation(result: ConsumptionResultDto): void {
+        if(!this.schedules.validId(result.diveId)) {
+            return;
+        }
+
         const dive = this.diveBy(result.diveId);
         const tanks = dive.tanksService;
         tanks.copyTanksConsumption(result.tanks);

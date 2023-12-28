@@ -326,5 +326,83 @@ describe('PlannerService', () => {
                 expectDiveMarkedAsCalculated(dive);
             });
         });
+
+        describe('Handles unknown dive Id (removed dive)', () => {
+            const unknownDiveId = 5;
+            let diveCalculated = false;
+
+            beforeEach(() => {
+                dispatcher.infoCalculated$.subscribe(() => diveCalculated = true);
+                diveCalculated = false;
+            });
+
+            it('skips calculate', () => {
+                const calculateDecoSpy = spyOn(PlanningTasks, 'calculateDecompression')
+                    .and.callThrough();
+
+                planner.calculate(unknownDiveId);
+                expect(calculateDecoSpy).toHaveBeenCalledTimes(0);
+                expect(diveCalculated).toBeFalsy();
+            });
+
+            it('interrupts calculation processing calculated profile', () => {
+                const calculateConsumptionSpy = spyOn(PlanningTasks, 'calculateConsumption')
+                    .and.callThrough();
+
+                const calculateInfoSpy = spyOn(PlanningTasks, 'diveInfo')
+                    .and.callThrough();
+
+                spyOn(PlanningTasks, 'calculateDecompression')
+                    .and.callFake(() => ({
+                        diveId: unknownDiveId,
+                        profile: {
+                            segments: [],
+                            ceilings: [],
+                            tissues: [],
+                            errors: []
+                        },
+                        events: []
+                    }));
+
+                planner.calculate();
+                expect(calculateConsumptionSpy).toHaveBeenCalledTimes(0);
+                expect(calculateInfoSpy).toHaveBeenCalledTimes(0);
+                expect(diveCalculated).toBeFalsy();
+            });
+
+            it('does not apply consumption result', () => {
+                spyOn(PlanningTasks, 'calculateConsumption')
+                    .and.callFake(() => ({
+                        diveId: unknownDiveId,
+                        maxTime: 0,
+                        timeToSurface: 0,
+                        tanks: []
+                    }));
+
+                expect( () => planner.calculate()).not.toThrow();
+                expect(diveCalculated).toBeFalsy();
+            });
+
+            it('does not apply dive info result', () => {
+                spyOn(PlanningTasks, 'diveInfo')
+                    .and.callFake(() => ({
+                        diveId: unknownDiveId,
+                        noDeco: 0,
+                        otu: 0,
+                        cns: 0,
+                        density: {
+                            gas: {
+                                fO2: 0,
+                                fHe: 0
+                            },
+                            depth: 0,
+                            density: 0
+                        }
+                    }));
+
+                expect( () => planner.calculate()).not.toThrow();
+                // This call doesnt fire finished calculation, so not checking, since it is not relevant.
+            });
+        });
     });
 });

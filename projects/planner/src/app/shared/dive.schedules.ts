@@ -195,6 +195,12 @@ export class DiveSchedules {
         });
     }
 
+    public validId(diveId: number): boolean {
+        // the dives are always ordered by Id
+        const maxDiveId = this._dives[this._dives.length - 1].id;
+        return maxDiveId >= diveId;
+    }
+
     private createDiveSchedule(): DiveSchedule {
         return new DiveSchedule(this.length, this.units, this.dispatcher);
     }

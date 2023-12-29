@@ -53,7 +53,6 @@ describe('Depths service', () => {
 
         describe('When Calculated', () => {
             it('Max bottom time is applied', () => {
-                console.log(depthService.segments);
                 depthService.applyMaxDuration();
                 expect(depthService.planDuration).toBe(expectedDuration);
             });

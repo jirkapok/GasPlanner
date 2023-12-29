@@ -102,4 +102,10 @@ export class DiveResults {
         this.ceilings = [];
         this.events = [];
     }
+
+    public endCalculation(): void {
+        this.profileCalculated = true;
+        this.diveInfoCalculated = true;
+        this.calculated = true;
+    }
 }

@@ -34,26 +34,26 @@ export class PlannerService extends Streamed {
     private waypoints: WayPointsService;
 
     constructor(
-        private workerFactory: WorkersFactoryCommon,
         private schedules: DiveSchedules,
         private dispatcher: ReloadDispatcher,
+        workerFactory: WorkersFactoryCommon,
         units: UnitConversion) {
         super();
 
         this.waypoints = new WayPointsService(units);
-        this.profileTask = this.workerFactory.createProfileWorker();
+        this.profileTask = workerFactory.createProfileWorker();
         this.profileTask.calculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((data) => this.continueCalculation(data));
         this.profileTask.failed$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.profileFailed());
 
-        this.diveInfoTask = this.workerFactory.createDiveInfoWorker();
+        this.diveInfoTask = workerFactory.createDiveInfoWorker();
         this.diveInfoTask.calculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((calculated) => this.finishDiveInfo(calculated));
         this.diveInfoTask.failed$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.profileFailed());
 
-        this.consumptionTask = this.workerFactory.createConsumptionWorker();
+        this.consumptionTask = workerFactory.createConsumptionWorker();
         this.consumptionTask.calculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((data) => this.finishCalculation(data));
         this.consumptionTask.failed$.pipe(takeUntil(this.unsubscribe$))
@@ -88,9 +88,7 @@ export class PlannerService extends Streamed {
         this.calculatingProfile = false;
         this.calculatingDiveInfo = false;
         const dive = this.diveResult(diveId);
-        dive.profileCalculated = true;
-        dive.diveInfoCalculated = true;
-        dive.calculated = true;
+        dive.endCalculation();
     }
 
     private showStillRunning(diveId: number): void {
@@ -119,7 +117,7 @@ export class PlannerService extends Streamed {
         const tankData = dive.tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
-        const diveResult = this.diveResult(result.diveId);
+        const diveResult = dive.diveResult;
         diveResult.wayPoints = this.wayPointsFromResult(calculatedProfile);
         diveResult.ceilings = calculatedProfile.ceilings;
         diveResult.events = events.items;
@@ -127,27 +125,30 @@ export class PlannerService extends Streamed {
         diveResult.averageDepth = Segments.averageDepth(calculatedProfile.segments);
 
         if (diveResult.endsOnSurface) {
-            const infoRequest = this.createProfileRequest(calculatedProfile.tissues, result.diveId);
-            this.diveInfoTask.calculate(infoRequest);
-
-            const consumptionRequest = {
-                diveId: result.diveId,
-                plan: infoRequest.plan,
-                profile: DtoSerialization.fromSegments(calculatedProfile.segments),
-                options: infoRequest.options,
-                diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
-                tanks: infoRequest.tanks
-            };
-            this.consumptionTask.calculate(consumptionRequest);
-
-            diveResult.profileCalculated = true;
-            this.calculatingProfile = false;
-            this.dispatcher.sendWayPointsCalculated();
+            this.processCalculatedProfile(calculatedProfile, result, dive);
         } else {
             // fires info finished before the profile finished, case of error it doesn't matter
             this.profileFailed(result.diveId);
-            console.table(calculatedProfile.errors);
         }
+    }
+
+    private processCalculatedProfile(calculatedProfile: CalculatedProfile, result: ProfileResultDto, dive: DiveSchedule) {
+        const infoRequest = this.createProfileRequest(calculatedProfile.tissues, result.diveId);
+        this.diveInfoTask.calculate(infoRequest);
+
+        const consumptionRequest = {
+            diveId: result.diveId,
+            plan: infoRequest.plan,
+            profile: DtoSerialization.fromSegments(calculatedProfile.segments),
+            options: infoRequest.options,
+            diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
+            tanks: infoRequest.tanks
+        };
+        this.consumptionTask.calculate(consumptionRequest);
+
+        dive.diveResult.profileCalculated = true;
+        this.calculatingProfile = false;
+        this.dispatcher.sendWayPointsCalculated();
     }
 
     private createProfileRequest(previousDivetissues: LoadedTissue[], diveId: number): ProfileRequestDto {

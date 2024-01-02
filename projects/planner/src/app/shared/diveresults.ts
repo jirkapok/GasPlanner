@@ -29,10 +29,10 @@ export class DiveResults {
 
     private _calculatingProfile = false;
     private _calculatingDiveInfo = false;
-    private _calculating = false;
+    private _calculatingConsumption = false;
     private _profileCalculated = false;
     private _diveInfoCalculated = false;
-    private _calculated = false;
+    private _consumptionCalculated = false;
     private _calculationFailed = false;
 
     public get diveInfoCalculated(): boolean {
@@ -40,7 +40,7 @@ export class DiveResults {
     }
 
     public get calculated(): boolean {
-        return this._calculated;
+        return this._consumptionCalculated;
     }
 
     public get profileCalculated(): boolean {
@@ -66,11 +66,11 @@ export class DiveResults {
 
     /** the only errors preventing draw chart */
     public get hasErrors(): boolean {
-        return this._calculated && (this._calculationFailed || this.notEnoughTime);
+        return this._consumptionCalculated && (this._calculationFailed || this.notEnoughTime);
     }
 
     public get showResults(): boolean {
-        return this._calculated && !this.hasErrors;
+        return this._consumptionCalculated && !this.hasErrors;
     }
 
     public get otuExceeded(): boolean {
@@ -82,7 +82,7 @@ export class DiveResults {
     }
 
     public get showMaxDuration(): boolean {
-        return this._calculated && this.maxTime > 0;
+        return this._consumptionCalculated && this.maxTime > 0;
     }
 
     public get hasErrorEvent(): boolean {
@@ -123,17 +123,17 @@ export class DiveResults {
     public endCalculation(): void {
         this._profileCalculated = true;
         this._diveInfoCalculated = true;
-        this._calculated = true;
+        this._consumptionCalculated = true;
     }
 
     public startCalculatingState(): void {
-        this._calculating = true;
+        this._calculatingConsumption = true;
         this._calculatingProfile = true;
         this._calculatingDiveInfo = true;
     }
 
     public endCalculationProgress(): void {
-        this._calculating = false;
+        this._calculatingConsumption = false;
         this._calculatingProfile = false;
         this._calculatingDiveInfo = false;
     }
@@ -148,8 +148,8 @@ export class DiveResults {
             this._diveInfoCalculated = false;
         }
 
-        if (this._calculating) {
-            this._calculated = false;
+        if (this._calculatingConsumption) {
+            this._consumptionCalculated = false;
         }
     }
 
@@ -165,7 +165,7 @@ export class DiveResults {
 
     public consumptionCalculationFinished(): void {
         this._calculationFailed = false;
-        this._calculating = false;
+        this._calculatingConsumption = false;
     }
 
     public calculationFailed(): void {

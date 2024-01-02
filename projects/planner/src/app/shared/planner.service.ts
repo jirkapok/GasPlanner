@@ -24,10 +24,6 @@ import { ReloadDispatcher } from './reloadDispatcher';
 
 @Injectable()
 export class PlannerService extends Streamed {
-    // TODO move calculating flags to dive
-    private calculating = false;
-    private calculatingDiveInfo = false;
-    private calculatingProfile = false;
     private profileTask: IBackgroundTask<ProfileRequestDto, ProfileResultDto>;
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
     private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
@@ -66,10 +62,11 @@ export class PlannerService extends Streamed {
             return;
         }
 
-        this.startCalculatingState();
+        const dive = this.diveResult(diveId);
+        dive.startCalculatingState();
 
         setTimeout(() => {
-            this.showStillRunning(diveId);
+            dive.showStillRunning();
         }, 500);
 
         const diveResult = this.diveResult(diveId);
@@ -77,35 +74,10 @@ export class PlannerService extends Streamed {
         this.profileTask.calculate(profileRequest);
     }
 
-    private startCalculatingState(): void {
-        this.calculating = true;
-        this.calculatingProfile = true;
-        this.calculatingDiveInfo = true;
-    }
-
     private endCalculatingState(diveId: number): void {
-        this.calculating = false;
-        this.calculatingProfile = false;
-        this.calculatingDiveInfo = false;
         const dive = this.diveResult(diveId);
+        dive.endCalculationProgress();
         dive.endCalculation();
-    }
-
-    private showStillRunning(diveId: number): void {
-        const dive = this.diveResult(diveId);
-
-        if (this.calculatingProfile) {
-            dive.profileCalculated = false;
-            dive.emptyProfile();
-        }
-
-        if (this.calculatingDiveInfo) {
-            dive.diveInfoCalculated = false;
-        }
-
-        if (this.calculating) {
-            dive.calculated = false;
-        }
     }
 
     private continueCalculation(result: ProfileResultDto): void {
@@ -146,8 +118,7 @@ export class PlannerService extends Streamed {
         };
         this.consumptionTask.calculate(consumptionRequest);
 
-        dive.diveResult.profileCalculated = true;
-        this.calculatingProfile = false;
+        dive.diveResult.profileCalculationFinished();
         this.dispatcher.sendWayPointsCalculated();
     }
 
@@ -173,14 +144,11 @@ export class PlannerService extends Streamed {
         return this.waypoints.calculateWayPoints(calculatedProfile.segments);
     }
 
-    // TODO profileFailed, but for which dive?
+    // We are unable to distinguish, which profile failed, so panic and reset all.
     private profileFailed(diveId: number = 1): void {
         const dive = this.diveResult(diveId);
-        dive.calculationFailed = true;
-        dive.events = [];
-        dive.wayPoints = [];
-        dive.ceilings = [];
         this.endCalculatingState(diveId);
+        dive.calculationFailed();
         // fire events, because there will be no continuation
         this.dispatcher.sendWayPointsCalculated();
         this.dispatcher.sendInfoCalculated();
@@ -199,8 +167,7 @@ export class PlannerService extends Streamed {
         diveResult.planDuration = dive.depths.planDuration;
         diveResult.notEnoughTime = dive.depths.notEnoughTime;
         diveResult.highestDensity = DtoSerialization.toDensity(diveInfoResult.density);
-        diveResult.diveInfoCalculated = true;
-        this.calculatingDiveInfo = false;
+        diveResult.diveInfoCalculationFinished();
     }
 
     private finishCalculation(result: ConsumptionResultDto): void {
@@ -223,9 +190,8 @@ export class PlannerService extends Streamed {
         diveResult.notEnoughGas = !tanks.enoughGas;
 
         // TODO still there is an option, that some calculation is still running.
-        diveResult.calculated = true;
-        diveResult.calculationFailed = false;
-        this.calculating = false;
+        // diveResult.calculated = true;
+        diveResult.consumptionCalculationFinished();
         this.dispatcher.sendInfoCalculated();
     }
 

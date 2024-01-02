@@ -8,10 +8,6 @@ import { Injectable } from '@angular/core';
 export class DiveResults {
     private static readonly maxAcceptableNdl = 1000;
     public noDecoTime = 0;
-    public calculated = false;
-    public diveInfoCalculated = false;
-    public profileCalculated = false;
-    public calculationFailed = false;
     public maxTime = 0;
     public timeToSurface = 0;
     public turnPressure = 0;
@@ -30,6 +26,27 @@ export class DiveResults {
     public finalTissues: LoadedTissue[] = [];
     public events: Event[] = [];
 
+
+    private _calculatingProfile = false;
+    private _calculatingDiveInfo = false;
+    private _calculating = false;
+    private _profileCalculated = false;
+    private _diveInfoCalculated = false;
+    private _calculated = false;
+    private _calculationFailed = false;
+
+    public get diveInfoCalculated(): boolean {
+        return this._diveInfoCalculated;
+    }
+
+    public get calculated(): boolean {
+        return this._calculated;
+    }
+
+    public get profileCalculated(): boolean {
+        return this._profileCalculated;
+    }
+
     /** can't use plan duration, because it doesn't contain ascent */
     public get totalDuration(): number {
         if (this.wayPoints.length === 0) {
@@ -40,7 +57,7 @@ export class DiveResults {
     }
 
     public get ndlValid(): boolean {
-        return this.diveInfoCalculated && this.noDecoTime < DiveResults.maxAcceptableNdl;
+        return this._diveInfoCalculated && this.noDecoTime < DiveResults.maxAcceptableNdl;
     }
 
     public get noDecoExceeded(): boolean {
@@ -49,11 +66,11 @@ export class DiveResults {
 
     /** the only errors preventing draw chart */
     public get hasErrors(): boolean {
-        return this.calculated && (this.calculationFailed || this.notEnoughTime);
+        return this._calculated && (this._calculationFailed || this.notEnoughTime);
     }
 
     public get showResults(): boolean {
-        return this.calculated && !this.hasErrors;
+        return this._calculated && !this.hasErrors;
     }
 
     public get otuExceeded(): boolean {
@@ -65,7 +82,7 @@ export class DiveResults {
     }
 
     public get showMaxDuration(): boolean {
-        return this.calculated && this.maxTime > 0;
+        return this._calculated && this.maxTime > 0;
     }
 
     public get hasErrorEvent(): boolean {
@@ -104,8 +121,57 @@ export class DiveResults {
     }
 
     public endCalculation(): void {
-        this.profileCalculated = true;
-        this.diveInfoCalculated = true;
-        this.calculated = true;
+        this._profileCalculated = true;
+        this._diveInfoCalculated = true;
+        this._calculated = true;
+    }
+
+    public startCalculatingState(): void {
+        this._calculating = true;
+        this._calculatingProfile = true;
+        this._calculatingDiveInfo = true;
+    }
+
+    public endCalculationProgress(): void {
+        this._calculating = false;
+        this._calculatingProfile = false;
+        this._calculatingDiveInfo = false;
+    }
+
+    public showStillRunning(): void {
+        if (this._calculatingProfile) {
+            this._profileCalculated = false;
+            this.emptyProfile();
+        }
+
+        if (this._calculatingDiveInfo) {
+            this._diveInfoCalculated = false;
+        }
+
+        if (this._calculating) {
+            this._calculated = false;
+        }
+    }
+
+    public profileCalculationFinished(): void {
+        this._profileCalculated = true;
+        this._calculatingProfile = false;
+    }
+
+    public diveInfoCalculationFinished(): void {
+        this._diveInfoCalculated = true;
+        this._calculatingDiveInfo = false;
+    }
+
+    public consumptionCalculationFinished(): void {
+        this._calculationFailed = false;
+        this._calculating = false;
+    }
+
+    public calculationFailed(): void {
+        this._calculationFailed = true;
+        this.events = [];
+        this.wayPoints = [];
+        this.ceilings = [];
     }
 }

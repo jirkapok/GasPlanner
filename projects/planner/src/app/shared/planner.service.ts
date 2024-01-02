@@ -51,7 +51,7 @@ export class PlannerService extends Streamed {
 
         this.consumptionTask = workerFactory.createConsumptionWorker();
         this.consumptionTask.calculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((data) => this.finishCalculation(data));
+            .subscribe((data) => this.finishConsumption(data));
         this.consumptionTask.failed$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.profileFailed());
     }
@@ -63,7 +63,7 @@ export class PlannerService extends Streamed {
         }
 
         const dive = this.diveResult(diveId);
-        dive.startCalculatingState();
+        dive.start();
 
         setTimeout(() => {
             dive.showStillRunning();
@@ -72,12 +72,6 @@ export class PlannerService extends Streamed {
         const diveResult = this.diveResult(diveId);
         const profileRequest = this.createProfileRequest(diveResult.finalTissues, diveId);
         this.profileTask.calculate(profileRequest);
-    }
-
-    private endCalculatingState(diveId: number): void {
-        const dive = this.diveResult(diveId);
-        dive.endCalculationProgress();
-        dive.endCalculation();
     }
 
     private continueCalculation(result: ProfileResultDto): void {
@@ -100,7 +94,8 @@ export class PlannerService extends Streamed {
             this.processCalculatedProfile(calculatedProfile, result, dive);
         } else {
             // fires info finished before the profile finished, case of error it doesn't matter
-            this.profileFailed(result.diveId);
+            diveResult.endFailed();
+            this.sendEvents();
         }
     }
 
@@ -116,10 +111,10 @@ export class PlannerService extends Streamed {
             diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
             tanks: infoRequest.tanks
         };
-        this.consumptionTask.calculate(consumptionRequest);
 
-        dive.diveResult.profileCalculationFinished();
+        dive.diveResult.profileFinished();
         this.dispatcher.sendWayPointsCalculated();
+        this.consumptionTask.calculate(consumptionRequest);
     }
 
     private createProfileRequest(previousDivetissues: LoadedTissue[], diveId: number): ProfileRequestDto {
@@ -144,11 +139,13 @@ export class PlannerService extends Streamed {
         return this.waypoints.calculateWayPoints(calculatedProfile.segments);
     }
 
-    // We are unable to distinguish, which profile failed, so panic and reset all.
-    private profileFailed(diveId: number = 1): void {
-        const dive = this.diveResult(diveId);
-        this.endCalculatingState(diveId);
-        dive.calculationFailed();
+    private profileFailed(): void {
+        // We are unable to distinguish, which profile failed, so panic and reset all.
+        this.schedules.dives.forEach(d => d.diveResult.endFailed());
+        this.sendEvents();
+    }
+
+    private sendEvents(): void {
         // fire events, because there will be no continuation
         this.dispatcher.sendWayPointsCalculated();
         this.dispatcher.sendInfoCalculated();
@@ -167,10 +164,14 @@ export class PlannerService extends Streamed {
         diveResult.planDuration = dive.depths.planDuration;
         diveResult.notEnoughTime = dive.depths.notEnoughTime;
         diveResult.highestDensity = DtoSerialization.toDensity(diveInfoResult.density);
-        diveResult.diveInfoCalculationFinished();
+        diveResult.diveInfoFinished();
+
+        if(diveResult.calculated) {
+            this.dispatcher.sendInfoCalculated();
+        }
     }
 
-    private finishCalculation(result: ConsumptionResultDto): void {
+    private finishConsumption(result: ConsumptionResultDto): void {
         if(!this.schedules.validId(result.diveId)) {
             return;
         }
@@ -188,11 +189,11 @@ export class PlannerService extends Streamed {
         // this needs to be moved to each gas or do we have other option?
         diveResult.needsReturn = dive.depths.needsReturn && tanks.singleTank;
         diveResult.notEnoughGas = !tanks.enoughGas;
+        diveResult.consumptionFinished();
 
-        // TODO still there is an option, that some calculation is still running.
-        // diveResult.calculated = true;
-        diveResult.consumptionCalculationFinished();
-        this.dispatcher.sendInfoCalculated();
+        if(diveResult.calculated) {
+            this.dispatcher.sendInfoCalculated();
+        }
     }
 
     private createEventOptions(): EventOptionsDto {

@@ -39,12 +39,17 @@ export class DiveResults {
         return this._diveInfoCalculated;
     }
 
+    /** Only if both consumption and dive info finished already, since they are running in parallel */
     public get calculated(): boolean {
-        return this._consumptionCalculated;
+        return this._consumptionCalculated && this.diveInfoCalculated;
     }
 
     public get profileCalculated(): boolean {
         return this._profileCalculated;
+    }
+
+    public get failed(): boolean {
+        return this._calculationFailed;
     }
 
     /** can't use plan duration, because it doesn't contain ascent */
@@ -66,7 +71,7 @@ export class DiveResults {
 
     /** the only errors preventing draw chart */
     public get hasErrors(): boolean {
-        return this._consumptionCalculated && (this._calculationFailed || this.notEnoughTime);
+        return this.calculated && (this.failed || this.notEnoughTime);
     }
 
     public get showResults(): boolean {
@@ -114,28 +119,11 @@ export class DiveResults {
         return count > 0 && this.wayPoints[count - 1].endDepthMeters === 0;
     }
 
-    public emptyProfile(): void {
-        this.wayPoints = [];
-        this.ceilings = [];
-        this.events = [];
-    }
-
-    public endCalculation(): void {
-        this._profileCalculated = true;
-        this._diveInfoCalculated = true;
-        this._consumptionCalculated = true;
-    }
-
-    public startCalculatingState(): void {
+    public start(): void {
         this._calculatingConsumption = true;
         this._calculatingProfile = true;
         this._calculatingDiveInfo = true;
-    }
-
-    public endCalculationProgress(): void {
-        this._calculatingConsumption = false;
-        this._calculatingProfile = false;
-        this._calculatingDiveInfo = false;
+        this._calculationFailed = false;
     }
 
     public showStillRunning(): void {
@@ -153,25 +141,32 @@ export class DiveResults {
         }
     }
 
-    public profileCalculationFinished(): void {
+    public profileFinished(): void {
         this._profileCalculated = true;
         this._calculatingProfile = false;
     }
 
-    public diveInfoCalculationFinished(): void {
+    public diveInfoFinished(): void {
         this._diveInfoCalculated = true;
         this._calculatingDiveInfo = false;
     }
 
-    public consumptionCalculationFinished(): void {
-        this._calculationFailed = false;
+    public consumptionFinished(): void {
+        this._consumptionCalculated = true;
         this._calculatingConsumption = false;
     }
 
-    public calculationFailed(): void {
+    public endFailed(): void {
+        this.profileFinished();
+        this.diveInfoFinished();
+        this.consumptionFinished();
+        this.emptyProfile();
         this._calculationFailed = true;
-        this.events = [];
+    }
+
+    private emptyProfile(): void {
         this.wayPoints = [];
         this.ceilings = [];
+        this.events = [];
     }
 }

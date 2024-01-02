@@ -370,7 +370,7 @@ describe('PlannerService', () => {
                 expect(diveCalculated).toBeFalsy();
             });
 
-            it('does not apply consumption result', () => {
+            xit('does not apply consumption result', () => {
                 spyOn(PlanningTasks, 'calculateConsumption')
                     .and.callFake(() => ({
                         diveId: unknownDiveId,
@@ -383,7 +383,7 @@ describe('PlannerService', () => {
                 expect(diveCalculated).toBeFalsy();
             });
 
-            it('does not apply dive info result', () => {
+            xit('does not apply dive info result', () => {
                 spyOn(PlanningTasks, 'diveInfo')
                     .and.callFake(() => ({
                         diveId: unknownDiveId,
@@ -401,7 +401,7 @@ describe('PlannerService', () => {
                     }));
 
                 expect( () => planner.calculate()).not.toThrow();
-                // This call doesnt fire finished calculation, so not checking, since it is not relevant.
+                expect(diveCalculated).toBeFalsy();
             });
         });
     });

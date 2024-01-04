@@ -23,6 +23,7 @@ export class DiveResults {
     public highestDensity = HighestDensity.createDefault();
     public wayPoints: WayPoint[] = [];
     public ceilings: Ceiling[] = [];
+    /** In meaning of at end of the dive */
     public finalTissues: LoadedTissue[] = [];
     public events: Event[] = [];
 

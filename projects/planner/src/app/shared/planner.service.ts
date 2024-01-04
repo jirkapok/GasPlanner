@@ -70,7 +70,7 @@ export class PlannerService extends Streamed {
             diveResult.showStillRunning();
         }, 500);
 
-        const profileRequest = this.createProfileRequest(diveResult.finalTissues, dive);
+        const profileRequest = this.createProfileRequest(dive);
         this.profileTask.calculate(profileRequest);
     }
 
@@ -102,7 +102,7 @@ export class PlannerService extends Streamed {
     }
 
     private processCalculatedProfile(calculatedProfile: CalculatedProfile, dive: DiveSchedule) {
-        const infoRequest = this.createProfileRequest(calculatedProfile.tissues, dive);
+        const infoRequest = this.createProfileRequest(dive);
         this.diveInfoTask.calculate(infoRequest);
 
         const consumptionRequest = {
@@ -119,17 +119,27 @@ export class PlannerService extends Streamed {
         this.dispatcher.sendWayPointsCalculated();
     }
 
-    private createProfileRequest(previousDivetissues: LoadedTissue[], dive: DiveSchedule): ProfileRequestDto {
+    private createProfileRequest(dive: DiveSchedule): ProfileRequestDto {
+        const previousTissues = this.previousDiveTissues(dive.id);
         const serializableTanks = dive.tanksService.tanks as ITankBound[];
         return {
             diveId: dive.id,
             tanks: DtoSerialization.fromTanks(serializableTanks),
             plan: DtoSerialization.fromSegments(dive.depths.segments),
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
-            tissues: DtoSerialization.fromTissues(previousDivetissues),
+            tissues: DtoSerialization.fromTissues(previousTissues),
             surfaceInterval: dive.surfaceInterval,
             eventOptions: this.createEventOptions()
         };
+    }
+
+    private previousDiveTissues(diveId: number): LoadedTissue[] {
+        if(diveId > 1) {
+            const previousDiveId = diveId - 1;
+            return this.diveResult(previousDiveId).finalTissues;
+        }
+
+        return [];
     }
 
     private wayPointsFromResult(calculatedProfile: CalculatedProfile): WayPoint[] {

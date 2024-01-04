@@ -62,19 +62,21 @@ export class PlannerService extends Streamed {
             return;
         }
 
-        const dive = this.diveResult(diveId);
-        dive.start();
+        const dive = this.diveBy(diveId);
+        const diveResult = dive.diveResult;
+        diveResult.start();
 
         setTimeout(() => {
-            dive.showStillRunning();
+            diveResult.showStillRunning();
         }, 500);
 
-        const diveResult = this.diveResult(diveId);
-        const profileRequest = this.createProfileRequest(diveResult.finalTissues, diveId);
+        const profileRequest = this.createProfileRequest(diveResult.finalTissues, dive);
         this.profileTask.calculate(profileRequest);
     }
 
     private continueCalculation(result: ProfileResultDto): void {
+        // still we may assign result to wrong dive after a dive is removed and Ids are rearranged
+        // but there should be following schedule to fix it
         if(!this.schedules.validId(result.diveId)) {
             return;
         }
@@ -91,7 +93,7 @@ export class PlannerService extends Streamed {
         diveResult.averageDepth = Segments.averageDepth(calculatedProfile.segments);
 
         if (diveResult.endsOnSurface) {
-            this.processCalculatedProfile(calculatedProfile, result, dive);
+            this.processCalculatedProfile(calculatedProfile, dive);
         } else {
             // fires info finished before the profile finished, case of error it doesn't matter
             diveResult.endFailed();
@@ -99,12 +101,12 @@ export class PlannerService extends Streamed {
         }
     }
 
-    private processCalculatedProfile(calculatedProfile: CalculatedProfile, result: ProfileResultDto, dive: DiveSchedule) {
-        const infoRequest = this.createProfileRequest(calculatedProfile.tissues, result.diveId);
+    private processCalculatedProfile(calculatedProfile: CalculatedProfile, dive: DiveSchedule) {
+        const infoRequest = this.createProfileRequest(calculatedProfile.tissues, dive);
         this.diveInfoTask.calculate(infoRequest);
 
         const consumptionRequest = {
-            diveId: result.diveId,
+            diveId: dive.id,
             plan: infoRequest.plan,
             profile: DtoSerialization.fromSegments(calculatedProfile.segments),
             options: infoRequest.options,
@@ -113,15 +115,14 @@ export class PlannerService extends Streamed {
         };
 
         dive.diveResult.profileFinished();
-        this.dispatcher.sendWayPointsCalculated();
         this.consumptionTask.calculate(consumptionRequest);
+        this.dispatcher.sendWayPointsCalculated();
     }
 
-    private createProfileRequest(previousDivetissues: LoadedTissue[], diveId: number): ProfileRequestDto {
-        const dive = this.diveBy(diveId);
+    private createProfileRequest(previousDivetissues: LoadedTissue[], dive: DiveSchedule): ProfileRequestDto {
         const serializableTanks = dive.tanksService.tanks as ITankBound[];
         return {
-            diveId: diveId,
+            diveId: dive.id,
             tanks: DtoSerialization.fromTanks(serializableTanks),
             plan: DtoSerialization.fromSegments(dive.depths.segments),
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),

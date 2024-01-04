@@ -39,9 +39,16 @@ export class DiveResults {
         return this._diveInfoCalculated;
     }
 
-    /** Only if both consumption and dive info finished already, since they are running in parallel */
+    /**
+     * Only if both consumption and dive info finished already, since they are running in parallel.
+     * Not checking if background calculation is still running, so this only shows last known state.
+     * */
     public get calculated(): boolean {
         return this._consumptionCalculated && this.diveInfoCalculated;
+    }
+
+    public get running(): boolean {
+        return !this.calculated || this._calculatingConsumption || this._calculatingDiveInfo;
     }
 
     public get profileCalculated(): boolean {

@@ -145,12 +145,6 @@ export class PlannerService extends Streamed {
         this.sendEvents();
     }
 
-    private sendEvents(): void {
-        // fire events, because there will be no continuation
-        this.dispatcher.sendWayPointsCalculated();
-        this.dispatcher.sendInfoCalculated();
-    }
-
     private finishDiveInfo(diveInfoResult: DiveInfoResultDto): void {
         if(!this.schedules.validId(diveInfoResult.diveId)) {
             return;
@@ -165,10 +159,7 @@ export class PlannerService extends Streamed {
         diveResult.notEnoughTime = dive.depths.notEnoughTime;
         diveResult.highestDensity = DtoSerialization.toDensity(diveInfoResult.density);
         diveResult.diveInfoFinished();
-
-        if(diveResult.calculated) {
-            this.dispatcher.sendInfoCalculated();
-        }
+        this.fireFinishedEvents(diveResult);
     }
 
     private finishConsumption(result: ConsumptionResultDto): void {
@@ -190,10 +181,7 @@ export class PlannerService extends Streamed {
         diveResult.needsReturn = dive.depths.needsReturn && tanks.singleTank;
         diveResult.notEnoughGas = !tanks.enoughGas;
         diveResult.consumptionFinished();
-
-        if(diveResult.calculated) {
-            this.dispatcher.sendInfoCalculated();
-        }
+        this.fireFinishedEvents(diveResult);
     }
 
     private createEventOptions(): EventOptionsDto {
@@ -215,6 +203,18 @@ export class PlannerService extends Streamed {
             return found;
         }
 
-        return this.schedules.dives[0];
+        throw new Error(`Unable to find dive by Id '${ diveId }'.`);
+    }
+
+    private fireFinishedEvents(diveResult: DiveResults) {
+        if(!diveResult.running) {
+            this.dispatcher.sendInfoCalculated();
+        }
+    }
+
+    private sendEvents(): void {
+        // fire events, because there will be no continuation
+        this.dispatcher.sendWayPointsCalculated();
+        this.dispatcher.sendInfoCalculated();
     }
 }

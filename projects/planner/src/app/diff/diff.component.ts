@@ -5,6 +5,7 @@ import {Segments, StandardGases, Tank, Time} from 'scuba-physics';
 import {WayPoint} from '../shared/models';
 import {PreferencesStore} from '../shared/preferencesStore';
 import {PlannerService} from '../shared/planner.service';
+import {TestDataJsonProvider} from './testData/TestDataJsonProvider';
 
 export class TestData {
     public readonly wayPointsA: WayPoint[];
@@ -13,76 +14,7 @@ export class TestData {
     public readonly wayPointsB: WayPoint[];
     public readonly tanksB: Tank[];
 
-    private profileOneJson = `
-            {
-              "options": {
-                "imperialUnits": false,
-                "isComplex": false,
-                "language": "en"
-              },
-              "dives": [
-                {
-                  "options": {
-                    "gfLow": 0.4,
-                    "gfHigh": 0.85,
-                    "maxPpO2": 1.4,
-                    "maxDecoPpO2": 1.6,
-                    "salinity": 1,
-                    "altitude": 0,
-                    "roundStopsToMinutes": false,
-                    "gasSwitchDuration": 2,
-                    "safetyStop": 2,
-                    "lastStopDepth": 3,
-                    "decoStopDistance": 3,
-                    "minimumAutoStopDepth": 10,
-                    "maxEND": 30,
-                    "oxygenNarcotic": true,
-                    "ascentSpeed6m": 3,
-                    "ascentSpeed50percTo6m": 6,
-                    "ascentSpeed50perc": 9,
-                    "descentSpeed": 18,
-                    "problemSolvingDuration": 1
-                  },
-                  "diver": {
-                    "rmv": 20
-                  },
-                  "tanks": [
-                    {
-                      "id": 1,
-                      "size": 15,
-                      "workPressure": 0,
-                      "startPressure": 200,
-                      "gas": {
-                        "fO2": 0.209,
-                        "fHe": 0
-                      }
-                    }
-                  ],
-                  "plan": [
-                    {
-                      "startDepth": 0,
-                      "endDepth": 10,
-                      "duration": 36,
-                      "tankId": 1,
-                      "gas": {
-                        "fO2": 0.209,
-                        "fHe": 0
-                      }
-                    },
-                    {
-                      "startDepth": 10,
-                      "endDepth": 10,
-                      "duration": 3564,
-                      "tankId": 1,
-                      "gas": {
-                        "fO2": 0.209,
-                        "fHe": 0
-                      }
-                    }
-                  ]
-                }
-              ]
-            }`;
+    private testDataProvider = new TestDataJsonProvider();
     constructor(private preferencesStore: PreferencesStore, private plannerService: PlannerService) {
         const units = new UnitConversion();
         const waypointService = new WayPointsService(units);
@@ -120,10 +52,12 @@ export class TestData {
         segmentsB.add(15, 15, StandardGases.ean50, Time.oneMinute);
         segmentsB.add(15, 0, StandardGases.ean50, Time.oneMinute * 2);
         this.wayPointsB = waypointService.calculateWayPoints(segmentsB.items);
+        this.loadProfile(1);
     }
 
-    public loadProfile(){
-        localStorage.setItem('preferences', this.profileOneJson);
+    public loadProfile(num: number){
+        const preferencesJson: string = this.testDataProvider.get(num);
+        localStorage.setItem('preferences', preferencesJson);
         this.preferencesStore.load();
         this.plannerService.calculate();
     }

@@ -52,14 +52,17 @@ export class TestData {
         segmentsB.add(15, 15, StandardGases.ean50, Time.oneMinute);
         segmentsB.add(15, 0, StandardGases.ean50, Time.oneMinute * 2);
         this.wayPointsB = waypointService.calculateWayPoints(segmentsB.items);
-        this.loadProfile(1);
+        this.injectProfiles(0, 1);
     }
 
-    public loadProfile(num: number){
-        const preferencesJson: string = this.testDataProvider.get(num);
+    // !! ONLY FOR TESTING PURPOSES !!
+    // Rewrites user defined dive profiles and replaces with 2 pre-defined testing profiles
+    public injectProfiles(profileAIndex: number, profileBIndex: number){
+        const preferencesJson: string = this.testDataProvider.get(profileAIndex, profileBIndex);
         localStorage.setItem('preferences', preferencesJson);
         this.preferencesStore.load();
         this.plannerService.calculate();
+        this.plannerService.calculate(2);
     }
 }
 

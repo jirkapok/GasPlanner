@@ -3,9 +3,8 @@ import {WayPointsService} from '../shared/waypoints.service';
 import {UnitConversion} from '../shared/UnitConversion';
 import {Segments, StandardGases, Tank, Time} from 'scuba-physics';
 import {WayPoint} from '../shared/models';
-import {PreferencesStore} from '../shared/preferencesStore';
-import {PlannerService} from '../shared/planner.service';
 import {TestDataJsonProvider} from './testData/TestDataJsonProvider';
+import {TestDataInjector} from './testData/testDataInjector';
 
 export class TestData {
     public readonly wayPointsA: WayPoint[];
@@ -15,7 +14,7 @@ export class TestData {
     public readonly tanksB: Tank[];
 
     private testDataProvider = new TestDataJsonProvider();
-    constructor(private preferencesStore: PreferencesStore, private plannerService: PlannerService) {
+    constructor(private testDataInjector: TestDataInjector) {
         const units = new UnitConversion();
         const waypointService = new WayPointsService(units);
 
@@ -52,17 +51,7 @@ export class TestData {
         segmentsB.add(15, 15, StandardGases.ean50, Time.oneMinute);
         segmentsB.add(15, 0, StandardGases.ean50, Time.oneMinute * 2);
         this.wayPointsB = waypointService.calculateWayPoints(segmentsB.items);
-        this.injectProfiles(0, 1);
-    }
-
-    // !! ONLY FOR TESTING PURPOSES !!
-    // Rewrites user defined dive profiles and replaces with 2 pre-defined testing profiles
-    public injectProfiles(profileAIndex: number, profileBIndex: number){
-        const preferencesJson: string = this.testDataProvider.get(profileAIndex, profileBIndex);
-        localStorage.setItem('preferences', preferencesJson);
-        this.preferencesStore.load();
-        this.plannerService.calculate();
-        this.plannerService.calculate(2);
+        this.testDataInjector.injectProfiles(0, 1);
     }
 }
 
@@ -72,7 +61,7 @@ export class TestData {
     styleUrls: ['./diff.component.scss']
 })
 export class DiffComponent {
-    public testData = new TestData(this.preferencesStore, this.plannerService);
-    constructor(private preferencesStore: PreferencesStore, private plannerService: PlannerService) {
+    public testData = new TestData(this.testDataInjector);
+    constructor(private testDataInjector: TestDataInjector) {
     }
 }

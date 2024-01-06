@@ -13,3 +13,8 @@
 .dropdown-menu {
     position: relative !important;
 }
+
+.card-max-height-md {
+    max-height: 500px;
+    overflow-y: scroll;
+}

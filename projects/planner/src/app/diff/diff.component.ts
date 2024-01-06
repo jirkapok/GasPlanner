@@ -1,18 +1,14 @@
-import { Component } from '@angular/core';
-import { WayPointsService } from '../shared/waypoints.service';
-import { UnitConversion } from '../shared/UnitConversion';
-import {
-    Ceiling, Segments, StandardGases,
-    Tank, Time, Event
-} from 'scuba-physics';
-import { WayPoint } from '../shared/models';
+import {Component} from '@angular/core';
+import {WayPointsService} from '../shared/waypoints.service';
+import {UnitConversion} from '../shared/UnitConversion';
+import {Segments, StandardGases, Tank, Time} from 'scuba-physics';
+import {WayPoint} from '../shared/models';
 
-
-class TestData {
-    public readonly profileA: WayPoint[];
+export class TestData {
+    public readonly wayPointsA: WayPoint[];
     public readonly tanksA: Tank[];
 
-    public readonly profileB: WayPoint[];
+    public readonly wayPointsB: WayPoint[];
     public readonly tanksB: Tank[];
 
     constructor() {
@@ -36,7 +32,7 @@ class TestData {
         segmentsA.add(21, 3, StandardGases.ean50, Time.oneMinute * 3);
         segmentsA.add(3, 3, StandardGases.oxygen, Time.oneMinute * 6);
         segmentsA.add(3, 0, StandardGases.oxygen, Time.oneMinute);
-        this.profileA = waypointService.calculateWayPoints(segmentsA.items);
+        this.wayPointsA = waypointService.calculateWayPoints(segmentsA.items);
 
         this.tanksB = [
             new Tank(24, 200, 21),
@@ -51,7 +47,7 @@ class TestData {
         segmentsB.add(30, 15, StandardGases.air, Time.oneMinute * 3);
         segmentsB.add(15, 15, StandardGases.ean50, Time.oneMinute);
         segmentsB.add(15, 0, StandardGases.ean50, Time.oneMinute * 2);
-        this.profileB = waypointService.calculateWayPoints(segmentsB.items);
+        this.wayPointsB = waypointService.calculateWayPoints(segmentsB.items);
     }
 }
 
@@ -61,8 +57,5 @@ class TestData {
     styleUrls: ['./diff.component.scss']
 })
 export class DiffComponent {
-    public data = new TestData();
-
-    // run: npm start
-    // Navigate to the component: http://localhost:4200/diff
+    public testData = new TestData();
 }

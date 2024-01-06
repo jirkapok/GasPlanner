@@ -1,0 +1,24 @@
+@import "node_modules/mdb-angular-ui-kit/assets/scss/free/variables";
+#waypointsDiffTable {
+    .vertical-right-border {
+        border-right-width: medium;
+    }
+    .vertical-left-border {
+        border-left-width: medium;
+    }
+
+    .vertical-borders {
+        border-left-width: medium;
+        border-right-width: medium;
+    }
+
+    tr {
+        border-top: hidden;
+        border-bottom: hidden;
+    }
+
+    .active-profile {
+        background: $primary;
+        border-color: $primary;
+    }
+}

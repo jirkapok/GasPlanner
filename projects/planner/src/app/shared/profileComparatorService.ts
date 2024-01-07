@@ -11,6 +11,13 @@ export class ProfileComparatorService {
     constructor(private schedules: DiveSchedules) {
     }
 
+    get totalDuration(): number {
+        if(this.profileAResults().totalDuration > this.profileBResults().totalDuration){
+            return this.profileAResults().totalDuration;
+        }
+        return this.profileBResults().totalDuration;
+    }
+
     set profileAIndex(value: number) {
         this._profileAIndex = value;
     }
@@ -29,5 +36,9 @@ export class ProfileComparatorService {
 
     public hasTwoProfiles(): boolean {
         return this.schedules.length > 1;
+    }
+
+    public isReady(): boolean {
+        return this.profileAResults().calculated && this.profileBResults().calculated;
     }
 }

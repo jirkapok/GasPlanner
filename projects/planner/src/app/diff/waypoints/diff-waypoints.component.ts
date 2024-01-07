@@ -1,5 +1,4 @@
-import {Component, Input} from '@angular/core';
-import {TestData} from '../diff.component';
+import {Component} from '@angular/core';
 import {faTasks} from '@fortawesome/free-solid-svg-icons';
 import {UnitConversion} from '../../shared/UnitConversion';
 import {WaypointsDifferenceService} from '../../shared/waypoints-difference.service';
@@ -11,7 +10,6 @@ import {ProfileComparatorService} from '../../shared/profileComparatorService';
     styleUrls: ['./diff-waypoints.component.scss'],
 })
 export class WaypointsDifferenceComponent {
-    @Input({ required: true }) data!: TestData;
     public tasks = faTasks;
 
     constructor(public units: UnitConversion,

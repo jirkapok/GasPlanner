@@ -22,7 +22,6 @@ describe('WaypointsDifferenceComponent', () => {
         });
         fixture = TestBed.createComponent(WaypointsDifferenceComponent);
         component = fixture.componentInstance;
-        component.data = new TestData();
         fixture.detectChanges();
     });
 

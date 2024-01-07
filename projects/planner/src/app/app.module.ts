@@ -91,6 +91,7 @@ import {MaskitoModule} from '@maskito/angular';
 import {SurfaceIntervalComponent} from './surface-interval/surface-interval.component';
 import {TestDataInjector} from './diff/testData/testDataInjector';
 import {ProfileComparatorService} from './shared/profileComparatorService';
+import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.component';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -150,7 +151,8 @@ const COMPONENTS = [
     WeightCalcComponent,
     WaypointsDifferenceComponent,
     DiveInfoDifferenceComponent,
-    ProfileDifferenceChartComponent
+    ProfileDifferenceChartComponent,
+    LoadTestDataComponent
 ];
 
 const SERVICES = [

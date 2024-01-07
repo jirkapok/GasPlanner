@@ -1,3 +1,5 @@
+<div class="position-absolute z-index-"><app-loadtestdata></app-loadtestdata></div>
+
 <div *ngIf="profileComparatorService.hasTwoProfiles(); else missingProfiles" class="mt-5">
     <div class="row">
         <div class="col-12 col-lg-12 col-xl-6 col-xxl-6 mt-4">
@@ -15,7 +17,7 @@
 <ng-template #missingProfiles>
     <div class="mt-5">
         <div class="row">
-            <div class="col-12 m-5">Please make at least 2 profiles</div>
+            <div class="col-11 m-5">Please make at least 2 profiles</div>
         </div>
     </div>
 </ng-template>

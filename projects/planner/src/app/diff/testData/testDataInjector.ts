@@ -6,6 +6,7 @@ import {TestDataJsonProvider} from './TestDataJsonProvider';
 @Injectable()
 export class TestDataInjector {
 
+    public testProfilesCount = TestDataJsonProvider.length;
     private testDataProvider = new TestDataJsonProvider();
     constructor(private preferencesStore: PreferencesStore, private plannerService: PlannerService) {
     }
@@ -18,5 +19,14 @@ export class TestDataInjector {
         this.preferencesStore.load();
         this.plannerService.calculate();
         this.plannerService.calculate(2);
+    }
+
+    public injectAllProfiles() {
+        const preferencesJson: string = this.testDataProvider.getAll();
+        localStorage.setItem('preferences', preferencesJson);
+        this.preferencesStore.load();
+        for (let i = 1; i <= this.testDataProvider.numberOfProfiles(); i++){
+            this.plannerService.calculate(i);
+        }
     }
 }

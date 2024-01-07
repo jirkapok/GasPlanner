@@ -1,24 +1,18 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {TestData} from '../diff.component';
 import {faTasks} from '@fortawesome/free-solid-svg-icons';
 import {UnitConversion} from '../../shared/UnitConversion';
-import {WaypointsComparisonTableRowProvider} from '../../shared/waypointsComparisonTableRowProvider';
+import {WaypointsDifferenceService} from '../../shared/waypoints-difference.service';
 
 @Component({
     selector: 'app-diff-waypoints',
     templateUrl: './diff-waypoints.component.html',
     styleUrls: ['./diff-waypoints.component.scss'],
 })
-export class WaypointsDifferenceComponent implements OnInit {
+export class WaypointsDifferenceComponent {
     @Input({ required: true }) data!: TestData;
     public tasks = faTasks;
-    public tableRowProvider: WaypointsComparisonTableRowProvider =
-        new WaypointsComparisonTableRowProvider([], []);
 
-    constructor(public units: UnitConversion) {
-    }
-
-    ngOnInit() {
-        this.tableRowProvider = new WaypointsComparisonTableRowProvider(this.data.wayPointsA, this.data.wayPointsB);
+    constructor(public units: UnitConversion, public tableRowProvider: WaypointsDifferenceService) {
     }
 }

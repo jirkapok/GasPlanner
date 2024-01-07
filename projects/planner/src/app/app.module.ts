@@ -92,6 +92,7 @@ import {SurfaceIntervalComponent} from './surface-interval/surface-interval.comp
 import {TestDataInjector} from './diff/testData/testDataInjector';
 import {ProfileComparatorService} from './shared/profileComparatorService';
 import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.component';
+import {WaypointsDifferenceService} from './shared/waypoints-difference.service';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -188,7 +189,8 @@ const SERVICES = [
     ViewSwitchService,
     WayPointsService,
     TestDataInjector,
-    ProfileComparatorService
+    ProfileComparatorService,
+    WaypointsDifferenceService
 ];
 
 @NgModule({

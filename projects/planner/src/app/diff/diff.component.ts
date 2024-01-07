@@ -5,6 +5,7 @@ import {Segments, StandardGases, Tank, Time} from 'scuba-physics';
 import {WayPoint} from '../shared/models';
 import {TestDataJsonProvider} from './testData/TestDataJsonProvider';
 import {TestDataInjector} from './testData/testDataInjector';
+import {ProfileComparatorService} from '../shared/profileComparatorService';
 
 export class TestData {
     public readonly wayPointsA: WayPoint[];
@@ -51,7 +52,7 @@ export class TestData {
         segmentsB.add(15, 15, StandardGases.ean50, Time.oneMinute);
         segmentsB.add(15, 0, StandardGases.ean50, Time.oneMinute * 2);
         this.wayPointsB = waypointService.calculateWayPoints(segmentsB.items);
-        this.testDataInjector.injectProfiles(0, 1);
+        // this.testDataInjector.injectProfiles(0, 1);
     }
 }
 
@@ -62,6 +63,6 @@ export class TestData {
 })
 export class DiffComponent {
     public testData = new TestData(this.testDataInjector);
-    constructor(private testDataInjector: TestDataInjector) {
+    constructor(private testDataInjector: TestDataInjector, public profileComparatorService: ProfileComparatorService) {
     }
 }

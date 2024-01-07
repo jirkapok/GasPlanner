@@ -1,4 +1,4 @@
-<div class="mt-5">
+<div *ngIf="profileComparatorService.hasTwoProfiles(); else missingProfiles" class="mt-5">
     <div class="row">
         <div class="col-12 col-lg-12 col-xl-6 col-xxl-6 mt-4">
             <app-diff-profilechart></app-diff-profilechart>
@@ -12,3 +12,10 @@
     </div>
 </div>
 
+<ng-template #missingProfiles>
+    <div class="mt-5">
+        <div class="row">
+            <div class="col-12 m-5">Please make at least 2 profiles</div>
+        </div>
+    </div>
+</ng-template>

@@ -6,9 +6,13 @@ import {TestDataJsonProvider} from './TestDataJsonProvider';
 @Injectable()
 export class TestDataInjector {
 
-    public testProfilesCount = TestDataJsonProvider.length;
     private testDataProvider = new TestDataJsonProvider();
+    private _testProfilesCount = this.testDataProvider.numberOfProfiles();
     constructor(private preferencesStore: PreferencesStore, private plannerService: PlannerService) {
+    }
+
+    get testProfilesCount(): number {
+        return this._testProfilesCount;
     }
 
     // !! ONLY FOR TESTING PURPOSES !!

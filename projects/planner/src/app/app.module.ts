@@ -90,6 +90,7 @@ import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilec
 import {MaskitoModule} from '@maskito/angular';
 import {SurfaceIntervalComponent} from './surface-interval/surface-interval.component';
 import {TestDataInjector} from './diff/testData/testDataInjector';
+import {ProfileComparatorService} from './shared/profileComparatorService';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -184,7 +185,8 @@ const SERVICES = [
     ViewStates,
     ViewSwitchService,
     WayPointsService,
-    TestDataInjector
+    TestDataInjector,
+    ProfileComparatorService
 ];
 
 @NgModule({

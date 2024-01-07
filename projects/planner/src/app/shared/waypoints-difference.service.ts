@@ -9,6 +9,9 @@ export class WaypointsDifferenceService {
     private _waypointRows: WaypointsComparisonTableRow[] = [];
     constructor(private profileComparatorService: ProfileComparatorService) {
     }
+    get isCalculated(): boolean {
+        return this.profileComparatorService.isReady();
+    }
 
     private get wayPointsA(): WayPoint[]{
         return this.profileComparatorService.profileAResults().wayPoints;
@@ -18,9 +21,6 @@ export class WaypointsDifferenceService {
         return this.profileComparatorService.profileBResults().wayPoints;
     }
 
-    public isCalculated(): boolean {
-        return this.profileComparatorService.isReady();
-    }
 
     public getRows(): WaypointsComparisonTableRow[] {
         const MAX_SAFETY_LIMIT = 65536; // 2**16

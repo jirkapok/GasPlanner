@@ -5,8 +5,11 @@
             <span>Dive way points</span>
         </div>
     </div>
-    <div class="card-body card-minheight table-responsive card-max-height-md">
-        <table id="waypointsDiffTable" class="table table-sm p-0 text-center table-hover">
+    <div class="hide card-body card-minheight table-responsive card-max-height-md">
+        <app-calculating [show]="!tableRowProvider.isCalculated" class="position-absolute"
+        style="top: 50%; left:50%"></app-calculating>
+
+        <table id="waypointsDiffTable" class="table table-sm p-0 text-center table-hover" >
             <thead class="table-light sticky-top">
             <tr>
                 <th colspan="1" ></th>
@@ -21,7 +24,9 @@
                 <th class="fw-bold px-1">Duration [min]</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody [ngClass]="{
+             'd-none': !tableRowProvider.isCalculated
+             }">
                 <tr *ngFor="let row of tableRowProvider.getRows()">
                     <td class="px-1 vertical-right-border">
                         {{ row.runTime | duration:profileComparatorService.totalDuration }}

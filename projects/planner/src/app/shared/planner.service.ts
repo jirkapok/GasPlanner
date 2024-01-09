@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { takeUntil } from 'rxjs';
-import _ from 'lodash';
-
 import { DiveResults } from './diveresults';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
@@ -62,7 +60,7 @@ export class PlannerService extends Streamed {
             return;
         }
 
-        const dive = this.diveBy(diveId);
+        const dive = this.diveById(diveId);
         const diveResult = dive.diveResult;
         diveResult.start();
 
@@ -81,7 +79,7 @@ export class PlannerService extends Streamed {
             return;
         }
 
-        const dive = this.diveBy(result.diveId);
+        const dive = this.diveById(result.diveId);
         const tankData = dive.tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
@@ -161,7 +159,7 @@ export class PlannerService extends Streamed {
             return;
         }
 
-        const dive = this.diveBy(diveInfoResult.diveId);
+        const dive = this.diveById(diveInfoResult.diveId);
         const diveResult = dive.diveResult;
         diveResult.noDecoTime = diveInfoResult.noDeco;
         diveResult.otu = diveInfoResult.otu;
@@ -178,7 +176,7 @@ export class PlannerService extends Streamed {
             return;
         }
 
-        const dive = this.diveBy(result.diveId);
+        const dive = this.diveById(result.diveId);
         const tanks = dive.tanksService;
         tanks.copyTanksConsumption(result.tanks);
         const diveResult = dive.diveResult;
@@ -203,12 +201,11 @@ export class PlannerService extends Streamed {
     }
 
     private diveResult(diveId: number): DiveResults {
-        return this.diveBy(diveId).diveResult;
+        return this.diveById(diveId).diveResult;
     }
-    private diveBy(diveId: number): DiveSchedule {
-        const found = _(this.schedules.dives)
-            .filter(d => d.id === diveId)
-            .first();
+
+    private diveById(diveId: number): DiveSchedule {
+        const found = this.schedules.byId(diveId);
 
         if(found) {
             return found;

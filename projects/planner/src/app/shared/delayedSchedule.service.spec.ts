@@ -13,7 +13,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import Spy = jasmine.Spy;
 import { Time } from 'scuba-physics';
 
-fdescribe('Delayed Schedule', () => {
+describe('Delayed Schedule', () => {
     let dispatcher: ReloadDispatcher;
     let schedules: DiveSchedules;
     let plannerSpy: Spy<(diveId?: number) => void>;
@@ -47,7 +47,6 @@ fdescribe('Delayed Schedule', () => {
         schedules.add();
         addRepetitiveDive();
         schedules.add();
-        plannerSpy.calls.reset();
         dispatcher.sendDepthsReloaded();
 
         setTimeout(() => {

@@ -5,6 +5,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { Streamed } from './streamed';
 import { takeUntil } from 'rxjs';
 import { DiveSchedules } from './dive.schedules';
+import _ from 'lodash';
 
 @Injectable()
 export class DelayedScheduleService extends Streamed {
@@ -29,7 +30,7 @@ export class DelayedScheduleService extends Streamed {
 
         // the only reloaded in case preferences load
         this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.schedule(1));
+            .subscribe(() => this.scheduleAll());
 
         // we need to serialize since next dive can be calculated only after previous one has results
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
@@ -44,8 +45,14 @@ export class DelayedScheduleService extends Streamed {
             return;
         }
 
-        this.scheduled = true;
+        // TODO restore this.scheduled = true;
         setTimeout(() => this.scheduleDive(diveId), 100);
+    }
+
+    private scheduleAll(): void {
+        const primaryDives = _(this.diveSchedules.dives)
+            .filter(d => d.primary).value();
+        primaryDives.forEach(d => this.schedule(d.id));
     }
 
     private scheduleSelected(): void {
@@ -56,7 +63,8 @@ export class DelayedScheduleService extends Streamed {
     private scheduleNextDive(diveId: number): void {
         const nextId = diveId + 1;
 
-        if(this.diveSchedules.validId(nextId)) {
+        const nextDive = this.diveSchedules.byId(nextId);
+        if(nextDive && !nextDive.primary) {
             this.schedule(nextId);
         }
     }

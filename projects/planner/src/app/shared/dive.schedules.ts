@@ -6,6 +6,7 @@ import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { GasToxicity, Time } from 'scuba-physics';
+import _ from 'lodash';
 
 export class DiveSchedule {
     private _id = 0;
@@ -199,6 +200,12 @@ export class DiveSchedules {
         // the dives are always ordered by Id
         const maxDiveId = this._dives[this._dives.length - 1].id;
         return maxDiveId >= diveId;
+    }
+
+    public byId(diveId: number): DiveSchedule | undefined {
+        return _(this.dives)
+            .filter(d => d.id === diveId)
+            .first();
     }
 
     private createDiveSchedule(): DiveSchedule {

@@ -179,6 +179,7 @@ export class DiveSchedules {
             this._dives = this._dives.filter(g => g !== dive);
             this.renumber();
             this._selected = this._dives[0];
+            this.dispatcher.sendDepthsReloaded();
         }
     }
 

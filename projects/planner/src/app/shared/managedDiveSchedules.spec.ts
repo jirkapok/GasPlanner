@@ -22,8 +22,8 @@ describe('Managed Schedules', () => {
     let preferencesStore: PreferencesStore;
     let schedules: DiveSchedules;
     let savePreferencesSpy: Spy<() => void>;
-    let schedulerSpy: Spy<() => void>;
     let loadPreferencesSpy: Spy<() => void>;
+    let dispatcherSpy: Spy<() => void>;
 
     const changeDive = (dive: DiveSchedule) => {
         const tankService = dive.tanksService;
@@ -67,11 +67,11 @@ describe('Managed Schedules', () => {
         localStorage.clear();
         preferencesStore = TestBed.inject(PreferencesStore);
         loadPreferencesSpy = spyOn(preferencesStore, 'load').and.callThrough();
-        const scheduler = TestBed.inject(DelayedScheduleService);
-        schedulerSpy = spyOn(scheduler, 'schedule').and.callThrough();
         schedules = TestBed.inject(DiveSchedules);
         sut = TestBed.inject(ManagedDiveSchedules);
         savePreferencesSpy = spyOn(preferencesStore, 'save').and.callThrough();
+        const dispatcher = TestBed.inject(ReloadDispatcher);
+        dispatcherSpy = spyOn(dispatcher, 'sendDepthsReloaded').and.callThrough();
     });
 
     describe('Application startup', () => {
@@ -99,8 +99,7 @@ describe('Managed Schedules', () => {
         });
 
         it('Calls scheduler after add', () => {
-            // 2x data initialization
-            expect(schedulerSpy).toHaveBeenCalledTimes(3);
+            expect(dispatcherSpy).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -126,7 +125,7 @@ describe('Managed Schedules', () => {
         });
 
         it('Calls scheduler after remove', () => {
-            expect(schedulerSpy).toHaveBeenCalledTimes(1);
+            expect(dispatcherSpy).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -146,7 +145,7 @@ describe('Managed Schedules', () => {
         });
 
         it('Calls scheduled to recalculate selected dive', () => {
-            expect(schedulerSpy).toHaveBeenCalledWith();
+            expect(dispatcherSpy).toHaveBeenCalledWith();
         });
     });
 

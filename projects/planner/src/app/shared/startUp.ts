@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
-import { environment } from '../../environments/environment';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
 import { DelayedScheduleService } from '../shared/delayedSchedule.service';
@@ -48,10 +47,6 @@ export class DashboardStartUp {
     }
 
     public updateQueryParams(): void {
-        if (!environment.production) {
-            console.log('Planner calculated');
-        }
-
         const urlParams = this.urlSerialization.toUrl();
         const maxUrlRecommendedLength = 2048;
 

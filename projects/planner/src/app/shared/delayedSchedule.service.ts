@@ -22,13 +22,15 @@ export class DelayedScheduleService extends Streamed {
         this.dispatcher.tankChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());
 
+        // TODO depth changed called 2x during startup
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());
 
         this.dispatcher.optionsChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());
 
-        // the only reloaded in case preferences load
+        // the only reloaded in case preferences load, add or removed dive,
+        // because following dive may need to be recalculated. Not efficient.
         this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleAll());
 
@@ -50,9 +52,11 @@ export class DelayedScheduleService extends Streamed {
     }
 
     private scheduleAll(): void {
-        const primaryDives = _(this.diveSchedules.dives)
-            .filter(d => d.primary).value();
-        primaryDives.forEach(d => this.schedule(d.id));
+        this.views.saveMainView();
+
+        _(this.diveSchedules.dives)
+            .filter(d => d.primary)
+            .forEach(d => setTimeout(() => this.scheduleDive(d.id), 100));
     }
 
     private scheduleSelected(): void {

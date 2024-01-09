@@ -24,7 +24,6 @@ export class ManagedDiveSchedules {
     public remove(dive: DiveSchedule): void {
         this.schedules.remove(dive);
         this.preferences.save();
-        this.schedule.schedule();
     }
 
     public loadDefaults(): void {

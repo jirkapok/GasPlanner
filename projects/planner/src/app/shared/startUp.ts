@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
-import { PreferencesStore } from '../shared/preferencesStore';
-import { PlanUrlSerialization } from '../shared/PlanUrlSerialization';
-import { DelayedScheduleService } from '../shared/delayedSchedule.service';
+import { PreferencesStore } from './preferencesStore';
+import { PlanUrlSerialization } from './PlanUrlSerialization';
+import { DelayedScheduleService } from './delayedSchedule.service';
 import { SubViewStorage } from './subViewStorage';
 import { ViewStates } from './viewStates';
 
@@ -29,7 +29,7 @@ export class DashboardStartUp {
 
         if (query === '' || this.views.started) {
             // no need to restore the state, since dives are kept in service states
-            this.delayedCalc.schedule();
+            // TODO this.delayedCalc.schedule();
         } else {
             // TODO load from url only in case there is only one dive or starting the app
             // the only view which loads from parameters instead of view state

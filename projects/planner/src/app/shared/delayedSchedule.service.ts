@@ -39,8 +39,7 @@ export class DelayedScheduleService extends Streamed {
             .subscribe((diveId) => this.scheduleNextDive(diveId));
     }
 
-    // TODO remove manual call, everything should be scheduled based on events
-    public schedule(diveId: number = 1): void {
+    private schedule(diveId: number): void {
         this.views.saveMainView();
 
         if(this.scheduled) {

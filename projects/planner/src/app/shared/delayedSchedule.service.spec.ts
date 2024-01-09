@@ -11,9 +11,12 @@ import { PreferencesStore } from './preferencesStore';
 import { Preferences } from './preferences';
 import { ViewSwitchService } from './viewSwitchService';
 import Spy = jasmine.Spy;
+import { Time } from "../../../../scuba-physics/src/lib/Time";
 
-describe('Delayed Schedule', () => {
+fdescribe('Delayed Schedule', () => {
     let sut: DelayedScheduleService;
+    let dispatcher: ReloadDispatcher;
+    let schedules: DiveSchedules;
     let plannerSpy: Spy<(diveId?: number) => void>;
 
     beforeEach(async () => {
@@ -29,23 +32,57 @@ describe('Delayed Schedule', () => {
             ]
         }).compileComponents();
 
-        sut = TestBed.inject(DelayedScheduleService);
         const planner = TestBed.inject(PlannerService);
         plannerSpy = spyOn(planner, 'calculate').and.callFake((diveId?: number) => {});
+        sut = TestBed.inject(DelayedScheduleService);
+        dispatcher = TestBed.inject(ReloadDispatcher);
+        schedules = TestBed.inject(DiveSchedules);
     });
 
     it('Plans first dive', (done) => {
-        sut.schedule();
+        dispatcher.sendDepthChanged();
 
         setTimeout(() => {
-            expect(plannerSpy).toHaveBeenCalledWith();
+            expect(plannerSpy).toHaveBeenCalledWith(1);
+            done();
+        }, 110);
+    });
+
+    it('Plans second dive', (done) => {
+        const secondDive = schedules.add();
+        secondDive.surfaceInterval = Time.oneHour;
+        dispatcher.sendInfoCalculated(1);
+
+        setTimeout(() => {
+            expect(plannerSpy).toHaveBeenCalledWith(2);
+            done();
+        }, 110);
+    });
+
+    it('Stops planning after last dive calculated', (done) => {
+        const secondDive = schedules.add();
+        secondDive.surfaceInterval = Time.oneHour;
+        dispatcher.sendInfoCalculated(2);
+
+        setTimeout(() => {
+            expect(plannerSpy).not.toHaveBeenCalledWith(3);
+            done();
+        }, 110);
+    });
+
+    it('Stops planning if next dive is not repetitive dive', (done) => {
+        schedules.add();
+        dispatcher.sendInfoCalculated(1);
+
+        setTimeout(() => {
+            expect(plannerSpy).not.toHaveBeenCalledWith(2);
             done();
         }, 110);
     });
 
     // TODO delayed schedule test cases
-    // * After received result, next dive is scheduled
-    // * After received last dive result, no schedule is done
     // * When calculating and calculation is running for dive with higher id than next planned, nothing is scheduled
     // * When calculating and calculation is running for dive wiht lower id than next planned, schedule is restarted from new dive id.
+    // * does not calculate next, if next one is first dive (undefined surface interval)
+    // * Stops scheduling when previous calculation failed
 });

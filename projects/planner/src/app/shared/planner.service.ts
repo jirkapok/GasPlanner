@@ -97,7 +97,7 @@ export class PlannerService extends Streamed {
         } else {
             // fires info finished before the profile finished, case of error it doesn't matter
             diveResult.endFailed();
-            this.sendEvents();
+            this.sendFailedEvents();
         }
     }
 
@@ -153,7 +153,7 @@ export class PlannerService extends Streamed {
     private profileFailed(): void {
         // We are unable to distinguish, which profile failed, so panic and reset all.
         this.schedules.dives.forEach(d => d.diveResult.endFailed());
-        this.sendEvents();
+        this.sendFailedEvents();
     }
 
     private finishDiveInfo(diveInfoResult: DiveInfoResultDto): void {
@@ -170,7 +170,7 @@ export class PlannerService extends Streamed {
         diveResult.notEnoughTime = dive.depths.notEnoughTime;
         diveResult.highestDensity = DtoSerialization.toDensity(diveInfoResult.density);
         diveResult.diveInfoFinished();
-        this.fireFinishedEvents(diveResult);
+        this.fireFinishedEvents(dive);
     }
 
     private finishConsumption(result: ConsumptionResultDto): void {
@@ -192,7 +192,7 @@ export class PlannerService extends Streamed {
         diveResult.needsReturn = dive.depths.needsReturn && tanks.singleTank;
         diveResult.notEnoughGas = !tanks.enoughGas;
         diveResult.consumptionFinished();
-        this.fireFinishedEvents(diveResult);
+        this.fireFinishedEvents(dive);
     }
 
     private createEventOptions(): EventOptionsDto {
@@ -217,15 +217,19 @@ export class PlannerService extends Streamed {
         throw new Error(`Unable to find dive by Id '${ diveId }'.`);
     }
 
-    private fireFinishedEvents(diveResult: DiveResults) {
-        if(!diveResult.running) {
-            this.dispatcher.sendInfoCalculated();
+    private fireFinishedEvents(dive: DiveSchedule) {
+        if(!dive.diveResult.running) {
+            this.dispatcher.sendInfoCalculated(dive.id);
         }
     }
 
-    private sendEvents(): void {
+    private sendFailedEvents(): void {
         // fire events, because there will be no continuation
+        // we dont know which one, so we use selected to refresh UI.
+        // TODO distinguish failed state, so it stops scheduling
+        // TODO add tests, that the events are fired with correct id
+        const diveId = this.schedules.selected.id;
         this.dispatcher.sendWayPointsCalculated();
-        this.dispatcher.sendInfoCalculated();
+        this.dispatcher.sendInfoCalculated(diveId);
     }
 }

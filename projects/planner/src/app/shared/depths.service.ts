@@ -181,7 +181,7 @@ export class DepthsService extends Streamed implements IDepths {
 
     private tankRemoved(removed: Tank): void {
         this.plan.resetSegments(removed, this.firstTank);
-        this.depthsReloaded();
+        this.dispatcher.sendDepthChanged(); // TODO check, if depth changed is enough
     }
 
     private updateLevels(): void {

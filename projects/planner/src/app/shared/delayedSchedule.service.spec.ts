@@ -11,13 +11,17 @@ import { PreferencesStore } from './preferencesStore';
 import { Preferences } from './preferences';
 import { ViewSwitchService } from './viewSwitchService';
 import Spy = jasmine.Spy;
-import { Time } from "../../../../scuba-physics/src/lib/Time";
+import { Time } from 'scuba-physics';
 
 fdescribe('Delayed Schedule', () => {
-    let sut: DelayedScheduleService;
     let dispatcher: ReloadDispatcher;
     let schedules: DiveSchedules;
     let plannerSpy: Spy<(diveId?: number) => void>;
+
+    const addRepetitiveDive = (): void => {
+        const thirdDive = schedules.add();
+        thirdDive.surfaceInterval = Time.oneHour;
+    };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -34,23 +38,38 @@ fdescribe('Delayed Schedule', () => {
 
         const planner = TestBed.inject(PlannerService);
         plannerSpy = spyOn(planner, 'calculate').and.callFake((diveId?: number) => {});
-        sut = TestBed.inject(DelayedScheduleService);
         dispatcher = TestBed.inject(ReloadDispatcher);
         schedules = TestBed.inject(DiveSchedules);
+        TestBed.inject(DelayedScheduleService);
     });
 
-    it('Plans first dive', (done) => {
-        dispatcher.sendDepthChanged();
+    it('Plans all first dives', (done) => {
+        schedules.add();
+        addRepetitiveDive();
+        schedules.add();
+        plannerSpy.calls.reset();
+        dispatcher.sendDepthsReloaded();
 
         setTimeout(() => {
             expect(plannerSpy).toHaveBeenCalledWith(1);
+            expect(plannerSpy).toHaveBeenCalledWith(2);
+            expect(plannerSpy).toHaveBeenCalledWith(4);
+            done();
+        }, 110);
+    });
+
+    it('Plans current dive', (done) => {
+        schedules.add();
+        dispatcher.sendDepthChanged();
+
+        setTimeout(() => {
+            expect(plannerSpy).toHaveBeenCalledWith(2);
             done();
         }, 110);
     });
 
     it('Plans second dive', (done) => {
-        const secondDive = schedules.add();
-        secondDive.surfaceInterval = Time.oneHour;
+        addRepetitiveDive();
         dispatcher.sendInfoCalculated(1);
 
         setTimeout(() => {
@@ -83,6 +102,5 @@ fdescribe('Delayed Schedule', () => {
     // TODO delayed schedule test cases
     // * When calculating and calculation is running for dive with higher id than next planned, nothing is scheduled
     // * When calculating and calculation is running for dive wiht lower id than next planned, schedule is restarted from new dive id.
-    // * does not calculate next, if next one is first dive (undefined surface interval)
     // * Stops scheduling when previous calculation failed
 });

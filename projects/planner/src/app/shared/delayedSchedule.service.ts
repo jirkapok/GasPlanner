@@ -19,17 +19,17 @@ export class DelayedScheduleService extends Streamed {
         super();
 
         this.dispatcher.tankChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.schedule());
+            .subscribe(() => this.scheduleSelected());
 
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.schedule());
+            .subscribe(() => this.scheduleSelected());
 
         this.dispatcher.optionsChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.schedule());
+            .subscribe(() => this.scheduleSelected());
 
-        // the only reloaded in case tank removed and preferences load
+        // the only reloaded in case preferences load
         this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.schedule());
+            .subscribe(() => this.schedule(1));
 
         // we need to serialize since next dive can be calculated only after previous one has results
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
@@ -46,6 +46,11 @@ export class DelayedScheduleService extends Streamed {
 
         this.scheduled = true;
         setTimeout(() => this.scheduleDive(diveId), 100);
+    }
+
+    private scheduleSelected(): void {
+        const selectedId = this.diveSchedules.selected.id;
+        this.schedule(selectedId);
     }
 
     private scheduleNextDive(diveId: number): void {

@@ -22,7 +22,6 @@ export class DelayedScheduleService extends Streamed {
         this.dispatcher.tankChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());
 
-        // TODO depth changed called 2x during startup
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());
 

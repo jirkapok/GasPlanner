@@ -14,8 +14,6 @@ export class ManagedDiveSchedules {
         this.loadAll();
     }
 
-    // TODO Implement line of calculations in PlannerService.calculate(diveId)
-
     public add(): void {
         const added = this.schedules.add();
         this.loadDefaultTo(added);

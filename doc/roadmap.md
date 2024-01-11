@@ -16,7 +16,6 @@ Following list of features and improvements ordered by priority is under develop
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
 * Gas blender features
-  * Redundancies calculator - when filling one tank from second. What is the target pressure in both.
   * Gas blender calculator
     * Add use case, if we need release some pressure from the tanks, because otherwise we are unable mix
     * Check https://github.com/atdotde/realblender, https://github.com/subsurface/subsurface/blob/master/core/gas-model.c, https://thetheoreticaldiver.org/wordpress/index.php/2021/11/16/blending-real-gases/
@@ -24,6 +23,7 @@ Following list of features and improvements ordered by priority is under develop
   * Read only fields should be distinguish able
   * Profile:
     * Waypoints table: add switch in case user is switching to tank with the same gas
+    * Gas switch is not present in shortened waypoints list
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
   * Add option to ignore some warnings
@@ -65,13 +65,6 @@ Following list of features and improvements ordered by priority is under develop
 
 * Business scenarios:
   * 1. Dive > user surface rest (minutes delay/surface interval) > 2. dive
-  * I want to plan a dive and choose from two plans
+  * I want to plan a dive and choose from two following plans or two independent plans
     (or I have a plan and i want to plan emergency ascent)
 
-```javascript
-DiveToCompare {
-  wayPoint/Segment[]
-  TankBound/Tank[]
-  Info {}
-}
-```

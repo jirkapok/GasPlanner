@@ -10,6 +10,7 @@ import { TankBound } from '../shared/models';
 import { Precision, TankTemplate, GasToxicity } from 'scuba-physics';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { TanksService } from '../shared/tanks.service';
 
 interface TankForm {
     firstTankSize: FormControl<number>;
@@ -77,7 +78,11 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         }
 
         this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reload());
+            .subscribe((source: TanksService) => {
+                if(this.diveSchedules.selectedTansks === source) {
+                    this.reload();
+                }
+            });
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reload());

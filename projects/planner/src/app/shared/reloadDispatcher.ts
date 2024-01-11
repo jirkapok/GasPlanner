@@ -1,7 +1,9 @@
 import { Observable, Subject } from 'rxjs';
-import { Tank} from 'scuba-physics';
+import { Tank } from 'scuba-physics';
 import { Injectable } from '@angular/core';
-import { DiveSchedule } from './dive.schedules';
+import { TanksService } from './tanks.service';
+import { OptionsService } from './options.service';
+import { DepthsService } from './depths.service';
 
 /**
  * Since we show only the selected dive schedule,
@@ -13,43 +15,35 @@ export class ReloadDispatcher {
      *  Event fired only in case of tanks rebuild (loadFrom or resetToSimple) on selected dive.
      *  Not fired when adding or removing tanks.
      **/
-    public tanksReloaded$: Observable<void>;
+    public tanksReloaded$: Observable<TanksService>;
     /** On selected dive only */
     public tankChanged$: Observable<void>;
     /** On selected dive only */
     public tankRemoved$: Observable<Tank>;
-    /** Only in case Reload all dives. */
-    public depthsReloaded$: Observable<void>;
     /** On selected dive only */
     public depthChanged$: Observable<void>;
     /** On selected dive only */
-    public optionsReloaded$: Observable<void>;
+    public optionsReloaded$: Observable<OptionsService>;
     /** On selected dive only */
     public optionsChanged$: Observable<void>;
-    /** On selected dive only */
-    public selectedChanged$: Observable<void>;
+    /** Only in case Reload all dives. */
+    public depthsReloaded$: Observable<DepthsService>;
     /** For any finished dive */
     public infoCalculated$: Observable<number>;
     /** For selected dive only. */
-    public wayPointsCalculated$: Observable<void>;
+    public wayPointsCalculated$: Observable<number>;
+    public selectedChanged$: Observable<void>;
 
-    private onTanksReloaded = new Subject<void>();
+    private onTanksReloaded = new Subject<TanksService>();
     private onTankChanged = new Subject<void>();
     private onTankRemoved = new Subject<Tank>();
-    private onDepthsReloaded = new Subject<void>();
+    private onDepthsReloaded = new Subject<DepthsService>();
     private onDepthChanged = new Subject<void>();
-    private onOptionsReloaded = new Subject<void>();
+    private onOptionsReloaded = new Subject<OptionsService>();
     private onOptionsChanged = new Subject<void>();
     private onSelectedChanged = new Subject<void>();
     private onInfoCalculated = new Subject<number>();
-    private onWayPointsCalculated = new Subject<void>();
-
-    /**
-    * to prevent circular dependency on DiveSchedules,
-    * we remember it when its value is changing.
-    * Used to prevent firing events in case updating not selected dive
-    */
-    private lastSelectedId = 1;
+    private onWayPointsCalculated = new Subject<number>();
 
     constructor() {
         this.tanksReloaded$ = this.onTanksReloaded.asObservable();
@@ -64,9 +58,9 @@ export class ReloadDispatcher {
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
     }
 
-    public sendTanksReloaded(): void {
+    public sendTanksReloaded(source: TanksService): void {
         console.log('Tanks reloaded');
-        this.onTanksReloaded.next();
+        this.onTanksReloaded.next(source);
     }
 
     public sendTanksRemoved(removed: Tank): void {
@@ -79,19 +73,14 @@ export class ReloadDispatcher {
         this.onTankChanged.next();
     }
 
-    public sendDepthsReloaded(): void {
-        console.log('Depths reloaded');
-        this.onDepthsReloaded.next();
-    }
-
     public sendDepthChanged(): void {
         console.log('Depth changed');
         this.onDepthChanged.next();
     }
 
-    public sendOptionsReloaded(): void {
+    public sendOptionsReloaded(source: OptionsService): void {
         console.log('Options reloaded');
-        this.onOptionsReloaded.next();
+        this.onOptionsReloaded.next(source);
     }
 
     public sendOptionsChanged(): void {
@@ -99,15 +88,18 @@ export class ReloadDispatcher {
         this.onOptionsChanged.next();
     }
 
-    // TODO use lastSelected to check when firing events
-    public sendSelectedChanged(newSelected: DiveSchedule): void {
-        this.lastSelectedId = newSelected.id;
-        console.log(`Selected dive changed to ${newSelected.id}`);
+    public sendSelectedChanged(newSelectedId: number): void {
+        console.log(`Selected dive changed to ${newSelectedId}`);
         this.onSelectedChanged.next();
     }
 
-    public sendWayPointsCalculated(): void {
-        this.onWayPointsCalculated.next();
+    public sendDepthsReloaded(source: DepthsService): void {
+        console.log('Depths reloaded');
+        this.onDepthsReloaded.next(source);
+    }
+
+    public sendWayPointsCalculated(diveId: number): void {
+        this.onWayPointsCalculated.next(diveId);
     }
 
     public sendInfoCalculated(diveId: number): void {

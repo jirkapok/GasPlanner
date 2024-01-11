@@ -64,7 +64,7 @@ export class TanksService {
             this._tanks = newTanks;
         }
 
-        this.dispatcher.sendTanksReloaded();
+        this.dispatcher.sendTanksReloaded(this);
     }
 
     public copyTanksConsumption(tanks: ConsumedDto[]) {

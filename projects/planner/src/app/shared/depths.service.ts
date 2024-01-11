@@ -199,6 +199,6 @@ export class DepthsService extends Streamed implements IDepths {
 
     private depthsReloaded(): void {
         this.updateLevels();
-        this.dispatcher.sendDepthsReloaded();
+        this.dispatcher.sendDepthsReloaded(this);
     }
 }

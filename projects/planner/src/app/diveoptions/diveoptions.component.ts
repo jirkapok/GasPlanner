@@ -130,7 +130,11 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         });
 
         this.dispatcher.optionsReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reload());
+            .subscribe((source: OptionsService) => {
+                if(this.options === source) {
+                    this.reload();
+                }
+            });
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reload());

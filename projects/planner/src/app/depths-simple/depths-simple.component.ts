@@ -67,12 +67,18 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
             planDuration: [ Precision.round(this.depths.planDuration, 1), this.validators.duration ]
         });
 
-        // Reload is not relevant here
-        // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.reload();
+            });
+
+        // TODO fix not reloaded depth after load defaults
+        this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((source: DepthsService) => {
+                if(this.depths === source) {
+                    this.reload();
+                }
             });
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))

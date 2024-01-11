@@ -100,11 +100,17 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
             levels: this.fb.array(this.createLevelControls())
         });
 
-        // this combination of event handlers isn't efficient, but leave it because its simple
         // for simple view, this is also kicked of when switching to simple view
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.reload();
+            });
+
+        this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((source: DepthsService) => {
+                if(this.depths === source) {
+                    this.reload();
+                }
             });
     }
 

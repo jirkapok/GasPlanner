@@ -6,6 +6,7 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { UnitConversion } from '../shared/UnitConversion';
 import { DashboardStartUp } from '../shared/startUp';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { DiveSchedules } from "../shared/dive.schedules";
 
 @Component({
     selector: 'app-dashboard',
@@ -19,7 +20,8 @@ export class DashboardComponent extends Streamed implements OnInit {
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
         private dispatcher: ReloadDispatcher,
-        public startup: DashboardStartUp) {
+        public startup: DashboardStartUp,
+        private schedules: DiveSchedules) {
         super();
     }
 
@@ -37,6 +39,10 @@ export class DashboardComponent extends Streamed implements OnInit {
         // because the calculation runs in background first it subscribes,
         // than it starts to receive the event.
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.startup.updateQueryParams());
+            .subscribe((diveId: number) => {
+                if(this.schedules.selected.id === diveId) {
+                    this.startup.updateQueryParams();
+                }
+            });
     }
 }

@@ -72,7 +72,11 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         });
 
         this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reloadAll());
+            .subscribe((source: TanksService) => {
+                if(this.tanksService === source) {
+                    this.reloadAll();
+                }
+            });
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());

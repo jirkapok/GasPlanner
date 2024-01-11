@@ -163,7 +163,7 @@ export class DiveSchedules {
     public set selected(newValue: DiveSchedule) {
         if (this._dives.includes(newValue)) {
             this._selected = newValue;
-            this.dispatcher.sendSelectedChanged(newValue);
+            this.dispatcher.sendSelectedChanged(newValue.id);
         }
     }
 
@@ -179,7 +179,7 @@ export class DiveSchedules {
             this._dives = this._dives.filter(g => g !== dive);
             this.renumber();
             this._selected = this._dives[0];
-            this.dispatcher.sendDepthsReloaded();
+            this.dispatcher.sendDepthsReloaded(dive.depths);
         }
     }
 

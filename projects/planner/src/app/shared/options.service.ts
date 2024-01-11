@@ -244,7 +244,7 @@ export class OptionsService {
         this.options.loadFrom(newOptions);
         const newDiver = new DiverOptions(newOptions, diver);
         this.applyDiver(newDiver);
-        this.dispatcher.sendOptionsReloaded();
+        this.dispatcher.sendOptionsReloaded(this);
     }
 
     public applyDiver(diver: DiverOptions): void {

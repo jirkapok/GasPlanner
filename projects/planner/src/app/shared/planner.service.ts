@@ -119,7 +119,7 @@ export class PlannerService extends Streamed {
 
         dive.diveResult.profileFinished();
         this.consumptionTask.calculate(consumptionRequest);
-        this.dispatcher.sendWayPointsCalculated();
+        this.dispatcher.sendWayPointsCalculated(dive.id);
     }
 
     private createProfileRequest(dive: DiveSchedule): ProfileRequestDto {
@@ -231,7 +231,7 @@ export class PlannerService extends Streamed {
         // TODO distinguish failed state, so it stops scheduling
         // TODO add tests, that the events are fired with correct id
         const diveId = this.schedules.selected.id;
-        this.dispatcher.sendWayPointsCalculated();
+        this.dispatcher.sendWayPointsCalculated(diveId);
         this.dispatcher.sendInfoCalculated(diveId);
     }
 }

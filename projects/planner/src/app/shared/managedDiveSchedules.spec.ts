@@ -13,6 +13,7 @@ import {SubViewStorage} from './subViewStorage';
 import {ManagedDiveSchedules} from './managedDiveSchedules';
 import Spy = jasmine.Spy;
 import {ReloadDispatcher} from './reloadDispatcher';
+import { DepthsService } from "./depths.service";
 
 describe('Managed Schedules', () => {
     const expectedSecondTankSize = 24;
@@ -23,7 +24,7 @@ describe('Managed Schedules', () => {
     let schedules: DiveSchedules;
     let savePreferencesSpy: Spy<() => void>;
     let loadPreferencesSpy: Spy<() => void>;
-    let dispatcherSpy: Spy<() => void>;
+    let dispatcherSpy: Spy<(depths: DepthsService) => void>;
 
     const changeDive = (dive: DiveSchedule) => {
         const tankService = dive.tanksService;
@@ -145,7 +146,7 @@ describe('Managed Schedules', () => {
         });
 
         it('Calls scheduled to recalculate selected dive', () => {
-            expect(dispatcherSpy).toHaveBeenCalledWith();
+            expect(dispatcherSpy).toHaveBeenCalledWith(secondDive.depths);
         });
     });
 

@@ -47,7 +47,7 @@ describe('Delayed Schedule', () => {
         schedules.add();
         addRepetitiveDive();
         schedules.add();
-        dispatcher.sendDepthsReloaded();
+        dispatcher.sendDepthsReloaded(schedules.dives[0].depths);
 
         setTimeout(() => {
             expect(plannerSpy).toHaveBeenCalledWith(1);

@@ -13,20 +13,22 @@ import { DepthsService } from './depths.service';
 export class ReloadDispatcher {
     /**
      *  Event fired only in case of tanks rebuild (loadFrom or resetToSimple) on selected dive.
-     *  Not fired when adding or removing tanks.
      **/
     public tanksReloaded$: Observable<TanksService>;
-    /** On selected dive only */
+    /** Edit tank, assign template, Add tank. On selected dive only */
     public tankChanged$: Observable<void>;
-    /** On selected dive only */
+    /** Triggers depth change. On selected dive only. */
     public tankRemoved$: Observable<Tank>;
-    /** On selected dive only */
+    /**
+     * Edit depths, duration, assign tank, remove dive, reset to simple.
+     * On selected dive only.
+     **/
     public depthChanged$: Observable<void>;
-    /** On selected dive only */
+    /** When load default. On selected dive only */
     public optionsReloaded$: Observable<OptionsService>;
-    /** On selected dive only */
+    /** When editing options. On selected dive only */
     public optionsChanged$: Observable<void>;
-    /** Only in case Reload all dives. */
+    /** Only in case Reload all dives, add dive or load default. */
     public depthsReloaded$: Observable<DepthsService>;
     /** For any finished dive */
     public infoCalculated$: Observable<number>;

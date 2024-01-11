@@ -22,8 +22,6 @@ export class DelayedScheduleService extends Streamed {
 
     /** Call only once at startup */
     public startScheduling(): void {
-        this.views.saveMainView();
-
         _(this.diveSchedules.dives)
             .filter(d => d.primary)
             .forEach(d => setTimeout(() => this.scheduleDive(d.id), 100));
@@ -41,8 +39,6 @@ export class DelayedScheduleService extends Streamed {
         this.dispatcher.optionsChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());
 
-        // the only reloaded in case load defaults and add dive
-        // because following dive may need to be recalculated. Not efficient.
         this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());
 

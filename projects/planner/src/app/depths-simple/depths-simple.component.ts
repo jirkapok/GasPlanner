@@ -67,7 +67,6 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
             planDuration: [ Precision.round(this.depths.planDuration, 1), this.validators.duration ]
         });
 
-        // for simple view, this is also kicked of when switching to simple view
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 this.reload();

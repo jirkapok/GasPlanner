@@ -39,7 +39,7 @@ export class DashboardComponent extends Streamed implements OnInit {
         // because the calculation runs in background first it subscribes,
         // than it starts to receive the event.
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((diveId: number) => {
+            .subscribe((diveId?: number) => {
                 if(this.schedules.selected.id === diveId) {
                     this.startup.updateQueryParams();
                 }

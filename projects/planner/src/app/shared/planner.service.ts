@@ -228,10 +228,9 @@ export class PlannerService extends Streamed {
     private sendFailedEvents(): void {
         // fire events, because there will be no continuation
         // we dont know which one, so we use selected to refresh UI.
-        // TODO distinguish failed state, so it stops scheduling
+        // It is Ok to send waypoints calculated, since they are already set to empty
         // TODO add tests, that the events are fired with correct id
-        const diveId = this.schedules.selected.id;
-        this.dispatcher.sendWayPointsCalculated(diveId);
-        this.dispatcher.sendInfoCalculated(diveId);
+        this.dispatcher.sendWayPointsCalculated();
+        this.dispatcher.sendInfoCalculated();
     }
 }

@@ -69,7 +69,11 @@ export class DelayedScheduleService extends Streamed {
         this.schedule(selectedId);
     }
 
-    private scheduleNextDive(diveId: number): void {
+    private scheduleNextDive(diveId?: number): void {
+        if(!diveId) {
+            return;
+        }
+
         const nextId = diveId + 1;
         const nextDive = this.diveSchedules.byId(nextId);
 

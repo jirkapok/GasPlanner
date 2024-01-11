@@ -112,8 +112,16 @@ describe('Delayed Schedule', () => {
         }, delayHigherThanScheduler);
     });
 
+    it('Stops planning when calculation task fails.', (done) => {
+        dispatcher.sendInfoCalculated();
+
+        setTimeout(() => {
+            expect(plannerSpy).toHaveBeenCalledTimes(1); // only initialization
+            done();
+        }, delayHigherThanScheduler);
+    });
+
     // TODO delayed schedule test cases
     // * When calculating and calculation is running for dive with higher id than next planned, nothing is scheduled
     // * When calculating and calculation is running for dive with lower id than next planned, schedule is restarted from new dive id.
-    // * Stops scheduling when previous calculation failed
 });

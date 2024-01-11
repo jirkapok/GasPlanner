@@ -31,9 +31,9 @@ export class ReloadDispatcher {
     /** Only in case Reload all dives, add dive or load default. */
     public depthsReloaded$: Observable<DepthsService>;
     /** For any finished dive */
-    public infoCalculated$: Observable<number>;
+    public infoCalculated$: Observable<number | undefined>;
     /** For selected dive only. */
-    public wayPointsCalculated$: Observable<number>;
+    public wayPointsCalculated$: Observable<number | undefined>;
     public selectedChanged$: Observable<void>;
 
     private onTanksReloaded = new Subject<TanksService>();
@@ -44,8 +44,8 @@ export class ReloadDispatcher {
     private onOptionsReloaded = new Subject<OptionsService>();
     private onOptionsChanged = new Subject<void>();
     private onSelectedChanged = new Subject<void>();
-    private onInfoCalculated = new Subject<number>();
-    private onWayPointsCalculated = new Subject<number>();
+    private onInfoCalculated = new Subject<number | undefined>();
+    private onWayPointsCalculated = new Subject<number | undefined>();
 
     constructor() {
         this.tanksReloaded$ = this.onTanksReloaded.asObservable();
@@ -100,11 +100,11 @@ export class ReloadDispatcher {
         this.onDepthsReloaded.next(source);
     }
 
-    public sendWayPointsCalculated(diveId: number): void {
+    public sendWayPointsCalculated(diveId?: number): void {
         this.onWayPointsCalculated.next(diveId);
     }
 
-    public sendInfoCalculated(diveId: number): void {
+    public sendInfoCalculated(diveId?: number): void {
         this.onInfoCalculated.next(diveId);
     }
 }

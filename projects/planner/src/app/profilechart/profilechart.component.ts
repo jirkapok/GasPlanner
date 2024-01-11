@@ -88,7 +88,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
         this.updateLayoutThickFormat();
         this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((diveId: number) => {
+            .subscribe((diveId?: number) => {
                 if (this.schedules.selected.id === diveId) {
                     this.plotCharts();
                 }

@@ -178,8 +178,8 @@ export class DiveSchedules {
         if (!this.empty) {
             this._dives = this._dives.filter(g => g !== dive);
             this.renumber();
-            this._selected = this._dives[0];
-            this.dispatcher.sendDepthsReloaded(dive.depths);
+            this.selectPreviousDive(dive);
+            this.dispatcher.sendDepthChanged();
         }
     }
 
@@ -217,5 +217,12 @@ export class DiveSchedules {
         this._dives.forEach((dive, index) => {
             dive.assignIndex(index);
         });
+    }
+
+    private selectPreviousDive(dive: DiveSchedule): void {
+        // to be independent on the collection, dive already removed
+        const currentIndex = dive.id - 1;
+        const newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+        this._selected = this._dives[newIndex];
     }
 }

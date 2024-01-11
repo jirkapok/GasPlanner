@@ -73,7 +73,6 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
                 this.reload();
             });
 
-        // TODO fix not reloaded depth after load defaults
         this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((source: DepthsService) => {
                 if(this.depths === source) {

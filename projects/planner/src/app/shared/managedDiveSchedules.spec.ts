@@ -13,7 +13,7 @@ import {SubViewStorage} from './subViewStorage';
 import {ManagedDiveSchedules} from './managedDiveSchedules';
 import Spy = jasmine.Spy;
 import {ReloadDispatcher} from './reloadDispatcher';
-import { DepthsService } from "./depths.service";
+import { DepthsService } from './depths.service';
 
 describe('Managed Schedules', () => {
     const expectedSecondTankSize = 24;
@@ -106,19 +106,23 @@ describe('Managed Schedules', () => {
 
     describe('Remove dive', () => {
         let scheduleRemoveSpy: Spy<(d: DiveSchedule) => void>;
+        let depthChangedSpy: Spy<() => void>;
         let toRemove: DiveSchedule;
 
         beforeEach(() => {
             sut.add();
             sut.add();
+            sut.add();
 
             scheduleRemoveSpy = spyOn(schedules, 'remove').and.callThrough();
-            toRemove = schedules.dives[1];
+            const dispatcher = TestBed.inject(ReloadDispatcher);
+            depthChangedSpy = spyOn(dispatcher, 'sendDepthChanged').and.callThrough();
+            toRemove = schedules.dives[2];
             sut.remove(toRemove);
         });
 
         it('Saves state in preferences', () => {
-            expect(savePreferencesSpy).toHaveBeenCalledTimes(4);
+            expect(savePreferencesSpy).toHaveBeenCalledTimes(5);
         });
 
         it('Is removed from dives', () => {
@@ -126,7 +130,11 @@ describe('Managed Schedules', () => {
         });
 
         it('Calls scheduler after remove', () => {
-            expect(dispatcherSpy).toHaveBeenCalledTimes(1);
+            expect(depthChangedSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('Selects previous dive', () => {
+            expect(schedules.selected.id).toEqual(2);
         });
     });
 

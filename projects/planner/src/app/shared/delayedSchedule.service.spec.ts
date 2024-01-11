@@ -14,8 +14,10 @@ import Spy = jasmine.Spy;
 import { Time } from 'scuba-physics';
 
 describe('Delayed Schedule', () => {
+    const delayHigherThanScheduler = 110;
     let dispatcher: ReloadDispatcher;
     let schedules: DiveSchedules;
+    let scheduler: DelayedScheduleService;
     let plannerSpy: Spy<(diveId?: number) => void>;
 
     const addRepetitiveDive = (): void => {
@@ -40,21 +42,22 @@ describe('Delayed Schedule', () => {
         plannerSpy = spyOn(planner, 'calculate').and.callFake((diveId?: number) => {});
         dispatcher = TestBed.inject(ReloadDispatcher);
         schedules = TestBed.inject(DiveSchedules);
-        TestBed.inject(DelayedScheduleService);
+        scheduler = TestBed.inject(DelayedScheduleService);
+        scheduler.startScheduling();
     });
 
-    it('Plans all first dives', (done) => {
+    it('Plans all first dives  after start', (done) => {
         schedules.add();
         addRepetitiveDive();
         schedules.add();
-        dispatcher.sendDepthsReloaded(schedules.dives[0].depths);
+        scheduler.startScheduling();
 
         setTimeout(() => {
             expect(plannerSpy).toHaveBeenCalledWith(1);
             expect(plannerSpy).toHaveBeenCalledWith(2);
             expect(plannerSpy).toHaveBeenCalledWith(4);
             done();
-        }, 110);
+        }, delayHigherThanScheduler);
     });
 
     it('Plans current dive', (done) => {
@@ -64,7 +67,7 @@ describe('Delayed Schedule', () => {
         setTimeout(() => {
             expect(plannerSpy).toHaveBeenCalledWith(2);
             done();
-        }, 110);
+        }, delayHigherThanScheduler);
     });
 
     it('Plans second dive', (done) => {
@@ -74,7 +77,7 @@ describe('Delayed Schedule', () => {
         setTimeout(() => {
             expect(plannerSpy).toHaveBeenCalledWith(2);
             done();
-        }, 110);
+        }, delayHigherThanScheduler);
     });
 
     it('Stops planning after last dive calculated', (done) => {
@@ -85,7 +88,7 @@ describe('Delayed Schedule', () => {
         setTimeout(() => {
             expect(plannerSpy).not.toHaveBeenCalledWith(3);
             done();
-        }, 110);
+        }, delayHigherThanScheduler);
     });
 
     it('Stops planning if next dive is not repetitive dive', (done) => {
@@ -95,7 +98,7 @@ describe('Delayed Schedule', () => {
         setTimeout(() => {
             expect(plannerSpy).not.toHaveBeenCalledWith(2);
             done();
-        }, 110);
+        }, delayHigherThanScheduler);
     });
 
     // TODO delayed schedule test cases

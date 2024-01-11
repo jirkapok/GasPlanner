@@ -41,7 +41,7 @@ export class DelayedScheduleService extends Streamed {
         this.dispatcher.optionsChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());
 
-        // the only reloaded in case preferences load, add or removed dive,
+        // the only reloaded in case load defaults and add dive
         // because following dive may need to be recalculated. Not efficient.
         this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());

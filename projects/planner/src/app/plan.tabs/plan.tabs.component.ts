@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
-import { DiveSchedule, DiveSchedules } from '../shared/dive.schedules';
+import { DiveSchedule } from '../shared/dive.schedules';
+import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 
 @Component({
     selector: 'app-plan-tabs',
@@ -12,24 +13,24 @@ export class PlanTabsComponent {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
     public addIcon = faPlus;
 
-    constructor(public schedule: DiveSchedules) { }
+    constructor(public schedules: ManagedDiveSchedules) { }
 
     public closeTab(dive: DiveSchedule): void {
-        this.schedule.remove(dive);
+        this.schedules.remove(dive);
     }
 
     public addTab(): void {
-        this.schedule.add();
+        this.schedules.add();
     }
 
     // TODO main menu overlaps the tab, when text is wrapped on two rows
     public selectedChanged(e: MdbTabChange): void {
         let newIndex = e.index;
-        if (e.index === this.schedule.length) {
+        if (e.index === this.schedules.length) {
             newIndex = e.index - 1;
             this.tabs?.setActiveTab(newIndex);
         }
 
-        this.schedule.selected = this.schedule.dives[newIndex];
+        this.schedules.select(newIndex);
     }
 }

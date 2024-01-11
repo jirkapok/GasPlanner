@@ -14,6 +14,18 @@ export class ManagedDiveSchedules {
         this.loadAll();
     }
 
+    public get length(): number {
+        return this.schedules.length;
+    }
+
+    public get empty(): boolean {
+        return this.schedules.empty;
+    }
+
+    public get dives(): DiveSchedule[] {
+        return this.schedules.dives;
+    }
+
     public add(): void {
         const added = this.schedules.add();
         this.loadDefaultTo(added);
@@ -38,6 +50,11 @@ export class ManagedDiveSchedules {
         // TODO implement restore of last selected dive on page reload
         // there is always at least one.
         this.schedules.selected = this.schedules.dives[0];
+        this.schedule.startScheduling();
+    }
+
+    public select(newIndex: number): void {
+        this.schedules.selected = this.schedules.dives[newIndex];
     }
 
     private loadDefaultTo(dive: DiveSchedule) {

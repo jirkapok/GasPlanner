@@ -18,7 +18,20 @@ export class DelayedScheduleService extends Streamed {
         private diveSchedules: DiveSchedules,
         private views: SubViewStorage) {
         super();
+    }
 
+    /** Call only once at startup */
+    public startScheduling(): void {
+        this.views.saveMainView();
+
+        _(this.diveSchedules.dives)
+            .filter(d => d.primary)
+            .forEach(d => setTimeout(() => this.scheduleDive(d.id), 100));
+
+        this.registerEventListeners();
+    }
+
+    private registerEventListeners(): void {
         this.dispatcher.tankChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());
 
@@ -31,7 +44,7 @@ export class DelayedScheduleService extends Streamed {
         // the only reloaded in case preferences load, add or removed dive,
         // because following dive may need to be recalculated. Not efficient.
         this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.scheduleAll());
+            .subscribe(() => this.scheduleSelected());
 
         // we need to serialize since next dive can be calculated only after previous one has results
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
@@ -47,14 +60,6 @@ export class DelayedScheduleService extends Streamed {
 
         // TODO restore this.scheduled = true;
         setTimeout(() => this.scheduleDive(diveId), 100);
-    }
-
-    private scheduleAll(): void {
-        this.views.saveMainView();
-
-        _(this.diveSchedules.dives)
-            .filter(d => d.primary)
-            .forEach(d => setTimeout(() => this.scheduleDive(d.id), 100));
     }
 
     private scheduleSelected(): void {

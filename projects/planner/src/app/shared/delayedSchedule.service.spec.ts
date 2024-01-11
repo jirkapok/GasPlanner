@@ -70,6 +70,17 @@ describe('Delayed Schedule', () => {
         }, delayHigherThanScheduler);
     });
 
+    it('Prevents multiple calculations afer quick change of the same time', (done) => {
+        dispatcher.sendDepthChanged();
+        dispatcher.sendDepthChanged();
+        dispatcher.sendDepthChanged();
+
+        setTimeout(() => {
+            expect(plannerSpy).toHaveBeenCalledTimes(2); // first at startup
+            done();
+        }, delayHigherThanScheduler);
+    });
+
     it('Plans second dive', (done) => {
         addRepetitiveDive();
         dispatcher.sendInfoCalculated(1);
@@ -103,6 +114,6 @@ describe('Delayed Schedule', () => {
 
     // TODO delayed schedule test cases
     // * When calculating and calculation is running for dive with higher id than next planned, nothing is scheduled
-    // * When calculating and calculation is running for dive wiht lower id than next planned, schedule is restarted from new dive id.
+    // * When calculating and calculation is running for dive with lower id than next planned, schedule is restarted from new dive id.
     // * Stops scheduling when previous calculation failed
 });

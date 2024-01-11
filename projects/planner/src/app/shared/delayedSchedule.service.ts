@@ -9,7 +9,13 @@ import _ from 'lodash';
 
 @Injectable()
 export class DelayedScheduleService extends Streamed {
-    private scheduled = false;
+    /**
+     * Prevent reoccurring schedule of the same dive.
+     * Check one dive only is enough, expecting that withing the delay
+     * user is unable to switch to another dive and change it.
+     **/
+    private scheduledDiveId = 0;
+    private delayMilliseconds = 100;
     private lastDiveId = 1;
 
     constructor(
@@ -24,7 +30,7 @@ export class DelayedScheduleService extends Streamed {
     public startScheduling(): void {
         _(this.diveSchedules.dives)
             .filter(d => d.primary)
-            .forEach(d => setTimeout(() => this.scheduleDive(d.id), 100));
+            .forEach(d => setTimeout(() => this.scheduleDive(d.id), this.delayMilliseconds));
 
         this.registerEventListeners();
     }
@@ -50,12 +56,12 @@ export class DelayedScheduleService extends Streamed {
     private schedule(diveId: number): void {
         this.views.saveMainView();
 
-        if(this.scheduled) {
+        if(this.scheduledDiveId === diveId) {
             return;
         }
 
-        // TODO restore this.scheduled = true;
-        setTimeout(() => this.scheduleDive(diveId), 100);
+        this.scheduledDiveId = diveId;
+        setTimeout(() => this.scheduleDive(diveId), this.delayMilliseconds);
     }
 
     private scheduleSelected(): void {
@@ -65,8 +71,8 @@ export class DelayedScheduleService extends Streamed {
 
     private scheduleNextDive(diveId: number): void {
         const nextId = diveId + 1;
-
         const nextDive = this.diveSchedules.byId(nextId);
+
         if(nextDive && !nextDive.primary) {
             this.schedule(nextId);
         }
@@ -74,6 +80,6 @@ export class DelayedScheduleService extends Streamed {
 
     private scheduleDive(diveId: number): void {
         this.planner.calculate(diveId);
-        this.scheduled = false;
+        this.scheduledDiveId = 0;
     }
 }

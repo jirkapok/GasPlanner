@@ -8,6 +8,7 @@ import { Precision } from './precision';
 import { Gases, StandardGases } from './Gases';
 import { Segments } from './Segments';
 import { Options } from './Options';
+import { AltitudePressure } from './pressure-converter';
 
 describe('Buhlmann Algorithm - Repetitive dives', () => {
     const sut = new BuhlmannAlgorithm();
@@ -37,10 +38,10 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         return sut.noDecoLimit(parameters);
     }).value();
 
-    const toTissueResult = (loaded: LoadedTissue[]) => _(loaded)
+    const toTissueResult = (loaded: LoadedTissue[], precision = 8) => _(loaded)
         .map(t => ({
-            pN2: Precision.round(t.pN2, 8),
-            pHe: Precision.round(t.pHe, 8)
+            pN2: Precision.round(t.pN2, precision),
+            pHe: Precision.round(t.pHe, precision)
         }))
         .value();
 
@@ -49,8 +50,8 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         return sut.applySurfaceInterval(parameters);
     };
 
-    // used enough long interval, so the tissues are stable on 8 dicimal places
-    const stableTissues = applySurfaceInterval(Tissues.create(1).finalState(), 0, Time.oneDay * 9);
+    // We need to use real pressure at 0 m.a.s.l
+    const stableTissues = Tissues.create(AltitudePressure.standard).finalState();
 
     describe('Surface interval', () => {
         it('Isn\'t applied for 0 seconds surface interval duration.', () => {
@@ -102,6 +103,15 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
                 item.pHe > r2[index].pHe && item.pHe !== 0 && r2[index].pHe !== 0
             )).toBeTruthy();
         });
+
+        it('Tissue come back to original state after 1.5 days surface interval', () => {
+            const diveResult = diveOnTrimix();
+            const surfaceIntervalResult = applySurfaceInterval(diveResult.tissues, 0, Time.oneHour * 36);
+            const roundto = 2; // rounding to less than 1 % of error
+            const r1 = toTissueResult(surfaceIntervalResult, roundto);
+            const r2 = toTissueResult(stableTissues, roundto);
+            expect(r1).toEqual(r2);
+        });
     });
 
     xdescribe('Following dive', () => {
@@ -124,7 +134,6 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             const firstDiveNdl = noDecoLimits();
             const restingParameters = new RestingParameters(firstDive.tissues, Time.oneMinute * 5);
             const secondDiveNdl = noDecoLimits(restingParameters);
-
             expect(_(firstDiveNdl).every((item, index) => item < secondDiveNdl[index] ))
                 .toBeTruthy();
         });

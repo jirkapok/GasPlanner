@@ -1,5 +1,5 @@
 import { Compartments, Compartment } from './Compartments';
-import { GasMixtures, Gas } from './Gases';
+import { GasMixtures, Gas, StandardGases } from './Gases';
 import _ from 'lodash';
 
 /**
@@ -36,11 +36,8 @@ export class Tissue extends Compartment implements LoadedTissue {
         super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
             compartment.heHalfTime, compartment.heA, compartment.heB);
 
-        // TODO verify, if we need to adjust waterVapourPressure by surface pressure e.g. altitude
-        // and should we also subtract it from partial pressure during the dive?
-        // because after some surface interval, the tissues are still ongasing, but should be stable
-        const waterVapourPressure = 0.0627; // as constant for body temperature 37°C
-        this._pN2 = GasMixtures.partialPressure(surfacePressure, 0.79) - waterVapourPressure;
+        const pressure = this.pressureInLungs(surfacePressure);
+        this._pN2 = GasMixtures.partialPressure(pressure, StandardGases.nitroxInAir);
         this._pHe = 0;
         this.updateTotal();
     }
@@ -107,10 +104,16 @@ export class Tissue extends Compartment implements LoadedTissue {
     private loadGas(segment: LoadSegment, fGas: number, pBegin: number, halfTime: number): number {
         const gasRateInBarsPerSecond = segment.speed * fGas;
         // initial ambient pressure
-        const gasPressureBreathingInBars = segment.startPressure * fGas;
+        const gasPressureBreathingInBars = this.pressureInLungs(segment.startPressure) * fGas;
         const newGasPressure = this.schreinerEquation(pBegin, gasPressureBreathingInBars,
             segment.duration, halfTime, gasRateInBarsPerSecond);
         return newGasPressure;
+    }
+
+    private pressureInLungs(ambientPressure: number): number {
+        /** as constant for body temperature 37°C */
+        const waterVapourPressure = 0.0627;
+        return ambientPressure - waterVapourPressure;
     }
 
     /**

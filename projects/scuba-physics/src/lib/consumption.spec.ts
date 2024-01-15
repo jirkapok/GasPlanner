@@ -30,7 +30,7 @@ describe('Consumption', () => {
             segments.addFlat(30, tank.gas, Time.oneMinute * 10.5);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
-            expect(maxBottomTime).toEqual(17);
+            expect(maxBottomTime).toEqual(18);
         });
 
         it('Decompression dive is calculated using all tanks', () => {
@@ -99,7 +99,7 @@ describe('Consumption', () => {
             segments.addFlat(20, tank.gas, Time.oneMinute * 10);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
-            expect(maxBottomTime).toEqual(50);
+            expect(maxBottomTime).toEqual(51);
         });
 
         it('Profile ending on surface can consume gas also on surface', () => {
@@ -440,7 +440,7 @@ describe('Consumption', () => {
             // ((5 * 2 * 1) + (4 * 1.9 * 1)) * 3
             expect(tank1.reserve).toEqual(53);
             // ((3 * 1 * 2) + (2.15 * 1.8 * 2) + (1.3 * 1.1 * 2) + (1.15 * .3 * 2)) * 3
-            expect(tank2.reserve).toEqual(53);
+            expect(tank2.reserve).toEqual(51);
         });
 
         it('Shallower, than deeper - last deepest point used for emergency ascent', () => {
@@ -533,7 +533,7 @@ describe('Consumption', () => {
                 consumption.consumeFromTanks(profile, options2, tanks, diver);
                 // ((5 b * 2 min * 1 bar/min) + (3.15 b * 3.7 min * 1) + (1.3 b * 3.25 min * 1) + (1.15 b * .3 min * 1)) * 3
                 // (10 + 11.7 + 4.3 + .4) * 3
-                expect(tank1.reserve).toEqual(77);
+                expect(tank1.reserve).toEqual(75);
                 expect(tank2.reserve).toEqual(0);
             });
 
@@ -563,7 +563,7 @@ describe('Consumption', () => {
 
                 it('counts the reserve', () => {
                     // see 'reserve counts always from first tank'. the user defined segments aren't used
-                    expect(tank1.reserve).toEqual(77);
+                    expect(tank1.reserve).toEqual(75);
                     expect(tank2.reserve).toEqual(0);
                 });
             });

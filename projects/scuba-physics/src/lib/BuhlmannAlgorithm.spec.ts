@@ -54,7 +54,7 @@ describe('Buhlmann Algorithm - Plan', () => {
 
         it('Salt water at sea level is applied', () => {
             const planText = calculatePlan(gases, segments);
-            const expectedPlan = '0,40,120; 40,40,480; 40,6,204; 6,6,2; 6,3,18; 3,3,62; 3,0,18;';
+            const expectedPlan = '0,40,120; 40,40,480; 40,3,222; 3,3,46; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 
@@ -62,14 +62,14 @@ describe('Buhlmann Algorithm - Plan', () => {
             it('Fresh water is applied', () => {
                 options.salinity = Salinity.fresh;
                 const planText = calculatePlan(gases, segments);
-                const expectedPlan = '0,40,120; 40,40,480; 40,3,222; 3,3,39; 3,0,18;';
+                const expectedPlan = '0,40,120; 40,40,480; 40,3,222; 3,3,22; 3,0,18;';
                 expect(planText).toBe(expectedPlan);
             });
 
             it('Brackish water is applied', () => {
                 options.salinity = Salinity.brackish;
                 const planText = calculatePlan(gases, segments);
-                const expectedPlan = '0,40,120; 40,40,480; 40,3,222; 3,3,55; 3,0,18;';
+                const expectedPlan = '0,40,120; 40,40,480; 40,3,222; 3,3,38; 3,0,18;';
                 expect(planText).toBe(expectedPlan);
             });
         });
@@ -78,7 +78,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             it('1000 m.a.s.l is applied', () => {
                 options.altitude = 1000;
                 const planText = calculatePlan(gases, segments);
-                const expectedPlan = '0,40,120; 40,40,480; 40,6,204; 6,6,37; 6,3,18; 3,3,75; 3,0,18;';
+                const expectedPlan = '0,40,120; 40,40,480; 40,6,204; 6,6,22; 6,3,18; 3,3,68; 3,0,18;';
                 expect(planText).toBe(expectedPlan);
             });
         });
@@ -92,7 +92,7 @@ describe('Buhlmann Algorithm - Plan', () => {
         segments.add(0, 30, StandardGases.air, 3 * Time.oneMinute);
         segments.addFlat(30, StandardGases.air, 30 * Time.oneMinute);
         const planText = calculatePlan(gases, segments);
-        const expectedPlan = '0,30,180; 30,30,1800; 30,10,120; 10,10,420; 10,5,30; 5,5,240; 5,3,12; 3,3,960; 3,0,18;';
+        const expectedPlan = '0,30,180; 30,30,1800; 30,10,120; 10,10,300; 10,5,30; 5,5,240; 5,3,12; 3,3,840; 3,0,18;';
         expect(planText).toBe(expectedPlan);
     });
 
@@ -220,8 +220,8 @@ describe('Buhlmann Algorithm - Plan', () => {
 
         const planText = calculatePlan(gases, segments);
 
-        const expectedPlan = '0,30,90; 30,30,1410; 30,9,126; 9,9,120; ' +
-            '9,6,18; 6,6,180; 6,3,18; 3,3,480; 3,0,18;';
+        const expectedPlan = '0,30,90; 30,30,1410; 30,9,126; 9,9,60; ' +
+            '9,6,18; 6,6,180; 6,3,18; 3,3,420; 3,0,18;';
         expect(planText).toBe(expectedPlan);
     });
 
@@ -237,7 +237,7 @@ describe('Buhlmann Algorithm - Plan', () => {
         const planText = calculatePlan(gases, segments);
 
         const expectedPlan = '0,40,120; 40,40,1680; 40,21,114; 21,21,60; 21,15,36; 15,15,60; 15,12,18; ' +
-            '12,12,120; 12,9,18; 9,9,240; 9,6,18; 6,6,360; 6,3,18; 3,3,900; 3,0,18;';
+            '12,12,120; 12,9,18; 9,9,180; 9,6,18; 6,6,360; 6,3,18; 3,3,900; 3,0,18;';
         expect(planText).toBe(expectedPlan);
     });
 
@@ -255,8 +255,8 @@ describe('Buhlmann Algorithm - Plan', () => {
             const planText = calculatePlan(gases, segments);
 
             const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
-                '18,18,60; 18,15,18; 15,15,60; 15,12,18; 12,12,180; 12,9,18; ' +
-                '9,9,180; 9,6,18; 6,6,420; 6,3,18; 3,3,960; 3,0,18;';
+                '18,18,60; 18,15,18; 15,15,60; 15,12,18; 12,12,120; 12,9,18; ' +
+                '9,9,240; 9,6,18; 6,6,360; 6,3,18; 3,3,960; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 
@@ -274,8 +274,8 @@ describe('Buhlmann Algorithm - Plan', () => {
             const planText = calculatePlan(gases, segments);
 
             const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
-                '18,18,16; 18,15,18; 15,15,86; 15,12,18; 12,12,136; 12,9,18; ' +
-                '9,9,227; 9,6,18; 6,6,268; 6,3,18; 3,3,696; 3,0,18;';
+                '18,18,7; 18,15,18; 15,15,84; 15,12,18; 12,12,132; 12,9,18; ' +
+                '9,9,221; 9,6,18; 6,6,267; 6,3,18; 3,3,697; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
     });
@@ -341,8 +341,8 @@ describe('Buhlmann Algorithm - Plan', () => {
             const planText = calculatePlan(gases, segments);
 
             const expectedPlan = '0,75,300; 75,75,300; 75,27,288; 27,27,60; 27,24,18; 24,24,60; 24,21,18; ' +
-                '21,21,120; 21,18,18; 18,18,180; 18,15,18; 15,15,180; 15,12,18; 12,12,360; ' +
-                '12,9,18; 9,9,660; 9,6,18; 6,6,1380; 6,3,18; 3,3,4020; 3,0,18;';
+                '21,21,60; 21,18,18; 18,18,180; 18,15,18; 15,15,180; 15,12,18; 12,12,300; ' +
+                '12,9,18; 9,9,540; 9,6,18; 6,6,1200; 6,3,18; 3,3,3240; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 

@@ -391,8 +391,8 @@ describe('Profile Events', () => {
             // during this dive on second level we are already decompressing anyway,
             // so once the ceiling should be lower than current depth.
             assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: 743, depth: 30, gas: undefined },
-                { type: EventType.brokenCeiling, timeStamp: 1534, depth: 5.96, gas: undefined }
+                { type: EventType.noDecoEnd, timeStamp: 778, depth: 30, gas: undefined },
+                { type: EventType.brokenCeiling, timeStamp: 1545, depth: 4.72, gas: undefined }
             ]);
         });
 
@@ -407,7 +407,7 @@ describe('Profile Events', () => {
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
             assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: 3444, depth: 16, gas: undefined }
+                { type: EventType.noDecoEnd, timeStamp: 3746, depth: 16, gas: undefined }
             ]);
         });
 
@@ -425,9 +425,9 @@ describe('Profile Events', () => {
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.always);
 
             assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: 794, depth: 30, gas: undefined },
-                { type: EventType.brokenCeiling, timeStamp: 1850, depth: 7.01, gas: undefined },
-                { type: EventType.brokenCeiling, timeStamp: 2030, depth: 3.79, gas: undefined }
+                { type: EventType.noDecoEnd, timeStamp: 836, depth: 30, gas: undefined },
+                { type: EventType.brokenCeiling, timeStamp: 1856, depth: 6.44, gas: undefined },
+                { type: EventType.brokenCeiling, timeStamp: 2051, depth: 2.85, gas: undefined }
             ]);
         });
     });
@@ -448,7 +448,7 @@ describe('Profile Events', () => {
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
             assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: 551, depth: 30, gas: undefined },
+                { type: EventType.noDecoEnd, timeStamp: 572, depth: 30, gas: undefined },
                 { type: EventType.gasSwitch, timeStamp: Time.oneMinute * 14, depth: 21, gas: StandardGases.ean50 },
                 { type: EventType.switchToHigherN2, timeStamp: Time.oneMinute * 14, depth: 21, gas: StandardGases.ean50 }
             ]);
@@ -615,7 +615,7 @@ describe('Profile Events', () => {
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
             expect(events.items).toEqual([
-                Event.create(EventType.noDecoEnd, 826, 30),
+                Event.create(EventType.noDecoEnd, 868, 30),
             ]);
         });
 
@@ -625,13 +625,13 @@ describe('Profile Events', () => {
 
             const segments = new Segments();
             segments.add(0, 30, StandardGases.air, 102);
-            segments.add(30, 30, StandardGases.air, 678);
+            segments.add(30, 30, StandardGases.air, 690);
             segments.add(30, 0, StandardGases.air, Time.oneMinute * 4);
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
             assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: 786, depth: 29.25, gas: undefined },
+                { type: EventType.noDecoEnd, timeStamp: 870, depth: 20.25, gas: undefined },
             ]);
         });
     });

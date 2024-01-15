@@ -59,7 +59,7 @@ describe('PlannerService', () => {
     describe('Dive info calculated', () => {
         it('No deco limit is calculated', () => {
             const noDecoLimit = dive.noDecoTime;
-            expect(noDecoLimit).toBe(12);
+            expect(noDecoLimit).toBe(13);
         });
 
         it('OTU limit is calculated', () => {

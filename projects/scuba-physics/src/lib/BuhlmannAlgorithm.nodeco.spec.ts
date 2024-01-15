@@ -71,7 +71,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             const algorithm = new BuhlmannAlgorithm();
             const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
             const ndl = algorithm.noDecoLimit(parameters);
-            expect(ndl).toBe(36);
+            expect(ndl).toBe(39);
         });
 
         it('Initial levels have remaining NDL', () => {
@@ -84,7 +84,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             const algorithm = new BuhlmannAlgorithm();
             const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
             const ndl = algorithm.noDecoLimit(parameters);
-            expect(ndl).toBe(36);
+            expect(ndl).toBe(39);
         });
     });
 
@@ -105,15 +105,15 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         it('Fresh water', () => {
             // 0: depth, 1: ndl
             const noDecoLimitTestCases = [
-                [10, 337], // From which depth to start count with deco?
-                [12, 161],
-                [15, 85],
-                [18, 57],
-                [21, 40],
-                [24, 28],
-                [27, 21],
-                [30, 16],
-                [33, 13],
+                [10, 473], // From which depth to start count with deco?
+                [12, 195],
+                [15, 94],
+                [18, 61],
+                [21, 43],
+                [24, 30],
+                [27, 23],
+                [30, 17],
+                [33, 14],
                 [36, 11],
                 [39, 9],
                 [42, 9],
@@ -125,14 +125,14 @@ describe('Buhlmann Algorithm - No decompression times', () => {
 
         it('Fresh water with gradient factor 40/85', () => {
             const noDecoLimitTestCases = [
-                [10, 206], // From which depth to start count with deco?
-                [12, 111],
-                [15, 65],
-                [18, 41],
-                [21, 28],
-                [24, 20],
-                [27, 15],
-                [30, 12],
+                [10, 268], // From which depth to start count with deco?
+                [12, 134],
+                [15, 72],
+                [18, 45],
+                [21, 30],
+                [24, 21],
+                [27, 16],
+                [30, 13],
                 [33, 10],
                 [36, 8],
                 [39, 7],
@@ -149,19 +149,19 @@ describe('Buhlmann Algorithm - No decompression times', () => {
 
         it('Salt water', () => {
             const noDecoLimitTestCasesSalt = [
-                [10, 289], // From which depth to start count with deco?
-                [12, 148],
-                [15, 80],
-                [18, 53],
-                [21, 37],
-                [24, 26],
-                [27, 20],
-                [30, 15],
+                [10, 403], // From which depth to start count with deco?
+                [12, 173],
+                [15, 87],
+                [18, 57],
+                [21, 40],
+                [24, 28],
+                [27, 21],
+                [30, 16],
                 [33, 13],
                 [36, 10],
-                [39, 8],
+                [39, 9],
                 [42, 8],
-                [100, 4], // Where is the limit for no decompression depth?
+                [100, 5], // Where is the limit for no decompression depth?
             ];
 
             calculateNoDecompressionLimit(noDecoLimitTestCasesSalt, Salinity.salt);

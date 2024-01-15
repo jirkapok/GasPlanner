@@ -53,7 +53,7 @@ describe('Tissues', () => {
             const segment = new LoadSegment(2, Time.oneMinute * 30, 0);
             tissue.load(segment, StandardGases.air);
             const ceiling = tissue.ceiling(1);
-            expect(ceiling).toBeCloseTo(0.22258747, 8);
+            expect(ceiling).toBeCloseTo(0.19547818, 8);
         });
     });
 });

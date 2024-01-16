@@ -56,7 +56,7 @@ export class PlannerService extends Streamed {
     }
 
     /** Not called by default, needs to be called manually */
-    public calculate(diveId: number = 1): void {
+    public calculate(diveId: number): void {
         if(!this.schedules.validId(diveId)) {
             return;
         }

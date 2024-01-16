@@ -53,7 +53,7 @@ describe('Url Serialization', () => {
         created.viewSwitch.isComplex = true;
         created.tanksService.addTank();
         created.depths.addSegment();
-        created.planner.calculate();
+        created.planner.calculate(1);
         return created;
     };
 
@@ -101,17 +101,17 @@ describe('Url Serialization', () => {
     it('Serialize and deserialize complex plan',() => {
         const current = createSut();
         current.urlSerialization.fromUrl(customizedUrl);
-        current.planner.calculate();
+        current.planner.calculate(1);
         expectParsedEquals(current);
     });
 
     it('Serialize and deserialize simple plan', () => {
         const simpleSut = createSut();
         simpleSut.tanksService.tanks[0].size = 18;
-        simpleSut.planner.calculate();
+        simpleSut.planner.calculate(1);
         const urlParams = simpleSut.urlSerialization.toUrl();
         sut.urlSerialization.fromUrl(urlParams);
-        sut.planner.calculate();
+        sut.planner.calculate(1);
         expectParsedEquals(simpleSut);
     });
 
@@ -119,7 +119,7 @@ describe('Url Serialization', () => {
         const encodedParams = encodeURIComponent(customizedUrl);
         const current = createSut();
         current.urlSerialization.fromUrl(encodedParams);
-        current.planner.calculate();
+        current.planner.calculate(1);
         expectParsedEquals(current);
     });
 

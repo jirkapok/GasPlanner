@@ -114,7 +114,7 @@ describe('PreferencesStore', () => {
                 tanks[0].startPressure = 150;
                 tanks[1].o2 = 50;
                 viewSwitch.isComplex = true; // otherwise the tank will be removed.
-                planner.calculate();
+                planner.calculate(1);
                 sut.save();
 
                 tanks[0].startPressure = 130;
@@ -122,7 +122,7 @@ describe('PreferencesStore', () => {
                 tanks[1].workingPressure = 0;
                 sut.load();
 
-                planner.calculate(); // not called automatically
+                planner.calculate(1); // not called automatically
                 const expected1 = new Tank(15, 150, 21);
                 expected1.id = 1;
                 expected1.consumed = 66;
@@ -147,7 +147,7 @@ describe('PreferencesStore', () => {
                 const lastSegment = depthsService.levels[2];
                 const secondTank = tanksService.tanks[1];
                 lastSegment.tank = secondTank;
-                planner.calculate();
+                planner.calculate(1);
                 sut.save();
 
                 depthsService.removeSegment(lastSegment);
@@ -168,7 +168,7 @@ describe('PreferencesStore', () => {
                 tanksService.addTank();
 
                 depthsService.addSegment();
-                planner.calculate();
+                planner.calculate(1);
                 sut.save();
 
                 sut.load();

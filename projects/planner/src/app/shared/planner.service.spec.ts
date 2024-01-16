@@ -53,7 +53,7 @@ describe('PlannerService', () => {
         optionsService.safetyStop = SafetyStop.always;
         depthsService.plannedDepth = 30;
         dispatcher = TestBed.inject(ReloadDispatcher);
-        planner.calculate();
+        planner.calculate(1);
     });
 
     describe('Events are fired', () => {
@@ -112,7 +112,7 @@ describe('PlannerService', () => {
                 tanksService.tanks[1].o2 = 50;
                 tanksService.addTank();
                 tanksService.tanks[2].o2 = 100;
-                planner.calculate();
+                planner.calculate(1);
 
                 const wayPoints = dive.wayPoints;
                 expect(wayPoints[3].endDepth).toBeCloseTo(70, 4); // Ean50 switch
@@ -142,20 +142,20 @@ describe('PlannerService', () => {
     describe('Shows Warnings', () => {
         it('60m for 50 minutes maximum depth exceeded', () => {
             depthsService.plannedDepth =60;
-            planner.calculate();
+            planner.calculate(1);
             const hasEvents = dive.events.length > 0;
             expect(hasEvents).toBeTruthy();
         });
 
         it('60m for 50 minutes not enough gas', () => {
             depthsService.planDuration = 50;
-            planner.calculate();
+            planner.calculate(1);
             expect(dive.notEnoughGas).toBeTruthy();
         });
 
         it('30m for 20 minutes no decompression time exceeded', () => {
             depthsService.planDuration = 20;
-            planner.calculate();
+            planner.calculate(1);
             expect(dive.noDecoExceeded).toBeTruthy();
         });
     });
@@ -194,7 +194,7 @@ describe('PlannerService', () => {
             // changing altitude changes surface pressure used to convert depths in algorithm
             // in case it would take effect, the switch depth would be 24 m
             optionsService.altitude = 800;
-            planner.calculate();
+            planner.calculate(1);
             // 4. segment - gas switch
             expect(dive.wayPoints[3].endDepth).toEqual(21);
         });
@@ -232,7 +232,7 @@ describe('PlannerService', () => {
                 dispatcher.infoCalculated$.subscribe(() => infoFinished = true);
                 noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
                 consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
-                planner.calculate();
+                planner.calculate(1);
             });
 
             it('Fallback to error state', () => {
@@ -279,7 +279,7 @@ describe('PlannerService', () => {
                 dispatcher.infoCalculated$.subscribe((source) => infoFinished.push(source));
                 noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
                 consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
-                planner.calculate();
+                planner.calculate(1);
             });
 
             it('Still finishes waypoints calculated event', () => {
@@ -312,7 +312,7 @@ describe('PlannerService', () => {
                     .and.throwError('No deco failed');
 
                 dispatcher.infoCalculated$.subscribe((source) => infoFinished.push(source));
-                planner.calculate();
+                planner.calculate(1);
             });
 
             it('Still ends info calculated event', () => {
@@ -332,7 +332,7 @@ describe('PlannerService', () => {
                     .and.throwError('Consumption failed');
 
                 dispatcher.infoCalculated$.subscribe((source) => infoFinished = source);
-                planner.calculate();
+                planner.calculate(1);
             });
 
             it('Still ends calculated event', () => {
@@ -381,7 +381,7 @@ describe('PlannerService', () => {
                         events: []
                     }));
 
-                planner.calculate();
+                planner.calculate(1);
                 expect(calculateConsumptionSpy).toHaveBeenCalledTimes(0);
                 expect(calculateInfoSpy).toHaveBeenCalledTimes(0);
                 expect(diveCalculated).toBeFalsy();
@@ -396,7 +396,7 @@ describe('PlannerService', () => {
                         tanks: []
                     }));
 
-                expect( () => planner.calculate()).not.toThrow();
+                expect( () => planner.calculate(1)).not.toThrow();
                 expect(diveCalculated).toBeFalsy();
             });
 
@@ -417,7 +417,7 @@ describe('PlannerService', () => {
                         }
                     }));
 
-                expect( () => planner.calculate()).not.toThrow();
+                expect( () => planner.calculate(1)).not.toThrow();
                 expect(diveCalculated).toBeFalsy();
             });
         });

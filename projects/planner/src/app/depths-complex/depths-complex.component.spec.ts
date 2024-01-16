@@ -80,7 +80,7 @@ describe('Depths Complex Component', () => {
         fixture = TestBed.createComponent(DepthsComplexComponent);
         depths = TestBed.inject(DiveSchedules).selected.depths;
         const planner = TestBed.inject(PlannerService);
-        planner.calculate();
+        planner.calculate(1);
         fixture.detectChanges();
         complexPage = new ComplexDepthsPage(fixture);
     });

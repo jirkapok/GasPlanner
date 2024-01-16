@@ -370,9 +370,11 @@ describe('Buhlmann Algorithm - Plan', () => {
 
     // There is no such profile, where deco is increased even during ascent,
     // because the tissues pressure never reaches so close to the ambient pressure.
-    // Each ascent immediately starts decompression.
+    // Every ascent immediately starts decompression.
 
-    // TODO add algorithm test cases:
-    // Trimix
-    // F: Gases: 12/60, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
+    // TODO add algorithm test cases: air breaks
+    // A: Gases: 12/60, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
+    // B: Gases: 7/70, oxygen to 80m for 20min, option air breaks = true;
+    // no switch possible, since we dont have breath able bototm gas at 6m
+    // C: Fall back to Ean50 instead of bottom gas in case of hypoxic bottom gas
 });

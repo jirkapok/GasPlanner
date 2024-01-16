@@ -56,10 +56,32 @@ describe('PlannerService', () => {
         planner.calculate();
     });
 
+    describe('Events are fired', () => {
+        let profilesReceived: (number | undefined)[];
+        let infosReceived: (number | undefined)[];
+
+        beforeEach(() => {
+            profilesReceived = [];
+            infosReceived = [];
+            dispatcher.wayPointsCalculated$.subscribe((source) => profilesReceived.push(source));
+            dispatcher.infoCalculated$.subscribe((source) => infosReceived.push(source));
+            TestBed.inject(DiveSchedules).add();
+            planner.calculate(2);
+        });
+
+        it('Profile calculated with correct dive id', () => {
+            expect(profilesReceived).toEqual([2]);
+        });
+
+        it('Info calculated with correct dive id', () => {
+            expect(infosReceived).toEqual([2]);
+        });
+    });
+
     describe('Dive info calculated', () => {
         it('No deco limit is calculated', () => {
             const noDecoLimit = dive.noDecoTime;
-            expect(noDecoLimit).toBe(13);
+            expect(noDecoLimit).toEqual(13);
         });
 
         it('OTU limit is calculated', () => {
@@ -101,23 +123,19 @@ describe('PlannerService', () => {
 
     describe('Successfully calculates 30m for 15 minutes (defaults)', () => {
         it('8 minutes time to surface', () => {
-            planner.calculate();
-            expect(dive.timeToSurface).toBe(8);
+            expect(dive.timeToSurface).toEqual(8);
         });
 
         it('18 minutes maximum dive time', () => {
-            planner.calculate();
-            expect(dive.maxTime).toBe(18);
+            expect(dive.maxTime).toEqual(18);
         });
 
         it('74 bar rock bottom', () => {
-            planner.calculate();
-            expect(tanksService.firstTank.tank.reserve).toBe(78);
+            expect(tanksService.firstTank.tank.reserve).toEqual(78);
         });
 
         it('109 bar remaining gas', () => {
-            planner.calculate();
-            expect(tanksService.firstTank.tank.endPressure).toBe(123);
+            expect(tanksService.firstTank.tank.endPressure).toEqual(123);
         });
     });
 
@@ -158,17 +176,14 @@ describe('PlannerService', () => {
 
     describe('Updates dive', () => {
         it('Average depth is calculated', () => {
-            planner.calculate();
-            expect(dive.averageDepth).toBe(21.75);
+            expect(dive.averageDepth).toEqual(21.75);
         });
 
         it('Waypoints are calculated', () => {
-            planner.calculate();
-            expect(dive.wayPoints.length).toBe(5);
+            expect(dive.wayPoints.length).toEqual(5);
         });
 
         it('Start ascent is updated', () => {
-            planner.calculate();
             depthsService.applyNdlDuration();
             expect(dive.emergencyAscentStart).toEqual(Time.oneMinute * 12);
         });
@@ -181,7 +196,7 @@ describe('PlannerService', () => {
             optionsService.altitude = 800;
             planner.calculate();
             // 4. segment - gas switch
-            expect(dive.wayPoints[3].endDepth).toBe(21);
+            expect(dive.wayPoints[3].endDepth).toEqual(21);
         });
     });
 
@@ -225,7 +240,7 @@ describe('PlannerService', () => {
             });
 
             it('Sets waypoints to empty', () => {
-                expect(dive.wayPoints.length).toBe(0);
+                expect(dive.wayPoints.length).toEqual(0);
             });
 
             it('Still fires waypoints calculated event', () => {
@@ -253,14 +268,15 @@ describe('PlannerService', () => {
             let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => DiveInfoResultDto>;
             let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
             let wayPointsFinished = false;
-            let infoFinished = false;
+            // serial processing in tests results in wrong behavior, the task is still finished
+            const infoFinished: (number | undefined)[] = [];
 
             beforeEach(() => {
                 spyOn(PlanningTasks, 'calculateDecompression')
                     .and.throwError('Profile failed');
 
                 dispatcher.wayPointsCalculated$.subscribe(() => wayPointsFinished = true);
-                dispatcher.infoCalculated$.subscribe(() => infoFinished = true);
+                dispatcher.infoCalculated$.subscribe((source) => infoFinished.push(source));
                 noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
                 consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
                 planner.calculate();
@@ -271,7 +287,7 @@ describe('PlannerService', () => {
             });
 
             it('Still finishes info calculated event', () => {
-                expect(infoFinished).toBeTruthy();
+                expect(infoFinished[0]).toBeUndefined();
             });
 
             it('Sets calculation to failed', () => {
@@ -288,18 +304,19 @@ describe('PlannerService', () => {
         });
 
         describe('No deco task failed', () => {
-            let infoFinished = false;
+            // serial processing in tests results in wrong behavior, the task is still finished
+            const infoFinished: (number | undefined)[] = [];
 
             beforeEach(() => {
                 spyOn(PlanningTasks, 'diveInfo')
                     .and.throwError('No deco failed');
 
-                dispatcher.infoCalculated$.subscribe(() => infoFinished = true);
+                dispatcher.infoCalculated$.subscribe((source) => infoFinished.push(source));
                 planner.calculate();
             });
 
             it('Still ends info calculated event', () => {
-                expect(infoFinished).toBeTruthy();
+                expect(infoFinished[0]).toBeUndefined();
             });
 
             it('Sets calculation to resolved failed', () => {
@@ -308,18 +325,18 @@ describe('PlannerService', () => {
         });
 
         describe('Consumption task failed', () => {
-            let infoFinished = false;
+            let infoFinished: number | undefined = -1; // unknown id
 
             beforeEach(() => {
                 spyOn(PlanningTasks, 'calculateConsumption')
                     .and.throwError('Consumption failed');
 
-                dispatcher.infoCalculated$.subscribe(() => infoFinished = true);
+                dispatcher.infoCalculated$.subscribe((source) => infoFinished = source);
                 planner.calculate();
             });
 
             it('Still ends calculated event', () => {
-                expect(infoFinished).toBeTruthy();
+                expect(infoFinished).toBeUndefined();
             });
 
             it('Sets consumption to resolved failed', () => {

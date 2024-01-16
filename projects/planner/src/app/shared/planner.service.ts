@@ -226,10 +226,9 @@ export class PlannerService extends Streamed {
     }
 
     private sendFailedEvents(): void {
-        // fire events, because there will be no continuation
-        // we dont know which one, so we use selected to refresh UI.
-        // It is Ok to send waypoints calculated, since they are already set to empty
-        // TODO add tests, that the events are fired with correct id
+        // Fire events, because there will be no continuation.
+        // But we dont know which one.
+        // It is Ok to send waypoints calculated, since they are already set to empty.
         this.dispatcher.sendWayPointsCalculated();
         this.dispatcher.sendInfoCalculated();
     }

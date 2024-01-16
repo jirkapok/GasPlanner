@@ -10,7 +10,7 @@ export class ManagedDiveSchedules {
         private preferences: PreferencesStore,
         private schedule: DelayedScheduleService
     ) {
-        // TODO consider speedup start by storing calculated final tissues to prevent calculation of all dives
+        // consider speedup start by storing calculated final tissues to prevent calculation of all dives
         this.loadAll();
     }
 

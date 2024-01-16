@@ -263,8 +263,12 @@ export class TissuesValidator {
                item.b >= 0;
     }
 
+    public static validCount(current?: LoadedTissue[]): boolean {
+        return !!current && current.length === Compartments.buhlmannZHL16C.length;
+    }
+
     public static valid(current: LoadedTissue[]) {
-        if(!current || current.length !== Compartments.buhlmannZHL16C.length) {
+        if(!TissuesValidator.validCount(current)) {
             return false;
         }
 

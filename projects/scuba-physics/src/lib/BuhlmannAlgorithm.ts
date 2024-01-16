@@ -7,7 +7,7 @@ import { CalculatedProfile, Ceiling, Event } from './Profile';
 import { Options } from './Options';
 import { Precision } from './precision';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
-import { AltitudePressure, Salinity } from './pressure-converter';
+import { AltitudePressure, PressureConverter, Salinity } from './pressure-converter';
 import { AlgorithmContext, ContextMemento } from './AlgorithmContext';
 
 // Speed in meters / min.
@@ -16,6 +16,7 @@ const durationFor = (depthDifference: number, speed: number): number => {
     return depthDifference / meterPerSec;
 };
 
+/** Represents surface interval between two dives */
 export class RestingParameters {
     /**
      * Creates new instance of algorithm parameters representing surface interval between two dives.
@@ -27,6 +28,7 @@ export class RestingParameters {
     }
 }
 
+/** Parameters to request application of surface interval */
 export class SurfaceIntervalParameters {
     /**
      * Creates new instance of algorithm parameters representing surface interval between two dives.
@@ -98,12 +100,13 @@ export class AlgorithmParams {
     }
 
     private resolveSurfaceParameters(provided?: RestingParameters): RestingParameters {
-        // helps calculator to dont generate issues for first dive
-        if(provided && provided.current.length > 0) {
+        // helps calculator to dont generate tissues for first dive
+        if(provided && TissuesValidator.validCount(provided?.current)) {
             return provided;
         }
 
-        const surfacePressure = AltitudePressure.pressure(this.options.altitude);
+        const surfacePressurePascal = AltitudePressure.pressure(this.options.altitude);
+        const surfacePressure = PressureConverter.pascalToBar(surfacePressurePascal);
         const tissues = Tissues.create(surfacePressure).finalState();
         return new RestingParameters(tissues, Number.POSITIVE_INFINITY);
     }
@@ -112,17 +115,24 @@ export class AlgorithmParams {
 export class BuhlmannAlgorithm {
     /**
      * Calculates no decompression limit in minutes.
-     * Returns positive number or Infinity, in case there is no more tissues loading.
-     * Usually at small depths (bellow 10 meters).
+     * Returns positive number or Infinity, in case there is no more tissues loading
+     * usually at small depths (bellow 10 meters).
      */
     public noDecoLimit({ segments, gases, options, surfaceInterval }: AlgorithmParams): number {
         const depthConverter = new DepthConverterFactory(options).create();
-        // TODO apply rested surface tissues
         const rested = this.applySurfaceInterval(surfaceInterval);
-        const context = new AlgorithmContext(gases, segments, options, depthConverter);
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, rested);
         return this.swimNoDecoLimit(segments, gases, context);
     }
 
+    /**
+     * Calculates decompression: generating missing ascent for the planned profile,
+     * ceilings during the dive and tissues at end of the dive.
+     * @param segments Not empty planned depths collection
+     * @param gases Not empty gases used during the plan
+     * @param options Customization of the required profile
+     * @param surfaceInterval Rested tissues after surface interval from previous dive
+     */
     public decompression({ segments, gases, options, surfaceInterval }: AlgorithmParams): CalculatedProfile {
         const depthConverter = new DepthConverterFactory(options).create();
         const newSegments = segments.copy();
@@ -133,7 +143,7 @@ export class BuhlmannAlgorithm {
         }
 
         const rested = this.applySurfaceInterval(surfaceInterval);
-        const context = new AlgorithmContext(gases, newSegments, options, depthConverter);
+        const context = new AlgorithmContext(gases, newSegments, options, depthConverter, rested);
         this.swimPlan(context);
         context.markAverageDepth();
         let nextStop = context.nextStop(context.currentDepth);
@@ -154,10 +164,12 @@ export class BuhlmannAlgorithm {
     }
 
     /**
-     * @param current not empty collection of valid tissues ordered by compartment half time.
-     * See Compartments class.
+     * Takes current tissues (usually at end of the dive) and applies required surface interval.
+     * This simulates diver resting at surface and breathing air for required time.
+     * @param current not empty collection of valid tissues ordered by compartment half time. See Compartments class.
      * @param altitude in meters
      * @param surfaceInterval in seconds to align units with segments
+     * @returns tissues at end of the surface interval.
      */
     public applySurfaceInterval({ previousTissues, altitude, surfaceInterval }: SurfaceIntervalParameters): LoadedTissue[] {
         if(!TissuesValidator.valid(previousTissues)) {

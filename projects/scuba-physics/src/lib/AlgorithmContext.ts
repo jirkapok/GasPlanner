@@ -34,8 +34,8 @@ export class AlgorithmContext {
         public segments: Segments,
         public options: Options,
         public depthConverter: DepthConverter,
-        currentTissues: LoadedTissue[] | null = null) {
-        this.tissues = currentTissues ? Tissues.createLoaded(currentTissues) : Tissues.create(depthConverter.surfacePressure);
+        currentTissues: LoadedTissue[]) {
+        this.tissues = Tissues.createLoaded(currentTissues);
         // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
         const last = segments.last();

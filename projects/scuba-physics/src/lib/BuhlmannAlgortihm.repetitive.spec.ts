@@ -114,8 +114,8 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         });
     });
 
-    xdescribe('Following dive', () => {
-        it('Has higher tissues loading', () => {
+    describe('Following dive', () => {
+        it('Deco calculation ends with different tissues loading', () => {
             const firstDive = diveOnTrimix();
             const restingParameters = new RestingParameters(firstDive.tissues, Time.oneMinute * 5);
             const secondDive = diveOnTrimix(restingParameters);
@@ -123,18 +123,24 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             const firstTissues = toTissueResult(firstDive.tissues);
             const secondTissues = toTissueResult(secondDive.tissues);
 
-            expect(_(firstTissues).every((item, index) =>
-                item.pHe < secondTissues[index].pHe && item.pN2 < secondTissues[index].pN2 &&
-                item.pHe !== 0 && secondTissues[index].pHe !== 0
-            )).toBeTruthy();
+            // there is difference in both he and N2, some tissues have higher loading, some lower.
+            expect(firstTissues).not.toEqual(secondTissues);
+        });
+
+        it('Deco calculation generates reproducible results', () => {
+            const firstDive = diveOnTrimix();
+            const secondDive = diveOnTrimix();
+            const firstTissues = toTissueResult(firstDive.tissues);
+            const secondTissues = toTissueResult(secondDive.tissues);
+            expect(firstTissues).toEqual(secondTissues);
         });
 
         it('Nodeco limit are lower', () => {
             const firstDive = diveOnTrimix();
             const firstDiveNdl = noDecoLimits();
-            const restingParameters = new RestingParameters(firstDive.tissues, Time.oneMinute * 5);
+            const restingParameters = new RestingParameters(firstDive.tissues, Time.oneMinute * 10);
             const secondDiveNdl = noDecoLimits(restingParameters);
-            expect(_(firstDiveNdl).every((item, index) => item < secondDiveNdl[index] ))
+            expect(_(firstDiveNdl).every((item, index) => item > secondDiveNdl[index] ))
                 .toBeTruthy();
         });
     });

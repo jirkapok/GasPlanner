@@ -80,6 +80,7 @@ export class DiveSchedule {
         }
 
         this._surfaceInterval = newValue;
+        this.dispatcher.sendDepthChanged();
     }
 
     public assignIndex(index: number): void {

@@ -8,7 +8,6 @@ import { Precision } from './precision';
 import { Gases, StandardGases } from './Gases';
 import { Segments } from './Segments';
 import { Options } from './Options';
-import { AltitudePressure } from './pressure-converter';
 
 describe('Buhlmann Algorithm - Repetitive dives', () => {
     const sut = new BuhlmannAlgorithm();
@@ -50,35 +49,36 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         return sut.applySurfaceInterval(parameters);
     };
 
-    // We need to use real pressure at 0 m.a.s.l
-    const stableTissues = Tissues.create(AltitudePressure.standard).finalState();
+    const stableTissues = Tissues.createLoadedAt(0);
 
     describe('Surface interval', () => {
         it('Isn\'t applied for 0 seconds surface interval duration.', () => {
-            const r1 = toTissueResult(stableTissues);
-            const result = applySurfaceInterval(stableTissues, 0, 0);
-            const r2 = toTissueResult(result);
+            const diveResult = diveOnTrimix();
+            const restedTissues = applySurfaceInterval(diveResult.tissues, 0, 0);
+            const r1 = toTissueResult(diveResult.tissues);
+            const r2 = toTissueResult(restedTissues);
             expect(r1).toEqual(r2);
         });
 
-        it('Isn\'t applied for Infinite surface interval duration.', () => {
-            const r1 = toTissueResult(stableTissues);
-            const result = applySurfaceInterval(stableTissues, 0, Number.POSITIVE_INFINITY);
-            const r2 = toTissueResult(result);
+        it('Reset tissues to stable for infinite surface interval.', () => {
+            const diveResult = diveOnTrimix();
+            const restedTissues = applySurfaceInterval(diveResult.tissues, 0, Number.POSITIVE_INFINITY);
+            const r1 = toTissueResult(restedTissues);
+            const r2 = toTissueResult(stableTissues);
             expect(r1).toEqual(r2);
         });
 
         it('Doesn\'t change not loaded tissues.', () => {
             const r1 = toTissueResult(stableTissues);
-            const result = applySurfaceInterval(stableTissues, 0, Time.oneMinute * 10);
-            const r2 = toTissueResult(result);
+            const restedTissues = applySurfaceInterval(stableTissues, 0, Time.oneMinute * 10);
+            const r2 = toTissueResult(restedTissues);
             expect(r1).toEqual(r2);
         });
 
         it('Adapts to higher altitude.', () => {
             const r1 = toTissueResult(stableTissues);
-            const result = applySurfaceInterval(stableTissues, 1000, Time.oneMinute * 10);
-            const r2 = toTissueResult(result);
+            const restedTissues = applySurfaceInterval(stableTissues, 1000, Time.oneMinute * 10);
+            const r2 = toTissueResult(restedTissues);
             expect(_(r1).every((item, index) =>
                 item.pN2 > r2[index].pN2 && r2[index].pN2 !== 0 && r2[index].pHe === 0
             )).toBeTruthy();
@@ -106,9 +106,9 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
 
         it('Tissue come back to original state after 1.5 days surface interval', () => {
             const diveResult = diveOnTrimix();
-            const surfaceIntervalResult = applySurfaceInterval(diveResult.tissues, 0, Time.oneHour * 36);
+            const restedTissues = applySurfaceInterval(diveResult.tissues, 0, Time.oneHour * 36);
             const roundto = 2; // rounding to less than 1 % of error
-            const r1 = toTissueResult(surfaceIntervalResult, roundto);
+            const r1 = toTissueResult(restedTissues, roundto);
             const r2 = toTissueResult(stableTissues, roundto);
             expect(r1).toEqual(r2);
         });

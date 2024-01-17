@@ -105,9 +105,7 @@ export class AlgorithmParams {
             return provided;
         }
 
-        const surfacePressurePascal = AltitudePressure.pressure(this.options.altitude);
-        const surfacePressure = PressureConverter.pascalToBar(surfacePressurePascal);
-        const tissues = Tissues.create(surfacePressure).finalState();
+        const tissues = Tissues.createLoadedAt(this.options.altitude);
         return new RestingParameters(tissues, Number.POSITIVE_INFINITY);
     }
 }
@@ -184,8 +182,8 @@ export class BuhlmannAlgorithm {
             throw Error('Surface interval needs to be positive number or 0.');
         }
 
-        if(surfaceInterval === Number.POSITIVE_INFINITY || surfaceInterval <= 0) {
-            return previousTissues;
+        if(surfaceInterval === Number.POSITIVE_INFINITY) {
+            return Tissues.createLoadedAt(altitude);
         }
 
         // at surface, there is no depth change, even we are at different elevation and we are always breathing air

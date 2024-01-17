@@ -1,6 +1,7 @@
 import { Compartments, Compartment } from './Compartments';
 import { GasMixtures, Gas, StandardGases } from './Gases';
 import _ from 'lodash';
+import { AltitudePressure, PressureConverter } from './pressure-converter';
 
 /**
  * Represents transition between depths during dive
@@ -178,6 +179,17 @@ export class Tissues {
         }
 
         return new Tissues(created);
+    }
+
+    /**
+     * Creates new loaded tissues at altitude
+     * @param altitude in m.a.s.l
+     */
+    public static createLoadedAt(altitude: number): LoadedTissue[] {
+        const surfacePressurePascal = AltitudePressure.pressure(altitude);
+        const surfacePressure = PressureConverter.pascalToBar(surfacePressurePascal);
+        const tissues = Tissues.create(surfacePressure).finalState();
+        return tissues;
     }
 
     public static copy(source: Tissue[]): Tissue[] {

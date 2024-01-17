@@ -23,7 +23,6 @@ export class PlanTabsComponent {
         this.schedules.add();
     }
 
-    // TODO main menu overlaps the tab, when text is wrapped on two rows
     public selectedChanged(e: MdbTabChange): void {
         let newIndex = e.index;
         if (e.index === this.schedules.length) {

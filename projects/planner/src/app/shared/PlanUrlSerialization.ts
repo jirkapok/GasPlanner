@@ -250,6 +250,11 @@ export class PlanUrlSerialization {
     }
 
     public toUrl(): string {
+        if(this.schedules.hasMany) {
+            // unable to store more dives, the url would easily exceed maximum length
+            return '';
+        }
+
         // always use first dive, in case of multiple dives, we are unable to show the complete url
         const dive = this.schedules.dives[0];
         const tanksParam = PlanUrlSerialization.toTanksParam(dive.tanksService.tanks);

@@ -137,6 +137,10 @@ export class DiveSchedules {
         return this._dives.length;
     }
 
+    public get hasMany(): boolean {
+        return this._dives.length > 1;
+    }
+
     public get empty(): boolean {
         return this.length <= 1;
     }
@@ -168,6 +172,7 @@ export class DiveSchedules {
         }
     }
 
+    // consider unify usage by id or by diveId
     public setSelectedIndex(newIndex: number): void {
         if(newIndex >= 0 && newIndex < this._dives.length) {
             this.selected = this._dives[newIndex];

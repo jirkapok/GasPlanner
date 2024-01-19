@@ -12,6 +12,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 
 interface TestSut {
+    schedules: DiveSchedules;
     options: OptionsService;
     depths: DepthsService;
     tanksService: TanksService;
@@ -38,6 +39,7 @@ describe('Url Serialization', () => {
         firstDive.depths.setSimple();
 
         return {
+            schedules: schedules,
             options: firstDive.optionsService,
             depths: firstDive.depths,
             tanksService: firstDive.tanksService,
@@ -89,6 +91,12 @@ describe('Url Serialization', () => {
     it('Generates valid url characters', () => {
         const isValid = /[-a-zA-Z0-9@:%_+.~#&//=]*/g.test(customizedUrl);
         expect(isValid).toBeTruthy();
+    });
+
+    it('Generates empty url for multiple dives', () => {
+        sut.schedules.add();
+        const url = sut.urlSerialization.toUrl();
+        expect(url).toEqual('');
     });
 
     it('Serialize application options', () => {

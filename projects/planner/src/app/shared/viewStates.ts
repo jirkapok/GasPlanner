@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppStates } from './serialization.model';
-import { ViewState } from '../shared/views.model';
+import { ViewState } from './views.model';
 
 export class KnownViews {
     public static readonly dashboard = 'dashboard';

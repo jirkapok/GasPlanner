@@ -62,7 +62,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     private get tanksService(): TanksService {
-        return this.schedules.selectedTansks;
+        return this.schedules.selectedTanks;
     }
 
     public ngOnInit(): void {

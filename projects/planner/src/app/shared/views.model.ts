@@ -1,5 +1,9 @@
 import { Salinity } from 'scuba-physics';
 
+export interface DashBoardViewState extends ViewState {
+    selectedDiveIndex: number;
+}
+
 export interface GasViewState extends ViewState {
     o2: number;
     he: number;

@@ -6,10 +6,11 @@ import {
 import { DtoSerialization } from './dtoSerialization';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
-import { ViewStates } from './viewStates';
+import { KnownViews, ViewStates } from './viewStates';
 import { DiveSetup } from './models';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import _ from 'lodash';
+import { DashBoardViewState } from './views.model';
 
 @Injectable()
 export class Preferences {
@@ -37,6 +38,11 @@ export class Preferences {
     public applyApp(loaded: AppPreferences): void {
         this.applyLoaded(loaded);
         this.viewStates.loadFrom(loaded.states);
+        const mainView: DashBoardViewState | null = this.viewStates.get(KnownViews.dashboard);
+
+        if(mainView) {
+            this.schedules.setSelectedIndex(mainView.selectedDiveIndex);
+        }
     }
 
     public applyLoaded(loaded: AppPreferencesDto): void {

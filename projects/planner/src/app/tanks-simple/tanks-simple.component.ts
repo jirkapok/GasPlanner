@@ -42,7 +42,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     }
 
     public get firstTank(): TankBound {
-        return this.diveSchedules.selectedTansks.firstTank;
+        return this.diveSchedules.selectedTanks.firstTank;
     }
 
     public get ranges(): RangeConstants {
@@ -79,7 +79,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
 
         this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((source: TanksService) => {
-                if(this.diveSchedules.selectedTansks === source) {
+                if(this.diveSchedules.selectedTanks === source) {
                     this.reload();
                 }
             });

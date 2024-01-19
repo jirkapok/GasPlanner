@@ -54,7 +54,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
 
     // only to get their label, formatted in the tankLabel
     public get tanks(): TankBound[] {
-        return this.schedules.selectedTansks.tanks;
+        return this.schedules.selectedTanks.tanks;
     }
 
     public get levelControls(): FormArray<FormGroup<LevelRow>> {

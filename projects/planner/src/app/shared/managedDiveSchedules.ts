@@ -2,13 +2,15 @@ import {Injectable} from '@angular/core';
 import {PreferencesStore} from './preferencesStore';
 import {DiveSchedule, DiveSchedules} from './dive.schedules';
 import {DelayedScheduleService} from './delayedSchedule.service';
+import { SubViewStorage } from './subViewStorage';
 
 @Injectable()
 export class ManagedDiveSchedules {
     constructor(
         private schedules: DiveSchedules,
         private preferences: PreferencesStore,
-        private schedule: DelayedScheduleService
+        private schedule: DelayedScheduleService,
+        private viewStore: SubViewStorage
     ) {
         // consider speedup start by storing calculated final tissues to prevent calculation of all dives
         this.loadAll();
@@ -47,14 +49,14 @@ export class ManagedDiveSchedules {
 
     public loadAll(){
         this.preferences.load();
-        // TODO implement restore of last selected dive on page reload
-        // there is always at least one.
-        this.schedules.selected = this.schedules.dives[0];
+        // we dont need to load the selected dive, since it is loaded by preferences
         this.schedule.startScheduling();
     }
 
     public select(newIndex: number): void {
-        this.schedules.selected = this.schedules.dives[newIndex];
+        // order matters, since first update main view and second enforces save preferences
+        this.viewStore.setSelectedDive(newIndex);
+        this.schedules.setSelectedIndex(newIndex);
     }
 
     private loadDefaultTo(dive: DiveSchedule) {

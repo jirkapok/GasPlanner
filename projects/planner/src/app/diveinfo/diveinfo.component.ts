@@ -48,7 +48,7 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get tanks(): Tank[] {
-        return this.schedules.selectedTansks.tankData;
+        return this.schedules.selectedTanks.tankData;
     }
 
     public get showMaxBottomTime(): boolean {

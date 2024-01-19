@@ -141,7 +141,7 @@ export class DiveSchedules {
         return this.length <= 1;
     }
 
-    public get selectedTansks(): TanksService {
+    public get selectedTanks(): TanksService {
         return this.selected.tanksService;
     }
 
@@ -165,6 +165,12 @@ export class DiveSchedules {
         if (this._dives.includes(newValue)) {
             this._selected = newValue;
             this.dispatcher.sendSelectedChanged(newValue.id);
+        }
+    }
+
+    public setSelectedIndex(newIndex: number): void {
+        if(newIndex >= 0 && newIndex < this._dives.length) {
+            this.selected = this._dives[newIndex];
         }
     }
 
@@ -201,7 +207,7 @@ export class DiveSchedules {
     public validId(diveId: number): boolean {
         // the dives are always ordered by Id
         const maxDiveId = this._dives[this._dives.length - 1].id;
-        return maxDiveId >= diveId;
+        return maxDiveId >= diveId && diveId > 0;
     }
 
     public byId(diveId: number): DiveSchedule | undefined {

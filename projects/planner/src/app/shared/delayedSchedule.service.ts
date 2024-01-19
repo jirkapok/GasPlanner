@@ -16,7 +16,6 @@ export class DelayedScheduleService extends Streamed {
      **/
     private scheduledDiveId = 0;
     private delayMilliseconds = 100;
-    private lastDiveId = 1;
 
     constructor(
         private dispatcher: ReloadDispatcher,

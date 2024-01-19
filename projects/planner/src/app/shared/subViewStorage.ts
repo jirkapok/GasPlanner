@@ -1,5 +1,5 @@
 import { KnownViews, ViewStates } from './viewStates';
-import { ViewState } from './views.model';
+import { DashBoardViewState, ViewState } from './views.model';
 import { PreferencesStore } from './preferencesStore';
 import { Injectable } from '@angular/core';
 
@@ -18,13 +18,19 @@ import { Injectable } from '@angular/core';
  */
 @Injectable()
 export class SubViewStorage {
-    private _mainViewState: ViewState = {
-        id: KnownViews.dashboard
+    // no need to restore at startup, it is immediately overriden
+    private _mainViewState: DashBoardViewState = {
+        id: KnownViews.dashboard,
+        selectedDiveIndex: 0
     };
 
     constructor(
         private views: ViewStates,
         private preferences: PreferencesStore) {
+    }
+
+    public saveMainView() {
+        this.saveView(this._mainViewState);
     }
 
     public saveView<TView extends ViewState>(viewState: TView): void {
@@ -37,8 +43,7 @@ export class SubViewStorage {
         return loaded as TView;
     }
 
-    public saveMainView() {
-        this.views.set(this._mainViewState);
-        this.preferences.save();
+    public setSelectedDive(newIndex: number) {
+        this._mainViewState.selectedDiveIndex = newIndex;
     }
 }

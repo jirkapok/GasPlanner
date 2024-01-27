@@ -21,7 +21,7 @@ export class TestDataInjector {
         const preferencesJson: string = this.testDataProvider.get(profileAIndex, profileBIndex);
         localStorage.setItem('preferences', preferencesJson);
         this.preferencesStore.load();
-        this.plannerService.calculate();
+        this.plannerService.calculate(1);
         this.plannerService.calculate(2);
     }
 

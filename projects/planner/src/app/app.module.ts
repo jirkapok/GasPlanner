@@ -93,6 +93,7 @@ import {TestDataInjector} from './diff/testData/testDataInjector';
 import {ProfileComparatorService} from './shared/profileComparatorService';
 import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.component';
 import {WaypointsDifferenceService} from './shared/waypoints-difference.service';
+import {DiveInfoResultsDifferenceComponent} from './diff/diveinfo/results/diff-diveinfo-results.component';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -153,7 +154,8 @@ const COMPONENTS = [
     WaypointsDifferenceComponent,
     DiveInfoDifferenceComponent,
     ProfileDifferenceChartComponent,
-    LoadTestDataComponent
+    LoadTestDataComponent,
+    DiveInfoResultsDifferenceComponent
 ];
 
 const SERVICES = [

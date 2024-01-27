@@ -41,4 +41,12 @@ export class ProfileComparatorService {
     public isReady(): boolean {
         return this.profileAResults().calculated && this.profileBResults().calculated;
     }
+
+    public isDiveInfoReady(): boolean {
+        return this.profileAResults().diveInfoCalculated && this.profileBResults().diveInfoCalculated;
+    }
+
+    public isProfileReady(): boolean {
+        return this.profileAResults().profileCalculated && this.profileBResults().profileCalculated;
+    }
 }

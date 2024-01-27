@@ -17,42 +17,58 @@ export class DiveInfoResultsDifferenceComponent {
         public units: UnitConversion,
         private profileComparatorService: ProfileComparatorService) {
     }
-    public get dive(): DiveResults {
+    public get profileA(): DiveResults {
         return this.profileComparatorService.profileAResults();
+    }
+
+    public get isReady(): boolean {
+        return this.profileComparatorService.isReady();
+    }
+
+    public get isDiveInfoReady(): boolean {
+        return this.profileComparatorService.isDiveInfoReady();
+    }
+
+    public get isProfileReady(): boolean {
+        return this.profileComparatorService.isProfileReady();
     }
 
     public get isComplex(): boolean {
         return this.viewSwitch.isComplex;
     }
 
-    public get showMaxBottomTime(): boolean {
-        return this.dive.maxTime > 0;
+    public get needsReturn(): boolean {
+        return this.profileA.needsReturn;
     }
 
-    public get noDeco(): number {
-        return this.dive.noDecoTime;
+    public showMaxBottomTime(profile: DiveResults): boolean {
+        return profile.maxTime > 0;
     }
 
-    public get averageDepth(): number {
-        return this.units.fromMeters(this.dive.averageDepth);
+    public noDeco(profile: DiveResults): number {
+        return profile.noDecoTime;
     }
 
-    public get highestDensity(): number {
-        const density = this.dive.highestDensity.density;
+    public averageDepth(profile: DiveResults): number {
+        return this.units.fromMeters(profile.averageDepth);
+    }
+
+    public highestDensity(profile: DiveResults): number {
+        const density = profile.highestDensity.density;
         return this.units.fromGramPerLiter(density);
     }
 
-    public get densityText(): string {
-        const gas = this.dive.highestDensity.gas.name;
-        const depth = this.units.fromMeters(this.dive.highestDensity.depth);
+    public densityText(profile: DiveResults): string {
+        const gas = profile.highestDensity.gas.name;
+        const depth = this.units.fromMeters(profile.highestDensity.depth);
         return `${gas} at ${depth} ${this.units.length}`;
     }
 
-    public get cnsText(): string {
-        if(this.dive.cns >= 1000) {
+    public cnsText(profile: DiveResults): string {
+        if(profile.cns >= 1000) {
             return '> 1000';
         }
 
-        return formatNumber(this.dive.cns, 'en', '1.0-0');
+        return formatNumber(profile.cns, 'en', '1.0-0');
     }
 }

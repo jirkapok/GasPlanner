@@ -1,11 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {DiveInfoDifferenceComponent} from './diff-diveinfo.component';
-import {ViewSwitchService} from '../../shared/viewSwitchService';
-import {UnitConversion} from '../../shared/UnitConversion';
-import {ProfileComparatorService} from '../../shared/profileComparatorService';
-import {DiveSchedules} from '../../shared/dive.schedules';
-import {ReloadDispatcher} from '../../shared/reloadDispatcher';
 
 describe('DiveInfoDifferenceComponent', () => {
     let component: DiveInfoDifferenceComponent;
@@ -13,14 +8,7 @@ describe('DiveInfoDifferenceComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DiveInfoDifferenceComponent],
-            providers: [
-                ViewSwitchService,
-                DiveSchedules,
-                ReloadDispatcher,
-                UnitConversion,
-                ProfileComparatorService
-            ]
+            declarations: [DiveInfoDifferenceComponent]
         });
         fixture = TestBed.createComponent(DiveInfoDifferenceComponent);
         component = fixture.componentInstance;

@@ -19,6 +19,8 @@ export class OxygenComponent implements OnInit {
     public showBestMix = true;
     @Input()
     public nitroxForm!: FormGroup;
+    @Input()
+    public controlName: string = 'o2';
 
     @Output()
     public gasChange = new EventEmitter<number>();
@@ -29,27 +31,18 @@ export class OxygenComponent implements OnInit {
     @Output()
     public assignBestMix = new EventEmitter();
 
-    public nitroxNames: string[];
-
     constructor(private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
         public units: UnitConversion) {
-        this.nitroxNames = StandardGases.nitroxNames();
     }
 
     public ngOnInit(): void {
         if (!this.nitroxForm) {
-            this.nitroxForm = this.fb.group({
-                o2: [Precision.round(this.tank.o2, 1), this.validators.nitroxOxygen]
-            });
+            this.nitroxForm = this.fb.group({});
         }
     }
 
     public fireAssignBestMix(): void {
         this.assignBestMix.emit();
-
-        this.nitroxForm.patchValue({
-            o2: Precision.round(this.tank.o2, 1)
-        });
     }
 }

@@ -99,6 +99,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     // TODO fix property binding when changing selected dive
+    // simple view: altitude, gradients and probably all fields with inputs
     public get options(): OptionsService {
         return this.schedules.selectedOptions;
     }

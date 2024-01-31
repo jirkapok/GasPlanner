@@ -7,15 +7,15 @@ import {
 } from '@angular/forms';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
-import { AltitudeForm } from '../altitude/altitude.component';
 import { Precision, AltitudeCalculator } from 'scuba-physics';
 import { KnownViews } from '../shared/viewStates';
 import { AltitudeViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 
-interface AltitudeDepthForm extends AltitudeForm {
+interface AltitudeDepthForm {
     pressure: FormControl<number>;
     actualDepth: FormControl<number>;
+    altitude: FormControl<number>;
 }
 
 @Component({

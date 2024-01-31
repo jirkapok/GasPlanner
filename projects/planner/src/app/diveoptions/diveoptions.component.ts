@@ -29,6 +29,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     public strategy = this.allUsableName;
     public icon = faCog;
     public optionsForm!: FormGroup<{
+        altitude: FormControl<number>;
         maxEND: FormControl<number>;
         problem: FormControl<number>;
         gasSwitch: FormControl<number>;
@@ -120,6 +121,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     public ngOnInit(): void {
         this.optionsForm = this.fb.group({
+            altitude: [this.options.altitude, this.validators.altitude],
             maxEND: [Precision.round(this.options.maxEND, 1), this.validators.maxEnd],
             problem: [Precision.round(this.options.problemSolvingDuration, 1), this.validators.problemSolvingDuration],
             gasSwitch: [Precision.round(this.options.gasSwitchDuration, 1), this.validators.gasSwitchDuration],
@@ -233,7 +235,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     public applyOptions(): void {
-        // altitude and salinity are checked in their respective component and shouldn't fire event
+        // salinity is checked in their respective component and shouldn't fire event
         if (this.optionsForm.invalid) {
             return;
         }
@@ -257,6 +259,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     private reload(): void {
         this.optionsForm.patchValue({
+            altitude: this.options.altitude,
             maxEND: Precision.round(this.options.maxEND, 1),
             problem: Precision.round(this.options.problemSolvingDuration, 1),
             gasSwitch: Precision.round(this.options.gasSwitchDuration, 1),

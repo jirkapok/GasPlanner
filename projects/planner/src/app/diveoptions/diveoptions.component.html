@@ -22,7 +22,8 @@
                     </div>
 
                     <div class="mb-4 col col-12 col-sm-6 col-md-4 col-lg-12 col-xl-6">
-                        <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)">
+                        <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)"
+                            [altitudeForm]="optionsForm" controlName="altitude">
                         </app-altitude>
                     </div>
                     <div class="mb-4 col col-12 col-sm-12 col-md-4 col-lg-12 col-xxl-12">
@@ -38,7 +39,8 @@
                     <mdb-tab title="Environment">
                         <div class="pt-3 row">
                             <div class="mb-4 col col-12 col-sm-6">
-                                <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)">
+                                <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)"
+                                              [altitudeForm]="optionsForm" controlName="altitude">
                                 </app-altitude>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6">

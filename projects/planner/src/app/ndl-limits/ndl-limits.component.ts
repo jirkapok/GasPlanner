@@ -29,7 +29,7 @@ export class NdlLimitsComponent implements OnInit {
     constructor(
         public units: UnitConversion,
         private ndl: NdlService,
-        optionsService: OptionsService,
+        optionsService: OptionsService, // TODO fix option service binding to schedules.selected
         public location: Location,
         private viewStates: SubViewStorage) {
         this.tank = new TankBound(Tank.createDefault(), this.units);

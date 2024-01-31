@@ -1,12 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-
-export interface AltitudeForm {
-    altitude: FormControl<number>;
-}
 
 @Component({
     selector: 'app-altitude',
@@ -14,15 +10,12 @@ export interface AltitudeForm {
     styleUrls: ['./altitude.component.scss']
 })
 export class AltitudeComponent implements OnInit {
-    @Output()
-    public inputChange = new EventEmitter<number>();
-
+    @Output() public inputChange = new EventEmitter<number>();
+    // TODO check units, should be respective units not masl
     /** In m.a.s.l */
-    @Input()
-    public altitude = 0;
-
-    @Input()
-    public altitudeForm!: FormGroup;
+    @Input() public altitude = 0;
+    @Input() public altitudeForm!: FormGroup;
+    @Input() public controlName = 'altitude';
 
     constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
@@ -46,15 +39,15 @@ export class AltitudeComponent implements OnInit {
     }
 
     public get altitudeInvalid(): boolean {
-        const altitudeField = this.altitudeForm.controls.altitude;
+        const altitudeField = this.altitudeForm.get(this.controlName) as AbstractControl;
         return this.inputs.controlInValid(altitudeField);
     }
 
     public ngOnInit(): void {
         if(!this.altitudeForm) {
-            this.altitudeForm = this.fb.group({
-                altitude: [this.altitudeBound, this.validators.altitude]
-            });
+            this.altitudeForm = this.fb.group({});
+            const altitudeControl = this.fb.control(this.altitudeBound, this.validators.altitude);
+            this.altitudeForm.addControl(this.controlName, altitudeControl);
         }
     }
 
@@ -63,8 +56,8 @@ export class AltitudeComponent implements OnInit {
             return;
         }
 
-        const typedForm = this.altitudeForm as FormGroup<AltitudeForm>;
-        const newValue = Number(typedForm.value.altitude);
+        const altitudeField = this.altitudeForm.get(this.controlName);
+        const newValue = Number(altitudeField?.value);
         this.altitude = this.units.toMeters(newValue);
         this.inputChange.emit(this.altitude);
     }
@@ -90,7 +83,7 @@ export class AltitudeComponent implements OnInit {
     private setLevel(index: number): void {
         const level = this.selectLevels()[index];
         this.altitudeForm.patchValue({
-            altitude: level
+            [this.controlName]: level
         });
 
         this.altitudeChanged();

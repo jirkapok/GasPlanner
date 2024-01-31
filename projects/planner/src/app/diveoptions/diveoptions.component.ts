@@ -38,6 +38,9 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         ascentSpeed6m: FormControl<number>;
         ascentSpeed50percTo6m: FormControl<number>;
         ascentSpeed50perc: FormControl<number>;
+        rmv: FormControl<number>;
+        maxPO2: FormControl<number>;
+        maxDecoPO2: FormControl<number>;
     }>;
 
     constructor(public units: UnitConversion,
@@ -100,9 +103,16 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     // TODO fix property binding when changing selected dive
-    // simple view: altitude, gradients and probably all fields with inputs
+    // simple view: gradients and diver in complex
     public get options(): OptionsService {
         return this.schedules.selectedOptions;
+    }
+
+    private get rmv(): number {
+        const roundTo = this.units.ranges.rmvRounding;
+        const rmvMetric = this.options.diverOptions.rmv;
+        const rmv = this.units.fromLiter(rmvMetric);
+        return Precision.round(rmv, roundTo);
     }
 
     public set isComplex(newValue: boolean) {
@@ -130,6 +140,9 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             ascentSpeed6m: [Precision.round(this.options.ascentSpeed6m, 1), this.validators.speed],
             ascentSpeed50percTo6m: [Precision.round(this.options.ascentSpeed50percTo6m, 1), this.validators.speed],
             ascentSpeed50perc: [Precision.round(this.options.ascentSpeed50perc, 1), this.validators.speed],
+            rmv: [this.rmv, this.validators.diverRmv],
+            maxPO2: [Precision.round(this.options.diverOptions.maxPpO2, 2), this.validators.ppO2],
+            maxDecoPO2: [Precision.round(this.options.diverOptions.maxDecoPpO2, 2), this.validators.ppO2]
         });
 
         this.dispatcher.optionsReloaded$.pipe(takeUntil(this.unsubscribe$))
@@ -258,6 +271,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     private reload(): void {
+        const diver = this.options.diverOptions;
         this.optionsForm.patchValue({
             altitude: this.options.altitude,
             maxEND: Precision.round(this.options.maxEND, 1),
@@ -268,6 +282,9 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             ascentSpeed6m: Precision.round(this.options.ascentSpeed6m, 1),
             ascentSpeed50percTo6m: Precision.round(this.options.ascentSpeed50percTo6m, 1),
             ascentSpeed50perc: Precision.round(this.options.ascentSpeed50perc, 1),
+            rmv: diver.rmv,
+            maxPO2: diver.maxPpO2,
+            maxDecoPO2: diver.maxDecoPpO2
         });
     }
 }

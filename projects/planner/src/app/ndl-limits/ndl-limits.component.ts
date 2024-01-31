@@ -51,6 +51,7 @@ export class NdlLimitsComponent implements OnInit {
         this.calculate();
     }
 
+    // TODO prevent calculation, if any control isn't valid
     public calculate(): void {
         this.limits = this.ndl.calculate(this.tank.tank.gas, this.options);
         const indexOffset = 4; // 4 times the minimum 3 m depth (= 12 m)

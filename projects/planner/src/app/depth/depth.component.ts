@@ -47,8 +47,8 @@ export class DepthComponent implements OnInit {
     public ngOnInit(): void {
         if (!this.depthForm) {
             this.depthForm = this.fb.group({});
-            const oO2Control = this.fb.control(Precision.round(this.plannedDepth, 1), this.validators.depth);
-            this.depthForm.addControl(this.controlName, oO2Control);
+            const depthControl = this.fb.control(Precision.round(this.plannedDepth, 1), this.validators.depth);
+            this.depthForm.addControl(this.controlName, depthControl);
         }
     }
 }

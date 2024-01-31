@@ -28,7 +28,8 @@
                     </div>
                     <div class="mb-4 col col-12 col-sm-12 col-md-4 col-lg-12 col-xxl-12">
                         <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
-                            (inputChange)="updateGradients($event)" [simple]="true" [showTitle]="true"></app-gradients>
+                            [gfForm]="optionsForm" (inputChange)="updateGradients($event)"
+                            [simple]="true" [showTitle]="true"></app-gradients>
                     </div>
                 </div>
             </div>
@@ -52,7 +53,8 @@
                     <mdb-tab title="Conservatism">
                         <div class="pt-3">
                             <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
-                                (inputChange)="updateGradients($event)" [simple]="false" [showTitle]="false">
+                                [gfForm]="optionsForm" (inputChange)="updateGradients($event)"
+                                [simple]="false" [showTitle]="false">
                             </app-gradients>
                         </div>
                     </mdb-tab>

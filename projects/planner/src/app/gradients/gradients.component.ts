@@ -11,20 +11,13 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
     styleUrls: ['./gradients.component.scss']
 })
 export class GradientsComponent implements OnInit {
-    @Input()
-    public showTitle = false;
-    @Input()
-    public simple = false;
-
-    @Input()
-    public gfLow = OptionDefaults.gfLow;
-    @Input()
-    public gfHigh = OptionDefaults.gfHigh;
-
-    @Output()
-    public inputChange = new EventEmitter<Gradients>();
+    @Input() public showTitle = false;
+    @Input() public simple = false;
+    @Input() public gfLow = OptionDefaults.gfLow;
+    @Input() public gfHigh = OptionDefaults.gfHigh;
+    @Input() public gfForm!: FormGroup;
+    @Output() public inputChange = new EventEmitter<Gradients>();
     public standards = new StandardGradientsService();
-    public gfForm!: FormGroup;
 
     constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
@@ -65,10 +58,12 @@ export class GradientsComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.gfForm = this.fb.group({
-            gfLow: [Precision.round(this.gfLow * 100, 1), this.validators.gradients],
-            gfHigh: [Precision.round(this.gfHigh * 100, 1), this.validators.gradients]
-        });
+        if(!this.gfForm) {
+            this.gfForm = this.fb.group({
+                gfLow: [Precision.round(this.gfLow * 100, 1), this.validators.gradients],
+                gfHigh: [Precision.round(this.gfHigh * 100, 1), this.validators.gradients]
+            });
+        }
     }
 
     public lowConservatism(): void {

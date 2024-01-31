@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
-import { Options, Salinity, Tank, Time, GasToxicity } from 'scuba-physics';
+import { Options, Salinity, Tank, GasToxicity } from 'scuba-physics';
 import { NdlLimit, NdlService } from '../shared/ndl.service';
 import { OptionsService } from '../shared/options.service';
 import { Gradients } from '../shared/standard-gradients.service';
@@ -21,7 +21,6 @@ export class NdlLimitsComponent implements OnInit {
     public iconConfig = faCog;
     public tank: TankBound;
     public options: Options;
-    public totalDuration = Time.oneDay;
     public isComplex = false;
     public limits: NdlLimit[] = [];
     public toxicity: GasToxicity;

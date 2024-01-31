@@ -30,6 +30,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     public icon = faCog;
     public optionsForm!: FormGroup<{
         altitude: FormControl<number>;
+        gfLow: FormControl<number>;
+        gfHigh: FormControl<number>;
         maxEND: FormControl<number>;
         problem: FormControl<number>;
         gasSwitch: FormControl<number>;
@@ -102,8 +104,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         return this.inputs.controlInValid(ascentSpeed50perc);
     }
 
-    // TODO fix property binding when changing selected dive
-    // simple view: gradients and diver in complex
     public get options(): OptionsService {
         return this.schedules.selectedOptions;
     }
@@ -132,6 +132,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     public ngOnInit(): void {
         this.optionsForm = this.fb.group({
             altitude: [this.options.altitude, this.validators.altitude],
+            gfLow: [Precision.round(this.options.gfLow * 100, 1), this.validators.gradients],
+            gfHigh: [Precision.round(this.options.gfHigh * 100, 1), this.validators.gradients],
             maxEND: [Precision.round(this.options.maxEND, 1), this.validators.maxEnd],
             problem: [Precision.round(this.options.problemSolvingDuration, 1), this.validators.problemSolvingDuration],
             gasSwitch: [Precision.round(this.options.gasSwitchDuration, 1), this.validators.gasSwitchDuration],
@@ -274,6 +276,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         const diver = this.options.diverOptions;
         this.optionsForm.patchValue({
             altitude: this.options.altitude,
+            gfLow: Precision.round(this.options.gfLow * 100, 1),
+            gfHigh: Precision.round(this.options.gfHigh * 100, 1),
             maxEND: Precision.round(this.options.maxEND, 1),
             problem: Precision.round(this.options.problemSolvingDuration, 1),
             gasSwitch: Precision.round(this.options.gasSwitchDuration, 1),

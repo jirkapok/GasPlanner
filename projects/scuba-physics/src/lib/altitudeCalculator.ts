@@ -13,6 +13,7 @@ export class AltitudeCalculator {
         return this._pressure;
     }
 
+    /** In m.a.s.l */
     public get altitude(): number {
         return this._altitude;
     }

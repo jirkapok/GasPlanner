@@ -245,7 +245,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     public altitudeChanged(newValue: number): void {
-        this.options.altitude = newValue;
+        this.options.altitude = this.units.fromMeters(newValue);
         this.applyOptions();
     }
 

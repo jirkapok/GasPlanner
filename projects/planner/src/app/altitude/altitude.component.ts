@@ -11,20 +11,16 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 })
 export class AltitudeComponent implements OnInit {
     @Output() public inputChange = new EventEmitter<number>();
-    // TODO check units, should be respective units not masl
     /** In m.a.s.l */
     @Input() public altitude = 0;
     @Input() public altitudeForm!: FormGroup;
     @Input() public controlName = 'altitude';
 
-    constructor(private fb: NonNullableFormBuilder,
+    constructor(
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) { }
-
-    public get altitudeBound(): number {
-        return this.units.fromMeters(this.altitude);
-    }
 
     public get smallHill(): string {
         return this.levelLabel(1);
@@ -46,7 +42,8 @@ export class AltitudeComponent implements OnInit {
     public ngOnInit(): void {
         if(!this.altitudeForm) {
             this.altitudeForm = this.fb.group({});
-            const altitudeControl = this.fb.control(this.altitudeBound, this.validators.altitude);
+            const altitudeBound = this.units.fromMeters(this.altitude);
+            const altitudeControl = this.fb.control(altitudeBound, this.validators.altitude);
             this.altitudeForm.addControl(this.controlName, altitudeControl);
         }
     }
@@ -83,7 +80,7 @@ export class AltitudeComponent implements OnInit {
     private setLevel(index: number): void {
         const level = this.selectLevels()[index];
         this.altitudeForm.patchValue({
-            [this.controlName]: level
+            [this.controlName]: level // already in respective units
         });
 
         this.altitudeChanged();

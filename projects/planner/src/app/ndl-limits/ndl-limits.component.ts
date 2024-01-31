@@ -3,13 +3,13 @@ import { Location } from '@angular/common';
 import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
 import { Options, Salinity, Tank, GasToxicity } from 'scuba-physics';
 import { NdlLimit, NdlService } from '../shared/ndl.service';
-import { OptionsService } from '../shared/options.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { TankBound } from '../shared/models';
 import { NdlViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { KnownViews } from '../shared/viewStates';
+import { DiveSchedules } from '../shared/dive.schedules';
 
 @Component({
     selector: 'app-ndl-limits',
@@ -27,17 +27,18 @@ export class NdlLimitsComponent implements OnInit {
 
     constructor(
         public units: UnitConversion,
-        private ndl: NdlService,
-        optionsService: OptionsService, // TODO fix option service binding to schedules.selected
         public location: Location,
-        private viewStates: SubViewStorage) {
+        private ndl: NdlService,
+        private viewStates: SubViewStorage,
+        schedules: DiveSchedules) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
         const defaultTanks = this.units.defaults.tanks;
         // size of the tank is irrelevant in this view
         this.tank.workingPressure = defaultTanks.primary.workingPressure;
         this.tank.size = defaultTanks.primary.size;
         this.options = new Options();
-        this.options.loadFrom(optionsService.getOptions());
+        const originOptions = schedules.selectedOptions.getOptions();
+        this.options.loadFrom(originOptions);
         this.toxicity = new GasToxicity(this.options);
     }
 

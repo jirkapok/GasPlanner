@@ -44,8 +44,9 @@ describe('NdlLimits component', () => {
         fixture.detectChanges();
     });
 
-    it('Default values are copied', inject([OptionsService],
-        (options: OptionsService) => {
+    it('Default values are copied', inject([DiveSchedules],
+        (schedules: DiveSchedules) => {
+            const options = schedules.selectedOptions;
             options.altitude = 200;
             options.gfLow = 0.2;
             options.gfHigh = 0.9;
@@ -89,11 +90,11 @@ describe('NdlLimits component', () => {
             }));
 
         it('Uses default tank size', inject(
-            [Location, NdlService, OptionsService, SubViewStorage],
-            (location: Location, ndlService: NdlService, options: OptionsService, views: SubViewStorage) => {
+            [Location, NdlService, DiveSchedules, SubViewStorage],
+            (location: Location, ndlService: NdlService, schedules: DiveSchedules, views: SubViewStorage) => {
                 const units = new UnitConversion();
                 units.imperialUnits = true;
-                const sut = new NdlLimitsComponent(units, ndlService, options, location, views);
+                const sut = new NdlLimitsComponent(units, location, ndlService, views, schedules);
                 expect(sut.tank.size).toBe(124.1);
             }));
     });

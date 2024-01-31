@@ -16,6 +16,7 @@ import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 interface SimpleDepthsForm {
     planDuration: FormControl<number>;
+    depth: FormControl<number>;
 }
 
 @Component({
@@ -64,7 +65,8 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
 
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({
-            planDuration: [ Precision.round(this.depths.planDuration, 1), this.validators.duration ]
+            planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
+            depth: [Precision.round(this.depths.plannedDepth, 1), this.validators.depth]
         });
 
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
@@ -83,19 +85,29 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
             .subscribe(() => this.reload());
     }
 
-    public durationChanged(): void {
+    public valuesChanged(): void {
         if (this.simpleForm.invalid) {
             return;
         }
 
         const newValue = this.simpleForm.value;
         this.depths.planDuration = Number(newValue.planDuration);
+        this.depths.plannedDepth = Number(newValue.depth);
+    }
+
+    public depthChanged(newValue: number): void {
+        this.depths.plannedDepth = newValue;
+    }
+
+    public assignMaxDepth(): void {
+        this.depths.applyMaxDepth();
+        this.reload();
     }
 
     private reload(): void {
-        // depth is reloaded in its nested component
         this.simpleForm.patchValue({
             planDuration: Precision.round(this.depths.planDuration, 1),
+            depth: Precision.round(this.depths.plannedDepth, 1)
         });
     }
 }

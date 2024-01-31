@@ -1,7 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { Precision } from 'scuba-physics';
-import {DepthsService, IDepths} from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
@@ -12,34 +11,23 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
     styleUrls: ['./depth.component.scss']
 })
 export class DepthComponent implements OnInit {
-    public depthForm!: FormGroup<{
-        depth: FormControl<number>;
-    }>;
-
-    private _depths: IDepths = {
-        plannedDepth: 0,
-        bestNitroxMix: '',
-        applyMaxDepth: () => {},
-    };
+    @Input() public depthForm!: FormGroup;
+    @Input() public controlName = 'depth';
+    @Input() public bestNitroxMix = '';
+    /** in respective units */
+    @Input() public plannedDepth = 0;
+    @Output() public depthChange = new EventEmitter<number>();
+    @Output() public assignMaxDepth = new EventEmitter();
 
     constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public units: UnitConversion) { }
+        public units: UnitConversion) {
+    }
 
     public get depthInvalid(): boolean {
-        const depthField = this.depthForm.controls.depth;
-        return this.inputs.controlInValid(depthField);
-    }
-
-    public get depths(): IDepths {
-        return this._depths;
-    }
-
-    @Input()
-    public set depths(newValue: IDepths) {
-        this._depths = newValue;
-        this.patchDepth();
+        const depthField = this.depthForm.get(this.controlName);
+        return !depthField || this.inputs.controlInValid(depthField);
     }
 
     public depthChanged() {
@@ -47,28 +35,20 @@ export class DepthComponent implements OnInit {
             return;
         }
 
-        const newValue = this.depthForm.controls.depth.value;
-        this.depths.plannedDepth = Number(newValue);
+        const depthField = this.depthForm.get(this.controlName);
+        const newValue = Number(depthField?.value);
+        this.depthChange.next(Number(newValue));
     }
 
     public applyMaxDepth(): void {
-        this.depths.applyMaxDepth();
-        this.patchDepth();
+        this.assignMaxDepth.next({});
     }
 
     public ngOnInit(): void {
-        this.depthForm = this.fb.group({
-            depth: [Precision.round(this.depths.plannedDepth, 1), this.validators.depth]
-        });
-    }
-
-    private patchDepth(): void {
-        if(!this.depthForm) {
-            return;
+        if (!this.depthForm) {
+            this.depthForm = this.fb.group({});
+            const oO2Control = this.fb.control(Precision.round(this.plannedDepth, 1), this.validators.depth);
+            this.depthForm.addControl(this.controlName, oO2Control);
         }
-
-        this.depthForm.patchValue({
-            depth: Precision.round(this.depths.plannedDepth, 1)
-        });
     }
 }

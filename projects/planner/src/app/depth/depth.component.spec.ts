@@ -2,20 +2,10 @@ import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { DepthsService } from '../shared/depths.service';
 import { InputControls } from '../shared/inputcontrols';
-import { PlannerService } from '../shared/planner.service';
-import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DepthComponent } from './depth.component';
-import { SubViewStorage } from '../shared/subViewStorage';
-import { PreferencesStore } from '../shared/preferencesStore';
-import { Preferences } from '../shared/preferences';
-import { ViewStates } from '../shared/viewStates';
-import { ReloadDispatcher } from '../shared/reloadDispatcher';
-import { DiveSchedules } from '../shared/dive.schedules';
 
 export class DepthPage {
     constructor(private fixture: ComponentFixture<DepthComponent>) { }
@@ -29,23 +19,19 @@ export class DepthPage {
     }
 }
 
-describe('DepthComponent Imperial units', () => {
+describe('DepthComponent', () => {
     let component: DepthComponent;
     let fixture: ComponentFixture<DepthComponent>;
-    let depths: DepthsService;
     let page: DepthPage;
+    let changeFired: boolean;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DepthComponent],
             imports: [ReactiveFormsModule],
             providers: [
-                DecimalPipe, WorkersFactoryCommon, PlannerService,
                 UnitConversion, ValidatorGroups,
-                InputControls, ViewSwitchService,
-                SubViewStorage, ViewStates,
-                PreferencesStore, Preferences,
-                DiveSchedules, ReloadDispatcher,
+                InputControls, DecimalPipe
             ]
         })
             .compileComponents();
@@ -56,24 +42,21 @@ describe('DepthComponent Imperial units', () => {
         page = new DepthPage(fixture);
         component = fixture.componentInstance;
         component.units.imperialUnits = true;
-        depths = TestBed.inject(DiveSchedules).selected.depths;
-        component.depths = depths;
         fixture.detectChanges();
+    });
+
+    it('Fires value changed', () => {
+        component.depthChange.subscribe(() => changeFired = true);
+        changeFired = false;
         page.depthInput.value = '70';
         page.depthInput.dispatchEvent(new Event('input'));
+        expect(changeFired).toBeTruthy();
     });
 
-    it('Converts bound depth to imperial', () => {
-        expect(depths.plannedDepth).toBeCloseTo(70, 6);
-    });
-
-    it('Depth to imperial', () => {
-        const depth = depths.plannedDepthMeters;
-        expect(depth).toBeCloseTo(21.336, 6);
-    });
-
-    it('Apply max depth', () => {
+    it('Fires apply max depth', () => {
+        let eventFired = false;
+        component.assignMaxDepth.subscribe(() => eventFired = true);
         page.applyMaxDepthButton.click();
-        expect(page.depthInput.value).toBe('98.4');
+        expect(eventFired).toBeTruthy();
     });
 });

@@ -21,6 +21,7 @@ import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { Time } from 'scuba-physics';
 import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
 import { MaskitoModule } from '@maskito/angular';
+import { DepthComponent } from "../depth/depth.component";
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
@@ -40,6 +41,10 @@ export class SimpleDepthsPage {
     public get applyNdlButton(): HTMLButtonElement {
         return this.fixture.debugElement.query(By.css('#btnApplyNdl')).nativeElement as HTMLButtonElement;
     }
+
+    public get depthInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#depthField')).nativeElement as HTMLInputElement;
+    }
 }
 
 describe('Depths Simple Component', () => {
@@ -50,7 +55,7 @@ describe('Depths Simple Component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ DepthsSimpleComponent, SurfaceIntervalComponent ],
+            declarations: [ DepthsSimpleComponent, SurfaceIntervalComponent, DepthComponent ],
             imports: [ ReactiveFormsModule, MaskitoModule ],
             providers: [
                 WorkersFactoryCommon, PlannerService,
@@ -149,5 +154,23 @@ describe('Depths Simple Component', () => {
                 expect(schedules.selected.surfaceInterval).toEqual(Time.oneHour);
                 expect(component.simpleForm.invalid).toBeTruthy();
             }));
+    });
+
+    describe('Depth imperial', () => {
+        beforeEach(() => {
+            component.units.imperialUnits = true;
+            fixture.detectChanges();
+        });
+
+        it('Applies max depth', () => {
+            component.assignMaxDepth();
+            expect(simplePage.depthInput.value).toBeCloseTo(98.4, 1);
+        });
+
+        it('Applies depth', () => {
+            simplePage.depthInput.value = '20';
+            simplePage.depthInput.dispatchEvent(new Event('input'));
+            expect(depths.plannedDepth).toBeCloseTo(20);
+        });
     });
 });

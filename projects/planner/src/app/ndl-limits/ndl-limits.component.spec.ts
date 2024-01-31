@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NonNullableFormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Salinity } from 'scuba-physics';
@@ -16,6 +16,7 @@ import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { DiveSchedules } from '../shared/dive.schedules';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 describe('NdlLimits component', () => {
     let component: NdlLimitsComponent;
@@ -31,7 +32,7 @@ describe('NdlLimits component', () => {
                 PreferencesStore, Preferences,
                 WorkersFactoryCommon, ViewSwitchService,
                 ReloadDispatcher, DiveSchedules,
-                OptionsService
+                OptionsService, ValidatorGroups
             ],
             imports: [RouterTestingModule.withRoutes([])]
         })
@@ -90,11 +91,12 @@ describe('NdlLimits component', () => {
             }));
 
         it('Uses default tank size', inject(
-            [Location, NdlService, DiveSchedules, SubViewStorage],
-            (location: Location, ndlService: NdlService, schedules: DiveSchedules, views: SubViewStorage) => {
+            [Location, NdlService, DiveSchedules, SubViewStorage, NonNullableFormBuilder, ValidatorGroups],
+            (location: Location, ndlService: NdlService, schedules: DiveSchedules,
+                views: SubViewStorage, fb: NonNullableFormBuilder, validators: ValidatorGroups) => {
                 const units = new UnitConversion();
                 units.imperialUnits = true;
-                const sut = new NdlLimitsComponent(units, location, ndlService, views, schedules);
+                const sut = new NdlLimitsComponent(units, location, ndlService, views, fb, validators, schedules);
                 expect(sut.tank.size).toBe(124.1);
             }));
     });

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
 import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
-import { Options, Salinity, Tank, GasToxicity } from 'scuba-physics';
+import {
+    Options, Salinity, Tank, GasToxicity, Precision
+} from 'scuba-physics';
 import { NdlLimit, NdlService } from '../shared/ndl.service';
 import { Gradients } from '../shared/standard-gradients.service';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -10,6 +13,7 @@ import { NdlViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { KnownViews } from '../shared/viewStates';
 import { DiveSchedules } from '../shared/dive.schedules';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-ndl-limits',
@@ -24,12 +28,15 @@ export class NdlLimitsComponent implements OnInit {
     public isComplex = false;
     public limits: NdlLimit[] = [];
     public toxicity: GasToxicity;
+    public form!: FormGroup;
 
     constructor(
         public units: UnitConversion,
         public location: Location,
         private ndl: NdlService,
         private viewStates: SubViewStorage,
+        private fb: NonNullableFormBuilder,
+        private validators: ValidatorGroups,
         schedules: DiveSchedules) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
         const defaultTanks = this.units.defaults.tanks;
@@ -48,11 +55,21 @@ export class NdlLimitsComponent implements OnInit {
 
     public ngOnInit(): void {
         this.loadState();
+        this.form = this.fb.group({
+            o2: [Precision.round(this.tank.o2, 1), this.validators.nitroxOxygen],
+            maxPpO2: [Precision.round(this.options.maxPpO2, 2), this.validators.ppO2],
+            altitude: [this.units.fromMeters(this.options.altitude), this.validators.altitude],
+            gfLow: [Precision.round(this.options.gfLow * 100, 1), this.validators.gradients],
+            gfHigh: [Precision.round(this.options.gfHigh * 100, 1), this.validators.gradients]
+        });
         this.calculate();
     }
 
-    // TODO prevent calculation, if any control isn't valid
     public calculate(): void {
+        if(this.form.invalid) {
+            return;
+        }
+
         this.limits = this.ndl.calculate(this.tank.tank.gas, this.options);
         const indexOffset = 4; // 4 times the minimum 3 m depth (= 12 m)
 

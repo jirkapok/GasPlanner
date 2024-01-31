@@ -8,10 +8,11 @@
             <div class="card-body">
                 <div class="pt-2 mb-4">
                     <app-oxygen [tank]="tank" [showBestMix]="false" (gasChange)="calculate()"
-                        (standardGasApplied)="calculate()" [toxicity]="toxicity"></app-oxygen>
+                        (standardGasApplied)="calculate()" [toxicity]="toxicity" [nitroxForm]="form"></app-oxygen>
                 </div>
                 <div class="pt-2 mb-4">
-                    <app-pp-o2 [maxPpO2]="options.maxPpO2" (ppO2Change)="ppO2Changed($event)" label="Maximum ppO2:">
+                    <app-pp-o2 [maxPpO2]="options.maxPpO2" (ppO2Change)="ppO2Changed($event)"
+                              [pO2Form]="form" label="Maximum ppO2:">
                     </app-pp-o2>
                 </div>
                 <div class="pt-2 mb-4">
@@ -19,12 +20,13 @@
                     </app-salinity>
                 </div>
                 <div class="pt-2 mb-4">
-                    <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)">
+                    <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)"
+                       [altitudeForm]="form">
                     </app-altitude>
                 </div>
                 <div class="pt-2">
                     <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
-                        (inputChange)="gradientsChanged($event)"
+                        (inputChange)="gradientsChanged($event)" [gfForm]="form"
                         [simple]="false" [showTitle]="true">
                     </app-gradients>
                 </div>

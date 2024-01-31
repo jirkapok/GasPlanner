@@ -1,8 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
-import { Precision, StandardGases, Tank, GasToxicity } from 'scuba-physics';
+import { Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../shared/UnitConversion';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { TankBound } from '../shared/models';
 
 @Component({
@@ -11,28 +10,17 @@ import { TankBound } from '../shared/models';
     styleUrls: ['./oxygen.component.scss']
 })
 export class OxygenComponent implements OnInit {
-    @Input()
-    public tank = new TankBound(new Tank(15, 200, 21), this.units);
-    @Input()
-    public toxicity = new GasToxicity();
-    @Input()
-    public showBestMix = true;
-    @Input()
-    public nitroxForm!: FormGroup;
-    @Input()
-    public controlName: string = 'o2';
+    @Input() public tank = new TankBound(new Tank(15, 200, 21), this.units);
+    @Input() public toxicity = new GasToxicity();
+    @Input() public showBestMix = true;
+    @Input() public nitroxForm!: FormGroup;
+    @Input() public controlName = 'o2';
+    @Output() public gasChange = new EventEmitter<number>();
+    @Output() public standardGasApplied = new EventEmitter<string>();
+    @Output() public assignBestMix = new EventEmitter();
 
-    @Output()
-    public gasChange = new EventEmitter<number>();
-
-    @Output()
-    public standardGasApplied = new EventEmitter<string>();
-
-    @Output()
-    public assignBestMix = new EventEmitter();
-
-    constructor(private fb: NonNullableFormBuilder,
-        private validators: ValidatorGroups,
+    constructor(
+        private fb: NonNullableFormBuilder,
         public units: UnitConversion) {
     }
 

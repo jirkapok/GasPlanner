@@ -17,6 +17,10 @@ Following list of features and improvements ordered by priority is under develop
   * I want to plan a dive and choose from two following plans or two independent plans
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
+  * Fix offline mode:
+    * https://progressier.com/
+    * https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers
+    * https://developers.google.com/codelabs/pwa-training/pwa03--going-offline#1)
 * Gas blender calculator
   * Add use case, if we need release some pressure from the tanks, because otherwise we are unable mix
   * Check the real gas blending as replacement of ideal law 

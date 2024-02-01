@@ -121,6 +121,7 @@ describe('Delayed Schedule', () => {
         }, delayHigherThanScheduler);
     });
 
+    // TODO after switch to simple view, all dives need to be recalculated, currently aren't
     // TODO delayed schedule test cases
     // * When calculating and calculation is running for dive with higher id than next planned, nothing is scheduled
     // * When calculating and calculation is running for dive with lower id than next planned, schedule is restarted from new dive id.

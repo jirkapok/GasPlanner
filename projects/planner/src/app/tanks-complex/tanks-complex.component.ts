@@ -45,6 +45,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         super();
     }
 
+    // TODO add surface interval control to complex depths
+
     public get ranges(): RangeConstants {
         return this.units.ranges;
     }

@@ -41,30 +41,30 @@ export class DiveInfoResultsDifferenceComponent {
         return this.profileA.needsReturn;
     }
 
-    public showMaxBottomTime(profile: DiveResults): boolean {
+    public showMaxBottomTimeOfProfile(profile: DiveResults): boolean {
         return profile.maxTime > 0;
     }
 
-    public noDeco(profile: DiveResults): number {
+    public noDecoOfProfile(profile: DiveResults): number {
         return profile.noDecoTime;
     }
 
-    public averageDepth(profile: DiveResults): number {
+    public averageDepthOfProfile(profile: DiveResults): number {
         return this.units.fromMeters(profile.averageDepth);
     }
 
-    public highestDensity(profile: DiveResults): number {
+    public highestDensityOfProfile(profile: DiveResults): number {
         const density = profile.highestDensity.density;
         return this.units.fromGramPerLiter(density);
     }
 
-    public densityText(profile: DiveResults): string {
+    public densityTextOfProfile(profile: DiveResults): string {
         const gas = profile.highestDensity.gas.name;
         const depth = this.units.fromMeters(profile.highestDensity.depth);
         return `${gas} at ${depth} ${this.units.length}`;
     }
 
-    public cnsText(profile: DiveResults): string {
+    public cnsTextOfProfile(profile: DiveResults): string {
         if(profile.cns >= 1000) {
             return '> 1000';
         }

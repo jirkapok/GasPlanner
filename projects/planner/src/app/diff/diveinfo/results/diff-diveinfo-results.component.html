@@ -16,7 +16,7 @@
     <tr>
         <td>Average depth [{{units.length}}]:</td>
         <td class="table-active">
-            <strong *ngIf="isReady">{{ averageDepth(profileA) | number:'1.0-1' }}</strong>
+            <strong *ngIf="isReady">{{ averageDepthOfProfile(profileA) | number:'1.0-1' }}</strong>
         </td>
     </tr>
     <tr>
@@ -30,10 +30,10 @@
         <td>No decompression time [min]:
         </td>
         <td class="table-active">
-            <strong *ngIf="isDiveInfoReady">{{ noDeco(profileA) | number:'1.0-0' }}</strong>
+            <strong *ngIf="isDiveInfoReady">{{ noDecoOfProfile(profileA) | number:'1.0-0' }}</strong>
         </td>
     </tr>
-    <tr *ngIf="showMaxBottomTime">
+    <tr *ngIf="showMaxBottomTimeOfProfile">
         <td>Maximum bottom time [min]:
         </td>
         <td class="table-active">
@@ -43,10 +43,10 @@
     <tr *ngIf="isComplex">
         <td>
             Highest gas density [{{units.density}}]:<br>
-            ({{densityText(profileA)}})
+            ({{densityTextOfProfile(profileA)}})
         </td>
         <td class="table-active">
-            <strong *ngIf="isReady">{{ highestDensity(profileA) | number:'1.0-2' }}</strong>
+            <strong *ngIf="isReady">{{ highestDensityOfProfile(profileA) | number:'1.0-2' }}</strong>
         </td>
     </tr>
     <tr *ngIf="needsReturn">
@@ -70,7 +70,7 @@
     <tr *ngIf="isProfileReady">
         <td>CNS toxicity [%]:</td>
         <td class="table-active">
-            <strong *ngIf="isReady">{{cnsText(profileA)}}</strong>
+            <strong *ngIf="isReady">{{cnsTextOfProfile(profileA)}}</strong>
         </td>
     </tr>
     </tbody>

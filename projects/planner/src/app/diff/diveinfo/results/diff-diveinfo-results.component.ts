@@ -22,6 +22,10 @@ export class DiveInfoResultsDifferenceComponent {
         return this.profileComparatorService.profileAResults();
     }
 
+    public get profileB(): DiveResults {
+        return this.profileComparatorService.profileBResults();
+    }
+
     public get areResultsCalculated(): boolean {
         return this.profileComparatorService.areResultsCalculated();
     }

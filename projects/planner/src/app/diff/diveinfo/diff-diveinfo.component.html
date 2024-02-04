@@ -2,22 +2,14 @@
     <div class="card-header">
         <div class="float-start mt-1">
             <fa-icon [icon]="icon" class="me-3"></fa-icon>
-            <span>Dive info</span>
+            <span>Dive Results</span>
         </div>
     </div>
 
     <div class="card-body card-minheight">
-        <mdb-tabs>
-            <mdb-tab title="Results">
-                <div class="pb-3">
-                    <app-diff-diveinfo-results></app-diff-diveinfo-results>
-                </div>
-            </mdb-tab>
-            <mdb-tab>
-                <ng-template mdbTabTitle>
-                    <span>Consumed</span>
-                </ng-template>
-            </mdb-tab>
-        </mdb-tabs>
+        <div class="pb-3">
+            <app-diff-diveinfo-results></app-diff-diveinfo-results>
+        </div>
     </div>
 </div>
+

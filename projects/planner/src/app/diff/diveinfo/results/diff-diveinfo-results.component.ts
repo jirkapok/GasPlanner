@@ -17,20 +17,21 @@ export class DiveInfoResultsDifferenceComponent {
         public units: UnitConversion,
         private profileComparatorService: ProfileComparatorService) {
     }
+
     public get profileA(): DiveResults {
         return this.profileComparatorService.profileAResults();
     }
 
-    public get isReady(): boolean {
-        return this.profileComparatorService.isReady();
+    public get areResultsCalculated(): boolean {
+        return this.profileComparatorService.areResultsCalculated();
     }
 
-    public get isDiveInfoReady(): boolean {
-        return this.profileComparatorService.isDiveInfoReady();
+    public get areDiveInfosCalculated(): boolean {
+        return this.profileComparatorService.areDiveInfosCalculated();
     }
 
-    public get isProfileReady(): boolean {
-        return this.profileComparatorService.isProfileReady();
+    public get areProfilesCalculated(): boolean {
+        return this.profileComparatorService.areProfilesCalculated();
     }
 
     public get isComplex(): boolean {

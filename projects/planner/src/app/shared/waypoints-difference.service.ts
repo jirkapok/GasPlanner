@@ -10,7 +10,7 @@ export class WaypointsDifferenceService {
     constructor(private profileComparatorService: ProfileComparatorService) {
     }
     get isCalculated(): boolean {
-        return this.profileComparatorService.isReady();
+        return this.profileComparatorService.areResultsCalculated();
     }
 
     private get wayPointsA(): WayPoint[]{

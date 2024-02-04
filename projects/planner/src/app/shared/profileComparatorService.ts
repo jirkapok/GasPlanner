@@ -38,15 +38,15 @@ export class ProfileComparatorService {
         return this.schedules.length > 1;
     }
 
-    public isReady(): boolean {
+    public areResultsCalculated(): boolean {
         return this.profileAResults().calculated && this.profileBResults().calculated;
     }
 
-    public isDiveInfoReady(): boolean {
+    public areDiveInfosCalculated(): boolean {
         return this.profileAResults().diveInfoCalculated && this.profileBResults().diveInfoCalculated;
     }
 
-    public isProfileReady(): boolean {
+    public areProfilesCalculated(): boolean {
         return this.profileAResults().profileCalculated && this.profileBResults().profileCalculated;
     }
 }

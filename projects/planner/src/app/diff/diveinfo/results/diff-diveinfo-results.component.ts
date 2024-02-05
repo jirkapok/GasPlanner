@@ -4,6 +4,7 @@ import {UnitConversion} from '../../../shared/UnitConversion';
 import {ProfileComparatorService} from '../../../shared/profileComparatorService';
 import {DiveResults} from '../../../shared/diveresults';
 import {formatNumber} from '@angular/common';
+import {faArrowDown, faArrowUp, IconDefinition} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-diff-diveinfo-results',
@@ -11,6 +12,8 @@ import {formatNumber} from '@angular/common';
     styleUrls: ['./diff-diveinfo-results.component.scss']
 })
 export class DiveInfoResultsDifferenceComponent {
+    private arrowUp: IconDefinition = faArrowUp;
+    private arrowDown: IconDefinition = faArrowDown;
 
     constructor(
         private viewSwitch: ViewSwitchService,
@@ -43,7 +46,56 @@ export class DiveInfoResultsDifferenceComponent {
     }
 
     public get needsReturn(): boolean {
+        // TODO: Add Profile B
         return this.profileA.needsReturn;
+    }
+
+    public get totalDurationDifference(): number {
+        return this.profileB.totalDuration - this.profileA.totalDuration;
+    }
+
+    public get timeToSurfaceDifference(): number {
+        return this.profileB.timeToSurface - this.profileA.timeToSurface;
+    }
+
+    public get averageDepthDifference(): number {
+        return this.averageDepthOfProfile(this.profileB) - this.averageDepthOfProfile(this.profileA);
+    }
+
+    public get emergencyAscentStartDifference(): number {
+        return this.profileB.emergencyAscentStart - this.profileA.emergencyAscentStart;
+    }
+
+    public get noDecoDifference(): number {
+        return this.noDecoOfProfile(this.profileB) - this.noDecoOfProfile(this.profileA);
+    }
+
+    public get maxTimeDifference(): number {
+        return this.profileB.maxTime - this.profileA.maxTime;
+    }
+
+    public get highestDensityDifference(): number {
+        return this.highestDensityOfProfile(this.profileB) - this.highestDensityOfProfile(this.profileA);
+    }
+
+    public get otuDifference(): number {
+        return this.profileB.otu - this.profileA.otu;
+    }
+
+    public get cnsDifference(): number {
+        return this.profileB.cns - this.profileA.cns;
+    }
+    public get cnsDifferenceText(): string {
+        const diff = this.cnsDifference;
+        if(diff >= 1000) {
+            return '> 1000';
+        }
+
+        if(diff <= -1000) {
+            return '< -1000';
+        }
+
+        return formatNumber(diff, 'en', '1.0-0');
     }
 
     public showMaxBottomTimeOfProfile(profile: DiveResults): boolean {
@@ -75,5 +127,9 @@ export class DiveInfoResultsDifferenceComponent {
         }
 
         return formatNumber(profile.cns, 'en', '1.0-0');
+    }
+
+    public getArrow(difference: number): IconDefinition {
+        return difference > 0 ? this.arrowUp : this.arrowDown;
     }
 }

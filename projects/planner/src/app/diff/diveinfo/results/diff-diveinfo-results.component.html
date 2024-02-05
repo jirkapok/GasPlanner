@@ -12,6 +12,12 @@
                 {{ profileB.totalDuration | duration:profileB.totalDuration}}
             </strong>
         </td>
+        <td class="table-active d-flex justify-content-between align-items-center">
+            <strong *ngIf="areResultsCalculated">
+                {{ totalDurationDifference | duration:totalDurationDifference}}
+            </strong>
+            <fa-icon [icon] ="getArrow(totalDurationDifference)"/>
+        </td>
     </tr>
     <tr>
         <td>Time to surface [min]:</td>
@@ -24,6 +30,12 @@
             <strong *ngIf="areResultsCalculated">
                 {{ profileB.timeToSurface | number:'1.0-0' }}
             </strong>
+        </td>
+        <td class="table-active d-flex justify-content-between align-items-center">
+            <strong *ngIf="areResultsCalculated">
+                {{ timeToSurfaceDifference | number:'1.0-0' }}
+            </strong>
+            <fa-icon [icon] ="getArrow(timeToSurfaceDifference)"/>
         </td>
     </tr>
     <tr>
@@ -38,6 +50,12 @@
                 {{ averageDepthOfProfile(profileB) | number:'1.0-1' }}
             </strong>
         </td>
+        <td class="table-active d-flex justify-content-between align-items-center">
+            <strong *ngIf="areResultsCalculated">
+                {{ averageDepthDifference | number:'1.0-1' }}
+            </strong>
+            <fa-icon [icon] ="getArrow(averageDepthDifference)"/>
+        </td>
     </tr>
     <tr>
         <td>Rock bottom at [min]:</td>
@@ -50,6 +68,13 @@
             <strong *ngIf="areResultsCalculated">
                 {{ profileB.emergencyAscentStart | duration:profileB.emergencyAscentStart }}
             </strong>
+        </td>
+
+        <td class="table-active d-flex justify-content-between align-items-center">
+            <strong *ngIf="areResultsCalculated">
+                {{ emergencyAscentStartDifference | duration:emergencyAscentStartDifference}}
+            </strong>
+            <fa-icon [icon] ="getArrow(emergencyAscentStartDifference)"/>
         </td>
     </tr>
     <tr>
@@ -64,6 +89,12 @@
                 {{ noDecoOfProfile(profileB) | number:'1.0-0' }}
             </strong>
         </td>
+        <td class="table-active d-flex justify-content-between align-items-center">
+            <strong *ngIf="areDiveInfosCalculated">
+                {{ noDecoDifference | number:'1.0-0' }}
+            </strong>
+            <fa-icon [icon] ="getArrow(noDecoDifference)"/>
+        </td>
     </tr>
     <tr *ngIf="showMaxBottomTimeOfProfile">
         <td>Maximum bottom time [min]:</td>
@@ -76,6 +107,12 @@
             <strong *ngIf="areResultsCalculated">
                 {{ profileB.maxTime | number:'1.0-0' }}
             </strong>
+        </td>
+        <td class="table-active d-flex justify-content-between align-items-center">
+            <strong *ngIf="areResultsCalculated">
+                {{ maxTimeDifference | number:'1.0-0' }}
+            </strong>
+            <fa-icon [icon] ="getArrow(maxTimeDifference)"/>
         </td>
     </tr>
     <tr *ngIf="isComplex">
@@ -94,8 +131,16 @@
                 ({{densityTextOfProfile(profileB)}})
             </strong>
         </td>
+        <td class="table-active d-flex justify-content-between align-items-center">
+            <strong *ngIf="areResultsCalculated">
+                {{ highestDensityDifference | number:'1.0-2' }}
+            </strong>
+            <fa-icon [icon] ="getArrow(highestDensityDifference)"/>
+        </td>
     </tr>
-<!--    TODO: Verify correctness once return strategy is implemented    -->
+<!--    TODO: Verify correctness once return strategy is implemented   -->
+<!--    TODO: Implement difference col   -->
+
     <tr *ngIf="needsReturn">
         <td>Turn time [min]:</td>
         <td class="table-active">
@@ -134,6 +179,12 @@
                 {{ profileB.otu | number:'1.0-0' }}
             </strong>
         </td>
+        <td class="table-active d-flex justify-content-between align-items-center">
+            <strong *ngIf="areResultsCalculated">
+                {{ otuDifference | number:'1.0-0' }}
+            </strong>
+            <fa-icon [icon] ="getArrow(otuDifference)"/>
+        </td>
     </tr>
     <tr *ngIf="areProfilesCalculated">
         <td>CNS toxicity [%]:</td>
@@ -146,6 +197,12 @@
             <strong *ngIf="areResultsCalculated">
                 {{cnsTextOfProfile(profileB)}}
             </strong>
+        </td>
+        <td class="table-active d-flex justify-content-between align-items-center">
+            <strong *ngIf="areResultsCalculated">
+                {{ cnsDifferenceText }}
+            </strong>
+            <fa-icon [icon] ="getArrow(cnsDifference)"/>
         </td>
     </tr>
     </tbody>

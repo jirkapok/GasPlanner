@@ -46,23 +46,17 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
     }
 
     private get surfaceInterval(): string | null {
-        if(this.schedules.selected.primary) {
-            return null;
-        }
-
-        const currentSeconds = this.schedules.selected.surfaceInterval;
-        return DateFormats.formatShortTime(currentSeconds);
+        return this.schedules.selected.surfaceIntervalText;
     }
 
     public ngOnInit(): void {
         if(!this.form) {
             this.form = this.fb.group([]);
+            const control = this.fb.control(this.surfaceInterval, [
+                this.validators.surfaceInterval()
+            ]);
+            this.form.addControl(this.controlName, control);
         }
-
-        const control = this.fb.control(this.surfaceInterval, [
-            this.validators.surfaceInterval()
-        ]);
-        this.form.addControl(this.controlName, control);
 
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {

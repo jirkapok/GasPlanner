@@ -5,9 +5,13 @@
     </div>
     <form [formGroup]="complexForm">
 
+    <div class="card-body">
+        <div *ngIf="!isFirstDive" class="row col-md-6 col-lg-12 col-xl-6 pb-2 mb-4">
+            <app-surface-interval [form]="complexForm" controlName="surfaceInterval"/>
+        </div>
 
         <!-- Small devices -->
-        <div class="card-body d-md-none d-block" formArrayName="levels">
+        <div class=" d-md-none d-block" formArrayName="levels">
             <mdb-accordion [flush]="true">
                 <mdb-accordion-item *ngFor="let level of levelControls.controls; let i = index" [formGroupName]="i">
                     <ng-template mdbAccordionItemHeader>
@@ -73,8 +77,8 @@
         </div>
 
         <!-- Large devices -->
-        <div class="card-body d-none d-md-block" formArrayName="levels">
-            <div class="row pb-2">
+        <div class="d-none d-md-block" formArrayName="levels">
+            <div class="row">
                 <div class="col col-1 m-0 px-1 text-end">From [{{units.length}}]</div>
                 <div class="col col-2 m-0 px-1">To [{{units.length}}]</div>
                 <div class="col col-2 m-0 px-1">Duration [min]</div>
@@ -137,5 +141,6 @@
                 </div>
             </div>
         </div>
+       </div>
     </form>
 </div>

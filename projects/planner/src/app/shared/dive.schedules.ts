@@ -7,6 +7,7 @@ import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { GasToxicity, Time } from 'scuba-physics';
 import _ from 'lodash';
+import { DateFormats } from './formaters';
 
 export class DiveSchedule {
     private _id = 0;
@@ -37,6 +38,14 @@ export class DiveSchedule {
 
     public get surfaceInterval(): number {
         return this._surfaceInterval;
+    }
+
+    public get surfaceIntervalText(): string | null {
+        if(this.primary) {
+            return null;
+        }
+
+        return DateFormats.formatShortTime(this.surfaceInterval);
     }
 
     /**

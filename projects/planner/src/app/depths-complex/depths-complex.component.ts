@@ -20,6 +20,7 @@ interface LevelRow {
 }
 
 interface DepthsForm {
+    surfaceInterval: FormControl<string | null>;
     levels: FormArray<FormGroup<LevelRow>>;
 }
 
@@ -48,6 +49,10 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         return this.units.ranges;
     }
 
+    public get isFirstDive(): boolean {
+        return this.schedules.selected.isFirst;
+    }
+
     public get minimumSegments(): boolean {
         return this.depths.minimumSegments;
     }
@@ -63,6 +68,10 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
 
     public get depths(): DepthsService {
         return this.schedules.selectedDepths;
+    }
+
+    private get surfaceInterval(): string | null {
+        return this.schedules.selected.surfaceIntervalText;
     }
 
     public depthItemInvalid(index: number): boolean {
@@ -97,6 +106,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
 
     public ngOnInit(): void {
         this.complexForm = this.fb.group({
+            surfaceInterval: [this.surfaceInterval, this.validators.surfaceInterval()],
             levels: this.fb.array(this.createLevelControls())
         });
 
@@ -150,6 +160,9 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     }
 
     private reload(): void {
+        this.complexForm.patchValue({
+            surfaceInterval: this.surfaceInterval
+        });
         this.levelControls.clear();
         this.createLevelControls().forEach(c => this.levelControls.push(c));
     }

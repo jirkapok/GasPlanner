@@ -15,6 +15,7 @@ import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 interface SimpleDepthsForm {
+    surfaceInterval: FormControl<string | null>;
     planDuration: FormControl<number>;
     depth: FormControl<number>;
 }
@@ -63,8 +64,13 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         return this.schedules.selected.isFirst;
     }
 
+    private get surfaceInterval(): string | null {
+        return this.schedules.selected.surfaceIntervalText;
+    }
+
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({
+            surfaceInterval: [this.surfaceInterval, this.validators.surfaceInterval()],
             planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
             depth: [Precision.round(this.depths.plannedDepth, 1), this.validators.depth]
         });
@@ -106,6 +112,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
 
     private reload(): void {
         this.simpleForm.patchValue({
+            surfaceInterval: this.surfaceInterval,
             planDuration: Precision.round(this.depths.planDuration, 1),
             depth: Precision.round(this.depths.plannedDepth, 1)
         });

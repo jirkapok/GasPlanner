@@ -27,11 +27,14 @@ export class DelayedScheduleService extends Streamed {
 
     /** Call only once at startup */
     public startScheduling(): void {
+        this.scheduleAll();
+        this.registerEventListeners();
+    }
+
+    private scheduleAll(): void {
         _(this.diveSchedules.dives)
             .filter(d => d.primary)
             .forEach(d => setTimeout(() => this.scheduleDive(d.id), this.delayMilliseconds));
-
-        this.registerEventListeners();
     }
 
     private registerEventListeners(): void {
@@ -46,6 +49,9 @@ export class DelayedScheduleService extends Streamed {
 
         this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.scheduleSelected());
+
+        this.dispatcher.setToSimple$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.scheduleAll());
 
         // we need to serialize since next dive can be calculated only after previous one has results
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))

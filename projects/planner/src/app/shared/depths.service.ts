@@ -146,10 +146,10 @@ export class DepthsService extends Streamed {
         this.depthsReloaded();
     }
 
+    /** does not send any vent since it needs to be handled for all dives at once */
     public setSimple(): void {
         this.plan.setSimple(this.plan.maxDepth, this.plan.duration, this.firstTank, this.optionsService.getOptions());
         this.updateLevels();
-        this.apply();
     }
 
     public fixDepths(): void {

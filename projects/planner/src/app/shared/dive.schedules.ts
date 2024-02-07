@@ -216,6 +216,8 @@ export class DiveSchedules {
         this._dives.forEach((dive) => {
             dive.setSimple();
         });
+
+        this.dispatcher.sendSetSimple();
     }
 
     public validId(diveId: number): boolean {

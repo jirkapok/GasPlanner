@@ -80,6 +80,11 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
                 this.reload();
             });
 
+        this.dispatcher.setToSimple$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                this.reload();
+            });
+
         this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((source: DepthsService) => {
                 if(this.depths === source) {

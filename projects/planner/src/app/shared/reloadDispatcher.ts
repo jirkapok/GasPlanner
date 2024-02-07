@@ -20,7 +20,7 @@ export class ReloadDispatcher {
     /** Triggers depth change. On selected dive only. */
     public tankRemoved$: Observable<Tank>;
     /**
-     * Edit depths, duration, assign tank, remove dive, reset to simple.
+     * Edit depths, duration, assign tank, remove dive.
      * On selected dive only.
      **/
     public depthChanged$: Observable<void>;
@@ -35,6 +35,8 @@ export class ReloadDispatcher {
     /** For selected dive only. */
     public wayPointsCalculated$: Observable<number | undefined>;
     public selectedChanged$: Observable<void>;
+    /** This need special event, since all dives are reset and we really need to recalculate all */
+    public setToSimple$: Observable<void>;
 
     private onTanksReloaded = new Subject<TanksService>();
     private onTankChanged = new Subject<void>();
@@ -46,6 +48,7 @@ export class ReloadDispatcher {
     private onSelectedChanged = new Subject<void>();
     private onInfoCalculated = new Subject<number | undefined>();
     private onWayPointsCalculated = new Subject<number | undefined>();
+    private onSetToSimple = new Subject<void>();
 
     constructor() {
         this.tanksReloaded$ = this.onTanksReloaded.asObservable();
@@ -58,6 +61,7 @@ export class ReloadDispatcher {
         this.selectedChanged$ = this.onSelectedChanged.asObservable();
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
+        this.setToSimple$ = this.onSetToSimple.asObservable();
     }
 
     public sendTanksReloaded(source: TanksService): void {
@@ -106,5 +110,9 @@ export class ReloadDispatcher {
 
     public sendInfoCalculated(diveId?: number): void {
         this.onInfoCalculated.next(diveId);
+    }
+
+    public sendSetSimple(): void {
+        this.onSetToSimple.next();
     }
 }

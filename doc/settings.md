@@ -19,3 +19,4 @@ Here you can find default options used when you open the application and plan ne
 > We strongly encourage to use metric system, which is easy to use.
 
 In case you prefer to use Imperial units the app will switch to that system and all values will use feet, cubic feet, feet above sea water and psi. The default value is metric system. Keep mind that the app primary uses metric system and different values than expected may be caused by rounding.
+See also [this video](https://youtu.be/gYa1bvFO0uk)

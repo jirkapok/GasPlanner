@@ -21,8 +21,8 @@ describe('Delayed Schedule', () => {
     let plannerSpy: Spy<(diveId?: number) => void>;
 
     const addRepetitiveDive = (): void => {
-        const thirdDive = schedules.add();
-        thirdDive.surfaceInterval = Time.oneHour;
+        const nextDive = schedules.add();
+        nextDive.surfaceInterval = Time.oneHour;
     };
 
     beforeEach(async () => {
@@ -43,85 +43,88 @@ describe('Delayed Schedule', () => {
         dispatcher = TestBed.inject(ReloadDispatcher);
         schedules = TestBed.inject(DiveSchedules);
         scheduler = TestBed.inject(DelayedScheduleService);
-        scheduler.startScheduling();
-    });
-
-    it('Plans all first dives  after start', (done) => {
-        schedules.add();
+        scheduler.delayMilliseconds = 0;
         addRepetitiveDive();
         schedules.add();
-        scheduler.startScheduling();
+        scheduler.startScheduling(); // to bind events
+    });
 
+    const verifySchedules = (testFn: () => void, expectedCalls: [number | undefined][], done: DoneFn) => {
+        setTimeout(() => { // to skip initial schedule
+            plannerSpy.calls.reset();
+            testFn();
+
+            setTimeout(() => {
+                const currentCalls = plannerSpy.calls.allArgs();
+                expect(currentCalls).toEqual(expectedCalls);
+                done();
+            }, delayHigherThanScheduler);
+        });
+    };
+
+
+    it('Plans all first dives after start', (done) => {
         setTimeout(() => {
-            expect(plannerSpy).toHaveBeenCalledWith(1);
-            expect(plannerSpy).toHaveBeenCalledWith(2);
-            expect(plannerSpy).toHaveBeenCalledWith(4);
+            expect(plannerSpy.calls.allArgs()).toEqual([[1], [3]]);
             done();
         }, delayHigherThanScheduler);
     });
 
     it('Plans current dive', (done) => {
-        schedules.add();
-        dispatcher.sendDepthChanged();
-
-        setTimeout(() => {
-            expect(plannerSpy).toHaveBeenCalledWith(2);
-            done();
-        }, delayHigherThanScheduler);
+        verifySchedules(() => {
+            console.table(plannerSpy.calls.allArgs());
+            schedules.add();
+            dispatcher.sendDepthChanged();
+        }, [[4]], done);
     });
 
-    it('Prevents multiple calculations afer quick change of the same time', (done) => {
-        dispatcher.sendDepthChanged();
-        dispatcher.sendDepthChanged();
-        dispatcher.sendDepthChanged();
-
-        setTimeout(() => {
-            expect(plannerSpy).toHaveBeenCalledTimes(2); // first at startup
-            done();
-        }, delayHigherThanScheduler);
+    it('Prevents multiple calculations after quick change of the same time', (done) => {
+        verifySchedules(() => {
+            dispatcher.sendDepthChanged();
+            dispatcher.sendDepthChanged();
+            dispatcher.sendDepthChanged();
+        }, [[3]], done);
     });
 
-    it('Plans second dive', (done) => {
-        addRepetitiveDive();
-        dispatcher.sendInfoCalculated(1);
-
-        setTimeout(() => {
-            expect(plannerSpy).toHaveBeenCalledWith(2);
-            done();
-        }, delayHigherThanScheduler);
+    it('Plans second repetitive dive', (done) => {
+        verifySchedules(() => {
+            dispatcher.sendInfoCalculated(1);
+        }, [[2]], done);
     });
 
     it('Stops planning after last dive calculated', (done) => {
-        const secondDive = schedules.add();
-        secondDive.surfaceInterval = Time.oneHour;
-        dispatcher.sendInfoCalculated(2);
-
-        setTimeout(() => {
-            expect(plannerSpy).not.toHaveBeenCalledWith(3);
-            done();
-        }, delayHigherThanScheduler);
+        verifySchedules(() => {
+            dispatcher.sendInfoCalculated(3);
+        }, [], done);
     });
 
     it('Stops planning if next dive is not repetitive dive', (done) => {
-        schedules.add();
-        dispatcher.sendInfoCalculated(1);
-
-        setTimeout(() => {
-            expect(plannerSpy).not.toHaveBeenCalledWith(2);
-            done();
-        }, delayHigherThanScheduler);
+        verifySchedules(() => {
+            dispatcher.sendInfoCalculated(1);
+        }, [[2]], done);
     });
 
     it('Stops planning when calculation task fails.', (done) => {
-        dispatcher.sendInfoCalculated();
-
-        setTimeout(() => {
-            expect(plannerSpy).toHaveBeenCalledTimes(1); // only initialization
-            done();
-        }, delayHigherThanScheduler);
+        verifySchedules(() => {
+            dispatcher.sendInfoCalculated();
+        }, [], done);
     });
 
-    // TODO delayed schedule test cases
-    // * When calculating and calculation is running for dive with higher id than next planned, nothing is scheduled
-    // * When calculating and calculation is running for dive with lower id than next planned, schedule is restarted from new dive id.
+    it('Schedules dive 2 when scheduling dive 1', (done) => {
+        verifySchedules(() => {
+            schedules.setSelectedIndex(1);
+            dispatcher.sendDepthChanged(); // 2
+            schedules.setSelectedIndex(2);
+            dispatcher.sendDepthChanged();  // 3
+        }, [[2], [3]], done);
+    });
+
+    it('Schedules dive 1 when scheduling dive 2', (done) => {
+        verifySchedules(() => {
+            schedules.setSelectedIndex(2);
+            dispatcher.sendDepthChanged(); // 3
+            schedules.setSelectedIndex(1);
+            dispatcher.sendDepthChanged(); // 2
+        }, [[3], [2]], done);
+    });
 });

@@ -9,13 +9,14 @@ import _ from 'lodash';
 
 @Injectable()
 export class DelayedScheduleService extends Streamed {
+    public delayMilliseconds = 100;
+
     /**
      * Prevent reoccurring schedule of the same dive.
      * Check one dive only is enough, expecting that withing the delay
      * user is unable to switch to another dive and change it.
      **/
     private scheduledDiveId = 0;
-    private delayMilliseconds = 100;
 
     constructor(
         private dispatcher: ReloadDispatcher,
@@ -61,6 +62,8 @@ export class DelayedScheduleService extends Streamed {
     private schedule(diveId: number): void {
         this.views.saveMainView();
 
+        // this prevents fast changes to schedule the same dive, but does not prevent th schedule other dives.
+        // Expects user is unable to select dive within the delayMilliseconds.
         if(this.scheduledDiveId === diveId) {
             return;
         }

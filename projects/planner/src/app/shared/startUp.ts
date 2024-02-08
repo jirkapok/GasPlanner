@@ -27,12 +27,8 @@ export class DashboardStartUp {
 
         if (query === '' || this.views.started) {
             // no need to restore the state, since dives are kept in service states
-            // no calculation needed because it was alredy done in reload
+            // no calculation needed because it was already done in reload
         } else {
-            // TODO fix startup Expression changed for SAC label in simple tanks
-            // TODO load from url only in case there is only one dive or starting the app
-            // otherwise it will override all the dives
-
             // the only view which loads from parameters instead of view state
             this.urlSerialization.fromUrl(query);
             // cant do in constructor, since the state may be changed

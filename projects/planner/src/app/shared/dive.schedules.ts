@@ -17,11 +17,15 @@ export class DiveSchedule {
     private readonly _tanks: TanksService;
     private readonly _depths: DepthsService;
 
-    constructor(index: number, private units: UnitConversion, private dispatcher: ReloadDispatcher) {
-        this.assignIndex(index);
+    constructor(private _index: number, private units: UnitConversion, private dispatcher: ReloadDispatcher) {
+        this.assignIndex(_index);
         this._tanks = new TanksService(units, dispatcher);
         this._optionsService = new OptionsService(this.units, this.dispatcher);
         this._depths = new DepthsService(this.units, this.tanksService, this._diveResult, this._optionsService, this.dispatcher);
+    }
+
+    public get index(): number {
+        return this._index;
     }
 
     public get id(): number {
@@ -93,6 +97,7 @@ export class DiveSchedule {
     }
 
     public assignIndex(index: number): void {
+        this._index = index;
         this._id = index + 1;
     }
 

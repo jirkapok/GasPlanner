@@ -28,6 +28,10 @@ export class ManagedDiveSchedules {
         return this.schedules.dives;
     }
 
+    public get selectedIndex(): number {
+        return this.schedules.selected.index;
+    }
+
     public add(): void {
         const added = this.schedules.add();
         this.loadDefaultTo(added);

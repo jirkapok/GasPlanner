@@ -12,6 +12,7 @@ import { DelayedScheduleService } from '../shared/delayedSchedule.service';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { SubViewStorage } from '../shared/subViewStorage';
+import { MdbTabsModule } from "mdb-angular-ui-kit/tabs";
 
 describe('PlanTabsComponent', () => {
     let component: PlanTabsComponent;
@@ -20,6 +21,7 @@ describe('PlanTabsComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [PlanTabsComponent],
+            imports: [MdbTabsModule],
             providers: [
                 UnitConversion, ReloadDispatcher,
                 DiveSchedules, ManagedDiveSchedules,
@@ -34,7 +36,7 @@ describe('PlanTabsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    fit('should create', () => {
         expect(component).toBeTruthy();
     });
 });

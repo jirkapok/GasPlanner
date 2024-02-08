@@ -4,10 +4,12 @@ import { Injectable } from '@angular/core';
 import { TanksService } from './tanks.service';
 import { OptionsService } from './options.service';
 import { DepthsService } from './depths.service';
+import { Logger } from './Logger';
 
 /**
  * Since we show only the selected dive schedule,
  * we are always reloading properties of selected dive to the UI.
+ * This fixes issue with reregistering events after selected dive changed.
  */
 @Injectable()
 export class ReloadDispatcher {
@@ -65,42 +67,42 @@ export class ReloadDispatcher {
     }
 
     public sendTanksReloaded(source: TanksService): void {
-        console.log('Tanks reloaded');
+        Logger.debug('Tanks reloaded');
         this.onTanksReloaded.next(source);
     }
 
     public sendTanksRemoved(removed: Tank): void {
-        console.log('Tank removed');
+        Logger.debug('Tank removed');
         this.onTankRemoved.next(removed);
     }
 
     public sendTankChanged(){
-        console.log('Tank changed');
+        Logger.debug('Tank changed');
         this.onTankChanged.next();
     }
 
     public sendDepthChanged(): void {
-        console.log('Depth changed');
+        Logger.debug('Depth changed');
         this.onDepthChanged.next();
     }
 
     public sendOptionsReloaded(source: OptionsService): void {
-        console.log('Options reloaded');
+        Logger.debug('Options reloaded');
         this.onOptionsReloaded.next(source);
     }
 
     public sendOptionsChanged(): void {
-        console.log('Options changed');
+        Logger.debug('Options changed');
         this.onOptionsChanged.next();
     }
 
     public sendSelectedChanged(newSelectedId: number): void {
-        console.log(`Selected dive changed to ${newSelectedId}`);
+        Logger.debug(`Selected dive changed to ${newSelectedId}`);
         this.onSelectedChanged.next();
     }
 
     public sendDepthsReloaded(source: DepthsService): void {
-        console.log('Depths reloaded');
+        Logger.debug('Depths reloaded');
         this.onDepthsReloaded.next(source);
     }
 

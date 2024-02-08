@@ -12,6 +12,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
 import { DiveSchedules } from './dive.schedules';
+import { Logger } from './Logger';
 
 class ParseContext {
     private static readonly trueValue = '1';
@@ -281,10 +282,10 @@ export class PlanUrlSerialization {
             if (isValid) {
                 this.preferences.applyLoaded(parsed);
             } else {
-                console.log('Unable to load planner from url parameters, due to invalid data.');
+                Logger.warn('Unable to load planner from url parameters, due to invalid data.');
             }
         } catch {
-            console.log('Failed loading of planner from url parameters.');
+            Logger.warn('Failed loading of planner from url parameters.');
         }
     }
 

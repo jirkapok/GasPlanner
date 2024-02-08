@@ -18,7 +18,7 @@ import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { UnitConversion } from './UnitConversion';
 import { WayPoint } from './models';
 import { ReloadDispatcher } from './reloadDispatcher';
-import { environment } from '../../environments/environment';
+import { Logger } from './Logger';
 
 
 @Injectable()
@@ -61,10 +61,7 @@ export class PlannerService extends Streamed {
             return;
         }
 
-        if (!environment.production) {
-            console.log(`Planner calculated: ${diveId}`);
-        }
-
+        Logger.debug(`Planner calculated: ${diveId}`);
         const dive = this.diveById(diveId);
         const diveResult = dive.diveResult;
         diveResult.start();

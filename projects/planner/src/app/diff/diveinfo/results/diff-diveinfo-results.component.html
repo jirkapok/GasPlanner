@@ -4,7 +4,7 @@
         <td></td>
         <td><div class="d-flex justify-content-center align-items-center"><strong>Profile A</strong></div></td>
         <td><div class="d-flex justify-content-center align-items-center"><strong>Profile B</strong></div></td>
-        <td class="{{getBgColor('totalDuration', totalDurationDifference)}}
+        <td *ngIf="areResultsCalculated" class="{{getBgColor('totalDuration', totalDurationDifference)}}
             d-flex justify-content-center align-items-center">
             <strong>Difference</strong>
         </td>
@@ -21,9 +21,9 @@
                 {{ profileB.totalDuration | duration:profileB.totalDuration}}
             </div>
         </td>
-        <td class="{{getBgColor('totalDuration', totalDurationDifference)}}">
+        <td *ngIf="areResultsCalculated" class="{{getBgColor('totalDuration', totalDurationDifference)}}" >
             <div class="delta d-flex justify-content-between align-items-center">
-                <strong *ngIf="areResultsCalculated">
+                <strong>
                     {{ totalDurationDifference | duration:totalDurationDifference}}
                 </strong>
                 <fa-icon [icon] ="getArrow(totalDurationDifference)"/>
@@ -42,9 +42,9 @@
                 {{ profileB.timeToSurface | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{getBgColor('timeToSurface', timeToSurfaceDifference)}}">
+        <td *ngIf="areResultsCalculated" class="{{getBgColor('timeToSurface', timeToSurfaceDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
-                <strong *ngIf="areResultsCalculated">
+                <strong>
                     {{ timeToSurfaceDifference | number:'1.0-0' }}
                 </strong>
                 <fa-icon [icon] ="getArrow(timeToSurfaceDifference)"/>
@@ -63,9 +63,9 @@
                 {{ averageDepthOfProfile(profileB) | number:'1.0-1' }}
             </div>
         </td>
-        <td class="{{getBgColor('averageDepth', averageDepthDifference)}}">
+        <td *ngIf="areResultsCalculated" class="{{getBgColor('averageDepth', averageDepthDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
-                <strong *ngIf="areResultsCalculated">
+                <strong>
                     {{ averageDepthDifference | number:'1.0-1' }}
                 </strong>
                 <fa-icon [icon] ="getArrow(averageDepthDifference)"/>
@@ -85,9 +85,10 @@
             </div>
         </td>
 
-        <td class="{{getBgColor('emergencyAscentStart', emergencyAscentStartDifference)}}">
+        <td *ngIf="areResultsCalculated"
+            class="{{getBgColor('emergencyAscentStart', emergencyAscentStartDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
-                <strong *ngIf="areResultsCalculated">
+                <strong>
                 {{ emergencyAscentStartDifference | duration:emergencyAscentStartDifference}}
                 </strong>
                 <fa-icon [icon] ="getArrow(emergencyAscentStartDifference)"/>
@@ -106,9 +107,9 @@
                 {{ noDecoOfProfile(profileB) | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{getBgColor('noDeco', noDecoDifference)}}">
+        <td *ngIf="areDiveInfosCalculated" class="{{getBgColor('noDeco', noDecoDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
-                <strong *ngIf="areDiveInfosCalculated">
+                <strong>
                     {{ noDecoDifference | number:'1.0-0' }}
                 </strong>
                 <fa-icon [icon] ="getArrow(noDecoDifference)"/>
@@ -127,9 +128,9 @@
                 {{ profileB.maxTime | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{getBgColor('maxTime', maxTimeDifference)}}">
+        <td *ngIf="areResultsCalculated" class="{{getBgColor('maxTime', maxTimeDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
-                <strong *ngIf="areResultsCalculated">
+                <strong>
                     {{ maxTimeDifference | number:'1.0-0' }}
                 </strong>
                 <fa-icon [icon] ="getArrow(maxTimeDifference)"/>
@@ -152,9 +153,9 @@
                 ({{densityTextOfProfile(profileB)}})
             </div>
         </td>
-        <td class="{{getBgColor('highestDensity', highestDensityDifference)}}">
+        <td *ngIf="areResultsCalculated" class="{{getBgColor('highestDensity', highestDensityDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
-                <strong *ngIf="areResultsCalculated">
+                <strong>
                     {{ highestDensityDifference | number:'1.0-2' }}
                 </strong>
                 <fa-icon [icon] ="getArrow(highestDensityDifference)"/>
@@ -201,9 +202,9 @@
                 {{ profileB.otu | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{getBgColor('otu', otuDifference)}}">
+        <td *ngIf="areResultsCalculated" class="{{getBgColor('otu', otuDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
-                <strong *ngIf="areResultsCalculated">
+                <strong>
                     {{ otuDifference | number:'1.0-0' }}
                 </strong>
                 <fa-icon [icon] ="getArrow(otuDifference)"/>
@@ -222,9 +223,9 @@
                 {{cnsTextOfProfile(profileB)}}
             </div>
         </td>
-        <td class="{{getBgColor('cns', cnsDifference)}}">
+        <td *ngIf="areResultsCalculated" class="{{getBgColor('cns', cnsDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
-                <strong *ngIf="areResultsCalculated">
+                <strong>
                     {{ cnsDifferenceText }}
                 </strong>
                 <fa-icon [icon] ="getArrow(cnsDifference)"/>

@@ -4,7 +4,7 @@ import {UnitConversion} from '../../../shared/UnitConversion';
 import {ProfileComparatorService} from '../../../shared/profileComparatorService';
 import {DiveResults} from '../../../shared/diveresults';
 import {formatNumber} from '@angular/common';
-import {faArrowDown, faArrowUp, IconDefinition} from '@fortawesome/free-solid-svg-icons';
+import {faArrowDown, faArrowUp, faMinus, IconDefinition} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-diff-diveinfo-results',
@@ -14,6 +14,7 @@ import {faArrowDown, faArrowUp, IconDefinition} from '@fortawesome/free-solid-sv
 export class DiveInfoResultsDifferenceComponent {
     private arrowUp: IconDefinition = faArrowUp;
     private arrowDown: IconDefinition = faArrowDown;
+    private dash: IconDefinition = faMinus;
     private rowColorVectorMap: Map<string, number> = new Map<string, number>([
         ['totalDuration', 1],
         ['timeToSurface', -1],
@@ -141,7 +142,16 @@ export class DiveInfoResultsDifferenceComponent {
     }
 
     public getArrow(difference: number): IconDefinition {
-        return difference > 0 ? this.arrowUp : this.arrowDown;
+        if(difference > 0) {
+            return this.arrowUp;
+        }
+
+        if (difference < 0) {
+            return this.arrowDown;
+        }
+
+
+        return this.dash;
     }
 
     public getBgColor(rowKey: string, value: number): string {
@@ -149,13 +159,13 @@ export class DiveInfoResultsDifferenceComponent {
             console.error('Could not find vector for key: ' + rowKey);
         }
 
-        const isPositive = (this.rowColorVectorMap.get(rowKey) ?? 0) * value > 0;
+        const projectedValue = (this.rowColorVectorMap.get(rowKey) ?? 0) * value;
 
-        if (isPositive){
+        if (projectedValue > 0){
             return 'table-success';
         }
 
-        if (!isPositive){
+        if (projectedValue < 0){
             return 'table-danger';
         }
 

@@ -19,18 +19,8 @@ fa-icon {
     }
 }
 
-// Second collumn (Profile A)
 tr:not(#table-header) {
     td:nth-child(n+2){
         border-left-width: medium !important;
     }
 }
-
-
-//tr {
-//    td:nth-child(n+2){
-//        color:$black
-//    }
-//}
-//
-

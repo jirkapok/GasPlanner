@@ -1,16 +1,25 @@
 <table class="table table-sm">
     <tbody>
+    <tr id="table-header">
+        <td></td>
+        <td><div class="d-flex justify-content-center align-items-center"><strong>Profile A</strong></div></td>
+        <td><div class="d-flex justify-content-center align-items-center"><strong>Profile B</strong></div></td>
+        <td class="{{getBgColor('totalDuration', totalDurationDifference)}}
+            d-flex justify-content-center align-items-center">
+            <strong>Difference</strong>
+        </td>
+    </tr>
     <tr>
         <td>Total dive time [min]:</td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ profileA.totalDuration | duration:profileA.totalDuration}}
-            </strong>
+            </div>
         </td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ profileB.totalDuration | duration:profileB.totalDuration}}
-            </strong>
+            </div>
         </td>
         <td class="{{getBgColor('totalDuration', totalDurationDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
@@ -24,14 +33,14 @@
     <tr>
         <td>Time to surface [min]:</td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ profileA.timeToSurface | number:'1.0-0' }}
-            </strong>
+            </div>
         </td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ profileB.timeToSurface | number:'1.0-0' }}
-            </strong>
+            </div>
         </td>
         <td class="{{getBgColor('timeToSurface', timeToSurfaceDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
@@ -45,14 +54,14 @@
     <tr>
         <td>Average depth [{{units.length}}]:</td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ averageDepthOfProfile(profileA) | number:'1.0-1' }}
-            </strong>
+            </div>
         </td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ averageDepthOfProfile(profileB) | number:'1.0-1' }}
-            </strong>
+            </div>
         </td>
         <td class="{{getBgColor('averageDepth', averageDepthDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
@@ -66,14 +75,14 @@
     <tr>
         <td>Rock bottom at [min]:</td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ profileA.emergencyAscentStart | duration:profileA.emergencyAscentStart }}
-            </strong>
+            </div>
         </td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ profileB.emergencyAscentStart | duration:profileB.emergencyAscentStart }}
-            </strong>
+            </div>
         </td>
 
         <td class="{{getBgColor('emergencyAscentStart', emergencyAscentStartDifference)}}">
@@ -88,14 +97,14 @@
     <tr>
         <td>No decompression time [min]:</td>
         <td>
-            <strong *ngIf="areDiveInfosCalculated">
+            <div *ngIf="areDiveInfosCalculated">
                 {{ noDecoOfProfile(profileA) | number:'1.0-0' }}
-            </strong>
+            </div>
         </td>
         <td>
-            <strong *ngIf="areDiveInfosCalculated">
+            <div *ngIf="areDiveInfosCalculated">
                 {{ noDecoOfProfile(profileB) | number:'1.0-0' }}
-            </strong>
+            </div>
         </td>
         <td class="{{getBgColor('noDeco', noDecoDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
@@ -109,14 +118,14 @@
     <tr *ngIf="showMaxBottomTimeOfProfile">
         <td>Maximum bottom time [min]:</td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ profileA.maxTime | number:'1.0-0' }}
-            </strong>
+            </div>
         </td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ profileB.maxTime | number:'1.0-0' }}
-            </strong>
+            </div>
         </td>
         <td class="{{getBgColor('maxTime', maxTimeDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
@@ -130,18 +139,18 @@
     <tr *ngIf="isComplex">
         <td>Highest gas density [{{units.density}}]:</td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ highestDensityOfProfile(profileA) | number:'1.0-2' }}
                 <br>
                 ({{densityTextOfProfile(profileA)}})
-            </strong>
+            </div>
         </td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ highestDensityOfProfile(profileB) | number:'1.0-2' }}
                 <br>
                 ({{densityTextOfProfile(profileB)}})
-            </strong>
+            </div>
         </td>
         <td class="{{getBgColor('highestDensity', highestDensityDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
@@ -183,14 +192,14 @@
     <tr *ngIf="areProfilesCalculated">
         <td>OTU toxicity [OTU]:</td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ profileA.otu | number:'1.0-0' }}
-            </strong>
+            </div>
         </td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{ profileB.otu | number:'1.0-0' }}
-            </strong>
+            </div>
         </td>
         <td class="{{getBgColor('otu', otuDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">
@@ -204,14 +213,14 @@
     <tr *ngIf="areProfilesCalculated">
         <td>CNS toxicity [%]:</td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{cnsTextOfProfile(profileA)}}
-            </strong>
+            </div>
         </td>
         <td>
-            <strong *ngIf="areResultsCalculated">
+            <div *ngIf="areResultsCalculated">
                 {{cnsTextOfProfile(profileB)}}
-            </strong>
+            </div>
         </td>
         <td class="{{getBgColor('cns', cnsDifference)}}">
             <div class="delta d-flex justify-content-between align-items-center">

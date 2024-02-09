@@ -1,11 +1,11 @@
-<div class="card overflow-y-scroll">
+<div class="card">
     <div class="card-header">
         <div class="float-start">
             <fa-icon [icon]="tasks" class="me-3"></fa-icon>
             <span>Dive way points</span>
         </div>
     </div>
-    <div class="hide card-body card-minheight table-responsive card-max-height-md">
+    <div id="body" class="hide card-minheight card-max-height-md">
         <app-calculating [show]="!tableRowProvider.isCalculated" class="position-absolute"
         style="top: 50%; left:50%"></app-calculating>
 
@@ -17,9 +17,9 @@
                 <th colspan="2" class="fw-bold px-1">Profile B</th>
             </tr>
             <tr>
-                <th class="fw-bold px-1 ">Run [min]</th>
-                <th class="fw-bold px-1 active-profile">Depth [{{units.length}}]</th>
-                <th class="fw-bold px-1 active-profile">Duration [min]</th>
+                <th class="fw-bold px-1">Run [min]</th>
+                <th class="fw-bold px-1 vertical-left-border">Depth [{{units.length}}]</th>
+                <th class="fw-bold px-1 vertical-right-border">Duration [min]</th>
                 <th class="fw-bold px-1">Depth [{{units.length}}]</th>
                 <th class="fw-bold px-1">Duration [min]</th>
             </tr>

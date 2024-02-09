@@ -2,207 +2,224 @@
     <tbody>
     <tr>
         <td>Total dive time [min]:</td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ profileA.totalDuration | duration:profileA.totalDuration}}
             </strong>
         </td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ profileB.totalDuration | duration:profileB.totalDuration}}
             </strong>
         </td>
-        <td class="table-active d-flex justify-content-between align-items-center">
-            <strong *ngIf="areResultsCalculated">
-                {{ totalDurationDifference | duration:totalDurationDifference}}
-            </strong>
-            <fa-icon [icon] ="getArrow(totalDurationDifference)"/>
+        <td class="{{getBgColor('totalDuration', totalDurationDifference)}}">
+            <div class="delta d-flex justify-content-between align-items-center">
+                <strong *ngIf="areResultsCalculated">
+                    {{ totalDurationDifference | duration:totalDurationDifference}}
+                </strong>
+                <fa-icon [icon] ="getArrow(totalDurationDifference)"/>
+            </div>
         </td>
     </tr>
     <tr>
         <td>Time to surface [min]:</td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ profileA.timeToSurface | number:'1.0-0' }}
             </strong>
         </td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ profileB.timeToSurface | number:'1.0-0' }}
             </strong>
         </td>
-        <td class="table-active d-flex justify-content-between align-items-center">
-            <strong *ngIf="areResultsCalculated">
-                {{ timeToSurfaceDifference | number:'1.0-0' }}
-            </strong>
-            <fa-icon [icon] ="getArrow(timeToSurfaceDifference)"/>
+        <td class="{{getBgColor('timeToSurface', timeToSurfaceDifference)}}">
+            <div class="delta d-flex justify-content-between align-items-center">
+                <strong *ngIf="areResultsCalculated">
+                    {{ timeToSurfaceDifference | number:'1.0-0' }}
+                </strong>
+                <fa-icon [icon] ="getArrow(timeToSurfaceDifference)"/>
+            </div>
         </td>
     </tr>
     <tr>
         <td>Average depth [{{units.length}}]:</td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ averageDepthOfProfile(profileA) | number:'1.0-1' }}
             </strong>
         </td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ averageDepthOfProfile(profileB) | number:'1.0-1' }}
             </strong>
         </td>
-        <td class="table-active d-flex justify-content-between align-items-center">
-            <strong *ngIf="areResultsCalculated">
-                {{ averageDepthDifference | number:'1.0-1' }}
-            </strong>
-            <fa-icon [icon] ="getArrow(averageDepthDifference)"/>
+        <td class="{{getBgColor('averageDepth', averageDepthDifference)}}">
+            <div class="delta d-flex justify-content-between align-items-center">
+                <strong *ngIf="areResultsCalculated">
+                    {{ averageDepthDifference | number:'1.0-1' }}
+                </strong>
+                <fa-icon [icon] ="getArrow(averageDepthDifference)"/>
+            </div>
         </td>
     </tr>
     <tr>
         <td>Rock bottom at [min]:</td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ profileA.emergencyAscentStart | duration:profileA.emergencyAscentStart }}
             </strong>
         </td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ profileB.emergencyAscentStart | duration:profileB.emergencyAscentStart }}
             </strong>
         </td>
 
-        <td class="table-active d-flex justify-content-between align-items-center">
-            <strong *ngIf="areResultsCalculated">
+        <td class="{{getBgColor('emergencyAscentStart', emergencyAscentStartDifference)}}">
+            <div class="delta d-flex justify-content-between align-items-center">
+                <strong *ngIf="areResultsCalculated">
                 {{ emergencyAscentStartDifference | duration:emergencyAscentStartDifference}}
-            </strong>
-            <fa-icon [icon] ="getArrow(emergencyAscentStartDifference)"/>
+                </strong>
+                <fa-icon [icon] ="getArrow(emergencyAscentStartDifference)"/>
+            </div>
         </td>
     </tr>
     <tr>
         <td>No decompression time [min]:</td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areDiveInfosCalculated">
                 {{ noDecoOfProfile(profileA) | number:'1.0-0' }}
             </strong>
         </td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areDiveInfosCalculated">
                 {{ noDecoOfProfile(profileB) | number:'1.0-0' }}
             </strong>
         </td>
-        <td class="table-active d-flex justify-content-between align-items-center">
-            <strong *ngIf="areDiveInfosCalculated">
-                {{ noDecoDifference | number:'1.0-0' }}
-            </strong>
-            <fa-icon [icon] ="getArrow(noDecoDifference)"/>
+        <td class="{{getBgColor('noDeco', noDecoDifference)}}">
+            <div class="delta d-flex justify-content-between align-items-center">
+                <strong *ngIf="areDiveInfosCalculated">
+                    {{ noDecoDifference | number:'1.0-0' }}
+                </strong>
+                <fa-icon [icon] ="getArrow(noDecoDifference)"/>
+            </div>
         </td>
     </tr>
     <tr *ngIf="showMaxBottomTimeOfProfile">
         <td>Maximum bottom time [min]:</td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ profileA.maxTime | number:'1.0-0' }}
             </strong>
         </td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ profileB.maxTime | number:'1.0-0' }}
             </strong>
         </td>
-        <td class="table-active d-flex justify-content-between align-items-center">
-            <strong *ngIf="areResultsCalculated">
-                {{ maxTimeDifference | number:'1.0-0' }}
-            </strong>
-            <fa-icon [icon] ="getArrow(maxTimeDifference)"/>
+        <td class="{{getBgColor('maxTime', maxTimeDifference)}}">
+            <div class="delta d-flex justify-content-between align-items-center">
+                <strong *ngIf="areResultsCalculated">
+                    {{ maxTimeDifference | number:'1.0-0' }}
+                </strong>
+                <fa-icon [icon] ="getArrow(maxTimeDifference)"/>
+            </div>
         </td>
     </tr>
     <tr *ngIf="isComplex">
         <td>Highest gas density [{{units.density}}]:</td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ highestDensityOfProfile(profileA) | number:'1.0-2' }}
                 <br>
                 ({{densityTextOfProfile(profileA)}})
             </strong>
         </td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ highestDensityOfProfile(profileB) | number:'1.0-2' }}
                 <br>
                 ({{densityTextOfProfile(profileB)}})
             </strong>
         </td>
-        <td class="table-active d-flex justify-content-between align-items-center">
-            <strong *ngIf="areResultsCalculated">
-                {{ highestDensityDifference | number:'1.0-2' }}
-            </strong>
-            <fa-icon [icon] ="getArrow(highestDensityDifference)"/>
+        <td class="{{getBgColor('highestDensity', highestDensityDifference)}}">
+            <div class="delta d-flex justify-content-between align-items-center">
+                <strong *ngIf="areResultsCalculated">
+                    {{ highestDensityDifference | number:'1.0-2' }}
+                </strong>
+                <fa-icon [icon] ="getArrow(highestDensityDifference)"/>
+            </div>
         </td>
     </tr>
-<!--    TODO: Verify correctness once return strategy is implemented   -->
-<!--    TODO: Implement difference col   -->
+<!--    TODO: Implement needsReturn rows   -->
 
-    <tr *ngIf="needsReturn">
-        <td>Turn time [min]:</td>
-        <td class="table-active">
-            <strong *ngIf="areResultsCalculated">
-                {{ profileA.turnTime | number:'1.0-0' }}
-            </strong>
-        </td>
-        <td class="table-active">
-            <strong *ngIf="areResultsCalculated">
-                {{ profileB.turnTime | number:'1.0-0' }}
-            </strong>
-        </td>
-    </tr>
-    <tr *ngIf="needsReturn">
-        <td>Turn pressure [{{units.pressure}}]:</td>
-        <td class="table-active">
-            <strong *ngIf="areResultsCalculated">
-                {{ profileA.turnPressure | number:'1.0-0' }}
-            </strong>
-        </td>
-        <td class="table-active">
-            <strong *ngIf="areResultsCalculated">
-                {{ profileB.turnPressure | number:'1.0-0' }}
-            </strong>
-        </td>
-    </tr>
+<!--    <tr *ngIf="needsReturn">-->
+<!--        <td>Turn time [min]:</td>-->
+<!--        <td>-->
+<!--            <strong *ngIf="areResultsCalculated">-->
+<!--                {{ profileA.turnTime | number:'1.0-0' }}-->
+<!--            </strong>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            <strong *ngIf="areResultsCalculated">-->
+<!--                {{ profileB.turnTime | number:'1.0-0' }}-->
+<!--            </strong>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    <tr *ngIf="needsReturn">-->
+<!--        <td>Turn pressure [{{units.pressure}}]:</td>-->
+<!--        <td>-->
+<!--            <strong *ngIf="areResultsCalculated">-->
+<!--                {{ profileA.turnPressure | number:'1.0-0' }}-->
+<!--            </strong>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            <strong *ngIf="areResultsCalculated">-->
+<!--                {{ profileB.turnPressure | number:'1.0-0' }}-->
+<!--            </strong>-->
+<!--        </td>-->
+<!--    </tr>-->
     <tr *ngIf="areProfilesCalculated">
         <td>OTU toxicity [OTU]:</td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ profileA.otu | number:'1.0-0' }}
             </strong>
         </td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{ profileB.otu | number:'1.0-0' }}
             </strong>
         </td>
-        <td class="table-active d-flex justify-content-between align-items-center">
-            <strong *ngIf="areResultsCalculated">
-                {{ otuDifference | number:'1.0-0' }}
-            </strong>
-            <fa-icon [icon] ="getArrow(otuDifference)"/>
+        <td class="{{getBgColor('otu', otuDifference)}}">
+            <div class="delta d-flex justify-content-between align-items-center">
+                <strong *ngIf="areResultsCalculated">
+                    {{ otuDifference | number:'1.0-0' }}
+                </strong>
+                <fa-icon [icon] ="getArrow(otuDifference)"/>
+            </div>
         </td>
     </tr>
     <tr *ngIf="areProfilesCalculated">
         <td>CNS toxicity [%]:</td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{cnsTextOfProfile(profileA)}}
             </strong>
         </td>
-        <td class="table-active">
+        <td>
             <strong *ngIf="areResultsCalculated">
                 {{cnsTextOfProfile(profileB)}}
             </strong>
         </td>
-        <td class="table-active d-flex justify-content-between align-items-center">
-            <strong *ngIf="areResultsCalculated">
-                {{ cnsDifferenceText }}
-            </strong>
-            <fa-icon [icon] ="getArrow(cnsDifference)"/>
+        <td class="{{getBgColor('cns', cnsDifference)}}">
+            <div class="delta d-flex justify-content-between align-items-center">
+                <strong *ngIf="areResultsCalculated">
+                    {{ cnsDifferenceText }}
+                </strong>
+                <fa-icon [icon] ="getArrow(cnsDifference)"/>
+            </div>
         </td>
     </tr>
     </tbody>

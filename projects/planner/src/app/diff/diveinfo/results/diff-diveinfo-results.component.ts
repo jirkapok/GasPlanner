@@ -14,6 +14,17 @@ import {faArrowDown, faArrowUp, IconDefinition} from '@fortawesome/free-solid-sv
 export class DiveInfoResultsDifferenceComponent {
     private arrowUp: IconDefinition = faArrowUp;
     private arrowDown: IconDefinition = faArrowDown;
+    private rowColorVectorMap: Map<string, number> = new Map<string, number>([
+        ['totalDuration', 1],
+        ['timeToSurface', -1],
+        ['averageDepth', -1],
+        ['emergencyAscentStart', -1],
+        ['noDeco', 1],
+        ['maxTime', 1],
+        ['highestDensity', -1],
+        ['otu', -1],
+        ['cns', -1]
+    ]);
 
     constructor(
         private viewSwitch: ViewSwitchService,
@@ -131,5 +142,23 @@ export class DiveInfoResultsDifferenceComponent {
 
     public getArrow(difference: number): IconDefinition {
         return difference > 0 ? this.arrowUp : this.arrowDown;
+    }
+
+    public getBgColor(rowKey: string, value: number): string {
+        if(!this.rowColorVectorMap.has(rowKey)){
+            console.error('Could not find vector for key: ' + rowKey);
+        }
+
+        const isPositive = (this.rowColorVectorMap.get(rowKey) ?? 0) * value > 0;
+
+        if (isPositive){
+            return 'table-success';
+        }
+
+        if (!isPositive){
+            return 'table-danger';
+        }
+
+        return 'table-active';
     }
 }

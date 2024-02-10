@@ -8,6 +8,7 @@
     * [Tanks](./tanks.md)
     * [Standard gases](./standard_gases.md) 
     * [Depths](./depths.md)
+    * [Surface interval](./depths.md#repetitive-dives-and-surface-interval)
     * [Options](./plan_options.md)
       * [Environment](./environment.md)
       * [Conservatism](./gradient_factors.md)

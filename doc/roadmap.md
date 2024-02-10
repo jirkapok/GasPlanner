@@ -10,7 +10,6 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Fix documentation: redundancies, limitations, multiple depths
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
   * Fix offline mode:

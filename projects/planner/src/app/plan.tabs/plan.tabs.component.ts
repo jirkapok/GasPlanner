@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faRotate } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
 import { DiveSchedule } from '../shared/dive.schedules';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
@@ -14,13 +14,13 @@ import { takeUntil } from 'rxjs';
 export class PlanTabsComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
     public addIcon = faPlus;
+    public reloadIcon = faRotate;
 
     constructor(public schedules: ManagedDiveSchedules, private cd: ChangeDetectorRef) {
         super();
     }
 
-    // TODO add loading to the tab header
-    // TODO Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
+    // TODO mark all following dives not calculated immediately
 
     public ngAfterViewInit(): void {
         // hack to fix missing initial value of the selected tab

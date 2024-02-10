@@ -6,15 +6,15 @@
 * Limitations
 * Screen structure
 * Plan
-    * [Tanks and depths](./plan.md)
+    * [Tanks](./tanks.md)
     * [Standard gases](./standard_gases.md) 
-    * Depths
+    * [Depths](./depths.md)
     * [Options](./plan_options.md)
-* [Results](./results.md)
-  * Dive info table
-  * Oxygen toxicity
-  * Events causing errors and warnings
-  * Consumed gas charts
+* Results
+  * [Dive info table](./diveinfo.md)
+  * [Oxygen toxicity](./diveinfo.md#oxygen-toxicity)
+  * [Events causing errors and warnings](./events.md)
+  * [Consumed gas charts](./consumed.md)
   * Dive way points table
   * Dive profile chart
 * [Application settings](./settings.md)

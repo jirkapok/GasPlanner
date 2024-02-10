@@ -1,79 +1,10 @@
 # Calculated results
 
-* Dive info table
-* Oxygen toxicity
-* Events causing errors and warnings
 * Consumed gas charts
 * Dive way points table
 * Dive profile chart
 
-## Dive info table
 
-* `Time to surface (TTS)` [minutes]: Total duration of ascent from critical point of dive in case of emergency. Problem solving duration minutes are added to ascent duration to be able respond to situation at depth as recommended during scuba trainings.
-* `No decompression time` [minutes]: The longes time diver can stay at required depth where direct ascent to the surface is considered to be safe. There may be small deco, which disappears during the ascent.
-* `Maximum bottom time` [minutes]: The longest time diver can stay at required depth considering provided gases. Even, it may lead to decompression dive.
-* `Rock bottom at` time: The moment at which the emergency ascent is calculated used to calculate the rock bottom. It is the last moment at highest depth.
-
-> **Emergency ascent may differ from calculated ascent**, because it is calculated at different time during the dive.
-
-## Oxygen toxicity
-
-There are usually two types of oxygen toxicity considered:
-
-* Central Nervous System toxicity (CNS): manifests as symptoms such as visual changes (especially tunnel vision), ringing in the ears (tinnitus), nausea, twitching (especially of the face), behavioral changes (irritability, anxiety, confusion), and dizziness. This unit is measured in percents from exposure time limits.
-* Pulmonary oxygen toxicity (OTU): Pulmonary toxicity symptoms result from an inflammation that starts in the airways leading to the lungs and then spreads into the lungs (tracheobronchial tree). The symptoms appear in the upper chest region (substernal and carinal regions). This begins as a mild tickle on inhalation and progresses to frequent coughing. If breathing increased partial pressures of oxygen continues, patients experience a mild burning on inhalation along with uncontrollable coughing and occasional shortness of breath (dyspnea).
-
-See also [Oxygen toxicity at wiki](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater). For both units there is a NOAA recommendation which our application follows. If any of these units reaches 80 % of its limit a warning is shown.
-
-## Events causing errors and warnings
-
-In case of any issue with the plan, Notification messages are shown bellow the dive table colored by red for errors and yellow for warnings. Warning should be understood so that the dive isn't optimal and there is low risk of problems. Error means, that the plan doesn't make sense or probably will end in dead. There are also informative messages
-
-| Event | Risk | Solution |
-| --- | --- | --- |
-| Not enough gas | Easy, right? | Provide more tanks, use larger tank or reduce planned depth or duration |
-| High ppO2 | High content of oxygen increase risk of oxygen toxicity which may cause convulsions, drowning or dead | Use gas with lower oxygen content or reduce planned depth |
-| Low ppO2 | At that point the gas is hypoxic and may cause drowning or dead, in case partial pressure of oxygen is bellow 0.18 | Use gas with higher oxygen content at these depths |
-| High ascent speed | User defined part of the dive with high risk of micro-bubbles which cause higher risk of DCS | Enlarge the ascent duration |
-| High descent speed | Higher risk of ear (or other cavities) barotrauma | Enlarge the descent duration |
-| Broken ceiling | In user defined part of the dive profile you reach lower depth than current ceiling, which increases risk of DCS | Fix the profile, so always stay bellow the ceiling |
-| Narcotic depth exceeded | Even the gas is breathe able at this depth, there is higher risk of gas narcotic effects. Usually this applies to deep air dives | Plan shallower dive or use gas for higher depths (Trimix) |
-| Switch to gas with higher N2 content | There is a risk of Isobaric counter diffusion | Choose another decompression gas with lower nitrogen content |
-| Long oxygen exposure causing 80 % of CNS limit reached | There is a risk of CNS toxicity symptoms | Choose gases with lower oxygen content or reduce target depth |
-| Long oxygen exposure causing 80 % of OTU limit reached (260 OTU) | There is a risk of OTU toxicity symptoms | Choose gases with lower oxygen content or reduce target depth |
-| High gas density | Causes high work of breathing and results in high partial pressures of arterial CO2, which can cause narcosis, hypercapnia and loss of consciousness. | Reduce target depth or use gas with higher helium content (i.e. lower density). |
-
-> This is the main purpose of this application: to reduce these risks!
-
-Read more about
-
-* [Decompression sickness](https://en.wikipedia.org/wiki/Decompression_sickness) (DCS)
-* [Cavities bartrauma](https://en.wikipedia.org/wiki/Barotrauma)
-* [Oxygen toxicity](https://en.wikipedia.org/wiki/Oxygen_toxicity#Underwater)
-* [Hypooxia](https://en.wikipedia.org/wiki/Hypoxia_(medical))
-* [Isobaric counter diffusion](https://en.wikipedia.org/wiki/Isobaric_counterdiffusion)
-* [Gas density](https://dan.org/alert-diver/article/performance-under-pressure/)
-
-## Consumed gas charts
-
-![Tank consumed and reserve](./tank_consumption_reserve.png)
-
-* `Gas remaining`: The consumed gas is extracted from tank Start pressure. Example shows not enough gas to realize the dive. Only 97 bars (1407 psi) are remaining from 200 bars (2900 psi). But the reserve is 104 bars (2030 psi), which should be still present in the tank after you reach the surface from dive without any issue.
-* `Rock bottom` [bars] (psi): Minimum amount of gas (reserve) required for safe ascent in case of emergency for two divers under stress. It is shown for each defined tank. These values are calculated at "Rock bottom at" time.
-
-> If diver defines 20 Liters/minute his RMV, than the Rock bottom counts with 60 liters/minute breathing rate for both divers during emergency ascent.
-
-How reserve is calculated? Currently only all usable strategy is implemented.
-
-1. Simple view: Ascent is automatically calculated from deepest point at end of the planned time. In this case the rock bottom is gas needed for proper ascent to the surface.
-2. Complex multilevel dive with or without user defined parts of the profile up to the surface. Again we use all available tanks even they aren't used by user. Emergency ascent is calculated at end of deepest point, since rest of the profile is considered as decompression ascent.
-
-In case of multiple tanks
-
-* Consumed gas is extracted in reverse order from last tank up to the first tank
-* Reserve for first tak remains always at least 30 bars (435 psi)
-* For all other tanks, there is no reserve required as technical minimum, until the reserve isn't larger than capacity of the first tank.
-* In case of multiple tanks with the same bottom gas, to consume from both tanks and distribute the reserve, you need manually create segments and assing the tanks in Extended view.
 
 ## Dive way points table
 

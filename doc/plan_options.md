@@ -1,5 +1,11 @@
 # Plan options
 
+* [Environment](./plan_options.md#environment)
+* [Conservatism](./plan_options.md#conservatism---gradient-factors)
+* [Gases](./plan_options.md#gases)
+* [Stops](./plan_options.md#stops)
+* [Speeds](./plan_options.md#speeds)
+
 For faster customization or to be able reset options to default values, you can use two buttons.
 
 * `Recreational`: Options taught in basic open water courses for most training agencies. This will switch e.g. safety stop to 5 meters (15 ft) and ascent speeds to 9 meters/minute (30 ft/min).

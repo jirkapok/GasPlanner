@@ -81,7 +81,7 @@ This calculator uses simple depth converter where 1 ATM equals 1 bar to simplify
 * Equivalent narcotic depth (`END`) is affected by both nitrox and oxygen depending on your understanding if oxygen is narcotic or not.
 * Maximum partial pressure limits maximum depth by oxygen content.
 
-The results shown in the table respect all options defined in this form. More details about all of the are described in Nitrox calculator chapter or in [dive results](./results.md).
+The results shown in the table respect all options defined in this form. More details about all of the are described in Nitrox calculator chapter or in [events](./events.md).
 
 ## Redundancies
 

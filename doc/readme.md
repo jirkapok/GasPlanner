@@ -1,10 +1,10 @@
 # Application help
 
-* Supported platforms
-* Theoretical model
-* Calculations Background
-* Limitations
-* Screen structure
+* [Supported platforms](./readme.md#supported-platforms)
+* [Theoretical model](./readme.md#theoretical-model)
+* [Calculations Background](./readme.md#calculations-background)
+* [Limitations](./readme.md#limitations)
+* [Screen structure](./readme.md#screen-structure)
 * Plan
     * [Tanks](./tanks.md)
     * [Standard gases](./standard_gases.md) 
@@ -15,8 +15,8 @@
   * [Oxygen toxicity](./diveinfo.md#oxygen-toxicity)
   * [Events causing errors and warnings](./events.md)
   * [Consumed gas charts](./consumed.md)
-  * Dive way points table
-  * Dive profile chart
+  * [Dive way points table](./waypoints_table.md)
+  * [Dive profile chart](./profile_chart.md)
 * [Application settings](./settings.md)
 * [Calculators](./calculators.md)
     * [RMV/SAC](./calculators.md#rmv)

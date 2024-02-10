@@ -1,5 +1,13 @@
 # Calculators
 
+* [RMV/SAC](./calculators.md#rmv)
+* [Nitrox](./calculators.md#nitrox)
+* [No decompression limits (NDL) table](./calculators.md#no-decompression-limits)
+* [Altitude](./calculators.md#altitude)
+* [Weight](./calculators.md#weight)
+* [Gas properties](./calculators.md#gas-properties)
+* [Redundancies](./calculators.md#redundancies)
+
 ## RMV/SAC
 
 To be able calculate remaining gas and reserve for planned dive, you need to know your consumption, where this calculator steps into the game. Read more on [Gas planning wiki](https://en.wikipedia.org/wiki/Scuba_gas_planning) or on [Diving cylinder wiki](https://en.wikipedia.org/wiki/Diving_cylinder). We are talking about two measures with different meaning:
@@ -62,11 +70,11 @@ The altitude diving calculator helps to estimate altitude from the current air p
 
 ## Weight
 
-The weight calculator helps to estimate required additional lead the diver needs to use to compensate weight lost during the dive as gas from provided tank is consumed. This does not count with protection suit weight compensation using additional lead. E.g. if you consume 150 b (2175 psi) from 15 L (125 cuft) tank, you will need to add 2.8 kg (6.1 lb) of lead to be neutrally buoyant. This calculator is based on assumption that 1 liter of dry air at 15 °C weights 1,225 kg.
+The weight calculator helps to estimate required additional lead the diver needs to use to compensate weight lost during the dive as gas from provided tank is consumed. This does not count with protection suit weight compensation using additional lead. E.g. if you consume 150 b (2175 psi) from 15 L (125 cuft) tank, you will need to add 2.8 kg (6.1 lb) of lead to be neutrally buoyant. This calculator is based on assumption that 1 liter of dry air at 15 °C weights 1,225 g.
 
 ## Gas properties
 
-This calculator uses simple depth converter where 1 ATM equals 1 bar to simplify the results understanding. This calculator helps to understand gas properties under higher pressure at depth. The key understandings are:
+This calculator uses simple depth converter where 1 ATM equals 1 bar to simplify the results understanding. This calculator extends properties shown by Nitrox calculator. By adding helium to gas mixture (trimix) you are able to choose gas for higher depths range and more properties come to account. It helps to understand gas properties under higher pressure at depth. The key understandings are:
 
 * Don't breath gas with higher density than 5.7 g/l. see also <https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/> and <https://www.thoughtco.com/how-to-calculate-density-of-a-gas-607847>
 * Stay within limit of maximum narcotic depth (`MND`), maximum depth (`MOD`) and minimum depth.
@@ -74,3 +82,8 @@ This calculator uses simple depth converter where 1 ATM equals 1 bar to simplify
 * Maximum partial pressure limits maximum depth by oxygen content.
 
 The results shown in the table respect all options defined in this form. More details about all of the are described in Nitrox calculator chapter or in [dive results](./results.md).
+
+## Redundancies
+
+* TODO
+

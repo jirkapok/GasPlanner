@@ -1,6 +1,9 @@
 # Dive plan
 
-## Depth
+* Depths
+* Tanks
+
+## Depth(s)
 
 ![Target depth](./target_depth_properties.png)
 

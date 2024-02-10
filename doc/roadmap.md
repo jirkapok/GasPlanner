@@ -7,14 +7,9 @@ Following list of features and improvements ordered by priority is under develop
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
 * TTS is calculated from last user defined point, not from the deepest point
-* Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
 
 ## Improvements / Features
 
-* Add documentation for gas properties and redundancies calculator
-* Allow user to compare multiple plans side by side
-  * I want compare consequences of emergency ascent
-  * I want to plan a dive and choose from two following plans or two independent plans
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
   * Fix offline mode:
@@ -27,6 +22,9 @@ Following list of features and improvements ordered by priority is under develop
     * https://github.com/atdotde/realblender
     * https://github.com/subsurface/subsurface/blob/master/core/gas-model.c
     * https://thetheoreticaldiver.org/wordpress/index.php/2021/11/16/blending-real-gases/
+* Allow user to compare multiple plans side by side
+  * I want compare consequences of emergency ascent
+  * I want to plan a dive and choose from two following plans or two independent plans
 * UI Tweaks
   * Read only fields should be distinguish able
   * Profile:

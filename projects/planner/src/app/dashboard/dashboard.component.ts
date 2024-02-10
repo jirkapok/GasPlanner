@@ -6,7 +6,7 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { UnitConversion } from '../shared/UnitConversion';
 import { DashboardStartUp } from '../shared/startUp';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
-import { DiveSchedules } from "../shared/dive.schedules";
+import { DiveSchedules } from '../shared/dive.schedules';
 
 @Component({
     selector: 'app-dashboard',

@@ -19,6 +19,9 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
         super();
     }
 
+    // TODO add loading to the tab header
+    // TODO Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
+
     public ngAfterViewInit(): void {
         // hack to fix missing initial value of the selected tab
         const selectedIndex = this.schedules.selectedIndex;

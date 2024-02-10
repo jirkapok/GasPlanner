@@ -1,4 +1,13 @@
-# Calculated results (Dive info)
+# Calculated results
+
+* Dive info table
+* Oxygen toxicity
+* Events causing errors and warnings
+* Consumed gas charts
+* Dive way points table
+* Dive profile chart
+
+## Dive info table
 
 * `Time to surface (TTS)` [minutes]: Total duration of ascent from critical point of dive in case of emergency. Problem solving duration minutes are added to ascent duration to be able respond to situation at depth as recommended during scuba trainings.
 * `No decompression time` [minutes]: The longes time diver can stay at required depth where direct ascent to the surface is considered to be safe. There may be small deco, which disappears during the ascent.
@@ -66,7 +75,7 @@ In case of multiple tanks
 * For all other tanks, there is no reserve required as technical minimum, until the reserve isn't larger than capacity of the first tank.
 * In case of multiple tanks with the same bottom gas, to consume from both tanks and distribute the reserve, you need manually create segments and assing the tanks in Extended view.
 
-## Dive way points
+## Dive way points table
 
 Table showing details about profile changes during the dive. Each row represents one event.
 
@@ -79,7 +88,7 @@ Table showing details about profile changes during the dive. Each row represents
 * `Duration` [minutes]: Duration of this transition since previous row.
 * `Run time` [minutes]: Absolute time since the dive started till end of current row. Calculated as total sum of all previous lines.
 
-## Dive profile
+## Dive profile chart
 
 Graphical representation how the calculated depth changes in time. This corresponds to precise values shown in the way points table. Move mouse over the chart to focus related row in the waypoints table.
 

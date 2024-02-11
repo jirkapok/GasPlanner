@@ -13,6 +13,7 @@ import { Streamed } from '../shared/streamed';
 import { DepthsService } from '../shared/depths.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveSchedules } from '../shared/dive.schedules';
+import {TextConstants} from '../shared/TextConstants';
 
 @Component({
     selector: 'app-diveinfo',
@@ -80,7 +81,7 @@ export class DiveInfoComponent extends Streamed {
 
     public get cnsText(): string {
         if(this.dive.cns >= 1000) {
-            return '> 1000';
+            return TextConstants.cnsOverOneThousand;
         }
 
         return formatNumber(this.dive.cns, 'en', '1.0-0');

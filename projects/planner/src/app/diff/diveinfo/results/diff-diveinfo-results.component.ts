@@ -6,6 +6,7 @@ import {DiveResults} from '../../../shared/diveresults';
 import {formatNumber} from '@angular/common';
 import {faArrowDown, faArrowUp, faMinus, IconDefinition} from '@fortawesome/free-solid-svg-icons';
 import {Logger} from '../../../shared/Logger';
+import {TextConstants} from '../../../shared/TextConstants';
 
 @Component({
     selector: 'app-diff-diveinfo-results',
@@ -13,6 +14,8 @@ import {Logger} from '../../../shared/Logger';
     styleUrls: ['./diff-diveinfo-results.component.scss']
 })
 export class DiveInfoResultsDifferenceComponent {
+    private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';
+
     private arrowUp: IconDefinition = faArrowUp;
     private arrowDown: IconDefinition = faArrowDown;
     private dash: IconDefinition = faMinus;
@@ -101,11 +104,11 @@ export class DiveInfoResultsDifferenceComponent {
     public get cnsDifferenceText(): string {
         const diff = this.cnsDifference;
         if(diff >= 1000) {
-            return '> 1000';
+            return TextConstants.cnsOverOneThousand;
         }
 
         if(diff <= -1000) {
-            return '< -1000';
+            return this.cnsDifferenceUnderMinusOneThousand;
         }
 
         return formatNumber(diff, 'en', '1.0-0');
@@ -136,7 +139,7 @@ export class DiveInfoResultsDifferenceComponent {
 
     public cnsTextOfProfile(profile: DiveResults): string {
         if(profile.cns >= 1000) {
-            return '> 1000';
+            return TextConstants.cnsOverOneThousand;
         }
 
         return formatNumber(profile.cns, 'en', '1.0-0');
@@ -156,6 +159,10 @@ export class DiveInfoResultsDifferenceComponent {
     }
 
     public getBgColor(rowKey: string, value: number): string {
+        const cssClassOnImprovement = 'table-success';
+        const cssClassOnDeterioration = 'table-danger';
+        const cssClassOnNoChange = 'table-active';
+
         if(!this.rowColorVectorMap.has(rowKey)){
             Logger.warn('Could not find vector for key: ' + rowKey);
         }
@@ -163,13 +170,13 @@ export class DiveInfoResultsDifferenceComponent {
         const projectedValue = (this.rowColorVectorMap.get(rowKey) ?? 0) * value;
 
         if (projectedValue > 0){
-            return 'table-success';
+            return cssClassOnImprovement;
         }
 
         if (projectedValue < 0){
-            return 'table-danger';
+            return cssClassOnDeterioration;
         }
 
-        return 'table-active';
+        return cssClassOnNoChange;
     }
 }

@@ -5,6 +5,7 @@ import {ProfileComparatorService} from '../../../shared/profileComparatorService
 import {DiveResults} from '../../../shared/diveresults';
 import {formatNumber} from '@angular/common';
 import {faArrowDown, faArrowUp, faMinus, IconDefinition} from '@fortawesome/free-solid-svg-icons';
+import {Logger} from '../../../shared/Logger';
 
 @Component({
     selector: 'app-diff-diveinfo-results',
@@ -156,7 +157,7 @@ export class DiveInfoResultsDifferenceComponent {
 
     public getBgColor(rowKey: string, value: number): string {
         if(!this.rowColorVectorMap.has(rowKey)){
-            console.error('Could not find vector for key: ' + rowKey);
+            Logger.warn('Could not find vector for key: ' + rowKey);
         }
 
         const projectedValue = (this.rowColorVectorMap.get(rowKey) ?? 0) * value;

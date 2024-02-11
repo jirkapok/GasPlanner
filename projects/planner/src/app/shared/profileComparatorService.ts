@@ -6,7 +6,7 @@ import {DiveResults} from './diveresults';
 export class ProfileComparatorService {
 
     private _profileAIndex = 0;
-    private _profileBIndex = 1;
+    private _profileBIndex = 0;
 
     constructor(private schedules: DiveSchedules) {
     }

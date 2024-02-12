@@ -95,6 +95,8 @@ import {WaypointsDifferenceService} from './shared/waypoints-difference.service'
 import {DiveInfoResultsDifferenceComponent} from './diff/diveinfo/results/diff-diveinfo-results.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 import { GasBlenderService } from './shared/gas-blender.service';
+import {DiffTabsButtonComponent} from './diff/tabs/profile-button/diff-tabs-button.component';
+import {DiffTabsComponent} from './diff/tabs/diff-tabs.component';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -156,8 +158,12 @@ const COMPONENTS = [
     WayPointsComponent,
     WeightCalcComponent,
     WaypointsDifferenceComponent,
-
-    LoadTestDataComponent
+    DiveInfoDifferenceComponent,
+    ProfileDifferenceChartComponent,
+    LoadTestDataComponent,
+    DiveInfoResultsDifferenceComponent,
+    DiffTabsComponent,
+    DiffTabsButtonComponent
 ];
 
 const STANDALONE = [

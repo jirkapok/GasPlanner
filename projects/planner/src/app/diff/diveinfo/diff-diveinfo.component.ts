@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {faSlidersH} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-diff-diveinfo',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
     styleUrls: ['./diff-diveinfo.component.scss']
 })
 export class DiveInfoDifferenceComponent {
-
+    public icon = faSlidersH;
 }

@@ -1,0 +1,9 @@
+@import "node_modules/mdb-angular-ui-kit/assets/scss/free/variables";
+
+#loadTestData {
+    position: absolute;
+    z-index: $fixed-action-button-zindex;
+    left: 92vw;
+    top: 10vh;
+    width: 5vw;
+}

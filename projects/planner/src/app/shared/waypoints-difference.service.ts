@@ -1,22 +1,39 @@
 import {WayPoint} from './models';
 import {WaypointsComparisonTableRow} from './WaypointsComparisonTableRow';
+import {Injectable} from '@angular/core';
+import {ProfileComparatorService} from './profileComparatorService';
 
-// TODO: Rework into injectable service that gets data from services instead of constructor
-export class WaypointsComparisonTableRowProvider {
+@Injectable()
+export class WaypointsDifferenceService {
 
-    private wayPointsA: WayPoint[];
-    private wayPointsB: WayPoint[];
     private _waypointRows: WaypointsComparisonTableRow[] = [];
-
-    constructor(wayPointsA: WayPoint[], wayPointsB: WayPoint[]) {
-        this.wayPointsA = wayPointsA;
-        this.wayPointsB = wayPointsB;
+    constructor(private profileComparatorService: ProfileComparatorService) {
     }
+    get isCalculated(): boolean {
+        return this.profileComparatorService.areResultsCalculated();
+    }
+
+    private get wayPointsA(): WayPoint[]{
+        return this.profileComparatorService.profileAResults().wayPoints;
+    }
+
+    private get wayPointsB(): WayPoint[]{
+        return this.profileComparatorService.profileBResults().wayPoints;
+    }
+
 
     public getRows(): WaypointsComparisonTableRow[] {
         const MAX_SAFETY_LIMIT = 65536; // 2**16
-        let waypointA: WayPoint | undefined = this.wayPointsA.pop();
-        let waypointB: WayPoint | undefined = this.wayPointsB.pop();
+        this._waypointRows = [];
+
+        if(!this.isCalculated){
+            return [];
+        }
+
+        const wayPointsACopy = [...this.wayPointsA];
+        const wayPointsBCopy = [...this.wayPointsB];
+        let waypointA: WayPoint | undefined = wayPointsACopy.pop();
+        let waypointB: WayPoint | undefined = wayPointsBCopy.pop();
 
         for (let i = 0; i < MAX_SAFETY_LIMIT; i++) {
             let row: WaypointsComparisonTableRow;
@@ -32,7 +49,7 @@ export class WaypointsComparisonTableRowProvider {
                     durationB: undefined,
                     depthB: undefined,
                 };
-                waypointA = this.wayPointsA.pop();
+                waypointA = wayPointsACopy.pop();
                 this._waypointRows.unshift(row);
                 continue;
             }
@@ -45,7 +62,7 @@ export class WaypointsComparisonTableRowProvider {
                     durationB: waypointB?.duration,
                     depthB: waypointB?.endDepth,
                 };
-                waypointB = this.wayPointsB.pop();
+                waypointB = wayPointsBCopy.pop();
                 this._waypointRows.unshift(row);
                 continue;
             }
@@ -57,8 +74,8 @@ export class WaypointsComparisonTableRowProvider {
                 durationB: waypointB?.duration,
                 depthB: waypointB?.endDepth,
             };
-            waypointA = this.wayPointsA.pop();
-            waypointB = this.wayPointsB.pop();
+            waypointA = wayPointsACopy.pop();
+            waypointB = wayPointsBCopy.pop();
             this._waypointRows.unshift(row);
         }
         return this._waypointRows;

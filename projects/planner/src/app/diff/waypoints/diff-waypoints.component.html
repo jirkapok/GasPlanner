@@ -1,12 +1,15 @@
-<div class="card overflow-y-scroll">
+<div class="card">
     <div class="card-header">
         <div class="float-start">
             <fa-icon [icon]="tasks" class="me-3"></fa-icon>
             <span>Dive way points</span>
         </div>
     </div>
-    <div class="card-body card-minheight table-responsive card-max-height-md">
-        <table id="waypointsDiffTable" class="table table-sm p-0 text-center table-hover">
+    <div id="body" class="hide card-minheight card-max-height-md">
+        <app-calculating [show]="!tableRowProvider.isCalculated" class="position-absolute"
+        style="top: 50%; left:50%"></app-calculating>
+
+        <table id="waypointsDiffTable" class="table table-sm p-0 text-center table-hover" >
             <thead class="table-light sticky-top">
             <tr>
                 <th colspan="1" ></th>
@@ -14,29 +17,31 @@
                 <th colspan="2" class="fw-bold px-1">Profile B</th>
             </tr>
             <tr>
-                <th class="fw-bold px-1 ">Run [min]</th>
-                <th class="fw-bold px-1 active-profile">Depth [{{units.length}}]</th>
-                <th class="fw-bold px-1 active-profile">Duration [min]</th>
+                <th class="fw-bold px-1">Run [min]</th>
+                <th class="fw-bold px-1 vertical-left-border">Depth [{{units.length}}]</th>
+                <th class="fw-bold px-1 vertical-right-border">Duration [min]</th>
                 <th class="fw-bold px-1">Depth [{{units.length}}]</th>
                 <th class="fw-bold px-1">Duration [min]</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody [ngClass]="{
+             'd-none': !tableRowProvider.isCalculated
+             }">
                 <tr *ngFor="let row of tableRowProvider.getRows()">
                     <td class="px-1 vertical-right-border">
-                        {{ row.runTime * 1000 | date:'mm:ss' }}
+                        {{ row.runTime | duration:profileComparatorService.totalDuration }}
                     </td>
                     <td  *ngIf="row.depthA !== undefined; else emptyRow" class="px-1">
                         {{ row.depthA  | number: '1.0-0'}}
                     </td>
                     <td *ngIf="row.durationA !== undefined else emptyRowWithDivider" class="px-1 vertical-right-border">
-                        {{ row.durationA * 1000 | date: 'mm:ss'}}
+                        {{ row.durationA * 1 | duration:profileComparatorService.totalDuration }}
                     </td>
                     <td *ngIf="row.depthB !== undefined else emptyRow" class="px-1">
                         {{ row.depthB | number:'1.0-0' }}
                     </td>
                     <td *ngIf="row.durationB !== undefined else emptyRow" class="px-1">
-                        {{ row.durationB * 1000 | date: 'mm:ss'}}
+                        {{ row.durationB * 1 | duration:profileComparatorService.totalDuration }}
                     </td>
                 </tr>
             </tbody>

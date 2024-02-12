@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DiveInfoDifferenceComponent } from './diff-diveinfo.component';
+import {DiveInfoDifferenceComponent} from './diff-diveinfo.component';
 
 describe('DiveInfoDifferenceComponent', () => {
     let component: DiveInfoDifferenceComponent;

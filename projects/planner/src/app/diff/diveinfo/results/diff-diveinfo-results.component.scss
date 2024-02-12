@@ -1,0 +1,26 @@
+@import "node_modules/mdb-angular-ui-kit/assets/scss/free/variables";
+
+fa-icon {
+    margin-left: 0.5rem !important;
+    padding-left: 0.4rem;
+}
+
+.delta {
+    max-width: 4.3rem;
+}
+
+#table-header {
+    color:$black;
+    td:nth-child(2){
+        background-color: $primary;
+    }
+    td:nth-child(3){
+        background-color: $blue-gray-50;
+    }
+}
+
+tr:not(#table-header) {
+    td:nth-child(n+2){
+        border-left-width: medium !important;
+    }
+}

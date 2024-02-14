@@ -579,6 +579,15 @@ Awesome, nor vice versa. **Please do not use brand logos for any purpose except
 to represent the company, product, or service to which they refer.**
 
 
+@maskito/angular
+Apache-2.0
+
+@maskito/core
+Apache-2.0
+
+@maskito/kit
+Apache-2.0
+
 lodash
 MIT
 Copyright OpenJS Foundation and other contributors <https://openjsf.org/>

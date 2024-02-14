@@ -3,7 +3,7 @@ import { formatNumber } from '@angular/common';
 import { takeUntil } from 'rxjs';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import {
-    faSlidersH, faShareFromSquare
+    faSlidersH, faShareFromSquare, faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons';
 
 import { DiveResults } from '../shared/diveresults';
@@ -23,6 +23,7 @@ import {TextConstants} from '../shared/TextConstants';
 export class DiveInfoComponent extends Streamed {
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
+    public readonly warnIcon = faExclamationTriangle;
     public toastVisible = false;
 
     constructor(

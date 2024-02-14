@@ -67,6 +67,7 @@ export class PlannerService extends Streamed {
         diveResult.start();
 
         setTimeout(() => {
+            // TODO mark all following dives not calculated immediately
             diveResult.showStillRunning();
         }, 500);
 

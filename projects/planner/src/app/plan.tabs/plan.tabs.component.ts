@@ -20,8 +20,6 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
         super();
     }
 
-    // TODO mark all following dives not calculated immediately
-
     public ngAfterViewInit(): void {
         // hack to fix missing initial value of the selected tab
         const selectedIndex = this.schedules.selectedIndex;

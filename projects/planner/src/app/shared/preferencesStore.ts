@@ -47,6 +47,13 @@ export class PreferencesStore {
         localStorage.setItem(PreferencesStore.storageDefaultsKey, serialized);
     }
 
+    public ensureDefault(): void {
+        const toParse = localStorage.getItem(PreferencesStore.storageDefaultsKey);
+        if (!toParse) {
+            this.saveDefault();
+        }
+    }
+
     public disableDisclaimer(): void {
         localStorage.setItem(PreferencesStore.disclaimerKey, PreferencesStore.disclaimerValue);
     }

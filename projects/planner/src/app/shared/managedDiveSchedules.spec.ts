@@ -24,6 +24,7 @@ describe('Managed Schedules', () => {
     let schedules: DiveSchedules;
     let savePreferencesSpy: Spy<() => void>;
     let loadPreferencesSpy: Spy<() => void>;
+    let ensureDefaultPreferencesSpy: Spy<() => void>;
     let dispatcherSpy: Spy<(depths: DepthsService) => void>;
 
     const changeDive = (dive: DiveSchedule) => {
@@ -68,6 +69,7 @@ describe('Managed Schedules', () => {
         localStorage.clear();
         preferencesStore = TestBed.inject(PreferencesStore);
         loadPreferencesSpy = spyOn(preferencesStore, 'load').and.callThrough();
+        ensureDefaultPreferencesSpy = spyOn(preferencesStore, 'ensureDefault').and.callThrough();
         schedules = TestBed.inject(DiveSchedules);
         sut = TestBed.inject(ManagedDiveSchedules);
         savePreferencesSpy = spyOn(preferencesStore, 'save').and.callThrough();
@@ -76,6 +78,10 @@ describe('Managed Schedules', () => {
     });
 
     describe('Application startup', () => {
+        it('Ensures there is always default dive',  () => {
+            expect(ensureDefaultPreferencesSpy).toHaveBeenCalledWith();
+        });
+
         it('Loads all dives data',  () => {
             expect(loadPreferencesSpy).toHaveBeenCalledWith();
             // but doesn't schedule calculation, because no dive was loaded
@@ -114,6 +120,7 @@ describe('Managed Schedules', () => {
             sut.add();
             sut.add();
 
+            savePreferencesSpy.calls.reset();
             scheduleRemoveSpy = spyOn(schedules, 'remove').and.callThrough();
             const dispatcher = TestBed.inject(ReloadDispatcher);
             depthChangedSpy = spyOn(dispatcher, 'sendDepthChanged').and.callThrough();
@@ -122,7 +129,7 @@ describe('Managed Schedules', () => {
         });
 
         it('Saves state in preferences', () => {
-            expect(savePreferencesSpy).toHaveBeenCalledTimes(5);
+            expect(savePreferencesSpy).toHaveBeenCalledTimes(2);
         });
 
         it('Is removed from dives', () => {

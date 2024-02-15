@@ -211,5 +211,18 @@ describe('PreferencesStore', () => {
                 expect(tanksService.firstTank.size).toBeCloseTo(20, 1);
                 expect(depthsService.plannedDepth).toBeCloseTo(21, 1);
             }));
+
+        it('Load Defaults when no default is defined ', inject([DiveSchedules],
+            (schedules: DiveSchedules) => {
+                localStorage.clear();
+
+                sut.ensureDefault();
+                tanksService.firstTank.size = 22;
+                depthsService.plannedDepth = 23;
+                sut.loadDefault(schedules.selected);
+
+                expect(tanksService.firstTank.size).toBeCloseTo(15, 1);
+                expect(depthsService.plannedDepth).toBeCloseTo(30, 1);
+            }));
     });
 });

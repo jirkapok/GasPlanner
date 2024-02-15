@@ -12,6 +12,7 @@ export class ManagedDiveSchedules {
         private schedule: DelayedScheduleService,
         private viewStore: SubViewStorage
     ) {
+        this.preferences.ensureDefault();
         // consider speedup start by storing calculated final tissues to prevent calculation of all dives
         this.loadAll();
     }

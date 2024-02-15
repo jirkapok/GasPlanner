@@ -38,11 +38,11 @@ export class DiveInfoResultsDifferenceComponent {
     }
 
     public get profileA(): DiveResults {
-        return this.profileComparatorService.profileAResults();
+        return this.profileComparatorService.profileAResults;
     }
 
     public get profileB(): DiveResults {
-        return this.profileComparatorService.profileBResults();
+        return this.profileComparatorService.profileBResults;
     }
 
     public get areResultsCalculated(): boolean {

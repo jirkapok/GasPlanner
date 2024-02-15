@@ -14,11 +14,11 @@ export class WaypointsDifferenceService {
     }
 
     private get wayPointsA(): WayPoint[]{
-        return this.profileComparatorService.profileAResults().wayPoints;
+        return this.profileComparatorService.profileAResults.wayPoints;
     }
 
     private get wayPointsB(): WayPoint[]{
-        return this.profileComparatorService.profileBResults().wayPoints;
+        return this.profileComparatorService.profileBResults.wayPoints;
     }
 
 

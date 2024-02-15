@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {DiveSchedules} from './dive.schedules';
+import {DiveSchedule, DiveSchedules} from './dive.schedules';
 import {DiveResults} from './diveresults';
 
 @Injectable()
@@ -12,11 +12,20 @@ export class ProfileComparatorService {
     }
 
     get totalDuration(): number {
-        if(this.profileAResults().totalDuration > this.profileBResults().totalDuration){
-            return this.profileAResults().totalDuration;
+        if(this.profileAResults.totalDuration > this.profileBResults.totalDuration){
+            return this.profileAResults.totalDuration;
         }
-        return this.profileBResults().totalDuration;
+        return this.profileBResults.totalDuration;
     }
+
+    public get profileA(): DiveSchedule {
+        return this.schedules.dives[this._profileAIndex];
+    }
+
+    public get profileB(): DiveSchedule {
+        return this.schedules.dives[this._profileBIndex];
+    }
+
 
     set profileAIndex(value: number) {
         this._profileAIndex = value;
@@ -26,12 +35,12 @@ export class ProfileComparatorService {
         this._profileBIndex = value;
     }
 
-    public profileAResults(): DiveResults {
-        return this.schedules.dives[this._profileAIndex].diveResult;
+    public get profileAResults(): DiveResults {
+        return this.profileA.diveResult;
     }
 
-    public profileBResults(): DiveResults {
-        return this.schedules.dives[this._profileBIndex].diveResult;
+    public get profileBResults(): DiveResults {
+        return this.profileB.diveResult;
     }
 
     public hasTwoProfiles(): boolean {
@@ -39,14 +48,14 @@ export class ProfileComparatorService {
     }
 
     public areResultsCalculated(): boolean {
-        return this.profileAResults().calculated && this.profileBResults().calculated;
+        return this.profileAResults.calculated && this.profileBResults.calculated;
     }
 
     public areDiveInfosCalculated(): boolean {
-        return this.profileAResults().diveInfoCalculated && this.profileBResults().diveInfoCalculated;
+        return this.profileAResults.diveInfoCalculated && this.profileBResults.diveInfoCalculated;
     }
 
     public areProfilesCalculated(): boolean {
-        return this.profileAResults().profileCalculated && this.profileBResults().profileCalculated;
+        return this.profileAResults.profileCalculated && this.profileBResults.profileCalculated;
     }
 }

@@ -66,4 +66,14 @@ export class ProfileComparatorService {
     public areProfilesCalculated(): boolean {
         return this.profileAResults.profileCalculated && this.profileBResults.profileCalculated;
     }
+
+    public appendProfileToProfileComparison(index: number): boolean {
+        if(this._profileAIndex.getValue() === index || this._profileBIndex.getValue() === index){
+            return true;
+        }
+
+        this.profileAIndex = this._profileBIndex.getValue();
+        this.profileBIndex = index;
+        return true;
+    }
 }

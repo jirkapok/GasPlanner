@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {DiveSchedule, DiveSchedules} from './dive.schedules';
 import {DiveResults} from './diveresults';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable()
 export class ProfileComparatorService {
 
-    private _profileAIndex = 0;
-    private _profileBIndex = 0;
+    private _profileAIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+    private _profileBIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
     constructor(private schedules: DiveSchedules) {
     }
@@ -18,12 +19,20 @@ export class ProfileComparatorService {
         return this.profileBResults.totalDuration;
     }
 
+    public get profileAIndex(): Observable<number> {
+        return this._profileAIndex.asObservable();
+    }
+
+    public get profileBIndex(): Observable<number> {
+        return this._profileBIndex.asObservable();
+    }
+
     public get profileA(): DiveSchedule {
-        return this.schedules.dives[this._profileAIndex];
+        return this.schedules.dives[this._profileAIndex.getValue()];
     }
 
     public get profileB(): DiveSchedule {
-        return this.schedules.dives[this._profileBIndex];
+        return this.schedules.dives[this._profileBIndex.getValue()];
     }
 
     public get profileAResults(): DiveResults {
@@ -34,12 +43,12 @@ export class ProfileComparatorService {
         return this.profileB.diveResult;
     }
 
-    set profileAIndex(value: number) {
-        this._profileAIndex = value;
+    private set profileAIndex(value: number) {
+        this._profileAIndex.next(value);
     }
 
-    set profileBIndex(value: number) {
-        this._profileBIndex = value;
+    private set profileBIndex(value: number) {
+        this._profileBIndex.next(value);
     }
 
     public hasTwoProfiles(): boolean {

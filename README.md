@@ -2,24 +2,22 @@
 
 This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations. Purpose of the application is to provide easy to use calculations. Works also on mobile devices in offline mode.
 
-> **NOTE:** Running instance is available at [https://dugong.online/](https://dugong.online/)
+> **NOTE:** Running instance is available at **[https://dugong.online/](https://dugong.online/)**
 
 ## Disclaimer
 
 None of the authors, contributors, administrators, or anyone else connected with this project can be responsible for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.
 
-## Features - Road map
+## Features
 
-* Open circuit only multi-level dives
+* **Share dive plan** using url address
+* **Consumed gas charts**
+* List of warnings with explanation
+* Open circuit repetitive multi-level dives
 * Multiple nitrox and Trimix/Helitrox gases/tanks
-* Decompression calculated using Bühlmann ZHL-16C algorithm
-* Conservatism using Gradient factors
-* Calculation of consumed gas and rock bottom for each tank
 * Environment using water salinity and altitude options
-* Ascent plan using table and chart with list of warnings
-* Share dive plan using url address
-* Nitrox and RMV/SAC calculators
-* No decompression limits table
+* Bühlmann ZHL-16C algorithm with Gradient factors
+* Lot of calculators: RMV/SAC, Nitrox, Trimix properties, Redundancies, NDL table ...
 * See more in **[Application help](./doc/readme.md)**
 * See also [Road map of planned features](./doc/roadmap.md)
 

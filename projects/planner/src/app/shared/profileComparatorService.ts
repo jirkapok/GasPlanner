@@ -26,6 +26,13 @@ export class ProfileComparatorService {
         return this.schedules.dives[this._profileBIndex];
     }
 
+    public get profileAResults(): DiveResults {
+        return this.profileA.diveResult;
+    }
+
+    public get profileBResults(): DiveResults {
+        return this.profileB.diveResult;
+    }
 
     set profileAIndex(value: number) {
         this._profileAIndex = value;
@@ -33,14 +40,6 @@ export class ProfileComparatorService {
 
     set profileBIndex(value: number) {
         this._profileBIndex = value;
-    }
-
-    public get profileAResults(): DiveResults {
-        return this.profileA.diveResult;
-    }
-
-    public get profileBResults(): DiveResults {
-        return this.profileB.diveResult;
     }
 
     public hasTwoProfiles(): boolean {

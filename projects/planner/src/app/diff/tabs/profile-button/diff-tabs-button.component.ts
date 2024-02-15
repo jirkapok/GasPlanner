@@ -8,7 +8,7 @@ import {ProfileComparatorService} from '../../../shared/profileComparatorService
 })
 export class DiffTabsButtonComponent implements OnInit {
     @Input({required: true}) index = 0;
-    buttonFill = 'btn-outline-primary';
+    buttonFill = 'btn-outline-secondary';
     private enabled = false;
 
     constructor(private profileComparatorService: ProfileComparatorService) {
@@ -16,6 +16,10 @@ export class DiffTabsButtonComponent implements OnInit {
 
     public ngOnInit() {
         this.profileComparatorService.profileAIndex.subscribe((value) => {
+            if (value === this.index){
+                this.enablePrimaryProfile();
+            }
+
             if(this.enabled && value !== this.index){
                 this.disableProfile();
             }
@@ -23,7 +27,7 @@ export class DiffTabsButtonComponent implements OnInit {
 
         this.profileComparatorService.profileBIndex.subscribe((value) => {
             if (value === this.index) {
-                this.enableProfile();
+                this.enableSecondaryProfile();
             }
         });
     }
@@ -32,13 +36,18 @@ export class DiffTabsButtonComponent implements OnInit {
         this.profileComparatorService.appendProfileToProfileComparison(this.index);
     }
 
-    private enableProfile() {
+    private enablePrimaryProfile() {
         this.buttonFill = 'btn-primary';
         this.enabled = true;
     }
 
+    private enableSecondaryProfile() {
+        this.buttonFill = 'btn-secondary';
+        this.enabled = true;
+    }
+
     private disableProfile() {
-        this.buttonFill = 'btn-outline-primary';
+        this.buttonFill = 'btn-outline-secondary';
         this.enabled = false;
     }
 }

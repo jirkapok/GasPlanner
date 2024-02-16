@@ -31,7 +31,7 @@ describe('Scheduled dives', () => {
         const units = new UnitConversion();
         units.imperialUnits = true;
         const dive = new DiveSchedule(0, units, new ReloadDispatcher());
-        expect(dive.title).toEqual('1. 12 min/100 ft');
+        expect(dive.title).toEqual('1. 100 ft, 12 min');
     });
 
     describe('Selected dive', () => {
@@ -71,7 +71,7 @@ describe('Scheduled dives', () => {
 
         it('has title', () => {
             // this means it has depths and time configured
-            expect(sut.dives[1].title).toEqual('2. 12 min/30 m');
+            expect(sut.dives[1].title).toEqual('2. 30 m, 12 min');
         });
 
         it('Assigns dive number', () => {

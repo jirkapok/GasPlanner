@@ -80,7 +80,7 @@ export class DiveSchedule {
         const depth = this.depths.plannedDepth;
         const depthUnits = this.units.length;
         const duration = this.depths.planDuration;
-        return `${this.id}. ${duration} min/${depth} ${depthUnits}`;
+        return `${this.id}. ${depth} ${depthUnits}, ${duration} min`;
     }
 
     /**

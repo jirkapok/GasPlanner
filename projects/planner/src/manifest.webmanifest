@@ -1,5 +1,5 @@
 {
-    "name": "Gas planner",
+    "name": "Dugong Gas planner",
     "short_name": "Gas planner",
     "description": "Simple scuba diving gas planning calculator. Calculates decompression and dive ascent based on Bühlmann ZHL-16 model.",
     "categories": ["utilities", "sports", "education", "navigation"],

@@ -13,6 +13,7 @@ export interface MixResult {
     addO2: number;
     addHe: number;
     addTop: number;
+    removeFromSource: number;
 }
 
 /**
@@ -66,7 +67,8 @@ export class GasBlender {
         return {
             addO2: addO2,
             addHe: addHe,
-            addTop: addTop
+            addTop: addTop,
+            removeFromSource: 0
         };
     }
 

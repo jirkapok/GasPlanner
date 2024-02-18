@@ -82,7 +82,8 @@ export class GasBlender {
      * @returns final pressure in both tanks in bars
      */
     public static redundancies(tankA: TankFill, tankB: TankFill): number {
-
+        GasBlender.validateTankFill(tankA, 'tankA');
+        GasBlender.validateTankFill(tankB, 'tankB');
 
         if (tankA.volume === 0 && tankB.volume === 0) {
             return 0;
@@ -118,13 +119,13 @@ export class GasBlender {
         }
     }
 
-    private static validateTankFill(tank: TankFill): void {
-        if (tank.volume <= 0) {
-            throw new Error('Tank Volume needs to be positive number.');
+    private static validateTankFill(tank: TankFill, tankName: string): void {
+        if (tank.volume < 0) {
+            throw new Error(`${tankName} Volume needs to be positive number.`);
         }
 
-        if (tank.startPressure <= 0) {
-            throw new Error('Tank Start pressure needs to be positive number.');
+        if (tank.startPressure < 0) {
+            throw new Error(`${tankName} Start pressure needs to be positive number.`);
         }
     }
 }

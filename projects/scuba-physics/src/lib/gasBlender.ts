@@ -50,6 +50,10 @@ export class GasBlender {
      * Math describing to create required amount of mixture from current tank content using o2, he and topping mix.
      */
     public static mix(request: MixRequest): MixResult {
+        GasBlender.validate(request.source, 'Source');
+        GasBlender.validate(request.target, 'Target');
+        GasBlender.validate(request.topMix, 'Top');
+
         const finalfN2 = GasBlender.n2(request.target);
         const finalN2  = finalfN2 * request.target.pressure;
         const currentfN2 = GasBlender.n2(request.source);
@@ -78,6 +82,8 @@ export class GasBlender {
      * @returns final pressure in both tanks in bars
      */
     public static redundancies(tankA: TankFill, tankB: TankFill): number {
+
+
         if (tankA.volume === 0 && tankB.volume === 0) {
             return 0;
         }
@@ -95,5 +101,30 @@ export class GasBlender {
 
     private static n2(mix: Mix): number {
         return 1 - mix.o2 - mix.he;
+    }
+
+    private static validate(mix: Mix, partName: string): void {
+        if (mix.o2 < 0 || mix.o2 > 1) {
+            throw new Error(`${partName} mix contains invalid o2 content.`);
+        }
+
+        if (mix.he < 0 || mix.he > 1) {
+            throw new Error(`${partName} mix contains invalid he content.`);
+        }
+
+        const sum = mix.o2 + mix.he;
+        if (sum > 1) {
+            throw new Error(`${partName} mix contains invalid N2 content.`);
+        }
+    }
+
+    private static validateTankFill(tank: TankFill): void {
+        if (tank.volume <= 0) {
+            throw new Error('Tank Volume needs to be positive number.');
+        }
+
+        if (tank.startPressure <= 0) {
+            throw new Error('Tank Start pressure needs to be positive number.');
+        }
     }
 }

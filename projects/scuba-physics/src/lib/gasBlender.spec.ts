@@ -44,6 +44,71 @@ describe('Gas Blender', () => {
         expect(result.removeFromSource).toBeCloseTo(expecedRemove, 6);
     };
 
+    describe('Parameters validation', () => {
+        describe('Source', () => {
+            it('Oxygen in source', () => {
+                const parameters = createEmptyRequest();
+                parameters.source.o2 = 1.2;
+                expect(() => GasBlender.mix(parameters)).toThrow();
+            });
+
+            it('Helium in source', () => {
+                const parameters = createEmptyRequest();
+                parameters.source.he = 1.2;
+                expect(() => GasBlender.mix(parameters)).toThrow();
+            });
+
+            it('Sum of parts in source', () => {
+                const parameters = createEmptyRequest();
+                parameters.source.o2 = 0.6;
+                parameters.source.he = 0.6;
+                expect(() => GasBlender.mix(parameters)).toThrow();
+            });
+        });
+
+        describe('Target', () => {
+            it('Oxygen in Target', () => {
+                const parameters = createEmptyRequest();
+                parameters.target.o2 = 1.2;
+                expect(() => GasBlender.mix(parameters)).toThrow();
+            });
+
+            it('Helium in Target', () => {
+                const parameters = createEmptyRequest();
+                parameters.target.he = 1.2;
+                expect(() => GasBlender.mix(parameters)).toThrow();
+            });
+
+            it('Sum of parts in Target', () => {
+                const parameters = createEmptyRequest();
+                parameters.target.o2 = 0.6;
+                parameters.target.he = 0.6;
+                expect(() => GasBlender.mix(parameters)).toThrow();
+            });
+        });
+
+        describe('Top mix', () => {
+            it('Oxygen in Top mix', () => {
+                const parameters = createEmptyRequest();
+                parameters.topMix.o2 = 1.2;
+                expect(() => GasBlender.mix(parameters)).toThrow();
+            });
+
+            it('Helium in Top mix', () => {
+                const parameters = createEmptyRequest();
+                parameters.topMix.he = 1.2;
+                expect(() => GasBlender.mix(parameters)).toThrow();
+            });
+
+            it('Sum of parts in Top mix', () => {
+                const parameters = createEmptyRequest();
+                parameters.topMix.o2 = 0.6;
+                parameters.topMix.he = 0.6;
+                expect(() => GasBlender.mix(parameters)).toThrow();
+            });
+        });
+    });
+
     describe('Ean', () => {
         describe('into Empty tank', () => {
             it('Air from Air to empty tank', () => {
@@ -308,6 +373,77 @@ describe('Gas Blender', () => {
             request.topMix.he = 0.25;
 
             assertResult(request, -20, 20, 150);
+        });
+    });
+
+    // no need to test 0 bar remove, since it is part of all other tests
+    // test not only removed amount, but also the final result
+    // TODO Finish Gas blender test cases
+    xdescribe('Remove from source tank', () => {
+        it('Trimix 25/25 to Ean32 needs to remove everything', () => {
+            const request = createNonEmptyRequest();
+            request.target.o2 = 0.32;
+            request.target.he = 0;
+            request.topMix.o2 = 0.21;
+            request.topMix.he = 0;
+
+            assertResult(request, 0, 20, 200, 50);
+        });
+
+        it('Oxygen to Ean32 needs to remove oxygen', () => {
+            const request = createNonEmptyRequest();
+            request.source.o2 = 1;
+            request.target.o2 = 0.32;
+            request.target.he = 0;
+            request.topMix.o2 = 0.21;
+            request.topMix.he = 0;
+
+            assertResult(request, 0, 20, 180, 50);
+        });
+
+        // using non standard mixtures to only test possibilities
+        it('Trimix 25/35 to 15/30 needs to remove oxygen', () => {
+            const request = createNonEmptyRequest();
+            request.source.o2 = 1;
+            request.target.o2 = 0.32;
+            request.target.he = 0;
+            request.topMix.o2 = 0.21;
+            request.topMix.he = 0;
+
+            assertResult(request, 0, 20, 180, 50);
+        });
+
+        it('Trimix 21/35 to 18/25 needs to remove helium', () => {
+            const request = createNonEmptyRequest();
+            request.source.o2 = 1;
+            request.target.o2 = 0.32;
+            request.target.he = 0;
+            request.topMix.o2 = 0.21;
+            request.topMix.he = 0;
+
+            assertResult(request, 0, 20, 180, 50);
+        });
+
+        it('Unable to mix, because top mix contains more oxygen, than needed', () => {
+            const request = createNonEmptyRequest();
+            request.source.o2 = 1;
+            request.target.o2 = 0.32;
+            request.target.he = 0;
+            request.topMix.o2 = 0.21;
+            request.topMix.he = 0;
+
+            assertResult(request, 0, 20, 180, 50);
+        });
+
+        it('Unable to mix, because top mix contains more helium, than needed', () => {
+            const request = createNonEmptyRequest();
+            request.source.o2 = 1;
+            request.target.o2 = 0.32;
+            request.target.he = 0;
+            request.topMix.o2 = 0.21;
+            request.topMix.he = 0;
+
+            assertResult(request, 0, 20, 180, 50);
         });
     });
 });

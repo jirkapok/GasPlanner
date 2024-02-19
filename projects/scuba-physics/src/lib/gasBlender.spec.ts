@@ -379,9 +379,12 @@ describe('Gas Blender', () => {
     // no need to test 0 bar remove, since it is part of all other tests
     // test not only removed amount, but also the final result
     // TODO Finish Gas blender test cases
+    // Add test case - remove from source to remove nitrogen
     xdescribe('Remove from source tank', () => {
         it('Trimix 25/25 to Ean32 needs to remove everything', () => {
             const request = createNonEmptyRequest();
+            request.source.o2 = 0.25;
+            request.source.he = 0.25;
             request.target.o2 = 0.32;
             request.target.he = 0;
             request.topMix.o2 = 0.21;

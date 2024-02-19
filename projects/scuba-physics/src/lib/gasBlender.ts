@@ -48,6 +48,7 @@ export interface MixRequest {
 export class GasBlender {
     /**
      * Math describing to create required amount of mixture from current tank content using o2, he and topping mix.
+     * The formula expects ideal gas law.
      */
     public static mix(request: MixRequest): MixResult {
         GasBlender.validate(request.source, 'Source');

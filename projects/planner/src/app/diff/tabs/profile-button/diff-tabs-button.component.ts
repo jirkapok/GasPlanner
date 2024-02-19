@@ -29,6 +29,7 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
 })
 export class DiffTabsButtonComponent implements OnInit {
     @Input({required: true}) index = 0;
+    @Input({required: true}) title = '';
     public state = 'disabled';
 
     constructor(private profileComparatorService: ProfileComparatorService) {

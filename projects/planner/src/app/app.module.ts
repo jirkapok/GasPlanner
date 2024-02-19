@@ -94,6 +94,7 @@ import {ProfileComparatorService} from './shared/profileComparatorService';
 import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.component';
 import {WaypointsDifferenceService} from './shared/waypoints-difference.service';
 import {DiveInfoResultsDifferenceComponent} from './diff/diveinfo/results/diff-diveinfo-results.component';
+import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -125,17 +126,21 @@ const COMPONENTS = [
     DepthsComplexComponent,
     DepthsSimpleComponent,
     DiffComponent,
+    DiveInfoResultsDifferenceComponent,
+    DiveInfoDifferenceComponent,
     DiveInfoComponent,
     DiveIssuesComponent,
     DiveOptionsComponent,
     DiverComponent,
     DurationPipe,
+    GasBlenderComponent,
     GaslabelComponent,
     GasPropertiesCalcComponent,
     GradientsComponent,
     MainMenuComponent,
     NdlLimitsComponent,
     NitroxComponent,
+    ProfileDifferenceChartComponent,
     ProfileChartComponent,
     OxygenComponent,
     OxygenDropDownComponent,
@@ -152,10 +157,8 @@ const COMPONENTS = [
     WayPointsComponent,
     WeightCalcComponent,
     WaypointsDifferenceComponent,
-    DiveInfoDifferenceComponent,
-    ProfileDifferenceChartComponent,
-    LoadTestDataComponent,
-    DiveInfoResultsDifferenceComponent
+
+    LoadTestDataComponent
 ];
 
 const SERVICES = [

@@ -13,6 +13,7 @@ import { WeightCalcComponent } from './weight/weight.component';
 import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
 import { DiffComponent } from './diff/diff.component';
 import { RedundanciesComponent } from './redundancies/redundancies.component';
+import { GasBlenderComponent } from "./gas-blender/gas-blender.component";
 
 const canActivateDashboard: CanActivateFn = (): boolean | UrlTree => {
     const router = inject(Router);
@@ -39,6 +40,7 @@ const routes: Routes = [
     { path: KnownViews.about, component: AboutComponent },
     { path: KnownViews.diff, component: DiffComponent },
     { path: KnownViews.redundancies, component: RedundanciesComponent },
+    { path: KnownViews.blender, component: GasBlenderComponent },
     {
         path: '**',
         component: DashboardComponent,

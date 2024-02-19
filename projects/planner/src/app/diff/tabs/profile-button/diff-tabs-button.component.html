@@ -1,3 +1,14 @@
-<input type="checkbox" class="btn-check" id="{{'btn-check-' + this.index}}" name="profile-tab" autocomplete="off">
-<label class="btn" [ngClass]="buttonFill" (click)="clicked()"
-       for="{{'btn-check-' + this.index}}">Profile {{this.index}} </label>
+<div>
+    <div class="label-header" [@labelState]="state">
+        <div class="profile-header primary-header">
+            PROFILE A
+        </div>
+
+        <div class="profile-header secondary-header">
+            PROFILE B
+        </div>
+    </div>
+    <input type="checkbox" class="btn-check" id="{{'btn-check-' + this.index}}" name="profile-tab" autocomplete="off">
+    <label class="btn" [ngClass]="{'btn-success': isEnabled, 'btn-outline-secondary': !isEnabled}" (click)="clicked()"
+           for="{{'btn-check-' + this.index}}">Profile {{this.index}} </label>
+</div>

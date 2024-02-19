@@ -1,35 +1,61 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ProfileComparatorService} from '../../../shared/profileComparatorService';
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
     selector: 'app-diff-tabs-button',
     templateUrl: './diff-tabs-button.component.html',
-    styleUrls: ['./diff-tabs-button.component.scss']
+    styleUrls: ['./diff-tabs-button.component.scss'],
+    animations: [
+        trigger('labelState',[
+            state('primary', style({
+                transform: 'rotateX(180deg)',
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0
+            })),
+            state('secondary', style({ transform: 'none'})),
+            state('disabled', style({
+                visibility: 'hidden',
+                transform: 'translateY(21px)',
+            })),
+            transition('disabled => secondary', [animate('400ms')]),
+            transition('secondary => primary', [animate('500ms')]),
+            transition('primary => disabled', [animate('400ms', keyframes([
+                style({transform: 'rotateX(180deg)', offset: 0}),
+                style({transform: 'rotateX(180deg) translateY(-21px)', offset: 1})
+            ]))]),
+        ]),
+    ]
 })
 export class DiffTabsButtonComponent implements OnInit {
     @Input({required: true}) index = 0;
-    buttonFill = 'btn-outline-secondary';
-    private enabled = false;
+    public state = 'disabled';
 
     constructor(private profileComparatorService: ProfileComparatorService) {
     }
 
-    public ngOnInit() {
-        this.profileComparatorService.profileAIndex.subscribe((value) => {
-            if (value === this.index){
-                this.enablePrimaryProfile();
-            }
+    public get isEnabled(): boolean {
+        return this.state !== 'disabled';
+    }
 
-            if(this.enabled && value !== this.index){
-                this.disableProfile();
-            }
-        });
+    public ngOnInit() {
 
         this.profileComparatorService.profileBIndex.subscribe((value) => {
             if (value === this.index) {
                 this.enableSecondaryProfile();
             }
         });
+
+        this.profileComparatorService.profileAIndex.subscribe((value) => {
+            if (value === this.index){
+                this.enablePrimaryProfile();
+            }
+
+            if(this.isEnabled && value !== this.index){
+                this.disableProfile();
+            }
+        });
+
     }
 
     public clicked() {
@@ -37,17 +63,14 @@ export class DiffTabsButtonComponent implements OnInit {
     }
 
     private enablePrimaryProfile() {
-        this.buttonFill = 'btn-primary';
-        this.enabled = true;
+        this.state = 'primary';
     }
 
     private enableSecondaryProfile() {
-        this.buttonFill = 'btn-secondary';
-        this.enabled = true;
+        this.state = 'secondary';
     }
 
     private disableProfile() {
-        this.buttonFill = 'btn-outline-secondary';
-        this.enabled = false;
+        this.state = 'disabled';
     }
 }

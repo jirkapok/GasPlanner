@@ -1,3 +1,53 @@
+@import "node_modules/mdb-angular-ui-kit/assets/scss/free/variables";
+
+// Background of btn cannot be transparent, but must be solid so that header can hide behind it and "fade out"
+// The normal, sane way of sliding the header in/out would have been to animate opacity, but that doesn't work with the
+// 3D transform, as for some reason backface-visibility completely breaks.
+// So we have to use a solid background color of the label and hide the header behind it.
 label {
     margin-left: .5rem;
+    position: relative;
+    z-index: 100;
+    background-color: white !important;
+}
+
+.btn-success {
+    transition: color 600ms;
+    background-color: $success !important;
+}
+
+.btn-outline-secondary {
+    transition: color 600ms;
+}
+
+.profile-header {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    font-size: smaller;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.primary-header {
+    background-color: $primary;
+    color: $white;
+    transform: rotateX(180deg);
+    backface-visibility: hidden;
+
+}
+
+.secondary-header {
+    background-color: $blue-gray-50;
+    color: $black;
+    backface-visibility: hidden;
+}
+
+.label-header {
+    position: relative;
+    height: 21px;
+    margin-left: 8px;
+    transform-style: preserve-3d;
+    z-index: 1;
 }

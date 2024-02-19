@@ -5,6 +5,7 @@ import {ProfileComparatorService} from '../../../shared/profileComparatorService
 import {DiveSchedules} from '../../../shared/dive.schedules';
 import {UnitConversion} from '../../../shared/UnitConversion';
 import {ReloadDispatcher} from '../../../shared/reloadDispatcher';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('DiffTabsButtonComponent', () => {
     let component: DiffTabsButtonComponent;
@@ -12,6 +13,7 @@ describe('DiffTabsButtonComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [BrowserAnimationsModule],
             declarations: [DiffTabsButtonComponent],
             providers: [
                 ProfileComparatorService,

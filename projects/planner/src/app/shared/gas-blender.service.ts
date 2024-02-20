@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { TankBound } from '../shared/models';
 import { GasBlender, MixRequest, MixResult, Tank } from 'scuba-physics';
-import { UnitConversion } from '../shared/UnitConversion';
+import { TankBound } from './models';
+import { UnitConversion } from './UnitConversion';
 
 @Injectable()
 export class BasBlenderService {
@@ -16,6 +16,7 @@ export class BasBlenderService {
         // TODO move percents from tank new BoundGas
         this.topMix = new TankBound(Tank.createDefault(), this.units);
         this.topMix.assignStandardGas('EAN32');
+        console.log(this.topMix.tank.gas);
         this.targetTank = new TankBound(Tank.createDefault(), this.units);
         this.calculate();
     }
@@ -54,8 +55,8 @@ export class BasBlenderService {
                 he: targetMetric.gas.fHe
             },
             topMix: {
-                o2: topMetric.o2,
-                he: topMetric.he
+                o2: topMetric.gas.fO2,
+                he: topMetric.gas.fHe
             }
         };
         this.results = GasBlender.mix(request);

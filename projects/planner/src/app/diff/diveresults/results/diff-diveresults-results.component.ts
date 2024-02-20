@@ -9,9 +9,9 @@ import {Logger} from '../../../shared/Logger';
 import {TextConstants} from '../../../shared/TextConstants';
 
 @Component({
-    selector: 'app-diff-diveinfo-results',
-    templateUrl: './diff-diveinfo-results.component.html',
-    styleUrls: ['./diff-diveinfo-results.component.scss', '../../diff.component.scss']
+    selector: 'app-diff-diveresults-results',
+    templateUrl: './diff-diveresults-results.component.html',
+    styleUrls: ['./diff-diveresults-results.component.scss', '../../diff.component.scss']
 })
 export class DiveInfoResultsDifferenceComponent {
     private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';

@@ -488,6 +488,7 @@ export class StandardGases {
         return `${prefix} ${percentO2.toString()}/${percentHe.toString()}`;
     }
 
+    // TODO consider to make it case insensitive
     /** Case sensitive search. If nothing found returns null */
     public static byName(name: string): Gas | null {
         if (StandardGases.map.has(name)) {

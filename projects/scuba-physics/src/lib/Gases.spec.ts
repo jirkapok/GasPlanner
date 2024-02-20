@@ -196,6 +196,11 @@ describe('Gases', () => {
         });
 
         describe('By name', () => {
+            it('IS case sensitive', () => {
+                const found = StandardGases.byName('OXYGEN');
+                expect(found).toBeNull();
+            });
+
             it('Oxygen', () => {
                 const found = StandardGases.byName('Oxygen');
                 expect(found).toEqual(StandardGases.oxygen);

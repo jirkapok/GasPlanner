@@ -2,10 +2,29 @@
     <tbody>
     <tr id="table-header">
         <td></td>
-        <td><div class="d-flex justify-content-center align-items-center"><strong>Profile A</strong></div></td>
-        <td><div class="d-flex justify-content-center align-items-center"><strong>Profile B</strong></div></td>
-        <td *ngIf="areResultsCalculated" class="d-flex justify-content-center align-items-center">
-            <strong>Difference</strong>
+        <td>
+            <div class="d-flex justify-content-center align-items-center">
+                <strong>
+                    <div class="profile-title">Profile A</div>
+                    {{profileATitle}}
+                </strong>
+            </div>
+        </td>
+        <td>
+            <div class="d-flex justify-content-center align-items-center">
+                <strong>
+                    <div class="profile-title">Profile B</div>
+                    {{profileBTitle}}
+                </strong>
+            </div>
+        </td>
+        <td *ngIf="areResultsCalculated">
+            <div class="d-flex justify-content-center align-items-center">
+                <strong>
+                    <p></p>
+                    Difference
+                </strong>
+            </div>
         </td>
     </tr>
     <tr>

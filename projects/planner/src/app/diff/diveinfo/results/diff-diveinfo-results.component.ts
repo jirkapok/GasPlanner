@@ -11,7 +11,7 @@ import {TextConstants} from '../../../shared/TextConstants';
 @Component({
     selector: 'app-diff-diveinfo-results',
     templateUrl: './diff-diveinfo-results.component.html',
-    styleUrls: ['./diff-diveinfo-results.component.scss']
+    styleUrls: ['./diff-diveinfo-results.component.scss', '../../diff.component.scss']
 })
 export class DiveInfoResultsDifferenceComponent {
     private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';
@@ -43,6 +43,14 @@ export class DiveInfoResultsDifferenceComponent {
 
     public get profileB(): DiveResults {
         return this.profileComparatorService.profileBResults;
+    }
+
+    public get profileATitle(): string {
+        return this.profileComparatorService.profileA.title;
+    }
+
+    public get profileBTitle(): string {
+        return this.profileComparatorService.profileB.title;
     }
 
     public get areResultsCalculated(): boolean {

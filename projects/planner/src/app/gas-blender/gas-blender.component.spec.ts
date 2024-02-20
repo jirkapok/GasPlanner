@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GasBlenderComponent } from './gas-blender.component';
+import { UnitConversion } from '../shared/UnitConversion';
 
 describe('GasBlenderComponent', () => {
     let component: GasBlenderComponent;
@@ -8,7 +9,8 @@ describe('GasBlenderComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [GasBlenderComponent]
+            declarations: [GasBlenderComponent],
+            providers: [UnitConversion]
         });
         fixture = TestBed.createComponent(GasBlenderComponent);
         component = fixture.componentInstance;

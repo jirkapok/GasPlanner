@@ -1,19 +1,19 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {DiveResultsResultsDifferenceComponent} from './diff-diveresults-table.component';
+import {DiveResultsTableDifferenceComponent} from './diff-diveresults-table.component';
 import {ViewSwitchService} from '../../../shared/viewSwitchService';
 import {DiveSchedules} from '../../../shared/dive.schedules';
 import {ReloadDispatcher} from '../../../shared/reloadDispatcher';
 import {UnitConversion} from '../../../shared/UnitConversion';
 import {ProfileComparatorService} from '../../../shared/profileComparatorService';
 
-describe('DiveResultsResultsDifferenceComponent', () => {
-    let component: DiveResultsResultsDifferenceComponent;
-    let fixture: ComponentFixture<DiveResultsResultsDifferenceComponent>;
+describe('DiveResultsTableDifferenceComponent', () => {
+    let component: DiveResultsTableDifferenceComponent;
+    let fixture: ComponentFixture<DiveResultsTableDifferenceComponent>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DiveResultsResultsDifferenceComponent],
+            declarations: [DiveResultsTableDifferenceComponent],
             providers: [
                 ViewSwitchService,
                 DiveSchedules,
@@ -22,7 +22,7 @@ describe('DiveResultsResultsDifferenceComponent', () => {
                 ProfileComparatorService
             ]
         });
-        fixture = TestBed.createComponent(DiveResultsResultsDifferenceComponent);
+        fixture = TestBed.createComponent(DiveResultsTableDifferenceComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -13,7 +13,7 @@ import {TextConstants} from '../../../shared/TextConstants';
     templateUrl: './diff-diveresults-table.component.html',
     styleUrls: ['./diff-diveresults-table.component.scss', '../../diff.component.scss']
 })
-export class DiveResultsResultsDifferenceComponent {
+export class DiveResultsTableDifferenceComponent {
     private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';
 
     private arrowUp: IconDefinition = faArrowUp;

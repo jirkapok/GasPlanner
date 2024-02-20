@@ -1,15 +1,54 @@
-<div class="row mt-5">
-    <div class="col col-12 col-sm-5 col-md-4 col-lg-3 col-xxl-2 mt-3">
-        <div class="card">
-            <div class="card-header">
-                <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
-                <span>Gas blender</span>
+<form [formGroup]="blenderForm">
+    <div class="row mt-5">
+        <div class="col col-12 col-sm-5 col-md-4 col-lg-3 col-xxl-2 mt-3">
+            <div class="card">
+                <div class="card-header">
+                    <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
+                    <span>Gas blender</span>
+                </div>
+                <div class="card-body">
+                    <div>Source tank</div>
+                    <div>O2</div>
+                    <div>He</div>
+                    <div>Pressure</div>
+                    <div>Top mix</div>
+                    <div>O2</div>
+                    <div>He</div>
+                    <div>Target</div>
+                    <div>O2</div>
+                    <div>He</div>
+                    <div>Pressure</div>
+                </div>
             </div>
-            <div class="card-body">
-                <form [formGroup]="blenderForm">
-                    <div>BLLLL</div>
-                </form>
+        </div>
+        <div class="col col-12 col-sm-5 col-md-4 col-lg-3 col-xxl-2 mt-3">
+            <div class="card">
+                <div class="card-header">
+                    <span>Results</span>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td>Add O2 [{{units.pressure}}]</td>
+                                <td class="table-active">0</td>
+                            </tr>
+                            <tr>
+                                <td>Add He [{{units.pressure}}]</td>
+                                <td class="table-active">0</td>
+                            </tr>
+                            <tr>
+                                <td>Add Top mix [{{units.pressure}}]</td>
+                                <td class="table-active">0</td>
+                            </tr>
+                            <tr>
+                                <td>Remove from source [{{units.pressure}}]</td>
+                                <td class="table-active">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>

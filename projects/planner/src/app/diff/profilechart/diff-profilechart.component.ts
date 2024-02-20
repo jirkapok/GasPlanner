@@ -11,6 +11,7 @@ import {WayPoint} from '../../shared/models';
 import {DateFormats} from '../../shared/formaters';
 import * as Plotly from 'plotly.js-basic-dist';
 import {Streamed} from '../../shared/streamed';
+import {ChartPlotter} from '../../shared/chartPlotter';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -52,6 +53,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     private layout: any;
     private resampling: ResamplingService;
+    private profileChartPlotter: ChartPlotter;
 
     constructor(
         private units: UnitConversion,
@@ -86,6 +88,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             shapes: []
         };
 
+        this.profileChartPlotter = new ChartPlotter(this.dive, this.resampling, this.units);
         this.updateLayoutThickFormat();
         this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((diveId?: number) => {
@@ -141,11 +144,12 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     private plotCharts(): void {
         this.updateLayoutThickFormat();
+        this.profileChartPlotter.dive = this.dive;
         // performance: number of samples shown in chart doesn't speedup the drawing significantly
-        const dataAverageDepths = this.plotAverageDepth();
-        const depths = this.plotDepths();
-        const ceilings = this.plotCeilings();
-        const plotEvents = this.plotEvents();
+        const dataAverageDepths = this.profileChartPlotter.plotAverageDepth();
+        const depths = this.profileChartPlotter.plotDepths();
+        const ceilings = this.profileChartPlotter.plotCeilings();
+        const plotEvents = this.profileChartPlotter.plotEvents();
         const traces = [dataAverageDepths, depths, ceilings, plotEvents];
 
         Plotly.react(this.elementName, traces, this.layout, this.options);
@@ -162,92 +166,4 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         // setting to string instead expected d3 formtting function causes warning in console = want fix
         this.layout.xaxis.tickformat = DateFormats.selectChartTimeFormat(this.dive.totalDuration);
     }
-
-    private plotAverageDepth(): any {
-        const resampleAverageDepth = this.resampling.resampleAverageDepth(this.dive.wayPoints);
-
-        const dataAverageDepths = {
-            x: resampleAverageDepth.xValues,
-            y: resampleAverageDepth.yValues,
-            type: 'scatter',
-            line: {
-                dash: 'dot'
-            },
-            name: 'Avg. depth',
-            marker: {
-                color: 'rgb(62, 157, 223)'
-            },
-            hovertemplate: `%{y:.2f}  ${this.units.length}`
-        };
-
-        return dataAverageDepths;
-    }
-
-    private plotDepths(): any {
-        const resampled = this.resampling.resampleWaypoints(this.dive.wayPoints);
-
-        const data = {
-            x: resampled.xValues,
-            y: resampled.yValues,
-            type: 'scatter',
-            name: 'Depth',
-            marker: {
-                color: 'rgb(31, 119, 180)'
-            },
-            hovertemplate: `%{y:.2f}  ${this.units.length}`
-        };
-
-        return data;
-    }
-
-    private plotCeilings(): any {
-        const resampled = this.resampling.resampleCeilings(this.dive.ceilings);
-
-        const dataCeilings = {
-            x: resampled.xValues,
-            y: resampled.yValues,
-            type: 'scatter',
-            fill: 'tozeroy',
-            name: 'Ceiling',
-            marker: {
-                color: 'rgb(255, 160, 73)'
-            },
-            hovertemplate: `%{y:.2f}  ${this.units.length}`
-        };
-
-        return dataCeilings;
-    }
-
-    private plotEvents(): any {
-        const resampled = this.resampling.convertEvents(this.dive.events);
-
-        const dataEvents = {
-            x: resampled.xValues,
-            y: resampled.yValues,
-            labels: resampled.labels,
-            text: resampled.labels,
-            type: 'scatter',
-            mode: 'text+markers',
-            fill: 'tozeroy',
-            name: 'Event',
-            hovertemplate: '%{text}',
-            texttemplate: '%{text}',
-            textposition: 'top center',
-            fillcolor: 'rgba(0, 0, 0, 0)',
-            marker: {
-                color: 'rgba(31, 119, 180, 0.5)',
-                size: 8,
-                // symbol: 'bowtie-open', // https://plotly.com/javascript/reference/#box-marker-symbol
-                line: {
-                    color: 'rgba(31, 119, 180, 0.7)',
-                    width: 2
-                }
-            },
-            showlegend: false
-        };
-
-
-        return dataEvents;
-    }
-
 }

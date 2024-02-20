@@ -6,6 +6,6 @@ import {faSlidersH} from '@fortawesome/free-solid-svg-icons';
     templateUrl: './diff-diveresults.component.html',
     styleUrls: ['./diff-diveresults.component.scss']
 })
-export class DiveInfoDifferenceComponent {
+export class DiveResultsDifferenceComponent {
     public icon = faSlidersH;
 }

@@ -85,14 +85,14 @@ import {RedundanciesService} from './shared/redundancies.service';
 import {ReloadDispatcher} from './shared/reloadDispatcher';
 import {ManagedDiveSchedules} from './shared/managedDiveSchedules';
 import {WaypointsDifferenceComponent} from './diff/waypoints/diff-waypoints.component';
-import {DiveInfoDifferenceComponent} from './diff/diveresults/diff-diveresults.component';
+import {DiveResultsDifferenceComponent} from './diff/diveresults/diff-diveresults.component';
 import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilechart.component';
 import {SurfaceIntervalComponent} from './surface-interval/surface-interval.component';
 import {TestDataInjector} from './diff/testData/testDataInjector';
 import {ProfileComparatorService} from './shared/profileComparatorService';
 import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.component';
 import {WaypointsDifferenceService} from './shared/waypoints-difference.service';
-import {DiveInfoResultsDifferenceComponent} from './diff/diveresults/results/diff-diveresults-results.component';
+import {DiveResultsResultsDifferenceComponent} from './diff/diveresults/results/diff-diveresults-results.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 import { GasBlenderService } from './shared/gas-blender.service';
 import {DiffTabsButtonComponent} from './diff/tabs/profile-button/diff-tabs-button.component';
@@ -128,8 +128,6 @@ const COMPONENTS = [
     DepthsComplexComponent,
     DepthsSimpleComponent,
     DiffComponent,
-    DiveInfoResultsDifferenceComponent,
-    DiveInfoDifferenceComponent,
     DiveInfoComponent,
     DiveIssuesComponent,
     DiveOptionsComponent,
@@ -158,10 +156,10 @@ const COMPONENTS = [
     WayPointsComponent,
     WeightCalcComponent,
     WaypointsDifferenceComponent,
-    DiveInfoDifferenceComponent,
+    DiveResultsDifferenceComponent,
     ProfileDifferenceChartComponent,
     LoadTestDataComponent,
-    DiveInfoResultsDifferenceComponent,
+    DiveResultsResultsDifferenceComponent,
     DiffTabsComponent,
     DiffTabsButtonComponent
 ];

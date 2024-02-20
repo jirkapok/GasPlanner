@@ -1,16 +1,16 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {DiveInfoDifferenceComponent} from './diff-diveresults.component';
+import {DiveResultsDifferenceComponent} from './diff-diveresults.component';
 
-describe('DiveInfoDifferenceComponent', () => {
-    let component: DiveInfoDifferenceComponent;
-    let fixture: ComponentFixture<DiveInfoDifferenceComponent>;
+describe('DiveResultsDifferenceComponent', () => {
+    let component: DiveResultsDifferenceComponent;
+    let fixture: ComponentFixture<DiveResultsDifferenceComponent>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DiveInfoDifferenceComponent]
+            declarations: [DiveResultsDifferenceComponent]
         });
-        fixture = TestBed.createComponent(DiveInfoDifferenceComponent);
+        fixture = TestBed.createComponent(DiveResultsDifferenceComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

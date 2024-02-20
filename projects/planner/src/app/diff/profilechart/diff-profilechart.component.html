@@ -1,1 +1,14 @@
-<app-profilechart></app-profilechart>
+<div class="card">
+    <div class="card-header">
+        <fa-icon [icon]="icon" class="me-3" flip="vertical"></fa-icon>
+        <span>Profile chart</span>
+    </div>
+    <div class="card-body card-minheight">
+        <app-calculating [show]="!profileCalculated"></app-calculating>
+        <div id="diveplot" class="diveplot" [ngClass]="{
+        'plot-display': profileCalculated,
+        'plot-hidden': !profileCalculated
+      }">
+        </div>
+    </div>
+</div>

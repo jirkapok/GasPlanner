@@ -92,7 +92,7 @@ import {TestDataInjector} from './diff/testData/testDataInjector';
 import {ProfileComparatorService} from './shared/profileComparatorService';
 import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.component';
 import {WaypointsDifferenceService} from './shared/waypoints-difference.service';
-import {DiveResultsResultsDifferenceComponent} from './diff/diveresults/table/diff-diveresults-results.component';
+import {DiveResultsResultsDifferenceComponent} from './diff/diveresults/table/diff-diveresults-table.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 import { GasBlenderService } from './shared/gas-blender.service';
 import {DiffTabsButtonComponent} from './diff/tabs/profile-button/diff-tabs-button.component';

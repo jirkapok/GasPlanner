@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {DiveResultsResultsDifferenceComponent} from './diff-diveresults-results.component';
+import {DiveResultsResultsDifferenceComponent} from './diff-diveresults-table.component';
 import {ViewSwitchService} from '../../../shared/viewSwitchService';
 import {DiveSchedules} from '../../../shared/dive.schedules';
 import {ReloadDispatcher} from '../../../shared/reloadDispatcher';

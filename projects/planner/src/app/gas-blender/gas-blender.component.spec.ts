@@ -23,4 +23,8 @@ describe('GasBlenderComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    // TODO test cases
+    // - imperial values: source pressure, target pressure, results, AddO2, AddHe, AddTop
+    // - imperial values: shows removeFrom source
 });

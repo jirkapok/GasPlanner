@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GasBlenderComponent } from './gas-blender.component';
 import { UnitConversion } from '../shared/UnitConversion';
-import { BasBlenderService } from '../shared/gas-blender.service';
+import { GasBlenderService } from '../shared/gas-blender.service';
 
 describe('GasBlenderComponent', () => {
     let component: GasBlenderComponent;
@@ -12,7 +12,7 @@ describe('GasBlenderComponent', () => {
         TestBed.configureTestingModule({
             declarations: [GasBlenderComponent],
             providers: [
-                UnitConversion, BasBlenderService
+                UnitConversion, GasBlenderService
             ]
         });
         fixture = TestBed.createComponent(GasBlenderComponent);

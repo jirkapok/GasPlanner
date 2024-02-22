@@ -1,11 +1,11 @@
 import { UnitConversion } from './UnitConversion';
-import { BasBlenderService } from './gas-blender.service';
+import { GasBlenderService } from './gas-blender.service';
 
 describe('Gas blender service', () => {
-    let sut: BasBlenderService;
+    let sut: GasBlenderService;
 
     beforeEach(() => {
-        sut = new BasBlenderService(new UnitConversion());
+        sut = new GasBlenderService(new UnitConversion());
     });
 
     it('Creates', () => {

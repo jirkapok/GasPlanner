@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { BasBlenderService } from '../shared/gas-blender.service';
+import { GasBlenderService } from '../shared/gas-blender.service';
 
 @Component({
     selector: 'app-gas-blender',
@@ -15,7 +15,7 @@ export class GasBlenderComponent {
 
     constructor(
         public units: UnitConversion,
-        public blender: BasBlenderService,
+        public blender: GasBlenderService,
         private fb: NonNullableFormBuilder) {
         this.blenderForm = this.fb.group([]);
     }

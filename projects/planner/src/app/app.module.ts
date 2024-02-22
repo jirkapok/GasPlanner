@@ -95,7 +95,7 @@ import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.c
 import {WaypointsDifferenceService} from './shared/waypoints-difference.service';
 import {DiveInfoResultsDifferenceComponent} from './diff/diveinfo/results/diff-diveinfo-results.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
-import { BasBlenderService } from './shared/gas-blender.service';
+import { GasBlenderService } from './shared/gas-blender.service';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -171,7 +171,7 @@ const SERVICES = [
     DepthsService,
     DiveResults,
     DiveSchedules,
-    BasBlenderService,
+    GasBlenderService,
     InputControls,
     ManagedDiveSchedules,
     NdlService,

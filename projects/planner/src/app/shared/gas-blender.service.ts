@@ -4,7 +4,7 @@ import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
 
 @Injectable()
-export class BasBlenderService {
+export class GasBlenderService {
     private readonly _sourceTank: TankBound;
     private readonly _topMix: TankBound;
     private readonly _targetTank: TankBound;

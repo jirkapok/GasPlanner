@@ -7,17 +7,74 @@
                     <span>Gas blender</span>
                 </div>
                 <div class="card-body">
-                    <div>Source tank</div>
-                    <div>O2</div>
-                    <div>He</div>
-                    <div>Pressure</div>
-                    <div>Top mix</div>
-                    <div>O2</div>
-                    <div>He</div>
-                    <div>Target</div>
-                    <div>O2</div>
-                    <div>He</div>
-                    <div>Pressure</div>
+                    <div class="row mb-2">
+                        <div>Source tank</div>
+                        <div class="mb-2">
+                            <app-oxygen-dropdown [tank]="blender.sourceTank" (gasChange)="applyChange()"
+                                                 [showBestMix]="false" (standardGasApplied)="applyChange()" controlName="sourceO2"
+                                                 [showTrimixGases]="true" [nitroxForm]="blenderForm" />
+                        </div>
+                        <div class="mb-2">
+                            <label for="sourceHe" class="form-label">He [%]:</label>
+                            <input formControlName="tankHe" class="form-control" type="number"
+                                   (input)="applyChange()" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
+                                   required [class.is-invalid]="sourceHeInvalid" id="sourceHe" />
+                            <div class="text-danger" *ngIf="sourceHeInvalid">Needs to be number
+                                {{ranges.tankHeLabel}}</div>
+                        </div>
+                        <div>
+                            <label for="sourcePressure" class="form-label">Pressure
+                                [{{units.pressure}}]:</label>
+                            <input formControlName="tankStartPressure" class="form-control" type="number"
+                                   (input)="applyChange()" required [min]="ranges.tankPressure[0]"
+                                   [max]="ranges.tankPressure[1]" step="1" id="sourcePressure"
+                                   [class.is-invalid]="sourcePressureInvalid" />
+                            <div class="text-danger" *ngIf="sourcePressureInvalid">
+                                Needs to be number {{ranges.tankPressureLabel}}</div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div>Top mix</div>
+                        <div class="mb-2">
+                            <app-oxygen-dropdown [tank]="blender.sourceTank" (gasChange)="applyChange()"
+                                                 [showBestMix]="false" (standardGasApplied)="applyChange()" controlName="topMixO2"
+                                                 [showTrimixGases]="true" [nitroxForm]="blenderForm" />
+                        </div>
+                        <div class="mb-2">
+                            <label for="topMixHe" class="form-label">He [%]:</label>
+                            <input formControlName="tankHe" class="form-control" type="number"
+                                   (input)="applyChange()" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
+                                   required [class.is-invalid]="topMixHeInvalid" id="topMixHe" />
+                            <div class="text-danger" *ngIf="topMixHeInvalid">Needs to be number
+                                {{ranges.tankHeLabel}}</div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div>Target</div>
+                        <div class="mb-2">
+                            <app-oxygen-dropdown [tank]="blender.sourceTank" (gasChange)="applyChange()"
+                                                 [showBestMix]="false" (standardGasApplied)="applyChange()" controlName="targetO2"
+                                                 [showTrimixGases]="true" [nitroxForm]="blenderForm" />
+                        </div>
+                        <div class="mb-2">
+                            <label for="sourceHe" class="form-label">He [%]:</label>
+                            <input formControlName="tankHe" class="form-control" type="number"
+                                   (input)="applyChange()" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
+                                   required [class.is-invalid]="targetHeInvalid" id="targetHe" />
+                            <div class="text-danger" *ngIf="targetHeInvalid">Needs to be number
+                                {{ranges.tankHeLabel}}</div>
+                        </div>
+                        <div>
+                            <label for="sourcePressure" class="form-label">Pressure
+                                [{{units.pressure}}]:</label>
+                            <input formControlName="tankStartPressure" class="form-control" type="number"
+                                   (input)="applyChange()" required [min]="ranges.tankPressure[0]"
+                                   [max]="ranges.tankPressure[1]" step="1" id="targetPressure"
+                                   [class.is-invalid]="targetPressureInvalid" />
+                            <div class="text-danger" *ngIf="targetPressureInvalid">
+                                Needs to be number {{ranges.tankPressureLabel}}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

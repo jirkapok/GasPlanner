@@ -5,20 +5,30 @@ import { UnitConversion } from './UnitConversion';
 
 @Injectable()
 export class BasBlenderService {
-    private sourceTank: TankBound;
-    private topMix: TankBound;
-    private targetTank: TankBound;
+    private readonly _sourceTank: TankBound;
+    private readonly _topMix: TankBound;
+    private readonly _targetTank: TankBound;
     private results!: MixResult;
 
     constructor(private units: UnitConversion) {
-        this.sourceTank = new TankBound(Tank.createDefault(), this.units);
-        // TODO set to Ean32 by default
+        this._sourceTank = new TankBound(Tank.createDefault(), this.units);
         // TODO move percents from tank new BoundGas
-        this.topMix = new TankBound(Tank.createDefault(), this.units);
-        this.topMix.assignStandardGas('EAN32');
-        console.log(this.topMix.tank.gas);
-        this.targetTank = new TankBound(Tank.createDefault(), this.units);
+        this._topMix = new TankBound(Tank.createDefault(), this.units);
+        this._topMix.assignStandardGas('EAN32');
+        this._targetTank = new TankBound(Tank.createDefault(), this.units);
         this.calculate();
+    }
+
+    public get sourceTank(): TankBound {
+        return this._sourceTank;
+    }
+
+    public get topMix(): TankBound {
+        return this._topMix;
+    }
+
+    public get targetTank(): TankBound {
+        return this._targetTank;
     }
 
     public get addO2(): number {
@@ -43,7 +53,7 @@ export class BasBlenderService {
 
     private calculate(): void {
         // to avoid percents conversion to fraction
-        const sourceMetric = this.sourceTank.tank;
+        const sourceMetric = this._sourceTank.tank;
         const targetMetric = this.targetTank.tank;
         const topMetric = this.topMix.tank;
 

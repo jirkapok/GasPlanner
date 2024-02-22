@@ -15,7 +15,7 @@ export class GasBlenderComponent {
 
     constructor(
         public units: UnitConversion,
-        private blender: BasBlenderService,
+        public blender: BasBlenderService,
         private fb: NonNullableFormBuilder) {
         this.blenderForm = this.fb.group([]);
     }
@@ -44,15 +44,39 @@ export class GasBlenderComponent {
         return this.blender.needsRemove;
     }
 
+    // TODO fix invalid controls
+    public get sourceHeInvalid(): boolean {
+        return false;
+    }
+
+    public get sourcePressureInvalid(): boolean {
+        return false;
+    }
+
+    public get topMixHeInvalid(): boolean {
+        return false;
+    }
+
+    public get targetHeInvalid(): boolean {
+        return false;
+    }
+
+    // we dont need working pressure for source and target,
+    // since dont count with volume only percentage
+    public get targetPressureInvalid(): boolean {
+        return false;
+    }
+
+    public applyChange(): void {
+    }
+
     // TODO Gas blender component:
-    // note we dont need working pressure, since dont count with volume only percentage
-    // create and bind service with tests
-    // add input controls and bind default values
+    // add service tests
+    // bind default values to input controls
     // On inputs change
     // On source mix template change
     // On top mix template change
     // On target mix template change
     // Do we need Reload?
-    // bind results
     // save/load state
 }

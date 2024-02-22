@@ -24,6 +24,26 @@ export class GasBlenderComponent {
         return this.units.ranges;
     }
 
+    public get addO2(): number {
+        return this.blender.addO2;
+    }
+
+    public get addHe(): number {
+        return this.blender.addHe;
+    }
+
+    public get addTopMix(): number {
+        return this.blender.addTop;
+    }
+
+    public get removeFromSource(): number {
+        return this.blender.removeFromSource;
+    }
+
+    public get needsRemove(): boolean {
+        return this.blender.needsRemove;
+    }
+
     // TODO Gas blender component:
     // note we dont need working pressure, since dont count with volume only percentage
     // create and bind service with tests

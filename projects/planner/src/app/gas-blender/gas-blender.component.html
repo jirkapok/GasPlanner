@@ -29,21 +29,21 @@
                 <div class="card-body">
                     <table class="table table-sm">
                         <tbody>
+                            <tr *ngIf="needsRemove">
+                                <td>Remove from source [{{units.pressure}}]</td>
+                                <td class="table-active">{{ removeFromSource | number:'1.0-2' }}</td>
+                            </tr>
                             <tr>
                                 <td>Add O2 [{{units.pressure}}]</td>
-                                <td class="table-active">0</td>
+                                <td class="table-active">{{ addO2 | number:'1.0-2' }}</td>
                             </tr>
                             <tr>
                                 <td>Add He [{{units.pressure}}]</td>
-                                <td class="table-active">0</td>
+                                <td class="table-active">{{ addHe | number:'1.0-2' }}</td>
                             </tr>
                             <tr>
                                 <td>Add Top mix [{{units.pressure}}]</td>
-                                <td class="table-active">0</td>
-                            </tr>
-                            <tr>
-                                <td>Remove from source [{{units.pressure}}]</td>
-                                <td class="table-active">0</td>
+                                <td class="table-active">{{ addTopMix | number:'1.0-2' }}</td>
                             </tr>
                         </tbody>
                     </table>

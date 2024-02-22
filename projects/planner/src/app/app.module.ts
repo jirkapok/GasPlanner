@@ -95,6 +95,7 @@ import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.c
 import {WaypointsDifferenceService} from './shared/waypoints-difference.service';
 import {DiveInfoResultsDifferenceComponent} from './diff/diveinfo/results/diff-diveinfo-results.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
+import { BasBlenderService } from './shared/gas-blender.service';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -170,6 +171,7 @@ const SERVICES = [
     DepthsService,
     DiveResults,
     DiveSchedules,
+    BasBlenderService,
     InputControls,
     ManagedDiveSchedules,
     NdlService,
@@ -210,7 +212,7 @@ const SERVICES = [
             // or after 30 seconds (whichever comes first).
             registrationStrategy: 'registerWhenStable:30000'
         }),
-        MaskitoModule
+        MaskitoModule  // TODO replace obsolite MaskitoModule
     ],
     exports: [],
     providers: SERVICES,

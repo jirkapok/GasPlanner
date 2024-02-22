@@ -37,6 +37,10 @@ export class BasBlenderService {
         return 0;//  this.results.removeFromSource;
     }
 
+    public get needsRemove(): boolean {
+        return this.removeFromSource > 0;
+    }
+
     private calculate(): void {
         // to avoid percents conversion to fraction
         const sourceMetric = this.sourceTank.tank;

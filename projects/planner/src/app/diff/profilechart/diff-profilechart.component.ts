@@ -3,15 +3,13 @@ import {faChartArea} from '@fortawesome/free-solid-svg-icons';
 import {ResamplingService} from '../../shared/ResamplingService';
 import {UnitConversion} from '../../shared/UnitConversion';
 import {SelectedWaypoint} from '../../shared/selectedwaypointService';
-import {ReloadDispatcher} from '../../shared/reloadDispatcher';
-import {DiveSchedules} from '../../shared/dive.schedules';
-import {takeUntil} from 'rxjs';
 import {DiveResults} from '../../shared/diveresults';
 import {WayPoint} from '../../shared/models';
 import {DateFormats} from '../../shared/formaters';
 import * as Plotly from 'plotly.js-basic-dist';
 import {Streamed} from '../../shared/streamed';
 import {ChartPlotter} from '../../shared/chartPlotter';
+import {ProfileComparatorService} from '../../shared/profileComparatorService';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -58,8 +56,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     constructor(
         private units: UnitConversion,
         private selectedWaypoint: SelectedWaypoint,
-        private dispatcher: ReloadDispatcher,
-        private schedules: DiveSchedules) {
+        private profileComparatorService: ProfileComparatorService) {
         super();
         this.resampling = new ResamplingService(units);
 
@@ -90,16 +87,12 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
         this.profileChartPlotter = new ChartPlotter(this.dive, this.resampling, this.units);
         this.updateLayoutThickFormat();
-        this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((diveId?: number) => {
-                if (this.schedules.selected.id === diveId) {
-                    this.plotCharts();
-                }
-            });
-        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.plotCharts());
-        this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((wayPoint) => this.selectWayPoint(wayPoint));
+        this.profileComparatorService.profileAIndex.subscribe(() => {
+            if (this.profileCalculated) {
+                this.plotCharts();
+            }
+        });
+        // TODO: Implement selectedWaypoint for diff-waypoints
     }
 
     public get profileCalculated(): boolean {

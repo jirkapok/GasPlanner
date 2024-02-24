@@ -76,4 +76,15 @@ export class ProfileComparatorService {
         this.profileBIndex = index;
         return true;
     }
+
+    public waitUntilProfilesCalculated(): Promise<void> {
+        return new Promise<void>((resolve) => {
+            const interval = setInterval(() => {
+                if(this.areProfilesCalculated()){
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 100);
+        });
+    }
 }

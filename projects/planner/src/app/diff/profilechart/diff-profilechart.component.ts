@@ -105,7 +105,9 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     public ngOnInit(): void {
-        this.plotCharts();
+        void this.profileComparatorService.waitUntilProfilesCalculated().then(() => {
+            this.plotCharts();
+        });
         this.hookChartEvents();
     }
 

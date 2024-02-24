@@ -4,10 +4,20 @@ import {DiveResults} from './diveresults';
 
 export class ChartPlotter {
 
-    constructor(public dive: DiveResults, private resampling: ResamplingService, private units: UnitConversion) {
-    }
+    private readonly namePrefix: string = '';
+    private readonly averageDepthLineColor: string = 'rgb(62, 157, 223)';
+    private readonly depthLineColor: string = 'rgb(31, 119, 180)';
+    private readonly ceilingLineColor: string = 'rgb(255, 160, 73)';
+    private readonly eventLineColor: string = 'rgba(31, 119, 180, 0.7)';
+    private readonly eventFillColor: string = 'rgba(31, 119, 180, 0.5)';
 
-    public plotAverageDepth(name: string = 'Avg. depth'): any {
+    constructor(
+        public dive: DiveResults,
+        private resampling: ResamplingService,
+        private units: UnitConversion
+    ) {}
+
+    public plotAverageDepth(): any {
         const resampleAverageDepth = this.resampling.resampleAverageDepth(this.dive.wayPoints);
 
         const dataAverageDepths = {
@@ -17,9 +27,9 @@ export class ChartPlotter {
             line: {
                 dash: 'dot'
             },
-            name: name,
+            name: this.namePrefix + 'Avg. depth',
             marker: {
-                color: 'rgb(62, 157, 223)'
+                color: this.averageDepthLineColor
             },
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
@@ -27,16 +37,16 @@ export class ChartPlotter {
         return dataAverageDepths;
     }
 
-    public plotDepths(name: string = 'Depth'): any {
+    public plotDepths(): any {
         const resampled = this.resampling.resampleWaypoints(this.dive.wayPoints);
 
         const data = {
             x: resampled.xValues,
             y: resampled.yValues,
             type: 'scatter',
-            name: name,
+            name: this.namePrefix + 'Depth',
             marker: {
-                color: 'rgb(31, 119, 180)'
+                color: this.depthLineColor
             },
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
@@ -44,7 +54,7 @@ export class ChartPlotter {
         return data;
     }
 
-    public plotCeilings(name: string = 'Ceiling'): any {
+    public plotCeilings(): any {
         const resampled = this.resampling.resampleCeilings(this.dive.ceilings);
 
         const dataCeilings = {
@@ -52,9 +62,9 @@ export class ChartPlotter {
             y: resampled.yValues,
             type: 'scatter',
             fill: 'tozeroy',
-            name: name,
+            name: this.namePrefix + 'Ceiling',
             marker: {
-                color: 'rgb(255, 160, 73)'
+                color: this.ceilingLineColor
             },
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
@@ -62,7 +72,7 @@ export class ChartPlotter {
         return dataCeilings;
     }
 
-    public plotEvents(name: string = 'Events'): any {
+    public plotEvents(): any {
         const resampled = this.resampling.convertEvents(this.dive.events);
 
         const dataEvents = {
@@ -73,17 +83,17 @@ export class ChartPlotter {
             type: 'scatter',
             mode: 'text+markers',
             fill: 'tozeroy',
-            name: 'Event',
+            name: this.namePrefix + 'Event',
             hovertemplate: '%{text}',
             texttemplate: '%{text}',
             textposition: 'top center',
             fillcolor: 'rgba(0, 0, 0, 0)',
             marker: {
-                color: 'rgba(31, 119, 180, 0.5)',
+                color: this.eventFillColor,
                 size: 8,
                 // symbol: 'bowtie-open', // https://plotly.com/javascript/reference/#box-marker-symbol
                 line: {
-                    color: 'rgba(31, 119, 180, 0.7)',
+                    color: this.eventLineColor,
                     width: 2
                 }
             },

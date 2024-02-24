@@ -8,7 +8,7 @@ import {WayPoint} from '../../shared/models';
 import {DateFormats} from '../../shared/formaters';
 import * as Plotly from 'plotly.js-basic-dist';
 import {Streamed} from '../../shared/streamed';
-import {ChartPlotter} from '../../shared/chartPlotter';
+import {ChartPlotter, ChartPlotterFactory} from '../../shared/chartPlotter';
 import {ProfileComparatorService} from '../../shared/profileComparatorService';
 
 @Component({
@@ -85,7 +85,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             shapes: []
         };
 
-        this.profileChartPlotter = new ChartPlotter(this.dive, this.resampling, this.units);
+        const chartPlotterFactory = new ChartPlotterFactory(this.resampling, this.units);
+        this.profileChartPlotter = chartPlotterFactory.create(this.profileA);
         this.updateLayoutThickFormat();
         this.profileComparatorService.profileAIndex.subscribe(() => {
             if (this.profileCalculated) {

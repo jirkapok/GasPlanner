@@ -2,6 +2,64 @@ import {UnitConversion} from './UnitConversion';
 import {ResamplingService} from './ResamplingService';
 import {DiveResults} from './diveresults';
 
+
+
+export class ChartPlotterFactory {
+
+    private namePrefix = '';
+    private averageDepthLineColor = 'rgb(62, 157, 223)';
+    private depthLineColor = 'rgb(31, 119, 180)';
+    private ceilingLineColor = 'rgb(255, 160, 73)';
+    private eventLineColor = 'rgba(31, 119, 180, 0.7)';
+    private eventFillColor = 'rgba(31, 119, 180, 0.5)';
+
+    constructor(private resampling: ResamplingService, private units: UnitConversion) {
+    }
+
+    public wthNamePrefix(prefix: string): ChartPlotterFactory {
+        this.namePrefix = prefix;
+        return this;
+    }
+    public wthAverageDepthColor(color: string): ChartPlotterFactory {
+        this.averageDepthLineColor = color;
+        return this;
+    }
+
+    public wthDepthColor(color: string): ChartPlotterFactory {
+        this.depthLineColor = color;
+        return this;
+    }
+
+    public wthCeilingColor(color: string): ChartPlotterFactory {
+        this.ceilingLineColor = color;
+        return this;
+    }
+
+    public wthEventLineColor(color: string): ChartPlotterFactory {
+        this.eventLineColor = color;
+        return this;
+    }
+
+    public wthEventFillColor(color: string): ChartPlotterFactory {
+        this.eventFillColor = color;
+        return this;
+    }
+
+    public create(dive: DiveResults): ChartPlotter {
+        return new ChartPlotter(
+            dive,
+            this.resampling,
+            this.units,
+            this.namePrefix,
+            this.averageDepthLineColor,
+            this.depthLineColor,
+            this.ceilingLineColor,
+            this.eventLineColor,
+            this.eventFillColor
+        );
+    }
+}
+
 export class ChartPlotter {
 
     private readonly namePrefix: string = '';
@@ -14,8 +72,21 @@ export class ChartPlotter {
     constructor(
         public dive: DiveResults,
         private resampling: ResamplingService,
-        private units: UnitConversion
-    ) {}
+        private units: UnitConversion,
+        namePrefix: string,
+        averageDepthLineColor: string,
+        depthLineColor: string,
+        ceilingLineColor: string,
+        eventLineColor: string,
+        eventFillColor: string
+    ) {
+        this.namePrefix = namePrefix;
+        this.averageDepthLineColor = averageDepthLineColor;
+        this.depthLineColor = depthLineColor;
+        this.ceilingLineColor = ceilingLineColor;
+        this.eventLineColor = eventLineColor;
+        this.eventFillColor = eventFillColor;
+    }
 
     public plotAverageDepth(): any {
         const resampleAverageDepth = this.resampling.resampleAverageDepth(this.dive.wayPoints);

@@ -4,10 +4,10 @@
         <span>Profile chart</span>
     </div>
     <div class="card-body card-minheight">
-        <app-calculating [show]="!profileCalculated"></app-calculating>
+        <app-calculating [show]="!profilesCalculated"></app-calculating>
         <div id="diveplot" class="diveplot" [ngClass]="{
-        'plot-display': profileCalculated,
-        'plot-hidden': !profileCalculated
+        'plot-display': profilesCalculated,
+        'plot-hidden': !profilesCalculated
       }">
         </div>
     </div>

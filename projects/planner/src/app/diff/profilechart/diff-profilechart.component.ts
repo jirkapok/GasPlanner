@@ -51,7 +51,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     private layout: any;
     private resampling: ResamplingService;
-    private profileChartPlotter: ChartPlotter;
+    private profileAChartPlotter: ChartPlotter;
+    private profileBChartPlotter: ChartPlotter;
 
     constructor(
         private units: UnitConversion,
@@ -86,22 +87,41 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         };
 
         const chartPlotterFactory = new ChartPlotterFactory(this.resampling, this.units);
-        this.profileChartPlotter = chartPlotterFactory.create(this.profileA);
+        this.profileAChartPlotter = chartPlotterFactory.wthNamePrefix('Profile A ').create(this.profileA);
+        this.profileBChartPlotter = chartPlotterFactory
+            .wthNamePrefix('Profile B ')
+            .wthAverageDepthColor('rgb(188,191,192)')
+            .wthDepthColor('rgb(141,143,144)')
+            .wthCeilingColor('rgb(141,143,144)')
+            .wthEventFillColor('rgb(141,143,144)')
+            .wthEventLineColor('rgb(118,119,120)')
+            .create(this.profileB);
+
         this.updateLayoutThickFormat();
         this.profileComparatorService.profileAIndex.subscribe(() => {
-            if (this.profileCalculated) {
+            if (this.profileComparatorService.areProfilesCalculated()) {
+                this.plotCharts();
+            }
+        });
+
+        this.profileComparatorService.profileBIndex.subscribe(() => {
+            if (this.profilesCalculated) {
                 this.plotCharts();
             }
         });
         // TODO: Implement selectedWaypoint for diff-waypoints
     }
 
-    public get profileCalculated(): boolean {
-        return this.dive.profileCalculated;
+    public get profilesCalculated(): boolean {
+        return this.profileComparatorService.areProfilesCalculated();
     }
 
-    private get dive(): DiveResults {
-        return this.schedules.selected.diveResult;
+    private get profileA(): DiveResults {
+        return this.profileComparatorService.profileAResults;
+    }
+
+    private get profileB(): DiveResults {
+        return this.profileComparatorService.profileBResults;
     }
 
     public ngOnInit(): void {
@@ -140,13 +160,23 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     private plotCharts(): void {
         this.updateLayoutThickFormat();
-        this.profileChartPlotter.dive = this.dive;
+        this.profileAChartPlotter.dive = this.profileA;
+        this.profileBChartPlotter.dive = this.profileB;
         // performance: number of samples shown in chart doesn't speedup the drawing significantly
-        const dataAverageDepths = this.profileChartPlotter.plotAverageDepth();
-        const depths = this.profileChartPlotter.plotDepths();
-        const ceilings = this.profileChartPlotter.plotCeilings();
-        const plotEvents = this.profileChartPlotter.plotEvents();
-        const traces = [dataAverageDepths, depths, ceilings, plotEvents];
+        const profileAAverageDepths = this.profileAChartPlotter.plotAverageDepth();
+        const profileADepths = this.profileAChartPlotter.plotDepths();
+        const profileACeilings = this.profileAChartPlotter.plotCeilings();
+        const profileAEvents = this.profileAChartPlotter.plotEvents();
+
+        const profileBAverageDepths = this.profileBChartPlotter.plotAverageDepth();
+        const profileBDepths = this.profileBChartPlotter.plotDepths();
+        const profileBCeilings = this.profileBChartPlotter.plotCeilings();
+        const profileBEvents = this.profileBChartPlotter.plotEvents();
+
+        const traces = [
+            profileBAverageDepths, profileBDepths, profileBCeilings, profileBEvents,
+            profileAAverageDepths, profileADepths, profileACeilings, profileAEvents,
+        ];
 
         Plotly.react(this.elementName, traces, this.layout, this.options);
     }
@@ -160,6 +190,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     private updateLayoutThickFormat(): void {
         // setting to string instead expected d3 formtting function causes warning in console = want fix
-        this.layout.xaxis.tickformat = DateFormats.selectChartTimeFormat(this.dive.totalDuration);
+        this.layout.xaxis.tickformat = DateFormats.selectChartTimeFormat(this.profileA.totalDuration);
     }
 }

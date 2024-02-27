@@ -1,17 +1,22 @@
 .gas-bar {
     padding: 5px 8px;
-    height: 2em;
+    height: 4em;
     font-size: 1em;
     border: 1px solid #a1a1a1;
     border-radius: .5em;
     background: transparent;
     box-shadow: none;
     overflow: visible;
-    position: static;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .rounded-progress {
+    position: absolute;
     height: 100%;
+    left: 50%;
 }
 
 .reserve-overlay {
@@ -20,23 +25,34 @@
 
 .reserve-value {
     position: absolute;
-    bottom: -3.75em;
-    right: 3px;
+    bottom: -7.75em;
+    right: 5px;
     text-align: right;
 }
 
 .reserve-bar {
     position: absolute;
     padding: 0px;
-    height: 4em;
-    top: -.1em;
-    left: 0px;
+    height: 6em;
+    top: .25em;
+    left: 50%;
+    width: 3px;
+    background: darkgrey;
     text-align: right;
     font-size: .75em;
-    border-right: 2px solid darkorange;
+    z-index: 101;
 }
 
 .combined_wrapper {
     position: relative;
     width: 100%;
+    height: 1.5em;
+    z-index: 100;
+}
+
+.flip {
+    transform: scaleX(-1);
+    * {
+        transform: scaleX(-1);
+    }
 }

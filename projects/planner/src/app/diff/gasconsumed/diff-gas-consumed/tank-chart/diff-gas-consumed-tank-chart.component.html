@@ -1,0 +1,25 @@
+<div class="my-4">
+    <div class="d-flex flex-row justify-content-between">
+        <strong class="text-start"><span *ngIf="showId"> {{ tank.id }}.</span> {{ tank.name }}</strong>
+        <app-gaslabel [tank]="tank" [toxicity]="toxicity"  [showName]="false" class="text-end"></app-gaslabel>
+    </div>
+    <div class="d-flex flex-row justify-content-between">
+        <small class="text-start text-muted">Gas remaining: {{ endPressure | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}</small>
+        <small class="text-end text-muted">Rock bottom: <strong>{{ reserve | number:'1.0-0' }}</strong> {{units.pressure}}</small>
+    </div>
+    <div class="progress gas-bar mt-1 mb-2">
+        <div class="combined_wrapper">
+            <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"
+                 [attr.aria-valuenow]="tank.reserve" [style.width]="tank.percentsReserve + '%'" class="reserve-bar rounded-progress">
+                <div class="reserve-overlay">
+                    <div class="reserve-value">{{reserve | number:'1.0-0' }}</div>
+                </div>
+            </div>
+
+            <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"
+                 [ngClass]="{'progress-bar rounded-progress': true, 'bg-success': tank.hasReserve, 'bg-danger': !tank.hasReserve }"
+                 [attr.aria-valuenow]="tank.endPressure" [style.width]="tank.percentsRemaining + '%'">
+                {{endPressure | number:'1.0-0' }}</div>
+        </div>
+    </div>
+</div>

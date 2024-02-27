@@ -97,6 +97,10 @@ import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 import { GasBlenderService } from './shared/gas-blender.service';
 import {DiffTabsButtonComponent} from './diff/tabs/profile-button/diff-tabs-button.component';
 import {DiffTabsComponent} from './diff/tabs/diff-tabs.component';
+import {GasConsumedDifferenceComponent} from './diff/gasconsumed/diff-gas-consumed/diff-gas-consumed.component';
+import {
+    GasConsumedDifferenceTankComponent
+} from './diff/gasconsumed/diff-gas-consumed/tank-chart/diff-gas-consumed-tank-chart.component';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -160,7 +164,9 @@ const COMPONENTS = [
     LoadTestDataComponent,
     DiveResultsTableDifferenceComponent,
     DiffTabsComponent,
-    DiffTabsButtonComponent
+    DiffTabsButtonComponent,
+    GasConsumedDifferenceComponent,
+    GasConsumedDifferenceTankComponent
 ];
 
 const STANDALONE = [

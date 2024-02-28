@@ -4,6 +4,7 @@ import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { GasBlenderService } from '../shared/gas-blender.service';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { InputControls } from '../shared/inputcontrols';
 
 interface IGasBlenderForm {
     sourceO2: FormControl<number>;
@@ -29,6 +30,7 @@ export class GasBlenderComponent implements OnInit {
         public units: UnitConversion,
         public blender: GasBlenderService,
         private validators: ValidatorGroups,
+        private inputs: InputControls,
         private fb: NonNullableFormBuilder) {
     }
 
@@ -57,25 +59,30 @@ export class GasBlenderComponent implements OnInit {
     }
 
     public get sourceHeInvalid(): boolean {
-        return false;
+        const control = this.blenderForm.controls.sourceHe;
+        return this.inputs.controlInValid(control);
     }
 
     public get topMixHeInvalid(): boolean {
-        return false;
+        const control = this.blenderForm.controls.topMixHe;
+        return this.inputs.controlInValid(control);
     }
 
     public get targetHeInvalid(): boolean {
-        return false;
+        const control = this.blenderForm.controls.targetHe;
+        return this.inputs.controlInValid(control);
     }
 
     // we dont need working pressure for source and target,
     // since dont count with volume only percentage
     public get sourcePressureInvalid(): boolean {
-        return false;
+        const control = this.blenderForm.controls.sourcePressure;
+        return this.inputs.controlInValid(control);
     }
 
     public get targetPressureInvalid(): boolean {
-        return false;
+        const control = this.blenderForm.controls.targetPressure;
+        return this.inputs.controlInValid(control);
     }
 
     public ngOnInit(): void {
@@ -131,6 +138,5 @@ export class GasBlenderComponent implements OnInit {
     // TODO Gas blender component:
     // Do we need Reload?
     // add service tests
-    // Invalid controls
     // save/load state
 }

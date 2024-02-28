@@ -101,6 +101,16 @@ export class Tank implements TankFill {
         return Tank.volume(this);
     }
 
+    /** Gets total volume of reserve in liters */
+    public get reserveVolume(): number {
+        return Tank.volume2(this.size, this.reserve);
+    }
+
+    /** Gets total volume of consumed gas in liters */
+    public get consumedVolume(): number {
+        return Tank.volume2(this.size, this.consumed);
+    }
+
     /** Gets not null name of the content gas based on O2 and he fractions */
     public get name(): string {
         return this._gas.name;
@@ -156,7 +166,11 @@ export class Tank implements TankFill {
 
     /** Gets total volume at start pressure in liters */
     public static volume(tank: TankFill): number {
-        return tank.size * tank.startPressure;
+        return Tank.volume2(tank.size, tank.startPressure);
+    }
+
+    private static volume2(size: number, pressure: number): number {
+        return size * pressure;
     }
 
     public assignStandardGas(gasName: string): void {

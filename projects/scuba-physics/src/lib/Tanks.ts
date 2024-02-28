@@ -1,6 +1,12 @@
 import { Precision } from './precision';
 import { Gas, StandardGases } from './Gases';
-import { TankFill } from './gasBlender';
+
+export interface TankFill {
+    /** start pressure in bars as non zero positive number.*/
+    startPressure: number;
+    /** internal tank water volume in liters as non zero positive number. */
+    size: number;
+}
 
 export class Tanks {
     /**
@@ -91,7 +97,7 @@ export class Tank implements TankFill {
 
     /** Gets total volume at start pressure in liters */
     public get volume(): number {
-        return this.size * this.startPressure;
+        return Tank.volume(this);
     }
 
     /** Gets not null name of the content gas based on O2 and he fractions */
@@ -145,6 +151,11 @@ export class Tank implements TankFill {
     /** Creates 15 L, filled with 200 bar Air */
     public static createDefault(): Tank {
         return new Tank(15, 200, StandardGases.o2InAir * 100);
+    }
+
+    /** Gets total volume at start pressure in liters */
+    public static volume(tank: TankFill): number {
+        return tank.size * tank.startPressure;
     }
 
     public assignStandardGas(gasName: string): void {

@@ -1,9 +1,4 @@
-export interface TankFill {
-    /** start pressure in bars as non zero positive number.*/
-    startPressure: number;
-    /** internal tank water volume in liters as non zero positive number. */
-    volume: number;
-}
+import { Tank, TankFill } from './Tanks';
 
 /**
  * Blending result showing amount of each component used
@@ -86,19 +81,15 @@ export class GasBlender {
         GasBlender.validateTankFill(tankA, 'tankA');
         GasBlender.validateTankFill(tankB, 'tankB');
 
-        if (tankA.volume === 0 && tankB.volume === 0) {
+        if (tankA.size === 0 && tankB.size === 0) {
             return 0;
         }
 
-        const combinedVolume = tankA.volume + tankB.volume;
-        const tankVolumeA = GasBlender.tankGasVolume(tankA);
-        const tankVolumeB = GasBlender.tankGasVolume(tankB);
-        const result = (tankVolumeA + tankVolumeB) / combinedVolume;
+        const combinedSize = tankA.size + tankB.size;
+        const tankVolumeA = Tank.volume(tankA);
+        const tankVolumeB = Tank.volume(tankB);
+        const result = (tankVolumeA + tankVolumeB) / combinedSize;
         return result;
-    }
-
-    private static tankGasVolume(tank: TankFill): number {
-        return tank.startPressure * tank.volume;
     }
 
     private static n2(mix: Mix): number {
@@ -121,7 +112,7 @@ export class GasBlender {
     }
 
     private static validateTankFill(tank: TankFill, tankName: string): void {
-        if (tank.volume < 0) {
+        if (tank.size < 0) {
             throw new Error(`${tankName} Volume needs to be positive number.`);
         }
 

@@ -6,10 +6,10 @@
         </div>
     </div>
 
-    <div class="card-body card-minheight">
+    <div class="card-body card-minheight card-max-height-md">
         <div class="pb-3">
             <app-diff-gas-consumed-tank-chart
-                *ngFor="let tank of tanks" [tank]="tank" [showId]=true [toxicity]="toxicity"
+                *ngFor="let tank of tanks" [tank]="tank" [toxicity]="toxicity"
             ></app-diff-gas-consumed-tank-chart>
         </div>
     </div>

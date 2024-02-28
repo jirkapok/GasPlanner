@@ -35,7 +35,7 @@
     padding: 0px;
     height: 6em;
     top: .25em;
-    left: 50%;
+    left: calc(50% - 2px);
     width: 3px;
     background: darkgrey;
     text-align: right;
@@ -55,4 +55,13 @@
     * {
         transform: scaleX(-1);
     }
+}
+
+.img-wrapper {
+    width: fit-content;
+    height: fit-content;
+    align-content: center;
+    display: flex;
+    padding-right: .5em;
+    padding-left: .5em;
 }

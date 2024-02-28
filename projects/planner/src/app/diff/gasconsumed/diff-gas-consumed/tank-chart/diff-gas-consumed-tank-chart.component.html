@@ -1,11 +1,40 @@
-<div class="my-4">
-    <div class="d-flex flex-row justify-content-between">
-        <strong class="text-start"><span *ngIf="showId"> {{ tank.id }}.</span> {{ tank.name }}</strong>
-        <app-gaslabel [tank]="tank" [toxicity]="toxicity"  [showName]="false" class="text-end"></app-gaslabel>
+<div class="my-2">
+    <div>
+        <strong class="text-start">{{ tank.name }}</strong>
     </div>
-    <div class="d-flex flex-row justify-content-between">
-        <small class="text-start text-muted">Gas remaining: {{ endPressure | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}</small>
-        <small class="text-end text-muted">Rock bottom: <strong>{{ reserve | number:'1.0-0' }}</strong> {{units.pressure}}</small>
+    <div class="d-flex flex-row justify-content-around">
+        <small><strong class="text-start text-muted">Profile A</strong></small>
+        <small><strong class="text-start text-muted">Profile B</strong></small>
+    </div>
+    <div *ngIf="!collapsed" class="d-flex flex-row">
+        <div class="img-wrapper"><img src="./assets/icons/legend-gas.png" alt="Gas remaining"></div>
+        <div class="d-flex flex-row justify-content-between w-100">
+            <small class="text-start text-muted">
+                Gas remaining:
+                {{ endPressure | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}
+            </small>
+            <small class="text-end text-muted">
+                Gas remaining:
+                {{ endPressure | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}
+            </small>
+        </div>
+        <div class="img-wrapper"><img src="./assets/icons/legend-gas.png" alt="Gas remaining"></div>
+
+    </div>
+    <div *ngIf="!collapsed" class="d-flex flex-row">
+        <div class="img-wrapper"><img src="./assets/icons/legend-safetyReserve.png" alt="Safety reserve"></div>
+        <div class="d-flex flex-row justify-content-between w-100">
+            <small class="text-start text-muted">
+                Safety reserve:
+                {{ tank.reserve | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}
+            </small>
+            <small class="text-end text-muted">
+                Safety reserve:
+                {{ tank.reserve | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}
+            </small>
+        </div>
+        <div class="img-wrapper"><img src="./assets/icons/legend-safetyReserve.png" alt="Safety reserve"></div>
+
     </div>
     <div class="progress gas-bar mt-1 mb-2">
         <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"

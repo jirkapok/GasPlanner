@@ -15,7 +15,7 @@ export class GasConsumedDifferenceTankComponent {
     @Input()
     public toxicity = new GasToxicity();
     @Input()
-    public showId = false;
+    public collapsed = false;
 
     constructor(public units: UnitConversion) { }
 

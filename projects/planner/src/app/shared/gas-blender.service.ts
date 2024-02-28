@@ -12,10 +12,12 @@ export class GasBlenderService {
 
     constructor(private units: UnitConversion) {
         this._sourceTank = new TankBound(Tank.createDefault(), this.units);
+        this._sourceTank.startPressure = 0;
         // TODO move percents from tank new BoundGas
         this._topMix = new TankBound(Tank.createDefault(), this.units);
         this._topMix.assignStandardGas('EAN32');
         this._targetTank = new TankBound(Tank.createDefault(), this.units);
+        this._targetTank.assignStandardGas('EAN32');
         this.calculate();
     }
 
@@ -51,7 +53,8 @@ export class GasBlenderService {
         return this.removeFromSource > 0;
     }
 
-    private calculate(): void {
+    // TODO apply, when any field changes
+    public calculate(): void {
         // to avoid percents conversion to fraction
         const sourceMetric = this._sourceTank.tank;
         const targetMetric = this.targetTank.tank;

@@ -16,7 +16,7 @@
                         </div>
                         <div class="mb-2">
                             <label for="sourceHe" class="form-label">He [%]:</label>
-                            <input formControlName="tankHe" class="form-control" type="number"
+                            <input formControlName="sourceHe" class="form-control" type="number"
                                    (input)="applyChange()" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
                                    required [class.is-invalid]="sourceHeInvalid" id="sourceHe" />
                             <div class="text-danger" *ngIf="sourceHeInvalid">Needs to be number
@@ -25,8 +25,8 @@
                         <div>
                             <label for="sourcePressure" class="form-label">Pressure
                                 [{{units.pressure}}]:</label>
-                            <input formControlName="tankStartPressure" class="form-control" type="number"
-                                   (input)="applyChange()" required [min]="ranges.tankPressure[0]"
+                            <input formControlName="sourcePressure" class="form-control" type="number"
+                                   (input)="applyChange()" required [min]="0"
                                    [max]="ranges.tankPressure[1]" step="1" id="sourcePressure"
                                    [class.is-invalid]="sourcePressureInvalid" />
                             <div class="text-danger" *ngIf="sourcePressureInvalid">
@@ -42,7 +42,7 @@
                         </div>
                         <div class="mb-2">
                             <label for="topMixHe" class="form-label">He [%]:</label>
-                            <input formControlName="tankHe" class="form-control" type="number"
+                            <input formControlName="topMixHe" class="form-control" type="number"
                                    (input)="applyChange()" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
                                    required [class.is-invalid]="topMixHeInvalid" id="topMixHe" />
                             <div class="text-danger" *ngIf="topMixHeInvalid">Needs to be number
@@ -58,7 +58,7 @@
                         </div>
                         <div class="mb-2">
                             <label for="sourceHe" class="form-label">He [%]:</label>
-                            <input formControlName="tankHe" class="form-control" type="number"
+                            <input formControlName="targetHe" class="form-control" type="number"
                                    (input)="applyChange()" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
                                    required [class.is-invalid]="targetHeInvalid" id="targetHe" />
                             <div class="text-danger" *ngIf="targetHeInvalid">Needs to be number
@@ -67,7 +67,7 @@
                         <div>
                             <label for="sourcePressure" class="form-label">Pressure
                                 [{{units.pressure}}]:</label>
-                            <input formControlName="tankStartPressure" class="form-control" type="number"
+                            <input formControlName="targetPressure" class="form-control" type="number"
                                    (input)="applyChange()" required [min]="ranges.tankPressure[0]"
                                    [max]="ranges.tankPressure[1]" step="1" id="targetPressure"
                                    [class.is-invalid]="targetPressureInvalid" />

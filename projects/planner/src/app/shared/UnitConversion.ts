@@ -207,7 +207,7 @@ class MetricRanges implements RangeConstants {
     public readonly rmvRounding = 2;
     public readonly tankHe: [number, number] = [0, 99];
     public readonly tankHeLabel: string = toLabel(this.tankHe, '%');
-    public readonly tankPressure: [number, number] = [30, 350];
+    public readonly tankPressure: [number, number] = [1, 350];
     public readonly tankPressureLabel: string = toLabel(this.tankPressure, this.units.pressureShortcut);
     public readonly tankSize: [number, number] = [1, 50];
     public readonly tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);
@@ -243,7 +243,7 @@ class ImperialRanges implements RangeConstants {
     public readonly rmvRounding = 4;
     public readonly tankHe: [number, number] = [0, 99];
     public readonly tankHeLabel: string = toLabel(this.tankHe, '%');
-    public readonly tankPressure: [number, number] = [400, 5100];
+    public readonly tankPressure: [number, number] = [1, 5100];
     public readonly tankPressureLabel: string = toLabel(this.tankPressure, this.units.pressureShortcut);
     public readonly tankSize: [number, number] = [1, 300];
     public readonly tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);

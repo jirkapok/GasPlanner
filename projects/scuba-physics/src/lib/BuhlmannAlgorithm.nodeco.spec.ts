@@ -1,9 +1,10 @@
 import { Time } from './Time';
 import { BuhlmannAlgorithm, AlgorithmParams } from './BuhlmannAlgorithm';
-import { Gases, StandardGases } from './Gases';
+import { Gases } from './Gases';
 import { Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
 import { Salinity } from './pressure-converter';
+import { StandardGases } from './StandardGases';
 
 describe('Buhlmann Algorithm - No decompression times', () => {
     it('Ndl at surface returns Infinity', () => {

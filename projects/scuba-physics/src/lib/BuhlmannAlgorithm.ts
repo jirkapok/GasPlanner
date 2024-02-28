@@ -1,5 +1,5 @@
 import { LoadedTissue, LoadSegment, Tissues, TissuesValidator } from './Tissues';
-import { Gas, Gases, GasesValidator, StandardGases } from './Gases';
+import { Gas, Gases, GasesValidator } from './Gases';
 import { Segment, Segments, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Time } from './Time';
@@ -7,8 +7,9 @@ import { CalculatedProfile, Ceiling, Event } from './Profile';
 import { Options } from './Options';
 import { Precision } from './precision';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
-import { AltitudePressure, PressureConverter, Salinity } from './pressure-converter';
+import { Salinity } from './pressure-converter';
 import { AlgorithmContext, ContextMemento } from './AlgorithmContext';
+import { StandardGases } from './StandardGases';
 
 // Speed in meters / min.
 const durationFor = (depthDifference: number, speed: number): number => {

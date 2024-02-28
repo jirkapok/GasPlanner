@@ -1,9 +1,9 @@
 import { CnsCalculator } from './cnsCalculator';
 import { DepthConverter } from './depth-converter';
-import { StandardGases } from './Gases';
 import { ToxicityProfiles } from './OtuCalculator.spec';
 import { Segment } from './Segments';
 import { Time } from './Time';
+import { StandardGases } from './StandardGases';
 
 describe('CNSCalculatorService', () => {
     const depthConverter = DepthConverter.simple();

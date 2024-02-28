@@ -1,6 +1,6 @@
 import { OptionExtensions } from './Options.spec';
-import { StandardGases } from './Gases';
 import { GasToxicity } from './gasToxicity';
+import { StandardGases } from './StandardGases';
 
 describe('GasToxicity service', () => {
     it('MND for 12/35 returns 52 m', () => {

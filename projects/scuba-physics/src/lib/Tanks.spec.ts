@@ -1,5 +1,5 @@
-import { StandardGases } from './Gases';
 import { Tank } from './Tanks';
+import { StandardGases } from './StandardGases';
 
 describe('Tank', () => {
     let tank: Tank;

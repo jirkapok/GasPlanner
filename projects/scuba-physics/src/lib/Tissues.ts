@@ -1,7 +1,9 @@
 import { Compartments, Compartment } from './Compartments';
-import { GasMixtures, Gas, StandardGases } from './Gases';
+import { Gas } from './Gases';
 import _ from 'lodash';
 import { AltitudePressure, PressureConverter } from './pressure-converter';
+import { GasMixtures } from './GasMixtures';
+import { StandardGases } from './StandardGases';
 
 /**
  * Represents transition between depths during dive

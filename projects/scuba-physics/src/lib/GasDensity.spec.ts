@@ -1,8 +1,8 @@
 import { DensityAtDepth, GasDensity, HighestDensity } from './GasDensity';
-import { StandardGases } from './Gases';
 import { Segment } from './Segments';
 import { Time } from './Time';
 import { DepthConverter } from './depth-converter';
+import { StandardGases } from './StandardGases';
 
 describe('Gas Density', () => {
     describe('at 1 ATA', () => {

@@ -1,7 +1,7 @@
 import { LoadedTissue, LoadSegment, Tissue, Tissues, TissuesValidator } from './Tissues';
 import { Compartments } from './Compartments';
-import { StandardGases } from './Gases';
 import { Time } from './Time';
+import { StandardGases } from './StandardGases';
 
 describe('Tissues', () => {
     const createTissue = () => new Tissue(Compartments.buhlmannZHL16C[0], 1);

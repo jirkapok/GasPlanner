@@ -5,9 +5,10 @@ import {
 } from './BuhlmannAlgorithm';
 import { LoadedTissue, Tissues } from './Tissues';
 import { Precision } from './precision';
-import { Gases, StandardGases } from './Gases';
+import { Gases } from './Gases';
 import { Segments } from './Segments';
 import { Options } from './Options';
+import { StandardGases } from './StandardGases';
 
 describe('Buhlmann Algorithm - Repetitive dives', () => {
     const sut = new BuhlmannAlgorithm();

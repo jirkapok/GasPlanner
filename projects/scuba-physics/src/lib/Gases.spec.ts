@@ -1,11 +1,13 @@
 import {
     Gases, Gas, GasesValidator,
-    GasMixtures, GasOptions, BestGasOptions,
-    StandardGases, OCGasSource
+    GasOptions, BestGasOptions,
+    OCGasSource
 } from './Gases';
 import { DepthConverter } from './depth-converter';
 import { SafetyStop } from './Options';
 import { Precision } from './precision';
+import { GasMixtures } from './GasMixtures';
+import { StandardGases } from './StandardGases';
 
 describe('Gases', () => {
     const options: GasOptions = {

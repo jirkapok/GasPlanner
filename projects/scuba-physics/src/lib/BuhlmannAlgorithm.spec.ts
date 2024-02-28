@@ -1,10 +1,11 @@
 import { Time } from './Time';
 import {AlgorithmParams, BuhlmannAlgorithm} from './BuhlmannAlgorithm';
-import { Gas, Gases, StandardGases } from './Gases';
+import { Gas, Gases } from './Gases';
 import { Segment, Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
 import { Salinity } from './pressure-converter';
 import { SafetyStop } from './Options';
+import { StandardGases } from './StandardGases';
 
 describe('Buhlmann Algorithm - Plan', () => {
     // gradientFactorLow = 0.4, gradientFactorHigh=0.85, deco ppO2 = 1.6, and max END allowed: 30 meters.

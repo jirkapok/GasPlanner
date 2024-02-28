@@ -11,7 +11,7 @@
                         <div>Source</div>
                         <div class="mb-2">
                             <app-oxygen-dropdown [tank]="blender.sourceTank" (gasChange)="applyChange()"
-                                                 [showBestMix]="false" (standardGasApplied)="applyChange()" controlName="sourceO2"
+                                                 [showBestMix]="false" (standardGasApplied)="applyTemplate()" controlName="sourceO2"
                                                  [showTrimixGases]="true" [nitroxForm]="blenderForm" />
                         </div>
                         <div class="mb-2">
@@ -36,8 +36,8 @@
                     <div class="col col-12 col-sm-4 mb-2">
                         <div>Top mix</div>
                         <div class="mb-2">
-                            <app-oxygen-dropdown [tank]="blender.sourceTank" (gasChange)="applyChange()"
-                                                 [showBestMix]="false" (standardGasApplied)="applyChange()" controlName="topMixO2"
+                            <app-oxygen-dropdown [tank]="blender.topMix" (gasChange)="applyChange()"
+                                                 [showBestMix]="false" (standardGasApplied)="applyTemplate()" controlName="topMixO2"
                                                  [showTrimixGases]="true" [nitroxForm]="blenderForm" />
                         </div>
                         <div class="mb-2">
@@ -52,8 +52,8 @@
                     <div class="col col-12 col-sm-4 mb-2">
                         <div>Target</div>
                         <div class="mb-2">
-                            <app-oxygen-dropdown [tank]="blender.sourceTank" (gasChange)="applyChange()"
-                                                 [showBestMix]="false" (standardGasApplied)="applyChange()" controlName="targetO2"
+                            <app-oxygen-dropdown [tank]="blender.targetTank" (gasChange)="applyChange()"
+                                                 [showBestMix]="false" (standardGasApplied)="applyTemplate()" controlName="targetO2"
                                                  [showTrimixGases]="true" [nitroxForm]="blenderForm" />
                         </div>
                         <div class="mb-2">

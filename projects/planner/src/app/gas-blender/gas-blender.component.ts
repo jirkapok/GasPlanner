@@ -111,12 +111,26 @@ export class GasBlenderComponent implements OnInit {
         this.blender.calculate();
     }
 
+    public applyTemplate(): void {
+        if(this.blenderForm.invalid) {
+            return;
+        }
+
+        this.blenderForm.patchValue({
+            sourceO2: this.blender.sourceTank.o2,
+            sourceHe: this.blender.sourceTank.he,
+            topMixO2: this.blender.topMix.o2,
+            topMixHe: this.blender.topMix.he,
+            targetO2: this.blender.targetTank.o2,
+            targetHe: this.blender.targetTank.he
+        });
+
+        this.applyChange();
+    }
+
     // TODO Gas blender component:
-    // add service tests
-    // On source mix template change
-    // On top mix template change
-    // On target mix template change
     // Do we need Reload?
+    // add service tests
     // Invalid controls
     // save/load state
 }

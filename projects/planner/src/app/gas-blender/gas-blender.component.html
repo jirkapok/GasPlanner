@@ -1,14 +1,14 @@
 <form [formGroup]="blenderForm">
     <div class="row mt-5">
-        <div class="col col-12 col-sm-5 col-md-4 col-lg-3 col-xxl-2 mt-3">
+        <div class="col col-12 col-md-8 col-lg-6 col-xxl-6 mt-3">
             <div class="card">
                 <div class="card-header">
                     <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
                     <span>Gas blender</span>
                 </div>
-                <div class="card-body">
-                    <div class="row mb-2">
-                        <div>Source tank</div>
+                <div class="card-body row">
+                    <div class="col col-12 col-sm-4 mb-2">
+                        <div>Source</div>
                         <div class="mb-2">
                             <app-oxygen-dropdown [tank]="blender.sourceTank" (gasChange)="applyChange()"
                                                  [showBestMix]="false" (standardGasApplied)="applyChange()" controlName="sourceO2"
@@ -33,7 +33,7 @@
                                 Needs to be number {{ranges.tankPressureLabel}}</div>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="col col-12 col-sm-4 mb-2">
                         <div>Top mix</div>
                         <div class="mb-2">
                             <app-oxygen-dropdown [tank]="blender.sourceTank" (gasChange)="applyChange()"
@@ -49,7 +49,7 @@
                                 {{ranges.tankHeLabel}}</div>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="col col-12 col-sm-4 mb-2">
                         <div>Target</div>
                         <div class="mb-2">
                             <app-oxygen-dropdown [tank]="blender.sourceTank" (gasChange)="applyChange()"
@@ -78,7 +78,7 @@
                 </div>
             </div>
         </div>
-        <div class="col col-12 col-sm-5 col-md-4 col-lg-3 col-xxl-2 mt-3">
+        <div class="col col-12 col-md-4 col-lg-3 col-xxl-2 mt-3">
             <div class="card">
                 <div class="card-header">
                     <span>Results</span>

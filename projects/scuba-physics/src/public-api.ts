@@ -33,3 +33,4 @@ export * from './lib/Time';
 export { LoadedTissue } from './lib/Tissues';
 export * from './lib/units';
 export * from './lib/weight';
+export * from './lib/consumptionByMix';

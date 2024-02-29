@@ -20,8 +20,7 @@ import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { Time } from 'scuba-physics';
 import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
-import { MaskitoModule } from '@maskito/angular';
-import { DepthComponent } from "../depth/depth.component";
+import { DepthComponent } from '../depth/depth.component';
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
@@ -55,8 +54,8 @@ describe('Depths Simple Component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ DepthsSimpleComponent, SurfaceIntervalComponent, DepthComponent ],
-            imports: [ ReactiveFormsModule, MaskitoModule ],
+            declarations: [ DepthsSimpleComponent, DepthComponent ],
+            imports: [ ReactiveFormsModule, SurfaceIntervalComponent ],
             providers: [
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls, DiveSchedules,

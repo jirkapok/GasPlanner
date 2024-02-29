@@ -13,7 +13,7 @@ describe('SurfaceIntervalComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [SurfaceIntervalComponent],
+            imports: [ SurfaceIntervalComponent ],
             providers: [
                 DiveSchedules, UnitConversion, DecimalPipe,
                 ReloadDispatcher, InputControls, ValidatorGroups

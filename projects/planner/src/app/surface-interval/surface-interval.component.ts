@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
+import {
+    AbstractControl, FormControl, FormGroup,
+    NonNullableFormBuilder, ReactiveFormsModule
+} from '@angular/forms';
 import { maskitoTimeOptionsGenerator } from '@maskito/kit';
+import { MaskitoDirective } from '@maskito/angular';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { takeUntil } from 'rxjs';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
@@ -8,11 +12,19 @@ import { Streamed } from '../shared/streamed';
 import { DateFormats } from '../shared/formaters';
 import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-surface-interval',
     templateUrl: './surface-interval.component.html',
-    styleUrls: ['./surface-interval.component.scss']
+    styleUrls: ['./surface-interval.component.scss'],
+    standalone: true,
+    imports: [
+        MaskitoDirective, ReactiveFormsModule,
+        MdbDropdownModule, MdbFormsModule, NgIf
+    ]
 })
 export class SurfaceIntervalComponent extends Streamed implements OnInit {
     @Input() public form!: FormGroup;

@@ -87,7 +87,6 @@ import {ManagedDiveSchedules} from './shared/managedDiveSchedules';
 import {WaypointsDifferenceComponent} from './diff/waypoints/diff-waypoints.component';
 import {DiveInfoDifferenceComponent} from './diff/diveinfo/diff-diveinfo.component';
 import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilechart.component';
-import {MaskitoModule} from '@maskito/angular';
 import {SurfaceIntervalComponent} from './surface-interval/surface-interval.component';
 import {TestDataInjector} from './diff/testData/testDataInjector';
 import {ProfileComparatorService} from './shared/profileComparatorService';
@@ -150,7 +149,6 @@ const COMPONENTS = [
     RedundanciesComponent,
     SacComponent,
     SalinityComponent,
-    SurfaceIntervalComponent,
     TankChartComponent,
     TanksComplexComponent,
     TanksSimpleComponent,
@@ -160,6 +158,10 @@ const COMPONENTS = [
     WaypointsDifferenceComponent,
 
     LoadTestDataComponent
+];
+
+const STANDALONE = [
+    SurfaceIntervalComponent,
 ];
 
 const SERVICES = [
@@ -205,14 +207,14 @@ const SERVICES = [
     imports: [
         ...ANGULAR_MODULES,
         ...MDB_MODULES,
+        STANDALONE,
         ClipboardModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,
             // Register the ServiceWorker as soon as the application is stable
             // or after 30 seconds (whichever comes first).
             registrationStrategy: 'registerWhenStable:30000'
-        }),
-        MaskitoModule  // TODO replace obsolite MaskitoModule
+        })
     ],
     exports: [],
     providers: SERVICES,

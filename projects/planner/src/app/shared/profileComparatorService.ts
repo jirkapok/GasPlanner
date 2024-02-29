@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {DiveSchedule, DiveSchedules} from './dive.schedules';
 import {DiveResults} from './diveresults';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {ConsumptionByMix, IConsumedMix} from 'scuba-physics';
 
 @Injectable()
 export class ProfileComparatorService {
@@ -41,6 +42,14 @@ export class ProfileComparatorService {
 
     public get profileBResults(): DiveResults {
         return this.profileB.diveResult;
+    }
+
+    public get profileACombinedTanks(): IConsumedMix[] {
+        return ConsumptionByMix.combine(this.profileA.tanksService.tankData);
+    }
+
+    public get profileBCombinedTanks(): IConsumedMix[] {
+        return ConsumptionByMix.combine(this.profileB.tanksService.tankData);
     }
 
     private set profileAIndex(value: number) {

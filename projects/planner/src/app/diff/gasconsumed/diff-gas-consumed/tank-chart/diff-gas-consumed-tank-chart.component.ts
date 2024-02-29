@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UnitConversion} from '../../../../shared/UnitConversion';
 import {IConsumedMix, StandardGases} from 'scuba-physics';
+import { faArrowLeft, faArrowRight, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-diff-gas-consumed-tank-chart',
@@ -24,6 +25,10 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
         };
     @Input()
     public collapsed = false;
+
+    public faArrowLeft = faArrowLeft;
+    public faArrowRight = faArrowRight;
+    public faMinus = faMinus;
 
     private profileAGasRemaining = this.profileACombinedGas.total - this.profileACombinedGas.consumed;
     private profileBGasRemaining = this.profileBCombinedGas.total - this.profileBCombinedGas.consumed;

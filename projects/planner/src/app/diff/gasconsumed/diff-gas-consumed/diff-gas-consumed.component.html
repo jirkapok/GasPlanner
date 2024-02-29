@@ -9,7 +9,7 @@
     <div class="card-body card-minheight card-max-height-md">
         <div class="pb-3">
             <app-diff-gas-consumed-tank-chart
-                *ngFor="let tank of tanks" [tank]="tank" [toxicity]="toxicity"
+                *ngFor="let tank of getMixedTanks" [profileACombinedGas]="tank.profileA" [profileBCombinedGas]="tank.profileB"
             ></app-diff-gas-consumed-tank-chart>
         </div>
     </div>

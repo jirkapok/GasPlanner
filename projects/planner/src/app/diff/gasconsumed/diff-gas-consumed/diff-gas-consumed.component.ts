@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {GasToxicity, Tank} from 'scuba-physics';
 import {faSlidersH} from '@fortawesome/free-solid-svg-icons';
 import {ProfileComparatorService} from '../../../shared/profileComparatorService';
 import {IConsumedMix, StandardGases} from 'scuba-physics';
@@ -19,14 +18,6 @@ export class GasConsumedDifferenceComponent {
     public icon = faSlidersH;
 
     constructor(public profileComparatorService: ProfileComparatorService) {
-    }
-
-    public get tanks(): Tank[] {
-        return this.profileComparatorService.profileA.tanksService.tankData;
-    }
-
-    public get toxicity(): GasToxicity {
-        return this.profileComparatorService.profileA.optionsService.toxicity;
     }
 
     public get getMixedTanks(): IMixedTanksForComparison[] {

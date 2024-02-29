@@ -1,6 +1,6 @@
 <div class="my-2">
     <div>
-        <strong class="text-start">{{ tank.name }}</strong>
+        <strong class="text-start">{{ gasName }}</strong>
     </div>
     <div class="d-flex flex-row justify-content-around">
         <small><strong class="text-start text-muted">Profile A</strong></small>
@@ -9,48 +9,50 @@
     <div *ngIf="!collapsed" class="d-flex flex-row">
         <div class="img-wrapper"><img src="./assets/icons/legend-gas.png" alt="Gas remaining"></div>
         <div class="d-flex flex-row justify-content-between w-100">
-            <small class="text-start text-muted">
+            <small *ngIf="gasTotalProfileA != 0 else missingTank" class="text-start text-muted">
                 Gas remaining:
-                {{ endPressure | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}
+                {{ gasRemainingProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
             </small>
-            <small class="text-end text-muted">
+            <small *ngIf="gasTotalProfileB != 0 else missingTank" class="text-end text-muted">
                 Gas remaining:
-                {{ endPressure | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}
+                {{ gasRemainingProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
             </small>
         </div>
-        <div class="img-wrapper"><img src="./assets/icons/legend-gas.png" alt="Gas remaining"></div>
 
     </div>
     <div *ngIf="!collapsed" class="d-flex flex-row">
         <div class="img-wrapper"><img src="./assets/icons/legend-safetyReserve.png" alt="Safety reserve"></div>
         <div class="d-flex flex-row justify-content-between w-100">
-            <small class="text-start text-muted">
+            <small *ngIf="gasTotalProfileA != 0" class="text-start text-muted">
                 Safety reserve:
-                {{ tank.reserve | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}
+                {{ gasReserveProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
             </small>
-            <small class="text-end text-muted">
+            <small *ngIf="gasTotalProfileB != 0" class="text-end text-muted">
                 Safety reserve:
-                {{ tank.reserve | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}
+                {{ gasReserveProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
             </small>
         </div>
-        <div class="img-wrapper"><img src="./assets/icons/legend-safetyReserve.png" alt="Safety reserve"></div>
 
     </div>
     <div class="progress gas-bar mt-1 mb-2">
-        <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"
-             [attr.aria-valuenow]="tank.reserve" class="reserve-bar rounded-progress">
+        <div class="reserve-bar rounded-progress"></div>
+        <div class="combined_wrapper" [ngClass]="{'flip': gasRemainingDifference > 0}" >
+            <div role="progressbar"
+                 class="progress-bar rounded-progress bg-primary"
+                 [style.width]="gasRemainingPercentageDifference + '%'">
+                {{Math.abs(gasRemainingDifference) | number:'1.0-0' }}</div>
         </div>
-        <div class="combined_wrapper">
-            <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"
-                 [ngClass]="{'progress-bar rounded-progress': true, 'bg-primary': tank.hasReserve, 'bg-danger': !tank.hasReserve }"
-                 [attr.aria-valuenow]="tank.endPressure" [style.width]="tank.percentsRemaining/2 + '%'">
-                {{endPressure | number:'1.0-0' }}</div>
-        </div>
-        <div class="combined_wrapper flip">
-            <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="tank.startPressure"
+        <div class="combined_wrapper" [ngClass]="{'flip': gasReserveDifference > 0}" >
+            <div role="progressbar"
                  class="progress-bar rounded-progress bg-warning "
-                 [attr.aria-valuenow]="tank.endPressure" [style.width]="tank.percentsReserve/2 + '%'">
-                {{tank.reserve | number:'1.0-0' }}</div>
+                 [style.width]="gasReservePercentageDifference + '%'">
+                {{Math.abs(gasReserveDifference) | number:'1.0-0' }}</div>
         </div>
     </div>
 </div>
+
+
+<ng-template #missingTank>
+    <small class="text-start text-muted">
+        {{ gasName }} is not present
+    </small>

@@ -50,7 +50,7 @@
         <div class="d-flex flex-row">
             <div class="img-wrapper"><img src="./assets/icons/legend-safetyReserve.png" alt="Safety reserve"></div>
             <div class="d-flex flex-row justify-content-between w-100">
-                <small *ngIf="gasTotalProfileA != 0" class="text-start text-muted">
+                <small *ngIf="gasTotalProfileA != 0 else whiteSpace" class="text-start text-muted">
                     Safety reserve:
                     {{ gasReserveProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
                 </small>
@@ -83,3 +83,7 @@
     <small class="text-start text-muted">
         {{ gasName }} is not present
     </small>
+</ng-template>
+<ng-template #whiteSpace>
+    <small></small>
+</ng-template>

@@ -33,12 +33,16 @@ export class GasConsumedDifferenceComponent {
         for (const tankA of this.profileComparatorService.profileACombinedTanks) {
             const tankB: IConsumedMix | undefined = this.profileComparatorService.profileBCombinedTanks
                 .find(t => t.gas.contentCode() === tankA.gas.contentCode());
+            if (tankB === undefined) {
+                emptyTank.gas = tankA.gas.copy();
+            }
             mixedTanks.push({ profileA: tankA, profileB: tankB ?? emptyTank });
         }
 
         for (const tankB of this.profileComparatorService.profileBCombinedTanks) {
             if (!mixedTanks.find(mt => mt.profileB?.gas.contentCode() === tankB.gas.contentCode()
             )){
+                emptyTank.gas = tankB.gas.copy();
                 mixedTanks.push({ profileA: emptyTank, profileB: tankB });
             }
         }

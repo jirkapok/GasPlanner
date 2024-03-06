@@ -13,9 +13,10 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
-describe('GasBlenderComponent', () => {
+fdescribe('GasBlenderComponent', () => {
     let component: GasBlenderComponent;
     let fixture: ComponentFixture<GasBlenderComponent>;
+    let calculateSpy: jasmine.Spy<() => void>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -31,9 +32,19 @@ describe('GasBlenderComponent', () => {
         fixture = TestBed.createComponent(GasBlenderComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        const calc = TestBed.inject(GasBlenderService);
+        calculateSpy = spyOn(calc, 'calculate');
     });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
+    it('Apply change calls calculate', () => {
+        component.applyChange();
+
+        expect(calculateSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Apply template calls calculate', () => {
+        component.applyTemplate();
+
+        expect(calculateSpy).toHaveBeenCalledTimes(1);
     });
 });

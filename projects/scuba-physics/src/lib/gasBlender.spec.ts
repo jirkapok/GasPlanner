@@ -25,24 +25,25 @@ describe('Gas Blender', () => {
     };
 
     const assertResult = (request: MixRequest, expectedTop: number, expectedO2: number,
-        expectedHe: number, expecedRemove: number = 0): void => {
+        expectedHe: number, expectedRemove: number = 0): void => {
+        const precision = 6;
         const result = GasBlender.mix(request);
 
-        expect(result.addTop).withContext('top pressure').toBeCloseTo(expectedTop, 6);
-        expect(result.addO2).withContext('add O2').toBeCloseTo(expectedO2, 6);
-        expect(result.addHe).withContext('add He').toBeCloseTo(expectedHe, 6);
+        expect(result.addTop).withContext('top pressure').toBeCloseTo(expectedTop, precision);
+        expect(result.addO2).withContext('add O2').toBeCloseTo(expectedO2, precision);
+        expect(result.addHe).withContext('add He').toBeCloseTo(expectedHe, precision);
 
         const sourcePressure = request.source.pressure - result.removeFromSource;
         const finalPpO2 = (request.source.o2 * sourcePressure + request.topMix.o2 * result.addTop + result.addO2)
                             / request.target.pressure;
-        expect(request.target.o2).withContext('final pp O2').toBeCloseTo(finalPpO2, 6);
+        expect(request.target.o2).withContext('final pp O2').toBeCloseTo(finalPpO2, precision);
         const finalPpHe = (request.source.he * sourcePressure + request.topMix.he * result.addTop + result.addHe)
                             / request.target.pressure;
-        expect(request.target.he).withContext('final pp He').toBeCloseTo(finalPpHe, 6);
+        expect(request.target.he).withContext('final pp He').toBeCloseTo(finalPpHe, precision);
 
         const total = sourcePressure + result.addTop + result.addO2 + result.addHe;
-        expect(request.target.pressure).withContext('Sum pressures').toBeCloseTo(total, 6);
-        expect(result.removeFromSource).toBeCloseTo(expecedRemove, 6);
+        expect(request.target.pressure).withContext('Sum pressures').toBeCloseTo(total, precision);
+        expect(result.removeFromSource).toBeCloseTo(expectedRemove, precision);
     };
 
     describe('Parameters validation', () => {
@@ -136,7 +137,7 @@ describe('Gas Blender', () => {
                 assertResult(request, 147.058824, 52.941176, 0);
             });
 
-            it('Ignores small numbers rounding', () => {
+            it('Fixes small numbers rounding', () => {
                 const request = createEmptyRequest();
                 request.topMix.o2 = 0.32;
                 request.target.o2 = 0.32;

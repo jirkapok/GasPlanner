@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { GasBlender, MixRequest, MixResult, Tank } from 'scuba-physics';
+import {
+    GasBlender, MixRequest, MixResult, Tank
+} from 'scuba-physics';
 import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
 
@@ -8,11 +10,17 @@ export class GasBlenderService {
     private readonly _sourceTank: TankBound;
     private readonly _topMix: TankBound;
     private readonly _targetTank: TankBound;
-    private results!: MixResult;
+    private _addO2 = 0;
+    private _addHe = 0;
+    private _addTop = 0;
+    private _removeFromSource = 0;
+    private _unableToCalculate = false;
 
     constructor(private units: UnitConversion) {
+        // create default tank based on units
         this._sourceTank = new TankBound(Tank.createDefault(), this.units);
         this._sourceTank.startPressure = 0;
+        // TODO set target tank pressure based on units
         // TODO move percents from tank new BoundGas
         this._topMix = new TankBound(Tank.createDefault(), this.units);
         this._topMix.assignStandardGas('EAN32');
@@ -34,33 +42,52 @@ export class GasBlenderService {
     }
 
     public get addO2(): number {
-        return this.results.addO2 * 100;
+        return this.units.fromBar(this._addO2);
     }
 
     public get addHe(): number {
-        return this.results.addHe * 100;
+        return this.units.fromBar(this._addHe);
     }
 
     public get addTop(): number {
-        return this.results.addTop;
+        return this.units.fromBar(this._addTop);
     }
 
     public get removeFromSource(): number {
-        return this.results.removeFromSource;
+        return this.units.fromBar(this._removeFromSource);
     }
 
     public get needsRemove(): boolean {
         return this.removeFromSource > 0;
     }
 
-    // TODO apply, when any field changes
+    public get unableToCalculate(): boolean {
+        return this._unableToCalculate;
+    }
+
+    /**
+     *  Needs to be applied, when any field changes.
+     **/
     public calculate(): void {
+        try {
+            const request: MixRequest = this.createRequest();
+            const results = GasBlender.mix(request);
+            this.applyResults(results);
+            this._unableToCalculate = false;
+        } catch {
+            const results: MixResult = { addHe: 0, addO2: 0, addTop: 0, removeFromSource: 0 };
+            this.applyResults(results);
+            this._unableToCalculate = true;
+        }
+    }
+
+    private createRequest(): MixRequest {
         // to avoid percents conversion to fraction
         const sourceMetric = this._sourceTank.tank;
         const targetMetric = this.targetTank.tank;
         const topMetric = this.topMix.tank;
 
-        const request: MixRequest = {
+        return {
             source: {
                 pressure: sourceMetric.startPressure,
                 o2: sourceMetric.gas.fO2,
@@ -76,7 +103,12 @@ export class GasBlenderService {
                 he: topMetric.gas.fHe
             }
         };
+    }
 
-        this.results = GasBlender.mix(request);
+    private applyResults(results: MixResult): void {
+        this._addO2 = results.addO2;
+        this._addHe = results.addHe;
+        this._addTop = results.addTop;
+        this._removeFromSource = results.removeFromSource;
     }
 }

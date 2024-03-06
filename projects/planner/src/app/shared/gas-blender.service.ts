@@ -20,7 +20,7 @@ export class GasBlenderService {
         // create default tank based on units
         this._sourceTank = new TankBound(Tank.createDefault(), this.units);
         this._sourceTank.startPressure = 0;
-        // TODO move percents from tank new BoundGas
+        // TODO move percents from tank to new BoundGas
         this._topMix = new TankBound(Tank.createDefault(), this.units);
         this._topMix.assignStandardGas('EAN32');
         this._targetTank = new TankBound(Tank.createDefault(), this.units);

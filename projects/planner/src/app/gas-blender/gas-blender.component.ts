@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faCalculator, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { GasBlenderService } from '../shared/gas-blender.service';
@@ -28,6 +28,7 @@ interface IGasBlenderForm {
 })
 export class GasBlenderComponent implements OnInit {
     public readonly calcIcon = faCalculator;
+    public exclamation = faExclamationTriangle;
     public blenderForm!: FormGroup<IGasBlenderForm>;
 
     constructor(
@@ -177,7 +178,6 @@ export class GasBlenderComponent implements OnInit {
         this.viewStates.saveView(viewState);
     }
 
-    // TODO Gas blender component: we need normalization of view state stored in metric, when imperial units are selected
     private createDefaultState(): BlenderViewState {
         return {
             id: KnownViews.blender,
@@ -201,7 +201,6 @@ export class GasBlenderComponent implements OnInit {
     private loadTankState(tank: Tank, state: TankMix): void {
         tank.o2 = state.o2;
         tank.he = state.he;
-        // TODO normalize pressure by units
         tank.startPressure = state.pressure;
     }
 

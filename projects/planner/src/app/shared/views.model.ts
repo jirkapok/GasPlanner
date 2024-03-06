@@ -23,6 +23,22 @@ export interface RedundanciesViewState extends ViewState {
     secondTank: TankFillState;
 }
 
+export interface BlenderViewState extends ViewState {
+    source: TankMix;
+    target: TankMix;
+    topMix: Mix;
+}
+
+export interface TankMix extends Mix {
+    /** current pressure in bars */
+    pressure: number;
+}
+
+export interface Mix {
+    o2: number;
+    he: number;
+}
+
 export interface TankFillState {
     startPressure: number;
     workingPressure: number;

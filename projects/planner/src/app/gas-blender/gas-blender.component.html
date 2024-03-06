@@ -10,7 +10,7 @@
                     <div class="col col-12 col-sm-4 mb-2">
                         <div>Source</div>
                         <div class="mb-2">
-                            <app-oxygen-dropdown [tank]="blender.sourceTank" (gasChange)="applyChange()"
+                            <app-oxygen-dropdown [tank]="calc.sourceTank" (gasChange)="applyChange()"
                                                  [showBestMix]="false" (standardGasApplied)="applyTemplate()" controlName="sourceO2"
                                                  [showTrimixGases]="true" [nitroxForm]="blenderForm" />
                         </div>
@@ -36,7 +36,7 @@
                     <div class="col col-12 col-sm-4 mb-2">
                         <div>Top mix</div>
                         <div class="mb-2">
-                            <app-oxygen-dropdown [tank]="blender.topMix" (gasChange)="applyChange()"
+                            <app-oxygen-dropdown [tank]="calc.topMix" (gasChange)="applyChange()"
                                                  [showBestMix]="false" (standardGasApplied)="applyTemplate()" controlName="topMixO2"
                                                  [showTrimixGases]="true" [nitroxForm]="blenderForm" />
                         </div>
@@ -52,7 +52,7 @@
                     <div class="col col-12 col-sm-4 mb-2">
                         <div>Target</div>
                         <div class="mb-2">
-                            <app-oxygen-dropdown [tank]="blender.targetTank" (gasChange)="applyChange()"
+                            <app-oxygen-dropdown [tank]="calc.targetTank" (gasChange)="applyChange()"
                                                  [showBestMix]="false" (standardGasApplied)="applyTemplate()" controlName="targetO2"
                                                  [showTrimixGases]="true" [nitroxForm]="blenderForm" />
                         </div>

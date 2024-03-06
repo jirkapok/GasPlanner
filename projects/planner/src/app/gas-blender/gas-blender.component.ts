@@ -5,7 +5,10 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { GasBlenderService } from '../shared/gas-blender.service';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
-import { Precision } from 'scuba-physics';
+import { Precision, StandardGases, Tank } from 'scuba-physics';
+import { BlenderViewState, TankMix } from '../shared/views.model';
+import { KnownViews } from '../shared/viewStates';
+import { SubViewStorage } from '../shared/subViewStorage';
 
 interface IGasBlenderForm {
     sourceO2: FormControl<number>;
@@ -29,9 +32,10 @@ export class GasBlenderComponent implements OnInit {
 
     constructor(
         public units: UnitConversion,
-        public blender: GasBlenderService,
+        public calc: GasBlenderService,
         private validators: ValidatorGroups,
         private inputs: InputControls,
+        private viewStates: SubViewStorage,
         private fb: NonNullableFormBuilder) {
     }
 
@@ -40,23 +44,23 @@ export class GasBlenderComponent implements OnInit {
     }
 
     public get addO2(): number {
-        return this.blender.addO2;
+        return this.calc.addO2;
     }
 
     public get addHe(): number {
-        return this.blender.addHe;
+        return this.calc.addHe;
     }
 
     public get addTopMix(): number {
-        return this.blender.addTop;
+        return this.calc.addTop;
     }
 
     public get removeFromSource(): number {
-        return this.blender.removeFromSource;
+        return this.calc.removeFromSource;
     }
 
     public get needsRemove(): boolean {
-        return this.blender.needsRemove;
+        return this.calc.needsRemove;
     }
 
     public get sourceHeInvalid(): boolean {
@@ -87,18 +91,21 @@ export class GasBlenderComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.loadState();
+        this.saveState();
+
         // custom range to allow mix to empty tank
         const pressureRange: [number, number] = [0, this.ranges.tankPressure[1]];
         const pressureValidator = this.validators.rangeFor(pressureRange);
         this.blenderForm = this.fb.group({
-            sourceO2: [this.blender.sourceTank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
-            sourceHe: [this.blender.sourceTank.he, this.validators.rangeFor(this.ranges.tankHe)],
-            sourcePressure: [Precision.round(this.blender.sourceTank.startPressure, 1), pressureValidator],
-            topMixO2: [this.blender.topMix.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
-            topMixHe: [this.blender.topMix.he, this.validators.rangeFor(this.ranges.tankHe)],
-            targetO2: [this.blender.targetTank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
-            targetHe: [this.blender.targetTank.he, this.validators.rangeFor(this.ranges.tankHe)],
-            targetPressure: [Precision.round(this.blender.targetTank.startPressure, 1), pressureValidator]
+            sourceO2: [this.calc.sourceTank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
+            sourceHe: [this.calc.sourceTank.he, this.validators.rangeFor(this.ranges.tankHe)],
+            sourcePressure: [Precision.round(this.calc.sourceTank.startPressure, 1), pressureValidator],
+            topMixO2: [this.calc.topMix.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
+            topMixHe: [this.calc.topMix.he, this.validators.rangeFor(this.ranges.tankHe)],
+            targetO2: [this.calc.targetTank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
+            targetHe: [this.calc.targetTank.he, this.validators.rangeFor(this.ranges.tankHe)],
+            targetPressure: [Precision.round(this.calc.targetTank.startPressure, 1), pressureValidator]
         });
     }
 
@@ -108,15 +115,17 @@ export class GasBlenderComponent implements OnInit {
         }
 
         const newValue = this.blenderForm.value;
-        this.blender.sourceTank.o2 = Number(newValue.sourceO2);
-        this.blender.sourceTank.he = Number(newValue.sourceHe);
-        this.blender.sourceTank.startPressure = Number(newValue.sourcePressure);
-        this.blender.topMix.o2 = Number(newValue.topMixO2);
-        this.blender.topMix.he = Number(newValue.topMixHe);
-        this.blender.targetTank.o2 = Number(newValue.targetO2);
-        this.blender.targetTank.he = Number(newValue.targetHe);
-        this.blender.targetTank.startPressure = Number(newValue.targetPressure);
-        this.blender.calculate();
+        this.calc.sourceTank.o2 = Number(newValue.sourceO2);
+        this.calc.sourceTank.he = Number(newValue.sourceHe);
+        this.calc.sourceTank.startPressure = Number(newValue.sourcePressure);
+        this.calc.topMix.o2 = Number(newValue.topMixO2);
+        this.calc.topMix.he = Number(newValue.topMixHe);
+        this.calc.targetTank.o2 = Number(newValue.targetO2);
+        this.calc.targetTank.he = Number(newValue.targetHe);
+        this.calc.targetTank.startPressure = Number(newValue.targetPressure);
+
+        this.calc.calculate();
+        this.saveState();
     }
 
     public applyTemplate(): void {
@@ -125,18 +134,82 @@ export class GasBlenderComponent implements OnInit {
         }
 
         this.blenderForm.patchValue({
-            sourceO2: this.blender.sourceTank.o2,
-            sourceHe: this.blender.sourceTank.he,
-            topMixO2: this.blender.topMix.o2,
-            topMixHe: this.blender.topMix.he,
-            targetO2: this.blender.targetTank.o2,
-            targetHe: this.blender.targetTank.he
+            sourceO2: this.calc.sourceTank.o2,
+            sourceHe: this.calc.sourceTank.he,
+            topMixO2: this.calc.topMix.o2,
+            topMixHe: this.calc.topMix.he,
+            targetO2: this.calc.targetTank.o2,
+            targetHe: this.calc.targetTank.he
         });
 
         this.applyChange();
     }
 
-    // TODO Gas blender component:
-    // save/load state
-    // we need normalization of view state stored in metric, when imperial units are selected
+    private loadState(): void {
+        let state: BlenderViewState = this.viewStates.loadView(KnownViews.blender);
+
+        if (!state) {
+            state = this.createDefaultState();
+        }
+
+        this.applyState(state);
+        this.calc.calculate();
+    }
+
+    private applyState(state: BlenderViewState) {
+        this.loadTankState(this.calc.sourceTank.tank, state.source);
+        this.loadTankState(this.calc.targetTank.tank, state.target);
+        this.calc.topMix.o2 = state.topMix.o2;
+        this.calc.topMix.he = state.topMix.he;
+    }
+
+    private saveState(): void {
+        const viewState = {
+            id: KnownViews.blender,
+            source: this.toTankState(this.calc.sourceTank.tank),
+            target: this.toTankState(this.calc.targetTank.tank),
+            topMix: {
+                o2: this.calc.topMix.tank.o2,
+                he: this.calc.topMix.tank.he
+            },
+        };
+
+        this.viewStates.saveView(viewState);
+    }
+
+    // TODO Gas blender component: we need normalization of view state stored in metric, when imperial units are selected
+    private createDefaultState(): BlenderViewState {
+        return {
+            id: KnownViews.blender,
+            source: {
+                o2: StandardGases.o2InAir * 100,
+                he: 0,
+                pressure: 0
+            },
+            target: {
+                o2: StandardGases.ean32.fO2 * 100,
+                he: 0,
+                pressure: 200
+            },
+            topMix: {
+                o2: StandardGases.ean32.fO2 * 100,
+                he: 0,
+            },
+        };
+    }
+
+    private loadTankState(tank: Tank, state: TankMix): void {
+        tank.o2 = state.o2;
+        tank.he = state.he;
+        // TODO normalize pressure by units
+        tank.startPressure = state.pressure;
+    }
+
+    private toTankState(tank: Tank): TankMix {
+        return {
+            o2: tank.o2,
+            he: tank.he,
+            pressure: tank.startPressure
+        };
+    }
 }

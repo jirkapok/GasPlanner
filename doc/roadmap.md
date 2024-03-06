@@ -8,6 +8,7 @@ Following list of features and improvements ordered by priority is under develop
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
 * TTS is calculated from last user defined point, not from the deepest point
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
+* Redundancies calculator does not show values after switch to imperial units
 
 ## Improvements / Features
 

@@ -5,6 +5,7 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { GasBlenderService } from '../shared/gas-blender.service';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
+import { Precision } from 'scuba-physics';
 
 interface IGasBlenderForm {
     sourceO2: FormControl<number>;
@@ -92,12 +93,12 @@ export class GasBlenderComponent implements OnInit {
         this.blenderForm = this.fb.group({
             sourceO2: [this.blender.sourceTank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
             sourceHe: [this.blender.sourceTank.he, this.validators.rangeFor(this.ranges.tankHe)],
-            sourcePressure: [this.blender.sourceTank.startPressure, pressureValidator],
+            sourcePressure: [Precision.round(this.blender.sourceTank.startPressure, 1), pressureValidator],
             topMixO2: [this.blender.topMix.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
             topMixHe: [this.blender.topMix.he, this.validators.rangeFor(this.ranges.tankHe)],
             targetO2: [this.blender.targetTank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
             targetHe: [this.blender.targetTank.he, this.validators.rangeFor(this.ranges.tankHe)],
-            targetPressure: [this.blender.targetTank.startPressure, pressureValidator]
+            targetPressure: [Precision.round(this.blender.targetTank.startPressure, 1), pressureValidator]
         });
     }
 
@@ -136,6 +137,6 @@ export class GasBlenderComponent implements OnInit {
     }
 
     // TODO Gas blender component:
-    // Do we need Reload?
     // save/load state
+    // we need normalization of view state stored in metric, when imperial units are selected
 }

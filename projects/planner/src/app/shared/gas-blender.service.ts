@@ -76,6 +76,8 @@ export class GasBlenderService {
                 he: topMetric.gas.fHe
             }
         };
+
+        // TODO add exception handling in case we are unable to create target mix.
         this.results = GasBlender.mix(request);
     }
 }

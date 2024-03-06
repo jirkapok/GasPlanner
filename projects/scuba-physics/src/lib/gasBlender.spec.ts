@@ -136,6 +136,14 @@ describe('Gas Blender', () => {
                 assertResult(request, 147.058824, 52.941176, 0);
             });
 
+            it('Ignores small numbers rounding', () => {
+                const request = createEmptyRequest();
+                request.topMix.o2 = 0.32;
+                request.target.o2 = 0.32;
+
+                assertResult(request, 200, 0, 0);
+            });
+
             it('Can`t create Air from Ean32 to empty tank', () => {
                 const request = createEmptyRequest();
                 request.topMix.o2 = 0.32;

@@ -1,4 +1,5 @@
 import { Tank, TankFill } from './Tanks';
+import { Precision } from "./precision";
 
 /**
  * Blending result showing amount of each component used
@@ -77,7 +78,7 @@ export class GasBlender {
         const addN2 = finalN2 - currentN2;
         // Even the top mix contains more nitrogen than target, we are still able to mix
         // by adding less top mix and more He and O2
-        if(addN2 < 0) {
+        if(Precision.round(addN2, 8) < 0) {
             const removeSource = -(addN2 / currentfN2);
             return GasBlender.mixByRemoving(request, removeSource);
         }
@@ -89,13 +90,14 @@ export class GasBlender {
         const topHe = addTop * request.topMix.he;
         const addHe = targetHe - sourceHe - topHe;
 
-        if(addHe < 0) {
+        if(Precision.round(addHe, 8) < 0) {
             const removeSource = -(addHe / request.source.he);
             return GasBlender.mixByRemoving(request, removeSource);
         }
 
         const addO2 = request.target.pressure - request.source.pressure - addHe - addTop;
-        if(addO2 < 0) {
+
+        if(Precision.round(addO2, 8) < 0) {
             const removeSource = -(addO2 / request.source.o2);
             return GasBlender.mixByRemoving(request, removeSource);
         }
@@ -110,6 +112,7 @@ export class GasBlender {
 
     private static mixByRemoving(request: MixRequest, removeSource: number) {
         const newRequest = GasBlender.copyRequest(request);
+        // const expectedRemove = Precision.floor(removeSource, 8);
 
         if(removeSource > request.source.pressure) {
             throw new Error('Unable to mix required gas because target contains less he or oxygen than top mix.');

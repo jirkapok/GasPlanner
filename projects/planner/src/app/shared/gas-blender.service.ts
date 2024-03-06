@@ -46,7 +46,7 @@ export class GasBlenderService {
     }
 
     public get removeFromSource(): number {
-        return 0;//  this.results.removeFromSource;
+        return this.results.removeFromSource;
     }
 
     public get needsRemove(): boolean {
@@ -77,7 +77,6 @@ export class GasBlenderService {
             }
         };
 
-        // TODO add exception handling in case we are unable to create target mix.
         this.results = GasBlender.mix(request);
     }
 }

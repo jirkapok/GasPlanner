@@ -1,5 +1,5 @@
 import { Tank, TankFill } from './Tanks';
-import { Precision } from "./precision";
+import { Precision } from './precision';
 
 /**
  * Blending result showing amount of each component used
@@ -75,10 +75,12 @@ export class GasBlender {
         const finalN2  = finalfN2 * request.target.pressure;
         const currentfN2 = GasBlender.n2(request.source);
         const currentN2 = currentfN2 * request.source.pressure;
-        const addN2 = finalN2 - currentN2;
+        let addN2 = finalN2 - currentN2;
+        addN2 = Precision.round(addN2, 8);
+
         // Even the top mix contains more nitrogen than target, we are still able to mix
         // by adding less top mix and more He and O2
-        if(Precision.round(addN2, 8) < 0) {
+        if(addN2 < 0) {
             const removeSource = -(addN2 / currentfN2);
             return GasBlender.mixByRemoving(request, removeSource);
         }
@@ -88,16 +90,18 @@ export class GasBlender {
         const targetHe = request.target.pressure * request.target.he;
         const sourceHe = request.source.pressure * request.source.he;
         const topHe = addTop * request.topMix.he;
-        const addHe = targetHe - sourceHe - topHe;
+        let addHe = targetHe - sourceHe - topHe;
+        addHe = Precision.round(addHe, 8);
 
-        if(Precision.round(addHe, 8) < 0) {
+        if(addHe < 0) {
             const removeSource = -(addHe / request.source.he);
             return GasBlender.mixByRemoving(request, removeSource);
         }
 
-        const addO2 = request.target.pressure - request.source.pressure - addHe - addTop;
+        let addO2 = request.target.pressure - request.source.pressure - addHe - addTop;
+        addO2 = Precision.round(addO2, 8);
 
-        if(Precision.round(addO2, 8) < 0) {
+        if(addO2 < 0) {
             const removeSource = -(addO2 / request.source.o2);
             return GasBlender.mixByRemoving(request, removeSource);
         }

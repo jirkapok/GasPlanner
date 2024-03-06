@@ -137,6 +137,5 @@ export class GasBlenderComponent implements OnInit {
 
     // TODO Gas blender component:
     // Do we need Reload?
-    // add service tests
     // save/load state
 }

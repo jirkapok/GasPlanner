@@ -1,5 +1,6 @@
 import { Precision } from './precision';
 import { Gas } from './Gases';
+import _ from 'lodash';
 
 export class StandardGases {
     /** Relative partial pressure of oxygen in air at surface */
@@ -123,11 +124,15 @@ export class StandardGases {
         return `${prefix} ${percentO2.toString()}/${percentHe.toString()}`;
     }
 
-    // TODO consider to make it case insensitive
-    /** Case sensitive search. If nothing found returns null */
+    /** Case insensitive search. If nothing found returns null */
     public static byName(name: string): Gas | null {
-        if (StandardGases.map.has(name)) {
-            const found = StandardGases.map.get(name);
+        const keys = [...StandardGases.map.keys()];
+        const foundKey = _(keys)
+            .filter((k) => k.toLowerCase() === name.toLowerCase())
+            .first();
+
+        if (foundKey) {
+            const found = StandardGases.map.get(foundKey);
             return found ?? null;
         }
 

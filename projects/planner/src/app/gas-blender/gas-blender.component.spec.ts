@@ -5,7 +5,13 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { GasBlenderService } from '../shared/gas-blender.service';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
-
+import { SubViewStorage } from '../shared/subViewStorage';
+import { ViewStates } from '../shared/viewStates';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { Preferences } from '../shared/preferences';
+import { ViewSwitchService } from '../shared/viewSwitchService';
+import { DiveSchedules } from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 describe('GasBlenderComponent', () => {
     let component: GasBlenderComponent;
@@ -16,7 +22,10 @@ describe('GasBlenderComponent', () => {
             declarations: [GasBlenderComponent],
             providers: [
                 UnitConversion, GasBlenderService,
-                ValidatorGroups, InputControls, DecimalPipe
+                ValidatorGroups, InputControls, DecimalPipe,
+                SubViewStorage, ViewStates, PreferencesStore,
+                Preferences, ViewSwitchService, DiveSchedules,
+                ReloadDispatcher
             ]
         });
         fixture = TestBed.createComponent(GasBlenderComponent);

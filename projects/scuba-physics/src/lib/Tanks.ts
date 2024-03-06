@@ -78,6 +78,7 @@ export class Tank implements TankFill {
         return this._gas;
     }
 
+    // TODO move percents from tank to new BoundGas
     /** o2 content in percent adjusted to iterate to Air*/
     public get o2(): number {
         return AirO2Pin.getO2(this.gas.fO2, this.gas.fHe);

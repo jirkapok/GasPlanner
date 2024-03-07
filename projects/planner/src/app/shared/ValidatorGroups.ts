@@ -5,6 +5,9 @@ import { DateFormats } from './formaters';
 
 @Injectable()
 export class ValidatorGroups {
+    public static readonly minGradient = 10;
+    public static readonly maxGradient = 120;
+
     constructor(private units: UnitConversion) {
     }
 
@@ -57,7 +60,7 @@ export class ValidatorGroups {
     }
 
     public get gradients(): ValidatorFn[] {
-        return this.rangeFor([10,100]);
+        return this.rangeFor([ValidatorGroups.minGradient,ValidatorGroups.maxGradient]);
     }
 
     public get speed(): ValidatorFn[] {

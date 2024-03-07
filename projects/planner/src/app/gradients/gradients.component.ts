@@ -17,6 +17,8 @@ export class GradientsComponent implements OnInit {
     @Input() public gfHigh = OptionDefaults.gfHigh;
     @Input() public gfForm!: FormGroup;
     @Output() public inputChange = new EventEmitter<Gradients>();
+    public readonly minGradient = ValidatorGroups.minGradient;
+    public readonly maxGradient = ValidatorGroups.maxGradient;
     public standards = new StandardGradientsService();
 
     constructor(private fb: NonNullableFormBuilder,

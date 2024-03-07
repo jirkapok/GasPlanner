@@ -28,7 +28,6 @@ Following list of features and improvements ordered by priority is under develop
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
   * Add warnings to gas properties calc for properties exceeding recommended maximum
-  * Allow Gradients over 100%
   * Consider switch to issues tab in case there are any warnings
 * Add undo/redo to all pages
 * Add calculation trainings

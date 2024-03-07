@@ -9,7 +9,7 @@
                 <input id="gfLowField" *ngIf="simple" [value]="conservatism" class="form-control" type="text"
                     [readonly]="true" />
                 <input id="gfLowField" *ngIf="!simple" class="form-control" type="number" formControlName="gfLow"
-                    (input)="gfLowChanged()" required min="10" max="100" step="1" [class.is-invalid]="gfLowInvalid" />
+                    (input)="gfLowChanged()" required [min]="minGradient" [max]="maxGradient" step="1" [class.is-invalid]="gfLowInvalid" />
                 <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
                     id="conservatismMenu" mdbDropdownToggle data-mdb-toggle="dropdown" aria-expanded="false"></button>
                 <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
@@ -20,15 +20,15 @@
                 </ul>
             </div>
             <div class="text-danger form-text position-absolute" *ngIf="gfLowInvalid">
-                Needs to be number 10 - 100 lower than gradient high</div>
+                Needs to be number {{ minGradient }} - {{ maxGradient }} lower than gradient high</div>
         </div>
     </div>
     <div class="mb-4 col col-12 col-sm-6" *ngIf="!simple">
         <label for="gfHighField" class="form-label" mdbLabel>Gradient high [%]:</label>
         <input id="gfHighField" formControlName="gfHigh" class="form-control" type="number" required
-            (input)="gfHighChanged()" min="10" max="100" step="1" [class.is-invalid]="gfHighInvalid" />
+            (input)="gfHighChanged()" [min]="minGradient" [max]="maxGradient" step="1" [class.is-invalid]="gfHighInvalid" />
         <div class="invalid-feedback position-absolute">
-            Needs to be number 10 - 100 higher than gradient low
+            Needs to be number {{ minGradient }} - {{ maxGradient }}  higher than gradient low
         </div>
     </div>
 </div>

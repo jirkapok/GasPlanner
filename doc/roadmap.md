@@ -8,6 +8,7 @@ Following list of features and improvements ordered by priority is under develop
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
 * TTS is calculated from last user defined point, not from the deepest point
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
+* Not enough gas warning in complex mode shows maximum dive time 0 minutes.
 
 ## Improvements / Features
 
@@ -28,7 +29,6 @@ Following list of features and improvements ordered by priority is under develop
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
   * Add warnings to gas properties calc for properties exceeding recommended maximum
-  * Consider switch to issues tab in case there are any warnings
 * Add undo/redo to all pages
 * Add calculation trainings
 * Help

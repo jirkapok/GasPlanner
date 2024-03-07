@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { formatNumber } from '@angular/common';
 import { takeUntil } from 'rxjs';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
@@ -14,6 +14,8 @@ import { DepthsService } from '../shared/depths.service';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveSchedules } from '../shared/dive.schedules';
 import {TextConstants} from '../shared/TextConstants';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
 
 @Component({
     selector: 'app-diveinfo',
@@ -21,6 +23,7 @@ import {TextConstants} from '../shared/TextConstants';
     styleUrls: ['./diveinfo.component.scss']
 })
 export class DiveInfoComponent extends Streamed {
+    @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
     public readonly warnIcon = faExclamationTriangle;
@@ -30,18 +33,18 @@ export class DiveInfoComponent extends Streamed {
         private clipboard: ClipboardService,
         private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
+        private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
         super();
 
         this.clipboard.copyResponse$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((res: IClipboardResponse) => {
-                // stupid replacement of Bootstrap toasts, because not part of the free mdb package
-                if (res.isSuccess) {
-                    this.toastVisible = true;
-                    setTimeout(() => {
-                        this.hideToast();
-                    }, 5000);
-                }
+                this.copyToClipBoard(res);
+            });
+
+        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((diveId)=> {
+                this.checkIssuesTab(diveId);
             });
     }
 
@@ -114,5 +117,23 @@ export class DiveInfoComponent extends Streamed {
 
     public hideToast(): void {
         this.toastVisible = false;
+    }
+
+    private checkIssuesTab(diveId: number | undefined) {
+        const selectedDive = this.schedules.selected;
+        if (selectedDive.id === diveId && (selectedDive.diveResult.hasErrorEvent || selectedDive.diveResult.hasErrorEvent)) {
+            const issuesTab = 2;
+            this.tabs?.setActiveTab(issuesTab);
+        }
+    }
+
+    private copyToClipBoard(res: IClipboardResponse) {
+        // stupid replacement of Bootstrap toasts, because not part of the free mdb package
+        if (res.isSuccess) {
+            this.toastVisible = true;
+            setTimeout(() => {
+                this.hideToast();
+            }, 5000);
+        }
     }
 }

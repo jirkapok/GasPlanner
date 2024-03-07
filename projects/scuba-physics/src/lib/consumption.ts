@@ -1,5 +1,5 @@
 import { Precision } from './precision';
-import {AlgorithmParams, BuhlmannAlgorithm} from './BuhlmannAlgorithm';
+import { AlgorithmParams, BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { DepthConverter } from './depth-converter';
 import { Diver } from './Diver';
 import { Gases } from './Gases';
@@ -9,6 +9,7 @@ import { Segment, Segments } from './Segments';
 import { Tank, Tanks } from './Tanks';
 import { Time } from './Time';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
+import { PlanFactory } from './PlanFactory';
 
 
 class ConsumptionSegment {
@@ -84,7 +85,7 @@ export class Consumption {
             throw new Error('Profile needs to contain at least 2 segments.');
         }
 
-        const emergencyAscent = this.emergencyAscent(segments, options, tanks);
+        const emergencyAscent = PlanFactory.emergencyAscent(segments, options, tanks);
         this.consumeFromTanks2(segments, emergencyAscent, options, tanks, diver);
     }
 
@@ -108,20 +109,6 @@ export class Consumption {
         const remainToConsume = this.consumeByTanks(segments, diver.rmv);
         this.consumeByGases(segments, tanks, diver.rmv, remainToConsume);
         this.updateReserve(emergencyAscent, tanks, diver.stressRmv);
-    }
-
-    public emergencyAscent(segments: Segment[], options: Options, tanks: Tank[]): Segment[] {
-        const profile = Segments.fromCollection(segments);
-        const deepestPart = profile.deepestPart();
-        const deepestProfile = Segments.fromCollection(deepestPart);
-        const gases = Gases.fromTanks(tanks);
-        const algorithm = new BuhlmannAlgorithm();
-        const parameters = AlgorithmParams.forMultilevelDive(deepestProfile, gases, options);
-        const emergencyProfile = algorithm.decompression(parameters);
-        const emergencySegments = emergencyProfile.segments;
-        const ascent = emergencySegments.slice(deepestPart.length, emergencySegments.length);
-        this.addSolvingSegment(ascent, options.problemSolvingDuration);
-        return ascent;
     }
 
     /**
@@ -199,19 +186,6 @@ export class Consumption {
         const tankConsumedBars = (consumedBars + tank.reserve) > tank.startPressure ? tank.startPressure - tank.reserve : consumedBars;
         tank.reserve += tankConsumedBars;
         return this.extractRemaining(consumedLiters, tankConsumedBars, tank.size);
-    }
-
-    // in case of user defined gas switch without stay at depth (in ascent segment), we prolong the duration at depth
-    private addSolvingSegment(ascent: Segment[], problemSolvingDuration: number): void {
-        // all segments are user defined
-        if (ascent.length === 0) {
-            return;
-        }
-
-        const solvingDuration = problemSolvingDuration * Time.oneMinute;
-        const ascentDepth = ascent[0].startDepth;
-        const problemSolving = new Segment(ascentDepth, ascentDepth, ascent[0].gas, solvingDuration);
-        ascent.unshift(problemSolving);
     }
 
     private consumeByGases(segments: Segment[], tanks: Tank[], sac: number, remainToConsume: Map<number, number>): void {

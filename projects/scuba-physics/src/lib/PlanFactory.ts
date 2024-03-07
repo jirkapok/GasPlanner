@@ -2,7 +2,9 @@ import { Tank } from './Tanks';
 import { Options } from './Options';
 import { Time } from './Time';
 import { Precision } from './precision';
-import { Segments } from './Segments';
+import { Segment, Segments } from './Segments';
+import { Gases } from './Gases';
+import { AlgorithmParams, BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 
 /** Creates skeleton for dive profile */
 export class PlanFactory {
@@ -38,5 +40,33 @@ export class PlanFactory {
         estimate = Precision.ceil(estimate, 1);
         estimate = Time.toSeconds(estimate);
         return Precision.ceil(estimate);
+    }
+
+    public static emergencyAscent(segments: Segment[], options: Options, tanks: Tank[]): Segment[] {
+        const profile = Segments.fromCollection(segments);
+        const deepestPart = profile.deepestPart();
+        const deepestProfile = Segments.fromCollection(deepestPart);
+        const gases = Gases.fromTanks(tanks);
+        const algorithm = new BuhlmannAlgorithm();
+        const parameters = AlgorithmParams.forMultilevelDive(deepestProfile, gases, options);
+        const emergencyProfile = algorithm.decompression(parameters);
+        const emergencySegments = emergencyProfile.segments;
+        const ascent = emergencySegments.slice(deepestPart.length, emergencySegments.length);
+        PlanFactory.addSolvingSegment(ascent, options.problemSolvingDuration);
+        return ascent;
+    }
+
+
+    // in case of user defined gas switch without stay at depth (in ascent segment), we prolong the duration at depth
+    private static addSolvingSegment(ascent: Segment[], problemSolvingDuration: number): void {
+        // all segments are user defined
+        if (ascent.length === 0) {
+            return;
+        }
+
+        const solvingDuration = problemSolvingDuration * Time.oneMinute;
+        const ascentDepth = ascent[0].startDepth;
+        const problemSolving = new Segment(ascentDepth, ascentDepth, ascent[0].gas, solvingDuration);
+        ascent.unshift(problemSolving);
     }
 }

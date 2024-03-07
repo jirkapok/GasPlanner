@@ -29,12 +29,19 @@ describe('RedundanciesComponent', () => {
                 ReloadDispatcher, DiveSchedules
             ]
         });
+
+        const units = TestBed.inject(UnitConversion);
+        units.imperialUnits = true;
+        // no need to reset view states, they are empty
         fixture = TestBed.createComponent(RedundanciesComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
+    it('Creates default tank dimensions in imperial units', () => {
+        expect(component.firstTank.size).toBeCloseTo(124.1 , 1);
+        expect(component.firstTank.workingPressure).toBeCloseTo(3442);
+        expect(component.secondTank.size).toBeCloseTo(124.1 , 1);
+        expect(component.secondTank.workingPressure).toBeCloseTo(3442);
     });
 });

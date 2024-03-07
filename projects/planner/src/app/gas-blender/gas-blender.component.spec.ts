@@ -13,7 +13,7 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
-fdescribe('GasBlenderComponent', () => {
+describe('GasBlenderComponent', () => {
     let component: GasBlenderComponent;
     let fixture: ComponentFixture<GasBlenderComponent>;
     let calculateSpy: jasmine.Spy<() => void>;

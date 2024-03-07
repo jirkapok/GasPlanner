@@ -147,7 +147,7 @@ export class RedundanciesComponent implements OnInit {
     private loadTank(target: ITankSize, state: TankFillState): void {
         target.startPressure = this.units.fromBar(state.startPressure);
         target.workingPressure = this.units.fromBar(state.workingPressure);
-        target.size = this.units.fromLiter(state.size);
+        target.size = this.units.fromTankLiters(state.size, state.workingPressure);
     }
 
     private saveState(): void {
@@ -158,7 +158,12 @@ export class RedundanciesComponent implements OnInit {
     }
 
     private createDefaultState(): RedundanciesViewState {
-        return this.createState(this.createTankState(), this.createTankState());
+        const defaultTank = this.units.defaults.tanks.primary;
+        const workingPressure = this.units.toBar(defaultTank.workingPressure);
+        const size = this.units.toTankLiters(defaultTank.size, workingPressure);
+        const firstTank = this.createTankState(200, workingPressure, size);
+        const secondTank = this.createTankState(200, workingPressure, size);
+        return this.createState(firstTank, secondTank);
     }
 
     private createState(first: TankFillState, second: TankFillState): RedundanciesViewState {
@@ -172,7 +177,7 @@ export class RedundanciesComponent implements OnInit {
     private createTankStateFrom(tank: ITankSize): TankFillState {
         const startPressure = this.units.toBar(tank.startPressure);
         const workingPressure = this.units.toBar(tank.workingPressure);
-        const size = this.units.toLiter(tank.size);
+        const size = this.units.toTankLiters(tank.size, workingPressure);
         return this.createTankState(startPressure, workingPressure, size);
     }
 

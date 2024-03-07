@@ -8,7 +8,6 @@ Following list of features and improvements ordered by priority is under develop
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
 * TTS is calculated from last user defined point, not from the deepest point
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
-* Redundancies calculator does not show values after switch to imperial units
 
 ## Improvements / Features
 
@@ -18,12 +17,6 @@ Following list of features and improvements ordered by priority is under develop
     * https://progressier.com/
     * https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers
     * https://developers.google.com/codelabs/pwa-training/pwa03--going-offline#1)
-* Gas blender calculator
-  * Add use case, if we need release some pressure from the tanks, because otherwise we are unable mix
-  * Check the real gas blending as replacement of ideal law 
-    * https://github.com/atdotde/realblender
-    * https://github.com/subsurface/subsurface/blob/master/core/gas-model.c
-    * https://thetheoreticaldiver.org/wordpress/index.php/2021/11/16/blending-real-gases/
 * Allow user to compare multiple plans side by side
   * I want compare consequences of emergency ascent
   * I want to plan a dive and choose from two following plans or two independent plans
@@ -62,7 +55,7 @@ Following list of features and improvements ordered by priority is under develop
 * Extend application settings:
   * Define custom maximum gas density
   * Custom diver stress sac rate ratio
-  * Add option to ignore some warnings
   * Add minimum gas reserve for first tank and for stage
+  * Add option to ignore some warnings
 * Add more variables to weight calculator (suits, BMI, tank material, water type)
 

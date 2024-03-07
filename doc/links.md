@@ -2,11 +2,25 @@
 
 Following list of external sources was used to develop this application and can be used as reference and study material.
 
-Inspired by:
+# Inspired by:
 
 * <https://github.com/Subsurface-divelog>
 
-Based on following references:
+## At time of development also other implementations are available:
+
+* <https://github.com/igaponov/deco-model>
+* <https://github.com/oliverjohnstone/npm-buhlmann-ZH-L16>
+* Gas mixture calculator: <https://github.com/eianlei/pydplan>
+* Mobile first DiveProMe+ <https://vlasovalexey.github.io/DiveProMe/>
+
+## Alternatives
+
+* <https://diveplanner.online/planner>
+* <https://play.google.com/store/apps/details?id=com.techdeco.mcp>
+* <https://play.google.com/store/apps/details?id=com.hhssoftware.multideco>
+* <https://play.google.com/store/apps/details?id=com.diveprome.avlasov.diveprome>
+
+## Based on following references:
 
 * <https://github.com/archisgore/online-deco-console>
 * <https://github.com/nyxtom/dive>
@@ -25,19 +39,7 @@ Based on following references:
 * <https://onedrive.live.com/?authkey=%21ACenWvokBcikpo0&id=24444EC0EEA41A1B%2112595&cid=24444EC0EEA41A1B&parId=root&parQt=sharedby&parCid=8D71FF700D902B86&o=OneUp>
 * <https://www.hhssoftware.com/v-planner/decomyths.html>
 
-At time of development also other implementations are available:
-
-* <https://github.com/igaponov/deco-model>
-* <https://github.com/oliverjohnstone/npm-buhlmann-ZH-L16>
-* Gas mixture calculator: <https://github.com/eianlei/pydplan>
-* Mobile first DiveProMe+ <https://vlasovalexey.github.io/DiveProMe/>
-
-Alternatives
-
-* <https://diveplanner.online/planner>
-* <https://play.google.com/store/apps/details?id=com.techdeco.mcp>
-* <https://play.google.com/store/apps/details?id=com.hhssoftware.multideco>
-* <https://play.google.com/store/apps/details?id=com.diveprome.avlasov.diveprome>
+## Related links
 
 * Add air breaks
   * <https://dan.org/alert-diver/article/understanding-oxygen-toxicity/>
@@ -46,3 +48,7 @@ Alternatives
   * <https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/>
   * <https://www.diverite.com/articles/oxygen-toxicity-signs-and-symptoms/>
   * Diverite and decodopler: 20min./5 min.
+* Gas blender
+  * https://github.com/atdotde/realblender
+  * https://github.com/subsurface/subsurface/blob/master/core/gas-model.c
+  * https://thetheoreticaldiver.org/wordpress/index.php/2021/11/16/blending-real-gases/

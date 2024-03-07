@@ -1,13 +1,13 @@
-<div class="row mt-5">
-    <div class="col col-12 col-sm-5 col-md-4 col-lg-3 col-xxl-2 mt-3">
-        <div class="card">
-            <div class="card-header">
-                <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
-                <span>Gas mixture</span>
-            </div>
-            <div class="card-body">
-                <form [formGroup]="redForm">
-                    <div>
+<form [formGroup]="redForm">
+    <div class="row mt-5">
+        <div class="col col-12 col-lg-8 col-xxl-6 mt-3">
+            <div class="card">
+                <div class="card-header">
+                    <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
+                    <span>Gas mixture</span>
+                </div>
+                <div class="card-body row">
+                    <div class="col col-12 col-sm-6 col-md-4">
                         <div>First tank</div>
                         <div>
                             <div class="pt-2 mb-4">
@@ -37,7 +37,7 @@
                                 {{ranges.tankPressureLabel}}</div>
                         </div>
                     </div>
-                    <div>
+                    <div class="col col-12 col-sm-6 col-md-4">
                         <div>Second tank</div>
                         <div>
                             <div class="pt-2 mb-4">
@@ -67,18 +67,18 @@
                                 {{ranges.tankPressureLabel}}</div>
                         </div>
                     </div>
-                    <div>
+                    <div class="col col-12 col-sm-6 col-md-4">
                         <label for="finalPressure" class="form-label" mdbLabel>Final pressure [{{units.pressure}}]:</label>
                         <input class="form-control readonly" name="finalPressure" id="finalPressure"
                             [readonly]="true" [value]="calc.finalPressure | number: '1.0-1'" readonly />
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="form-group mt-3">
-        <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
+    <div class="row">
+        <div class="form-group mt-3">
+            <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
+        </div>
     </div>
-</div>
+</form>

@@ -3,7 +3,7 @@ import { Salinity } from './pressure-converter';
 import { Gas, Gases } from './Gases';
 import { Options, SafetyStop } from './Options';
 import { OptionExtensions } from './Options.spec';
-import { Ceiling, EventType, Events, Event } from './Profile';
+import { Ceiling, EventType, Events, Event } from './CalculatedProfile';
 import { EventOptions, ProfileEvents } from './ProfileEvents';
 import { Segment, Segments } from './Segments';
 import { Time } from './Time';

@@ -1,6 +1,6 @@
 import { Options } from './Options';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
-import { Ceiling, EventsFactory, Events } from './Profile';
+import { Ceiling, EventsFactory, Events } from './CalculatedProfile';
 import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { AscentSpeeds } from './speeds';

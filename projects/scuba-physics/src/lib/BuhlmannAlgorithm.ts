@@ -3,7 +3,7 @@ import { Gas, Gases, GasesValidator } from './Gases';
 import { Segment, Segments, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Time } from './Time';
-import { CalculatedProfile, Ceiling, Event } from './Profile';
+import { CalculatedProfile, Ceiling, Event } from './CalculatedProfile';
 import { Options } from './Options';
 import { Precision } from './precision';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';

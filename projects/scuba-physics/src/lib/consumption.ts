@@ -4,7 +4,7 @@ import { DepthConverter } from './depth-converter';
 import { Diver } from './Diver';
 import { Gases } from './Gases';
 import { Options } from './Options';
-import { CalculatedProfile } from './Profile';
+import { CalculatedProfile } from './CalculatedProfile';
 import { Segment, Segments } from './Segments';
 import { Tank, Tanks } from './Tanks';
 import { Time } from './Time';

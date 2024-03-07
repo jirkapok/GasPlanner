@@ -1,5 +1,5 @@
 import { LoadedTissue, Tissue, Tissues } from './Tissues';
-import { Ceiling } from './Profile';
+import { Ceiling } from './CalculatedProfile';
 import { BestGasOptions, Gas, Gases, OCGasSource } from './Gases';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
 import { AscentSpeeds } from './speeds';

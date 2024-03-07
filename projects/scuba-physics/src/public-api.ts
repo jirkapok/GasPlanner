@@ -23,7 +23,7 @@ export * from './lib/OtuCalculator';
 export * from './lib/PlanFactory';
 export * from './lib/precision';
 export * from './lib/pressure-converter';
-export * from './lib/Profile';
+export * from './lib/CalculatedProfile';
 export * from './lib/ProfileEvents';
 export * from './lib/SacCalculator';
 export * from './lib/Segments';

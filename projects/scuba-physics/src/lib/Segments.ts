@@ -1,5 +1,5 @@
 import { Gas, Gases } from './Gases';
-import { Event, EventsFactory } from './Profile';
+import { Event, EventsFactory } from './CalculatedProfile';
 import { Tank } from './Tanks';
 import { LinearFunction } from './linearFunction';
 

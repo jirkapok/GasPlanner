@@ -20,6 +20,7 @@ export * from './lib/gasToxicity';
 export * from './lib/NitroxCalculator';
 export * from './lib/Options';
 export * from './lib/OtuCalculator';
+export * from './lib/PlanFactory';
 export * from './lib/precision';
 export * from './lib/pressure-converter';
 export * from './lib/Profile';

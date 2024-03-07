@@ -32,6 +32,7 @@
     * [Weight](./calculators.md#weight)
     * [Gas properties](./calculators.md#gas-properties)
     * [Redundancies](./calculators.md#redundancies)
+    * [Gas blender](./calculators.md#gas-blender)
 * [External reading](./links.md)
 
 ## Supported platforms

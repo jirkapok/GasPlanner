@@ -19,7 +19,7 @@ export class PlanFactory {
      * @param tank to be assigned to the segments
      * @param options Ascent/descent speeds
      */
-    public static createForPlan(targetDepth: number, duration: number, tank: Tank, options: Options): Segments {
+    public static createPlan(targetDepth: number, duration: number, tank: Tank, options: Options): Segments {
         const segments = new Segments();
         const descentDuration = PlanFactory.descentDuration(targetDepth, options);
         const descent = segments.add(0, targetDepth, tank.gas, descentDuration);

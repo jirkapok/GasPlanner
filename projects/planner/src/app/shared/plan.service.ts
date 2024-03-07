@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Time, Segment, Segments, SegmentsFactory,
+import { Time, Segment, Segments, PlanFactory,
     Options, Tank } from 'scuba-physics';
 import { Strategies } from './models';
 
@@ -65,11 +65,11 @@ export class Plan {
 
 
     public assignDepth(newDepth: number, tank: Tank, options: Options): void {
-        this._segments = SegmentsFactory.createForPlan(newDepth, this.duration, tank, options);
+        this._segments = PlanFactory.createPlan(newDepth, this.duration, tank, options);
     }
 
     public assignDuration(newDuration: number, tank: Tank, options: Options): void {
-        this._segments = SegmentsFactory.createForPlan(this.maxDepth, newDuration, tank, options);
+        this._segments = PlanFactory.createPlan(this.maxDepth, newDuration, tank, options);
     }
 
     public addSegment(tank: Tank): void {
@@ -106,6 +106,6 @@ export class Plan {
     }
 
     private reset(depth: number, duration: number, tank: Tank, options: Options): void {
-        this._segments = SegmentsFactory.createForPlan(depth, duration, tank, options);
+        this._segments = PlanFactory.createPlan(depth, duration, tank, options);
     }
 }

@@ -12,8 +12,11 @@
 <ng-container *ngIf="!dive.hasErrors">
     <div *ngIf="dive.calculated && dive.notEnoughGas" class="alert alert-danger">
         <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
-        <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
+        <span *ngIf="dive.showMaxBottomTime">Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
             {{ dive.maxTime | number:'1.0-0' }} min. Use larger tank, fill it with more gas, reduce dive
+            duration or planned depth.</span>
+        <span *ngIf="!dive.showMaxBottomTime">Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
+            shorter than currently planned dive. Use larger tank, fill it with more gas, reduce dive
             duration or planned depth.</span>
     </div>
     <div *ngIf="dive.diveInfoCalculated && dive.noDecoExceeded" class="alert alert-info">

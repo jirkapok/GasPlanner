@@ -1,7 +1,7 @@
 import {
     Segments, Gases, ProfileEvents, DepthConverterFactory,
     Consumption, Time, Diver, OtuCalculator, CnsCalculator, DensityAtDepth, EventOptions,
-    AlgorithmParams, BuhlmannAlgorithm, RestingParameters
+    AlgorithmParams, BuhlmannAlgorithm, RestingParameters, Segment
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
@@ -65,13 +65,15 @@ export class PlanningTasks {
         const tanks = DtoSerialization.toTanks(task.tanks);
         const originProfile = DtoSerialization.toSegments(task.profile, tanks);
         const segments = DtoSerialization.toSegments(task.plan, tanks);
-        const plan = Segments.fromCollection(segments);
+
         // diver ppO2 is irrelevant for consumption calculation
         const diver = new Diver(task.diver.rmv);
 
         const options = DtoSerialization.toOptions(task.options);
+        const plan = PlanningTasks.selectConsumptionPlan(segments, task.isComplex);
         // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
         const maxTime = consumption.calculateMaxBottomTime(plan, tanks, diver, options);
+
         const emergencyAscent = consumption.emergencyAscent(originProfile, options, tanks);
         let timeToSurface = Segments.duration(emergencyAscent);
         timeToSurface = Time.toMinutes(timeToSurface);
@@ -83,6 +85,17 @@ export class PlanningTasks {
             timeToSurface: timeToSurface,
             tanks: DtoSerialization.toConsumed(tanks),
         };
+    }
+
+    private static selectConsumptionPlan(segments: Segment[], isComplex: boolean): Segments {
+        if(isComplex) {
+            return Segments.fromCollection(segments);
+        }
+
+        // In simple view we are able to calculate the max time from descent only.
+        // Otherwise the maxTime is always 0 min if already planned dive which takes longer than maximum.
+        const descent = segments.slice(0, 1);
+        return Segments.fromCollection(descent);
     }
 
     private static profileParametersFromTask(task: ProfileRequestDto): AlgorithmParams {

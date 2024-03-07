@@ -107,6 +107,7 @@ export interface LoadedTissueDto {
 
 export interface ConsumptionRequestDto {
     diveId: number;
+    isComplex: boolean;
     plan: SegmentDto[];
     profile: SegmentDto[];
     options: OptionsDto;

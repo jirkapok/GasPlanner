@@ -66,7 +66,7 @@
                                     <strong *ngIf="dive.diveInfoCalculated">{{ noDeco | number:'1.0-0' }}</strong>
                                 </td>
                             </tr>
-                            <tr *ngIf="showMaxBottomTime">
+                            <tr *ngIf="dive.showMaxBottomTime">
                                 <td>Maximum bottom time [min]:
                                     <button type="button" class="btn btn-secondary btn-sm ml-2"
                                         (click)="applyMaxDuration()" *ngIf="showApply">Use</button>

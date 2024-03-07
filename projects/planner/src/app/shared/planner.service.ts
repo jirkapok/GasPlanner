@@ -19,6 +19,7 @@ import { UnitConversion } from './UnitConversion';
 import { WayPoint } from './models';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { Logger } from './Logger';
+import { ViewSwitchService } from './viewSwitchService';
 
 
 @Injectable()
@@ -31,6 +32,7 @@ export class PlannerService extends Streamed {
     constructor(
         private schedules: DiveSchedules,
         private dispatcher: ReloadDispatcher,
+        private viewSwitch: ViewSwitchService,
         workerFactory: WorkersFactoryCommon,
         units: UnitConversion) {
         super();
@@ -108,6 +110,7 @@ export class PlannerService extends Streamed {
 
         const consumptionRequest = {
             diveId: dive.id,
+            isComplex: this.viewSwitch.isComplex,
             plan: infoRequest.plan,
             profile: DtoSerialization.fromSegments(calculatedProfile.segments),
             options: infoRequest.options,

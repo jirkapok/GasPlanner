@@ -95,7 +95,11 @@ export class DiveResults {
     }
 
     public get showMaxDuration(): boolean {
-        return this._consumptionCalculated && this.maxTime > 0;
+        return this._consumptionCalculated && this.showMaxBottomTime;
+    }
+
+    public get showMaxBottomTime(): boolean {
+        return this.maxTime > 0;
     }
 
     public get hasErrorEvent(): boolean {

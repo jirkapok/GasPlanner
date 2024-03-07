@@ -56,10 +56,6 @@ export class DiveInfoComponent extends Streamed {
         return this.schedules.selectedTanks.tankData;
     }
 
-    public get showMaxBottomTime(): boolean {
-        return this.dive.maxTime > 0;
-    }
-
     public get noDeco(): number {
         return this.dive.noDecoTime;
     }

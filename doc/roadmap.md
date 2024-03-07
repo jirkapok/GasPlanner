@@ -6,9 +6,8 @@ Following list of features and improvements ordered by priority is under develop
 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
-* TTS is calculated from last user defined point, not from the deepest point
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
-* Not enough gas warning in complex mode shows maximum dive time 0 minutes.
+* TTS is calculated from last user defined point, not from the deepest point
 
 ## Improvements / Features
 

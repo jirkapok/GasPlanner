@@ -21,6 +21,7 @@ import { ViewStates } from './viewStates';
 import { DiveResults } from './diveresults';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
+import { ViewSwitchService } from './viewSwitchService';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -37,7 +38,8 @@ describe('PlannerService', () => {
                 WorkersFactoryCommon,
                 PlannerService, UnitConversion,
                 DiveSchedules, ReloadDispatcher,
-                SettingsNormalizationService, ViewStates
+                SettingsNormalizationService, ViewStates,
+                ViewSwitchService
             ],
             imports: []
         }).compileComponents();

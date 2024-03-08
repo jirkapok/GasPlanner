@@ -7,7 +7,7 @@ Following list of features and improvements ordered by priority is under develop
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
-* TTS is calculated from last user defined point, not from the deepest point
+* Shared link to dashboard does not load the profile
 
 ## Improvements / Features
 
@@ -28,7 +28,13 @@ Following list of features and improvements ordered by priority is under develop
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
   * Add warnings to gas properties calc for properties exceeding recommended maximum
-* Add undo/redo to all pages
+* Extend application settings:
+  * Define custom maximum gas density
+  * Custom diver stress sac rate ratio
+  * Add minimum gas reserve for first tank and for stage
+  * Add option to ignore some warnings (ICD, density)
+* Add tissues heatmap to the profile chart and to the dives comparision
+* Add localizations
 * Add calculation trainings
 * Help
   * Add help to the UI as side bar
@@ -36,9 +42,6 @@ Following list of features and improvements ordered by priority is under develop
     * <https://www.npmjs.com/package/ngx-markdown>
     * <https://stackblitz.com/edit/angular-azjfgh?file=src%2Fapp%2Fapp.component.html>
     * <https://stackoverflow.com/questions/53416871/routing-to-static-html-page-in-angular-6>
-* Add localizations
-* Add export of the plan to pdf
-* Import/Export dive to compare from well known file format see also <https://www.npmjs.com/package/xml-js>
 * Gas consumption:
   * Restore 1/2 and 1/3 reserve strategies
   * Add setting for minimum reserve for both main tank and deco tanks
@@ -50,10 +53,7 @@ Following list of features and improvements ordered by priority is under develop
 * TRIMIX support
   * Add air breaks
 * Add CCR support
-* Extend application settings:
-  * Define custom maximum gas density
-  * Custom diver stress sac rate ratio
-  * Add minimum gas reserve for first tank and for stage
-  * Add option to ignore some warnings
+* Add undo/redo to all pages
+* Add export of the plan to pdf
+* Import/Export dive to compare from well known file format see also <https://www.npmjs.com/package/xml-js>
 * Add more variables to weight calculator (suits, BMI, tank material, water type)
-

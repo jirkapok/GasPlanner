@@ -317,12 +317,9 @@ describe('Profile Events', () => {
             const tank2 = Tank.createDefault();
 
             const segments = new Segments();
-            const s1 = segments.add(0, 15, StandardGases.air, Time.oneMinute * 4);
-            s1.tank = tank1;
-            const s2 = segments.add(15, 15, StandardGases.air, Time.oneMinute);
-            s2.tank = tank1;
-            const s3 = segments.add(15, 15, StandardGases.air, Time.oneMinute * 1);
-            s3.tank = tank2;
+            segments.add(0, 15, tank1, Time.oneMinute * 4);
+            segments.add(15, 15, tank1, Time.oneMinute);
+            segments.add(15, 15, tank2, Time.oneMinute * 1);
             segments.add(15, 15, StandardGases.air, Time.oneMinute);
             segments.add(15, 0, StandardGases.air, Time.oneMinute * 2);
 

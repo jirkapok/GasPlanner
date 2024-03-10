@@ -281,21 +281,23 @@ export class Segments {
     /**
      * @param startDepth in meters
      * @param endDepth in meters
+     * @param source Tank in case user defined segment, otherwise gas, see segment constructor
      * @param duration in seconds
      */
-    public add(startDepth: number, endDepth: number, gas: Gas, duration: number): Segment {
-        const segment = new Segment(startDepth, endDepth, gas, duration);
+    public add(startDepth: number, endDepth: number, source: Tank | Gas, duration: number): Segment {
+        const segment = new Segment(startDepth, endDepth, source, duration);
         this.segments.push(segment);
         this.updateMaxDepth(segment);
         return segment;
     }
 
     /**
-    * @param depth in meters
-    * @param duration in seconds
-    */
-    public addFlat(depth: number, gas: Gas, duration: number): Segment {
-        return this.add(depth, depth, gas, duration);
+     * @param depth in meters
+     * @param source Tank in case user defined segment, otherwise gas, see segment constructor
+     * @param duration in seconds
+     */
+    public addFlat(depth: number, source: Tank | Gas, duration: number): Segment {
+        return this.add(depth, depth, source, duration);
     }
 
     /** Adds transition to newDepth in meters, from last segment end depth using given gas for given duration in seconds */

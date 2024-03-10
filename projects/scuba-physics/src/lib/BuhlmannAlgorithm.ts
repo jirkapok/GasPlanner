@@ -189,7 +189,6 @@ export class BuhlmannAlgorithm {
 
         // at surface, there is no depth change, even we are at different elevation and we are always breathing air
         const segments = new Segments();
-        // TODO ensure the depth is 0 m
         const restingSegment = segments.addFlat(StandardGases.air, surfaceInterval);
         const gases = new Gases();
         gases.add(StandardGases.air);

@@ -496,8 +496,7 @@ describe('Consumption', () => {
             expect(tank1.reserve).toEqual(47);
         });
 
-        // TODO Consider use user defined segments for emergency ascent
-        // Hidden to user: From which point to calculate rock bottom and subtract it before strategy is calculated?
+        // TODO hidden to user: From which point to calculate rock bottom and subtract it before strategy is calculated?
         //    - 1/2 usable strategy
         //    - 1/3 usable strategy
 

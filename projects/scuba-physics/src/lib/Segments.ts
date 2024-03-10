@@ -301,11 +301,6 @@ export class Segments {
         return this.add(this.currentDepth, source, duration);
     }
 
-    // TODO will be removed
-    public addChangeTo(newDepth: number, gas: Gas, duration: number): Segment {
-        return this.add(newDepth, gas, duration);
-    }
-
     /**
      * @param skipItems Positive number of items from start of this collection to don't merge.
      * @returns not null collection managed items after all neighbor elements with identical speed are merged into one

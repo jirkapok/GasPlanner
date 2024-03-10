@@ -272,23 +272,23 @@ describe('Segments', () => {
 
         it('Last segment is deepest', () => {
             const segments = new Segments();
-            segments.addChangeTo(20, StandardGases.air, 1);
-            segments.addChangeTo(40, StandardGases.air, 1);
+            segments.add(20, StandardGases.air, 1);
+            segments.add(40, StandardGases.air, 1);
             const deepestPart = segments.deepestPart();
             expect(deepestPart.length).toBe(2);
         });
 
         it('First segment is deepest', () => {
             const segments = new Segments();
-            segments.addChangeTo(40, StandardGases.air, 1);
-            segments.addChangeTo(20, StandardGases.air, 1);
+            segments.add(40, StandardGases.air, 1);
+            segments.add(20, StandardGases.air, 1);
             const deepestPart = segments.deepestPart();
             expect(deepestPart.length).toBe(1);
         });
 
         it('Flat after deepest', () => {
             const segments = new Segments();
-            segments.addChangeTo(40, StandardGases.air, 1);
+            segments.add(40, StandardGases.air, 1);
             segments.addFlat(StandardGases.air, 1);
             segments.addFlat(StandardGases.air, 1);
             segments.addFlat(StandardGases.air, 1);
@@ -299,11 +299,11 @@ describe('Segments', () => {
 
         it('First deepest segments in Multi level', () => {
             const segments = new Segments();
-            segments.addChangeTo(20, StandardGases.air, 1);
-            segments.addChangeTo(40, StandardGases.air, 1);
-            segments.addChangeTo(20, StandardGases.air, 1);
-            segments.addChangeTo(40, StandardGases.air, 1);
-            segments.addChangeTo(20, StandardGases.air, 1);
+            segments.add(20, StandardGases.air, 1);
+            segments.add(40, StandardGases.air, 1);
+            segments.add(20, StandardGases.air, 1);
+            segments.add(40, StandardGases.air, 1);
+            segments.add(20, StandardGases.air, 1);
             const deepestPart = segments.deepestPart();
             expect(deepestPart.length).toBe(4);
         });

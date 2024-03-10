@@ -74,7 +74,7 @@ export class Plan {
 
     public addSegment(tank: Tank): void {
         const last = this._segments.last();
-        const created = this._segments.addChangeTo(last.endDepth, tank.gas, Plan.defaultDuration);
+        const created = this._segments.add(last.endDepth, tank.gas, Plan.defaultDuration);
         created.tank = tank;
     }
 

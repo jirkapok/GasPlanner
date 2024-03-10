@@ -13,7 +13,7 @@ import { WeightCalcComponent } from './weight/weight.component';
 import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
 import { DiffComponent } from './diff/diff.component';
 import { RedundanciesComponent } from './redundancies/redundancies.component';
-import { GasBlenderComponent } from "./gas-blender/gas-blender.component";
+import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 
 const canActivateDashboard: CanActivateFn = (): boolean | UrlTree => {
     const router = inject(Router);

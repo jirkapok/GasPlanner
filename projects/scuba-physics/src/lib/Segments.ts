@@ -292,12 +292,12 @@ export class Segments {
     }
 
     /**
-     * @param depth in meters
+     * Adds continuation of last segment at its endDepth, use for stops or hover swim
      * @param source Tank in case user defined segment, otherwise gas, see segment constructor
      * @param duration in seconds
      */
-    public addFlat(depth: number, source: Tank | Gas, duration: number): Segment {
-        return this.add(depth, depth, source, duration);
+    public addFlat(source: Tank | Gas, duration: number): Segment {
+        return this.add(this.currentDepth, this.currentDepth, source, duration);
     }
 
     /** Adds transition to newDepth in meters, from last segment end depth using given gas for given duration in seconds */

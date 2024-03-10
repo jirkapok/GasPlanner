@@ -26,7 +26,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
 
         const segments = new Segments();
         segments.add(0, depth, air, Time.oneMinute * 1);
-        segments.addFlat(depth, air, Time.oneMinute * 1440);
+        segments.addFlat(air, Time.oneMinute * 1440);
 
         const algorithm = new BuhlmannAlgorithm();
         const multilevelDive = AlgorithmParams.forMultilevelDive(segments, gases, options);
@@ -52,7 +52,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         it('No decompression limit for multilevel dive equals simple dive Ndl', () => {
             const segments = new Segments();
             segments.add(0, 30, air, Time.oneMinute * 1.5);
-            segments.addFlat(30, air, Time.oneMinute);
+            segments.addFlat(air, Time.oneMinute);
 
             const algorithm = new BuhlmannAlgorithm();
             const multilevelDive = AlgorithmParams.forMultilevelDive(segments, gases, options);
@@ -65,9 +65,9 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         it('Segments already reached NDL', () => {
             const segments = new Segments();
             segments.add(0, 40, air, Time.oneMinute * 2);
-            segments.addFlat(40, air, Time.oneMinute * 5);
+            segments.addFlat(air, Time.oneMinute * 5);
             segments.add(40, 20, air, Time.oneMinute * 2);
-            segments.addFlat(20, air, Time.oneMinute * 40);
+            segments.addFlat(air, Time.oneMinute * 40);
 
             const algorithm = new BuhlmannAlgorithm();
             const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
@@ -78,9 +78,9 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         it('Initial levels have remaining NDL', () => {
             const segments = new Segments();
             segments.add(0, 40, air, Time.oneMinute * 2);
-            segments.addFlat(40, air, Time.oneMinute * 5);
+            segments.addFlat(air, Time.oneMinute * 5);
             segments.add(40, 20, air, Time.oneMinute * 2);
-            segments.addFlat(20, air, Time.oneMinute * 5);
+            segments.addFlat(air, Time.oneMinute * 5);
 
             const algorithm = new BuhlmannAlgorithm();
             const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);

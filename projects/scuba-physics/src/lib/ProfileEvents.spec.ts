@@ -381,7 +381,7 @@ describe('Profile Events', () => {
 
             const segments = new Segments();
             segments.add(0, 30, StandardGases.air, 2 * Time.oneMinute);
-            segments.addFlat(30, StandardGases.air, 20 * Time.oneMinute);
+            segments.addFlat(StandardGases.air, 20 * Time.oneMinute);
             segments.add(30, 3, StandardGases.air, 4 * Time.oneMinute);
 
             const events = calculateEvents(gases, segments, Salinity.salt, SafetyStop.never);
@@ -400,7 +400,7 @@ describe('Profile Events', () => {
 
             const segments = new Segments();
             segments.add(0, 16, StandardGases.air, 1.25 * Time.oneMinute);
-            segments.addFlat(16, StandardGases.air, 118.75 * Time.oneMinute);
+            segments.addFlat(StandardGases.air, 118.75 * Time.oneMinute);
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
@@ -415,9 +415,9 @@ describe('Profile Events', () => {
 
             const segments = new Segments();
             segments.add(0, 30, StandardGases.air, 2 * Time.oneMinute);
-            segments.addFlat(30, StandardGases.air, 25 * Time.oneMinute);
+            segments.addFlat(StandardGases.air, 25 * Time.oneMinute);
             segments.add(30, 6, StandardGases.air, 4 * Time.oneMinute);
-            segments.addFlat(6, StandardGases.air, 2 * Time.oneMinute);
+            segments.addFlat(StandardGases.air, 2 * Time.oneMinute);
             segments.add(6, 2, StandardGases.air, 1.5 * Time.oneMinute);
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.always);

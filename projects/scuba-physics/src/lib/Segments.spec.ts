@@ -289,10 +289,10 @@ describe('Segments', () => {
         it('Flat after deepest', () => {
             const segments = new Segments();
             segments.addChangeTo(40, StandardGases.air, 1);
-            segments.addFlat(40, StandardGases.air, 1);
-            segments.addFlat(40, StandardGases.air, 1);
-            segments.addFlat(40, StandardGases.air, 1);
-            segments.addFlat(20, StandardGases.air, 1);
+            segments.addFlat(StandardGases.air, 1);
+            segments.addFlat(StandardGases.air, 1);
+            segments.addFlat(StandardGases.air, 1);
+            segments.add(40, 20, StandardGases.air, 1);
             const deepestPart = segments.deepestPart();
             expect(deepestPart.length).toBe(4);
         });
@@ -320,27 +320,27 @@ describe('Segments', () => {
         it('Simple dive = last segment', () => {
             const segments = new Segments();
             segments.add(0,10, irrelevantGas, 30);
-            segments.addFlat(10, irrelevantGas, 40);
+            segments.addFlat(irrelevantGas, 40);
             expect(segments.startAscentTime).toBe(70);
         });
 
         it('Multilevel dive = deepest segment', () => {
             const segments = new Segments();
             segments.add(0,20, irrelevantGas, 10);
-            segments.addFlat(20, irrelevantGas, 40);
+            segments.addFlat(irrelevantGas, 40);
             segments.add(20,5, irrelevantGas, 50);
-            segments.addFlat(5, irrelevantGas, 60);
-            segments.add(10,10, irrelevantGas, 70);
-            segments.addFlat(10, irrelevantGas, 80);
+            segments.addFlat(irrelevantGas, 60);
+            segments.add(5,10, irrelevantGas, 70);
+            segments.addFlat(irrelevantGas, 80);
             expect(segments.startAscentTime).toBe(50);
         });
 
         it('Plan up to surface = deepest segment', () => {
             const segments = new Segments();
             segments.add(0,20, irrelevantGas, 10);
-            segments.addFlat(20, irrelevantGas, 50);
+            segments.addFlat(irrelevantGas, 50);
             segments.add(20,5, irrelevantGas, 20);
-            segments.addFlat(5, irrelevantGas, 30);
+            segments.addFlat(irrelevantGas, 30);
             segments.add(5, 0, irrelevantGas, 40);
             expect(segments.startAscentTime).toBe(60);
         });

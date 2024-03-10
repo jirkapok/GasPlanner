@@ -26,7 +26,7 @@ export class PlanFactory {
         let bottomTime = Time.toSeconds(duration) - descentDuration;
         // not enough time to descent
         bottomTime = bottomTime < 0 ? 0 : bottomTime;
-        segments.addFlat(targetDepth, tank, bottomTime);
+        segments.addFlat(tank, bottomTime);
         return segments;
     }
 

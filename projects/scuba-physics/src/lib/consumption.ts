@@ -157,7 +157,7 @@ export class Consumption {
     private createTestProfile(sourceSegments: Segments): Segments {
         const testSegments = sourceSegments.copy();
         const lastUserSegment = sourceSegments.last();
-        testSegments.addFlat(lastUserSegment.endDepth, lastUserSegment.gas, 0);
+        testSegments.addFlat(lastUserSegment.gas, 0);
         return testSegments;
     }
 

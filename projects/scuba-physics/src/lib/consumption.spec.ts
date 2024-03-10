@@ -27,7 +27,7 @@ describe('Consumption', () => {
 
             const segments = new Segments();
             segments.add(0, 30, tank.gas, Time.oneMinute * 0.5);
-            segments.addFlat(30, tank.gas, Time.oneMinute * 10.5);
+            segments.addFlat(tank.gas, Time.oneMinute * 10.5);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(17);
@@ -40,7 +40,7 @@ describe('Consumption', () => {
 
             const segments = new Segments();
             segments.add(0, 40, airTank.gas, Time.oneMinute * 2);
-            segments.addFlat(40, airTank.gas, Time.oneMinute);
+            segments.addFlat(airTank.gas, Time.oneMinute);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(20);
@@ -53,7 +53,7 @@ describe('Consumption', () => {
 
             const segments = new Segments();
             segments.add(0, 40, airTank.gas, Time.oneMinute * 2);
-            segments.addFlat(40, airTank.gas, Time.oneMinute);
+            segments.addFlat(airTank.gas, Time.oneMinute);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(5);
@@ -65,7 +65,7 @@ describe('Consumption', () => {
 
             const segments = new Segments();
             segments.add(0, 30, tank.gas, Time.oneMinute * 0.5);
-            segments.addFlat(30, tank.gas, Time.oneMinute * 23);
+            segments.addFlat(tank.gas, Time.oneMinute * 23);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(0);
@@ -78,7 +78,7 @@ describe('Consumption', () => {
 
             const segments = new Segments();
             segments.add(0, 5, tank.gas, Time.oneMinute);
-            segments.addFlat(5, tank.gas, Time.oneMinute * 10);
+            segments.addFlat(tank.gas, Time.oneMinute * 10);
 
             const startTime = performance.now();
             consumption.calculateMaxBottomTime(segments, tanks, diver, options);
@@ -95,8 +95,8 @@ describe('Consumption', () => {
 
             const segments = new Segments();
             segments.add(0, 20, tank.gas, Time.oneMinute);
-            segments.addFlat(20, tank.gas, Time.oneMinute * 10);
-            segments.addFlat(20, tank.gas, Time.oneMinute * 10);
+            segments.addFlat(tank.gas, Time.oneMinute * 10);
+            segments.addFlat(tank.gas, Time.oneMinute * 10);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);
             expect(maxBottomTime).toEqual(50);
@@ -108,7 +108,7 @@ describe('Consumption', () => {
 
             const segments = new Segments();
             segments.add(0, 10, tank.gas, Time.oneMinute * 10);
-            segments.addFlat(10, tank.gas, Time.oneMinute * 10);
+            segments.addFlat(tank.gas, Time.oneMinute * 10);
             segments.add(10, 0, tank.gas, Time.oneMinute * 10);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, diver, options);

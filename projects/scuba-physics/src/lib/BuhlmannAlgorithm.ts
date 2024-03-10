@@ -83,7 +83,7 @@ export class AlgorithmParams {
 
         const segments = new Segments();
         const duration = durationFor(depth, options.descentSpeed);
-        segments.add(0, depth, gas, duration);
+        segments.add(depth, gas, duration);
 
         return new AlgorithmParams(segments, gases, options, surface);
     }

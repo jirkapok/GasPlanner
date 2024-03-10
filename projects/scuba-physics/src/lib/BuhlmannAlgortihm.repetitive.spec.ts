@@ -17,7 +17,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         const gases = new Gases();
         gases.add(StandardGases.trimix1845);
         const segments = new Segments();
-        segments.add(0, depth, StandardGases.trimix1845, Time.oneMinute * 2);
+        segments.add(depth, StandardGases.trimix1845, Time.oneMinute * 2);
         segments.addFlat(StandardGases.trimix1845, Time.oneMinute * 60);
         const options = new Options(1, 1, 1.6, 1.6);
         return AlgorithmParams.forMultilevelDive(segments, gases, options, rest);

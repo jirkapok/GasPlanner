@@ -25,7 +25,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         gases.add(air);
 
         const segments = new Segments();
-        segments.add(0, depth, air, Time.oneMinute * 1);
+        segments.add(depth, air, Time.oneMinute * 1);
         segments.addFlat(air, Time.oneMinute * 1440);
 
         const algorithm = new BuhlmannAlgorithm();
@@ -51,7 +51,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
 
         it('No decompression limit for multilevel dive equals simple dive Ndl', () => {
             const segments = new Segments();
-            segments.add(0, 30, air, Time.oneMinute * 1.5);
+            segments.add(30, air, Time.oneMinute * 1.5);
             segments.addFlat(air, Time.oneMinute);
 
             const algorithm = new BuhlmannAlgorithm();
@@ -64,9 +64,9 @@ describe('Buhlmann Algorithm - No decompression times', () => {
 
         it('Segments already reached NDL', () => {
             const segments = new Segments();
-            segments.add(0, 40, air, Time.oneMinute * 2);
+            segments.add(40, air, Time.oneMinute * 2);
             segments.addFlat(air, Time.oneMinute * 5);
-            segments.add(40, 20, air, Time.oneMinute * 2);
+            segments.add(20, air, Time.oneMinute * 2);
             segments.addFlat(air, Time.oneMinute * 40);
 
             const algorithm = new BuhlmannAlgorithm();
@@ -77,9 +77,9 @@ describe('Buhlmann Algorithm - No decompression times', () => {
 
         it('Initial levels have remaining NDL', () => {
             const segments = new Segments();
-            segments.add(0, 40, air, Time.oneMinute * 2);
+            segments.add(40, air, Time.oneMinute * 2);
             segments.addFlat(air, Time.oneMinute * 5);
-            segments.add(40, 20, air, Time.oneMinute * 2);
+            segments.add(20, air, Time.oneMinute * 2);
             segments.addFlat(air, Time.oneMinute * 5);
 
             const algorithm = new BuhlmannAlgorithm();

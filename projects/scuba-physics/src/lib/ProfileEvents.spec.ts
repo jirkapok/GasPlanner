@@ -60,7 +60,7 @@ describe('Profile Events', () => {
     describe('Low ppO2', () => {
         it('User defines 10/70 at beginning of dive', () => {
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(30, StandardGases.trimix1070, Time.oneMinute);
 
             const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -69,7 +69,8 @@ describe('Profile Events', () => {
 
         it('Algorithm was unable to choose better gas than 10/70 at end of dive', () => {
             const segments = new Segments();
-            segments.add(30, 0, StandardGases.trimix1070, 1 * Time.oneMinute);
+            segments.add(30, StandardGases.trimix1070, 1 * Time.oneMinute);
+            segments.add(0, StandardGases.trimix1070, 1 * Time.oneMinute);
 
             const eventOptions = createEventOption(0, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -78,11 +79,11 @@ describe('Profile Events', () => {
 
         it('Multilevel dive with 10/70', () => {
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.air, Time.oneMinute * 2);
-            segments.add(30, 3, StandardGases.trimix1070, Time.oneMinute * 3);
-            segments.add(3, 3, StandardGases.trimix1070, Time.oneMinute);
-            segments.add(3, 10, StandardGases.trimix1070, Time.oneMinute);
-            segments.add(10, 0, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(30, StandardGases.air, Time.oneMinute * 2);
+            segments.add(3, StandardGases.trimix1070, Time.oneMinute * 3);
+            segments.addFlat(StandardGases.trimix1070, Time.oneMinute);
+            segments.add(10, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(0, StandardGases.trimix1070, Time.oneMinute);
 
             // Profile:
             // \   _  /
@@ -99,10 +100,10 @@ describe('Profile Events', () => {
 
         it('Gas switch to 10/70 at 3 m', () => {
             const segments = new Segments();
-            segments.add(0, 3, StandardGases.air, Time.oneMinute);
-            segments.add(3, 3, StandardGases.air, Time.oneMinute);
-            segments.add(3, 3, StandardGases.trimix1070, Time.oneMinute);
-            segments.add(3, 0, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(3, StandardGases.air, Time.oneMinute);
+            segments.addFlat(StandardGases.air, Time.oneMinute);
+            segments.addFlat(StandardGases.trimix1070, Time.oneMinute);
+            segments.add(0, StandardGases.trimix1070, Time.oneMinute);
 
             // Profile:
             // \_ s_ /
@@ -117,9 +118,9 @@ describe('Profile Events', () => {
 
         it('Started dive with 10/70 assigns correct depth and time', () => {
             const segments = new Segments();
-            segments.add(0, 4, StandardGases.trimix1070, Time.oneMinute);
-            segments.add(4, 4, StandardGases.trimix1070, Time.oneMinute);
-            segments.add(4, 0, StandardGases.oxygen, Time.oneMinute);
+            segments.add(4, StandardGases.trimix1070, Time.oneMinute);
+            segments.addFlat(StandardGases.trimix1070, Time.oneMinute);
+            segments.add(0, StandardGases.oxygen, Time.oneMinute);
 
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -132,9 +133,9 @@ describe('Profile Events', () => {
 
         it('Gas switch to 10/70 assigns correct depth and time', () => {
             const segments = new Segments();
-            segments.add(0, 3, StandardGases.air, Time.oneMinute * 3);
-            segments.add(3, 3, StandardGases.trimix1070, Time.oneMinute);
-            segments.add(3, 0, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(3, StandardGases.air, Time.oneMinute * 3);
+            segments.addFlat(StandardGases.trimix1070, Time.oneMinute);
+            segments.add(0, StandardGases.trimix1070, Time.oneMinute);
 
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -147,9 +148,9 @@ describe('Profile Events', () => {
 
         it('Ascent to 3 m with 10/70 assigns correct depth and time', () => {
             const segments = new Segments();
-            segments.add(0, 10, StandardGases.air, Time.oneMinute);
-            segments.add(10, 3, StandardGases.trimix1070, Time.oneMinute);
-            segments.add(3, 0, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(10, StandardGases.air, Time.oneMinute);
+            segments.add(3, StandardGases.trimix1070, Time.oneMinute);
+            segments.add(0, StandardGases.trimix1070, Time.oneMinute);
 
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -164,9 +165,9 @@ describe('Profile Events', () => {
     describe('High ppO2', () => {
         it('No high ppO2 event for oxygen at 4 m', () => {
             const segments = new Segments();
-            segments.add(0, 4, StandardGases.oxygen, Time.oneMinute * 1);
-            segments.add(4, 4, StandardGases.oxygen, Time.oneMinute * 1);
-            segments.add(4, 0, StandardGases.oxygen, Time.oneMinute * 1);
+            segments.add(4, StandardGases.oxygen, Time.oneMinute * 1);
+            segments.addFlat(StandardGases.oxygen, Time.oneMinute * 1);
+            segments.add(0, StandardGases.oxygen, Time.oneMinute * 1);
 
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -175,9 +176,9 @@ describe('Profile Events', () => {
 
         it('Adds high ppO2 event during decent only once', () => {
             const segments = new Segments();
-            segments.add(0, 70, StandardGases.air, Time.oneMinute * 3.5);
-            segments.add(70, 70, StandardGases.air, Time.oneMinute * 2);
-            segments.add(70, 21, StandardGases.air, Time.oneMinute * 5);
+            segments.add(70, StandardGases.air, Time.oneMinute * 3.5);
+            segments.addFlat(StandardGases.air, Time.oneMinute * 2);
+            segments.add(21, StandardGases.air, Time.oneMinute * 5);
 
             // Profile:
             //   \   /
@@ -192,13 +193,13 @@ describe('Profile Events', () => {
 
         it('NO high PpO2 event is added, when deco ppO2 limit is used during automatically created ascent', () => {
             const segments = new Segments();
-            segments.add(0, 40, StandardGases.air, Time.oneMinute * 2);
-            segments.add(40, 40, StandardGases.air, Time.oneMinute);
-            segments.add(40, 21, StandardGases.air, Time.oneMinute * 2);
-            segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
-            segments.add(21, 3, StandardGases.ean50, Time.oneMinute * 3);
-            segments.add(3, 3, StandardGases.ean50, Time.oneMinute);
-            segments.add(3, 0, StandardGases.ean50, Time.oneMinute);
+            segments.add(40, StandardGases.air, Time.oneMinute * 2);
+            segments.addFlat(StandardGases.air, Time.oneMinute);
+            segments.add(21, StandardGases.air, Time.oneMinute * 2);
+            segments.addFlat(StandardGases.ean50, Time.oneMinute);
+            segments.add(3, StandardGases.ean50, Time.oneMinute * 3);
+            segments.addFlat(StandardGases.ean50, Time.oneMinute);
+            segments.add(0, StandardGases.ean50, Time.oneMinute);
 
             // Profile:
             //  \       _/ safety stop
@@ -214,10 +215,10 @@ describe('Profile Events', () => {
 
         it('User defined gas switch to high ppO2 at depth', () => {
             const segments = new Segments();
-            segments.add(0, 20, StandardGases.air, Time.oneMinute);
-            segments.add(20, 20, StandardGases.air, Time.oneMinute);
-            segments.add(20, 20, StandardGases.ean50, Time.oneMinute);
-            segments.add(20, 3, StandardGases.ean50, Time.oneMinute * 2);
+            segments.add(20, StandardGases.air, Time.oneMinute);
+            segments.addFlat(StandardGases.air, Time.oneMinute);
+            segments.addFlat(StandardGases.ean50, Time.oneMinute);
+            segments.add(3, StandardGases.ean50, Time.oneMinute * 2);
 
             // Profile:
             //    \_s_/
@@ -232,11 +233,11 @@ describe('Profile Events', () => {
 
         it('Multiple events are added for multilevel dives', () => {
             const segments = new Segments();
-            segments.add(0, 20, StandardGases.ean50, Time.oneMinute);
-            segments.add(20, 20, StandardGases.ean50, Time.oneMinute);
-            segments.add(20, 15, StandardGases.ean50, Time.oneMinute);
-            segments.add(15, 20, StandardGases.ean50, Time.oneMinute);
-            segments.add(20, 3, StandardGases.ean50, Time.oneMinute * 2);
+            segments.add(20, StandardGases.ean50, Time.oneMinute);
+            segments.addFlat(StandardGases.ean50, Time.oneMinute);
+            segments.add(15, StandardGases.ean50, Time.oneMinute);
+            segments.add(20, StandardGases.ean50, Time.oneMinute);
+            segments.add(3, StandardGases.ean50, Time.oneMinute * 2);
 
             // Profile: high ppO2 reached during the descents
             //    \_/\_/
@@ -251,9 +252,9 @@ describe('Profile Events', () => {
 
         it('Assigns correct depth and time for gas switch', () => {
             const segments = new Segments();
-            segments.add(0, 10, StandardGases.ean50, Time.oneMinute * 3);
-            segments.add(10, 10, StandardGases.oxygen, Time.oneMinute);
-            segments.add(10, 0, StandardGases.oxygen, Time.oneMinute * 2);
+            segments.add(10, StandardGases.ean50, Time.oneMinute * 3);
+            segments.addFlat(StandardGases.oxygen, Time.oneMinute);
+            segments.add(0, StandardGases.oxygen, Time.oneMinute * 2);
 
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -266,9 +267,9 @@ describe('Profile Events', () => {
 
         it('Assigns correct depth and time during decent', () => {
             const segments = new Segments();
-            segments.add(0, 2, StandardGases.oxygen, Time.oneMinute * 1);
-            segments.add(2, 10, StandardGases.oxygen, Time.oneMinute * 4);
-            segments.add(10, 0, StandardGases.oxygen, Time.oneMinute * 2);
+            segments.add(2, StandardGases.oxygen, Time.oneMinute * 1);
+            segments.add(10, StandardGases.oxygen, Time.oneMinute * 4);
+            segments.add(0, StandardGases.oxygen, Time.oneMinute * 2);
 
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -282,11 +283,11 @@ describe('Profile Events', () => {
     describe('Gas switch', () => {
         it('Adds event on deco stop', () => {
             const segments = new Segments();
-            segments.add(0, 40, StandardGases.air, Time.oneMinute * 4);
-            segments.add(40, 40, StandardGases.air, Time.oneMinute);
-            segments.add(40, 21, StandardGases.air, Time.oneMinute * 3);
-            segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
-            segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
+            segments.add(40, StandardGases.air, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.air, Time.oneMinute);
+            segments.add(21, StandardGases.air, Time.oneMinute * 3);
+            segments.addFlat(StandardGases.ean50, Time.oneMinute);
+            segments.add(6, StandardGases.ean50, Time.oneMinute * 2);
 
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -298,11 +299,11 @@ describe('Profile Events', () => {
 
         it('Adds event user defined switch at bottom', () => {
             const segments = new Segments();
-            segments.add(0, 15, StandardGases.air, Time.oneMinute * 4);
-            segments.add(15, 15, StandardGases.air, Time.oneMinute);
-            segments.add(15, 15, StandardGases.ean50, Time.oneMinute * 1);
-            segments.add(15, 15, StandardGases.ean50, Time.oneMinute);
-            segments.add(15, 0, StandardGases.ean50, Time.oneMinute * 2);
+            segments.add(15, StandardGases.air, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.air, Time.oneMinute);
+            segments.addFlat(StandardGases.ean50, Time.oneMinute * 1);
+            segments.addFlat(StandardGases.ean50, Time.oneMinute);
+            segments.add(0, StandardGases.ean50, Time.oneMinute * 2);
 
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -317,11 +318,11 @@ describe('Profile Events', () => {
             const tank2 = Tank.createDefault();
 
             const segments = new Segments();
-            segments.add(0, 15, tank1, Time.oneMinute * 4);
-            segments.add(15, 15, tank1, Time.oneMinute);
-            segments.add(15, 15, tank2, Time.oneMinute * 1);
-            segments.add(15, 15, StandardGases.air, Time.oneMinute);
-            segments.add(15, 0, StandardGases.air, Time.oneMinute * 2);
+            segments.add(15, tank1, Time.oneMinute * 4);
+            segments.addFlat(tank1, Time.oneMinute);
+            segments.addFlat(tank2, Time.oneMinute * 1);
+            segments.addFlat(StandardGases.air, Time.oneMinute);
+            segments.add(0, StandardGases.air, Time.oneMinute * 2);
 
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -335,8 +336,8 @@ describe('Profile Events', () => {
     describe('High speeds', () => {
         it('Adds high ascent speed', () => {
             const segments = new Segments();
-            segments.add(0, 20, StandardGases.air, Time.oneMinute * 2);
-            segments.add(20, 0, StandardGases.air, Time.oneMinute);
+            segments.add(20, StandardGases.air, Time.oneMinute * 2);
+            segments.add(0, StandardGases.air, Time.oneMinute);
 
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -350,7 +351,8 @@ describe('Profile Events', () => {
             const segments = new Segments();
             // using this formula javascript creates precise number 166.66666666666666 periodical
             const duration = (30 - 5) / 9 * Time.oneMinute;
-            segments.add(30, 5, StandardGases.air, duration);
+            segments.add(30, StandardGases.air, duration);
+            segments.add(5, StandardGases.air, duration);
 
             const recommendedOptions = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
             recommendedOptions.ascentSpeed50perc = 9;
@@ -361,9 +363,9 @@ describe('Profile Events', () => {
 
         it('Adds high descent speed', () => {
             const segments = new Segments();
-            segments.add(0, 10, StandardGases.air, Time.oneMinute);
-            segments.add(10, 40, StandardGases.air, Time.oneMinute);
-            segments.add(40, 0, StandardGases.air, Time.oneMinute * 20);
+            segments.add(10, StandardGases.air, Time.oneMinute);
+            segments.add(40, StandardGases.air, Time.oneMinute);
+            segments.add(0, StandardGases.air, Time.oneMinute * 20);
 
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -380,9 +382,9 @@ describe('Profile Events', () => {
             gases.add(StandardGases.air);
 
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.air, 2 * Time.oneMinute);
+            segments.add(30, StandardGases.air, 2 * Time.oneMinute);
             segments.addFlat(StandardGases.air, 20 * Time.oneMinute);
-            segments.add(30, 3, StandardGases.air, 4 * Time.oneMinute);
+            segments.add(3, StandardGases.air, 4 * Time.oneMinute);
 
             const events = calculateEvents(gases, segments, Salinity.salt, SafetyStop.never);
 
@@ -399,7 +401,7 @@ describe('Profile Events', () => {
             gases.add(StandardGases.air);
 
             const segments = new Segments();
-            segments.add(0, 16, StandardGases.air, 1.25 * Time.oneMinute);
+            segments.add(16, StandardGases.air, 1.25 * Time.oneMinute);
             segments.addFlat(StandardGases.air, 118.75 * Time.oneMinute);
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
@@ -414,11 +416,11 @@ describe('Profile Events', () => {
             gases.add(StandardGases.air);
 
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.air, 2 * Time.oneMinute);
+            segments.add(30, StandardGases.air, 2 * Time.oneMinute);
             segments.addFlat(StandardGases.air, 25 * Time.oneMinute);
-            segments.add(30, 6, StandardGases.air, 4 * Time.oneMinute);
+            segments.add(6, StandardGases.air, 4 * Time.oneMinute);
             segments.addFlat(StandardGases.air, 2 * Time.oneMinute);
-            segments.add(6, 2, StandardGases.air, 1.5 * Time.oneMinute);
+            segments.add(2, StandardGases.air, 1.5 * Time.oneMinute);
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.always);
 
@@ -437,11 +439,11 @@ describe('Profile Events', () => {
             gases.add(StandardGases.ean50);
 
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.trimix1845, Time.oneMinute * 2);
-            segments.add(30, 30, StandardGases.trimix1845, Time.oneMinute * 10);
-            segments.add(30, 21, StandardGases.trimix1845, Time.oneMinute * 2);
-            segments.add(21, 21, StandardGases.ean50, Time.oneMinute);
-            segments.add(21, 6, StandardGases.ean50, Time.oneMinute * 2);
+            segments.add(30, StandardGases.trimix1845, Time.oneMinute * 2);
+            segments.addFlat(StandardGases.trimix1845, Time.oneMinute * 10);
+            segments.add(21, StandardGases.trimix1845, Time.oneMinute * 2);
+            segments.addFlat(StandardGases.ean50, Time.oneMinute);
+            segments.add(6, StandardGases.ean50, Time.oneMinute * 2);
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
@@ -454,9 +456,9 @@ describe('Profile Events', () => {
 
         it('21/35 to 35/25 doesn\'t add the event', () => {
             const segments = new Segments();
-            segments.add(0, 15, StandardGases.trimix2135, Time.oneMinute * 4);
-            segments.add(15, 15, StandardGases.trimix2135, Time.oneMinute);
-            segments.add(15, 0, StandardGases.trimix3525, Time.oneMinute * 6);
+            segments.add(15, StandardGases.trimix2135, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.trimix2135, Time.oneMinute);
+            segments.add(0, StandardGases.trimix3525, Time.oneMinute * 6);
 
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -467,9 +469,9 @@ describe('Profile Events', () => {
 
         it('doesn\'t add the event in case no helium in mixtures', () => {
             const segments = new Segments();
-            segments.add(0, 15, StandardGases.ean50, Time.oneMinute * 4);
-            segments.add(15, 15, StandardGases.ean50, Time.oneMinute);
-            segments.add(15, 0, StandardGases.air, Time.oneMinute * 6);
+            segments.add(15, StandardGases.ean50, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.ean50, Time.oneMinute);
+            segments.add(0, StandardGases.air, Time.oneMinute * 6);
 
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -486,9 +488,9 @@ describe('Profile Events', () => {
 
         it('Switch to narcotic gas', () => {
             const segments = new Segments();
-            segments.add(0, 45, StandardGases.trimix1845, Time.oneMinute * 4);
-            segments.add(45, 45, StandardGases.trimix1845, Time.oneMinute);
-            segments.add(45, 0, StandardGases.trimix3525, Time.oneMinute * 20);
+            segments.add(45, StandardGases.trimix1845, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.trimix1845, Time.oneMinute);
+            segments.add(0, StandardGases.trimix3525, Time.oneMinute * 20);
 
             const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -501,9 +503,9 @@ describe('Profile Events', () => {
 
         it('Swim deeper than gas narcotic depth', () => {
             const segments = new Segments();
-            segments.add(0, 40, StandardGases.air, Time.oneMinute * 4);
-            segments.add(40, 40, StandardGases.air, Time.oneMinute);
-            segments.add(40, 0, StandardGases.air, Time.oneMinute * 20);
+            segments.add(40, StandardGases.air, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.air, Time.oneMinute);
+            segments.add(0, StandardGases.air, Time.oneMinute * 20);
 
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
@@ -522,9 +524,9 @@ describe('Profile Events', () => {
 
         const findProfileEvents = (maxDepth: number): Events => {
             const segments = new Segments();
-            segments.add(0, maxDepth, StandardGases.air, Time.oneMinute * 4);
-            segments.add(maxDepth, maxDepth, StandardGases.air, Time.oneMinute * 10);
-            segments.add(maxDepth, 0, StandardGases.air, Time.oneMinute * 10);
+            segments.add(maxDepth, StandardGases.air, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.air, Time.oneMinute * 10);
+            segments.add(0, StandardGases.air, Time.oneMinute * 10);
 
             const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
             eventOptions.maxDensity = GasDensity.recommendedMaximum;
@@ -548,9 +550,9 @@ describe('Profile Events', () => {
 
         it('Gas switch to high density generates event', () => {
             const segments = new Segments();
-            segments.add(0, 40, StandardGases.trimix2525, Time.oneMinute * 4);
-            segments.add(40, 40, StandardGases.air, Time.oneMinute * 10);
-            segments.add(40, 0, StandardGases.air, Time.oneMinute * 10);
+            segments.add(40, StandardGases.trimix2525, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.air, Time.oneMinute * 10);
+            segments.add(0, StandardGases.air, Time.oneMinute * 10);
 
             const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
             eventOptions.maxDensity = GasDensity.recommendedMaximum;
@@ -570,11 +572,11 @@ describe('Profile Events', () => {
 
         it('Adds start of safety stop', () => {
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.air, Time.oneMinute * 2);
-            segments.add(30, 30, StandardGases.air, Time.oneMinute * 10);
-            segments.add(30, 3, StandardGases.air, Time.oneMinute * 3);
-            segments.add(3, 3, StandardGases.air, Time.oneMinute * 3);
-            segments.add(3, 0, StandardGases.air, Time.oneMinute * 1);
+            segments.add(30, StandardGases.air, Time.oneMinute * 2);
+            segments.addFlat(StandardGases.air, Time.oneMinute * 10);
+            segments.add(3, StandardGases.air, Time.oneMinute * 3);
+            segments.addFlat(StandardGases.air, Time.oneMinute * 3);
+            segments.add(0, StandardGases.air, Time.oneMinute * 1);
 
             const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
             options.safetyStop = SafetyStop.always;
@@ -587,11 +589,11 @@ describe('Profile Events', () => {
 
         it('Safety stop not present event not created', () => {
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.air, Time.oneMinute * 2);
-            segments.add(30, 30, StandardGases.air, Time.oneMinute * 10);
-            segments.add(30, 3, StandardGases.air, Time.oneMinute * 3);
-            segments.add(3, 3, StandardGases.air, Time.oneMinute * 1);
-            segments.add(3, 0, StandardGases.air, Time.oneMinute * 1);
+            segments.add(30, StandardGases.air, Time.oneMinute * 2);
+            segments.addFlat(StandardGases.air, Time.oneMinute * 10);
+            segments.add(3, StandardGases.air, Time.oneMinute * 3);
+            segments.addFlat(StandardGases.air, Time.oneMinute * 1);
+            segments.add(0, StandardGases.air, Time.oneMinute * 1);
 
             const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
             options.safetyStop = SafetyStop.always;
@@ -606,9 +608,9 @@ describe('Profile Events', () => {
             gases.add(StandardGases.air);
 
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.air, Time.oneMinute * 3);
-            segments.add(30, 30, StandardGases.air, Time.oneMinute * 12);
-            segments.add(30, 0, StandardGases.air, Time.oneMinute * 4);
+            segments.add(30, StandardGases.air, Time.oneMinute * 3);
+            segments.addFlat(StandardGases.air, Time.oneMinute * 12);
+            segments.add(0, StandardGases.air, Time.oneMinute * 4);
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
@@ -622,9 +624,9 @@ describe('Profile Events', () => {
             gases.add(StandardGases.air);
 
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.air, 102);
-            segments.add(30, 30, StandardGases.air, 690);
-            segments.add(30, 0, StandardGases.air, Time.oneMinute * 4);
+            segments.add(30, StandardGases.air, 102);
+            segments.addFlat(StandardGases.air, 690);
+            segments.add(0, StandardGases.air, Time.oneMinute * 4);
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 

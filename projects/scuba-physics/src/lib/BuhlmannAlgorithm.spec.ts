@@ -49,7 +49,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             options.salinity = Salinity.salt;
             options.altitude = 0;
             segments = new Segments();
-            segments.add(0, 40, StandardGases.air, 2 * Time.oneMinute);
+            segments.add(40, StandardGases.air, 2 * Time.oneMinute);
             segments.addFlat(StandardGases.air, 8 * Time.oneMinute);
         });
 
@@ -90,7 +90,7 @@ describe('Buhlmann Algorithm - Plan', () => {
         const gases: Gases = new Gases();
         gases.add(StandardGases.air);
         const segments = new Segments();
-        segments.add(0, 30, StandardGases.air, 3 * Time.oneMinute);
+        segments.add(30, StandardGases.air, 3 * Time.oneMinute);
         segments.addFlat(StandardGases.air, 30 * Time.oneMinute);
         const planText = calculatePlan(gases, segments);
         const expectedPlan = '0,30,180; 30,30,1800; 30,10,120; 10,10,300; 10,5,30; 5,5,240; 5,3,12; 3,3,840; 3,0,18;';
@@ -141,7 +141,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             const gases: Gases = new Gases();
             gases.add(StandardGases.ean32);
             const segments = new Segments();
-            segments.add(0, 5, StandardGases.ean32, 15);
+            segments.add(5, StandardGases.ean32, 15);
             segments.addFlat(StandardGases.ean32, 29.75 * Time.oneMinute);
             const planText = calculatePlan(gases, segments);
             return planText;
@@ -152,7 +152,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             gases.add(StandardGases.air);
 
             const segments = new Segments();
-            segments.add(0, 10, StandardGases.air, 30);
+            segments.add(10, StandardGases.air, 30);
             segments.addFlat(StandardGases.air, 39.5 * Time.oneMinute);
 
             options.safetyStop = SafetyStop.always;
@@ -188,7 +188,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             gases.add(StandardGases.ean32);
 
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.ean32, 2 * Time.oneMinute);
+            segments.add(30, StandardGases.ean32, 2 * Time.oneMinute);
             segments.addFlat(StandardGases.ean32, 10 * Time.oneMinute);
 
             const planText = calculatePlan(gases, segments);
@@ -201,9 +201,9 @@ describe('Buhlmann Algorithm - Plan', () => {
         gases.add(StandardGases.air);
 
         const segments = new Segments();
-        segments.add(0, 10, StandardGases.air, 1 * Time.oneMinute);
+        segments.add(10, StandardGases.air, 1 * Time.oneMinute);
         segments.addFlat(StandardGases.air, 10 * Time.oneMinute);
-        segments.add(10, 0, StandardGases.air, 1 * Time.oneMinute);
+        segments.add(0, StandardGases.air, 1 * Time.oneMinute);
 
         const planText = calculatePlan(gases, segments);
 
@@ -216,7 +216,7 @@ describe('Buhlmann Algorithm - Plan', () => {
         gases.add(StandardGases.air);
 
         const segments = new Segments();
-        segments.add(0, 30, StandardGases.air, 1.5 * Time.oneMinute);
+        segments.add(30, StandardGases.air, 1.5 * Time.oneMinute);
         segments.addFlat(StandardGases.air, 23.5 * Time.oneMinute);
 
         const planText = calculatePlan(gases, segments);
@@ -232,7 +232,7 @@ describe('Buhlmann Algorithm - Plan', () => {
         gases.add(StandardGases.ean50);
 
         const segments = new Segments();
-        segments.add(0, 40, StandardGases.air, 2 * Time.oneMinute);
+        segments.add(40, StandardGases.air, 2 * Time.oneMinute);
         segments.addFlat(StandardGases.air, 28 * Time.oneMinute);
 
         const planText = calculatePlan(gases, segments);
@@ -249,7 +249,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             gases.add(StandardGases.ean50);
 
             const segments = new Segments();
-            segments.add(0, 50, StandardGases.trimix2135, 2.5 * Time.oneMinute);
+            segments.add(50, StandardGases.trimix2135, 2.5 * Time.oneMinute);
             segments.addFlat(StandardGases.trimix2135, 22.5 * Time.oneMinute);
 
             options.roundStopsToMinutes = true;
@@ -268,7 +268,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             gases.add(StandardGases.oxygen);
 
             const segments = new Segments();
-            segments.add(0, 50, StandardGases.trimix2135, 2.5 * Time.oneMinute);
+            segments.add(50, StandardGases.trimix2135, 2.5 * Time.oneMinute);
             segments.addFlat(StandardGases.trimix2135, 22.5 * Time.oneMinute);
 
             options.roundStopsToMinutes = false;
@@ -284,7 +284,7 @@ describe('Buhlmann Algorithm - Plan', () => {
     describe('Gas switches - 30m for 10 minutes', () => {
         const createSegments = (): Segments => {
             const segments = new Segments();
-            segments.add(0, 30, StandardGases.air, 1.5 * Time.oneMinute);
+            segments.add(30, StandardGases.air, 1.5 * Time.oneMinute);
             segments.addFlat(StandardGases.air, 8.5 * Time.oneMinute);
             return segments;
         };
@@ -335,7 +335,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             gases.add(StandardGases.trimix1260);
 
             const segments = new Segments();
-            segments.add(0, 75, StandardGases.trimix1260, 5 * Time.oneMinute);
+            segments.add(75, StandardGases.trimix1260, 5 * Time.oneMinute);
             segments.addFlat(StandardGases.trimix1260, 5 * Time.oneMinute);
 
             options.roundStopsToMinutes = true;
@@ -355,8 +355,8 @@ describe('Buhlmann Algorithm - Plan', () => {
             gases.add(StandardGases.oxygen);
 
             const segments = new Segments();
-            segments.add(0, 10, StandardGases.trimix3525, 1 * Time.oneMinute);
-            segments.add(10, 75, StandardGases.trimix1260, 5 * Time.oneMinute);
+            segments.add(10, StandardGases.trimix3525, 1 * Time.oneMinute);
+            segments.add(75, StandardGases.trimix1260, 5 * Time.oneMinute);
             segments.addFlat(StandardGases.trimix1260, 5 * Time.oneMinute);
 
             options.roundStopsToMinutes = true;

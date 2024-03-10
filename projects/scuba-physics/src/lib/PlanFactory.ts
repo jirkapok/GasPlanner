@@ -22,7 +22,7 @@ export class PlanFactory {
     public static createPlan(targetDepth: number, duration: number, tank: Tank, options: Options): Segments {
         const segments = new Segments();
         const descentDuration = PlanFactory.descentDuration(targetDepth, options);
-        segments.add(0, targetDepth, tank, descentDuration);
+        segments.add(targetDepth, tank, descentDuration);
         let bottomTime = Time.toSeconds(duration) - descentDuration;
         // not enough time to descent
         bottomTime = bottomTime < 0 ? 0 : bottomTime;

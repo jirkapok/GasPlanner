@@ -144,10 +144,10 @@ export class AlgorithmContext {
     }
 
     public addAscentSegment(nextStop: number, duration: number): Segment {
-        return this.segments.add(this.currentDepth, nextStop, this.currentGas, duration);
+        return this.segments.add(nextStop, this.currentGas, duration);
     }
 
     private addStopSegment(duration: number): Segment {
-        return this.segments.add(this.currentDepth, this.currentDepth, this.currentGas, duration);
+        return this.segments.addFlat(this.currentGas, duration);
     }
 }

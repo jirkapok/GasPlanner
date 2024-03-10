@@ -224,13 +224,13 @@ export class Segments {
         return Segments.duration(this.segments);
     }
 
-    /** deep copy of all element */
+    /** deep copy of all element, Does not fix start depths  */
     public static from(other: Segments): Segments {
         const result = Segments.fromCollection(other.segments);
         return result;
     }
 
-    /** deep copy of all element */
+    /** Deep copy of all elements, Does not fix start depths */
     public static fromCollection(segments: Segment[]): Segments {
         const result = new Segments();
 
@@ -279,13 +279,14 @@ export class Segments {
     }
 
     /**
-     * @param startDepth in meters
-     * @param endDepth in meters
+     * Adds transition to newDepth in meters, from last segment end depth using given gas for given duration in seconds
+     * @param newDepth The target depth in meters
+     * @param  in meters
      * @param source Tank in case user defined segment, otherwise gas, see segment constructor
      * @param duration in seconds
      */
-    public add(startDepth: number, endDepth: number, source: Tank | Gas, duration: number): Segment {
-        const segment = new Segment(startDepth, endDepth, source, duration);
+    public add(newDepth: number, source: Tank | Gas, duration: number): Segment {
+        const segment = new Segment(this.currentDepth, newDepth, source, duration);
         this.segments.push(segment);
         this.updateMaxDepth(segment);
         return segment;
@@ -297,12 +298,12 @@ export class Segments {
      * @param duration in seconds
      */
     public addFlat(source: Tank | Gas, duration: number): Segment {
-        return this.add(this.currentDepth, this.currentDepth, source, duration);
+        return this.add(this.currentDepth, source, duration);
     }
 
-    /** Adds transition to newDepth in meters, from last segment end depth using given gas for given duration in seconds */
+    // TODO will be removed
     public addChangeTo(newDepth: number, gas: Gas, duration: number): Segment {
-        return this.add(this.currentDepth, newDepth, gas, duration);
+        return this.add(newDepth, gas, duration);
     }
 
     /**

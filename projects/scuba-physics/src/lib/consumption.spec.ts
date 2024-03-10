@@ -326,10 +326,8 @@ describe('Consumption', () => {
             const ean50Tank2 = new Tank(10, 200, 50);
             const tanks = [airTank, airTank2, ean50Tank, ean50Tank2];
 
-            const descent = new Segment(0, 20, ean50Tank.gas, 2 * Time.oneMinute); // ean50 2b * 2 bar/min * 2 minute = 8b
-            descent.tank = ean50Tank;
-            const swim = new Segment(20, 20, airTank.gas, 20 * Time.oneMinute);  // 3 b * 1 b/min * 20 min = 60b
-            swim.tank = airTank;
+            const descent = new Segment(0, 20, ean50Tank, 2 * Time.oneMinute); // ean50 2b * 2 bar/min * 2 minute = 8b
+            const swim = new Segment(20, 20, airTank, 20 * Time.oneMinute);  // 3 b * 1 b/min * 20 min = 60b
 
             const profile = [
                 descent,
@@ -361,10 +359,8 @@ describe('Consumption', () => {
             const airTank = new Tank(20, 100, 21);
             const tanks = [airTank];
 
-            const descent = new Segment(0, 20, airTank.gas, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
-            descent.tank = airTank;
-            const swim = new Segment(20, 20, airTank.gas, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
-            swim.tank = airTank;
+            const descent = new Segment(0, 20, airTank, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
+            const swim = new Segment(20, 20, airTank, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
 
             const profile = [
                 descent,
@@ -387,12 +383,9 @@ describe('Consumption', () => {
             const airTank = new Tank(20, 100, 21);
             const tanks = [airTank];
 
-            const descent = new Segment(0, 20, airTank.gas, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
-            descent.tank = airTank;
-            const swim = new Segment(20, 20, airTank.gas, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
-            swim.tank = airTank;
-            const ascent = new Segment(20, 0, airTank.gas, 4 * Time.oneMinute);   // 2 b * 1 bar/min * 4 minute = 8b
-            ascent.tank = airTank;
+            const descent = new Segment(0, 20, airTank, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
+            const swim = new Segment(20, 20, airTank, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
+            const ascent = new Segment(20, 0, airTank, 4 * Time.oneMinute);   // 2 b * 1 bar/min * 4 minute = 8b
 
             const profile = [descent, swim, ascent];
             consumption.consumeFromTanks(profile, options3, tanks, diver);

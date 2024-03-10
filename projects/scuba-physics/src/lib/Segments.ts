@@ -30,16 +30,50 @@ export class SegmentsValidator {
 }
 
 export class Segment {
+    public _startDepth: number;
+    public _endDepth: number;
+    public _duration: number;
     private _tank?: Tank;
+    private _gas: Gas;
 
     constructor(
         /** in meters */
-        public startDepth: number,
+        startDepth: number,
         /** in meters */
-        public endDepth: number,
-        private _gas: Gas,
+        endDepth: number,
+        /**
+         *  Use tank for user defined segments otherwise gas only.
+         *  User defined tank is used to enforce the tank usage in emergency ascent consumed gas calculation.
+         **/
+        source: Gas | Tank,
         /** in seconds */
-        public duration: number) { }
+        duration: number) {
+        this._startDepth = startDepth;
+        this._endDepth = endDepth;
+        this._duration = duration;
+
+        if(source instanceof Tank) {
+            this._tank = source;
+            this._gas = source.gas;
+        } else {
+            this._gas = source;
+        }
+    }
+
+    /** in meters */
+    public get startDepth(): number {
+        return this._startDepth;
+    }
+
+    /** in meters */
+    public get endDepth(): number {
+        return this._endDepth;
+    }
+
+    /** in seconds */
+    public get duration(): number {
+        return this._duration;
+    }
 
     /** See tank, you can change gas only by assigning tank,
      * gas doesn't change for calculated segments.
@@ -62,6 +96,21 @@ export class Segment {
     /** in meters */
     public get averageDepth(): number {
         return (this.startDepth + this.endDepth) / 2;
+    }
+
+    /** in meters */
+    public set startDepth(newValue: number) {
+        this._startDepth = newValue;
+    }
+
+    /** in meters */
+    public set endDepth(newValue: number) {
+        this._endDepth = newValue;
+    }
+
+    /** in seconds */
+    public set duration(newValue: number) {
+        this._duration = newValue;
     }
 
     /**

@@ -7,8 +7,8 @@
             <small><strong>Difference</strong></small>
         </div>
         <div class="d-flex flex-row justify-content-around">
-            <small><strong class="text-start text-muted">Profile A</strong></small>
-            <small><strong class="text-start text-muted">Profile B</strong></small>
+            <small><strong class="text-start text-muted">{{ profileATitle }}</strong></small>
+            <small><strong class="text-start text-muted">{{ profileBTitle }}</strong></small>
         </div>
     </div>
     <div *ngIf="!collapsed" style="position: relative">
@@ -51,11 +51,11 @@
             <div class="img-wrapper"><img src="./assets/icons/legend-safetyReserve.png" alt="Safety reserve"></div>
             <div class="d-flex flex-row justify-content-between w-100">
                 <small *ngIf="gasTotalProfileA != 0 else whiteSpace" class="text-start text-muted">
-                    Safety reserve:
+                    Reserve:
                     {{ gasReserveProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
                 </small>
                 <small *ngIf="gasTotalProfileB != 0" class="text-end text-muted">
-                    Safety reserve:
+                    Reserve:
                     {{ gasReserveProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
                 </small>
             </div>
@@ -81,7 +81,7 @@
 
 <ng-template #missingTank>
     <small class="text-start text-muted">
-        {{ gasName }} is not present
+        Not available
     </small>
 </ng-template>
 <ng-template #whiteSpace>

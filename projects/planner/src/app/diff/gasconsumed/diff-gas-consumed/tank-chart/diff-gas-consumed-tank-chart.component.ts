@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UnitConversion} from '../../../../shared/UnitConversion';
 import {IConsumedMix, StandardGases} from 'scuba-physics';
 import { faArrowLeft, faArrowRight, faMinus } from '@fortawesome/free-solid-svg-icons';
+import {ProfileComparatorService} from '../../../../shared/profileComparatorService';
 
 @Component({
     selector: 'app-diff-gas-consumed-tank-chart',
@@ -33,7 +34,7 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
     private profileAGasRemaining = this.profileACombinedGas.total - this.profileACombinedGas.consumed;
     private profileBGasRemaining = this.profileBCombinedGas.total - this.profileBCombinedGas.consumed;
 
-    constructor(public units: UnitConversion) { }
+    constructor(public units: UnitConversion, private profileComparatorService: ProfileComparatorService) { }
 
     public get gasName(): string {
         return this.profileACombinedGas.gas.name;
@@ -91,6 +92,14 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
         const profileAPercentage = this.profileACombinedGas.reserve / totalReserve;
         const profileBPercentage = this.profileBCombinedGas.reserve / totalReserve;
         return Math.abs(profileAPercentage - profileBPercentage) * 50;
+    }
+
+    public get profileATitle(): string {
+        return this.profileComparatorService.profileA.title;
+    }
+
+    public get profileBTitle(): string {
+        return this.profileComparatorService.profileB.title;
     }
 
 

@@ -2,7 +2,6 @@ import { Precision } from './precision';
 import { DepthConverter } from './depth-converter';
 import { DepthLevels } from './DepthLevels';
 import { GasMixtures } from './GasMixtures';
-import { StandardGases } from './StandardGases';
 
 export class GasSwitchCalculator {
     constructor(private depthLevels: DepthLevels) {
@@ -27,7 +26,7 @@ export class GasSwitchCalculator {
  * except gas switch depth (see GasSwitchCalculator).
  */
 export class NitroxCalculator {
-    constructor(private depthConverter: DepthConverter, private o2InAir = StandardGases.o2InAir) {
+    constructor(private depthConverter: DepthConverter, private o2InAir = GasMixtures.o2InAir) {
     }
 
     /**

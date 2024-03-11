@@ -1,12 +1,9 @@
 import { Precision } from './precision';
+import { GasMixtures } from './GasMixtures';
 import { Gas } from './Gases';
 import _ from 'lodash';
 
 export class StandardGases {
-    /** Relative partial pressure of oxygen in air at surface */
-    public static readonly o2InAir = 0.209;
-    public static readonly nitroxInAir = 1 - StandardGases.o2InAir;
-
     // theoretical range for ppo2 1.3 test data (even not used all gases with these values)
     // Standard gases inspired by UTD standard gases
 
@@ -36,7 +33,7 @@ export class StandardGases {
     // Normooxic
 
     /** 0 - 52.2 m */
-    public static readonly air = new Gas(StandardGases.o2InAir, 0);
+    public static readonly air = new Gas(GasMixtures.o2InAir, 0);
 
     /** 0 - 51.9 m */
     public static readonly trimix2135 = new Gas(0.21, 0.35);

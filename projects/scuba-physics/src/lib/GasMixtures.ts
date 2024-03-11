@@ -1,7 +1,15 @@
 import { DepthConverter } from './depth-converter';
-import { StandardGases } from './StandardGases';
 
 export class GasMixtures {
+    /** Relative partial pressure of oxygen in air at surface */
+    public static readonly o2InAir = 0.209;
+    public static readonly nitroxInAir = 1 - GasMixtures.o2InAir;
+
+    /** Defines minimum fraction of oxygen in gas mixture of breath able gas. */
+    public static readonly minPpO2 = 0.18;
+
+    /** Maximum recommended value of equivalent narcotic depth. */
+    public static readonly maxEnd = 30;
     /**
      * Calculates the partial pressure of a gas component from the volume gas fraction and total pressure.
      *
@@ -48,11 +56,12 @@ export class GasMixtures {
      * Calculates equivalent air depth for given nitrox gas mix.
      * https://en.wikipedia.org/wiki/Equivalent_air_depth
      *
-     * @param fO2 - Fraction of Oxygen in gas mix (0-1).
-     * @param depth - Current depth in bars.
+     * @param fO2 Fraction of Oxygen in gas mix (0-1).
+     * @param depth Current depth in bars.
+     * @param o2InAir Theoretical/default fraction of oxygen content in air.
      * @returns Depth in bars. May return pressure lower than surface pressure!
      */
-    public static ead(fO2: number, depth: number, o2InAir: number = StandardGases.o2InAir): number {
+    public static ead(fO2: number, depth: number, o2InAir: number = GasMixtures.o2InAir): number {
         const fN2 = 1 - fO2; // here we are interested only in nitrogen toxicity
         const nitroxInAir = 1 - o2InAir;
         const result = GasMixtures.end(depth, fN2) / nitroxInAir;
@@ -99,8 +108,7 @@ export class GasMixtures {
      * @returns Depth in bars.
      */
     public static ceiling(fO2: number, surfacePressure: number): number {
-        const minppO2 = 0.18;
-        const ratio = minppO2 / fO2;
+        const ratio = GasMixtures.minPpO2 / fO2;
         const bars = ratio * surfacePressure;
 
         // hyperoxic gases have pressure bellow sea level, which cant be converted to depth

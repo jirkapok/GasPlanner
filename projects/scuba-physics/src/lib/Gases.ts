@@ -14,7 +14,6 @@ import { StandardGases } from './StandardGases';
 export class GasesValidator {
     /**
      * @param gases not null list of gases to validate
-     * @param surfacePressure surfaces pressure in bars
      */
     public static validate(gases: Gases): Event[] {
         const events: Event[] = [];

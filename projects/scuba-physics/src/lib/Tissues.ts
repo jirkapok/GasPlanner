@@ -3,7 +3,6 @@ import { Gas } from './Gases';
 import _ from 'lodash';
 import { AltitudePressure, PressureConverter } from './pressure-converter';
 import { GasMixtures } from './GasMixtures';
-import { StandardGases } from './StandardGases';
 
 /**
  * Represents transition between depths during dive
@@ -40,7 +39,7 @@ export class Tissue extends Compartment implements LoadedTissue {
             compartment.heHalfTime, compartment.heA, compartment.heB);
 
         const pressure = this.pressureInLungs(surfacePressure);
-        this._pN2 = GasMixtures.partialPressure(pressure, StandardGases.nitroxInAir);
+        this._pN2 = GasMixtures.partialPressure(pressure, GasMixtures.nitroxInAir);
         this._pHe = 0;
         this.updateTotal();
     }

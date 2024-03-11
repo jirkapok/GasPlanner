@@ -3,6 +3,7 @@ import { DepthLevelOptions } from './DepthLevels';
 import { GasOptions } from './Gases';
 import { Salinity } from './pressure-converter';
 import { SpeedOptions } from './speeds';
+import { GasMixtures } from './GasMixtures';
 
 
 export enum SafetyStop {
@@ -25,7 +26,7 @@ export class OptionDefaults {
     public static readonly minimumAutoStopDepth = 10;
 
     public static readonly addSafetyStop = true;
-    public static readonly maxEND = 30;
+    public static readonly maxEND = GasMixtures.maxEnd;
     public static readonly oxygenNarcotic = true;
 
     public static readonly ascentSpeed6m = 3;

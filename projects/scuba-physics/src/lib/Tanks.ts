@@ -1,4 +1,5 @@
 import { Precision } from './precision';
+import { GasMixtures } from './GasMixtures';
 import { Gas } from './Gases';
 import { StandardGases } from './StandardGases';
 
@@ -162,7 +163,7 @@ export class Tank implements TankFill {
 
     /** Creates 15 L, filled with 200 bar Air */
     public static createDefault(): Tank {
-        return new Tank(15, 200, StandardGases.o2InAir * 100);
+        return new Tank(15, 200, GasMixtures.o2InAir * 100);
     }
 
     /** Gets total volume at start pressure in liters */
@@ -196,7 +197,7 @@ export class Tank implements TankFill {
  */
 export class AirO2Pin {
     private static readonly pinnedO2 = 21;
-    private static readonly o2InAirPercent = StandardGases.o2InAir * 100;
+    private static readonly o2InAirPercent = GasMixtures.o2InAir * 100;
 
     public static getO2(fO2: number, fHe: number): number {
         const current = fO2 * 100;
@@ -211,7 +212,7 @@ export class AirO2Pin {
 
     public static setO2(newO2: number, fHe: number): number {
         if (this.isInAirRange(newO2, fHe)) {
-            return StandardGases.o2InAir;
+            return GasMixtures.o2InAir;
         }
 
         return newO2 / 100;

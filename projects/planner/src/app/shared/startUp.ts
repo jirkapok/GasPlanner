@@ -33,9 +33,11 @@ export class DashboardStartUp {
             this.urlSerialization.fromUrl(query);
             // cant do in constructor, since the state may be changed
             this.viewStore.saveMainView();
-            // in case it fails we need to reset the parameters
-            this.updateQueryParams();
         }
+
+        // in case it fails we need to reset the parameters
+        // or in case of navigation to dashboard with only one dive
+        this.updateQueryParams();
     }
 
     public stopDisclaimer(): void {

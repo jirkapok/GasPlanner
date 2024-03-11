@@ -1,4 +1,11 @@
-import { CanActivateFn, Router, RouterModule, Routes, UrlTree } from '@angular/router';
+import {
+    ActivatedRouteSnapshot,
+    CanActivateFn,
+    Router,
+    RouterModule,
+    Routes,
+    UrlTree
+} from '@angular/router';
 import { Location } from '@angular/common';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -15,10 +22,12 @@ import { DiffComponent } from './diff/diff.component';
 import { RedundanciesComponent } from './redundancies/redundancies.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 
-const canActivateDashboard: CanActivateFn = (): boolean | UrlTree => {
+const canActivateDashboard: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
     const router = inject(Router);
     const viewStates = inject(ViewStates);
-    if (viewStates.redirectToView) {
+
+    // the only view with params is dashboard with only one dive
+    if (route.queryParamMap.keys.length === 0 && viewStates.redirectToView) {
         const target = `/${viewStates.lastView}`;
         const location = inject(Location);
         location.go(target);

@@ -1,4 +1,5 @@
 import {
+    GasDensity, GasMixtures,
     GasProperties, Tank
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
@@ -59,6 +60,22 @@ export class BoundGasProperties {
 
     public get oxygenNarcotic(): boolean {
         return this.calc.oxygenNarcotic;
+    }
+
+    public get minPpO2Exceeded(): boolean {
+        return this.ppO2 < GasMixtures.minPpO2;
+    }
+
+    public get maxPpO2Exceeded(): boolean {
+        return this.ppO2 > this.maxPpO2;
+    }
+
+    public get mndExceeded(): boolean {
+        return this.mnd > GasMixtures.maxEnd;
+    }
+
+    public get densityExceeded(): boolean {
+        return this.calc.density > GasDensity.recommendedMaximum;
     }
 
     public set depth(newValue: number) {

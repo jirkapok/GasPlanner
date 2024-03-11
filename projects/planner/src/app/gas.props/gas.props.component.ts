@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { faCalculator, faTable } from '@fortawesome/free-solid-svg-icons';
+import { faCalculator, faExclamationTriangle, faTable } from '@fortawesome/free-solid-svg-icons';
 import {
     NonNullableFormBuilder, FormGroup, FormControl
 } from '@angular/forms';
@@ -29,6 +29,7 @@ interface GasForm {
 export class GasPropertiesCalcComponent implements OnInit {
     public calcIcon = faCalculator;
     public tableIcon = faTable;
+    public warningIcon = faExclamationTriangle;
     public gasForm!: FormGroup<GasForm>;
     public calc: BoundGasProperties;
     public depthConverterWarning = TextConstants.depthConverterWarning;

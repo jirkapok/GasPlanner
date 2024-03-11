@@ -5,7 +5,9 @@ import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { GasBlenderService } from '../shared/gas-blender.service';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
-import { Precision, StandardGases, Tank } from 'scuba-physics';
+import {
+    Precision, StandardGases, Tank, GasMixtures
+} from 'scuba-physics';
 import { BlenderViewState, TankMix } from '../shared/views.model';
 import { KnownViews } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
@@ -182,7 +184,7 @@ export class GasBlenderComponent implements OnInit {
         return {
             id: KnownViews.blender,
             source: {
-                o2: StandardGases.o2InAir * 100,
+                o2: GasMixtures.o2InAir * 100,
                 he: 0,
                 pressure: 0
             },

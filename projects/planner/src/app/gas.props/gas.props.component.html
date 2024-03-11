@@ -32,7 +32,7 @@
                         <div class="form-check form-switch pb-1">
                             <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
                                 [checked]="calc.oxygenNarcotic" (change)="switchOxygenNarcotic()" />
-                            <label class="form-check-label" for="roundStops">Oxygen is narcotic</label>
+                            <label class="form-check-label" for="oxygenNarcotic">Oxygen is narcotic</label>
                         </div>
                     </div>
                     <div class="pt-2 mb-4">
@@ -95,6 +95,39 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="col col-12 col-sm-7 col-md-5 col-lg-4 col-xxl-3 mt-3">
+        <div class="card">
+            <div class="card-header">
+                <fa-icon [icon]="warningIcon" class="me-3"></fa-icon>
+                <span>Issues</span>
+            </div>
+            <div class="card-body">
+                <div *ngIf="true" class="alert alert-warning">
+                    <fa-icon [icon]="warningIcon" class="me-2"></fa-icon>
+                    <strong>Minimum depth: </strong>
+                    <span>Exceeded minimum value of Oxygen partial pressure (0.18), which defines minimum depth.
+                        Add more oxygen content or reduce required depth.</span>
+                </div>
+                <div *ngIf="true" class="alert alert-warning">
+                    <fa-icon [icon]="warningIcon" class="me-2"></fa-icon>
+                    <strong>Maximum depth: </strong>
+                    <span>Exceeded maximum value of Oxygen partial pressure (1.6). Increase the maximum ppO2,
+                        reduce oxygen content or reduce required depth.</span>
+                </div>
+                <div *ngIf="true" class="alert alert-warning">
+                    <fa-icon [icon]="warningIcon" class="me-2"></fa-icon>
+                    <strong>Maximum narcotic depth: </strong>
+                    <span>Exceeded maximum value of narcotic depth controlled by partial pressure of nitrogen.
+                        Reduce nitrogen content by adding helium, adding oxygen or reduce required depth.</span>
+                </div>
+                <div *ngIf="true" class="alert alert-warning">
+                    <fa-icon [icon]="warningIcon" class="me-2"></fa-icon>
+                    <strong>Maximum gas density: </strong>
+                    <span>Exceeded maximum value of gas density (5.6 g/l). Reduce oxygen content or add more helium.</span>
+                </div>
             </div>
         </div>
     </div>

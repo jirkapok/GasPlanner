@@ -3,4 +3,8 @@ form {
     padding-top: 1.5rem !important;
     // spread tabs across full page width
     width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 100%;
+    position: relative;
 }

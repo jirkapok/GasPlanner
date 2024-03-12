@@ -9,6 +9,7 @@ export interface GasViewState extends ViewState {
     he: number;
     maxPO2: number;
     depth: number;
+    mndLimit: number;
     oxygenNarcotic: boolean;
 }
 

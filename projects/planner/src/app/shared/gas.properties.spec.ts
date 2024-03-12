@@ -41,6 +41,14 @@ describe('Gas properties bound', () => {
         it('Depth is 100 ft', () => {
             expect(sut.depth).toBeCloseTo(100, 6);
         });
+
+        it('Narcotic depth limit is applied', () => {
+            sut.tank.o2 = 21;
+            sut.tank.he = 0;
+            sut.mndLimit = 133;
+            units.imperialUnits = false;
+            expect(sut.mnd).toBeCloseTo(40.5384, 6);
+        });
     });
 
     describe('Metric', () => {
@@ -84,6 +92,13 @@ describe('Gas properties bound', () => {
         it('Max. PpO2 is applied', () => {
             sut.maxPpO2 = 1.5;
             expect(sut.maxDepth).toBeCloseTo(140, 6);
+        });
+
+        it('Narcotic depth limit is applied', () => {
+            sut.tank.o2 = 21;
+            sut.tank.he = 0;
+            sut.mndLimit = 40;
+            expect(sut.mnd).toBeCloseTo(40, 6);
         });
 
         it('Max. density is 5.7 g/l', () => {

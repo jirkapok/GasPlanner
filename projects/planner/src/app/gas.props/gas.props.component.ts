@@ -12,13 +12,14 @@ import { GasViewState } from '../shared/views.model';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { BoundGasProperties } from '../shared/gas.properties';
 import { TextConstants } from '../shared/TextConstants';
-import { Tank } from 'scuba-physics';
+import { Tank, Precision } from 'scuba-physics';
 
 interface GasForm {
     o2: FormControl<number>;
     he: FormControl<number>;
     maxPO2: FormControl<number>;
     depth: FormControl<number>;
+    mndLimit: FormControl<number>;
 }
 
 @Component({
@@ -64,6 +65,11 @@ export class GasPropertiesCalcComponent implements OnInit {
         return this.inputs.controlInValid(depthControl);
     }
 
+    public get narcoticDepthInvalid(): boolean {
+        const mndLimitControl = this.gasForm.controls.mndLimit;
+        return this.inputs.controlInValid(mndLimitControl);
+    }
+
     public get nitrox(): number {
         return this.tank.n2;
     }
@@ -73,7 +79,8 @@ export class GasPropertiesCalcComponent implements OnInit {
             o2: [this.tank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
             he: [this.tank.he, this.validators.rangeFor(this.ranges.tankHe)],
             maxPO2: [this.calc.maxPpO2, this.validators.rangeFor(this.ranges.ppO2)],
-            depth: [this.calc.depth, this.validators.rangeFor(this.ranges.depth)],
+            depth: [Precision.round(this.calc.depth, 1), this.validators.rangeFor(this.ranges.depth)],
+            mndLimit: [Precision.round(this.calc.mndLimit,1), this.validators.rangeFor(this.ranges.narcoticDepth)],
         });
     }
 
@@ -97,6 +104,7 @@ export class GasPropertiesCalcComponent implements OnInit {
         this.tank.he = Number(values.he);
         this.calc.maxPpO2 = Number(values.maxPO2);
         this.calc.depth = Number(values.depth);
+        this.calc.mndLimit = Number(values.mndLimit);
         this.reloadContent();
         this.saveState();
     }
@@ -125,6 +133,7 @@ export class GasPropertiesCalcComponent implements OnInit {
         this.tank.o2 =  state.o2;
         this.calc.maxPpO2 = state.maxPO2;
         this.calc.depth = this.units.fromMeters(state.depth);
+        this.calc.mndLimit = this.units.fromMeters(state.mndLimit);
 
         if(this.calc.oxygenNarcotic !== state.oxygenNarcotic) {
             this.calc.switchOxygenNarcotic();
@@ -142,6 +151,7 @@ export class GasPropertiesCalcComponent implements OnInit {
             he: this.tank.he,
             maxPO2: this.calc.maxPpO2,
             depth: this.units.toMeters(this.calc.depth),
+            mndLimit: this.units.toMeters(this.calc.mndLimit),
             oxygenNarcotic: this.calc.oxygenNarcotic,
             id: KnownViews.gas
         };

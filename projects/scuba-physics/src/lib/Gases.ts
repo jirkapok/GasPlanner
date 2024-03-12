@@ -4,7 +4,6 @@ import { DepthLevelOptions, DepthLevels } from './DepthLevels';
 import { Event, EventsFactory } from './CalculatedProfile';
 import { Tank } from './Tanks';
 import { GasMixtures } from './GasMixtures';
-import { StandardGases } from './StandardGases';
 
 /**
  * The only issue with gases is, that there is no gas.
@@ -122,6 +121,9 @@ export class Gases {
 }
 
 export class Gas {
+    private static nameFor: (fO2: number, fHe: number) => string;
+    private static byName: (gasName: string) => Gas | null;
+
     /**
      * @param _fO2 partial pressure of O2 in the mix, range 0-1
      * @param _fHe partial pressure of He in the mix, range 0-1
@@ -149,7 +151,7 @@ export class Gas {
 
     /** Gets not null name of the content gas based on O2 and he fractions */
     public get name(): string {
-        return StandardGases.nameFor(this.fO2, this.fHe);
+        return Gas.nameFor(this.fO2, this.fHe);
     }
 
     public set fO2(newValue: number) {
@@ -166,6 +168,12 @@ export class Gas {
         if (this.contentExceeds100percent()) {
             this._fO2 = this.countRemaining(this._fHe);
         }
+    }
+
+    /** For internal use only */
+    public static init(nameFor: (fO2: number, fHe: number) => string, byName: (gasName: string) => Gas | null) {
+        Gas.nameFor = nameFor;
+        Gas.byName = byName;
     }
 
     public copy(): Gas {
@@ -231,7 +239,7 @@ export class Gas {
     }
 
     public assignStandardGas(gasName: string): void {
-        const found = StandardGases.byName(gasName);
+        const found = Gas.byName(gasName);
 
         if (!found) {
             return;

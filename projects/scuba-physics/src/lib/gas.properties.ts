@@ -1,4 +1,4 @@
-import { DensityAtDepth } from './GasDensity';
+import { DensityAtDepth, GasDensity } from './GasDensity';
 import { Gas } from './Gases';
 import { Tank } from './Tanks';
 import { DepthConverter } from './depth-converter';
@@ -18,6 +18,23 @@ export class GasProperties {
 
     public get tank(): Tank {
         return this._tank;
+    }
+
+
+    public get minPpO2Exceeded(): boolean {
+        return this.ppO2 < GasMixtures.minPpO2;
+    }
+
+    public get maxPpO2Exceeded(): boolean {
+        return this.ppO2 > this.maxPpO2;
+    }
+
+    public get mndExceeded(): boolean {
+        return this.mnd > GasMixtures.maxEnd;
+    }
+
+    public get densityExceeded(): boolean {
+        return this.density > GasDensity.recommendedMaximum;
     }
 
     /** Gets or sets narcotic depth in meters to be used to compare with current gas properties. */

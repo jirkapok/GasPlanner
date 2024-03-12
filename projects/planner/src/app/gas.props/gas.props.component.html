@@ -74,11 +74,15 @@
                             <td class="table-active">{{ calc.totalPp | number: '1.0-2' }}</td>
                         </tr>
                         <tr>
-                            <td>Minimum depth [{{units.length}}]</td>
+                            <td>Minimum depth [{{units.length}}]
+                                <fa-icon *ngIf="calc.minPpO2Exceeded" [icon]="warningIcon" class="me-2 text-warning"></fa-icon>
+                            </td>
                             <td class="table-active">{{ calc.minDepth | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
-                            <td>Maximum depth [{{units.length}}]</td>
+                            <td>Maximum depth [{{units.length}}]
+                                <fa-icon *ngIf="calc.maxPpO2Exceeded" [icon]="warningIcon" class="me-2 text-warning"></fa-icon>
+                            </td>
                             <td class="table-active">{{ calc.maxDepth | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
@@ -86,11 +90,14 @@
                             <td class="table-active">{{ calc.end | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
-                            <td>Maximum narcotic depth [{{units.length}}]</td>
+                            <td>Maximum narcotic depth [{{units.length}}]
+                                <fa-icon *ngIf="calc.mndExceeded" [icon]="warningIcon" class="me-2 text-warning"></fa-icon>
+                            </td>
                             <td class="table-active">{{ calc.mnd | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
-                            <td>Density [{{units.density}}]</td>
+                            <td>Density [{{units.density}}]
+                                <fa-icon *ngIf="calc.densityExceeded" [icon]="warningIcon" class="me-2 text-warning"></fa-icon></td>
                             <td class="table-active">{{ calc.density | number: '1.0-2' }}</td>
                         </tr>
                     </tbody>
@@ -105,25 +112,25 @@
                 <span>Issues</span>
             </div>
             <div class="card-body">
-                <div *ngIf="true" class="alert alert-warning">
+                <div *ngIf="calc.minPpO2Exceeded" class="alert alert-warning">
                     <fa-icon [icon]="warningIcon" class="me-2"></fa-icon>
                     <strong>Minimum depth: </strong>
                     <span>Exceeded minimum value of Oxygen partial pressure (0.18), which defines minimum depth.
                         Add more oxygen content or reduce required depth.</span>
                 </div>
-                <div *ngIf="true" class="alert alert-warning">
+                <div *ngIf="calc.maxPpO2Exceeded" class="alert alert-warning">
                     <fa-icon [icon]="warningIcon" class="me-2"></fa-icon>
                     <strong>Maximum depth: </strong>
                     <span>Exceeded maximum value of Oxygen partial pressure (1.6). Increase the maximum ppO2,
                         reduce oxygen content or reduce required depth.</span>
                 </div>
-                <div *ngIf="true" class="alert alert-warning">
+                <div *ngIf="calc.mndExceeded" class="alert alert-warning">
                     <fa-icon [icon]="warningIcon" class="me-2"></fa-icon>
                     <strong>Maximum narcotic depth: </strong>
                     <span>Exceeded maximum value of narcotic depth controlled by partial pressure of nitrogen.
                         Reduce nitrogen content by adding helium, adding oxygen or reduce required depth.</span>
                 </div>
-                <div *ngIf="true" class="alert alert-warning">
+                <div *ngIf="calc.densityExceeded" class="alert alert-warning">
                     <fa-icon [icon]="warningIcon" class="me-2"></fa-icon>
                     <strong>Maximum gas density: </strong>
                     <span>Exceeded maximum value of gas density (5.6 g/l). Reduce oxygen content or add more helium.</span>

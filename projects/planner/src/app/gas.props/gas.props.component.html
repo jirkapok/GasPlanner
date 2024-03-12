@@ -1,64 +1,67 @@
 <div class="row mt-5">
-    <div class="col col-12 col-sm-5 col-md-4 col-lg-3 col-xxl-2 mt-3">
+    <div class="col col-12 col-md-7 col-lg-4 col-xl-5 col-xxl-4 mt-3">
         <div class="card">
             <div class="card-header">
                 <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
                 <span>Gas mixture</span>
             </div>
             <div class="card-body">
-                <div class="mb-4">{{ depthConverterWarning }}</div>
                 <form [formGroup]="gasForm">
-                    <div>
-                        <div class="pt-2 mb-4">
-                            <app-oxygen-dropdown [tank]="tank" id="o2Item" (gasChange)="inputChanged()"
-                                (standardGasApplied)="standardGasApplied()" [nitroxForm]="gasForm" controlName="o2"
-                                [showBestMix]="false" [showTrimixGases]="true"></app-oxygen-dropdown>
-                            <small class="text-muted">Nitrox {{ nitrox | number: '1.0-2' }} [%]</small>
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-lg-12 col-xl-6">
+                            <div class="pt-2 mb-4">
+                                <app-oxygen-dropdown [tank]="tank" id="o2Item" (gasChange)="inputChanged()"
+                                                     (standardGasApplied)="standardGasApplied()" [nitroxForm]="gasForm" controlName="o2"
+                                                     [showBestMix]="false" [showTrimixGases]="true"></app-oxygen-dropdown>
+                                <small class="text-muted">Nitrox {{ nitrox | number: '1.0-2' }} [%]</small>
+                            </div>
+                            <div class="pt-2 mb-4">
+                                <label for="heItem" class="form-label">He [%]:</label>
+                                <input formControlName="he" class="form-control" type="number" (input)="inputChanged()"
+                                       [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1" required
+                                       [class.is-invalid]="gasHeInvalid" id="heItem" />
+                                <div class="text-danger" *ngIf="gasHeInvalid">Needs to be number
+                                    {{ranges.tankHeLabel}}</div>
+                            </div>
+                            <div class="pt-2 mb-4">
+                                <app-pp-o2 [maxPpO2]="calc.maxPpO2" (ppO2Change)="inputChanged()" label="Maximum ppO2:"
+                                           [pO2Form]="gasForm" controlName="maxPO2"></app-pp-o2>
+                            </div>
                         </div>
-                    </div>
-                    <div class="pt-2 mb-4">
-                        <label for="heItem" class="form-label">He [%]:</label>
-                        <input formControlName="he" class="form-control" type="number" (input)="inputChanged()"
-                            [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1" required
-                            [class.is-invalid]="gasHeInvalid" id="heItem" />
-                        <div class="text-danger" *ngIf="gasHeInvalid">Needs to be number
-                            {{ranges.tankHeLabel}}</div>
-                    </div>
-                    <div class="pt-2 mb-4">
-                        <app-pp-o2 [maxPpO2]="calc.maxPpO2" (ppO2Change)="inputChanged()" label="Maximum ppO2:"
-                            [pO2Form]="gasForm" controlName="maxPO2"></app-pp-o2>
-                    </div>
-                    <div class="pt-2 mb-4">
-                        <label for="maxNarcoticDepth" class="form-label" mdbLabel>Max narcotic depth
-                            [{{units.length}}]:</label>
-                        <input id="maxNarcoticDepth" class="form-control" type="number" formControlName="mndLimit"
-                               required [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
-                               (input)="inputChanged()" [class.is-invalid]="narcoticDepthInvalid" />
-                        <div class="invalid-feedback position-absolute">
-                            Needs to be number {{ranges.narcoticDepthLabel}}
+                        <div class="col-12 col-sm-6 col-lg-12 col-xl-6">
+                            <div class="pt-2 mb-4">
+                                <label for="maxNarcoticDepth" class="form-label" mdbLabel>Max narcotic depth
+                                    [{{units.length}}]:</label>
+                                <input id="maxNarcoticDepth" class="form-control" type="number" formControlName="mndLimit"
+                                       required [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
+                                       (input)="inputChanged()" [class.is-invalid]="narcoticDepthInvalid" />
+                                <div class="invalid-feedback position-absolute">
+                                    Needs to be number {{ranges.narcoticDepthLabel}}
+                                </div>
+                            </div>
+                            <div class="pt-2 mb-4">
+                                <div class="form-check form-switch pb-1">
+                                    <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
+                                           [checked]="calc.oxygenNarcotic" (change)="switchOxygenNarcotic()" />
+                                    <label class="form-check-label" for="oxygenNarcotic">Oxygen is narcotic</label>
+                                </div>
+                            </div>
+                            <div class="pt-2 mb-4">
+                                <label for="depth" class="form-label" mdbLabel>Properties at depth [{{units.length}}]:
+                                </label>
+                                <input class="form-control" type="number" (input)="inputChanged()" id="depth"
+                                       formControlName="depth" required [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
+                                       [class.is-invalid]="depthInvalid" />
+                                <div class="invalid-feedback position-absolute">Needs to be number
+                                    {{ranges.depth}}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="pt-2 mb-4">
-                        <div class="form-check form-switch pb-1">
-                            <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
-                                [checked]="calc.oxygenNarcotic" (change)="switchOxygenNarcotic()" />
-                            <label class="form-check-label" for="oxygenNarcotic">Oxygen is narcotic</label>
-                        </div>
-                    </div>
-                    <div class="pt-2 mb-4">
-                        <label for="depth" class="form-label" mdbLabel>Properties at depth [{{units.length}}]:
-                        </label>
-                        <input class="form-control" type="number" (input)="inputChanged()" id="depth"
-                            formControlName="depth" required [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
-                            [class.is-invalid]="depthInvalid" />
-                        <div class="invalid-feedback position-absolute">Needs to be number
-                            {{ranges.depth}}</div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="col col-12 col-sm-7 col-md-5 col-lg-4 col-xxl-3 mt-3">
+    <div class="col col-12 col-md-5 col-lg-4 col-xl-4 col-xxl-3 mt-3">
         <div class="card">
             <div class="card-header">
                 <fa-icon [icon]="tableIcon" class="me-3"></fa-icon>
@@ -115,13 +118,14 @@
             </div>
         </div>
     </div>
-    <div class="col col-12 col-sm-7 col-md-5 col-lg-4 col-xxl-3 mt-3">
+    <div class="col col-12 col-md-12 col-lg-4 col-xl-3 col-xxl-5 mt-3">
         <div class="card">
             <div class="card-header">
                 <fa-icon [icon]="warningIcon" class="me-3"></fa-icon>
-                <span>Issues</span>
+                <span>Warnings</span>
             </div>
             <div class="card-body">
+                <div class="mb-4">{{ depthConverterWarning }}</div>
                 <div *ngIf="calc.minPpO2Exceeded" class="alert alert-warning">
                     <fa-icon [icon]="warningIcon" class="me-2"></fa-icon>
                     <strong>Minimum depth: </strong>

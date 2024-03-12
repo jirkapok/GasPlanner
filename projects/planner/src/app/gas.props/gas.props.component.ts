@@ -133,7 +133,11 @@ export class GasPropertiesCalcComponent implements OnInit {
         this.tank.o2 =  state.o2;
         this.calc.maxPpO2 = state.maxPO2;
         this.calc.depth = this.units.fromMeters(state.depth);
-        this.calc.mndLimit = this.units.fromMeters(state.mndLimit);
+
+        // upgrade
+        if(state.mndLimit) {
+            this.calc.mndLimit = this.units.fromMeters(state.mndLimit);
+        }
 
         if(this.calc.oxygenNarcotic !== state.oxygenNarcotic) {
             this.calc.switchOxygenNarcotic();

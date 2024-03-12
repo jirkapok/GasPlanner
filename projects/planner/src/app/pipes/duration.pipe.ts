@@ -10,6 +10,8 @@ export class DurationPipe implements PipeTransform {
     constructor(private datePipe: DatePipe) {}
 
     transform(value: number, maxValue: number): unknown {
+        value = Math.abs(value);
+        maxValue = Math.abs(maxValue);
         const duration = DateFormats.toDate(value);
         const format = DateFormats.selectTimeFormat(maxValue);
         const minutesPart = this.datePipe.transform(duration, format) || '';

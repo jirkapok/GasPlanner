@@ -33,6 +33,14 @@ describe('Gas properties bound', () => {
         it('Density is 0.130 lb/cuft', () => {
             expect(sut.density).toBeCloseTo(0.130979, 6);
         });
+
+        it('Max. density is 0.130 lb/cuft', () => {
+            expect(sut.maxDensity).toBeCloseTo(0.355839, 6);
+        });
+
+        it('Depth is 100 ft', () => {
+            expect(sut.depth).toBeCloseTo(100, 6);
+        });
     });
 
     describe('Metric', () => {
@@ -67,6 +75,19 @@ describe('Gas properties bound', () => {
         it('Switch O2 narcotic changes MND', () => {
             sut.switchOxygenNarcotic();
             expect(sut.mnd).toBeCloseTo(190, 3);
+        });
+
+        it('Min. PpO2 is 0.18', () => {
+            expect(sut.minPpO2).toBeCloseTo(0.18, 6);
+        });
+
+        it('Max. PpO2 is applied', () => {
+            sut.maxPpO2 = 1.5;
+            expect(sut.maxDepth).toBeCloseTo(140, 6);
+        });
+
+        it('Max. density is 5.7 g/l', () => {
+            expect(sut.maxDensity).toBeCloseTo(5.7, 6);
         });
     });
 });

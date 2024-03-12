@@ -158,6 +158,6 @@ export class StandardGases {
     }
 }
 
-// To remove circular dependency
+// TODO To remove circular dependency
 Gas.init((fO2: number, fHe: number) => StandardGases.nameFor(fO2, fHe),
     (name: string) => StandardGases.byName(name));

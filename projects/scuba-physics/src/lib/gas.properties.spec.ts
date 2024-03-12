@@ -17,7 +17,7 @@ describe('Gas properties calculator', () => {
 
     describe('Settings', () => {
         it('Narcotic depth is used', () => {
-            sut.narcoticDepth = 40;
+            sut.narcoticDepthLimit = 40;
             expect(sut.mnd).toBeCloseTo(40, 3);
         });
 
@@ -50,6 +50,10 @@ describe('Gas properties calculator', () => {
             expect(sut.end).toBeCloseTo(30, 3);
         });
 
+        it('Maximum narcotic depth is 30 m', () => {
+            expect(sut.narcoticDepthLimit).toBeCloseTo(30, 3);
+        });
+
         it('Minimum depth is 0 m', () => {
             expect(sut.minDepth).toBeCloseTo(0, 3);
         });
@@ -76,6 +80,28 @@ describe('Gas properties calculator', () => {
 
         it('Density is 5.15 g/l', () => {
             expect(sut.density).toBeCloseTo(5.151972, 6);
+        });
+
+        it('Default narcotic depth limit', () => {
+            expect(sut.narcoticDepthLimit).toBeCloseTo(30, 6);
+        });
+
+        describe('Limits', () => {
+            it('Not exceeded density', () => {
+                expect(sut.densityExceeded).toBeFalsy();
+            });
+
+            it('Not exceeded mnd', () => {
+                expect(sut.mndExceeded).toBeFalsy();
+            });
+
+            it('Not exceeded min. ppO2', () => {
+                expect(sut.minPpO2Exceeded).toBeFalsy();
+            });
+
+            it('Not exceeded max. ppO2', () => {
+                expect(sut.maxPpO2Exceeded).toBeFalsy();
+            });
         });
     });
 
@@ -115,6 +141,29 @@ describe('Gas properties calculator', () => {
 
         it('Density is 2 g/l', () => {
             expect(sut.density).toBeCloseTo(2.0732, 6);
+        });
+    });
+
+    describe('Exceeded limits', () => {
+        it('Exceeds density', () => {
+            sut.depth = 42;
+            expect(sut.densityExceeded).toBeTruthy();
+        });
+
+        it('Exceeds mnd', () => {
+            sut.depth = 42;
+            expect(sut.mndExceeded).toBeTruthy();
+        });
+
+        it('Exceeds min. ppO2', () => {
+            sut.depth = 3;
+            sut.tank.o2 = 10;
+            expect(sut.minPpO2Exceeded).toBeTruthy();
+        });
+
+        it('Exceeds max. ppO2', () => {
+            sut.depth = 70;
+            expect(sut.maxPpO2Exceeded).toBeTruthy();
         });
     });
 });

@@ -20,7 +20,6 @@ export class GasProperties {
         return this._tank;
     }
 
-
     public get minPpO2Exceeded(): boolean {
         return this.ppO2 < GasMixtures.minPpO2;
     }
@@ -30,7 +29,7 @@ export class GasProperties {
     }
 
     public get mndExceeded(): boolean {
-        return this.mnd > GasMixtures.maxEnd;
+        return this.end > this.mnd;
     }
 
     public get densityExceeded(): boolean {
@@ -38,7 +37,7 @@ export class GasProperties {
     }
 
     /** Gets or sets narcotic depth in meters to be used to compare with current gas properties. */
-    public get narcoticDepth(): number {
+    public get narcoticDepthLimit(): number {
         return this.depthConverter.fromBar(this.narcDepthBars);
     }
 
@@ -109,7 +108,7 @@ export class GasProperties {
         return this.depthConverter.toBar(this.depth);
     }
 
-    public set narcoticDepth(newValue: number) {
+    public set narcoticDepthLimit(newValue: number) {
         this.narcDepthBars = this.depthConverter.toBar(newValue);
     }
 }

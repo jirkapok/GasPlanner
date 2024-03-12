@@ -2,8 +2,17 @@
 #body {
     margin: 24px;
     flex: 1 1 auto;
-
 }
+
+.card-max-height-md {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.card-minheight {
+    min-height: 450px;
+}
+
 #waypointsDiffTable {
     .vertical-right-border {
         border-right-width: medium;
@@ -25,5 +34,6 @@
     .active-profile {
         background: $primary;
         border-color: $primary;
+        color: white;
     }
 }

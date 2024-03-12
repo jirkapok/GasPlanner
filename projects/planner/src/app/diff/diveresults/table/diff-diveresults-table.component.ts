@@ -9,11 +9,11 @@ import {Logger} from '../../../shared/Logger';
 import {TextConstants} from '../../../shared/TextConstants';
 
 @Component({
-    selector: 'app-diff-diveinfo-results',
-    templateUrl: './diff-diveinfo-results.component.html',
-    styleUrls: ['./diff-diveinfo-results.component.scss']
+    selector: 'app-diff-diveresults-table',
+    templateUrl: './diff-diveresults-table.component.html',
+    styleUrls: ['./diff-diveresults-table.component.scss', '../../diff.component.scss']
 })
-export class DiveInfoResultsDifferenceComponent {
+export class DiveResultsTableDifferenceComponent {
     private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';
 
     private arrowUp: IconDefinition = faArrowUp;
@@ -38,11 +38,19 @@ export class DiveInfoResultsDifferenceComponent {
     }
 
     public get profileA(): DiveResults {
-        return this.profileComparatorService.profileAResults();
+        return this.profileComparatorService.profileAResults;
     }
 
     public get profileB(): DiveResults {
-        return this.profileComparatorService.profileBResults();
+        return this.profileComparatorService.profileBResults;
+    }
+
+    public get profileATitle(): string {
+        return this.profileComparatorService.profileA.title;
+    }
+
+    public get profileBTitle(): string {
+        return this.profileComparatorService.profileB.title;
     }
 
     public get areResultsCalculated(): boolean {

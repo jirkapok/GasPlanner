@@ -7,7 +7,7 @@ import {ProfileComparatorService} from '../../shared/profileComparatorService';
 @Component({
     selector: 'app-diff-waypoints',
     templateUrl: './diff-waypoints.component.html',
-    styleUrls: ['./diff-waypoints.component.scss'],
+    styleUrls: ['./diff-waypoints.component.scss', '../diff.component.scss'],
 })
 export class WaypointsDifferenceComponent {
     public tasks = faTasks;
@@ -15,5 +15,13 @@ export class WaypointsDifferenceComponent {
     constructor(public units: UnitConversion,
         public tableRowProvider: WaypointsDifferenceService,
         public profileComparatorService: ProfileComparatorService) {
+    }
+
+    public get profileATitle(): string {
+        return this.profileComparatorService.profileA.title;
+    }
+
+    public get profileBTitle(): string {
+        return this.profileComparatorService.profileB.title;
     }
 }

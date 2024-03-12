@@ -1,6 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProfileDifferenceChartComponent } from './diff-profilechart.component';
+import {UnitConversion} from '../../shared/UnitConversion';
+import {ResamplingService} from '../../shared/ResamplingService';
+import {ProfileComparatorService} from '../../shared/profileComparatorService';
+import {SelectedWaypoint} from '../../shared/selectedwaypointService';
+import {DiveSchedules} from '../../shared/dive.schedules';
+import {ReloadDispatcher} from '../../shared/reloadDispatcher';
 
 describe('ProfileDifferenceChartComponent', () => {
     let component: ProfileDifferenceChartComponent;
@@ -8,7 +14,15 @@ describe('ProfileDifferenceChartComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [ProfileDifferenceChartComponent]
+            declarations: [ProfileDifferenceChartComponent],
+            providers: [
+                UnitConversion,
+                SelectedWaypoint,
+                ProfileComparatorService,
+                ResamplingService,
+                DiveSchedules,
+                ReloadDispatcher,
+            ]
         });
         fixture = TestBed.createComponent(ProfileDifferenceChartComponent);
         component = fixture.componentInstance;

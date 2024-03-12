@@ -85,16 +85,22 @@ import {RedundanciesService} from './shared/redundancies.service';
 import {ReloadDispatcher} from './shared/reloadDispatcher';
 import {ManagedDiveSchedules} from './shared/managedDiveSchedules';
 import {WaypointsDifferenceComponent} from './diff/waypoints/diff-waypoints.component';
-import {DiveInfoDifferenceComponent} from './diff/diveinfo/diff-diveinfo.component';
+import {DiveResultsDifferenceComponent} from './diff/diveresults/diff-diveresults.component';
 import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilechart.component';
 import {SurfaceIntervalComponent} from './surface-interval/surface-interval.component';
 import {TestDataInjector} from './diff/testData/testDataInjector';
 import {ProfileComparatorService} from './shared/profileComparatorService';
 import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.component';
 import {WaypointsDifferenceService} from './shared/waypoints-difference.service';
-import {DiveInfoResultsDifferenceComponent} from './diff/diveinfo/results/diff-diveinfo-results.component';
+import {DiveResultsTableDifferenceComponent} from './diff/diveresults/table/diff-diveresults-table.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 import { GasBlenderService } from './shared/gas-blender.service';
+import {DiffTabsButtonComponent} from './diff/tabs/profile-button/diff-tabs-button.component';
+import {DiffTabsComponent} from './diff/tabs/diff-tabs.component';
+import {GasConsumedDifferenceComponent} from './diff/gasconsumed/diff-gas-consumed/diff-gas-consumed.component';
+import {
+    GasConsumedDifferenceTankComponent
+} from './diff/gasconsumed/diff-gas-consumed/tank-chart/diff-gas-consumed-tank-chart.component';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -126,8 +132,6 @@ const COMPONENTS = [
     DepthsComplexComponent,
     DepthsSimpleComponent,
     DiffComponent,
-    DiveInfoResultsDifferenceComponent,
-    DiveInfoDifferenceComponent,
     DiveInfoComponent,
     DiveIssuesComponent,
     DiveOptionsComponent,
@@ -140,7 +144,6 @@ const COMPONENTS = [
     MainMenuComponent,
     NdlLimitsComponent,
     NitroxComponent,
-    ProfileDifferenceChartComponent,
     ProfileChartComponent,
     OxygenComponent,
     OxygenDropDownComponent,
@@ -156,8 +159,14 @@ const COMPONENTS = [
     WayPointsComponent,
     WeightCalcComponent,
     WaypointsDifferenceComponent,
-
-    LoadTestDataComponent
+    DiveResultsDifferenceComponent,
+    ProfileDifferenceChartComponent,
+    LoadTestDataComponent,
+    DiveResultsTableDifferenceComponent,
+    DiffTabsComponent,
+    DiffTabsButtonComponent,
+    GasConsumedDifferenceComponent,
+    GasConsumedDifferenceTankComponent
 ];
 
 const STANDALONE = [

@@ -17,16 +17,14 @@ Following list of features and improvements ordered by priority is under develop
     * https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers
     * https://developers.google.com/codelabs/pwa-training/pwa03--going-offline#1)
 * Allow user to compare multiple plans side by side
-  * I want compare consequences of emergency ascent
-  * I want to plan a dive and choose from two following plans or two independent plans
+  * Add tests
+  * Fix remaining TODOs in the Diff
 * UI Tweaks
-  * Read only fields should be distinguish able
   * Profile:
     * Waypoints table: add switch in case user is switching to tank with the same gas
     * Gas switch is not present in shortened waypoints list
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
-  * Add warnings to gas properties calc for properties exceeding recommended maximum
 * Extend application settings:
   * Define custom maximum gas density
   * Custom diver stress sac rate ratio
@@ -52,6 +50,7 @@ Following list of features and improvements ordered by priority is under develop
 * TRIMIX support
   * Add air breaks
 * Add CCR support
+* UI Tweaks: Read only fields should be distinguish able
 * Add undo/redo to all pages
 * Add export of the plan to pdf
 * Import/Export dive to compare from well known file format see also <https://www.npmjs.com/package/xml-js>

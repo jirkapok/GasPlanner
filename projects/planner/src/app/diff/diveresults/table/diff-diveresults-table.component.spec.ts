@@ -27,6 +27,7 @@ describe('DiveResultsTableDifferenceComponent', () => {
         fixture.detectChanges();
     });
 
+    // TODO reorganize component methods to compare service
     it('should create', () => {
         expect(component).toBeTruthy();
     });

@@ -30,4 +30,9 @@ describe('DiffGasConsumedComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    // TODO extract getMixedTanks to separate service, see also methods in dif-gas-consumed-tank-chart
+    it('Creates compared gases', () => {
+        expect(component.getMixedTanks).not.toBeNull();
+    });
 });

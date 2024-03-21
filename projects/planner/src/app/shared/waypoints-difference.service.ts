@@ -1,5 +1,5 @@
 import { WayPoint } from './models';
-import { WaypointsComparisonTableRow } from './WaypointsComparisonTableRow';
+import { ComparedWaypoint } from './ComparedWaypoint';
 import { Injectable } from '@angular/core';
 import { ProfileComparatorService } from './profileComparatorService';
 
@@ -38,9 +38,9 @@ class WaypointsDiffContext {
         }
     }
 
-    public toRow(): WaypointsComparisonTableRow {
+    public toRow(): ComparedWaypoint {
         const runtime = this.dominantA ? this._endTimeA : this._endTimeB;
-        const row: WaypointsComparisonTableRow = {
+        const row: ComparedWaypoint = {
             runTime: runtime,
             durationA: this.waypointA?.duration,
             depthA: this.waypointA?.endDepth,
@@ -79,7 +79,7 @@ export class WaypointsDifferenceService {
         return this.profileComparatorService.bothResultsCalculated;
     }
 
-    public get difference(): WaypointsComparisonTableRow[] {
+    public get difference(): ComparedWaypoint[] {
         if(!this.isCalculated){
             return [];
         }

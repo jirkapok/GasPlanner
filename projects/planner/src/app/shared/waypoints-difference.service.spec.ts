@@ -6,7 +6,7 @@ import { UnitConversion } from './UnitConversion';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { WayPointsService } from './waypoints.service';
 import { Segment, StandardGases } from 'scuba-physics';
-import { WaypointsComparisonTableRow } from './WaypointsComparisonTableRow';
+import { ComparedWaypoint } from './ComparedWaypoint';
 
 describe('WayPoints Difference Service', () => {
     let sut: WaypointsDifferenceService;
@@ -76,7 +76,7 @@ describe('WayPoints Difference Service', () => {
         new Segment(10, 0, StandardGases.air, 180)
     ];
 
-    const assertDivesWayPointsCompare = (profileA: Segment[], profileB: Segment[], expected: WaypointsComparisonTableRow[])=> {
+    const assertDivesWayPointsCompare = (profileA: Segment[], profileB: Segment[], expected: ComparedWaypoint[])=> {
         schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(profileA);
         schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(profileB);
         expect(sut.difference).toEqual(expected);
@@ -105,7 +105,7 @@ describe('WayPoints Difference Service', () => {
     });
 
     it('Identical profiles', () => {
-        const expected: WaypointsComparisonTableRow[] = [
+        const expected: ComparedWaypoint[] = [
             { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
             { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 120 },
             { runTime: 360, depthA: 0, durationA: 180, depthB: 0, durationB: 180 },
@@ -114,7 +114,7 @@ describe('WayPoints Difference Service', () => {
     });
 
     it('Profile B takes longer', () => {
-        const expected: WaypointsComparisonTableRow[] = [
+        const expected: ComparedWaypoint[] = [
             { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
             { runTime: 180, depthA: 20, durationA: 120, depthB: undefined, durationB: undefined },
             { runTime: 360, depthA: 0, durationA: 180, depthB: 20, durationB: 300 },
@@ -124,7 +124,7 @@ describe('WayPoints Difference Service', () => {
     });
 
     it('Profile A takes longer', () => {
-        const expected: WaypointsComparisonTableRow[] = [
+        const expected: ComparedWaypoint[] = [
             { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
             { runTime: 180, depthA: undefined, durationA: undefined, depthB: 20, durationB: 120 },
             { runTime: 360, depthA: 20, durationA: 300, depthB: 0, durationB: 180 },
@@ -134,7 +134,7 @@ describe('WayPoints Difference Service', () => {
     });
 
     it('Profile B has more segments', () => {
-        const expected: WaypointsComparisonTableRow[] = [
+        const expected: ComparedWaypoint[] = [
             { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
             { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 120 },
             { runTime: 360, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined },
@@ -145,7 +145,7 @@ describe('WayPoints Difference Service', () => {
     });
 
     it('Profile A has more segments', () => {
-        const expected: WaypointsComparisonTableRow[] = [
+        const expected: ComparedWaypoint[] = [
             { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
             { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 120 },
             { runTime: 360, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 },
@@ -156,7 +156,7 @@ describe('WayPoints Difference Service', () => {
     });
 
     it('Profile B has levels missing in profile A', () => {
-        const expected: WaypointsComparisonTableRow[] = [
+        const expected: ComparedWaypoint[] = [
             { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
             { runTime: 90, depthA: undefined, durationA: undefined, depthB: 15, durationB: 30 },
             { runTime: 150, depthA: undefined, durationA: undefined, depthB: 15, durationB: 60 },
@@ -168,7 +168,7 @@ describe('WayPoints Difference Service', () => {
     });
 
     it('Profile A has levels missing in profile B', () => {
-        const expected: WaypointsComparisonTableRow[] = [
+        const expected: ComparedWaypoint[] = [
             { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
             { runTime: 90, depthA: 15, durationA: 30, depthB: undefined, durationB: undefined },
             { runTime: 150, depthA: 15, durationA: 60, depthB: undefined, durationB: undefined },

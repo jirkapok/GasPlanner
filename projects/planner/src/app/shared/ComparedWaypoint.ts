@@ -1,4 +1,4 @@
-export interface WaypointsComparisonTableRow {
+export interface ComparedWaypoint {
     runTime: number;
     depthA: number | undefined;
     durationA: number | undefined;

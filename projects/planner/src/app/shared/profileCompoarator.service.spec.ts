@@ -35,7 +35,8 @@ describe('ProfileComparison service', () => {
         expect(sut.hasTwoProfiles()).toBeFalsy();
     });
 
-    // TODO remove hasTwoProfiles or use it
+    // TODO remove hasTwoProfiles or use it: initial load of the component, if there is only one profile select as both
+    // if there are at least two select second as B
     //  change it to get property and all other properties in the service
     it('Has two profiles', () => {
         schedules.add();
@@ -119,6 +120,8 @@ describe('ProfileComparison service', () => {
         });
     });
 
+    // TODO add switch when clicking on already selected profile swithes profiles
+    // TODO change buttons colors to select profile: Try ProfileB to be green and selected profiles gray, not selected white
     describe('Select new profile', () => {
         const expectedA = 2;
         const expectedB = 1;

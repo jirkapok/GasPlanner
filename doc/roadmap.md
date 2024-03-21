@@ -18,22 +18,23 @@ Following list of features and improvements ordered by priority is under develop
     * https://developers.google.com/codelabs/pwa-training/pwa03--going-offline#1)
 * Allow user to compare multiple plans side by side
   * Fix remaining TODOs in the Diff
+  * Add save/load for selected dives
 * UI Tweaks
-  * Profile:
-    * Waypoints table: add switch in case user is switching to tank with the same gas
-    * Gas switch is not present in shortened waypoints list
-  * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
-  * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
-  * Tanks complex view: Add check box to be able enable or disable tanks
+    * Profile:
+        * Waypoints table: add switch in case user is switching to tank with the same gas
+        * Gas switch is not present in shortened waypoints list
+    * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
+    * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
+    * Tanks complex view: Add check box to be able enable or disable tanks
 * Gas blender:
-  * Add gas blending costs
-  * Add application settings for costs
-  * Add use case to identify mix when adding only top mix without adding he or oxygen
+    * Add gas blending costs
+    * Add application settings for costs
+    * Add use case to identify mix when adding only top mix without adding he or oxygen
 * Extend application settings:
-  * Define custom maximum gas density
-  * Custom diver stress sac rate ratio
-  * Add minimum gas reserve for first tank and for stage
-  * Add option to ignore some warnings (ICD, density)
+    * Define custom maximum gas density
+    * Custom diver stress sac rate ratio
+    * Add minimum gas reserve for first tank and for stage
+    * Add option to ignore some warnings (ICD, density)
 * Add tissues heatmap to the profile chart and to the dives comparision
 * Add localizations
 * Add calculation trainings
@@ -54,6 +55,9 @@ Following list of features and improvements ordered by priority is under develop
 * TRIMIX support
   * Add air breaks
 * Add CCR support
+* Profile comparison: 
+  * Add option to compare dives aligned by the end of dive
+  * Add tissues heat map compare
 * UI Tweaks: Read only fields should be distinguish able
 * Add undo/redo to all pages
 * Add export of the plan to pdf

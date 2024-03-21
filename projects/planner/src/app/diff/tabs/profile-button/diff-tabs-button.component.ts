@@ -1,6 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ProfileComparatorService} from '../../../shared/profileComparatorService';
-import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
+import { Component, Input } from '@angular/core';
+import {
+    animate, keyframes, state, style, transition, trigger
+} from '@angular/animations';
+import { ProfileComparatorService } from '../../../shared/profileComparatorService';
 
 @Component({
     selector: 'app-diff-tabs-button',
@@ -27,51 +29,31 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
         ]),
     ]
 })
-export class DiffTabsButtonComponent implements OnInit {
+export class DiffTabsButtonComponent {
     @Input({required: true}) index = 0;
     @Input({required: true}) title = '';
-    public state = 'disabled';
+    private readonly disabled = 'disabled';
 
-    constructor(private profileComparatorService: ProfileComparatorService) {
+    public constructor(private profilesDiff: ProfileComparatorService) {
     }
 
-    public get isEnabled(): boolean {
-        return this.state !== 'disabled';
+    public get state(): string {
+        if(this.index === this.profilesDiff.indexA) {
+            return 'primary';
+        }
+
+        if(this.index === this.profilesDiff.indexB) {
+            return 'secondary';
+        }
+
+        return this.disabled;
     }
 
-    public ngOnInit() {
-
-        this.profileComparatorService.profileBIndex.subscribe((value) => {
-            if (value === this.index) {
-                this.enableSecondaryProfile();
-            }
-        });
-
-        this.profileComparatorService.profileAIndex.subscribe((value) => {
-            if (value === this.index){
-                this.enablePrimaryProfile();
-            }
-
-            if(this.isEnabled && value !== this.index){
-                this.disableProfile();
-            }
-        });
-
+    public get selected(): boolean {
+        return this.state !== this.disabled;
     }
 
-    public clicked() {
-        this.profileComparatorService.appendProfileToProfileComparison(this.index);
-    }
-
-    private enablePrimaryProfile() {
-        this.state = 'primary';
-    }
-
-    private enableSecondaryProfile() {
-        this.state = 'secondary';
-    }
-
-    private disableProfile() {
-        this.state = 'disabled';
+    public selectProfile() {
+        this.profilesDiff.appendProfileToProfileComparison(this.index);
     }
 }

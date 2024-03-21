@@ -8,7 +8,7 @@
             PROFILE B
         </div>
     </div>
-    <input type="checkbox" class="btn-check" id="{{'btn-check-' + this.index}}" name="profile-tab" autocomplete="off">
-    <label class="btn" [ngClass]="{'btn-success': isEnabled, 'btn-outline-secondary': !isEnabled}" (click)="clicked()"
-           for="{{'btn-check-' + this.index}}">{{this.title}} </label>
+    <input type="checkbox" class="btn-check" id="btn-check-{{this.index}}" name="profile-tab" autocomplete="off">
+    <label class="btn" [ngClass]="{'btn-success': selected, 'btn-outline-secondary': !selected}" (click)="selectProfile()"
+           for="btn-check-{{this.index}}">{{this.title}} </label>
 </div>

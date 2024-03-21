@@ -27,8 +27,6 @@ describe('DiffTabsButtonComponent', () => {
         fixture.detectChanges();
     });
 
-    // TODO move subscribed events to selected model
-    // TODO merge with diff-tabs component
     it('should create', () => {
         expect(component).toBeTruthy();
     });

@@ -33,6 +33,14 @@ export class ProfileComparatorService {
         return this._profileAIndex.asObservable();
     }
 
+    public get indexA(): number {
+        return this._profileAIndex.value;
+    }
+
+    public get indexB(): number {
+        return this._profileBIndex.value;
+    }
+
     public get profileBIndex(): Observable<number> {
         return this._profileBIndex.asObservable();
     }

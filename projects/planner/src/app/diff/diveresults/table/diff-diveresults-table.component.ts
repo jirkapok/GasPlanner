@@ -53,8 +53,8 @@ export class DiveResultsTableDifferenceComponent {
         return this.profileComparatorService.profileB.title;
     }
 
-    public get areResultsCalculated(): boolean {
-        return this.profileComparatorService.areResultsCalculated();
+    public get bothResultsCalculated(): boolean {
+        return this.profileComparatorService.bothResultsCalculated;
     }
 
     public get areDiveInfosCalculated(): boolean {

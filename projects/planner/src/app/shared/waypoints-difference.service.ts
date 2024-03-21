@@ -5,12 +5,13 @@ import {ProfileComparatorService} from './profileComparatorService';
 
 @Injectable()
 export class WaypointsDifferenceService {
-
     private _waypointRows: WaypointsComparisonTableRow[] = [];
-    constructor(private profileComparatorService: ProfileComparatorService) {
+
+    public constructor(private profileComparatorService: ProfileComparatorService) {
     }
-    get isCalculated(): boolean {
-        return this.profileComparatorService.areResultsCalculated();
+
+    public get isCalculated(): boolean {
+        return this.profileComparatorService.bothResultsCalculated;
     }
 
     private get wayPointsA(): WayPoint[]{
@@ -20,7 +21,6 @@ export class WaypointsDifferenceService {
     private get wayPointsB(): WayPoint[]{
         return this.profileComparatorService.profileBResults.wayPoints;
     }
-
 
     public getRows(): WaypointsComparisonTableRow[] {
         const MAX_SAFETY_LIMIT = 65536; // 2**16

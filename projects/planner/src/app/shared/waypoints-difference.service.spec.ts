@@ -182,6 +182,5 @@ describe('WayPoints Difference Service', () => {
         assertDivesWayPointsCompare(segments6_minutes11, segments4_minutes11, expected);
     });
 
-    // TODO rename areResultsCalculated to bothResultsCalculated
-    // TODO rename to difference, refactor to property
+    // TODO rename getRows to difference, refactor to property
 });

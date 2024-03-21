@@ -52,6 +52,11 @@ export class ProfileComparatorService {
         return ConsumptionByMix.combine(this.profileB.tanksService.tankData);
     }
 
+    public get bothResultsCalculated(): boolean {
+        return this.profileAResults.calculated && !this.profileAResults.failed &&
+            this.profileBResults.calculated && !this.profileBResults.failed;
+    }
+
     private set profileAIndex(value: number) {
         this._profileAIndex.next(value);
     }
@@ -62,11 +67,6 @@ export class ProfileComparatorService {
 
     public hasTwoProfiles(): boolean {
         return this.schedules.length > 1;
-    }
-
-    public areResultsCalculated(): boolean {
-        return this.profileAResults.calculated && !this.profileAResults.failed &&
-               this.profileBResults.calculated && !this.profileBResults.failed;
     }
 
     public areDiveInfosCalculated(): boolean {

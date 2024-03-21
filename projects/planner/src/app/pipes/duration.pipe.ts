@@ -9,7 +9,11 @@ import { Time } from 'scuba-physics';
 export class DurationPipe implements PipeTransform {
     constructor(private datePipe: DatePipe) {}
 
-    transform(value: number, maxValue: number): unknown {
+    transform(value: number | undefined, maxValue: number): string {
+        if(!value) {
+            return '';
+        }
+
         value = Math.abs(value);
         maxValue = Math.abs(maxValue);
         const duration = DateFormats.toDate(value);

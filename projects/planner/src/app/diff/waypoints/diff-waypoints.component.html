@@ -35,16 +35,16 @@
                     <td class="px-1 vertical-right-border">
                         {{ row.runTime | duration:profileDiff.totalDuration }}
                     </td>
-                    <td  *ngIf="row.depthA !== undefined; else emptyRow" class="px-1">
+                    <td class="px-1">
                         {{ row.depthA  | number: '1.0-0'}}
                     </td>
-                    <td *ngIf="row.durationA !== undefined else emptyRowWithDivider" class="px-1 vertical-right-border">
+                    <td class="px-1 vertical-right-border">
                         {{ row.durationA | duration:profileDiff.totalDuration }}
                     </td>
-                    <td *ngIf="row.depthB !== undefined else emptyRow" class="px-1">
+                    <td class="px-1">
                         {{ row.depthB | number:'1.0-0' }}
                     </td>
-                    <td *ngIf="row.durationB !== undefined else emptyRow" class="px-1">
+                    <td class="px-1">
                         {{ row.durationB | duration:profileDiff.totalDuration }}
                     </td>
                 </tr>
@@ -52,8 +52,3 @@
         </table>
     </div>
 </div>
-
-<ng-template #emptyRow><td class="px-1"></td></ng-template>
-<ng-template #emptyRowWithDivider><td class="px-1 vertical-right-border"></td></ng-template>
-
-

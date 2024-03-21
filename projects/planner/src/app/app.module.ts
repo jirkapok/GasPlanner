@@ -91,7 +91,6 @@ import {SurfaceIntervalComponent} from './surface-interval/surface-interval.comp
 import {TestDataInjector} from './diff/testData/testDataInjector';
 import {ProfileComparatorService} from './shared/profileComparatorService';
 import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.component';
-import {WaypointsDifferenceService} from './shared/waypoints-difference.service';
 import {DiveResultsTableDifferenceComponent} from './diff/diveresults/table/diff-diveresults-table.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 import { GasBlenderService } from './shared/gas-blender.service';
@@ -207,8 +206,7 @@ const SERVICES = [
     ViewSwitchService,
     WayPointsService,
     TestDataInjector,
-    ProfileComparatorService,
-    WaypointsDifferenceService
+    ProfileComparatorService
 ];
 
 @NgModule({

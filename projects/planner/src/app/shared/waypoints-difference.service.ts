@@ -3,6 +3,73 @@ import { WaypointsComparisonTableRow } from './WaypointsComparisonTableRow';
 import { Injectable } from '@angular/core';
 import { ProfileComparatorService } from './profileComparatorService';
 
+class WaypointsDiffContext {
+    public waypointA: WayPoint | undefined;
+    public waypointB: WayPoint | undefined;
+    private readonly defaultTime = -1;
+    private _endTimeA = this.defaultTime;
+    private _endTimeB = this.defaultTime;
+
+    constructor(private wayPointsA: WayPoint[], private wayPointsB: WayPoint[]) {
+        this.updateA();
+        this.updateB();
+    }
+
+    public get hasNext(): boolean {
+        return !!(this.waypointA || this.waypointB);
+    }
+
+    private get dominantA(): boolean {
+        return this._endTimeA > this._endTimeB;
+    }
+
+    private get dominantB(): boolean {
+        return this._endTimeB > this._endTimeA;
+    }
+
+    public next(): void {
+        if (this.dominantA) {
+            this.updateA();
+        } else if (this.dominantB) {
+            this.updateB();
+        } else {
+            this.updateA();
+            this.updateB();
+        }
+    }
+
+    public toRow(): WaypointsComparisonTableRow {
+        const runtime = this.dominantA ? this._endTimeA : this._endTimeB;
+        const row: WaypointsComparisonTableRow = {
+            runTime: runtime,
+            durationA: this.waypointA?.duration,
+            depthA: this.waypointA?.endDepth,
+            durationB: this.waypointB?.duration,
+            depthB: this.waypointB?.endDepth,
+        };
+
+        if (this.dominantA) {
+            row.durationB = undefined;
+            row.depthB = undefined;
+        } else if (this.dominantB) {
+            row.durationA = undefined;
+            row.depthA = undefined;
+        }
+
+        return row;
+    }
+
+    private updateA(): void {
+        this.waypointA = this.wayPointsA.pop();
+        this._endTimeA = this.waypointA?.endTime ?? this.defaultTime;
+    }
+
+    private updateB(): void {
+        this.waypointB = this.wayPointsB.pop();
+        this._endTimeB = this.waypointB?.endTime ?? this.defaultTime;
+    }
+}
+
 @Injectable()
 export class WaypointsDifferenceService {
     public constructor(private profileComparatorService: ProfileComparatorService) {
@@ -17,39 +84,13 @@ export class WaypointsDifferenceService {
             return [];
         }
 
-        const wayPointsACopy = [...this.wayPointsA];
-        const wayPointsBCopy = [...this.wayPointsB];
-        let waypointA = wayPointsACopy.pop();
-        let waypointB = wayPointsBCopy.pop();
+        const context = new WaypointsDiffContext([...this.wayPointsA], [...this.wayPointsB]);
         const waypointRows = [];
 
-        while(waypointA || waypointB) {
-            const endTimeA = waypointA?.endTime ?? -1;
-            const endTimeB = waypointB?.endTime ?? -1;
-            const runtime = endTimeA >= endTimeB ? endTimeA : endTimeB;
-
-            const row: WaypointsComparisonTableRow = {
-                runTime: runtime,
-                durationA: waypointA?.duration,
-                depthA: waypointA?.endDepth,
-                durationB: waypointB?.duration,
-                depthB: waypointB?.endDepth,
-            };
-
+        while(context.hasNext) {
+            const row = context.toRow();
             waypointRows.unshift(row);
-
-            if (endTimeA > endTimeB) {
-                row.durationB = undefined;
-                row.depthB = undefined;
-                waypointA = wayPointsACopy.pop();
-            } else if (endTimeA < endTimeB) {
-                row.durationA = undefined;
-                row.depthA = undefined;
-                waypointB = wayPointsBCopy.pop();
-            } else {
-                waypointA = wayPointsACopy.pop();
-                waypointB = wayPointsBCopy.pop();
-            }
+            context.next();
         }
 
         return waypointRows;

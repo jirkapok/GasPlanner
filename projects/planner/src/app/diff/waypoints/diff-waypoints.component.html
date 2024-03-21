@@ -6,10 +6,10 @@
         </div>
     </div>
     <div id="body" class="hide card-minheight card-max-height-md">
-        <app-calculating *ngIf="!profileDiff.bothResultsCalculated" class="position-absolute">
-        </app-calculating>
+        <app-calculating [show]="!profileDiff.bothResultsCalculated"></app-calculating>
 
-        <table id="waypointsDiffTable" class="table table-sm p-0 text-center table-hover" >
+        <table *ngIf="profileDiff.bothResultsCalculated"
+            id="waypointsDiffTable" class="table table-sm p-0 text-center table-hover" >
             <thead class="table-light sticky-top">
             <tr>
                 <th colspan="1" ></th>
@@ -30,7 +30,7 @@
                 <th class="fw-bold px-1">Duration [min]</th>
             </tr>
             </thead>
-            <tbody [ngClass]="{ 'd-none': !profileDiff.bothResultsCalculated }">
+            <tbody>
                 <tr *ngFor="let row of profileDiff.difference">
                     <td class="px-1 vertical-right-border">
                         {{ row.runTime | duration:profileDiff.totalDuration }}

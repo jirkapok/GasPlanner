@@ -13,61 +13,45 @@ export class WaypointsDifferenceService {
     }
 
     public get difference(): WaypointsComparisonTableRow[] {
-        const MAX_SAFETY_LIMIT = 65536; // 2**16
-        const waypointRows = [];
-
         if(!this.isCalculated){
             return [];
         }
 
         const wayPointsACopy = [...this.wayPointsA];
         const wayPointsBCopy = [...this.wayPointsB];
-        let waypointA: WayPoint | undefined = wayPointsACopy.pop();
-        let waypointB: WayPoint | undefined = wayPointsBCopy.pop();
+        let waypointA = wayPointsACopy.pop();
+        let waypointB = wayPointsBCopy.pop();
+        const waypointRows = [];
 
-        for (let i = 0; i < MAX_SAFETY_LIMIT; i++) {
-            let row: WaypointsComparisonTableRow;
-            if (waypointA === undefined && waypointB === undefined) {
-                break;
-            }
+        while(waypointA || waypointB) {
+            const endTimeA = waypointA?.endTime ?? -1;
+            const endTimeB = waypointB?.endTime ?? -1;
+            const runtime = endTimeA >= endTimeB ? endTimeA : endTimeB;
 
-            if ((waypointA?.endTime || -1) > (waypointB?.endTime || -1)) {
-                row = {
-                    runTime: waypointA!.endTime,
-                    durationA: waypointA?.duration,
-                    depthA: waypointA?.endDepth,
-                    durationB: undefined,
-                    depthB: undefined,
-                };
-                waypointA = wayPointsACopy.pop();
-                waypointRows.unshift(row);
-                continue;
-            }
-
-            if ((waypointA?.endTime || -1) < (waypointB?.endTime || -1)) {
-                row = {
-                    runTime: waypointB!.endTime,
-                    durationA: undefined,
-                    depthA: undefined,
-                    durationB: waypointB?.duration,
-                    depthB: waypointB?.endDepth,
-                };
-                waypointB = wayPointsBCopy.pop();
-                waypointRows.unshift(row);
-                continue;
-            }
-
-            row = {
-                runTime: waypointA!.endTime,
+            const row: WaypointsComparisonTableRow = {
+                runTime: runtime,
                 durationA: waypointA?.duration,
                 depthA: waypointA?.endDepth,
                 durationB: waypointB?.duration,
                 depthB: waypointB?.endDepth,
             };
-            waypointA = wayPointsACopy.pop();
-            waypointB = wayPointsBCopy.pop();
+
             waypointRows.unshift(row);
+
+            if (endTimeA > endTimeB) {
+                row.durationB = undefined;
+                row.depthB = undefined;
+                waypointA = wayPointsACopy.pop();
+            } else if (endTimeA < endTimeB) {
+                row.durationA = undefined;
+                row.depthA = undefined;
+                waypointB = wayPointsBCopy.pop();
+            } else {
+                waypointA = wayPointsACopy.pop();
+                waypointB = wayPointsBCopy.pop();
+            }
         }
+
         return waypointRows;
     }
 

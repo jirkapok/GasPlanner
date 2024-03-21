@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { WaypointsDifferenceService } from './waypoints-difference.service';
 import { ProfileComparatorService } from './profileComparatorService';
 import { DiveSchedules } from './dive.schedules';
 import { UnitConversion } from './UnitConversion';
@@ -9,7 +8,7 @@ import { Segment, StandardGases } from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
 
 describe('WayPoints Difference Service', () => {
-    let sut: WaypointsDifferenceService;
+    let sut: ProfileComparatorService;
     let schedules: DiveSchedules;
     let wayPoints: WayPointsService;
 
@@ -17,7 +16,7 @@ describe('WayPoints Difference Service', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
-                WaypointsDifferenceService, ProfileComparatorService,
+                ProfileComparatorService,
                 DiveSchedules, UnitConversion, ReloadDispatcher,
                 WayPointsService
             ],
@@ -26,11 +25,10 @@ describe('WayPoints Difference Service', () => {
     });
 
     beforeEach(() => {
-        sut = TestBed.inject(WaypointsDifferenceService);
         schedules = TestBed.inject(DiveSchedules);
         schedules.add();
-        const selection = TestBed.inject(ProfileComparatorService);
-        selection.appendProfileToProfileComparison(1);
+        sut = TestBed.inject(ProfileComparatorService);
+        sut.appendProfileToProfileComparison(1);
         wayPoints = TestBed.inject(WayPointsService);
         setDiveCalculated(0);
         setDiveCalculated(1);

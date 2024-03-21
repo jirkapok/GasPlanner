@@ -6,7 +6,7 @@
         </div>
     </div>
     <div id="body" class="hide card-minheight card-max-height-md">
-        <app-calculating [show]="!tableRowProvider.isCalculated" class="position-absolute"
+        <app-calculating [show]="!profileComparatorService.bothResultsCalculated" class="position-absolute"
         style="top: 50%; left:50%"></app-calculating>
 
         <table id="waypointsDiffTable" class="table table-sm p-0 text-center table-hover" >
@@ -31,9 +31,9 @@
             </tr>
             </thead>
             <tbody [ngClass]="{
-             'd-none': !tableRowProvider.isCalculated
+             'd-none': !profileComparatorService.bothResultsCalculated
              }">
-                <tr *ngFor="let row of tableRowProvider.difference">
+                <tr *ngFor="let row of profileComparatorService.difference">
                     <td class="px-1 vertical-right-border">
                         {{ row.runTime | duration:profileComparatorService.totalDuration }}
                     </td>

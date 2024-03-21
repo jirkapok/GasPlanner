@@ -1,12 +1,13 @@
-import {Injectable} from '@angular/core';
-import {DiveSchedule, DiveSchedules} from './dive.schedules';
-import {DiveResults} from './diveresults';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {ConsumptionByMix, IConsumedMix} from 'scuba-physics';
+import { Injectable } from '@angular/core';
+import { DiveSchedule, DiveSchedules } from './dive.schedules';
+import { DiveResults } from './diveresults';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ConsumptionByMix, IConsumedMix } from 'scuba-physics';
+import { ComparedWaypoint } from './ComparedWaypoint';
+import { WayPoint } from './models';
 
 @Injectable()
 export class ProfileComparatorService {
-
     private _profileAIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
     private _profileBIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
@@ -57,6 +58,31 @@ export class ProfileComparatorService {
             this.profileBResults.calculated && !this.profileBResults.failed;
     }
 
+    public get difference(): ComparedWaypoint[] {
+        if(!this.bothResultsCalculated){
+            return [];
+        }
+
+        const context = new WaypointsDiffContext([...this.wayPointsA], [...this.wayPointsB]);
+        const waypointRows = [];
+
+        while(context.hasNext) {
+            const row = context.toRow();
+            waypointRows.unshift(row);
+            context.next();
+        }
+
+        return waypointRows;
+    }
+
+    private get wayPointsA(): WayPoint[]{
+        return this.profileAResults.wayPoints;
+    }
+
+    private get wayPointsB(): WayPoint[]{
+        return this.profileBResults.wayPoints;
+    }
+
     private set profileAIndex(value: number) {
         this._profileAIndex.next(value);
     }
@@ -96,5 +122,72 @@ export class ProfileComparatorService {
                 }
             }, 100);
         });
+    }
+}
+
+class WaypointsDiffContext {
+    public waypointA: WayPoint | undefined;
+    public waypointB: WayPoint | undefined;
+    private readonly defaultTime = -1;
+    private _endTimeA = this.defaultTime;
+    private _endTimeB = this.defaultTime;
+
+    constructor(private wayPointsA: WayPoint[], private wayPointsB: WayPoint[]) {
+        this.updateA();
+        this.updateB();
+    }
+
+    public get hasNext(): boolean {
+        return !!(this.waypointA || this.waypointB);
+    }
+
+    private get dominantA(): boolean {
+        return this._endTimeA > this._endTimeB;
+    }
+
+    private get dominantB(): boolean {
+        return this._endTimeB > this._endTimeA;
+    }
+
+    public next(): void {
+        if (this.dominantA) {
+            this.updateA();
+        } else if (this.dominantB) {
+            this.updateB();
+        } else {
+            this.updateA();
+            this.updateB();
+        }
+    }
+
+    public toRow(): ComparedWaypoint {
+        const runtime = this.dominantA ? this._endTimeA : this._endTimeB;
+        const row: ComparedWaypoint = {
+            runTime: runtime,
+            durationA: this.waypointA?.duration,
+            depthA: this.waypointA?.endDepth,
+            durationB: this.waypointB?.duration,
+            depthB: this.waypointB?.endDepth,
+        };
+
+        if (this.dominantA) {
+            row.durationB = undefined;
+            row.depthB = undefined;
+        } else if (this.dominantB) {
+            row.durationA = undefined;
+            row.depthA = undefined;
+        }
+
+        return row;
+    }
+
+    private updateA(): void {
+        this.waypointA = this.wayPointsA.pop();
+        this._endTimeA = this.waypointA?.endTime ?? this.defaultTime;
+    }
+
+    private updateB(): void {
+        this.waypointB = this.wayPointsB.pop();
+        this._endTimeB = this.waypointB?.endTime ?? this.defaultTime;
     }
 }

@@ -12,14 +12,6 @@ export class WaypointsDifferenceComponent {
     public tasks = faTasks;
 
     constructor(public units: UnitConversion,
-        public profileComparatorService: ProfileComparatorService) {
-    }
-
-    public get profileATitle(): string {
-        return this.profileComparatorService.profileA.title;
-    }
-
-    public get profileBTitle(): string {
-        return this.profileComparatorService.profileB.title;
+        public profileDiff: ProfileComparatorService) {
     }
 }

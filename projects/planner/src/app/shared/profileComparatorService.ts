@@ -14,7 +14,15 @@ export class ProfileComparatorService {
     constructor(private schedules: DiveSchedules) {
     }
 
-    get totalDuration(): number {
+    public get profileATitle(): string {
+        return this.profileA.title;
+    }
+
+    public get profileBTitle(): string {
+        return this.profileB.title;
+    }
+
+    public get totalDuration(): number {
         if(this.profileAResults.totalDuration > this.profileBResults.totalDuration){
             return this.profileAResults.totalDuration;
         }

@@ -65,7 +65,8 @@ export class ProfileComparatorService {
     }
 
     public areResultsCalculated(): boolean {
-        return this.profileAResults.calculated && this.profileBResults.calculated;
+        return this.profileAResults.calculated && !this.profileAResults.failed &&
+               this.profileBResults.calculated && !this.profileBResults.failed;
     }
 
     public areDiveInfosCalculated(): boolean {

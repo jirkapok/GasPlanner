@@ -94,14 +94,14 @@ fdescribe('WayPoints Difference Service', () => {
         assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes6, []);
     });
 
-    xit('Failed profile A with valid profile B', () => {
+    it('Failed profile A with valid profile B', () => {
         schedules.dives[0].diveResult .endFailed();
         schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(segments3_minutes6);
         const diff = sut.getRows();
         expect(diff).toEqual([]);
     });
 
-    xit('Failed profile B with valid profile A', () => {
+    it('Failed profile B with valid profile A', () => {
         schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(segments3_minutes6);
         schedules.dives[1].diveResult.endFailed();
         const diff = sut.getRows();
@@ -185,5 +185,4 @@ fdescribe('WayPoints Difference Service', () => {
 
     // TODO rename areResultsCalculated to bothResultsCalculated
     // TODO rename to difference, refactor to property
-    // TODO waypoints diff test cases: for both profiles
 });

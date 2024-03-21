@@ -32,46 +32,25 @@ export class DiveResultsTableDifferenceComponent {
     ]);
 
     constructor(
-        private viewSwitch: ViewSwitchService,
+        public viewSwitch: ViewSwitchService,
         public units: UnitConversion,
-        private profileComparatorService: ProfileComparatorService) {
+        public profilesDiff: ProfileComparatorService) {
     }
 
     public get profileA(): DiveResults {
-        return this.profileComparatorService.profileAResults;
+        return this.profilesDiff.profileAResults;
     }
 
     public get profileB(): DiveResults {
-        return this.profileComparatorService.profileBResults;
-    }
-
-    public get profileATitle(): string {
-        return this.profileComparatorService.profileA.title;
-    }
-
-    public get profileBTitle(): string {
-        return this.profileComparatorService.profileB.title;
-    }
-
-    public get bothResultsCalculated(): boolean {
-        return this.profileComparatorService.bothResultsCalculated;
+        return this.profilesDiff.profileBResults;
     }
 
     public get areDiveInfosCalculated(): boolean {
-        return this.profileComparatorService.areDiveInfosCalculated();
+        return this.profilesDiff.areDiveInfosCalculated();
     }
 
     public get areProfilesCalculated(): boolean {
-        return this.profileComparatorService.areProfilesCalculated();
-    }
-
-    public get isComplex(): boolean {
-        return this.viewSwitch.isComplex;
-    }
-
-    public get needsReturn(): boolean {
-        // TODO: Add Profile B
-        return this.profileA.needsReturn;
+        return this.profilesDiff.areProfilesCalculated();
     }
 
     public get totalDurationDifference(): number {

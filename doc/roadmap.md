@@ -17,7 +17,6 @@ Following list of features and improvements ordered by priority is under develop
     * https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers
     * https://developers.google.com/codelabs/pwa-training/pwa03--going-offline#1)
 * Allow user to compare multiple plans side by side
-  * Add tests
   * Fix remaining TODOs in the Diff
 * UI Tweaks
   * Profile:
@@ -25,6 +24,11 @@ Following list of features and improvements ordered by priority is under develop
     * Gas switch is not present in shortened waypoints list
   * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
   * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
+  * Tanks complex view: Add check box to be able enable or disable tanks
+* Gas blender:
+  * Add gas blending costs
+  * Add application settings for costs
+  * Add use case to identify mix when adding only top mix without adding he or oxygen
 * Extend application settings:
   * Define custom maximum gas density
   * Custom diver stress sac rate ratio

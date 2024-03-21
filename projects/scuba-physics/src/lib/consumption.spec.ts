@@ -9,6 +9,8 @@ import { SafetyStop } from './Options';
 import { Salinity } from './pressure-converter';
 import { Precision } from './precision';
 
+// TODO consumption test case: /?t=1-24-0-220-0.21-0.35,2-11.1-0-200-0.5-0&de=0-53-360-1,53-53-660-1,53-46-60-1,46-46-360-1,46-24-120-1,24-21-60-1&di=20&o=300,9,3,1,3,20,3,0.75,0.3,6,1.6,30,1.4,10,1,1,1,1,1&ao=1,0
+// Ensure if it si valid: generates too high reserve for S80 = 200 b, twin = 120 b
 describe('Consumption', () => {
     const diver = new Diver(20);
     const consumption = new Consumption(DepthConverter.forFreshWater());

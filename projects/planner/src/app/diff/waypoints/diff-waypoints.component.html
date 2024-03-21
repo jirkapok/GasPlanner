@@ -34,7 +34,7 @@
             <tbody [ngClass]="{
              'd-none': !tableRowProvider.isCalculated
              }">
-                <tr *ngFor="let row of tableRowProvider.getRows()">
+                <tr *ngFor="let row of tableRowProvider.difference">
                     <td class="px-1 vertical-right-border">
                         {{ row.runTime | duration:profileComparatorService.totalDuration }}
                     </td>

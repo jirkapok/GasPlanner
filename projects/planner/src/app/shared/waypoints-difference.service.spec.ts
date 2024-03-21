@@ -79,8 +79,7 @@ describe('WayPoints Difference Service', () => {
     const assertDivesWayPointsCompare = (profileA: Segment[], profileB: Segment[], expected: WaypointsComparisonTableRow[])=> {
         schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(profileA);
         schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(profileB);
-        const diff = sut.getRows();
-        expect(diff).toEqual(expected);
+        expect(sut.difference).toEqual(expected);
     };
 
     it('Not calculated profile A', () => {
@@ -96,15 +95,13 @@ describe('WayPoints Difference Service', () => {
     it('Failed profile A with valid profile B', () => {
         schedules.dives[0].diveResult .endFailed();
         schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(segments3_minutes6);
-        const diff = sut.getRows();
-        expect(diff).toEqual([]);
+        expect(sut.difference).toEqual([]);
     });
 
     it('Failed profile B with valid profile A', () => {
         schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(segments3_minutes6);
         schedules.dives[1].diveResult.endFailed();
-        const diff = sut.getRows();
-        expect(diff).toEqual([]);
+        expect(sut.difference).toEqual([]);
     });
 
     it('Identical profiles', () => {
@@ -181,6 +178,4 @@ describe('WayPoints Difference Service', () => {
         ];
         assertDivesWayPointsCompare(segments6_minutes11, segments4_minutes11, expected);
     });
-
-    // TODO rename getRows to difference, refactor to property
 });

@@ -1,7 +1,7 @@
-import {WayPoint} from './models';
-import {WaypointsComparisonTableRow} from './WaypointsComparisonTableRow';
-import {Injectable} from '@angular/core';
-import {ProfileComparatorService} from './profileComparatorService';
+import { WayPoint } from './models';
+import { WaypointsComparisonTableRow } from './WaypointsComparisonTableRow';
+import { Injectable } from '@angular/core';
+import { ProfileComparatorService } from './profileComparatorService';
 
 @Injectable()
 export class WaypointsDifferenceService {
@@ -14,15 +14,7 @@ export class WaypointsDifferenceService {
         return this.profileComparatorService.bothResultsCalculated;
     }
 
-    private get wayPointsA(): WayPoint[]{
-        return this.profileComparatorService.profileAResults.wayPoints;
-    }
-
-    private get wayPointsB(): WayPoint[]{
-        return this.profileComparatorService.profileBResults.wayPoints;
-    }
-
-    public getRows(): WaypointsComparisonTableRow[] {
+    public get difference(): WaypointsComparisonTableRow[] {
         const MAX_SAFETY_LIMIT = 65536; // 2**16
         this._waypointRows = [];
 
@@ -79,5 +71,13 @@ export class WaypointsDifferenceService {
             this._waypointRows.unshift(row);
         }
         return this._waypointRows;
+    }
+
+    private get wayPointsA(): WayPoint[]{
+        return this.profileComparatorService.profileAResults.wayPoints;
+    }
+
+    private get wayPointsB(): WayPoint[]{
+        return this.profileComparatorService.profileBResults.wayPoints;
     }
 }

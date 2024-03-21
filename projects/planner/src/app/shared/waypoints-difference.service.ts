@@ -5,8 +5,6 @@ import { ProfileComparatorService } from './profileComparatorService';
 
 @Injectable()
 export class WaypointsDifferenceService {
-    private _waypointRows: WaypointsComparisonTableRow[] = [];
-
     public constructor(private profileComparatorService: ProfileComparatorService) {
     }
 
@@ -16,7 +14,7 @@ export class WaypointsDifferenceService {
 
     public get difference(): WaypointsComparisonTableRow[] {
         const MAX_SAFETY_LIMIT = 65536; // 2**16
-        this._waypointRows = [];
+        const waypointRows = [];
 
         if(!this.isCalculated){
             return [];
@@ -42,7 +40,7 @@ export class WaypointsDifferenceService {
                     depthB: undefined,
                 };
                 waypointA = wayPointsACopy.pop();
-                this._waypointRows.unshift(row);
+                waypointRows.unshift(row);
                 continue;
             }
 
@@ -55,7 +53,7 @@ export class WaypointsDifferenceService {
                     depthB: waypointB?.endDepth,
                 };
                 waypointB = wayPointsBCopy.pop();
-                this._waypointRows.unshift(row);
+                waypointRows.unshift(row);
                 continue;
             }
 
@@ -68,9 +66,9 @@ export class WaypointsDifferenceService {
             };
             waypointA = wayPointsACopy.pop();
             waypointB = wayPointsBCopy.pop();
-            this._waypointRows.unshift(row);
+            waypointRows.unshift(row);
         }
-        return this._waypointRows;
+        return waypointRows;
     }
 
     private get wayPointsA(): WayPoint[]{

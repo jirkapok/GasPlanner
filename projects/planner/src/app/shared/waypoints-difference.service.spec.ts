@@ -8,7 +8,7 @@ import { WayPointsService } from './waypoints.service';
 import { Segment, StandardGases } from 'scuba-physics';
 import { WaypointsComparisonTableRow } from './WaypointsComparisonTableRow';
 
-fdescribe('WayPoints Difference Service', () => {
+describe('WayPoints Difference Service', () => {
     let sut: WaypointsDifferenceService;
     let schedules: DiveSchedules;
     let wayPoints: WayPointsService;
@@ -77,7 +77,6 @@ fdescribe('WayPoints Difference Service', () => {
     ];
 
     const assertDivesWayPointsCompare = (profileA: Segment[], profileB: Segment[], expected: WaypointsComparisonTableRow[])=> {
-        // TODO cant use for empty profiles, because it is not accepted by waypoint service - fix waypoint service
         schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(profileA);
         schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(profileB);
         const diff = sut.getRows();

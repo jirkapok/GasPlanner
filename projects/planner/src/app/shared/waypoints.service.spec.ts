@@ -14,12 +14,17 @@ describe('WayPointsService', () => {
 
     const sut = new WayPointsService(new UnitConversion());
 
+    it('No segments returns empty array', () => {
+        const wayPoints = sut.calculateWayPoints([]);
+        expect(wayPoints.length).toEqual(0);
+    });
+
     it('No errors converts waypoints', () => {
         const plan = new Plan();
         plan.setSimple(40, 20, airTank, options);
 
         const wayPoints = sut.calculateWayPoints(plan.segments);
-        expect(wayPoints.length).toBe(2);
+        expect(wayPoints.length).toEqual(2);
     });
 
     it('With gas switch adds event', () => {
@@ -28,6 +33,6 @@ describe('WayPointsService', () => {
         plan.addSegment(new Tank(10, 0, 50));
 
         const wayPoints = sut.calculateWayPoints(plan.segments);
-        expect(wayPoints[2].swimAction).toBe(SwimAction.switch);
+        expect(wayPoints[2].swimAction).toEqual(SwimAction.switch);
     });
 });

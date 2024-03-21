@@ -9,6 +9,11 @@ export class WayPointsService {
 
     public calculateWayPoints(profile: Segment[]): WayPoint[] {
         const wayPoints = [];
+
+        if(profile.length === 0) {
+            return [];
+        }
+
         const descent = profile[0];
         let lastWayPoint = WayPoint.fromSegment(this.units, descent);
         let lastSegment = descent;

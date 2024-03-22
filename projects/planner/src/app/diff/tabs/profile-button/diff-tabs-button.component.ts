@@ -54,6 +54,6 @@ export class DiffTabsButtonComponent {
     }
 
     public selectProfile() {
-        this.profilesDiff.appendProfileToProfileComparison(this.index);
+        this.profilesDiff.selectProfile(this.index);
     }
 }

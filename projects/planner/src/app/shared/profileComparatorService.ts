@@ -119,7 +119,7 @@ export class ProfileComparatorService {
         return this.profileAResults.profileCalculated && this.profileBResults.profileCalculated;
     }
 
-    public appendProfileToProfileComparison(index: number): boolean {
+    public selectProfile(index: number): boolean {
         if(this._profileAIndex.getValue() === index || this._profileBIndex.getValue() === index){
             return true;
         }

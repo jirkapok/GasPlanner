@@ -28,7 +28,7 @@ describe('WayPoints Difference Service', () => {
         schedules = TestBed.inject(DiveSchedules);
         schedules.add();
         sut = TestBed.inject(ProfileComparatorService);
-        sut.appendProfileToProfileComparison(1);
+        sut.selectProfile(1);
         wayPoints = TestBed.inject(WayPointsService);
         setDiveCalculated(0);
         setDiveCalculated(1);

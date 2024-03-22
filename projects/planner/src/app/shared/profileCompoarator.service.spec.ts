@@ -35,6 +35,7 @@ describe('ProfileComparison service', () => {
         expect(sut.hasTwoProfiles()).toBeFalsy();
     });
 
+    // TODO add reaction on event when profile was removed
     // TODO remove hasTwoProfiles or use it: initial load of the component, if there is only one profile select as both
     // if there are at least two select second as B
     //  change it to get property and all other properties in the service
@@ -60,8 +61,8 @@ describe('ProfileComparison service', () => {
         schedules.dives[1].diveResult.wayPoints = [
             WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 700))
         ];
-        // TODO rename appendProfileToProfileComparison to selectProfile
-        sut.appendProfileToProfileComparison(1);
+
+        sut.selectProfile(1);
 
         expect(sut.totalDuration).toEqual(700);
     }));
@@ -74,7 +75,7 @@ describe('ProfileComparison service', () => {
             schedules.add();
             schedules.dives[0].tanksService.tankData[0].consumed = 50;
             schedules.dives[1].tanksService.tankData[0].consumed = 100;
-            sut.appendProfileToProfileComparison(1);
+            sut.selectProfile(1);
             combineMethod = spyOn(ConsumptionByMix, 'combine')
                 .and.callThrough();
         });
@@ -137,8 +138,8 @@ describe('ProfileComparison service', () => {
             sut.profileBIndex.subscribe((newIndex: number) => newProfileB = newIndex);
 
             // TODO remove appendProfileToProfileComparison method return value
-            sut.appendProfileToProfileComparison(expectedA);
-            sut.appendProfileToProfileComparison(expectedB);
+            sut.selectProfile(expectedA);
+            sut.selectProfile(expectedB);
         });
 
         it('Selects Profile', () => {

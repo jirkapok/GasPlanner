@@ -135,7 +135,7 @@
             </div>
         </td>
     </tr>
-    <tr *ngIf="showMaxBottomTimeOfProfile">
+    <tr *ngIf="diff.showMaxBottomTime">
         <td>Maximum bottom time [min]:</td>
         <td>
             <div>
@@ -162,14 +162,14 @@
             <div>
                 {{ diff.highestDensity.valueA | number:'1.0-2' }}
                 <br>
-                ({{densityTextOfProfile(profileA)}})
+                ({{diff.densityGasA}})
             </div>
         </td>
         <td>
             <div>
                 {{ diff.highestDensity.valueB | number:'1.0-2' }}
                 <br>
-                ({{densityTextOfProfile(profileB)}})
+                ({{diff.densityGasB}})
             </div>
         </td>
         <td class="{{diff.highestDensity.bgColor}}">
@@ -206,18 +206,18 @@
         <td>CNS toxicity [%]:</td>
         <td>
             <div>
-                {{cnsTextOfProfile(profileA)}}
+                {{diff.cnsA}}
             </div>
         </td>
         <td>
             <div>
-                {{cnsTextOfProfile(profileB)}}
+                {{diff.cnsB}}
             </div>
         </td>
         <td class="{{diff.cns.bgColor}}">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
-                    {{ cnsDifferenceText(diff.cns.difference) | number:'1.0-0' }}
+                    {{ diff.cnsDifference | number:'1.0-0' }}
                 </strong>
                 <fa-icon [icon] ="diff.cns.arrow"/>
             </div>

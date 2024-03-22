@@ -58,30 +58,100 @@ class ResultDiff {
     }
 }
 
+class DiveResulsDiff {
+    public totalDuration = new ResultDiff(this.profileA, this.profileB, 1,
+        d => d.totalDuration);
+    public timeToSurface = new ResultDiff(this.profileA, this.profileB, -1,
+        d => d.timeToSurface);
+    public averageDepth = new ResultDiff(this.profileA, this.profileB, -1,
+        d => this.units.fromMeters(d.averageDepth));
+    public emergencyAscentStart = new ResultDiff(this.profileA, this.profileB, -1,
+        d => d.emergencyAscentStart);
+    public noDeco = new ResultDiff(this.profileA, this.profileB, 1,
+        d => d.noDecoTime);
+    public maxTime = new ResultDiff(this.profileA, this.profileB, 1,
+        d => d.maxTime);
+    public highestDensity = new ResultDiff(this.profileA, this.profileB, -1,
+        d => this.density(d));
+    public otu = new ResultDiff(this.profileA, this.profileB, -1,
+        d => d.otu);
+    public cns = new ResultDiff(this.profileA, this.profileB, -1,
+        d => d.cns);
+
+    private readonly maxCns = 1000;
+    private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';
+
+    public constructor(private units: UnitConversion, private profileA: DiveResults, private profileB: DiveResults) {
+    }
+
+    public get densityGasA(): string {
+        return this.densityFormatted(this.profileA);
+    }
+
+    public get densityGasB(): string {
+        return this.densityFormatted(this.profileA);
+    }
+
+    public get cnsA(): string {
+        return this.cnsFormatted(this.profileA);
+    }
+
+    public get cnsB(): string {
+        return this.cnsFormatted(this.profileA);
+    }
+
+    public get cnsDifference(): string {
+        const diff = this.cns.difference;
+
+        if(diff >= this.maxCns) {
+            return TextConstants.cnsOverOneThousand;
+        }
+
+        if(diff <= -this.maxCns) {
+            return this.cnsDifferenceUnderMinusOneThousand;
+        }
+
+        return formatNumber(diff, 'en', '1.0-0');
+    }
+
+    public get showMaxBottomTime(): boolean {
+        return this.profileA.maxTime > 0 && this.profileB.maxTime > 0;
+    }
+
+    private densityFormatted(profile: DiveResults): string {
+        const gas = profile.highestDensity.gas.name;
+        const depth = this.units.fromMeters(profile.highestDensity.depth);
+        return `${gas} at ${depth} ${this.units.length}`;
+    }
+
+    private density(profile: DiveResults): number {
+        const density = profile.highestDensity.density;
+        return this.units.fromGramPerLiter(density);
+    }
+
+    private cnsFormatted(profile: DiveResults): string {
+        if(profile.cns >= this.maxCns) {
+            return TextConstants.cnsOverOneThousand;
+        }
+
+        return formatNumber(profile.cns, 'en', '1.0-0');
+    }
+}
+
 @Component({
     selector: 'app-diff-diveresults-table',
     templateUrl: './diff-diveresults-table.component.html',
     styleUrls: ['./diff-diveresults-table.component.scss', '../../diff.component.scss']
 })
 export class DiveResultsTableDifferenceComponent {
-    public diff = {
-        totalDuration: new ResultDiff(this.profileA, this.profileB, 1, d => d.totalDuration),
-        timeToSurface: new ResultDiff(this.profileA, this.profileB, -1, d => d.timeToSurface),
-        averageDepth: new ResultDiff(this.profileA, this.profileB, -1, d => d.averageDepth),
-        emergencyAscentStart: new ResultDiff(this.profileA, this.profileB, -1, d => d.emergencyAscentStart),
-        noDeco: new ResultDiff(this.profileA, this.profileB, 1, d => d.noDecoTime),
-        maxTime: new ResultDiff(this.profileA, this.profileB, 1, d => d.maxTime),
-        highestDensity: new ResultDiff(this.profileA, this.profileB, -1, d => d.highestDensity.density),
-        otu: new ResultDiff(this.profileA, this.profileB, -1, d => d.otu),
-        cns: new ResultDiff(this.profileA, this.profileB, -1, d => d.cns),
-    };
-
-    private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';
-
-    constructor(
+    public constructor(
         public viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         public profilesDiff: ProfileComparatorService) {
+    }
+
+    public get diff(): DiveResulsDiff {
+        return new DiveResulsDiff(this.units, this.profileA, this.profileB);
     }
 
     public get profileA(): DiveResults {
@@ -98,40 +168,5 @@ export class DiveResultsTableDifferenceComponent {
 
     public get areProfilesCalculated(): boolean {
         return this.profilesDiff.areProfilesCalculated();
-    }
-
-    public cnsDifferenceText(diff: number): string {
-        if(diff >= 1000) {
-            return TextConstants.cnsOverOneThousand;
-        }
-
-        if(diff <= -1000) {
-            return this.cnsDifferenceUnderMinusOneThousand;
-        }
-
-        return formatNumber(diff, 'en', '1.0-0');
-    }
-
-    public showMaxBottomTimeOfProfile(profile: DiveResults): boolean {
-        return profile.maxTime > 0;
-    }
-
-    public highestDensityOfProfile(profile: DiveResults): number {
-        const density = profile.highestDensity.density;
-        return this.units.fromGramPerLiter(density);
-    }
-
-    public densityTextOfProfile(profile: DiveResults): string {
-        const gas = profile.highestDensity.gas.name;
-        const depth = this.units.fromMeters(profile.highestDensity.depth);
-        return `${gas} at ${depth} ${this.units.length}`;
-    }
-
-    public cnsTextOfProfile(profile: DiveResults): string {
-        if(profile.cns >= 1000) {
-            return TextConstants.cnsOverOneThousand;
-        }
-
-        return formatNumber(profile.cns, 'en', '1.0-0');
     }
 }

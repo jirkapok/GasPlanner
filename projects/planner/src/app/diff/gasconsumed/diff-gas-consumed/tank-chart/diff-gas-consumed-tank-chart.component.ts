@@ -66,8 +66,24 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
     public get gasRemainingDifference(): number {
         return this.units.fromLiter(this.profileAGasRemaining - this.profileBGasRemaining);
     }
+
+    public get absoluteRemainingDifference(): number {
+        return Math.abs(this.gasRemainingDifference);
+    }
     public get gasReserveDifference(): number {
         return this.units.fromLiter(this.profileACombinedGas.reserve - this.profileBCombinedGas.reserve);
+    }
+
+    public get absoluteReserveDifference(): number {
+        return Math.abs(this.gasReserveDifference);
+    }
+
+    public get reserveRight(): boolean {
+        return this.gasReserveDifference > 0;
+    }
+
+    public get remainingRight(): boolean {
+        return this.gasRemainingDifference > 0;
     }
 
     public get gasRemainingPercentageDifference(): number {
@@ -102,14 +118,10 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
         return this.profileComparatorService.profileB.title;
     }
 
-
-    ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes.profileACombinedGas || changes.profileBCombinedGas) {
             this.profileAGasRemaining = this.profileACombinedGas.total - this.profileACombinedGas.consumed;
             this.profileBGasRemaining = this.profileBCombinedGas.total - this.profileBCombinedGas.consumed;
         }
     }
-
-    // TODO why Math?
-    protected readonly Math = Math;
 }

@@ -16,7 +16,7 @@
             <small>
                 <fa-icon *ngIf="gasRemainingDifference > 0" [icon]="faArrowLeft" class="text-success"/>
                 <strong *ngIf="gasRemainingDifference != 0">
-                    {{Math.abs(gasRemainingDifference) | number:'1.0-0' }}
+                    {{ absoluteRemainingDifference | number:'1.0-0' }}
                 </strong>
                 <fa-icon *ngIf="gasRemainingDifference < 0" [icon]="faArrowRight" class="text-success"/>
                 <fa-icon *ngIf="gasRemainingDifference === 0" [icon]="faMinus"/>
@@ -41,7 +41,7 @@
             <small>
                 <fa-icon *ngIf="gasReserveDifference > 0" [icon]="faArrowLeft" class="text-success"/>
                 <strong *ngIf="gasReserveDifference != 0">
-                    {{Math.abs(gasReserveDifference) | number:'1.0-0' }}
+                    {{ absoluteReserveDifference | number:'1.0-0' }}
                 </strong>
                 <fa-icon *ngIf="gasReserveDifference < 0" [icon]="faArrowRight" class="text-success"/>
                 <fa-icon *ngIf="gasReserveDifference === 0" [icon]="faMinus"/>
@@ -63,17 +63,17 @@
     </div>
     <div class="progress gas-bar mt-1 mb-2">
         <div class="reserve-bar rounded-progress"></div>
-        <div class="combined_wrapper" [ngClass]="{'flip': gasRemainingDifference > 0}" >
+        <div class="combined_wrapper" [ngClass]="{'flip': remainingRight }" >
             <div role="progressbar"
                  class="progress-bar rounded-progress bg-primary"
                  [style.width]="gasRemainingPercentageDifference + '%'">
-                {{Math.abs(gasRemainingDifference) | number:'1.0-0' }}</div>
+                {{ absoluteRemainingDifference | number:'1.0-0' }}</div>
         </div>
-        <div class="combined_wrapper" [ngClass]="{'flip': gasReserveDifference > 0}" >
+        <div class="combined_wrapper" [ngClass]="{'flip': reserveRight }" >
             <div role="progressbar"
                  class="progress-bar rounded-progress bg-warning "
                  [style.width]="gasReservePercentageDifference + '%'">
-                {{Math.abs(gasReserveDifference) | number:'1.0-0' }}</div>
+                {{ absoluteReserveDifference | number:'1.0-0' }}</div>
         </div>
     </div>
 </div>

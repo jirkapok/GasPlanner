@@ -20,7 +20,7 @@ export interface IConsumedMix {
 
 export class ConsumptionByMix {
     /**
-     * Agregates tanks by their gas mixture
+     * Aggregates tanks by their gas mixture
      * @param tanks with already calculated consumption and reserve
      */
     public static combine(tanks: Tank[]): IConsumedMix[] {

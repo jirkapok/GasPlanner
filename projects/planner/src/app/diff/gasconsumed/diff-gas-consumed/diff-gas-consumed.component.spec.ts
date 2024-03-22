@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GasConsumedDifferenceComponent } from './diff-gas-consumed.component';
-import {ProfileComparatorService} from '../../../shared/profileComparatorService';
-import {DiveSchedules} from '../../../shared/dive.schedules';
-import {UnitConversion} from '../../../shared/UnitConversion';
-import {ReloadDispatcher} from '../../../shared/reloadDispatcher';
+import { ProfileComparatorService } from '../../../shared/profileComparatorService';
+import { DiveSchedules } from '../../../shared/dive.schedules';
+import { UnitConversion } from '../../../shared/UnitConversion';
+import { ReloadDispatcher } from '../../../shared/reloadDispatcher';
+import { GasesComparisonService } from '../../../shared/gases-comparison.service';
 
 describe('DiffGasConsumedComponent', () => {
     let component: GasConsumedDifferenceComponent;
@@ -14,6 +14,7 @@ describe('DiffGasConsumedComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [GasConsumedDifferenceComponent],
             providers: [
+                GasesComparisonService,
                 ProfileComparatorService,
                 DiveSchedules,
                 UnitConversion,
@@ -33,6 +34,6 @@ describe('DiffGasConsumedComponent', () => {
 
     // TODO extract getMixedTanks to separate service, see also methods in dif-gas-consumed-tank-chart
     it('Creates compared gases', () => {
-        expect(component.getMixedTanks).not.toBeNull();
+        expect(component.gasesDifference).not.toBeNull();
     });
 });

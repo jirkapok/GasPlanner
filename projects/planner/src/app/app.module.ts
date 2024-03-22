@@ -100,6 +100,7 @@ import {GasConsumedDifferenceComponent} from './diff/gasconsumed/diff-gas-consum
 import {
     GasConsumedDifferenceTankComponent
 } from './diff/gasconsumed/diff-gas-consumed/tank-chart/diff-gas-consumed-tank-chart.component';
+import { GasesComparisonService } from './shared/gases-comparison.service';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -206,7 +207,8 @@ const SERVICES = [
     ViewSwitchService,
     WayPointsService,
     TestDataInjector,
-    ProfileComparatorService
+    ProfileComparatorService,
+    GasesComparisonService
 ];
 
 @NgModule({

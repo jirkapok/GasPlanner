@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ProfileComparatorService } from './profileComparatorService';
 import { IConsumedMix, StandardGases } from 'scuba-physics';
 
+// TODO rebind to the respective units, currently all values are in liters
 export interface IMixedTanksForComparison {
     profileA: IConsumedMix;
     profileB: IConsumedMix;

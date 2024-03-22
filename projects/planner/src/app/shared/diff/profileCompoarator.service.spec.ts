@@ -126,22 +126,19 @@ describe('ProfileComparison service', () => {
         });
     });
 
-    // TODO add switch when clicking on already selected profile swithes profiles
+    // TODO add switch when clicking on already selected profile switches profiles
     // TODO change buttons colors to select profile: Try ProfileB to be green and selected profiles gray, not selected white
     describe('Select new profile', () => {
         const expectedA = 2;
         const expectedB = 1;
-        let newProfileA = -1; // set to non existing index
-        let newProfileB = -1;
+        let eventNoticedTimes = 0;
 
         beforeEach(() => {
             schedules.add();
             schedules.add();
 
-            // TODO rename to ProfileAChanged and dont create new one, but initialize in constructor
-            sut.profileAIndex.subscribe((newIndex: number) => newProfileA = newIndex);
-            sut.profileBIndex.subscribe((newIndex: number) => newProfileB = newIndex);
-
+            eventNoticedTimes = 0;
+            sut.selectionChanged.subscribe(() => eventNoticedTimes++);
             sut.selectProfile(expectedA);
             sut.selectProfile(expectedB);
         });
@@ -151,12 +148,8 @@ describe('ProfileComparison service', () => {
             expect(sut.profileB).toEqual(schedules.dives[expectedB]);
         });
 
-        it('Profile A change event received', () => {
-            expect(newProfileA).toEqual(expectedA);
-        });
-
-        it('Profile B change event received', () => {
-            expect(newProfileB).toEqual(expectedB);
+        it('Selection change event received', () => {
+            expect(eventNoticedTimes).toEqual(2);
         });
     });
 });

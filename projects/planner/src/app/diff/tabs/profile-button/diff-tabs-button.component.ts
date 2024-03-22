@@ -38,11 +38,11 @@ export class DiffTabsButtonComponent {
     }
 
     public get state(): string {
-        if(this.index === this.profilesDiff.indexA) {
+        if(this.index === this.profilesDiff.profileAIndex) {
             return 'primary';
         }
 
-        if(this.index === this.profilesDiff.indexB) {
+        if(this.index === this.profilesDiff.profileBIndex) {
             return 'secondary';
         }
 

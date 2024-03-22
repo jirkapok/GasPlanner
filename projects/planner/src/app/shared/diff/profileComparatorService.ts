@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { DiveResults } from '../diveresults';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ConsumptionByMix, IConsumedMix } from 'scuba-physics';
 import { ComparedWaypoint } from '../ComparedWaypoint';
 import { WayPoint } from '../models';
 
 @Injectable()
 export class ProfileComparatorService {
-    private _profileAIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-    private _profileBIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+    private _profileAIndex = 0;
+    private _profileBIndex = 0;
+    private _onSelectionChanged: Subject<void> = new Subject<void>();
+    private _selectionChanged: Observable<void>;
 
     constructor(private schedules: DiveSchedules) {
+        this._selectionChanged = this._onSelectionChanged.asObservable();
+
         if(this.hasTwoProfiles) {
             this.selectProfile(1);
         }
@@ -32,28 +36,24 @@ export class ProfileComparatorService {
         return this.profileBResults.totalDuration;
     }
 
-    public get profileAIndex(): Observable<number> {
-        return this._profileAIndex.asObservable();
+    public get selectionChanged(): Observable<void> {
+        return this._selectionChanged;
     }
 
-    public get indexA(): number {
-        return this._profileAIndex.value;
+    public get profileAIndex(): number {
+        return this._profileAIndex;
     }
 
-    public get indexB(): number {
-        return this._profileBIndex.value;
-    }
-
-    public get profileBIndex(): Observable<number> {
-        return this._profileBIndex.asObservable();
+    public get profileBIndex(): number {
+        return this._profileBIndex;
     }
 
     public get profileA(): DiveSchedule {
-        return this.schedules.dives[this._profileAIndex.getValue()];
+        return this.schedules.dives[this._profileAIndex];
     }
 
     public get profileB(): DiveSchedule {
-        return this.schedules.dives[this._profileBIndex.getValue()];
+        return this.schedules.dives[this._profileBIndex];
     }
 
     public get profileAResults(): DiveResults {
@@ -106,14 +106,6 @@ export class ProfileComparatorService {
         return this.profileBResults.wayPoints;
     }
 
-    private set profileAIndex(value: number) {
-        this._profileAIndex.next(value);
-    }
-
-    private set profileBIndex(value: number) {
-        this._profileBIndex.next(value);
-    }
-
     public areDiveInfosCalculated(): boolean {
         return this.profileAResults.diveInfoCalculated && this.profileBResults.diveInfoCalculated;
     }
@@ -123,12 +115,13 @@ export class ProfileComparatorService {
     }
 
     public selectProfile(index: number): void {
-        if(this._profileAIndex.getValue() === index || this._profileBIndex.getValue() === index){
+        if(this._profileAIndex === index || this._profileBIndex === index){
             return;
         }
 
-        this.profileAIndex = this._profileBIndex.getValue();
-        this.profileBIndex = index;
+        this._profileAIndex = this._profileBIndex;
+        this._profileBIndex = index;
+        this._onSelectionChanged.next();
     }
 
     public waitUntilProfilesCalculated(): Promise<void> {

@@ -98,17 +98,12 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .create(this.profileB);
 
         this.updateLayoutThickFormat();
-        this.profileComparatorService.profileAIndex.subscribe(() => {
+        this.profileComparatorService.selectionChanged.subscribe(() => {
             if (this.profileComparatorService.areProfilesCalculated()) {
                 this.plotCharts();
             }
         });
 
-        this.profileComparatorService.profileBIndex.subscribe(() => {
-            if (this.profilesCalculated) {
-                this.plotCharts();
-            }
-        });
         // TODO: Implement selectedWaypoint for diff-waypoints
     }
 

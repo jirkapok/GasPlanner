@@ -1,12 +1,62 @@
-import {Component} from '@angular/core';
-import {ViewSwitchService} from '../../../shared/viewSwitchService';
-import {UnitConversion} from '../../../shared/UnitConversion';
-import {ProfileComparatorService} from '../../../shared/profileComparatorService';
-import {DiveResults} from '../../../shared/diveresults';
-import {formatNumber} from '@angular/common';
-import {faArrowDown, faArrowUp, faMinus, IconDefinition} from '@fortawesome/free-solid-svg-icons';
-import {Logger} from '../../../shared/Logger';
-import {TextConstants} from '../../../shared/TextConstants';
+import { Component } from '@angular/core';
+import { ViewSwitchService } from '../../../shared/viewSwitchService';
+import { UnitConversion } from '../../../shared/UnitConversion';
+import { ProfileComparatorService } from '../../../shared/profileComparatorService';
+import { DiveResults } from '../../../shared/diveresults';
+import { formatNumber } from '@angular/common';
+import { faArrowDown, faArrowUp, faMinus, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { TextConstants } from '../../../shared/TextConstants';
+
+class ResultDiff {
+    private arrowUp: IconDefinition = faArrowUp;
+    private arrowDown: IconDefinition = faArrowDown;
+    private dash: IconDefinition = faMinus;
+
+    constructor(
+        private profileA: DiveResults,
+        private profileB: DiveResults,
+        private betterDirection: number,
+        private valueAccessor: (result: DiveResults) => number,
+    ) { }
+
+    public get valueA(): number {
+        return this.valueAccessor(this.profileA);
+    }
+
+    public get valueB(): number {
+        return this.valueAccessor(this.profileB);
+    }
+
+    public get difference(): number {
+        return this.valueB - this.valueA;
+    }
+
+    public get arrow(): IconDefinition {
+        if(this.difference > 0) {
+            return this.arrowUp;
+        }
+
+        if (this.difference < 0) {
+            return this.arrowDown;
+        }
+
+        return this.dash;
+    }
+
+    public get bgColor(): string {
+        const projectedValue = this.betterDirection * this.difference;
+
+        if (projectedValue > 0){
+            return 'table-success';
+        }
+
+        if (projectedValue < 0){
+            return 'table-danger';
+        }
+
+        return 'table-active';
+    }
+}
 
 @Component({
     selector: 'app-diff-diveresults-table',
@@ -14,22 +64,19 @@ import {TextConstants} from '../../../shared/TextConstants';
     styleUrls: ['./diff-diveresults-table.component.scss', '../../diff.component.scss']
 })
 export class DiveResultsTableDifferenceComponent {
-    private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';
+    public diff = {
+        totalDuration: new ResultDiff(this.profileA, this.profileB, 1, d => d.totalDuration),
+        timeToSurface: new ResultDiff(this.profileA, this.profileB, -1, d => d.timeToSurface),
+        averageDepth: new ResultDiff(this.profileA, this.profileB, -1, d => d.averageDepth),
+        emergencyAscentStart: new ResultDiff(this.profileA, this.profileB, -1, d => d.emergencyAscentStart),
+        noDeco: new ResultDiff(this.profileA, this.profileB, 1, d => d.noDecoTime),
+        maxTime: new ResultDiff(this.profileA, this.profileB, 1, d => d.maxTime),
+        highestDensity: new ResultDiff(this.profileA, this.profileB, -1, d => d.highestDensity.density),
+        otu: new ResultDiff(this.profileA, this.profileB, -1, d => d.otu),
+        cns: new ResultDiff(this.profileA, this.profileB, -1, d => d.cns),
+    };
 
-    private arrowUp: IconDefinition = faArrowUp;
-    private arrowDown: IconDefinition = faArrowDown;
-    private dash: IconDefinition = faMinus;
-    private rowColorVectorMap: Map<string, number> = new Map<string, number>([
-        ['totalDuration', 1],
-        ['timeToSurface', -1],
-        ['averageDepth', -1],
-        ['emergencyAscentStart', -1],
-        ['noDeco', 1],
-        ['maxTime', 1],
-        ['highestDensity', -1],
-        ['otu', -1],
-        ['cns', -1]
-    ]);
+    private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';
 
     constructor(
         public viewSwitch: ViewSwitchService,
@@ -45,7 +92,7 @@ export class DiveResultsTableDifferenceComponent {
         return this.profilesDiff.profileBResults;
     }
 
-    public get areDiveInfosCalculated(): boolean {
+    public get diveInfosCalculated(): boolean {
         return this.profilesDiff.areDiveInfosCalculated();
     }
 
@@ -53,43 +100,7 @@ export class DiveResultsTableDifferenceComponent {
         return this.profilesDiff.areProfilesCalculated();
     }
 
-    public get totalDurationDifference(): number {
-        return this.profileB.totalDuration - this.profileA.totalDuration;
-    }
-
-    public get timeToSurfaceDifference(): number {
-        return this.profileB.timeToSurface - this.profileA.timeToSurface;
-    }
-
-    public get averageDepthDifference(): number {
-        return this.averageDepthOfProfile(this.profileB) - this.averageDepthOfProfile(this.profileA);
-    }
-
-    public get emergencyAscentStartDifference(): number {
-        return this.profileB.emergencyAscentStart - this.profileA.emergencyAscentStart;
-    }
-
-    public get noDecoDifference(): number {
-        return this.noDecoOfProfile(this.profileB) - this.noDecoOfProfile(this.profileA);
-    }
-
-    public get maxTimeDifference(): number {
-        return this.profileB.maxTime - this.profileA.maxTime;
-    }
-
-    public get highestDensityDifference(): number {
-        return this.highestDensityOfProfile(this.profileB) - this.highestDensityOfProfile(this.profileA);
-    }
-
-    public get otuDifference(): number {
-        return this.profileB.otu - this.profileA.otu;
-    }
-
-    public get cnsDifference(): number {
-        return this.profileB.cns - this.profileA.cns;
-    }
-    public get cnsDifferenceText(): string {
-        const diff = this.cnsDifference;
+    public cnsDifferenceText(diff: number): string {
         if(diff >= 1000) {
             return TextConstants.cnsOverOneThousand;
         }
@@ -103,14 +114,6 @@ export class DiveResultsTableDifferenceComponent {
 
     public showMaxBottomTimeOfProfile(profile: DiveResults): boolean {
         return profile.maxTime > 0;
-    }
-
-    public noDecoOfProfile(profile: DiveResults): number {
-        return profile.noDecoTime;
-    }
-
-    public averageDepthOfProfile(profile: DiveResults): number {
-        return this.units.fromMeters(profile.averageDepth);
     }
 
     public highestDensityOfProfile(profile: DiveResults): number {
@@ -130,40 +133,5 @@ export class DiveResultsTableDifferenceComponent {
         }
 
         return formatNumber(profile.cns, 'en', '1.0-0');
-    }
-
-    public getArrow(difference: number): IconDefinition {
-        if(difference > 0) {
-            return this.arrowUp;
-        }
-
-        if (difference < 0) {
-            return this.arrowDown;
-        }
-
-
-        return this.dash;
-    }
-
-    public getBgColor(rowKey: string, value: number): string {
-        const cssClassOnImprovement = 'table-success';
-        const cssClassOnDeterioration = 'table-danger';
-        const cssClassOnNoChange = 'table-active';
-
-        if(!this.rowColorVectorMap.has(rowKey)){
-            Logger.warn('Could not find vector for key: ' + rowKey);
-        }
-
-        const projectedValue = (this.rowColorVectorMap.get(rowKey) ?? 0) * value;
-
-        if (projectedValue > 0){
-            return cssClassOnImprovement;
-        }
-
-        if (projectedValue < 0){
-            return cssClassOnDeterioration;
-        }
-
-        return cssClassOnNoChange;
     }
 }

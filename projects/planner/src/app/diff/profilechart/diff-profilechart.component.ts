@@ -1,15 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {faChartArea} from '@fortawesome/free-solid-svg-icons';
-import {ResamplingService} from '../../shared/ResamplingService';
-import {UnitConversion} from '../../shared/UnitConversion';
-import {SelectedWaypoint} from '../../shared/selectedwaypointService';
-import {DiveResults} from '../../shared/diveresults';
-import {WayPoint} from '../../shared/models';
-import {DateFormats} from '../../shared/formaters';
+import { Component, OnInit } from '@angular/core';
+import { faChartArea } from '@fortawesome/free-solid-svg-icons';
+import { ResamplingService } from '../../shared/ResamplingService';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { SelectedWaypoint } from '../../shared/selectedwaypointService';
+import { DiveResults } from '../../shared/diveresults';
+import { WayPoint } from '../../shared/models';
+import { DateFormats } from '../../shared/formaters';
 import * as Plotly from 'plotly.js-basic-dist';
-import {Streamed} from '../../shared/streamed';
-import {ChartPlotter, ChartPlotterFactory} from '../../shared/chartPlotter';
-import {ProfileComparatorService} from '../../shared/profileComparatorService';
+import { Streamed } from '../../shared/streamed';
+import { ChartPlotter, ChartPlotterFactory } from '../../shared/chartPlotter';
+import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 
 @Component({
     selector: 'app-diff-profilechart',

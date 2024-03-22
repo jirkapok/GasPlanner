@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {WaypointsDifferenceComponent} from './diff-waypoints.component';
 import {UnitConversion} from '../../shared/UnitConversion';
-import {ProfileComparatorService} from '../../shared/profileComparatorService';
+import {ProfileComparatorService} from '../../shared/diff/profileComparatorService';
 import {DiveSchedules} from '../../shared/dive.schedules';
 import {ReloadDispatcher} from '../../shared/reloadDispatcher';
 

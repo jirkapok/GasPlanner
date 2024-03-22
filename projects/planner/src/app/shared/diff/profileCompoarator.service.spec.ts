@@ -1,9 +1,9 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { DiveSchedules } from './dive.schedules';
+import { DiveSchedules } from '../dive.schedules';
 import { ProfileComparatorService } from './profileComparatorService';
-import { ReloadDispatcher } from './reloadDispatcher';
-import { UnitConversion } from './UnitConversion';
-import { WayPoint } from './models';
+import { ReloadDispatcher } from '../reloadDispatcher';
+import { UnitConversion } from '../UnitConversion';
+import { WayPoint } from '../models';
 import { ConsumptionByMix, IConsumedMix, Segment, StandardGases, Tank } from 'scuba-physics';
 
 describe('ProfileComparison service', () => {

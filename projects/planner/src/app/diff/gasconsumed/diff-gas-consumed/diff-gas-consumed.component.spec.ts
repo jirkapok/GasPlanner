@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GasConsumedDifferenceComponent } from './diff-gas-consumed.component';
-import { ProfileComparatorService } from '../../../shared/profileComparatorService';
+import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
 import { DiveSchedules } from '../../../shared/dive.schedules';
 import { UnitConversion } from '../../../shared/UnitConversion';
 import { ReloadDispatcher } from '../../../shared/reloadDispatcher';
-import { GasesComparisonService } from '../../../shared/gases-comparison.service';
+import { GasesComparisonService } from '../../../shared/diff/gases-comparison.service';
 
 describe('DiffGasConsumedComponent', () => {
     let component: GasConsumedDifferenceComponent;

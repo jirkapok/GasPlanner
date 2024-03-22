@@ -1,17 +1,17 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {LoadTestDataComponent} from './loadtestdata.component';
-import {ProfileComparatorService} from '../../../shared/profileComparatorService';
-import {TestDataInjector} from '../testDataInjector';
-import {PreferencesStore} from '../../../shared/preferencesStore';
-import {Preferences} from '../../../shared/preferences';
-import {ViewSwitchService} from '../../../shared/viewSwitchService';
-import {DiveSchedules} from '../../../shared/dive.schedules';
-import {UnitConversion} from '../../../shared/UnitConversion';
-import {ReloadDispatcher} from '../../../shared/reloadDispatcher';
-import {ViewStates} from '../../../shared/viewStates';
-import {PlannerService} from '../../../shared/planner.service';
-import {WorkersFactoryCommon} from '../../../shared/serial.workers.factory';
+import { LoadTestDataComponent } from './loadtestdata.component';
+import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
+import { TestDataInjector } from '../testDataInjector';
+import { PreferencesStore } from '../../../shared/preferencesStore';
+import { Preferences } from '../../../shared/preferences';
+import { ViewSwitchService } from '../../../shared/viewSwitchService';
+import { DiveSchedules } from '../../../shared/dive.schedules';
+import { UnitConversion } from '../../../shared/UnitConversion';
+import { ReloadDispatcher } from '../../../shared/reloadDispatcher';
+import { ViewStates } from '../../../shared/viewStates';
+import { PlannerService } from '../../../shared/planner.service';
+import { WorkersFactoryCommon } from '../../../shared/serial.workers.factory';
 
 describe('LoadTestDataComponent', () => {
     let component: LoadTestDataComponent;

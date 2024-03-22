@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
-import { GasesComparisonService, IMixedTanksForComparison } from '../../../shared/gases-comparison.service';
+import { GasesComparisonService, IMixedTanksForComparison } from '../../../shared/diff/gases-comparison.service';
 
 @Component({
     selector: 'app-diff-gas-consumed',

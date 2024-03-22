@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ProfileComparatorService } from './profileComparatorService';
-import { DiveSchedules } from './dive.schedules';
-import { UnitConversion } from './UnitConversion';
-import { ReloadDispatcher } from './reloadDispatcher';
+import { DiveSchedules } from '../dive.schedules';
+import { UnitConversion } from '../UnitConversion';
+import { ReloadDispatcher } from '../reloadDispatcher';
 import { GasesComparisonService } from './gases-comparison.service';
 
 describe('GasesComparisonService', () => {

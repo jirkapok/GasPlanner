@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { ProfileComparatorService } from './profileComparatorService';
-import { DiveSchedules } from './dive.schedules';
-import { UnitConversion } from './UnitConversion';
-import { ReloadDispatcher } from './reloadDispatcher';
-import { WayPointsService } from './waypoints.service';
+import { DiveSchedules } from '../dive.schedules';
+import { UnitConversion } from '../UnitConversion';
+import { ReloadDispatcher } from '../reloadDispatcher';
+import { WayPointsService } from '../waypoints.service';
 import { Segment, StandardGases } from 'scuba-physics';
-import { ComparedWaypoint } from './ComparedWaypoint';
+import { ComparedWaypoint } from '../ComparedWaypoint';
 
 describe('WayPoints Difference Service', () => {
     let sut: ProfileComparatorService;

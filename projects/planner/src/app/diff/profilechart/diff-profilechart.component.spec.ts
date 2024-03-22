@@ -1,12 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProfileDifferenceChartComponent } from './diff-profilechart.component';
-import {UnitConversion} from '../../shared/UnitConversion';
-import {ResamplingService} from '../../shared/ResamplingService';
-import {ProfileComparatorService} from '../../shared/profileComparatorService';
-import {SelectedWaypoint} from '../../shared/selectedwaypointService';
-import {DiveSchedules} from '../../shared/dive.schedules';
-import {ReloadDispatcher} from '../../shared/reloadDispatcher';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { ResamplingService } from '../../shared/ResamplingService';
+import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
+import { SelectedWaypoint } from '../../shared/selectedwaypointService';
+import { DiveSchedules } from '../../shared/dive.schedules';
+import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 
 describe('ProfileDifferenceChartComponent', () => {
     let component: ProfileDifferenceChartComponent;

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { DiveSchedule, DiveSchedules } from './dive.schedules';
-import { DiveResults } from './diveresults';
+import { DiveSchedule, DiveSchedules } from '../dive.schedules';
+import { DiveResults } from '../diveresults';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ConsumptionByMix, IConsumedMix } from 'scuba-physics';
-import { ComparedWaypoint } from './ComparedWaypoint';
-import { WayPoint } from './models';
+import { ComparedWaypoint } from '../ComparedWaypoint';
+import { WayPoint } from '../models';
 
 @Injectable()
 export class ProfileComparatorService {

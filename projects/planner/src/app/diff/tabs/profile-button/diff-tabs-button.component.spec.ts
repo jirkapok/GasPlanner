@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DiffTabsButtonComponent } from './diff-tabs-button.component';
-import {ProfileComparatorService} from '../../../shared/profileComparatorService';
-import {DiveSchedules} from '../../../shared/dive.schedules';
-import {UnitConversion} from '../../../shared/UnitConversion';
-import {ReloadDispatcher} from '../../../shared/reloadDispatcher';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
+import { DiveSchedules } from '../../../shared/dive.schedules';
+import { UnitConversion } from '../../../shared/UnitConversion';
+import { ReloadDispatcher } from '../../../shared/reloadDispatcher';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('DiffTabsButtonComponent', () => {
     let component: DiffTabsButtonComponent;

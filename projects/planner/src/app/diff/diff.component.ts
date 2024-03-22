@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {ProfileComparatorService} from '../shared/profileComparatorService';
+import { Component } from '@angular/core';
+import { ProfileComparatorService } from '../shared/diff/profileComparatorService';
 
 @Component({
     selector: 'app-diff',

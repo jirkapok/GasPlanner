@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
 import { UnitConversion } from '../../shared/UnitConversion';
-import { ProfileComparatorService } from '../../shared/profileComparatorService';
+import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 
 @Component({
     selector: 'app-diff-waypoints',

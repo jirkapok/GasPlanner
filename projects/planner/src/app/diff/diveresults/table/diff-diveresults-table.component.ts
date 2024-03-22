@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ViewSwitchService } from '../../../shared/viewSwitchService';
 import { UnitConversion } from '../../../shared/UnitConversion';
-import { ProfileComparatorService } from '../../../shared/profileComparatorService';
+import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
 import { DiveResults } from '../../../shared/diveresults';
 import { formatNumber } from '@angular/common';
 import { faArrowDown, faArrowUp, faMinus, IconDefinition } from '@fortawesome/free-solid-svg-icons';

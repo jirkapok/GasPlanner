@@ -1,10 +1,9 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {DiffComponent} from './diff.component';
-import {ProfileComparatorService} from '../shared/profileComparatorService';
-import {DiveSchedules} from '../shared/dive.schedules';
-import {UnitConversion} from '../shared/UnitConversion';
-import {ReloadDispatcher} from '../shared/reloadDispatcher';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DiffComponent } from './diff.component';
+import { ProfileComparatorService } from '../shared/diff/profileComparatorService';
+import { DiveSchedules } from '../shared/dive.schedules';
+import { UnitConversion } from '../shared/UnitConversion';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 describe('DiffComponent', () => {
     let component: DiffComponent;

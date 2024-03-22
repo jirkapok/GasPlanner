@@ -89,7 +89,6 @@ import {DiveResultsDifferenceComponent} from './diff/diveresults/diff-diveresult
 import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilechart.component';
 import {SurfaceIntervalComponent} from './surface-interval/surface-interval.component';
 import {TestDataInjector} from './diff/testData/testDataInjector';
-import {ProfileComparatorService} from './shared/profileComparatorService';
 import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.component';
 import {DiveResultsTableDifferenceComponent} from './diff/diveresults/table/diff-diveresults-table.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
@@ -100,7 +99,9 @@ import {GasConsumedDifferenceComponent} from './diff/gasconsumed/diff-gas-consum
 import {
     GasConsumedDifferenceTankComponent
 } from './diff/gasconsumed/diff-gas-consumed/tank-chart/diff-gas-consumed-tank-chart.component';
-import { GasesComparisonService } from './shared/gases-comparison.service';
+
+import { ProfileComparatorService } from './shared/diff/profileComparatorService';
+import { GasesComparisonService } from './shared/diff/gases-comparison.service';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import {
     animate, keyframes, state, style, transition, trigger
 } from '@angular/animations';
-import { ProfileComparatorService } from '../../../shared/profileComparatorService';
+import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
 
 @Component({
     selector: 'app-diff-tabs-button',

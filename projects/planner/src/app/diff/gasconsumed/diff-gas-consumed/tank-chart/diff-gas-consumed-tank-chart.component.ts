@@ -1,8 +1,8 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {UnitConversion} from '../../../../shared/UnitConversion';
-import {IConsumedMix, StandardGases} from 'scuba-physics';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { UnitConversion } from '../../../../shared/UnitConversion';
+import { IConsumedMix, StandardGases } from 'scuba-physics';
 import { faArrowLeft, faArrowRight, faMinus } from '@fortawesome/free-solid-svg-icons';
-import {ProfileComparatorService} from '../../../../shared/profileComparatorService';
+import { ProfileComparatorService } from '../../../../shared/diff/profileComparatorService';
 
 @Component({
     selector: 'app-diff-gas-consumed-tank-chart',
@@ -110,5 +110,6 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
         }
     }
 
+    // TODO why Math?
     protected readonly Math = Math;
 }

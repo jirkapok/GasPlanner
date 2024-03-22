@@ -26,22 +26,27 @@ describe('ProfileComparison service', () => {
         schedules = TestBed.inject(DiveSchedules);
     });
 
-    it('Has default dives', () => {
+    it('Only 1 dive compares with it self', () => {
         expect(sut.profileA).toEqual(schedules.dives[0]);
         expect(sut.profileB).toEqual(schedules.dives[0]);
     });
 
+    it('Two dives compares first two dives', () => {
+        schedules.add();
+        const newSut = new ProfileComparatorService(schedules);
+        expect(newSut.profileA).toEqual(schedules.dives[0]);
+        expect(newSut.profileB).toEqual(schedules.dives[1]);
+    });
+
     it('Has only one profile', () => {
-        expect(sut.hasTwoProfiles()).toBeFalsy();
+        expect(sut.hasTwoProfiles).toBeFalsy();
     });
 
     // TODO add reaction on event when profile was removed
-    // TODO remove hasTwoProfiles or use it: initial load of the component, if there is only one profile select as both
-    // if there are at least two select second as B
-    //  change it to get property and all other properties in the service
+
     it('Has two profiles', () => {
         schedules.add();
-        expect(sut.hasTwoProfiles()).toBeTruthy();
+        expect(sut.hasTwoProfiles).toBeTruthy();
     });
 
     it('Total duration of one dive', inject([UnitConversion], (units: UnitConversion) => {
@@ -137,7 +142,6 @@ describe('ProfileComparison service', () => {
             sut.profileAIndex.subscribe((newIndex: number) => newProfileA = newIndex);
             sut.profileBIndex.subscribe((newIndex: number) => newProfileB = newIndex);
 
-            // TODO remove appendProfileToProfileComparison method return value
             sut.selectProfile(expectedA);
             sut.selectProfile(expectedB);
         });

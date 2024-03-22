@@ -12,6 +12,9 @@ export class ProfileComparatorService {
     private _profileBIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
     constructor(private schedules: DiveSchedules) {
+        if(this.hasTwoProfiles) {
+            this.selectProfile(1);
+        }
     }
 
     public get profileATitle(): string {
@@ -91,6 +94,10 @@ export class ProfileComparatorService {
         return waypointRows;
     }
 
+    public get hasTwoProfiles(): boolean {
+        return this.schedules.length > 1;
+    }
+
     private get wayPointsA(): WayPoint[]{
         return this.profileAResults.wayPoints;
     }
@@ -107,10 +114,6 @@ export class ProfileComparatorService {
         this._profileBIndex.next(value);
     }
 
-    public hasTwoProfiles(): boolean {
-        return this.schedules.length > 1;
-    }
-
     public areDiveInfosCalculated(): boolean {
         return this.profileAResults.diveInfoCalculated && this.profileBResults.diveInfoCalculated;
     }
@@ -119,14 +122,13 @@ export class ProfileComparatorService {
         return this.profileAResults.profileCalculated && this.profileBResults.profileCalculated;
     }
 
-    public selectProfile(index: number): boolean {
+    public selectProfile(index: number): void {
         if(this._profileAIndex.getValue() === index || this._profileBIndex.getValue() === index){
-            return true;
+            return;
         }
 
         this.profileAIndex = this._profileBIndex.getValue();
         this.profileBIndex = index;
-        return true;
     }
 
     public waitUntilProfilesCalculated(): Promise<void> {

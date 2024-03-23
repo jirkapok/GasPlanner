@@ -98,11 +98,11 @@ export class ProfileComparatorService {
         return this.schedules.length > 1;
     }
 
-    public get areDiveInfosCalculated(): boolean {
+    public get diveInfosCalculated(): boolean {
         return this.profileAResults.diveInfoCalculated && this.profileBResults.diveInfoCalculated;
     }
 
-    public get areProfilesCalculated(): boolean {
+    public get profilesCalculated(): boolean {
         return this.profileAResults.profileCalculated && this.profileBResults.profileCalculated;
     }
 
@@ -127,7 +127,7 @@ export class ProfileComparatorService {
     public waitUntilProfilesCalculated(): Promise<void> {
         return new Promise<void>((resolve) => {
             const interval = setInterval(() => {
-                if(this.areProfilesCalculated){
+                if(this.profilesCalculated){
                     clearInterval(interval);
                     resolve();
                 }

@@ -23,8 +23,8 @@ export class GasesComparisonService {
             reserve: 0
         };
 
-        for (const tankA of this.profileDiff.profileACombinedTanks) {
-            const tankB: IConsumedMix | undefined = this.profileDiff.profileBCombinedTanks
+        for (const tankA of this.profileDiff.profileAConsumed) {
+            const tankB: IConsumedMix | undefined = this.profileDiff.profileBConsumed
                 .find(t => t.gas.contentCode() === tankA.gas.contentCode());
             if (tankB === undefined) {
                 emptyTank.gas = tankA.gas.copy();
@@ -32,7 +32,7 @@ export class GasesComparisonService {
             mixedTanks.push({profileA: tankA, profileB: tankB ?? emptyTank});
         }
 
-        for (const tankB of this.profileDiff.profileBCombinedTanks) {
+        for (const tankB of this.profileDiff.profileBConsumed) {
             if (!mixedTanks.find(mt => mt.profileB?.gas.contentCode() === tankB.gas.contentCode()
             )) {
                 emptyTank.gas = tankB.gas.copy();

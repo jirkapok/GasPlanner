@@ -86,18 +86,17 @@ describe('ProfileComparison service', () => {
         });
 
         it('profileACombinedTanks call combined consumption for Profile A', () => {
-            const _ = sut.profileACombinedTanks;
+            const _ = sut.profileAConsumed;
             expect(combineMethod).toHaveBeenCalledWith(sut.profileA.tanksService.tankData);
         });
 
         it('profileBCombinedTanks call combined consumption for Profile B', () => {
-            const _ = sut.profileBCombinedTanks;
+            const _ = sut.profileBConsumed;
             expect(combineMethod).toHaveBeenCalledWith(sut.profileB.tanksService.tankData);
         });
     });
 
     describe('Handles only calculated profiles', () => {
-        // TODO areProfilesCalculated change to property
         // TODO switch waitUntilProfilesCalculated to use events from Dispatcher the drawing components
         it('Waits until profiles are calculated', async() => {
             let eventReceived = false;

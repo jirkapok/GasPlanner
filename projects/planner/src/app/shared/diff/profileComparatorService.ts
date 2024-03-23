@@ -37,7 +37,7 @@ export class ProfileComparatorService {
         return this.profileA.diveResult;
     }
 
-    public get profileACombinedTanks(): IConsumedMix[] {
+    public get profileAConsumed(): IConsumedMix[] {
         return ConsumptionByMix.combine(this.profileA.tanksService.tankData);
     }
 
@@ -57,7 +57,7 @@ export class ProfileComparatorService {
         return this.profileB.diveResult;
     }
 
-    public get profileBCombinedTanks(): IConsumedMix[] {
+    public get profileBConsumed(): IConsumedMix[] {
         return ConsumptionByMix.combine(this.profileB.tanksService.tankData);
     }
 

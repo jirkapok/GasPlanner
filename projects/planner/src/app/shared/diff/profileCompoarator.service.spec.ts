@@ -115,14 +115,14 @@ describe('ProfileComparison service', () => {
         });
 
         it('By default Not calculated profiles', () => {
-            expect(sut.areProfilesCalculated()).toBeFalsy();
+            expect(sut.areProfilesCalculated).toBeFalsy();
         });
 
         it('Profiles are already calculated', () => {
             // TODO distinguish profile calculated, consumption and diveInfo
             sut.profileAResults.profileFinished();
             sut.profileBResults.profileFinished();
-            expect(sut.areProfilesCalculated()).toBeTruthy();
+            expect(sut.areProfilesCalculated).toBeTruthy();
         });
     });
 

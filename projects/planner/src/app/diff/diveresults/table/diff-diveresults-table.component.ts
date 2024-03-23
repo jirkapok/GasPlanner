@@ -163,10 +163,10 @@ export class DiveResultsTableDifferenceComponent {
     }
 
     public get diveInfosCalculated(): boolean {
-        return this.profilesDiff.areDiveInfosCalculated();
+        return this.profilesDiff.areDiveInfosCalculated;
     }
 
     public get areProfilesCalculated(): boolean {
-        return this.profilesDiff.areProfilesCalculated();
+        return this.profilesDiff.areProfilesCalculated;
     }
 }

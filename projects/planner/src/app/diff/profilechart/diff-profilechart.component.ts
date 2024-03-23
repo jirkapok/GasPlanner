@@ -99,7 +99,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
         this.updateLayoutThickFormat();
         this.profileComparatorService.selectionChanged.subscribe(() => {
-            if (this.profileComparatorService.areProfilesCalculated()) {
+            if (this.profileComparatorService.areProfilesCalculated) {
                 this.plotCharts();
             }
         });
@@ -108,7 +108,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     public get profilesCalculated(): boolean {
-        return this.profileComparatorService.areProfilesCalculated();
+        return this.profileComparatorService.areProfilesCalculated;
     }
 
     private get profileA(): DiveResults {

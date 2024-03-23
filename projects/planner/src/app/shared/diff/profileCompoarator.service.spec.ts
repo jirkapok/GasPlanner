@@ -124,7 +124,6 @@ describe('ProfileComparison service', () => {
         });
     });
 
-    // TODO add switch when clicking on already selected profile switches profiles
     // TODO change buttons colors to select profile: Try ProfileB to be green and selected profiles gray, not selected white
     describe('Select new profile', () => {
         const expectedA = 2;
@@ -149,6 +148,12 @@ describe('ProfileComparison service', () => {
         it('Selection change event received', () => {
             expect(eventNoticedTimes).toEqual(2);
         });
+
+        it('Switch already selected profiles', () => {
+            sut.selectProfile(expectedB);
+
+            expect(sut.profileA).toEqual(schedules.dives[expectedB]);
+            expect(sut.profileB).toEqual(schedules.dives[expectedA]);
+        });
     });
 });
-

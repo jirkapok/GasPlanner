@@ -116,7 +116,7 @@ export class ProfileComparatorService {
 
     public selectProfile(index: number): void {
         if(this._profileAIndex === index || this._profileBIndex === index){
-            return;
+            index = this._profileAIndex; // switch selected profiles
         }
 
         this._profileAIndex = this._profileBIndex;

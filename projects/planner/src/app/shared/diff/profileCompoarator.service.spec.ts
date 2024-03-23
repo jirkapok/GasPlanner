@@ -72,7 +72,6 @@ describe('ProfileComparison service', () => {
         expect(sut.totalDuration).toEqual(700);
     }));
 
-    // TODO rename to Consumption profileACombinedTanks, profileBCombinedTanks
     describe('Tanks combined consumption', () => {
         let combineMethod: jasmine.Spy<(tanks: Tank[]) => IConsumedMix[]>;
 
@@ -137,7 +136,7 @@ describe('ProfileComparison service', () => {
             schedules.add();
 
             eventNoticedTimes = 0;
-            sut.selectionChanged.subscribe(() => eventNoticedTimes++);
+            sut.selectionChanged$.subscribe(() => eventNoticedTimes++);
             sut.selectProfile(expectedA);
             sut.selectProfile(expectedB);
         });

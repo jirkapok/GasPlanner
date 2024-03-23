@@ -11,10 +11,10 @@ export class ProfileComparatorService {
     private _profileAIndex = 0;
     private _profileBIndex = 0;
     private _onSelectionChanged: Subject<void> = new Subject<void>();
-    private _selectionChanged: Observable<void>;
+    private _selectionChanged$: Observable<void>;
 
     constructor(private schedules: DiveSchedules) {
-        this._selectionChanged = this._onSelectionChanged.asObservable();
+        this._selectionChanged$ = this._onSelectionChanged.asObservable();
 
         if(this.hasTwoProfiles) {
             this.selectProfile(1);
@@ -61,8 +61,8 @@ export class ProfileComparatorService {
         return ConsumptionByMix.combine(this.profileB.tanksService.tankData);
     }
 
-    public get selectionChanged(): Observable<void> {
-        return this._selectionChanged;
+    public get selectionChanged$(): Observable<void> {
+        return this._selectionChanged$;
     }
 
     public get totalDuration(): number {

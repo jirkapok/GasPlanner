@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { takeUntil } from 'rxjs';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -98,11 +99,12 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .create(this.profileB);
 
         this.updateLayoutThickFormat();
-        this.profileComparatorService.selectionChanged.subscribe(() => {
-            if (this.profilesCalculated) {
-                this.plotCharts();
-            }
-        });
+        this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                if (this.profilesCalculated) {
+                    this.plotCharts();
+                }
+            });
 
         // TODO: Implement selectedWaypoint for diff-waypoints
     }

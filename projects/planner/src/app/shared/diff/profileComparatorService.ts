@@ -21,12 +21,48 @@ export class ProfileComparatorService {
         }
     }
 
+    public get profileAIndex(): number {
+        return this._profileAIndex;
+    }
+
+    public get profileA(): DiveSchedule {
+        return this.schedules.dives[this._profileAIndex];
+    }
+
     public get profileATitle(): string {
         return this.profileA.title;
     }
 
+    public get profileAResults(): DiveResults {
+        return this.profileA.diveResult;
+    }
+
+    public get profileACombinedTanks(): IConsumedMix[] {
+        return ConsumptionByMix.combine(this.profileA.tanksService.tankData);
+    }
+
+    public get profileBIndex(): number {
+        return this._profileBIndex;
+    }
+
+    public get profileB(): DiveSchedule {
+        return this.schedules.dives[this._profileBIndex];
+    }
+
     public get profileBTitle(): string {
         return this.profileB.title;
+    }
+
+    public get profileBResults(): DiveResults {
+        return this.profileB.diveResult;
+    }
+
+    public get profileBCombinedTanks(): IConsumedMix[] {
+        return ConsumptionByMix.combine(this.profileB.tanksService.tankData);
+    }
+
+    public get selectionChanged(): Observable<void> {
+        return this._selectionChanged;
     }
 
     public get totalDuration(): number {
@@ -34,42 +70,6 @@ export class ProfileComparatorService {
             return this.profileAResults.totalDuration;
         }
         return this.profileBResults.totalDuration;
-    }
-
-    public get selectionChanged(): Observable<void> {
-        return this._selectionChanged;
-    }
-
-    public get profileAIndex(): number {
-        return this._profileAIndex;
-    }
-
-    public get profileBIndex(): number {
-        return this._profileBIndex;
-    }
-
-    public get profileA(): DiveSchedule {
-        return this.schedules.dives[this._profileAIndex];
-    }
-
-    public get profileB(): DiveSchedule {
-        return this.schedules.dives[this._profileBIndex];
-    }
-
-    public get profileAResults(): DiveResults {
-        return this.profileA.diveResult;
-    }
-
-    public get profileBResults(): DiveResults {
-        return this.profileB.diveResult;
-    }
-
-    public get profileACombinedTanks(): IConsumedMix[] {
-        return ConsumptionByMix.combine(this.profileA.tanksService.tankData);
-    }
-
-    public get profileBCombinedTanks(): IConsumedMix[] {
-        return ConsumptionByMix.combine(this.profileB.tanksService.tankData);
     }
 
     public get bothResultsCalculated(): boolean {
@@ -98,20 +98,20 @@ export class ProfileComparatorService {
         return this.schedules.length > 1;
     }
 
-    private get wayPointsA(): WayPoint[]{
-        return this.profileAResults.wayPoints;
-    }
-
-    private get wayPointsB(): WayPoint[]{
-        return this.profileBResults.wayPoints;
-    }
-
     public areDiveInfosCalculated(): boolean {
         return this.profileAResults.diveInfoCalculated && this.profileBResults.diveInfoCalculated;
     }
 
     public areProfilesCalculated(): boolean {
         return this.profileAResults.profileCalculated && this.profileBResults.profileCalculated;
+    }
+
+    private get wayPointsA(): WayPoint[]{
+        return this.profileAResults.wayPoints;
+    }
+
+    private get wayPointsB(): WayPoint[]{
+        return this.profileBResults.wayPoints;
     }
 
     public selectProfile(index: number): void {

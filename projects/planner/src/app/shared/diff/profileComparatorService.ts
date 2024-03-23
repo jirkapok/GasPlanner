@@ -1,24 +1,31 @@
 import { Injectable } from '@angular/core';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { DiveResults } from '../diveresults';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { ConsumptionByMix, IConsumedMix } from 'scuba-physics';
 import { ComparedWaypoint } from '../ComparedWaypoint';
 import { WayPoint } from '../models';
+import { ReloadDispatcher } from '../reloadDispatcher';
+import { Streamed } from '../streamed';
 
 @Injectable()
-export class ProfileComparatorService {
+export class ProfileComparatorService extends Streamed {
     private _profileAIndex = 0;
     private _profileBIndex = 0;
     private _onSelectionChanged: Subject<void> = new Subject<void>();
     private _selectionChanged$: Observable<void>;
 
-    constructor(private schedules: DiveSchedules) {
+    constructor(private schedules: DiveSchedules, private dispatcher: ReloadDispatcher) {
+        super();
         this._selectionChanged$ = this._onSelectionChanged.asObservable();
 
         if(this.hasTwoProfiles) {
             this.selectProfile(1);
         }
+
+        // In case dive removed
+        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.resetSelection());
     }
 
     public get profileAIndex(): number {
@@ -133,6 +140,18 @@ export class ProfileComparatorService {
                 }
             }, 100);
         });
+    }
+
+    private resetSelection(): void {
+        const maxIndex = this.schedules.length;
+
+        if(this._profileAIndex >= maxIndex) {
+            this._profileAIndex = 0;
+        }
+
+        if(this._profileBIndex >= maxIndex) {
+            this._profileBIndex = 0;
+        }
     }
 }
 

@@ -27,22 +27,20 @@ describe('ProfileComparison service', () => {
     });
 
     it('Only 1 dive compares with it self', () => {
-        expect(sut.profileA).toEqual(schedules.dives[0]);
-        expect(sut.profileB).toEqual(schedules.dives[0]);
+        expect(sut.profileAIndex).toEqual(0);
+        expect(sut.profileBIndex).toEqual(0);
     });
 
     it('Two dives compares first two dives', () => {
         schedules.add();
-        const newSut = new ProfileComparatorService(schedules);
-        expect(newSut.profileA).toEqual(schedules.dives[0]);
-        expect(newSut.profileB).toEqual(schedules.dives[1]);
+        const newSut = new ProfileComparatorService(schedules, new ReloadDispatcher());
+        expect(newSut.profileAIndex).toEqual(0);
+        expect(newSut.profileBIndex).toEqual(1);
     });
 
     it('Has only one profile', () => {
         expect(sut.hasTwoProfiles).toBeFalsy();
     });
-
-    // TODO add reaction on event when profile was removed
 
     it('Has two profiles', () => {
         schedules.add();
@@ -141,8 +139,8 @@ describe('ProfileComparison service', () => {
         });
 
         it('Selects Profile', () => {
-            expect(sut.profileA).toEqual(schedules.dives[expectedA]);
-            expect(sut.profileB).toEqual(schedules.dives[expectedB]);
+            expect(sut.profileAIndex).toEqual(expectedA);
+            expect(sut.profileBIndex).toEqual(expectedB);
         });
 
         it('Selection change event received', () => {
@@ -152,8 +150,19 @@ describe('ProfileComparison service', () => {
         it('Switch already selected profiles', () => {
             sut.selectProfile(expectedB);
 
-            expect(sut.profileA).toEqual(schedules.dives[expectedB]);
-            expect(sut.profileB).toEqual(schedules.dives[expectedA]);
+            expect(sut.profileAIndex).toEqual(expectedB);
+            expect(sut.profileBIndex).toEqual(expectedA);
+        });
+
+        it('Remove selected profile A resets selection to first profile', () => {
+            const added = schedules.add();
+            sut.selectProfile(added.index -1);
+            sut.selectProfile(added.index);
+            schedules.remove(added);
+            schedules.remove(schedules.dives[2]);
+
+            expect(sut.profileAIndex).toEqual(0);
+            expect(sut.profileBIndex).toEqual(0);
         });
     });
 });

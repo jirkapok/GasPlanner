@@ -12,19 +12,18 @@ import { ConsumedGasDifference } from '../../../../shared/diff/gases-comparison.
 })
 export class GasConsumedDifferenceTankComponent {
     @Input({required: true})
-    public gasDiff: ConsumedGasDifference = {
-            gas: StandardGases.air.copy(),
-            profileA: {
+    public gasDiff = new ConsumedGasDifference(
+            StandardGases.air.copy(),
+            {
                 total: 0,
                 consumed: 0,
                 reserve: 0
             },
-            profileB: {
+            {
                 total: 0,
                 consumed: 0,
                 reserve: 0
-            }
-        };
+            });
 
     @Input()
     public collapsed = false;
@@ -46,66 +45,11 @@ export class GasConsumedDifferenceTankComponent {
         return this.gasDiff.profileB.total;
     }
 
-    public get remainingProfileA(): number {
-        return  this.gasDiff.profileA.total - this.gasDiff.profileA.consumed;
-    }
-
-    public get remainingProfileB(): number {
-        return  this.gasDiff.profileB.total - this.gasDiff.profileB.consumed;
-    }
-
     public get gasReserveProfileA(): number {
         return this.gasDiff.profileA.reserve;
     }
 
     public get gasReserveProfileB(): number {
         return this.gasDiff.profileB.reserve;
-    }
-
-    public get gasRemainingDifference(): number {
-        return this.remainingProfileA - this.remainingProfileB;
-    }
-
-    public get absoluteRemainingDifference(): number {
-        return Math.abs(this.gasRemainingDifference);
-    }
-    public get gasReserveDifference(): number {
-        return this.gasDiff.profileA.reserve - this.gasDiff.profileB.reserve;
-    }
-
-    public get absoluteReserveDifference(): number {
-        return Math.abs(this.gasReserveDifference);
-    }
-
-    public get reserveRight(): boolean {
-        return this.gasReserveDifference > 0;
-    }
-
-    public get remainingRight(): boolean {
-        return this.gasRemainingDifference > 0;
-    }
-
-    public get gasRemainingPercentageDifference(): number {
-        const totalGasRemaining = this.remainingProfileA + this.remainingProfileB;
-
-        if (totalGasRemaining === 0) {
-            return 0;
-        }
-
-        const profileAPercentage = this.remainingProfileA / totalGasRemaining;
-        const profileBPercentage = this.remainingProfileB / totalGasRemaining;
-        return Math.abs(profileAPercentage - profileBPercentage) * 50; // half into middle
-    }
-
-    public get gasReservePercentageDifference(): number {
-        const totalReserve = this.gasDiff.profileA.reserve + this.gasDiff.profileB.reserve;
-
-        if (totalReserve === 0) {
-            return 0;
-        }
-
-        const profileAPercentage = this.gasDiff.profileA.reserve / totalReserve;
-        const profileBPercentage = this.gasDiff.profileB.reserve / totalReserve;
-        return Math.abs(profileAPercentage - profileBPercentage) * 50; // half into middle
     }
 }

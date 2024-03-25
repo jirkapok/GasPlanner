@@ -14,12 +14,12 @@
     <div *ngIf="!collapsed" style="position: relative">
         <div class="difference-text">
             <small>
-                <fa-icon *ngIf="gasRemainingDifference > 0" [icon]="faArrowLeft" class="text-success"/>
-                <strong *ngIf="gasRemainingDifference != 0">
-                    {{ absoluteRemainingDifference | number:'1.0-0' }}
+                <fa-icon *ngIf="gasDiff.gasRemainingDifference > 0" [icon]="faArrowLeft" class="text-success"/>
+                <strong *ngIf="gasDiff.gasRemainingDifference != 0">
+                    {{ gasDiff.absoluteRemainingDifference | number:'1.0-0' }}
                 </strong>
-                <fa-icon *ngIf="gasRemainingDifference < 0" [icon]="faArrowRight" class="text-success"/>
-                <fa-icon *ngIf="gasRemainingDifference === 0" [icon]="faMinus"/>
+                <fa-icon *ngIf="gasDiff.gasRemainingDifference < 0" [icon]="faArrowRight" class="text-success"/>
+                <fa-icon *ngIf="gasDiff.gasRemainingDifference === 0" [icon]="faMinus"/>
             </small>
         </div>
         <div class="d-flex flex-row z-index-1">
@@ -27,11 +27,11 @@
             <div class="d-flex flex-row justify-content-between w-100">
                 <small *ngIf="gasTotalProfileA != 0 else missingTank" class="text-start text-muted">
                     Gas remaining:
-                    {{ remainingProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
+                    {{ gasDiff.remainingProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
                 </small>
                 <small *ngIf="gasTotalProfileB != 0 else missingTank" class="text-end text-muted">
                     Gas remaining:
-                    {{ remainingProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
+                    {{ gasDiff.remainingProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
                 </small>
             </div>
         </div>
@@ -39,12 +39,12 @@
     <div *ngIf="!collapsed" style="position: relative">
         <div class="difference-text">
             <small>
-                <fa-icon *ngIf="gasReserveDifference > 0" [icon]="faArrowLeft" class="text-success"/>
-                <strong *ngIf="gasReserveDifference != 0">
-                    {{ absoluteReserveDifference | number:'1.0-0' }}
+                <fa-icon *ngIf="gasDiff.gasReserveDifference > 0" [icon]="faArrowLeft" class="text-success"/>
+                <strong *ngIf="gasDiff.gasReserveDifference != 0">
+                    {{ gasDiff.absoluteReserveDifference | number:'1.0-0' }}
                 </strong>
-                <fa-icon *ngIf="gasReserveDifference < 0" [icon]="faArrowRight" class="text-success"/>
-                <fa-icon *ngIf="gasReserveDifference === 0" [icon]="faMinus"/>
+                <fa-icon *ngIf="gasDiff.gasReserveDifference < 0" [icon]="faArrowRight" class="text-success"/>
+                <fa-icon *ngIf="gasDiff.gasReserveDifference === 0" [icon]="faMinus"/>
             </small>
         </div>
         <div class="d-flex flex-row">
@@ -63,17 +63,17 @@
     </div>
     <div class="progress gas-bar mt-1 mb-2">
         <div class="reserve-bar rounded-progress"></div>
-        <div class="combined_wrapper" [ngClass]="{'flip': remainingRight }" >
+        <div class="combined_wrapper" [ngClass]="{'flip': gasDiff.remainingRight }" >
             <div role="progressbar"
                  class="progress-bar rounded-progress bg-primary"
-                 [style.width]="gasRemainingPercentageDifference + '%'">
-                {{ absoluteRemainingDifference | number:'1.0-0' }}</div>
+                 [style.width]="gasDiff.gasRemainingPercentageDifference + '%'">
+                {{ gasDiff.absoluteRemainingDifference | number:'1.0-0' }}</div>
         </div>
-        <div class="combined_wrapper" [ngClass]="{'flip': reserveRight }" >
+        <div class="combined_wrapper" [ngClass]="{'flip': gasDiff.reserveRight }" >
             <div role="progressbar"
                  class="progress-bar rounded-progress bg-warning "
-                 [style.width]="gasReservePercentageDifference + '%'">
-                {{ absoluteReserveDifference | number:'1.0-0' }}</div>
+                 [style.width]="gasDiff.gasReservePercentageDifference + '%'">
+                {{ gasDiff.absoluteReserveDifference | number:'1.0-0' }}</div>
         </div>
     </div>
 </div>

@@ -3,7 +3,7 @@ import { ProfileComparatorService } from './profileComparatorService';
 import { DiveSchedules } from '../dive.schedules';
 import { UnitConversion } from '../UnitConversion';
 import { ReloadDispatcher } from '../reloadDispatcher';
-import { GasesComparisonService } from './gases-comparison.service';
+import { ConsumedGasDifference, GasesComparisonService } from './gases-comparison.service';
 import { StandardGases } from 'scuba-physics';
 import { TanksService } from '../tanks.service';
 
@@ -35,114 +35,96 @@ describe('GasesComparisonService', () => {
     });
 
     it('Compares default air tank', () => {
-        expect(sut.gasesDifference).toEqual([{
-            gas: StandardGases.air,
-            profileA: {
+        expect(sut.gasesDifference).toEqual([ new ConsumedGasDifference(
+            StandardGases.air,
+            {
                 total: 3000,
                 consumed: 0,
                 reserve: 0
             },
-            profileB: {
+            {
                 total: 3000,
                 consumed: 0,
                 reserve: 0
             }
-        }]);
+        )]);
     });
 
     it('Profile A has one gas more', () => {
         tanksA.addTank();
         tanksA.tankData[1].assignStandardGas(StandardGases.ean32.name);
 
-        expect(sut.gasesDifference).toEqual([{
-            gas: StandardGases.air,
-            profileA: {
+        expect(sut.gasesDifference).toEqual([
+            new ConsumedGasDifference(StandardGases.air, {
                 total: 3000,
                 consumed: 0,
                 reserve: 0
-            },
-            profileB: {
+            }, {
                 total: 3000,
                 consumed: 0,
                 reserve: 0
-            }
-        },
-        {
-            gas: StandardGases.ean32,
-            profileA: {
+            }),
+            new ConsumedGasDifference(StandardGases.ean32, {
                 total: 2220,
                 consumed: 0,
                 reserve: 0
-            },
-            profileB: {
+            }, {
                 total: 0,
                 consumed: 0,
                 reserve: 0
-            }
-        }]);
+            })
+        ]);
     });
 
     it('Profile B has one gas more', () => {
         tanksB.addTank();
         tanksB.tankData[1].assignStandardGas(StandardGases.ean32.name);
 
-        expect(sut.gasesDifference).toEqual([{
-            gas: StandardGases.air,
-            profileA: {
+        expect(sut.gasesDifference).toEqual([
+            new ConsumedGasDifference(StandardGases.air, {
                 total: 3000,
                 consumed: 0,
                 reserve: 0
-            },
-            profileB: {
+            }, {
                 total: 3000,
                 consumed: 0,
                 reserve: 0
-            }
-        },
-        {
-            gas: StandardGases.ean32,
-            profileA: {
+            }),
+            new ConsumedGasDifference(StandardGases.ean32, {
                 total: 0,
                 consumed: 0,
                 reserve: 0
-            },
-            profileB: {
+            }, {
                 total: 2220,
                 consumed: 0,
                 reserve: 0
-            }
-        }]);
+            })
+        ]);
     });
 
     it('No common gas between profiles', () => {
         tanksB.tankData[0].assignStandardGas(StandardGases.ean32.name);
 
-        expect(sut.gasesDifference).toEqual([{
-            gas: StandardGases.air,
-            profileA: {
+        expect(sut.gasesDifference).toEqual([
+            new ConsumedGasDifference(StandardGases.air, {
                 total: 3000,
                 consumed: 0,
                 reserve: 0
-            },
-            profileB: {
+            }, {
                 total: 0,
                 consumed: 0,
                 reserve: 0
-            }
-        },
-        {
-            gas: StandardGases.ean32,
-            profileA: {
+            }),
+            new ConsumedGasDifference(StandardGases.ean32, {
                 total: 0,
                 consumed: 0,
                 reserve: 0
-            },
-            profileB: {
+            }, {
                 total: 3000,
                 consumed: 0,
                 reserve: 0
-            }
-        }]);
+            })
+        ]);
     });
 
     it('Compare values are in imperial units', () => {

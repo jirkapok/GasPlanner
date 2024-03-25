@@ -3,22 +3,26 @@ import { ProfileComparatorService } from './profileComparatorService';
 import { Gas, IConsumedMix } from 'scuba-physics';
 import { UnitConversion } from '../UnitConversion';
 
-// TODO rebind to the respective units, currently all values are in liters
-
 /** Everything in respective units */
 export interface IConsumedByProfile {
+    /**
+     * Sum of all tanks total amount of gas in respective units
+     */
     total: number;
     /**
-     * Sum of all tanks consumed amount of gas in liters
+     * Sum of all tanks consumed amount of gas in respective units
      */
     consumed: number;
     /**
-     * Sum of all tanks reserve amount of gas in liters
+     * Sum of all tanks reserve amount of gas in respective units
      */
     reserve: number;
 }
 
 export class ConsumedGasDifference {
+    /** half into middle */
+    private fiftyPercent = 50;
+
     constructor(
         public gas: Gas,
         public profileA: IConsumedByProfile,
@@ -66,7 +70,7 @@ export class ConsumedGasDifference {
 
         const profileAPercentage = this.remainingProfileA / totalGasRemaining;
         const profileBPercentage = this.remainingProfileB / totalGasRemaining;
-        return Math.abs(profileAPercentage - profileBPercentage) * 50; // half into middle
+        return Math.abs(profileAPercentage - profileBPercentage) * this.fiftyPercent;
     }
 
     public get gasReservePercentageDifference(): number {
@@ -78,11 +82,10 @@ export class ConsumedGasDifference {
 
         const profileAPercentage = this.profileA.reserve / totalReserve;
         const profileBPercentage = this.profileB.reserve / totalReserve;
-        return Math.abs(profileAPercentage - profileBPercentage) * 50; // half into middle
+        return Math.abs(profileAPercentage - profileBPercentage) * this.fiftyPercent;
     }
 }
 
-// TODO merge GasesComparisonService to ProfileComparatorService
 @Injectable()
 export class GasesComparisonService {
     constructor(private units: UnitConversion, private profileDiff: ProfileComparatorService) {

@@ -8,7 +8,7 @@
 
     <div class="card-body card-minheight card-max-height-md">
         <div class="pb-3">
-            <app-diff-gas-consumed-tank-chart *ngFor="let gasDiff of gasesDifference" [profileDiff]="gasDiff">
+            <app-diff-gas-consumed-tank-chart *ngFor="let gasDiff of gasesDifference" [gasDiff]="gasDiff">
             </app-diff-gas-consumed-tank-chart>
         </div>
     </div>

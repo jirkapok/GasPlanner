@@ -7,7 +7,7 @@ import { DiveSchedules } from '../../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../../shared/reloadDispatcher';
 import { UnitConversion } from '../../../shared/UnitConversion';
 import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
-import { ResultsComparison } from './results-comparison.service';
+import { ResultsComparison } from '../../../shared/diff/results-comparison.service';
 
 describe('DiveResultsTableDifferenceComponent', () => {
     let component: DiveResultsTableDifferenceComponent;

@@ -102,7 +102,7 @@ import {
 
 import { ProfileComparatorService } from './shared/diff/profileComparatorService';
 import { GasesComparisonService } from './shared/diff/gases-comparison.service';
-import { ResultsComparison } from './diff/diveresults/table/results-comparison.service';
+import { ResultsComparison } from './shared/diff/results-comparison.service';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,

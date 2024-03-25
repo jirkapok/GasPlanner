@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ViewSwitchService } from '../../../shared/viewSwitchService';
 import { UnitConversion } from '../../../shared/UnitConversion';
 import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
+import { ResultsComparison } from '../../../shared/diff/results-comparison.service';
 import { DiveResults } from '../../../shared/diveresults';
-import { ResultsComparison } from './results-comparison.service';
 
 @Component({
     selector: 'app-diff-diveresults-table',

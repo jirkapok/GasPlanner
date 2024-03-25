@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { UnitConversion } from '../../../shared/UnitConversion';
-import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
-import { TextConstants } from '../../../shared/TextConstants';
+import { UnitConversion } from '../UnitConversion';
+import { ProfileComparatorService } from './profileComparatorService';
+import { TextConstants } from '../TextConstants';
 import { formatNumber } from '@angular/common';
-import { DiveResults } from '../../../shared/diveresults';
+import { DiveResults } from '../diveresults';
 import {
     faArrowDown, faArrowUp, faMinus, IconDefinition
 } from '@fortawesome/free-solid-svg-icons';

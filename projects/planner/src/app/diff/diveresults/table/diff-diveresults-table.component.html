@@ -33,20 +33,20 @@
         <td>Total dive time [min]:</td>
         <td>
             <div>
-                {{ diff.totalDuration.valueA | duration:profileA.totalDuration}}
+                {{ resultsDiff.totalDuration.valueA | duration:profileA.totalDuration}}
             </div>
         </td>
         <td>
             <div>
-                {{ diff.totalDuration.valueB | duration:profileB.totalDuration}}
+                {{ resultsDiff.totalDuration.valueB | duration:profileB.totalDuration}}
             </div>
         </td>
         <td class="table-active">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
-                    {{ diff.totalDuration.difference | duration:diff.totalDuration.difference}}
+                    {{ resultsDiff.totalDuration.difference | duration:resultsDiff.totalDuration.difference}}
                 </strong>
-                <fa-icon [icon]="diff.totalDuration.arrow"/>
+                <fa-icon [icon]="resultsDiff.totalDuration.arrow"/>
             </div>
         </td>
     </tr>
@@ -54,20 +54,20 @@
         <td>Time to surface [min]:</td>
         <td>
             <div>
-                {{ diff.timeToSurface.valueA | number:'1.0-0' }}
+                {{ resultsDiff.timeToSurface.valueA | number:'1.0-0' }}
             </div>
         </td>
         <td>
             <div>
-                {{ diff.timeToSurface.valueB | number:'1.0-0' }}
+                {{ resultsDiff.timeToSurface.valueB | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{diff.timeToSurface.bgColor}}">
+        <td class="{{resultsDiff.timeToSurface.bgColor}}">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
-                    {{ diff.timeToSurface.difference | number:'1.0-0' }}
+                    {{ resultsDiff.timeToSurface.difference | number:'1.0-0' }}
                 </strong>
-                <fa-icon [icon] ="diff.timeToSurface.arrow"/>
+                <fa-icon [icon] ="resultsDiff.timeToSurface.arrow"/>
             </div>
         </td>
     </tr>
@@ -75,20 +75,20 @@
         <td>Average depth [{{units.length}}]:</td>
         <td>
             <div>
-                {{ diff.averageDepth.valueA | number:'1.0-1' }}
+                {{ resultsDiff.averageDepth.valueA | number:'1.0-1' }}
             </div>
         </td>
         <td>
             <div>
-                {{ diff.averageDepth.valueB | number:'1.0-1' }}
+                {{ resultsDiff.averageDepth.valueB | number:'1.0-1' }}
             </div>
         </td>
-        <td class="{{diff.averageDepth.bgColor}}">
+        <td class="{{resultsDiff.averageDepth.bgColor}}">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
-                    {{ diff.averageDepth.difference | number:'1.0-1' }}
+                    {{ resultsDiff.averageDepth.difference | number:'1.0-1' }}
                 </strong>
-                <fa-icon [icon] ="diff.averageDepth.arrow"/>
+                <fa-icon [icon] ="resultsDiff.averageDepth.arrow"/>
             </div>
         </td>
     </tr>
@@ -96,21 +96,21 @@
         <td>Rock bottom at [min]:</td>
         <td>
             <div>
-                {{ diff.emergencyAscentStart.valueA | duration:profileA.emergencyAscentStart }}
+                {{ resultsDiff.emergencyAscentStart.valueA | duration:profileA.emergencyAscentStart }}
             </div>
         </td>
         <td>
             <div>
-                {{ diff.emergencyAscentStart.valueB | duration:profileB.emergencyAscentStart }}
+                {{ resultsDiff.emergencyAscentStart.valueB | duration:profileB.emergencyAscentStart }}
             </div>
         </td>
 
         <td class="table-active">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
-                {{ diff.emergencyAscentStart.difference | duration:diff.emergencyAscentStart.difference}}
+                {{ resultsDiff.emergencyAscentStart.difference | duration:resultsDiff.emergencyAscentStart.difference}}
                 </strong>
-                <fa-icon [icon] ="diff.emergencyAscentStart.arrow"/>
+                <fa-icon [icon] ="resultsDiff.emergencyAscentStart.arrow"/>
             </div>
         </td>
     </tr>
@@ -118,41 +118,41 @@
         <td>No decompression time [min]:</td>
         <td>
             <div>
-                {{ diff.noDeco.valueA | number:'1.0-0' }}
+                {{ resultsDiff.noDeco.valueA | number:'1.0-0' }}
             </div>
         </td>
         <td>
             <div>
-                {{ diff.noDeco.valueB | number:'1.0-0' }}
+                {{ resultsDiff.noDeco.valueB | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{diff.noDeco.bgColor}}">
+        <td class="{{resultsDiff.noDeco.bgColor}}">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
-                    {{ diff.noDeco.difference | number:'1.0-0' }}
+                    {{ resultsDiff.noDeco.difference | number:'1.0-0' }}
                 </strong>
-                <fa-icon [icon] ="diff.noDeco.arrow"/>
+                <fa-icon [icon] ="resultsDiff.noDeco.arrow"/>
             </div>
         </td>
     </tr>
-    <tr *ngIf="diff.showMaxBottomTime">
+    <tr *ngIf="resultsDiff.showMaxBottomTime">
         <td>Maximum bottom time [min]:</td>
         <td>
             <div>
-                {{ diff.maxTime.valueA | number:'1.0-0' }}
+                {{ resultsDiff.maxTime.valueA | number:'1.0-0' }}
             </div>
         </td>
         <td>
             <div>
-                {{ diff.maxTime.valueB | number:'1.0-0' }}
+                {{ resultsDiff.maxTime.valueB | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{diff.maxTime.bgColor}}">
+        <td class="{{resultsDiff.maxTime.bgColor}}">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
-                    {{ diff.maxTime.difference | number:'1.0-0' }}
+                    {{ resultsDiff.maxTime.difference | number:'1.0-0' }}
                 </strong>
-                <fa-icon [icon] ="diff.maxTime.arrow"/>
+                <fa-icon [icon] ="resultsDiff.maxTime.arrow"/>
             </div>
         </td>
     </tr>
@@ -160,24 +160,24 @@
         <td>Highest gas density [{{units.density}}]:</td>
         <td>
             <div>
-                {{ diff.highestDensity.valueA | number:'1.0-2' }}
+                {{ resultsDiff.highestDensity.valueA | number:'1.0-2' }}
                 <br>
-                ({{diff.densityGasA}})
+                ({{resultsDiff.densityGasA}})
             </div>
         </td>
         <td>
             <div>
-                {{ diff.highestDensity.valueB | number:'1.0-2' }}
+                {{ resultsDiff.highestDensity.valueB | number:'1.0-2' }}
                 <br>
-                ({{diff.densityGasB}})
+                ({{resultsDiff.densityGasB}})
             </div>
         </td>
-        <td class="{{diff.highestDensity.bgColor}}">
+        <td class="{{resultsDiff.highestDensity.bgColor}}">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
-                    {{ diff.highestDensity.difference | number:'1.0-2' }}
+                    {{ resultsDiff.highestDensity.difference | number:'1.0-2' }}
                 </strong>
-                <fa-icon [icon] ="diff.highestDensity.arrow"/>
+                <fa-icon [icon] ="resultsDiff.highestDensity.arrow"/>
             </div>
         </td>
     </tr>
@@ -185,20 +185,20 @@
         <td>OTU toxicity [OTU]:</td>
         <td>
             <div>
-                {{ diff.otu.valueA | number:'1.0-0' }}
+                {{ resultsDiff.otu.valueA | number:'1.0-0' }}
             </div>
         </td>
         <td>
             <div>
-                {{ diff.otu.valueB | number:'1.0-0' }}
+                {{ resultsDiff.otu.valueB | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{diff.otu.bgColor}}">
+        <td class="{{resultsDiff.otu.bgColor}}">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
-                    {{ diff.otu.difference | number:'1.0-0' }}
+                    {{ resultsDiff.otu.difference | number:'1.0-0' }}
                 </strong>
-                <fa-icon [icon] ="diff.otu.arrow"/>
+                <fa-icon [icon] ="resultsDiff.otu.arrow"/>
             </div>
         </td>
     </tr>
@@ -206,20 +206,20 @@
         <td>CNS toxicity [%]:</td>
         <td>
             <div>
-                {{diff.cnsA}}
+                {{resultsDiff.cnsA}}
             </div>
         </td>
         <td>
             <div>
-                {{diff.cnsB}}
+                {{resultsDiff.cnsB}}
             </div>
         </td>
-        <td class="{{diff.cns.bgColor}}">
+        <td class="{{resultsDiff.cns.bgColor}}">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
-                    {{ diff.cnsDifference | number:'1.0-0' }}
+                    {{ resultsDiff.cnsDifference | number:'1.0-0' }}
                 </strong>
-                <fa-icon [icon] ="diff.cns.arrow"/>
+                <fa-icon [icon] ="resultsDiff.cns.arrow"/>
             </div>
         </td>
     </tr>

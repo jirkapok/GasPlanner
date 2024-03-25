@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UnitConversion } from '../../../../shared/UnitConversion';
-import { IConsumedMix, StandardGases } from 'scuba-physics';
+import { StandardGases } from 'scuba-physics';
 import { faArrowLeft, faArrowRight, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ProfileComparatorService } from '../../../../shared/diff/profileComparatorService';
+import { IConsumedGasDifference } from '../../../../shared/diff/gases-comparison.service';
 
 @Component({
     selector: 'app-diff-gas-consumed-tank-chart',
@@ -11,19 +12,20 @@ import { ProfileComparatorService } from '../../../../shared/diff/profileCompara
 })
 export class GasConsumedDifferenceTankComponent implements OnChanges{
     @Input({required: true})
-    public profileACombinedGas: IConsumedMix = {
+    public profileDiff: IConsumedGasDifference = {
             gas: StandardGases.air.copy(),
-            total: 0,
-            consumed: 0,
-            reserve: 0
+            profileA: {
+                total: 0,
+                consumed: 0,
+                reserve: 0
+            },
+            profileB: {
+                total: 0,
+                consumed: 0,
+                reserve: 0
+            }
         };
-    @Input({required: true})
-    public profileBCombinedGas: IConsumedMix = {
-            gas: StandardGases.air.copy(),
-            total: 0,
-            consumed: 0,
-            reserve: 0
-        };
+
     @Input()
     public collapsed = false;
 
@@ -31,47 +33,47 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
     public faArrowRight = faArrowRight;
     public faMinus = faMinus;
 
-    private profileAGasRemaining = this.profileACombinedGas.total - this.profileACombinedGas.consumed;
-    private profileBGasRemaining = this.profileBCombinedGas.total - this.profileBCombinedGas.consumed;
+    private profileAGasRemaining = this.profileDiff.profileA.total - this.profileDiff.profileA.consumed;
+    private profileBGasRemaining = this.profileDiff.profileB.total - this.profileDiff.profileB.consumed;
 
     constructor(public units: UnitConversion, private profileComparatorService: ProfileComparatorService) { }
 
     public get gasName(): string {
-        return this.profileACombinedGas.gas.name;
+        return this.profileDiff.gas.name;
     }
     public get gasTotalProfileA(): number {
-        return this.units.fromLiter(this.profileACombinedGas.total);
+        return this.profileDiff.profileA.total;
     }
 
     public get gasTotalProfileB(): number {
-        return this.units.fromLiter(this.profileBCombinedGas.total);
+        return this.profileDiff.profileB.total;
     }
 
     public get gasRemainingProfileA(): number {
-        return this.units.fromLiter(this.profileAGasRemaining);
+        return this.profileAGasRemaining;
     }
 
     public get gasRemainingProfileB(): number {
-        return this.units.fromLiter(this.profileBGasRemaining);
+        return this.profileBGasRemaining;
     }
 
     public get gasReserveProfileA(): number {
-        return this.units.fromLiter(this.profileACombinedGas.reserve);
+        return this.profileDiff.profileA.reserve;
     }
 
     public get gasReserveProfileB(): number {
-        return this.units.fromLiter(this.profileBCombinedGas.reserve);
+        return this.profileDiff.profileB.reserve;
     }
 
     public get gasRemainingDifference(): number {
-        return this.units.fromLiter(this.profileAGasRemaining - this.profileBGasRemaining);
+        return this.profileAGasRemaining - this.profileBGasRemaining;
     }
 
     public get absoluteRemainingDifference(): number {
         return Math.abs(this.gasRemainingDifference);
     }
     public get gasReserveDifference(): number {
-        return this.units.fromLiter(this.profileACombinedGas.reserve - this.profileBCombinedGas.reserve);
+        return this.profileDiff.profileA.reserve - this.profileDiff.profileB.reserve;
     }
 
     public get absoluteReserveDifference(): number {
@@ -95,19 +97,19 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
 
         const profileAPercentage = this.profileAGasRemaining / totalGasRemaining;
         const profileBPercentage = this.profileBGasRemaining / totalGasRemaining;
-        return Math.abs(profileAPercentage - profileBPercentage) * 50;
+        return Math.abs(profileAPercentage - profileBPercentage) * 50; // half into middle
     }
 
     public get gasReservePercentageDifference(): number {
-        const totalReserve = this.profileACombinedGas.reserve + this.profileBCombinedGas.reserve;
+        const totalReserve = this.profileDiff.profileA.reserve + this.profileDiff.profileB.reserve;
 
         if (totalReserve === 0) {
             return 0;
         }
 
-        const profileAPercentage = this.profileACombinedGas.reserve / totalReserve;
-        const profileBPercentage = this.profileBCombinedGas.reserve / totalReserve;
-        return Math.abs(profileAPercentage - profileBPercentage) * 50;
+        const profileAPercentage = this.profileDiff.profileA.reserve / totalReserve;
+        const profileBPercentage = this.profileDiff.profileB.reserve / totalReserve;
+        return Math.abs(profileAPercentage - profileBPercentage) * 50; // half into middle
     }
 
     public get profileATitle(): string {
@@ -119,9 +121,9 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
     }
 
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.profileACombinedGas || changes.profileBCombinedGas) {
-            this.profileAGasRemaining = this.profileACombinedGas.total - this.profileACombinedGas.consumed;
-            this.profileBGasRemaining = this.profileBCombinedGas.total - this.profileBCombinedGas.consumed;
+        if (changes.profileDiff || changes.profileBCombinedGas) {
+            this.profileAGasRemaining = this.profileDiff.profileA.total - this.profileDiff.profileA.consumed;
+            this.profileBGasRemaining = this.profileDiff.profileB.total - this.profileDiff.profileB.consumed;
         }
     }
 }

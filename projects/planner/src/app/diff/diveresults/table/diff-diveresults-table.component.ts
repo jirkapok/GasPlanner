@@ -7,6 +7,7 @@ import { formatNumber } from '@angular/common';
 import { faArrowDown, faArrowUp, faMinus, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { TextConstants } from '../../../shared/TextConstants';
 
+// TODO extract ResultDiff to injectable service, resolve selected profiles updates
 class ResultDiff {
     private arrowUp: IconDefinition = faArrowUp;
     private arrowDown: IconDefinition = faArrowDown;

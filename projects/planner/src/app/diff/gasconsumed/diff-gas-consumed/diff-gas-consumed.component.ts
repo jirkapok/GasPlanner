@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
-import { GasesComparisonService, IMixedTanksForComparison } from '../../../shared/diff/gases-comparison.service';
+import { GasesComparisonService, IConsumedGasDifference } from '../../../shared/diff/gases-comparison.service';
 
 @Component({
     selector: 'app-diff-gas-consumed',
@@ -13,7 +13,7 @@ export class GasConsumedDifferenceComponent {
     constructor(public gasesDiff: GasesComparisonService) {
     }
 
-    public get gasesDifference(): IMixedTanksForComparison[] {
+    public get gasesDifference(): IConsumedGasDifference[] {
         return this.gasesDiff.gasesDifference;
     }
 }

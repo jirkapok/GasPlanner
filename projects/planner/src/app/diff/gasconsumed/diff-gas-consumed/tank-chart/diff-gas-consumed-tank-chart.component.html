@@ -27,11 +27,11 @@
             <div class="d-flex flex-row justify-content-between w-100">
                 <small *ngIf="gasTotalProfileA != 0 else missingTank" class="text-start text-muted">
                     Gas remaining:
-                    {{ gasRemainingProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
+                    {{ remainingProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
                 </small>
                 <small *ngIf="gasTotalProfileB != 0 else missingTank" class="text-end text-muted">
                     Gas remaining:
-                    {{ gasRemainingProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
+                    {{ remainingProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
                 </small>
             </div>
         </div>

@@ -1,18 +1,18 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UnitConversion } from '../../../../shared/UnitConversion';
 import { StandardGases } from 'scuba-physics';
 import { faArrowLeft, faArrowRight, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ProfileComparatorService } from '../../../../shared/diff/profileComparatorService';
-import { IConsumedGasDifference } from '../../../../shared/diff/gases-comparison.service';
+import { ConsumedGasDifference } from '../../../../shared/diff/gases-comparison.service';
 
 @Component({
     selector: 'app-diff-gas-consumed-tank-chart',
     templateUrl: './diff-gas-consumed-tank-chart.component.html',
     styleUrl: './diff-gas-consumed-tank-chart.component.scss'
 })
-export class GasConsumedDifferenceTankComponent implements OnChanges{
+export class GasConsumedDifferenceTankComponent {
     @Input({required: true})
-    public gasDiff: IConsumedGasDifference = {
+    public gasDiff: ConsumedGasDifference = {
             gas: StandardGases.air.copy(),
             profileA: {
                 total: 0,
@@ -33,9 +33,6 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
     public faArrowRight = faArrowRight;
     public faMinus = faMinus;
 
-    private profileAGasRemaining = this.gasDiff.profileA.total - this.gasDiff.profileA.consumed;
-    private profileBGasRemaining = this.gasDiff.profileB.total - this.gasDiff.profileB.consumed;
-
     constructor(public units: UnitConversion, public profileDiff: ProfileComparatorService) { }
 
     public get gasName(): string {
@@ -49,12 +46,12 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
         return this.gasDiff.profileB.total;
     }
 
-    public get gasRemainingProfileA(): number {
-        return this.profileAGasRemaining;
+    public get remainingProfileA(): number {
+        return  this.gasDiff.profileA.total - this.gasDiff.profileA.consumed;
     }
 
-    public get gasRemainingProfileB(): number {
-        return this.profileBGasRemaining;
+    public get remainingProfileB(): number {
+        return  this.gasDiff.profileB.total - this.gasDiff.profileB.consumed;
     }
 
     public get gasReserveProfileA(): number {
@@ -66,7 +63,7 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
     }
 
     public get gasRemainingDifference(): number {
-        return this.profileAGasRemaining - this.profileBGasRemaining;
+        return this.remainingProfileA - this.remainingProfileB;
     }
 
     public get absoluteRemainingDifference(): number {
@@ -89,14 +86,14 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
     }
 
     public get gasRemainingPercentageDifference(): number {
-        const totalGasRemaining = this.profileAGasRemaining + this.profileBGasRemaining;
+        const totalGasRemaining = this.remainingProfileA + this.remainingProfileB;
 
         if (totalGasRemaining === 0) {
             return 0;
         }
 
-        const profileAPercentage = this.profileAGasRemaining / totalGasRemaining;
-        const profileBPercentage = this.profileBGasRemaining / totalGasRemaining;
+        const profileAPercentage = this.remainingProfileA / totalGasRemaining;
+        const profileBPercentage = this.remainingProfileB / totalGasRemaining;
         return Math.abs(profileAPercentage - profileBPercentage) * 50; // half into middle
     }
 
@@ -110,12 +107,5 @@ export class GasConsumedDifferenceTankComponent implements OnChanges{
         const profileAPercentage = this.gasDiff.profileA.reserve / totalReserve;
         const profileBPercentage = this.gasDiff.profileB.reserve / totalReserve;
         return Math.abs(profileAPercentage - profileBPercentage) * 50; // half into middle
-    }
-
-    public ngOnChanges(changes: SimpleChanges) {
-        if (changes.profileDiff || changes.profileBCombinedGas) {
-            this.profileAGasRemaining = this.gasDiff.profileA.total - this.gasDiff.profileA.consumed;
-            this.profileBGasRemaining = this.gasDiff.profileB.total - this.gasDiff.profileB.consumed;
-        }
     }
 }

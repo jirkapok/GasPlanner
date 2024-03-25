@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ProfileComparatorService } from './profileComparatorService';
 import { Gas, IConsumedMix } from 'scuba-physics';
-import { UnitConversion } from "../UnitConversion";
+import { UnitConversion } from '../UnitConversion';
 
 // TODO rebind to the respective units, currently all values are in liters
 
@@ -18,10 +18,13 @@ export interface IConsumedByProfile {
     reserve: number;
 }
 
-export interface IConsumedGasDifference {
-    gas: Gas;
-    profileA: IConsumedByProfile;
-    profileB: IConsumedByProfile;
+export class ConsumedGasDifference {
+    constructor(
+        public gas: Gas,
+        public profileA: IConsumedByProfile,
+        public profileB: IConsumedByProfile) {
+    }
+
 }
 
 // TODO merge GasesComparisonService to ProfileComparatorService
@@ -30,8 +33,8 @@ export class GasesComparisonService {
     constructor(private units: UnitConversion, private profileDiff: ProfileComparatorService) {
     }
 
-    public get gasesDifference(): IConsumedGasDifference[] {
-        const mixedTanks: IConsumedGasDifference[] = [];
+    public get gasesDifference(): ConsumedGasDifference[] {
+        const mixedTanks: ConsumedGasDifference[] = [];
 
         const emptyConsumption: IConsumedByProfile = {
             total: 0,

@@ -122,7 +122,6 @@ describe('ProfileComparison service', () => {
         });
     });
 
-    // TODO change buttons colors to select profile: Try ProfileB to be green and selected profiles gray, not selected white
     describe('Select new profile', () => {
         const expectedA = 2;
         const expectedB = 1;

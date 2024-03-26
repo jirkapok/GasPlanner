@@ -4,7 +4,7 @@
     <tbody>
     <tr id="table-header">
         <td></td>
-        <td>
+        <td class="bg-primary text-light">
             <div class="d-flex justify-content-center align-items-center">
                 <strong>
                     <div class="profile-title">Profile A</div>
@@ -12,7 +12,7 @@
                 </strong>
             </div>
         </td>
-        <td>
+        <td class="bg-success text-light">
             <div class="d-flex justify-content-center align-items-center">
                 <strong>
                     <div class="profile-title">Profile B</div>
@@ -20,7 +20,7 @@
                 </strong>
             </div>
         </td>
-        <td>
+        <td class="bg-secondary text-light">
             <div class="d-flex justify-content-center align-items-center">
                 <strong>
                     <div class="profile-title"><br/></div>
@@ -31,17 +31,17 @@
     </tr>
     <tr>
         <td>Total dive time [min]:</td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.totalDuration.valueA | duration:profileA.totalDuration}}
             </div>
         </td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.totalDuration.valueB | duration:profileB.totalDuration}}
             </div>
         </td>
-        <td class="table-active">
+        <td class="border-start border-end">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
                     {{ resultsDiff.totalDuration.difference | duration:resultsDiff.totalDuration.difference}}
@@ -52,17 +52,17 @@
     </tr>
     <tr>
         <td>Time to surface [min]:</td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.timeToSurface.valueA | number:'1.0-0' }}
             </div>
         </td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.timeToSurface.valueB | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{resultsDiff.timeToSurface.bgColor}}">
+        <td class="{{resultsDiff.timeToSurface.bgColor}} border-start border-end">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
                     {{ resultsDiff.timeToSurface.difference | number:'1.0-0' }}
@@ -73,17 +73,17 @@
     </tr>
     <tr>
         <td>Average depth [{{units.length}}]:</td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.averageDepth.valueA | number:'1.0-1' }}
             </div>
         </td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.averageDepth.valueB | number:'1.0-1' }}
             </div>
         </td>
-        <td class="{{resultsDiff.averageDepth.bgColor}}">
+        <td class="{{resultsDiff.averageDepth.bgColor}} border-start border-end">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
                     {{ resultsDiff.averageDepth.difference | number:'1.0-1' }}
@@ -94,18 +94,17 @@
     </tr>
     <tr>
         <td>Rock bottom at [min]:</td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.emergencyAscentStart.valueA | duration:profileA.emergencyAscentStart }}
             </div>
         </td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.emergencyAscentStart.valueB | duration:profileB.emergencyAscentStart }}
             </div>
         </td>
-
-        <td class="table-active">
+        <td class="border-start border-end">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
                 {{ resultsDiff.emergencyAscentStart.difference | duration:resultsDiff.emergencyAscentStart.difference}}
@@ -116,17 +115,17 @@
     </tr>
     <tr *ngIf="diveInfosCalculated">
         <td>No decompression time [min]:</td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.noDeco.valueA | number:'1.0-0' }}
             </div>
         </td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.noDeco.valueB | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{resultsDiff.noDeco.bgColor}}">
+        <td class="{{resultsDiff.noDeco.bgColor}} border-start border-end">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
                     {{ resultsDiff.noDeco.difference | number:'1.0-0' }}
@@ -137,17 +136,17 @@
     </tr>
     <tr *ngIf="resultsDiff.showMaxBottomTime">
         <td>Maximum bottom time [min]:</td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.maxTime.valueA | number:'1.0-0' }}
             </div>
         </td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.maxTime.valueB | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{resultsDiff.maxTime.bgColor}}">
+        <td class="{{resultsDiff.maxTime.bgColor}} border-start border-end">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
                     {{ resultsDiff.maxTime.difference | number:'1.0-0' }}
@@ -158,21 +157,21 @@
     </tr>
     <tr *ngIf="viewSwitch.isComplex">
         <td>Highest gas density [{{units.density}}]:</td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.highestDensity.valueA | number:'1.0-2' }}
                 <br>
                 ({{resultsDiff.densityGasA}})
             </div>
         </td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.highestDensity.valueB | number:'1.0-2' }}
                 <br>
                 ({{resultsDiff.densityGasB}})
             </div>
         </td>
-        <td class="{{resultsDiff.highestDensity.bgColor}}">
+        <td class="{{resultsDiff.highestDensity.bgColor}} border-start border-end">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
                     {{ resultsDiff.highestDensity.difference | number:'1.0-2' }}
@@ -183,17 +182,17 @@
     </tr>
     <tr *ngIf="areProfilesCalculated">
         <td>OTU toxicity [OTU]:</td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.otu.valueA | number:'1.0-0' }}
             </div>
         </td>
-        <td>
+        <td class="border-start">
             <div>
                 {{ resultsDiff.otu.valueB | number:'1.0-0' }}
             </div>
         </td>
-        <td class="{{resultsDiff.otu.bgColor}}">
+        <td class="{{resultsDiff.otu.bgColor}} border-start border-end">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
                     {{ resultsDiff.otu.difference | number:'1.0-0' }}
@@ -204,17 +203,17 @@
     </tr>
     <tr *ngIf="areProfilesCalculated">
         <td>CNS toxicity [%]:</td>
-        <td>
+        <td class="border-start">
             <div>
                 {{resultsDiff.cnsA}}
             </div>
         </td>
-        <td>
+        <td class="border-start">
             <div>
                 {{resultsDiff.cnsB}}
             </div>
         </td>
-        <td class="{{resultsDiff.cns.bgColor}}">
+        <td class="{{resultsDiff.cns.bgColor}} border-start border-end">
             <div class="delta d-flex justify-content-between align-items-center">
                 <strong>
                     {{ resultsDiff.cnsDifference | number:'1.0-0' }}

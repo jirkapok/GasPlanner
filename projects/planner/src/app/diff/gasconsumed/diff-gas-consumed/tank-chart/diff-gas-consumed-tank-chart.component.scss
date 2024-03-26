@@ -1,3 +1,5 @@
+@import "node_modules/mdb-angular-ui-kit/assets/scss/free/variables";
+
 .gas-bar {
     padding: 5px 8px;
     height: 4em;
@@ -57,9 +59,9 @@
     }
 }
 
-.img-wrapper {
-    width: fit-content;
-    height: fit-content;
+.legend-bars {
+    width: 16px;
+    height: 16px;
     align-content: center;
     display: flex;
     padding-right: .5em;

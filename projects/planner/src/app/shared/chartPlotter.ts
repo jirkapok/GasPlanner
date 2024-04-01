@@ -3,7 +3,7 @@ import {ResamplingService} from './ResamplingService';
 import {DiveResults} from './diveresults';
 
 
-
+// TODO merge with profileChart component drawing methods
 export class ChartPlotterFactory {
 
     private namePrefix = '';

@@ -194,10 +194,10 @@ class WaypointsDiffContext {
         const runtime = this.dominantA ? this._endTimeA : this._endTimeB;
         const row = new ComparedWaypoint(
             runtime,
-            this.waypointA?.duration,
             this.waypointA?.endDepth,
-            this.waypointB?.duration,
-            this.waypointB?.endDepth);
+            this.waypointA?.duration,
+            this.waypointB?.endDepth,
+            this.waypointB?.duration);
 
         if (this.dominantA) {
             row.durationB = undefined;

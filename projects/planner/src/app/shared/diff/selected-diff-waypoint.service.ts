@@ -1,30 +1,30 @@
 import { EventEmitter, Injectable, Input, Output } from '@angular/core';
-import { WayPoint } from '../models';
 import { DiveSchedules } from '../dive.schedules';
 import { DateFormats } from '../formaters';
+import { ComparedWaypoint } from './ComparedWaypoint';
 
 @Injectable()
 export class SelectedDiffWaypoint {
-    @Output() public selectedChanged = new EventEmitter<WayPoint>();
-    private lastSelected: WayPoint | undefined;
+    @Output() public selectedChanged = new EventEmitter<ComparedWaypoint>();
+    private lastSelected: ComparedWaypoint | undefined;
 
     constructor(private schedules: DiveSchedules) {
     }
 
     @Input()
     public set selectedTimeStamp(newValue: string) {
-        let found: WayPoint | undefined;
+        let found: ComparedWaypoint | undefined;
         if (newValue) {
             const newTimeStamp = DateFormats.secondsFromDate(newValue);
             const dive = this.schedules.selected.diveResult;
-            found = dive.wayPoints.find(p => p.fits(newTimeStamp));
+            // found = dive.wayPoints.find(p => p.fits(newTimeStamp));
         }
 
         this.selected = found;
     }
 
     @Input()
-    public set selected(point: WayPoint | undefined) {
+    public set selected(point: ComparedWaypoint | undefined) {
         if (this.lastSelected) {
             this.lastSelected.selected = false;
         }

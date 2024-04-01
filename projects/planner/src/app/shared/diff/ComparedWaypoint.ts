@@ -4,4 +4,5 @@ export interface ComparedWaypoint {
     durationA: number | undefined;
     depthB: number | undefined;
     durationB: number | undefined;
+    selected: boolean;
 }

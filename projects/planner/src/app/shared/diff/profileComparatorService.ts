@@ -3,7 +3,7 @@ import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { DiveResults } from '../diveresults';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ConsumptionByMix, IConsumedMix } from 'scuba-physics';
-import { ComparedWaypoint } from '../ComparedWaypoint';
+import { ComparedWaypoint } from './ComparedWaypoint';
 import { WayPoint } from '../models';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
@@ -198,6 +198,7 @@ class WaypointsDiffContext {
             depthA: this.waypointA?.endDepth,
             durationB: this.waypointB?.duration,
             depthB: this.waypointB?.endDepth,
+            selected: false
         };
 
         if (this.dominantA) {

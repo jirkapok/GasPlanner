@@ -88,8 +88,6 @@ import {WaypointsDifferenceComponent} from './diff/waypoints/diff-waypoints.comp
 import {DiveResultsDifferenceComponent} from './diff/diveresults/diff-diveresults.component';
 import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilechart.component';
 import {SurfaceIntervalComponent} from './surface-interval/surface-interval.component';
-import {TestDataInjector} from './diff/testData/testDataInjector';
-import {LoadTestDataComponent} from './diff/testData/loadtestdata/loadtestdata.component';
 import {DiveResultsTableDifferenceComponent} from './diff/diveresults/table/diff-diveresults-table.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 import { GasBlenderService } from './shared/gas-blender.service';
@@ -163,7 +161,6 @@ const COMPONENTS = [
     WaypointsDifferenceComponent,
     DiveResultsDifferenceComponent,
     ProfileDifferenceChartComponent,
-    LoadTestDataComponent,
     DiveResultsTableDifferenceComponent,
     DiffTabsComponent,
     DiffTabsButtonComponent,
@@ -208,7 +205,6 @@ const SERVICES = [
     ViewStates,
     ViewSwitchService,
     WayPointsService,
-    TestDataInjector,
     ProfileComparatorService,
     GasesComparisonService,
     ResultsComparison

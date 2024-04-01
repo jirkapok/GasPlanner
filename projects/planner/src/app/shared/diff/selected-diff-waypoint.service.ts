@@ -1,14 +1,14 @@
 import { EventEmitter, Injectable, Input, Output } from '@angular/core';
-import { DiveSchedules } from '../dive.schedules';
 import { DateFormats } from '../formaters';
 import { ComparedWaypoint } from './ComparedWaypoint';
+import { ProfileComparatorService } from './profileComparatorService';
 
 @Injectable()
 export class SelectedDiffWaypoint {
     @Output() public selectedChanged = new EventEmitter<ComparedWaypoint>();
     private lastSelected: ComparedWaypoint | undefined;
 
-    constructor(private schedules: DiveSchedules) {
+    constructor(private profilesDiff: ProfileComparatorService) {
     }
 
     @Input()
@@ -16,8 +16,8 @@ export class SelectedDiffWaypoint {
         let found: ComparedWaypoint | undefined;
         if (newValue) {
             const newTimeStamp = DateFormats.secondsFromDate(newValue);
-            const dive = this.schedules.selected.diveResult;
-            // found = dive.wayPoints.find(p => p.fits(newTimeStamp));
+            const wayPoints = this.profilesDiff.difference;
+            found = wayPoints.find(p => p.fits(newTimeStamp));
         }
 
         this.selected = found;

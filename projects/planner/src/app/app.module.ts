@@ -101,6 +101,7 @@ import {
 import { ProfileComparatorService } from './shared/diff/profileComparatorService';
 import { GasesComparisonService } from './shared/diff/gases-comparison.service';
 import { ResultsComparison } from './shared/diff/results-comparison.service';
+import { SelectedDiffWaypoint } from './shared/diff/selected-diff-waypoint.service';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -195,6 +196,7 @@ const SERVICES = [
     RedundanciesService,
     SacCalculatorService,
     SelectedWaypoint,
+    SelectedDiffWaypoint,
     SettingsNormalizationService,
     StopsFilter,
     SubViewStorage,

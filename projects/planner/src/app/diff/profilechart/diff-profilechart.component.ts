@@ -3,7 +3,6 @@ import { takeUntil } from 'rxjs';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { UnitConversion } from '../../shared/UnitConversion';
-import { SelectedWaypoint } from '../../shared/selectedwaypointService';
 import { DiveResults } from '../../shared/diveresults';
 import { WayPoint } from '../../shared/models';
 import { DateFormats } from '../../shared/formaters';
@@ -11,6 +10,7 @@ import * as Plotly from 'plotly.js-basic-dist';
 import { Streamed } from '../../shared/streamed';
 import { ChartPlotter, ChartPlotterFactory } from '../../shared/chartPlotter';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
+import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -57,7 +57,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     constructor(
         private units: UnitConversion,
-        private selectedWaypoint: SelectedWaypoint,
+        private selectedDiff: SelectedDiffWaypoint,
         private profileComparatorService: ProfileComparatorService) {
         super();
         this.resampling = new ResamplingService(units);
@@ -106,7 +106,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
                 }
             });
 
-        // TODO: Implement selectedWaypoint for diff-waypoints
+        // TODO: Implement selectedDiff for diff-waypoints
     }
 
     public get profilesCalculated(): boolean {
@@ -131,11 +131,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     public plotlyHover(data: any): void {
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x;
-        this.selectedWaypoint.selectedTimeStamp = timeStampValue;
+        this.selectedDiff.selectedTimeStamp = timeStampValue;
     }
 
     private plotlyHoverLeave(data: any) {
-        this.selectedWaypoint.selectedTimeStamp = '';
+        this.selectedDiff.selectedTimeStamp = '';
     }
 
     private selectWayPoint(wayPoint: WayPoint | undefined) {

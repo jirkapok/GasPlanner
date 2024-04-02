@@ -1,13 +1,15 @@
+import { Injectable } from '@angular/core';
+import * as Plotly from 'plotly.js-basic-dist';
+import _ from 'lodash';
 import { UnitConversion } from './UnitConversion';
 import { ResamplingService } from './ResamplingService';
 import { DiveResults } from './diveresults';
-import * as Plotly from 'plotly.js-basic-dist';
 import { DateFormats } from './formaters';
 import { WayPoint } from './models';
 import { Ceiling, Event } from 'scuba-physics';
-import _ from 'lodash';
 
 // TODO merge with profileChart component drawing methods
+@Injectable()
 export class ChartPlotterFactory {
     public static readonly depthLineColorA = 'rgb(31, 119, 180)';
     public static readonly depthLineColorB = 'rgb(141, 143, 144)';
@@ -250,10 +252,8 @@ export class ChartPlotter {
     private layout: Partial<Plotly.Layout>;
 
     /** Provide traces in reverse order to keep the last on top */
-    constructor(public elementName: string, private units: UnitConversion, ...traceBuilders: DiveTracesBuilder[]) {
+    constructor(public elementName: string, chartPlotterFactory: ChartPlotterFactory, ...traceBuilders: DiveTracesBuilder[]) {
         this.builders = traceBuilders;
-        const resampling = new ResamplingService(units);
-        const chartPlotterFactory = new ChartPlotterFactory(resampling, this.units);
         this.cursor1 = chartPlotterFactory.createCursor();
         this.layout = chartPlotterFactory.createLayout();
         this.options = chartPlotterFactory.createOptions();

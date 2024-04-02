@@ -7,6 +7,7 @@ import { SelectedWaypoint } from '../../shared/selectedwaypointService';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
+import { ChartPlotterFactory } from '../../shared/chartPlotter';
 
 describe('ProfileDifferenceChartComponent', () => {
     let component: ProfileDifferenceChartComponent;
@@ -23,6 +24,7 @@ describe('ProfileDifferenceChartComponent', () => {
                 DiveSchedules,
                 ReloadDispatcher,
                 SelectedDiffWaypoint,
+                ChartPlotterFactory
             ]
         });
         fixture = TestBed.createComponent(ProfileDifferenceChartComponent);

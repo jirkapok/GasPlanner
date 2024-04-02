@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
-import { ResamplingService } from '../../shared/ResamplingService';
-import { UnitConversion } from '../../shared/UnitConversion';
 import { DiveResults } from '../../shared/diveresults';
 import * as Plotly from 'plotly.js-basic-dist';
 import { Streamed } from '../../shared/streamed';
@@ -21,13 +19,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     private plotter: ChartPlotter;
 
     constructor(
-        private units: UnitConversion,
+        chartPlotterFactory: ChartPlotterFactory,
         private selectedWaypoints: SelectedDiffWaypoint,
         private profileComparatorService: ProfileComparatorService) {
         super();
 
-        const resampling = new ResamplingService(units);
-        const chartPlotterFactory = new ChartPlotterFactory(resampling, this.units);
         const profileATraces = chartPlotterFactory.wthNamePrefix('Profile A ')
             .create(() => this.profileA);
         const profileBTraces = chartPlotterFactory
@@ -39,7 +35,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthEventLineColor('rgb(118,119,120)')
             .create(() => this.profileB);
 
-        this.plotter = new ChartPlotter('diveplot', this.units, profileBTraces, profileATraces);
+        this.plotter = new ChartPlotter('diveplot', chartPlotterFactory, profileBTraces, profileATraces);
 
         this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {

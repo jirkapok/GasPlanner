@@ -15,10 +15,10 @@ export class WaypointsDifferenceComponent {
 
     constructor(public units: UnitConversion,
         public profileDiff: ProfileComparatorService,
-        private diffSelection: SelectedDiffWaypoint) {
+        private selectedDiff: SelectedDiffWaypoint) {
     }
 
     public highlightRow(point: ComparedWaypoint | undefined): void {
-        this.diffSelection.selected = point;
+        this.selectedDiff.selected = point;
     }
 }

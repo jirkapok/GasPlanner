@@ -5,7 +5,7 @@ import { UnitConversion } from '../UnitConversion';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { WayPointsService } from '../waypoints.service';
 import { Segment, StandardGases } from 'scuba-physics';
-import { ComparedWaypoint } from '../ComparedWaypoint';
+import { ComparedWaypoint } from './ComparedWaypoint';
 
 describe('WayPoints Difference Service', () => {
     let sut: ProfileComparatorService;
@@ -103,75 +103,75 @@ describe('WayPoints Difference Service', () => {
 
     it('Identical profiles', () => {
         const expected: ComparedWaypoint[] = [
-            { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
-            { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 120 },
-            { runTime: 360, depthA: 0, durationA: 180, depthB: 0, durationB: 180 },
+            new ComparedWaypoint(60, 20, 60, 20, 60),
+            new ComparedWaypoint(180, 20, 120, 20, 120),
+            new ComparedWaypoint(360, 0, 180, 0, 180),
         ];
         assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes6, expected);
     });
 
     it('Profile B takes longer', () => {
         const expected: ComparedWaypoint[] = [
-            { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
-            { runTime: 180, depthA: 20, durationA: 120, depthB: undefined, durationB: undefined },
-            { runTime: 360, depthA: 0, durationA: 180, depthB: 20, durationB: 300 },
-            { runTime: 540, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 },
+            new ComparedWaypoint(60, 20, 60, 20, 60),
+            new ComparedWaypoint(180, 20, 120,  undefined, undefined),
+            new ComparedWaypoint( 360, 0, 180, 20, 300),
+            new ComparedWaypoint( 540, undefined, undefined, 0, 180),
         ];
         assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes9, expected);
     });
 
     it('Profile A takes longer', () => {
         const expected: ComparedWaypoint[] = [
-            { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
-            { runTime: 180, depthA: undefined, durationA: undefined, depthB: 20, durationB: 120 },
-            { runTime: 360, depthA: 20, durationA: 300, depthB: 0, durationB: 180 },
-            { runTime: 540, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined },
+            new ComparedWaypoint(60, 20, 60, 20, 60),
+            new ComparedWaypoint(180, undefined, undefined, 20, 120),
+            new ComparedWaypoint(360, 20, 300, 0, 180),
+            new ComparedWaypoint(540, 0, 180, undefined, undefined),
         ];
         assertDivesWayPointsCompare(segments3_minutes9, segments3_minutes6, expected);
     });
 
     it('Profile B has more segments', () => {
         const expected: ComparedWaypoint[] = [
-            { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
-            { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 120 },
-            { runTime: 360, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined },
-            { runTime: 480, depthA: undefined, durationA: undefined, depthB: 10, durationB: 300 },
-            { runTime: 660, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 },
+            new ComparedWaypoint(60, 20, 60, 20, 60),
+            new ComparedWaypoint(180, 20, 120, 20, 120),
+            new ComparedWaypoint(360, 0, 180, undefined, undefined),
+            new ComparedWaypoint(480, undefined, undefined, 10, 300),
+            new ComparedWaypoint(660, undefined, undefined, 0, 180),
         ];
         assertDivesWayPointsCompare(segments3_minutes6, segments4_minutes11, expected);
     });
 
     it('Profile A has more segments', () => {
         const expected: ComparedWaypoint[] = [
-            { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
-            { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 120 },
-            { runTime: 360, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 },
-            { runTime: 480, depthA: 10, durationA: 300, depthB: undefined, durationB: undefined },
-            { runTime: 660, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined },
+            new ComparedWaypoint(60, 20, 60, 20, 60),
+            new ComparedWaypoint(180, 20, 120, 20, 120),
+            new ComparedWaypoint(360, undefined, undefined, 0, 180),
+            new ComparedWaypoint(480, 10, 300, undefined,  undefined),
+            new ComparedWaypoint(660, 0, 180, undefined, undefined),
         ];
         assertDivesWayPointsCompare(segments4_minutes11, segments3_minutes6, expected);
     });
 
     it('Profile B has levels missing in profile A', () => {
         const expected: ComparedWaypoint[] = [
-            { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
-            { runTime: 90, depthA: undefined, durationA: undefined, depthB: 15, durationB: 30 },
-            { runTime: 150, depthA: undefined, durationA: undefined, depthB: 15, durationB: 60 },
-            { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 30 },
-            { runTime: 480, depthA: 10, durationA: 300, depthB: 10, durationB: 300 },
-            { runTime: 660, depthA: 0, durationA: 180, depthB: 0, durationB: 180 },
+            new ComparedWaypoint(60, 20, 60, 20, 60),
+            new ComparedWaypoint(90, undefined, undefined, 15, 30),
+            new ComparedWaypoint(150, undefined, undefined, 15, 60),
+            new ComparedWaypoint(180, 20, 120, 20, 30),
+            new ComparedWaypoint(480, 10, 300, 10, 300),
+            new ComparedWaypoint(660, 0, 180, 0, 180),
         ];
         assertDivesWayPointsCompare(segments4_minutes11, segments6_minutes11, expected);
     });
 
     it('Profile A has levels missing in profile B', () => {
         const expected: ComparedWaypoint[] = [
-            { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
-            { runTime: 90, depthA: 15, durationA: 30, depthB: undefined, durationB: undefined },
-            { runTime: 150, depthA: 15, durationA: 60, depthB: undefined, durationB: undefined },
-            { runTime: 180, depthA: 20, durationA: 30, depthB: 20, durationB: 120 },
-            { runTime: 480, depthA: 10, durationA: 300, depthB: 10, durationB: 300 },
-            { runTime: 660, depthA: 0, durationA: 180, depthB: 0, durationB: 180 },
+            new ComparedWaypoint(60, 20, 60, 20, 60 ),
+            new ComparedWaypoint(90, 15, 30, undefined, undefined),
+            new ComparedWaypoint(150, 15, 60, undefined, undefined),
+            new ComparedWaypoint(180, 20, 30, 20, 120),
+            new ComparedWaypoint(480, 10, 300, 10, 300),
+            new ComparedWaypoint(660, 0, 180, 0, 180),
         ];
         assertDivesWayPointsCompare(segments6_minutes11, segments4_minutes11, expected);
     });

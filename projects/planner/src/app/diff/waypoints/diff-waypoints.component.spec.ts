@@ -4,6 +4,7 @@ import {UnitConversion} from '../../shared/UnitConversion';
 import {ProfileComparatorService} from '../../shared/diff/profileComparatorService';
 import {DiveSchedules} from '../../shared/dive.schedules';
 import {ReloadDispatcher} from '../../shared/reloadDispatcher';
+import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 
 describe('WaypointsDifferenceComponent', () => {
     let component: WaypointsDifferenceComponent;
@@ -12,10 +13,12 @@ describe('WaypointsDifferenceComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [WaypointsDifferenceComponent],
-            providers: [UnitConversion,
+            providers: [
+                UnitConversion,
                 ProfileComparatorService,
                 DiveSchedules,
-                ReloadDispatcher
+                ReloadDispatcher,
+                SelectedDiffWaypoint
             ]
         });
         fixture = TestBed.createComponent(WaypointsDifferenceComponent);

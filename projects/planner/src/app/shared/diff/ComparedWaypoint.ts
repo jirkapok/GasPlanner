@@ -1,4 +1,4 @@
-import { WayPoint } from "../models";
+import { WayPoint } from '../models';
 
 export class ComparedWaypoint {
     public selected = false;

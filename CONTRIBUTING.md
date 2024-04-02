@@ -5,4 +5,9 @@ No extra rules are applied.
 ## List of contributors
 
 * Michael Czolko (CNS and OTU calculations)
-* Denis Lebo (Profiles comparison)
+
+## Bachelor/Master's thesis
+
+* Profiles comparison - Denis Lebo
+
+

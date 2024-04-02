@@ -63,3 +63,10 @@ Following list of features and improvements ordered by priority is under develop
 * Add export of the plan to pdf
 * Import/Export dive to compare from well known file format see also <https://www.npmjs.com/package/xml-js>
 * Add more variables to weight calculator (suits, BMI, tank material, water type)
+
+## Bachelor/Master's thesis topic proposals
+
+* Implementation of installer for mobile platforms (Android a iPhone)
+* Embedded help - Show reach help in offline mode as part of the application (created from markup files)
+* Localizations
+* Gamification/Training - add training part in form of questions, including topic/formula explanation and evaluation of solution

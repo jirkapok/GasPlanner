@@ -37,7 +37,7 @@ To compile the application compile, first you need to install the dependency fro
 Than compile solution by `npm run build` to deploy `dist` directory. To start the app use `npm start` for debugging purpose. See also `build/build.ps1` build script.
 Development state of the art can also be checked using Github Actions:
 
-[![Build status](https://github.com/jirkapok/GasPlanner/actions/workflows/main.yml/badge.svg)](https://github.com/jirkapok/GasPlanner/actions)
+[![Build status](https://github.com/jirkapok/GasPlanner/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/jirkapok/GasPlanner/actions)
 
 ## Running the tests
 

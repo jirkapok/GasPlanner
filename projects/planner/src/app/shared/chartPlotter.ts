@@ -5,13 +5,14 @@ import {DiveResults} from './diveresults';
 
 // TODO merge with profileChart component drawing methods
 export class ChartPlotterFactory {
-
+    public static readonly depthLineColorA = 'rgb(31, 119, 180)';
+    public static readonly depthLineColorB = 'rgb(141, 143, 144)';
     private namePrefix = '';
     private averageDepthLineColor = 'rgb(62, 157, 223)';
-    private depthLineColor = 'rgb(31, 119, 180)';
     private ceilingLineColor = 'rgb(255, 160, 73)';
     private eventLineColor = 'rgba(31, 119, 180, 0.7)';
     private eventFillColor = 'rgba(31, 119, 180, 0.5)';
+    private depthLineColor = ChartPlotterFactory.depthLineColorA;
 
     constructor(private resampling: ResamplingService, private units: UnitConversion) {
     }

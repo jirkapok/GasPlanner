@@ -14,6 +14,7 @@ export class ProfileComparatorService extends Streamed {
     private _profileBIndex = 0;
     private _onSelectionChanged: Subject<void> = new Subject<void>();
     private _selectionChanged$: Observable<void>;
+    private _wayPoints: ComparedWaypoint[] = [];
 
     constructor(private schedules: DiveSchedules, private dispatcher: ReloadDispatcher) {
         super();
@@ -22,6 +23,9 @@ export class ProfileComparatorService extends Streamed {
         if(this.hasTwoProfiles) {
             this.selectProfile(1);
         }
+
+        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.updateWayPoints());
 
         // In case dive removed
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
@@ -85,20 +89,7 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public get difference(): ComparedWaypoint[] {
-        if(!this.bothResultsCalculated){
-            return [];
-        }
-
-        const context = new WaypointsDiffContext([...this.wayPointsA], [...this.wayPointsB]);
-        const waypointRows = [];
-
-        while(context.hasNext) {
-            const row = context.toRow();
-            waypointRows.unshift(row);
-            context.next();
-        }
-
-        return waypointRows;
+        return this._wayPoints;
     }
 
     public get hasTwoProfiles(): boolean {
@@ -128,9 +119,11 @@ export class ProfileComparatorService extends Streamed {
 
         this._profileAIndex = this._profileBIndex;
         this._profileBIndex = index;
+        this.updateWayPoints();
         this._onSelectionChanged.next();
     }
 
+    // TODO check to be removed
     public waitUntilProfilesCalculated(): Promise<void> {
         return new Promise<void>((resolve) => {
             const interval = setInterval(() => {
@@ -151,6 +144,26 @@ export class ProfileComparatorService extends Streamed {
 
         if(this._profileBIndex >= maxIndex) {
             this._profileBIndex = 0;
+        }
+
+        this.updateWayPoints();
+    }
+
+    // TODO add tests for cached waypoints
+    /** Waypoints need to be cached to preserve the selection */
+    private updateWayPoints(): void {
+        this._wayPoints = [];
+
+        if(!this.bothResultsCalculated){
+            return;
+        }
+
+        const context = new WaypointsDiffContext([...this.wayPointsA], [...this.wayPointsB]);
+
+        while(context.hasNext) {
+            const row = context.toRow();
+            this._wayPoints.unshift(row);
+            context.next();
         }
     }
 }
@@ -192,12 +205,7 @@ class WaypointsDiffContext {
 
     public toRow(): ComparedWaypoint {
         const runtime = this.dominantA ? this._endTimeA : this._endTimeB;
-        const row = new ComparedWaypoint(
-            runtime,
-            this.waypointA?.endDepth,
-            this.waypointA?.duration,
-            this.waypointB?.endDepth,
-            this.waypointB?.duration);
+        const row = new ComparedWaypoint(runtime, this.waypointA, this.waypointB);
 
         if (this.dominantA) {
             row.durationB = undefined;

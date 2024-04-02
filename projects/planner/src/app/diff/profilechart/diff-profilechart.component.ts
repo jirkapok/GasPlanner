@@ -11,6 +11,7 @@ import { Streamed } from '../../shared/streamed';
 import { ChartPlotter, ChartPlotterFactory } from '../../shared/chartPlotter';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
+import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -32,23 +33,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         editable: false
     };
 
-    private cursor1 = {
-        xid: 1,
-        type: 'line',
-        // x-reference is assigned to the x-values
-        xref: 'x',
-        // y-reference is assigned to the plot paper [0,1]
-        yref: 'y',
-        x0: new Date('2001-06-12 12:30'), // dummy values
-        y0: 0,
-        x1: new Date('2001-06-12 12:30'),
-        y1: 1,
-        fillcolor: '#d3d3d3',
-        line: {
-            color: 'rgb(31, 119, 180)',
-            width: 5
-        }
-    };
+    private cursor1: Partial<Plotly.Shape> = ProfileDifferenceChartComponent.createCursor(ChartPlotterFactory.depthLineColorA);
+    private cursor2: Partial<Plotly.Shape> = ProfileDifferenceChartComponent.createCursor(ChartPlotterFactory.depthLineColorB);
 
     private layout: any;
     private resampling: ResamplingService;
@@ -57,7 +43,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     constructor(
         private units: UnitConversion,
-        private selectedDiff: SelectedDiffWaypoint,
+        private selectedWaypoints: SelectedDiffWaypoint,
         private profileComparatorService: ProfileComparatorService) {
         super();
         this.resampling = new ResamplingService(units);
@@ -92,9 +78,9 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.profileBChartPlotter = chartPlotterFactory
             .wthNamePrefix('Profile B ')
             .wthAverageDepthColor('rgb(188,191,192)')
-            .wthDepthColor('rgb(141,143,144)')
-            .wthCeilingColor('rgb(141,143,144)')
-            .wthEventFillColor('rgb(141,143,144)')
+            .wthDepthColor(ChartPlotterFactory.depthLineColorB)
+            .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
+            .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
             .wthEventLineColor('rgb(118,119,120)')
             .create(this.profileB);
 
@@ -106,7 +92,10 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
                 }
             });
 
-        // TODO: Implement selectedDiff for diff-waypoints
+        this.selectedWaypoints.selectedChanged.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((selected: ComparedWaypoint) => {
+                this.selectWayPoint(selected);
+            });
     }
 
     public get profilesCalculated(): boolean {
@@ -121,6 +110,25 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         return this.profileComparatorService.profileBResults;
     }
 
+    private static createCursor(lineColor: string): Partial<Plotly.Shape> {
+        return {
+            type: 'line',
+            // x-reference is assigned to the x-values
+            xref: 'x',
+            // y-reference is assigned to the plot paper [0,1]
+            yref: 'y',
+            x0: new Date('2001-06-12 12:30'), // dummy values
+            y0: 0,
+            x1: new Date('2001-06-12 12:30'),
+            y1: 1,
+            fillcolor: '#d3d3d3',
+            line: {
+                color: lineColor,
+                width: 5
+            }
+        };
+    }
+
     public ngOnInit(): void {
         void this.profileComparatorService.waitUntilProfilesCalculated().then(() => {
             this.plotCharts();
@@ -131,28 +139,40 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     public plotlyHover(data: any): void {
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x;
-        this.selectedDiff.selectedTimeStamp = timeStampValue;
+        this.selectedWaypoints.selectedTimeStamp = timeStampValue;
     }
 
     private plotlyHoverLeave(data: any) {
-        this.selectedDiff.selectedTimeStamp = '';
+        this.selectedWaypoints.selectedTimeStamp = '';
     }
 
-    private selectWayPoint(wayPoint: WayPoint | undefined) {
-        const shapes: any[] = [];
-        const update = {
-            shapes: shapes
+    private selectWayPoint(selected: ComparedWaypoint | undefined) {
+        if (!selected) {
+            return;
+        }
+
+        const update: Partial<Plotly.Layout> = {
+            shapes: []
         };
 
-        if (wayPoint) {
-            this.cursor1.x0 = DateFormats.toDate(wayPoint.startTime);
-            this.cursor1.x1 = DateFormats.toDate(wayPoint.endTime);
-            this.cursor1.y0 = wayPoint.startDepth;
-            this.cursor1.y1 = wayPoint.endDepth;
-            update.shapes.push(this.cursor1);
+        if(selected.wayPointA) {
+            this.updateCursor(selected.wayPointA, this.cursor1);
+            update.shapes!.push(this.cursor1);
+        }
+
+        if(selected.wayPointB) {
+            this.updateCursor(selected.wayPointB, this.cursor2);
+            update.shapes!.push(this.cursor2);
         }
 
         Plotly.relayout(this.elementName, update);
+    }
+
+    private updateCursor(wayPoint: WayPoint, cursor: Partial<Plotly.Shape>): void {
+        cursor.x0 = DateFormats.toDate(wayPoint.startTime);
+        cursor.x1 = DateFormats.toDate(wayPoint.endTime);
+        cursor.y0 = wayPoint.startDepth;
+        cursor.y1 = wayPoint.endDepth;
     }
 
     private plotCharts(): void {

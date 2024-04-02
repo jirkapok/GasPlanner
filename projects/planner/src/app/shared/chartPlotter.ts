@@ -1,7 +1,11 @@
-import {UnitConversion} from './UnitConversion';
-import {ResamplingService} from './ResamplingService';
-import {DiveResults} from './diveresults';
+import { UnitConversion } from './UnitConversion';
+import { ResamplingService } from './ResamplingService';
+import { DiveResults } from './diveresults';
 import * as Plotly from 'plotly.js-basic-dist';
+import { DateFormats } from './formaters';
+import { WayPoint } from './models';
+import { Ceiling, Event } from 'scuba-physics';
+import _ from 'lodash';
 
 // TODO merge with profileChart component drawing methods
 export class ChartPlotterFactory {
@@ -104,8 +108,8 @@ export class ChartPlotterFactory {
         return this;
     }
 
-    public create(dive: DiveResults): ChartPlotter {
-        return new ChartPlotter(
+    public create(dive: () => DiveResults): DiveTracesBuilder {
+        return new DiveTracesBuilder(
             dive,
             this.resampling,
             this.units,
@@ -119,8 +123,7 @@ export class ChartPlotterFactory {
     }
 }
 
-export class ChartPlotter {
-
+export class DiveTracesBuilder {
     private readonly namePrefix: string = '';
     private readonly averageDepthLineColor: string = 'rgb(62, 157, 223)';
     private readonly depthLineColor: string = 'rgb(31, 119, 180)';
@@ -129,7 +132,7 @@ export class ChartPlotter {
     private readonly eventFillColor: string = 'rgba(31, 119, 180, 0.5)';
 
     constructor(
-        public dive: DiveResults,
+        private dive: () => DiveResults,
         private resampling: ResamplingService,
         private units: UnitConversion,
         namePrefix: string,
@@ -147,8 +150,18 @@ export class ChartPlotter {
         this.eventFillColor = eventFillColor;
     }
 
-    public plotAverageDepth(): Partial<Plotly.PlotData> {
-        const resampleAverageDepth = this.resampling.resampleAverageDepth(this.dive.wayPoints);
+    public traces(): Partial<Plotly.PlotData>[] {
+        const diveResult = this.dive();
+        // performance: number of samples shown in chart doesn't speedup the drawing significantly
+        const averageDepths = this.plotAverageDepth(diveResult.wayPoints);
+        const depths = this.plotDepths(diveResult.wayPoints);
+        const ceilings = this.plotCeilings(diveResult.ceilings);
+        const events = this.plotEvents(diveResult.events);
+        return [ averageDepths, depths, ceilings, events ];
+    }
+
+    private plotAverageDepth(wayPoints: WayPoint[]): Partial<Plotly.PlotData> {
+        const resampleAverageDepth = this.resampling.resampleAverageDepth(wayPoints);
 
         return {
             x: resampleAverageDepth.xValues,
@@ -165,8 +178,8 @@ export class ChartPlotter {
         };
     }
 
-    public plotDepths(): Partial<Plotly.PlotData> {
-        const resampled = this.resampling.resampleWaypoints(this.dive.wayPoints);
+    private plotDepths(wayPoints: WayPoint[]): Partial<Plotly.PlotData> {
+        const resampled = this.resampling.resampleWaypoints(wayPoints);
 
         return {
             x: resampled.xValues,
@@ -180,8 +193,8 @@ export class ChartPlotter {
         };
     }
 
-    public plotCeilings(): Partial<Plotly.PlotData> {
-        const resampled = this.resampling.resampleCeilings(this.dive.ceilings);
+    private plotCeilings(ceilings: Ceiling[]): Partial<Plotly.PlotData> {
+        const resampled = this.resampling.resampleCeilings(ceilings);
 
         const dataCeilings = {
             x: resampled.xValues,
@@ -198,8 +211,8 @@ export class ChartPlotter {
         return <Partial<Plotly.PlotData>>dataCeilings;
     }
 
-    public plotEvents(): Partial<Plotly.PlotData> {
-        const resampled = this.resampling.convertEvents(this.dive.events);
+    private plotEvents(events: Event[]): Partial<Plotly.PlotData> {
+        const resampled = this.resampling.convertEvents(events);
 
         const dataEvents = {
             x: resampled.xValues,
@@ -227,5 +240,53 @@ export class ChartPlotter {
         };
 
         return <Partial<Plotly.PlotData>>dataEvents;
+    }
+}
+
+export class ChartPlotter {
+    private builders: DiveTracesBuilder[];
+    private options: Partial<Plotly.Config>;
+    private cursor1: Partial<Plotly.Shape>;
+    private layout: Partial<Plotly.Layout>;
+
+    /** Provide traces in reverse order to keep the last on top */
+    constructor(public elementName: string, private units: UnitConversion, ...traceBuilders: DiveTracesBuilder[]) {
+        this.builders = traceBuilders;
+        const resampling = new ResamplingService(units);
+        const chartPlotterFactory = new ChartPlotterFactory(resampling, this.units);
+        this.cursor1 = chartPlotterFactory.createCursor();
+        this.layout = chartPlotterFactory.createLayout();
+        this.options = chartPlotterFactory.createOptions();
+    }
+
+    public plotCharts(totalDuration: number): void {
+        this.updateLayoutThickFormat(totalDuration);
+        const traces: Plotly.Data[] = _(this.builders).map(b => b.traces())
+            .flatten()
+            .toArray().value();
+        void Plotly.react(this.elementName, traces, this.layout, this.options);
+    }
+
+    public plotCursor(wayPoint: WayPoint | undefined): void {
+        if(wayPoint) {
+            this.updateCursor(wayPoint, this.cursor1);
+            const update: Partial<Plotly.Layout> = {
+                shapes: [ this.cursor1 ]
+            };
+
+            void Plotly.relayout(this.elementName, update);
+        }
+    }
+
+    private updateLayoutThickFormat(totalDuration: number): void {
+        // setting to string instead expected d3 formatting function causes warning in console = want fix
+        this.layout.xaxis!.tickformat = DateFormats.selectChartTimeFormat(totalDuration);
+    }
+
+    private updateCursor(wayPoint: WayPoint, cursor: Partial<Plotly.Shape>): void {
+        cursor.x0 = DateFormats.toDate(wayPoint.startTime);
+        cursor.x1 = DateFormats.toDate(wayPoint.endTime);
+        cursor.y0 = wayPoint.startDepth;
+        cursor.y1 = wayPoint.endDepth;
     }
 }

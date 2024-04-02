@@ -4,11 +4,9 @@ import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { DiveResults } from '../../shared/diveresults';
-import { WayPoint } from '../../shared/models';
-import { DateFormats } from '../../shared/formaters';
 import * as Plotly from 'plotly.js-basic-dist';
 import { Streamed } from '../../shared/streamed';
-import { ChartPlotter, ChartPlotterFactory } from '../../shared/chartPlotter';
+import { ChartPlotterFactory, ChartPlotter } from '../../shared/chartPlotter';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
@@ -20,38 +18,29 @@ import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
-    private readonly elementName = 'diveplot';
-    private chartElement: any; // prevent typescript type gymnastic
-    private options: Partial<Plotly.Config>;
-    private cursor1: Partial<Plotly.Shape>;
-    private layout: Partial<Plotly.Layout>;
-    private resampling: ResamplingService;
-    private profileAChartPlotter: ChartPlotter;
-    private profileBChartPlotter: ChartPlotter;
+    private plotter: ChartPlotter;
 
     constructor(
         private units: UnitConversion,
         private selectedWaypoints: SelectedDiffWaypoint,
         private profileComparatorService: ProfileComparatorService) {
         super();
-        this.resampling = new ResamplingService(units);
-        const chartPlotterFactory = new ChartPlotterFactory(this.resampling, this.units);
 
-        this.cursor1 = chartPlotterFactory.createCursor();
-        this.layout = chartPlotterFactory.createLayout();
-        this.options = chartPlotterFactory.createOptions();
-
-        this.profileAChartPlotter = chartPlotterFactory.wthNamePrefix('Profile A ').create(this.profileA);
-        this.profileBChartPlotter = chartPlotterFactory
+        const resampling = new ResamplingService(units);
+        const chartPlotterFactory = new ChartPlotterFactory(resampling, this.units);
+        const profileATraces = chartPlotterFactory.wthNamePrefix('Profile A ')
+            .create(() => this.profileA);
+        const profileBTraces = chartPlotterFactory
             .wthNamePrefix('Profile B ')
             .wthAverageDepthColor('rgb(188,191,192)')
             .wthDepthColor(ChartPlotterFactory.depthLineColorB)
             .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
             .wthEventLineColor('rgb(118,119,120)')
-            .create(this.profileB);
+            .create(() => this.profileB);
 
-        this.updateLayoutThickFormat();
+        this.plotter = new ChartPlotter('diveplot', this.units, profileBTraces, profileATraces);
+
         this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 if (this.profilesCalculated) {
@@ -100,57 +89,18 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         }
 
         const wayPoint = selected.durationA ? selected.wayPointA : selected.wayPointB;
-
-        if(wayPoint) {
-            this.updateCursor(wayPoint, this.cursor1);
-
-            const update: Partial<Plotly.Layout> = {
-                shapes: [ this.cursor1 ]
-            };
-
-            void Plotly.relayout(this.elementName, update);
-        }
-    }
-
-    private updateCursor(wayPoint: WayPoint, cursor: Partial<Plotly.Shape>): void {
-        cursor.x0 = DateFormats.toDate(wayPoint.startTime);
-        cursor.x1 = DateFormats.toDate(wayPoint.endTime);
-        cursor.y0 = wayPoint.startDepth;
-        cursor.y1 = wayPoint.endDepth;
+        this.plotter.plotCursor(wayPoint);
     }
 
     private plotCharts(): void {
-        this.updateLayoutThickFormat();
-        this.profileAChartPlotter.dive = this.profileA;
-        this.profileBChartPlotter.dive = this.profileB;
-        // performance: number of samples shown in chart doesn't speedup the drawing significantly
-        const profileAAverageDepths = this.profileAChartPlotter.plotAverageDepth();
-        const profileADepths = this.profileAChartPlotter.plotDepths();
-        const profileACeilings = this.profileAChartPlotter.plotCeilings();
-        const profileAEvents = this.profileAChartPlotter.plotEvents();
-
-        const profileBAverageDepths = this.profileBChartPlotter.plotAverageDepth();
-        const profileBDepths = this.profileBChartPlotter.plotDepths();
-        const profileBCeilings = this.profileBChartPlotter.plotCeilings();
-        const profileBEvents = this.profileBChartPlotter.plotEvents();
-
-        const traces: Plotly.Data[] = [
-            profileBAverageDepths, profileBDepths, profileBCeilings, profileBEvents,
-            profileAAverageDepths, profileADepths, profileACeilings, profileAEvents,
-        ];
-
-        void Plotly.react(this.elementName, traces, this.layout, this.options);
+        this.plotter.plotCharts(this.profileA.totalDuration);
     }
 
     private hookChartEvents(): void {
-        this.chartElement = document.getElementById(this.elementName)!;
-        this.chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
-        this.chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
-        this.chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
-    }
-
-    private updateLayoutThickFormat(): void {
-        // setting to string instead expected d3 formatting function causes warning in console = want fix
-        this.layout.xaxis!.tickformat = DateFormats.selectChartTimeFormat(this.profileA.totalDuration);
+        // used any to prevent typescript type gymnastic
+        const chartElement: any = document.getElementById(this.plotter.elementName);
+        chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
     }
 }

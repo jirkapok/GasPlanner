@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { takeUntil } from 'rxjs';
 import { WayPoint } from '../shared/models';
 import { DiveResults } from '../shared/diveresults';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-basic-dist';
-import { takeUntil } from 'rxjs';
-import { DateFormats } from '../shared/formaters';
-import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { Streamed } from '../shared/streamed';
-import { ResamplingService } from '../shared/ResamplingService';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { ChartPlotter, ChartPlotterFactory } from '../shared/chartPlotter';
 
 @Component({
     selector: 'app-profilechart',
@@ -20,73 +18,19 @@ import { ReloadDispatcher } from '../shared/reloadDispatcher';
 export class ProfileChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
-    private chartElement: any;
-
-    private options = {
-        displaylogo: false,
-        displayModeBar: false,
-        responsive: true,
-        // staticPlot: true,
-        autosize: true,
-        scrollZoom: false,
-        editable: false
-    };
-
-    private cursor1 = {
-        xid: 1,
-        type: 'line',
-        // x-reference is assigned to the x-values
-        xref: 'x',
-        // y-reference is assigned to the plot paper [0,1]
-        yref: 'y',
-        x0: new Date('2001-06-12 12:30'), // dummy values
-        y0: 0,
-        x1: new Date('2001-06-12 12:30'),
-        y1: 1,
-        fillcolor: '#d3d3d3',
-        line: {
-            color: 'rgb(31, 119, 180)',
-            width: 5
-        }
-    };
-
-    private layout: any;
-    private resampling: ResamplingService;
+    private plotter: ChartPlotter;
 
     constructor(
-        private units: UnitConversion,
+        chartPlotterFactory: ChartPlotterFactory,
         private selectedWaypoint: SelectedWaypoint,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
         super();
-        this.resampling = new ResamplingService(units);
 
-        this.layout = {
-            autosize: true,
-            showlegend: false,
-            xaxis: {
-                fixedrange: true,
-                title: {
-                    text: 'Time [min]'
-                }
-            },
-            yaxis: {
-                fixedrange: true,
-                autorange: 'reversed',
-                title: {
-                    text: `Depth [${units.length}]`
-                }
-            },
-            margin: { l: 40, r: 10, b: 40, t: 10 },
-            hovermode: 'x unified',
-            hoverlabel: {
-                bgcolor: 'rgba(200, 200, 200, 0.25)',
-                bordercolor: 'rgba(200, 200, 200, 0.25)'
-            },
-            shapes: []
-        };
+        const profileTraces = chartPlotterFactory.wthNamePrefix('')
+            .create(() => this.dive);
+        this.plotter = new ChartPlotter('diveplot', chartPlotterFactory, profileTraces);
 
-        this.updateLayoutThickFormat();
         this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((diveId?: number) => {
                 if (this.schedules.selected.id === diveId) {
@@ -112,141 +56,28 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.hookChartEvents();
     }
 
-    public plotlyHover(data: any): void {
+    public plotlyHover(data: Plotly.PlotMouseEvent): void {
         // first data is the dive profile chart, x value is the timestamp as string
-        const timeStampValue: string = data.points[0].x;
+        const timeStampValue: string = data.points[0].x!.toString();
         this.selectedWaypoint.selectedTimeStamp = timeStampValue;
     }
 
-    private plotlyHoverLeave(data: any) {
+    private plotlyHoverLeave() {
         this.selectedWaypoint.selectedTimeStamp = '';
     }
 
     private selectWayPoint(wayPoint: WayPoint | undefined) {
-        const shapes: any[] = [];
-        const update = {
-            shapes: shapes
-        };
-
-        if (wayPoint) {
-            this.cursor1.x0 = DateFormats.toDate(wayPoint.startTime);
-            this.cursor1.x1 = DateFormats.toDate(wayPoint.endTime);
-            this.cursor1.y0 = wayPoint.startDepth;
-            this.cursor1.y1 = wayPoint.endDepth;
-            update.shapes.push(this.cursor1);
-        }
-
-        Plotly.relayout(this.elementName, update);
+        this.plotter.plotCursor(wayPoint);
     }
 
     private plotCharts(): void {
-        this.updateLayoutThickFormat();
-        // performance: number of samples shown in chart doesn't speedup the drawing significantly
-        const dataAverageDepths = this.plotAverageDepth();
-        const depths = this.plotDepths();
-        const ceilings = this.plotCeilings();
-        const plotEvents = this.plotEvents();
-        const traces = [dataAverageDepths, depths, ceilings, plotEvents];
-
-        Plotly.react(this.elementName, traces, this.layout, this.options);
+        this.plotter.plotCharts(this.dive.totalDuration);
     }
 
     private hookChartEvents(): void {
-        this.chartElement = document.getElementById(this.elementName);
-        this.chartElement.on('plotly_hover', (e: any) => this.plotlyHover(e));
-        this.chartElement.on('plotly_click', (e: any) => this.plotlyHover(e));
-        this.chartElement.on('plotly_unhover', (e: any) => this.plotlyHoverLeave(e));
-    }
-
-    private updateLayoutThickFormat(): void {
-        // setting to string instead expected d3 formtting function causes warning in console = want fix
-        this.layout.xaxis.tickformat = DateFormats.selectChartTimeFormat(this.dive.totalDuration);
-    }
-
-    private plotAverageDepth(): any {
-        const resampled = this.resampling.resampleAverageDepth(this.dive.wayPoints);
-
-        const dataAverageDepths = {
-            x: resampled.xValues,
-            y: resampled.yValues,
-            type: 'scatter',
-            line: {
-                dash: 'dot'
-            },
-            name: 'Avg. depth',
-            marker: {
-                color: 'rgb(62, 157, 223)'
-            },
-            hovertemplate: `%{y:.2f}  ${this.units.length}`
-        };
-
-        return dataAverageDepths;
-    }
-
-    private plotDepths(): any {
-        const resampled = this.resampling.resampleWaypoints(this.dive.wayPoints);
-
-        const data = {
-            x: resampled.xValues,
-            y: resampled.yValues,
-            type: 'scatter',
-            name: 'Depth',
-            marker: {
-                color: 'rgb(31, 119, 180)'
-            },
-            hovertemplate: `%{y:.2f}  ${this.units.length}`
-        };
-
-        return data;
-    }
-
-    private plotCeilings(): any {
-        const resampled = this.resampling.resampleCeilings(this.dive.ceilings);
-
-        const dataCeilings = {
-            x: resampled.xValues,
-            y: resampled.yValues,
-            type: 'scatter',
-            fill: 'tozeroy',
-            name: 'Ceiling',
-            marker: {
-                color: 'rgb(255, 160, 73)'
-            },
-            hovertemplate: `%{y:.2f}  ${this.units.length}`
-        };
-
-        return dataCeilings;
-    }
-
-    private plotEvents(): any {
-        const resampled = this.resampling.convertEvents(this.dive.events);
-
-        const dataEvents = {
-            x: resampled.xValues,
-            y: resampled.yValues,
-            labels: resampled.labels,
-            text: resampled.labels,
-            type: 'scatter',
-            mode: 'text+markers',
-            fill: 'tozeroy',
-            name: 'Event',
-            hovertemplate: '%{text}',
-            texttemplate: '%{text}',
-            textposition: 'top center',
-            fillcolor: 'rgba(0, 0, 0, 0)',
-            marker: {
-                color: 'rgba(31, 119, 180, 0.5)',
-                size: 8,
-                // symbol: 'bowtie-open', // https://plotly.com/javascript/reference/#box-marker-symbol
-                line: {
-                    color: 'rgba(31, 119, 180, 0.7)',
-                    width: 2
-                }
-            },
-            showlegend: false
-        };
-
-
-        return dataEvents;
+        const chartElement: any = document.getElementById(this.elementName);
+        chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
     }
 }

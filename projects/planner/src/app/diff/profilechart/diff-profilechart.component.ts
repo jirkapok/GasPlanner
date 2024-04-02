@@ -21,7 +21,7 @@ import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
-    private chartElement: any;
+    private chartElement: any; // prevent typescript type gymnastic
 
     private options = {
         displaylogo: false,
@@ -33,9 +33,9 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         editable: false
     };
 
-    private cursor1: Partial<Plotly.Shape> = ProfileDifferenceChartComponent.createCursor(ChartPlotterFactory.depthLineColorA);
+    private cursor1: Partial<Plotly.Shape> = ChartPlotterFactory.createCursor(ChartPlotterFactory.depthLineColorA);
 
-    private layout: any;
+    private layout: Partial<Plotly.Layout>;
     private resampling: ResamplingService;
     private profileAChartPlotter: ChartPlotter;
     private profileBChartPlotter: ChartPlotter;
@@ -109,25 +109,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         return this.profileComparatorService.profileBResults;
     }
 
-    private static createCursor(lineColor: string): Partial<Plotly.Shape> {
-        return {
-            type: 'line',
-            // x-reference is assigned to the x-values
-            xref: 'x',
-            // y-reference is assigned to the plot paper [0,1]
-            yref: 'y',
-            x0: new Date('2001-06-12 12:30'), // dummy values
-            y0: 0,
-            x1: new Date('2001-06-12 12:30'),
-            y1: 1,
-            fillcolor: '#d3d3d3',
-            line: {
-                color: lineColor,
-                width: 5
-            }
-        };
-    }
-
     public ngOnInit(): void {
         void this.profileComparatorService.waitUntilProfilesCalculated().then(() => {
             this.plotCharts();
@@ -135,17 +116,17 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         });
     }
 
-    public plotlyHover(data: any): void {
+    public plotlyHover(data: Plotly.PlotMouseEvent): void {
         // first data is the dive profile chart, x value is the timestamp as string
-        const timeStampValue: string = data.points[0].x;
+        const timeStampValue: string = data.points[0].x!.toString();
         this.selectedWaypoints.selectedTimeStamp = timeStampValue;
     }
 
-    private plotlyHoverLeave(data: any) {
+    private plotlyHoverLeave() {
         this.selectedWaypoints.selectedTimeStamp = '';
     }
 
-    private selectWayPoint(selected: ComparedWaypoint | undefined) {
+    private selectWayPoint(selected: ComparedWaypoint | undefined): void {
         if (!selected) {
             return;
         }
@@ -159,7 +140,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
                 shapes: [ this.cursor1 ]
             };
 
-            Plotly.relayout(this.elementName, update);
+            void Plotly.relayout(this.elementName, update);
         }
     }
 
@@ -185,23 +166,23 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         const profileBCeilings = this.profileBChartPlotter.plotCeilings();
         const profileBEvents = this.profileBChartPlotter.plotEvents();
 
-        const traces = [
+        const traces: Plotly.Data[] = [
             profileBAverageDepths, profileBDepths, profileBCeilings, profileBEvents,
             profileAAverageDepths, profileADepths, profileACeilings, profileAEvents,
         ];
 
-        Plotly.react(this.elementName, traces, this.layout, this.options);
+        void Plotly.react(this.elementName, traces, this.layout, this.options);
     }
 
     private hookChartEvents(): void {
-        this.chartElement = document.getElementById(this.elementName);
-        this.chartElement.on('plotly_hover', (e: any) => this.plotlyHover(e));
-        this.chartElement.on('plotly_click', (e: any) => this.plotlyHover(e));
-        this.chartElement.on('plotly_unhover', (e: any) => this.plotlyHoverLeave(e));
+        this.chartElement = document.getElementById(this.elementName)!;
+        this.chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        this.chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        this.chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
     }
 
     private updateLayoutThickFormat(): void {
         // setting to string instead expected d3 formtting function causes warning in console = want fix
-        this.layout.xaxis.tickformat = DateFormats.selectChartTimeFormat(this.profileA.totalDuration);
+        this.layout.xaxis!.tickformat = DateFormats.selectChartTimeFormat(this.profileA.totalDuration);
     }
 }

@@ -1,7 +1,7 @@
 import {UnitConversion} from './UnitConversion';
 import {ResamplingService} from './ResamplingService';
 import {DiveResults} from './diveresults';
-
+import * as Plotly from 'plotly.js-basic-dist';
 
 // TODO merge with profileChart component drawing methods
 export class ChartPlotterFactory {
@@ -15,6 +15,25 @@ export class ChartPlotterFactory {
     private depthLineColor = ChartPlotterFactory.depthLineColorA;
 
     constructor(private resampling: ResamplingService, private units: UnitConversion) {
+    }
+
+    public static createCursor(lineColor: string): Partial<Plotly.Shape> {
+        return {
+            type: 'line',
+            // x-reference is assigned to the x-values
+            xref: 'x',
+            // y-reference is assigned to the plot paper [0,1]
+            yref: 'y',
+            x0: new Date('2001-06-12 12:30'), // dummy values
+            y0: 0,
+            x1: new Date('2001-06-12 12:30'),
+            y1: 1,
+            fillcolor: '#d3d3d3',
+            line: {
+                color: lineColor,
+                width: 5
+            }
+        };
     }
 
     public wthNamePrefix(prefix: string): ChartPlotterFactory {
@@ -89,15 +108,15 @@ export class ChartPlotter {
         this.eventFillColor = eventFillColor;
     }
 
-    public plotAverageDepth(): any {
+    public plotAverageDepth(): Partial<Plotly.PlotData> {
         const resampleAverageDepth = this.resampling.resampleAverageDepth(this.dive.wayPoints);
 
-        const dataAverageDepths = {
+        return {
             x: resampleAverageDepth.xValues,
             y: resampleAverageDepth.yValues,
-            type: 'scatter',
+            type: <Plotly.PlotType>'scatter',
             line: {
-                dash: 'dot'
+                dash: <Plotly.Dash>'dot'
             },
             name: this.namePrefix + 'Avg. depth',
             marker: {
@@ -105,34 +124,30 @@ export class ChartPlotter {
             },
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
-
-        return dataAverageDepths;
     }
 
-    public plotDepths(): any {
+    public plotDepths(): Partial<Plotly.PlotData> {
         const resampled = this.resampling.resampleWaypoints(this.dive.wayPoints);
 
-        const data = {
+        return {
             x: resampled.xValues,
             y: resampled.yValues,
-            type: 'scatter',
+            type: <Plotly.PlotType>'scatter',
             name: this.namePrefix + 'Depth',
             marker: {
                 color: this.depthLineColor
             },
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
-
-        return data;
     }
 
-    public plotCeilings(): any {
+    public plotCeilings(): Partial<Plotly.PlotData> {
         const resampled = this.resampling.resampleCeilings(this.dive.ceilings);
 
         const dataCeilings = {
             x: resampled.xValues,
             y: resampled.yValues,
-            type: 'scatter',
+            type: <Plotly.PlotType>'scatter',
             fill: 'tozeroy',
             name: this.namePrefix + 'Ceiling',
             marker: {
@@ -141,10 +156,10 @@ export class ChartPlotter {
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
 
-        return dataCeilings;
+        return <Partial<Plotly.PlotData>>dataCeilings;
     }
 
-    public plotEvents(): any {
+    public plotEvents(): Partial<Plotly.PlotData> {
         const resampled = this.resampling.convertEvents(this.dive.events);
 
         const dataEvents = {
@@ -152,7 +167,7 @@ export class ChartPlotter {
             y: resampled.yValues,
             labels: resampled.labels,
             text: resampled.labels,
-            type: 'scatter',
+            type: <Plotly.PlotType>'scatter',
             mode: 'text+markers',
             fill: 'tozeroy',
             name: this.namePrefix + 'Event',
@@ -172,6 +187,6 @@ export class ChartPlotter {
             showlegend: false
         };
 
-        return dataEvents;
+        return <Partial<Plotly.PlotData>>dataEvents;
     }
 }

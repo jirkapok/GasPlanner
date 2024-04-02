@@ -34,7 +34,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     };
 
     private cursor1: Partial<Plotly.Shape> = ProfileDifferenceChartComponent.createCursor(ChartPlotterFactory.depthLineColorA);
-    private cursor2: Partial<Plotly.Shape> = ProfileDifferenceChartComponent.createCursor(ChartPlotterFactory.depthLineColorB);
 
     private layout: any;
     private resampling: ResamplingService;
@@ -151,21 +150,17 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             return;
         }
 
-        const update: Partial<Plotly.Layout> = {
-            shapes: []
-        };
+        const wayPoint = selected.durationA ? selected.wayPointA : selected.wayPointB;
 
-        if(selected.wayPointA) {
-            this.updateCursor(selected.wayPointA, this.cursor1);
-            update.shapes!.push(this.cursor1);
+        if(wayPoint) {
+            this.updateCursor(wayPoint, this.cursor1);
+
+            const update: Partial<Plotly.Layout> = {
+                shapes: [ this.cursor1 ]
+            };
+
+            Plotly.relayout(this.elementName, update);
         }
-
-        if(selected.wayPointB) {
-            this.updateCursor(selected.wayPointB, this.cursor2);
-            update.shapes!.push(this.cursor2);
-        }
-
-        Plotly.relayout(this.elementName, update);
     }
 
     private updateCursor(wayPoint: WayPoint, cursor: Partial<Plotly.Shape>): void {

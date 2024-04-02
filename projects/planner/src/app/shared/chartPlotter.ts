@@ -17,7 +17,19 @@ export class ChartPlotterFactory {
     constructor(private resampling: ResamplingService, private units: UnitConversion) {
     }
 
-    public static createCursor(lineColor: string): Partial<Plotly.Shape> {
+    public createOptions(): Partial<Plotly.Config> {
+        return {
+            displaylogo: false,
+            displayModeBar: false,
+            responsive: true,
+            // staticPlot: true,
+            autosizable: true,
+            scrollZoom: false,
+            editable: false
+        };
+    }
+
+    public createCursor(): Partial<Plotly.Shape> {
         return {
             type: 'line',
             // x-reference is assigned to the x-values
@@ -30,9 +42,36 @@ export class ChartPlotterFactory {
             y1: 1,
             fillcolor: '#d3d3d3',
             line: {
-                color: lineColor,
+                color: ChartPlotterFactory.depthLineColorA,
                 width: 5
             }
+        };
+    }
+
+    public createLayout(): Partial<Plotly.Layout> {
+        return {
+            autosize: true,
+            showlegend: false,
+            xaxis: {
+                fixedrange: true,
+                title: {
+                    text: 'Time [min]'
+                }
+            },
+            yaxis: {
+                fixedrange: true,
+                autorange: 'reversed',
+                title: {
+                    text: `Depth [${this.units.length}]`
+                }
+            },
+            margin: { l: 40, r: 10, b: 40, t: 10 },
+            hovermode: 'x unified',
+            hoverlabel: {
+                bgcolor: 'rgba(200, 200, 200, 0.25)',
+                bordercolor: 'rgba(200, 200, 200, 0.25)'
+            },
+            shapes: []
         };
     }
 

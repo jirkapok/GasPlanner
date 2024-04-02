@@ -22,19 +22,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     public icon = faChartArea;
     private readonly elementName = 'diveplot';
     private chartElement: any; // prevent typescript type gymnastic
-
-    private options = {
-        displaylogo: false,
-        displayModeBar: false,
-        responsive: true,
-        // staticPlot: true,
-        autosize: true,
-        scrollZoom: false,
-        editable: false
-    };
-
-    private cursor1: Partial<Plotly.Shape> = ChartPlotterFactory.createCursor(ChartPlotterFactory.depthLineColorA);
-
+    private options: Partial<Plotly.Config>;
+    private cursor1: Partial<Plotly.Shape>;
     private layout: Partial<Plotly.Layout>;
     private resampling: ResamplingService;
     private profileAChartPlotter: ChartPlotter;
@@ -46,33 +35,12 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         private profileComparatorService: ProfileComparatorService) {
         super();
         this.resampling = new ResamplingService(units);
-
-        this.layout = {
-            autosize: true,
-            showlegend: false,
-            xaxis: {
-                fixedrange: true,
-                title: {
-                    text: 'Time [min]'
-                }
-            },
-            yaxis: {
-                fixedrange: true,
-                autorange: 'reversed',
-                title: {
-                    text: `Depth [${units.length}]`
-                }
-            },
-            margin: { l: 40, r: 10, b: 40, t: 10 },
-            hovermode: 'x unified',
-            hoverlabel: {
-                bgcolor: 'rgba(200, 200, 200, 0.25)',
-                bordercolor: 'rgba(200, 200, 200, 0.25)'
-            },
-            shapes: []
-        };
-
         const chartPlotterFactory = new ChartPlotterFactory(this.resampling, this.units);
+
+        this.cursor1 = chartPlotterFactory.createCursor();
+        this.layout = chartPlotterFactory.createLayout();
+        this.options = chartPlotterFactory.createOptions();
+
         this.profileAChartPlotter = chartPlotterFactory.wthNamePrefix('Profile A ').create(this.profileA);
         this.profileBChartPlotter = chartPlotterFactory
             .wthNamePrefix('Profile B ')
@@ -182,7 +150,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     private updateLayoutThickFormat(): void {
-        // setting to string instead expected d3 formtting function causes warning in console = want fix
+        // setting to string instead expected d3 formatting function causes warning in console = want fix
         this.layout.xaxis!.tickformat = DateFormats.selectChartTimeFormat(this.profileA.totalDuration);
     }
 }

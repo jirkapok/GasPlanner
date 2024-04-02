@@ -8,7 +8,6 @@ import { DateFormats } from './formaters';
 import { WayPoint } from './models';
 import { Ceiling, Event } from 'scuba-physics';
 
-// TODO merge with profileChart component drawing methods
 @Injectable()
 export class ChartPlotterFactory {
     public static readonly depthLineColorA = 'rgb(31, 119, 180)';

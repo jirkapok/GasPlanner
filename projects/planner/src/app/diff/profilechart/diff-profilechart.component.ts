@@ -92,6 +92,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.plotter.plotCharts(this.profileA.totalDuration);
     }
 
+    // TODO fix hover over the diff chart
     private hookChartEvents(): void {
         // used any to prevent typescript type gymnastic
         const chartElement: any = document.getElementById(this.plotter.elementName);

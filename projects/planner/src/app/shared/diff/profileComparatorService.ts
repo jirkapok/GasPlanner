@@ -123,7 +123,6 @@ export class ProfileComparatorService extends Streamed {
         this._onSelectionChanged.next();
     }
 
-    // TODO check to be removed
     public waitUntilProfilesCalculated(): Promise<void> {
         return new Promise<void>((resolve) => {
             const interval = setInterval(() => {
@@ -149,7 +148,6 @@ export class ProfileComparatorService extends Streamed {
         this.updateWayPoints();
     }
 
-    // TODO add tests for cached waypoints
     /** Waypoints need to be cached to preserve the selection */
     private updateWayPoints(): void {
         this._wayPoints = [];

@@ -200,4 +200,24 @@ describe('WayPoints Difference Service', () => {
         ];
         assertDivesWayPointsCompare(segments6_minutes11, segments4_minutes11, expected);
     });
+
+    it('Comparison returns cached diff', () => {
+        // irrelevant profiles
+        schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(segments3_minutes6);
+        schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(segments6_minutes11);
+        dispatcher.sendInfoCalculated(1);
+        dispatcher.sendInfoCalculated(2);
+        expect(sut.difference).toBe(sut.difference);
+    });
+
+    it('Recalculated even same profile refreshes diff', () => {
+        // irrelevant profiles
+        schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(segments3_minutes6);
+        schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(segments6_minutes11);
+        dispatcher.sendInfoCalculated(1);
+        dispatcher.sendInfoCalculated(2);
+        const first = sut.difference;
+        dispatcher.sendInfoCalculated(2);
+        expect(first).not.toBe(sut.difference);
+    });
 });

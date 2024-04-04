@@ -6,7 +6,6 @@ import { WayPointsService } from '../shared/waypoints.service';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
-import { ChartPlotterFactory } from '../shared/chartPlotter';
 import { ResamplingService } from '../shared/ResamplingService';
 
 describe('ProfileChartComponent', () => {
@@ -20,7 +19,7 @@ describe('ProfileChartComponent', () => {
                 WorkersFactoryCommon, ReloadDispatcher,
                 WayPointsService, SelectedWaypoint,
                 UnitConversion, DiveSchedules,
-                ChartPlotterFactory, ResamplingService
+                ResamplingService,
             ]
         });
 

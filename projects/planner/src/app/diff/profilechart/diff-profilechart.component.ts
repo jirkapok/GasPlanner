@@ -39,7 +39,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthEventLineColor('rgb(118,119,120)')
             .create(() => this.profileB);
 
-        this.plotter = new ChartPlotter('diveplot', chartPlotterFactory, profileBTraces, profileATraces);
+        this.plotter = new ChartPlotter('diveplotdiff', chartPlotterFactory, profileBTraces, profileATraces);
 
         this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {

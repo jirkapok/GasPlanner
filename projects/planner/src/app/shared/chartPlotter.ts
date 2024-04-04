@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import * as Plotly from 'plotly.js-basic-dist';
 import _ from 'lodash';
 import { UnitConversion } from './UnitConversion';
@@ -8,7 +7,7 @@ import { DateFormats } from './formaters';
 import { WayPoint } from './models';
 import { Ceiling, Event } from 'scuba-physics';
 
-@Injectable()
+/** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {
     public static readonly depthLineColorA = 'rgb(31, 119, 180)';
     public static readonly depthLineColorB = 'rgb(141, 143, 144)';

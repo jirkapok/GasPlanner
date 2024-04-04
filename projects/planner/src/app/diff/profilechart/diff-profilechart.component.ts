@@ -8,6 +8,8 @@ import { ChartPlotterFactory, ChartPlotter } from '../../shared/chartPlotter';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { ResamplingService } from '../../shared/ResamplingService';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -19,11 +21,13 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     private plotter: ChartPlotter;
 
     constructor(
-        chartPlotterFactory: ChartPlotterFactory,
+        units: UnitConversion,
+        resampling: ResamplingService,
         private selectedWaypoints: SelectedDiffWaypoint,
         private profileComparatorService: ProfileComparatorService) {
         super();
 
+        const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
         const profileATraces = chartPlotterFactory.wthNamePrefix('Profile A ')
             .create(() => this.profileA);
         const profileBTraces = chartPlotterFactory

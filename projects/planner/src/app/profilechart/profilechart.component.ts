@@ -9,6 +9,8 @@ import { Streamed } from '../shared/streamed';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { ChartPlotter, ChartPlotterFactory } from '../shared/chartPlotter';
+import { UnitConversion } from '../shared/UnitConversion';
+import { ResamplingService } from '../shared/ResamplingService';
 
 @Component({
     selector: 'app-profilechart',
@@ -21,12 +23,14 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private plotter: ChartPlotter;
 
     constructor(
-        chartPlotterFactory: ChartPlotterFactory,
+        units: UnitConversion,
+        resampling: ResamplingService,
         private selectedWaypoint: SelectedWaypoint,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
         super();
 
+        const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
         const profileTraces = chartPlotterFactory.wthNamePrefix('')
             .create(() => this.dive);
         this.plotter = new ChartPlotter('diveplot', chartPlotterFactory, profileTraces);

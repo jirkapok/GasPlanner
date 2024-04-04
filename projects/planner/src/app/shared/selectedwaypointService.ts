@@ -5,7 +5,7 @@ import { DateFormats } from './formaters';
 
 @Injectable()
 export class SelectedWaypoint {
-    @Output() public selectedChanged = new EventEmitter<WayPoint>();
+    @Output() public selectedChanged = new EventEmitter<WayPoint | undefined>();
     private lastSelected: WayPoint | undefined;
 
     constructor(private schedules: DiveSchedules) {}

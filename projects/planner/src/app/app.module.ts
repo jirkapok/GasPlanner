@@ -102,8 +102,7 @@ import { ProfileComparatorService } from './shared/diff/profileComparatorService
 import { GasesComparisonService } from './shared/diff/gases-comparison.service';
 import { ResultsComparison } from './shared/diff/results-comparison.service';
 import { SelectedDiffWaypoint } from './shared/diff/selected-diff-waypoint.service';
-import { ChartPlotterFactory } from './shared/chartPlotter';
-import { ResamplingService } from "./shared/ResamplingService";
+import { ResamplingService } from './shared/ResamplingService';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -212,8 +211,7 @@ const SERVICES = [
     ProfileComparatorService,
     GasesComparisonService,
     ResultsComparison,
-    ResamplingService,
-    ChartPlotterFactory
+    ResamplingService
 ];
 
 @NgModule({

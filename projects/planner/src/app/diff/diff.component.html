@@ -1,6 +1,10 @@
 <div class="mt-5">
     <div class="row"><app-diff-tabs></app-diff-tabs></div>
-
+    <div class="alert alert-info fade show mt-4" role="alert" *ngIf="!diff.hasTwoProfiles">
+        <fa-icon [icon]="exclamation" class="me-2 fa-lg"></fa-icon>
+        <span>There is only one dive planned. If you want to compare dives, define at least two.</span>
+        <button type="button" class="btn btn-sm btn-primary ms-2" data-bs-dismiss="alert" (click)="goToDashboard()">Go to planner</button>
+    </div>
     <div class="row">
         <div class="col-12 col-xl-6 col-xxl-6 mt-4 h-100">
             <app-diff-profilechart></app-diff-profilechart>

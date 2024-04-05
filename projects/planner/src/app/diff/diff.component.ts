@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { ProfileComparatorService } from '../shared/diff/profileComparatorService';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,10 +11,10 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 export class DiffComponent {
     public readonly exclamation = faExclamationCircle;
 
-    constructor(public diff: ProfileComparatorService, private location: Location) {
+    constructor(public diff: ProfileComparatorService, private router: Router) {
     }
 
-    public goToDashboard(): void {
-        this.location.go('/');
+    public async goToDashboard(): Promise<void> {
+        await this.router.navigate(['/']);
     }
 }

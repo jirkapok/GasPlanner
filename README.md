@@ -1,6 +1,8 @@
 # Dugong Gas planner
 
-This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations. Purpose of the application is to provide easy to use calculations. Works also on mobile devices in offline mode.
+This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations. 
+Purpose of the application is to provide easy to use calculations and help scuba divers to learn diving theory and formulas.
+Works also on mobile devices in offline mode. [Why Dugong?](./doc/whydugong.md)
 
 > **NOTE:** Running instance is available at **[https://dugong.online/](https://dugong.online/)**
 
@@ -11,7 +13,8 @@ None of the authors, contributors, administrators, or anyone else connected with
 ## Features
 
 * **Share dive plan** using url address
-* **Consumed gas charts**
+* **Compare dives**
+* Consumed gas charts
 * List of warnings with explanation
 * Open circuit repetitive multi-level dives
 * Multiple nitrox and Trimix/Helitrox gases/tanks

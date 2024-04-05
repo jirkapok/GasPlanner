@@ -63,6 +63,7 @@ Following list of features and improvements ordered by priority is under develop
 * Add export of the plan to pdf
 * Import/Export dive to compare from well known file format see also <https://www.npmjs.com/package/xml-js>
 * Add more variables to weight calculator (suits, BMI, tank material, water type)
+* Thalmann algorithm for deeper depths (https://indepthmag.com/thalmann-algorithm/)
 
 ## Bachelor/Master's thesis topic proposals
 

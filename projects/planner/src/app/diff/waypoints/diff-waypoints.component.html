@@ -6,9 +6,9 @@
         </div>
     </div>
     <div id="body" class="hide card-minheight card-max-height-md">
-        <app-calculating [show]="!profileDiff.bothResultsCalculated"></app-calculating>
+        <app-calculating [show]="!profileDiff.profilesCalculated"></app-calculating>
 
-        <table *ngIf="profileDiff.bothResultsCalculated"
+        <table *ngIf="profileDiff.profilesCalculated"
             id="waypointsDiffTable" class="table table-sm p-0 text-center table-hover" >
             <thead class="table-light sticky-top">
             <tr>

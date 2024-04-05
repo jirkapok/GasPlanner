@@ -104,6 +104,10 @@ export class ProfileComparatorService extends Streamed {
         return this.profileAResults.profileCalculated && this.profileBResults.profileCalculated;
     }
 
+    public get showConsumption(): boolean {
+        return this.profileAResults.showResults && this.profileBResults.showResults;
+    }
+
     private get wayPointsA(): WayPoint[]{
         return this.profileAResults.wayPoints;
     }

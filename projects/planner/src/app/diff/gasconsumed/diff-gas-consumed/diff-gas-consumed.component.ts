@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import { GasesComparisonService, ConsumedGasDifference } from '../../../shared/diff/gases-comparison.service';
+import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
 
 @Component({
     selector: 'app-diff-gas-consumed',
@@ -10,7 +11,7 @@ import { GasesComparisonService, ConsumedGasDifference } from '../../../shared/d
 export class GasConsumedDifferenceComponent {
     public icon = faSlidersH;
 
-    constructor(public gasesDiff: GasesComparisonService) {
+    constructor(public profileDif: ProfileComparatorService, public gasesDiff: GasesComparisonService) {
     }
 
     public get gasesDifference(): ConsumedGasDifference[] {

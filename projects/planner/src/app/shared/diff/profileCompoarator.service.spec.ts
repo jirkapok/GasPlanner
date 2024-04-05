@@ -114,11 +114,24 @@ describe('ProfileComparison service', () => {
             expect(sut.profilesCalculated).toBeFalsy();
         });
 
-        it('Profiles are already calculated', () => {
-            // TODO distinguish profile calculated, consumption and diveInfo
+        it('Dive profiles are already calculated', () => {
             sut.profileAResults.profileFinished();
             sut.profileBResults.profileFinished();
             expect(sut.profilesCalculated).toBeTruthy();
+        });
+
+        it('Dive results are already calculated', () => {
+            sut.profileAResults.diveInfoFinished();
+            sut.profileAResults.consumptionFinished();
+            sut.profileBResults.diveInfoFinished();
+            sut.profileBResults.consumptionFinished();
+            expect(sut.bothResultsCalculated).toBeTruthy();
+        });
+
+        it('Consumption are already calculated', () => {
+            sut.profileAResults.consumptionFinished();
+            sut.profileBResults.consumptionFinished();
+            expect(sut.showConsumption).toBeTruthy();
         });
     });
 

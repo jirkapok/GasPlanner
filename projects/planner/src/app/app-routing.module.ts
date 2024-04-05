@@ -21,13 +21,16 @@ import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
 import { DiffComponent } from './diff/diff.component';
 import { RedundanciesComponent } from './redundancies/redundancies.component';
 import { GasBlenderComponent } from './gas-blender/gas-blender.component';
+import { ManagedDiveSchedules } from './shared/managedDiveSchedules';
 
 const canActivateDashboard: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
     const router = inject(Router);
     const viewStates = inject(ViewStates);
-
+    const schedules = inject(ManagedDiveSchedules);
     // the only view with params is dashboard with only one dive
-    if (route.queryParamMap.keys.length === 0 && viewStates.redirectToView) {
+    const isEmptyAddress = route.queryParamMap.keys.length === 0 && schedules.empty;
+
+    if (isEmptyAddress && viewStates.redirectToView) {
         const target = `/${viewStates.lastView}`;
         const location = inject(Location);
         location.go(target);

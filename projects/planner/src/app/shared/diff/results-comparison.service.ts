@@ -8,24 +8,28 @@ import {
     faArrowDown, faArrowUp, faMinus, IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
 
-class ResultDiff {
+export class ResultDiff {
     private arrowUp: IconDefinition = faArrowUp;
     private arrowDown: IconDefinition = faArrowDown;
     private dash: IconDefinition = faMinus;
 
+    /**
+     * Provide lambdas to resolve current values when selection changes.
+     * We dont need to capture the results since recalculation is cheap.
+     * */
     constructor(
-        private profileA: DiveResults,
-        private profileB: DiveResults,
+        private profileA: () => DiveResults,
+        private profileB: () => DiveResults,
         private betterDirection: number,
         private valueAccessor: (result: DiveResults) => number,
     ) { }
 
     public get valueA(): number {
-        return this.valueAccessor(this.profileA);
+        return this.valueAccessor(this.profileA());
     }
 
     public get valueB(): number {
-        return this.valueAccessor(this.profileB);
+        return this.valueAccessor(this.profileB());
     }
 
     public get difference(): number {
@@ -61,23 +65,23 @@ class ResultDiff {
 
 @Injectable()
 export class ResultsComparison {
-    public totalDuration = new ResultDiff(this.profileA, this.profileB, 1,
+    public totalDuration = new ResultDiff(() => this.profileA, () => this.profileB, 1,
         d => d.totalDuration);
-    public timeToSurface = new ResultDiff(this.profileA, this.profileB, -1,
+    public timeToSurface = new ResultDiff(() => this.profileA, () => this.profileB, -1,
         d => d.timeToSurface);
-    public averageDepth = new ResultDiff(this.profileA, this.profileB, -1,
+    public averageDepth = new ResultDiff(() => this.profileA, () => this.profileB, -1,
         d => this.units.fromMeters(d.averageDepth));
-    public emergencyAscentStart = new ResultDiff(this.profileA, this.profileB, -1,
+    public emergencyAscentStart = new ResultDiff(() => this.profileA, () => this.profileB, -1,
         d => d.emergencyAscentStart);
-    public noDeco = new ResultDiff(this.profileA, this.profileB, 1,
+    public noDeco = new ResultDiff(() => this.profileA, () => this.profileB, 1,
         d => d.noDecoTime);
-    public maxTime = new ResultDiff(this.profileA, this.profileB, 1,
+    public maxTime = new ResultDiff(() => this.profileA, () => this.profileB, 1,
         d => d.maxTime);
-    public highestDensity = new ResultDiff(this.profileA, this.profileB, -1,
+    public highestDensity = new ResultDiff(() => this.profileA, () => this.profileB, -1,
         d => this.density(d));
-    public otu = new ResultDiff(this.profileA, this.profileB, -1,
+    public otu = new ResultDiff(() => this.profileA, () => this.profileB, -1,
         d => d.otu);
-    public cns = new ResultDiff(this.profileA, this.profileB, -1,
+    public cns = new ResultDiff(() => this.profileA, () => this.profileB, -1,
         d => d.cns);
 
     private readonly maxCns = 1000;

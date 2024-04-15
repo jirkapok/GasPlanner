@@ -251,13 +251,8 @@ export class PlanUrlSerialization {
     }
 
     public toUrl(): string {
-        if(this.schedules.hasMany) {
-            // unable to store more dives, the url would easily exceed maximum length
-            return '';
-        }
-
         // always use first dive, in case of multiple dives, we are unable to show the complete url
-        const dive = this.schedules.dives[0];
+        const dive = this.schedules.selected;
         const tanksParam = PlanUrlSerialization.toTanksParam(dive.tanksService.tanks);
         const depthsParam = PlanUrlSerialization.toDepthsParam(dive.depths.segments);
         const diParam = PlanUrlSerialization.toDiverParam(dive.optionsService.getDiver());
@@ -280,7 +275,7 @@ export class PlanUrlSerialization {
             const isValid = new PlanValidation(imperial).validate(parsed);
 
             if (isValid) {
-                this.preferences.applyLoaded(parsed);
+                this.preferences.addLoaded(parsed.dives[0]);
             } else {
                 Logger.warn('Unable to load planner from url parameters, due to invalid data.');
             }

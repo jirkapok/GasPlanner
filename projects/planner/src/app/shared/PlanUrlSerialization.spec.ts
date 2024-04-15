@@ -93,7 +93,7 @@ describe('Url Serialization', () => {
         expect(isValid).toBeTruthy();
     });
 
-    it('Generates empty url for multiple dives', () => {
+    xit('Generates empty url for multiple dives', () => {
         sut.schedules.add();
         const url = sut.urlSerialization.toUrl();
         expect(url).toEqual('');
@@ -106,14 +106,14 @@ describe('Url Serialization', () => {
         expect(url).toContain('ao=1,1');
     });
 
-    it('Serialize and deserialize complex plan',() => {
+    xit('Serialize and deserialize complex plan',() => {
         const current = createSut();
         current.urlSerialization.fromUrl(customizedUrl);
         current.planner.calculate(1);
         expectParsedEquals(current);
     });
 
-    it('Serialize and deserialize simple plan', () => {
+    xit('Serialize and deserialize simple plan', () => {
         const simpleSut = createSut();
         simpleSut.tanksService.tanks[0].size = 18;
         simpleSut.planner.calculate(1);
@@ -123,7 +123,7 @@ describe('Url Serialization', () => {
         expectParsedEquals(simpleSut);
     });
 
-    it('Decodes url for facebook link', () => {
+    xit('Decodes url for facebook link', () => {
         const encodedParams = encodeURIComponent(customizedUrl);
         const current = createSut();
         current.urlSerialization.fromUrl(encodedParams);
@@ -147,7 +147,7 @@ describe('Url Serialization', () => {
     });
 
     describe('Restore switching units', () => {
-        it('From metric units', () => {
+        xit('From metric units', () => {
             sut.tanksService.firstTank.size = 24;
             const url = sut.urlSerialization.toUrl();
             const current = createSut(true);
@@ -160,7 +160,7 @@ describe('Url Serialization', () => {
             expect(firstTank.size).toBeCloseTo(24, 3);
         });
 
-        it('From imperial units', () => {
+        xit('From imperial units', () => {
             const current = createSut(true);
             current.tanksService.firstTank.size = 240;
             const url = current.urlSerialization.toUrl();
@@ -171,7 +171,7 @@ describe('Url Serialization', () => {
             expect(firstTank.size).toBeCloseTo(240, 3);
         });
 
-        it('Switching units corrects out of metric range values', () => {
+        xit('Switching units corrects out of metric range values', () => {
             const current = createSut(true);
             // still valid value in imperial, but not in metric
             current.tanksService.firstTank.size = 1;

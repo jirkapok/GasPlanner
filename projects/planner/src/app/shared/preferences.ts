@@ -66,6 +66,11 @@ export class Preferences {
         diveSchedule.depths.loadFrom(setup.segments);
     }
 
+    public addLoaded(loaded: DiveDto): void {
+        const added = this.schedules.add();
+        this.loadDive(added, loaded);
+    }
+
     private applyDives(loaded: DiveDto[]): void {
         if(loaded.length > 0) {
             // consider better way than rebuild dives from scratch
@@ -73,8 +78,7 @@ export class Preferences {
             this.loadDive(this.schedules.dives[0], loaded[0]);
 
             for (let index = 1; index < loaded.length; index++) {
-                const added = this.schedules.add();
-                this.loadDive(added, loaded[index]);
+                this.addLoaded(loaded[index]);
             }
         }
     }

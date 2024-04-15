@@ -31,10 +31,10 @@ export class DashboardStartUp {
         } else {
             // the only view which loads from parameters instead of view state
             this.urlSerialization.fromUrl(query);
-            // cant do in constructor, since the state may be changed
-            this.viewStore.saveMainView();
         }
 
+        // cant do in constructor, since the state may be changed
+        this.viewStore.saveMainView();
         // in case it fails we need to reset the parameters
         // or in case of navigation to dashboard with only one dive
         this.updateQueryParams();

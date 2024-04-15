@@ -44,5 +44,10 @@ export class DashboardComponent extends Streamed implements OnInit {
                     this.startup.updateQueryParams();
                 }
             });
+
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                this.startup.updateQueryParams();
+            });
     }
 }

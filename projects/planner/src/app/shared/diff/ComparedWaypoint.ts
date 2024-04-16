@@ -24,12 +24,7 @@ export class ComparedWaypoint {
         this.durationB = this.wayPointB?.duration;
     }
 
-    private get endTime(): number {
-        const duration = this.durationA ?? this.durationB!;
-        return this.runTime + duration;
-    }
-
     public fits(timeStamp: number): boolean {
-        return this.runTime <= timeStamp && timeStamp < this.endTime;
+        return this.runTime >= timeStamp;
     }
 }

@@ -93,7 +93,9 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     private plotCharts(): void {
-        this.plotter.plotCharts(this.profileA.totalDuration);
+        const totalDuration = this.profileA.totalDuration > this.profileB.totalDuration ?
+            this.profileA.totalDuration : this.profileB.totalDuration;
+        this.plotter.plotCharts(totalDuration);
     }
 
     private hookChartEvents(): void {

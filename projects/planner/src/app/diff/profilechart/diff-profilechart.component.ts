@@ -69,8 +69,10 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     public ngOnInit(): void {
         void this.profileComparatorService.waitUntilProfilesCalculated().then(() => {
             this.plotCharts();
-            this.hookChartEvents();
         });
+
+        this.plotCharts();
+        this.hookChartEvents();
     }
 
     public plotlyHover(data: Plotly.PlotMouseEvent): void {

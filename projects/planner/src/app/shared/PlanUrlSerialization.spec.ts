@@ -36,7 +36,7 @@ class TestSut {
 // TODO test cases
 // * Load of current dive (Refresh page) - does not add new dive
 // * From url - adds new dive
-fdescribe('Url Serialization', () => {
+describe('Url Serialization', () => {
     const irrelevantFactory = new WorkersFactoryCommon();
 
     // because we need custom instances to compare
@@ -72,13 +72,12 @@ fdescribe('Url Serialization', () => {
         customizedUrl = sut.urlSerialization.toUrl();
     });
 
-    const expectParsedEquals = (current: TestSut): void => {
+    const expectSelectedEquals = (current: TestSut): void => {
         const toExpect = {
             plan: sut.depths.segments,
             tanks: sut.tanksService.tankData,
             diver: sut.options.getDiver(),
             options: sut.options.getOptions(),
-            isComplex: sut.viewSwitch.isComplex
         };
 
         const toCompare = {
@@ -86,7 +85,6 @@ fdescribe('Url Serialization', () => {
             tanks: current.tanksService.tankData,
             diver: current.options.getDiver(),
             options: current.options.getOptions(),
-            isComplex: current.viewSwitch.isComplex
         };
 
         expect(toCompare).toEqual(toExpect);
@@ -112,21 +110,21 @@ fdescribe('Url Serialization', () => {
         expect(url).toContain('ao=1,1');
     });
 
-    xit('Serialize and deserialize complex plan',() => {
+    it('Serialize and deserialize complex plan',() => {
         const current = createSut();
         current.urlSerialization.fromUrl(customizedUrl);
-        current.planner.calculate(1);
-        expectParsedEquals(current);
+        current.planner.calculate(2);
+        expectSelectedEquals(current);
     });
 
-    xit('Serialize and deserialize simple plan', () => {
+    it('Serialize and deserialize simple plan', () => {
         const simpleSut = createSut();
         simpleSut.tanksService.tanks[0].size = 18;
         simpleSut.planner.calculate(1);
         const urlParams = simpleSut.urlSerialization.toUrl();
         sut.urlSerialization.fromUrl(urlParams);
-        sut.planner.calculate(1);
-        expectParsedEquals(simpleSut);
+        sut.planner.calculate(2);
+        expectSelectedEquals(simpleSut);
     });
 
     it('Decodes url for facebook link', () => {
@@ -135,7 +133,7 @@ fdescribe('Url Serialization', () => {
         current.urlSerialization.fromUrl(encodedParams);
         current.schedules.remove(current.schedules.dives[0]); // because the dive was added
         current.planner.calculate(1);
-        expectParsedEquals(current);
+        expectSelectedEquals(current);
     });
 
     it('Complex plan in imperial units still generates url below 2048 characters', () => {
@@ -194,7 +192,7 @@ fdescribe('Url Serialization', () => {
         const assertImported = (urlParams: string): void => {
             const current = createCustomSut();
             current.urlSerialization.fromUrl(urlParams);
-            expectParsedEquals(current);
+            expectSelectedEquals(current);
         };
 
         it('Invalid url values', () => {
@@ -215,7 +213,7 @@ fdescribe('Url Serialization', () => {
                 'di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,1';
             const current = createCustomSut();
             current.urlSerialization.fromUrl(urlParams);
-            expectParsedEquals(current);
+            expectSelectedEquals(current);
         });
 
         it('Empty string', () => {

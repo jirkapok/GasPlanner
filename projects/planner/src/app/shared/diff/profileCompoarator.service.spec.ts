@@ -94,22 +94,6 @@ describe('ProfileComparison service', () => {
     });
 
     describe('Handles only calculated profiles', () => {
-        // TODO switch waitUntilProfilesCalculated to use events from Dispatcher the drawing components
-        it('Waits until profiles are calculated', async() => {
-            let eventReceived = false;
-            sut.profileAResults.showStillRunning();
-
-            setTimeout(() => {
-                sut.profileAResults.profileFinished();
-            }, 110); // more than the service waits
-
-            await sut.waitUntilProfilesCalculated().then(() => {
-                eventReceived = true;
-            });
-
-            expect(eventReceived).toBeTruthy();
-        });
-
         it('By default Not calculated profiles', () => {
             expect(sut.profilesCalculated).toBeFalsy();
         });

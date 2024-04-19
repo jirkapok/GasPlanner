@@ -127,17 +127,6 @@ export class ProfileComparatorService extends Streamed {
         this._onSelectionChanged.next();
     }
 
-    public waitUntilProfilesCalculated(): Promise<void> {
-        return new Promise<void>((resolve) => {
-            const interval = setInterval(() => {
-                if(this.profilesCalculated){
-                    clearInterval(interval);
-                    resolve();
-                }
-            }, 100);
-        });
-    }
-
     private resetSelection(): void {
         const maxIndex = this.schedules.length;
 

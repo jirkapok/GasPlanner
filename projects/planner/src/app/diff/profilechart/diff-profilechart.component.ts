@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import { DiveResults } from '../../shared/diveresults';
@@ -10,6 +10,7 @@ import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.s
 import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
+import {ReloadDispatcher} from '../../shared/reloadDispatcher';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -24,7 +25,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         units: UnitConversion,
         resampling: ResamplingService,
         private selectedWaypoints: SelectedDiffWaypoint,
-        private profileComparatorService: ProfileComparatorService) {
+        private profileComparatorService: ProfileComparatorService,
+        private reloadDispatcher: ReloadDispatcher) {
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
@@ -52,6 +54,14 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .subscribe((selected: ComparedWaypoint) => {
                 this.selectWayPoint(selected);
             });
+
+        this.reloadDispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                if (this.profilesCalculated) {
+                    this.plotCharts();
+                    this.hookChartEvents();
+                }
+            });
     }
 
     public get profilesCalculated(): boolean {
@@ -67,12 +77,10 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     public ngOnInit(): void {
-        void this.profileComparatorService.waitUntilProfilesCalculated().then(() => {
+        if (this.profilesCalculated) {
             this.plotCharts();
-        });
-
-        this.plotCharts();
-        this.hookChartEvents();
+            this.hookChartEvents();
+        }
     }
 
     public plotlyHover(data: Plotly.PlotMouseEvent): void {

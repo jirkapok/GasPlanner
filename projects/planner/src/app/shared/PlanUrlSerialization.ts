@@ -6,7 +6,7 @@ import {
 import { PlanValidation } from './PlanValidation';
 import { Preferences } from './preferences';
 import {
-    AppPreferencesDto, DiverDto, OptionsDto, SegmentDto, TankDto
+    AppPreferencesDto, DiveDto, DiverDto, OptionsDto, SegmentDto, TankDto
 } from './serialization.model';
 import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
@@ -251,8 +251,13 @@ export class PlanUrlSerialization {
     }
 
     public toUrl(): string {
+        const diveId = this.schedules.selected.id;
+        return this.toUrlFor(diveId);
+    }
+
+    public toUrlFor(diveId: number): string {
         // always use first dive, in case of multiple dives, we are unable to show the complete url
-        const dive = this.schedules.selected;
+        const dive = this.schedules.byId(diveId)!;
         const tanksParam = PlanUrlSerialization.toTanksParam(dive.tanksService.tanks);
         const depthsParam = PlanUrlSerialization.toDepthsParam(dive.depths.segments);
         const diParam = PlanUrlSerialization.toDiverParam(dive.optionsService.getDiver());
@@ -275,13 +280,33 @@ export class PlanUrlSerialization {
             const isValid = new PlanValidation(imperial).validate(parsed);
 
             if (isValid) {
-                this.preferences.addLoaded(parsed.dives[0]);
+                this.applyDiveUrl(decodedUrl, parsed);
             } else {
                 Logger.warn('Unable to load planner from url parameters, due to invalid data.');
             }
         } catch {
             Logger.warn('Failed loading of planner from url parameters.');
         }
+    }
+
+    private applyDiveUrl(url: string, parsed: AppPreferencesDto): void {
+        const foundByUrl = _(this.schedules.dives).find(d => {
+            const currentUrl = this.toUrlFor(d.id);
+            return url === currentUrl; // TODO we need to ignore the units and complex view
+        });
+
+        if (!foundByUrl) {
+            this.preferences.addLoaded(parsed.dives[0]);
+            if (parsed.options.isComplex) {
+                this.viewSwitch.isComplex = true;
+            }
+
+            return;
+        }
+
+        // TODO do we need set selected, because if the dive is there,
+        //  we know it is present dive any way and selected should be loaded during strartup
+        this.schedules.selected = foundByUrl;
     }
 
     private toAppOptions(): string {

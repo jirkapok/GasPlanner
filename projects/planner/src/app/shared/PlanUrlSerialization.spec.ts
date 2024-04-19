@@ -11,18 +11,32 @@ import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 
-interface TestSut {
-    schedules: DiveSchedules;
-    options: OptionsService;
-    depths: DepthsService;
-    tanksService: TanksService;
-    planner: PlannerService;
-    viewSwitch: ViewSwitchService;
-    units: UnitConversion;
-    urlSerialization: PlanUrlSerialization;
+class TestSut {
+    constructor(
+        public schedules: DiveSchedules,
+        public planner: PlannerService,
+        public viewSwitch: ViewSwitchService,
+        public units: UnitConversion,
+        public urlSerialization: PlanUrlSerialization) {
+    }
+
+    public get options(): OptionsService {
+        return this.schedules.selectedOptions;
+    }
+
+    public get depths(): DepthsService {
+        return this.schedules.selectedDepths;
+    }
+
+    public get tanksService(): TanksService {
+        return this.schedules.selectedTanks;
+    }
 }
 
-describe('Url Serialization', () => {
+// TODO test cases
+// * Load of current dive (Refresh page) - does not add new dive
+// * From url - adds new dive
+fdescribe('Url Serialization', () => {
     const irrelevantFactory = new WorkersFactoryCommon();
 
     // because we need custom instances to compare
@@ -37,17 +51,7 @@ describe('Url Serialization', () => {
         const urlSerialization = new PlanUrlSerialization(viewSwitch, units, schedules, preferences);
         const firstDive = schedules.dives[0];
         firstDive.depths.setSimple();
-
-        return {
-            schedules: schedules,
-            options: firstDive.optionsService,
-            depths: firstDive.depths,
-            tanksService: firstDive.tanksService,
-            planner: planner,
-            viewSwitch: viewSwitch,
-            units: units,
-            urlSerialization: urlSerialization
-        };
+        return new TestSut(schedules, planner, viewSwitch, units,  urlSerialization);
     };
 
     const createCustomSut = () => {
@@ -93,10 +97,12 @@ describe('Url Serialization', () => {
         expect(isValid).toBeTruthy();
     });
 
-    xit('Generates empty url for multiple dives', () => {
+    it('Generates url of selected dive for multiple dives', () => {
         sut.schedules.add();
+        sut.schedules.selected = sut.schedules.dives[0];
         const url = sut.urlSerialization.toUrl();
-        expect(url).toEqual('');
+        const urlExpected = sut.urlSerialization.toUrlFor(sut.schedules.dives[0].id);
+        expect(urlExpected).toEqual(url);
     });
 
     it('Serialize application options', () => {
@@ -123,10 +129,11 @@ describe('Url Serialization', () => {
         expectParsedEquals(simpleSut);
     });
 
-    xit('Decodes url for facebook link', () => {
+    it('Decodes url for facebook link', () => {
         const encodedParams = encodeURIComponent(customizedUrl);
         const current = createSut();
         current.urlSerialization.fromUrl(encodedParams);
+        current.schedules.remove(current.schedules.dives[0]); // because the dive was added
         current.planner.calculate(1);
         expectParsedEquals(current);
     });

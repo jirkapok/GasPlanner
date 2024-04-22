@@ -179,7 +179,7 @@ describe('Url Serialization', () => {
         });
     });
 
-    fdescribe('Load dive by Url', () => {
+    describe('Load dive by Url', () => {
         it('Does not add new dive on Refresh', () => {
             const currentSimple = createSimplePlan();
             currentSimple.urlSerialization.fromUrl(simpleViewUrl);

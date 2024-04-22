@@ -124,6 +124,10 @@ export class PlanValidation {
         const depthRange: [number, number] = [0, this.ranges.depth[1]];
         const startValid = this.isLengthInRange(segment.startDepth, depthRange);
         const endValid = this.isLengthInRange(segment.endDepth, depthRange);
+        // TODO invalid profile to 15 m/60 min created in simple view
+        // seems to better allow UI to add profile with 0 min duration, since 0,1min = 6 seconds
+        // which still does not prevent shorter descent than 6 seconds created by profile factory.
+        // http://localhost:4200/?t=1-15-0-200-0.209-0,2-11.1-0-200-1-0&de=0-15-54-1,15-15-3546-1&di=20&o=0,9,9,9,3,18,2,0.85,0.4,5,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
         const durationValid = this.isInRange(segment.duration, durationRange);
         const gasValid = this.isValidGas(segment.gas, contentRanges);
         return tankValid && startValid && endValid && durationValid && gasValid;

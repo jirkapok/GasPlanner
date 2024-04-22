@@ -33,9 +33,6 @@ class TestSut {
     }
 }
 
-// TODO test cases
-// * Load of current dive (Refresh page) - does not add new dive
-// * From url - adds new dive
 describe('Url Serialization', () => {
     const irrelevantFactory = new WorkersFactoryCommon();
 
@@ -179,6 +176,31 @@ describe('Url Serialization', () => {
             currentComplex.planner.calculate(2);
             expectSelectedEquals(currentComplex, complexSut);
             expect(currentComplex.viewSwitch.isComplex).toBeTruthy();
+        });
+    });
+
+    fdescribe('Load dive by Url', () => {
+        it('Does not add new dive on Refresh', () => {
+            const currentSimple = createSimplePlan();
+            currentSimple.urlSerialization.fromUrl(simpleViewUrl);
+            currentSimple.urlSerialization.fromUrl(simpleViewUrl);
+            currentSimple.urlSerialization.fromUrl(simpleViewUrl);
+            expect(currentSimple.schedules.length).toEqual(1);
+        });
+
+        it('Adds new dive', () => {
+            const currentSimple = createSimpleSut();
+            currentSimple.urlSerialization.fromUrl(simpleViewUrl);
+            currentSimple.urlSerialization.fromUrl(simpleViewUrl);
+            expect(currentSimple.schedules.length).toEqual(2);
+        });
+
+        it('Ignores complex view flag when searching for current dive', () => {
+            const currentSimple = createSimplePlan();
+            currentSimple.viewSwitch.isComplex = true;
+            currentSimple.urlSerialization.fromUrl(simpleViewUrl);
+            currentSimple.urlSerialization.fromUrl(simpleViewUrl);
+            expect(currentSimple.schedules.length).toEqual(1);
         });
     });
 

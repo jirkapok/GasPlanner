@@ -256,15 +256,9 @@ export class PlanUrlSerialization {
     }
 
     public toUrlFor(diveId: number): string {
-        // always use first dive, in case of multiple dives, we are unable to show the complete url
-        const dive = this.schedules.byId(diveId)!;
-        const tanksParam = PlanUrlSerialization.toTanksParam(dive.tanksService.tanks);
-        const depthsParam = PlanUrlSerialization.toDepthsParam(dive.depths.segments);
-        const diParam = PlanUrlSerialization.toDiverParam(dive.optionsService.getDiver());
-        const optionsParam = PlanUrlSerialization.toOptionsParam(dive.optionsService.getOptions());
+        const diveUrl = this.toDiveUrl(diveId);
         const appOptions = this.toAppOptions();
-        const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}&ao=${appOptions}`;
-        return result;
+        return `${diveUrl}&ao=${appOptions}`;
     }
 
     public fromUrl(url: string): void {
@@ -291,8 +285,8 @@ export class PlanUrlSerialization {
 
     private applyDiveUrl(url: string, parsed: AppPreferencesDto): void {
         const foundByUrl = _(this.schedules.dives).find(d => {
-            const currentUrl = this.toUrlFor(d.id);
-            return url === currentUrl; // TODO we need to ignore the units and complex view
+            const currentUrl = this.toDiveUrl(d.id);
+            return url.includes(currentUrl); // url is always in metric, so it is ok compare different units
         });
 
         if (!foundByUrl) {
@@ -313,5 +307,16 @@ export class PlanUrlSerialization {
         const isComplex = ParseContext.serializeBoolean(this.viewSwitch.isComplex);
         const imperial = ParseContext.serializeBoolean(this.units.imperialUnits);
         return `${isComplex},${imperial}`;
+    }
+
+    private toDiveUrl(diveId: number): string {
+        // always use first dive, in case of multiple dives, we are unable to show the complete url
+        const dive = this.schedules.byId(diveId)!;
+        const tanksParam = PlanUrlSerialization.toTanksParam(dive.tanksService.tanks);
+        const depthsParam = PlanUrlSerialization.toDepthsParam(dive.depths.segments);
+        const diParam = PlanUrlSerialization.toDiverParam(dive.optionsService.getDiver());
+        const optionsParam = PlanUrlSerialization.toOptionsParam(dive.optionsService.getOptions());
+        const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}`;
+        return result;
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "scuba-physics",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "peerDependencies": {
     "@angular/common": "^17.2.1",
     "@angular/core": "^17.2.1"

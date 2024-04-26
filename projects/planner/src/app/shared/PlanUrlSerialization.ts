@@ -298,8 +298,6 @@ export class PlanUrlSerialization {
             return;
         }
 
-        // TODO do we need set selected, because if the dive is there,
-        //  we know it is present dive any way and selected should be loaded during strartup
         this.schedules.selected = foundByUrl;
     }
 

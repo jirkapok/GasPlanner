@@ -13,6 +13,7 @@ import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
 import { DiveSchedules } from './dive.schedules';
 import { Logger } from './Logger';
+import { SettingsNormalizationService } from './settings-normalization.service';
 
 class ParseContext {
     private static readonly trueValue = '1';
@@ -81,6 +82,7 @@ export class PlanUrlSerialization {
     constructor(
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
+        private normalization: SettingsNormalizationService,
         private schedules: DiveSchedules,
         private preferences: Preferences
     ) { }
@@ -300,11 +302,16 @@ export class PlanUrlSerialization {
         const diveUrl = this.subtractDiveUrl(url);
         const foundByUrl = _(this.schedules.dives).find(d => {
             const currentUrl = this.toDiveUrl(d.id);
-            return diveUrl === currentUrl; // url is always in metric, so it is ok compare different units
+            // url is always in metric, so it is ok compare different units
+            // But never finds similar dive in different units, since the values arent rounded or normalized yet
+            return diveUrl === currentUrl;
         });
 
         if (!foundByUrl) {
-            this.preferences.addLoaded(parsed.dives[0]);
+            // the loaded dive was valid in its original units, so normalization fixes the range.
+            const added = this.preferences.addLoaded(parsed.dives[0]);
+            // this.normalization.applyDive(added);
+
             if (parsed.options.isComplex) {
                 this.viewSwitch.isComplex = true;
             }

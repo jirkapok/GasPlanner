@@ -5,27 +5,30 @@ import { TanksService } from './tanks.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 import { ViewStates } from './viewStates';
 import { DepthsService } from './depths.service';
-import { DiveSchedules } from './dive.schedules';
+import { DiveSchedule, DiveSchedules } from './dive.schedules';
 
 @Injectable()
 export class SettingsNormalizationService {
     constructor(
         private units: UnitConversion,
         private schedules: DiveSchedules,
-        private views: ViewStates) { }
+        private views: ViewStates
+    ) { }
 
     private get ranges(): RangeConstants {
         return this.units.ranges;
     }
 
     public apply(): void {
-        this.schedules.dives.forEach(d => {
-            this.applyToOptions(d.optionsService);
-            this.normalizeTanks(d.tanksService);
-            this.normalizeSegments(d.depths);
-        });
-
+        this.schedules.dives.forEach(d => this.applyDive(d));
+        // TODO consider move outside to be able use this method to restore dives
         this.views.reset();
+    }
+
+    public applyDive(dive: DiveSchedule): void {
+        this.applyToOptions(dive.optionsService);
+        this.normalizeTanks(dive.tanksService);
+        this.normalizeSegments(dive.depths);
     }
 
     private applyToOptions(options: OptionsService): void {
@@ -63,7 +66,14 @@ export class SettingsNormalizationService {
             // otherwise loosing precision in metric, where the value is even not relevant
             if(this.units.imperialUnits) {
                 const size = tank.size;
-                t.workingPressure = defaultTanks.primary.workingPressure;
+
+                // reset only in case switching to imperial
+                if(t.workingPressure === 0) {
+                    t.workingPressure = defaultTanks.primary.workingPressure;
+                }
+
+                // may cause rounding of size, but this happens in when loading metric dive to imperial units
+                t.workingPressureBars = this.fitPressureToRange(t.workingPressureBars, this.ranges.tankPressure);
                 // to keep it aligned with previous value in bars
                 t.size = this.units.fromTankLiters(size, t.workingPressureBars);
             } else {
@@ -72,8 +82,7 @@ export class SettingsNormalizationService {
 
             // the rest (consumed and reserve) will be calculated
             tank.startPressure = this.fitPressureToRange(tank.startPressure, this.ranges.tankPressure);
-            const workingPressureBars = this.units.toBar(t.workingPressure);
-            tank.size = this.fitTankSizeToRange(tank.size, workingPressureBars, this.ranges.tankSize);
+            tank.size = this.fitTankSizeToRange(tank.size, t.workingPressureBars, this.ranges.tankSize);
         });
     }
 

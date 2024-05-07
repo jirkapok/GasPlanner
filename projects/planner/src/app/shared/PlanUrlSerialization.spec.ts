@@ -10,6 +10,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
+import { SettingsNormalizationService } from './settings-normalization.service';
 
 class TestSut {
     constructor(
@@ -45,7 +46,8 @@ describe('Url Serialization', () => {
         const viewSwitch = new ViewSwitchService(schedules);
         const planner = new PlannerService(schedules, dispatcher, viewSwitch, irrelevantFactory, units);
         const preferences = new Preferences(viewSwitch, units, schedules, new ViewStates());
-        const urlSerialization = new PlanUrlSerialization(viewSwitch, units, schedules, preferences);
+        const normalization = new SettingsNormalizationService(units, schedules, new ViewStates());
+        const urlSerialization = new PlanUrlSerialization(viewSwitch, units, normalization, schedules, preferences);
         const firstDive = schedules.dives[0];
         firstDive.depths.setSimple();
         return new TestSut(schedules, planner, viewSwitch, units,  urlSerialization);
@@ -231,9 +233,8 @@ describe('Url Serialization', () => {
         });
     });
 
-    // TODO fix restore url from imperial units
     describe('Switching units', () => {
-        xit('From metric units', () => {
+        it('From metric units', () => {
             complexSut.tanksService.firstTank.size = 24;
             const url = complexSut.urlSerialization.toUrl();
             const current = createSimpleSut(true);
@@ -242,26 +243,26 @@ describe('Url Serialization', () => {
 
             const firstTank = current.tanksService.firstTank;
             // since working pressure is the main difference and affects size
-            expect(firstTank.workingPressureBars).toBeCloseTo(0, 3);
-            expect(firstTank.size).toBeCloseTo(24, 3);
+            expect(firstTank.workingPressure).toBeCloseTo(3442, 3);
+            expect(firstTank.tank.size).toBeCloseTo(23.995, 3);
         });
 
-        xit('From imperial units', () => {
-            const current = createSimpleSut(true);
-            current.tanksService.firstTank.size = 240;
-            const url = current.urlSerialization.toUrl();
+        it('From imperial units', () => {
+            const source = createSimpleSut(true);
+            source.tanksService.firstTank.size = 240;
+            const url = source.urlSerialization.toUrl();
             complexSut.urlSerialization.fromUrl(url);
 
             const firstTank = complexSut.tanksService.firstTank;
-            expect(firstTank.workingPressure).toBeCloseTo(3442, 3);
-            expect(firstTank.size).toBeCloseTo(240, 3);
+            expect(firstTank.workingPressure).toBeCloseTo(0);
+            expect(firstTank.size).toBeCloseTo(28.6, 3);
         });
 
-        xit('Switching units corrects out of metric range values', () => {
-            const current = createSimpleSut(true);
+        it('Switching units corrects out of metric range values', () => {
+            const source = createSimpleSut(true);
             // still valid value in imperial, but not in metric
-            current.tanksService.firstTank.size = 1;
-            const url = current.urlSerialization.toUrl();
+            source.tanksService.firstTank.size = 1;
+            const url = source.urlSerialization.toUrl();
             complexSut.urlSerialization.fromUrl(url);
 
             const firstTank = complexSut.tanksService.firstTank;

@@ -106,6 +106,14 @@ describe('SettingsNormalizationService', () => {
             const workingPressure = tankService.firstTank.workingPressure;
             expect(workingPressure).toBeCloseTo(3442, 6);
         });
+
+        it('Preserves current working pressure', () => {
+            // when loading from url
+            tankService.firstTank.workingPressure = 2000;
+            service.apply();
+            const workingPressure = tankService.firstTank.workingPressure;
+            expect(workingPressure).toBeCloseTo(2000, 6);
+        });
     });
 
     describe('Metric units', () => {

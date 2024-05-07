@@ -23,7 +23,12 @@ export class Preferences {
 
     private static loadWorkingPressure(source: TankDto[], target: ITankBound[]): void {
         for (let index = 0; index < target.length; index++) {
-            target[index].workingPressureBars = source[index].workPressure;
+            const loadedWorkingPressure = source[index].workPressure;
+
+            // to prevent load 0 in imperial units, for metrics, 0 is default anyway
+            if(loadedWorkingPressure > 0) {
+                target[index].workingPressureBars = loadedWorkingPressure;
+            }
         }
     }
 
@@ -45,15 +50,6 @@ export class Preferences {
         }
     }
 
-    public applyLoaded(loaded: AppPreferencesDto): void {
-        // first apply units to prevent loading of invalid values
-        this.units.imperialUnits = loaded.options.imperialUnits;
-        this.applyDives(loaded.dives);
-        // now we are able to switch the view
-        this.viewSwitch.isComplex = loaded.options.isComplex;
-        // not using normalization to fix values here, because expecting they are valid
-    }
-
     public toDive(): DiveDto {
         return this.toDiveFrom(this.schedules.selected);
     }
@@ -70,9 +66,19 @@ export class Preferences {
         }
     }
 
-    public addLoaded(loaded: DiveDto): void {
+    public addLoaded(loaded: DiveDto): DiveSchedule {
         const added = this.schedules.add();
         this.loadDive(added, loaded);
+        return added;
+    }
+
+    private applyLoaded(loaded: AppPreferencesDto): void {
+        // first apply units to prevent loading of invalid values
+        this.units.imperialUnits = loaded.options.imperialUnits;
+        this.applyDives(loaded.dives);
+        // now we are able to switch the view
+        this.viewSwitch.isComplex = loaded.options.isComplex;
+        // not using normalization to fix values here, because expecting they are valid
     }
 
     private applyDives(loaded: DiveDto[]): void {

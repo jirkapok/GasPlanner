@@ -310,7 +310,7 @@ export class PlanUrlSerialization {
         if (!foundByUrl) {
             // the loaded dive was valid in its original units, so normalization fixes the range.
             const added = this.preferences.addLoaded(parsed.dives[0]);
-            // this.normalization.applyDive(added);
+            this.normalization.applyDive(added);
 
             if (parsed.options.isComplex) {
                 this.viewSwitch.isComplex = true;

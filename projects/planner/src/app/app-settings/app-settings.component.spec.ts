@@ -70,8 +70,8 @@ describe('App settings component', () => {
             expect(options.diverOptions.rmv).toBeCloseTo(29.998867, 6);
         });
 
-        it('Applies recreational options', () => {
-            expect(options.maxEND).toBeCloseTo(100, 4);
+        it('Rounds END', () => {
+            expect(options.maxEND).toBeCloseTo(98, 4);
         });
 
         it('Applies units change', inject([UnitConversion],

@@ -53,8 +53,14 @@ export class SettingsNormalizationService {
 
     private normalizeOptions(options: OptionsService): void {
         const altitudeRange = this.ranges.altitude;
+        const speedRange = this.ranges.speed;
         options.altitude = this.fitUnit(u => u, v => v, options.altitude, altitudeRange);
-        options.useRecreational(); // to round usage of options to nice values
+        options.ascentSpeed50perc = this.fitUnit(u => u, v => v, options.ascentSpeed50perc, speedRange);
+        options.ascentSpeed50percTo6m = this.fitUnit(u => u, v => v, options.ascentSpeed50percTo6m, speedRange);
+        options.ascentSpeed6m = this.fitUnit(u => u, v => v, options.ascentSpeed6m, speedRange);
+        options.descentSpeed = this.fitUnit(u => u, v => v, options.descentSpeed, speedRange);
+        options.lastStopDepth = this.fitUnit(u => u, v => v, options.lastStopDepth, this.ranges.lastStopDepth);
+        options.maxEND = this.fitUnit(u => u, v => v, options.maxEND, this.ranges.narcoticDepth);
     }
 
     private normalizeTanks(tanksService: TanksService): void {

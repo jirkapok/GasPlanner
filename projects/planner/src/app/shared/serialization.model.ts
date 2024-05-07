@@ -26,6 +26,7 @@ export interface DiveDto {
     diver: DiverDto;
     tanks: TankDto[];
     plan: SegmentDto[];
+    surfaceInterval?: number;
 }
 
 /**

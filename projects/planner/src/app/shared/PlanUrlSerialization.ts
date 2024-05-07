@@ -6,7 +6,7 @@ import {
 import { PlanValidation } from './PlanValidation';
 import { Preferences } from './preferences';
 import {
-    AppPreferencesDto, DiveDto, DiverDto, OptionsDto, SegmentDto, TankDto
+    AppPreferencesDto, DiverDto, OptionsDto, SegmentDto, TankDto
 } from './serialization.model';
 import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
@@ -28,6 +28,16 @@ class ParseContext {
 
     public static deserializeBoolean(value: string): boolean {
         return (value === ParseContext.trueValue);
+    }
+
+    public parseNullableNumber(index: number): number | undefined {
+        const toParse = this.paramValues[index];
+
+        if(toParse === '') {
+            return undefined;
+        }
+
+        return Number(toParse);
     }
 
     public parseNumber(index: number): number {
@@ -82,6 +92,8 @@ export class PlanUrlSerialization {
         const diverParam = params.get('di') || '';
         const tanksParam = params.get('t') || '';
         const depthsParam = params.get('de') || '';
+        const siParam = params.get('si') || '';
+        const siContext = new ParseContext(siParam, ',');
 
         const tanks = PlanUrlSerialization.fromTanksParam(tanksParam);
         const parsed: AppPreferencesDto = {
@@ -91,6 +103,7 @@ export class PlanUrlSerialization {
                 diver: PlanUrlSerialization.fromDiverParam(diverParam),
                 tanks: tanks,
                 plan: PlanUrlSerialization.fromDepthsParam(tanks, depthsParam),
+                surfaceInterval: siContext.parseNullableNumber(0)
             }]
         };
 
@@ -284,9 +297,10 @@ export class PlanUrlSerialization {
     }
 
     private applyDiveUrl(url: string, parsed: AppPreferencesDto): void {
+        const diveUrl = this.subtractDiveUrl(url);
         const foundByUrl = _(this.schedules.dives).find(d => {
             const currentUrl = this.toDiveUrl(d.id);
-            return url.includes(currentUrl); // url is always in metric, so it is ok compare different units
+            return diveUrl === currentUrl; // url is always in metric, so it is ok compare different units
         });
 
         if (!foundByUrl) {
@@ -299,6 +313,15 @@ export class PlanUrlSerialization {
         }
 
         this.schedules.selected = foundByUrl;
+    }
+
+    private subtractDiveUrl(url: string): string {
+        const appOptionsIndex = url.indexOf('&ao=');
+        if(appOptionsIndex > 0) {
+            return url.substring(0, appOptionsIndex);
+        }
+
+        return url;
     }
 
     private toAppOptions(): string {
@@ -314,7 +337,12 @@ export class PlanUrlSerialization {
         const depthsParam = PlanUrlSerialization.toDepthsParam(dive.depths.segments);
         const diParam = PlanUrlSerialization.toDiverParam(dive.optionsService.getDiver());
         const optionsParam = PlanUrlSerialization.toOptionsParam(dive.optionsService.getOptions());
-        const result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}`;
+        let result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}`;
+
+        if(!dive.primary) {
+            result += `&si=${dive.surfaceInterval}`;
+        }
+
         return result;
     }
 }

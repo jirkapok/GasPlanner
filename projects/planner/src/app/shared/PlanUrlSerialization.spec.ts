@@ -204,6 +204,33 @@ describe('Url Serialization', () => {
         });
     });
 
+    describe('Surface interval', () => {
+        it('Creates 1. dive url without surface interval ', () => {
+            const sut = createSimplePlan();
+            const diveUrl = sut.urlSerialization.toUrlFor(1);
+            expect(diveUrl.indexOf('&si=')).toEqual(-1);
+        });
+
+        it('Creates 2. dive url with surface interval ', () => {
+            const sut = createSimplePlan();
+            const dive = sut.schedules.add();
+            dive.apply30MinutesSurfaceInterval(); // default dive has no surface interval
+            const diveUrl = sut.urlSerialization.toUrlFor(dive.id);
+            expect(diveUrl.indexOf('&si=')).not.toEqual(-1);
+        });
+
+        it('Restores dive surface interval', () => {
+            const source = createSimpleSut();
+            const dive = source.schedules.add();
+            dive.apply30MinutesSurfaceInterval();
+            const urlWithSurfaceInterval = source.urlSerialization.toUrlFor(dive.id);
+            const current = createSimpleSut();
+            current.urlSerialization.fromUrl(urlWithSurfaceInterval);
+            expect(current.schedules.length).toEqual(2);
+            expect(current.schedules.dives[1].surfaceInterval).toEqual(1800);
+        });
+    });
+
     // TODO fix restore url from imperial units
     describe('Switching units', () => {
         xit('From metric units', () => {

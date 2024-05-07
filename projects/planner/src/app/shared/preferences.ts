@@ -64,6 +64,10 @@ export class Preferences {
         diveSchedule.tanksService.loadFrom(setup.tanks);
         Preferences.loadWorkingPressure(loadedDive.tanks, diveSchedule.tanksService.tanks);
         diveSchedule.depths.loadFrom(setup.segments);
+
+        if(loadedDive.surfaceInterval) {
+            diveSchedule.surfaceInterval = loadedDive.surfaceInterval;
+        }
     }
 
     public addLoaded(loaded: DiveDto): void {
@@ -102,11 +106,13 @@ export class Preferences {
     }
 
     private toDiveFrom(dive: DiveSchedule): DiveDto {
+        const surfaceInterval = !dive.primary ? dive.surfaceInterval : undefined;
         return {
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
             diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
             tanks: DtoSerialization.fromTanks(dive.tanksService.tanks as ITankBound[]),
             plan: DtoSerialization.fromSegments(dive.depths.segments),
+            surfaceInterval: surfaceInterval
         };
     }
 

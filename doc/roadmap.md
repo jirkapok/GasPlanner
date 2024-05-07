@@ -7,7 +7,6 @@ Following list of features and improvements ordered by priority is under develop
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
-* sharing of profile with url from other units than configured in settings fails
 
 ## Improvements / Features
 
@@ -19,9 +18,6 @@ Following list of features and improvements ordered by priority is under develop
     * https://progressier.com/
     * https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers
     * https://developers.google.com/codelabs/pwa-training/pwa03--going-offline#1)
-* Allow user to compare multiple plans side by side
-  * Fix remaining TODOs in the Diff
-  * Add save/load for selected dives
 * UI Tweaks
     * Profile:
         * Waypoints table: add switch in case user is switching to tank with the same gas

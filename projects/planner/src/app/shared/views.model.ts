@@ -76,6 +76,13 @@ export interface WeightViewState extends ViewState {
     consumed: number;
 }
 
+export interface DiffViewState extends ViewState {
+    // index
+    profileA: number;
+    // index
+    profileB: number;
+}
+
 /** all data are stored in metric */
 export interface ViewState {
     /** case sensitive id as view key */

@@ -29,6 +29,11 @@ export class SubViewStorage {
         private preferences: PreferencesStore) {
     }
 
+    public reset() {
+        this.views.reset();
+        this.saveMainView();
+    }
+
     public saveMainView() {
         this.saveView(this._mainViewState);
     }

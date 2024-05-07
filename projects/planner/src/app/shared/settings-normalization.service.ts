@@ -11,8 +11,7 @@ import { DiveSchedule, DiveSchedules } from './dive.schedules';
 export class SettingsNormalizationService {
     constructor(
         private units: UnitConversion,
-        private schedules: DiveSchedules,
-        private views: ViewStates
+        private schedules: DiveSchedules
     ) { }
 
     private get ranges(): RangeConstants {
@@ -21,8 +20,6 @@ export class SettingsNormalizationService {
 
     public apply(): void {
         this.schedules.dives.forEach(d => this.applyDive(d));
-        // TODO consider move outside to be able use this method to restore dives
-        this.views.reset();
     }
 
     public applyDive(dive: DiveSchedule): void {

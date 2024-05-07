@@ -46,7 +46,7 @@ describe('Url Serialization', () => {
         const viewSwitch = new ViewSwitchService(schedules);
         const planner = new PlannerService(schedules, dispatcher, viewSwitch, irrelevantFactory, units);
         const preferences = new Preferences(viewSwitch, units, schedules, new ViewStates());
-        const normalization = new SettingsNormalizationService(units, schedules, new ViewStates());
+        const normalization = new SettingsNormalizationService(units, schedules);
         const urlSerialization = new PlanUrlSerialization(viewSwitch, units, normalization, schedules, preferences);
         const firstDive = schedules.dives[0];
         firstDive.depths.setSimple();

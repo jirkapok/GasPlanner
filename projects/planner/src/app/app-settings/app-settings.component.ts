@@ -58,7 +58,7 @@ export class AppSettingsComponent implements OnInit {
         this.selectedOptions.applyDiver(this.diver);
         this.units.imperialUnits = imperialUnits;
         this.settingsNormalization.apply();
-        this.views.saveMainView();
+        this.views.reset();
         // only to recheck the form validity
         this.cd.detectChanges();
     }

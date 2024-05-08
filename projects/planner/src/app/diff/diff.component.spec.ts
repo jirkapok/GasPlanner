@@ -4,6 +4,11 @@ import { ProfileComparatorService } from '../shared/diff/profileComparatorServic
 import { DiveSchedules } from '../shared/dive.schedules';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { ViewStates } from '../shared/viewStates';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { Preferences } from '../shared/preferences';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 describe('DiffComponent', () => {
     let component: DiffComponent;
@@ -14,9 +19,11 @@ describe('DiffComponent', () => {
             declarations: [DiffComponent],
             providers: [
                 ProfileComparatorService,
-                DiveSchedules,
-                UnitConversion,
-                ReloadDispatcher
+                DiveSchedules, UnitConversion,
+                ViewStates, SubViewStorage,
+                PreferencesStore, Preferences,
+                ViewSwitchService,
+                ReloadDispatcher,
             ]
         });
         fixture = TestBed.createComponent(DiffComponent);

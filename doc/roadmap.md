@@ -10,8 +10,6 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80
-  * Another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
   * Fix offline mode:
@@ -25,6 +23,7 @@ Following list of features and improvements ordered by priority is under develop
     * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
     * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
     * Tanks complex view: Add check box to be able enable or disable tanks
+    * Add Surface GF to the results
 * Gas blender:
     * Add gas blending costs
     * Add application settings for costs
@@ -34,7 +33,7 @@ Following list of features and improvements ordered by priority is under develop
     * Custom diver stress sac rate ratio
     * Add minimum gas reserve for first tank and for stage
     * Add option to ignore some warnings (ICD, density)
-* Add tissues heatmap to the profile chart and to the dives comparision
+* Add tissues heat map to the profile chart and to the dives comparision
 * Add localizations
 * Add calculation trainings
 * Help
@@ -44,13 +43,15 @@ Following list of features and improvements ordered by priority is under develop
     * <https://stackblitz.com/edit/angular-azjfgh?file=src%2Fapp%2Fapp.component.html>
     * <https://stackoverflow.com/questions/53416871/routing-to-static-html-page-in-angular-6>
 * Gas consumption:
+  * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80
+  * Clarify another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
   * Restore 1/2 and 1/3 reserve strategies
-  * Add setting for minimum reserve for both main tank and deco tanks
-  * Adjust consumption by Z factor: <https://en.wikipedia.org/wiki/Cubic_foot>
-    * Fix RMV/SAC calculator based on Nominal volume
-    * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
-    * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
-    * <https://youtu.be/OI4ZzqJLQjw>
+    * Add setting for minimum reserve for both main tank and deco tanks
+    * Adjust consumption by Z factor: <https://en.wikipedia.org/wiki/Cubic_foot>
+      * Fix RMV/SAC calculator based on Nominal volume
+      * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
+      * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
+      * <https://youtu.be/OI4ZzqJLQjw>
 * TRIMIX support
   * Add air breaks
 * Add CCR support

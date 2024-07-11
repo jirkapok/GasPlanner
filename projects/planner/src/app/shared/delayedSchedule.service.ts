@@ -34,7 +34,7 @@ export class DelayedScheduleService extends Streamed {
 
     private scheduleAll(): void {
         _(this.diveSchedules.dives)
-            .filter(d => d.primary)
+            .filter(d => !d.isRepetitive)
             .forEach(d => setTimeout(() => this.scheduleDive(d.id), this.delayMilliseconds));
     }
 
@@ -85,7 +85,7 @@ export class DelayedScheduleService extends Streamed {
         const nextId = diveId + 1;
         const nextDive = this.diveSchedules.byId(nextId);
 
-        if(nextDive && !nextDive.primary) {
+        if(nextDive && nextDive.isRepetitive) {
             this.schedule(nextId);
         }
     }

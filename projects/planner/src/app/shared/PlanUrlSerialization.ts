@@ -346,7 +346,7 @@ export class PlanUrlSerialization {
         const optionsParam = PlanUrlSerialization.toOptionsParam(dive.optionsService.getOptions());
         let result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}`;
 
-        if(!dive.primary) {
+        if(dive.isRepetitive) {
             result += `&si=${dive.surfaceInterval}`;
         }
 

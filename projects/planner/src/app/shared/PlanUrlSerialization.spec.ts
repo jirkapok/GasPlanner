@@ -179,6 +179,25 @@ describe('Url Serialization', () => {
             expectSelectedEquals(currentComplex, complexSut);
             expect(currentComplex.viewSwitch.isComplex).toBeTruthy();
         });
+
+        // Solutions considered:
+        // * Prolong duration shorter than one minute - with small differences, but it is acceptable.
+        //   Also keeps aligned the UI for both views minimum 1 minute.
+        // * Allow shorter duration than 1 min -> issue with infinite descent/ascent speed - too much work.
+        // * Don't allow it - edge case not supported is to aggressive. We should support it.
+        it('Restore short descent duration from simple to complex', () => {
+            const currentComplex = createSimpleSut();
+            currentComplex.viewSwitch.isComplex = true;
+
+            // 15 m/60 minutes - dive created in simple view, descent takes only 54 seconds, which is invalid in complex view
+            const fastDescentUrl = '?t=1-15-0-200-0.209-0,2-11.1-0-200-1-0&' +
+                                          'de=0-15-54-1,15-15-3546-1&' +
+                                          'di=20&o=0,9,9,9,3,18,2,0.85,0.4,5,1.6,30,1.4,10,1,1,0,2,1&ao=1,0';
+            currentComplex.urlSerialization.fromUrl(fastDescentUrl);
+
+            // not fixing the value, allowing to restore invalid values
+            expect(currentComplex.depths.levels[0].duration).toBeCloseTo(0.9, 0);
+        });
     });
 
     describe('Load dive by Url', () => {

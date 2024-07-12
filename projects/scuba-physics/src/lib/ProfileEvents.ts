@@ -386,12 +386,18 @@ export class ProfileEvents {
         // descent => density is higher at end
         if ((switchToDifferentDensity && startDensity > context.maxDensity) ||
             (isDescent && endDensity > context.maxDensity)) {
-            const densityRange = { start: startDensity, end: endDensity };
-            const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
-            const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, densityRange, context.maxDensity);
-            const depth = current.depthAt(timeStamp - context.elapsed);
-            const event = EventsFactory.createHighDensity(timeStamp, depth, current.gas);
-            context.events.add(event);
+            // gas switch while ascending
+            if(current.startDepth > current.endDepth) {
+                const event = EventsFactory.createHighDensity(context.elapsed, current.startDepth, current.gas);
+                context.events.add(event);
+            } else {
+                const densityRange = { start: startDensity, end: endDensity };
+                const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
+                const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, densityRange, context.maxDensity);
+                const depth = current.depthAt(timeStamp - context.elapsed);
+                const event = EventsFactory.createHighDensity(timeStamp, depth, current.gas);
+                context.events.add(event);
+            }
         }
     }
 

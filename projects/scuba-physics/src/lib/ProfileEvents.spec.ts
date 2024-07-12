@@ -589,7 +589,22 @@ describe('Profile Events', () => {
             eventOptions.maxDensity = GasDensity.recommendedMaximum;
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items.length).toEqual(3); // gasswitch, idc, high density
+            expect(events.items.length).toEqual(3); // gas switch, idc, high density
+            expect(events.items[2]).toEqual(
+                Event.create(EventType.highGasDensity, 240, 40, StandardGases.air)
+            );
+        });
+
+        it('Gas switch to high density ascent', () => {
+            const segments = new Segments();
+            segments.add(40, StandardGases.trimix2525, Time.oneMinute * 4);
+            segments.add(0, StandardGases.air, Time.oneMinute * 4);
+
+            const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            eventOptions.maxDensity = GasDensity.recommendedMaximum;
+            const events = ProfileEvents.fromProfile(eventOptions);
+
+            expect(events.items.length).toEqual(3); // gas switch, idc, high density
             expect(events.items[2]).toEqual(
                 Event.create(EventType.highGasDensity, 240, 40, StandardGases.air)
             );

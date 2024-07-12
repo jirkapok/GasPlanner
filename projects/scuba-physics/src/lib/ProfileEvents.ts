@@ -346,11 +346,16 @@ export class ProfileEvents {
 
         if (context.maxMnd < startEnd && context.fixedMnd ||
             context.maxMnd < endEnd && context.fixedMnd) {
-            const mndRange = { start: startEnd, end: endEnd };
-            const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
-            const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, mndRange, context.maxMnd);
-            const depth = current.depthAt(timeStamp);
-            this.addMndEvent(context, timeStamp, depth);
+            // gas switch already bellow maxMnd
+            if(pressureSegment.startDepth > context.maxMnd) {
+                this.addMndEvent(context, context.elapsed, current.startDepth);
+            } else {
+                const mndRange = { start: pressureSegment.startDepth, end: pressureSegment.endDepth };
+                const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
+                const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, mndRange, context.maxMnd);
+                const depth = current.depthAt(timeStamp - context.elapsed);
+                this.addMndEvent(context, timeStamp, depth);
+            }
         }
 
         // we can add the event multiple times, only after it is fixed
@@ -384,7 +389,7 @@ export class ProfileEvents {
             const densityRange = { start: startDensity, end: endDensity };
             const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
             const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, densityRange, context.maxDensity);
-            const depth = current.depthAt(timeStamp);
+            const depth = current.depthAt(timeStamp - context.elapsed);
             const event = EventsFactory.createHighDensity(timeStamp, depth, current.gas);
             context.events.add(event);
         }

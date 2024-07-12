@@ -93,5 +93,17 @@
                 }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Exceeded maximum recommended gas density! Reduce the depth or use gas with higher helium content (i.e. lower density).</span>
         </div>
+
+        <div *ngIf="isMinDepth(event)" class="alert alert-warning">
+            <fa-icon [icon]="warning" class="me-2"></fa-icon>
+            <strong>{{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+            <span>Dives planned to shallow depth for long time may lead to saturation diving! Reduce the dive duration shorter than 5 hours.</span>
+        </div>
+
+        <div *ngIf="isMaxDepth(event)" class="alert alert-warning">
+            <fa-icon [icon]="warning" class="me-2"></fa-icon>
+            <strong>{{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+            <span>Exceeded maximum depth where the algorithm was well tested on real life data! Reduce the maximum depth.</span>
+        </div>
     </ng-container>
 </ng-container>

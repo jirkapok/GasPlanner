@@ -73,6 +73,14 @@ export class DiveIssuesComponent {
         return event.type === EventType.highGasDensity;
     }
 
+    public isMinDepth(event: Event): boolean {
+        return event.type === EventType.minDepth;
+    }
+
+    public isMaxDepth(event: Event): boolean {
+        return event.type === EventType.maxDepth;
+    }
+
     public eventDepthFor(event: Event): number {
         return this.units.fromMeters(event.depth);
     }

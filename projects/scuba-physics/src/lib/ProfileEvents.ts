@@ -62,7 +62,8 @@ class EventsContext {
     private startAscentIndex: number;
     private profile: Segment[];
     private _mndBars: number;
-    private maxDepth: number;
+    private _maxDepth: number;
+    private _totalDuration: number;
 
     constructor(eventOptions: EventOptions) {
         this.profile = eventOptions.profile;
@@ -74,9 +75,18 @@ class EventsContext {
         this.densityAtDepth = new DensityAtDepth(this.exactDepths);
         this.speeds = new AscentSpeeds(this.options);
         const segments = Segments.fromCollection(this.profile);
+        this._maxDepth = segments.maxDepth;
+        this._totalDuration = segments.duration;
         this.speeds.markAverageDepth(segments);
-        this.maxDepth = segments.maxDepth;
         this._mndBars = this.simpleDepths.toBar(this.options.maxEND);
+    }
+
+    public get maxDepth(): number {
+        return this._maxDepth;
+    }
+
+    public get totalDuration(): number {
+        return this._totalDuration;
     }
 
     public get previous(): Segment | null {
@@ -193,6 +203,9 @@ export class ProfileEvents {
             context.addElapsed();
         }
 
+        // add only once without time stamp
+        this.addShallowDepth(context);
+        this.addMaximumDepth(context);
         return context.events;
     }
 
@@ -406,6 +419,22 @@ export class ProfileEvents {
         if (context.atSafetyStop && current.duration >= Time.safetyStopDuration) {
             const timeStamp = context.elapsed + current.duration - Time.safetyStopDuration;
             const event = EventsFactory.createSafetyStopStart(timeStamp, current.endDepth);
+            context.events.add(event);
+        }
+    }
+
+    private static addShallowDepth(context: EventsContext): void {
+        // constants chosen by guessing
+        if (context.maxDepth < 9 && context.totalDuration > Time.oneHour * 5) {
+            const event = EventsFactory.createShallowDepth(context.maxDepth);
+            context.events.add(event);
+        }
+    }
+
+    private static addMaximumDepth(context: EventsContext): void {
+        // constant chosen by guessing
+        if (context.maxDepth > 120) {
+            const event = EventsFactory.createMaxDepth(context.maxDepth);
             context.events.add(event);
         }
     }

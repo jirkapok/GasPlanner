@@ -648,7 +648,6 @@ describe('Profile Events', () => {
             expect(events.items).toEqual([]);
         });
 
-
         it('Adds end of NDL', () => {
             const gases = new Gases();
             gases.add(StandardGases.air);
@@ -679,6 +678,42 @@ describe('Profile Events', () => {
             assertEvents(events.items, [
                 { type: EventType.noDecoEnd, timeStamp: 870, depth: 20.25, gas: undefined },
             ]);
+        });
+    });
+
+    describe('Algorithm limits', () => {
+        it('Minimum depth bellow 9 meters with long exposures aren`t tested', () => {
+            const gases = new Gases();
+            gases.add(StandardGases.air);
+
+            const segments = new Segments();
+            segments.add(5, StandardGases.air, Time.oneMinute * 10);
+            segments.addFlat(StandardGases.air, Time.oneHour * 10);
+            segments.add(0, StandardGases.air, Time.oneMinute);
+
+            const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
+
+            expect(events.items).toEqual([
+                Event.create(EventType.minDepth, 0, 5),
+            ]);
+        });
+
+        it('Maximum depth higher than 120 meters aren`t tested', () => {
+            const gases = new Gases();
+            gases.add(StandardGases.trimix1070);
+
+            const segments = new Segments();
+            segments.add(130, StandardGases.trimix1070, Time.oneMinute * 10);
+            segments.addFlat(StandardGases.trimix1070, Time.oneMinute);
+            // don't care about the decompression
+            segments.add(0, StandardGases.trimix1070, Time.oneMinute * 50);
+
+            const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
+
+            // simplify the test by ignoring all other events
+            expect(events.items[6]).toEqual(
+                Event.create(EventType.maxDepth, 0, 130)
+            );
         });
     });
 });

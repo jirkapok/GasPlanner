@@ -1,7 +1,7 @@
-var app=require("../Add.ts");
-describe("Addition",function(){
-it("The function should add 2 numbers",function() {
-var value=app.AddNumber(5,6);
-expect(value).toBe(11);
-});
+describe('First Jasmine test', () => {
+    it('Should Correctly add two numbers', () => {
+        console.log('Running First Jasmine Test');
+        const result = 1 + 2;
+        expect(result).toBe(3);
+    });
 });

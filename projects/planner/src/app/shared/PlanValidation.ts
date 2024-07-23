@@ -9,19 +9,17 @@ import { RangeConstants, UnitConversion } from './UnitConversion';
 export class PlanValidation {
     private ranges: RangeConstants;
     private units: Units;
-    private simpleDurationRange: [number, number];
-    private complexDurationRange: [number, number];
+    private durationRange: [number, number];
 
     constructor(targetImperialUnits: boolean) {
         this.ranges = this.createUnits(targetImperialUnits);
         this.units = this.ranges.units;
 
         // duration ranges are both the same for both units.
-        const minDuration  = Time.toSeconds(this.ranges.duration[0]);
         const maxDuration  = Time.toSeconds(this.ranges.duration[1]);
         // min only 1 second, since simple profiles may have auto calculated descent shorter than one minute
-        this.simpleDurationRange = [1, maxDuration];
-        this.complexDurationRange = [minDuration, maxDuration];
+        // but this is not valid for complex dives, needs to be fixed during deserialization
+        this.durationRange = [Time.oneSecond, maxDuration];
     }
 
     public validate(appDto: AppPreferencesDto): boolean {
@@ -49,8 +47,7 @@ export class PlanValidation {
         const maxTankId = plan.tanks.length;
         const contentRanges = this.selectContentRanges(isComplex);
         const tanksValid = this.allTanksValid(imperialUnits, plan.tanks, maxTankId, contentRanges);
-        const durationRange = this.selectDurationRanges(isComplex);
-        const segmentsValid = this.allSegmentsValid(plan.plan, maxTankId, durationRange, contentRanges);
+        const segmentsValid = this.allSegmentsValid(plan.plan, maxTankId, contentRanges);
         const optionsValid = this.optionsValid(plan.options);
         const diverValid = this.diverValid(plan.diver);
         return tanksValid && segmentsValid && optionsValid && diverValid;
@@ -62,14 +59,6 @@ export class PlanValidation {
         }
 
         return [this.ranges.nitroxOxygen, [0,0]];
-    }
-
-    private selectDurationRanges(isComplex: boolean): [number, number] {
-        if(isComplex) {
-            return this.complexDurationRange;
-        }
-
-        return this.simpleDurationRange;
     }
 
     private allTanksValid(imperialUnits: boolean, tanks: TankDto[], maxTankId: number,
@@ -111,24 +100,19 @@ export class PlanValidation {
     }
 
     private allSegmentsValid(segments: SegmentDto[], maxTankId: number,
-        durationRange: [number, number], contentRanges: [[number, number], [number, number]]): boolean {
+        contentRanges: [[number, number], [number, number]]): boolean {
         return segments.length > 0 &&
-            _(segments).every(s => this.isValidSegment(s, maxTankId, durationRange, contentRanges));
+            _(segments).every(s => this.isValidSegment(s, maxTankId, contentRanges));
     }
 
-    private isValidSegment(segment: SegmentDto, maxTankId: number,
-        durationRange: [number, number], contentRanges: [[number, number], [number, number]]): boolean {
+    private isValidSegment(segment: SegmentDto, maxTankId: number, contentRanges: [[number, number], [number, number]]): boolean {
         // it is a plan, so all segments need to have tankId
         const tankValid = this.isInRange(segment.tankId, [1, maxTankId]);
         // cant use range, since the values may end at surface
         const depthRange: [number, number] = [0, this.ranges.depth[1]];
         const startValid = this.isLengthInRange(segment.startDepth, depthRange);
         const endValid = this.isLengthInRange(segment.endDepth, depthRange);
-        // TODO invalid profile to 15 m/60 min created in simple view
-        // seems to better allow UI to add profile with 0 min duration, since 0,1min = 6 seconds
-        // which still does not prevent shorter descent than 6 seconds created by profile factory.
-        // http://localhost:4200/?t=1-15-0-200-0.209-0,2-11.1-0-200-1-0&de=0-15-54-1,15-15-3546-1&di=20&o=0,9,9,9,3,18,2,0.85,0.4,5,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
-        const durationValid = this.isInRange(segment.duration, durationRange);
+        const durationValid = this.isInRange(segment.duration, this.durationRange);
         const gasValid = this.isValidGas(segment.gas, contentRanges);
         return tankValid && startValid && endValid && durationValid && gasValid;
     }

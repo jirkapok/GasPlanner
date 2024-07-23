@@ -62,7 +62,8 @@ class EventsContext {
     private startAscentIndex: number;
     private profile: Segment[];
     private _mndBars: number;
-    private maxDepth: number;
+    private _maxDepth: number;
+    private _totalDuration: number;
 
     constructor(eventOptions: EventOptions) {
         this.profile = eventOptions.profile;
@@ -74,9 +75,18 @@ class EventsContext {
         this.densityAtDepth = new DensityAtDepth(this.exactDepths);
         this.speeds = new AscentSpeeds(this.options);
         const segments = Segments.fromCollection(this.profile);
+        this._maxDepth = segments.maxDepth;
+        this._totalDuration = segments.duration;
         this.speeds.markAverageDepth(segments);
-        this.maxDepth = segments.maxDepth;
         this._mndBars = this.simpleDepths.toBar(this.options.maxEND);
+    }
+
+    public get maxDepth(): number {
+        return this._maxDepth;
+    }
+
+    public get totalDuration(): number {
+        return this._totalDuration;
     }
 
     public get previous(): Segment | null {
@@ -193,6 +203,9 @@ export class ProfileEvents {
             context.addElapsed();
         }
 
+        // add only once without time stamp
+        this.addShallowDepth(context);
+        this.addMaximumDepth(context);
         return context.events;
     }
 
@@ -346,11 +359,16 @@ export class ProfileEvents {
 
         if (context.maxMnd < startEnd && context.fixedMnd ||
             context.maxMnd < endEnd && context.fixedMnd) {
-            const mndRange = { start: startEnd, end: endEnd };
-            const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
-            const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, mndRange, context.maxMnd);
-            const depth = current.depthAt(timeStamp);
-            this.addMndEvent(context, timeStamp, depth);
+            // gas switch already bellow maxMnd
+            if(pressureSegment.startDepth > context.maxMnd) {
+                this.addMndEvent(context, context.elapsed, current.startDepth);
+            } else {
+                const mndRange = { start: pressureSegment.startDepth, end: pressureSegment.endDepth };
+                const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
+                const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, mndRange, context.maxMnd);
+                const depth = current.depthAt(timeStamp - context.elapsed);
+                this.addMndEvent(context, timeStamp, depth);
+            }
         }
 
         // we can add the event multiple times, only after it is fixed
@@ -381,12 +399,18 @@ export class ProfileEvents {
         // descent => density is higher at end
         if ((switchToDifferentDensity && startDensity > context.maxDensity) ||
             (isDescent && endDensity > context.maxDensity)) {
-            const densityRange = { start: startDensity, end: endDensity };
-            const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
-            const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, densityRange, context.maxDensity);
-            const depth = current.depthAt(timeStamp);
-            const event = EventsFactory.createHighDensity(timeStamp, depth, current.gas);
-            context.events.add(event);
+            // gas switch while ascending
+            if(current.startDepth > current.endDepth) {
+                const event = EventsFactory.createHighDensity(context.elapsed, current.startDepth, current.gas);
+                context.events.add(event);
+            } else {
+                const densityRange = { start: startDensity, end: endDensity };
+                const timeRange = { start: context.elapsed, end: context.elapsed + current.duration };
+                const timeStamp = LinearFunction.xValueAtAbsolute(timeRange, densityRange, context.maxDensity);
+                const depth = current.depthAt(timeStamp - context.elapsed);
+                const event = EventsFactory.createHighDensity(timeStamp, depth, current.gas);
+                context.events.add(event);
+            }
         }
     }
 
@@ -395,6 +419,22 @@ export class ProfileEvents {
         if (context.atSafetyStop && current.duration >= Time.safetyStopDuration) {
             const timeStamp = context.elapsed + current.duration - Time.safetyStopDuration;
             const event = EventsFactory.createSafetyStopStart(timeStamp, current.endDepth);
+            context.events.add(event);
+        }
+    }
+
+    private static addShallowDepth(context: EventsContext): void {
+        // constants chosen by guessing
+        if (context.maxDepth < 9 && context.totalDuration > Time.oneHour * 5) {
+            const event = EventsFactory.createShallowDepth(context.maxDepth);
+            context.events.add(event);
+        }
+    }
+
+    private static addMaximumDepth(context: EventsContext): void {
+        // constant chosen by guessing
+        if (context.maxDepth > 120) {
+            const event = EventsFactory.createMaxDepth(context.maxDepth);
             context.events.add(event);
         }
     }

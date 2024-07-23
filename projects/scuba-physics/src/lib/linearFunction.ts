@@ -23,7 +23,7 @@ export class LinearFunction {
         return x.start + LinearFunction.xValueAt(y.start, speed, yValue);
     }
 
-    /** Returns relative value, because the xStart is unknown */
+    /** Returns relative X value, because the xStart is unknown */
     public static xValueAt(yStart: number, speed: number, yValue: number): number {
         if(speed === 0) {
             return 0;

@@ -31,6 +31,10 @@ export enum EventType {
     highGasDensity = 11,
     /* Marks start of additional safety stop */
     safetyStop = 12,
+    /* Algorithm is used in shallow depths bellow 9 meters with long exposure which may lead to saturation diving */
+    minDepth = 13,
+    /* Algorithm si used in depths higher than 120 meters, where the algorithm wasn't tested enough */
+    maxDepth = 14,
 }
 
 export class Event {
@@ -103,6 +107,16 @@ export class EventsFactory {
 
     public static createHighDensity(timeStamp: number, depth: number, gas: Gas): Event {
         return Event.create(EventType.highGasDensity, timeStamp, depth, gas);
+    }
+
+    public static createShallowDepth(depth: number): Event {
+        // consider find the moment of maximum depth from the profile
+        return Event.create(EventType.minDepth, 0, depth);
+    }
+
+    public static createMaxDepth(depth: number): Event {
+        // consider find the moment of maximum depth from the profile
+        return Event.create(EventType.maxDepth, 0, depth);
     }
 }
 

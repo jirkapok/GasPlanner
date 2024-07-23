@@ -7,6 +7,7 @@ Following list of features and improvements ordered by priority is under develop
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
+* Loading of simple dive URL with segment shorter than 60 seconds (simple dive to 15 m) shows no validation issue
 
 ## Improvements / Features
 
@@ -21,7 +22,6 @@ Following list of features and improvements ordered by priority is under develop
         * Waypoints table: add switch in case user is switching to tank with the same gas
         * Gas switch is not present in shortened waypoints list
     * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
-    * Add limitation for shallow dives below 10 meters, that max. duration is limited to no deco limit and longer dives are saturation dives and this calculator does not work for them.
     * Tanks complex view: Add check box to be able enable or disable tanks
     * Add Surface GF to the results
 * Gas blender:

@@ -50,7 +50,7 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
     }
 
     public get surfaceReadOnly(): boolean {
-        return this.schedules.selected.primary;
+        return !this.schedules.selected.isRepetitive;
     }
 
     public get placeHolder(): string {

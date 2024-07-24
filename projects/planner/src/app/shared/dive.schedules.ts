@@ -45,7 +45,7 @@ export class DiveSchedule {
     }
 
     public get surfaceIntervalText(): string | null {
-        if(this.primary) {
+        if(!this.isRepetitive) {
             return null;
         }
 
@@ -53,11 +53,11 @@ export class DiveSchedule {
     }
 
     /**
-     * It is the first dive of the day, e.g. it is not repetitive dive.
+     * It is not the first dive of the day, e.g. it is repetitive dive.
      * Distinguish from isFirst property.
      */
-    public get primary(): boolean {
-        return this.surfaceInterval === Number.POSITIVE_INFINITY;
+    public get isRepetitive(): boolean {
+        return this.surfaceInterval !== Number.POSITIVE_INFINITY;
     }
 
     public get tanksService(): TanksService {

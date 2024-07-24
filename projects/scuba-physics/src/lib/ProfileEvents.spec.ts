@@ -489,6 +489,21 @@ describe('Profile Events', () => {
         it('Switch to narcotic gas', () => {
             const segments = new Segments();
             segments.add(45, StandardGases.trimix1845, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.trimix3525, Time.oneMinute);
+            segments.add(0, StandardGases.trimix3525, Time.oneMinute * 20);
+
+            const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
+
+            assertEvents(events.items, [
+                { type: EventType.gasSwitch, timeStamp: 240, depth: 45, gas: StandardGases.trimix3525 },
+                { type: EventType.maxEndExceeded, timeStamp: 240, depth: 45, gas: StandardGases.trimix3525 },
+            ]);
+        });
+
+        it('Switch to narcotic gas ascending', () => {
+            const segments = new Segments();
+            segments.add(45, StandardGases.trimix1845, Time.oneMinute * 4);
             segments.addFlat(StandardGases.trimix1845, Time.oneMinute);
             segments.add(0, StandardGases.trimix3525, Time.oneMinute * 20);
 
@@ -497,13 +512,29 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.gasSwitch, timeStamp: 300, depth: 45, gas: StandardGases.trimix3525 },
-                { type: EventType.maxEndExceeded, depth: 32.08, timeStamp: 344.4, gas: StandardGases.trimix3525 },
+                { type: EventType.maxEndExceeded, timeStamp: 300, depth: 45, gas: StandardGases.trimix3525 },
             ]);
         });
 
         it('Swim deeper than gas narcotic depth', () => {
             const segments = new Segments();
             segments.add(40, StandardGases.air, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.air, Time.oneMinute);
+            segments.add(0, StandardGases.air, Time.oneMinute * 20);
+
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
+
+            // only one event for multiple segments
+            assertEvents(events.items, [
+                { type: EventType.maxEndExceeded, timeStamp: 180, depth: 30, gas: StandardGases.air }
+            ]);
+        });
+
+        it('Swim deeper multiple segments than gas narcotic depth', () => {
+            const segments = new Segments();
+            segments.add(20, StandardGases.air, Time.oneMinute * 2);
+            segments.add(40, StandardGases.air, Time.oneMinute * 2);
             segments.addFlat(StandardGases.air, Time.oneMinute);
             segments.add(0, StandardGases.air, Time.oneMinute * 20);
 
@@ -558,7 +589,22 @@ describe('Profile Events', () => {
             eventOptions.maxDensity = GasDensity.recommendedMaximum;
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items.length).toEqual(3); // gasswitch, idc, high density
+            expect(events.items.length).toEqual(3); // gas switch, idc, high density
+            expect(events.items[2]).toEqual(
+                Event.create(EventType.highGasDensity, 240, 40, StandardGases.air)
+            );
+        });
+
+        it('Gas switch to high density ascent', () => {
+            const segments = new Segments();
+            segments.add(40, StandardGases.trimix2525, Time.oneMinute * 4);
+            segments.add(0, StandardGases.air, Time.oneMinute * 4);
+
+            const eventOptions = createEventOption(1, segments.items, emptyCeilings, options);
+            eventOptions.maxDensity = GasDensity.recommendedMaximum;
+            const events = ProfileEvents.fromProfile(eventOptions);
+
+            expect(events.items.length).toEqual(3); // gas switch, idc, high density
             expect(events.items[2]).toEqual(
                 Event.create(EventType.highGasDensity, 240, 40, StandardGases.air)
             );
@@ -602,7 +648,6 @@ describe('Profile Events', () => {
             expect(events.items).toEqual([]);
         });
 
-
         it('Adds end of NDL', () => {
             const gases = new Gases();
             gases.add(StandardGases.air);
@@ -633,6 +678,42 @@ describe('Profile Events', () => {
             assertEvents(events.items, [
                 { type: EventType.noDecoEnd, timeStamp: 870, depth: 20.25, gas: undefined },
             ]);
+        });
+    });
+
+    describe('Algorithm limits', () => {
+        it('Minimum depth bellow 9 meters with long exposures aren`t tested', () => {
+            const gases = new Gases();
+            gases.add(StandardGases.air);
+
+            const segments = new Segments();
+            segments.add(5, StandardGases.air, Time.oneMinute * 10);
+            segments.addFlat(StandardGases.air, Time.oneHour * 10);
+            segments.add(0, StandardGases.air, Time.oneMinute);
+
+            const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
+
+            expect(events.items).toEqual([
+                Event.create(EventType.minDepth, 0, 5),
+            ]);
+        });
+
+        it('Maximum depth higher than 120 meters aren`t tested', () => {
+            const gases = new Gases();
+            gases.add(StandardGases.trimix1070);
+
+            const segments = new Segments();
+            segments.add(130, StandardGases.trimix1070, Time.oneMinute * 10);
+            segments.addFlat(StandardGases.trimix1070, Time.oneMinute);
+            // don't care about the decompression
+            segments.add(0, StandardGases.trimix1070, Time.oneMinute * 50);
+
+            const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
+
+            // simplify the test by ignoring all other events
+            expect(events.items[6]).toEqual(
+                Event.create(EventType.maxDepth, 0, 130)
+            );
         });
     });
 });

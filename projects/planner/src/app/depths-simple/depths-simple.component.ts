@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
     NonNullableFormBuilder, FormGroup, FormControl
 } from '@angular/forms';
@@ -26,6 +26,7 @@ interface SimpleDepthsForm {
     styleUrls: ['./depths-simple.component.scss']
 })
 export class DepthsSimpleComponent extends Streamed implements OnInit {
+    @Input() public rootForm!: FormGroup;
     public cardIcon = faLayerGroup;
     public simpleForm!: FormGroup<SimpleDepthsForm>;
 
@@ -94,10 +95,12 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reload());
+
+        this.rootForm.addControl('simpleDepths', this.simpleForm);
     }
 
     public valuesChanged(): void {
-        if (this.simpleForm.invalid) {
+        if (this.rootForm.invalid) {
             return;
         }
 

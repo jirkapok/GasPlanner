@@ -1,42 +1,40 @@
-<div class="card">
-    <form [formGroup]="tanksForm">
-        <div class="card-header ">
-            <fa-icon [icon]="icon" class="me-3"></fa-icon>
-            <span>Bottom gas tank</span>
+<div class="card" [formGroup]="tanksForm">
+    <div class="card-header ">
+        <fa-icon [icon]="icon" class="me-3"></fa-icon>
+        <span>Bottom gas tank</span>
+    </div>
+    <div class="card-body row">
+        <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
+            <label for="sizeFirstTank" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>
+            <app-tank-size [sizeForm]="tanksForm" [tank]="firstTank" controlName="firstTankSize"
+                (sizeChange)="applySimple()" (applyTemplate)="applyTemplate($event)">
+            </app-tank-size>
+            <div class="text-danger form-text position-absolute" *ngIf="firstTankSizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>
+            <div class="form-text text-muted" [class.invisible]="firstTankSizeInvalid">SAC: {{gasSac() |
+                number:'1.0-2'}} {{units.sac}}</div>
         </div>
-        <div class="card-body row">
-            <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
-                <label for="sizeFirstTank" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>
-                <app-tank-size [sizeForm]="tanksForm" [tank]="firstTank" controlName="firstTankSize"
-                    (sizeChange)="applySimple()" (applyTemplate)="applyTemplate($event)">
-                </app-tank-size>
-                <div class="text-danger form-text position-absolute" *ngIf="firstTankSizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>
-                <div class="form-text text-muted" [class.invisible]="firstTankSizeInvalid">SAC: {{gasSac() |
-                    number:'1.0-2'}} {{units.sac}}</div>
-            </div>
-            <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6" *ngIf="units.imperialUnits">
-                <label for="workPressureFirstTank" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
-                </label>
-                <input class="form-control" type="number" (input)="applySimple()" id="workPressureFirstTank"
-                    formControlName="workPressure" required [min]="ranges.tankPressure[0]"
-                    [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="workPressureInvalid" />
-                <div class="invalid-feedback position-absolute">Needs to be number
-                    {{ranges.tankPressureLabel}}</div>
-            </div>
-            <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
-                <label for="startPressureFirstTank" class="form-label" mdbLabel>Start pressure [{{units.pressure}}]:
-                </label>
-                <input class="form-control" type="number" (input)="applySimple()" id="startPressureFirstTank"
-                    formControlName="firstTankStartPressure" required [min]="ranges.tankPressure[0]"
-                    [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankStartPressureInvalid" />
-                <div class="invalid-feedback position-absolute">Needs to be number
-                    {{ranges.tankPressureLabel}}</div>
-            </div>
-            <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
-                <app-oxygen [tank]="firstTank" [toxicity]="toxicity" (gasChange)="applySimple()"
-                    (assignBestMix)="assignBestMix()" (standardGasApplied)="applySimple()" controlName="o2"
-                    [nitroxForm]="tanksForm"></app-oxygen>
-            </div>
+        <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6" *ngIf="units.imperialUnits">
+            <label for="workPressureFirstTank" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
+            </label>
+            <input class="form-control" type="number" (input)="applySimple()" id="workPressureFirstTank"
+                formControlName="workPressure" required [min]="ranges.tankPressure[0]"
+                [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="workPressureInvalid" />
+            <div class="invalid-feedback position-absolute">Needs to be number
+                {{ranges.tankPressureLabel}}</div>
         </div>
-    </form>
+        <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
+            <label for="startPressureFirstTank" class="form-label" mdbLabel>Start pressure [{{units.pressure}}]:
+            </label>
+            <input class="form-control" type="number" (input)="applySimple()" id="startPressureFirstTank"
+                formControlName="firstTankStartPressure" required [min]="ranges.tankPressure[0]"
+                [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankStartPressureInvalid" />
+            <div class="invalid-feedback position-absolute">Needs to be number
+                {{ranges.tankPressureLabel}}</div>
+        </div>
+        <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
+            <app-oxygen [tank]="firstTank" [toxicity]="toxicity" (gasChange)="applySimple()"
+                (assignBestMix)="assignBestMix()" (standardGasApplied)="applySimple()" controlName="o2"
+                [nitroxForm]="tanksForm"></app-oxygen>
+        </div>
+    </div>
 </div>

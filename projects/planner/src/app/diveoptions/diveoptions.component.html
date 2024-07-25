@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" [formGroup]="optionsForm">
     <div class="card-header">
         <div class="float-start">
             <fa-icon [icon]="icon" class="me-3"></fa-icon>
@@ -13,192 +13,190 @@
         </div>
     </div>
     <div class="card-body">
-        <form [formGroup]="optionsForm">
-            <div *ngIf="!isComplex">
-                <div class="mt-3 row">
-                    <div class="mb-4 col col-12 col-sm-6 col-md-4 col-lg-12 col-xl-6">
-                        <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)">
-                        </app-salinity>
-                    </div>
+        <div *ngIf="!isComplex">
+            <div class="mt-3 row">
+                <div class="mb-4 col col-12 col-sm-6 col-md-4 col-lg-12 col-xl-6">
+                    <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)">
+                    </app-salinity>
+                </div>
 
-                    <div class="mb-4 col col-12 col-sm-6 col-md-4 col-lg-12 col-xl-6">
-                        <app-altitude [altitude]="options.getOptions().altitude" (inputChange)="altitudeChanged($event)"
-                            [altitudeForm]="optionsForm" controlName="altitude">
-                        </app-altitude>
-                    </div>
-                    <div class="mb-4 col col-12 col-sm-12 col-md-4 col-lg-12 col-xxl-12">
-                        <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
-                            [gfForm]="optionsForm" (inputChange)="updateGradients($event)"
-                            [simple]="true" [showTitle]="true"></app-gradients>
-                    </div>
+                <div class="mb-4 col col-12 col-sm-6 col-md-4 col-lg-12 col-xl-6">
+                    <app-altitude [altitude]="options.getOptions().altitude" (inputChange)="altitudeChanged($event)"
+                        [altitudeForm]="optionsForm" controlName="altitude">
+                    </app-altitude>
+                </div>
+                <div class="mb-4 col col-12 col-sm-12 col-md-4 col-lg-12 col-xxl-12">
+                    <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
+                        [gfForm]="optionsForm" (inputChange)="updateGradients($event)"
+                        [simple]="true" [showTitle]="true"></app-gradients>
                 </div>
             </div>
+        </div>
 
-            <!-- Complex UI only -->
-            <div *ngIf="isComplex">
-                <mdb-tabs>
-                    <mdb-tab title="Environment">
-                        <div class="pt-3 row">
-                            <div class="mb-4 col col-12 col-sm-6">
-                                <app-altitude [altitude]="options.getOptions().altitude" (inputChange)="altitudeChanged($event)"
-                                              [altitudeForm]="optionsForm" controlName="altitude">
-                                </app-altitude>
-                            </div>
-                            <div class="mb-4 col col-12 col-sm-6">
-                                <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)">
-                                </app-salinity>
+        <!-- Complex UI only -->
+        <div *ngIf="isComplex">
+            <mdb-tabs>
+                <mdb-tab title="Environment">
+                    <div class="pt-3 row">
+                        <div class="mb-4 col col-12 col-sm-6">
+                            <app-altitude [altitude]="options.getOptions().altitude" (inputChange)="altitudeChanged($event)"
+                                          [altitudeForm]="optionsForm" controlName="altitude">
+                            </app-altitude>
+                        </div>
+                        <div class="mb-4 col col-12 col-sm-6">
+                            <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)">
+                            </app-salinity>
+                        </div>
+                    </div>
+                </mdb-tab>
+                <mdb-tab title="Conservatism">
+                    <div class="pt-3">
+                        <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
+                            [gfForm]="optionsForm" (inputChange)="updateGradients($event)"
+                            [simple]="false" [showTitle]="false">
+                        </app-gradients>
+                    </div>
+                </mdb-tab>
+                <mdb-tab title="Gases">
+                    <div class="pt-3 row">
+                        <div class="mb-3 col col-12 col-sm-6">
+                            <label for="maxNarcoticDepth" class="form-label" mdbLabel>Max narcotic depth
+                                [{{units.length}}]:</label>
+                            <input id="maxNarcoticDepth" class="form-control" type="number" formControlName="maxEND"
+                                required [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
+                                (input)="applyOptions()" [class.is-invalid]="narcoticDepthInvalid" />
+                            <div class="invalid-feedback position-absolute">
+                                Needs to be number {{ranges.narcoticDepthLabel}}
                             </div>
                         </div>
-                    </mdb-tab>
-                    <mdb-tab title="Conservatism">
-                        <div class="pt-3">
-                            <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
-                                [gfForm]="optionsForm" (inputChange)="updateGradients($event)"
-                                [simple]="false" [showTitle]="false">
-                            </app-gradients>
-                        </div>
-                    </mdb-tab>
-                    <mdb-tab title="Gases">
-                        <div class="pt-3 row">
-                            <div class="mb-3 col col-12 col-sm-6">
-                                <label for="maxNarcoticDepth" class="form-label" mdbLabel>Max narcotic depth
-                                    [{{units.length}}]:</label>
-                                <input id="maxNarcoticDepth" class="form-control" type="number" formControlName="maxEND"
-                                    required [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
-                                    (input)="applyOptions()" [class.is-invalid]="narcoticDepthInvalid" />
-                                <div class="invalid-feedback position-absolute">
-                                    Needs to be number {{ranges.narcoticDepthLabel}}
-                                </div>
-                            </div>
-                            <div class="col col-12 col-sm-6">
-                                <div class="form-check form-switch pb-1">
-                                    <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
-                                        [checked]="options.oxygenNarcotic" (change)="switchOxygenNarcotic()" />
-                                    <label class="form-check-label" for="roundStops">Oxygen is narcotic</label>
-                                </div>
+                        <div class="col col-12 col-sm-6">
+                            <div class="form-check form-switch pb-1">
+                                <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
+                                    [checked]="options.oxygenNarcotic" (change)="switchOxygenNarcotic()" />
+                                <label class="form-check-label" for="roundStops">Oxygen is narcotic</label>
                             </div>
                         </div>
-                    </mdb-tab>
-                    <mdb-tab title="Stops">
-                        <div class="row pt-3">
-                            <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                                <label for="problem" class="form-label" mdbLabel>Solve problem [min]:</label>
-                                <input id="problem" formControlName="problem" class="form-control" type="number"
-                                    (input)="applyOptions()" required min="1" max="100" step="1"
-                                    [class.is-invalid]="problemInvalid" />
-                                <div class="invalid-feedback position-absolute">
-                                    Needs to be number 1 - 100 mim
-                                </div>
-                            </div>
-                            <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                                <label for="switchDuration" class="form-label" mdbLabel>Gas switch [min]:</label>
-                                <input id="switchDuration" formControlName="gasSwitch" class="form-control"
-                                    type="number" required min="1" max="100" step="1" (input)="applyOptions()"
-                                    [class.is-invalid]="switchDurationInvalid" />
-                                <div class="invalid-feedback position-absolute">
-                                    Needs to be number 1 - 100 min
-                                </div>
-                            </div>
-                            <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                                <label for="safetyStop" class="form-label" mdbLabel>Add 3 min safety
-                                    stop:</label>
-                                <div class="input-group dropdown" mdbDropdown>
-                                    <input id="safetyStop" [value]="options.safetyStopOption" class="form-control"
-                                        type="text" [readonly]="true" />
-                                    <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
-                                        id="safetyStopMenu" aria-expanded="false" data-mdb-toggle="dropdown"
-                                        mdbDropdownToggle></button>
-                                    <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-                                        <li (click)="useSafetyOff()"><a
-                                                class="dropdown-item">{{options.safetyOffName}}</a>
-                                        </li>
-                                        <li (click)="useSafetyAuto()"><a
-                                                class="dropdown-item">{{options.safetyAutoName}}</a>
-                                        </li>
-                                        <li (click)="useSafetyOn()"><a
-                                                class="dropdown-item">{{options.safetyOnName}}</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                                <label for="lastStop" class="form-label" mdbLabel>Last stop depth
-                                    [{{units.length}}]:</label>
-                                <input id="lastStop" (input)="applyOptions()" formControlName="lastStopDepth"
-                                    class="form-control" type="number" required [min]="ranges.lastStopDepth[0]"
-                                    [max]="ranges.lastStopDepth[1]" step="1" [class.is-invalid]="lastStopInvalid" />
-                                <div class="invalid-feedback position-absolute">
-                                    Needs to be number {{ranges.lastStopDepthLabel}}
-                                </div>
-                            </div>
-                            <div class="row ms-2">
-                                <div class="form-check form-switch">
-                                    <input type="checkbox" class="form-check-input" id="roundStops" mdbCheckbox
-                                        [checked]="options.roundStopsToMinutes" (change)="switchStopsRounding()" />
-                                    <label class="form-check-label" for="roundStops">Round deco stops to
-                                        minutes</label>
-                                </div>
+                    </div>
+                </mdb-tab>
+                <mdb-tab title="Stops">
+                    <div class="row pt-3">
+                        <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
+                            <label for="problem" class="form-label" mdbLabel>Solve problem [min]:</label>
+                            <input id="problem" formControlName="problem" class="form-control" type="number"
+                                (input)="applyOptions()" required min="1" max="100" step="1"
+                                [class.is-invalid]="problemInvalid" />
+                            <div class="invalid-feedback position-absolute">
+                                Needs to be number 1 - 100 mim
                             </div>
                         </div>
-                    </mdb-tab>
-                    <mdb-tab title="Speeds">
-                        <div class="row pt-3">
-                            <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <label for="descSpeed" class="form-label" mdbLabel>Descent
-                                    [{{units.speed}}]:</label>
-                                <input id="descSpeed" formControlName="descentSpeed" class="form-control" type="number"
-                                    (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
-                                    step="1" [class.is-invalid]="descSpeedInvalid" />
-                                <div class="invalid-feedback position-absolute">
-                                    Needs to be number {{ranges.speedLabel}}
-                                </div>
-                            </div>
-                            <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <label for="ascSpeed3" class="form-label" mdbLabel>Ascent to 50%
-                                    [{{units.speed}}]:</label>
-                                <input id="ascSpeed3" formControlName="ascentSpeed50perc" class="form-control"
-                                    type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
-                                    [max]="ranges.speed[1]" step="1" [class.is-invalid]="ascentSpeed50percInvalid" />
-                                <div class="invalid-feedback position-absolute">
-                                    Needs to be number {{ranges.speedLabel}}
-                                </div>
-                            </div>
-                            <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <label for="ascSpeed2" class="form-label" mdbLabel>Ascent to
-                                    {{units.defaults.lastSpeedLevel}}
-                                    {{units.length}} [{{units.speed}}]:</label>
-                                <input id="ascSpeed2" (input)="applyOptions()" formControlName="ascentSpeed50percTo6m"
-                                    class="form-control" type="number" required [min]="ranges.speed[0]"
-                                    [max]="ranges.speed[1]" step="1"
-                                    [class.is-invalid]="ascentSpeed50percTo6mInvalid" />
-                                <div class="invalid-feedback position-absolute">
-                                    Needs to be number {{ranges.speedLabel}}
-                                </div>
-                            </div>
-                            <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
-                                <label for="ascSpeed" class="form-label" mdbLabel>Ascent
-                                    {{units.defaults.lastSpeedLevel}}
-                                    {{units.length}} to surface [{{units.speed}}]:</label>
-                                <input id="ascSpeed" formControlName="ascentSpeed6m" class="form-control" type="number"
-                                    (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
-                                    step="1" [class.is-invalid]="ascSpeedInvalid" />
-                                <div class="invalid-feedback position-absolute">
-                                    Needs to be number {{ranges.speedLabel}}
-                                </div>
+                        <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
+                            <label for="switchDuration" class="form-label" mdbLabel>Gas switch [min]:</label>
+                            <input id="switchDuration" formControlName="gasSwitch" class="form-control"
+                                type="number" required min="1" max="100" step="1" (input)="applyOptions()"
+                                [class.is-invalid]="switchDurationInvalid" />
+                            <div class="invalid-feedback position-absolute">
+                                Needs to be number 1 - 100 min
                             </div>
                         </div>
-                    </mdb-tab>
-                    <mdb-tab title="Diver">
-                        <app-diver class="col col-12 col-sm-5 col-lg-4 col-xl-3 col-xxl-2" [diver]="options.diverOptions"
-                            [diverForm]="optionsForm" (changed)="fireChanged()"></app-diver>
-                    </mdb-tab>
-                </mdb-tabs>
-            </div>
-            <div>
-                <button type="button" class="btn btn-secondary me-2 mt-3"
-                    (click)="useRecreational()">Recreational</button>
-                <button type="button" class="btn btn-secondary mt-3" (click)="useRecommended()">Recommended</button>
-            </div>
-        </form>
+                        <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
+                            <label for="safetyStop" class="form-label" mdbLabel>Add 3 min safety
+                                stop:</label>
+                            <div class="input-group dropdown" mdbDropdown>
+                                <input id="safetyStop" [value]="options.safetyStopOption" class="form-control"
+                                    type="text" [readonly]="true" />
+                                <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
+                                    id="safetyStopMenu" aria-expanded="false" data-mdb-toggle="dropdown"
+                                    mdbDropdownToggle></button>
+                                <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+                                    <li (click)="useSafetyOff()"><a
+                                            class="dropdown-item">{{options.safetyOffName}}</a>
+                                    </li>
+                                    <li (click)="useSafetyAuto()"><a
+                                            class="dropdown-item">{{options.safetyAutoName}}</a>
+                                    </li>
+                                    <li (click)="useSafetyOn()"><a
+                                            class="dropdown-item">{{options.safetyOnName}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
+                            <label for="lastStop" class="form-label" mdbLabel>Last stop depth
+                                [{{units.length}}]:</label>
+                            <input id="lastStop" (input)="applyOptions()" formControlName="lastStopDepth"
+                                class="form-control" type="number" required [min]="ranges.lastStopDepth[0]"
+                                [max]="ranges.lastStopDepth[1]" step="1" [class.is-invalid]="lastStopInvalid" />
+                            <div class="invalid-feedback position-absolute">
+                                Needs to be number {{ranges.lastStopDepthLabel}}
+                            </div>
+                        </div>
+                        <div class="row ms-2">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input" id="roundStops" mdbCheckbox
+                                    [checked]="options.roundStopsToMinutes" (change)="switchStopsRounding()" />
+                                <label class="form-check-label" for="roundStops">Round deco stops to
+                                    minutes</label>
+                            </div>
+                        </div>
+                    </div>
+                </mdb-tab>
+                <mdb-tab title="Speeds">
+                    <div class="row pt-3">
+                        <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
+                            <label for="descSpeed" class="form-label" mdbLabel>Descent
+                                [{{units.speed}}]:</label>
+                            <input id="descSpeed" formControlName="descentSpeed" class="form-control" type="number"
+                                (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
+                                step="1" [class.is-invalid]="descSpeedInvalid" />
+                            <div class="invalid-feedback position-absolute">
+                                Needs to be number {{ranges.speedLabel}}
+                            </div>
+                        </div>
+                        <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
+                            <label for="ascSpeed3" class="form-label" mdbLabel>Ascent to 50%
+                                [{{units.speed}}]:</label>
+                            <input id="ascSpeed3" formControlName="ascentSpeed50perc" class="form-control"
+                                type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
+                                [max]="ranges.speed[1]" step="1" [class.is-invalid]="ascentSpeed50percInvalid" />
+                            <div class="invalid-feedback position-absolute">
+                                Needs to be number {{ranges.speedLabel}}
+                            </div>
+                        </div>
+                        <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
+                            <label for="ascSpeed2" class="form-label" mdbLabel>Ascent to
+                                {{units.defaults.lastSpeedLevel}}
+                                {{units.length}} [{{units.speed}}]:</label>
+                            <input id="ascSpeed2" (input)="applyOptions()" formControlName="ascentSpeed50percTo6m"
+                                class="form-control" type="number" required [min]="ranges.speed[0]"
+                                [max]="ranges.speed[1]" step="1"
+                                [class.is-invalid]="ascentSpeed50percTo6mInvalid" />
+                            <div class="invalid-feedback position-absolute">
+                                Needs to be number {{ranges.speedLabel}}
+                            </div>
+                        </div>
+                        <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
+                            <label for="ascSpeed" class="form-label" mdbLabel>Ascent
+                                {{units.defaults.lastSpeedLevel}}
+                                {{units.length}} to surface [{{units.speed}}]:</label>
+                            <input id="ascSpeed" formControlName="ascentSpeed6m" class="form-control" type="number"
+                                (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
+                                step="1" [class.is-invalid]="ascSpeedInvalid" />
+                            <div class="invalid-feedback position-absolute">
+                                Needs to be number {{ranges.speedLabel}}
+                            </div>
+                        </div>
+                    </div>
+                </mdb-tab>
+                <mdb-tab title="Diver">
+                    <app-diver class="col col-12 col-sm-5 col-lg-4 col-xl-3 col-xxl-2" [diver]="options.diverOptions"
+                        [diverForm]="optionsForm" (changed)="fireChanged()"></app-diver>
+                </mdb-tab>
+            </mdb-tabs>
+        </div>
+        <div>
+            <button type="button" class="btn btn-secondary me-2 mt-3"
+                (click)="useRecreational()">Recreational</button>
+            <button type="button" class="btn btn-secondary mt-3" (click)="useRecommended()">Recommended</button>
+        </div>
     </div>
 </div>

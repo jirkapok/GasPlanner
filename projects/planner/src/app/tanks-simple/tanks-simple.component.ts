@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { faBatteryHalf } from '@fortawesome/free-solid-svg-icons';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { takeUntil } from 'rxjs';
@@ -25,6 +25,7 @@ interface TankForm {
     styleUrls: ['./tanks-simple.component.scss']
 })
 export class TanksSimpleComponent extends Streamed implements OnInit {
+    @Input() public rootForm!: FormGroup;
     public icon = faBatteryHalf;
     public tanksForm!: FormGroup<TankForm>;
     constructor(
@@ -86,6 +87,8 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reload());
+
+        this.rootForm.addControl('tanks', this.tanksForm);
     }
 
     public gasSac(): number {
@@ -95,13 +98,17 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     }
 
     public assignBestMix(): void {
+        if (this.rootForm.invalid) {
+            return;
+        }
+
         const maxDepth = this.diveSchedules.selectedDepths.plannedDepthMeters;
         this.firstTank.o2 = this.toxicity.bestNitroxMix(maxDepth);
         this.dispatcher.sendTankChanged();
     }
 
     public applyTemplate(template: TankTemplate): void {
-        if (this.tanksForm.invalid) {
+        if (this.rootForm.invalid) {
             return;
         }
 
@@ -113,7 +120,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     }
 
     public applySimple(): void {
-        if (this.tanksForm.invalid) {
+        if (this.rootForm.invalid) {
             return;
         }
 

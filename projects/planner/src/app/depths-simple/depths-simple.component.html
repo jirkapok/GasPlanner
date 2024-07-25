@@ -1,33 +1,31 @@
-<div class="card">
+<div class="card" [formGroup]="simpleForm">
     <div class="card-header">
         <fa-icon [icon]="cardIcon" class="me-3"></fa-icon>
         <span>Depth</span>
     </div>
-    <form [formGroup]="simpleForm">
-        <div class="card-body row">
-            <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
-                <label for="duration" class="form-label" mdbLabel>Bottom time [min]:</label>
-                <input id="duration" formControlName="planDuration" class="form-control" (input)="valuesChanged()"
-                    type="number" required [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
-                    [class.is-invalid]="durationInvalid" />
-                <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.durationLabel }}
-                </div>
-                <div class="text-muted form-text" [class.invisible]="durationInvalid">No deco limit {{ noDecoTime |
-                    number:'1.0-0' }} min</div>
-                <button type="button" class="btn btn-secondary mt-2 me-2 col col-auto"
-                    (click)="depths.applyMaxDuration()" [class.invisible]="!diveResult.showMaxDuration"
-                    id="btnApplyDuration">Max</button>
-                <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="depths.applyNdlDuration()"
-                    [class.invisible]="!diveResult.ndlValid" id="btnApplyNdl">No deco</button>
+    <div class="card-body row">
+        <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
+            <label for="duration" class="form-label" mdbLabel>Bottom time [min]:</label>
+            <input id="duration" formControlName="planDuration" class="form-control" (input)="valuesChanged()"
+                type="number" required [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
+                [class.is-invalid]="durationInvalid" />
+            <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.durationLabel }}
             </div>
-            <div class="col col-12 col-md-6 col-lg-12 col-xl-6">
-                <app-depth [plannedDepth]="depths.plannedDepth" [bestNitroxMix]="depths.bestNitroxMix"
-                           [depthForm]="simpleForm" controlName="depth"
-                           (depthChange)="depthChanged($event)" (assignMaxDepth)="assignMaxDepth()"></app-depth>
-            </div>
-            <div *ngIf="!isFirstDive" class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
-                <app-surface-interval [form]="simpleForm" controlName="surfaceInterval"/>
-            </div>
+            <div class="text-muted form-text" [class.invisible]="durationInvalid">No deco limit {{ noDecoTime |
+                number:'1.0-0' }} min</div>
+            <button type="button" class="btn btn-secondary mt-2 me-2 col col-auto"
+                (click)="depths.applyMaxDuration()" [class.invisible]="!diveResult.showMaxDuration"
+                id="btnApplyDuration">Max</button>
+            <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="depths.applyNdlDuration()"
+                [class.invisible]="!diveResult.ndlValid" id="btnApplyNdl">No deco</button>
         </div>
-    </form>
+        <div class="col col-12 col-md-6 col-lg-12 col-xl-6">
+            <app-depth [plannedDepth]="depths.plannedDepth" [bestNitroxMix]="depths.bestNitroxMix"
+                       [depthForm]="simpleForm" controlName="depth"
+                       (depthChange)="depthChanged($event)" (assignMaxDepth)="assignMaxDepth()"></app-depth>
+        </div>
+        <div *ngIf="!isFirstDive" class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
+            <app-surface-interval [form]="simpleForm" controlName="surfaceInterval"/>
+        </div>
+    </div>
 </div>

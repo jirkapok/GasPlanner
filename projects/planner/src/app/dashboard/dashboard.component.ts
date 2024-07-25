@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import { Streamed } from '../shared/streamed';
@@ -15,14 +16,17 @@ import { DiveSchedules } from '../shared/dive.schedules';
 })
 export class DashboardComponent extends Streamed implements OnInit {
     public exclamation = faExclamationTriangle;
+    public rootForm!: FormGroup;
 
     constructor(
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
         private dispatcher: ReloadDispatcher,
         public startup: DashboardStartUp,
-        private schedules: DiveSchedules) {
+        private schedules: DiveSchedules,
+        private fb: NonNullableFormBuilder) {
         super();
+        this.rootForm = this.fb.group({});
     }
 
     public get isComplex(): boolean {

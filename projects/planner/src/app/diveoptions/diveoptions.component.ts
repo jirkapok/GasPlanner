@@ -21,8 +21,9 @@ import { PreferencesStore } from '../shared/preferencesStore';
     styleUrls: ['./diveoptions.component.scss']
 })
 export class DiveOptionsComponent extends Streamed implements OnInit {
-    @Input()
-    public formValid = true;
+    @Input() public formValid = true;
+    @Input() public rootForm!: FormGroup;
+
     public readonly allUsableName = 'All usable';
     public readonly halfUsableName = 'Half usable';
     public readonly thirdUsableName = 'Thirds usable';
@@ -156,6 +157,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reload());
+
+        this.rootForm.addControl('diveOptions', this.optionsForm);
     }
 
     // public reset(): void {
@@ -198,12 +201,20 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     // }
 
     public useRecreational(): void {
+        if(this.rootForm.invalid) {
+            return;
+        }
+
         this.options.useRecreational();
         this.fireChanged();
         this.reload();
     }
 
     public useRecommended(): void {
+        if(this.rootForm.invalid) {
+            return;
+        }
+
         this.options.useRecommended();
         this.fireChanged();
         this.reload();
@@ -251,7 +262,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     public applyOptions(): void {
         // salinity is checked in their respective component and shouldn't fire event
-        if (this.optionsForm.invalid) {
+        if (this.rootForm.invalid) {
             return;
         }
 

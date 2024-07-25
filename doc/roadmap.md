@@ -11,24 +11,25 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
+* Extend application settings:
+  * Define custom maximum gas density
+  * Custom diver stress sac rate ratio
+  * Add minimum gas reserve for first tank and for stage
+  * Add option to ignore some warnings (ICD, density)
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
   * Fix offline mode:
     * https://progressier.com/
     * https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers
     * https://developers.google.com/codelabs/pwa-training/pwa03--going-offline#1)
-* UI Tweaks
-    * Tanks complex view: Add check box to be able enable or disable tanks
-    * Add Surface GF to the results
 * Gas blender:
     * Add gas blending costs
     * Add application settings for costs
     * Add use case to identify mix when adding only top mix without adding he or oxygen
-* Extend application settings:
-    * Define custom maximum gas density
-    * Custom diver stress sac rate ratio
-    * Add minimum gas reserve for first tank and for stage
-    * Add option to ignore some warnings (ICD, density)
+* UI Tweaks
+    * Tanks complex view: Add check box to be able enable or disable tanks
+    * Add Surface GF to the results
+    * Read only fields should be distinguish able
 * Add tissues heat map to the profile chart and to the dives comparision
 * Add localizations
 * Add calculation trainings
@@ -48,14 +49,13 @@ Following list of features and improvements ordered by priority is under develop
       * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
       * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
       * <https://youtu.be/OI4ZzqJLQjw>
+* Add undo/redo to all pages
 * TRIMIX support
   * Add air breaks
 * Add CCR support
 * Profile comparison: 
   * Add option to compare dives aligned by the end of dive
   * Add tissues heat map compare
-* UI Tweaks: Read only fields should be distinguish able
-* Add undo/redo to all pages
 * Add export of the plan to pdf
 * Import/Export dive to compare from well known file format see also <https://www.npmjs.com/package/xml-js>
 * Add more variables to weight calculator (suits, BMI, tank material, water type)

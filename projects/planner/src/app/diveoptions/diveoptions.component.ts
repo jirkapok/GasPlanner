@@ -55,6 +55,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         private preferences: PreferencesStore,
         private dispatcher: ReloadDispatcher) {
         super();
+        this.rootForm = this.fb.group({});
     }
 
     public get isComplex(): boolean {

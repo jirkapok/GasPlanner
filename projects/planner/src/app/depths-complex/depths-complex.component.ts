@@ -44,6 +44,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         private schedules: DiveSchedules,
         public dispatcher: ReloadDispatcher) {
         super();
+        this.rootForm = this.fb.group({});
     }
 
     public get ranges(): RangeConstants {

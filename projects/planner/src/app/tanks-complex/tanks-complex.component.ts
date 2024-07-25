@@ -44,6 +44,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
         super();
+        this.rootForm = this.fb.group({});
     }
 
     public get ranges(): RangeConstants {

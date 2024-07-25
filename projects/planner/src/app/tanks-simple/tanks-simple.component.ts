@@ -36,6 +36,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         private diveSchedules: DiveSchedules,
         private dispatcher: ReloadDispatcher) {
         super();
+        this.rootForm = this.fb.group({});
     }
 
     public get toxicity(): GasToxicity {

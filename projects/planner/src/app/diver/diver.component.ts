@@ -40,8 +40,20 @@ export class DiverComponent extends Streamed implements OnInit {
         return Precision.round(rmv, roundTo);
     }
 
+    public get stressRmv(): number {
+        const roundTo = this.units.ranges.rmvRounding;
+        const rmvMetric = this.diver.stressRmv;
+        const rmv = this.units.fromLiter(rmvMetric);
+        return Precision.round(rmv, roundTo);
+    }
+
     public get rmvInvalid(): boolean {
         const rmv = this.diverForm.controls.rmv;
+        return this.inputs.controlInValid(rmv);
+    }
+
+    public get stressRmvInvalid(): boolean {
+        const rmv = this.diverForm.controls.srtessRmv;
         return this.inputs.controlInValid(rmv);
     }
 
@@ -56,6 +68,8 @@ export class DiverComponent extends Streamed implements OnInit {
 
         const rmvControl = this.fb.control(this.rmv, this.validators.diverRmv);
         this.diverForm.addControl('rmv', rmvControl);
+        const stressRmvControl = this.fb.control(this.stressRmv, this.validators.diverRmv);
+        this.diverForm.addControl('stressRmv', stressRmvControl);
 
         this.units.ranges$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((r) => this.rangeChanged(r));
@@ -68,6 +82,8 @@ export class DiverComponent extends Streamed implements OnInit {
 
         const rmv = Number(this.diverForm.value.rmv);
         this.diver.rmv = this.units.toLiter(rmv);
+        const stressRmv = Number(this.diverForm.value.stressRmv);
+        this.diver.stressRmv = this.units.toLiter(stressRmv);
         this.changed.emit();
     }
 

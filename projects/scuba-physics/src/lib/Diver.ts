@@ -3,16 +3,14 @@ import { Tank } from './Tanks';
 export class Diver {
     // liters/min
     public static readonly defaultSac = 20;
+    /** liter/min, usually 1.5x rmv */
+    public stressRmv: number;
 
     /**
      * @param rmv liter/min
      */
     constructor(public rmv: number = Diver.defaultSac) {
-    }
-
-    /** liter/min as 3x sac */
-    public get stressRmv(): number {
-        return this.rmv * 3;
+        this.stressRmv = rmv * 1.5;
     }
 
     /**

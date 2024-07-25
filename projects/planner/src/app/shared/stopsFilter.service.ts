@@ -29,9 +29,9 @@ export class StopsFilter {
 
         const depths = this.schedules.selectedDepths;
         return allWayPoints.filter((item, index) =>
-            index < depths.startAscentIndex ||
-            index === allWayPoints.length - 1 ||
-            item.swimAction === SwimAction.hover
+            index < depths.startAscentIndex ||     // all user defined waypoints
+            index === allWayPoints.length - 1 ||   // ascent to surface
+            (item.swimAction === SwimAction.hover || item.swimAction === SwimAction.switch)  // all stops
         );
     }
 

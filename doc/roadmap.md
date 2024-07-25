@@ -18,9 +18,6 @@ Following list of features and improvements ordered by priority is under develop
     * https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers
     * https://developers.google.com/codelabs/pwa-training/pwa03--going-offline#1)
 * UI Tweaks
-    * Profile:
-        * Waypoints table: add switch in case user is switching to tank with the same gas
-        * Gas switch is not present in shortened waypoints list
     * Recommended and recreational buttons still calculated even with invalid altitude (or any other control not in the same form)
     * Tanks complex view: Add check box to be able enable or disable tanks
     * Add Surface GF to the results

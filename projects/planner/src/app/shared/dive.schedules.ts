@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
-import { GasToxicity, Time } from 'scuba-physics';
+import { GasToxicity, Precision, Time } from 'scuba-physics';
 import _ from 'lodash';
 import { DateFormats } from './formaters';
 
@@ -77,7 +77,7 @@ export class DiveSchedule {
     }
 
     public get title(): string {
-        const depth = this.depths.plannedDepth;
+        const depth = Precision.round(this.depths.plannedDepth);
         const depthUnits = this.units.length;
         const duration = this.depths.planDuration;
         return `${this.id}. ${depth} ${depthUnits}, ${duration} min`;

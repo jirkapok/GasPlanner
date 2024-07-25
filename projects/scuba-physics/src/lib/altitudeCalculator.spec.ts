@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AltitudeCalculator } from './altitudeCalculator';
 
-describe('Altitude calclulator service', () => {
+describe('Altitude calculator service', () => {
     let calc: AltitudeCalculator;
 
     beforeEach(async () => {

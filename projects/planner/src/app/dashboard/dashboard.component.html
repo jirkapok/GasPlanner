@@ -21,14 +21,14 @@
                 'col-12': isComplex
                 }">
                 <app-tanks-simple *ngIf="!isComplex" [rootForm]="rootForm"></app-tanks-simple>
-                <app-tanks-complex *ngIf="isComplex"></app-tanks-complex>
+                <app-tanks-complex *ngIf="isComplex" [rootForm]="rootForm"></app-tanks-complex>
             </div>
             <div class="mb-4" [ngClass]="{
                 'col-12 col-sm-6 col-lg-4 col-xl-4': !isComplex,
                 'col-12 col-lg-7': isComplex
                 }">
                 <app-depths-simple *ngIf="!isComplex" [rootForm]="rootForm"></app-depths-simple>
-                <app-depths-complex *ngIf="isComplex"></app-depths-complex>
+                <app-depths-complex *ngIf="isComplex" [rootForm]="rootForm"></app-depths-complex>
             </div>
             <div class="mb-4" [ngClass]="{
                 'col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4': !isComplex,
@@ -52,14 +52,14 @@
                 'col-12 col-xxl-5': isComplex
                 }">
                 <app-tanks-simple *ngIf="!isComplex" [rootForm]="rootForm"></app-tanks-simple>
-                <app-tanks-complex *ngIf="isComplex"></app-tanks-complex>
+                <app-tanks-complex *ngIf="isComplex" [rootForm]="rootForm"></app-tanks-complex>
             </div>
             <div class="mb-4" [ngClass]="{
                 'col-12 col-sm-6 col-lg-4 col-xl-4': !isComplex,
                 'col-12 col-lg-7 col-xxl-4': isComplex
                 }">
                 <app-depths-simple *ngIf="!isComplex" [rootForm]="rootForm"></app-depths-simple>
-                <app-depths-complex *ngIf="isComplex"></app-depths-complex>
+                <app-depths-complex *ngIf="isComplex" [rootForm]="rootForm"></app-depths-complex>
             </div>
             <div class="mb-4" [ngClass]="{
                 'col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4': !isComplex,

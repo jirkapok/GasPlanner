@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { Precision, TankTemplate, GasToxicity } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -30,6 +30,7 @@ interface TanksForm {
     styleUrls: ['./tanks-complex.component.scss']
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
+    @Input() public rootForm!: FormGroup;
     public icon = faBatteryHalf;
     public plusIcon = faPlus;
     public minusIcon = faMinus;
@@ -80,6 +81,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
+
+        this.rootForm.addControl('tanksForm', this.tanksForm);
     }
 
     public gasSac(index: number): number {
@@ -114,7 +117,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     public addTank(): void {
-        if (this.tanksForm.invalid) {
+        if (this.rootForm.invalid) {
             return;
         }
 
@@ -125,7 +128,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     public removeTank(index: number): void {
-        if (this.tanksForm.invalid || this.tanks.length <= 1) {
+        if (this.rootForm.invalid || this.tanks.length <= 1) {
             return;
         }
 
@@ -142,7 +145,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     public tankChanged(index: number): void {
-        if (this.tanksForm.invalid) {
+        if (this.rootForm.invalid) {
             return;
         }
 

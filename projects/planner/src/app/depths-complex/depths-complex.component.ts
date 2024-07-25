@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormArray,  FormControl,
     NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
@@ -30,6 +30,7 @@ interface DepthsForm {
     styleUrls: ['./depths-complex.component.scss']
 })
 export class DepthsComplexComponent extends Streamed implements OnInit {
+    @Input() public rootForm!: FormGroup;
     public cardIcon = faLayerGroup;
     public addIcon = faPlus;
     public removeIcon = faMinus;
@@ -122,10 +123,12 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
                     this.reload();
                 }
             });
+
+        this.rootForm.addControl('depths', this.complexForm);
     }
 
     public addLevel(): void {
-        if (this.complexForm.invalid) {
+        if (this.rootForm.invalid) {
             return;
         }
 
@@ -137,7 +140,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     }
 
     public removeLevel(index: number): void {
-        if (this.complexForm.invalid || !this.minimumSegments) {
+        if (this.rootForm.invalid || !this.minimumSegments) {
             return;
         }
 
@@ -147,7 +150,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     }
 
     public levelChanged(index: number): void {
-        if (this.complexForm.invalid) {
+        if (this.rootForm.invalid) {
             return;
         }
 

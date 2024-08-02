@@ -64,6 +64,7 @@ export class DepthsService extends Streamed {
 
     /** in minutes */
     // change
+    // change1
     public get planDuration(): number {
         return this.plan.duration;
     }

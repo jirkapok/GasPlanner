@@ -55,6 +55,7 @@ export class AppSettingsComponent implements OnInit {
         }
 
         const imperialUnits = Boolean(this.settingsForm.controls.imperialUnits.value);
+        // TODO get rid of diver component with settings specific to dive.
         this.selectedOptions.applyDiver(this.diver);
         this.units.imperialUnits = imperialUnits;
         this.settingsNormalization.apply();

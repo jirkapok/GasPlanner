@@ -31,5 +31,6 @@ export class Diver {
 
     public loadFrom(other: Diver): void {
         this.rmv = other.rmv;
+        this.stressRmv = other.stressRmv;
     }
 }

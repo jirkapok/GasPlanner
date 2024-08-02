@@ -62,7 +62,7 @@ describe('PreferencesStore', () => {
             diver.maxDecoPpO2 = 1.5;
             sut.save();
 
-            diver.rmv = 10;
+            diver.rmv = 10; // TODO test sressRmv
             diver.maxPpO2 = 1.3;
             diver.maxDecoPpO2 = 1.4;
             sut.load();

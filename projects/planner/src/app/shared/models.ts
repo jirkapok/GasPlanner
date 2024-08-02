@@ -80,6 +80,10 @@ export class DiverOptions {
         return this.diver.rmv;
     }
 
+    public get stressRmv(): number {
+        return this.diver.stressRmv;
+    }
+
     public set maxPpO2(newValue: number) {
         this.options.maxPpO2 = newValue;
     }
@@ -92,8 +96,13 @@ export class DiverOptions {
         this.diver.rmv = newValue;
     }
 
+    public set stressRmv(newValue: number) {
+        this.diver.stressRmv = newValue;
+    }
+
     public loadFrom(other: DiverOptions): void {
         this.rmv = other.rmv;
+        this.stressRmv = other.stressRmv;
         this.maxPpO2 = other.maxPpO2;
         this.maxDecoPpO2 = other.maxDecoPpO2;
     }

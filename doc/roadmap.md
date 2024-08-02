@@ -14,6 +14,10 @@ Following list of features and improvements ordered by priority is under develop
 * Extend application settings:
   * Define custom maximum gas density
   * Custom diver stress sac rate ratio
+    * Add to general settings
+    * Add to dive settings
+    * Apply to gas algorithm
+    * Visualize on consumption chart
   * Add minimum gas reserve for first tank and for stage
   * Add option to ignore some warnings (ICD, density)
 * Fix PWA issues https://www.pwabuilder.com/

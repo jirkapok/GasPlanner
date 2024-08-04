@@ -3,14 +3,15 @@ import { Tank } from './Tanks';
 export class Diver {
     // liters/min
     public static readonly defaultSac = 20;
-    /** liter/min, usually 1.5x rmv */
+    // TODO fix meaning of the value for one diver only
+    /** liter/min, usually 1.5x rmv for 2 divers (e.g. 3x) */
     public stressRmv: number;
 
     /**
      * @param rmv liter/min
      */
     constructor(public rmv: number = Diver.defaultSac) {
-        this.stressRmv = rmv * 1.5;
+        this.stressRmv = rmv * 3;
     }
 
     /**

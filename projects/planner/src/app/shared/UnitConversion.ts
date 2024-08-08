@@ -134,6 +134,10 @@ export class UnitConversion {
         return this.current.fromGramPerLiter(density);
     }
 
+    public toGramPerLiter(density: number): number {
+        return this.current.toGramPerLiter(density);
+    }
+
     public fromKilogram(weight: number): number {
         return this.current.fromKilogram(weight);
     }
@@ -173,7 +177,7 @@ export interface RangeConstants {
     duration: [number, number];
     durationLabel: string;
     altitude: [number, number];
-    altitudeLevels: [number, number, number, number]
+    altitudeLevels: [number, number, number, number];
     altitudeLabel: string;
     altitudePressure: [number, number];
     speed: [number, number];

@@ -170,6 +170,8 @@ export interface RangeConstants {
     rmvRounding: number;
     depth: [number, number];
     depthLabel: string;
+    maxDensity: [number, number];
+    maxDensityLabel: string;
     narcoticDepth: [number, number];
     narcoticDepthLabel: string;
     lastStopDepth: [number, number];
@@ -201,6 +203,8 @@ class MetricRanges implements RangeConstants {
     public readonly diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
     public readonly duration: [number, number] = [1, 1440];
     public readonly durationLabel: string = toLabel(this.duration, 'min');
+    public readonly maxDensity: [number, number] = [1, 10];
+    public readonly maxDensityLabel: string = toLabel(this.maxDensity, this.units.densityShortcut);
     public readonly narcoticDepth: [number, number] = [1, 100];
     public readonly narcoticDepthLabel: string = toLabel(this.narcoticDepth, this.units.lengthShortcut);
     public readonly nitroxOxygen: [number, number] = [21, 100];
@@ -237,6 +241,8 @@ class ImperialRanges implements RangeConstants {
     public readonly diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
     public readonly duration: [number, number] = [1, 1440];
     public readonly durationLabel: string = toLabel(this.duration, 'min');
+    public readonly maxDensity: [number, number] = [1, 10]; // TODO define range for maxDensity in imperial
+    public readonly maxDensityLabel: string = toLabel(this.maxDensity, this.units.densityShortcut);
     public readonly narcoticDepth: [number, number] = [1, 300];
     public readonly narcoticDepthLabel: string = toLabel(this.narcoticDepth, this.units.lengthShortcut);
     public readonly nitroxOxygen: [number, number] = [21, 100];

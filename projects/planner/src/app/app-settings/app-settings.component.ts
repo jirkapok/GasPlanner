@@ -5,12 +5,12 @@ import {
 import { Location } from '@angular/common';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
-import { OptionsService } from '../shared/options.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
-import { UnitConversion } from '../shared/UnitConversion';
+import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
+import { InputControls } from '../shared/inputcontrols';
 
 @Component({
     selector: 'app-app-settings',
@@ -23,6 +23,7 @@ export class AppSettingsComponent implements OnInit {
 
     public settingsForm!: FormGroup<{
         imperialUnits: FormControl<boolean>;
+        maxDensity: FormControl<number>;
     }>;
 
     constructor(
@@ -33,12 +34,23 @@ export class AppSettingsComponent implements OnInit {
         public appSettings: ApplicationSettingsService,
         private formBuilder: NonNullableFormBuilder,
         private cd: ChangeDetectorRef,
+        private inputs: InputControls,
         public location: Location) {
+    }
+
+    public get ranges(): RangeConstants {
+        return this.units.ranges;
+    }
+
+    public get maxDensityInvalid(): boolean {
+        const densityControl = this.settingsForm.controls.maxDensity;
+        return this.inputs.controlInValid(densityControl);
     }
 
     public ngOnInit(): void {
         this.settingsForm = this.formBuilder.group({
-            imperialUnits: [this.units.imperialUnits, [Validators.required]]
+            imperialUnits: [this.units.imperialUnits, [Validators.required]],
+            maxDensity: [this.appSettings.maxGasDensity, [Validators.required]]
         });
     }
 

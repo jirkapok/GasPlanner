@@ -33,7 +33,8 @@ export class SettingsNormalizationService {
         const rmvRounding = this.units.ranges.rmvRounding;
         options.diverOptions.rmv = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
             oDiver.rmv, this.units.ranges.diverRmv, rmvRounding);
-// TODO stressRmv
+        options.diverOptions.stressRmv = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
+            oDiver.stressRmv, this.units.ranges.diverRmv, rmvRounding);
         this.applyOptionsCalculationValues(options);
         this.normalizeOptions(options);
     }

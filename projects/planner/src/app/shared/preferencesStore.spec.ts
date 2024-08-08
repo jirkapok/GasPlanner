@@ -58,22 +58,26 @@ describe('PreferencesStore', () => {
         it('Diver values are loaded after save', () => {
             const diver = options.diverOptions;
             diver.rmv = 10;
+            diver.stressRmv = 14;
             diver.maxPpO2 = 1.1;
             diver.maxDecoPpO2 = 1.5;
             sut.save();
 
-            diver.rmv = 10; // TODO test sressRmv
+            diver.rmv = 10;
+            diver.stressRmv = 16;
             diver.maxPpO2 = 1.3;
             diver.maxDecoPpO2 = 1.4;
             sut.load();
 
             const expected = {
                 rmv: 10,
+                stressRmv: 14,
                 maxPpO2: 1.1,
                 maxDecoPpO2: 1.5
             };
             expect({
                 rmv: diver.rmv,
+                stressRmv: diver.stressRmv,
                 maxPpO2: diver.maxPpO2,
                 maxDecoPpO2: diver.maxDecoPpO2
             }).toEqual(expected);

@@ -9,8 +9,8 @@ import { OptionsService } from '../shared/options.service';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { UnitConversion } from '../shared/UnitConversion';
 import { SubViewStorage } from '../shared/subViewStorage';
-import { DiverOptions } from '../shared/models';
-import {DiveSchedules} from '../shared/dive.schedules';
+import { DiveSchedules } from '../shared/dive.schedules';
+import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 
 @Component({
     selector: 'app-app-settings',
@@ -28,16 +28,12 @@ export class AppSettingsComponent implements OnInit {
     constructor(
         public units: UnitConversion,
         private settingsNormalization: SettingsNormalizationService,
-        private formBuilder: NonNullableFormBuilder,
-        private cd: ChangeDetectorRef,
         private schedules: DiveSchedules,
         private views: SubViewStorage,
+        public appSettings: ApplicationSettingsService,
+        private formBuilder: NonNullableFormBuilder,
+        private cd: ChangeDetectorRef,
         public location: Location) {
-    }
-
-    // consider use to all dives not only to currently selected
-    private get selectedOptions(): OptionsService {
-        return this.schedules.selected.optionsService;
     }
 
     public ngOnInit(): void {

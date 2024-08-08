@@ -17,6 +17,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { DiveSchedules } from '../shared/dive.schedules';
+import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
@@ -44,6 +45,7 @@ describe('App settings component', () => {
                 PreferencesStore, Preferences,
                 PlannerService, WorkersFactoryCommon,
                 ViewSwitchService, ReloadDispatcher,
+                ApplicationSettingsService
             ]
         }).compileComponents();
     });
@@ -63,6 +65,10 @@ describe('App settings component', () => {
             component.use();
             const schedules = TestBed.inject(DiveSchedules);
             options = schedules.selected.optionsService;
+        });
+
+        it('Converts Gas density', () => {
+            expect(component.appSettings.maxGasDensity).toBeCloseTo(0.35584, 4);
         });
 
         it('Rounds END', () => {

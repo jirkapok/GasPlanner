@@ -59,15 +59,10 @@ describe('App settings component', () => {
         let options: OptionsService;
 
         beforeEach(() => {
-            component.diver.rmv = 30;
             page.imperialRadio.click();
             component.use();
             const schedules = TestBed.inject(DiveSchedules);
             options = schedules.selected.optionsService;
-        });
-
-        it('Normalize rmv to imperial', () => {
-            expect(options.diverOptions.rmv).toBeCloseTo(29.998867, 6);
         });
 
         it('Rounds END', () => {

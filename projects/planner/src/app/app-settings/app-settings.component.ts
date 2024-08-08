@@ -21,7 +21,6 @@ export class AppSettingsComponent implements OnInit {
     public flagIcon = faFlag;
     public diverIcon = faUserCog;
 
-    public diver: DiverOptions;
     public settingsForm!: FormGroup<{
         imperialUnits: FormControl<boolean>;
     }>;
@@ -34,8 +33,6 @@ export class AppSettingsComponent implements OnInit {
         private schedules: DiveSchedules,
         private views: SubViewStorage,
         public location: Location) {
-        this.diver = new DiverOptions();
-        this.diver.loadFrom(this.selectedOptions.diverOptions);
     }
 
     // consider use to all dives not only to currently selected
@@ -55,8 +52,6 @@ export class AppSettingsComponent implements OnInit {
         }
 
         const imperialUnits = Boolean(this.settingsForm.controls.imperialUnits.value);
-        // TODO get rid of diver component with settings specific to dive.
-        this.selectedOptions.applyDiver(this.diver);
         this.units.imperialUnits = imperialUnits;
         this.settingsNormalization.apply();
         this.views.reset();

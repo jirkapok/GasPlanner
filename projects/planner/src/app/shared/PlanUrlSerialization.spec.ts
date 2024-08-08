@@ -11,6 +11,7 @@ import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { SettingsNormalizationService } from './settings-normalization.service';
+import { Diver } from 'scuba-physics';
 
 class TestSut {
     constructor(
@@ -142,6 +143,22 @@ describe('Url Serialization', () => {
 
         const result = current.urlSerialization.toUrl();
         expect(result.length).toBeLessThan(2048);
+    });
+
+    describe('Diver options', () => {
+        it('Serialize both Rmv and stressRmv', () => {
+            expect(simpleViewUrl).toContain('di=20,30');
+        });
+
+        it('Deserialize both Rmv and stressRmv', () => {
+            const missingStressUrl = 't=1-18-0-200-0.209-0&' +
+                'de=0-30-102-1,30-30-618-1&' +
+                'di=24&' +
+                'o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&' +
+                'ao=0,0';
+            complexSut.urlSerialization.fromUrl(missingStressUrl);
+            expect(complexSut.schedules.selected.optionsService.getDiver()).toEqual(new Diver(24, 36));
+        });
     });
 
     describe('Complex vs. Simple view', () => {

@@ -165,15 +165,18 @@ export class PlanUrlSerialization {
         const context = new ParseContext(parseParam, ',');
         const result: DiverDto = {
             rmv: context.parseNumber(0),
-            // TODO add test to verify default value is loaded if not present
             stressRmv: context.parseNumber(1)
         };
+
+        if(!result.stressRmv) {
+            result.stressRmv = new Diver(result.rmv).stressRmv;
+        }
 
         return result;
     }
 
     private static toDiverParam(di: Diver): string {
-        const result = `${di.rmv}`;
+        const result = `${di.rmv},${di.stressRmv}`;
         return result;
     }
 

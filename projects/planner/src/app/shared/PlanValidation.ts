@@ -136,7 +136,7 @@ export class PlanValidation {
     }
 
     private diverValid(diver: DiverDto): boolean {
-        return this.isRmvValid(diver.rmv);
+        return this.isRmvValid(diver.rmv) && this.isRmvValid(diver.stressRmv);
     }
 
     private complexModeValid(app: AppPreferencesDto): boolean {

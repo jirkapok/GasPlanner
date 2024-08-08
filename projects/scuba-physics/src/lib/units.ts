@@ -20,6 +20,8 @@ export interface Units {
 
     fromGramPerLiter(density: number): number;
 
+    toGramPerLiter(density: number): number;
+
     fromKilogram(weight: number): number;
 
     toKilogram(weight: number): number;
@@ -91,6 +93,10 @@ export class MetricUnits implements Units {
     }
 
     public fromGramPerLiter(density: number): number {
+        return density;
+    }
+
+    public toGramPerLiter(density: number): number {
         return density;
     }
 
@@ -201,6 +207,10 @@ export class ImperialUnits implements Units {
 
     public fromGramPerLiter(density: number): number {
         return density * ImperialUnits.lbPerCuftRate;
+    }
+
+    public toGramPerLiter(density: number): number {
+        return density / ImperialUnits.lbPerCuftRate;
     }
 
     public fromKilogram(weight: number): number {

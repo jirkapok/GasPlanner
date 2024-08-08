@@ -106,9 +106,14 @@ describe('Metric units', () => {
         });
     });
 
-    describe('Density - Gram per iter', () => {
+    describe('Density - Gram per liter', () => {
         it('From 1 g/l returns identical value', () => {
             const result = units.fromGramPerLiter(1.234);
+            expect(result).toBeCloseTo(1.234, 3);
+        });
+
+        it('To 1 g/l returns identical value', () => {
+            const result = units.toGramPerLiter(1.234);
             expect(result).toBeCloseTo(1.234, 3);
         });
     });
@@ -261,6 +266,16 @@ describe('Imperial units', () => {
         it('From 1 g/l returns expect', () => {
             const result = units.fromGramPerLiter(1);
             expect(result).toBeCloseTo(0.06242796, 8);
+        });
+
+        it('To 0 g/l returns 0', () => {
+            const result = units.toGramPerLiter(0);
+            expect(result).toBeCloseTo(0);
+        });
+
+        it('To 1 g/l returns 1', () => {
+            const result = units.toGramPerLiter(0.06242796);
+            expect(result).toBeCloseTo(1, 7);
         });
     });
 

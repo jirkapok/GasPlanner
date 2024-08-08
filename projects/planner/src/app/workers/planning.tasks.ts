@@ -68,7 +68,7 @@ export class PlanningTasks {
         const segments = DtoSerialization.toSegments(task.plan, tanks);
 
         // diver ppO2 is irrelevant for consumption calculation
-        const diver = new Diver(task.diver.rmv);
+        const diver = new Diver(task.diver.rmv, task.diver.stressRmv);
 
         const options = DtoSerialization.toOptions(task.options);
         const plan = PlanningTasks.selectConsumptionPlan(segments, task.isComplex);

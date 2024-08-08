@@ -108,7 +108,7 @@ export class Consumption {
         Tanks.resetConsumption(tanks);
         const remainToConsume = this.consumeByTanks(segments, diver.rmv);
         this.consumeByGases(segments, tanks, diver.rmv, remainToConsume);
-        this.updateReserve(emergencyAscent, tanks, diver.stressRmv);
+        this.updateReserve(emergencyAscent, tanks, diver.teamStressRmv);
     }
 
     /**

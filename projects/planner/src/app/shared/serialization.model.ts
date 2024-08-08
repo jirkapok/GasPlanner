@@ -154,6 +154,7 @@ export interface GasDto {
 
 export interface DiverDto {
     rmv: number;
+    stressRmv: number;
 }
 
 export interface OptionsDto {

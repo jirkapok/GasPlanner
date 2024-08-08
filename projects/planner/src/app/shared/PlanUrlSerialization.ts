@@ -164,7 +164,9 @@ export class PlanUrlSerialization {
     private static fromDiverParam(parseParam: string): DiverDto {
         const context = new ParseContext(parseParam, ',');
         const result: DiverDto = {
-            rmv: context.parseNumber(0)
+            rmv: context.parseNumber(0),
+            // TODO add test to verify default value is loaded if not present
+            stressRmv: context.parseNumber(1)
         };
 
         return result;

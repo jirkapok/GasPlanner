@@ -170,11 +170,12 @@ export class DtoSerialization {
     public static fromDiver(diver: Diver): DiverDto {
         return {
             rmv: diver.rmv,
+            stressRmv: diver.stressRmv
         };
     }
 
     public static toDiver(dto: DiverDto): Diver {
-        const diver = new Diver(dto.rmv);
+        const diver = new Diver(dto.rmv, dto.stressRmv);
         return diver;
     }
 

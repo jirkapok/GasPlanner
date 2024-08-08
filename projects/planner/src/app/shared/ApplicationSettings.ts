@@ -5,6 +5,10 @@ import { GasDensity } from 'scuba-physics';
 // TODO AppSettings:
 // * add to normalization service
 // * Add to application serialization settings
+// * Define imperial range
+// * Apply by component
+// * Add save and load last from state
+// * Apply to algorithm
 // * Don't add to url
 
 export class AppSettings {

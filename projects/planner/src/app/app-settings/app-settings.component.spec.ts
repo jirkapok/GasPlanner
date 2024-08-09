@@ -83,6 +83,7 @@ describe('App settings component', () => {
 });
 
 // TODO AppSettings:
+// * After changing units, also the range values need to be reloaded
 // * Apply settings by component
 // * Add to application settings serialization/persistence
 // * Add save and load last from state
@@ -91,7 +92,7 @@ describe('App settings component', () => {
 
 
 // TODO missing test cases:
-// * Units.ts: Add more tests for density conversion
+// * Add tests for Diver.ts
 // * AppSettingsComponent:
 //   * Precision and Step for imperial units
 //   * Precision and Step for metric units
@@ -99,4 +100,7 @@ describe('App settings component', () => {
 //   * Values are Saved to PreferencesStore after clicking Use button
 //   * Values are loaded from PreferencesStore after component initialization
 // * PersistenceService: Save and load AppSettings from store
+// * ProfileEvents: Generates correct events based on maxDensity
 // * NormalizationService: rounds values to correct range of settings when switching units
+// * Scheduler: Change of maxDensity triggers schedule calculation
+// * Diver.component.ts: Add tests for rmv and stressRmv save and load

@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
-import { GasDensity } from 'scuba-physics';
+import { AppSettings } from './models';
 
 // TODO AppSettings:
-// * add to normalization service
+// * Don't add to url
 // * Add to application serialization settings
 // * Define imperial range
 // * Apply by component
 // * Add save and load last from state
 // * Apply to algorithm
-// * Don't add to url
-
-export class AppSettings {
-    public maxGasDensity = GasDensity.recommendedMaximum;
-    public priamryTankReserve = 30;
-    public stageTankReserve = 30;
-}
+// * Define Step and precision rounding for UI (imperial needs more precision)
+// * add to normalization service
 
 @Injectable()
 export class ApplicationSettingsService {

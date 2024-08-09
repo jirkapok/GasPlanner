@@ -1,10 +1,10 @@
 import {
-    Ceiling, Time, Event, Segment,
-    StandardGases, Tank, OtuCalculator,
-    Precision, HighestDensity, EventType, TankTemplate, Options, Diver
+    Time, Segment,
+    StandardGases, Tank,
+    Precision, TankTemplate, Options,
+    Diver, GasDensity
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
-import { Injectable } from '@angular/core';
 
 export enum Strategies {
     ALL = 1,
@@ -63,6 +63,15 @@ export class Level {
         this.segment.tank = newValue.tank;
         this.tankBound = newValue;
     }
+}
+
+/**
+ * Not added to the Url, since it is not needed for sharing.
+ */
+export class AppSettings {
+    public maxGasDensity = GasDensity.recommendedMaximum;
+    public primaryTankReserve = 30;
+    public stageTankReserve = 20;
 }
 
 export class DiverOptions {

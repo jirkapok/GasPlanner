@@ -11,6 +11,8 @@ import { SubViewStorage } from '../shared/subViewStorage';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { InputControls } from '../shared/inputcontrols';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { Precision } from 'scuba-physics';
 
 @Component({
     selector: 'app-app-settings',
@@ -35,6 +37,7 @@ export class AppSettingsComponent implements OnInit {
         private formBuilder: NonNullableFormBuilder,
         private cd: ChangeDetectorRef,
         private inputs: InputControls,
+        private validators: ValidatorGroups,
         public location: Location) {
     }
 
@@ -47,10 +50,22 @@ export class AppSettingsComponent implements OnInit {
         return this.inputs.controlInValid(densityControl);
     }
 
+    public get densityRounding(): number {
+        return this.units.imperialUnits ? 3 : 1;
+    }
+
+    public get densityStep(): number {
+        return Math.pow(0.1, this.densityRounding);
+    }
+
+    private get maxDensity(): number {
+        return Precision.round(this.appSettings.maxGasDensity, this.densityRounding);
+    }
+
     public ngOnInit(): void {
         this.settingsForm = this.formBuilder.group({
             imperialUnits: [this.units.imperialUnits, [Validators.required]],
-            maxDensity: [this.appSettings.maxGasDensity, [Validators.required]]
+            maxDensity: [this.maxDensity, this.validators.maxDensity]
         });
     }
 
@@ -63,7 +78,16 @@ export class AppSettingsComponent implements OnInit {
         this.units.imperialUnits = imperialUnits;
         this.settingsNormalization.apply();
         this.views.reset();
+
+        this.reLoad();
+
         // only to recheck the form validity
         this.cd.detectChanges();
+    }
+
+    private reLoad(): void {
+        this.settingsForm.patchValue({
+            maxDensity: this.maxDensity
+        });
     }
 }

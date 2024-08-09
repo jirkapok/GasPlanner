@@ -14,7 +14,7 @@
                         </label>
                         <input class="form-control" type="number" id="maxDensity"
                                formControlName="maxDensity" required [min]="ranges.maxDensity[0]"
-                               [max]="ranges.maxDensity[1]" step="0.1" [class.is-invalid]="maxDensityInvalid" />
+                               [max]="ranges.maxDensity[1]" [step]="densityStep" [class.is-invalid]="maxDensityInvalid" />
                         <div class="invalid-feedback position-absolute">Needs to be number {{ranges.maxDensityLabel}}</div>
                     </div>
                 </div>

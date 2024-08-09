@@ -81,3 +81,22 @@ describe('App settings component', () => {
             }));
     });
 });
+
+// TODO AppSettings:
+// * Apply settings by component
+// * Add to application settings serialization/persistence
+// * Add save and load last from state
+// * Apply to algorithm
+// * add to normalization service
+
+
+// TODO missing test cases:
+// * Units.ts: Add more tests for density conversion
+// * AppSettingsComponent:
+//   * Precision and Step for imperial units
+//   * Precision and Step for metric units
+//   * Values are reloaded after switch to and from imperial units and click Use button
+//   * Values are Saved to PreferencesStore after clicking Use button
+//   * Values are loaded from PreferencesStore after component initialization
+// * PersistenceService: Save and load AppSettings from store
+// * NormalizationService: rounds values to correct range of settings when switching units

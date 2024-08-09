@@ -2,16 +2,6 @@ import { Injectable } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 import { AppSettings } from './models';
 
-// TODO AppSettings:
-// * Don't add to url
-// * Add to application serialization settings
-// * Define imperial range
-// * Apply by component
-// * Add save and load last from state
-// * Apply to algorithm
-// * Define Step and precision rounding for UI (imperial needs more precision)
-// * add to normalization service
-
 @Injectable()
 export class ApplicationSettingsService {
     public appSettings = new AppSettings();

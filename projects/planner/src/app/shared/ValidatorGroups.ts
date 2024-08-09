@@ -87,6 +87,10 @@ export class ValidatorGroups {
         return [Validators.required, this.validateMinRmv, this.validateMaxRmv];
     }
 
+    public get maxDensity(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.maxDensity);
+    }
+
     private get ranges(): RangeConstants {
         return this.units.ranges;
     }

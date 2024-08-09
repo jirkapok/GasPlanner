@@ -1,8 +1,8 @@
 import {
     Ceiling, EventType, Event, HighestDensity, OtuCalculator, LoadedTissue
 } from 'scuba-physics';
-import { WayPoint } from './models';
 import { Injectable } from '@angular/core';
+import { WayPoint } from './wayPoint';
 
 @Injectable()
 export class DiveResults {

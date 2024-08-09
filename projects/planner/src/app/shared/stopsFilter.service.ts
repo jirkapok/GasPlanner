@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { SwimAction, WayPoint } from './models';
 import { DiveResults } from './diveresults';
 import { DiveSchedules } from './dive.schedules';
+import { WayPoint, SwimAction } from './wayPoint';
 
 @Injectable()
 export class StopsFilter {

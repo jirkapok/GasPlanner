@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable, Input, Output } from '@angular/core';
-import { WayPoint } from './models';
 import { DiveSchedules } from './dive.schedules';
 import { DateFormats } from './formaters';
+import { WayPoint } from './wayPoint';
 
 @Injectable()
 export class SelectedWaypoint {

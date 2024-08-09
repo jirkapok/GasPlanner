@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
-import { WayPoint } from '../shared/models';
 import { DiveResults } from '../shared/diveresults';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-basic-dist';
@@ -11,6 +10,7 @@ import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { ChartPlotter, ChartPlotterFactory } from '../shared/chartPlotter';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ResamplingService } from '../shared/ResamplingService';
+import { WayPoint } from '../shared/wayPoint';
 
 @Component({
     selector: 'app-profilechart',

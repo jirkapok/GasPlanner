@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
-import { WayPoint } from './models';
 import { Segment } from 'scuba-physics';
+import { WayPoint } from "./wayPoint";
 
 @Injectable()
 export class WayPointsService {

@@ -4,9 +4,9 @@ import { DiveResults } from '../diveresults';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ConsumptionByMix, IConsumedMix } from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
-import { WayPoint } from '../models';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
+import { WayPoint } from '../wayPoint';
 
 @Injectable()
 export class ProfileComparatorService extends Streamed {

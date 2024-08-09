@@ -1,9 +1,9 @@
-import { WayPoint } from './models';
 import {
-    CalculatedProfile, Segment, StandardGases
+    Segment, StandardGases
 } from 'scuba-physics';
 import { WayPointsService } from './waypoints.service';
 import { UnitConversion } from './UnitConversion';
+import { WayPoint } from './wayPoint';
 
 export class TestBedExtensions {
     public static sampleWayPoints(): WayPoint[] {

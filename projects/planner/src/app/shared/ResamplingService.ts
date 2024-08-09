@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { WayPoint } from './models';
 import { Event, EventType, StandardGases, Precision, Ceiling } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import { DateFormats } from './formaters';
+import { WayPoint } from './wayPoint';
 
 export interface AxisValues {
     xValues: Date[];

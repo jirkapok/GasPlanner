@@ -1,11 +1,11 @@
 import { SelectedWaypoint } from './selectedwaypointService';
 import { inject, TestBed } from '@angular/core/testing';
 import { Segment, StandardGases } from 'scuba-physics';
-import { WayPoint } from './models';
 import { UnitConversion } from './UnitConversion';
 import {ReloadDispatcher} from './reloadDispatcher';
 import {DiveSchedules} from './dive.schedules';
 import {TestBedExtensions} from './TestbedExtensions.spec';
+import { WayPoint } from './wayPoint';
 
 describe('Selected Waypoint', () => {
     const segment = new Segment(5, 10, StandardGases.air, 60);

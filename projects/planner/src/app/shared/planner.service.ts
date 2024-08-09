@@ -16,10 +16,10 @@ import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { UnitConversion } from './UnitConversion';
-import { WayPoint } from './models';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { Logger } from './Logger';
 import { ViewSwitchService } from './viewSwitchService';
+import { WayPoint } from './wayPoint';
 
 
 @Injectable()

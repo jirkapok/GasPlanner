@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { WayPoint, SwimAction } from '../shared/models';
 import {
     faArrowDown, faArrowUp, faArrowRight, faTasks,
     faRandom, IconDefinition, faFilter
@@ -8,6 +7,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { StopsFilter } from '../shared/stopsFilter.service';
+import { WayPoint, SwimAction } from '../shared/wayPoint';
 
 @Component({
     selector: 'app-waypoints',

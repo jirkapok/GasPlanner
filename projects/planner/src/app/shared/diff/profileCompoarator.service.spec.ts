@@ -3,8 +3,8 @@ import { DiveSchedules } from '../dive.schedules';
 import { ProfileComparatorService } from './profileComparatorService';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { UnitConversion } from '../UnitConversion';
-import { WayPoint } from '../models';
 import { ConsumptionByMix, IConsumedMix, Segment, StandardGases, Tank } from 'scuba-physics';
+import { WayPoint } from '../wayPoint';
 
 describe('ProfileComparison service', () => {
     let sut: ProfileComparatorService;

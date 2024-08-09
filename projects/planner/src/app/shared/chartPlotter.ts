@@ -4,8 +4,8 @@ import { UnitConversion } from './UnitConversion';
 import { ResamplingService } from './ResamplingService';
 import { DiveResults } from './diveresults';
 import { DateFormats } from './formaters';
-import { WayPoint } from './models';
 import { Ceiling, Event } from 'scuba-physics';
+import { WayPoint } from './wayPoint';
 
 /** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {

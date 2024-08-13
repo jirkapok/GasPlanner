@@ -84,7 +84,6 @@ describe('App settings component', () => {
 
 // TODO AppSettings:
 // * After changing units, also the range values need to be reloaded
-// * Apply settings by component
 // * Add to application settings serialization/persistence
 // * Add save and load last from state
 // * Apply to algorithm

@@ -37,6 +37,7 @@ export interface AppOptionsDto {
     imperialUnits: boolean;
     isComplex: boolean;
     language: string;
+    maxDensity: number;
 }
 
 /**

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import _ from 'lodash';
 import {
     AppOptionsDto, AppPreferences, AppPreferencesDto,
     AppStates, DiveDto, ITankBound, TankDto
@@ -9,8 +10,8 @@ import { ViewSwitchService } from './viewSwitchService';
 import { KnownViews, ViewStates } from './viewStates';
 import { DiveSetup } from './models';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
-import _ from 'lodash';
 import { DashBoardViewState } from './views.model';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 @Injectable()
 export class Preferences {
@@ -18,6 +19,7 @@ export class Preferences {
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
         private schedules: DiveSchedules,
+        private appSettings: ApplicationSettingsService,
         private viewStates: ViewStates
     ) { }
 
@@ -76,6 +78,8 @@ export class Preferences {
         // first apply units to prevent loading of invalid values
         this.units.imperialUnits = loaded.options.imperialUnits;
         this.applyDives(loaded.dives);
+        this.appSettings.loadFrom(loaded.options.maxDensity);
+
         // now we are able to switch the view
         this.viewSwitch.isComplex = loaded.options.isComplex;
         // not using normalization to fix values here, because expecting they are valid
@@ -107,7 +111,8 @@ export class Preferences {
         return {
             imperialUnits: this.units.imperialUnits,
             isComplex: this.viewSwitch.isComplex,
-            language: 'en'
+            language: 'en',
+            maxDensity: this.appSettings.settings.maxGasDensity
         };
     }
 

@@ -6,7 +6,8 @@ import {
 import { PlanValidation } from './PlanValidation';
 import { Preferences } from './preferences';
 import {
-    AppPreferencesDto, DiverDto, OptionsDto, SegmentDto, TankDto
+    AppOptionsDto, AppPreferencesDto, DiverDto,
+    OptionsDto, SegmentDto, TankDto
 } from './serialization.model';
 import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
@@ -14,6 +15,7 @@ import { UnitConversion } from './UnitConversion';
 import { DiveSchedules } from './dive.schedules';
 import { Logger } from './Logger';
 import { SettingsNormalizationService } from './settings-normalization.service';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 class ParseContext {
     private static readonly trueValue = '1';
@@ -84,44 +86,9 @@ export class PlanUrlSerialization {
         private units: UnitConversion,
         private normalization: SettingsNormalizationService,
         private schedules: DiveSchedules,
+        private appSettings: ApplicationSettingsService,
         private preferences: Preferences
     ) { }
-
-    private static parseDto(url: string): AppPreferencesDto {
-        const params = new URLSearchParams(url);
-        const appSettingsParam = params.get('ao') || '';
-        const optionsParam = params.get('o') || '';
-        const diverParam = params.get('di') || '';
-        const tanksParam = params.get('t') || '';
-        const depthsParam = params.get('de') || '';
-        const siParam = params.get('si') || '';
-        const siContext = new ParseContext(siParam, ',');
-
-        const tanks = PlanUrlSerialization.fromTanksParam(tanksParam);
-        const parsed: AppPreferencesDto = {
-            options: PlanUrlSerialization.fromAppSettingsParam(appSettingsParam),
-            dives: [{
-                options: PlanUrlSerialization.fromOptionsParam(optionsParam),
-                diver: PlanUrlSerialization.fromDiverParam(diverParam),
-                tanks: tanks,
-                plan: PlanUrlSerialization.fromDepthsParam(tanks, depthsParam),
-                surfaceInterval: siContext.parseNullableNumber(0)
-            }]
-        };
-
-        // for imperial units the string is long because of precise values,
-        // consider rounding to 6 decimal places
-        return parsed;
-    }
-
-    private static fromAppSettingsParam(appSettings: string) {
-        const context = new ParseContext(appSettings, ',');
-        return {
-            isComplex: context.parseBoolean(0),
-            imperialUnits: context.parseBoolean(1),
-            language: 'en'
-        };
-    }
 
     private static fromOptionsParam(optionsParam: string): OptionsDto {
         const context = new ParseContext(optionsParam, ',');
@@ -288,7 +255,7 @@ export class PlanUrlSerialization {
             }
 
             const decodedUrl = decodeURIComponent(url);
-            const parsed = PlanUrlSerialization.parseDto(decodedUrl);
+            const parsed = this.parseDto(decodedUrl);
             // use the same concept as with  preferences, so we can skip loading, if deserialization fails.
             const imperial = parsed.options.imperialUnits;
             const isValid = new PlanValidation(imperial).validate(parsed);
@@ -343,7 +310,7 @@ export class PlanUrlSerialization {
     }
 
     private toDiveUrl(diveId: number): string {
-        // always use first dive, in case of multiple dives, we are unable to show the complete url
+        // always use selected dive, in case of multiple dives, we are unable to show the complete all dives url
         const dive = this.schedules.byId(diveId)!;
         const tanksParam = PlanUrlSerialization.toTanksParam(dive.tanksService.tanks);
         const depthsParam = PlanUrlSerialization.toDepthsParam(dive.depths.segments);
@@ -356,5 +323,43 @@ export class PlanUrlSerialization {
         }
 
         return result;
+    }
+
+    private parseDto(url: string): AppPreferencesDto {
+        const params = new URLSearchParams(url);
+        const appSettingsParam = params.get('ao') || '';
+        const optionsParam = params.get('o') || '';
+        const diverParam = params.get('di') || '';
+        const tanksParam = params.get('t') || '';
+        const depthsParam = params.get('de') || '';
+        const siParam = params.get('si') || '';
+        const siContext = new ParseContext(siParam, ',');
+
+        const tanks = PlanUrlSerialization.fromTanksParam(tanksParam);
+        const parsed: AppPreferencesDto = {
+            options: this.fromAppSettingsParam(appSettingsParam),
+            dives: [{
+                options: PlanUrlSerialization.fromOptionsParam(optionsParam),
+                diver: PlanUrlSerialization.fromDiverParam(diverParam),
+                tanks: tanks,
+                plan: PlanUrlSerialization.fromDepthsParam(tanks, depthsParam),
+                surfaceInterval: siContext.parseNullableNumber(0)
+            }]
+        };
+
+        // for imperial units the string is long because of precise values,
+        // consider rounding to 6 decimal places
+        return parsed;
+    }
+
+    private fromAppSettingsParam(appSettings: string): AppOptionsDto {
+        const context = new ParseContext(appSettings, ',');
+        return {
+            isComplex: context.parseBoolean(0),
+            imperialUnits: context.parseBoolean(1),
+            language: 'en',
+            // Not part of the url:
+            maxDensity: this.appSettings.settings.maxGasDensity
+        };
     }
 }

@@ -12,6 +12,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { Diver } from 'scuba-physics';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 class TestSut {
     constructor(
@@ -46,9 +47,11 @@ describe('Url Serialization', () => {
         const schedules = new DiveSchedules(units, dispatcher);
         const viewSwitch = new ViewSwitchService(schedules);
         const planner = new PlannerService(schedules, dispatcher, viewSwitch, irrelevantFactory, units);
-        const preferences = new Preferences(viewSwitch, units, schedules, new ViewStates());
+        const appSettings = new ApplicationSettingsService(units);
+        const preferences = new Preferences(viewSwitch, units, schedules, appSettings, new ViewStates());
         const normalization = new SettingsNormalizationService(units, schedules);
-        const urlSerialization = new PlanUrlSerialization(viewSwitch, units, normalization, schedules, preferences);
+        const urlSerialization = new PlanUrlSerialization(viewSwitch, units, normalization,
+            schedules, appSettings, preferences);
         const firstDive = schedules.dives[0];
         firstDive.depths.setSimple();
         return new TestSut(schedules, planner, viewSwitch, units,  urlSerialization);

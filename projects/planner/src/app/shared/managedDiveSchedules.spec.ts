@@ -14,6 +14,7 @@ import {ManagedDiveSchedules} from './managedDiveSchedules';
 import Spy = jasmine.Spy;
 import {ReloadDispatcher} from './reloadDispatcher';
 import { DepthsService } from './depths.service';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 describe('Managed Schedules', () => {
     const expectedSecondTankSize = 24;
@@ -62,7 +63,7 @@ describe('Managed Schedules', () => {
                 ReloadDispatcher, WayPointsService,
                 Preferences, ViewSwitchService,
                 ViewStates, DelayedScheduleService,
-                SubViewStorage,
+                SubViewStorage, ApplicationSettingsService
             ],
         }).compileComponents();
 

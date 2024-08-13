@@ -16,6 +16,7 @@ import { ViewStates } from './viewStates';
 import { SubViewStorage } from './subViewStorage';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 describe('PreferencesStore', () => {
     beforeEach(() => {
@@ -27,7 +28,7 @@ describe('PreferencesStore', () => {
                 Preferences, ViewStates, SubViewStorage,
                 SettingsNormalizationService,
                 WayPointsService, DiveSchedules,
-                ReloadDispatcher
+                ReloadDispatcher, ApplicationSettingsService
             ]
         });
 

@@ -19,6 +19,7 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { DiveSchedules } from '../shared/dive.schedules';
+import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 
 export class NitroxPage {
     constructor(private fixture: ComponentFixture<NitroxComponent>) { }
@@ -47,7 +48,7 @@ describe('Nitrox component', () => {
                 PlannerService, WorkersFactoryCommon,
                 ViewSwitchService, SubViewStorage,
                 ReloadDispatcher, DiveSchedules,
-                OptionsService
+                OptionsService, ApplicationSettingsService
             ],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         }).compileComponents();

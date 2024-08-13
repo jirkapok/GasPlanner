@@ -12,6 +12,7 @@ import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 
 describe('GasBlenderComponent', () => {
     let component: GasBlenderComponent;
@@ -26,7 +27,7 @@ describe('GasBlenderComponent', () => {
                 ValidatorGroups, InputControls, DecimalPipe,
                 SubViewStorage, ViewStates, PreferencesStore,
                 Preferences, ViewSwitchService, DiveSchedules,
-                ReloadDispatcher
+                ReloadDispatcher, ApplicationSettingsService
             ]
         });
         fixture = TestBed.createComponent(GasBlenderComponent);

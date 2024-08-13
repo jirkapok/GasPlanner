@@ -17,6 +17,7 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 
 describe('NdlLimits component', () => {
     let component: NdlLimitsComponent;
@@ -32,7 +33,8 @@ describe('NdlLimits component', () => {
                 PreferencesStore, Preferences,
                 WorkersFactoryCommon, ViewSwitchService,
                 ReloadDispatcher, DiveSchedules,
-                OptionsService, ValidatorGroups
+                OptionsService, ValidatorGroups,
+                ApplicationSettingsService
             ],
             imports: [RouterTestingModule.withRoutes([])]
         })

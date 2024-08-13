@@ -9,6 +9,7 @@ import { ViewStates } from '../shared/viewStates';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
+import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 
 describe('DiffComponent', () => {
     let component: DiffComponent;
@@ -22,8 +23,8 @@ describe('DiffComponent', () => {
                 DiveSchedules, UnitConversion,
                 ViewStates, SubViewStorage,
                 PreferencesStore, Preferences,
-                ViewSwitchService,
-                ReloadDispatcher,
+                ViewSwitchService, ReloadDispatcher,
+                ApplicationSettingsService
             ]
         });
         fixture = TestBed.createComponent(DiffComponent);

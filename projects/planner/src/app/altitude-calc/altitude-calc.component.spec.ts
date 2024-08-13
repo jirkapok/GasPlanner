@@ -13,6 +13,7 @@ import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { DiveSchedules } from '../shared/dive.schedules';
+import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 
 describe('AltitudeCalcComponent', () => {
     let component: AltitudeCalcComponent;
@@ -26,7 +27,8 @@ describe('AltitudeCalcComponent', () => {
                 DecimalPipe, SubViewStorage, ViewStates,
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
                 Preferences, ViewSwitchService,
-                ReloadDispatcher, DiveSchedules
+                ReloadDispatcher, DiveSchedules,
+                ApplicationSettingsService
             ]
         });
         fixture = TestBed.createComponent(AltitudeCalcComponent);

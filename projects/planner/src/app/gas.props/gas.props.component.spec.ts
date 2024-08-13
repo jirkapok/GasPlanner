@@ -15,6 +15,7 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { StandardGases } from 'scuba-physics';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { DiveSchedules } from '../shared/dive.schedules';
+import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 
 describe('GasPropertiesCalcComponent', () => {
     let component: GasPropertiesCalcComponent;
@@ -28,7 +29,8 @@ describe('GasPropertiesCalcComponent', () => {
                 DecimalPipe, SubViewStorage, ViewStates,
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
                 Preferences, ViewSwitchService,
-                ReloadDispatcher, DiveSchedules
+                ReloadDispatcher, DiveSchedules,
+                ApplicationSettingsService
             ]
         });
         fixture = TestBed.createComponent(GasPropertiesCalcComponent);

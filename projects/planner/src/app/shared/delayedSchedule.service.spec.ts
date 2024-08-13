@@ -12,6 +12,7 @@ import { Preferences } from './preferences';
 import { ViewSwitchService } from './viewSwitchService';
 import Spy = jasmine.Spy;
 import { Time } from 'scuba-physics';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 describe('Delayed Schedule', () => {
     const delayHigherThanScheduler = 110;
@@ -34,7 +35,7 @@ describe('Delayed Schedule', () => {
                 PlannerService, DiveSchedules, UnitConversion,
                 WorkersFactoryCommon, SubViewStorage,
                 ViewStates, PreferencesStore, Preferences,
-                ViewSwitchService
+                ViewSwitchService, ApplicationSettingsService
             ]
         }).compileComponents();
 

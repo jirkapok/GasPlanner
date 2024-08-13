@@ -12,6 +12,7 @@ import { DiveSetup } from './models';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { DashBoardViewState } from './views.model';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { GasDensity } from "scuba-physics";
 
 @Injectable()
 export class Preferences {
@@ -78,7 +79,8 @@ export class Preferences {
         // first apply units to prevent loading of invalid values
         this.units.imperialUnits = loaded.options.imperialUnits;
         this.applyDives(loaded.dives);
-        this.appSettings.loadFrom(loaded.options.maxDensity);
+        const loadedDensity = loaded.options.maxDensity || GasDensity.recommendedMaximum;
+        this.appSettings.loadFrom(loadedDensity);
 
         // now we are able to switch the view
         this.viewSwitch.isComplex = loaded.options.isComplex;

@@ -24,6 +24,6 @@ export class ApplicationSettingsService {
     }
 
     public loadFrom(maxDensity: number): void {
-        this.settings.maxGasDensity = maxDensity || GasDensity.recommendedMaximum;
+        this.settings.maxGasDensity = maxDensity;
     }
 }

@@ -4,8 +4,8 @@ import { DiveResults } from './diveresults';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
-    GasDensity, CalculatedProfile,
-    Precision, Segments, LoadedTissue
+    CalculatedProfile, Precision,
+    Segments, LoadedTissue
 } from 'scuba-physics';
 import {
     ConsumptionResultDto, ConsumptionRequestDto, EventOptionsDto,
@@ -20,6 +20,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { Logger } from './Logger';
 import { ViewSwitchService } from './viewSwitchService';
 import { WayPoint } from './wayPoint';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 
 @Injectable()
@@ -33,6 +34,7 @@ export class PlannerService extends Streamed {
         private schedules: DiveSchedules,
         private dispatcher: ReloadDispatcher,
         private viewSwitch: ViewSwitchService,
+        private appSettings: ApplicationSettingsService,
         workerFactory: WorkersFactoryCommon,
         units: UnitConversion) {
         super();
@@ -201,8 +203,7 @@ export class PlannerService extends Streamed {
 
     private createEventOptions(): EventOptionsDto {
         return {
-            // TODO make maxDensity configurable
-            maxDensity: GasDensity.recommendedMaximum
+            maxDensity: this.appSettings.settings.maxGasDensity
         };
     }
 

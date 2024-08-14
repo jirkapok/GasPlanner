@@ -109,3 +109,4 @@ describe('App settings component', () => {
 //   * What are the values to test?
 // * Scheduler: Change of maxDensity triggers schedule calculation
 // * Diver.component.ts: Add tests for rmv and stressRmv save and load
+// * PlannerService: MaxGasDensity is used when calling task

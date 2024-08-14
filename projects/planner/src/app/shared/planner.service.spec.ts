@@ -22,6 +22,7 @@ import { DiveResults } from './diveresults';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ViewSwitchService } from './viewSwitchService';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -39,7 +40,7 @@ describe('PlannerService', () => {
                 PlannerService, UnitConversion,
                 DiveSchedules, ReloadDispatcher,
                 SettingsNormalizationService, ViewStates,
-                ViewSwitchService
+                ViewSwitchService, ApplicationSettingsService
             ],
             imports: []
         }).compileComponents();

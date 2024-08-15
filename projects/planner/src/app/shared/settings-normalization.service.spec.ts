@@ -10,6 +10,7 @@ import { DiverOptions } from './models';
 import { DiveSchedules } from './dive.schedules';
 import { ViewStates } from './viewStates';
 import { ReloadDispatcher } from './reloadDispatcher';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 describe('SettingsNormalizationService', () => {
     let service: SettingsNormalizationService;
@@ -30,7 +31,8 @@ describe('SettingsNormalizationService', () => {
             providers: [
                 RouterTestingModule, UnitConversion,
                 SettingsNormalizationService, ReloadDispatcher,
-                ViewStates, DiveSchedules
+                ViewStates, DiveSchedules,
+                ApplicationSettingsService
             ],
             imports: [RouterTestingModule.withRoutes([])]
         });

@@ -50,16 +50,12 @@ export class AppSettingsComponent implements OnInit {
         return this.inputs.controlInValid(densityControl);
     }
 
-    public get densityRounding(): number {
-        return this.units.imperialUnits ? 3 : 1;
-    }
-
     public get densityStep(): number {
-        return Math.pow(0.1, this.densityRounding);
+        return Math.pow(0.1, this.ranges.densityRounding);
     }
 
     private get maxDensity(): number {
-        return Precision.round(this.appSettings.maxGasDensity, this.densityRounding);
+        return Precision.round(this.appSettings.maxGasDensity, this.ranges.densityRounding);
     }
 
     public ngOnInit(): void {

@@ -49,7 +49,7 @@ describe('Url Serialization', () => {
         const appSettings = new ApplicationSettingsService(units);
         const planner = new PlannerService(schedules, dispatcher, viewSwitch, appSettings, irrelevantFactory, units);
         const preferences = new Preferences(viewSwitch, units, schedules, appSettings, new ViewStates());
-        const normalization = new SettingsNormalizationService(units, schedules);
+        const normalization = new SettingsNormalizationService(units, appSettings, schedules);
         const urlSerialization = new PlanUrlSerialization(viewSwitch, units, normalization,
             schedules, appSettings, preferences);
         const firstDive = schedules.dives[0];

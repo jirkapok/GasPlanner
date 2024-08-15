@@ -8,11 +8,10 @@ import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { SubViewStorage } from '../shared/subViewStorage';
-import { DiveSchedules } from '../shared/dive.schedules';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { Precision } from 'scuba-physics';
+import { Precision, GasDensity } from 'scuba-physics';
 
 @Component({
     selector: 'app-app-settings',
@@ -31,7 +30,6 @@ export class AppSettingsComponent implements OnInit {
     constructor(
         public units: UnitConversion,
         private settingsNormalization: SettingsNormalizationService,
-        private schedules: DiveSchedules,
         private views: SubViewStorage,
         public appSettings: ApplicationSettingsService,
         private formBuilder: NonNullableFormBuilder,
@@ -81,6 +79,15 @@ export class AppSettingsComponent implements OnInit {
 
         // only to recheck the form validity
         this.cd.detectChanges();
+    }
+
+    public resetToDefault(): void {
+        this.settingsForm.patchValue({
+            imperialUnits: false,
+            maxDensity: GasDensity.recommendedMaximum
+        });
+
+        // don't apply yet, let the user to confirm
     }
 
     private reLoad(): void {

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 import { AppSettings } from './models';
-import { GasDensity } from "scuba-physics";
 
 @Injectable()
 export class ApplicationSettingsService {

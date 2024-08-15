@@ -84,7 +84,6 @@ describe('App settings component', () => {
 
 // TODO AppSettings:
 // * After changing units, also the range values need to be reloaded
-// * Add save and load last form state. Do we want this? Or together with reset to default?
 
 
 // TODO missing test cases:

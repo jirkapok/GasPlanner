@@ -42,7 +42,13 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ["MyChromeWithoutSearchSelect"],
+    customLaunchers: {
+      MyChromeWithoutSearchSelect: {
+        base: "Chrome",
+        flags: ["-disable-search-engine-choice-screen"],
+      },
+    },
     singleRun: false,
     restartOnFileChange: true
   });

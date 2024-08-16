@@ -13,9 +13,7 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Extend application settings:
-  * Define custom maximum gas density
   * Add setting for minimum reserve for both main tank and deco tanks
-  * Add option to ignore some warnings (ICD, density)
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
   * Fix offline mode:

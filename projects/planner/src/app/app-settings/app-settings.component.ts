@@ -11,7 +11,7 @@ import { SubViewStorage } from '../shared/subViewStorage';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { Precision, GasDensity } from 'scuba-physics';
+import { Precision } from 'scuba-physics';
 
 @Component({
     selector: 'app-app-settings',

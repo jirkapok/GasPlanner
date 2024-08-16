@@ -11,7 +11,9 @@
 * ProfileEvents: Generates correct events based on maxDensity
 * NormalizationService: rounds values to correct range of settings when switching units
   * What are the values to test?
-* PlannerService: MaxGasDensity is used when calling task
+* PlannerService: 
+  * MaxGasDensity is used when calling task
+  * Events are filtered by AppSettings
 * Scheduler: Change of maxDensity triggers schedule calculation
 * Diver.component.ts: Add tests for rmv and stressRmv save and load
 * AppSettingsComponent:

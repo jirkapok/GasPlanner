@@ -21,6 +21,7 @@ import { Logger } from './Logger';
 import { ViewSwitchService } from './viewSwitchService';
 import { WayPoint } from './wayPoint';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { IgnoredIssuesService } from './IgnoredIssues.service';
 
 
 @Injectable()
@@ -29,6 +30,7 @@ export class PlannerService extends Streamed {
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
     private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
     private waypoints: WayPointsService;
+    private ignoredIssues: IgnoredIssuesService;
 
     constructor(
         private schedules: DiveSchedules,
@@ -40,6 +42,7 @@ export class PlannerService extends Streamed {
         super();
 
         this.waypoints = new WayPointsService(units);
+        this.ignoredIssues = new IgnoredIssuesService(this.appSettings);
         this.profileTask = workerFactory.createProfileWorker();
         this.profileTask.calculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((data) => this.continueCalculation(data));
@@ -93,7 +96,7 @@ export class PlannerService extends Streamed {
         const diveResult = dive.diveResult;
         diveResult.wayPoints = this.wayPointsFromResult(calculatedProfile);
         diveResult.ceilings = calculatedProfile.ceilings;
-        diveResult.events = events.items;
+        diveResult.events = this.ignoredIssues.filterIgnored(events.items);
         diveResult.finalTissues = calculatedProfile.tissues;
         diveResult.averageDepth = Segments.averageDepth(calculatedProfile.segments);
 

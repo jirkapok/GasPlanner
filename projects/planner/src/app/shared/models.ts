@@ -71,6 +71,9 @@ export class AppSettings {
     public maxGasDensity = GasDensity.recommendedMaximum;
     public primaryTankReserve = 30;
     public stageTankReserve = 20;
+    public icdIgnored = false;
+    public noDecoIgnored = false;
+    public densityIgnored = false;
 }
 
 export class DiverOptions {

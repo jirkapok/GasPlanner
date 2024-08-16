@@ -1,27 +1,31 @@
-import { EventType } from 'scuba-physics';
+import { EventType, Event } from 'scuba-physics';
 import { Injectable } from '@angular/core';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 @Injectable()
 export class IgnoredIssuesService {
-    public icdIgnored = false;
-    public densityIgnored = false;
-    public noDecoIgnored = false;
+    public constructor(private appSettings: ApplicationSettingsService) {
+    }
 
-    public get ignoredIssues(): EventType[] {
+    private get ignoredIssues(): EventType[] {
         const ignored: EventType[] = [];
 
-        if (this.icdIgnored) {
+        if (this.appSettings.icdIgnored) {
             ignored.push(EventType.switchToHigherN2);
         }
 
-        if (this.densityIgnored) {
+        if (this.appSettings.densityIgnored) {
             ignored.push(EventType.highGasDensity);
         }
 
-        if (this.noDecoIgnored) {
+        if (this.appSettings.noDecoIgnored) {
             ignored.push(EventType.noDecoEnd);
         }
 
         return ignored;
+    }
+
+    public filterIgnored(issues: Event[]): Event[] {
+        return issues.filter(issue => !this.ignoredIssues.includes(issue.type));
     }
 }

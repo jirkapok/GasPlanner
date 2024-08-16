@@ -25,6 +25,9 @@ export class AppSettingsComponent implements OnInit {
     public settingsForm!: FormGroup<{
         imperialUnits: FormControl<boolean>;
         maxDensity: FormControl<number>;
+        icdIgnored: FormControl<boolean>;
+        densityIgnored: FormControl<boolean>;
+        noDecoIgnored: FormControl<boolean>;
     }>;
 
     constructor(
@@ -59,7 +62,10 @@ export class AppSettingsComponent implements OnInit {
     public ngOnInit(): void {
         this.settingsForm = this.formBuilder.group({
             imperialUnits: [this.units.imperialUnits, [Validators.required]],
-            maxDensity: [this.maxDensity, this.validators.maxDensity]
+            maxDensity: [this.maxDensity, this.validators.maxDensity],
+            densityIgnored: [this.appSettings.densityIgnored, [Validators.required]],
+            icdIgnored: [this.appSettings.icdIgnored, [Validators.required]],
+            noDecoIgnored: [this.appSettings.noDecoIgnored, [Validators.required]]
         });
     }
 
@@ -77,6 +83,7 @@ export class AppSettingsComponent implements OnInit {
         this.views.reset();
         this.reLoad();
 
+        // TODO we need to kick new calculation schedule, because the events may be affected
         // only to recheck the form validity
         this.cd.detectChanges();
     }
@@ -84,15 +91,20 @@ export class AppSettingsComponent implements OnInit {
     public resetToDefault(): void {
         this.settingsForm.patchValue({
             imperialUnits: false,
-            maxDensity: Precision.round(this.appSettings.defaultMaxGasDensity, this.ranges.densityRounding)
+            maxDensity: Precision.round(this.appSettings.defaultMaxGasDensity, this.ranges.densityRounding),
+            icdIgnored: false,
+            densityIgnored: false,
+            noDecoIgnored: false
         });
 
         // don't apply yet, let the user confirm
     }
 
     private reLoad(): void {
+        // the ignored issues don't have to be reloaded, since they are not affected by normalization
         this.settingsForm.patchValue({
             maxDensity: this.maxDensity
+            // TODO add tank reserve settings reload
         });
     }
 }

@@ -60,6 +60,9 @@ export class AppSettingsComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        // we can't use view state here, because wouldn't be able to see the current state
+        // see also use method
+
         this.settingsForm = this.formBuilder.group({
             imperialUnits: [this.units.imperialUnits, [Validators.required]],
             maxDensity: [this.maxDensity, this.validators.maxDensity],
@@ -69,6 +72,10 @@ export class AppSettingsComponent implements OnInit {
         });
     }
 
+    /**
+     * This is the only one component, which does not save data directly,
+     * because it is used in calculation, and user can't roll back otherwise.
+     **/
     public use(): void {
         if (this.settingsForm.invalid) {
             return;
@@ -91,16 +98,16 @@ export class AppSettingsComponent implements OnInit {
         this.cd.detectChanges();
     }
 
+    /** don't apply yet, let the user confirm */
     public resetToDefault(): void {
         this.settingsForm.patchValue({
             imperialUnits: false,
-            maxDensity: Precision.round(this.appSettings.defaultMaxGasDensity, this.ranges.densityRounding),
+            // needs to be always in metric, because we reset to metric
+            maxDensity: Precision.round(this.appSettings.defaultMaxGasDensity, 1),
             icdIgnored: false,
             densityIgnored: false,
             noDecoIgnored: false
         });
-
-        // don't apply yet, let the user confirm
     }
 
     private reLoad(): void {

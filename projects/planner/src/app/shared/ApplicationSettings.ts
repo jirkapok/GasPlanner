@@ -19,8 +19,9 @@ export class ApplicationSettingsService {
         return this.units.fromGramPerLiter(this.appSettings.maxGasDensity);
     }
 
+    /** in metric **/
     public get defaultMaxGasDensity(): number {
-        return this.units.fromGramPerLiter(GasDensity.recommendedMaximum);
+        return GasDensity.recommendedMaximum;
     }
 
     public get icdIgnored(): boolean {

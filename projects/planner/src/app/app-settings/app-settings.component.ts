@@ -25,6 +25,8 @@ export class AppSettingsComponent implements OnInit {
     public settingsForm!: FormGroup<{
         imperialUnits: FormControl<boolean>;
         maxDensity: FormControl<number>;
+        primaryTankReserve: FormControl<number>;
+        stageTankReserve: FormControl<number>;
         icdIgnored: FormControl<boolean>;
         densityIgnored: FormControl<boolean>;
         noDecoIgnored: FormControl<boolean>;
@@ -59,6 +61,14 @@ export class AppSettingsComponent implements OnInit {
         return Precision.round(this.appSettings.maxGasDensity, this.ranges.densityRounding);
     }
 
+    private get primaryTankReserve(): number {
+        return Precision.round(this.appSettings.primaryTankReserve);
+    }
+
+    private get stageTankReserve(): number {
+        return Precision.round(this.appSettings.stageTankReserve);
+    }
+
     public ngOnInit(): void {
         // we can't use view state here, because wouldn't be able to see the current state
         // see also use method
@@ -66,6 +76,9 @@ export class AppSettingsComponent implements OnInit {
         this.settingsForm = this.formBuilder.group({
             imperialUnits: [this.units.imperialUnits, [Validators.required]],
             maxDensity: [this.maxDensity, this.validators.maxDensity],
+            // TODO check tank pressure validators after units are changed
+            primaryTankReserve: [this.primaryTankReserve, this.validators.tankPressure],
+            stageTankReserve: [this.stageTankReserve, this.validators.tankPressure],
             densityIgnored: [this.appSettings.densityIgnored, [Validators.required]],
             icdIgnored: [this.appSettings.icdIgnored, [Validators.required]],
             noDecoIgnored: [this.appSettings.noDecoIgnored, [Validators.required]]
@@ -86,6 +99,8 @@ export class AppSettingsComponent implements OnInit {
         this.appSettings.densityIgnored = Boolean(newValues.densityIgnored);
         this.appSettings.noDecoIgnored = Boolean(newValues.noDecoIgnored);
         this.appSettings.maxGasDensity = Number(newValues.maxDensity);
+        this.appSettings.primaryTankReserve = Number(newValues.primaryTankReserve);
+        this.appSettings.stageTankReserve = Number(newValues.stageTankReserve);
         // apply imperial last, to be able to apply in current units
         this.units.imperialUnits = Boolean(newValues.imperialUnits);
 
@@ -93,7 +108,7 @@ export class AppSettingsComponent implements OnInit {
         this.views.reset();
         this.reLoad();
 
-        // TODO we need to kick new calculation schedule, because the events may be affected
+        // TODO we need to kick new calculation schedule, because the events and reserve may be affected
         // only to recheck the form validity
         this.cd.detectChanges();
     }
@@ -104,6 +119,8 @@ export class AppSettingsComponent implements OnInit {
             imperialUnits: false,
             // needs to be in current units, because range is not applied yet
             maxDensity: Precision.round(this.appSettings.defaultMaxGasDensity, this.ranges.densityRounding),
+            primaryTankReserve: Precision.round(this.appSettings.defaultPrimaryTankReserve),
+            stageTankReserve: Precision.round(this.appSettings.defaultStageTankReserve),
             icdIgnored: false,
             densityIgnored: false,
             noDecoIgnored: false
@@ -113,8 +130,9 @@ export class AppSettingsComponent implements OnInit {
     private reLoad(): void {
         // the ignored issues don't have to be reloaded, since they are not affected by normalization
         this.settingsForm.patchValue({
-            maxDensity: this.maxDensity
-            // TODO add tank reserve settings reload
+            maxDensity: this.maxDensity,
+            primaryTankReserve: this.primaryTankReserve,
+            stageTankReserve: this.stageTankReserve,
         });
     }
 }

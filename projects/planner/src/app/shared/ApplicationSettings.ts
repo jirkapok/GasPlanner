@@ -34,6 +34,14 @@ export class ApplicationSettingsService {
         return this.units.fromGramPerLiter(GasDensity.recommendedMaximum);
     }
 
+    public get defaultPrimaryTankReserve(): number {
+        return this.units.fromBar(AppSettings.defaultPrimaryReserve);
+    }
+
+    public get defaultStageTankReserve(): number {
+        return this.units.fromBar(AppSettings.defaultStageReserve);
+    }
+
     public get icdIgnored(): boolean {
         return this.appSettings.icdIgnored;
     }

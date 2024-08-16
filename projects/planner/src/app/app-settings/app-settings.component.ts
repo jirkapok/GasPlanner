@@ -49,8 +49,18 @@ export class AppSettingsComponent implements OnInit {
     }
 
     public get maxDensityInvalid(): boolean {
-        const densityControl = this.settingsForm.controls.maxDensity;
-        return this.inputs.controlInValid(densityControl);
+        const control = this.settingsForm.controls.maxDensity;
+        return this.inputs.controlInValid(control);
+    }
+
+    public get primaryTankReserveInvalid(): boolean {
+        const control = this.settingsForm.controls.primaryTankReserve;
+        return this.inputs.controlInValid(control);
+    }
+
+    public get stageTankReserveInvalid(): boolean {
+        const control = this.settingsForm.controls.stageTankReserve;
+        return this.inputs.controlInValid(control);
     }
 
     public get densityStep(): number {

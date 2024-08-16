@@ -37,6 +37,22 @@
                                [max]="ranges.maxDensity[1]" [step]="densityStep" [class.is-invalid]="maxDensityInvalid" />
                         <div class="invalid-feedback position-absolute">Needs to be number {{ranges.maxDensityLabel}}</div>
                     </div>
+                    <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
+                        <label for="primaryTankReserve" class="form-label" mdbLabel>Minimum Primary tank reserve [{{units.pressure}}]:
+                        </label>
+                        <input class="form-control" type="number" id="primaryTankReserve"
+                               formControlName="primaryTankReserve" required [min]="ranges.tankPressure[0]"
+                               [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="primaryTankReserveInvalid" />
+                        <div class="invalid-feedback position-absolute">Needs to be number {{ranges.tankPressureLabel}}</div>
+                    </div>
+                    <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
+                        <label for="stageTankReserve" class="form-label" mdbLabel>Minimum Stage tank reserve [{{units.pressure}}]:
+                        </label>
+                        <input class="form-control" type="number" id="stageTankReserve"
+                               formControlName="stageTankReserve" required [min]="ranges.tankPressure[0]"
+                               [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="stageTankReserveInvalid" />
+                        <div class="invalid-feedback position-absolute">Needs to be number {{ranges.tankPressureLabel}}</div>
+                    </div>
                 </div>
             </div>
         </div>

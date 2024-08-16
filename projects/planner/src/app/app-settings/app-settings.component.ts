@@ -76,7 +76,6 @@ export class AppSettingsComponent implements OnInit {
         this.settingsForm = this.formBuilder.group({
             imperialUnits: [this.units.imperialUnits, [Validators.required]],
             maxDensity: [this.maxDensity, this.validators.maxDensity],
-            // TODO check tank pressure validators after units are changed
             primaryTankReserve: [this.primaryTankReserve, this.validators.tankPressure],
             stageTankReserve: [this.stageTankReserve, this.validators.tankPressure],
             densityIgnored: [this.appSettings.densityIgnored, [Validators.required]],

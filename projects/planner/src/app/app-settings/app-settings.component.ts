@@ -102,8 +102,8 @@ export class AppSettingsComponent implements OnInit {
     public resetToDefault(): void {
         this.settingsForm.patchValue({
             imperialUnits: false,
-            // needs to be always in metric, because we reset to metric
-            maxDensity: Precision.round(this.appSettings.defaultMaxGasDensity, 1),
+            // needs to be in current units, because range is not applied yet
+            maxDensity: Precision.round(this.appSettings.defaultMaxGasDensity, this.ranges.densityRounding),
             icdIgnored: false,
             densityIgnored: false,
             noDecoIgnored: false

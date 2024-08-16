@@ -15,13 +15,14 @@ export class ApplicationSettingsService {
         return this.appSettings;
     }
 
+    /** in current units **/
     public get maxGasDensity(): number {
         return this.units.fromGramPerLiter(this.appSettings.maxGasDensity);
     }
 
-    /** in metric **/
+    /** in current units **/
     public get defaultMaxGasDensity(): number {
-        return GasDensity.recommendedMaximum;
+        return this.units.fromGramPerLiter(GasDensity.recommendedMaximum);
     }
 
     public get icdIgnored(): boolean {

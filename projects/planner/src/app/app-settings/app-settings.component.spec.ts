@@ -82,18 +82,8 @@ describe('App settings component', () => {
     });
 });
 
-// TODO AppSettings:
-// * After changing units, also the range values need to be reloaded
-
-
 // TODO missing test cases:
 // * Add tests for Diver.ts
-// * AppSettingsComponent:
-//   * Precision and Step for imperial units
-//   * Precision and Step for metric units
-//   * Values are reloaded after switch to and from imperial units and click Use button
-//   * Values are Saved to PreferencesStore after clicking Use button
-//   * Values are loaded from PreferencesStore after component initialization
 // * PersistenceService:
 //   * Save and load AppSettings from store (density)
 //   * Density not saved yet, default value is loaded
@@ -104,6 +94,12 @@ describe('App settings component', () => {
 // * ProfileEvents: Generates correct events based on maxDensity
 // * NormalizationService: rounds values to correct range of settings when switching units
 //   * What are the values to test?
+// * PlannerService: MaxGasDensity is used when calling task
 // * Scheduler: Change of maxDensity triggers schedule calculation
 // * Diver.component.ts: Add tests for rmv and stressRmv save and load
-// * PlannerService: MaxGasDensity is used when calling task
+// * AppSettingsComponent:
+//   * Precision and Step for imperial units
+//   * Precision and Step for metric units
+//   * Values are reloaded after switch to and from imperial units and click Use button
+//   * Values are Saved to PreferencesStore after clicking Use button
+//   * Values are loaded from PreferencesStore after component initialization

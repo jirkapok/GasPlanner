@@ -72,9 +72,9 @@ export class AppSettingsComponent implements OnInit {
         this.appSettings.maxGasDensity = Number(newValues.maxDensity.value);
         // apply imperial last, to be able to apply in current units
         this.units.imperialUnits = Boolean(newValues.imperialUnits.value);
+
         this.settingsNormalization.apply();
         this.views.reset();
-
         this.reLoad();
 
         // only to recheck the form validity
@@ -84,10 +84,10 @@ export class AppSettingsComponent implements OnInit {
     public resetToDefault(): void {
         this.settingsForm.patchValue({
             imperialUnits: false,
-            maxDensity: GasDensity.recommendedMaximum
+            maxDensity: Precision.round(this.appSettings.defaultMaxGasDensity, this.ranges.densityRounding)
         });
 
-        // don't apply yet, let the user to confirm
+        // don't apply yet, let the user confirm
     }
 
     private reLoad(): void {

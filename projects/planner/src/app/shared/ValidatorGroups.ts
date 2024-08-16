@@ -83,12 +83,14 @@ export class ValidatorGroups {
         return this.rangeFor(this.ranges.narcoticDepth);
     }
 
+    // dynamic validation
     public get diverRmv(): ValidatorFn[] {
         return [Validators.required, this.validateMinRmv, this.validateMaxRmv];
     }
 
+    // dynamic validation
     public get maxDensity(): ValidatorFn[] {
-        return this.rangeFor(this.ranges.maxDensity);
+        return [Validators.required, this.validateMinDensity, this.validateMaxDensity];
     }
 
     private get ranges(): RangeConstants {
@@ -122,5 +124,13 @@ export class ValidatorGroups {
 
     private validateMaxRmv(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => Validators.max(this.ranges.diverRmv[1])(control);
+    }
+
+    private validateMinDensity(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => Validators.min(this.ranges.maxDensity[0])(control);
+    }
+
+    private validateMaxDensity(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => Validators.max(this.ranges.maxDensity[1])(control);
     }
 }

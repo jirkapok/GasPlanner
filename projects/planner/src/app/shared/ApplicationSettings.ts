@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 import { AppSettings } from './models';
+import { GasDensity } from 'scuba-physics';
 
 @Injectable()
 export class ApplicationSettingsService {
@@ -16,6 +17,10 @@ export class ApplicationSettingsService {
 
     public get maxGasDensity(): number {
         return this.units.fromGramPerLiter(this.appSettings.maxGasDensity);
+    }
+
+    public get defaultMaxGasDensity(): number {
+        return this.units.fromGramPerLiter(GasDensity.recommendedMaximum);
     }
 
     public set maxGasDensity(value: number) {

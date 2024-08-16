@@ -113,7 +113,7 @@ export class AppSettingsComponent implements OnInit {
         // apply imperial last, to be able to apply in current units
         this.units.imperialUnits = Boolean(newValues.imperialUnits);
 
-        this.settingsNormalization.apply(); // TODO add tank reserve to normalization
+        this.settingsNormalization.apply();
         this.views.reset();
         this.reLoad();
 

@@ -20,6 +20,7 @@ export class SettingsNormalizationService {
     }
 
     public apply(): void {
+        this.applyToAppSettings();
         this.schedules.dives.forEach(d => this.applyDive(d));
     }
 
@@ -37,6 +38,9 @@ export class SettingsNormalizationService {
             v => this.units.fromGramPerLiter(v),
             v => this.units.toGramPerLiter(v),
             settings.maxGasDensity, this.units.ranges.maxDensity, densityRounding);
+
+        settings.primaryTankReserve = this.fitPressureToRange(settings.primaryTankReserve, this.ranges.tankPressure);
+        settings.stageTankReserve = this.fitPressureToRange(settings.stageTankReserve, this.ranges.tankPressure);
     }
 
     private applyToOptions(options: OptionsService): void {

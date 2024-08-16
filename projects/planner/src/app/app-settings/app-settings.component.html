@@ -3,6 +3,28 @@
         <div class="col col-12 col-sm-7 col-lg-5 col-xl-4 col-xxl-3 mt-3">
             <div class="card">
                 <div class="card-header">
+                    <fa-icon [icon]="flagIcon" class="me-3"></fa-icon>
+                    <span>Units</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-check">
+                        <input type="radio" id="metricRadio" class="form-check-input" formControlName="imperialUnits"
+                               [value]="false" />
+                        <label class="custom-control-label" for="metricRadio" value="metric">Metric units (m, l,
+                            bar)</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" id="imperialRadio" class="form-check-input" formControlName="imperialUnits"
+                               [value]="true" />
+                        <label class="custom-control-label" for="imperialRadio">Imperial units (ft, cuft, psi)<br>
+                            (Experimental, not recommended)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-12 col-sm-7 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+            <div class="card">
+                <div class="card-header">
                     <fa-icon [icon]="diverIcon" class="me-3"></fa-icon>
                     <span>Limits</span>
                 </div>
@@ -36,28 +58,6 @@
                     <div class="form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="noDecoIgnored" formControlName="noDecoIgnored" mdbCheckbox />
                         <label class="custom-control-label" for="noDecoIgnored">No decompression limit reached</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col col-12 col-sm-7 col-lg-5 col-xl-4 col-xxl-3 mt-3">
-            <div class="card">
-                <div class="card-header">
-                    <fa-icon [icon]="flagIcon" class="me-3"></fa-icon>
-                    <span>Units</span>
-                </div>
-                <div class="card-body">
-                    <div class="form-check">
-                        <input type="radio" id="metricRadio" class="form-check-input" formControlName="imperialUnits"
-                            [value]="false" />
-                        <label class="custom-control-label" for="metricRadio" value="metric">Metric units (m, l,
-                            bar)</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" id="imperialRadio" class="form-check-input" formControlName="imperialUnits"
-                            [value]="true" />
-                        <label class="custom-control-label" for="imperialRadio">Imperial units (ft, cuft, psi)<br>
-                            (Experimental, not recommended)</label>
                     </div>
                 </div>
             </div>

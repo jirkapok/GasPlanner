@@ -74,10 +74,13 @@ export class AppSettingsComponent implements OnInit {
             return;
         }
 
-        const newValues = this.settingsForm.controls;
-        this.appSettings.maxGasDensity = Number(newValues.maxDensity.value);
+        const newValues = this.settingsForm.value;
+        this.appSettings.icdIgnored = Boolean(newValues.icdIgnored);
+        this.appSettings.densityIgnored = Boolean(newValues.densityIgnored);
+        this.appSettings.noDecoIgnored = Boolean(newValues.noDecoIgnored);
+        this.appSettings.maxGasDensity = Number(newValues.maxDensity);
         // apply imperial last, to be able to apply in current units
-        this.units.imperialUnits = Boolean(newValues.imperialUnits.value);
+        this.units.imperialUnits = Boolean(newValues.imperialUnits);
 
         this.settingsNormalization.apply();
         this.views.reset();

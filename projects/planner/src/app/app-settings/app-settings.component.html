@@ -7,8 +7,6 @@
                     <span>Limits</span>
                 </div>
                 <div class="card-body">
-                    <p>Options for application limits: Primary tank minimum reserve pressure</p>
-
                     <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
                         <label for="maxDensity" class="form-label" mdbLabel>Max gas density [{{units.density}}]:
                         </label>
@@ -16,6 +14,28 @@
                                formControlName="maxDensity" required [min]="ranges.maxDensity[0]"
                                [max]="ranges.maxDensity[1]" [step]="densityStep" [class.is-invalid]="maxDensityInvalid" />
                         <div class="invalid-feedback position-absolute">Needs to be number {{ranges.maxDensityLabel}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-12 col-sm-7 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+            <div class="card">
+                <div class="card-header">
+                    <fa-icon [icon]="diverIcon" class="me-3"></fa-icon>
+                    <span>Ignored Issues (warnings/errors)</span>
+                </div>
+                <div class="card-body">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input" id="icdIgnored" formControlName="icdIgnored" mdbCheckbox />
+                        <label class="custom-control-label" for="icdIgnored">Isobaric counter diffusion (ICD)</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input" id="densityIgnored" formControlName="densityIgnored" mdbCheckbox />
+                        <label class="custom-control-label" for="densityIgnored">Maximum gas density Exceeded</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input" id="noDecoIgnored" formControlName="noDecoIgnored" mdbCheckbox />
+                        <label class="custom-control-label" for="noDecoIgnored">No decompression limit reached</label>
                     </div>
                 </div>
             </div>

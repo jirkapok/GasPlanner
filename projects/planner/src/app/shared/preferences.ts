@@ -79,8 +79,7 @@ export class Preferences {
         // first apply units to prevent loading of invalid values
         this.units.imperialUnits = loaded.options.imperialUnits;
         this.applyDives(loaded.dives);
-        const loadedDensity = loaded.options.maxDensity || GasDensity.recommendedMaximum;
-        this.appSettings.loadFrom(loadedDensity);
+        this.appSettings.loadFrom(loaded.options);
 
         // now we are able to switch the view
         this.viewSwitch.isComplex = loaded.options.isComplex;
@@ -110,11 +109,17 @@ export class Preferences {
     }
 
     private toAppSettings(): AppOptionsDto {
+        const settings = this.appSettings.settings;
         return {
             imperialUnits: this.units.imperialUnits,
             isComplex: this.viewSwitch.isComplex,
             language: 'en',
-            maxDensity: this.appSettings.settings.maxGasDensity
+            maxDensity: settings.maxGasDensity,
+            primaryTankReserve: settings.primaryTankReserve,
+            stageTankReserve: settings.stageTankReserve,
+            icdIgnored: settings.icdIgnored,
+            densityIgnored: settings.densityIgnored,
+            noDecoIgnored: settings.noDecoIgnored
         };
     }
 

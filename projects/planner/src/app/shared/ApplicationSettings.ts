@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 import { AppSettings } from './models';
 import { GasDensity } from 'scuba-physics';
+import { AppOptionsDto } from './serialization.model';
 
 @Injectable()
 export class ApplicationSettingsService {
@@ -18,6 +19,14 @@ export class ApplicationSettingsService {
     /** in current units **/
     public get maxGasDensity(): number {
         return this.units.fromGramPerLiter(this.appSettings.maxGasDensity);
+    }
+
+    public get primaryTankReserve(): number {
+        return this.units.fromBar(this.appSettings.primaryTankReserve);
+    }
+
+    public get stageTankReserve(): number {
+        return this.units.fromBar(this.appSettings.stageTankReserve);
     }
 
     /** in current units **/
@@ -41,6 +50,14 @@ export class ApplicationSettingsService {
         this.appSettings.maxGasDensity = this.units.toGramPerLiter(value);
     }
 
+    public set primaryTankReserve(newValue: number) {
+        this.appSettings.primaryTankReserve = this.units.toBar(newValue);
+    }
+
+    public set stageTankReserve(newValue: number) {
+        this.appSettings.stageTankReserve = this.units.toBar(newValue);
+    }
+
     public set icdIgnored(newValue: boolean) {
         this.appSettings.icdIgnored = newValue;
     }
@@ -53,8 +70,12 @@ export class ApplicationSettingsService {
         this.appSettings.noDecoIgnored = newValue;
     }
 
-    public loadFrom(maxDensity: number): void {
-        this.settings.maxGasDensity = maxDensity;
-        // TODO add ignored issues and tank reserve
+    public loadFrom(source: AppOptionsDto): void {
+        this.settings.maxGasDensity = source.maxDensity || GasDensity.recommendedMaximum;
+        this.settings.primaryTankReserve = source.primaryTankReserve || AppSettings.defaultPrimaryReserve;
+        this.settings.stageTankReserve = source.stageTankReserve || AppSettings.defaultStageReserve;
+        this.settings.icdIgnored = source.icdIgnored || false;
+        this.settings.densityIgnored = source.densityIgnored || false;
+        this.settings.noDecoIgnored = source.noDecoIgnored || false;
     }
 }

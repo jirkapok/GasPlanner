@@ -359,7 +359,12 @@ export class PlanUrlSerialization {
             imperialUnits: context.parseBoolean(1),
             language: 'en',
             // Not part of the url:
-            maxDensity: this.appSettings.settings.maxGasDensity
+            maxDensity: this.appSettings.settings.maxGasDensity,
+            primaryTankReserve: this.appSettings.settings.primaryTankReserve,
+            stageTankReserve: this.appSettings.settings.stageTankReserve,
+            icdIgnored: this.appSettings.settings.icdIgnored,
+            densityIgnored: this.appSettings.settings.densityIgnored,
+            noDecoIgnored: this.appSettings.settings.noDecoIgnored
         };
     }
 }

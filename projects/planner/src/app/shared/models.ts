@@ -68,9 +68,13 @@ export class Level {
  * Not added to the Url, since it is not needed for sharing.
  */
 export class AppSettings {
+    // TODO move default values to library GasConsumptions
+    public static readonly defaultPrimaryReserve = 30;
+    public static readonly defaultStageReserve = 20;
+
     public maxGasDensity = GasDensity.recommendedMaximum;
-    public primaryTankReserve = 30;
-    public stageTankReserve = 20;
+    public primaryTankReserve = AppSettings.defaultPrimaryReserve;
+    public stageTankReserve = AppSettings.defaultStageReserve;
     public icdIgnored = false;
     public noDecoIgnored = false;
     public densityIgnored = false;

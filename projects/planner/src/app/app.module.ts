@@ -104,6 +104,7 @@ import { ResultsComparison } from './shared/diff/results-comparison.service';
 import { SelectedDiffWaypoint } from './shared/diff/selected-diff-waypoint.service';
 import { ResamplingService } from './shared/ResamplingService';
 import { ApplicationSettingsService } from './shared/ApplicationSettings';
+import { IgnoredIssuesService } from './shared/IgnoredIssues.service';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -213,7 +214,8 @@ const SERVICES = [
     GasesComparisonService,
     ResultsComparison,
     ResamplingService,
-    ApplicationSettingsService
+    ApplicationSettingsService,
+    IgnoredIssuesService
 ];
 
 @NgModule({

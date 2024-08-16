@@ -357,8 +357,8 @@ export class PlanUrlSerialization {
         return {
             isComplex: context.parseBoolean(0),
             imperialUnits: context.parseBoolean(1),
-            language: 'en',
             // Not part of the url:
+            language: 'en',
             maxDensity: this.appSettings.settings.maxGasDensity,
             primaryTankReserve: this.appSettings.settings.primaryTankReserve,
             stageTankReserve: this.appSettings.settings.stageTankReserve,

@@ -12,6 +12,7 @@ import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
 
 @Component({
     selector: 'app-app-settings',
@@ -37,6 +38,7 @@ export class AppSettingsComponent implements OnInit {
         private settingsNormalization: SettingsNormalizationService,
         private views: SubViewStorage,
         public appSettings: ApplicationSettingsService,
+        private dispatcher: ReloadDispatcher,
         private formBuilder: NonNullableFormBuilder,
         private cd: ChangeDetectorRef,
         private inputs: InputControls,
@@ -116,8 +118,8 @@ export class AppSettingsComponent implements OnInit {
         this.settingsNormalization.apply();
         this.views.reset();
         this.reLoad();
+        this.dispatcher.sendSetSimple(); // the only one event, which triggers all dives calculation
 
-        // TODO we need to kick new calculation schedule, because the events and reserve may be affected
         // only to recheck the form validity
         this.cd.detectChanges();
     }

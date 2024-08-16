@@ -37,7 +37,10 @@ export class ReloadDispatcher {
     /** For selected dive only. */
     public wayPointsCalculated$: Observable<number | undefined>;
     public selectedChanged$: Observable<void>;
-    /** This need special event, since all dives are reset and we really need to recalculate all */
+    /**
+     * Set to simple needs special event, since all dives are reset and we really need to recalculate all.
+     * The same applies Application settings change.
+     */
     public setToSimple$: Observable<void>;
 
     private onTanksReloaded = new Subject<TanksService>();

@@ -56,8 +56,10 @@ class ConsumptionSegment {
  * (e.g. rock bottom, turn pressure, turn time)
  */
 export class Consumption {
-    /** Minimum bars to keep in tank, even for shallow dives */
-    public static readonly minimumRockBottom = 30;
+    /** Minimum bars to keep in first tank, even for shallow dives */
+    public static readonly defaultPrimaryReserve = 30;
+    /** Minimum bars to keep in stage tank, even for shallow dives */
+    public static readonly defaultStageReserve = 20;
 
     constructor(private depthConverter: DepthConverter) { }
 
@@ -175,9 +177,11 @@ export class Consumption {
             gasesConsumed.set(gasCode, consumedLiters);
         }
 
+        // TODO make tank reserve configurable
+        // TODO apply also defaultStageReserve
         // Add minimum reserve to first tank only as back gas? This doesn't look nice for side mount.
-        if (tanks[0].reserve < Consumption.minimumRockBottom) {
-            tanks[0].reserve = Consumption.minimumRockBottom;
+        if (tanks[0].reserve < Consumption.defaultPrimaryReserve) {
+            tanks[0].reserve = Consumption.defaultPrimaryReserve;
         }
     }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 import { AppSettings } from './models';
-import { GasDensity } from 'scuba-physics';
+import { Consumption, GasDensity } from 'scuba-physics';
 import { AppOptionsDto } from './serialization.model';
 
 @Injectable()
@@ -35,11 +35,11 @@ export class ApplicationSettingsService {
     }
 
     public get defaultPrimaryTankReserve(): number {
-        return this.units.fromBar(AppSettings.defaultPrimaryReserve);
+        return this.units.fromBar(Consumption.defaultPrimaryReserve);
     }
 
     public get defaultStageTankReserve(): number {
-        return this.units.fromBar(AppSettings.defaultStageReserve);
+        return this.units.fromBar(Consumption.defaultStageReserve);
     }
 
     public get icdIgnored(): boolean {
@@ -80,8 +80,8 @@ export class ApplicationSettingsService {
 
     public loadFrom(source: AppOptionsDto): void {
         this.settings.maxGasDensity = source.maxDensity || GasDensity.recommendedMaximum;
-        this.settings.primaryTankReserve = source.primaryTankReserve || AppSettings.defaultPrimaryReserve;
-        this.settings.stageTankReserve = source.stageTankReserve || AppSettings.defaultStageReserve;
+        this.settings.primaryTankReserve = source.primaryTankReserve || Consumption.defaultPrimaryReserve;
+        this.settings.stageTankReserve = source.stageTankReserve || Consumption.defaultStageReserve;
         this.settings.icdIgnored = source.icdIgnored || false;
         this.settings.densityIgnored = source.densityIgnored || false;
         this.settings.noDecoIgnored = source.noDecoIgnored || false;

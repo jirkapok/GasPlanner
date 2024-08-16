@@ -1,7 +1,7 @@
 import {
     Time, Segment, Tank,
     Precision, TankTemplate, Options,
-    Diver, GasDensity
+    Diver, GasDensity, Consumption
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -68,13 +68,9 @@ export class Level {
  * Not added to the Url, since it is not needed for sharing.
  */
 export class AppSettings {
-    // TODO move default values to library GasConsumptions
-    public static readonly defaultPrimaryReserve = 30;
-    public static readonly defaultStageReserve = 20;
-
     public maxGasDensity = GasDensity.recommendedMaximum;
-    public primaryTankReserve = AppSettings.defaultPrimaryReserve;
-    public stageTankReserve = AppSettings.defaultStageReserve;
+    public primaryTankReserve = Consumption.defaultPrimaryReserve;
+    public stageTankReserve = Consumption.defaultStageReserve;
     public icdIgnored = false;
     public noDecoIgnored = false;
     public densityIgnored = false;

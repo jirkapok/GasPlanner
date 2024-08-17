@@ -78,7 +78,7 @@ export class PlanningTasks {
         const emergencyAscent = PlanFactory.emergencyAscent(originProfile, options, tanks);
         let timeToSurface = Segments.duration(emergencyAscent);
         timeToSurface = Time.toMinutes(timeToSurface);
-        consumption.consumeFromTanks2(originProfile, emergencyAscent, options, tanks, diver);
+        consumption.consumeFromTanks2(originProfile, emergencyAscent, tanks, diver);
 
         return {
             diveId: task.diveId,

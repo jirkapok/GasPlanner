@@ -103,6 +103,7 @@ export class OptionsService {
         return this.options.roundStopsToMinutes;
     }
 
+    // TODO confirm it is not used
     public get safetyStop(): SafetyStop {
         return this.options.safetyStop;
     }

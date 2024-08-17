@@ -33,6 +33,7 @@ export class DiveIssuesComponent {
         return this.schedules.selectedDepths.planDuration + 1;
     }
 
+    // TODO replace noDeco from dive results by event
     public get noDeco(): number {
         return this.dive.noDecoTime;
     }

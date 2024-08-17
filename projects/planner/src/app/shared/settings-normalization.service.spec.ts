@@ -48,12 +48,43 @@ describe('SettingsNormalizationService', () => {
     });
 
     describe('Diver', () => {
-        it('RMV applies to planner', () => {
+        it('RMV is normalized', () => {
             diverOptions.rmv = 100;
             applySut(optionsService);
             expect(optionsService.diverOptions.rmv).toBe(90);
         });
 
+        it('Stress RMV is normalized', () => {
+            diverOptions.stressRmv = 110;
+            applySut(optionsService);
+            expect(optionsService.diverOptions.stressRmv).toBe(90);
+        });
+    });
+
+    describe('Application settings', () => {
+        let appSettings: ApplicationSettingsService;
+
+        beforeEach(() => {
+            appSettings = TestBed.inject(ApplicationSettingsService);
+        });
+
+        it('Gas density is normalized', () => {
+            appSettings.maxGasDensity = 12;
+            service.apply();
+            expect(appSettings.maxGasDensity).toBe(10);
+        });
+
+        it('Primary tank reserve is normalized', () => {
+            appSettings.primaryTankReserve = 400;
+            service.apply();
+            expect(appSettings.primaryTankReserve).toBe(350);
+        });
+
+        it('Stage tank reserve is normalized', () => {
+            appSettings.stageTankReserve = 390;
+            service.apply();
+            expect(appSettings.stageTankReserve).toBe(350);
+        });
     });
 
     describe('Imperial units', () => {

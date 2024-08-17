@@ -1,6 +1,7 @@
 # TODO missing test cases
 
 * Add tests for Diver.ts
+* Test IgnoredIssuesService.ts
 * PersistenceService:
   * Save and load AppSettings from store (density, warnings, tank reserve)
   * AppSettings not saved yet, default value is loaded
@@ -9,8 +10,6 @@
   * Loads and saves stressRmv and rmv
   * Loads default stressRmv, if not present in URL
 * ProfileEvents: Generates correct events based on maxDensity
-* NormalizationService: rounds values to correct range of settings when switching units
-  * What are the values to test?
 * PlannerService: 
   * MaxGasDensity is used when calling task
   * Consumption task uses tanks reserve

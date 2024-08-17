@@ -19,12 +19,6 @@
             shorter than currently planned dive. Use larger tank, fill it with more gas, reduce dive
             duration or planned depth.</span>
     </div>
-    <div *ngIf="dive.diveInfoCalculated && dive.noDecoExceeded" class="alert alert-info">
-        <fa-icon [icon]="info" class="me-2"></fa-icon>
-        <span>No decompression time for current depth exceeded (For no decompression dive set dive time
-            maximum
-            to {{ noDeco | number:'1.0-0' }} min)!</span>
-    </div>
     <div *ngIf="dive.diveInfoCalculated && dive.otuExceeded" class="alert alert-warning">
         <fa-icon [icon]="warning" class="me-2"></fa-icon>
         <span>Exceeded 80 % of maximum single exposure oxygen toxicity units
@@ -40,6 +34,14 @@
     </div>
 
     <ng-container *ngFor="let event of events">
+        <div *ngIf="isNoDeco(event)" class="alert alert-info">
+            <fa-icon [icon]="info" class="me-2"></fa-icon>
+            <strong>{{ event.timeStamp | duration:event.timeStamp
+                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+            <span>No decompression time for current depth exceeded (For no decompression dive set dive time
+            maximum
+            to {{ noDeco | number:'1.0-0' }} min)!</span>
+        </div>
         <div *ngIf="isLowPpO2(event)" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp

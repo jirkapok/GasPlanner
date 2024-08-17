@@ -553,4 +553,33 @@ describe('Consumption', () => {
             });
         });
     });
+
+    describe('Custom minimum tank reserve is applied', () => {
+        const tank1 = new Tank(20, 200, 21);
+        const tank2 = new Tank(10, 200, 21);
+        const tank3 = new Tank(10, 200, 21);
+        const tanks = [tank1, tank2, tank3];
+
+        const s1 = new Segment(0, 5, tank1, Time.oneMinute);
+        const s2 = new Segment(5, 5, tank1, Time.oneMinute * 10);
+        const s3 = new Segment(5, 0, tank2, Time.oneMinute);
+        const segments = [s1, s2, s3];
+
+        consumption.consumeFromTanks(segments, options2, tanks, diver);
+
+        it('First tank', () => {
+            expect(tank1.reserve).toEqual(30);
+        });
+
+        xit('All other stage tanks', () => {
+            expect(tank2.reserve).toEqual(20);
+            expect(tank3.reserve).toEqual(20);
+        });
+    });
+
+    // TODO add test cases: How to calculate reserve in case user consumed more than reserve:
+    // * for from first tank
+    // * for last stage tank
+    // * for multiple stage tanks
+    // * for used defined consumed from second stage
 });

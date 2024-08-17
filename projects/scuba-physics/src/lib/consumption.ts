@@ -51,6 +51,14 @@ class ConsumptionSegment {
     }
 }
 
+export interface ConsumptionOptions {
+    diver: Diver;
+    /** Minimum tank reserve for first tank in bars */
+    primaryTankReserve: number;
+    /** Minimum tank reserve for all other stage tanks in bars */
+    stageTankReserve: number;
+}
+
 /**
  * Calculates tank consumptions during the dive and related variables
  * (e.g. rock bottom, turn pressure, turn time)
@@ -109,7 +117,7 @@ export class Consumption {
         Tanks.resetConsumption(tanks);
         const remainToConsume = this.consumeByTanks(segments, diver.rmv);
         this.consumeByGases(segments, tanks, diver.rmv, remainToConsume);
-        this.updateReserve(emergencyAscent, tanks, diver.teamStressRmv);
+        this.updateReserve(emergencyAscent, tanks, diver.teamStressRmv, Consumption.defaultPrimaryReserve, Consumption.defaultStageReserve);
     }
 
     /**
@@ -162,7 +170,7 @@ export class Consumption {
         return testSegments;
     }
 
-    private updateReserve(ascent: Segment[], tanks: Tank[], stressSac: number): void {
+    private updateReserve(ascent: Segment[], tanks: Tank[], stressSac: number, firstTankReserve: number, stageTankReserve: number): void {
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
         const gasesConsumed: Map<number, number> = this.toBeConsumed(ascent, stressSac, () => true);

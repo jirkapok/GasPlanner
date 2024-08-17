@@ -103,11 +103,6 @@ export class OptionsService {
         return this.options.roundStopsToMinutes;
     }
 
-    // TODO confirm it is not used
-    public get safetyStop(): SafetyStop {
-        return this.options.safetyStop;
-    }
-
     public get salinity(): Salinity {
         return this.options.salinity;
     }
@@ -209,10 +204,6 @@ export class OptionsService {
 
     public set roundStopsToMinutes(newValue: boolean) {
         this.options.roundStopsToMinutes = newValue;
-    }
-
-    public set safetyStop(newValue: SafetyStop) {
-        this.options.safetyStop = newValue;
     }
 
     public set salinity(newValue: Salinity) {

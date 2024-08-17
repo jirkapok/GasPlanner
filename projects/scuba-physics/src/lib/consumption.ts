@@ -88,15 +88,15 @@ export class Consumption {
      *                 the array needs have at least 3 items (descent, swim, ascent).
      * @param options Not null profile behavior options.
      * @param tanks All tanks used to generate the profile, their gases need to fit all used in segments param
-     * @param diver diver respiratory minute volumes in Liters/minute.
+     * @param consumptionOptions Not null definition how to consume the gases.
      */
-    public consumeFromTanks(segments: Segment[], options: Options, tanks: Tank[], diver: Diver): void {
+    public consumeFromTanks(segments: Segment[], options: Options, tanks: Tank[], consumptionOptions: ConsumptionOptions): void {
         if (segments.length < 2) {
             throw new Error('Profile needs to contain at least 2 segments.');
         }
 
         const emergencyAscent = PlanFactory.emergencyAscent(segments, options, tanks);
-        this.consumeFromTanks2(segments, emergencyAscent, tanks, diver);
+        this.consumeFromTanks2(segments, emergencyAscent, tanks, consumptionOptions);
     }
 
     /**
@@ -107,29 +107,30 @@ export class Consumption {
      * @param emergencyAscent Not null array of segments representing the special ascent.
      *                 Doesn't have to be part of the segments parameter value, since in emergency we need current state.
      * @param tanks All tanks used to generate the profile, their gases need to fit all used in segments param
-     * @param diver diver respiratory minute volumes in Liters/minute.
+     * @param consumptionOptions Not null consumption definition.
      */
-    public consumeFromTanks2(segments: Segment[], emergencyAscent: Segment[], tanks: Tank[], diver: Diver): void {
+    public consumeFromTanks2(segments: Segment[], emergencyAscent: Segment[], tanks: Tank[], consumptionOptions: ConsumptionOptions): void {
         if (segments.length < 2) {
             throw new Error('Profile needs to contain at least 2 segments.');
         }
 
         Tanks.resetConsumption(tanks);
-        const remainToConsume = this.consumeByTanks(segments, diver.rmv);
-        this.consumeByGases(segments, tanks, diver.rmv, remainToConsume);
-        this.updateReserve(emergencyAscent, tanks, diver.teamStressRmv, Consumption.defaultPrimaryReserve, Consumption.defaultStageReserve);
+        const remainToConsume = this.consumeByTanks(segments, consumptionOptions.diver.rmv);
+        this.consumeByGases(segments, tanks, consumptionOptions.diver.rmv, remainToConsume);
+        this.updateReserve(emergencyAscent, tanks, consumptionOptions);
     }
 
     /**
      * We cant provide this method for multilevel dives, because we don't know which segment to extend
      * @param sourceSegments User defined profile
      * @param tanks The tanks used during the dive to check available gases
-     * @param diver Consumption SAC definition
+     * @param consumptionOptions Not null consumption definition
      * @param options ppO2 definitions needed to estimate ascent profile
      * @returns Number of minutes representing maximum time we can spend as bottom time.
      * Returns 0 in case the duration is shorter than user defined segments.
      */
-    public calculateMaxBottomTime(sourceSegments: Segments, tanks: Tank[], diver: Diver, options: Options): number {
+    public calculateMaxBottomTime(sourceSegments: Segments, tanks: Tank[],
+        consumptionOptions: ConsumptionOptions, options: Options): number {
         const testSegments = this.createTestProfile(sourceSegments);
         const addedSegment = testSegments.last();
 
@@ -140,7 +141,7 @@ export class Consumption {
             maxValue: Time.oneDay,
             doWork: (newValue: number) => {
                 addedSegment.duration = newValue;
-                this.consumeFromProfile(testSegments, tanks, diver, options);
+                this.consumeFromProfile(testSegments, tanks, consumptionOptions, options);
             },
             meetsCondition: () => Tanks.haveReserve(tanks)
         };
@@ -158,9 +159,9 @@ export class Consumption {
         return Precision.floor(totalDuration);
     }
 
-    private consumeFromProfile(testSegments: Segments, tanks: Tank[], diver: Diver, options: Options) {
+    private consumeFromProfile(testSegments: Segments, tanks: Tank[], consumptionOptions: ConsumptionOptions, options: Options) {
         const profile = Consumption.calculateDecompression(testSegments, tanks, options);
-        this.consumeFromTanks(profile.segments, options, tanks, diver);
+        this.consumeFromTanks(profile.segments, options, tanks, consumptionOptions);
     }
 
     private createTestProfile(sourceSegments: Segments): Segments {
@@ -170,10 +171,10 @@ export class Consumption {
         return testSegments;
     }
 
-    private updateReserve(ascent: Segment[], tanks: Tank[], stressSac: number, firstTankReserve: number, stageTankReserve: number): void {
+    private updateReserve(ascent: Segment[], tanks: Tank[], options: ConsumptionOptions): void {
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
-        const gasesConsumed: Map<number, number> = this.toBeConsumed(ascent, stressSac, () => true);
+        const gasesConsumed: Map<number, number> = this.toBeConsumed(ascent, options.diver.teamStressRmv, () => true);
 
         // add the reserve from opposite order than consumed gas
         for (let index = 0; index <= tanks.length - 1; index++) {
@@ -249,9 +250,9 @@ export class Consumption {
         return consumedLiters;
     }
 
-    private toBeConsumed(segments: Segment[], sac: number, includeSegment: (segment: Segment) => boolean): Map<number, number> {
+    private toBeConsumed(segments: Segment[], rmv: number, includeSegment: (segment: Segment) => boolean): Map<number, number> {
         const emptyConsumptions = new Map<number, number>();
-        return this.toBeConsumedYet(segments, sac, emptyConsumptions, includeSegment);
+        return this.toBeConsumedYet(segments, rmv, emptyConsumptions, includeSegment);
     }
 
     private toBeConsumedYet(segments: Segment[], sac: number,

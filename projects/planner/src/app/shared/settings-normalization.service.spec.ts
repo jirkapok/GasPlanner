@@ -115,7 +115,7 @@ describe('SettingsNormalizationService', () => {
             expect(options.maxEND).toBeCloseTo(29.8704, 4);
             expect(options.altitude).toBeCloseTo(99.9744, 4);
             expect(options.ascentSpeed50perc).toBeCloseTo(9.144, 4);
-            expect(options.ascentSpeed50percTo6m).toBeCloseTo(6.096, 4);
+            expect(options.ascentSpeed50percTo6m).toBeCloseTo(3.048, 4);
             expect(options.ascentSpeed6m).toBeCloseTo(3.048, 4);
             expect(options.descentSpeed).toBeCloseTo(17.9832, 4);
         });
@@ -178,7 +178,7 @@ describe('SettingsNormalizationService', () => {
             expect(options.maxEND).toBe(30);
             expect(options.altitude).toBe(100);
             expect(options.ascentSpeed50perc).toBe(9);
-            expect(options.ascentSpeed50percTo6m).toBe(6);
+            expect(options.ascentSpeed50percTo6m).toBe(3);
             expect(options.ascentSpeed6m).toBe(3);
             expect(options.descentSpeed).toBe(18);
         });

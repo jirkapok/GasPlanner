@@ -73,6 +73,10 @@ export class DiveResults {
         return this._diveInfoCalculated && this.noDecoTime < DiveResults.maxAcceptableNdl;
     }
 
+    public get noDecoExceeded(): boolean {
+        return this.planDuration > this.noDecoTime;
+    }
+
     /** the only errors preventing draw chart */
     public get hasErrors(): boolean {
         return this.calculated && (this.failed || this.notEnoughTime);

@@ -155,6 +155,12 @@ describe('PlannerService', () => {
             planner.calculate(1);
             expect(dive.notEnoughGas).toBeTruthy();
         });
+
+        it('30m for 20 minutes no decompression time exceeded', () => {
+            depthsService.planDuration = 20;
+            planner.calculate(1);
+            expect(dive.noDecoExceeded).toBeTruthy();
+        });
     });
 
     describe('Manage tanks', () => {

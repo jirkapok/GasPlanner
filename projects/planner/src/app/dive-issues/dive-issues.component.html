@@ -34,7 +34,7 @@
     </div>
 
     <ng-container *ngFor="let event of events">
-        <div *ngIf="isNoDeco(event)" class="alert alert-info">
+        <div *ngIf="showNoDeco(event)" class="alert alert-info">
             <fa-icon [icon]="info" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
                 }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>

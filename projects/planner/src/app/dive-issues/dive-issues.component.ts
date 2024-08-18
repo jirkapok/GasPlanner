@@ -41,9 +41,8 @@ export class DiveIssuesComponent {
         return this.schedules.selectedResult;
     }
 
-    // TODO restore exceeded noDeco in dive result to keep it less appear
-    public isNoDeco(event: Event): boolean {
-        return event.type === EventType.noDecoEnd;
+    public showNoDeco(event: Event): boolean {
+        return event.type === EventType.noDecoEnd && this.dive.noDecoExceeded;
     }
 
     public isLowPpO2(event: Event): boolean {

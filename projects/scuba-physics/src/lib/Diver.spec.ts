@@ -1,8 +1,7 @@
 import { Diver} from './Diver';
 import { Tank} from './Tanks';
 
-// eslint-disable-next-line jasmine/no-focused-tests
-fdescribe('Diver', () => {
+describe('Diver', () => {
 
     it('Diver.rmv', () => {
         const diver = new Diver(20, 25);

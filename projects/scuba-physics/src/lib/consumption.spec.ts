@@ -421,15 +421,15 @@ describe('Consumption', () => {
             const tank = new Tank(10, 200, 21);
             const tanks = [tank];
 
-            const first = new Segment(0, 10, tank.gas, Time.oneMinute * 10);
-            const second = new Segment(10, 0, tank.gas, Time.oneMinute * 10);
+            const first = new Segment(0, 10, tank, Time.oneMinute * 10);
+            const second = new Segment(10, 0, tank, Time.oneMinute * 10);
             const segments = [first, second];
             // 1.5 * 20 * 2 = 60
 
             consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
-            expect(tank.consumed).toEqual(61); //  because of pressure conversion
-            // emergency ascent: ((2 * 2 * 2) + (1.5 * 1 * 2)) * 3 = 33
-            expect(tank.reserve).toEqual(33);
+            expect(tank.consumed).toEqual(62); //  because of pressure conversion
+            // emergency ascent: ((2 * 2 * 2) + (1.5 * 10 * 2)) * 3 = 33
+            expect(tank.reserve).toEqual(115);
         });
 
         it('As part of ascent counts to rock bottom', () => {

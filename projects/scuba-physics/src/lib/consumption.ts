@@ -115,9 +115,12 @@ export class Consumption {
         }
 
         Tanks.resetConsumption(tanks);
-        const remainToConsume = this.consumeByTanks(segments, consumptionOptions.diver.rmv);
-        this.consumeByGases(segments, tanks, consumptionOptions.diver.rmv, remainToConsume);
+        // Reserve needs to be first to be able preserve it.
         this.updateReserve(emergencyAscent, tanks, consumptionOptions);
+        // First satisfy user defined segments where tank is assigned and only then try the rest.
+        const minimum = 0;
+        let remainToConsume = this.consumeByTanks(segments, minimum, consumptionOptions.diver.rmv);
+        remainToConsume = this.consumeByGases(segments, tanks, consumptionOptions.diver.rmv, minimum, remainToConsume);
     }
 
     /**
@@ -174,7 +177,8 @@ export class Consumption {
     private updateReserve(ascent: Segment[], tanks: Tank[], options: ConsumptionOptions): void {
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
-        const gasesConsumed: Map<number, number> = this.toBeConsumed(ascent, options.diver.teamStressRmv, () => true);
+        const gasesConsumed: Map<number, number> = this.toBeConsumedYet(ascent, options.diver.teamStressRmv,
+            new Map<number, number>(), () => true);
 
         // add the reserve from opposite order than consumed gas
         for (let index = 0; index <= tanks.length - 1; index++) {
@@ -188,6 +192,7 @@ export class Consumption {
     }
 
     private ensureMinimalReserve(tank: Tank, tankIndex: number, options: ConsumptionOptions): number {
+        // maybe use the tank.id instead of index
         const minimalReserve = tankIndex === 0 ? options.primaryTankReserve : options.stageTankReserve;
 
         if(tank.reserve < minimalReserve) {
@@ -204,23 +209,26 @@ export class Consumption {
         return this.extractRemaining(consumedLiters, tankConsumedBars, tank.size);
     }
 
-    private consumeByGases(segments: Segment[], tanks: Tank[], sac: number, remainToConsume: Map<number, number>): void {
+    private consumeByGases(segments: Segment[], tanks: Tank[], sac: number, minimum: number,
+        remainToConsume: Map<number, number>): Map<number, number> {
         // assigned tank will be consumed from that tank directly
         // it is always user defined segment (also in ascent)
         const gasesConsumed: Map<number, number> = this.toBeConsumedYet(segments, sac, remainToConsume, (s) => !s.tank);
 
         // distribute the consumed liters across all tanks with that gas starting from last one
-        // to consumed stages first. This simulates one of the back mounted system procedures.
+        // to consumed stages first. This simulates open circuit procedure: First consume, what you can drop.
         for (let index = tanks.length - 1; index >= 0; index--) {
             const tank = tanks[index];
             const gasCode = tank.gas.contentCode();
             let consumedLiters = gasesConsumed.get(gasCode) || 0;
-            consumedLiters = this.consumeFromTank(tank, consumedLiters);
+            consumedLiters = this.consumeFromTank(tank, minimum, consumedLiters);
             gasesConsumed.set(gasCode, consumedLiters);
         }
+
+        return gasesConsumed;
     }
 
-    private consumeByTanks(segments: Segment[], sac: number): Map<number, number> {
+    private consumeByTanks(segments: Segment[], minimum: number, sac: number): Map<number, number> {
         const remainToConsume: Map<number, number> = new Map<number, number>();
         const sacSeconds = Time.toMinutes(sac);
 
@@ -230,7 +238,7 @@ export class Consumption {
                 const gasCode = segment.gas.contentCode();
                 const consumptionSegment = ConsumptionSegment.fromSegment(segment);
                 const consumedLiters = this.consumedBySegment(consumptionSegment, sacSeconds);
-                const remainingLiters = this.consumeFromTank(tank, consumedLiters);
+                const remainingLiters = this.consumeFromTank(tank, minimum, consumedLiters);
                 let consumedByGas: number = remainToConsume.get(gasCode) || 0;
                 consumedByGas += remainingLiters;
                 remainToConsume.set(gasCode, consumedByGas);
@@ -240,9 +248,11 @@ export class Consumption {
         return remainToConsume;
     }
 
-    private consumeFromTank(tank: Tank, consumedLiters: number): number {
+    /** Requires already calculated reserve */
+    private consumeFromTank(tank: Tank, minimum: number, consumedLiters: number): number {
         const consumedBars = Precision.ceil(consumedLiters / tank.size);
         const tankConsumedBars = consumedBars > tank.endPressure ? tank.endPressure : consumedBars;
+        // TODO count also with the reserve
         tank.consumed += tankConsumedBars;
         return this.extractRemaining(consumedLiters, tankConsumedBars, tank.size);
     }
@@ -252,11 +262,6 @@ export class Consumption {
         // because of previous rounding up the consumed bars
         consumedLiters = consumedLiters < 0 ? 0 : consumedLiters;
         return consumedLiters;
-    }
-
-    private toBeConsumed(segments: Segment[], rmv: number, includeSegment: (segment: Segment) => boolean): Map<number, number> {
-        const emptyConsumptions = new Map<number, number>();
-        return this.toBeConsumedYet(segments, rmv, emptyConsumptions, includeSegment);
     }
 
     private toBeConsumedYet(segments: Segment[], sac: number,

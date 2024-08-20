@@ -108,7 +108,7 @@ describe('PreferencesStore', () => {
                 // setup needed for consumed calculation
                 const oValues = options.getOptions();
                 OptionExtensions.applySimpleSpeeds(oValues);
-                options.safetyStop = SafetyStop.always;
+                options.useSafetyOn();
                 options.gasSwitchDuration = 1;
                 options.problemSolvingDuration = 2;
                 depthsService.plannedDepth = 30;

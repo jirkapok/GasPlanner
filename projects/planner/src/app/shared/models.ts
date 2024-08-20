@@ -1,7 +1,7 @@
 import {
     Time, Segment, Tank,
     Precision, TankTemplate, Options,
-    Diver, GasDensity
+    Diver, GasDensity, Consumption
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -69,8 +69,11 @@ export class Level {
  */
 export class AppSettings {
     public maxGasDensity = GasDensity.recommendedMaximum;
-    public primaryTankReserve = 30;
-    public stageTankReserve = 20;
+    public primaryTankReserve = Consumption.defaultPrimaryReserve;
+    public stageTankReserve = Consumption.defaultStageReserve;
+    public icdIgnored = false;
+    public noDecoIgnored = false;
+    public densityIgnored = false;
 }
 
 export class DiverOptions {

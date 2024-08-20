@@ -43,10 +43,6 @@ export class ValidatorGroups {
         return this.rangeFor(this.ranges.duration);
     }
 
-    public get tankPressure(): ValidatorFn[] {
-        return this.rangeFor(this.ranges.tankPressure);
-    }
-
     public get tankConsumed(): ValidatorFn[] {
         return this.rangeFor(this.ranges.consumed);
     }
@@ -83,12 +79,19 @@ export class ValidatorGroups {
         return this.rangeFor(this.ranges.narcoticDepth);
     }
 
+    // dynamic validation
     public get diverRmv(): ValidatorFn[] {
         return [Validators.required, this.validateMinRmv, this.validateMaxRmv];
     }
 
+    // dynamic validation
     public get maxDensity(): ValidatorFn[] {
-        return this.rangeFor(this.ranges.maxDensity);
+        return [Validators.required, this.validateMinDensity, this.validateMaxDensity];
+    }
+
+    // dynamic validation
+    public get tankPressure(): ValidatorFn[] {
+        return [Validators.required, this.validateMinPressure, this.validateMaxPressure];
     }
 
     private get ranges(): RangeConstants {
@@ -115,12 +118,28 @@ export class ValidatorGroups {
         };
     }
 
-    // only these RMV methods needs direct access to the range without component reload
+    // only these methods needs direct access to the range without component reload
     private validateMinRmv(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => Validators.min(this.ranges.diverRmv[0])(control);
     }
 
     private validateMaxRmv(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => Validators.max(this.ranges.diverRmv[1])(control);
+    }
+
+    private validateMinDensity(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => Validators.min(this.ranges.maxDensity[0])(control);
+    }
+
+    private validateMaxDensity(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => Validators.max(this.ranges.maxDensity[1])(control);
+    }
+
+    private validateMinPressure(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => Validators.min(this.ranges.tankPressure[0])(control);
+    }
+
+    private validateMaxPressure(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => Validators.max(this.ranges.tankPressure[1])(control);
     }
 }

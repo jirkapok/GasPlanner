@@ -10,6 +10,7 @@ import { DiverOptions } from './models';
 import { DiveSchedules } from './dive.schedules';
 import { ViewStates } from './viewStates';
 import { ReloadDispatcher } from './reloadDispatcher';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 describe('SettingsNormalizationService', () => {
     let service: SettingsNormalizationService;
@@ -30,7 +31,8 @@ describe('SettingsNormalizationService', () => {
             providers: [
                 RouterTestingModule, UnitConversion,
                 SettingsNormalizationService, ReloadDispatcher,
-                ViewStates, DiveSchedules
+                ViewStates, DiveSchedules,
+                ApplicationSettingsService
             ],
             imports: [RouterTestingModule.withRoutes([])]
         });
@@ -46,12 +48,43 @@ describe('SettingsNormalizationService', () => {
     });
 
     describe('Diver', () => {
-        it('RMV applies to planner', () => {
+        it('RMV is normalized', () => {
             diverOptions.rmv = 100;
             applySut(optionsService);
             expect(optionsService.diverOptions.rmv).toBe(90);
         });
 
+        it('Stress RMV is normalized', () => {
+            diverOptions.stressRmv = 110;
+            applySut(optionsService);
+            expect(optionsService.diverOptions.stressRmv).toBe(90);
+        });
+    });
+
+    describe('Application settings', () => {
+        let appSettings: ApplicationSettingsService;
+
+        beforeEach(() => {
+            appSettings = TestBed.inject(ApplicationSettingsService);
+        });
+
+        it('Gas density is normalized', () => {
+            appSettings.maxGasDensity = 12;
+            service.apply();
+            expect(appSettings.maxGasDensity).toBe(10);
+        });
+
+        it('Primary tank reserve is normalized', () => {
+            appSettings.primaryTankReserve = 400;
+            service.apply();
+            expect(appSettings.primaryTankReserve).toBe(350);
+        });
+
+        it('Stage tank reserve is normalized', () => {
+            appSettings.stageTankReserve = 390;
+            service.apply();
+            expect(appSettings.stageTankReserve).toBe(350);
+        });
     });
 
     describe('Imperial units', () => {
@@ -82,7 +115,7 @@ describe('SettingsNormalizationService', () => {
             expect(options.maxEND).toBeCloseTo(29.8704, 4);
             expect(options.altitude).toBeCloseTo(99.9744, 4);
             expect(options.ascentSpeed50perc).toBeCloseTo(9.144, 4);
-            expect(options.ascentSpeed50percTo6m).toBeCloseTo(6.096, 4);
+            expect(options.ascentSpeed50percTo6m).toBeCloseTo(3.048, 4);
             expect(options.ascentSpeed6m).toBeCloseTo(3.048, 4);
             expect(options.descentSpeed).toBeCloseTo(17.9832, 4);
         });
@@ -145,7 +178,7 @@ describe('SettingsNormalizationService', () => {
             expect(options.maxEND).toBe(30);
             expect(options.altitude).toBe(100);
             expect(options.ascentSpeed50perc).toBe(9);
-            expect(options.ascentSpeed50percTo6m).toBe(6);
+            expect(options.ascentSpeed50percTo6m).toBe(3);
             expect(options.ascentSpeed6m).toBe(3);
             expect(options.descentSpeed).toBe(18);
         });

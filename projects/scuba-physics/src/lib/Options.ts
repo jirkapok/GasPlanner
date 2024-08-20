@@ -30,7 +30,7 @@ export class OptionDefaults {
     public static readonly oxygenNarcotic = true;
 
     public static readonly ascentSpeed6m = 3;
-    public static readonly ascentSpeed50percTo6m = 6;
+    public static readonly ascentSpeed50percTo6m = 3;
     public static readonly ascentSpeed50perc = 9;
     public static readonly descentSpeed = 18;
 

@@ -41,6 +41,10 @@ export class DiveIssuesComponent {
         return this.schedules.selectedResult;
     }
 
+    public showNoDeco(event: Event): boolean {
+        return event.type === EventType.noDecoEnd && this.dive.noDecoExceeded;
+    }
+
     public isLowPpO2(event: Event): boolean {
         return event.type === EventType.lowPpO2;
     }

@@ -1,5 +1,5 @@
 import {
-    Time, SafetyStop, StandardGases,
+    Time, StandardGases,
     CalculatedProfile, Event
 } from 'scuba-physics';
 import { PlannerService } from './planner.service';
@@ -53,7 +53,7 @@ describe('PlannerService', () => {
         dive = selectedDive.diveResult;
         OptionExtensions.applySimpleSpeeds(optionsService.getOptions());
         optionsService.problemSolvingDuration = 2;
-        optionsService.safetyStop = SafetyStop.always;
+        optionsService.useSafetyOn();
         depthsService.plannedDepth = 30;
         dispatcher = TestBed.inject(ReloadDispatcher);
         planner.calculate(1);

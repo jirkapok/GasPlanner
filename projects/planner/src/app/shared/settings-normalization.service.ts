@@ -3,14 +3,15 @@ import { Precision } from 'scuba-physics';
 import { OptionsService } from './options.service';
 import { TanksService } from './tanks.service';
 import { RangeConstants, UnitConversion } from './UnitConversion';
-import { ViewStates } from './viewStates';
 import { DepthsService } from './depths.service';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
+import { ApplicationSettingsService } from './ApplicationSettings';
 
 @Injectable()
 export class SettingsNormalizationService {
     constructor(
         private units: UnitConversion,
+        private appSettings: ApplicationSettingsService,
         private schedules: DiveSchedules
     ) { }
 
@@ -19,6 +20,7 @@ export class SettingsNormalizationService {
     }
 
     public apply(): void {
+        this.applyToAppSettings();
         this.schedules.dives.forEach(d => this.applyDive(d));
     }
 
@@ -26,6 +28,19 @@ export class SettingsNormalizationService {
         this.applyToOptions(dive.optionsService);
         this.normalizeTanks(dive.tanksService);
         this.normalizeSegments(dive.depths);
+    }
+
+    private applyToAppSettings(): void {
+        const settings = this.appSettings.settings;
+        const densityRounding = this.units.ranges.densityRounding;
+
+        settings.maxGasDensity = this.fitUnit(
+            v => this.units.fromGramPerLiter(v),
+            v => this.units.toGramPerLiter(v),
+            settings.maxGasDensity, this.units.ranges.maxDensity, densityRounding);
+
+        settings.primaryTankReserve = this.fitPressureToRange(settings.primaryTankReserve, this.ranges.tankPressure);
+        settings.stageTankReserve = this.fitPressureToRange(settings.stageTankReserve, this.ranges.tankPressure);
     }
 
     private applyToOptions(options: OptionsService): void {

@@ -172,6 +172,7 @@ export interface RangeConstants {
     depthLabel: string;
     maxDensity: [number, number];
     maxDensityLabel: string;
+    densityRounding: number;
     narcoticDepth: [number, number];
     narcoticDepthLabel: string;
     lastStopDepth: [number, number];
@@ -205,6 +206,7 @@ class MetricRanges implements RangeConstants {
     public readonly durationLabel: string = toLabel(this.duration, 'min');
     public readonly maxDensity: [number, number] = [1, 10];
     public readonly maxDensityLabel: string = toLabel(this.maxDensity, this.units.densityShortcut);
+    public readonly densityRounding: number = 1;
     public readonly narcoticDepth: [number, number] = [1, 100];
     public readonly narcoticDepthLabel: string = toLabel(this.narcoticDepth, this.units.lengthShortcut);
     public readonly nitroxOxygen: [number, number] = [21, 100];
@@ -243,6 +245,7 @@ class ImperialRanges implements RangeConstants {
     public readonly durationLabel: string = toLabel(this.duration, 'min');
     public readonly maxDensity: [number, number] = [0.0624, 0.624];
     public readonly maxDensityLabel: string = toLabel(this.maxDensity, this.units.densityShortcut);
+    public readonly densityRounding: number = 4;
     public readonly narcoticDepth: [number, number] = [1, 300];
     public readonly narcoticDepthLabel: string = toLabel(this.narcoticDepth, this.units.lengthShortcut);
     public readonly nitroxOxygen: [number, number] = [21, 100];

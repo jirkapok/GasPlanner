@@ -38,6 +38,11 @@ export interface AppOptionsDto {
     isComplex: boolean;
     language: string;
     maxDensity: number;
+    primaryTankReserve: number;
+    stageTankReserve: number;
+    icdIgnored: boolean;
+    densityIgnored: boolean;
+    noDecoIgnored: boolean;
 }
 
 /**

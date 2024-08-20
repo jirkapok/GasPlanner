@@ -1,7 +1,7 @@
-import { Diver, Tank} from './Diver';
+import { Diver} from './Diver';
+import { Tank} from './Tanks';
 
-// eslint-disable-next-line jasmine/no-focused-tests
-fdescribe('Diver', () => {
+describe('Diver', () => {
 
     it('Diver.rmv', () => {
         const diver = new Diver(20, 25);
@@ -15,11 +15,8 @@ fdescribe('Diver', () => {
 
     it('should correctly calculate gas SAC based on tank size', () => {
         const diver = new Diver (20, 30);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         const tank = new Tank(100, 100, 20);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         tank.size = 100;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         expect(diver.gasSac(tank)).toBe(0.2);
     });
 });

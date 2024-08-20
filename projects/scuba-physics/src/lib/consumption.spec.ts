@@ -362,48 +362,61 @@ describe('Consumption', () => {
         });
 
         describe('Single user defined tank', () => {
-            const airTank = new Tank(20, 100, 21);
-            const tanks = [airTank];
+            it('Not all segments assigned, consumed more than available', () => {
+                const airTank = new Tank(20, 100, 21);
+                const tanks = [airTank];
 
-            const descent = new Segment(0, 20, airTank, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
-            const swim = new Segment(20, 20, airTank, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
+                const descent = new Segment(0, 20, airTank, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
+                const swim = new Segment(20, 20, airTank, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
 
-            const profile = [
-                descent,
-                swim,
-                new Segment(20, 0, airTank.gas, 4 * Time.oneMinute),   // 2 b * 1 bar/min * 4 minute = 8b
-            ];
+                const profile = [
+                    descent,
+                    swim,
+                    new Segment(20, 0, airTank.gas, 4 * Time.oneMinute),   // 2 b * 1 bar/min * 4 minute = 8b
+                ];
 
-            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
+                consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
-            it('Reserve is more than remaining', () => {
                 expect(airTank.reserve).toEqual(30); // ((3 * 2 * 1) + (2.5 * 2 * 1)) * 3
                 expect(airTank.consumed).toEqual(100); // up to the limit
             });
-        });
 
-        describe('Only user defined segments', () => {
-            const options3 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
-            options3.problemSolvingDuration = 2;
+            it('All segments assigned tank, consumed more than available', () => {
+                const options3 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
+                options3.problemSolvingDuration = 2;
 
-            const airTank = new Tank(20, 100, 21);
-            const tanks = [airTank];
+                const airTank = new Tank(20, 100, 21);
+                const tanks = [airTank];
 
-            const descent = new Segment(0, 20, airTank, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
-            const swim = new Segment(20, 20, airTank, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
-            const ascent = new Segment(20, 0, airTank, 4 * Time.oneMinute);   // 2 b * 1 bar/min * 4 minute = 8b
+                const descent = new Segment(0, 20, airTank, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
+                const swim = new Segment(20, 20, airTank, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
+                const ascent = new Segment(20, 0, airTank, 4 * Time.oneMinute);   // 2 b * 1 bar/min * 4 minute = 8b
 
-            const profile = [descent, swim, ascent];
-            consumption.consumeFromTanks(profile, options3, tanks, consumptionOptions);
+                const profile = [descent, swim, ascent];
+                consumption.consumeFromTanks(profile, options3, tanks, consumptionOptions);
 
-            it('Tank is updated as with calculated segments', () => {
                 expect(airTank.reserve).toEqual(42); // 3 min at 3 m + 2 min. solving
                 expect(airTank.consumed).toEqual(100); // up to the limit
+            });
+
+            it('All segments assigned tank, partially consumed', () => {
+                const airTank = new Tank(20, 100, 21);
+                const tanks = [airTank];
+
+                const descent = new Segment(0, 20, airTank, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
+                const swim = new Segment(20, 20, airTank, 20 * Time.oneMinute);  // 3 b * 1 b/min * 20 min = 60b
+                const ascent = new Segment(20, 0, airTank, 4 * Time.oneMinute);   // 2 b * 1 bar/min * 4 minute = 8b
+
+                const profile = [descent, swim, ascent];
+                consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
+
+                expect(airTank.reserve).toEqual(42); // 3 min at 3 m + 2 min. solving
+                expect(airTank.consumed).toEqual(72); // up to the limit
             });
         });
     });
 
-    describe('User defined segments', () => {
+    describe('User defined ascent', () => {
         it('Plan ends at surface', () => {
             const tank = new Tank(10, 200, 21);
             const tanks = [tank];

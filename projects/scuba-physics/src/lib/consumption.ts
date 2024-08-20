@@ -183,14 +183,18 @@ export class Consumption {
             let consumedLiters = gasesConsumed.get(gasCode) || 0;
             consumedLiters = this.addReserveToTank(tank, consumedLiters);
             gasesConsumed.set(gasCode, consumedLiters);
+            tank.reserve = this.ensureMinimalReserve(tank, index, options);
+        }
+    }
+
+    private ensureMinimalReserve(tank: Tank, tankIndex: number, options: ConsumptionOptions): number {
+        const minimalReserve = tankIndex === 0 ? options.primaryTankReserve : options.stageTankReserve;
+
+        if(tank.reserve < minimalReserve) {
+            return minimalReserve;
         }
 
-        // TODO make tank reserve configurable
-        // TODO apply also defaultStageReserve
-        // Add minimum reserve to first tank only as back gas? This doesn't look nice for side mount.
-        if (tanks[0].reserve < Consumption.defaultPrimaryReserve) {
-            tanks[0].reserve = Consumption.defaultPrimaryReserve;
-        }
+        return tank.reserve;
     }
 
     private addReserveToTank(tank: Tank, consumedLiters: number): number {

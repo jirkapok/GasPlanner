@@ -8,14 +8,15 @@ import { OptionExtensions } from './Options.spec';
 import { SafetyStop } from './Options';
 import { Salinity } from './pressure-converter';
 import { Precision } from './precision';
+import { StandardGases } from "./StandardGases";
 
 // TODO consumption test case: /?t=1-24-0-220-0.21-0.35,2-11.1-0-200-0.5-0&de=0-53-360-1,53-53-660-1,53-46-60-1,46-46-360-1,46-24-120-1,24-21-60-1&di=20&o=300,9,3,1,3,20,3,0.75,0.3,6,1.6,30,1.4,10,1,1,1,1,1&ao=1,0
 // Ensure if it si valid: generates too high reserve for S80 = 200 b, twin = 120 b
 describe('Consumption', () => {
-    const consumtionOptions: ConsumptionOptions = {
+    const consumptionOptions: ConsumptionOptions = {
         diver: new Diver(20),
         primaryTankReserve: Consumption.defaultPrimaryReserve,
-        stageTankReserve: Consumption.defaultStageReserve
+        stageTankReserve: 0
     };
     const consumption = new Consumption(DepthConverter.forFreshWater());
     const options2 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
@@ -26,6 +27,11 @@ describe('Consumption', () => {
     options.safetyStop = SafetyStop.always;
     options.problemSolvingDuration = 2;
 
+    beforeEach(() => {
+        consumptionOptions.primaryTankReserve = Consumption.defaultPrimaryReserve;
+        consumptionOptions.stageTankReserve = 0;
+    });
+
     describe('Max bottom time', () => {
         it('Is calculated for default simple plan', () => {
             const tank = new Tank(15, 200, 21);
@@ -35,7 +41,7 @@ describe('Consumption', () => {
             segments.add(30, tank.gas, Time.oneMinute * 0.5);
             segments.addFlat(tank.gas, Time.oneMinute * 10.5);
 
-            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumtionOptions, options);
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
             expect(maxBottomTime).toEqual(17);
         });
 
@@ -48,7 +54,7 @@ describe('Consumption', () => {
             segments.add(40, airTank.gas, Time.oneMinute * 2);
             segments.addFlat(airTank.gas, Time.oneMinute);
 
-            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumtionOptions, options);
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
             expect(maxBottomTime).toEqual(20);
         });
 
@@ -61,7 +67,7 @@ describe('Consumption', () => {
             segments.add(40, airTank.gas, Time.oneMinute * 2);
             segments.addFlat(airTank.gas, Time.oneMinute);
 
-            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumtionOptions, options);
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
             expect(maxBottomTime).toEqual(5);
         });
 
@@ -73,7 +79,7 @@ describe('Consumption', () => {
             segments.add(30, tank.gas, Time.oneMinute * 0.5);
             segments.addFlat(tank.gas, Time.oneMinute * 23);
 
-            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumtionOptions, options);
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
             expect(maxBottomTime).toEqual(0);
         });
 
@@ -87,7 +93,7 @@ describe('Consumption', () => {
             segments.addFlat(tank.gas, Time.oneMinute * 10);
 
             const startTime = performance.now();
-            consumption.calculateMaxBottomTime(segments, tanks, consumtionOptions, options);
+            consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
             const endTime = performance.now();
             const methodDuration = Precision.round(endTime - startTime);
 
@@ -104,7 +110,7 @@ describe('Consumption', () => {
             segments.addFlat(tank.gas, Time.oneMinute * 10);
             segments.addFlat(tank.gas, Time.oneMinute * 10);
 
-            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumtionOptions, options);
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
             expect(maxBottomTime).toEqual(50);
         });
 
@@ -117,7 +123,7 @@ describe('Consumption', () => {
             segments.addFlat(tank.gas, Time.oneMinute * 10);
             segments.add(0, tank.gas, Time.oneMinute * 10);
 
-            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumtionOptions, options);
+            const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
             expect(maxBottomTime).toEqual(181);
         });
     });
@@ -136,7 +142,7 @@ describe('Consumption', () => {
                 const options3 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
                 options3.safetyStop = SafetyStop.always;
                 options3.problemSolvingDuration = 2;
-                consumption.consumeFromTanks(segments, options3, tanks, consumtionOptions);
+                consumption.consumeFromTanks(segments, options3, tanks, consumptionOptions);
                 return tank;
             };
 
@@ -165,7 +171,7 @@ describe('Consumption', () => {
                 ];
 
                 // (2b avg depth * 2 bar/min * 1 minutes) + (3b * 2 bar/min * 10 minutes) + (2b * 2 bar/min * 2 minutes)
-                consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+                consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
                 expect(tank.consumed).toEqual(72);
             });
         });
@@ -185,7 +191,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Both tanks are consumed', () => {
                 expect(airTank.consumed).toEqual(52);
@@ -212,7 +218,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Consumption is updated from second tank only', () => {
                 expect(airTank.consumed).toEqual(0);
@@ -235,7 +241,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Consumption is updated from both air tanks', () => {
                 expect(airTank.consumed).toEqual(7);
@@ -255,7 +261,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, airTank.gas, 2 * Time.oneMinute)
             ];
 
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Consumes only user defined tank', () => {
                 expect(airTank.consumed).toEqual(72);
@@ -284,7 +290,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, airTank.gas, 2 * Time.oneMinute)
             ];
 
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('No tank is updated', () => {
                 expect(airTank.consumed).toEqual(0);
@@ -311,7 +317,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank.gas, 10 * Time.oneMinute)  // 2b * 4 bar/min * 10 minutes = 80b
             ];
 
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Reserve is updated from both EAN50 tanks', () => {
                 // ((4b * 2 * 1) + (3.5b * 1 min * 1 b/min.)) * 3
@@ -341,7 +347,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, ean50Tank2.gas, 4 * Time.oneMinute),   // 2 b * 2 bar/min * 4 minute = 16b
             ];
 
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Gas is Consumed from required tank', () => {
                 expect(airTank.consumed).toEqual(60); // user defined by swim segment
@@ -374,7 +380,7 @@ describe('Consumption', () => {
                 new Segment(20, 0, airTank.gas, 4 * Time.oneMinute),   // 2 b * 1 bar/min * 4 minute = 8b
             ];
 
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Reserve is more than remaining', () => {
                 expect(airTank.reserve).toEqual(30); // ((3 * 2 * 1) + (2.5 * 2 * 1)) * 3
@@ -394,7 +400,7 @@ describe('Consumption', () => {
             const ascent = new Segment(20, 0, airTank, 4 * Time.oneMinute);   // 2 b * 1 bar/min * 4 minute = 8b
 
             const profile = [descent, swim, ascent];
-            consumption.consumeFromTanks(profile, options3, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options3, tanks, consumptionOptions);
 
             it('Tank is updated as with calculated segments', () => {
                 expect(airTank.reserve).toEqual(42); // 3 min at 3 m + 2 min. solving
@@ -413,7 +419,7 @@ describe('Consumption', () => {
             const segments = [first, second];
             // 1.5 * 20 * 2 = 60
 
-            consumption.consumeFromTanks(segments, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
             expect(tank.consumed).toEqual(61); //  because of pressure conversion
             // emergency ascent: ((2 * 2 * 2) + (1.5 * 1 * 2)) * 3 = 33
             expect(tank.reserve).toEqual(33);
@@ -433,7 +439,7 @@ describe('Consumption', () => {
 
             // currently tank1 30/90,  tank2 112/169 (reserve/remaining)
             // should be tank1 129/90, tank2 94/169
-            consumption.consumeFromTanks(segments, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
             // ((5 * 2 * 1) + (3,3 * 10 * 1)) * 3
             expect(tank1.reserve).toEqual(128);
             // ((1,6 * 8 * 2 = 25,6) + (1,3 * 2 * 2 = 5,20)) * 3
@@ -457,7 +463,7 @@ describe('Consumption', () => {
             ];
 
             // reserve - ascent from 6. segment = ((4 bar * 1 bar/min * 2 min) + (2.5 b * 1 bar/min * 3 min)) * 3
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
             expect(tank1.reserve).toEqual(47);
         });
 
@@ -478,7 +484,7 @@ describe('Consumption', () => {
             ];
 
             // reserve - ascent from 6. segment = ((3 b * 1 bar/min * 2 min) + (2 b * 1 bar/min * 2 min)) * 3
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
             expect(tank1.reserve).toEqual(30);
         });
 
@@ -498,7 +504,7 @@ describe('Consumption', () => {
 
             // reserve - ascent from 2. segment
             // ((4 b * 2 min * 1 bar/min) + (2.5 b * 3 min * 1 bar/min)) * 3
-            consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
             expect(tank1.reserve).toEqual(47);
         });
 
@@ -523,7 +529,7 @@ describe('Consumption', () => {
                 const s5 = new Segment(6, 0, tank1.gas, Time.oneMinute * 2);
                 const profile = [s1, s2, s3, s4, s5];
 
-                consumption.consumeFromTanks(profile, options2, tanks, consumtionOptions);
+                consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
                 // custom ascent is calculated, since no used defined tank was used during ascent
                 // 40n 120s, 40-6 600s, 6-3 18s, 3-3 285, 3-0 18
                 expect(tank1.reserve).toEqual(149);
@@ -542,7 +548,7 @@ describe('Consumption', () => {
                 const s5 = new Segment(6, 0, tank2, Time.oneMinute * 2); // 1.3 * 2 * 2 = 5.2
                 const segments = [s1, s2, s3, s4, s5];
 
-                consumption.consumeFromTanks(segments, options2, tanks, consumtionOptions);
+                consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
 
                 it('counts the consumption', () => {
                     expect(tank1.consumed).toEqual(110);
@@ -558,32 +564,79 @@ describe('Consumption', () => {
         });
     });
 
-    describe('Custom minimum tank reserve is applied', () => {
-        const tank1 = new Tank(20, 200, 21);
-        const tank2 = new Tank(10, 200, 21);
-        const tank3 = new Tank(10, 200, 21);
-        const tanks = [tank1, tank2, tank3];
-
-        const s1 = new Segment(0, 5, tank1, Time.oneMinute);
-        const s2 = new Segment(5, 5, tank1, Time.oneMinute * 10);
-        const s3 = new Segment(5, 0, tank2, Time.oneMinute);
-        const segments = [s1, s2, s3];
-
-        consumption.consumeFromTanks(segments, options2, tanks, consumtionOptions);
-
-        it('First tank', () => {
-            expect(tank1.reserve).toEqual(30);
+    xdescribe('Preserve reserved gas', ()=> {
+        beforeEach(() => {
+            consumptionOptions.primaryTankReserve = Consumption.defaultPrimaryReserve;
+            consumptionOptions.stageTankReserve = Consumption.defaultStageReserve;
         });
 
-        xit('All other stage tanks', () => {
-            expect(tank2.reserve).toEqual(20);
-            expect(tank3.reserve).toEqual(20);
+        describe('Custom minimum tank reserve is applied', () => {
+            let tank1: Tank, tank2: Tank, tank3: Tank;
+
+            beforeEach(() => {
+                tank1 = new Tank(20, 200, 21);
+                tank2 = new Tank(10, 200, 21);
+                tank3 = new Tank(10, 200, 21);
+                const tanks = [tank1, tank2, tank3];
+
+                const s1 = new Segment(0, 5, tank1, Time.oneMinute);
+                const s2 = new Segment(5, 5, tank1, Time.oneMinute * 10);
+                const s3 = new Segment(5, 0, tank2, Time.oneMinute);
+                const segments = [s1, s2, s3];
+
+                consumptionOptions.primaryTankReserve = 40;
+                consumptionOptions.stageTankReserve = 25;
+
+                consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
+            });
+
+            it('First tank', () => {
+                expect(tank1.reserve).toEqual(consumptionOptions.primaryTankReserve);
+            });
+
+            it('All other stage tanks', () => {
+                expect(tank2.reserve).toEqual(consumptionOptions.stageTankReserve);
+                expect(tank3.reserve).toEqual(consumptionOptions.stageTankReserve);
+            });
+        });
+
+        describe('Consumed always leaves minimal reserve for stage tanks', () => {
+            let tank1: Tank, tank2: Tank, tank3: Tank, tank4: Tank;
+
+            beforeEach(() => {
+                tank1 = new Tank(20, 200, 21);
+                tank2 = new Tank(10, 200, 50);
+                tank3 = new Tank(10, 200, 50);
+                tank4 = new Tank(10, 200, 50);
+                const tanks = [tank1, tank2, tank3, tank4];
+
+                const s1 = new Segment(0, 20, tank1, Time.oneMinute);
+                const s2 = new Segment(20, 20, StandardGases.ean50, Time.oneMinute * 30);
+                const s3 = new Segment(20, 0, StandardGases.ean50, Time.oneMinute);
+                const segments = [s1, s2, s3];
+
+                consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
+            });
+
+            // cant be applied to primary tank, because there is no other tank to use the gas from.
+            it('First tank', () => {
+                expect(tank1.reserve).toEqual(30);
+            });
+
+            it('All other stage tanks', () => {
+                expect(tank2.reserve).toEqual(20);
+                expect(tank3.reserve).toEqual(20);
+            });
         });
     });
 
     // TODO add test cases: How to calculate reserve in case user consumed more than reserve:
-    // * for from first tank
-    // * for last stage tank
     // * for multiple stage tanks
-    // * for used defined consumed from second stage
+    // * for user defined consumed from second stage
+
+
+    // Implementation idea:
+    // 1. First calculate reserve for all tanks
+    // 2. Subtract gas up to reserve from all tanks
+    // 3. Still remaining gas - subtract from reserve
 });

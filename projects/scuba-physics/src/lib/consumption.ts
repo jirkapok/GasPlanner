@@ -119,8 +119,9 @@ export class Consumption {
         this.updateReserve(emergencyAscent, tanks, consumptionOptions);
         // First satisfy user defined segments where tank is assigned and only then try the rest.
         const minimum = 0;
-        let remainToConsume = this.consumeByTanks(segments, minimum, consumptionOptions.diver.rmv);
-        remainToConsume = this.consumeByGases(segments, tanks, consumptionOptions.diver.rmv, minimum, remainToConsume);
+        const rmv = consumptionOptions.diver.rmv;
+        let remainToConsume = this.consumeByTanks(segments, minimum, rmv);
+        remainToConsume = this.consumeByGases(segments, tanks, rmv, minimum, remainToConsume);
     }
 
     /**
@@ -209,11 +210,11 @@ export class Consumption {
         return this.extractRemaining(consumedLiters, tankConsumedBars, tank.size);
     }
 
-    private consumeByGases(segments: Segment[], tanks: Tank[], sac: number, minimum: number,
+    private consumeByGases(segments: Segment[], tanks: Tank[], rmv: number, minimum: number,
         remainToConsume: Map<number, number>): Map<number, number> {
         // assigned tank will be consumed from that tank directly
         // it is always user defined segment (also in ascent)
-        const gasesConsumed: Map<number, number> = this.toBeConsumedYet(segments, sac, remainToConsume, (s) => !s.tank);
+        const gasesConsumed: Map<number, number> = this.toBeConsumedYet(segments, rmv, remainToConsume, (s) => !s.tank);
 
         // distribute the consumed liters across all tanks with that gas starting from last one
         // to consumed stages first. This simulates open circuit procedure: First consume, what you can drop.
@@ -228,9 +229,9 @@ export class Consumption {
         return gasesConsumed;
     }
 
-    private consumeByTanks(segments: Segment[], minimum: number, sac: number): Map<number, number> {
+    private consumeByTanks(segments: Segment[], minimum: number, rmv: number): Map<number, number> {
         const remainToConsume: Map<number, number> = new Map<number, number>();
-        const sacSeconds = Time.toMinutes(sac);
+        const sacSeconds = Time.toMinutes(rmv);
 
         segments.forEach((segment: Segment) => {
             if (segment.tank) {
@@ -264,11 +265,11 @@ export class Consumption {
         return consumedLiters;
     }
 
-    private toBeConsumedYet(segments: Segment[], sac: number,
+    private toBeConsumedYet(segments: Segment[], rmv: number,
         remainToConsume: Map<number, number>,
         includeSegment: (segment: Segment) => boolean): Map<number, number> {
 
-        const sacSeconds = Time.toMinutes(sac);
+        const rmvSeconds = Time.toMinutes(rmv);
 
         for (let index = 0; index < segments.length; index++) {
             const segment = segments[index];
@@ -277,7 +278,7 @@ export class Consumption {
                 const gas = segment.gas;
                 const gasCode = gas.contentCode();
                 const converted = ConsumptionSegment.fromSegment(segment);
-                const consumedLiters = this.consumedBySegment(converted, sacSeconds);
+                const consumedLiters = this.consumedBySegment(converted, rmvSeconds);
                 let consumedByGas: number = remainToConsume.get(gasCode) || 0;
                 consumedByGas += consumedLiters;
                 remainToConsume.set(gasCode, consumedByGas);
@@ -289,11 +290,11 @@ export class Consumption {
 
     /**
      * Returns consumption in Liters at given segment average depth
-     * @param sacSeconds Liter/second
+     * @param rmvSeconds Liter/second
      */
-    private consumedBySegment(segment: ConsumptionSegment, sacSeconds: number) {
+    private consumedBySegment(segment: ConsumptionSegment, rmvSeconds: number) {
         const averagePressure = this.depthConverter.toBar(segment.averageDepth);
-        const consumed = segment.duration * averagePressure * sacSeconds;
+        const consumed = segment.duration * averagePressure * rmvSeconds;
         return consumed;
     }
 }

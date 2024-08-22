@@ -558,7 +558,7 @@ describe('Consumption', () => {
                 consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
 
                 it('counts the consumption', () => {
-                    expect(tank1.consumed).toEqual(110);
+                    expect(tank1.consumed).toEqual(109);
                     expect(tank2.consumed).toEqual(32); // depth rounding
                 });
 

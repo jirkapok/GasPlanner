@@ -233,6 +233,7 @@ export class Gas {
     /** Unique identifier of content */
     public contentCode(): number {
         const fourK = 10000;
+        // TODO change to update in setters, don't calculate every time
         // considered identical gas rounding on two decimal places
         return Precision.round(this._fO2 * fourK * fourK) +
             Precision.round(this._fHe * fourK);

@@ -118,7 +118,7 @@ export class Tank implements TankFill {
         return this._gas.name;
     }
 
-    /** calculated value in range 0 - start pressure in bars  */
+    /** Current pressure in bars. As calculated value of remaining gas in range 0 - start pressure.  */
     public get endPressure(): number {
         const remaining = this.startPressure - this.consumed;
 

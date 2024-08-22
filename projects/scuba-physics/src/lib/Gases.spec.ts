@@ -328,24 +328,25 @@ describe('Gases', () => {
         beforeEach(() => {
             sut = new Gas(GasMixtures.o2InAir, 0);
         });
+
         it('Creation', () => {
             sut = new Gas(0.28, 0.27);
-            expect(sut.contentCode()).toBeCloseTo(28002700);
+            expect(sut.contentCode).toBeCloseTo(28002700);
         });
 
         it('o2 change', () => {
             sut.fO2 = 0.32;
-            expect(sut.contentCode()).toBeCloseTo(32000000);
+            expect(sut.contentCode).toBeCloseTo(32000000);
         });
 
         it('He change', () => {
             sut.fHe = 0.48;
-            expect(sut.contentCode()).toBeCloseTo(20904800);
+            expect(sut.contentCode).toBeCloseTo(20904800);
         });
 
         it('standard gas assignment', () => {
             sut.assignStandardGas('Trimix 18/45');
-            expect(sut.contentCode()).toBeCloseTo(18004500);
+            expect(sut.contentCode).toBeCloseTo(18004500);
         });
     });
 });

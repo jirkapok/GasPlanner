@@ -33,7 +33,7 @@ describe('ConsumedByMix', () => {
 
         it('Groups by Gas', () => {
             const expected = [20900000, 32000000];
-            assertResult(r => r.gas.contentCode(), expected);
+            assertResult(r => r.gas.contentCode, expected);
         });
 
         it('Sums total volume', () => {

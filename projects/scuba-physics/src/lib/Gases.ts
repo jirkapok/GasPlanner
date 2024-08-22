@@ -157,6 +157,11 @@ export class Gas {
         return Gas.nameFor(this.fO2, this.fHe);
     }
 
+    /** Unique identifier of content */
+    public get contentCode(): number {
+        return this._contentCode;
+    }
+
     public set fO2(newValue: number) {
         this._fO2 = newValue > 1 ? 1 : newValue;
 
@@ -235,11 +240,6 @@ export class Gas {
         return !!other &&
             this._fO2 === other._fO2 &&
             this._fHe === other._fHe;
-    }
-
-    /** Unique identifier of content */
-    public contentCode(): number {
-        return this._contentCode;
     }
 
     public assignStandardGas(gasName: string): void {

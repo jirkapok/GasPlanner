@@ -165,7 +165,7 @@ export class Consumption {
         // add the reserve from opposite order than consumed gas
         for (let index = 0; index <= tanks.length - 1; index++) {
             const tank = tanks[index];
-            const gasCode = tank.gas.contentCode();
+            const gasCode = tank.gas.contentCode;
             const consumedLiters = gasesConsumed.get(gasCode);
             this.updateTankReserve(tank, index, options, consumedLiters);
             const remaining = consumedLiters - (tank.reserve * tank.size);
@@ -196,7 +196,7 @@ export class Consumption {
         // to consumed stages first. This simulates open circuit procedure: First consume, what you can drop.
         for (let index = tanks.length - 1; index >= 0; index--) {
             const tank = tanks[index];
-            const gasCode = tank.gas.contentCode();
+            const gasCode = tank.gas.contentCode;
             let remaining = remainToConsume.get(gasCode);
             let reallyConsumed = this.consumeFromTank(tank, remaining, minimum);
             reallyConsumed = reallyConsumed < 0 ? 0 : reallyConsumed;
@@ -221,7 +221,7 @@ export class Consumption {
         getConsumed: (s: Segment, remaining: number) => number): GasVolumes {
         segments.forEach((segment: Segment) => {
             if (segment.tank) {
-                const gasCode = segment.gas.contentCode();
+                const gasCode = segment.gas.contentCode;
                 let remaining: number = remainToConsume.get(gasCode);
                 const consumeLiters = getConsumed(segment, remaining);
                 let reallyConsumed = this.consumeFromTank(segment.tank, consumeLiters, minimum);
@@ -256,7 +256,7 @@ export class Consumption {
 
             if (includeSegment(segment)) {
                 const gas = segment.gas;
-                const gasCode = gas.contentCode();
+                const gasCode = gas.contentCode;
                 const consumedLiters = this.consumedBySegment(segment, rmvSeconds);
                 let consumedByGas: number = remainToConsume.get(gasCode);
                 consumedByGas += consumedLiters;

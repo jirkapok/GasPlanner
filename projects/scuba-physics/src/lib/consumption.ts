@@ -192,30 +192,28 @@ export class Consumption {
             const tank = tanks[index];
             const gasCode = tank.gas.contentCode();
             const consumedLiters = gasesConsumed.get(gasCode) || 0;
-            const remaining = this.addReserveToTank(tank, consumedLiters);
+            this.updateTankReserve(tank, index, options, consumedLiters);
+            let remaining = consumedLiters - (tank.reserve * tank.size);
+            remaining = remaining > 0 ? remaining : 0;
             gasesConsumed.set(gasCode, remaining);
-            tank.reserve = this.ensureMinimalReserve(tank, index, options);
         }
     }
 
-    private ensureMinimalReserve(tank: Tank, tankIndex: number, options: ConsumptionOptions): number {
+    private ensureMinimalReserve(reserve: number, tankIndex: number, options: ConsumptionOptions): number {
         // maybe use the tank.id instead of index
         const minimalReserve = tankIndex === 0 ? options.primaryTankReserve : options.stageTankReserve;
 
-        if(tank.reserve < minimalReserve) {
+        if(reserve < minimalReserve) {
             return minimalReserve;
         }
 
-        return tank.reserve;
+        return reserve;
     }
 
-    private addReserveToTank(tank: Tank, consumedLiters: number): number {
+    private updateTankReserve(tank: Tank, index: number, options: ConsumptionOptions, consumedLiters: number): void {
         const consumedBars = Precision.ceil(consumedLiters / tank.size);
-        const tankConsumedBars = (consumedBars + tank.reserve) > tank.startPressure ? tank.startPressure - tank.reserve : consumedBars;
-        tank.reserve += tankConsumedBars;
-        // TODO consider round by bars at end of the calculation
-        const remaining = consumedLiters - (tankConsumedBars * tank.size);
-        return remaining > 0 ? remaining : 0;
+        const tankConsumedBars = consumedBars > tank.startPressure ? tank.startPressure : consumedBars;
+        tank.reserve = this.ensureMinimalReserve(tankConsumedBars, index, options);
     }
 
     private consumeByGases(tanks: Tank[], remainToConsume: Map<number, number>,

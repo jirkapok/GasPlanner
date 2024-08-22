@@ -11,46 +11,6 @@ import { Time } from './Time';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
 import { PlanFactory } from './PlanFactory';
 
-// TODO remove, if no longer relevant
-class ConsumptionSegment {
-    /** in seconds */
-    public startTime = 0;
-    /** in seconds */
-    public endTime = 0;
-    /** in meters */
-    public averageDepth = 0;
-    /** in meters */
-    private _startDepth = 0;
-    /** in meters */
-    private _endDepth = 0;
-
-    /**
-     * @param duration in seconds
-     * @param newDepth in meters
-     * @param previousDepth in meters
-     */
-    private constructor(public duration: number, newDepth: number, previousDepth: number, averageDepth: number) {
-        this.endTime = Precision.roundTwoDecimals(duration);
-        this._endDepth = newDepth;
-        this._startDepth = previousDepth;
-        this.averageDepth = averageDepth;
-    }
-
-    /** in meters */
-    public get startDepth(): number {
-        return this._startDepth;
-    }
-
-    /** in meters */
-    public get endDepth(): number {
-        return this._endDepth;
-    }
-
-    public static fromSegment(segment: Segment): ConsumptionSegment {
-        return new ConsumptionSegment(segment.duration, segment.endDepth, segment.startDepth, segment.averageDepth);
-    }
-}
-
 class GasVolumes {
     private remaining: Map<number, number> = new Map<number, number>();
 
@@ -137,7 +97,7 @@ export class Consumption {
         // assigned tank will be consumed from that tank directly
         // it is always user defined segment (also in ascent)
         remainToConsume = this.consumeByTanks(segments, remainToConsume, rmv, tankMinimum);
-        remainToConsume = this.consumeByTanks2(segments, remainToConsume, () => 0);
+        remainToConsume = this.consumeByTanksRemaining(segments, remainToConsume, () => 0);
         remainToConsume = this.toBeConsumedYet(segments, rmv, remainToConsume, (s) => !s.tank);
         remainToConsume = this.consumeByGases(tanks, remainToConsume, tankMinimum);
         this.consumeByGases(tanks, remainToConsume, () => 0);
@@ -244,20 +204,13 @@ export class Consumption {
         return remainToConsume;
     }
 
-    private consumeByTanks2(segments: Segment[], remainToConsume: GasVolumes, minimum: (t: Tank) => number): GasVolumes {
-        return this.consumeBySegmentTank(segments, remainToConsume, minimum, (s: Segment, remaining: number) => remaining);
-    }
-
     private consumeByTanks(segments: Segment[], remainToConsume: GasVolumes, rmv: number, minimum: (t: Tank) => number): GasVolumes {
         const rmvSeconds = Time.toMinutes(rmv);
+        return this.consumeBySegmentTank(segments, remainToConsume, minimum, (s) => this.consumedBySegment(s, rmvSeconds));
+    }
 
-        const getConsumedLiters = (segment: Segment) => {
-            const consumptionSegment = ConsumptionSegment.fromSegment(segment);
-            const consumeLiters = this.consumedBySegment(consumptionSegment, rmvSeconds);
-            return consumeLiters;
-        };
-
-        return this.consumeBySegmentTank(segments, remainToConsume, minimum, getConsumedLiters);
+    private consumeByTanksRemaining(segments: Segment[], remainToConsume: GasVolumes, minimum: (t: Tank) => number): GasVolumes {
+        return this.consumeBySegmentTank(segments, remainToConsume, minimum, (_: Segment, remaining: number) => remaining);
     }
 
     private consumeBySegmentTank(segments: Segment[], remainToConsume: GasVolumes,
@@ -301,8 +254,7 @@ export class Consumption {
             if (includeSegment(segment)) {
                 const gas = segment.gas;
                 const gasCode = gas.contentCode();
-                const converted = ConsumptionSegment.fromSegment(segment);
-                const consumedLiters = this.consumedBySegment(converted, rmvSeconds);
+                const consumedLiters = this.consumedBySegment(segment, rmvSeconds);
                 let consumedByGas: number = remainToConsume.get(gasCode);
                 consumedByGas += consumedLiters;
                 remainToConsume.set(gasCode, consumedByGas);
@@ -316,9 +268,10 @@ export class Consumption {
      * Returns consumption in Liters at given segment average depth
      * @param rmvSeconds Liter/second
      */
-    private consumedBySegment(segment: ConsumptionSegment, rmvSeconds: number) {
+    private consumedBySegment(segment: Segment, rmvSeconds: number) {
         const averagePressure = this.depthConverter.toBar(segment.averageDepth);
-        const consumed = segment.duration * averagePressure * rmvSeconds;
+        const duration = Precision.roundTwoDecimals(segment.duration);
+        const consumed = duration * averagePressure * rmvSeconds;
         return consumed;
     }
 }

@@ -9,11 +9,16 @@ export interface DepthLevelOptions {
 
     /**
      * Depth difference between two deco stops in metres.
-     * Default 3 meters
+     * Default is 3 meters.
+     * As described in Buhlmanns Decompression book, it dated back to Navy seals in early 1900,
+     * where they used 10 feet increments.
      */
     decoStopDistance: number;
 
-    /** Depth in meters, default 10 meters */
+    /**
+     * Depth in meters, default 10 meters.
+     * Emulates some computers behavior (Suunto, Mares).
+     */
     minimumAutoStopDepth: number;
 }
 

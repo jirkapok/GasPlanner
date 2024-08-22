@@ -12,8 +12,6 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Extend application settings:
-  * Add setting for minimum reserve for both main tank and deco tanks
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
   * Fix offline mode:
@@ -24,14 +22,14 @@ Following list of features and improvements ordered by priority is under develop
     * Add gas blending costs
     * Add application settings for costs
     * Add use case to identify mix when adding only top mix without adding he or oxygen
+* Add tissues heat map
+  * to the profile chart
+  * to the dives comparision
 * UI Tweaks
     * Tanks complex view: Add check box to be able enable or disable tanks
     * Add Surface GF to the results
     * Read only fields should be distinguish able
     * Profile comparison: Add option to compare dives aligned by the end of dive
-* Add tissues heat map
-  * to the profile chart
-  * to the dives comparision
 * Gas consumption:
   * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80
   * Clarify another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0

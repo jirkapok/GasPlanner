@@ -123,6 +123,7 @@ export class Gases {
 export class Gas {
     private static nameFor: (fO2: number, fHe: number) => string;
     private static byName: (gasName: string) => Gas | null;
+    private _contentCode = 0;
 
     /**
      * @param _fO2 partial pressure of O2 in the mix, range 0-1
@@ -132,6 +133,8 @@ export class Gas {
         if (this.contentExceeds100percent()) {
             throw new Error('O2 + He can\'t exceed 100 %');
         }
+
+        this.updateContentCode();
     }
 
     /** Nitrox fraction in range 0 - 1 */
@@ -160,6 +163,8 @@ export class Gas {
         if (this.contentExceeds100percent()) {
             this._fHe = this.countRemaining(this._fO2);
         }
+
+        this.updateContentCode();
     }
 
     public set fHe(newValue: number) {
@@ -168,6 +173,8 @@ export class Gas {
         if (this.contentExceeds100percent()) {
             this._fO2 = this.countRemaining(this._fHe);
         }
+
+        this.updateContentCode();
     }
 
     /** For internal use only */
@@ -232,11 +239,7 @@ export class Gas {
 
     /** Unique identifier of content */
     public contentCode(): number {
-        const fourK = 10000;
-        // TODO change to update in setters, don't calculate every time
-        // considered identical gas rounding on two decimal places
-        return Precision.round(this._fO2 * fourK * fourK) +
-            Precision.round(this._fHe * fourK);
+        return this._contentCode;
     }
 
     public assignStandardGas(gasName: string): void {
@@ -257,5 +260,12 @@ export class Gas {
     private countRemaining(part: number): number {
         const rest = 1 - part;
         return Precision.round(rest, 5);
+    }
+
+    private updateContentCode(): void {
+        const fourK = 10000;
+        // considered identical gas rounding on two decimal places
+        this._contentCode = Precision.round(this._fO2 * fourK * fourK) +
+                            Precision.round(this._fHe * fourK);
     }
 }

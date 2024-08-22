@@ -23,7 +23,7 @@ describe('Consumption - Preserve reserved gas', ()=> {
 
     // For larger reserve we need deep dives, which cause long emergency ascent
 
-    xdescribe('Enough gas', () => {
+    describe('Enough gas', () => {
         describe('Custom minimum tank reserve is applied', () => {
             let tank1: Tank, tank2: Tank, tank3: Tank;
 
@@ -114,7 +114,7 @@ describe('Consumption - Preserve reserved gas', ()=> {
         });
     });
 
-    xdescribe('Respects user defined consumption', () => {
+    describe('Respects user defined consumption', () => {
         let tank1: Tank, tank2: Tank, tank3: Tank, tank4: Tank;
 
         beforeEach(() => {
@@ -143,7 +143,7 @@ describe('Consumption - Preserve reserved gas', ()=> {
         });
     });
 
-    xdescribe('Not enough gas', () => {
+    describe('Not enough gas', () => {
         describe('Consumed more than one tank reserve', () => {
             let tank1: Tank, tank2: Tank, tank3: Tank, tank4: Tank;
 
@@ -165,11 +165,11 @@ describe('Consumption - Preserve reserved gas', ()=> {
             });
 
             it('Consumed also from last tank reserve', () => {
-                // in total 600 b, 330 b rserve, consumed cca 284 b
+                // in total 600 b, 330 b reserve, consumed cca 284 b
                 expect(tank2.consumed).toEqual(0); // 200 - 0
                 expect(tank3.consumed).toEqual(95); // 200 - 105
                 // crossed reserve, subtracted even from reserve
-                expect(tank4.consumed).toEqual(187); // 330 -295
+                expect(tank4.consumed).toEqual(189); // 330 -295
                 // the same emergency reserve as above (200, 105, 25)
             });
         });
@@ -233,8 +233,5 @@ describe('Consumption - Preserve reserved gas', ()=> {
     });
 });
 
+// TODO test case: User segment already consumed more than reserve
 
-// Implementation idea:
-// 1. First calculate reserve for all tanks
-// 2. Subtract gas up to reserve from all tanks
-// 3. Still remaining gas - subtract from reserve

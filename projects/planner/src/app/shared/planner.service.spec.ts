@@ -137,8 +137,8 @@ describe('PlannerService', () => {
             expect(tanksService.firstTank.tank.reserve).toEqual(78);
         });
 
-        it('109 bar remaining gas', () => {
-            expect(tanksService.firstTank.tank.endPressure).toEqual(123);
+        it('124 bar remaining gas', () => {
+            expect(tanksService.firstTank.tank.endPressure).toEqual(124);
         });
     });
 

@@ -245,31 +245,31 @@ export class Consumption {
     }
 
     private consumeByTanks2(segments: Segment[], remainToConsume: GasVolumes, minimum: (t: Tank) => number): GasVolumes {
-        segments.forEach((segment: Segment) => {
-            if (segment.tank) {
-                const gasCode = segment.gas.contentCode();
-                let remaining: number = remainToConsume.get(gasCode);
-                let reallyConsumed = this.consumeFromTank(segment.tank, remaining, minimum);
-                reallyConsumed = reallyConsumed < 0 ? 0 : reallyConsumed;
-                remaining -= reallyConsumed;
-                remainToConsume.set(gasCode, remaining);
-            }
-        });
-
-        return remainToConsume;
+        return this.consumeBySegmentTank(segments, remainToConsume, minimum, (s: Segment, remaining: number) => remaining);
     }
 
     private consumeByTanks(segments: Segment[], remainToConsume: GasVolumes, rmv: number, minimum: (t: Tank) => number): GasVolumes {
         const rmvSeconds = Time.toMinutes(rmv);
 
+        const getConsumedLiters = (segment: Segment) => {
+            const consumptionSegment = ConsumptionSegment.fromSegment(segment);
+            const consumeLiters = this.consumedBySegment(consumptionSegment, rmvSeconds);
+            return consumeLiters;
+        };
+
+        return this.consumeBySegmentTank(segments, remainToConsume, minimum, getConsumedLiters);
+    }
+
+    private consumeBySegmentTank(segments: Segment[], remainToConsume: GasVolumes,
+        minimum: (t: Tank) => number,
+        getConsumed: (s: Segment, remaining: number) => number): GasVolumes {
         segments.forEach((segment: Segment) => {
             if (segment.tank) {
                 const gasCode = segment.gas.contentCode();
-                const consumptionSegment = ConsumptionSegment.fromSegment(segment);
-                const consumedLiters = this.consumedBySegment(consumptionSegment, rmvSeconds);
-                let reallyConsumed = this.consumeFromTank(segment.tank, consumedLiters, minimum);
-                reallyConsumed = reallyConsumed < 0 ? 0 : reallyConsumed;
                 let remaining: number = remainToConsume.get(gasCode);
+                const consumeLiters = getConsumed(segment, remaining);
+                let reallyConsumed = this.consumeFromTank(segment.tank, consumeLiters, minimum);
+                reallyConsumed = reallyConsumed < 0 ? 0 : reallyConsumed;
                 remaining -= reallyConsumed;
                 remainToConsume.set(gasCode, remaining);
             }

@@ -88,7 +88,7 @@ export class Consumption {
         }
 
         Tanks.resetConsumption(tanks);
-        // Reserve needs to be first to be able preserve it.
+        // Reserve needs to be first to be able to preserve it.
         this.updateReserve(emergencyAscent, tanks, consumptionOptions);
         const tankMinimum = (t: Tank) => t.reserve;
         const rmv = consumptionOptions.diver.rmv;
@@ -98,7 +98,7 @@ export class Consumption {
         remainToConsume = this.consumeByTanks(segments, remainToConsume, rmv, tankMinimum);
         remainToConsume = this.consumeByTanksRemaining(segments, remainToConsume, () => 0);
 
-        // and only now we can consume the remainig gas from all other segments
+        // and only now we can consume the remaining gas from all other segments
         remainToConsume = this.toBeConsumedYet(segments, rmv, remainToConsume, (s) => !s.tank);
         remainToConsume = this.consumeByGases(tanks, remainToConsume, tankMinimum);
         this.consumeByGases(tanks, remainToConsume, () => 0);

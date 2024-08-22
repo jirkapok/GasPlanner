@@ -72,9 +72,9 @@ describe('Consumption - Preserve reserved gas', ()=> {
             });
 
             it('Short dive, minimum consumed', () => {
-                expect(tank2.consumed).toEqual(0); // start pressure, whole tank reserve
-                expect(tank3.consumed).toEqual(0); // calculated reserve
-                expect(tank4.consumed).toEqual(4); // minimal reserve
+                expect(tank2.consumed).toEqual(0); // not used
+                expect(tank3.consumed).toEqual(0); // not used
+                expect(tank4.consumed).toEqual(4); // ascent to surface
             });
 
             it('Stage tanks consumed from last', () => {
@@ -114,7 +114,7 @@ describe('Consumption - Preserve reserved gas', ()=> {
         });
     });
 
-    describe('Respects user defined consumption', () => {
+    describe('Respects user defined segments', () => {
         let tank1: Tank, tank2: Tank, tank3: Tank, tank4: Tank;
 
         beforeEach(() => {
@@ -124,10 +124,12 @@ describe('Consumption - Preserve reserved gas', ()=> {
             tank4 = new Tank(10, 200, 50);
             const tanks = [tank1, tank2, tank3, tank4];
 
-            const s1 = new Segment(0, 60, tank1, Time.oneMinute * 2);
-            const s2 = new Segment(60, 60, tank1, Time.oneMinute * 20);
-            const s3 = new Segment(60, 20, tank1, Time.oneMinute * 4);
+            // needs to be lower depth then previous tests, because emergency ascent is calculated from here
+            const s1 = new Segment(0, 50, tank1, Time.oneMinute * 2);
+            const s2 = new Segment(50, 50, tank1, Time.oneMinute * 20);
+            const s3 = new Segment(50, 20, tank1, Time.oneMinute * 4);
             const s4 = new Segment(20, 20, tank2, Time.oneMinute * 10); // 60 b
+
             const s5 = new Segment(20, 20, StandardGases.ean50, Time.oneMinute * 30); // 180 b
             const s6 = new Segment(20, 0, StandardGases.ean50, Time.oneMinute); // 2 bar
             const segments = [s1, s2, s3, s4, s5, s6];
@@ -137,9 +139,9 @@ describe('Consumption - Preserve reserved gas', ()=> {
 
         it('Consumes up to reserve respecting what user already consumed', () => {
             expect(tank2.consumed).toEqual(60);
-            expect(tank3.consumed).toEqual(67);
+            expect(tank3.consumed).toEqual(8);
             expect(tank4.consumed).toEqual(175);
-            // the same emergency reserve as above (200, 105, 25)
+            // the same emergency reserve as above (200, 113, 25)
         });
     });
 
@@ -188,7 +190,7 @@ describe('Consumption - Preserve reserved gas', ()=> {
                 const s2 = new Segment(60, 60, tank1, Time.oneMinute * 20);
                 const s3 = new Segment(60, 20, tank1, Time.oneMinute * 4);
                 const s4 = new Segment(20, 20, tank2, Time.oneMinute * 10); // 60 b
-                const s5 = new Segment(20, 20, StandardGases.ean50, Time.oneMinute * 47); // 222 b
+                const s5 = new Segment(20, 20, StandardGases.ean50, Time.oneMinute * 40); // 240 b
                 const s6 = new Segment(20, 0, StandardGases.ean50, Time.oneMinute); // 2 bar
                 const segments = [s1, s2, s3, s4, s5, s6];
 
@@ -197,9 +199,9 @@ describe('Consumption - Preserve reserved gas', ()=> {
 
             it('Consumes reserve respecting what user already consumed', () => {
                 expect(tank2.consumed).toEqual(60);
-                expect(tank3.consumed).toEqual(95);
-                expect(tank4.consumed).toEqual(187);
-                // the same emergency reserve as above (200, 105, 25)
+                expect(tank3.consumed).toEqual(42);
+                expect(tank4.consumed).toEqual(200);
+                // the same emergency reserve as above (200, 200, 25)
             });
         });
 
@@ -230,8 +232,53 @@ describe('Consumption - Preserve reserved gas', ()=> {
                 // the same emergency reserve as above (200, 105, 25)
             });
         });
+
+        it('User segment consumed more than reserve', () => {
+            const tank1 = new Tank(20, 200, 21);
+            const tank2 = new Tank(10, 200, 50);
+            const tank3 = new Tank(10, 200, 50);
+            const tank4 = new Tank(10, 200, 50);
+            const tanks = [tank1, tank2, tank3, tank4];
+
+            const s1 = new Segment(0, 42, tank1, Time.oneMinute * 2);
+            const s2 = new Segment(42, 42, tank1, Time.oneMinute * 20);
+            const s3 = new Segment(42, 20, tank1, Time.oneMinute * 4);
+            const s4 = new Segment(20, 20, tank3, Time.oneMinute * 15); // 90 b
+            const s5 = new Segment(20, 20, StandardGases.ean50, Time.oneMinute * 40); // 240 b
+            const s6 = new Segment(20, 0, StandardGases.ean50, Time.oneMinute); // 2 bar
+            const segments = [s1, s2, s3, s4, s5, s6];
+
+            consumption.consumeFromTanks(segments, options, tanks, consumptionOptions);
+
+            expect(tank2.consumed).toEqual(0);
+            expect(tank3.consumed).toEqual(132);
+            expect(tank4.consumed).toEqual(200);
+            // the same emergency reserve as above (200, 129, 25)
+        });
+    });
+
+    it('User error, more used than available from one tank', () => {
+        const tank1 = new Tank(20, 200, 21);
+        const tank2 = new Tank(10, 200, 50);
+        const tank3 = new Tank(10, 200, 50);
+        const tank4 = new Tank(10, 200, 50);
+        const tanks = [tank1, tank2, tank3, tank4];
+
+        const s1 = new Segment(0, 20, tank1, Time.oneMinute * 2);
+        const s2 = new Segment(20, 20, tank1, Time.oneMinute * 20);
+        const s3 = new Segment(20, 20, tank3, Time.oneMinute * 20); // 120 b
+        const s4 = new Segment(20, 20, tank3, Time.oneMinute * 20); // 120 b
+        const s5 = new Segment(20, 20, StandardGases.ean50, Time.oneMinute * 40); // 240 b
+        const s6 = new Segment(20, 0, StandardGases.ean50, Time.oneMinute); // 2 bar
+        const segments = [s1, s2, s3, s4, s5, s6];
+
+        consumption.consumeFromTanks(segments, options, tanks, consumptionOptions);
+
+        expect(tank2.consumed).toEqual(105);
+        expect(tank3.consumed).toEqual(200);
+        expect(tank4.consumed).toEqual(175);
+        // the same emergency reserve as above (36, 25, 25)
     });
 });
 
-// TODO test case: User segment already consumed more than reserve
 

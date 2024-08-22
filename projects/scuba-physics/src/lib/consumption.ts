@@ -213,7 +213,9 @@ export class Consumption {
         const consumedBars = Precision.ceil(consumedLiters / tank.size);
         const tankConsumedBars = (consumedBars + tank.reserve) > tank.startPressure ? tank.startPressure - tank.reserve : consumedBars;
         tank.reserve += tankConsumedBars;
-        return this.extractRemaining(consumedLiters, tankConsumedBars, tank.size);
+        // TODO consider round by bars at end of the calculation
+        const remaining = consumedLiters - (tankConsumedBars * tank.size);
+        return remaining > 0 ? remaining : 0;
     }
 
     private consumeByGases(tanks: Tank[], remainToConsume: Map<number, number>,
@@ -280,13 +282,6 @@ export class Consumption {
         const tankConsumedBars = consumedBars > available ? available : consumedBars;
         tank.consumed += tankConsumedBars;
         return tankConsumedBars * tank.size; // TODO consider round by bars at end of the calculation
-    }
-
-    private extractRemaining(consumedLiters: number, tankConsumedBars: number, tankSize: number): number {
-        let remaining = consumedLiters - (tankConsumedBars * tankSize);
-        // because of previous rounding up the consumed bars
-        remaining = remaining < 0 ? 0 : remaining;
-        return remaining;
     }
 
     /** The only method which add gas to remainToConsume */

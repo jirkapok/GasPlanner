@@ -427,7 +427,7 @@ describe('Consumption', () => {
             // 1.5 * 20 * 2 = 60
 
             consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
-            expect(tank.consumed).toEqual(62); //  because of pressure conversion
+            expect(tank.consumed).toEqual(61);
             // emergency ascent: ((2 * 2 * 2) + (1.5 * 10 * 2)) * 3 = 33
             expect(tank.reserve).toEqual(115);
         });
@@ -559,7 +559,7 @@ describe('Consumption', () => {
 
                 it('counts the consumption', () => {
                     expect(tank1.consumed).toEqual(109);
-                    expect(tank2.consumed).toEqual(32); // depth rounding
+                    expect(tank2.consumed).toEqual(31);
                 });
 
                 it('counts the reserve', () => {

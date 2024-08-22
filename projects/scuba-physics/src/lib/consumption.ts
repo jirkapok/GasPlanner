@@ -93,14 +93,16 @@ export class Consumption {
         const tankMinimum = (t: Tank) => t.reserve;
         const rmv = consumptionOptions.diver.rmv;
         let remainToConsume: GasVolumes = this.toBeConsumedYet(segments, rmv, new GasVolumes(), (s) => !!s.tank);
-        // First satisfy user defined segments where tank is assigned and only then try the rest.
+        // First satisfy user defined segments where tank is assigned (also in ascent).
         // assigned tank will be consumed from that tank directly
-        // it is always user defined segment (also in ascent)
         remainToConsume = this.consumeByTanks(segments, remainToConsume, rmv, tankMinimum);
         remainToConsume = this.consumeByTanksRemaining(segments, remainToConsume, () => 0);
+
+        // and only now we can consume the remainig gas from all other segments
         remainToConsume = this.toBeConsumedYet(segments, rmv, remainToConsume, (s) => !s.tank);
         remainToConsume = this.consumeByGases(tanks, remainToConsume, tankMinimum);
         this.consumeByGases(tanks, remainToConsume, () => 0);
+        this.roundTanksConsumedToBars(tanks);
     }
 
     /**
@@ -172,6 +174,7 @@ export class Consumption {
     }
 
     private updateTankReserve(tank: Tank, index: number, options: ConsumptionOptions, consumedLiters: number): void {
+        // here we update only once, so we can directly round up
         const consumedBars = Precision.ceil(consumedLiters / tank.size);
         const tankConsumedBars = consumedBars > tank.startPressure ? tank.startPressure : consumedBars;
         tank.reserve = this.ensureMinimalReserve(tankConsumedBars, index, options);
@@ -233,12 +236,12 @@ export class Consumption {
 
     /** Requires already calculated reserve */
     private consumeFromTank(tank: Tank, consumedLiters: number, minimum: (t: Tank) => number): number {
-        const consumedBars = Precision.ceil(consumedLiters / tank.size);
         let available = tank.endPressure - minimum(tank);
         available = available > 0 ? available : 0;
-        const tankConsumedBars = consumedBars > available ? available : consumedBars;
-        tank.consumed += tankConsumedBars;
-        return tankConsumedBars * tank.size; // TODO consider round by bars at end of the calculation
+        const availableLiters = available * tank.size;
+        const reallyConsumedLiters = consumedLiters > availableLiters ? availableLiters : consumedLiters;
+        tank.consumed += reallyConsumedLiters / tank.size;
+        return reallyConsumedLiters;
     }
 
     /** The only method which add gas */
@@ -273,6 +276,10 @@ export class Consumption {
         const duration = Precision.roundTwoDecimals(segment.duration);
         const consumed = duration * averagePressure * rmvSeconds;
         return consumed;
+    }
+
+    private roundTanksConsumedToBars(tanks: Tank[]) {
+        tanks.forEach((tank: Tank) => tank.consumed = Precision.ceil(tank.consumed));
     }
 }
 

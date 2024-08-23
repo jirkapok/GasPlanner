@@ -102,7 +102,7 @@ export class GasesComparisonService {
 
         for (const consumedA of this.profileDiff.profileAConsumed) {
             const consumedB: IConsumedMix | undefined = this.profileDiff.profileBConsumed
-                .find(t => t.gas.contentCode() === consumedA.gas.contentCode());
+                .find(t => t.gas.contentCode === consumedA.gas.contentCode);
 
             const profileB = consumedB ? this.toProfileConsumed(consumedB) : emptyConsumption;
             const newGas = new ConsumedGasDifference(consumedA.gas,
@@ -111,7 +111,7 @@ export class GasesComparisonService {
         }
 
         for (const consumedB of this.profileDiff.profileBConsumed) {
-            if (!mixedTanks.find(mt => mt.gas.contentCode() === consumedB.gas.contentCode())) {
+            if (!mixedTanks.find(mt => mt.gas.contentCode === consumedB.gas.contentCode)) {
                 const newGas = new ConsumedGasDifference(consumedB.gas, emptyConsumption,
                     this.toProfileConsumed(consumedB));
                 mixedTanks.push(newGas);

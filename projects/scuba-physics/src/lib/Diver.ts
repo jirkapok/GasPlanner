@@ -44,5 +44,3 @@ export class Diver {
         this.stressRmv = other.stressRmv;
     }
 }
-
-export { Tank };

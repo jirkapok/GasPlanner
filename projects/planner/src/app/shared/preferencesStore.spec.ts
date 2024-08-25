@@ -28,7 +28,7 @@ describe('PreferencesStore', () => {
                 Preferences, ViewStates, SubViewStorage,
                 SettingsNormalizationService,
                 WayPointsService, DiveSchedules,
-                ReloadDispatcher, ApplicationSettingsService
+                ReloadDispatcher, ApplicationSettingsService,
             ]
         });
 
@@ -217,7 +217,7 @@ describe('PreferencesStore', () => {
                 expect(depthsService.plannedDepth).toBeCloseTo(21, 1);
             }));
 
-        it('Load Defaults when no default is defined ', inject([DiveSchedules],
+        it('Load Defaults when no default is defined', inject([DiveSchedules],
             (schedules: DiveSchedules) => {
                 localStorage.clear();
 
@@ -228,6 +228,34 @@ describe('PreferencesStore', () => {
 
                 expect(tanksService.firstTank.size).toBeCloseTo(15, 1);
                 expect(depthsService.plannedDepth).toBeCloseTo(30, 1);
+            }));
+
+        it('AppSettings load defaults', inject([ApplicationSettingsService],
+            (appSettings: ApplicationSettingsService) => {
+                localStorage.clear();
+
+                sut.ensureDefault();
+
+                expect(appSettings.maxGasDensity).toBeCloseTo(5.7, 1);
+                expect(appSettings.primaryTankReserve).toBeCloseTo(30, 1);
+                expect(appSettings.stageTankReserve).toBeCloseTo(20, 1);
+            }));
+
+        it('AppSettings loads saved values', inject([ApplicationSettingsService],
+            (appSettings: ApplicationSettingsService) => {
+                appSettings.maxGasDensity = 6;
+                appSettings.primaryTankReserve = 31;
+                appSettings.stageTankReserve = 21;
+
+                sut.save();
+                appSettings.maxGasDensity = 5.3;
+                appSettings.primaryTankReserve = 32;
+                appSettings.stageTankReserve = 22;
+                sut.load();
+
+                expect(appSettings.maxGasDensity).toBeCloseTo(6, 1);
+                expect(appSettings.primaryTankReserve).toBeCloseTo(31, 1);
+                expect(appSettings.stageTankReserve).toBeCloseTo(21, 1);
             }));
     });
 });

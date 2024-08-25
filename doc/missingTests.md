@@ -1,11 +1,7 @@
 # TODO missing test cases
 
-* Add tests for Diver.ts
 * Dive Schedule.label is rounded
 * Test IgnoredIssuesService.ts
-* PersistenceService:
-  * Save and load AppSettings from store (density, warnings, tank reserve)
-  * AppSettings not saved yet, default value is loaded
 * LoadFromUrl:
   * Loads app settings (density, warnings, tank reserve) with no change
   * Loads and saves stressRmv and rmv
@@ -24,3 +20,4 @@
   * Values are Saved to PreferencesStore after clicking Use button
   * Values are loaded from PreferencesStore after component initialization
   * Reset to default
+* All other components without tests (currently have only smoke tests)

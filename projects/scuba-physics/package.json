@@ -2,10 +2,10 @@
   "name": "scuba-physics",
   "version": "0.1.30",
   "peerDependencies": {
-    "@angular/common": "^17.2.1",
-    "@angular/core": "^17.2.1"
+    "@angular/common": "^17.3.8",
+    "@angular/core": "^17.3.8"
   },
   "dependencies": {
-    "tslib": "^2.6.2"
+    "tslib": "^2.7.0"
   }
 }

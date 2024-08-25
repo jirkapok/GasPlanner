@@ -5,23 +5,24 @@ Following list of features and improvements ordered by priority is under develop
 ## Known issues
 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
-* Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, wan't fix
+* Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, won't fix
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
 * Loading of simple dive URL with segment shorter than 60 seconds (simple dive to 15 m) shows no validation issue
 * If mouse over the dive profile chart and calculation finishes, the marked segment is still rendered
+* Refresh page adds new dive to the list
 
 ## Improvements / Features
 
+* Gas blender:
+    * Add gas blending costs
+    * Add application settings for costs
+    * Add use case to identify mix when adding only top mix without adding he or oxygen
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
   * Fix offline mode:
     * https://progressier.com/
     * https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers
     * https://developers.google.com/codelabs/pwa-training/pwa03--going-offline#1)
-* Gas blender:
-    * Add gas blending costs
-    * Add application settings for costs
-    * Add use case to identify mix when adding only top mix without adding he or oxygen
 * Add tissues heat map
   * to the profile chart
   * to the dives comparision

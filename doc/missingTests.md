@@ -2,10 +2,6 @@
 
 * Dive Schedule.label is rounded
 * Test IgnoredIssuesService.ts
-* LoadFromUrl:
-  * Loads app settings (density, warnings, tank reserve) with no change
-  * Loads and saves stressRmv and rmv
-  * Loads default stressRmv, if not present in URL
 * ProfileEvents: Generates correct events based on maxDensity
 * PlannerService: 
   * MaxGasDensity is used when calling task

@@ -20,7 +20,8 @@ class TestSut {
         public planner: PlannerService,
         public viewSwitch: ViewSwitchService,
         public units: UnitConversion,
-        public urlSerialization: PlanUrlSerialization) {
+        public urlSerialization: PlanUrlSerialization,
+        public appSettings: ApplicationSettingsService) {
     }
 
     public get options(): OptionsService {
@@ -54,7 +55,7 @@ describe('Url Serialization', () => {
             schedules, appSettings, preferences);
         const firstDive = schedules.dives[0];
         firstDive.depths.setSimple();
-        return new TestSut(schedules, planner, viewSwitch, units,  urlSerialization);
+        return new TestSut(schedules, planner, viewSwitch, units,  urlSerialization, appSettings);
     };
 
     const createSimplePlan = () => {
@@ -146,6 +147,17 @@ describe('Url Serialization', () => {
 
         const result = current.urlSerialization.toUrl();
         expect(result.length).toBeLessThan(2048);
+    });
+
+    it('AppSettings arn`t part of url', () => {
+        complexSut.appSettings.maxGasDensity = 6;
+        complexSut.appSettings.primaryTankReserve = 21;
+        complexSut.appSettings.stageTankReserve = 22;
+        complexSut.urlSerialization.fromUrl(complexViewUrl);
+
+        expect(complexSut.appSettings.maxGasDensity).toBeCloseTo(6, 1);
+        expect(complexSut.appSettings.primaryTankReserve).toBeCloseTo(21, 1);
+        expect(complexSut.appSettings.stageTankReserve).toBeCloseTo(22, 1);
     });
 
     describe('Diver options', () => {

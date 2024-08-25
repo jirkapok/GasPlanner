@@ -155,7 +155,7 @@ class EventsContext {
 }
 
 export interface EventOptions {
-    /** Maximum gas density in gram per liter. Defaults is 5.5 g/l */
+    /** Maximum gas density in gram per liter. Defaults is 5.7 g/l */
     maxDensity: number;
 
     /**

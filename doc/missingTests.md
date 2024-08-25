@@ -2,7 +2,6 @@
 
 * Dive Schedule.label is rounded
 * Test IgnoredIssuesService.ts
-* ProfileEvents: Generates correct events based on maxDensity
 * Diver.component.ts: Add tests for rmv and stressRmv save and load
 * AppSettingsComponent:
   * Density Precision and Step for imperial units

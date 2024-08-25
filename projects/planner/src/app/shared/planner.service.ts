@@ -119,7 +119,11 @@ export class PlannerService extends Streamed {
             plan: infoRequest.plan,
             profile: DtoSerialization.fromSegments(calculatedProfile.segments),
             options: infoRequest.options,
-            diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
+            consumptionOptions: {
+                diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
+                primaryTankReserve: this.appSettings.primaryTankReserve,
+                stageTankReserve: this.appSettings.stageTankReserve
+            },
             tanks: infoRequest.tanks
         };
 

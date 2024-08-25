@@ -68,16 +68,16 @@ export class PlanningTasks {
         const segments = DtoSerialization.toSegments(task.plan, tanks);
 
         // diver ppO2 is irrelevant for consumption calculation
-        const diver = new Diver(task.diver.rmv, task.diver.stressRmv);
+        const diverDto = task.consumptionOptions.diver;
+        const diver = new Diver(diverDto.rmv, diverDto.stressRmv);
 
         const options = DtoSerialization.toOptions(task.options);
         const plan = PlanningTasks.selectConsumptionPlan(segments, task.isComplex);
         const consumptionOptions: ConsumptionOptions = {
             diver: diver,
-            primaryTankReserve: Consumption.defaultPrimaryReserve,
-            stageTankReserve: Consumption.defaultStageReserve,
+            primaryTankReserve: task.consumptionOptions.primaryTankReserve,
+            stageTankReserve: task.consumptionOptions.stageTankReserve,
         };
-
 
         // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
         const maxTime = consumption.calculateMaxBottomTime(plan, tanks, consumptionOptions, options);

@@ -1,15 +1,16 @@
-import {
-    Time, StandardGases,
-    CalculatedProfile, Event
-} from 'scuba-physics';
+import { CalculatedProfile, Event, EventType, StandardGases, Time } from 'scuba-physics';
+import _ from 'lodash';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
 import { inject, TestBed } from '@angular/core/testing';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
 import {
-    ConsumptionRequestDto, ConsumptionResultDto,
-    DiveInfoResultDto, ProfileRequestDto, ProfileResultDto
+    ConsumptionRequestDto,
+    ConsumptionResultDto,
+    DiveInfoResultDto,
+    ProfileRequestDto,
+    ProfileResultDto
 } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
 import { UnitConversion } from './UnitConversion';
@@ -423,6 +424,40 @@ describe('PlannerService', () => {
                 expect( () => planner.calculate(1)).not.toThrow();
                 expect(diveCalculated).toBeFalsy();
             });
+        });
+    });
+
+    describe('App settings are applied', () => {
+        let decompressionSpy: jasmine.Spy<(data: ProfileRequestDto) => ProfileResultDto>;
+
+        beforeEach(() => {
+            const appSettings = TestBed.inject(ApplicationSettingsService);
+            appSettings.maxGasDensity = 6;
+            appSettings.primaryTankReserve = 99;
+            appSettings.stageTankReserve = 88;
+            tanksService.addTank();
+            depthsService.planDuration = 20; // enforce small deco, but don't hurt the second tank reserve
+            appSettings.noDecoIgnored = true;
+
+            decompressionSpy = spyOn(PlanningTasks, 'calculateDecompression').and.callThrough();
+            planner.calculate(1);
+        });
+
+        it('Uses gas density', () => {
+            expect(decompressionSpy).toHaveBeenCalledWith(
+                jasmine.objectContaining({
+                    eventOptions: jasmine.objectContaining({ maxDensity: 6 })
+                })
+            );
+        });
+
+        it('Uses primary and secondary tank reserve', () => {
+            expect(tanksService.tankData[0].reserve).toEqual(99);
+            expect(tanksService.tankData[1].reserve).toEqual(88);
+        });
+
+        it('Filters events', () => {
+            expect(_(dive.events).some(e => e.type === EventType.noDecoEnd)).toBeFalsy();
         });
     });
 });

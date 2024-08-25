@@ -118,8 +118,14 @@ export interface ConsumptionRequestDto {
     plan: SegmentDto[];
     profile: SegmentDto[];
     options: OptionsDto;
-    diver: DiverDto;
+    consumptionOptions: ConsumptionOptionsDto;
     tanks: TankDto[];
+}
+
+export interface ConsumptionOptionsDto {
+    diver: DiverDto;
+    primaryTankReserve: number;
+    stageTankReserve: number;
 }
 
 export interface ConsumedDto {

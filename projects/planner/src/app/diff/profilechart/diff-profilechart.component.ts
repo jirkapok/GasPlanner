@@ -59,7 +59,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .subscribe(() => {
                 if (this.profilesCalculated) {
                     this.plotCharts();
-                    this.hookChartEvents();
+                    this.plotlyHoverLeave();
                 }
             });
     }
@@ -91,10 +91,12 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     private plotlyHoverLeave() {
         this.selectedWaypoints.selectedTimeStamp = '';
+        this.selectWayPoint(undefined);
     }
 
     private selectWayPoint(selected: ComparedWaypoint | undefined): void {
         if (!selected) {
+            this.plotter.plotCursor(undefined);
             return;
         }
 

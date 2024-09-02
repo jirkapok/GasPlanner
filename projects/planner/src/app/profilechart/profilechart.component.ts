@@ -39,6 +39,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
             .subscribe((diveId?: number) => {
                 if (this.schedules.selected.id === diveId) {
                     this.plotCharts();
+                    this.plotlyHoverLeave();
                 }
             });
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
@@ -68,6 +69,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     private plotlyHoverLeave() {
         this.selectedWaypoint.selectedTimeStamp = '';
+        this.selectWayPoint(undefined);
     }
 
     private selectWayPoint(wayPoint: WayPoint | undefined) {

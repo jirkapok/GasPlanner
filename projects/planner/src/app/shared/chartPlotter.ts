@@ -266,14 +266,16 @@ export class ChartPlotter {
     }
 
     public plotCursor(wayPoint: WayPoint | undefined): void {
+        const update: Partial<Plotly.Layout> = {
+            shapes: []
+        };
+
         if(wayPoint) {
             this.updateCursor(wayPoint, this.cursor1);
-            const update: Partial<Plotly.Layout> = {
-                shapes: [ this.cursor1 ]
-            };
-
-            void Plotly.relayout(this.elementName, update);
+            update.shapes!.push(this.cursor1);
         }
+
+        void Plotly.relayout(this.elementName, update);
     }
 
     private updateLayoutThickFormat(totalDuration: number): void {

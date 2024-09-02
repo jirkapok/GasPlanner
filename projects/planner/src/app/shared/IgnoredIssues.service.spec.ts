@@ -4,6 +4,7 @@ import { IgnoredIssuesService } from './IgnoredIssues.service';
 import { UnitConversion } from './UnitConversion';
 
 describe('IgnoredIssuesService', () => {
+
     let appSettings: ApplicationSettingsService;
     let service: IgnoredIssuesService;
     let unitConversion: UnitConversion;
@@ -15,11 +16,26 @@ describe('IgnoredIssuesService', () => {
     });
 
     describe('ignoredIssues', () => {
+
         it('should add switchToHigherN2 to ignoredIssues when icdIgnored is true', () => {
             appSettings.settings.icdIgnored = true;
-            const ignoredIssues: EventType[] = []; // service.getIgnoredIssues();
+            const ignoredIssues: EventType[] = service.getIgnoredIssues();
 
-            expect(ignoredIssues).not.toContain(EventType.switchToHigherN2);
+            expect(ignoredIssues).toContain(EventType.switchToHigherN2);
+        });
+
+        it('should add highGasDensity to ignoredIssues when icdIgnored is true', () => {
+            appSettings.settings.icdIgnored = true;
+            const ignoredIssues: EventType[] = service.getIgnoredIssues();
+
+            expect(ignoredIssues).toContain(EventType.highGasDensity);
+        });
+
+        it('should add noDecoEnd to ignoredIssues when icdIgnored is true', () => {
+            appSettings.settings.icdIgnored = true;
+            const ignoredIssues: EventType[] = service.getIgnoredIssues();
+
+            expect(ignoredIssues).toContain(EventType.noDecoEnd);
         });
     });
 });

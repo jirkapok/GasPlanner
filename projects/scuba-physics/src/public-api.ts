@@ -14,6 +14,7 @@ export * from './lib/Diver';
 export * from './lib/GasMixtures';
 export * from './lib/Gases';
 export * from './lib/gasBlender';
+export * from './lib/blendPricing';
 export * from './lib/GasDensity';
 export * from './lib/gas.properties';
 export * from './lib/gasToxicity';

@@ -1,41 +1,43 @@
-import { EventType } from 'scuba-physics';
+import { EventType, Event, StandardGases } from 'scuba-physics';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { IgnoredIssuesService } from './IgnoredIssues.service';
-import { UnitConversion } from './UnitConversion';
 
 describe('IgnoredIssuesService', () => {
-
     let appSettings: ApplicationSettingsService;
     let service: IgnoredIssuesService;
-    let unitConversion: UnitConversion;
+
+    const testEvents: Event[] = [
+        Event.create(EventType.switchToHigherN2, 0, 0, StandardGases.air),
+        Event.create(EventType.highGasDensity, 0, 0, StandardGases.air),
+        Event.create(EventType.noDecoEnd, 0, 0, StandardGases.air)
+    ];
 
     beforeEach(() => {
-        unitConversion = new UnitConversion();
-        appSettings = new ApplicationSettingsService(unitConversion);
+        appSettings = new ApplicationSettingsService();
         service = new IgnoredIssuesService(appSettings);
     });
 
-    describe('ignoredIssues', () => {
+    it('should filter out ignored issues', () => {
+        appSettings.icdIgnored = true;
+        appSettings.densityIgnored = true;
+        appSettings.noDecoIgnored = true;
 
-        it('should add switchToHigherN2 to ignoredIssues when icdIgnored is true', () => {
-            appSettings.settings.icdIgnored = true;
-            const ignoredIssues: EventType[] = service.getIgnoredIssues();
+        const filteredEvents = service.filterIgnored(testEvents);
 
-            expect(ignoredIssues).toContain(EventType.switchToHigherN2);
-        });
+        expect(filteredEvents).toEqual([
+            Event.create(EventType.switchToHigherN2, 0, 0, StandardGases.air),
+            Event.create(EventType.highGasDensity, 0, 0, StandardGases.air),
+            Event.create(EventType.noDecoEnd, 0, 0, StandardGases.air)
+        ]);
+    });
 
-        it('should add highGasDensity to ignoredIssues when icdIgnored is true', () => {
-            appSettings.settings.icdIgnored = true;
-            const ignoredIssues: EventType[] = service.getIgnoredIssues();
+    it('should include all events when all ignored events are set to false', () => {
+        appSettings.icdIgnored = false;
+        appSettings.densityIgnored = false;
+        appSettings.noDecoIgnored = false;
 
-            expect(ignoredIssues).toContain(EventType.highGasDensity);
-        });
+        const filteredEvents = service.filterIgnored(testEvents);
 
-        it('should add noDecoEnd to ignoredIssues when icdIgnored is true', () => {
-            appSettings.settings.icdIgnored = true;
-            const ignoredIssues: EventType[] = service.getIgnoredIssues();
-
-            expect(ignoredIssues).toContain(EventType.noDecoEnd);
-        });
+        expect(filteredEvents).toEqual(testEvents);
     });
 });

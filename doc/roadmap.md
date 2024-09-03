@@ -8,7 +8,7 @@ Following list of features and improvements ordered by priority is under develop
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, won't fix
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
 * Loading of simple dive URL with segment shorter than 60 seconds (simple dive to 15 m) shows no validation issue
-* Refresh page adds new dive to the list
+
 
 ## Improvements / Features
 

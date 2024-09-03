@@ -296,11 +296,13 @@ export class PlanUrlSerialization {
 
     private subtractDiveUrl(url: string): string {
         const appOptionsIndex = url.indexOf('&ao=');
+        let trimmedUrl = url;
+
         if(appOptionsIndex > 0) {
-            return url.substring(0, appOptionsIndex);
+            trimmedUrl = url.substring(0, appOptionsIndex);
         }
 
-        return url;
+        return trimmedUrl.replace('?', ''); // remove the leading '?'
     }
 
     private toAppOptions(): string {

@@ -17,7 +17,7 @@ export class GasBlenderService {
     private _unableToCalculate = false;
 
     constructor(private units: UnitConversion) {
-        // we dont need create default tank based on units, because all values are always within ranges
+        // we don't need to create default tank based on units, because all values are always within ranges
         this._sourceTank = new TankBound(Tank.createDefault(), this.units);
         this._sourceTank.startPressure = 0;
         this._topMix = new TankBound(Tank.createDefault(), this.units);

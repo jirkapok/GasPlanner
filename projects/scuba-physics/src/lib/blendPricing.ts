@@ -1,13 +1,17 @@
-import { MixResult } from './gasBlender';
-
 /**
  * Configuration for prises of gases.
  * All values should be positive numbers.
+ * Amount of gas to add unit does not matter, because the price is per its unit.
+ * If addO2 is in bars, then o2Price is amount of money per bar.
+ * E.g. addO2 = 3 bar, and o2Price is in Euro per bar, then result will be in Euro.
  */
 export interface BlendCosts {
-    o2Price: number;
-    hePrice: number;
-    topMixPrice: number;
+    addO2: number;
+    o2UnitPrice: number;
+    addHe: number;
+    heUnitPrice: number;
+    addTop: number;
+    topMixUnitPrice: number;
 }
 
 /**
@@ -24,13 +28,12 @@ export interface BlendPrice {
 export class BlendPricing {
     /**
      * Calculates price for blended gas mix.
-     * @param used not null blended gas mix
-     * @param costs not null settings for gas prices
+     * @param costs not null settings for gas prices and amounts to add.
      */
-    public static price(used: MixResult, costs: BlendCosts): BlendPrice {
-        const o2Price = used.addO2 * costs.o2Price;
-        const hePrice = used.addHe * costs.hePrice;
-        const topMixPrice = used.addTop * costs.topMixPrice;
+    public static price(costs: BlendCosts): BlendPrice {
+        const o2Price = costs.addO2 * costs.o2UnitPrice;
+        const hePrice = costs.addHe * costs.heUnitPrice;
+        const topMixPrice = costs.addTop * costs.topMixUnitPrice;
 
         return {
             o2Price: o2Price,

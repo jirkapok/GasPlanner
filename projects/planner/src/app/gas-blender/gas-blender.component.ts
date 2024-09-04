@@ -11,6 +11,7 @@ import {
 import { BlenderViewState, TankMix } from '../shared/views.model';
 import { KnownViews } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
+import { BlendPricingService } from '../shared/blend-pricing.service';
 
 interface IGasBlenderForm {
     sourceO2: FormControl<number>;
@@ -36,6 +37,7 @@ export class GasBlenderComponent implements OnInit {
     constructor(
         public units: UnitConversion,
         public calc: GasBlenderService,
+        public pricing: BlendPricingService,
         private validators: ValidatorGroups,
         private inputs: InputControls,
         private viewStates: SubViewStorage,
@@ -44,26 +46,6 @@ export class GasBlenderComponent implements OnInit {
 
     public get ranges(): RangeConstants {
         return this.units.ranges;
-    }
-
-    public get addO2(): number {
-        return this.calc.addO2;
-    }
-
-    public get addHe(): number {
-        return this.calc.addHe;
-    }
-
-    public get addTopMix(): number {
-        return this.calc.addTop;
-    }
-
-    public get removeFromSource(): number {
-        return this.calc.removeFromSource;
-    }
-
-    public get needsRemove(): boolean {
-        return this.calc.needsRemove;
     }
 
     public get sourceHeInvalid(): boolean {
@@ -81,8 +63,8 @@ export class GasBlenderComponent implements OnInit {
         return this.inputs.controlInValid(control);
     }
 
-    // we dont need working pressure for source and target,
-    // since dont count with volume only percentage
+    // we don't need working pressure for source and target,
+    // since don't count with volume only percentage
     public get sourcePressureInvalid(): boolean {
         const control = this.blenderForm.controls.sourcePressure;
         return this.inputs.controlInValid(control);
@@ -126,8 +108,10 @@ export class GasBlenderComponent implements OnInit {
         this.calc.targetTank.o2 = Number(newValue.targetO2);
         this.calc.targetTank.he = Number(newValue.targetHe);
         this.calc.targetTank.startPressure = Number(newValue.targetPressure);
+        // TODO bind pricing
 
         this.calc.calculate();
+        this.pricing.calculate();
         this.saveState();
     }
 
@@ -181,6 +165,7 @@ export class GasBlenderComponent implements OnInit {
     }
 
     private createDefaultState(): BlenderViewState {
+        // TODO needs to be updated with pricing setup
         return {
             id: KnownViews.blender,
             source: {

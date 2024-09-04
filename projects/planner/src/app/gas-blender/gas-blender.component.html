@@ -86,21 +86,21 @@
                 <div class="card-body">
                     <table *ngIf="!calc.unableToCalculate" class="table table-sm" >
                         <tbody>
-                            <tr *ngIf="needsRemove">
+                            <tr *ngIf="calc.needsRemove">
                                 <td>Remove from source [{{units.pressure}}]</td>
-                                <td class="table-active">{{ removeFromSource | number:'1.0-1' }}</td>
+                                <td class="table-active">{{ calc.removeFromSource | number:'1.0-1' }}</td>
                             </tr>
                             <tr>
                                 <td>Add O2 [{{units.pressure}}]</td>
-                                <td class="table-active">{{ addO2 | number:'1.0-1' }}</td>
+                                <td class="table-active">{{ calc.addO2 | number:'1.0-1' }}</td>
                             </tr>
                             <tr>
                                 <td>Add He [{{units.pressure}}]</td>
-                                <td class="table-active">{{ addHe | number:'1.0-1' }}</td>
+                                <td class="table-active">{{ calc.addHe | number:'1.0-1' }}</td>
                             </tr>
                             <tr>
                                 <td>Add Top mix [{{units.pressure}}]</td>
-                                <td class="table-active">{{ addTopMix | number:'1.0-1' }}</td>
+                                <td class="table-active">{{ calc.addTop | number:'1.0-1' }}</td>
                             </tr>
                         </tbody>
                     </table>

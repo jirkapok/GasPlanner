@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
     BlendPricing
 } from 'scuba-physics';
-import { GasBlenderService } from "./gas-blender.service";
+import { GasBlenderService } from './gas-blender.service';
 
 @Injectable()
 export class BlendPricingService {

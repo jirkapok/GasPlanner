@@ -13,6 +13,7 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
+import { BlendPricingService } from '../shared/blend-pricing.service';
 
 describe('GasBlenderComponent', () => {
     let component: GasBlenderComponent;
@@ -23,7 +24,8 @@ describe('GasBlenderComponent', () => {
         TestBed.configureTestingModule({
             declarations: [GasBlenderComponent],
             providers: [
-                UnitConversion, GasBlenderService,
+                UnitConversion,
+                GasBlenderService, BlendPricingService,
                 ValidatorGroups, InputControls, DecimalPipe,
                 SubViewStorage, ViewStates, PreferencesStore,
                 Preferences, ViewSwitchService, DiveSchedules,

@@ -125,8 +125,31 @@
                 <div class="card-header">
                     <span>Unit prices</span>
                 </div>
-                <div class="card-body">
-                    TODO - add unit prices
+                <div class="card-body row">
+                    <div class="col col-12 col-sm-4 mb-2">
+                        <label for="priceO2" class="form-label">Unit price O2:</label>
+                        <input formControlName="priceO2" class="form-control" type="number"
+                               (input)="applyChange()" [min]="0" [max]="1000000" step="1"
+                               required [class.is-invalid]="sourceHeInvalid" id="priceO2" />
+                        <div class="text-danger" *ngIf="sourceHeInvalid">Needs to be number
+                            {{ranges.tankHeLabel}}</div>
+                    </div>
+                    <div class="col col-12 col-sm-4 mb-2">
+                        <label for="priceHe" class="form-label">Unit price He:</label>
+                        <input formControlName="priceHe" class="form-control" type="number"
+                               (input)="applyChange()" [min]="0" [max]="1000000" step="1"
+                               required [class.is-invalid]="sourceHeInvalid" id="priceHe" />
+                        <div class="text-danger" *ngIf="sourceHeInvalid">Needs to be number
+                            {{ranges.tankHeLabel}}</div>
+                    </div>
+                    <div class="col col-12 col-sm-4 mb-2">
+                        <label for="priceTopMix" class="form-label">Unit price He:</label>
+                        <input formControlName="priceTopMix" class="form-control" type="number"
+                               (input)="applyChange()" [min]="0" [max]="1000000" step="1"
+                               required [class.is-invalid]="sourceHeInvalid" id="priceTopMix" />
+                        <div class="text-danger" *ngIf="sourceHeInvalid">Needs to be number
+                            {{ranges.tankHeLabel}}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -138,22 +161,22 @@
                 <div class="card-body">
                     <table *ngIf="!calc.unableToCalculate" class="table table-sm" >
                         <tbody>
-                        <tr>
-                            <td>O2 price</td>
-                            <td class="table-active">{{ pricing.o2Price | number:'1.0-1' }}</td>
-                        </tr>
-                        <tr>
-                            <td>He price</td>
-                            <td class="table-active">{{ pricing.hePrice | number:'1.0-1' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Top mix price</td>
-                            <td class="table-active">{{ pricing.topMixPrice| number:'1.0-1' }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Total price</strong></td>
-                            <td class="table-active"><strong>{{ pricing.totalPrice | number:'1.0-1' }}</strong></td>
-                        </tr>
+                            <tr>
+                                <td>O2 price</td>
+                                <td class="table-active">{{ pricing.o2Price | number:'1.0-1' }}</td>
+                            </tr>
+                            <tr>
+                                <td>He price</td>
+                                <td class="table-active">{{ pricing.hePrice | number:'1.0-1' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Top mix price</td>
+                                <td class="table-active">{{ pricing.topMixPrice| number:'1.0-1' }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total price</strong></td>
+                                <td class="table-active"><strong>{{ pricing.totalPrice | number:'1.0-1' }}</strong></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

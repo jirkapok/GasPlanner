@@ -185,6 +185,7 @@ export interface RangeConstants {
     altitudePressure: [number, number];
     speed: [number, number];
     speedLabel: string;
+    money: [number, number];
 }
 
 const perMinute = '/min';
@@ -225,6 +226,7 @@ class MetricRanges implements RangeConstants {
     public readonly trimixOxygenLabel: string = toLabel(this.trimixOxygen, '%');
     public readonly speed: [number, number] = [0.1, 100];
     public readonly speedLabel: string = toLabel(this.speed, this.units.lengthShortcut + perMinute);
+    public readonly money: [number, number] = [0, 1000000];
 
     constructor() { }
 }
@@ -264,6 +266,7 @@ class ImperialRanges implements RangeConstants {
     public readonly trimixOxygenLabel: string = toLabel(this.trimixOxygen, '%');
     public readonly speed: [number, number] = [1, 300];
     public readonly speedLabel: string = toLabel(this.speed, this.units.lengthShortcut + perMinute);
+    public readonly money: [number, number] = [0, 1000000];
 
     constructor() { }
 }

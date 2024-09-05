@@ -22,6 +22,9 @@ interface IGasBlenderForm {
     targetO2: FormControl<number>;
     targetHe: FormControl<number>;
     targetPressure: FormControl<number>;
+    o2UnitPrice: FormControl<number>;
+    heUnitPrice: FormControl<number>;
+    topMixUnitPrice: FormControl<number>;
 }
 
 @Component({
@@ -77,6 +80,21 @@ export class GasBlenderComponent implements OnInit {
         return this.inputs.controlInValid(control);
     }
 
+    public get o2UnitPriceInvalid(): boolean {
+        const control = this.blenderForm.controls.o2UnitPrice;
+        return this.inputs.controlInValid(control);
+    }
+
+    public get heUnitPriceInvalid(): boolean {
+        const control = this.blenderForm.controls.heUnitPrice;
+        return this.inputs.controlInValid(control);
+    }
+
+    public get topMixUnitPriceInvalid(): boolean {
+        const control = this.blenderForm.controls.topMixUnitPrice;
+        return this.inputs.controlInValid(control);
+    }
+
     public ngOnInit(): void {
         this.loadState();
         this.saveState();
@@ -92,7 +110,10 @@ export class GasBlenderComponent implements OnInit {
             topMixHe: [this.calc.topMix.he, this.validators.rangeFor(this.ranges.tankHe)],
             targetO2: [this.calc.targetTank.o2, this.validators.rangeFor(this.ranges.trimixOxygen)],
             targetHe: [this.calc.targetTank.he, this.validators.rangeFor(this.ranges.tankHe)],
-            targetPressure: [Precision.round(this.calc.targetTank.startPressure, 1), pressureValidator]
+            targetPressure: [Precision.round(this.calc.targetTank.startPressure, 1), pressureValidator],
+            o2UnitPrice: [this.pricing.o2UnitPrice, this.validators.rangeFor(this.ranges.money)],
+            heUnitPrice: [this.pricing.heUnitPrice, this.validators.rangeFor(this.ranges.money)],
+            topMixUnitPrice: [this.pricing.topMixUnitPrice, this.validators.rangeFor(this.ranges.money)]
         });
     }
 
@@ -110,7 +131,9 @@ export class GasBlenderComponent implements OnInit {
         this.calc.targetTank.o2 = Number(newValue.targetO2);
         this.calc.targetTank.he = Number(newValue.targetHe);
         this.calc.targetTank.startPressure = Number(newValue.targetPressure);
-        // TODO bind pricing
+        this.pricing.o2UnitPrice = Number(newValue.o2UnitPrice);
+        this.pricing.heUnitPrice = Number(newValue.heUnitPrice);
+        this.pricing.topMixUnitPrice = Number(newValue.topMixUnitPrice);
 
         this.calc.calculate();
         this.pricing.calculate();

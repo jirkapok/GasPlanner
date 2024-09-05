@@ -127,28 +127,28 @@
                 </div>
                 <div class="card-body row">
                     <div class="col col-12 col-sm-4 mb-2">
-                        <label for="priceO2" class="form-label">Unit price O2:</label>
-                        <input formControlName="priceO2" class="form-control" type="number"
-                               (input)="applyChange()" [min]="0" [max]="1000000" step="1"
-                               required [class.is-invalid]="sourceHeInvalid" id="priceO2" />
-                        <div class="text-danger" *ngIf="sourceHeInvalid">Needs to be number
-                            {{ranges.tankHeLabel}}</div>
+                        <label for="o2UnitPrice" class="form-label">Unit price O2:</label>
+                        <input formControlName="o2UnitPrice" class="form-control" type="number"
+                               (input)="applyChange()" [min]="ranges.money[0]" [max]="ranges.money[1]" step="1"
+                               required [class.is-invalid]="o2UnitPriceInvalid" id="o2UnitPrice" />
+                        <div class="text-danger" *ngIf="o2UnitPriceInvalid">Needs to be number
+                            {{ranges.money}}</div>
                     </div>
                     <div class="col col-12 col-sm-4 mb-2">
-                        <label for="priceHe" class="form-label">Unit price He:</label>
-                        <input formControlName="priceHe" class="form-control" type="number"
-                               (input)="applyChange()" [min]="0" [max]="1000000" step="1"
-                               required [class.is-invalid]="sourceHeInvalid" id="priceHe" />
-                        <div class="text-danger" *ngIf="sourceHeInvalid">Needs to be number
-                            {{ranges.tankHeLabel}}</div>
+                        <label for="heUnitPrice" class="form-label">Unit price He:</label>
+                        <input formControlName="heUnitPrice" class="form-control" type="number"
+                               (input)="applyChange()" [min]="ranges.money[0]" [max]="ranges.money[1]"  step="1"
+                               required [class.is-invalid]="heUnitPriceInvalid" id="heUnitPrice" />
+                        <div class="text-danger" *ngIf="heUnitPriceInvalid">Needs to be number
+                            {{ranges.money}}</div>
                     </div>
                     <div class="col col-12 col-sm-4 mb-2">
-                        <label for="priceTopMix" class="form-label">Unit price He:</label>
-                        <input formControlName="priceTopMix" class="form-control" type="number"
-                               (input)="applyChange()" [min]="0" [max]="1000000" step="1"
-                               required [class.is-invalid]="sourceHeInvalid" id="priceTopMix" />
-                        <div class="text-danger" *ngIf="sourceHeInvalid">Needs to be number
-                            {{ranges.tankHeLabel}}</div>
+                        <label for="topMixUnitPrice" class="form-label">Unit price He:</label>
+                        <input formControlName="topMixUnitPrice" class="form-control" type="number"
+                               (input)="applyChange()" [min]="ranges.money[0]" [max]="ranges.money[1]"  step="1"
+                               required [class.is-invalid]="topMixUnitPriceInvalid" id="topMixUnitPrice" />
+                        <div class="text-danger" *ngIf="topMixUnitPriceInvalid">Needs to be number
+                            {{ranges.money}}</div>
                     </div>
                 </div>
             </div>

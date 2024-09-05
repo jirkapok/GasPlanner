@@ -11,7 +11,8 @@ describe('IgnoredIssuesService', () => {
     const testEvents: Event[] = [
         Event.create(EventType.switchToHigherN2, 0, 0, StandardGases.air),
         Event.create(EventType.highGasDensity, 0, 0, StandardGases.air),
-        Event.create(EventType.noDecoEnd, 0, 0, StandardGases.air)
+        Event.create(EventType.noDecoEnd, 0, 0, StandardGases.air),
+        Event.create(EventType.highAscentSpeed, 0, 0, StandardGases.oxygen)
     ];
 
     beforeEach(() => {
@@ -43,22 +44,21 @@ describe('IgnoredIssuesService', () => {
         expect(filteredResult).toEqual([]);
     });
 
-    it('should not filter out any issues when icdIgnored is off', () => {
+    it('should not filter out any issues when every issues are off', () => {
         appSettings.icdIgnored = false;
-
-        expect(filteredEvents).toEqual(testEvents);
-    });
-
-    it('should not filter out any issues when densityIgnored is off', () => {
         appSettings.densityIgnored = false;
-
-        expect(filteredEvents).toEqual(testEvents);
-    });
-
-    it('should not filter out any issues when noDecoIgnored is off', () => {
-
         appSettings.noDecoIgnored = false;
 
         expect(filteredEvents).toEqual(testEvents);
+    });
+
+    it('should not filter out any issues that are not on the ignored list', () => {
+
+        const filteredResult = service.filterIgnored(testEvents);
+
+        expect(filteredResult).toEqual([
+            Event.create(EventType.highAscentSpeed, 0, 0, StandardGases.oxygen)
+
+        ]);
     });
 });

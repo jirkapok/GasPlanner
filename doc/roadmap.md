@@ -13,8 +13,6 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Gas blender:
-    * Add gas blending costs
-    * Add application settings for costs
     * Add use case to identify mix when adding only top mix without adding he or oxygen
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/

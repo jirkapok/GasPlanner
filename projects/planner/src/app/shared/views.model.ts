@@ -28,6 +28,11 @@ export interface BlenderViewState extends ViewState {
     source: TankMix;
     target: TankMix;
     topMix: Mix;
+    prices: {
+        o2UnitPrice: number;
+        heUnitPrice: number;
+        topMixUnitPrice: number;
+    };
 }
 
 export interface TankMix extends Mix {

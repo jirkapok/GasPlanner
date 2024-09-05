@@ -135,8 +135,7 @@ export class GasBlenderComponent implements OnInit {
         this.pricing.heUnitPrice = Number(newValue.heUnitPrice);
         this.pricing.topMixUnitPrice = Number(newValue.topMixUnitPrice);
 
-        this.calc.calculate();
-        this.pricing.calculate();
+        this.calculate();
         this.saveState();
     }
 
@@ -169,7 +168,7 @@ export class GasBlenderComponent implements OnInit {
         }
 
         this.applyState(state);
-        this.calc.calculate();
+        this.calculate();
     }
 
     private applyState(state: BlenderViewState) {
@@ -177,6 +176,12 @@ export class GasBlenderComponent implements OnInit {
         this.loadTankState(this.calc.targetTank.tank, state.target);
         this.calc.topMix.o2 = state.topMix.o2;
         this.calc.topMix.he = state.topMix.he;
+
+        if(state.prices) {
+            this.pricing.o2UnitPrice = state.prices.o2UnitPrice;
+            this.pricing.heUnitPrice = state.prices.heUnitPrice;
+            this.pricing.topMixUnitPrice = state.prices.topMixUnitPrice;
+        }
     }
 
     private saveState(): void {
@@ -188,6 +193,11 @@ export class GasBlenderComponent implements OnInit {
                 o2: this.calc.topMix.tank.o2,
                 he: this.calc.topMix.tank.he
             },
+            prices: {
+                o2UnitPrice: this.pricing.o2UnitPrice,
+                heUnitPrice: this.pricing.heUnitPrice,
+                topMixUnitPrice: this.pricing.topMixUnitPrice
+            }
         };
 
         this.viewStates.saveView(viewState);
@@ -211,6 +221,11 @@ export class GasBlenderComponent implements OnInit {
                 o2: StandardGases.ean32.fO2 * 100,
                 he: 0,
             },
+            prices: {
+                o2UnitPrice: 0,
+                heUnitPrice: 0,
+                topMixUnitPrice: 0
+            }
         };
     }
 
@@ -226,5 +241,10 @@ export class GasBlenderComponent implements OnInit {
             he: tank.he,
             pressure: tank.startPressure
         };
+    }
+
+    private calculate(): void {
+        this.calc.calculate();
+        this.pricing.calculate();
     }
 }

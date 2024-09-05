@@ -136,7 +136,26 @@
                     <span>Mix price</span>
                 </div>
                 <div class="card-body">
-                    TODO - add pricing results
+                    <table *ngIf="!calc.unableToCalculate" class="table table-sm" >
+                        <tbody>
+                        <tr>
+                            <td>O2 price</td>
+                            <td class="table-active">{{ pricing.o2Price | number:'1.0-1' }}</td>
+                        </tr>
+                        <tr>
+                            <td>He price</td>
+                            <td class="table-active">{{ pricing.hePrice | number:'1.0-1' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Top mix price</td>
+                            <td class="table-active">{{ pricing.topMixPrice| number:'1.0-1' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total price</strong></td>
+                            <td class="table-active"><strong>{{ pricing.totalPrice | number:'1.0-1' }}</strong></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

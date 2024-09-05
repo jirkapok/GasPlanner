@@ -3,8 +3,16 @@
         <div class="col col-12 col-md-8 col-lg-6 col-xxl-5 mt-3">
             <div class="card">
                 <div class="card-header">
-                    <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
-                    <span>Gas blender</span>
+                    <div class="float-start">
+                        <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
+                        <span>Gas blender</span>
+                    </div>
+                    <div class="float-end me-1">
+                        <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showPricing }" type="button"
+                                data-toggle="button" [attr.aria-pressed]="showPricing" autocomplete="off" (click)="togglePricing()">
+                            <fa-icon [icon]="dollarIcon" class="fa-lg"></fa-icon>
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body row">
                     <div class="col col-12 col-sm-4 mb-2">
@@ -105,10 +113,30 @@
                         </tbody>
                     </table>
                     <div *ngIf="calc.unableToCalculate" class="alert alert-danger">
-                        <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
+                        <fa-icon [icon]="exclamationIcon" class="me-2"></fa-icon>
                         <span>Unable to calculate the required mix, because the Top mix contains more oxygen or helium,
                             than target mix.</span>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="showPricing" class="col col-12 col-md-8 col-lg-6 col-xxl-5 mt-3">
+            <div class="card">
+                <div class="card-header">
+                    <span>Unit prices</span>
+                </div>
+                <div class="card-body">
+                    TODO - add unit prices
+                </div>
+            </div>
+        </div>
+        <div *ngIf="showPricing" class="col col-12 col-md-4 col-lg-4 col-xxl-3 mt-3">
+            <div class="card">
+                <div class="card-header">
+                    <span>Mix price</span>
+                </div>
+                <div class="card-body">
+                    TODO - add pricing results
                 </div>
             </div>
         </div>

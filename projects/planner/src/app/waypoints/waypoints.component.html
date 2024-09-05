@@ -6,8 +6,8 @@
         </div>
         <div class="float-end me-1">
             <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': stops.stopsOnly }" type="button"
-                data-toggle="button" aria-pressed="stops.stopsOnly" autocomplete="off" (click)="stops.switchFilter()">
-                <fa-icon [icon]="filterIcon" class=""></fa-icon>
+                data-toggle="button" [attr.aria-pressed]="stops.stopsOnly" autocomplete="off" (click)="stops.switchFilter()">
+                <fa-icon [icon]="filterIcon" class="fa-lg"></fa-icon>
             </button>
         </div>
     </div>

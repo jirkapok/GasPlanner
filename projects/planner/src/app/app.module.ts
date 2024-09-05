@@ -105,6 +105,7 @@ import { SelectedDiffWaypoint } from './shared/diff/selected-diff-waypoint.servi
 import { ResamplingService } from './shared/ResamplingService';
 import { ApplicationSettingsService } from './shared/ApplicationSettings';
 import { IgnoredIssuesService } from './shared/IgnoredIssues.service';
+import { BlendPricingService } from './shared/blend-pricing.service';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -215,7 +216,8 @@ const SERVICES = [
     ResultsComparison,
     ResamplingService,
     ApplicationSettingsService,
-    IgnoredIssuesService
+    IgnoredIssuesService,
+    BlendPricingService
 ];
 
 @NgModule({

@@ -177,7 +177,7 @@ export class GasBlenderComponent implements OnInit {
         this.calc.topMix.o2 = state.topMix.o2;
         this.calc.topMix.he = state.topMix.he;
 
-        if(state.prices) {
+        if(state.prices) { // added in version 0.1.30, does not have to be present
             this.pricing.o2UnitPrice = state.prices.o2UnitPrice;
             this.pricing.heUnitPrice = state.prices.heUnitPrice;
             this.pricing.topMixUnitPrice = state.prices.topMixUnitPrice;
@@ -204,7 +204,6 @@ export class GasBlenderComponent implements OnInit {
     }
 
     private createDefaultState(): BlenderViewState {
-        // TODO needs to be updated with pricing setup
         return {
             id: KnownViews.blender,
             source: {

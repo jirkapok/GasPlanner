@@ -13,30 +13,26 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Gas blender:
-    * Add use case to identify mix when adding only top mix without adding he or oxygen
+  * Add use case to identify mix when adding only top mix without adding he or oxygen
 * Fix PWA issues https://www.pwabuilder.com/
   * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
-  * Fix offline mode:
-    * https://progressier.com/
-    * https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers
-    * https://developers.google.com/codelabs/pwa-training/pwa03--going-offline#1)
 * Add tissues heat map
   * to the profile chart
   * to the dives comparision
 * UI Tweaks
-    * Tanks complex view: Add check box to be able enable or disable tanks
-    * Add Surface GF to the results
-    * Read only fields should be distinguish able
-    * Profile comparison: Add option to compare dives aligned by the end of dive
+  * Tanks complex view: Add check box to be able enable or disable tanks
+  * Add Surface GF to the results
+  * Read only fields should be distinguish able
+  * Profile comparison: Add option to compare dives aligned by the end of dive
 * Gas consumption:
   * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80
   * Clarify another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
   * Restore 1/2 and 1/3 reserve strategies
-    * Adjust consumption by Z factor: <https://en.wikipedia.org/wiki/Cubic_foot>
-      * Fix RMV/SAC calculator based on Nominal volume
-      * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
-      * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
-      * <https://youtu.be/OI4ZzqJLQjw>
+  * Adjust consumption by Z factor: <https://en.wikipedia.org/wiki/Cubic_foot>
+    * Fix RMV/SAC calculator based on Nominal volume
+    * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
+    * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
+    * <https://youtu.be/OI4ZzqJLQjw>
 * Add undo/redo to all pages
 * TRIMIX support
   * Add air breaks

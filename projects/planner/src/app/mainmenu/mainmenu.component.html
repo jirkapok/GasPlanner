@@ -3,22 +3,22 @@
         <a class="navbar-brand ps-3" routerLink="./">Gas planner</a>
         <button class="navbar-toggler" type="button" aria-expanded="false" aria-label="Toggle navigation"
             (click)="basicNavbar.toggle()">
-            <fa-icon [icon]="faBars" class="me-3"></fa-icon>
+            <fa-icon [icon]="iconMenu" class="me-3"></fa-icon>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent" mdbCollapse #basicNavbar="mdbCollapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown" mdbDropdown >
                     <a class="nav-link dropdown-toggle" id="id01" mdbDropdownToggle>Calculators</a>
                     <div class="dropdown-menu" aria-labelledby="id01" mdbDropdownMenu>
-                        <a class="dropdown-item" routerLink="./">Planner</a>
-                        <a class="dropdown-item" routerLink="/sac">RMV/SAC</a>
-                        <a class="dropdown-item" routerLink="/nitrox">Nitrox</a>
-                        <a class="dropdown-item" routerLink="/gas">Gas properties</a>
-                        <a class="dropdown-item" routerLink="/altitude">Altitude</a>
-                        <a class="dropdown-item" routerLink="/weight">Weight</a>
-                        <a class="dropdown-item" routerLink="/ndl">NDL table</a>
+                        <a class="dropdown-item" routerLink="./"><fa-icon [icon]="iconPlanner" class="me-2"></fa-icon>Planner</a>
+                        <a class="dropdown-item" routerLink="/sac"><fa-icon [icon]="iconRmv" class="me-2"></fa-icon>RMV/SAC</a>
+                        <a class="dropdown-item" routerLink="/nitrox"><fa-icon [icon]="iconNitrox" class="me-2"></fa-icon>Nitrox</a>
+                        <a class="dropdown-item" routerLink="/gas"><fa-icon [icon]="iconGasProperties" class="me-2"></fa-icon>Gas properties</a>
+                        <a class="dropdown-item" routerLink="/altitude"><fa-icon [icon]="iconAltitude" class="me-2"></fa-icon>Altitude</a>
+                        <a class="dropdown-item" routerLink="/weight"><fa-icon [icon]="iconWeight" class="me-2"></fa-icon>Weight</a>
+                        <a class="dropdown-item" routerLink="/ndl"><fa-icon [icon]="iconNdl" class="me-2"></fa-icon>NDL table</a>
                         <a class="dropdown-item" routerLink="/redundancies">Redundancies</a>
-                        <a class="dropdown-item" routerLink="/blender">Gas blender</a>
+                        <a class="dropdown-item" routerLink="/blender"><fa-icon [icon]="iconBlender" class="me-2"></fa-icon>Gas blender</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown" mdbDropdown >

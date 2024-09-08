@@ -1,6 +1,10 @@
 import { Component, HostListener } from '@angular/core';
 import { Urls } from '../shared/navigation.service';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import {
+    faBars, faMountainSun, faHouse, faLungs, faTable,
+    faWeightHanging, faPercent, faFileLines,
+    faFaucet
+} from '@fortawesome/free-solid-svg-icons';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 
 @Component({
@@ -10,7 +14,16 @@ import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 })
 export class MainMenuComponent {
     public isNavbarCollapsed = true;
-    public faBars = faBars;
+    public iconMenu = faBars;
+    public iconAltitude = faMountainSun;
+    public iconRmv = faLungs;
+    public iconPlanner = faHouse;
+    public iconNdl = faTable;
+    public iconWeight = faWeightHanging;
+    public iconGasProperties = faFileLines;
+    public iconNitrox = faPercent;
+    public iconBlender = faFaucet;
+
     public showInstallButton = false;
     private deferredPrompt: any;
 

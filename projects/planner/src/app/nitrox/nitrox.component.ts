@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faPercent } from '@fortawesome/free-solid-svg-icons';
 import {
     FormControl, NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
@@ -29,7 +29,7 @@ interface NitroxForm {
     styleUrls: ['./nitrox.component.scss']
 })
 export class NitroxComponent implements OnInit {
-    public calcIcon = faCalculator;
+    public calcIcon = faPercent;
     public nitroxForm!: FormGroup<NitroxForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
     private fO2Control!: FormControl<number>;

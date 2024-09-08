@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faMountainSun } from '@fortawesome/free-solid-svg-icons';
 import {
     NonNullableFormBuilder, FormGroup, FormControl
 } from '@angular/forms';
@@ -24,7 +24,7 @@ interface AltitudeDepthForm {
     styleUrls: ['./altitude-calc.component.scss']
 })
 export class AltitudeCalcComponent implements OnInit {
-    public calcIcon = faCalculator;
+    public calcIcon = faMountainSun;
     public altitudeForm!: FormGroup<AltitudeDepthForm>;
     public calc = new AltitudeCalculator();
 

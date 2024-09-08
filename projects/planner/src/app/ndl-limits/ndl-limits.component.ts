@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
-import { faTable, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faTable } from '@fortawesome/free-solid-svg-icons';
 import {
     Options, Salinity, Tank, GasToxicity, Precision
 } from 'scuba-physics';
@@ -22,7 +22,6 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 })
 export class NdlLimitsComponent implements OnInit {
     public icon = faTable;
-    public iconConfig = faCog;
     public tank: TankBound;
     public options: Options;
     public isComplex = false;

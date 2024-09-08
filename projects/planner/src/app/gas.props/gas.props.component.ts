@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { faCalculator, faExclamationTriangle, faTable } from '@fortawesome/free-solid-svg-icons';
+import { faFileLines, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import {
     NonNullableFormBuilder, FormGroup, FormControl
 } from '@angular/forms';
@@ -28,8 +28,7 @@ interface GasForm {
     styleUrls: ['./gas.props.component.scss']
 })
 export class GasPropertiesCalcComponent implements OnInit {
-    public calcIcon = faCalculator;
-    public tableIcon = faTable;
+    public calcIcon = faFileLines;
     public warningIcon = faExclamationTriangle;
     public gasForm!: FormGroup<GasForm>;
     public calc: BoundGasProperties;

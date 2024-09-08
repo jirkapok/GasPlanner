@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faCalculator, faExclamationTriangle, faSackDollar } from '@fortawesome/free-solid-svg-icons';
+import { faFaucet, faExclamationTriangle, faSackDollar } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { GasBlenderService } from '../shared/gas-blender.service';
@@ -33,7 +33,7 @@ interface IGasBlenderForm {
     styleUrls: ['./gas-blender.component.scss']
 })
 export class GasBlenderComponent implements OnInit {
-    public readonly calcIcon = faCalculator;
+    public readonly calcIcon = faFaucet;
     public exclamationIcon = faExclamationTriangle;
     public dollarIcon = faSackDollar;
     public blenderForm!: FormGroup<IGasBlenderForm>;

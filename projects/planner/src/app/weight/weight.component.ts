@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faWeightHanging } from '@fortawesome/free-solid-svg-icons';
 import {
     NonNullableFormBuilder, FormGroup, FormControl, AbstractControl
 } from '@angular/forms';
@@ -26,7 +26,7 @@ interface WeightForm {
     styleUrls: ['./weight.component.scss']
 })
 export class WeightCalcComponent implements OnInit {
-    public calcIcon = faCalculator;
+    public calcIcon = faWeightHanging;
     public weightForm!: FormGroup<WeightForm>;
     public tank: TankBound;
 

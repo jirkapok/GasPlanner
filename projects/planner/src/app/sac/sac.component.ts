@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
-import { faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faLungs } from '@fortawesome/free-solid-svg-icons';
 
 import { SacCalculatorService } from '../shared/sac-calculator.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
@@ -30,7 +30,7 @@ interface SacForm {
     styleUrls: ['./sac.component.scss']
 })
 export class SacComponent implements OnInit {
-    public calcIcon = faCalculator;
+    public calcIcon = faLungs;
     public formSac!: FormGroup<SacForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
     // used as store for working pressure, keep in mind to sync size

@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/@angular/service-worker/config/schema.json",
-  "index": "https://dugong.online/index.html",
+  "index": "/index.html",
   "assetGroups": [
     {
       "name": "app",

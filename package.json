@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ng build scuba-physics && ng serve",
-    "start-pwa": "ng build planner && ng serve planner --ssl --port 9090",
+    "start-pwa": "ng build --configuration production planner && npx http-server -p 9090 -c-1 dist/planner",
     "build": "ng build --configuration production planner",
     "build-lib": "ng build scuba-physics",
     "test": "ng test",

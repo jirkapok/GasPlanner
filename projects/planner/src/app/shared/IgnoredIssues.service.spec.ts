@@ -5,60 +5,42 @@ import { UnitConversion } from './UnitConversion';
 
 describe('IgnoredIssuesService', () => {
     let appSettings: ApplicationSettingsService;
-    let service: IgnoredIssuesService;
-
-    const testEvents: Event[] = [
-        Event.create(EventType.switchToHigherN2, 0, 0, StandardGases.air),
-        Event.create(EventType.highGasDensity, 0, 0, StandardGases.air),
-        Event.create(EventType.noDecoEnd, 0, 0, StandardGases.air),
-        Event.create(EventType.highAscentSpeed, 0, 0, StandardGases.oxygen)
-    ];
+    let sut: IgnoredIssuesService;
+    const switchToHigherN2Event = Event.create(EventType.switchToHigherN2, 0, 0, StandardGases.air);
+    const highGasDensityEvent = Event.create(EventType.highGasDensity, 0, 0, StandardGases.air);
+    const noDecoEndEvent =Event.create(EventType.noDecoEnd, 0, 0, StandardGases.air);
+    const highAscentSpeedEvent = Event.create(EventType.highAscentSpeed, 0, 0, StandardGases.air);
+    const testEvents: Event[] = [switchToHigherN2Event, highGasDensityEvent, noDecoEndEvent, highAscentSpeedEvent];
 
     beforeEach(() => {
         const unitConversion = new UnitConversion();
         appSettings = new ApplicationSettingsService(unitConversion);
-        service = new IgnoredIssuesService(appSettings);
-
+        sut = new IgnoredIssuesService(appSettings);
     });
 
     it('should filter out switchToHigherN2 when icdIgnored is true', () => {
         appSettings.icdIgnored = true;
-        const filteredResult = service.filterIgnored(testEvents);
+        const filteredResult = sut.filterIgnored(testEvents);
 
-        expect(filteredResult).toEqual([
-            Event.create(EventType.highGasDensity, 0, 0, StandardGases.air),
-            Event.create(EventType.noDecoEnd, 0, 0, StandardGases.air),
-            Event.create(EventType.highAscentSpeed, 0, 0, StandardGases.oxygen)
-        ]);
+        expect(filteredResult).toEqual([highGasDensityEvent, noDecoEndEvent, highAscentSpeedEvent]);
     });
 
     it('should filter out highGasDensity when densityIgnored is true', () => {
         appSettings.densityIgnored = true;
-        const filteredResult = service.filterIgnored(testEvents);
+        const filteredResult = sut.filterIgnored(testEvents);
 
-        expect(filteredResult).toEqual([
-            Event.create(EventType.switchToHigherN2, 0, 0, StandardGases.air),
-            Event.create(EventType.noDecoEnd, 0, 0, StandardGases.air),
-            Event.create(EventType.highAscentSpeed, 0, 0, StandardGases.oxygen)
-        ]);
+        expect(filteredResult).toEqual([switchToHigherN2Event, noDecoEndEvent, highAscentSpeedEvent]);
     });
 
     it('should filter out noDecoEnd when noDecoIgnored is true', () => {
         appSettings.noDecoIgnored = true;
-        const filteredResult = service.filterIgnored(testEvents);
+        const filteredResult = sut.filterIgnored(testEvents);
 
-        expect(filteredResult).toEqual([
-            Event.create(EventType.switchToHigherN2, 0, 0, StandardGases.air),
-            Event.create(EventType.highGasDensity, 0, 0, StandardGases.air),
-            Event.create(EventType.highAscentSpeed, 0, 0, StandardGases.oxygen)
-        ]);
+        expect(filteredResult).toEqual([ switchToHigherN2Event, highGasDensityEvent, highAscentSpeedEvent]);
     });
 
     it('should not filter out any issues when every issues are off', () => {
-
-        const filteredResult = service.filterIgnored(testEvents);
-
+        const filteredResult = sut.filterIgnored(testEvents);
         expect(filteredResult).toEqual(testEvents);
     });
-
 });

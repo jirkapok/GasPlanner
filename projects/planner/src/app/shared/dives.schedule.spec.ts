@@ -77,6 +77,12 @@ describe('Scheduled dives', () => {
         it('Assigns dive number', () => {
             expect(sut.dives[1].id).toEqual(2);
         });
+
+        it('Rounds depth correctly', () => {
+            sut.dives[1].depths.plannedDepth = 31.287;
+            const expectedDepth = 31;
+            expect(sut.dives[1].title).toContain(`${expectedDepth} m`);
+        });
     });
 
     describe('Remove dive', () => {
@@ -110,4 +116,3 @@ describe('Scheduled dives', () => {
         });
     });
 });
-

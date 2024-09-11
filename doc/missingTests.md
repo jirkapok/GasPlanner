@@ -1,6 +1,6 @@
 # TODO missing test cases
 
-* Dive Schedule.label is rounded
+
 * BlendPricing, BlendPricingService, BlendPricingComponent
 * Diver.component.ts: Add tests for rmv and stressRmv save and load
 * AppSettingsComponent:

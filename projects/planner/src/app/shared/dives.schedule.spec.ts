@@ -78,10 +78,10 @@ describe('Scheduled dives', () => {
             expect(sut.dives[1].id).toEqual(2);
         });
 
-        it('Rounds depth correctly', () => {
+        it('Rounds to whole meters', () => {
             sut.dives[1].depths.plannedDepth = 31.287;
             const expectedDepth = 31;
-            expect(sut.dives[1].title).toContain(`${expectedDepth} m`);
+            expect(sut.dives[1].title).toEqual(`2. ${expectedDepth} m, 12 min`);
         });
     });
 

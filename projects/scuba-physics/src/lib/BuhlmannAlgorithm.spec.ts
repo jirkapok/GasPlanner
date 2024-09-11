@@ -4,10 +4,30 @@ import { Gas, Gases } from './Gases';
 import { Segment, Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
 import { Salinity } from './pressure-converter';
-import { SafetyStop } from './Options';
+import { Options, SafetyStop } from './Options';
 import { StandardGases } from './StandardGases';
 
+function concatenatePlan(decoPlan: Segment[]): string {
+    let planText = '';
+    decoPlan.forEach(segment => {
+        planText += `${segment.startDepth},${segment.endDepth},${segment.duration}; `;
+    });
+
+    return planText.trim();
+}
+
+export function calculatePlanFor(gases: Gases, source: Segments, options: Options): Segment[] {
+    const algorithm = new BuhlmannAlgorithm();
+    const parameters = AlgorithmParams.forMultilevelDive(source, gases, options);
+    const decoPlan = algorithm.decompression(parameters);
+    return decoPlan.segments;
+}
+
 describe('Buhlmann Algorithm - Plan', () => {
+    // There is no such profile, where deco is increased even during ascent,
+    // because the tissues pressure never reaches so close to the ambient pressure.
+    // Every ascent immediately starts decompression.
+
     // gradientFactorLow = 0.4, gradientFactorHigh=0.85, deco ppO2 = 1.6, and max END allowed: 30 meters.
     // we don't need to change the gradient factors, because its application is already confirmed by the ascent times and no deco times
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
@@ -22,20 +42,9 @@ describe('Buhlmann Algorithm - Plan', () => {
     });
 
     const calculatePlan = (gases: Gases, source: Segments): string => {
-        const algorithm = new BuhlmannAlgorithm();
-        const parameters = AlgorithmParams.forMultilevelDive(source, gases, options);
-        const decoPlan = algorithm.decompression(parameters);
-        const planText = concatenatePlan(decoPlan.segments);
+        const decoPlan = calculatePlanFor(gases, source, options);
+        const planText = concatenatePlan(decoPlan);
         return planText;
-    };
-
-    const concatenatePlan = (decoPlan: Segment[]): string => {
-        let planText = '';
-        decoPlan.forEach(segment => {
-            planText += `${segment.startDepth},${segment.endDepth},${segment.duration}; `;
-        });
-
-        return planText.trim();
     };
 
     describe('Environment - 40m for 10 minutes on air with small deco', () => {
@@ -201,9 +210,9 @@ describe('Buhlmann Algorithm - Plan', () => {
         gases.add(StandardGases.air);
 
         const segments = new Segments();
-        segments.add(10, StandardGases.air, 1 * Time.oneMinute);
+        segments.add(10, StandardGases.air, Time.oneMinute);
         segments.addFlat(StandardGases.air, 10 * Time.oneMinute);
-        segments.add(0, StandardGases.air, 1 * Time.oneMinute);
+        segments.add(0, StandardGases.air, Time.oneMinute);
 
         const planText = calculatePlan(gases, segments);
 
@@ -355,7 +364,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             gases.add(StandardGases.oxygen);
 
             const segments = new Segments();
-            segments.add(10, StandardGases.trimix3525, 1 * Time.oneMinute);
+            segments.add(10, StandardGases.trimix3525, Time.oneMinute);
             segments.add(75, StandardGases.trimix1260, 5 * Time.oneMinute);
             segments.addFlat(StandardGases.trimix1260, 5 * Time.oneMinute);
 
@@ -368,14 +377,4 @@ describe('Buhlmann Algorithm - Plan', () => {
             expect(planText).toBe(expectedPlan);
         });
     });
-
-    // There is no such profile, where deco is increased even during ascent,
-    // because the tissues pressure never reaches so close to the ambient pressure.
-    // Every ascent immediately starts decompression.
-
-    // TODO add algorithm test cases: air breaks
-    // A: Gases: 12/60, oxygen to 80m for 20min, option air breaks = true; there should be breaks at 6m back to trimix
-    // B: Gases: 7/70, oxygen to 80m for 20min, option air breaks = true;
-    // no switch possible, since we dont have breath able bototm gas at 6m
-    // C: Fall back to Ean50 instead of bottom gas in case of hypoxic bottom gas
 });

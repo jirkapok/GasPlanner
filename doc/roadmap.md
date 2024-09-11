@@ -12,6 +12,8 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
+* TRIMIX support
+    * Add air breaks
 * Gas blender:
   * Add use case to identify mix when adding only top mix without adding he or oxygen
 * Fix PWA issues https://www.pwabuilder.com/
@@ -34,8 +36,6 @@ Following list of features and improvements ordered by priority is under develop
     * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
     * <https://youtu.be/OI4ZzqJLQjw>
 * Add undo/redo to all pages
-* TRIMIX support
-  * Add air breaks
 * Add CCR support
 * Add localizations
 * Add calculation trainings

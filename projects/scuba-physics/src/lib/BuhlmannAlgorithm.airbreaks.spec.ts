@@ -140,4 +140,5 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
     // behavior notes:
     // * safety stop is also counted to the air break
     // TODO add warning if unable to switch to air break if back gas not breathable at 6m
+    // TODO add test for small depths without deco, but with oxygen - shouldn't add air break
 });

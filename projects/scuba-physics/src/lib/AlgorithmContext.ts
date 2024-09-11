@@ -8,6 +8,7 @@ import { Segment, Segments } from './Segments';
 import { Options } from './Options';
 import { DepthConverter } from './depth-converter';
 import { Time } from './Time';
+import { StandardGases } from './StandardGases';
 
 export interface ContextMemento {
     tissues: Tissue[];
@@ -20,9 +21,10 @@ export interface ContextMemento {
 export class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
-    public currentGas: Gas;
     /** in seconds */
     public runTime = 0;
+    private _oxygenStarted = 0;
+    private _currentGas: Gas;
     private gradients: GradientFactors;
     private bestGasOptions: BestGasOptions;
     private speeds: AscentSpeeds;
@@ -39,7 +41,7 @@ export class AlgorithmContext {
         // this.gradients = new SimpleGradientFactors(depthConverter, options, this.tissues, this.segments);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
         const last = segments.last();
-        this.currentGas = last.gas;
+        this._currentGas = last.gas;
 
         this.bestGasOptions = {
             currentDepth: this.currentDepth,
@@ -54,16 +56,16 @@ export class AlgorithmContext {
         this.gasSource = new OCGasSource(gases, options);
     }
 
+    public get currentGas(): Gas {
+        return this._currentGas;
+    }
+
     public get ascentSpeed(): number {
         return this.speeds.ascent(this.currentDepth);
     }
 
     public get currentDepth(): number {
         return this.segments.currentDepth;
-    }
-
-    public get ambientPressure(): number {
-        return this.depthConverter.toBar(this.currentDepth);
     }
 
     public get addSafetyStop(): boolean {
@@ -76,6 +78,23 @@ export class AlgorithmContext {
 
     public get isAtSurface(): boolean {
         return this.segments.last().endDepth === 0;
+    }
+
+    public get runTimeOnOxygen(): number {
+        return this.runTime - this._oxygenStarted;
+    }
+
+    public get isBreathingOxygen(): boolean {
+        // Correct is to compare ppO2 >= 1.3, but it may happen also on deep stops, which we want to avoid
+        return this.currentGas.compositionEquals(StandardGases.oxygen);
+    }
+
+    public set currentGas(newValue: Gas) {
+        this._currentGas = newValue;
+
+        if (newValue.compositionEquals(StandardGases.oxygen)) {
+            this._oxygenStarted = this.runTime;
+        }
     }
 
     /** use this just before calculating ascent to be able calculate correct speeds */

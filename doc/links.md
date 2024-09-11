@@ -47,6 +47,7 @@ Following list of external sources was used to develop this application and can 
   * <https://decodoppler.wordpress.com/2012/08/02/air-breaks-what-are-they-and-do-people-take-them-for-the-wrong-reason/>
   * <https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/>
   * <https://www.diverite.com/articles/oxygen-toxicity-signs-and-symptoms/>
+  * <https://www.diverite.com/uncategorized/oxygen-toxicity-and-ccr-rebreather-diving/>
   * Diverite and decodopler: 20min./5 min.
 * Gas blender
   * https://github.com/atdotde/realblender

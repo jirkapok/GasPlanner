@@ -21,6 +21,7 @@ Following list of features and improvements ordered by priority is under develop
 * Add tissues heat map
   * to the profile chart
   * to the dives comparision
+  * Show tissues after amount of time spend at surface
 * UI Tweaks
   * Tanks complex view: Add check box to be able enable or disable tanks
   * Add Surface GF to the results

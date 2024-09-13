@@ -53,3 +53,13 @@ Following list of external sources was used to develop this application and can 
   * https://github.com/atdotde/realblender
   * https://github.com/subsurface/subsurface/blob/master/core/gas-model.c
   * https://thetheoreticaldiver.org/wordpress/index.php/2021/11/16/blending-real-gases/
+
+
+## Rebreathers
+
+* <http://www.therebreathersite.nl/01_Informative/MenuInformative/MenuInformative.htm>
+* <https://advanceddivermagazine.com/articles/ccrcalculations/ccrcalculationstxt.html>
+* <https://www.bsac.com/news-and-blog/in-the-mix-closed-circuit-rebreather-gas-planning-part-2/>
+* <https://diyrebreathers.com/data/uploads/documents/a-learners-guide-to-rebreathers-by-richard-pyle.pdf>
+* <https://www.apdiving.com/en/wp-content/uploads/Rebreather_Vision_-Instruction-Manual-Nov12.pdf>
+* <http://www.therebreathersite.nl/01_Informative/OrificesinRebreathers/OrificesinRebreathers.html>

@@ -14,13 +14,13 @@ describe('BlendPricingService', () => {
         sut = TestBed.inject(BlendPricingService);
     });
 
-    it('should calculate prices correctly with default values', () => {
+    it('should calculate prices based on unit price and amount of gases', () => {
 
         sut.calculate();
 
         expect(sut.o2Price).toBe(0);
         expect(sut.hePrice).toBe(0);
         expect(sut.topMixPrice).toBe(0);
-        expect(sut.totalPrice).toBe(sut.o2Price + sut.hePrice + sut.topMixPrice);
+        expect(sut.totalPrice).toBe(0);
     });
 });

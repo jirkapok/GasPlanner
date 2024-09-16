@@ -17,7 +17,7 @@ describe('BlendPricing', () => {
             o2Price: 10,
             hePrice: 24,
             topMixPrice: 40,
-            totalPrice: 79
+            totalPrice: 74
         };
 
         const result = BlendPricing.price(costs);

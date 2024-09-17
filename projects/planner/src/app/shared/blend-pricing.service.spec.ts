@@ -22,8 +22,7 @@ class TestGasBlenderService {
     }
 }
 
-// eslint-disable-next-line jasmine/no-focused-tests
-fdescribe('BlendPricingService', () => {
+describe('BlendPricingService', () => {
     let sut: BlendPricingService;
     let gasBlender: TestGasBlenderService;
 

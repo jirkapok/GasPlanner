@@ -1,7 +1,7 @@
 # TODO missing test cases
 
 
-* BlendPricing, BlendPricingService, BlendPricingComponent
+* BlendPricing, BlendPricingService, GasBlenderComponent
 * Diver.component.ts: Add tests for rmv and stressRmv save and load
 * AppSettingsComponent:
   * Density Precision and Step for imperial units

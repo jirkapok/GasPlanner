@@ -170,16 +170,16 @@ export class GasBlender {
 
     private static validate(mix: Mix, partName: string): void {
         if (mix.o2 < 0 || mix.o2 > 1) {
-            throw new Error(`${partName} mix contains invalid o2 content.`);
+            throw new Error(`${partName} mix contains invalid o2 content. Needs to be in range 0-1.`);
         }
 
         if (mix.he < 0 || mix.he > 1) {
-            throw new Error(`${partName} mix contains invalid he content.`);
+            throw new Error(`${partName} mix contains invalid he content. Needs to be in range 0-1.`);
         }
 
         const sum = mix.o2 + mix.he;
         if (sum > 1) {
-            throw new Error(`${partName} mix contains invalid N2 content.`);
+            throw new Error(`${partName} mix contains invalid N2 content. Needs to be in range 0-1.`);
         }
     }
 

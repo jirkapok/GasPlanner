@@ -10,9 +10,26 @@ interface BlendPrice {
     totalPrice: number;
 }
 
+interface Request {
+    target: {
+        o2: number;
+        he: number;
+        topMix: number;
+    };
+}
+
+function createEmptyRequest(): Request {
+    return {
+        target: {
+            o2: 0,
+            he: 0,
+            topMix: 0
+        }
+    };
+}
+
 describe('BlendPricingService', () => {
     let sut: BlendPricingService;
-    let gasBlender: GasBlenderService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -24,7 +41,6 @@ describe('BlendPricingService', () => {
         });
 
         sut = TestBed.inject(BlendPricingService);
-        gasBlender = TestBed.inject(GasBlenderService);
     });
 
     it('calculate all unit prices and gas amounts', () => {
@@ -32,17 +48,53 @@ describe('BlendPricingService', () => {
         sut.heUnitPrice = 2;
         sut.topMixUnitPrice = 3;
 
-        gasBlender.addO2 = 4;
-        gasBlender.addHe = 5;
-        gasBlender.addTop = 6;
+        const request: Request = createEmptyRequest();
+
+        request.target.o2 = 4;
+        request.target.he = 5;
+        request.target.topMix = 6;
 
         sut.calculate();
 
-        expect(<BlendPrice>sut).toEqual({
+        const expectedPrice: BlendPrice = {
             o2Price: 4,
             hePrice: 10,
             topMixPrice: 18,
             totalPrice: 32
-        });
+        };
+
+        expect(sut.o2Price).toEqual(expectedPrice.o2Price);
+        expect(sut.hePrice).toEqual(expectedPrice.hePrice);
+        expect(sut.topMixPrice).toEqual(expectedPrice.topMixPrice);
+        expect(sut.totalPrice).toEqual(expectedPrice.totalPrice);
+    });
+
+    it('calculate all unit prices and gas amounts in imperial units', () => {
+        const unitConversion = new UnitConversion();
+        unitConversion.imperialUnits = true;
+
+        sut.o2UnitPrice = 1;
+        sut.heUnitPrice = 2;
+        sut.topMixUnitPrice = 3;
+
+        const request: Request = createEmptyRequest();
+
+        request.target.o2 = 4;
+        request.target.he = 5;
+        request.target.topMix = 6;
+
+        sut.calculate();
+
+        const expectedPrice: BlendPrice = {
+            o2Price: 4,
+            hePrice: 10,
+            topMixPrice: 18,
+            totalPrice: 32
+        };
+
+        expect(sut.o2Price).toEqual(expectedPrice.o2Price);
+        expect(sut.hePrice).toEqual(expectedPrice.hePrice);
+        expect(sut.topMixPrice).toEqual(expectedPrice.topMixPrice);
+        expect(sut.totalPrice).toEqual(expectedPrice.totalPrice);
     });
 });

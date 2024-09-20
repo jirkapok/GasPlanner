@@ -106,14 +106,16 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
         expect(finalSegments).toEqual(expected);
     });
 
-    xit('Adds air break only in 6m, not at last stop depth', () => {
+    it('Adds air breaks are added including last stop depth', () => {
         options.lastStopDepth = 3;
 
-        const finalSegments = calculatePlan75m(30, 4);
+        const finalSegments = calculatePlan75m(20, 6);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 1168),
+            new Segment(6,6, StandardGases.oxygen, 730),
             new Segment(6,3, StandardGases.oxygen, 18),
-            new Segment(3,3, StandardGases.oxygen, 2099),
+            new Segment(3,3, StandardGases.oxygen, 1182),
+            new Segment(3,3, StandardGases.trimix1260, 300),
+            new Segment(3,3, StandardGases.oxygen, 155),
             new Segment(3,0, StandardGases.oxygen, 18)
         ];
         expect(finalSegments).toEqual(expected);
@@ -128,12 +130,13 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
             const segments = new Segments();
             segments.add(6, StandardGases.oxygen, Time.oneMinute);
             segments.add(75, StandardGases.trimix1260, Time.oneMinute * 5);
-            segments.addFlat(StandardGases.trimix1260, Time.oneMinute * 5);
+            segments.addFlat(StandardGases.trimix1260, Time.oneMinute * 20);
 
-            const finalSegments = calculateFinalSegments(gases, segments, 2);
+            const finalSegments = calculateFinalSegments(gases, segments, 4);
 
             const expected: Segment[] = [
-                new Segment(6,6, StandardGases.oxygen, 907),
+                new Segment(9,6, StandardGases.trimix1260, 18),
+                new Segment(6,6, StandardGases.oxygen, 6000),
                 new Segment(6,0, StandardGases.oxygen, 36)
             ];
             expect(finalSegments).toEqual(expected);
@@ -142,6 +145,7 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
         it('Air break is done on Ean50 as fallback gas at 6m', () => {
             const gases = new Gases();
             gases.add(StandardGases.trimix1260);
+            gases.add(StandardGases.ean50);
             gases.add(StandardGases.oxygen);
 
             const segments = new Segments();
@@ -149,7 +153,7 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
             segments.add(75, StandardGases.trimix1260, Time.oneMinute * 5);
             segments.addFlat(StandardGases.trimix1260, Time.oneMinute * 5);
 
-            const finalSegments = calculateFinalSegments(gases, segments, 2);
+            const finalSegments = calculateFinalSegments(gases, segments, 4);
 
             const expected: Segment[] = [
                 new Segment(6,6, StandardGases.oxygen, 907),
@@ -159,8 +163,10 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
         });
     });
 
-    // behavior notes:
+    // TODO air break test cases:
     // * safety stop is also counted to the air break
-    // TODO add warning if unable to switch to air break if back gas not breathable at 6m
-    // TODO add test for small depths without deco, but with oxygen - shouldn't add air break
+    // * add warning if unable to switch to air break if back gas not breathable at 6m
+    // * small depths without deco, but with oxygen - shouldn't add air break
+    // * air breaks are disabled - adds no break
+    // * settings values are applied
 });

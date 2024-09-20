@@ -86,16 +86,16 @@ export class AlgorithmContext {
     }
 
     public get isBreathingOxygen(): boolean {
-        // Correct is to compare ppO2 >= 1.3, but it may happen also on deep stops, which we want to avoid
+        // Correct is to compare ppO2 >= 1.6, but it may happen also at deep stops, which we want to avoid.
         return this.currentGas.compositionEquals(StandardGases.oxygen);
     }
 
     public set currentGas(newValue: Gas) {
-        this._currentGas = newValue;
-
-        if (newValue.compositionEquals(StandardGases.oxygen)) {
+        if (newValue.compositionEquals(StandardGases.oxygen) && !this.isBreathingOxygen) {
             this._oxygenStarted = this.runTime;
         }
+
+        this._currentGas = newValue;
     }
 
     /** use this just before calculating ascent to be able calculate correct speeds */
@@ -118,6 +118,10 @@ export class AlgorithmContext {
         this.bestGasOptions.currentGas = this.currentGas;
         const newGas = this.gasSource.bestGas(this.bestGasOptions);
         return newGas;
+    }
+
+    public airBreakGas(): Gas {
+        return this.gasSource.airBreakGas(this.currentDepth, this.currentGas);
     }
 
     public createMemento(): ContextMemento {

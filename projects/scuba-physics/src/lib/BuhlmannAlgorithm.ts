@@ -287,11 +287,11 @@ export class BuhlmannAlgorithm {
 
     private switchAirBreakStopGas(context: AlgorithmContext): void {
         if (context.isBreathingOxygen) {
-            context.currentGas = context.gases.all[0]; // TODO how to select bottom gas?
+            context.currentGas = context.airBreakGas();
             return;
         }
 
-        context.currentGas = StandardGases.oxygen;
+        context.currentGas = context.bestDecoGas();
     }
 
     /* there is NO better option then to try, since we can't predict the tissues loading */

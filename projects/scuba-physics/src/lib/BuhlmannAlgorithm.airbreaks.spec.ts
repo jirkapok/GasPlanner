@@ -113,9 +113,9 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
         const expected: Segment[] = [
             new Segment(6,6, StandardGases.oxygen, 730),
             new Segment(6,3, StandardGases.oxygen, 18),
-            new Segment(3,3, StandardGases.oxygen, 1182),
-            new Segment(3,3, StandardGases.trimix1260, 300),
-            new Segment(3,3, StandardGases.oxygen, 155),
+            new Segment(3,3, StandardGases.oxygen, 452),
+            new Segment(3,3, StandardGases.trimix3525, 300),
+            new Segment(3,3, StandardGases.oxygen, 763),
             new Segment(3,0, StandardGases.oxygen, 18)
         ];
         expect(finalSegments).toEqual(expected);
@@ -124,19 +124,19 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
     describe('Bottom gas not breathable', () => {
         it('No air break when not other gas is breath able at 6m', () => {
             const gases = new Gases();
-            gases.add(StandardGases.trimix1260);
+            gases.add(StandardGases.trimix1070); // hypoxic at 6 m
             gases.add(StandardGases.oxygen);
 
             const segments = new Segments();
-            segments.add(6, StandardGases.oxygen, Time.oneMinute);
-            segments.add(75, StandardGases.trimix1260, Time.oneMinute * 5);
-            segments.addFlat(StandardGases.trimix1260, Time.oneMinute * 20);
+            segments.add(8, StandardGases.oxygen, Time.oneMinute); // broken ppO2
+            segments.add(75, StandardGases.trimix1070, Time.oneMinute * 5);
+            segments.addFlat(StandardGases.trimix1070, Time.oneMinute * 10);
 
-            const finalSegments = calculateFinalSegments(gases, segments, 4);
+            const finalSegments = calculateFinalSegments(gases, segments, 3);
 
             const expected: Segment[] = [
-                new Segment(9,6, StandardGases.trimix1260, 18),
-                new Segment(6,6, StandardGases.oxygen, 6000),
+                new Segment(9,6, StandardGases.trimix1070, 18),
+                new Segment(6,6, StandardGases.oxygen, 2490),
                 new Segment(6,0, StandardGases.oxygen, 36)
             ];
             expect(finalSegments).toEqual(expected);
@@ -144,19 +144,21 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
 
         it('Air break is done on Ean50 as fallback gas at 6m', () => {
             const gases = new Gases();
-            gases.add(StandardGases.trimix1260);
+            gases.add(StandardGases.trimix1070);
             gases.add(StandardGases.ean50);
             gases.add(StandardGases.oxygen);
 
             const segments = new Segments();
             segments.add(6, StandardGases.oxygen, Time.oneMinute);
-            segments.add(75, StandardGases.trimix1260, Time.oneMinute * 5);
-            segments.addFlat(StandardGases.trimix1260, Time.oneMinute * 5);
+            segments.add(75, StandardGases.trimix1070, Time.oneMinute * 5);
+            segments.addFlat(StandardGases.trimix1070, Time.oneMinute * 15);
 
             const finalSegments = calculateFinalSegments(gases, segments, 4);
 
             const expected: Segment[] = [
-                new Segment(6,6, StandardGases.oxygen, 907),
+                new Segment(6,6, StandardGases.oxygen, 1200),
+                new Segment(6,6, StandardGases.ean50, 300),
+                new Segment(6,6, StandardGases.oxygen, 794),
                 new Segment(6,0, StandardGases.oxygen, 36)
             ];
             expect(finalSegments).toEqual(expected);

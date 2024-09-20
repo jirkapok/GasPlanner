@@ -62,13 +62,20 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
     });
 
     it('Switches back to O2 after air break is finished', () => {
-        const finalSegments = calculatePlan(65, 15, 10);
+        const gases = new Gases();
+        gases.add(StandardGases.ean32);
+        gases.add(StandardGases.ean50);
+        gases.add(StandardGases.oxygen);
+
+        const segments = new Segments();
+        segments.add(30, StandardGases.ean32, Time.oneMinute * 5);
+        segments.addFlat(StandardGases.ean32, Time.oneMinute * 90);
+
+        const finalSegments = calculateFinalSegments(gases, segments, 3);
+
         const expected: Segment[] = [
             new Segment(6,6, StandardGases.oxygen, 1200),
-            new Segment(6,6, StandardGases.trimix1260, 300),
-            new Segment(6,6, StandardGases.oxygen, 1200),
-            new Segment(6,6, StandardGases.trimix1260, 300),
-            new Segment(6,6, StandardGases.oxygen, 883),
+            new Segment(6,6, StandardGases.ean32, 237),
             new Segment(6,0, StandardGases.oxygen, 36)
         ];
         expect(finalSegments).toEqual(expected);

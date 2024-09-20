@@ -280,9 +280,7 @@ export class BuhlmannAlgorithm {
     }
 
     private swimDecoStopDuration(context: AlgorithmContext, stopDuration: number): void {
-        // TODO remove redundant addDecoStopSegment
-        const decoStop = context.addDecoStopSegment();
-        decoStop.duration = stopDuration;
+        const decoStop = context.addStopSegment(stopDuration);
         this.swim(context, decoStop);
     }
 

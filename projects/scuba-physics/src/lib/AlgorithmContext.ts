@@ -148,13 +148,13 @@ export class AlgorithmContext {
         return newGas && !this.currentGas.compositionEquals(newGas);
     }
 
+    public addAscentSegment(nextStop: number, duration: number): Segment {
+        return this.segments.add(nextStop, this.currentGas, duration);
+    }
+
     public addGasSwitchSegment(): Segment {
         const duration = this.options.gasSwitchDuration * Time.oneMinute;
         return this.addStopSegment(duration);
-    }
-
-    public addDecoStopSegment(): Segment {
-        return this.addStopSegment(0);
     }
 
     public addSafetyStopSegment(): Segment {
@@ -162,11 +162,7 @@ export class AlgorithmContext {
         return this.addStopSegment(duration);
     }
 
-    public addAscentSegment(nextStop: number, duration: number): Segment {
-        return this.segments.add(nextStop, this.currentGas, duration);
-    }
-
-    private addStopSegment(duration: number): Segment {
+    public addStopSegment(duration: number): Segment {
         return this.segments.addFlat(this.currentGas, duration);
     }
 }

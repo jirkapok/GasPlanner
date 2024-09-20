@@ -231,8 +231,8 @@ export class BuhlmannAlgorithm {
             const roundedStopDuration = Precision.ceilDistance(stopDuration, context.decoStopDuration);
 
             if(context.isBreathingOxygen) {
-                // TODO this.swimOxygenStop(context, roundedStopDuration);
-                this.swimDecoStop(context, memento, roundedStopDuration);
+                this.swimOxygenStop(context, memento, roundedStopDuration);
+                // TODO this.swimDecoStop(context, memento, roundedStopDuration);
             } else {
                 // we don't restore last search iteration, we keep the deco stop segment
                 this.swimDecoStop(context, memento, roundedStopDuration);
@@ -240,21 +240,60 @@ export class BuhlmannAlgorithm {
         }
     }
 
-    /** Includes air breaks */
-    private swimOxygenStop(context: AlgorithmContext, totalStopDuration: number): void {
+    // TODO Validate if this is completely wrong:
+    //  It needs to counted during whole dive (not only during stops),
+    //  whenever ppO2 is at high level (not only on oxygen).
+    /**
+     *  Air breaks:
+     *  1. stay on oxygen up to max O2 time
+     *  2. switch to back gas for the break time
+     *  3. repeat until there is no more deco time
+     **/
+    private swimOxygenStop(context: AlgorithmContext, memento: ContextMemento,  totalStopDuration: number): void {
+        context.restore(memento);
         // TODO apply settings for air breaks
+        const maxOxygenTime = Time.oneMinute * 20;
+        const maxBottomGasTime = Time.oneMinute * 5;
+        let remainingStopTime = totalStopDuration;
+        // starting on oxygen: needs to be extracted from first oxygen part
+        let remainingOxygenTime = maxOxygenTime - context.runTimeOnOxygen;
+        remainingOxygenTime = remainingOxygenTime > 0 ? remainingOxygenTime : 0;
+        let stopDuration = Math.min(remainingStopTime, remainingOxygenTime);
+        this.swimDecoStopDuration(context, stopDuration);
+        remainingStopTime -= remainingOxygenTime;
+
+        while(remainingStopTime > 0) {
+            // here we don't count with gas switch duration (it is part of the stop)
+            this.switchOxygenStopGas(context);
+            const maxGasTime = context.isBreathingOxygen ? remainingOxygenTime : maxBottomGasTime;
+            stopDuration = Math.min(remainingStopTime, maxGasTime);
+            this.swimDecoStopDuration(context, stopDuration);
+            remainingStopTime -= stopDuration;
+        }
+
         // TODO air breaks prolong the deco, so we need to adjust the stop duration,
-        // but we want to avoid another stop estimation, because it is performance heavy
-        // easy solution is to use recursion and call the stayAtDecoStop once again
-        const remainingOxygenTime = totalStopDuration - context.runTimeOnOxygen;
-        const stopDuration = remainingOxygenTime > 0 ? remainingOxygenTime : 20;
-        const decoStop = context.addDecoStopSegment();
-        decoStop.duration = stopDuration;
-        this.swim(context, decoStop);
+        // but we want to avoid another stop estimation, because it is performance heavy.
+        // Easy solution is to use recursion and call the stayAtDecoStop once again.
+        // The gas switch took place already and is already counted in the runTimeOnOxygen.
+
+        // TODO dont restore the memento anymore, since it is no longer valid
+    }
+
+    private switchOxygenStopGas(context: AlgorithmContext): void {
+        if (context.isBreathingOxygen) {
+            context.currentGas = context.gases.all[0]; // TODO how to select bottom gas?
+            return;
+        }
+
+        context.currentGas = StandardGases.oxygen;
     }
 
     private swimDecoStop(context: AlgorithmContext, memento: ContextMemento, stopDuration: number): void {
         context.restore(memento);
+        this.swimDecoStopDuration(context, stopDuration);
+    }
+
+    private swimDecoStopDuration(context: AlgorithmContext, stopDuration: number): void {
         const decoStop = context.addDecoStopSegment();
         decoStop.duration = stopDuration;
         this.swim(context, decoStop);

@@ -16,6 +16,7 @@ export interface ContextMemento {
     segments: number;
     runTime: number;
     lowestCeiling: number;
+    oxygenStarted: number;
 }
 
 export class AlgorithmContext {
@@ -122,6 +123,7 @@ export class AlgorithmContext {
     public createMemento(): ContextMemento {
         return {
             runTime: this.runTime,
+            oxygenStarted: this._oxygenStarted,
             tissues: Tissues.copy(this.tissues.compartments),
             ceilings: this.ceilings.length,
             segments: this.segments.length,
@@ -134,6 +136,7 @@ export class AlgorithmContext {
         this.tissues.restoreFrom(memento.tissues);
         this.gradients.lowestCeiling = memento.lowestCeiling;
         this.runTime = memento.runTime;
+        this._oxygenStarted = memento.oxygenStarted;
         // ceilings and segments are only added
         this.ceilings = this.ceilings.slice(0, memento.ceilings);
         const toCut = this.segments.length - memento.segments;

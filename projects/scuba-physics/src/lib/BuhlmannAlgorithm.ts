@@ -269,14 +269,15 @@ export class BuhlmannAlgorithm {
 
         while(remainingStopTime > 0) {
             // here we don't count with gas switch duration (it is part of the stop)
-            this.switchOxygenStopGas(context);
-            const maxGasTime = context.isBreathingOxygen ? remainingOxygenTime : maxBottomGasTime;
+            this.switchAirBreakStopGas(context);
+            const maxGasTime = context.isBreathingOxygen ? maxOxygenTime : maxBottomGasTime;
             stopDuration = Math.min(remainingStopTime, maxGasTime);
             this.swimDecoStopDuration(context, stopDuration);
             remainingStopTime -= stopDuration;
         }
 
-        // TODO dont restore the memento anymore, since it is no longer valid
+        // we need to switch back to gas breathable during next ascent
+        context.currentGas = StandardGases.oxygen;
     }
 
     private swimDecoStopDuration(context: AlgorithmContext, stopDuration: number): void {
@@ -284,7 +285,7 @@ export class BuhlmannAlgorithm {
         this.swim(context, decoStop);
     }
 
-    private switchOxygenStopGas(context: AlgorithmContext): void {
+    private switchAirBreakStopGas(context: AlgorithmContext): void {
         if (context.isBreathingOxygen) {
             context.currentGas = context.gases.all[0]; // TODO how to select bottom gas?
             return;

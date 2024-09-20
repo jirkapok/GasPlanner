@@ -22,6 +22,10 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
     };
 
     const calculatePlan75m = (bottomTimeMinutes: number, segmentsCount: number): Segment[] => {
+        return calculatePlan(75, bottomTimeMinutes, segmentsCount);
+    };
+
+    const calculatePlan = (depth: number, bottomTimeMinutes: number, segmentsCount: number): Segment[] => {
         const gases = new Gases();
         gases.add(StandardGases.trimix1260);
         gases.add(StandardGases.trimix3525);
@@ -30,7 +34,7 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
 
         const segments = new Segments();
         segments.add(10, StandardGases.trimix3525, Time.oneMinute);
-        segments.add(75, StandardGases.trimix1260, Time.oneMinute * 5);
+        segments.add(depth, StandardGases.trimix1260, Time.oneMinute * 5);
         segments.addFlat(StandardGases.trimix1260, Time.oneMinute * bottomTimeMinutes);
 
         const finalSegments = calculateFinalSegments(gases, segments, segmentsCount);
@@ -47,33 +51,43 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
     });
 
     it('Adds air break for oxygen time longer than max. O2 time', () => {
-        const finalSegments = calculatePlan75m(13, 2);
+        const finalSegments = calculatePlan75m(13, 4);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 1316),
+            new Segment(6,6, StandardGases.oxygen, 1200),
+            new Segment(6,6, StandardGases.trimix1260, 300),
+            new Segment(6,6, StandardGases.oxygen, 124),
             new Segment(6,0, StandardGases.oxygen, 36)
         ];
         expect(finalSegments).toEqual(expected);
     });
 
     it('Switches back to O2 after air break is finished', () => {
-        const finalSegments = calculatePlan75m(15, 2);
+        const finalSegments = calculatePlan(65, 15, 10);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 1544),
+            new Segment(6,6, StandardGases.oxygen, 1200),
+            new Segment(6,6, StandardGases.trimix1260, 300),
+            new Segment(6,6, StandardGases.oxygen, 1200),
+            new Segment(6,6, StandardGases.trimix1260, 300),
+            new Segment(6,6, StandardGases.oxygen, 883),
             new Segment(6,0, StandardGases.oxygen, 36)
         ];
         expect(finalSegments).toEqual(expected);
     });
 
     it('Adds multiple air breaks', () => {
-        const finalSegments = calculatePlan75m(30, 2);
+        const finalSegments = calculatePlan75m(30, 6);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 3267),
+            new Segment(6,6, StandardGases.oxygen, 1200),
+            new Segment(6,6, StandardGases.trimix1260, 300),
+            new Segment(6,6, StandardGases.oxygen, 1200),
+            new Segment(6,6, StandardGases.trimix1260, 300),
+            new Segment(6,6, StandardGases.oxygen, 883),
             new Segment(6,0, StandardGases.oxygen, 36)
         ];
         expect(finalSegments).toEqual(expected);
     });
 
-    it('Counts with safety stop to max. O2 time', () => {
+    xit('Counts with safety stop to max. O2 time', () => {
         options.safetyStop = SafetyStop.always;
 
         const finalSegments = calculatePlan75m(15, 2);
@@ -84,7 +98,7 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
         expect(finalSegments).toEqual(expected);
     });
 
-    it('Adds air break only in 6m, not at last stop depth', () => {
+    xit('Adds air break only in 6m, not at last stop depth', () => {
         options.lastStopDepth = 3;
 
         const finalSegments = calculatePlan75m(30, 4);

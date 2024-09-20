@@ -21,9 +21,8 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
         return calculated.slice(calculated.length - segmentsCount, calculated.length);
     };
 
-    const calculatePlan75m = (bottomTimeMinutes: number, segmentsCount: number): Segment[] => {
-        return calculatePlan(75, bottomTimeMinutes, segmentsCount);
-    };
+    const calculatePlan75m = (bottomTimeMinutes: number, segmentsCount: number): Segment[] =>
+        calculatePlan(75, bottomTimeMinutes, segmentsCount);
 
     const calculatePlan = (depth: number, bottomTimeMinutes: number, segmentsCount: number): Segment[] => {
         const gases = new Gases();
@@ -94,12 +93,14 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
         expect(finalSegments).toEqual(expected);
     });
 
-    xit('Counts with safety stop to max. O2 time', () => {
+    it('Counts with safety stop to max. O2 time', () => {
         options.safetyStop = SafetyStop.always;
 
-        const finalSegments = calculatePlan75m(15, 2);
+        const finalSegments = calculatePlan75m(15, 4);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 1724),
+            new Segment(6,6, StandardGases.oxygen, 1200),
+            new Segment(6,6, StandardGases.trimix1260, 300),
+            new Segment(6,6, StandardGases.oxygen, 534),
             new Segment(6,0, StandardGases.oxygen, 36)
         ];
         expect(finalSegments).toEqual(expected);

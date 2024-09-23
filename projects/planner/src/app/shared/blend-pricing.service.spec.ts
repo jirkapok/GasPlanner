@@ -1,100 +1,35 @@
-import { TestBed } from '@angular/core/testing';
-import { BlendPricingService } from './blend-pricing.service';
-import { GasBlenderService } from './gas-blender.service';
 import { UnitConversion } from './UnitConversion';
-
-interface BlendPrice {
-    o2Price: number;
-    hePrice: number;
-    topMixPrice: number;
-    totalPrice: number;
-}
-
-interface Request {
-    target: {
-        o2: number;
-        he: number;
-        topMix: number;
-    };
-}
-
-function createEmptyRequest(): Request {
-    return {
-        target: {
-            o2: 0,
-            he: 0,
-            topMix: 0
-        }
-    };
-}
+import { GasBlenderService } from './gas-blender.service';
+import { BlendPricingService } from './blend-pricing.service';
 
 describe('BlendPricingService', () => {
     let sut: BlendPricingService;
+    let gasBlender: GasBlenderService;
+
+    const createGasBlenderService = (): GasBlenderService => {
+        const units = new UnitConversion();
+        return new GasBlenderService(units);
+    };
 
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [
-                BlendPricingService,
-                GasBlenderService,
-                UnitConversion
-            ]
-        });
+        gasBlender = createGasBlenderService();
+        sut = new BlendPricingService(gasBlender);
 
-        sut = TestBed.inject(BlendPricingService);
+        gasBlender.topMix.o2 = 25;
+        gasBlender.topMix.he = 25;
+        gasBlender.calculate();
+
+        sut.o2UnitPrice = 2;
+        sut.heUnitPrice = 3;
+        sut.topMixUnitPrice = 4;
     });
 
-    it('calculate all unit prices and gas amounts', () => {
-        sut.o2UnitPrice = 1;
-        sut.heUnitPrice = 2;
-        sut.topMixUnitPrice = 3;
-
-        const request: Request = createEmptyRequest();
-
-        request.target.o2 = 4;
-        request.target.he = 5;
-        request.target.topMix = 6;
-
+    it('Calculates prices for for the amount of gas', () => {
         sut.calculate();
 
-        const expectedPrice: BlendPrice = {
-            o2Price: 4,
-            hePrice: 10,
-            topMixPrice: 18,
-            totalPrice: 32
-        };
-
-        expect(sut.o2Price).toEqual(expectedPrice.o2Price);
-        expect(sut.hePrice).toEqual(expectedPrice.hePrice);
-        expect(sut.topMixPrice).toEqual(expectedPrice.topMixPrice);
-        expect(sut.totalPrice).toEqual(expectedPrice.totalPrice);
-    });
-
-    it('calculate all unit prices and gas amounts in imperial units', () => {
-        const unitConversion = new UnitConversion();
-        unitConversion.imperialUnits = true;
-
-        sut.o2UnitPrice = 1;
-        sut.heUnitPrice = 2;
-        sut.topMixUnitPrice = 3;
-
-        const request: Request = createEmptyRequest();
-
-        request.target.o2 = 4;
-        request.target.he = 5;
-        request.target.topMix = 6;
-
-        sut.calculate();
-
-        const expectedPrice: BlendPrice = {
-            o2Price: 4,
-            hePrice: 10,
-            topMixPrice: 18,
-            totalPrice: 32
-        };
-
-        expect(sut.o2Price).toEqual(expectedPrice.o2Price);
-        expect(sut.hePrice).toEqual(expectedPrice.hePrice);
-        expect(sut.topMixPrice).toEqual(expectedPrice.topMixPrice);
-        expect(sut.totalPrice).toEqual(expectedPrice.totalPrice);
+        expect(sut.o2Price).toBeCloseTo(50);
+        expect(sut.hePrice).toBeCloseTo(75);
+        expect(sut.topMixPrice).toBeCloseTo(200);
+        expect(sut.totalPrice).toBeCloseTo(325);
     });
 });

@@ -16,6 +16,7 @@ export interface ContextMemento {
     segments: number;
     runTime: number;
     lowestCeiling: number;
+    oxygenStarted: number;
 }
 
 export class AlgorithmContext {
@@ -85,16 +86,16 @@ export class AlgorithmContext {
     }
 
     public get isBreathingOxygen(): boolean {
-        // Correct is to compare ppO2 >= 1.3, but it may happen also on deep stops, which we want to avoid
+        // Correct is to compare ppO2 >= 1.6, but it may happen also at deep stops, which we want to avoid.
         return this.currentGas.compositionEquals(StandardGases.oxygen);
     }
 
     public set currentGas(newValue: Gas) {
-        this._currentGas = newValue;
-
-        if (newValue.compositionEquals(StandardGases.oxygen)) {
+        if (newValue.compositionEquals(StandardGases.oxygen) && !this.isBreathingOxygen) {
             this._oxygenStarted = this.runTime;
         }
+
+        this._currentGas = newValue;
     }
 
     /** use this just before calculating ascent to be able calculate correct speeds */
@@ -119,9 +120,14 @@ export class AlgorithmContext {
         return newGas;
     }
 
+    public airBreakGas(): Gas {
+        return this.gasSource.airBreakGas(this.currentDepth, this.currentGas);
+    }
+
     public createMemento(): ContextMemento {
         return {
             runTime: this.runTime,
+            oxygenStarted: this._oxygenStarted,
             tissues: Tissues.copy(this.tissues.compartments),
             ceilings: this.ceilings.length,
             segments: this.segments.length,
@@ -134,6 +140,7 @@ export class AlgorithmContext {
         this.tissues.restoreFrom(memento.tissues);
         this.gradients.lowestCeiling = memento.lowestCeiling;
         this.runTime = memento.runTime;
+        this._oxygenStarted = memento.oxygenStarted;
         // ceilings and segments are only added
         this.ceilings = this.ceilings.slice(0, memento.ceilings);
         const toCut = this.segments.length - memento.segments;
@@ -148,13 +155,13 @@ export class AlgorithmContext {
         return newGas && !this.currentGas.compositionEquals(newGas);
     }
 
+    public addAscentSegment(nextStop: number, duration: number): Segment {
+        return this.segments.add(nextStop, this.currentGas, duration);
+    }
+
     public addGasSwitchSegment(): Segment {
         const duration = this.options.gasSwitchDuration * Time.oneMinute;
         return this.addStopSegment(duration);
-    }
-
-    public addDecoStopSegment(): Segment {
-        return this.addStopSegment(0);
     }
 
     public addSafetyStopSegment(): Segment {
@@ -162,11 +169,7 @@ export class AlgorithmContext {
         return this.addStopSegment(duration);
     }
 
-    public addAscentSegment(nextStop: number, duration: number): Segment {
-        return this.segments.add(nextStop, this.currentGas, duration);
-    }
-
-    private addStopSegment(duration: number): Segment {
+    public addStopSegment(duration: number): Segment {
         return this.segments.addFlat(this.currentGas, duration);
     }
 }

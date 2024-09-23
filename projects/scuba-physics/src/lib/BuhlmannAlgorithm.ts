@@ -228,36 +228,70 @@ export class BuhlmannAlgorithm {
             // the algorithm returns lowest value, so the last second where the deco isn't enough
             // so we need to add one more second to be safe and adjust it to the required rounding
             const stopDuration = interval.search(searchContext) + Time.oneSecond;
-            const roundedStopDuration = Precision.ceilDistance(stopDuration, context.decoStopDuration);
-
-            if(context.isBreathingOxygen) {
-                // TODO this.swimOxygenStop(context, roundedStopDuration);
-                this.swimDecoStop(context, memento, roundedStopDuration);
-            } else {
-                // we don't restore last search iteration, we keep the deco stop segment
-                this.swimDecoStop(context, memento, roundedStopDuration);
-            }
+            const rounded = Precision.ceilDistance(stopDuration, context.decoStopDuration);
+            this.swimDecoStop(context, memento, rounded);
         }
-    }
-
-    /** Includes air breaks */
-    private swimOxygenStop(context: AlgorithmContext, totalStopDuration: number): void {
-        // TODO apply settings for air breaks
-        // TODO air breaks prolong the deco, so we need to adjust the stop duration,
-        // but we want to avoid another stop estimation, because it is performance heavy
-        // easy solution is to use recursion and call the stayAtDecoStop once again
-        const remainingOxygenTime = totalStopDuration - context.runTimeOnOxygen;
-        const stopDuration = remainingOxygenTime > 0 ? remainingOxygenTime : 20;
-        const decoStop = context.addDecoStopSegment();
-        decoStop.duration = stopDuration;
-        this.swim(context, decoStop);
     }
 
     private swimDecoStop(context: AlgorithmContext, memento: ContextMemento, stopDuration: number): void {
         context.restore(memento);
-        const decoStop = context.addDecoStopSegment();
-        decoStop.duration = stopDuration;
+        const addAirBreaks = false; // TODO apply settings for air breaks
+
+        // Air breaks prolong the deco, so we need to count with them also in stop estimation
+        if(context.isBreathingOxygen && addAirBreaks) {
+            this.swimOxygenStop(context, stopDuration);
+        } else {
+            this.swimDecoStopDuration(context, stopDuration);
+        }
+    }
+
+    // TODO Validate if this is completely wrong:
+    //  It needs to counted during whole dive (not only during stops),
+    //  whenever ppO2 is at high level (not only on oxygen).
+    /**
+     *  Air breaks:
+     *  1. stay on oxygen up to max O2 time
+     *  2. switch to back gas for the break time
+     *  3. repeat until there is no more deco time
+     **/
+    private swimOxygenStop(context: AlgorithmContext, totalStopDuration: number): void {
+        // TODO apply settings for air breaks
+        const maxOxygenTime = Time.oneMinute * 20;
+        const maxBottomGasTime = Time.oneMinute * 5;
+        let remainingStopTime = totalStopDuration;
+        // Starting on oxygen: needs to be extracted from first oxygen part
+        // The gas switch took place already and is already counted in the runTimeOnOxygen.
+        let remainingOxygenTime = maxOxygenTime - context.runTimeOnOxygen;
+        remainingOxygenTime = remainingOxygenTime > 0 ? remainingOxygenTime : 0;
+        let stopDuration = Math.min(remainingStopTime, remainingOxygenTime);
+        this.swimDecoStopDuration(context, stopDuration);
+        remainingStopTime -= remainingOxygenTime;
+
+        while(remainingStopTime > 0) {
+            // here we don't count with gas switch duration (it is part of the stop)
+            this.switchAirBreakStopGas(context);
+            const maxGasTime = context.isBreathingOxygen ? maxOxygenTime : maxBottomGasTime;
+            stopDuration = Math.min(remainingStopTime, maxGasTime);
+            this.swimDecoStopDuration(context, stopDuration);
+            remainingStopTime -= stopDuration;
+        }
+
+        // we need to switch back to gas breathable during next ascent
+        context.currentGas = StandardGases.oxygen;
+    }
+
+    private swimDecoStopDuration(context: AlgorithmContext, stopDuration: number): void {
+        const decoStop = context.addStopSegment(stopDuration);
         this.swim(context, decoStop);
+    }
+
+    private switchAirBreakStopGas(context: AlgorithmContext): void {
+        if (context.isBreathingOxygen) {
+            context.currentGas = context.airBreakGas();
+            return;
+        }
+
+        context.currentGas = context.bestDecoGas();
     }
 
     /* there is NO better option then to try, since we can't predict the tissues loading */

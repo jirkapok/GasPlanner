@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Precision } from './precision';
 import { DepthConverter } from './depth-converter';
 import { DepthLevelOptions, DepthLevels } from './DepthLevels';
@@ -61,10 +62,10 @@ export class OCGasSource {
     }
 
     /**
-    * Finds better gas to switch to from current depth. Returns current gas, if no better gas was found.
-    * Better gas is breathable at current depth and with higher O2, because during decompression we need to offgass both He and N2.
-    * Use this method to find decompression gas during ascent.
-    */
+     * Finds better gas to switch to from current depth. Returns current gas, if no better gas was found.
+     * Better gas is breathable at current depth and with higher O2, because during decompression we need to offgass both He and N2.
+     * Use this method to find decompression gas during ascent.
+     */
     public bestGas(options: BestGasOptions): Gas {
         const currentPressure = this.depthConverter.toBar(options.currentDepth);
         const maxEndPressure = this.depthConverter.toBar(options.maxEnd);
@@ -87,17 +88,36 @@ export class OCGasSource {
         });
         return found;
     }
+
+    /**
+     *  Finds gas with minimum ppO2, but breath able at air break.
+     *  Returns currentGas in case no gas meets the criteria.
+     *  (usually normoxic)
+     *  @param depth current depth in meters
+     *  @param currentGas not null currently gas
+     */
+    public airBreakGas(depth: number, currentGas: Gas): Gas {
+        const ambientPressure = this.depthConverter.toBar(depth);
+
+        const found = _(this.gases.all)
+            .filter(g => {
+                const gasPpO2 = GasMixtures.partialPressure(ambientPressure, g.fO2);
+                return gasPpO2 >= GasMixtures.minPpO2;
+            })
+            .minBy(g => g.fO2);
+        return found || currentGas;
+    }
 }
 
 export class Gases {
-    private bottomGases: Gas[] = [];
+    private items: Gas[] = [];
 
     public get all(): Gas[] {
-        return this.bottomGases.slice();
+        return this.items.slice();
     }
 
     public get hasBottomGas(): boolean {
-        return this.bottomGases.length >= 1;
+        return this.items.length >= 1;
     }
 
     public static fromTanks(tanks: Tank[]): Gases {
@@ -112,11 +132,11 @@ export class Gases {
     }
 
     public add(gas: Gas): void {
-        this.bottomGases.push(gas);
+        this.items.push(gas);
     }
 
     public isRegistered(gas: Gas): boolean {
-        return this.bottomGases.includes(gas);
+        return this.items.includes(gas);
     }
 }
 

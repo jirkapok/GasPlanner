@@ -24,7 +24,7 @@ export class AlgorithmContext {
     public ceilings: Ceiling[] = [];
     /** in seconds */
     public runTime = 0;
-    private addAirBreaks = true; // TODO apply settings for air breaks
+
     private _oxygenStarted = 0;
     private _currentGas: Gas;
     private gradients: GradientFactors;
@@ -83,7 +83,7 @@ export class AlgorithmContext {
     }
 
     public get shouldAddAirBreaks(): boolean {
-        return this.isBreathingOxygen && this.addAirBreaks;
+        return this.isBreathingOxygen && this.options.airBreaks.enabled;
     }
 
     public get runTimeOnOxygen(): number {
@@ -184,12 +184,16 @@ export class AlgorithmContext {
 
 
 export class AirBreakContext {
-    // TODO apply settings for air breaks
-    private readonly maxOxygenTime = Time.oneMinute * 20;
-    private readonly maxBottomGasTime = Time.oneMinute * 5;
+    /** in seconds */
+    private readonly maxOxygenTime: number;
+    /** in seconds */
+    private readonly maxBottomGasTime: number;
     private _initialStopDuration: number;
 
     constructor(private readonly context: AlgorithmContext, private remainingStopTime: number) {
+        this.maxOxygenTime = this.context.options.airBreaks.oxygenDuration * Time.oneMinute;
+        this.maxBottomGasTime = this.context.options.airBreaks.bottomGasDuration * Time.oneMinute;
+
         // need to preserve, because swim, adds oxygen runtime
         this._initialStopDuration = Math.min(this.remainingStopTime, this.remainingOxygenTime);
     }

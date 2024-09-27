@@ -13,7 +13,9 @@ describe('Buhlmann Algorithm - Air breaks', () => {
     beforeEach(() => {
         options.lastStopDepth = 6;
         options.safetyStop = SafetyStop.never;
-        // TODO reset to default air break settings 20/5
+        options.airBreaks.enabled = true;
+        options.airBreaks.oxygenDuration = 20;
+        options.airBreaks.bottomGasDuration = 5;
     });
 
     const calculateFinalSegments = (gases: Gases, source: Segments, segmentsCount: number): Segment[] => {
@@ -60,19 +62,19 @@ describe('Buhlmann Algorithm - Air breaks', () => {
         expect(finalSegments).toEqual(expected);
     });
 
-    xit('Applies air break duration settings', () => {
-        // TODO apply settings for air breaks 12 min/6min
+    it('Applies air break duration settings', () => {
+        options.airBreaks.oxygenDuration = 12;
+        options.airBreaks.bottomGasDuration = 6;
+
         const finalSegments = calculatePlan75m(13, 4);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 900),
+            new Segment(6,6, StandardGases.oxygen, 720),
             new Segment(6,6, StandardGases.trimix1260, 360),
-            new Segment(6,6, StandardGases.oxygen, 124),
+            new Segment(6,6, StandardGases.oxygen, 571),
             new Segment(6,0, StandardGases.oxygen, 36)
         ];
         expect(finalSegments).toEqual(expected);
     });
-
-
 
     it('Switches back to O2 after air break is finished', () => {
         const gases = new Gases();
@@ -136,8 +138,9 @@ describe('Buhlmann Algorithm - Air breaks', () => {
     });
 
     describe('NO breaks added', () => {
-        xit('Air breaks are disabled', () => {
-            // TODO disable air breaks
+        it('Air breaks are disabled', () => {
+            options.airBreaks.enabled = false;
+
             const finalSegments = calculatePlan75m(13, 3);
             const expected: Segment[] = [
                 new Segment(9,6, StandardGases.ean50, 18),

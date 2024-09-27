@@ -5,7 +5,6 @@ import { Salinity } from './pressure-converter';
 import { SpeedOptions } from './speeds';
 import { GasMixtures } from './GasMixtures';
 
-
 export enum SafetyStop {
     never = 1,
     auto = 2,
@@ -39,6 +38,9 @@ export class OptionDefaults {
     public static readonly maxPpO2 = 1.4;
     public static readonly maxDecoPpO2 = 1.6;
 
+    public static readonly airBreakOxygenDuration = 20;
+    public static readonly airBreakBottomGasDuration = 5;
+
     public static setMediumConservatism(options: Options): void {
         options.gfLow = OptionDefaults.gfLow;
         options.gfHigh = OptionDefaults.gfHigh;
@@ -51,6 +53,18 @@ export class OptionDefaults {
         options.gasSwitchDuration = OptionDefaults.gasSwitchDuration;
         options.oxygenNarcotic = OptionDefaults.oxygenNarcotic;
     }
+}
+
+export class AirBreakOptions {
+    constructor(
+        public enabled: boolean = false,
+
+        /** in minutes */
+        public oxygenDuration: number = OptionDefaults.airBreakOxygenDuration,
+
+        /** in minutes */
+        public bottomGasDuration: number = OptionDefaults.airBreakBottomGasDuration
+    ) { }
 }
 
 /**
@@ -122,6 +136,8 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
      * This time is added to consumption on bottom when calculating rock bottom */
     public problemSolvingDuration = OptionDefaults.problemSolvingDuration;
 
+    private readonly _airBreaks = new AirBreakOptions();
+
     constructor(
         // Gradient factors in Shearwater
         // Low (45/95)
@@ -160,6 +176,10 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         this.salinity = salinity || OptionDefaults.saltWater;
     }
 
+    public get airBreaks(): AirBreakOptions {
+        return this._airBreaks;
+    }
+
     public loadFrom(other: Options): void {
         // gases
         this.gfLow = other.gfLow || this.gfLow;
@@ -188,5 +208,7 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         this.ascentSpeed50percTo6m = other.ascentSpeed50percTo6m || this.ascentSpeed50percTo6m;
         this.ascentSpeed50perc = other.ascentSpeed50perc || this.ascentSpeed50perc;
         this.descentSpeed = other.descentSpeed || this.descentSpeed;
+
+        // TODO load air breaks
     }
 }

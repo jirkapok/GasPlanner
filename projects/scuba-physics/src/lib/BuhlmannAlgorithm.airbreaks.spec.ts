@@ -7,7 +7,7 @@ import { SafetyStop } from './Options';
 import { StandardGases } from './StandardGases';
 import { calculatePlanFor } from './BuhlmannAlgorithm.spec';
 
-xdescribe('Buhlmann Algorithm - Air breaks', () => {
+describe('Buhlmann Algorithm - Air breaks', () => {
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
 
     beforeEach(() => {
@@ -93,16 +93,16 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
         expect(finalSegments).toEqual(expected);
     });
 
-    it('Counts with safety stop to max. O2 time', () => {
+    it('Safety stop is counted to max. O2 time', () => {
         options.safetyStop = SafetyStop.always;
 
-        const finalSegments = calculatePlan75m(15, 4);
+        const finalSegments = calculatePlan75m(10.5, 3);
         const expected: Segment[] = [
             new Segment(6,6, StandardGases.oxygen, 1200),
-            new Segment(6,6, StandardGases.trimix1260, 300),
-            new Segment(6,6, StandardGases.oxygen, 534),
+            new Segment(6,6, StandardGases.trimix1260, 77),
             new Segment(6,0, StandardGases.oxygen, 36)
         ];
+
         expect(finalSegments).toEqual(expected);
     });
 
@@ -166,7 +166,6 @@ xdescribe('Buhlmann Algorithm - Air breaks', () => {
     });
 
     // TODO air break test cases:
-    // * safety stop is also counted to the air break
     // * add warning if unable to switch to air break if back gas not breathable at 6m
     // * small depths without deco, but with oxygen - shouldn't add air break
     // * air breaks are disabled - adds no break

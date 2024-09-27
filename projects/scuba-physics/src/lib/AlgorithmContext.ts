@@ -24,6 +24,7 @@ export class AlgorithmContext {
     public ceilings: Ceiling[] = [];
     /** in seconds */
     public runTime = 0;
+    private addAirBreaks = true; // TODO apply settings for air breaks
     private _oxygenStarted = 0;
     private _currentGas: Gas;
     private gradients: GradientFactors;
@@ -79,6 +80,10 @@ export class AlgorithmContext {
 
     public get isAtSurface(): boolean {
         return this.segments.last().endDepth === 0;
+    }
+
+    public get shouldAddAirBreaks(): boolean {
+        return this.isBreathingOxygen && this.addAirBreaks;
     }
 
     public get runTimeOnOxygen(): number {
@@ -165,11 +170,6 @@ export class AlgorithmContext {
 
     public addGasSwitchSegment(): Segment {
         const duration = this.options.gasSwitchDuration * Time.oneMinute;
-        return this.addStopSegment(duration);
-    }
-
-    public addSafetyStopSegment(): Segment {
-        const duration = Time.safetyStopDuration;
         return this.addStopSegment(duration);
     }
 

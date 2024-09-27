@@ -235,13 +235,22 @@ export class BuhlmannAlgorithm {
 
     private swimDecoStop(context: AlgorithmContext, memento: ContextMemento, stopDuration: number): void {
         context.restore(memento);
-        const addAirBreaks = false; // TODO apply settings for air breaks
 
         // Air breaks prolong the deco, so we need to count with them also in stop estimation
-        if(context.isBreathingOxygen && addAirBreaks) {
+        this.stayAtStop(context, stopDuration);
+    }
+
+    private stayAtSafetyStop(context: AlgorithmContext): void {
+        if (context.addSafetyStop) {
+            this.stayAtStop(context, Time.safetyStopDuration);
+        }
+    }
+
+    private stayAtStop(context: AlgorithmContext, stopDuration: number): void {
+        if (context.shouldAddAirBreaks) {
             this.swimOxygenStop(context, stopDuration);
         } else {
-            this.swimDecoStopDuration(context, stopDuration);
+            this.swimStopDuration(context, stopDuration);
         }
     }
 
@@ -259,7 +268,7 @@ export class BuhlmannAlgorithm {
         while(airBreak.needsStop) {
             // here we don't count with gas switch duration (it is part of the stop)
             airBreak.switchStopGas();
-            this.swimDecoStopDuration(context, airBreak.stopDuration);
+            this.swimStopDuration(context, airBreak.stopDuration);
             airBreak.subtractStopDuration();
         }
 
@@ -268,7 +277,7 @@ export class BuhlmannAlgorithm {
         context.currentGas = StandardGases.oxygen;
     }
 
-    private swimDecoStopDuration(context: AlgorithmContext, stopDuration: number): void {
+    private swimStopDuration(context: AlgorithmContext, stopDuration: number): void {
         const decoStop = context.addStopSegment(stopDuration);
         this.swim(context, decoStop);
     }
@@ -285,13 +294,6 @@ export class BuhlmannAlgorithm {
         const result = nextStop < context.ceiling();
         context.restore(memento);
         return result;
-    }
-
-    private stayAtSafetyStop(context: AlgorithmContext): void {
-        if (context.addSafetyStop) {
-            const safetyStop = context.addSafetyStopSegment();
-            this.swim(context, safetyStop);
-        }
     }
 
     private ascentToNextStop(context: AlgorithmContext, nextStop: number): void {

@@ -85,8 +85,15 @@ export class AlgorithmContext {
         return this.runTime - this._oxygenStarted;
     }
 
+    /**
+     * Current gas is oxygen - For Air breaks.
+     * Correct is to compare ppO2 is high (>= 1.6),
+     * because air break may happen also at deeper stops, not only on oxygen.
+     * But It is hard to reach air break on another gas than oxygen,
+     * because e.g. for Ean50, at 16m ppO2 is already 1.3,
+     * i.e. you should stay at 21 m more than 20 minutes.
+     **/
     public get isBreathingOxygen(): boolean {
-        // Correct is to compare ppO2 >= 1.6, but it may happen also at deep stops, which we want to avoid.
         return this.currentGas.compositionEquals(StandardGases.oxygen);
     }
 

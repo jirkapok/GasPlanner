@@ -245,11 +245,10 @@ export class BuhlmannAlgorithm {
         }
     }
 
-    // TODO Validate if this is completely wrong:
-    //  It needs to counted during whole dive (not only during stops),
-    //  whenever ppO2 is at high level (not only on oxygen).
+    // TODO Validate if this is completely wrong
+
     /**
-     *  Air breaks:
+     *  Air break process:
      *  1. stay on oxygen up to max O2 time
      *  2. switch to back gas for the break time
      *  3. repeat until there is no more deco time

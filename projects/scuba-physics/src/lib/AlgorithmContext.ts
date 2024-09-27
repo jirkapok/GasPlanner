@@ -24,10 +24,6 @@ export class AlgorithmContext {
     public ceilings: Ceiling[] = [];
     /** in seconds */
     public runTime = 0;
-    // TODO apply settings for air breaks
-    private readonly maxOxygenTime = Time.oneMinute * 20;
-    private readonly maxBottomGasTime = Time.oneMinute * 5;
-
     private _oxygenStarted = 0;
     private _currentGas: Gas;
     private gradients: GradientFactors;
@@ -101,21 +97,9 @@ export class AlgorithmContext {
         return this.currentGas.compositionEquals(StandardGases.oxygen);
     }
 
-    /** Only for air breaks */
-    public get maxAirBreakGasTime(): number {
-        const maxTime = this.isBreathingOxygen ? this.maxOxygenTime : this.maxBottomGasTime;
-        return maxTime;
-    }
-
-    public get remainingOxygenTime(): number {
-        // Starting on oxygen: needs to be extracted from first oxygen part
-        // The gas switch took place already and is already counted in the runTimeOnOxygen.
-        const remaining = this.maxOxygenTime - this.runTimeOnOxygen;
-        return remaining > 0 ? remaining : 0;
-    }
-
     public set currentGas(newValue: Gas) {
         if (newValue.compositionEquals(StandardGases.oxygen) && !this.isBreathingOxygen) {
+            // needs to be marked outside of air breaks, because everybody can change the gas
             this._oxygenStarted = this.runTime;
         }
 
@@ -142,10 +126,6 @@ export class AlgorithmContext {
         this.bestGasOptions.currentGas = this.currentGas;
         const newGas = this.gasSource.bestGas(this.bestGasOptions);
         return newGas;
-    }
-
-    public airBreakGas(): Gas {
-        return this.gasSource.airBreakGas(this.currentDepth, this.currentGas);
     }
 
     public createMemento(): ContextMemento {
@@ -197,13 +177,67 @@ export class AlgorithmContext {
         return this.segments.addFlat(this.currentGas, duration);
     }
 
-    public switchAirBreakStopGas(): void {
-        if (this.isBreathingOxygen) {
-            this.currentGas = this.airBreakGas();
+    public airBreakGas(): Gas {
+        return this.gasSource.airBreakGas(this.currentDepth, this.currentGas);
+    }
+}
+
+
+export class AirBreakContext {
+    // TODO apply settings for air breaks
+    private readonly maxOxygenTime = Time.oneMinute * 20;
+    private readonly maxBottomGasTime = Time.oneMinute * 5;
+    private readonly _initialStopDuration: number;
+
+    constructor(private readonly context: AlgorithmContext, private remainingStopTime: number) {
+        // need to preserve, because swim, adds oxygen runtime
+        this._initialStopDuration = Math.min(this.remainingStopTime, this.remainingOxygenTime);
+    }
+
+    public get needsStop(): boolean {
+        return this.remainingStopTime > 0;
+    }
+
+    public get maxGasTime(): number {
+        const maxTime = this.context.isBreathingOxygen ? this.maxOxygenTime : this.maxBottomGasTime;
+        return maxTime;
+    }
+
+    public get initialStopDuration(): number {
+        return this._initialStopDuration;
+    }
+
+    public get stopDuration(): number {
+        const stopDuration = Math.min(this.remainingStopTime, this.maxGasTime);
+        return stopDuration;
+    }
+
+    private get remainingOxygenTime(): number {
+        // Starting on oxygen: needs to be extracted from first oxygen part
+        // The gas switch took place already and is already counted in the runTimeOnOxygen.
+        const remaining = this.maxOxygenTime - this.context.runTimeOnOxygen;
+        return remaining > 0 ? remaining : 0;
+    }
+
+    public switchStopGas(): void {
+        if (this.context.isBreathingOxygen) {
+            this.context.currentGas = this.context.airBreakGas();
             return;
         }
 
         // should be oxygen only
-        this.currentGas = this.bestDecoGas();
+        this.context.currentGas = this.context.bestDecoGas();
+    }
+
+    public subtractInitialStopDuration(): void {
+        this.subtractRemainingStopTime(this._initialStopDuration);
+    }
+
+    public subtractStopDuration(): void {
+        this.subtractRemainingStopTime(this.stopDuration);
+    }
+
+    private subtractRemainingStopTime(stopTime: number): void {
+        this.remainingStopTime -= stopTime;
     }
 }

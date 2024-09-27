@@ -8,7 +8,7 @@ import { Options } from './Options';
 import { Precision } from './precision';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
 import { Salinity } from './pressure-converter';
-import { AlgorithmContext, ContextMemento } from './AlgorithmContext';
+import { AirBreakContext, AlgorithmContext, ContextMemento } from './AlgorithmContext';
 import { StandardGases } from './StandardGases';
 
 // Speed in meters / min.
@@ -254,18 +254,15 @@ export class BuhlmannAlgorithm {
      *  3. repeat until there is no more deco time
      **/
     private swimOxygenStop(context: AlgorithmContext, totalStopDuration: number): void {
-        let remainingStopTime = totalStopDuration;
-        const remainingOxygenTime = context.remainingOxygenTime;
-        let stopDuration = Math.min(remainingStopTime, remainingOxygenTime);
-        this.swimDecoStopDuration(context, stopDuration);
-        remainingStopTime -= remainingOxygenTime;
+        const airBreak = new AirBreakContext(context, totalStopDuration);
+        this.swimDecoStopDuration(context, airBreak.initialStopDuration);
+        airBreak.subtractInitialStopDuration();
 
-        while(remainingStopTime > 0) {
+        while(airBreak.needsStop) {
             // here we don't count with gas switch duration (it is part of the stop)
-            context.switchAirBreakStopGas();
-            stopDuration = Math.min(remainingStopTime, context.maxAirBreakGasTime);
-            this.swimDecoStopDuration(context, stopDuration);
-            remainingStopTime -= stopDuration;
+            airBreak.switchStopGas();
+            this.swimDecoStopDuration(context, airBreak.stopDuration);
+            airBreak.subtractStopDuration();
         }
 
         // we need to switch back to gas breathable during next ascent

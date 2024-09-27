@@ -254,8 +254,6 @@ export class BuhlmannAlgorithm {
         }
     }
 
-    // TODO Validate if this is completely wrong
-
     /**
      *  Air break process:
      *  1. stay on oxygen up to max O2 time
@@ -272,8 +270,8 @@ export class BuhlmannAlgorithm {
             airBreak.subtractStopDuration();
         }
 
-        // we need to switch back to gas breathable during next ascent
-        // TODO switch back only in case of hypoxic gas
+        // consider stay with last used gas, if breathable during ascent
+        // we started on oxygen, so we should switch back to breathable gas during ascent
         context.currentGas = StandardGases.oxygen;
     }
 

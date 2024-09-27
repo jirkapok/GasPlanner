@@ -65,6 +65,12 @@ export class AirBreakOptions {
         /** in minutes */
         public bottomGasDuration: number = OptionDefaults.airBreakBottomGasDuration
     ) { }
+
+    public loadFrom(source: AirBreakOptions): void {
+        this.enabled = source.enabled;
+        this.oxygenDuration = source.oxygenDuration;
+        this.bottomGasDuration = source.bottomGasDuration;
+    }
 }
 
 /**
@@ -150,7 +156,7 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         public gfLow: number = OptionDefaults.gfLow,
 
         /**
-         * Hight gradient factor in range 0-1 (e.g 0-100%), default 0.85
+         * High gradient factor in range 0-1 (e.g 0-100%), default 0.85
          */
         public gfHigh: number = OptionDefaults.gfHigh,
 
@@ -186,13 +192,13 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         this.gfHigh = other.gfHigh || this.gfHigh;
         this.maxPpO2 = other.maxPpO2 || this.maxPpO2;
         this.maxDecoPpO2 = other.maxDecoPpO2 || this.maxDecoPpO2;
-        this.oxygenNarcotic = !!other.oxygenNarcotic;
+        this.oxygenNarcotic = other.oxygenNarcotic;
 
         // environment
         this.salinity = other.salinity || this.salinity;
         // altitude is the only one property, which accepts 0;
         this.altitude = (other.altitude || other.altitude === 0) ? other.altitude : this.altitude;
-        this.roundStopsToMinutes = !!other.roundStopsToMinutes;
+        this.roundStopsToMinutes = other.roundStopsToMinutes;
         this.gasSwitchDuration = other.gasSwitchDuration || this.gasSwitchDuration;
         this.problemSolvingDuration = other.problemSolvingDuration || this.problemSolvingDuration;
 
@@ -209,6 +215,6 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         this.ascentSpeed50perc = other.ascentSpeed50perc || this.ascentSpeed50perc;
         this.descentSpeed = other.descentSpeed || this.descentSpeed;
 
-        // TODO load air breaks
+        this.airBreaks.loadFrom(other.airBreaks);
     }
 }

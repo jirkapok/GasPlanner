@@ -255,8 +255,6 @@ export class BuhlmannAlgorithm {
      **/
     private swimOxygenStop(context: AlgorithmContext, totalStopDuration: number): void {
         const airBreak = new AirBreakContext(context, totalStopDuration);
-        this.swimDecoStopDuration(context, airBreak.initialStopDuration);
-        airBreak.subtractInitialStopDuration();
 
         while(airBreak.needsStop) {
             // here we don't count with gas switch duration (it is part of the stop)

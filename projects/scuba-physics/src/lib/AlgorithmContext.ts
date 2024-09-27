@@ -187,7 +187,7 @@ export class AirBreakContext {
     // TODO apply settings for air breaks
     private readonly maxOxygenTime = Time.oneMinute * 20;
     private readonly maxBottomGasTime = Time.oneMinute * 5;
-    private readonly _initialStopDuration: number;
+    private _initialStopDuration: number;
 
     constructor(private readonly context: AlgorithmContext, private remainingStopTime: number) {
         // need to preserve, because swim, adds oxygen runtime
@@ -203,11 +203,11 @@ export class AirBreakContext {
         return maxTime;
     }
 
-    public get initialStopDuration(): number {
-        return this._initialStopDuration;
-    }
-
     public get stopDuration(): number {
+        if (this._initialStopDuration > 0) {
+            return this._initialStopDuration;
+        }
+
         const stopDuration = Math.min(this.remainingStopTime, this.maxGasTime);
         return stopDuration;
     }
@@ -220,6 +220,10 @@ export class AirBreakContext {
     }
 
     public switchStopGas(): void {
+        if (this._initialStopDuration > 0) {
+            return; // don't switch for initial oxygen stop
+        }
+
         if (this.context.isBreathingOxygen) {
             this.context.currentGas = this.context.airBreakGas();
             return;
@@ -229,11 +233,13 @@ export class AirBreakContext {
         this.context.currentGas = this.context.bestDecoGas();
     }
 
-    public subtractInitialStopDuration(): void {
-        this.subtractRemainingStopTime(this._initialStopDuration);
-    }
-
     public subtractStopDuration(): void {
+        if (this._initialStopDuration > 0) {
+            this.subtractRemainingStopTime(this._initialStopDuration);
+            this._initialStopDuration = 0;
+            return;
+        }
+
         this.subtractRemainingStopTime(this.stopDuration);
     }
 

@@ -24,6 +24,10 @@ export class AlgorithmContext {
     public ceilings: Ceiling[] = [];
     /** in seconds */
     public runTime = 0;
+    // TODO apply settings for air breaks
+    private readonly maxOxygenTime = Time.oneMinute * 20;
+    private readonly maxBottomGasTime = Time.oneMinute * 5;
+
     private _oxygenStarted = 0;
     private _currentGas: Gas;
     private gradients: GradientFactors;
@@ -95,6 +99,19 @@ export class AlgorithmContext {
      **/
     public get isBreathingOxygen(): boolean {
         return this.currentGas.compositionEquals(StandardGases.oxygen);
+    }
+
+    /** Only for air breaks */
+    public get maxAirBreakGasTime(): number {
+        const maxTime = this.isBreathingOxygen ? this.maxOxygenTime : this.maxBottomGasTime;
+        return maxTime;
+    }
+
+    public get remainingOxygenTime(): number {
+        // Starting on oxygen: needs to be extracted from first oxygen part
+        // The gas switch took place already and is already counted in the runTimeOnOxygen.
+        const remaining = this.maxOxygenTime - this.runTimeOnOxygen;
+        return remaining > 0 ? remaining : 0;
     }
 
     public set currentGas(newValue: Gas) {
@@ -178,5 +195,15 @@ export class AlgorithmContext {
 
     public addStopSegment(duration: number): Segment {
         return this.segments.addFlat(this.currentGas, duration);
+    }
+
+    public switchAirBreakStopGas(): void {
+        if (this.isBreathingOxygen) {
+            this.currentGas = this.airBreakGas();
+            return;
+        }
+
+        // should be oxygen only
+        this.currentGas = this.bestDecoGas();
     }
 }

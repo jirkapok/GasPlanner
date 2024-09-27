@@ -254,43 +254,28 @@ export class BuhlmannAlgorithm {
      *  3. repeat until there is no more deco time
      **/
     private swimOxygenStop(context: AlgorithmContext, totalStopDuration: number): void {
-        // TODO apply settings for air breaks
-        const maxOxygenTime = Time.oneMinute * 20;
-        const maxBottomGasTime = Time.oneMinute * 5;
         let remainingStopTime = totalStopDuration;
-        // Starting on oxygen: needs to be extracted from first oxygen part
-        // The gas switch took place already and is already counted in the runTimeOnOxygen.
-        let remainingOxygenTime = maxOxygenTime - context.runTimeOnOxygen;
-        remainingOxygenTime = remainingOxygenTime > 0 ? remainingOxygenTime : 0;
+        const remainingOxygenTime = context.remainingOxygenTime;
         let stopDuration = Math.min(remainingStopTime, remainingOxygenTime);
         this.swimDecoStopDuration(context, stopDuration);
         remainingStopTime -= remainingOxygenTime;
 
         while(remainingStopTime > 0) {
             // here we don't count with gas switch duration (it is part of the stop)
-            this.switchAirBreakStopGas(context);
-            const maxGasTime = context.isBreathingOxygen ? maxOxygenTime : maxBottomGasTime;
-            stopDuration = Math.min(remainingStopTime, maxGasTime);
+            context.switchAirBreakStopGas();
+            stopDuration = Math.min(remainingStopTime, context.maxAirBreakGasTime);
             this.swimDecoStopDuration(context, stopDuration);
             remainingStopTime -= stopDuration;
         }
 
         // we need to switch back to gas breathable during next ascent
+        // TODO switch back only in case of hypoxic gas
         context.currentGas = StandardGases.oxygen;
     }
 
     private swimDecoStopDuration(context: AlgorithmContext, stopDuration: number): void {
         const decoStop = context.addStopSegment(stopDuration);
         this.swim(context, decoStop);
-    }
-
-    private switchAirBreakStopGas(context: AlgorithmContext): void {
-        if (context.isBreathingOxygen) {
-            context.currentGas = context.airBreakGas();
-            return;
-        }
-
-        context.currentGas = context.bestDecoGas();
     }
 
     /* there is NO better option then to try, since we can't predict the tissues loading */

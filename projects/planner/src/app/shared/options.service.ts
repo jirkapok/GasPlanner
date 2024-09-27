@@ -269,4 +269,10 @@ export class OptionsService {
         this.options.maxEND =this.units.toMeters(newValues.maxEND);
         OptionDefaults.useGeneralRecommended(this.options);
     }
+
+    // TODO air breaks
+    // DTO serialization
+    // load/save to storage
+    // url params
+    // add to dive options UI
 }

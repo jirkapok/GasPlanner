@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { PreferencesStore } from './preferencesStore';
 import { PlannerService } from './planner.service';
 import { Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
-import { OptionExtensions } from '../../../../scuba-physics/src/lib/Options.spec';
+import { OptionExtensions } from './Options.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { OptionsService } from './options.service';
 import { TanksService } from './tanks.service';

@@ -8,6 +8,7 @@ import { Precision } from './precision';
 import { DensityAtDepth } from './GasDensity';
 import { DepthLevels } from './DepthLevels';
 import { LinearFunction } from './linearFunction';
+import { StandardGases } from './StandardGases';
 
 /** all values in bar */
 class PressureSegment {
@@ -29,7 +30,7 @@ class PressureSegment {
         return this.startDepth < this.endDepth;
     }
 
-    public get isFlat(): boolean {
+    public get isStop(): boolean {
         return this.startDepth === this.endDepth;
     }
 
@@ -123,6 +124,16 @@ class EventsContext {
             this.previous.tank !== this.current.tank;
     }
 
+    /**
+     * Not safe - Expecting the only reason the stop takes longer is, because there is no gas to switch to.
+     * It does not have to be algorithm generated.
+     */
+    public get brokenOxygenDuration(): boolean {
+        return this.options.airBreaks.enabled &&
+               this.current.gas.compositionEquals(StandardGases.oxygen) &&
+               this.current.duration > this.options.airBreaks.oxygenDuration;
+    }
+
     /** Gets maximum narcotic depth in bars */
     public get maxMnd(): number {
         return this._mndBars;
@@ -196,6 +207,7 @@ export class ProfileEvents {
             this.addMndExceeded(context, pressureSegment);
             this.addDensityExceeded(context);
             this.addSafetyStop(context);
+            this.addNoBottomGas(context, pressureSegment);
 
             ceilingContext.assignSegment(context.current);
             ProfileEvents.addBrokenCeiling(ceilingContext, eventOptions.ceilings);
@@ -249,7 +261,7 @@ export class ProfileEvents {
         }
     }
 
-    private static toPressureSegment(segment: Segment, depthConverter: DepthConverter) {
+    private static toPressureSegment(segment: Segment, depthConverter: DepthConverter): PressureSegment {
         const startPressure = depthConverter.toBar(segment.startDepth);
         const endPressure = depthConverter.toBar(segment.endDepth);
         return new PressureSegment(startPressure, endPressure, segment.duration);
@@ -435,6 +447,14 @@ export class ProfileEvents {
         // constant chosen by guessing
         if (context.maxDepth > 120) {
             const event = EventsFactory.createMaxDepth(context.maxDepth);
+            context.events.add(event);
+        }
+    }
+
+    private static addNoBottomGas(context: EventsContext, pressureSegment: PressureSegment): void {
+        if (context.brokenOxygenDuration && pressureSegment.isStop) {
+            const timeStamp = context.elapsed + context.options.airBreaks.oxygenDuration;
+            const event = EventsFactory.createMissingAirBreak(timeStamp, context.current.startDepth);
             context.events.add(event);
         }
     }

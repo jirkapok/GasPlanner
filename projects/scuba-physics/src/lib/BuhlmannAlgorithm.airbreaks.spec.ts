@@ -220,7 +220,4 @@ describe('Buhlmann Algorithm - Air breaks', () => {
             expect(finalSegments).toEqual(expected);
         });
     });
-
-    // TODO air break test cases:
-    // * add warning if unable to switch to air break if back gas not breathable at 6m
 });

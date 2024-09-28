@@ -31,12 +31,16 @@ describe('Profile Events', () => {
     });
 
     const calculateEvents = (gases: Gases, segments: Segments, salinity: Salinity, safetyStop: SafetyStop): Events => {
-        const algorithm = new BuhlmannAlgorithm();
         const defaultOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, salinity);
         defaultOptions.safetyStop = safetyStop;
-        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, defaultOptions);
+        return calculateEventsByOptions(gases, segments, defaultOptions);
+    };
+
+    const calculateEventsByOptions = (gases: Gases, segments: Segments, algorithmOptions: Options): Events => {
+        const algorithm = new BuhlmannAlgorithm();
+        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, algorithmOptions);
         const decoPlan = algorithm.decompression(parameters);
-        const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, defaultOptions);
+        const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, algorithmOptions);
         const events = ProfileEvents.fromProfile(eventOptions);
         return events;
     };
@@ -714,6 +718,50 @@ describe('Profile Events', () => {
             expect(events.items[6]).toEqual(
                 Event.create(EventType.maxDepth, 0, 130)
             );
+        });
+    });
+
+    describe('Air breaks', () => {
+        const generateEventsProfile = (airBreaksEnabled: boolean) =>{
+            const gases = new Gases();
+            gases.add(StandardGases.trimix1070);
+            gases.add(StandardGases.oxygen);
+
+            const segments = new Segments();
+            segments.add(60, StandardGases.trimix1070, 360);
+            segments.addFlat(StandardGases.trimix1070, 600);
+            segments.add(30, StandardGases.trimix1070, 240);
+            segments.add(15, StandardGases.trimix1070, 1800);
+            segments.add(6, StandardGases.trimix1070, 3600);
+            segments.addFlat(StandardGases.oxygen, 1500);
+            segments.add(0, StandardGases.oxygen, 360);
+
+            const algorithmOptions = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
+            algorithmOptions.airBreaks.enabled = airBreaksEnabled;
+            return calculateEventsByOptions(gases, segments, algorithmOptions);
+        };
+
+        it('Disabled air breaks add no vents', () => {
+            const events = generateEventsProfile(false);
+
+            assertEvents(events.items, [
+                { type: EventType.lowPpO2, timeStamp: 0, depth: 0, gas: undefined },
+                { type: EventType.noDecoEnd, timeStamp: 335, depth: 55.83, gas: undefined },
+                { type: EventType.lowPpO2, timeStamp: 5800, depth: 8, gas: undefined },
+                { type: EventType.gasSwitch, timeStamp: 6600, depth: 6, gas: StandardGases.oxygen }
+            ]);
+        });
+
+        it('No bottom gas Adds unable to switch warning', () => {
+            const events = generateEventsProfile(true);
+
+            assertEvents(events.items, [
+                { type: EventType.lowPpO2, timeStamp: 0, depth: 0, gas: undefined },
+                { type: EventType.noDecoEnd, timeStamp: 335, depth: 55.83, gas: undefined },
+                { type: EventType.lowPpO2, timeStamp: 5800, depth: 8, gas: undefined },
+                { type: EventType.gasSwitch, timeStamp: 6600, depth: 6, gas: StandardGases.oxygen },
+                { type: EventType.missingAirBreak, timeStamp: 6620, depth: 6, gas: undefined }
+            ]);
         });
     });
 });

@@ -35,6 +35,8 @@ export enum EventType {
     minDepth = 13,
     /* Algorithm si used in depths higher than 120 meters, where the algorithm wasn't tested enough */
     maxDepth = 14,
+    /* Unable ot switch to bottom gas, in case of generating air breaks */
+    missingAirBreak = 15,
 }
 
 export class Event {
@@ -117,6 +119,10 @@ export class EventsFactory {
     public static createMaxDepth(depth: number): Event {
         // consider find the moment of maximum depth from the profile
         return Event.create(EventType.maxDepth, 0, depth);
+    }
+
+    public static createMissingAirBreak(timeStamp: number, depth: number): Event {
+        return Event.create(EventType.missingAirBreak, timeStamp, depth);
     }
 }
 

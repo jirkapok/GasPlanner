@@ -44,6 +44,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         rmv: FormControl<number>;
         maxPO2: FormControl<number>;
         maxDecoPO2: FormControl<number>;
+        maxOxygenDuration: FormControl<number>;
+        backGasDuration: FormControl<number>;
     }>;
 
     constructor(public units: UnitConversion,
@@ -146,7 +148,10 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             ascentSpeed50perc: [Precision.round(this.options.ascentSpeed50perc, 1), this.validators.speed],
             rmv: [this.rmv, this.validators.diverRmv],
             maxPO2: [Precision.round(this.options.diverOptions.maxPpO2, 2), this.validators.ppO2],
-            maxDecoPO2: [Precision.round(this.options.diverOptions.maxDecoPpO2, 2), this.validators.ppO2]
+            maxDecoPO2: [Precision.round(this.options.diverOptions.maxDecoPpO2, 2), this.validators.ppO2],
+            // TODO duration validators
+            maxOxygenDuration: [Precision.round(this.maxOxygenDuration, 0), this.validators.gasSwitchDuration],
+            backGasDuration: [Precision.round(this.backGasDuration, 0), this.validators.gasSwitchDuration]
         });
 
         this.dispatcher.optionsReloaded$.pipe(takeUntil(this.unsubscribe$))
@@ -242,6 +247,19 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     public switchOxygenNarcotic(): void {
         this.options.oxygenNarcotic = !this.options.oxygenNarcotic;
+        this.applyOptions();
+    }
+
+    // TODO replace by biding to options
+    public airBreaksEnabled = true;
+    public backGasDuration = 5;
+    public maxOxygenDuration = 20;
+    public maxOxygenDurationInvalid = false;
+    public backGasDurationInvalid = false;
+
+    public switchAirBreaks(): void {
+        // TODO enable air breaks
+        this.airBreaksEnabled = !this.airBreaksEnabled;
         this.applyOptions();
     }
 

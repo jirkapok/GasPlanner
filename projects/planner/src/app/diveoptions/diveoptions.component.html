@@ -78,6 +78,39 @@
                         </div>
                     </div>
                 </mdb-tab>
+                <mdb-tab title="Air breaks">
+                    <div class="pt-3 row">
+                        <div class="coll">
+                            <div class="form-check form-switch pb-1">
+                                <input type="checkbox" class="form-check-input" id="enableAirBreaks" mdbCheckbox
+                                       [checked]="airBreaksEnabled" (change)="switchAirBreaks()" />
+                                <label class="form-check-label" for="roundStops">Generate Air breaks</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-3 row">
+                        <div class="mb-4 col col-12 col-sm-6 col-lg-12">
+                            <label for="maxOxygenDuration" class="form-label" mdbLabel>Maximum Oxygen stop duration
+                                [min]:</label>
+                            <input id="maxOxygenDuration" class="form-control" type="number" formControlName="maxOxygenDuration"
+                                   required [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
+                                   (input)="applyOptions()" [class.is-invalid]="maxOxygenDurationInvalid" />
+                            <div class="invalid-feedback position-absolute">
+                                Needs to be number 1-30.
+                            </div>
+                        </div>
+                        <div class="mb-4 col col-12 col-sm-6 col-lg-12">
+                            <label for="backGasDuration" class="form-label" mdbLabel>Back gas duration
+                                [min]:</label>
+                            <input id="backGasDuration" class="form-control" type="number" formControlName="backGasDuration"
+                                   required [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
+                                   (input)="applyOptions()" [class.is-invalid]="backGasDurationInvalid" />
+                            <div class="invalid-feedback position-absolute">
+                                Needs to be number 1-30.
+                            </div>
+                        </div>
+                    </div>
+                </mdb-tab>
                 <mdb-tab title="Stops">
                     <div class="row pt-3">
                         <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
@@ -142,7 +175,7 @@
                 </mdb-tab>
                 <mdb-tab title="Speeds">
                     <div class="row pt-3">
-                        <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
+                        <div class="mb-4 col col-12 col-sm-6 col-md-3 col-lg-6">
                             <label for="descSpeed" class="form-label" mdbLabel>Descent
                                 [{{units.speed}}]:</label>
                             <input id="descSpeed" formControlName="descentSpeed" class="form-control" type="number"
@@ -152,7 +185,7 @@
                                 Needs to be number {{ranges.speedLabel}}
                             </div>
                         </div>
-                        <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
+                        <div class="mb-4 col col-12 col-sm-6 col-md-3 col-lg-6">
                             <label for="ascSpeed3" class="form-label" mdbLabel>Ascent to 50%
                                 [{{units.speed}}]:</label>
                             <input id="ascSpeed3" formControlName="ascentSpeed50perc" class="form-control"
@@ -162,7 +195,7 @@
                                 Needs to be number {{ranges.speedLabel}}
                             </div>
                         </div>
-                        <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
+                        <div class="mb-4 col col-12 col-sm-6 col-md-3 col-lg-6">
                             <label for="ascSpeed2" class="form-label" mdbLabel>Ascent to
                                 {{units.defaults.lastSpeedLevel}}
                                 {{units.length}} [{{units.speed}}]:</label>
@@ -174,7 +207,7 @@
                                 Needs to be number {{ranges.speedLabel}}
                             </div>
                         </div>
-                        <div class="mb-4 col col-12 col-sm-6 col-lg-3 col-xxl-6">
+                        <div class="mb-4 col col-12 col-sm-6 col-md-3 col-lg-6">
                             <label for="ascSpeed" class="form-label" mdbLabel>Ascent
                                 {{units.defaults.lastSpeedLevel}}
                                 {{units.length}} to surface [{{units.speed}}]:</label>

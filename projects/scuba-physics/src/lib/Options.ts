@@ -55,6 +55,9 @@ export class OptionDefaults {
     }
 }
 
+/**
+ * Default air breaks UTD: 20 min. oxygen/5 min. break. GUE: 12 min. oxygen/6 min. break.
+ */
 export class AirBreakOptions {
     constructor(
         public enabled: boolean = false,

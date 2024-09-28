@@ -722,7 +722,7 @@ describe('Profile Events', () => {
     });
 
     describe('Air breaks', () => {
-        const generateEventsProfile = (airBreaksEnabled: boolean) =>{
+        const generateProfileEvents = (airBreaksEnabled: boolean) =>{
             const gases = new Gases();
             gases.add(StandardGases.trimix1070);
             gases.add(StandardGases.oxygen);
@@ -742,7 +742,7 @@ describe('Profile Events', () => {
         };
 
         it('Disabled air breaks add no vents', () => {
-            const events = generateEventsProfile(false);
+            const events = generateProfileEvents(false);
 
             assertEvents(events.items, [
                 { type: EventType.lowPpO2, timeStamp: 0, depth: 0, gas: undefined },
@@ -753,7 +753,7 @@ describe('Profile Events', () => {
         });
 
         it('No bottom gas Adds unable to switch warning', () => {
-            const events = generateEventsProfile(true);
+            const events = generateProfileEvents(true);
 
             assertEvents(events.items, [
                 { type: EventType.lowPpO2, timeStamp: 0, depth: 0, gas: undefined },

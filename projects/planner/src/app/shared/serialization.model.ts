@@ -169,6 +169,12 @@ export interface DiverDto {
     stressRmv: number;
 }
 
+export interface AirBreaksDto {
+    enabled: boolean;
+    oxygenDuration: number;
+    bottomGasDuration: number;
+}
+
 export interface OptionsDto {
     gfLow: number;
     gfHigh: number;
@@ -189,4 +195,6 @@ export interface OptionsDto {
     ascentSpeed50perc: number;
     descentSpeed: number;
     problemSolvingDuration: number;
+    /** optional because of upgrade */
+    airBreaks?: AirBreaksDto;
 }

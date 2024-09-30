@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { PreferencesStore } from './preferencesStore';
 import { PlannerService } from './planner.service';
-import { Options, Tank, Salinity, SafetyStop } from 'scuba-physics';
+import { Options, Tank, Salinity, SafetyStop, AirBreakOptions } from 'scuba-physics';
 import { OptionExtensions } from './Options.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { OptionsService } from './options.service';
@@ -257,5 +257,22 @@ describe('PreferencesStore', () => {
                 expect(appSettings.primaryTankReserve).toBeCloseTo(31, 1);
                 expect(appSettings.stageTankReserve).toBeCloseTo(21, 1);
             }));
+
+        it('Air breaks loads saved values', () => {
+            localStorage.clear();
+
+            sut.ensureDefault();
+            options.airBreaks.enabled = true;
+            options.airBreaks.oxygenDuration = 16;
+            options.airBreaks.bottomGasDuration = 6;
+            sut.save();
+
+            options.airBreaks.enabled = false;
+            options.airBreaks.oxygenDuration = 13;
+            options.airBreaks.bottomGasDuration = 4;
+            sut.load();
+
+            expect(options.airBreaks).toEqual(new AirBreakOptions(true, 16, 6));
+        });
     });
 });

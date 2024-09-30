@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import {
     CalculatedProfile, Diver, Events, Event, Gas,
-    HighestDensity, Options, Segment, Tank, Tanks, LoadedTissue
+    HighestDensity, Options, Segment, Tank, Tanks, LoadedTissue, AirBreakOptions
 } from 'scuba-physics';
 import {
+    AirBreaksDto,
     CalculatedProfileDto, ConsumedDto, DensityDto,
     DiverDto, EventDto, GasDto, ITankBound, LoadedTissueDto,
     OptionsDto, SegmentDto, TankDto
@@ -200,6 +201,7 @@ export class DtoSerialization {
             ascentSpeed50perc: options.ascentSpeed50perc,
             descentSpeed: options.descentSpeed,
             problemSolvingDuration: options.problemSolvingDuration,
+            airBreaks: DtoSerialization.fromAirBreaks(options.airBreaks)
         };
     }
 
@@ -219,6 +221,7 @@ export class DtoSerialization {
         options.ascentSpeed50perc = dto.ascentSpeed50perc;
         options.descentSpeed = dto.descentSpeed;
         options.problemSolvingDuration = dto.problemSolvingDuration;
+        DtoSerialization.toAirBreaks(options.airBreaks, dto.airBreaks);
         return options;
     }
 
@@ -244,5 +247,21 @@ export class DtoSerialization {
             fO2: gas.fO2,
             fHe: gas.fHe
         };
+    }
+
+    private static fromAirBreaks(airBreaks: AirBreakOptions): AirBreaksDto {
+        return {
+            enabled: airBreaks.enabled,
+            oxygenDuration: airBreaks.oxygenDuration,
+            bottomGasDuration: airBreaks.bottomGasDuration
+        };
+    }
+
+    private static toAirBreaks(airBreaks: AirBreakOptions, airBreaksDto: AirBreaksDto | undefined) {
+        if (airBreaksDto) {
+            airBreaks.enabled = airBreaksDto.enabled;
+            airBreaks.oxygenDuration = airBreaksDto.oxygenDuration;
+            airBreaks.bottomGasDuration = airBreaksDto.bottomGasDuration;
+        }
     }
 }

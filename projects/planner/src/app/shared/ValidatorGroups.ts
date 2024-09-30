@@ -67,11 +67,8 @@ export class ValidatorGroups {
         return this.rangeFor(this.ranges.lastStopDepth);
     }
 
-    public get gasSwitchDuration(): ValidatorFn[] {
-        return this.rangeFor([1,100]);
-    }
-
-    public get problemSolvingDuration(): ValidatorFn[] {
+    /** Duration in minutes 1-100 */
+    public get duration100(): ValidatorFn[] {
         return this.rangeFor([1,100]);
     }
 

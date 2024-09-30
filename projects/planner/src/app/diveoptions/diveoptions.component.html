@@ -83,7 +83,7 @@
                         <div class="coll">
                             <div class="form-check form-switch pb-1">
                                 <input type="checkbox" class="form-check-input" id="enableAirBreaks" mdbCheckbox
-                                       [checked]="airBreaksEnabled" (change)="switchAirBreaks()" />
+                                       [checked]="options.airBreaks.enabled" (change)="switchAirBreaks()" />
                                 <label class="form-check-label" for="roundStops">Generate Air breaks</label>
                             </div>
                         </div>
@@ -92,21 +92,21 @@
                         <div class="mb-4 col col-12 col-sm-6 col-lg-12">
                             <label for="maxOxygenDuration" class="form-label" mdbLabel>Maximum Oxygen stop duration
                                 [min]:</label>
-                            <input id="maxOxygenDuration" class="form-control" type="number" formControlName="maxOxygenDuration"
-                                   required [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
+                            <input id="maxOxygenDuration" class="form-control" type="number"
+                                   formControlName="maxOxygenDuration" required min="1" max="100" step="1"
                                    (input)="applyOptions()" [class.is-invalid]="maxOxygenDurationInvalid" />
                             <div class="invalid-feedback position-absolute">
-                                Needs to be number 1-30.
+                                Needs to be number 1-100.
                             </div>
                         </div>
                         <div class="mb-4 col col-12 col-sm-6 col-lg-12">
                             <label for="backGasDuration" class="form-label" mdbLabel>Back gas duration
                                 [min]:</label>
-                            <input id="backGasDuration" class="form-control" type="number" formControlName="backGasDuration"
-                                   required [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
+                            <input id="backGasDuration" class="form-control" type="number"
+                                   formControlName="backGasDuration" required min="1" max="100" step="1"
                                    (input)="applyOptions()" [class.is-invalid]="backGasDurationInvalid" />
                             <div class="invalid-feedback position-absolute">
-                                Needs to be number 1-30.
+                                Needs to be number 1-100.
                             </div>
                         </div>
                     </div>

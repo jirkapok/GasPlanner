@@ -207,7 +207,7 @@ export class ProfileEvents {
             this.addMndExceeded(context, pressureSegment);
             this.addDensityExceeded(context);
             this.addSafetyStop(context);
-            this.addNoBottomGas(context, pressureSegment);
+            this.addMissingAirBreak(context, pressureSegment);
 
             ceilingContext.assignSegment(context.current);
             ProfileEvents.addBrokenCeiling(ceilingContext, eventOptions.ceilings);
@@ -451,7 +451,11 @@ export class ProfileEvents {
         }
     }
 
-    private static addNoBottomGas(context: EventsContext, pressureSegment: PressureSegment): void {
+    /**
+     * This always happens together with low ppO during hypoxic trimix,
+     * otherwise user has some back gas for air breaks.
+     **/
+    private static addMissingAirBreak(context: EventsContext, pressureSegment: PressureSegment): void {
         if (context.brokenOxygenDuration && pressureSegment.isStop) {
             const timeStamp = context.elapsed + context.options.airBreaks.oxygenDuration;
             const event = EventsFactory.createMissingAirBreak(timeStamp, context.current.startDepth);

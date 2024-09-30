@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
     DefaultOptions, Diver, OptionDefaults,
-    Options, SafetyStop, Salinity, GasToxicity
+    Options, SafetyStop, Salinity, GasToxicity,
+    AirBreakOptions
 } from 'scuba-physics';
 import { StandardGradientsService } from './standard-gradients.service';
 import { UnitConversion } from './UnitConversion';
@@ -121,6 +122,10 @@ export class OptionsService {
             default:
                 return this.safetyAutoName;
         }
+    }
+
+    public get airBreaks(): AirBreakOptions {
+        return this.options.airBreaks;
     }
 
     public set maxEND(newValue: number) {
@@ -260,6 +265,10 @@ export class OptionsService {
         return this._diver;
     }
 
+    public switchAirBreaks(): void {
+        this.airBreaks.enabled = !this.airBreaks.enabled;
+    }
+
     private applyValues(newValues: DefaultOptions): void {
         this.options.ascentSpeed50perc = this.units.toMeters(newValues.ascentSpeed50perc);
         this.options.ascentSpeed50percTo6m = this.units.toMeters(newValues.ascentSpeed50percTo6m);
@@ -271,9 +280,10 @@ export class OptionsService {
     }
 
     // TODO air breaks
-    // DTO serialization
     // load/save to storage
+    // DTO serialization
     // url params
-    // add to dive options UI
     // add missingAirBreak warning to issues UI
+    // Allow to disable the Air break warning
+    // add to recommended?
 }

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
-import { Salinity, Precision } from 'scuba-physics';
+import { Salinity, Precision, AirBreakOptions } from 'scuba-physics';
 import { InputControls } from '../shared/inputcontrols';
 import { Strategies } from '../shared/models';
 import { OptionsService } from '../shared/options.service';
@@ -108,8 +108,22 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         return this.inputs.controlInValid(ascentSpeed50perc);
     }
 
+    public get maxOxygenDurationInvalid(): boolean {
+        const maxOxygenDuration = this.optionsForm.controls.maxOxygenDuration;
+        return this.inputs.controlInValid(maxOxygenDuration);
+    }
+
+    public get backGasDurationInvalid(): boolean {
+        const backGasDuration= this.optionsForm.controls.backGasDuration;
+        return this.inputs.controlInValid(backGasDuration);
+    }
+
     public get options(): OptionsService {
         return this.schedules.selectedOptions;
+    }
+
+    public get airBreaks(): AirBreakOptions {
+        return this.options.airBreaks;
     }
 
     private get rmv(): number {
@@ -139,8 +153,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             gfLow: [Precision.round(this.options.gfLow * 100, 1), this.validators.gradients],
             gfHigh: [Precision.round(this.options.gfHigh * 100, 1), this.validators.gradients],
             maxEND: [Precision.round(this.options.maxEND, 1), this.validators.maxEnd],
-            problem: [Precision.round(this.options.problemSolvingDuration, 1), this.validators.problemSolvingDuration],
-            gasSwitch: [Precision.round(this.options.gasSwitchDuration, 1), this.validators.gasSwitchDuration],
+            problem: [Precision.round(this.options.problemSolvingDuration, 1), this.validators.duration100],
+            gasSwitch: [Precision.round(this.options.gasSwitchDuration, 1), this.validators.duration100],
             lastStopDepth: [Precision.round(this.options.lastStopDepth, 1), this.validators.lastStopDepth],
             descentSpeed: [Precision.round(this.options.descentSpeed, 1), this.validators.speed],
             ascentSpeed6m: [Precision.round(this.options.ascentSpeed6m, 1), this.validators.speed],
@@ -149,9 +163,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             rmv: [this.rmv, this.validators.diverRmv],
             maxPO2: [Precision.round(this.options.diverOptions.maxPpO2, 2), this.validators.ppO2],
             maxDecoPO2: [Precision.round(this.options.diverOptions.maxDecoPpO2, 2), this.validators.ppO2],
-            // TODO duration validators
-            maxOxygenDuration: [Precision.round(this.maxOxygenDuration, 0), this.validators.gasSwitchDuration],
-            backGasDuration: [Precision.round(this.backGasDuration, 0), this.validators.gasSwitchDuration]
+            maxOxygenDuration: [Precision.round(this.airBreaks.oxygenDuration, 0), this.validators.duration100],
+            backGasDuration: [Precision.round(this.airBreaks.bottomGasDuration, 0), this.validators.duration100]
         });
 
         this.dispatcher.optionsReloaded$.pipe(takeUntil(this.unsubscribe$))
@@ -250,16 +263,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         this.applyOptions();
     }
 
-    // TODO replace by biding to options
-    public airBreaksEnabled = true;
-    public backGasDuration = 5;
-    public maxOxygenDuration = 20;
-    public maxOxygenDurationInvalid = false;
-    public backGasDurationInvalid = false;
-
     public switchAirBreaks(): void {
-        // TODO enable air breaks
-        this.airBreaksEnabled = !this.airBreaksEnabled;
+        this.options.switchAirBreaks();
         this.applyOptions();
     }
 
@@ -295,6 +300,9 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         this.options.ascentSpeed50percTo6m = Number(values.ascentSpeed50percTo6m);
         this.options.ascentSpeed50perc = Number(values.ascentSpeed50perc);
 
+        this.airBreaks.oxygenDuration = Number(values.maxOxygenDuration);
+        this.airBreaks.bottomGasDuration = Number(values.backGasDuration);
+
         this.fireChanged();
     }
 
@@ -318,7 +326,9 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             ascentSpeed50perc: Precision.round(this.options.ascentSpeed50perc, 1),
             rmv: diver.rmv,
             maxPO2: diver.maxPpO2,
-            maxDecoPO2: diver.maxDecoPpO2
+            maxDecoPO2: diver.maxDecoPpO2,
+            maxOxygenDuration: Precision.round(this.airBreaks.oxygenDuration),
+            backGasDuration: Precision.round(this.airBreaks.bottomGasDuration)
         });
     }
 }

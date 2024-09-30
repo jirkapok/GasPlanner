@@ -177,6 +177,7 @@ export interface RangeConstants {
     narcoticDepthLabel: string;
     lastStopDepth: [number, number];
     lastStopDepthLabel: string;
+    /** Dive duration only, the other durations like gas switch, solve problem are defined directly in the UI */
     duration: [number, number];
     durationLabel: string;
     altitude: [number, number];

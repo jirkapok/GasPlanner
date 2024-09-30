@@ -52,7 +52,7 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Bachelor/Master's thesis topic proposals
 
-* Implementation of installer for mobile platforms (Android a iPhone)
 * Embedded help - Show reach help in offline mode as part of the application (created from markup files)
-* Localizations
 * Gamification/Training - add training part in form of questions, including topic/formula explanation and evaluation of solution
+* Implement calculation of consumption strategies
+* Implement logbook of dive profiles from dive computer using [libdivecomputer](https://github.com/libdivecomputer/libdivecomputer>) library 

@@ -12,3 +12,4 @@
   * Change of maxDensity triggers schedule calculation
 * All other components without tests (currently have only smoke tests)
 * Gases: airBreakGas
+* Verify which gases can be switched from/to by IDC warning (extend current tests)

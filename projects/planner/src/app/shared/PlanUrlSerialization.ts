@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import _ from 'lodash';
 import {
+    AirBreakOptions,
     Diver, Options, SafetyStop, Salinity, Segment
 } from 'scuba-physics';
 import { PlanValidation } from './PlanValidation';
 import { Preferences } from './preferences';
 import {
+    AirBreaksDto,
     AppOptionsDto, AppPreferencesDto, DiverDto,
     OptionsDto, SegmentDto, TankDto
 } from './serialization.model';
@@ -16,6 +18,7 @@ import { DiveSchedules } from './dive.schedules';
 import { Logger } from './Logger';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { OptionDefaults } from "../../../../scuba-physics/src/lib/Options";
 
 class ParseContext {
     private static readonly trueValue = '1';
@@ -112,6 +115,7 @@ export class PlanUrlSerialization {
             roundStopsToMinutes: context.parseBoolean(16),
             safetyStop: context.parseEnum<SafetyStop>(17),
             salinity: context.parseEnum<Salinity>(18),
+            airBreaks: PlanUrlSerialization.fromAirBreakParam(context)
         };
         return result;
     }
@@ -119,13 +123,37 @@ export class PlanUrlSerialization {
     private static toOptionsParam(o: Options): string {
         const oxygenNarcotic = ParseContext.serializeBoolean(o.oxygenNarcotic);
         const roundStopsToMinutes = ParseContext.serializeBoolean(o.roundStopsToMinutes);
+        const airBreaks = PlanUrlSerialization.toAirBreakParams(o.airBreaks);
+
         const optionsParam = `${o.altitude},` +
             `${o.ascentSpeed50perc},${o.ascentSpeed50percTo6m},${o.ascentSpeed6m},` +
             `${o.decoStopDistance},${o.descentSpeed},${o.gasSwitchDuration},` +
             `${o.gfHigh},${o.gfLow},${o.lastStopDepth},${o.maxDecoPpO2},${o.maxEND},` +
             `${o.maxPpO2},${o.minimumAutoStopDepth},${oxygenNarcotic},${o.problemSolvingDuration},` +
-            `${roundStopsToMinutes},${o.safetyStop},${o.salinity}`;
+            `${roundStopsToMinutes},${o.safetyStop},${o.salinity},` +
+            `${airBreaks}`;
         return optionsParam;
+    }
+
+    private static toAirBreakParams(airBreaks: AirBreakOptions): string {
+        const enabled = ParseContext.serializeBoolean(airBreaks.enabled);
+        const airBreaksParam = `${enabled},${airBreaks.oxygenDuration},${airBreaks.bottomGasDuration}`;
+        return airBreaksParam;
+    }
+    private static fromAirBreakParam(context: ParseContext): AirBreaksDto {
+        if(context.paramValues.length > 21) {
+            return {
+                enabled: context.parseBoolean(19),
+                oxygenDuration: context.parseNumber(20),
+                bottomGasDuration: context.parseNumber(21)
+            };
+        }
+
+        return {
+            enabled: true,
+            oxygenDuration: OptionDefaults.airBreakOxygenDuration,
+            bottomGasDuration: OptionDefaults.airBreakBottomGasDuration
+        };
     }
 
     private static fromDiverParam(parseParam: string): DiverDto {

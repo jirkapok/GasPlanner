@@ -280,10 +280,7 @@ export class OptionsService {
     }
 
     // TODO air breaks
-    // load/save to storage
-    // DTO serialization
-    // url params
     // add missingAirBreak warning to issues UI
     // Allow to disable the Air break warning
-    // add to recommended?
+    // add to recommended options sets?
 }

@@ -11,7 +11,7 @@ import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { SettingsNormalizationService } from './settings-normalization.service';
-import { Diver } from 'scuba-physics';
+import { AirBreakOptions, Diver } from 'scuba-physics';
 import { ApplicationSettingsService } from './ApplicationSettings';
 
 class TestSut {
@@ -165,7 +165,7 @@ describe('Url Serialization', () => {
             expect(simpleViewUrl).toContain('di=20,30');
         });
 
-        it('Deserialize both Rmv and stressRmv', () => {
+        it('Deserialize both missing Rmv and stressRmv', () => {
             const missingStressUrl = 't=1-18-0-200-0.209-0&' +
                 'de=0-30-102-1,30-30-618-1&' +
                 'di=24&' +
@@ -173,6 +173,33 @@ describe('Url Serialization', () => {
                 'ao=0,0';
             complexSut.urlSerialization.fromUrl(missingStressUrl);
             expect(complexSut.schedules.selected.optionsService.getDiver()).toEqual(new Diver(24, 36));
+        });
+    });
+
+    describe('Air break options', () => {
+        it('Serialize air break options', () => {
+            expect(simpleViewUrl).toContain('o=0,9,3,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1,0,20,5&');
+        });
+
+        it('Deserialize missing Air break options', () => {
+            const missingStressUrl = 't=1-18-0-200-0.209-0&' +
+                'de=0-30-102-1,30-30-618-1&' +
+                'di=24&' +
+                'o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&' +
+                'ao=0,0';
+            complexSut.urlSerialization.fromUrl(missingStressUrl);
+            expect(complexSut.schedules.selected.optionsService.airBreaks)
+                .toEqual(new AirBreakOptions(true, 20, 5));
+        });
+        it('Deserialize Air break options', () => {
+            const missingStressUrl = 't=1-18-0-200-0.209-0&' +
+                'de=0-30-102-1,30-30-618-1&' +
+                'di=24&' +
+                'o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1,1,17,3&' +
+                'ao=0,0';
+            complexSut.urlSerialization.fromUrl(missingStressUrl);
+            expect(complexSut.schedules.selected.optionsService.airBreaks)
+                .toEqual(new AirBreakOptions(true, 17, 3));
         });
     });
 

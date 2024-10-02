@@ -129,9 +129,9 @@ class EventsContext {
      * It does not have to be algorithm generated.
      */
     public get brokenOxygenDuration(): boolean {
-        return this.options.airBreaks.enabled &&
-               this.current.gas.compositionEquals(StandardGases.oxygen) &&
-               this.current.duration > this.options.airBreaks.oxygenDuration;
+        // independent on the air break options, because we want it even breaks are disabled
+        return this.current.gas.compositionEquals(StandardGases.oxygen) &&
+               this.current.duration > Time.oneMinute * 20;
     }
 
     /** Gets maximum narcotic depth in bars */
@@ -348,6 +348,7 @@ export class ProfileEvents {
         }
     }
 
+    // TODO rename to IsobaricCounterDiffusion
     private static addSwitchHighN2(context: EventsContext): void {
         const current = context.current;
         const previous = context.previous;

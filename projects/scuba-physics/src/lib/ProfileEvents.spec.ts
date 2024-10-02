@@ -741,18 +741,19 @@ describe('Profile Events', () => {
             return calculateEventsByOptions(gases, segments, algorithmOptions);
         };
 
-        it('Disabled air breaks add no vents', () => {
+        it('Adds warning even Disabled air breaks', () => {
             const events = generateProfileEvents(false);
 
             assertEvents(events.items, [
                 { type: EventType.lowPpO2, timeStamp: 0, depth: 0, gas: undefined },
                 { type: EventType.noDecoEnd, timeStamp: 335, depth: 55.83, gas: undefined },
                 { type: EventType.lowPpO2, timeStamp: 5800, depth: 8, gas: undefined },
-                { type: EventType.gasSwitch, timeStamp: 6600, depth: 6, gas: StandardGases.oxygen }
+                { type: EventType.gasSwitch, timeStamp: 6600, depth: 6, gas: StandardGases.oxygen },
+                { type: EventType.missingAirBreak, timeStamp: 6620, depth: 6, gas: undefined }
             ]);
         });
 
-        it('No bottom gas Adds unable to switch warning', () => {
+        it('No bottom gas Adds warning', () => {
             const events = generateProfileEvents(true);
 
             assertEvents(events.items, [

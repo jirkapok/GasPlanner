@@ -280,7 +280,6 @@ export class OptionsService {
     }
 
     // TODO air breaks
-    // Generate air break warning even if air breaks are disabled
     // Allow to disable the Air break warning
     // add to recommended options sets? (consider also Gradient factors)
     // merge gas switch level with following segment on the same gas

@@ -161,7 +161,7 @@ export class Segment {
 
     public contentEquals(toCompare: Segment): boolean {
         return this.speed === toCompare.speed &&
-            this._gas === toCompare._gas;
+            this._gas.compositionEquals(toCompare._gas);
     }
 
     /**

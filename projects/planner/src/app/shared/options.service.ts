@@ -278,8 +278,4 @@ export class OptionsService {
         this.options.maxEND =this.units.toMeters(newValues.maxEND);
         OptionDefaults.useGeneralRecommended(this.options);
     }
-
-    // TODO air breaks
-    // add to recommended options sets? (consider also Gradient factors)
-    // merge gas switch level with following segment on the same gas
 }

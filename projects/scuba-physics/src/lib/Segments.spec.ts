@@ -38,12 +38,13 @@ describe('Segments', () => {
 
         beforeEach(() => {
             filledSegments = new Segments();
-            filledSegments.add(20, StandardGases.air, 15);
-            filledSegments.add(20, StandardGases.air, 15);
-            filledSegments.add(20, StandardGases.air, 35);
-            filledSegments.add(5, StandardGases.air, 35);
-            filledSegments.add(5, StandardGases.air, 3);
-            filledSegments.add(5, StandardGases.air, 3);
+            // use copy to enforce content comparison
+            filledSegments.add(20, StandardGases.air.copy(), 15);
+            filledSegments.addFlat(StandardGases.air.copy(), 15);
+            filledSegments.addFlat(StandardGases.air.copy(), 35);
+            filledSegments.add(5, StandardGases.air.copy(), 35);
+            filledSegments.addFlat(StandardGases.air.copy(), 3);
+            filledSegments.addFlat(StandardGases.air.copy(), 3);
         });
 
 

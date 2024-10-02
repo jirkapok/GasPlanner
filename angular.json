@@ -18,12 +18,15 @@
             "prefix": "app",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/planner",
+                        "outputPath": {
+                          "base": "dist/planner"
+                        },
                         "index": "projects/planner/src/index.html",
-                        "main": "projects/planner/src/main.ts",
-                        "polyfills": "projects/planner/src/polyfills.ts",
+                        "polyfills": [
+                          "projects/planner/src/polyfills.ts"
+                        ],
                         "tsConfig": "projects/planner/tsconfig.app.json",
                         "assets": [
                             "projects/planner/src/assets",
@@ -35,13 +38,13 @@
                         ],
                         "scripts": [
                         ],
-                        "serviceWorker": true,
-                        "ngswConfigPath": "projects/planner/ngsw-config.json",
+                        "serviceWorker": "projects/planner/ngsw-config.json",
                         "webWorkerTsConfig": "projects/planner/tsconfig.worker.json",
                         "allowedCommonJsDependencies":[
                             "lodash",
                             "plotly.js-basic-dist"
-                        ]
+                        ],
+                        "browser": "projects/planner/src/main.ts"
                     },
                     "configurations": {
                         "production": {
@@ -66,9 +69,7 @@
                             "outputHashing": "all"
                         },
                         "development": {
-                            "buildOptimizer": false,
-                            "optimization": false,
-                            "vendorChunk": true,
+                          "optimization": false,
                             "extractLicenses": false,
                             "sourceMap": true,
                             "namedChunks": true

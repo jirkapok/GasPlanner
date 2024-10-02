@@ -14,12 +14,28 @@ import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { BlendPricingService } from '../shared/blend-pricing.service';
+import { By } from '@angular/platform-browser';
 
+export class GasBlenderPage {
+    constructor(private fixture: ComponentFixture<GasBlenderComponent>) { }
+
+    public get pricingToggleBtn(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#pricingToggle')).nativeElement as HTMLInputElement;
+    }
+
+    public get unitPriceInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#unitPrice')).nativeElement as HTMLInputElement;
+    }
+
+    public get totalPriceDisplay(): HTMLElement {
+        return this.fixture.debugElement.query(By.css('#totalPrice')).nativeElement as HTMLElement;
+    }
+}
 describe('GasBlenderComponent', () => {
     let component: GasBlenderComponent;
     let fixture: ComponentFixture<GasBlenderComponent>;
     let calculateSpy: jasmine.Spy<() => void>;
-
+    let simplePage: GasBlenderPage;
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [GasBlenderComponent],
@@ -37,6 +53,20 @@ describe('GasBlenderComponent', () => {
         fixture.detectChanges();
         const calc = TestBed.inject(GasBlenderService);
         calculateSpy = spyOn(calc, 'calculate');
+        simplePage = new GasBlenderPage(fixture);
+    });
+
+    it('should toggle pricing and display correct total price', () => {
+
+        simplePage.pricingToggleBtn.click();
+        fixture.detectChanges();
+        expect(component.showPricing).toBeTruthy();
+
+        simplePage.unitPriceInput.value = '50';
+        simplePage.unitPriceInput.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+
+        expect(simplePage.totalPriceDisplay.textContent).toBe('50');
     });
 
     it('Apply change calls calculate', () => {

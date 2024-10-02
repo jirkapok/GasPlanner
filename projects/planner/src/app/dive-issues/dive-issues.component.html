@@ -107,5 +107,13 @@
             <strong>{{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Exceeded maximum depth where the algorithm was well tested on real life data! Reduce the maximum depth.</span>
         </div>
+
+        <div *ngIf="isMissingAirbreak(event)" class="alert alert-warning">
+            <fa-icon [icon]="warning" class="me-2"></fa-icon>
+            <strong>{{ event.timeStamp | duration:event.timeStamp
+                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+            <span>It is recommended to don't breath pure oxygen longer than 20 minutes.
+                Use air break option to generate proper gas switches or manually add switch to bottom gas.</span>
+        </div>
     </ng-container>
 </ng-container>

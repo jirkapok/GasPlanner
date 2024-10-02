@@ -85,6 +85,10 @@ export class DiveIssuesComponent {
         return event.type === EventType.maxDepth;
     }
 
+    public isMissingAirbreak(event: Event): boolean {
+        return event.type === EventType.missingAirBreak;
+    }
+
     public eventDepthFor(event: Event): number {
         return this.units.fromMeters(event.depth);
     }

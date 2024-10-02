@@ -1,4 +1,4 @@
-@import "node_modules/mdb-angular-ui-kit/assets/scss/free/variables";
+@import "mdb-angular-ui-kit/assets/scss/free/_variables";
 
 // Background of btn cannot be transparent, but must be solid so that header can hide behind it and "fade out"
 // The normal, sane way of sliding the header in/out would have been to animate opacity, but that doesn't work with the

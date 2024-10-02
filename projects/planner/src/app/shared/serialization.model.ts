@@ -43,6 +43,7 @@ export interface AppOptionsDto {
     icdIgnored: boolean;
     densityIgnored: boolean;
     noDecoIgnored: boolean;
+    missingAirBreakIgnored: boolean;
 }
 
 /**

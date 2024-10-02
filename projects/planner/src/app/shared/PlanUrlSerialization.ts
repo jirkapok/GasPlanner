@@ -394,7 +394,8 @@ export class PlanUrlSerialization {
             stageTankReserve: this.appSettings.settings.stageTankReserve,
             icdIgnored: this.appSettings.settings.icdIgnored,
             densityIgnored: this.appSettings.settings.densityIgnored,
-            noDecoIgnored: this.appSettings.settings.noDecoIgnored
+            noDecoIgnored: this.appSettings.settings.noDecoIgnored,
+            missingAirBreakIgnored: this.appSettings.settings.missingAirBreakIgnored
         };
     }
 }

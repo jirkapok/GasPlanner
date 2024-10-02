@@ -74,6 +74,7 @@ export class AppSettings {
     public icdIgnored = false;
     public noDecoIgnored = false;
     public densityIgnored = false;
+    public missingAirBreakIgnored = false;
 }
 
 export class DiverOptions {

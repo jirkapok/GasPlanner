@@ -12,7 +12,6 @@ import { DiveSetup } from './models';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { DashBoardViewState } from './views.model';
 import { ApplicationSettingsService } from './ApplicationSettings';
-import { GasDensity } from "scuba-physics";
 
 @Injectable()
 export class Preferences {
@@ -119,7 +118,8 @@ export class Preferences {
             stageTankReserve: settings.stageTankReserve,
             icdIgnored: settings.icdIgnored,
             densityIgnored: settings.densityIgnored,
-            noDecoIgnored: settings.noDecoIgnored
+            noDecoIgnored: settings.noDecoIgnored,
+            missingAirBreakIgnored: settings.missingAirBreakIgnored
         };
     }
 

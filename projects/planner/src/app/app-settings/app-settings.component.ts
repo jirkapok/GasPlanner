@@ -31,6 +31,7 @@ export class AppSettingsComponent implements OnInit {
         icdIgnored: FormControl<boolean>;
         densityIgnored: FormControl<boolean>;
         noDecoIgnored: FormControl<boolean>;
+        missingAirBreak: FormControl<boolean>;
     }>;
 
     constructor(
@@ -92,7 +93,8 @@ export class AppSettingsComponent implements OnInit {
             stageTankReserve: [this.stageTankReserve, this.validators.tankPressure],
             densityIgnored: [this.appSettings.densityIgnored, [Validators.required]],
             icdIgnored: [this.appSettings.icdIgnored, [Validators.required]],
-            noDecoIgnored: [this.appSettings.noDecoIgnored, [Validators.required]]
+            noDecoIgnored: [this.appSettings.noDecoIgnored, [Validators.required]],
+            missingAirBreak: [this.appSettings.missingAirBreakIgnored, [Validators.required]]
         });
     }
 
@@ -109,6 +111,7 @@ export class AppSettingsComponent implements OnInit {
         this.appSettings.icdIgnored = Boolean(newValues.icdIgnored);
         this.appSettings.densityIgnored = Boolean(newValues.densityIgnored);
         this.appSettings.noDecoIgnored = Boolean(newValues.noDecoIgnored);
+        this.appSettings.missingAirBreakIgnored = Boolean(newValues.missingAirBreak);
         this.appSettings.maxGasDensity = Number(newValues.maxDensity);
         this.appSettings.primaryTankReserve = Number(newValues.primaryTankReserve);
         this.appSettings.stageTankReserve = Number(newValues.stageTankReserve);
@@ -134,7 +137,8 @@ export class AppSettingsComponent implements OnInit {
             stageTankReserve: Precision.round(this.appSettings.defaultStageTankReserve),
             icdIgnored: false,
             densityIgnored: false,
-            noDecoIgnored: false
+            noDecoIgnored: false,
+            missingAirBreak: false,
         });
     }
 

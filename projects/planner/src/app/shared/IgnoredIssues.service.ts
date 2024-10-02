@@ -22,6 +22,10 @@ export class IgnoredIssuesService {
             ignored.push(EventType.noDecoEnd);
         }
 
+        if (this.appSettings.missingAirBreakIgnored) {
+            ignored.push(EventType.missingAirBreak);
+        }
+
         return ignored;
     }
 

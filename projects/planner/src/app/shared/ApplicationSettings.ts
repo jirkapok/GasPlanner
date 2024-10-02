@@ -54,6 +54,10 @@ export class ApplicationSettingsService {
         return this.appSettings.noDecoIgnored;
     }
 
+    public get missingAirBreakIgnored(): boolean {
+        return this.appSettings.missingAirBreakIgnored;
+    }
+
     public set maxGasDensity(value: number) {
         this.appSettings.maxGasDensity = this.units.toGramPerLiter(value);
     }
@@ -78,6 +82,10 @@ export class ApplicationSettingsService {
         this.appSettings.noDecoIgnored = newValue;
     }
 
+    public set missingAirBreakIgnored(newValue: boolean) {
+        this.appSettings.missingAirBreakIgnored = newValue;
+    }
+
     public loadFrom(source: AppOptionsDto): void {
         this.settings.maxGasDensity = source.maxDensity || GasDensity.recommendedMaximum;
         this.settings.primaryTankReserve = source.primaryTankReserve || Consumption.defaultPrimaryReserve;
@@ -85,5 +93,6 @@ export class ApplicationSettingsService {
         this.settings.icdIgnored = source.icdIgnored || false;
         this.settings.densityIgnored = source.densityIgnored || false;
         this.settings.noDecoIgnored = source.noDecoIgnored || false;
+        this.settings.missingAirBreakIgnored = source.missingAirBreakIgnored || false;
     }
 }

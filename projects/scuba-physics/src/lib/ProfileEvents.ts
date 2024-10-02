@@ -203,7 +203,7 @@ export class ProfileEvents {
             this.addUserTankSwitch(context);
             this.addHighDescentSpeed(context);
             this.addHighAscentSpeed(context);
-            this.addSwitchHighN2(context);
+            this.addIsobaricCounterDiffusion(context);
             this.addMndExceeded(context, pressureSegment);
             this.addDensityExceeded(context);
             this.addSafetyStop(context);
@@ -348,8 +348,7 @@ export class ProfileEvents {
         }
     }
 
-    // TODO rename to IsobaricCounterDiffusion
-    private static addSwitchHighN2(context: EventsContext): void {
+    private static addIsobaricCounterDiffusion(context: EventsContext): void {
         const current = context.current;
         const previous = context.previous;
 
@@ -358,7 +357,7 @@ export class ProfileEvents {
             const deltaHe = current.gas.fHe - previous.gas.fHe;
 
             if (previous.gas.fHe > 0 && deltaN2 * 5 > -deltaHe) {
-                const event = EventsFactory.createSwitchToHigherN2(context.elapsed, current.startDepth, current.gas);
+                const event = EventsFactory.createIsobaricCounterDiffusion(context.elapsed, current.startDepth, current.gas);
                 context.events.add(event);
             }
         }

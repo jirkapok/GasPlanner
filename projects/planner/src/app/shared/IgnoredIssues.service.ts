@@ -11,7 +11,7 @@ export class IgnoredIssuesService {
         const ignored: EventType[] = [];
 
         if (this.appSettings.icdIgnored) {
-            ignored.push(EventType.switchToHigherN2);
+            ignored.push(EventType.isobaricCounterDiffusion);
         }
 
         if (this.appSettings.densityIgnored) {

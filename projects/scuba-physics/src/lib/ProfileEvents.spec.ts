@@ -454,7 +454,7 @@ describe('Profile Events', () => {
             assertEvents(events.items, [
                 { type: EventType.noDecoEnd, timeStamp: 572, depth: 30, gas: undefined },
                 { type: EventType.gasSwitch, timeStamp: Time.oneMinute * 14, depth: 21, gas: StandardGases.ean50 },
-                { type: EventType.switchToHigherN2, timeStamp: Time.oneMinute * 14, depth: 21, gas: StandardGases.ean50 }
+                { type: EventType.isobaricCounterDiffusion, timeStamp: Time.oneMinute * 14, depth: 21, gas: StandardGases.ean50 }
             ]);
         });
 
@@ -468,7 +468,7 @@ describe('Profile Events', () => {
             const events = ProfileEvents.fromProfile(eventOptions);
 
             expect(events.items.length).toEqual(1); // only the gas switch event
-            expect(events.items[0].type).not.toEqual(EventType.switchToHigherN2);
+            expect(events.items[0].type).not.toEqual(EventType.isobaricCounterDiffusion);
         });
 
         it('doesn\'t add the event in case no helium in mixtures', () => {
@@ -481,7 +481,7 @@ describe('Profile Events', () => {
             const events = ProfileEvents.fromProfile(eventOptions);
 
             expect(events.items.length).toEqual(1); // only the gas switch event
-            expect(events.items[0].type).not.toEqual(EventType.switchToHigherN2);
+            expect(events.items[0].type).not.toEqual(EventType.isobaricCounterDiffusion);
         });
     });
 

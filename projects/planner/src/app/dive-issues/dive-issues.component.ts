@@ -66,7 +66,7 @@ export class DiveIssuesComponent {
     }
 
     public isHighN2Switch(event: Event): boolean {
-        return event.type === EventType.switchToHigherN2;
+        return event.type === EventType.isobaricCounterDiffusion;
     }
 
     public isMndExceeded(event: Event): boolean {

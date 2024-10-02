@@ -26,7 +26,7 @@ export enum EventType {
     /** Gas used at the depth exceeds the maximum narcotic depth */
     maxEndExceeded = 9,
     /** User switched to gas with higher N2 content (isobaric counter diffusion - ICD) */
-    switchToHigherN2 = 10,
+    isobaricCounterDiffusion = 10,
     /** Exceeded maximum gas density at depth */
     highGasDensity = 11,
     /* Marks start of additional safety stop */
@@ -103,8 +103,8 @@ export class EventsFactory {
         return Event.create(EventType.maxEndExceeded, timeStamp, depth, gas);
     }
 
-    public static createSwitchToHigherN2(timeStamp: number, depth: number, gas: Gas): Event {
-        return Event.create(EventType.switchToHigherN2, timeStamp, depth, gas);
+    public static createIsobaricCounterDiffusion(timeStamp: number, depth: number, gas: Gas): Event {
+        return Event.create(EventType.isobaricCounterDiffusion, timeStamp, depth, gas);
     }
 
     public static createHighDensity(timeStamp: number, depth: number, gas: Gas): Event {

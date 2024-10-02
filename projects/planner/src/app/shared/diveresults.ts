@@ -117,7 +117,7 @@ export class DiveResults {
                     case EventType.highAscentSpeed:
                     case EventType.highDescentSpeed:
                     case EventType.brokenCeiling:
-                    case EventType.switchToHigherN2:
+                    case EventType.isobaricCounterDiffusion:
                     case EventType.maxEndExceeded:
                     case EventType.highGasDensity:
                         return false;

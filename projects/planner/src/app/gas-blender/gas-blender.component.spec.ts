@@ -51,14 +51,14 @@ describe('GasBlenderComponent', () => {
         expect(calculateSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('Toggle pricing', () => {
-        component.showPricing = true;
-        component.togglePricing();
+    it('should toggle pricing', () => {
 
-        expect(component.showPricing).toBe(false);
+        expect(component.showPricing).toBeFalsy();
 
         component.togglePricing();
+        expect(component.showPricing).toBeTruthy();
 
-        expect(component.showPricing).toBe(true);
+        component.togglePricing();
+        expect(component.showPricing).toBeFalsy();
     });
 });

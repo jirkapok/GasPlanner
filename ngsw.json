@@ -1,7 +1,7 @@
 {
   "configVersion": 1,
-  "timestamp": 1724597366353,
-  "index": "/https://dugong.online/index.html",
+  "timestamp": 1727892332287,
+  "index": "/index.html",
   "assetGroups": [
     {
       "name": "app",
@@ -11,17 +11,17 @@
         "ignoreVary": true
       },
       "urls": [
-        "/192.fd618e723feba806.js",
-        "/216.e4cf22df30ddcb92.js",
-        "/224.88a2f882cee7ca4e.js",
-        "/540.c7d235fe9a86434b.js",
+        "/198.d21659d7bd747f53.js",
+        "/369.7179c582c91c3ff8.js",
+        "/439.8c6d9226e691481d.js",
+        "/559.375b1a16c0cb7074.js",
         "/favicon.ico",
         "/index.html",
-        "/main.ccf05fd4f2839f0a.js",
+        "/main.23a7b563fd542f79.js",
         "/manifest.webmanifest",
-        "/polyfills.ab66525ba8cb40ce.js",
-        "/runtime.ebd0742b6911002b.js",
-        "/styles.b7e2b0aa7558ef55.css"
+        "/polyfills.2757ce2ec018a635.js",
+        "/runtime.da67ea22632cf582.js",
+        "/styles.de62b580beca14c5.css"
       ],
       "patterns": []
     },
@@ -47,10 +47,10 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/192.fd618e723feba806.js": "1dba9ab754758d66373a47b1bfd09830bb202092",
-    "/216.e4cf22df30ddcb92.js": "de82a043118bef32979250194689b628f1879511",
-    "/224.88a2f882cee7ca4e.js": "4ef2c7bf5caa1d2e60d92315d402394c1911e883",
-    "/540.c7d235fe9a86434b.js": "bea6a192b44561ae242726a1cbed9cd20e32983f",
+    "/198.d21659d7bd747f53.js": "51ac98ddd715b4d758bf7a83d4636bf91dd1a0c5",
+    "/369.7179c582c91c3ff8.js": "94d69725d9cc9643201d9998ea175f1f5c67e430",
+    "/439.8c6d9226e691481d.js": "7707460442f14cb5e73b7831197c31eb8690bbfe",
+    "/559.375b1a16c0cb7074.js": "f4d573f3a9575e8059d4fec253b4f5dd9dc9079c",
     "/assets/icons/icon-128x128.png": "ff40289d8a8f61e85436fd7f5f42c7c5d9e55589",
     "/assets/icons/icon-144x144.png": "5e3d0cc7d9a497058e6f87c817c821b7fb4a5bc3",
     "/assets/icons/icon-152x152.png": "d36c00962cfc95ce49600cfd281b421f1d944ccd",
@@ -60,12 +60,12 @@
     "/assets/icons/icon-72x72.png": "bbf3a0e1d4a961f7360746df724533232813649a",
     "/assets/icons/icon-96x96.png": "2c1540d7bb572d2178c2ded3f45adc0cf19fbc6a",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "5708aa5aece15ff2f607afda0a993ec956d24cad",
-    "/main.ccf05fd4f2839f0a.js": "1687505b3cfc64807e1e6c3a02016126d82b7378",
+    "/index.html": "221084401b37247540aa0375a441c51dc069ba39",
+    "/main.23a7b563fd542f79.js": "c44aa5326dcfcf62007e8eabb672d777515ef630",
     "/manifest.webmanifest": "7c5ee7869b6a2d51d6b56a459d6ac506dba6dd0e",
-    "/polyfills.ab66525ba8cb40ce.js": "a2b11d439f6676f686a7ecfe7e643e82c2396c1b",
-    "/runtime.ebd0742b6911002b.js": "d11e7982ea260a39485aa4e9d342aac3e33873d4",
-    "/styles.b7e2b0aa7558ef55.css": "7c1480ea5dff4fdebb9963aacc979f70992552f7"
+    "/polyfills.2757ce2ec018a635.js": "dd45168dd44ff86c60e29c61158ac58a42e50334",
+    "/runtime.da67ea22632cf582.js": "36bcebf27c34f36b4dce4d5f844887c2974461ec",
+    "/styles.de62b580beca14c5.css": "b066fb7372edfa724706e09198cb88823548fb13"
   },
   "navigationUrls": [
     {

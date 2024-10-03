@@ -21,7 +21,8 @@
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
                         "outputPath": {
-                          "base": "dist/planner"
+                          "base": "dist/planner",
+                          "browser": ""
                         },
                         "index": "projects/planner/src/index.html",
                         "polyfills": [
@@ -66,7 +67,8 @@
                                     "with": "projects/planner/src/environments/environment.prod.ts"
                                 }
                             ],
-                            "outputHashing": "all"
+                            "outputHashing": "all",
+                            "serviceWorker": "projects/planner/ngsw-config.json"
                         },
                         "development": {
                           "optimization": false,

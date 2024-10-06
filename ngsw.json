@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1727892332287,
+  "timestamp": 1728246672398,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -11,17 +11,15 @@
         "ignoreVary": true
       },
       "urls": [
-        "/198.d21659d7bd747f53.js",
-        "/369.7179c582c91c3ff8.js",
-        "/439.8c6d9226e691481d.js",
-        "/559.375b1a16c0cb7074.js",
         "/favicon.ico",
         "/index.html",
-        "/main.23a7b563fd542f79.js",
+        "/main-LACUPZTW.js",
         "/manifest.webmanifest",
-        "/polyfills.2757ce2ec018a635.js",
-        "/runtime.da67ea22632cf582.js",
-        "/styles.de62b580beca14c5.css"
+        "/polyfills-XD2QEJ3Z.js",
+        "/styles-SCGIXIIW.css",
+        "/worker-FBE4NKPD.js",
+        "/worker-LD5SRIZT.js",
+        "/worker-ZWAOOFCR.js"
       ],
       "patterns": []
     },
@@ -33,6 +31,9 @@
         "ignoreVary": true
       },
       "urls": [
+        "/assets/icons/apple-icon-152.png",
+        "/assets/icons/apple-icon-167.png",
+        "/assets/icons/apple-icon-180.png",
         "/assets/icons/icon-128x128.png",
         "/assets/icons/icon-144x144.png",
         "/assets/icons/icon-152x152.png",
@@ -40,17 +41,23 @@
         "/assets/icons/icon-384x384.png",
         "/assets/icons/icon-512x512.png",
         "/assets/icons/icon-72x72.png",
-        "/assets/icons/icon-96x96.png"
+        "/assets/icons/icon-96x96.png",
+        "/assets/splash/apple_splash_1125.png",
+        "/assets/splash/apple_splash_1242.png",
+        "/assets/splash/apple_splash_1536.png",
+        "/assets/splash/apple_splash_1668.png",
+        "/assets/splash/apple_splash_2048.png",
+        "/assets/splash/apple_splash_640.png",
+        "/assets/splash/apple_splash_750.png"
       ],
       "patterns": []
     }
   ],
   "dataGroups": [],
   "hashTable": {
-    "/198.d21659d7bd747f53.js": "51ac98ddd715b4d758bf7a83d4636bf91dd1a0c5",
-    "/369.7179c582c91c3ff8.js": "94d69725d9cc9643201d9998ea175f1f5c67e430",
-    "/439.8c6d9226e691481d.js": "7707460442f14cb5e73b7831197c31eb8690bbfe",
-    "/559.375b1a16c0cb7074.js": "f4d573f3a9575e8059d4fec253b4f5dd9dc9079c",
+    "/assets/icons/apple-icon-152.png": "9c871a5547b41b4916cc1885d2ab7e86eb17c973",
+    "/assets/icons/apple-icon-167.png": "ab782936546292a53cf74432205fdf4897c60ef1",
+    "/assets/icons/apple-icon-180.png": "6a777c33c63ea54e18f63ac677b82d7a7a14c250",
     "/assets/icons/icon-128x128.png": "ff40289d8a8f61e85436fd7f5f42c7c5d9e55589",
     "/assets/icons/icon-144x144.png": "5e3d0cc7d9a497058e6f87c817c821b7fb4a5bc3",
     "/assets/icons/icon-152x152.png": "d36c00962cfc95ce49600cfd281b421f1d944ccd",
@@ -59,13 +66,22 @@
     "/assets/icons/icon-512x512.png": "530406abd9309c3d3e08bcbc91eb9bdf180faac4",
     "/assets/icons/icon-72x72.png": "bbf3a0e1d4a961f7360746df724533232813649a",
     "/assets/icons/icon-96x96.png": "2c1540d7bb572d2178c2ded3f45adc0cf19fbc6a",
+    "/assets/splash/apple_splash_1125.png": "26749a6675b664f03c29255da57cc3be4b5b8772",
+    "/assets/splash/apple_splash_1242.png": "495f70a61aa95624d8ff57adeed22fd7162a7a41",
+    "/assets/splash/apple_splash_1536.png": "377504eaba88e5eb28ededaa54829c1b05321e54",
+    "/assets/splash/apple_splash_1668.png": "90e52e92bedfe810cf98184616be174c7de2f6d0",
+    "/assets/splash/apple_splash_2048.png": "32e19382fb325ee4c2a85a9a9f34fc019fd01712",
+    "/assets/splash/apple_splash_640.png": "aa065aaea122cf10e2b3da73b58a3a61a8c8c694",
+    "/assets/splash/apple_splash_750.png": "d31ed0f6f9ce5cab5294b6789739d2179b1acb08",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "221084401b37247540aa0375a441c51dc069ba39",
-    "/main.23a7b563fd542f79.js": "c44aa5326dcfcf62007e8eabb672d777515ef630",
+    "/index.html": "2df858c47a3ae197c8e52bc8f5460fbe5b901b85",
+    "/main-LACUPZTW.js": "52e419f8440434fae19d8be8b73df392a27c4146",
     "/manifest.webmanifest": "7c5ee7869b6a2d51d6b56a459d6ac506dba6dd0e",
-    "/polyfills.2757ce2ec018a635.js": "dd45168dd44ff86c60e29c61158ac58a42e50334",
-    "/runtime.da67ea22632cf582.js": "36bcebf27c34f36b4dce4d5f844887c2974461ec",
-    "/styles.de62b580beca14c5.css": "b066fb7372edfa724706e09198cb88823548fb13"
+    "/polyfills-XD2QEJ3Z.js": "bba5bbeb74a3e1f0705b1ece411c4cf28a8fb362",
+    "/styles-SCGIXIIW.css": "4b58e1406bbb5d7282bb87e342f8fabde98aab53",
+    "/worker-FBE4NKPD.js": "80b34d0415f5f8191376e794756f688de2bd542d",
+    "/worker-LD5SRIZT.js": "acdc5901e01857b41ca6cce08c88666c53255a1b",
+    "/worker-ZWAOOFCR.js": "c45add56701efdbbf928255f1fcbb08b0d5816f8"
   },
   "navigationUrls": [
     {

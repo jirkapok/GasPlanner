@@ -31,7 +31,10 @@ export class DashboardStartUp {
     }
 
     public get showAppleInstall(): boolean {
-        return true;
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        const isIOs = /iphone|ipad|ipod/.test(userAgent);
+        const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+        return isIOs && !isInStandaloneMode;
     }
 
     public onDashboard(): void {

@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { Urls } from '../shared/navigation.service';
 import {
     faBars, faMountainSun, faHouse, faLungs, faTable,
@@ -24,17 +24,7 @@ export class MainMenuComponent {
     public iconNitrox = faPercent;
     public iconBlender = faFaucet;
 
-    public showInstallButton = false;
-    private deferredPrompt: any;
-
     constructor(private schedules: ManagedDiveSchedules, public urls: Urls) { }
-
-    @HostListener('window:beforeinstallprompt', ['$event'])
-    public onbeforeinstallprompt(e: Event): void {
-        e.preventDefault();
-        this.deferredPrompt = e;
-        this.showInstallButton = true;
-    }
 
     public saveDefaults(): void {
         this.schedules.saveDefaults();
@@ -42,17 +32,5 @@ export class MainMenuComponent {
 
     public loadDefaults(): void {
         this.schedules.loadDefaults();
-    }
-
-    public addToHomeScreen(): void {
-        this.showInstallButton = false;
-
-        if (this.deferredPrompt) {
-            this.deferredPrompt.prompt();
-            this.deferredPrompt.userChoice
-                .then((choiceResult: any) => {
-                    this.deferredPrompt = null;
-                });
-        }
     }
 }

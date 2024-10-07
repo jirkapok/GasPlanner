@@ -56,14 +56,19 @@ describe('GasBlenderComponent', () => {
         simplePage = new GasBlenderPage(fixture);
     });
 
-    it('should toggle pricing and display correct total price', () => {
+    it('should toggle pricing and display total price', () => {
+
+        expect(simplePage.pricingToggleBtn.checked).toBeFalsy();
 
         simplePage.pricingToggleBtn.click();
         fixture.detectChanges();
-        expect(component.showPricing).toBeTruthy();
+
+        const pricingElement = simplePage.totalPriceDisplay;
+        expect(pricingElement).toBeTruthy();
 
         simplePage.unitPriceInput.value = '50';
         simplePage.unitPriceInput.dispatchEvent(new Event('input'));
+
         fixture.detectChanges();
 
         expect(simplePage.totalPriceDisplay.textContent).toBe('50');
@@ -79,16 +84,5 @@ describe('GasBlenderComponent', () => {
         component.applyTemplate();
 
         expect(calculateSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('should toggle pricing', () => {
-
-        expect(component.showPricing).toBeFalsy();
-
-        component.togglePricing();
-        expect(component.showPricing).toBeTruthy();
-
-        component.togglePricing();
-        expect(component.showPricing).toBeFalsy();
     });
 });

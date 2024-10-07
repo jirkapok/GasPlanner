@@ -12,19 +12,22 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Improvements / Features
 
-* Fix PWA issues https://www.pwabuilder.com/
-  * Add standalone app support for iPhone https://love2dev.com/pwa/add-to-homescreen/
+* Fix PWA support for iPhone (offline mode and Add to Home screen)
 * Add tissues heat map
   * to the profile chart
   * to the dives comparision
   * Show tissues after amount of time spend at surface
+  * Explanation of Subsurface heatmap: https://scubaboard.com/community/threads/deep-stops-increases-dcs.497187/page-52
+  * Add to results:
+    * Time when the leading tissue starts offgasing
+    * Add Surface GF
 * UI Tweaks
-  * Profile comparison: Add option to compare dives aligned by the end of dive
-  * Add Surface GF to the results
-  * Read only fields should be distinguish able
-  * Tanks complex view: Add check box to be able enable or disable tanks
   * Add clone dive button
   * Mouse middle button click removes dive
+  * Add option to define custom stop distance
+  * Profile comparison: Add option to compare dives aligned by the end of dive
+  * Read only fields should be distinguish able
+  * Tanks complex view: Add check box to be able enable or disable tanks
 * Add CCR support
 * Gas consumption:
   * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80

@@ -9,6 +9,7 @@ export class PreferencesStore {
     private static readonly storageKey = 'preferences';
     private static readonly storageDefaultsKey = 'defaults';
     private static readonly disclaimerKey = 'disclaimer';
+    private static readonly showInstallKey = 'showInstall';
 
     constructor(private preferencesFactory: Preferences) {}
 
@@ -60,6 +61,15 @@ export class PreferencesStore {
 
     public disclaimerEnabled(): boolean {
         const saved = localStorage.getItem(PreferencesStore.disclaimerKey);
+        return saved !== PreferencesStore.disclaimerValue;
+    }
+
+    public disableShowInstall(): void {
+        localStorage.setItem(PreferencesStore.showInstallKey, PreferencesStore.disclaimerValue);
+    }
+
+    public installEnabled(): boolean {
+        const saved = localStorage.getItem(PreferencesStore.showInstallKey);
         return saved !== PreferencesStore.disclaimerValue;
     }
 }

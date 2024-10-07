@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
@@ -44,7 +44,7 @@ export class DashboardComponent extends Streamed implements OnInit {
         // than it starts to receive the event.
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((diveId?: number) => {
-                if(this.schedules.selected.id === diveId) {
+                if (this.schedules.selected.id === diveId) {
                     this.startup.updateQueryParams();
                 }
             });
@@ -53,5 +53,10 @@ export class DashboardComponent extends Streamed implements OnInit {
             .subscribe(() => {
                 this.startup.updateQueryParams();
             });
+    }
+
+    @HostListener('window:beforeinstallprompt', ['$event'])
+    public onbeforeinstallprompt(e: Event): void {
+        this.startup.onbeforeinstallprompt(e);
     }
 }

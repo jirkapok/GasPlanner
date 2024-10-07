@@ -7,7 +7,10 @@ import { ViewStates } from './viewStates';
 
 @Injectable()
 export class DashboardStartUp {
-    public _showDisclaimer = true;
+    private _showDisclaimer = true;
+    private _showInstallButton = false;
+    private allowInstall = false;
+    private deferredPrompt: any;
 
     constructor(
         private location: Location,
@@ -16,10 +19,22 @@ export class DashboardStartUp {
         private viewStore: SubViewStorage,
         private views: ViewStates) {
         this._showDisclaimer = this.preferences.disclaimerEnabled();
+        this._showInstallButton = this.preferences.installEnabled();
     }
 
     public get showDisclaimer(): boolean {
         return this._showDisclaimer;
+    }
+
+    public get showInstallButton(): boolean {
+        return this.allowInstall && this._showInstallButton;
+    }
+
+    public get showAppleInstall(): boolean {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        const isIOs = /iphone|ipad|ipod/.test(userAgent);
+        const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+        return isIOs && !isInStandaloneMode;
     }
 
     public onDashboard(): void {
@@ -45,6 +60,11 @@ export class DashboardStartUp {
         this.preferences.disableDisclaimer();
     }
 
+    public stopShowInstallButton(): void {
+        this._showInstallButton = false;
+        this.preferences.disableShowInstall();
+    }
+
     public updateQueryParams(): void {
         let urlParams = this.urlSerialization.toUrl();
         const maxUrlRecommendedLength = 2048;
@@ -58,5 +78,24 @@ export class DashboardStartUp {
         }
 
         this.location.go(urlParams);
+    }
+
+    public onbeforeinstallprompt(e: Event): void {
+        e.preventDefault();
+        this.deferredPrompt = e;
+        this.allowInstall = true;
+    }
+
+    public addToHomeScreen(): void {
+        this.allowInstall = false;
+        this.stopShowInstallButton();
+
+        if (this.deferredPrompt) {
+            this.deferredPrompt.prompt();
+            this.deferredPrompt.userChoice
+                .then((choiceResult: any) => {
+                    this.deferredPrompt = null;
+                });
+        }
     }
 }

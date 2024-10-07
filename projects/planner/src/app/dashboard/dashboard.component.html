@@ -11,6 +11,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
                     (click)="startup.stopDisclaimer()"></button>
             </div>
+
+            <div class="alert alert-info alert-dismissible fade show mt-4" role="alert" *ngIf="startup.showInstallButton">
+                <fa-icon [icon]="exclamation" class="me-2 fa-lg"></fa-icon>
+                <span>To be able to use the application in offline mode, you need to add it (install) to your Home screen.</span>
+                <span *ngIf="startup.showAppleInstall">Tap "Share" button and than "Add to home screen".</span>
+                <button *ngIf="!startup.showAppleInstall" (click)="startup.addToHomeScreen()"
+                        class="btn btn-success btn-small mr-auto ms-3">Add to Home screen</button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                        (click)="startup.stopShowInstallButton()"></button>
+            </div>
         </div>
 
         <app-plan-tabs></app-plan-tabs>

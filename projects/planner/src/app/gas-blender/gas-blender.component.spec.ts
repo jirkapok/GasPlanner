@@ -24,7 +24,7 @@ export class GasBlenderPage {
     }
 
     public get unitPriceInput(): HTMLInputElement {
-        return this.fixture.debugElement.query(By.css('#unitPrice')).nativeElement as HTMLInputElement;
+        return this.fixture.debugElement.query(By.css('#pricingResults')).nativeElement as HTMLInputElement;
     }
 
     public get totalPriceDisplay(): HTMLElement {

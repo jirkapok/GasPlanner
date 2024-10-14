@@ -9,6 +9,7 @@
                     </div>
                     <div class="float-end me-1">
                         <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showPricing }" type="button"
+                                id="pricingToggle"
                                 data-toggle="button" [attr.aria-pressed]="showPricing" autocomplete="off" (click)="togglePricing()">
                             <fa-icon [icon]="dollarIcon" class="fa-lg"></fa-icon>
                         </button>
@@ -92,7 +93,7 @@
                     <span>Results</span>
                 </div>
                 <div class="card-body">
-                    <table *ngIf="!calc.unableToCalculate" class="table table-sm" >
+                    <table *ngIf="!calc.unableToCalculate" class="table table-sm" id="pricingResults" >
                         <tbody>
                             <tr *ngIf="calc.needsRemove">
                                 <td>Remove from source [{{units.pressure}}]</td>
@@ -175,7 +176,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Total price</strong></td>
-                                <td class="table-active"><strong>{{ pricing.totalPrice | number:'1.0-1' }}</strong></td>
+                                <td class="table-active" id="totalPrice"><strong>{{ pricing.totalPrice | number:'1.0-1' }}</strong></td>
                             </tr>
                         </tbody>
                     </table>

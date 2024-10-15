@@ -23,8 +23,16 @@ export class GasBlenderPage {
         return this.fixture.debugElement.query(By.css('#pricingToggle')).nativeElement as HTMLInputElement;
     }
 
-    public get unitPriceInput(): HTMLInputElement {
-        return this.fixture.debugElement.query(By.css('#pricingResults')).nativeElement as HTMLInputElement;
+    public get o2unitPriceInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#o2UnitPrice')).nativeElement as HTMLInputElement;
+    }
+
+    public get heUnitPriceInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#heUnitPrice')).nativeElement as HTMLInputElement;
+    }
+
+    public get topMixUnitPriceInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#topMixUnitPrice')).nativeElement as HTMLInputElement;
     }
 
     public get totalPriceDisplay(): HTMLElement {
@@ -66,12 +74,18 @@ describe('GasBlenderComponent', () => {
         const pricingElement = simplePage.totalPriceDisplay;
         expect(pricingElement).toBeTruthy();
 
-        simplePage.unitPriceInput.value = '50';
-        simplePage.unitPriceInput.dispatchEvent(new Event('input'));
+        simplePage.o2unitPriceInput.value = '50';
+        simplePage.o2unitPriceInput.dispatchEvent(new Event('input'));
 
+        simplePage.heUnitPriceInput.value = '75';
+        simplePage.heUnitPriceInput.dispatchEvent(new Event('input'));
+
+        simplePage.topMixUnitPriceInput.value = '100';
+        simplePage.topMixUnitPriceInput.dispatchEvent(new Event('input'));
+
+        component.applyChange();
         fixture.detectChanges();
-
-        expect(simplePage.totalPriceDisplay.textContent).toBe('50');
+        expect(simplePage.totalPriceDisplay.textContent).toBe('225');
     });
 
     it('Apply change calls calculate', () => {

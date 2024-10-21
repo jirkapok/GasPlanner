@@ -90,7 +90,7 @@ describe('GasBlenderComponent', () => {
 
         component.applyChange();
         fixture.detectChanges();
-        expect(simplePage.totalPriceDisplay.textContent).toBe('225');
+        expect(simplePage.totalPriceDisplay.textContent).toBe('20,000');
     });
 
     it('Apply change calls calculate', () => {

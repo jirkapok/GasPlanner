@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { GasBlenderComponent } from './gas-blender.component';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -44,9 +45,10 @@ describe('GasBlenderComponent', () => {
     let fixture: ComponentFixture<GasBlenderComponent>;
     let calculateSpy: jasmine.Spy<() => void>;
     let simplePage: GasBlenderPage;
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [GasBlenderComponent],
+            imports: [ReactiveFormsModule],
             providers: [
                 UnitConversion,
                 GasBlenderService, BlendPricingService,
@@ -55,7 +57,10 @@ describe('GasBlenderComponent', () => {
                 Preferences, ViewSwitchService, DiveSchedules,
                 ReloadDispatcher, ApplicationSettingsService
             ]
-        });
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
         fixture = TestBed.createComponent(GasBlenderComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

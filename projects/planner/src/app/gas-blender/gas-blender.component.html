@@ -9,6 +9,7 @@
                     </div>
                     <div class="float-end me-1">
                         <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showPricing }" type="button"
+                                id="pricingToggle"
                                 data-toggle="button" [attr.aria-pressed]="showPricing" autocomplete="off" (click)="togglePricing()">
                             <fa-icon [icon]="dollarIcon" class="fa-lg"></fa-icon>
                         </button>
@@ -130,7 +131,7 @@
                         <label for="o2UnitPrice" class="form-label">Unit price O2:</label>
                         <input formControlName="o2UnitPrice" class="form-control" type="number"
                                (input)="applyChange()" [min]="ranges.money[0]" [max]="ranges.money[1]" step="1"
-                               required [class.is-invalid]="o2UnitPriceInvalid" id="o2UnitPrice" />
+                               required [class.is-invalid]="o2UnitPriceInvalid" id="o2UnitPrice"/>
                         <div class="text-danger" *ngIf="o2UnitPriceInvalid">Needs to be number
                             {{ranges.moneyLabel}}</div>
                     </div>
@@ -175,7 +176,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Total price</strong></td>
-                                <td class="table-active"><strong>{{ pricing.totalPrice | number:'1.0-1' }}</strong></td>
+                                <td class="table-active" id="totalPrice"><strong>{{ pricing.totalPrice | number:'1.0-1' }}</strong></td>
                             </tr>
                         </tbody>
                     </table>

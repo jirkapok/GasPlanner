@@ -131,7 +131,7 @@
                         <label for="o2UnitPrice" class="form-label">Unit price O2:</label>
                         <input formControlName="o2UnitPrice" class="form-control" type="number"
                                (input)="applyChange()" [min]="ranges.money[0]" [max]="ranges.money[1]" step="1"
-                               required [class.is-invalid]="o2UnitPriceInvalid"/>
+                               required [class.is-invalid]="o2UnitPriceInvalid" id="o2UnitPrice"/>
                         <div class="text-danger" *ngIf="o2UnitPriceInvalid">Needs to be number
                             {{ranges.moneyLabel}}</div>
                     </div>
@@ -164,7 +164,7 @@
                         <tbody>
                             <tr>
                                 <td>O2 price</td>
-                                <td class="table-active" id="o2UnitPrice">{{ pricing.o2Price | number:'1.0-1' }}</td>
+                                <td class="table-active">{{ pricing.o2Price | number:'1.0-1' }}</td>
                             </tr>
                             <tr>
                                 <td>He price</td>

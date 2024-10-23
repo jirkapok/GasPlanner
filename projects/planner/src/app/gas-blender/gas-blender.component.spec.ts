@@ -17,7 +17,7 @@ import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { BlendPricingService } from '../shared/blend-pricing.service';
 import { By } from '@angular/platform-browser';
 
-export class GasBlenderPage {
+class GasBlenderPage {
     constructor(private fixture: ComponentFixture<GasBlenderComponent>) { }
 
     public get pricingToggleBtn(): HTMLInputElement {
@@ -88,7 +88,6 @@ describe('GasBlenderComponent', () => {
         simplePage.topMixUnitPriceInput.value = '100';
         simplePage.topMixUnitPriceInput.dispatchEvent(new Event('input'));
 
-        component.applyChange();
         fixture.detectChanges();
         expect(simplePage.totalPriceDisplay.textContent).toBe('20,000');
     });

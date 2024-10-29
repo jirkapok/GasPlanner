@@ -11,7 +11,7 @@
             <label for="stressRmv" class="form-label" mdbLabel>Stress RMV [{{units.rmv}}]:</label>
             <input class="form-control" id="stressRmv" formControlName="stressRmv" type="number" (input)="inputChanged()"
                    [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" [step]="rmvStep"
-                   [class.is-invalid]="stressRmvInvalid" />
+                   [class.is-invalid]="stressRmvInvalid" id="stressRmv" />
             <div class="invalid-feedback position-absolute">Needs to be number {{ranges.diverRmvLabel}}</div>
         </div>
         <div class="pt-2 mt-2 mb-4 col col-12 col-md-6">

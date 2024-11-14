@@ -1,10 +1,11 @@
 import * as Plotly from 'plotly.js-dist';
 
 export class HeatMapPlotter {
-    // TODO define proper colorscale: blue, black, green, yellow, red
-    private readonly colorscaleValue = [
-        [0, 'green'],
-        [0.5, 'yellow'],
+    private readonly colorScale = [
+        [0, 'blue'],
+        [0.4, 'black'],
+        [0.5, 'green'],
+        [0.7, 'yellow'],
         [1, 'red']
     ];
 
@@ -31,9 +32,9 @@ export class HeatMapPlotter {
             visible: false
         },
         coloraxis: {
-            colorscale: this.colorscaleValue,
+            colorscale: this.colorScale,
             showscale: false,
-            cmin: 0,
+            cmin: -1,
             cmax: 1
         },
         margin: {
@@ -48,14 +49,22 @@ export class HeatMapPlotter {
     public constructor(private elementName: string) {
     }
 
+    /**
+     * Every data array represents a tissue saturation speed changes in time.
+     * Expecting values in range of -1 to 1 where:
+     * -1: is 100% speed of offgasing
+     *  0: is equilibrium (tissue is not offgasing or ongasing)
+     */
     public plotHeatMap(): void {
+        const dataValues = [
+            [-1, -0.5, -0.3, 0, 0.2],
+            [0, 0.1, 0.2, 0.5, 0.7],
+            [0.5, 0.6, 0.7, 0.8, 1]
+        ];
+
         const data = [
             {
-                z: [
-                    [0, 0.3, 0.8, 0.7, 0.2],
-                    [0.8, 0.9, 1.2, 0.7, 0.9],
-                    [0.8, 0.9, 1.2, 1.1, 1]
-                ],
+                z: dataValues,
                 type: <Plotly.PlotType>'heatmap',
                 coloraxis: 'coloraxis',
                 showscale: false

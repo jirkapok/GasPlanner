@@ -98,6 +98,7 @@ export class PlannerService extends Streamed {
         diveResult.ceilings = calculatedProfile.ceilings;
         diveResult.events = this.ignoredIssues.filterIgnored(events.items);
         diveResult.finalTissues = calculatedProfile.tissues;
+        diveResult.tissueOverPressures = calculatedProfile.tissueOverPressures;
         diveResult.averageDepth = Segments.averageDepth(calculatedProfile.segments);
 
         if (diveResult.endsOnSurface) {

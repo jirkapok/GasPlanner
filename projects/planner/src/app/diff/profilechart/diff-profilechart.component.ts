@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
 import { DiveResults } from '../../shared/diveresults';
-import * as Plotly from 'plotly.js-basic-dist';
+import * as Plotly from 'plotly.js-dist';
 import { Streamed } from '../../shared/streamed';
 import { ChartPlotterFactory, ChartPlotter } from '../../shared/chartPlotter';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';

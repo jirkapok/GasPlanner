@@ -30,6 +30,11 @@ Following list of features and improvements ordered by priority is under develop
   * Rounding to minutes should round also the ascent time, not only the deco stops
   * Profile comparison: Add option to compare dives aligned by the end of dive
   * Read only fields should be distinguish able
+  * Tanks complex view: Add check box to be able enable or disable tanks
+  * Add clone dive button
+  * Mouse middle button click removes dive
+  * Add option to define custom distance between deco stops
+  * Rounding to minutes should round also the ascent time, not only the deco stops
 * Add CCR support
 * Gas consumption:
   * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80

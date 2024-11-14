@@ -1,4 +1,4 @@
-import * as Plotly from 'plotly.js-basic-dist';
+import * as Plotly from 'plotly.js-dist';
 import _ from 'lodash';
 import { UnitConversion } from './UnitConversion';
 import { ResamplingService } from './ResamplingService';

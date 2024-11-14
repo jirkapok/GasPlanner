@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { DiveResults } from '../shared/diveresults';
 import { faChartArea } from '@fortawesome/free-solid-svg-icons';
-import * as Plotly from 'plotly.js-basic-dist';
+import * as Plotly from 'plotly.js-dist';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { Streamed } from '../shared/streamed';
 import { DiveSchedules } from '../shared/dive.schedules';
@@ -78,12 +78,72 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     private plotCharts(): void {
         this.plotter.plotCharts(this.dive.totalDuration);
+
+        const colorscaleValue = [
+            [0, 'green'],
+            [0.5, 'yellow'],
+            [1, 'red']
+        ];
+
+        const data = [
+            {
+                z: [
+                    [0, 0.3, 0.8, 0.7, 0.2],
+                    [0.8, 0.9, 1.2, 0.7, 0.9],
+                    [0.8, 0.9, 1.2, 1.1, 1]
+                ],
+                type: <Plotly.PlotType>'heatmap',
+                coloraxis: 'coloraxis',
+                showscale: false,
+            }
+        ];
+
+        const layout = {
+            height:50,
+            autosize: true,
+            showlegend: false,
+            xaxis: {
+                fixedrange: true,
+                visible: false
+            },
+            yaxis: {
+                fixedrange: true,
+                visible: false
+            },
+            coloraxis: {
+                colorscale: colorscaleValue,
+                showscale: false,
+                cmin: 0,
+                cmax: 1
+            },
+            margin: {
+                l: 40,
+                r: 5,
+                b: 0,
+                t: 10,
+                pad: 0
+            }
+        };
+
+        const config = {
+            displaylogo: false,
+            displayModeBar: false,
+            responsive: true,
+            // staticPlot: true,
+            autosizable: true,
+            scrollZoom: false,
+            editable: false
+        };
+
+        // TODO heatmap chart:
+        // * remove hover
+        Plotly.newPlot('heatmapplot', data, layout, config);
     }
 
     private hookChartEvents(): void {
         const chartElement: any = document.getElementById(this.elementName);
-        chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
-        chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
-        chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
+        // chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        // chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        // chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
     }
 }

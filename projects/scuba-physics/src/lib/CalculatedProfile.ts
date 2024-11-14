@@ -172,7 +172,7 @@ export class Ceiling {
  * Result of the Algorithm calculation
  */
 export class CalculatedProfile {
-    private static readonly emptyTissueOverPressures: number[][] = [
+    public static readonly emptyTissueOverPressures: number[][] = [
         [0],[0],[0],[0], [0],[0],[0],[0], [0],[0],[0],[0], [0],[0],[0],[0],
     ];
     private constructor(
@@ -222,7 +222,8 @@ export class CalculatedProfile {
         return new CalculatedProfile(segments, [], [], CalculatedProfile.emptyTissueOverPressures, errors);
     }
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissues: LoadedTissue[]): CalculatedProfile {
-        return new CalculatedProfile(segments, ceilings, tissues, CalculatedProfile.emptyTissueOverPressures, []);
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: number[][],
+        tissues: LoadedTissue[]): CalculatedProfile {
+        return new CalculatedProfile(segments, ceilings, tissues, tissueOverPressures, []);
     }
 }

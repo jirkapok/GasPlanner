@@ -103,7 +103,7 @@ export class DtoSerialization {
 
         // ceilings have simple data, no custom conversion needed
         const tissues = DtoSerialization.toTissues(profile.tissues);
-        return CalculatedProfile.fromProfile(segments, profile.ceilings, tissues);
+        return CalculatedProfile.fromProfile(segments, profile.ceilings, profile.tissueOverPressures, tissues);
     }
 
     public static fromProfile(profile: CalculatedProfile): CalculatedProfileDto {
@@ -113,6 +113,7 @@ export class DtoSerialization {
             segments: segments,
             ceilings: profile.ceilings,
             tissues: DtoSerialization.fromTissues(profile.tissues),
+            tissueOverPressures: profile.tissueOverPressures,
             errors: DtoSerialization.fromEvents(profile.errors)
         };
     }

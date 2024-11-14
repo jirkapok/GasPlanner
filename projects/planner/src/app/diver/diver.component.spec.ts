@@ -35,44 +35,52 @@ describe('DiverComponent', () => {
     });
 
     describe('inputChanged', () => {
-        it('should update rmv and stressRmv values in liters and emit changes', () => {
-            const rmv = 15;
-            const stressRmv = 20;
-            component.diverForm.setValue({ rmv: rmv, stressRmv: stressRmv });
+        it('should change rmv and stressRmv values and emit results', () => {
+            expect(component.diver.rmv).toBe(20);
+            expect(component.diver.stressRmv).toBe(30);
+
+            const newRmv = 15;
+            const newStressRmv = 25;
+            component.diverForm.setValue({ rmv: newRmv, stressRmv: newStressRmv });
+
             let wasEmitted = false;
             component.changed.subscribe(() => wasEmitted = true);
 
             component.inputChanged();
 
-            expect(component.diver.rmv).toBe(unitConversion.toLiter(rmv));
-            expect(component.diver.stressRmv).toBe(unitConversion.toLiter(stressRmv));
+            expect(component.diver.rmv).toBe(unitConversion.toLiter(newRmv));
+            expect(component.diver.stressRmv).toBe(unitConversion.toLiter(newStressRmv));
             expect(wasEmitted).toBeTrue();
         });
     });
 
-
     describe('maxPpO2Changed', () => {
-        it('should change new value of maxPpO2 and emit change', () => {
+        it('should change new value of maxPpO2 and emit', () => {
+            expect(component.diver.maxPpO2).toBe(1.4);
+
             const newPpO2 = 1.2;
             let wasEmitted = false;
             component.changed.subscribe(() => wasEmitted = true);
 
             component.maxPpO2Changed(newPpO2);
 
-
             expect(component.diver.maxPpO2).toBe(newPpO2);
             expect(wasEmitted).toBeTrue();
         });
     });
+
     describe('maxDecoPpO2Changed', () => {
-        it('should change new value of maxDecoPpO2 and emit change', () => {
+        it('should change new value of maxDecoPpO2 and emit', () => {
+            expect(component.diver.maxDecoPpO2).toBe(1.6);
+
             const newDecoPpO2 = 1.4;
             let wasEmitted = false;
             component.changed.subscribe(() => wasEmitted = true);
 
             component.maxDecoPpO2Changed(newDecoPpO2);
+
             expect(component.diver.maxDecoPpO2).toBe(newDecoPpO2);
             expect(wasEmitted).toBeTrue();
-        })
-    })
+        });
+    });
 });

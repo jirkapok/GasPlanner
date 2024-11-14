@@ -82,7 +82,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     private plotCharts(): void {
         this.plotter.plotCharts(this.dive.totalDuration);
-        this.heatmapPlotter.plotHeatMap();
+        this.heatmapPlotter.plotHeatMap(this.dive.tissueOverPressures);
     }
 
     private hookChartEvents(): void {

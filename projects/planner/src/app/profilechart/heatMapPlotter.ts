@@ -52,16 +52,11 @@ export class HeatMapPlotter {
     /**
      * Every data array represents a tissue saturation speed changes in time.
      * Expecting values in range of -1 to 1 where:
-     * -1: is 100% speed of offgasing
-     *  0: is equilibrium (tissue is not offgasing or ongasing)
+     * -1: is 100% speed of offgasing.
+     *  0: is equilibrium (tissue is not offgasing or ongasing).
+     * +1: is 100% speed of ongasing.
      */
-    public plotHeatMap(): void {
-        const dataValues = [
-            [-1, -0.5, -0.3, 0, 0.2],
-            [0, 0.1, 0.2, 0.5, 0.7],
-            [0.5, 0.6, 0.7, 0.8, 1]
-        ];
-
+    public plotHeatMap(dataValues: number[][]): void {
         const data = [
             {
                 z: dataValues,

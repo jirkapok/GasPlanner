@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { DiveResults } from '../shared/diveresults';
-import { faChartArea } from '@fortawesome/free-solid-svg-icons';
+import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-dist';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { Streamed } from '../shared/streamed';
@@ -19,7 +19,9 @@ import { HeatMapPlotter } from './heatMapPlotter';
     styleUrls: ['./profilechart.component.scss']
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
-    public icon = faChartArea;
+    public readonly profileIcon = faChartArea;
+    public readonly heatmapIcon = faFire;
+    public showHeatMap = false;
     private readonly elementName = 'diveplot';
     private readonly heatMapElementName = 'heatmapplot';
     private plotter: ChartPlotter;
@@ -71,6 +73,11 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.selectedWaypoint.selectedTimeStamp = timeStampValue;
     }
 
+    public switchHeatMap(): void {
+        this.showHeatMap = !this.showHeatMap;
+        this.plotCharts();
+    }
+
     private plotlyHoverLeave() {
         this.selectedWaypoint.selectedTimeStamp = '';
         this.selectWayPoint(undefined);
@@ -82,7 +89,10 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     private plotCharts(): void {
         this.plotter.plotCharts(this.dive.totalDuration);
-        this.heatmapPlotter.plotHeatMap(this.dive.tissueOverPressures);
+
+        // TODO layout jumps to right when switching on/off the heatmap
+        if (this.showHeatMap)
+            this.heatmapPlotter.plotHeatMap(this.dive.tissueOverPressures);
     }
 
     private hookChartEvents(): void {

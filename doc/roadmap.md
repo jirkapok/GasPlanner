@@ -8,7 +8,8 @@ Following list of features and improvements ordered by priority is under develop
 * Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, won't fix
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
 * Loading of simple dive URL with segment shorter than 60 seconds (simple dive to 15 m) shows no validation issue
-* Air breaks result in overlapping gas switches in profile chart
+* Air breaks result in overlapping gas switch text in profile chart
+* Gas consumption calculates duplicate gas reserve for deco tanks 
 
 ## Improvements / Features
 
@@ -19,15 +20,16 @@ Following list of features and improvements ordered by priority is under develop
   * Show tissues after amount of time spend at surface
   * Explanation of Subsurface heatmap: https://scubaboard.com/community/threads/deep-stops-increases-dcs.497187/page-52
   * Add to results:
-    * Time when the leading tissue starts offgasing
+    * TTS is not longer: Moment/depth during ascent at which all tissues saturation is equal or lower than the current ambient pressure
     * Add Surface GF
 * UI Tweaks
+  * Tanks complex view: Add check box to be able enable or disable tanks
   * Add clone dive button
   * Mouse middle button click removes dive
-  * Add option to define custom stop distance
+  * Add option to define custom distance between deco stops
+  * Rounding to minutes should round also the ascent time, not only the deco stops
   * Profile comparison: Add option to compare dives aligned by the end of dive
   * Read only fields should be distinguish able
-  * Tanks complex view: Add check box to be able enable or disable tanks
 * Add CCR support
 * Gas consumption:
   * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80

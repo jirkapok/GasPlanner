@@ -1,7 +1,7 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import {NonNullableFormBuilder, FormGroup}
-import {DiverComponent} from'./diver.component';
 import { DecimalPipe } from '@angular/common';
+import { DiverComponent } from './diver.component';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
@@ -9,38 +9,36 @@ import { DiverOptions } from '../shared/models';
 
 describe('DiverComponent', () => {
     let component: DiverComponent;
+    let fixture: ComponentFixture<DiverComponent>;
     let unitConversion: UnitConversion;
 
-    beforeEach(() => {
-        const formBuilder = new NonNullableFormBuilder();
-        const decimalPipe = new DecimalPipe('en-US');
-        const inputControls = new InputControls(decimalPipe);
-        unitConversion = new UnitConversion();
-        const validatorGroups = new ValidatorGroups(unitConversion);
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [DiverComponent],
+            imports: [ReactiveFormsModule],
+            providers: [
+                UnitConversion,
+                ValidatorGroups,
+                InputControls,
+                DecimalPipe
+            ]
+        }).compileComponents();
 
-
-        component = new DiverComponent(
-            formBuilder,
-            inputControls,
-            validatorGroups,
-            unitConversion
-        );
-
-            component.diverForm = formBuilder.group({
-            rmv: ['20'],
-            stressRmv: ['25']
-        });
-
+        fixture = TestBed.createComponent(DiverComponent);
+        component = fixture.componentInstance;
+        unitConversion = TestBed.inject(UnitConversion);
         component.diver = new DiverOptions();
+        fixture.detectChanges();
     });
 
     describe('inputChanged', () => {
-        it('should change rmv and stressRmv values and emit results', () => {
+        it('should change rmv and stressRmv values and emit', () => {
             expect(component.diver.rmv).toBe(20);
             expect(component.diver.stressRmv).toBe(30);
 
             const newRmv = 15;
             const newStressRmv = 25;
+
             component.diverForm.setValue({ rmv: newRmv, stressRmv: newStressRmv });
 
             let wasEmitted = false;

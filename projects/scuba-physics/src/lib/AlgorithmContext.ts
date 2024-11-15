@@ -22,6 +22,7 @@ export interface ContextMemento {
 export class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
+    public tissueOverPressures: number[][] = [];
     /** in seconds */
     public runTime = 0;
 
@@ -130,6 +131,11 @@ export class AlgorithmContext {
         this.bestGasOptions.currentGas = this.currentGas;
         const newGas = this.gasSource.bestGas(this.bestGasOptions);
         return newGas;
+    }
+
+    public currentOverPressures(): void {
+        const currentOverPressures = this.tissues.currentOverPressures();
+        this.tissueOverPressures.push(currentOverPressures);
     }
 
     public createMemento(): ContextMemento {

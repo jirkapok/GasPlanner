@@ -25,6 +25,10 @@ export class DiveResults {
     public ceilings: Ceiling[] = [];
     /** In meaning of at end of the dive */
     public finalTissues: LoadedTissue[] = [];
+    // 16 tissues overpressure history
+    public tissueOverPressures: number[][] = [
+        [0],[0],[0],[0], [0],[0],[0],[0], [0],[0],[0],[0], [0],[0],[0],[0],
+    ];
     public events: Event[] = [];
 
 

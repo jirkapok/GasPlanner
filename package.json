@@ -36,7 +36,7 @@
     "lodash": "^4.17.21",
     "mdb-angular-ui-kit": "^7.0.0",
     "ngx-clipboard": "^16.0.0",
-    "plotly.js-basic-dist": "^2.35.2",
+    "plotly.js-dist": "^2.35.2",
     "rxjs": "^7.8.1",
     "tslib": "^2.7.0",
     "zone.js": "^0.14.10"

@@ -103,6 +103,7 @@ export interface CalculatedProfileDto {
     segments: SegmentDto[];
     ceilings: Ceiling[];
     tissues: LoadedTissueDto[];
+    tissueOverPressures: number[][];
     errors: EventDto[];
 }
 

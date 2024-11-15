@@ -211,6 +211,11 @@ export class Tissues {
         return Tissues.copy(this._compartments);
     }
 
+    public currentOverPressures(): number[] {
+        // TODO calculate as relative value against M-values
+        return []; // _(this._compartments).map(t => t.pTotal).value();
+    }
+
     /**
     * Returns pressure in bars of the depth representing maximum ceiling of all tissues
     * reduced by the provided gradient.

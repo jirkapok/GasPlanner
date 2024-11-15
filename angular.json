@@ -43,7 +43,7 @@
                         "webWorkerTsConfig": "projects/planner/tsconfig.worker.json",
                         "allowedCommonJsDependencies":[
                             "lodash",
-                            "plotly.js-basic-dist"
+                            "plotly.js-dist"
                         ],
                         "browser": "projects/planner/src/main.ts"
                     },

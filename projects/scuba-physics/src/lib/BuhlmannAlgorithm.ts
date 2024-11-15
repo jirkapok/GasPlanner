@@ -158,7 +158,8 @@ export class BuhlmannAlgorithm {
         }
 
         const merged = context.segments.mergeFlat(segments.length);
-        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissues.finalState());
+        const finalTissues = context.tissues.finalState();
+        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissueOverPressures, finalTissues);
     }
 
     /**
@@ -341,6 +342,7 @@ export class BuhlmannAlgorithm {
         context.tissues.load(loadSegment, segment.gas);
         context.runTime += segment.duration;
         context.addCeiling();
+        context.currentOverPressures();
     }
 
     /**

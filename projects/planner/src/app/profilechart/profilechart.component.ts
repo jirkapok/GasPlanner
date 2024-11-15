@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { DiveResults } from '../shared/diveresults';
-import { faChartArea } from '@fortawesome/free-solid-svg-icons';
-import * as Plotly from 'plotly.js-basic-dist';
+import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
+import * as Plotly from 'plotly.js-dist';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { Streamed } from '../shared/streamed';
 import { DiveSchedules } from '../shared/dive.schedules';
@@ -11,6 +11,7 @@ import { ChartPlotter, ChartPlotterFactory } from '../shared/chartPlotter';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ResamplingService } from '../shared/ResamplingService';
 import { WayPoint } from '../shared/wayPoint';
+import { HeatMapPlotter } from './heatMapPlotter';
 
 @Component({
     selector: 'app-profilechart',
@@ -18,9 +19,13 @@ import { WayPoint } from '../shared/wayPoint';
     styleUrls: ['./profilechart.component.scss']
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
-    public icon = faChartArea;
+    public readonly profileIcon = faChartArea;
+    public readonly heatmapIcon = faFire;
+    public showHeatMap = false;
     private readonly elementName = 'diveplot';
+    private readonly heatMapElementName = 'heatmapplot';
     private plotter: ChartPlotter;
+    private heatmapPlotter: HeatMapPlotter;
 
     constructor(
         units: UnitConversion,
@@ -34,6 +39,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         const profileTraces = chartPlotterFactory.wthNamePrefix('')
             .create(() => this.dive);
         this.plotter = new ChartPlotter('diveplot', chartPlotterFactory, profileTraces);
+        this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
 
         this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((diveId?: number) => {
@@ -67,6 +73,11 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.selectedWaypoint.selectedTimeStamp = timeStampValue;
     }
 
+    public switchHeatMap(): void {
+        this.showHeatMap = !this.showHeatMap;
+        this.plotCharts();
+    }
+
     private plotlyHoverLeave() {
         this.selectedWaypoint.selectedTimeStamp = '';
         this.selectWayPoint(undefined);
@@ -78,6 +89,10 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     private plotCharts(): void {
         this.plotter.plotCharts(this.dive.totalDuration);
+
+        // TODO layout jumps to right when switching on/off the heatmap
+        if (this.showHeatMap)
+            this.heatmapPlotter.plotHeatMap(this.dive.tissueOverPressures);
     }
 
     private hookChartEvents(): void {

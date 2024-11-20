@@ -43,22 +43,37 @@ export class Tissue extends Compartment implements LoadedTissue {
         this.updateTotal();
     }
 
+    /**
+     * Current partial pressure of nitrogen saturated in the compartment in bars.
+     */
     public get pN2(): number {
         return this._pN2;
     }
 
+    /**
+     * Current partial pressure of helium saturated in the compartment in bars.
+     */
     public get pHe(): number {
         return this._pHe;
     }
 
+    /**
+     * Current total partial pressure of inert gases (He and N2) saturated in the compartment in bars.
+     */
     public get pTotal(): number {
         return this._pTotal;
     }
 
+    /**
+     * Buhlmann a mValue coefficient.
+     */
     public get a(): number {
         return this._a;
     }
 
+    /**
+     * Buhlmann b mValue coefficient.
+     */
     public get b(): number {
         return this._b;
     }
@@ -73,6 +88,10 @@ export class Tissue extends Compartment implements LoadedTissue {
         return copy;
     }
 
+    /**
+     * Calculates partial pressure of nitrogen in the tissue equilibrium at given surface pressure.
+     * @param surfacePressure in bars.
+     */
     public static inspiredN2Pressure(surfacePressure: number): number {
         const pressure = Tissue.pressureInLungs(surfacePressure);
         const pN2 = GasMixtures.partialPressure(pressure, GasMixtures.nitroxInAir);
@@ -87,6 +106,24 @@ export class Tissue extends Compartment implements LoadedTissue {
 
     public copy(): Tissue {
         return Tissue.fromCurrent(this, this);
+    }
+
+    /**
+     * Returns m-value for the tissue at the given pressure (surface or ambient).
+     * @param pressure in bars.
+     */
+    public mValue(pressure: number): number {
+        return this.a + pressure / this.b;
+    }
+
+    // TODO Test and add to the UI as surface Gradient factor at end of the dive
+    /**
+     * Returns the gradient factor from the original Buhlmann M-value for the tissue at the given pressure.
+     * @param pressure in bars (e.g. surface or ambient).
+     */
+    public gradientFactor(pressure: number): number {
+        const surfaceMValue = this.mValue(pressure);
+        return (this.pTotal - pressure) / (surfaceMValue - pressure);
     }
 
     /**
@@ -212,28 +249,33 @@ export class Tissues {
         this._compartments = Tissues.copy(source);
     }
 
+    /**
+     * Returns current state/snapshot of the tissues.
+     */
     public finalState(): LoadedTissue[] {
         return Tissues.copy(this._compartments);
     }
 
-    public saturationRatio(ambientPressure: number, surfacePressure: number): number[] {
-        // We dont use Gradient here, since we want to show the theoretical saturation,
-        // not the maximum saturation requested/limited by user.
-        // TODO Only nitrogen, since it is the only gas at surface? Or do we need last dive loading?
-        const inspiredN2 = Tissue.inspiredN2Pressure(surfacePressure);
-
-        // TODO calculate as relative value against M-values in range -1 .. +1
-        // tissue > ambient =>  (tissue - ambient) / (Mvalue - ambient)
-        // tissue < ambient =>  -(ambient - tissue) / (ambient - inspired)
-        // Inspired = default nitrogen only pressure at surface
-        // Mvalue = t.ceiling(1)
-        // Ambient = current depth pressure
+    // TODO verify the doc and meaning of the values
+    /**
+     * Calculates saturation ratio for all tissues as percents relative to ambient pressure.
+     * -1..0: is offgasing, -1 = surface pressure.
+     *    =0: is equilibrium (tissue is not offgasing or ongasing), at ambient pressure.
+     *    >0: is ongasing, +1 = 100% gradient i.e. at m-value, more means exceeded limit.
+     * @param ambientPressure The current ambient pressure in bars.
+     * @param surfacePressure The surface pressure in bars at beginning of the dive.
+     * @param gradient Gradient factor constant in range 0-1
+     */
+    public saturationRatio(ambientPressure: number, surfacePressure: number, gradient: number): number[] {
+        // TODO do we need adjust m-value against user gradient factors and surface pressure?
+        // We need use Gradient here, since we want to show the saturation aligned with profile and ceilings.
+        // Or should the heat map change when changing gradient factors?
         return _(this._compartments).map(t => {
             if(t.pTotal > ambientPressure) {
-                return t.ceiling(1);
+                return t.gradientFactor(ambientPressure);
             }
 
-            return t.ceiling(1);
+            return t.pTotal / ambientPressure;
         }).value();
     }
 
@@ -257,6 +299,13 @@ export class Tissues {
         return ceiling;
     }
 
+    /**
+     * Loads the tissues with inert gases from the gas at the segment.
+     * @param segment Not null segment of the dive.
+     * @param gas Not null gas to breath during the segment.
+     * @returns The tissue load change in bars or 0, if the tissues are already saturated.
+     * Or negative value if the tissues are offgasing.
+     */
     public load(segment: LoadSegment, gas: Gas): number {
         let loadChange = 0.0;
         for (let index = 0; index < this._compartments.length; index++) {

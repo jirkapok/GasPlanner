@@ -38,28 +38,42 @@ export class Tissue extends Compartment implements LoadedTissue {
         super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
             compartment.heHalfTime, compartment.heA, compartment.heB);
 
-        const pressure = this.pressureInLungs(surfacePressure);
-        this._pN2 = GasMixtures.partialPressure(pressure, GasMixtures.nitroxInAir);
+        this._pN2 = Tissue.inspiredN2Pressure(surfacePressure);
         this._pHe = 0;
         this.updateTotal();
     }
 
+    /**
+     * Current partial pressure of nitrogen saturated in the compartment in bars.
+     */
     public get pN2(): number {
         return this._pN2;
     }
 
+    /**
+     * Current partial pressure of helium saturated in the compartment in bars.
+     */
     public get pHe(): number {
         return this._pHe;
     }
 
+    /**
+     * Current total partial pressure of inert gases (He and N2) saturated in the compartment in bars.
+     */
     public get pTotal(): number {
         return this._pTotal;
     }
 
+    /**
+     * Buhlmann a mValue coefficient.
+     */
     public get a(): number {
         return this._a;
     }
 
+    /**
+     * Buhlmann b mValue coefficient.
+     */
     public get b(): number {
         return this._b;
     }
@@ -74,8 +88,42 @@ export class Tissue extends Compartment implements LoadedTissue {
         return copy;
     }
 
+    /**
+     * Calculates partial pressure of nitrogen in the tissue equilibrium at given surface pressure.
+     * @param surfacePressure in bars.
+     */
+    public static inspiredN2Pressure(surfacePressure: number): number {
+        const pressure = Tissue.pressureInLungs(surfacePressure);
+        const pN2 = GasMixtures.partialPressure(pressure, GasMixtures.nitroxInAir);
+        return pN2;
+    }
+
+    private static pressureInLungs(ambientPressure: number): number {
+        /** as constant for body temperature 37°C */
+        const waterVapourPressure = 0.0627;
+        return ambientPressure - waterVapourPressure;
+    }
+
     public copy(): Tissue {
         return Tissue.fromCurrent(this, this);
+    }
+
+    /**
+     * Returns m-value for the tissue at the given pressure (surface or ambient).
+     * @param pressure in bars.
+     */
+    public mValue(pressure: number): number {
+        return this.a + pressure / this.b;
+    }
+
+    // TODO Test and add to the UI as surface Gradient factor at end of the dive
+    /**
+     * Returns the gradient factor from the original Buhlmann M-value for the tissue at the given pressure.
+     * @param pressure in bars (e.g. surface or ambient).
+     */
+    public gradientFactor(pressure: number): number {
+        const surfaceMValue = this.mValue(pressure);
+        return (this.pTotal - pressure) / (surfaceMValue - pressure);
     }
 
     /**
@@ -106,16 +154,10 @@ export class Tissue extends Compartment implements LoadedTissue {
     private loadGas(segment: LoadSegment, fGas: number, pBegin: number, halfTime: number): number {
         const gasRateInBarsPerSecond = segment.speed * fGas;
         // initial ambient pressure
-        const gasPressureBreathingInBars = this.pressureInLungs(segment.startPressure) * fGas;
+        const gasPressureBreathingInBars = Tissue.pressureInLungs(segment.startPressure) * fGas;
         const newGasPressure = this.schreinerEquation(pBegin, gasPressureBreathingInBars,
             segment.duration, halfTime, gasRateInBarsPerSecond);
         return newGasPressure;
-    }
-
-    private pressureInLungs(ambientPressure: number): number {
-        /** as constant for body temperature 37°C */
-        const waterVapourPressure = 0.0627;
-        return ambientPressure - waterVapourPressure;
     }
 
     /**
@@ -207,13 +249,34 @@ export class Tissues {
         this._compartments = Tissues.copy(source);
     }
 
+    /**
+     * Returns current state/snapshot of the tissues.
+     */
     public finalState(): LoadedTissue[] {
         return Tissues.copy(this._compartments);
     }
 
-    public currentOverPressures(): number[] {
-        // TODO calculate as relative value against M-values
-        return []; // _(this._compartments).map(t => t.pTotal).value();
+    // TODO verify the doc and meaning of the values
+    /**
+     * Calculates saturation ratio for all tissues as percents relative to ambient pressure.
+     * -1..0: is offgasing, -1 = surface pressure.
+     *    =0: is equilibrium (tissue is not offgasing or ongasing), at ambient pressure.
+     *    >0: is ongasing, +1 = 100% gradient i.e. at m-value, more means exceeded limit.
+     * @param ambientPressure The current ambient pressure in bars.
+     * @param surfacePressure The surface pressure in bars at beginning of the dive.
+     * @param gradient Gradient factor constant in range 0-1
+     */
+    public saturationRatio(ambientPressure: number, surfacePressure: number, gradient: number): number[] {
+        // TODO do we need adjust m-value against user gradient factors and surface pressure?
+        // We need use Gradient here, since we want to show the saturation aligned with profile and ceilings.
+        // Or should the heat map change when changing gradient factors?
+        return _(this._compartments).map(t => {
+            if(t.pTotal > ambientPressure) {
+                return t.gradientFactor(ambientPressure);
+            }
+
+            return t.pTotal / ambientPressure -1;
+        }).value();
     }
 
     /**
@@ -236,6 +299,13 @@ export class Tissues {
         return ceiling;
     }
 
+    /**
+     * Loads the tissues with inert gases from the gas at the segment.
+     * @param segment Not null segment of the dive.
+     * @param gas Not null gas to breath during the segment.
+     * @returns The tissue load change in bars or 0, if the tissues are already saturated.
+     * Or negative value if the tissues are offgasing.
+     */
     public load(segment: LoadSegment, gas: Gas): number {
         let loadChange = 0.0;
         for (let index = 0; index < this._compartments.length; index++) {

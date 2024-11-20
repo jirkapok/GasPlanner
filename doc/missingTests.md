@@ -1,7 +1,10 @@
 # TODO missing test cases
 
-* GasBlenderComponent
 * Diver.component.ts: Add tests for rmv and stressRmv save and load
+* Options component:
+  * switchAirBreaks
+  * useRecreational
+  * useRecommended
 * AppSettingsComponent:
   * Density Precision and Step for imperial units
   * Density Precision and Step for metric units
@@ -11,5 +14,4 @@
   * Reset to default
   * Change of maxDensity triggers schedule calculation
 * All other components without tests (currently have only smoke tests)
-* Gases: airBreakGas
 * Verify which gases can be switched from/to by IDC warning (extend current tests)

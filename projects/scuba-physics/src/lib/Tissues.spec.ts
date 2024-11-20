@@ -56,4 +56,44 @@ describe('Tissues', () => {
             expect(ceiling).toBeCloseTo(0.19547818, 8);
         });
     });
+
+    xdescribe('Saturation ratio', () => {
+        const segment = new LoadSegment(6, Time.oneMinute * 60, 0);
+
+        xit('Is 0 at surface', () => {
+            // simple depth conversion at surface
+            const tissues = Tissues.create(1);
+            tissues.load(segment, StandardGases.air);
+            const saturationRatios = tissues.saturationRatio(2, 1, 1);
+            expect(saturationRatios[0]).toBeCloseTo(1, 8);
+        });
+
+        xit('Is less than 0 when descending ongassing tissues', () => {
+            const tissue = createTissue();
+            tissue.load(segment, StandardGases.air);
+            const ceiling = tissue.ceiling(1);
+            expect(ceiling).toBeCloseTo(0.19547818, 8);
+        });
+
+        xit('Is more than +1 when exceeded M-value', () => {
+            const tissue = createTissue();
+            tissue.load(segment, StandardGases.air);
+            const ceiling = tissue.ceiling(1);
+            expect(ceiling).toBeCloseTo(0.19547818, 8);
+        });
+
+        xit('Is more than 0 when offgasing', () => {
+            const tissue = createTissue();
+            tissue.load(segment, StandardGases.air);
+            const ceiling = tissue.ceiling(1);
+            expect(ceiling).toBeCloseTo(0.19547818, 8);
+        });
+
+        xit('Is -1 when descending when start ongassing', () => {
+            const tissue = createTissue();
+            tissue.load(segment, StandardGases.air);
+            const ceiling = tissue.ceiling(1);
+            expect(ceiling).toBeCloseTo(0.19547818, 8);
+        });
+    });
 });

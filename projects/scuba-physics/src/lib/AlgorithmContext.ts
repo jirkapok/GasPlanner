@@ -134,7 +134,8 @@ export class AlgorithmContext {
     }
 
     public currentOverPressures(): void {
-        const currentOverPressures = this.tissues.currentOverPressures();
+        const ambientPressure = this.depthConverter.toBar(this.currentDepth);
+        const currentOverPressures = this.tissues.saturationRatio(ambientPressure, this.depthConverter.surfacePressure, 1);
         this.tissueOverPressures.push(currentOverPressures);
     }
 

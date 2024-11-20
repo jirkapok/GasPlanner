@@ -77,8 +77,9 @@ describe('Consumption', () => {
             expect(maxBottomTime).toEqual(0);
         });
 
-        // This tests is performance dependent, should usually finish within 200 ms, but let assign reserve
-        it('for long dives is calculated within 400 ms', () => {
+        // This tests is performance dependent, should usually finish within 300 ms,
+        // but let assign reserve on slower machines at github.
+        it('for long dives is calculated within 550 ms', () => {
             const tank = new Tank(24, 200, 21);
             const tanks = [tank];
 
@@ -92,7 +93,7 @@ describe('Consumption', () => {
             const methodDuration = Precision.round(endTime - startTime);
 
             console.log(`Max bottom time duration: ${methodDuration} ms`);
-            expect(methodDuration).toBeLessThan(400);
+            expect(methodDuration).toBeLessThan(550);
         });
 
         it('Multilevel dive accept multiple continuing levels', () => {

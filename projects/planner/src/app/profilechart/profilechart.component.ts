@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
-import { DiveResults } from '../shared/diveresults';
-import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-dist';
+import * as _ from 'lodash';
+import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
+import { DiveResults } from '../shared/diveresults';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
 import { Streamed } from '../shared/streamed';
 import { DiveSchedules } from '../shared/dive.schedules';
@@ -91,8 +92,10 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.plotter.plotCharts(this.dive.totalDuration);
 
         // TODO layout jumps to right when switching on/off the heatmap
-        if (this.showHeatMap)
-            this.heatmapPlotter.plotHeatMap(this.dive.tissueOverPressures);
+        if (this.showHeatMap) {
+            const transponed = _.zip.apply(_, this.dive.tissueOverPressures) as number[][];
+            this.heatmapPlotter.plotHeatMap(transponed);
+        }
     }
 
     private hookChartEvents(): void {

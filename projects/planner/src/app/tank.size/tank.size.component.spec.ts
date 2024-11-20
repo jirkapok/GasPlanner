@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ReactiveFormsModule } from '@angular/forms';
 import { TankSizeComponent } from './tank.size.component';
 import { UnitConversion } from '../shared/UnitConversion';
 import { InputControls } from '../shared/inputcontrols';
@@ -7,6 +7,7 @@ import { DecimalPipe } from '@angular/common';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+
 
 export class TankSizePage {
     constructor(private fixture: ComponentFixture<TankSizeComponent>) { }
@@ -26,20 +27,24 @@ describe('TankSizeComponent', () => {
     let fixture: ComponentFixture<TankSizeComponent>;
     let page: TankSizePage;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             declarations: [TankSizeComponent],
-            providers: [UnitConversion, InputControls, DecimalPipe, ValidatorGroups]
-        });
+            providers: [UnitConversion, InputControls, DecimalPipe, ValidatorGroups],
+            imports: [ReactiveFormsModule]
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
         const units = TestBed.inject(UnitConversion);
         units.imperialUnits = true;
         fixture = TestBed.createComponent(TankSizeComponent);
         component = fixture.componentInstance;
         page = new TankSizePage(fixture);
+        fixture.detectChanges();
     });
 
     it('Changing size applies the value', () => {
-        fixture.detectChanges();
         spyOn(component.sizeChange, 'emit');
         const sizeField = page.sizeInput;
         sizeField.value = '12';
@@ -60,7 +65,6 @@ describe('TankSizeComponent', () => {
     });
 
     it('Assign standard tank applies impoerial values', () => {
-        fixture.detectChanges();
         spyOn(component.applyTemplate, 'emit');
         const templateButtons = page.templateButtons[2].nativeElement as HTMLInputElement;
         templateButtons.dispatchEvent(new Event('click'));

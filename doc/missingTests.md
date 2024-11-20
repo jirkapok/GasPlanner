@@ -2,7 +2,6 @@
 
 * GasBlenderComponent
 * Diver.component.ts: Add tests for rmv and stressRmv save and load
-* Fix TankSizeComponent line 56 error in the tests console
 * Options component:
   * switchAirBreaks
   * useRecreational

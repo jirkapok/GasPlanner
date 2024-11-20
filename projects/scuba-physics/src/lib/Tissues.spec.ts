@@ -64,7 +64,7 @@ describe('Tissues', () => {
             // simple depth conversion at surface
             const tissues = Tissues.create(1);
             tissues.load(segment, StandardGases.air);
-            const saturationRatios = tissues.saturationRatio(2, 1);
+            const saturationRatios = tissues.saturationRatio(2, 1, 1);
             expect(saturationRatios[0]).toBeCloseTo(1, 8);
         });
 

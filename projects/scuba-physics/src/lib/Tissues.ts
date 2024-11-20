@@ -275,7 +275,7 @@ export class Tissues {
                 return t.gradientFactor(ambientPressure);
             }
 
-            return t.pTotal / ambientPressure;
+            return t.pTotal / ambientPressure -1;
         }).value();
     }
 

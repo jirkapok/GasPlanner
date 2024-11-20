@@ -38,8 +38,7 @@ export class Tissue extends Compartment implements LoadedTissue {
         super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
             compartment.heHalfTime, compartment.heA, compartment.heB);
 
-        const pressure = this.pressureInLungs(surfacePressure);
-        this._pN2 = GasMixtures.partialPressure(pressure, GasMixtures.nitroxInAir);
+        this._pN2 = Tissue.inspiredN2Pressure(surfacePressure);
         this._pHe = 0;
         this.updateTotal();
     }
@@ -74,6 +73,18 @@ export class Tissue extends Compartment implements LoadedTissue {
         return copy;
     }
 
+    public static inspiredN2Pressure(surfacePressure: number): number {
+        const pressure = Tissue.pressureInLungs(surfacePressure);
+        const pN2 = GasMixtures.partialPressure(pressure, GasMixtures.nitroxInAir);
+        return pN2;
+    }
+
+    private static pressureInLungs(ambientPressure: number): number {
+        /** as constant for body temperature 37°C */
+        const waterVapourPressure = 0.0627;
+        return ambientPressure - waterVapourPressure;
+    }
+
     public copy(): Tissue {
         return Tissue.fromCurrent(this, this);
     }
@@ -106,16 +117,10 @@ export class Tissue extends Compartment implements LoadedTissue {
     private loadGas(segment: LoadSegment, fGas: number, pBegin: number, halfTime: number): number {
         const gasRateInBarsPerSecond = segment.speed * fGas;
         // initial ambient pressure
-        const gasPressureBreathingInBars = this.pressureInLungs(segment.startPressure) * fGas;
+        const gasPressureBreathingInBars = Tissue.pressureInLungs(segment.startPressure) * fGas;
         const newGasPressure = this.schreinerEquation(pBegin, gasPressureBreathingInBars,
             segment.duration, halfTime, gasRateInBarsPerSecond);
         return newGasPressure;
-    }
-
-    private pressureInLungs(ambientPressure: number): number {
-        /** as constant for body temperature 37°C */
-        const waterVapourPressure = 0.0627;
-        return ambientPressure - waterVapourPressure;
     }
 
     /**
@@ -211,9 +216,25 @@ export class Tissues {
         return Tissues.copy(this._compartments);
     }
 
-    public currentOverPressures(): number[] {
-        // TODO calculate as relative value against M-values
-        return []; // _(this._compartments).map(t => t.pTotal).value();
+    public saturationRatio(ambientPressure: number, surfacePressure: number): number[] {
+        // We dont use Gradient here, since we want to show the theoretical saturation,
+        // not the maximum saturation requested/limited by user.
+        // TODO Only nitrogen, since it is the only gas at surface? Or do we need last dive loading?
+        const inspiredN2 = Tissue.inspiredN2Pressure(surfacePressure);
+
+        // TODO calculate as relative value against M-values in range -1 .. +1
+        // tissue > ambient =>  (tissue - ambient) / (Mvalue - ambient)
+        // tissue < ambient =>  -(ambient - tissue) / (ambient - inspired)
+        // Inspired = default nitrogen only pressure at surface
+        // Mvalue = t.ceiling(1)
+        // Ambient = current depth pressure
+        return _(this._compartments).map(t => {
+            if(t.pTotal > ambientPressure) {
+                return t.ceiling(1);
+            }
+
+            return t.ceiling(1);
+        }).value();
     }
 
     /**

@@ -91,9 +91,9 @@ describe('DiverComponent', () => {
     });
 
     xit('should change rmvStep when switching to imperial units', () => {
-        expect(component.rmvStep).toBe(1);
+        expect(component.rmvStep).toBe(0.1);
         unitConversion.imperialUnits = true;
         fixture.detectChanges();
-        expect(component.rmvStep).toBe(0.1);
+        expect(component.rmvStep).toBe(0.001);
     });
 });

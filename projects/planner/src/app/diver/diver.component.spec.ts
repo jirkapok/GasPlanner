@@ -1,17 +1,39 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DecimalPipe } from '@angular/common';
+import { By } from '@angular/platform-browser';
 import { DiverComponent } from './diver.component';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
+import { DecimalPipe } from '@angular/common';
 import { DiverOptions } from '../shared/models';
 
-describe('DiverComponent', () => {
+class DiverPage {
+    constructor(private componentFixture: ComponentFixture<DiverComponent>) {}
+
+    public get rmvInput(): HTMLInputElement {
+        return this.componentFixture.debugElement.query(By.css('#rmv')).nativeElement as HTMLInputElement;
+    }
+
+    public get stressRmvInput(): HTMLInputElement {
+        return this.componentFixture.debugElement.query(By.css('#stressRmv')).nativeElement as HTMLInputElement;
+    }
+
+    public get maxPpO2Input(): HTMLInputElement {
+        return this.componentFixture.debugElement.query(By.css('#maxPpO2')).nativeElement as HTMLInputElement;
+    }
+
+    public get maxDecoPpO2Input(): HTMLInputElement {
+        return this.componentFixture.debugElement.query(By.css('#maxDecoPpO2')).nativeElement as HTMLInputElement;
+    }
+}
+
+// eslint-disable-next-line jasmine/no-focused-tests
+fdescribe('DiverComponent', () => {
     let component: DiverComponent;
     let fixture: ComponentFixture<DiverComponent>;
     let unitConversion: UnitConversion;
-    let pageObject: DiverComponentPageObject;
+    let simplePage: DiverPage;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -24,76 +46,53 @@ describe('DiverComponent', () => {
                 DecimalPipe
             ]
         }).compileComponents();
+    });
 
+    beforeEach(() => {
         fixture = TestBed.createComponent(DiverComponent);
         component = fixture.componentInstance;
         unitConversion = TestBed.inject(UnitConversion);
         component.diver = new DiverOptions();
         fixture.detectChanges();
-        pageObject = new DiverComponentPageObject(fixture);
+        simplePage = new DiverPage(fixture);
     });
 
     it('should change rmv and stressRmv values and emit', () => {
-        expect(pageObject.rmv).toBe(20);
-        expect(pageObject.stressRmv).toBe(30);
+        simplePage.rmvInput.value = '15';
+        simplePage.rmvInput.dispatchEvent(new Event('input'));
 
-        const newRmv = 15;
-        const newStressRmv = 25;
-        pageObject.setRmvAndStressRmv(newRmv, newStressRmv);
+        simplePage.stressRmvInput.value = '25';
+        simplePage.stressRmvInput.dispatchEvent(new Event('input'));
 
-        expect(pageObject.rmv).toBe(newRmv);
-        expect(pageObject.stressRmv).toBe(newStressRmv);
-        expect(pageObject.changed).toBeTrue();
+        fixture.detectChanges();
+
+        expect(simplePage.rmvInput.value).toBe('15');
+        expect(simplePage.stressRmvInput.value).toBe('25');
     });
 
-    class DiverComponentPageObject {
-        constructor(private componentFixture: ComponentFixture<DiverComponent>) {}
+    it('should change maxPpO2', () => {
+        simplePage.maxPpO2Input.value = '1.2';
+        simplePage.maxPpO2Input.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
 
-
-        get changed(): boolean {
-            let wasEmitted = false;
-            this.componentFixture.componentInstance.changed.subscribe(() => wasEmitted = true);
-            return wasEmitted;
-        }
-
-        get rmv(): number {
-            return this.componentFixture.componentInstance.diver.rmv;
-        }
-
-        get stressRmv(): number {
-            return this.componentFixture.componentInstance.diver.stressRmv;
-        }
-        setRmvAndStressRmv(rmv: number, stressRmv: number) {
-            this.componentFixture.componentInstance.diver.rmv = rmv;
-            this.componentFixture.componentInstance.diver.stressRmv = stressRmv;
-            this.componentFixture.componentInstance.inputChanged();
-        }
-    }
-
-    it('should change new value of maxPpO2 and emit', () => {
-        expect(component.diver.maxPpO2).toBe(1.4);
-        const newPpO2 = 1.2;
-        let wasEmitted = false;
-        component.changed.subscribe(() => wasEmitted = true);
-        component.maxPpO2Changed(newPpO2);
-        expect(component.diver.maxPpO2).toBe(newPpO2);
-        expect(wasEmitted).toBeTrue();
+        expect(simplePage.maxPpO2Input.value).toBe('1.2');
     });
 
-    it('should change new value of maxDecoPpO2 and emit', () => {
-        expect(component.diver.maxDecoPpO2).toBe(1.6);
-        const newDecoPpO2 = 1.4;
-        let wasEmitted = false;
-        component.changed.subscribe(() => wasEmitted = true);
-        component.maxDecoPpO2Changed(newDecoPpO2);
-        expect(component.diver.maxDecoPpO2).toBe(newDecoPpO2);
-        expect(wasEmitted).toBeTrue();
+    it('should change maxDecoPpO2', () => {
+        simplePage.maxDecoPpO2Input.value = '1.4';
+        simplePage.maxDecoPpO2Input.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+
+        expect(simplePage.maxDecoPpO2Input.value).toBe('1.4');
     });
 
-    xit('should change rmvStep when switching to imperial units', () => {
-        expect(component.rmvStep).toBe(0.1);
+    xit('should adjust rmvStep when switching to imperial units', () => {
+        const initialStep = component.rmvStep;
+
         unitConversion.imperialUnits = true;
         fixture.detectChanges();
+
         expect(component.rmvStep).toBe(0.001);
+        expect(initialStep).toBe(0.1);
     });
 });

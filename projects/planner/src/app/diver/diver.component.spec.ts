@@ -28,8 +28,7 @@ class DiverPage {
     }
 }
 
-// eslint-disable-next-line jasmine/no-focused-tests
-fdescribe('DiverComponent', () => {
+describe('DiverComponent', () => {
     let component: DiverComponent;
     let fixture: ComponentFixture<DiverComponent>;
     let unitConversion: UnitConversion;

@@ -7,6 +7,7 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
 import { DecimalPipe } from '@angular/common';
 import { DiverOptions } from '../shared/models';
+import { PpO2Component } from '../pp-o2/pp-o2.component';
 
 class DiverPage {
     constructor(private componentFixture: ComponentFixture<DiverComponent>) {}
@@ -20,16 +21,15 @@ class DiverPage {
     }
 
     public get maxPpO2Input(): HTMLInputElement {
-        return this.componentFixture.debugElement.query(By.css('#maxPpO2')).nativeElement as HTMLInputElement;
+        return this.componentFixture.debugElement.query(By.css('#maxPO2')).nativeElement as HTMLInputElement;
     }
 
     public get maxDecoPpO2Input(): HTMLInputElement {
-        return this.componentFixture.debugElement.query(By.css('#maxDecoPpO2')).nativeElement as HTMLInputElement;
+        return this.componentFixture.debugElement.query(By.css('#maxDecoPO2')).nativeElement as HTMLInputElement;
     }
 }
 
-// eslint-disable-next-line jasmine/no-focused-tests
-fdescribe('DiverComponent', () => {
+describe('DiverComponent', () => {
     let component: DiverComponent;
     let fixture: ComponentFixture<DiverComponent>;
     let unitConversion: UnitConversion;
@@ -37,7 +37,7 @@ fdescribe('DiverComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DiverComponent],
+            declarations: [DiverComponent, PpO2Component],
             imports: [ReactiveFormsModule],
             providers: [
                 UnitConversion,

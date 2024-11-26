@@ -13,9 +13,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.2
       - name: Setup NodeJs
-        uses: actions/setup-node@v4.0.3
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.11.1'
       # not using 'npm ci' because it fails
@@ -25,7 +25,7 @@ jobs:
       - run: npm install ./dist/scuba-physics --no-package-lock
       - run: npm run test-ci --configuration=ci
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2.17.1
+        uses: EnricoMi/publish-unit-test-result-action@v2.18.0
         if: always()
         with:
           JUNIT_FILES: test-results/**/*.xml

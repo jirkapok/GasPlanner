@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-node@v4.1.0
         with:
           node-version: '20.11.1'
-      # not using 'npm ci' because it fails
+     # not using 'npm ci' because it fails
       - run: npm install
       - run: npm run test-lib-ci --configuration=ci
       - run: npm run build-lib

@@ -1,6 +1,6 @@
 <ng-container [formGroup]="pO2Form">
-    <label for="maxPpO2" class="form-label" mdbLabel>{{label}}</label>
-    <input class="form-control" id="maxPpO2" [formControlName]="this.controlName" (input)="fireChanged()" type="number"
+    <label [for]="controlName" class="form-label" mdbLabel>{{label}}</label>
+    <input class="form-control" [id]="controlName" [formControlName]="this.controlName" (input)="fireChanged()" type="number"
         [min]="units.ranges.ppO2[0]" [max]="units.ranges.ppO2[1]" step="0.1" [class.is-invalid]="ppO2Invalid"  />
     <div class="invalid-feedback position-absolute">Needs to be number 0.21-3</div>
 </ng-container>

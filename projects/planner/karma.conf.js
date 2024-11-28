@@ -53,6 +53,7 @@ module.exports = function (config) {
     },
     singleRun: false,
     restartOnFileChange: true,
+    browserDisconnectTimeout : 10000,
     browserNoActivityTimeout: 10000,
   });
 };

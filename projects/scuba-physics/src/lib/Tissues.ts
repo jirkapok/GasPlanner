@@ -272,11 +272,11 @@ export class Tissues {
         // Or should the heat map change when changing gradient factors?
         return [];
         return _(this._compartments).map(t => {
-            if(t.pTotal > ambientPressure) {
-                return t.gradientFactor(ambientPressure);
+            if (t.pTotal < ambientPressure) {
+                return t.pTotal / ambientPressure - 1;
             }
 
-            return t.pTotal / ambientPressure -1;
+            return t.gradientFactor(ambientPressure);
         }).value();
     }
 

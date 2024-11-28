@@ -9,6 +9,7 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
+      require('karma-verbose-reporter'),
       require('karma-junit-reporter'),
       require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma')
@@ -29,6 +30,7 @@ module.exports = function (config) {
       dir: require('path').join(__dirname, '../../coverage/planner'),
       subdir: '.',
       reporters: [
+          'verbose',
         { type: 'html' },
         { type: 'text-summary' }
       ]

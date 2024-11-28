@@ -8,7 +8,7 @@
     "build": "ng build --configuration production planner",
     "build-lib": "ng build scuba-physics",
     "test": "ng test",
-    "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch",
+    "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch --reporters=verbose",
     "test-lib": "ng test --project scuba-physics",
     "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch",
     "lint": "ng lint"
@@ -69,6 +69,7 @@
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "karma-junit-reporter": "^2.0.1",
+    "karma-verbose-reporter": "^0.0.8",
     "ng-packagr": "^18.2.1",
     "typescript": "^5.5.4"
   }

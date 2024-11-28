@@ -270,14 +270,13 @@ export class Tissues {
         // TODO do we need adjust m-value against user gradient factors and surface pressure?
         // We need use Gradient here, since we want to show the saturation aligned with profile and ceilings.
         // Or should the heat map change when changing gradient factors?
-        return [];
-        // _(this._compartments).map(t => {
-        //     if(t.pTotal > ambientPressure) {
-        //         return t.gradientFactor(ambientPressure);
-        //     }
-        //
-        //     return t.pTotal / ambientPressure -1;
-        // }).value();
+        return _(this._compartments).map(t => {
+            if(t.pTotal > ambientPressure) {
+                return t.gradientFactor(ambientPressure);
+            }
+
+            return t.pTotal / ambientPressure -1;
+        }).value();
     }
 
     /**

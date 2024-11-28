@@ -13,6 +13,7 @@ import { StandardGases } from './StandardGases';
 export interface ContextMemento {
     tissues: Tissue[];
     ceilings: number;
+    saturationRatios: number;
     segments: number;
     runTime: number;
     lowestCeiling: number;
@@ -22,7 +23,7 @@ export interface ContextMemento {
 export class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
-    public tissueOverPressures: number[][] = [];
+    public saturationRatios: number[][] = [];
     /** in seconds */
     public runTime = 0;
 
@@ -133,10 +134,10 @@ export class AlgorithmContext {
         return newGas;
     }
 
-    public currentOverPressures(): void {
+    public addSaturation(): void {
         const ambientPressure = this.depthConverter.toBar(this.currentDepth);
         const currentOverPressures = this.tissues.saturationRatio(ambientPressure, this.depthConverter.surfacePressure, 1);
-        this.tissueOverPressures.push(currentOverPressures);
+        this.saturationRatios.push(currentOverPressures);
     }
 
     public createMemento(): ContextMemento {
@@ -145,6 +146,7 @@ export class AlgorithmContext {
             oxygenStarted: this._oxygenStarted,
             tissues: Tissues.copy(this.tissues.compartments),
             ceilings: this.ceilings.length,
+            saturationRatios: this.saturationRatios.length,
             segments: this.segments.length,
             lowestCeiling: this.gradients.lowestCeiling
         };
@@ -156,8 +158,9 @@ export class AlgorithmContext {
         this.gradients.lowestCeiling = memento.lowestCeiling;
         this.runTime = memento.runTime;
         this._oxygenStarted = memento.oxygenStarted;
-        // ceilings and segments are only added
+        // ceilings, segments and saturationRatios are only added
         this.ceilings = this.ceilings.slice(0, memento.ceilings);
+        this.saturationRatios = this.saturationRatios.slice(0, memento.saturationRatios);
         const toCut = this.segments.length - memento.segments;
         this.segments.cutDown(toCut);
     }

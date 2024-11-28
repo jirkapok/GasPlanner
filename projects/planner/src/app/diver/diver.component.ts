@@ -20,7 +20,7 @@ export class DiverComponent extends Streamed implements OnInit {
     @Input() public diverForm!: FormGroup;
     @Output()public changed = new EventEmitter();
 
-    private _rmvStep = 2;
+    private _rmvStep = 0.1;
 
     constructor(private fb: NonNullableFormBuilder,
         private inputs: InputControls,

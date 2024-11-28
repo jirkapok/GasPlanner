@@ -52,7 +52,7 @@ describe('DiverComponent', () => {
         fixture = TestBed.createComponent(DiverComponent);
         component = fixture.componentInstance;
         unitConversion = TestBed.inject(UnitConversion);
-        component.diver = new DiverOptions();
+        unitConversion.imperialUnits = false;
         fixture.detectChanges();
         simplePage = new DiverPage(fixture);
     });
@@ -86,10 +86,17 @@ describe('DiverComponent', () => {
         expect(simplePage.maxDecoPpO2Input.value).toBe('1.4');
     });
 
-    xit('should change rmvStep when switching to imperial units', () => {
+    it('should change rmvStep when switching to imperial units', () => {
         expect(component.rmvStep).toBe(0.1);
         unitConversion.imperialUnits = true;
         fixture.detectChanges();
         expect(component.rmvStep).toBe(0.001);
+    });
+
+    it('should start with imperial rmvStep', () => {
+        unitConversion.imperialUnits = true;
+        const imperialComponent = TestBed.createComponent(DiverComponent).componentInstance;
+        imperialComponent.ngOnInit();
+        expect(imperialComponent.rmvStep).toBe(0.001);
     });
 });

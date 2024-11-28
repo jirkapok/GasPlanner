@@ -1,6 +1,5 @@
 # TODO missing test cases
 
-* Diver.component.ts: Add tests for rmv and stressRmv save and load
 * Options component:
   * switchAirBreaks
   * useRecreational

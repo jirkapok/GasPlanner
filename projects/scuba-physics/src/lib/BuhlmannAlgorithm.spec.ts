@@ -6,6 +6,7 @@ import { OptionExtensions } from './Options.spec';
 import { Salinity } from './pressure-converter';
 import { Options, SafetyStop } from './Options';
 import { StandardGases } from './StandardGases';
+import { Precision } from './precision';
 
 function concatenatePlan(decoPlan: Segment[]): string {
     let planText = '';
@@ -376,5 +377,31 @@ describe('Buhlmann Algorithm - Plan', () => {
                 '12,9,18; 9,9,180; 9,6,18; 6,6,240; 6,3,18; 3,3,600; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
+
+        it('for trimix is calculated within 550 ms', () => {
+            const gases = new Gases();
+            gases.add(StandardGases.trimix1260);
+            gases.add(StandardGases.trimix3525);
+            gases.add(new Gas(0.5, 0.2));
+            gases.add(StandardGases.oxygen);
+
+            const segments = new Segments();
+            segments.add(10, StandardGases.trimix3525, Time.oneMinute);
+            segments.add(75, StandardGases.trimix1260, 5 * Time.oneMinute);
+            segments.addFlat(StandardGases.trimix1260, 5 * Time.oneMinute);
+
+            const algorithm = new BuhlmannAlgorithm();
+            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
+
+            const startTime = performance.now();
+            algorithm.decompression(parameters);
+            const endTime = performance.now();
+
+            const methodDuration = Precision.round(endTime - startTime);
+            console.log(`Decompression calculation duration: ${methodDuration} ms`);
+
+            expect(methodDuration).toBeLessThan(550);
+        });
+
     });
 });

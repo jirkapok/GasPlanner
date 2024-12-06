@@ -23,6 +23,7 @@ export class HeatMapPlotter {
         height:50,
         autosize: true,
         showlegend: false,
+        hoverinfo: 'none',
         xaxis: {
             fixedrange: true,
             visible: false
@@ -57,17 +58,17 @@ export class HeatMapPlotter {
      * +1: is 100% speed of ongasing.
      */
     public plotHeatMap(dataValues: number[][]): void {
-        const data = [
+        const data: Plotly.Data[] = [
             {
                 z: dataValues,
                 type: <Plotly.PlotType>'heatmap',
-                coloraxis: 'coloraxis',
-                showscale: false
+                colorscale: this.colorScale as Plotly.ColorScale,
+                showscale: false,
+                hoverinfo: 'none',
             }
         ];
 
         // TODO heatmap chart:
-        // * remove hover
         // * width still jumps
         Plotly.newPlot(this.elementName, data, this.layout, this.config);
     }

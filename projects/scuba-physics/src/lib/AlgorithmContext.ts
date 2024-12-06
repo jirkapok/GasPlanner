@@ -9,6 +9,7 @@ import { Options } from './Options';
 import { DepthConverter } from './depth-converter';
 import { Time } from './Time';
 import { StandardGases } from './StandardGases';
+import { FeatureFlags } from './featureFlags';
 
 export interface ContextMemento {
     tissues: Tissue[];
@@ -67,6 +68,7 @@ export class AlgorithmContext {
         return this.speeds.ascent(this.currentDepth);
     }
 
+    /** Gets depth at end of last segment */
     public get currentDepth(): number {
         return this.segments.currentDepth;
     }
@@ -135,6 +137,11 @@ export class AlgorithmContext {
     }
 
     public addSaturation(): void {
+        if (!FeatureFlags.Instance.collectSaturation) {
+            return;
+        }
+
+        // TODO Fix current depth at the moment, not the currentDepth at end of last segment
         const ambientPressure = this.depthConverter.toBar(this.currentDepth);
         const currentOverPressures = this.tissues.saturationRatio(ambientPressure, this.depthConverter.surfacePressure, 1);
         this.saturationRatios.push(currentOverPressures);

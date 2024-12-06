@@ -11,6 +11,7 @@ export * from './lib/DefaultValues';
 export * from './lib/depth-converter';
 export * from './lib/DepthLevels';
 export * from './lib/Diver';
+export * from './lib/featureFlags';
 export * from './lib/GasMixtures';
 export * from './lib/Gases';
 export * from './lib/gasBlender';

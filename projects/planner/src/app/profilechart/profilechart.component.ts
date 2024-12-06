@@ -92,7 +92,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.plotter.plotCharts(this.dive.totalDuration);
 
         if (this.showHeatMap) {
-            const transponed = _.zip.apply(_, this.dive.tissueOverPressures) as number[][];
+            let transponed = _.zip.apply(_, this.dive.tissueOverPressures) as number[][];
+            transponed = transponed.reverse();
             this.heatmapPlotter.plotHeatMap(transponed);
         }
     }

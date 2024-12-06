@@ -21,7 +21,6 @@ export class HeatMapPlotter {
     };
 
     private readonly layout = {
-        height:50,
         autosize: true,
         showlegend: false,
         hoverinfo: 'none',
@@ -71,5 +70,6 @@ export class HeatMapPlotter {
 
         // TODO heatmap chart width still jumps
         Plotly.newPlot(this.elementName, data, this.layout, this.config);
+        Plotly.relayout(this.elementName, this.layout);
     }
 }

@@ -41,6 +41,7 @@ export class Tissue extends Compartment implements LoadedTissue {
         this._pN2 = Tissue.inspiredN2Pressure(surfacePressure);
         this._pHe = 0;
         this.updateTotal();
+        this.updateCoefficients();
     }
 
     /**
@@ -85,6 +86,7 @@ export class Tissue extends Compartment implements LoadedTissue {
         copy._a = loaded.a;
         copy._b = loaded.b;
         copy.updateTotal();
+        copy.updateCoefficients();
         return copy;
     }
 
@@ -127,8 +129,29 @@ export class Tissue extends Compartment implements LoadedTissue {
     }
 
     /**
+     * Calculates saturation ratio for all tissues as percents relative to ambient pressure.
+     * -1..0: is offgasing, -1 = surface pressure.
+     *    =0: is equilibrium (tissue is not offgasing or ongasing), at ambient pressure.
+     *    >0: is ongasing, +1 = 100% gradient i.e. at m-value, more means exceeded limit.
+     * @param ambientPressure The current ambient pressure in bars.
+     * @param surfacePressure The surface pressure in bars at beginning of the dive.
+     * @param gradient Gradient factor constant in range 0-1
+     */
+    public saturationRatio(ambientPressure: number, surfacePressure: number, gradient: number): number {
+        // TODO do we need adjust m-value against user gradient factors and surface pressure?
+        // We need use Gradient here, since we want to show the saturation aligned with profile and ceilings.
+        // Or should the heat map change when changing gradient factors?
+        if (this.pTotal < ambientPressure) {
+            return this.pTotal / ambientPressure - 1;
+        }
+
+        return this.gradientFactor(ambientPressure);
+    }
+
+    /**
      * Returns pressure in bars of the depth representing maximum ceiling
      * reduced by the provided gradient.
+     * May return negative value in case the ceiling is lower than surface pressure.
      *
      * @param gradient Gradient factor constant in range 0-1
      */
@@ -143,10 +166,7 @@ export class Tissue extends Compartment implements LoadedTissue {
         this._pHe = this.loadGas(segment, gas.fHe, this.pHe, this.heHalfTime);
         const prevTotal = this.pTotal;
         this.updateTotal();
-
-        this._a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
-        this._b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
-
+        this.updateCoefficients();
         // return difference - how much load was added
         return this.pTotal - prevTotal;
     }
@@ -179,6 +199,11 @@ export class Tissue extends Compartment implements LoadedTissue {
 
     private updateTotal(): void {
         this._pTotal = this.pN2 + this.pHe;
+    }
+
+    private updateCoefficients() {
+        this._a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
+        this._b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
     }
 }
 
@@ -267,17 +292,8 @@ export class Tissues {
      * @param gradient Gradient factor constant in range 0-1
      */
     public saturationRatio(ambientPressure: number, surfacePressure: number, gradient: number): number[] {
-        // TODO do we need adjust m-value against user gradient factors and surface pressure?
-        // We need use Gradient here, since we want to show the saturation aligned with profile and ceilings.
-        // Or should the heat map change when changing gradient factors?
-        // return [];
-        return _(this._compartments).map(t => {
-            if (t.pTotal < ambientPressure) {
-                return t.pTotal / ambientPressure - 1;
-            }
-
-            return t.gradientFactor(ambientPressure);
-        }).value();
+        return _(this._compartments).map(t => t.saturationRatio(ambientPressure, surfacePressure, gradient))
+            .value();
     }
 
     /**
@@ -288,7 +304,7 @@ export class Tissues {
     * @returns Zero in case there is no ceiling, otherwise ceiling pressure in bars
     */
     public ceiling(gradient: number): number {
-        let ceiling = 0;
+        let ceiling = 0; // this prevents negative values
 
         for (let index = 0; index < this._compartments.length; index++) {
             const tissueCeiling = this._compartments[index].ceiling(gradient);
@@ -332,6 +348,7 @@ export interface LoadedTissue {
      */
     pHe: number;
 
+    // TODO remove a and b coefficients, since they are calculated from pN2 and pHe and compartment coefficients.
     /**
      * Buhlmann m-value constant a
      */

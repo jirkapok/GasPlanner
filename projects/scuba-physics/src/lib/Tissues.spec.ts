@@ -42,10 +42,10 @@ describe('Tissues', () => {
 
 
     describe('Tissue', () => {
-        it('Not loaded tissue ceiling is 0 m', () => {
+        it('Not loaded tissue ceiling above surface', () => {
             const tissue = createTissue();
             const ceiling = tissue.ceiling(1);
-            expect(ceiling).toBe(0);
+            expect(ceiling).toBeCloseTo(-0.23884756, 8);
         });
 
         it('loaded tissue have non 0 m ceiling', () => {
@@ -61,11 +61,9 @@ describe('Tissues', () => {
         const segment = new LoadSegment(6, Time.oneMinute * 60, 0);
 
         xit('Is 0 at surface', () => {
-            // simple depth conversion at surface
-            const tissues = Tissues.create(1);
-            tissues.load(segment, StandardGases.air);
-            const saturationRatios = tissues.saturationRatio(2, 1, 1);
-            expect(saturationRatios[0]).toBeCloseTo(1, 8);
+            const tissue = createTissue();
+            const saturationRatio = tissue.saturationRatio(1, 1, 1);
+            expect(saturationRatio).toBeCloseTo(0, 8);
         });
 
         xit('Is less than 0 when descending ongassing tissues', () => {

@@ -46,7 +46,7 @@ export class SubSurfaceGradientFactors {
      */
     private toleratedTissues(surface: number, lowestCeiling: number, gfHigh: number, gfLow: number): number {
         const compartments = this.tissues.compartments;
-        let tolerated = 0;
+        let tolerated = 0; // this prevents negative values
 
         for (let index = 0; index < compartments.length; index++) {
             const compartment = compartments[index];

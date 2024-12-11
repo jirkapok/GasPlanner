@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { LoadedTissue, LoadSegment, Tissue, Tissues, TissuesValidator } from './Tissues';
 import { Compartments } from './Compartments';
 import { Time } from './Time';
@@ -8,14 +9,20 @@ describe('Tissues', () => {
 
     describe('Creation', () => {
         it('Tissues Create generates valid tissues', () => {
-            const wrongCount: LoadedTissue[] = Tissues.create(1).finalState();
-            const valid = TissuesValidator.valid(wrongCount);
+            const loadedTissues: LoadedTissue[] = Tissues.create(1).finalState();
+            const valid = TissuesValidator.valid(loadedTissues);
             expect(valid).toBeTruthy();
+        });
+
+        it('Tissues Create sets a,b coefficients', () => {
+            const created: Tissues = Tissues.create(1);
+            const allLoaded = _(created.compartments).every(t => t.a > 0 && t.b > 0);
+            expect(allLoaded).toBeTruthy();
         });
 
         it('Copy creates new valid deep copy', () => {
             const source = createTissue();
-            const copy = source.copy();
+            const copy = createTissue().copy();
             expect(copy).toEqual(source);
         });
     });
@@ -34,7 +41,7 @@ describe('Tissues', () => {
 
         it('One invalid item', () => {
             const tissues: LoadedTissue[] = Tissues.create(1).finalState();
-            tissues[0] = { a: 0, b: 0, pHe: 0, pN2: -1 };
+            tissues[0] = { pHe: 0, pN2: -1 };
             const valid = TissuesValidator.valid(tissues);
             expect(valid).toBeFalsy();
         });

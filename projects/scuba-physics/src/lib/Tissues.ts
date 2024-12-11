@@ -83,8 +83,6 @@ export class Tissue extends Compartment implements LoadedTissue {
         const copy = new Tissue(compartment, 1); // irrelevant pressure wouldn't be used
         copy._pN2 = loaded.pN2;
         copy._pHe = loaded.pHe;
-        copy._a = loaded.a;
-        copy._b = loaded.b;
         copy.updateTotal();
         copy.updateCoefficients();
         return copy;
@@ -347,26 +345,12 @@ export interface LoadedTissue {
      * partial pressure of helium in bars
      */
     pHe: number;
-
-    // TODO remove a and b coefficients, since they are calculated from pN2 and pHe and compartment coefficients.
-    /**
-     * Buhlmann m-value constant a
-     */
-    a: number;
-
-    /**
-     * Buhlmann m-value constant b
-     */
-    b: number;
 }
 
 export class TissuesValidator {
     public static validTissue(item: LoadedTissue): boolean {
         return item.pN2 > 0 &&
-               item.pHe >= 0 &&
-               // a and b may be 0 in case no loading of the tissues was performed yet.
-               item.a >= 0 &&
-               item.b >= 0;
+               item.pHe >= 0;
     }
 
     public static validCount(current?: LoadedTissue[]): boolean {

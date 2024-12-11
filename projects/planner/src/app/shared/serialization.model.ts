@@ -110,8 +110,6 @@ export interface CalculatedProfileDto {
 export interface LoadedTissueDto {
     pHe: number;
     pN2: number;
-    a: number;
-    b: number;
 }
 
 export interface ConsumptionRequestDto {

@@ -121,18 +121,14 @@ export class DtoSerialization {
     public static toTissues(tissues: LoadedTissueDto[]): LoadedTissue[] {
         return _(tissues).map(t => ({
             pN2: t.pN2,
-            pHe: t.pHe,
-            a: t.a,
-            b: t.b
+            pHe: t.pHe
         })).value();
     }
 
     public static fromTissues(tissues: LoadedTissue[]): LoadedTissueDto[] {
         return _(tissues).map(t => ({
             pN2: t.pN2,
-            pHe: t.pHe,
-            a: t.a,
-            b: t.b
+            pHe: t.pHe
         })).value();
     }
 

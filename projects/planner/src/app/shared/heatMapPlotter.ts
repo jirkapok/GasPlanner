@@ -2,8 +2,8 @@ import * as Plotly from 'plotly.js-dist';
 
 export class HeatMapPlotter {
     private readonly colorScale = [
-        [0, 'white'],
-        [0.2, 'rgb(31, 119, 180)'],
+        [0, 'rgb(31, 119, 180)'],
+        [0.3, 'white'],
         [0.4, 'lightgrey'],
         [0.5, 'green'],
         [0.7, 'yellow'],
@@ -68,7 +68,6 @@ export class HeatMapPlotter {
             }
         ];
 
-        // TODO heatmap chart width still jumps
         Plotly.newPlot(this.elementName, data, this.layout, this.config);
         Plotly.relayout(this.elementName, this.layout);
     }

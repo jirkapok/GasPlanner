@@ -23,4 +23,3 @@ SAC = 150 / (2.5 * 45) = 1.333 bar/minute
 RMV = 1.333 * 15 = 20 liters/minute
 ```
 
-> Hit `Use` button to apply current RMV to the diver dive options settings

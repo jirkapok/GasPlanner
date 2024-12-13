@@ -2,8 +2,9 @@ import * as Plotly from 'plotly.js-dist';
 
 export class HeatMapPlotter {
     private readonly colorScale = [
-        [0, 'blue'],
-        [0.4, 'black'],
+        [0, 'rgb(31, 119, 180)'],
+        [0.3, 'white'],
+        [0.4, 'lightgrey'],
         [0.5, 'green'],
         [0.7, 'yellow'],
         [1, 'red']
@@ -20,9 +21,9 @@ export class HeatMapPlotter {
     };
 
     private readonly layout = {
-        height:50,
         autosize: true,
         showlegend: false,
+        hoverinfo: 'none',
         xaxis: {
             fixedrange: true,
             visible: false
@@ -57,18 +58,17 @@ export class HeatMapPlotter {
      * +1: is 100% speed of ongasing.
      */
     public plotHeatMap(dataValues: number[][]): void {
-        const data = [
+        const data: Plotly.Data[] = [
             {
                 z: dataValues,
                 type: <Plotly.PlotType>'heatmap',
-                coloraxis: 'coloraxis',
-                showscale: false
+                colorscale: this.colorScale as Plotly.ColorScale,
+                showscale: false,
+                hoverinfo: 'none',
             }
         ];
 
-        // TODO heatmap chart:
-        // * remove hover
-        // * width still jumps
         Plotly.newPlot(this.elementName, data, this.layout, this.config);
+        Plotly.relayout(this.elementName, this.layout);
     }
 }

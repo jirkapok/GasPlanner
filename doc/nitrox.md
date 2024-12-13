@@ -20,4 +20,3 @@ You can calculate one fo these values by providing the remaining two to answer f
 
 > Even you can use Air at depths higher than 30 meters (100 ft), there is still narcotic effect which increases for most people in depths bellow 30 meters. For such depths gases replacing nitrogen by helium like Trimix should be used.
 
-> Hit the `Use` button to apply current ppO2 to diver application settings.

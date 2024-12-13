@@ -26,8 +26,8 @@ Following table explains meaning and usage of the listed properties:
 * `Total partial pressure`: It is sum of all oxygen, helium and nitrogen partial pressures and corresponds with pressure at selected depth.
 * `Minimum depth` [m]: It is calculated as depth at which the gas oxygen partial pressure is 0.18. If the oxygen partial pressure is low, the gas is not breath able and may cause hypoxia bellow this depth.  
 * `Maximum depth` [m]: It is calculated as depth at which the gas oxygen partial pressure reaches value defined in maximum ppO2.
-* `Equivalent narcotic depth` [m]: The depth at which the nitrox part of the gas has the same narcotic effect as breathing air at selected depth. See also [Nitrox calculator](./nitrox.md).
-* `Maximum narcotic depth` [m]: Maximum depth at which the nitrox part of the gas reaches the same effect as breathing air at 30 m (100 ft). The Oxygen is narcitic switch affects, if not only the nitrogen, but also the oxygen is counted as narcotic. Most agencies count oxygen as narcotic.
+* `Equivalent narcotic depth` [m]: The depth at which the nitrox part of the gas has the same narcotic effect as breathing air at selected depth. See also [Nitrox calculator](./nitrox.md). This the value is known to nitrox divers as `Equivalent air depth`.
+* `Maximum narcotic depth` [m]: Maximum depth at which the nitrox part of the gas reaches the same effect as breathing air at 30 m (100 ft). The `Oxygen is narcotic` switch affects, if not only the nitrogen, but also the oxygen is counted as narcotic. Most agencies count oxygen as narcotic.
 * `Gas density` [m]: The total gas density of the mixture at selected depth. The higher the value is, the more work of breathing the diver needs to use to feel conformable, otherwise it may cause hypoxia. Recommended maximum value is 5.7 [g/l]. 
 
 The key understandings are:

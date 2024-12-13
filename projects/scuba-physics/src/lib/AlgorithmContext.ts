@@ -136,13 +136,12 @@ export class AlgorithmContext {
         return newGas;
     }
 
-    public addSaturation(): void {
+    public addSaturation(currentDepth: number): void {
         if (!FeatureFlags.Instance.collectSaturation) {
             return;
         }
 
-        // TODO Fix current depth at the moment, not the currentDepth at end of last segment
-        const ambientPressure = this.depthConverter.toBar(this.currentDepth);
+        const ambientPressure = this.depthConverter.toBar(currentDepth);
         const currentOverPressures = this.tissues.saturationRatio(ambientPressure, this.depthConverter.surfacePressure, 1);
         this.saturationRatios.push(currentOverPressures);
     }

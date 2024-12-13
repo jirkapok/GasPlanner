@@ -12,7 +12,7 @@ import { ChartPlotter, ChartPlotterFactory } from '../shared/chartPlotter';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ResamplingService } from '../shared/ResamplingService';
 import { WayPoint } from '../shared/wayPoint';
-import { HeatMapPlotter } from './heatMapPlotter';
+import { HeatMapPlotter } from '../shared/heatMapPlotter';
 
 @Component({
     selector: 'app-profilechart',
@@ -39,7 +39,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
         const profileTraces = chartPlotterFactory.wthNamePrefix('')
             .create(() => this.dive);
-        this.plotter = new ChartPlotter('diveplot', chartPlotterFactory, profileTraces);
+        this.plotter = new ChartPlotter(this.elementName, chartPlotterFactory, profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
 
         this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
@@ -91,9 +91,9 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private plotCharts(): void {
         this.plotter.plotCharts(this.dive.totalDuration);
 
-        // TODO layout jumps to right when switching on/off the heatmap
         if (this.showHeatMap) {
-            const transponed = _.zip.apply(_, this.dive.tissueOverPressures) as number[][];
+            let transponed = _.zip.apply(_, this.dive.tissueOverPressures) as number[][];
+            transponed = transponed.reverse();
             this.heatmapPlotter.plotHeatMap(transponed);
         }
     }

@@ -342,7 +342,7 @@ export class BuhlmannAlgorithm {
         context.tissues.load(loadSegment, segment.gas);
         context.runTime += segment.duration;
         context.addCeiling();
-        context.addSaturation();
+        context.addSaturation(segment.averageDepth);
     }
 
     /**

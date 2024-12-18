@@ -6,7 +6,6 @@ import { OptionExtensions } from './Options.spec';
 import { Salinity } from './pressure-converter';
 import { Options, SafetyStop } from './Options';
 import { StandardGases } from './StandardGases';
-import { Precision } from './precision';
 
 function concatenatePlan(decoPlan: Segment[]): string {
     let planText = '';

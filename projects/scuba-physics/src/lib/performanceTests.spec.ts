@@ -31,6 +31,11 @@ describe('Buhlmann Algorithm - Performance', () => {
         options.roundStopsToMinutes = true;
         options.decoStopDistance = 3;
         options.altitude = 0;
+        FeatureFlags.Instance.collectSaturation = false;
+    });
+
+    afterEach(() => {
+        FeatureFlags.Instance.collectSaturation = false;
     });
 
     it('for trimix 75 m deep dive is calculated within 400 ms', () => {

@@ -376,5 +376,6 @@ describe('Buhlmann Algorithm - Plan', () => {
                 '12,9,18; 9,9,180; 9,6,18; 6,6,240; 6,3,18; 3,3,600; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
+
     });
 });

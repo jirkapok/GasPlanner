@@ -13,33 +13,33 @@ import { Diver } from './Diver';
 import { DepthConverter } from './depth-converter';
 import { Consumption, ConsumptionOptions } from './consumption';
 
-
-export function calculatePlanFor(gases: Gases, source: Segments, options: Options): Segment[] {
-    const algorithm = new BuhlmannAlgorithm();
-    const parameters = AlgorithmParams.forMultilevelDive(source, gases, options);
-    const decoPlan = algorithm.decompression(parameters);
-    return decoPlan.segments;
-}
-
-describe('Buhlmann Algorithm - Performance', () => {
-    const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
-    options.safetyStop = SafetyStop.always;
-
+// Lets assign reserve to all asserts on slower machines at github.
+describe('Performance', () => {
     beforeEach(() => {
-        options.safetyStop = SafetyStop.always;
-        options.salinity = Salinity.salt;
-        options.roundStopsToMinutes = true;
-        options.decoStopDistance = 3;
-        options.altitude = 0;
-        FeatureFlags.Instance.collectSaturation = false;
+        // FeatureFlags.Instance.collectSaturation = true;
     });
 
     afterEach(() => {
         FeatureFlags.Instance.collectSaturation = false;
     });
 
-    it('for trimix 75 m deep dive is calculated within 400 ms', () => {
-        FeatureFlags.Instance.collectSaturation = true;
+    const assertDuration = (message: string, limit: number, actionToMeasure: () => void): void => {
+        const startTime = performance.now();
+        actionToMeasure();
+        const endTime = performance.now();
+
+        const methodDuration = Precision.round(endTime - startTime);
+        console.log(`${message}: ${methodDuration} ms (max ${limit} ms)`);
+        expect(methodDuration).toBeLessThan(limit);
+    };
+
+    it('Decompression is calculated within 100 ms', () => {
+        const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
+        options.safetyStop = SafetyStop.always;
+        options.salinity = Salinity.salt;
+        options.roundStopsToMinutes = true;
+        options.decoStopDistance = 3;
+        options.altitude = 0;
 
         const gases = new Gases();
         gases.add(StandardGases.trimix1260);
@@ -55,69 +55,42 @@ describe('Buhlmann Algorithm - Performance', () => {
         const algorithm = new BuhlmannAlgorithm();
         const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
 
-        const startTime = performance.now();
-        algorithm.decompression(parameters);
-        const endTime = performance.now();
-
-        const methodDuration = Precision.round(endTime - startTime);
-        console.log(`Decompression calculation duration: ${methodDuration} ms`);
-
-        expect(methodDuration).toBeLessThan(400);
+        assertDuration(`Decompression calculation duration`, 100,
+            () => algorithm.decompression(parameters));
     });
-});
 
-describe('Buhlmann Algorithm - No decompression times', () => {
-    it('Calculates No Decompression Limit at 10m within 100 ms', () => {
+    it('No decompression time calculated within 50 ms', () => {
         const options = OptionExtensions.createOptions(1, 1, 1.6, 1.6, Salinity.fresh);
         const algorithm = new BuhlmannAlgorithm();
 
-        const startTime = performance.now();
-        const simpleDive = AlgorithmParams.forSimpleDive(10, StandardGases.air, options);
-        const ndl = algorithm.noDecoLimit(simpleDive);
-        const endTime = performance.now();
+        const simpleDive = AlgorithmParams.forSimpleDive(6, StandardGases.air, options);
 
-        const methodDuration = Precision.round(endTime - startTime);
-        console.log(`No Decompression Limit calculation duration: ${methodDuration} ms`);
+        assertDuration(`No Decompression Limit calculation duration`, 50,
+            () => algorithm.noDecoLimit(simpleDive));
+    });
 
-        expect(ndl).toBe(473);
-        expect(methodDuration).toBeLessThan(100);
+    it('Consumption Max bottom time is calculated within 550 ms', () => {
+        const consumptionOptions: ConsumptionOptions = {
+            diver: new Diver(20),
+            primaryTankReserve: Consumption.defaultPrimaryReserve,
+            stageTankReserve: 0
+        };
+        const consumption = new Consumption(DepthConverter.forFreshWater());
+        const options2 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
+        options2.safetyStop = SafetyStop.never;
+        options2.problemSolvingDuration = 2;
+
+        const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
+        options.safetyStop = SafetyStop.always;
+        options.problemSolvingDuration = 2;
+        const tank = new Tank(24, 200, 21);
+        const tanks = [tank];
+
+        const segments = new Segments();
+        segments.add(5, tank.gas, Time.oneMinute);
+        segments.addFlat(tank.gas, Time.oneMinute * 10);
+
+        assertDuration(`Consumption Max bottom time duration`, 550,
+            () => consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options));
     });
 });
-
-describe('Consumption - Performance', () => {
-    const consumptionOptions: ConsumptionOptions = {
-        diver: new Diver(20),
-        primaryTankReserve: Consumption.defaultPrimaryReserve,
-        stageTankReserve: 0
-    };
-    const consumption = new Consumption(DepthConverter.forFreshWater());
-    const options2 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
-    options2.safetyStop = SafetyStop.never;
-    options2.problemSolvingDuration = 2;
-
-    const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
-    options.safetyStop = SafetyStop.always;
-    options.problemSolvingDuration = 2;
-
-    // This tests is performance dependent, should usually finish within 300 ms,
-    // but let assign reserve on slower machines at github.
-    describe('Max bottom time', () => {
-        it('for long dives is calculated within 550 ms', () => {
-            const tank = new Tank(24, 200, 21);
-            const tanks = [tank];
-
-            const segments = new Segments();
-            segments.add(5, tank.gas, Time.oneMinute);
-            segments.addFlat(tank.gas, Time.oneMinute * 10);
-
-            const startTime = performance.now();
-            consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
-            const endTime = performance.now();
-            const methodDuration = Precision.round(endTime - startTime);
-
-            console.log(`Max bottom time duration: ${methodDuration} ms`);
-            expect(methodDuration).toBeLessThan(550);
-        });
-    });
-});
-

@@ -2,18 +2,17 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { faLungs } from '@fortawesome/free-solid-svg-icons';
-
-import { SacCalculatorService } from '../shared/sac-calculator.service';
-import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { Diver, Precision, Tank, TankTemplate } from 'scuba-physics';
-import { InputControls } from '../shared/inputcontrols';
-import { TextConstants } from '../shared/TextConstants';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { OptionsService } from '../shared/options.service';
-import { TankBound } from '../shared/models';
-import { SacViewState } from '../shared/views.model';
-import { KnownViews } from '../shared/viewStates';
-import { SubViewStorage } from '../shared/subViewStorage';
+import { SacCalculatorService } from '../../shared/sac-calculator.service';
+import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
+import { InputControls } from '../../shared/inputcontrols';
+import { TextConstants } from '../../shared/TextConstants';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { OptionsService } from '../../shared/options.service';
+import { TankBound } from '../../shared/models';
+import { SacViewState } from '../../shared/views.model';
+import { KnownViews } from '../../shared/viewStates';
+import { SubViewStorage } from '../../shared/subViewStorage';
 
 interface SacForm {
     depth: FormControl<number>;

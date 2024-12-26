@@ -16,6 +16,16 @@ import {MdbAccordionModule} from 'mdb-angular-ui-kit/accordion';
 import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
+
+import {SacComponent} from './calculators/sac/sac.component';
+import {NitroxComponent} from './calculators/nitrox/nitrox.component';
+import {NdlLimitsComponent} from './calculators/ndl-limits/ndl-limits.component';
+import {AltitudeCalcComponent} from './calculators/altitude-calc/altitude-calc.component';
+import {WeightCalcComponent} from './calculators/weight/weight.component';
+import {GasPropertiesCalcComponent} from './calculators/gas.props/gas.props.component';
+import {RedundanciesComponent} from './calculators/redundancies/redundancies.component';
+import { GasBlenderComponent } from './calculators/gas-blender/gas-blender.component';
+
 import {TanksSimpleComponent} from './tanks-simple/tanks-simple.component';
 import {TanksComplexComponent} from './tanks-complex/tanks-complex.component';
 import {DiverComponent} from './diver/diver.component';
@@ -24,8 +34,7 @@ import {DiveInfoComponent} from './diveinfo/diveinfo.component';
 import {MainMenuComponent} from './mainmenu/mainmenu.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {GaslabelComponent} from './gaslabel/gaslabel.component';
-import {SacComponent} from './sac/sac.component';
-import {NitroxComponent} from './nitrox/nitrox.component';
+
 import {WayPointsComponent} from './waypoints/waypoints.component';
 import {ProfileChartComponent} from './profilechart/profilechart.component';
 import {AboutComponent} from './about/about.component';
@@ -35,7 +44,7 @@ import {DepthsComplexComponent} from './depths-complex/depths-complex.component'
 import {TankChartComponent} from './tank-chart/tank-chart.component';
 import {AppSettingsComponent} from './app-settings/app-settings.component';
 import {CalculatingComponent} from './calculating/calculating.component';
-import {NdlLimitsComponent} from './ndl-limits/ndl-limits.component';
+
 import {SalinityComponent} from './salinity/salinity.component';
 import {AltitudeComponent} from './altitude/altitude.component';
 import {GradientsComponent} from './gradients/gradients.component';
@@ -74,13 +83,10 @@ import {ViewStates} from './shared/viewStates';
 import {Urls} from './shared/navigation.service';
 import {SubViewStorage} from './shared/subViewStorage';
 import {DashboardStartUp} from './shared/startUp';
-import {AltitudeCalcComponent} from './altitude-calc/altitude-calc.component';
-import {WeightCalcComponent} from './weight/weight.component';
-import {GasPropertiesCalcComponent} from './gas.props/gas.props.component';
+
 import {DiffComponent} from './diff/diff.component';
 import {DiveResults} from './shared/diveresults';
 import {DiveSchedules} from './shared/dive.schedules';
-import {RedundanciesComponent} from './redundancies/redundancies.component';
 import {RedundanciesService} from './shared/redundancies.service';
 import {ReloadDispatcher} from './shared/reloadDispatcher';
 import {ManagedDiveSchedules} from './shared/managedDiveSchedules';
@@ -89,7 +95,6 @@ import {DiveResultsDifferenceComponent} from './diff/diveresults/diff-diveresult
 import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilechart.component';
 import {SurfaceIntervalComponent} from './surface-interval/surface-interval.component';
 import {DiveResultsTableDifferenceComponent} from './diff/diveresults/table/diff-diveresults-table.component';
-import { GasBlenderComponent } from './gas-blender/gas-blender.component';
 import { GasBlenderService } from './shared/gas-blender.service';
 import {DiffTabsButtonComponent} from './diff/tabs/profile-button/diff-tabs-button.component';
 import {DiffTabsComponent} from './diff/tabs/diff-tabs.component';

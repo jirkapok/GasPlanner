@@ -9,18 +9,18 @@ import {
 import { Location } from '@angular/common';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { SacComponent } from './sac/sac.component';
-import { NitroxComponent } from './nitrox/nitrox.component';
-import { AboutComponent } from './about/about.component';
-import { NdlLimitsComponent } from './ndl-limits/ndl-limits.component';
 import { NgModule, inject } from '@angular/core';
 import { KnownViews, ViewStates } from './shared/viewStates';
-import { AltitudeCalcComponent } from './altitude-calc/altitude-calc.component';
-import { WeightCalcComponent } from './weight/weight.component';
-import { GasPropertiesCalcComponent } from './gas.props/gas.props.component';
+import { AboutComponent } from './about/about.component';
 import { DiffComponent } from './diff/diff.component';
-import { RedundanciesComponent } from './redundancies/redundancies.component';
-import { GasBlenderComponent } from './gas-blender/gas-blender.component';
+import { SacComponent } from './calculators/sac/sac.component';
+import { NitroxComponent } from './calculators/nitrox/nitrox.component';
+import { NdlLimitsComponent } from './calculators/ndl-limits/ndl-limits.component';
+import { AltitudeCalcComponent } from './calculators/altitude-calc/altitude-calc.component';
+import { WeightCalcComponent } from './calculators/weight/weight.component';
+import { GasPropertiesCalcComponent } from './calculators/gas.props/gas.props.component';
+import { RedundanciesComponent } from './calculators/redundancies/redundancies.component';
+import { GasBlenderComponent } from './calculators/gas-blender/gas-blender.component';
 
 const canActivateDashboard: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
     const router = inject(Router);

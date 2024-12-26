@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TankSizeComponent } from './tank.size.component';
-import { UnitConversion } from '../shared/UnitConversion';
-import { InputControls } from '../shared/inputcontrols';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { InputControls } from '../../shared/inputcontrols';
 import { DecimalPipe } from '@angular/common';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 

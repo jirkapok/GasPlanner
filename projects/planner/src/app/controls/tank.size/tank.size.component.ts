@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
+import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { Precision, Tank, TankTemplate } from 'scuba-physics';
 import { AbstractControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
-import {ITankSize, TankBound} from '../shared/models';
-import { InputControls } from '../shared/inputcontrols';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import {ITankSize, TankBound} from '../../shared/models';
+import { InputControls } from '../../shared/inputcontrols';
 
 @Component({
     selector: 'app-tank-size',

@@ -32,6 +32,7 @@ import {GaslabelComponent} from './controls/gaslabel/gaslabel.component';
 import {SalinityComponent} from './controls/salinity/salinity.component';
 import {OxygenDropDownComponent} from './controls/oxygen-dropdown/oxygen-dropdown.component';
 import {OxygenComponent} from './controls/oxygen/oxygen.component';
+import {TankSizeComponent} from './controls/tank.size/tank.size.component';
 
 import {TanksSimpleComponent} from './tanks-simple/tanks-simple.component';
 import {TanksComplexComponent} from './tanks-complex/tanks-complex.component';
@@ -75,7 +76,6 @@ import {Preferences} from './shared/preferences';
 import {PlanUrlSerialization} from './shared/PlanUrlSerialization';
 import {WayPointsService} from './shared/waypoints.service';
 import {PlanTabsComponent} from './plan.tabs/plan.tabs.component';
-import {TankSizeComponent} from './tank.size/tank.size.component';
 import {StopsFilter} from './shared/stopsFilter.service';
 import {ViewStates} from './shared/viewStates';
 import {Urls} from './shared/navigation.service';

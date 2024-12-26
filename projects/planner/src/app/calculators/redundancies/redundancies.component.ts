@@ -2,15 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import { Location } from '@angular/common';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder} from '@angular/forms';
-import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { ITankSize } from '../shared/models';
 import { TankTemplate, Precision } from 'scuba-physics';
-import {ValidatorGroups} from '../shared/ValidatorGroups';
-import {InputControls} from '../shared/inputcontrols';
-import {RedundanciesService} from '../shared/redundancies.service';
-import {RedundanciesViewState, TankFillState} from '../shared/views.model';
-import {KnownViews} from '../shared/viewStates';
-import {SubViewStorage} from '../shared/subViewStorage';
+import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
+import { ITankSize } from '../../shared/models';
+import {ValidatorGroups} from '../../shared/ValidatorGroups';
+import {InputControls} from '../../shared/inputcontrols';
+import {RedundanciesService} from '../../shared/redundancies.service';
+import {RedundanciesViewState, TankFillState} from '../../shared/views.model';
+import {KnownViews} from '../../shared/viewStates';
+import {SubViewStorage} from '../../shared/subViewStorage';
 
 interface RedundanciesForm {
     firstTankSize: FormControl<number>;

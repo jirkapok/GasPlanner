@@ -341,6 +341,7 @@ export class BuhlmannAlgorithm {
         const loadSegment = this.toLoadSegment(context.depthConverter, segment);
         context.tissues.load(loadSegment, segment.gas);
         context.runTime += segment.duration;
+        // following methods slow down calculation 2x - consider speedup by extracting them
         context.addCeiling();
         context.addSaturation(segment.averageDepth);
     }

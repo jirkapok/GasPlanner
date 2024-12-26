@@ -13,6 +13,7 @@ import { UnitConversion } from '../shared/UnitConversion';
 import { ResamplingService } from '../shared/ResamplingService';
 import { WayPoint } from '../shared/wayPoint';
 import { HeatMapPlotter } from '../shared/heatMapPlotter';
+import { FeatureFlags } from 'scuba-physics';
 
 @Component({
     selector: 'app-profilechart',
@@ -22,6 +23,7 @@ import { HeatMapPlotter } from '../shared/heatMapPlotter';
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;
     public readonly heatmapIcon = faFire;
+    public heatMapEnabled = FeatureFlags.Instance.collectSaturation;
     public showHeatMap = false;
     private readonly elementName = 'diveplot';
     private readonly heatMapElementName = 'heatmapplot';

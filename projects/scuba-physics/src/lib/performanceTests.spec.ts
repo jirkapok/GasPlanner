@@ -16,7 +16,7 @@ import { Consumption, ConsumptionOptions } from './consumption';
 // Lets assign reserve to all asserts on slower machines at github.
 describe('Performance', () => {
     beforeEach(() => {
-        // FeatureFlags.Instance.collectSaturation = true;
+        FeatureFlags.Instance.collectSaturation = true;
     });
 
     afterEach(() => {

@@ -10,7 +10,10 @@ import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.s
 import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
-import {ReloadDispatcher} from '../../shared/reloadDispatcher';
+import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { HeatMapPlotter } from '../../shared/heatMapPlotter';
+import { FeatureFlags } from 'scuba-physics';
+import * as _ from "lodash";
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -19,7 +22,9 @@ import {ReloadDispatcher} from '../../shared/reloadDispatcher';
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
+    public heatMapEnabled = FeatureFlags.Instance.collectSaturation;
     private plotter: ChartPlotter;
+    private heatMapPlotter: HeatMapPlotter;
 
     constructor(
         units: UnitConversion,
@@ -30,10 +35,10 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
-        const profileATraces = chartPlotterFactory.wthNamePrefix('Profile A ')
+        const profileATraces = chartPlotterFactory.withNamePrefix('Profile A ')
             .create(() => this.profileA);
         const profileBTraces = chartPlotterFactory
-            .wthNamePrefix('Profile B ')
+            .withNamePrefix('Profile B ')
             .wthAverageDepthColor('rgb(188,191,192)')
             .wthDepthColor(ChartPlotterFactory.depthLineColorB)
             .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
@@ -42,6 +47,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .create(() => this.profileB);
 
         this.plotter = new ChartPlotter('diveplotdiff', chartPlotterFactory, profileBTraces, profileATraces);
+        this.heatMapPlotter = new HeatMapPlotter('heatmapplotA');
 
         this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
@@ -106,6 +112,13 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     private plotCharts(): void {
         this.plotter.plotCharts(this.profileComparatorService.totalDuration);
+
+        if(this.heatMapEnabled) {
+            const profileAoverPressures = this.profileA.tissueOverPressures;
+            let transponed = _.zip.apply(_, profileAoverPressures) as number[][];
+            transponed = transponed.reverse();
+            this.heatMapPlotter.plotHeatMap(transponed);
+        }
     }
 
     private hookChartEvents(): void {

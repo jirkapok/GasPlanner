@@ -6,9 +6,14 @@
     <div class="card-body card-minheight">
         <app-calculating [show]="!profilesCalculated"></app-calculating>
         <div id="diveplotdiff" class="diveplot" [ngClass]="{
-        'plot-display': profilesCalculated,
-        'plot-hidden': !profilesCalculated
-      }">
+            'plot-display': profilesCalculated,
+            'plot-hidden': !profilesCalculated
+          }">
         </div>
+        <div id="heatmapplotA" class="heatmap-plotA"
+             [ngClass]="{
+            'plot-display': profilesCalculated,
+            'plot-hidden': !profilesCalculated
+          }">
     </div>
 </div>

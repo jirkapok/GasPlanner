@@ -79,7 +79,7 @@ export class ChartPlotterFactory {
         };
     }
 
-    public wthNamePrefix(prefix: string): ChartPlotterFactory {
+    public withNamePrefix(prefix: string): ChartPlotterFactory {
         this.namePrefix = prefix;
         return this;
     }

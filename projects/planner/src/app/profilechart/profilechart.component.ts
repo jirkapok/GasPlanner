@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
-import * as _ from 'lodash';
 import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
 import { DiveResults } from '../shared/diveresults';
 import { SelectedWaypoint } from '../shared/selectedwaypointService';
@@ -94,9 +93,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.plotter.plotCharts(this.dive.totalDuration);
 
         if (this.showHeatMap) {
-            let transponed = _.zip.apply(_, this.dive.tissueOverPressures) as number[][];
-            transponed = transponed.reverse();
-            this.heatmapPlotter.plotHeatMap(transponed);
+            const overPressures = this.dive.tissueOverPressures;
+            this.heatmapPlotter.plotHeatMap(overPressures);
         }
     }
 

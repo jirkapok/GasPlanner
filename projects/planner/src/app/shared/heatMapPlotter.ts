@@ -1,4 +1,5 @@
 import * as Plotly from 'plotly.js-dist';
+import * as _ from "lodash";
 
 export class HeatMapPlotter {
     private readonly colorScale = [
@@ -58,9 +59,12 @@ export class HeatMapPlotter {
      * +1: is 100% speed of ongasing.
      */
     public plotHeatMap(dataValues: number[][]): void {
+        let transponed = _.zip.apply(_, dataValues) as number[][];
+        transponed = transponed.reverse();
+
         const data: Plotly.Data[] = [
             {
-                z: dataValues,
+                z: transponed,
                 type: <Plotly.PlotType>'heatmap',
                 colorscale: this.colorScale as Plotly.ColorScale,
                 showscale: false,

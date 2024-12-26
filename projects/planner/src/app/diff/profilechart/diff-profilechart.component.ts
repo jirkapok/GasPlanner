@@ -13,7 +13,6 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { FeatureFlags } from 'scuba-physics';
-import * as _ from "lodash";
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -48,8 +47,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .create(() => this.profileB);
 
         this.plotter = new ChartPlotter('diveplotdiff', chartPlotterFactory, profileBTraces, profileATraces);
-        this.heatMapPlotterA = new HeatMapPlotter('heatmapplotA');
-        this.heatMapPlotterB = new HeatMapPlotter('heatmapplotB');
+        this.heatMapPlotterA = new HeatMapPlotter('heatmapPlotA');
+        this.heatMapPlotterB = new HeatMapPlotter('heatmapPlotB');
 
         this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
@@ -117,15 +116,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
         if(this.heatMapEnabled) {
             // TODO rescale different profile duration to the same max. duration (add surface tissues offgasing to shorter dive)
-            const profileAoverPressuresA = this.profileA.tissueOverPressures;
-            let transponedA = _.zip.apply(_, profileAoverPressuresA) as number[][];
-            transponedA = transponedA.reverse();
-            this.heatMapPlotterA.plotHeatMap(transponedA);
+            const overPressuresA = this.profileA.tissueOverPressures;
+            this.heatMapPlotterA.plotHeatMap(overPressuresA);
 
-            const profileAoverPressuresB = this.profileB.tissueOverPressures;
-            let transponedB = _.zip.apply(_, profileAoverPressuresB) as number[][];
-            transponedB = transponedB.reverse();
-            this.heatMapPlotterB.plotHeatMap(transponedB);
+            const overPressuresB = this.profileB.tissueOverPressures;
+            this.heatMapPlotterB.plotHeatMap(overPressuresB);
         }
     }
 

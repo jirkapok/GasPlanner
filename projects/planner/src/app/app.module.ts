@@ -31,6 +31,7 @@ import {AltitudeComponent} from './controls/altitude/altitude.component';
 import {GaslabelComponent} from './controls/gaslabel/gaslabel.component';
 import {SalinityComponent} from './controls/salinity/salinity.component';
 import {OxygenDropDownComponent} from './controls/oxygen-dropdown/oxygen-dropdown.component';
+import {OxygenComponent} from './controls/oxygen/oxygen.component';
 
 import {TanksSimpleComponent} from './tanks-simple/tanks-simple.component';
 import {TanksComplexComponent} from './tanks-complex/tanks-complex.component';
@@ -49,7 +50,6 @@ import {TankChartComponent} from './tank-chart/tank-chart.component';
 import {AppSettingsComponent} from './app-settings/app-settings.component';
 import {GradientsComponent} from './gradients/gradients.component';
 import {DepthComponent} from './depth/depth.component';
-import {OxygenComponent} from './oxygen/oxygen.component';
 import {DurationPipe} from './pipes/duration.pipe';
 import {PlannerService} from './shared/planner.service';
 import {PreferencesStore} from './shared/preferencesStore';
@@ -71,7 +71,6 @@ import {SacCalculatorService} from './shared/sac-calculator.service';
 import {NitroxCalculatorService} from './shared/nitrox-calculator.service';
 import {SettingsNormalizationService} from './shared/settings-normalization.service';
 import {ViewSwitchService} from './shared/viewSwitchService';
-
 import {Preferences} from './shared/preferences';
 import {PlanUrlSerialization} from './shared/PlanUrlSerialization';
 import {WayPointsService} from './shared/waypoints.service';
@@ -82,7 +81,6 @@ import {ViewStates} from './shared/viewStates';
 import {Urls} from './shared/navigation.service';
 import {SubViewStorage} from './shared/subViewStorage';
 import {DashboardStartUp} from './shared/startUp';
-
 import {DiffComponent} from './diff/diff.component';
 import {DiveResults} from './shared/diveresults';
 import {DiveSchedules} from './shared/dive.schedules';

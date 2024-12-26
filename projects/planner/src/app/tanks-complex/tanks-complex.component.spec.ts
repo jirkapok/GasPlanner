@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { TankTemplate } from 'scuba-physics';
 import { GaslabelComponent } from '../controls/gaslabel/gaslabel.component';
 import { OxygenDropDownComponent } from '../controls/oxygen-dropdown/oxygen-dropdown.component';
-import { OxygenComponent } from '../oxygen/oxygen.component';
+import { OxygenComponent } from '../controls/oxygen/oxygen.component';
 import { InputControls } from '../shared/inputcontrols';
 import { PlannerService } from '../shared/planner.service';
 import { WorkersFactoryCommon } from '../shared/serial.workers.factory';

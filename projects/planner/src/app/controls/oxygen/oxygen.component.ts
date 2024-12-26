@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { Tank, GasToxicity } from 'scuba-physics';
-import { UnitConversion } from '../shared/UnitConversion';
-import { TankBound } from '../shared/models';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { TankBound } from '../../shared/models';
 
 @Component({
     selector: 'app-oxygen',

@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, AbstractControl } from '@angular/forms';
-import { InputControls } from '../shared/inputcontrols';
-import { UnitConversion } from '../shared/UnitConversion';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-altitude',

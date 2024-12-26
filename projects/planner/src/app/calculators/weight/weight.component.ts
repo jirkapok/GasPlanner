@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { faWeightHanging } from '@fortawesome/free-solid-svg-icons';
 import {
     NonNullableFormBuilder, FormGroup, FormControl, AbstractControl
 } from '@angular/forms';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { InputControls } from '../shared/inputcontrols';
 import {
     Precision, Tank, TankTemplate, AirWeight
 } from 'scuba-physics';
-import { KnownViews } from '../shared/viewStates';
-import { WeightViewState } from '../shared/views.model';
-import { SubViewStorage } from '../shared/subViewStorage';
-import { TankBound } from '../shared/models';
+import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { KnownViews } from '../../shared/viewStates';
+import { WeightViewState } from '../../shared/views.model';
+import { SubViewStorage } from '../../shared/subViewStorage';
+import { TankBound } from '../../shared/models';
 
 interface WeightForm {
     workPressure?: FormControl<number>;

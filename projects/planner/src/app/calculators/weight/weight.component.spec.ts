@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WeightCalcComponent } from './weight.component';
-import { UnitConversion } from '../shared/UnitConversion';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { InputControls } from '../shared/inputcontrols';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
 import { DecimalPipe } from '@angular/common';
-import { SubViewStorage } from '../shared/subViewStorage';
-import { ViewStates } from '../shared/viewStates';
-import { PreferencesStore } from '../shared/preferencesStore';
-import { PlannerService } from '../shared/planner.service';
-import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
-import { Preferences } from '../shared/preferences';
-import { ViewSwitchService } from '../shared/viewSwitchService';
-import { ReloadDispatcher } from '../shared/reloadDispatcher';
-import { DiveSchedules } from '../shared/dive.schedules';
-import { ApplicationSettingsService } from '../shared/ApplicationSettings';
+import { SubViewStorage } from '../../shared/subViewStorage';
+import { ViewStates } from '../../shared/viewStates';
+import { PreferencesStore } from '../../shared/preferencesStore';
+import { PlannerService } from '../../shared/planner.service';
+import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
+import { Preferences } from '../../shared/preferences';
+import { ViewSwitchService } from '../../shared/viewSwitchService';
+import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { DiveSchedules } from '../../shared/dive.schedules';
+import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 
 describe('WeightCalcComponent', () => {
     let component: WeightCalcComponent;

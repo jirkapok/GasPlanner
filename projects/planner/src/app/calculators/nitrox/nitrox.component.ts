@@ -4,18 +4,17 @@ import { faPercent } from '@fortawesome/free-solid-svg-icons';
 import {
     FormControl, NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
-
-import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
-import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { InputControls } from '../shared/inputcontrols';
-import { NitroxValidators } from '../shared/NitroxValidators';
-import { TextConstants } from '../shared/TextConstants';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
-import { SubViewStorage } from '../shared/subViewStorage';
-import { NitroxViewState } from '../shared/views.model';
-import { KnownViews } from '../shared/viewStates';
-import {DiveSchedules} from '../shared/dive.schedules';
+import { NitroxCalculatorService } from '../../shared/nitrox-calculator.service';
+import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
+import { InputControls } from '../../shared/inputcontrols';
+import { NitroxValidators } from '../../shared/NitroxValidators';
+import { TextConstants } from '../../shared/TextConstants';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { SubViewStorage } from '../../shared/subViewStorage';
+import { NitroxViewState } from '../../shared/views.model';
+import { KnownViews } from '../../shared/viewStates';
+import { DiveSchedules } from '../../shared/dive.schedules';
 
 interface NitroxForm {
     mod?: FormControl<number>;

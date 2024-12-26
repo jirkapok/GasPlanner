@@ -24,7 +24,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     public icon = faChartArea;
     public heatMapEnabled = FeatureFlags.Instance.collectSaturation;
     private plotter: ChartPlotter;
-    private heatMapPlotter: HeatMapPlotter;
+    private heatMapPlotterA: HeatMapPlotter;
+    private heatMapPlotterB: HeatMapPlotter;
 
     constructor(
         units: UnitConversion,
@@ -47,7 +48,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .create(() => this.profileB);
 
         this.plotter = new ChartPlotter('diveplotdiff', chartPlotterFactory, profileBTraces, profileATraces);
-        this.heatMapPlotter = new HeatMapPlotter('heatmapplotA');
+        this.heatMapPlotterA = new HeatMapPlotter('heatmapplotA');
+        this.heatMapPlotterB = new HeatMapPlotter('heatmapplotB');
 
         this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
@@ -114,10 +116,16 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.plotter.plotCharts(this.profileComparatorService.totalDuration);
 
         if(this.heatMapEnabled) {
-            const profileAoverPressures = this.profileA.tissueOverPressures;
-            let transponed = _.zip.apply(_, profileAoverPressures) as number[][];
-            transponed = transponed.reverse();
-            this.heatMapPlotter.plotHeatMap(transponed);
+            // TODO rescale different profile duration to the same max. duration (add surface tissues offgasing to shorter dive)
+            const profileAoverPressuresA = this.profileA.tissueOverPressures;
+            let transponedA = _.zip.apply(_, profileAoverPressuresA) as number[][];
+            transponedA = transponedA.reverse();
+            this.heatMapPlotterA.plotHeatMap(transponedA);
+
+            const profileAoverPressuresB = this.profileB.tissueOverPressures;
+            let transponedB = _.zip.apply(_, profileAoverPressuresB) as number[][];
+            transponedB = transponedB.reverse();
+            this.heatMapPlotterB.plotHeatMap(transponedB);
         }
     }
 

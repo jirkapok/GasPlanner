@@ -5,15 +5,21 @@
     </div>
     <div class="card-body card-minheight">
         <app-calculating [show]="!profilesCalculated"></app-calculating>
-        <div id="diveplotdiff" class="diveplot" [ngClass]="{
+        <div id="diveplotdiff" class="diff-dive-plot" [ngClass]="{
             'plot-display': profilesCalculated,
             'plot-hidden': !profilesCalculated
           }">
         </div>
-        <div id="heatmapplotA" class="heatmap-plotA"
+        <div id="heatmapplotA" class="diff-heatmap-plot"
              [ngClass]="{
             'plot-display': profilesCalculated,
             'plot-hidden': !profilesCalculated
           }">
+        <div id="heatmapplotB" class="diff-heatmap-plot"
+                 [ngClass]="{
+            'plot-display': profilesCalculated,
+            'plot-hidden': !profilesCalculated
+          }">
+        </div>
     </div>
 </div>

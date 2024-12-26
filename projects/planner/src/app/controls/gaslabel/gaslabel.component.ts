@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Precision, Tank, GasToxicity } from 'scuba-physics';
-import { UnitConversion } from '../shared/UnitConversion';
+import { UnitConversion } from '../../shared/UnitConversion';
 
 @Component({
     selector: 'app-gaslabel',

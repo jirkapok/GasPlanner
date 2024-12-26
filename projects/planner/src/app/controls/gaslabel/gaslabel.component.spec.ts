@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { PlannerService } from '../shared/planner.service';
-import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
-import { UnitConversion } from '../shared/UnitConversion';
+import { PlannerService } from '../../shared/planner.service';
+import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
+import { UnitConversion } from '../../shared/UnitConversion';
 import { GaslabelComponent } from './gaslabel.component';
 
 describe('Gas label component', () => {

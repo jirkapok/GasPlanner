@@ -28,6 +28,7 @@ import { GasBlenderComponent } from './calculators/gas-blender/gas-blender.compo
 
 import {CalculatingComponent} from './controls/calculating/calculating.component';
 import {AltitudeComponent} from './controls/altitude/altitude.component';
+import {GaslabelComponent} from './controls/gaslabel/gaslabel.component';
 
 import {TanksSimpleComponent} from './tanks-simple/tanks-simple.component';
 import {TanksComplexComponent} from './tanks-complex/tanks-complex.component';
@@ -36,8 +37,6 @@ import {DiveOptionsComponent} from './diveoptions/diveoptions.component';
 import {DiveInfoComponent} from './diveinfo/diveinfo.component';
 import {MainMenuComponent} from './mainmenu/mainmenu.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
-import {GaslabelComponent} from './gaslabel/gaslabel.component';
-
 import {WayPointsComponent} from './waypoints/waypoints.component';
 import {ProfileChartComponent} from './profilechart/profilechart.component';
 import {AboutComponent} from './about/about.component';

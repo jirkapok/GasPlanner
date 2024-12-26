@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { OptionDefaults, Precision } from 'scuba-physics';
-import { InputControls } from '../shared/inputcontrols';
-import { Gradients, StandardGradientsService } from '../shared/standard-gradients.service';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { Gradients, StandardGradientsService } from '../../shared/standard-gradients.service';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-gradients',

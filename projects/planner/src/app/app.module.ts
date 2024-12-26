@@ -33,6 +33,7 @@ import {SalinityComponent} from './controls/salinity/salinity.component';
 import {OxygenDropDownComponent} from './controls/oxygen-dropdown/oxygen-dropdown.component';
 import {OxygenComponent} from './controls/oxygen/oxygen.component';
 import {TankSizeComponent} from './controls/tank.size/tank.size.component';
+import {GradientsComponent} from './controls/gradients/gradients.component';
 
 import {TanksSimpleComponent} from './tanks-simple/tanks-simple.component';
 import {TanksComplexComponent} from './tanks-complex/tanks-complex.component';
@@ -49,7 +50,6 @@ import {DepthsSimpleComponent} from './depths-simple/depths-simple.component';
 import {DepthsComplexComponent} from './depths-complex/depths-complex.component';
 import {TankChartComponent} from './tank-chart/tank-chart.component';
 import {AppSettingsComponent} from './app-settings/app-settings.component';
-import {GradientsComponent} from './gradients/gradients.component';
 import {DepthComponent} from './depth/depth.component';
 import {DurationPipe} from './pipes/duration.pipe';
 import {PlannerService} from './shared/planner.service';

@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { faFileLines, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import {
     NonNullableFormBuilder, FormGroup, FormControl
 } from '@angular/forms';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { InputControls } from '../shared/inputcontrols';
-import { KnownViews } from '../shared/viewStates';
-import { GasViewState } from '../shared/views.model';
-import { SubViewStorage } from '../shared/subViewStorage';
-import { BoundGasProperties } from '../shared/gas.properties';
-import { TextConstants } from '../shared/TextConstants';
 import { Tank, Precision } from 'scuba-physics';
+import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { KnownViews } from '../../shared/viewStates';
+import { GasViewState } from '../../shared/views.model';
+import { SubViewStorage } from '../../shared/subViewStorage';
+import { BoundGasProperties } from '../../shared/gas.properties';
+import { TextConstants } from '../../shared/TextConstants';
 
 interface GasForm {
     o2: FormControl<number>;

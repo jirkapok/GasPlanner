@@ -1,21 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { GasPropertiesCalcComponent } from './gas.props.component';
-import { UnitConversion } from '../shared/UnitConversion';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { InputControls } from '../shared/inputcontrols';
 import { DecimalPipe } from '@angular/common';
-import { SubViewStorage } from '../shared/subViewStorage';
-import { ViewStates } from '../shared/viewStates';
-import { PreferencesStore } from '../shared/preferencesStore';
-import { PlannerService } from '../shared/planner.service';
-import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
-import { Preferences } from '../shared/preferences';
-import { ViewSwitchService } from '../shared/viewSwitchService';
 import { StandardGases } from 'scuba-physics';
-import { ReloadDispatcher } from '../shared/reloadDispatcher';
-import { DiveSchedules } from '../shared/dive.schedules';
-import { ApplicationSettingsService } from '../shared/ApplicationSettings';
+import { GasPropertiesCalcComponent } from './gas.props.component';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { SubViewStorage } from '../../shared/subViewStorage';
+import { ViewStates } from '../../shared/viewStates';
+import { PreferencesStore } from '../../shared/preferencesStore';
+import { PlannerService } from '../../shared/planner.service';
+import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
+import { Preferences } from '../../shared/preferences';
+import { ViewSwitchService } from '../../shared/viewSwitchService';
+import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { DiveSchedules } from '../../shared/dive.schedules';
+import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 
 describe('GasPropertiesCalcComponent', () => {
     let component: GasPropertiesCalcComponent;

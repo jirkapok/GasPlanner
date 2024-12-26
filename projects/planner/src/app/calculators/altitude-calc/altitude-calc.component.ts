@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { faMountainSun } from '@fortawesome/free-solid-svg-icons';
 import {
     NonNullableFormBuilder, FormGroup, FormControl
 } from '@angular/forms';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { InputControls } from '../shared/inputcontrols';
 import { Precision, AltitudeCalculator } from 'scuba-physics';
-import { KnownViews } from '../shared/viewStates';
-import { AltitudeViewState } from '../shared/views.model';
-import { SubViewStorage } from '../shared/subViewStorage';
+import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { KnownViews } from '../../shared/viewStates';
+import { AltitudeViewState } from '../../shared/views.model';
+import { SubViewStorage } from '../../shared/subViewStorage';
 
 interface AltitudeDepthForm {
     pressure: FormControl<number>;

@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { GasBlenderComponent } from './gas-blender.component';
-import { UnitConversion } from '../shared/UnitConversion';
-import { GasBlenderService } from '../shared/gas-blender.service';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { InputControls } from '../shared/inputcontrols';
-import { SubViewStorage } from '../shared/subViewStorage';
-import { ViewStates } from '../shared/viewStates';
-import { PreferencesStore } from '../shared/preferencesStore';
-import { Preferences } from '../shared/preferences';
-import { ViewSwitchService } from '../shared/viewSwitchService';
-import { DiveSchedules } from '../shared/dive.schedules';
-import { ReloadDispatcher } from '../shared/reloadDispatcher';
-import { ApplicationSettingsService } from '../shared/ApplicationSettings';
-import { BlendPricingService } from '../shared/blend-pricing.service';
-import { By } from '@angular/platform-browser';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { GasBlenderService } from '../../shared/gas-blender.service';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { SubViewStorage } from '../../shared/subViewStorage';
+import { ViewStates } from '../../shared/viewStates';
+import { PreferencesStore } from '../../shared/preferencesStore';
+import { Preferences } from '../../shared/preferences';
+import { ViewSwitchService } from '../../shared/viewSwitchService';
+import { DiveSchedules } from '../../shared/dive.schedules';
+import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { BlendPricingService } from '../../shared/blend-pricing.service';
 
 class GasBlenderPage {
     constructor(private fixture: ComponentFixture<GasBlenderComponent>) { }

@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { faFaucet, faExclamationTriangle, faSackDollar } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
-import { GasBlenderService } from '../shared/gas-blender.service';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { InputControls } from '../shared/inputcontrols';
 import {
     Precision, StandardGases, Tank, GasMixtures
 } from 'scuba-physics';
-import { BlenderViewState, TankMix } from '../shared/views.model';
-import { KnownViews } from '../shared/viewStates';
-import { SubViewStorage } from '../shared/subViewStorage';
-import { BlendPricingService } from '../shared/blend-pricing.service';
+import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
+import { GasBlenderService } from '../../shared/gas-blender.service';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { BlenderViewState, TankMix } from '../../shared/views.model';
+import { KnownViews } from '../../shared/viewStates';
+import { SubViewStorage } from '../../shared/subViewStorage';
+import { BlendPricingService } from '../../shared/blend-pricing.service';
 
 interface IGasBlenderForm {
     sourceO2: FormControl<number>;

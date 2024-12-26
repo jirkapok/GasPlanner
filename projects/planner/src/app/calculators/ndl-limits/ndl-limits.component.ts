@@ -5,15 +5,15 @@ import { faTable } from '@fortawesome/free-solid-svg-icons';
 import {
     Options, Salinity, Tank, GasToxicity, Precision
 } from 'scuba-physics';
-import { NdlLimit, NdlService } from '../shared/ndl.service';
-import { Gradients } from '../shared/standard-gradients.service';
-import { UnitConversion } from '../shared/UnitConversion';
-import { TankBound } from '../shared/models';
-import { NdlViewState } from '../shared/views.model';
-import { SubViewStorage } from '../shared/subViewStorage';
-import { KnownViews } from '../shared/viewStates';
-import { DiveSchedules } from '../shared/dive.schedules';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { NdlLimit, NdlService } from '../../shared/ndl.service';
+import { Gradients } from '../../shared/standard-gradients.service';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { TankBound } from '../../shared/models';
+import { NdlViewState } from '../../shared/views.model';
+import { SubViewStorage } from '../../shared/subViewStorage';
+import { KnownViews } from '../../shared/viewStates';
+import { DiveSchedules } from '../../shared/dive.schedules';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-ndl-limits',

@@ -34,6 +34,7 @@ import {OxygenDropDownComponent} from './controls/oxygen-dropdown/oxygen-dropdow
 import {OxygenComponent} from './controls/oxygen/oxygen.component';
 import {TankSizeComponent} from './controls/tank.size/tank.size.component';
 import {GradientsComponent} from './controls/gradients/gradients.component';
+import {PpO2Component} from './controls/pp-o2/pp-o2.component';
 
 import {TanksSimpleComponent} from './tanks-simple/tanks-simple.component';
 import {TanksComplexComponent} from './tanks-complex/tanks-complex.component';
@@ -60,7 +61,6 @@ import {WorkersFactory} from './shared/workers.factory';
 import {WorkersFactoryCommon} from './shared/serial.workers.factory';
 import {NdlService} from './shared/ndl.service';
 import {OptionsService} from './shared/options.service';
-import {PpO2Component} from './pp-o2/pp-o2.component';
 import {DelayedScheduleService} from './shared/delayedSchedule.service';
 import {AppinfoComponent} from './appinfo/appinfo.component';
 import {DiveIssuesComponent} from './dive-issues/dive-issues.component';

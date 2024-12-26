@@ -2,12 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DiverComponent } from './diver.component';
+import { DecimalPipe } from '@angular/common';
+import { PpO2Component } from '../controls/pp-o2/pp-o2.component';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { InputControls } from '../shared/inputcontrols';
-import { DecimalPipe } from '@angular/common';
-import { DiverOptions } from '../shared/models';
-import { PpO2Component } from '../pp-o2/pp-o2.component';
 
 class DiverPage {
     constructor(private componentFixture: ComponentFixture<DiverComponent>) {}

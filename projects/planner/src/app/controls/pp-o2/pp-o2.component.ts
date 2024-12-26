@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { Precision } from 'scuba-physics';
-import { InputControls } from '../shared/inputcontrols';
-import { UnitConversion } from '../shared/UnitConversion';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
 
 @Component({
     selector: 'app-pp-o2',

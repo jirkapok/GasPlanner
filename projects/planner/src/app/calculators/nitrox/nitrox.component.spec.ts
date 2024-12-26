@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
-import { OxygenDropDownComponent } from '../../oxygen-dropdown/oxygen-dropdown.component';
+import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { NitroxCalculatorService } from '../../shared/nitrox-calculator.service';
 import { OptionsService } from '../../shared/options.service';

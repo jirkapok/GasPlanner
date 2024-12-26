@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { Precision, StandardGases, Tank } from 'scuba-physics';
-import { InputControls } from '../shared/inputcontrols';
-import { UnitConversion } from '../shared/UnitConversion';
-import { ValidatorGroups } from '../shared/ValidatorGroups';
-import { IGasContent } from '../shared/models';
+import { InputControls } from '../../shared/inputcontrols';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { IGasContent } from '../../shared/models';
 
 @Component({
     selector: 'app-oxygen-dropdown',

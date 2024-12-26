@@ -30,6 +30,7 @@ import {CalculatingComponent} from './controls/calculating/calculating.component
 import {AltitudeComponent} from './controls/altitude/altitude.component';
 import {GaslabelComponent} from './controls/gaslabel/gaslabel.component';
 import {SalinityComponent} from './controls/salinity/salinity.component';
+import {OxygenDropDownComponent} from './controls/oxygen-dropdown/oxygen-dropdown.component';
 
 import {TanksSimpleComponent} from './tanks-simple/tanks-simple.component';
 import {TanksComplexComponent} from './tanks-complex/tanks-complex.component';
@@ -70,7 +71,7 @@ import {SacCalculatorService} from './shared/sac-calculator.service';
 import {NitroxCalculatorService} from './shared/nitrox-calculator.service';
 import {SettingsNormalizationService} from './shared/settings-normalization.service';
 import {ViewSwitchService} from './shared/viewSwitchService';
-import {OxygenDropDownComponent} from './oxygen-dropdown/oxygen-dropdown.component';
+
 import {Preferences} from './shared/preferences';
 import {PlanUrlSerialization} from './shared/PlanUrlSerialization';
 import {WayPointsService} from './shared/waypoints.service';

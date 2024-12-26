@@ -26,6 +26,9 @@ import {GasPropertiesCalcComponent} from './calculators/gas.props/gas.props.comp
 import {RedundanciesComponent} from './calculators/redundancies/redundancies.component';
 import { GasBlenderComponent } from './calculators/gas-blender/gas-blender.component';
 
+import {CalculatingComponent} from './controls/calculating/calculating.component';
+import {AltitudeComponent} from './controls/altitude/altitude.component';
+
 import {TanksSimpleComponent} from './tanks-simple/tanks-simple.component';
 import {TanksComplexComponent} from './tanks-complex/tanks-complex.component';
 import {DiverComponent} from './diver/diver.component';
@@ -43,10 +46,9 @@ import {DepthsSimpleComponent} from './depths-simple/depths-simple.component';
 import {DepthsComplexComponent} from './depths-complex/depths-complex.component';
 import {TankChartComponent} from './tank-chart/tank-chart.component';
 import {AppSettingsComponent} from './app-settings/app-settings.component';
-import {CalculatingComponent} from './calculating/calculating.component';
 
 import {SalinityComponent} from './salinity/salinity.component';
-import {AltitudeComponent} from './altitude/altitude.component';
+
 import {GradientsComponent} from './gradients/gradients.component';
 import {DepthComponent} from './depth/depth.component';
 import {OxygenComponent} from './oxygen/oxygen.component';

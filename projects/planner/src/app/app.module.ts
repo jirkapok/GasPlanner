@@ -36,23 +36,41 @@ import {TankSizeComponent} from './controls/tank.size/tank.size.component';
 import {GradientsComponent} from './controls/gradients/gradients.component';
 import {PpO2Component} from './controls/pp-o2/pp-o2.component';
 
-import {TanksSimpleComponent} from './tanks-simple/tanks-simple.component';
-import {TanksComplexComponent} from './tanks-complex/tanks-complex.component';
-import {DiverComponent} from './diver/diver.component';
-import {DiveOptionsComponent} from './diveoptions/diveoptions.component';
-import {DiveInfoComponent} from './diveinfo/diveinfo.component';
+import {SurfaceIntervalComponent} from './plan/surface-interval/surface-interval.component';
+import {PlanTabsComponent} from './plan/plan.tabs/plan.tabs.component';
+import {TanksSimpleComponent} from './plan/tanks-simple/tanks-simple.component';
+import {TanksComplexComponent} from './plan/tanks-complex/tanks-complex.component';
+import {DiverComponent} from './plan/diver/diver.component';
+import {DiveOptionsComponent} from './plan/diveoptions/diveoptions.component';
+import {DiveInfoComponent} from './plan/diveinfo/diveinfo.component';
+import {DashboardComponent} from './plan/dashboard/dashboard.component';
+import {WayPointsComponent} from './plan/waypoints/waypoints.component';
+import {ProfileChartComponent} from './plan/profilechart/profilechart.component';
+import {DepthsSimpleComponent} from './plan/depths-simple/depths-simple.component';
+import {DepthsComplexComponent} from './plan/depths-complex/depths-complex.component';
+import {TankChartComponent} from './plan/tank-chart/tank-chart.component';
+import {DepthComponent} from './plan/depth/depth.component';
+import {DiveIssuesComponent} from './plan/dive-issues/dive-issues.component';
+
+import {DiffComponent} from './diff/diff.component';
+import {DiffTabsButtonComponent} from './diff/tabs/profile-button/diff-tabs-button.component';
+import {DiffTabsComponent} from './diff/tabs/diff-tabs.component';
+import {GasConsumedDifferenceComponent} from './diff/gasconsumed/diff-gas-consumed/diff-gas-consumed.component';
+import {
+    GasConsumedDifferenceTankComponent
+} from './diff/gasconsumed/diff-gas-consumed/tank-chart/diff-gas-consumed-tank-chart.component';
+import {WaypointsDifferenceComponent} from './diff/waypoints/diff-waypoints.component';
+import {DiveResultsDifferenceComponent} from './diff/diveresults/diff-diveresults.component';
+import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilechart.component';
+import {DiveResultsTableDifferenceComponent} from './diff/diveresults/table/diff-diveresults-table.component';
+
 import {MainMenuComponent} from './mainmenu/mainmenu.component';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import {WayPointsComponent} from './waypoints/waypoints.component';
-import {ProfileChartComponent} from './profilechart/profilechart.component';
 import {AboutComponent} from './about/about.component';
 import {AppFooterComponent} from './footer/footer.component';
-import {DepthsSimpleComponent} from './depths-simple/depths-simple.component';
-import {DepthsComplexComponent} from './depths-complex/depths-complex.component';
-import {TankChartComponent} from './tank-chart/tank-chart.component';
 import {AppSettingsComponent} from './app-settings/app-settings.component';
-import {DepthComponent} from './depth/depth.component';
 import {DurationPipe} from './pipes/duration.pipe';
+import {AppinfoComponent} from './appinfo/appinfo.component';
+
 import {PlannerService} from './shared/planner.service';
 import {PreferencesStore} from './shared/preferencesStore';
 import {UnitConversion} from './shared/UnitConversion';
@@ -62,8 +80,6 @@ import {WorkersFactoryCommon} from './shared/serial.workers.factory';
 import {NdlService} from './shared/ndl.service';
 import {OptionsService} from './shared/options.service';
 import {DelayedScheduleService} from './shared/delayedSchedule.service';
-import {AppinfoComponent} from './appinfo/appinfo.component';
-import {DiveIssuesComponent} from './dive-issues/dive-issues.component';
 import {InputControls} from './shared/inputcontrols';
 import {ValidatorGroups} from './shared/ValidatorGroups';
 import {DepthsService} from './shared/depths.service';
@@ -75,31 +91,17 @@ import {ViewSwitchService} from './shared/viewSwitchService';
 import {Preferences} from './shared/preferences';
 import {PlanUrlSerialization} from './shared/PlanUrlSerialization';
 import {WayPointsService} from './shared/waypoints.service';
-import {PlanTabsComponent} from './plan.tabs/plan.tabs.component';
 import {StopsFilter} from './shared/stopsFilter.service';
 import {ViewStates} from './shared/viewStates';
 import {Urls} from './shared/navigation.service';
 import {SubViewStorage} from './shared/subViewStorage';
 import {DashboardStartUp} from './shared/startUp';
-import {DiffComponent} from './diff/diff.component';
 import {DiveResults} from './shared/diveresults';
 import {DiveSchedules} from './shared/dive.schedules';
 import {RedundanciesService} from './shared/redundancies.service';
 import {ReloadDispatcher} from './shared/reloadDispatcher';
 import {ManagedDiveSchedules} from './shared/managedDiveSchedules';
-import {WaypointsDifferenceComponent} from './diff/waypoints/diff-waypoints.component';
-import {DiveResultsDifferenceComponent} from './diff/diveresults/diff-diveresults.component';
-import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilechart.component';
-import {SurfaceIntervalComponent} from './surface-interval/surface-interval.component';
-import {DiveResultsTableDifferenceComponent} from './diff/diveresults/table/diff-diveresults-table.component';
 import { GasBlenderService } from './shared/gas-blender.service';
-import {DiffTabsButtonComponent} from './diff/tabs/profile-button/diff-tabs-button.component';
-import {DiffTabsComponent} from './diff/tabs/diff-tabs.component';
-import {GasConsumedDifferenceComponent} from './diff/gasconsumed/diff-gas-consumed/diff-gas-consumed.component';
-import {
-    GasConsumedDifferenceTankComponent
-} from './diff/gasconsumed/diff-gas-consumed/tank-chart/diff-gas-consumed-tank-chart.component';
-
 import { ProfileComparatorService } from './shared/diff/profileComparatorService';
 import { GasesComparisonService } from './shared/diff/gases-comparison.service';
 import { ResultsComparison } from './shared/diff/results-comparison.service';

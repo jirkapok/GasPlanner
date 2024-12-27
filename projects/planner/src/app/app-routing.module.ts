@@ -8,7 +8,7 @@ import {
 } from '@angular/router';
 import { Location } from '@angular/common';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponent } from './plan/dashboard/dashboard.component';
 import { NgModule, inject } from '@angular/core';
 import { KnownViews, ViewStates } from './shared/viewStates';
 import { AboutComponent } from './about/about.component';

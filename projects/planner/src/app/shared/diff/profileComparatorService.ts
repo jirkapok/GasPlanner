@@ -8,6 +8,11 @@ import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
 import { WayPoint } from '../wayPoint';
 
+export interface SaturationComparison {
+    profileAOverPressures: number[][];
+    profileBOverPressures: number[][];
+}
+
 @Injectable()
 export class ProfileComparatorService extends Streamed {
     private _profileAIndex = 0;
@@ -106,6 +111,15 @@ export class ProfileComparatorService extends Streamed {
 
     public get showConsumption(): boolean {
         return this.profileAResults.showResults && this.profileBResults.showResults;
+    }
+
+    public get overPressures(): SaturationComparison {
+        // TODO rescale different profile duration to the same max. duration (add surface tissues offgasing to shorter dive)
+        const aLonger = this.profileAResults.planDuration > this.profileBResults.planDuration;
+        return {
+            profileAOverPressures: this.profileAResults.tissueOverPressures,
+            profileBOverPressures: this.profileBResults.tissueOverPressures
+        };
     }
 
     private get wayPointsA(): WayPoint[]{

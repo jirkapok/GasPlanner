@@ -36,7 +36,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
         const profileATraces = chartPlotterFactory.withNamePrefix('Profile A ')
-            .create(() => this.profileA);
+            .create(() => this.profileComparatorService.profileAResults);
         const profileBTraces = chartPlotterFactory
             .withNamePrefix('Profile B ')
             .wthAverageDepthColor('rgb(188,191,192)')
@@ -44,7 +44,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
             .wthEventLineColor('rgb(118,119,120)')
-            .create(() => this.profileB);
+            .create(() => this.profileComparatorService.profileBResults);
 
         this.plotter = new ChartPlotter('diveplotdiff', chartPlotterFactory, profileBTraces, profileATraces);
         this.heatMapPlotterA = new HeatMapPlotter('heatmapPlotA');
@@ -73,14 +73,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     public get profilesCalculated(): boolean {
         return this.profileComparatorService.profilesCalculated;
-    }
-
-    private get profileA(): DiveResults {
-        return this.profileComparatorService.profileAResults;
-    }
-
-    private get profileB(): DiveResults {
-        return this.profileComparatorService.profileBResults;
     }
 
     public ngOnInit(): void {
@@ -115,12 +107,9 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.plotter.plotCharts(this.profileComparatorService.totalDuration);
 
         if(this.heatMapEnabled) {
-            // TODO rescale different profile duration to the same max. duration (add surface tissues offgasing to shorter dive)
-            const overPressuresA = this.profileA.tissueOverPressures;
-            this.heatMapPlotterA.plotHeatMap(overPressuresA);
-
-            const overPressuresB = this.profileB.tissueOverPressures;
-            this.heatMapPlotterB.plotHeatMap(overPressuresB);
+            var overPressures = this.profileComparatorService.overPressures;
+            this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
+            this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);
         }
     }
 

@@ -1,6 +1,6 @@
 import { Gas } from './Gases';
 import { Segment } from './Segments';
-import { LoadedTissue } from './Tissues';
+import { LoadedTissue, TissueOverPressures } from './Tissues.api';
 
 export enum EventType {
     noAction = 0,
@@ -172,7 +172,7 @@ export class Ceiling {
  * Result of the Algorithm calculation
  */
 export class CalculatedProfile {
-    public static readonly emptyTissueOverPressures: number[][] = [
+    public static readonly emptyTissueOverPressures: TissueOverPressures = [
         [0],[0],[0],[0], [0],[0],[0],[0], [0],[0],[0],[0], [0],[0],[0],[0],
     ];
     private constructor(

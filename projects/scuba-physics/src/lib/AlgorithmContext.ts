@@ -1,4 +1,4 @@
-import { LoadedTissue, Tissue, Tissues } from './Tissues';
+import { Tissue, Tissues } from './Tissues';
 import { Ceiling } from './CalculatedProfile';
 import { BestGasOptions, Gas, Gases, OCGasSource } from './Gases';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
@@ -10,11 +10,12 @@ import { DepthConverter } from './depth-converter';
 import { Time } from './Time';
 import { StandardGases } from './StandardGases';
 import { FeatureFlags } from './featureFlags';
+import { LoadedTissue, TissueOverPressures } from "./Tissues.api";
 
 export interface ContextMemento {
     tissues: Tissue[];
     ceilings: number;
-    saturationRatios: number;
+    tissueOverPressures: number;
     segments: number;
     runTime: number;
     lowestCeiling: number;
@@ -24,7 +25,7 @@ export interface ContextMemento {
 export class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
-    public saturationRatios: number[][] = [];
+    public tissueOverPressures: TissueOverPressures = [];
     /** in seconds */
     public runTime = 0;
 
@@ -143,7 +144,7 @@ export class AlgorithmContext {
 
         const ambientPressure = this.depthConverter.toBar(currentDepth);
         const currentOverPressures = this.tissues.saturationRatio(ambientPressure, this.depthConverter.surfacePressure, 1);
-        this.saturationRatios.push(currentOverPressures);
+        this.tissueOverPressures.push(currentOverPressures);
     }
 
     public createMemento(): ContextMemento {
@@ -152,7 +153,7 @@ export class AlgorithmContext {
             oxygenStarted: this._oxygenStarted,
             tissues: Tissues.copy(this.tissues.compartments),
             ceilings: this.ceilings.length,
-            saturationRatios: this.saturationRatios.length,
+            tissueOverPressures: this.tissueOverPressures.length,
             segments: this.segments.length,
             lowestCeiling: this.gradients.lowestCeiling
         };
@@ -166,7 +167,7 @@ export class AlgorithmContext {
         this._oxygenStarted = memento.oxygenStarted;
         // ceilings, segments and saturationRatios are only added
         this.ceilings = this.ceilings.slice(0, memento.ceilings);
-        this.saturationRatios = this.saturationRatios.slice(0, memento.saturationRatios);
+        this.tissueOverPressures = this.tissueOverPressures.slice(0, memento.tissueOverPressures);
         const toCut = this.segments.length - memento.segments;
         this.segments.cutDown(toCut);
     }

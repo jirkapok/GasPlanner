@@ -3,6 +3,7 @@ import { Gas } from './Gases';
 import _ from 'lodash';
 import { AltitudePressure, PressureConverter } from './pressure-converter';
 import { GasMixtures } from './GasMixtures';
+import { LoadedTissue } from "./Tissues.api";
 
 /**
  * Represents transition between depths during dive
@@ -330,21 +331,6 @@ export class Tissues {
         }
         return loadChange;
     }
-}
-
-/**
- * Represents state of the body after performed dive.
- */
-export interface LoadedTissue {
-    /**
-     * partial pressure of nitrogen in bars
-     */
-    pN2: number;
-
-    /**
-     * partial pressure of helium in bars
-     */
-    pHe: number;
 }
 
 export class TissuesValidator {

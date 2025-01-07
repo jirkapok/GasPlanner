@@ -33,7 +33,7 @@ export * from './lib/StandardGases';
 export * from './lib/StandardTanks';
 export * from './lib/Tanks';
 export * from './lib/Time';
-export { LoadedTissue } from './lib/Tissues';
+export * from './lib/Tissues.api';
 export * from './lib/units';
 export * from './lib/weight';
 export * from './lib/consumptionByMix';

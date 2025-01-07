@@ -3,12 +3,14 @@ import { Time } from './Time';
 import {
     AlgorithmParams, BuhlmannAlgorithm, RestingParameters, SurfaceIntervalParameters
 } from './BuhlmannAlgorithm';
-import { LoadedTissue, Tissues } from './Tissues';
+import { Tissues } from './Tissues';
 import { Precision } from './precision';
 import { Gases } from './Gases';
 import { Segments } from './Segments';
 import { Options } from './Options';
 import { StandardGases } from './StandardGases';
+import { FeatureFlags } from "./featureFlags";
+import { LoadedTissue } from "./Tissues.api";
 
 describe('Buhlmann Algorithm - Repetitive dives', () => {
     const sut = new BuhlmannAlgorithm();
@@ -47,13 +49,13 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
 
     const applySurfaceInterval = (loaded: LoadedTissue[], altitude: number, duration: number): LoadedTissue[] => {
         const parameters = new SurfaceIntervalParameters(loaded, altitude, duration);
-        return sut.applySurfaceInterval(parameters);
+        return sut.applySurfaceInterval(parameters).finalTissues;
     };
 
     const stableTissues = Tissues.createLoadedAt(0);
 
     describe('Surface interval', () => {
-        it('Isn\'t applied for 0 seconds surface interval duration.', () => {
+        it('Isn\'t applied for 0 seconds surface interval duration', () => {
             const diveResult = diveOnTrimix();
             const restedTissues = applySurfaceInterval(diveResult.tissues, 0, 0);
             const r1 = toTissueResult(diveResult.tissues);
@@ -61,7 +63,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             expect(r1).toEqual(r2);
         });
 
-        it('Reset tissues to stable for infinite surface interval.', () => {
+        it('Reset tissues to stable for infinite surface interval', () => {
             const diveResult = diveOnTrimix();
             const restedTissues = applySurfaceInterval(diveResult.tissues, 0, Number.POSITIVE_INFINITY);
             const r1 = toTissueResult(restedTissues);
@@ -69,14 +71,14 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             expect(r1).toEqual(r2);
         });
 
-        it('Doesn\'t change not loaded tissues.', () => {
+        it('Doesn\'t change not loaded tissues', () => {
             const r1 = toTissueResult(stableTissues);
             const restedTissues = applySurfaceInterval(stableTissues, 0, Time.oneMinute * 10);
             const r2 = toTissueResult(restedTissues);
             expect(r1).toEqual(r2);
         });
 
-        it('Adapts to higher altitude.', () => {
+        it('Adapts to higher altitude', () => {
             const r1 = toTissueResult(stableTissues);
             const restedTissues = applySurfaceInterval(stableTissues, 1000, Time.oneMinute * 10);
             const r2 = toTissueResult(restedTissues);
@@ -85,7 +87,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             )).toBeTruthy();
         });
 
-        it('Adapts to lower altitude.', () => {
+        it('Adapts to lower altitude', () => {
             const source = applySurfaceInterval(stableTissues, 1000, Time.oneMinute * 120);
             const r1 = toTissueResult(source);
             const result2 = applySurfaceInterval(stableTissues, 500, Time.oneMinute * 10);
@@ -95,7 +97,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             )).toBeTruthy();
         });
 
-        it('Adapts helium loading.', () => {
+        it('Adapts helium loading', () => {
             const diveResult = diveOnTrimix();
             const r1 = toTissueResult(diveResult.tissues);
             const result2 = applySurfaceInterval(diveResult.tissues, 0, Time.oneMinute * 10);
@@ -112,6 +114,15 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             const r1 = toTissueResult(restedTissues, roundto);
             const r2 = toTissueResult(stableTissues, roundto);
             expect(r1).toEqual(r2);
+        });
+
+        it('Fills the over pressures', () => {
+            FeatureFlags.Instance.collectSaturation = true;
+            const duration = Time.oneMinute * 10;
+            const parameters = new SurfaceIntervalParameters(stableTissues, 0, duration);
+            const result = sut.applySurfaceInterval(parameters);
+            expect(result.tissueOverPressures.length).toEqual(duration);
+            FeatureFlags.Instance.collectSaturation = false;
         });
     });
 

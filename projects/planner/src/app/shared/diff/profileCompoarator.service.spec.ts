@@ -3,7 +3,9 @@ import { DiveSchedules } from '../dive.schedules';
 import { ProfileComparatorService } from './profileComparatorService';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { UnitConversion } from '../UnitConversion';
-import { ConsumptionByMix, IConsumedMix, Segment, StandardGases, Tank } from 'scuba-physics';
+import {
+    ConsumptionByMix, FeatureFlags, IConsumedMix, Segment, StandardGases, Tank
+} from 'scuba-physics';
 import { WayPoint } from '../wayPoint';
 import { PlannerService } from '../planner.service';
 import { ViewSwitchService } from "../viewSwitchService";
@@ -168,12 +170,13 @@ describe('ProfileComparison service', () => {
         });
     });
 
-    xit('Tissue saturation Both have the same amount of samples', () => {
+    it('Tissue saturation Both have the same amount of samples', () => {
+        FeatureFlags.Instance.collectSaturation = true;
         schedules.add();
         schedules.dives[1].depths.planDuration = 14;
         sut.selectProfile(1);
         const planner = TestBed.inject(PlannerService);
-        // needed to get the finale over pressures
+        // needed to get the final over pressures
         planner.calculate(1);
         planner.calculate(2);
 
@@ -181,5 +184,6 @@ describe('ProfileComparison service', () => {
         const lengthB = overPressures.profileAOverPressures.length;
         const lengthA = overPressures.profileBOverPressures.length;
         expect(lengthA).toEqual(lengthB);
+        FeatureFlags.Instance.collectSaturation = false;
     });
 });

@@ -1,5 +1,6 @@
 import {
-    Ceiling, EventType, Event, HighestDensity, OtuCalculator, LoadedTissue
+    Ceiling, EventType, Event, HighestDensity,
+    OtuCalculator, LoadedTissue, TissueOverPressures
 } from 'scuba-physics';
 import { Injectable } from '@angular/core';
 import { WayPoint } from './wayPoint';
@@ -26,9 +27,7 @@ export class DiveResults {
     /** In meaning of at end of the dive */
     public finalTissues: LoadedTissue[] = [];
     // 16 tissues overpressure history
-    public tissueOverPressures: number[][] = [
-        [0],[0],[0],[0], [0],[0],[0],[0], [0],[0],[0],[0], [0],[0],[0],[0],
-    ];
+    public tissueOverPressures: TissueOverPressures = [];
     public events: Event[] = [];
 
 

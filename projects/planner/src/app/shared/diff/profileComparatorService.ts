@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { DiveResults } from '../diveresults';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { ConsumptionByMix, IConsumedMix } from 'scuba-physics';
+import {
+    ConsumptionByMix, IConsumedMix,
+    SurfaceIntervalParameters, BuhlmannAlgorithm,
+    TissueOverPressures, Time
+} from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
@@ -114,10 +118,23 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public get overPressures(): SaturationComparison {
-        // TODO rescale different profile duration to the same max. duration (add surface tissues offgasing to shorter dive)
-        const aLonger = this.profileAResults.planDuration > this.profileBResults.planDuration;
+        const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
+        const surfaceInterval = Math.abs(durationDiff);
+
+        // add to the shorter one and don't store it in the result, since it is used only for the diff
+        if(durationDiff > 0) {
+            const surfaceIntervalOverPressures = this.applySurfaceInterval(this.profileB, surfaceInterval);
+            const profileBOverPressures = [...this.profileBResults.tissueOverPressures, ...surfaceIntervalOverPressures];
+            return {
+                profileAOverPressures: this.profileAResults.tissueOverPressures,
+                profileBOverPressures: profileBOverPressures
+            };
+        }
+
+        const surfaceIntervalOverPressures = this.applySurfaceInterval(this.profileA, surfaceInterval);
+        const profileAOverPressures = [...this.profileAResults.tissueOverPressures, ...surfaceIntervalOverPressures];
         return {
-            profileAOverPressures: this.profileAResults.tissueOverPressures,
+            profileAOverPressures: profileAOverPressures,
             profileBOverPressures: this.profileBResults.tissueOverPressures
         };
     }
@@ -170,6 +187,15 @@ export class ProfileComparatorService extends Streamed {
             this._wayPoints.unshift(row);
             context.next();
         }
+    }
+
+    private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): TissueOverPressures {
+        const altitude = profile.optionsService.altitude;
+        const tissues = profile.diveResult.finalTissues;
+        const parameters = new SurfaceIntervalParameters(tissues, altitude, surfaceInterval);
+        const algorithm = new BuhlmannAlgorithm();
+        const changes = algorithm.applySurfaceInterval(parameters);
+        return changes.tissueOverPressures;
     }
 }
 

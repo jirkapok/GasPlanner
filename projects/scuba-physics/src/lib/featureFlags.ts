@@ -2,7 +2,7 @@ export class FeatureFlags
 {
     private static _instance: FeatureFlags;
 
-    public collectSaturation = false;
+    public collectSaturation = true;
 
     private constructor() {
     }

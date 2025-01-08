@@ -1,7 +1,15 @@
 <div class="card">
     <div class="card-header">
-        <fa-icon [icon]="icon" class="me-3" flip="vertical"></fa-icon>
-        <span>Profile chart</span>
+        <div class="float-start">
+            <fa-icon [icon]="icon" class="me-3" flip="vertical"></fa-icon>
+            <span>Profile chart</span>
+        </div>
+        <div class="float-end me-1">
+            <button *ngIf="heatMapEnabled" class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button"
+                    data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="switchHeatMap()">
+                <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
+            </button>
+        </div>
     </div>
     <div class="card-body card-minheight">
         <app-calculating [show]="!profilesCalculated"></app-calculating>
@@ -13,13 +21,13 @@
         <div id="heatmapPlotA" class="diff-heatmap-plot"
              [ngClass]="{
             'plot-display': profilesCalculated,
-            'plot-hidden': !profilesCalculated
+            'plot-hidden': !profilesCalculated || !showHeatMap
           }">
         </div>
         <div id="heatmapPlotB" class="diff-heatmap-plot"
                  [ngClass]="{
             'plot-display': profilesCalculated,
-            'plot-hidden': !profilesCalculated
+            'plot-hidden': !profilesCalculated || !showHeatMap
           }">
         </div>
     </div>

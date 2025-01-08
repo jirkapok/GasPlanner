@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { takeUntil } from 'rxjs';
-import { faChartArea } from '@fortawesome/free-solid-svg-icons';
-import { DiveResults } from '../../shared/diveresults';
+import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-dist';
 import { Streamed } from '../../shared/streamed';
 import { ChartPlotterFactory, ChartPlotter } from '../../shared/chartPlotter';
@@ -21,6 +20,8 @@ import { FeatureFlags } from 'scuba-physics';
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
+    protected readonly heatmapIcon = faFire;
+    public showHeatMap = true;
     public heatMapEnabled = FeatureFlags.Instance.collectSaturation;
     private plotter: ChartPlotter;
     private heatMapPlotterA: HeatMapPlotter;
@@ -88,6 +89,10 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.selectedWaypoints.selectedTimeStamp = timeStampValue;
     }
 
+    public switchHeatMap(): void {
+        this.showHeatMap = !this.showHeatMap;
+    }
+
     private plotlyHoverLeave() {
         this.selectedWaypoints.selectedTimeStamp = '';
         this.selectWayPoint(undefined);
@@ -106,7 +111,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     private plotCharts(): void {
         this.plotter.plotCharts(this.profileComparatorService.totalDuration);
 
-        if(this.heatMapEnabled) {
+        if(this.showHeatMap) {
             var overPressures = this.profileComparatorService.overPressures;
             this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
             this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);

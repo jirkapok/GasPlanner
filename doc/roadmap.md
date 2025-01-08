@@ -16,9 +16,9 @@ Following list of features and improvements ordered by priority is under develop
 * Fix PWA support for iPhone (offline mode and Add to Home screen)
 * Add tissues heat map
   * to the profile chart
-  * to the dives comparision
   * Show tissues after amount of time spend at surface
   * Explanation of Subsurface heatmap: https://scubaboard.com/community/threads/deep-stops-increases-dcs.497187/page-52
+  * Add heatmap explanation to the doc
   * Add to results:
     * TTS is not longer: Moment/depth during ascent at which all tissues saturation is equal or lower than the current ambient pressure
     * Add Surface GF

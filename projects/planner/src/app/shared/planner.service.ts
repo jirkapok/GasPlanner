@@ -100,7 +100,6 @@ export class PlannerService extends Streamed {
         diveResult.events = this.ignoredIssues.filterIgnored(events.items);
         diveResult.finalTissues = calculatedProfile.tissues;
         diveResult.tissueOverPressures = calculatedProfile.tissueOverPressures;
-        diveResult.averageDepth = Segments.averageDepth(calculatedProfile.segments);
 
         if (diveResult.endsOnSurface) {
             this.processCalculatedProfile(result.profile.segments, dive);
@@ -185,7 +184,7 @@ export class PlannerService extends Streamed {
         diveResult.planDuration = dive.depths.planDuration;
         diveResult.notEnoughTime = dive.depths.notEnoughTime;
         diveResult.highestDensity = DtoSerialization.toDensity(diveInfoResult.density);
-        //diveResult.averageDepth = diveInfoResult.averageDepth;
+        diveResult.averageDepth = diveInfoResult.averageDepth;
         diveResult.surfaceGradient = diveInfoResult.surfaceGradient;
         diveResult.offgasingStart = diveInfoResult.offgasingStart;
         diveResult.diveInfoFinished();

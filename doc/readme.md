@@ -23,6 +23,7 @@
   * [Consumed gas charts](./consumed.md)
   * [Dive way points table](./waypoints_table.md)
   * [Dive profile chart](./profile_chart.md)
+  * [Tissues heat map](./profile_chart.md#tissues-heat-map)
 * [Application settings](./settings.md)
 * [Calculators](./calculators.md)
     * [RMV/SAC](./sac.md)

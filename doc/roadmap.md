@@ -17,10 +17,8 @@ Following list of features and improvements ordered by priority is under develop
 * Add tissues heat map
   * to the profile chart
   * Show tissues after amount of time spend at surface
-  * Explanation of Subsurface heatmap: https://scubaboard.com/community/threads/deep-stops-increases-dcs.497187/page-52
-  * Add heatmap explanation to the doc
-  * Add to results:
-    * TTS is not longer: Moment/depth during ascent at which all tissues saturation is equal or lower than the current ambient pressure
+  * Add to results and diff:
+    * TTS is not longer (offgassing start): Moment/depth during ascent at which all tissues saturation is equal or lower than the current ambient pressure
     * Add Surface GF
 * UI Tweaks
   * Tanks complex view: Add check box to be able enable or disable tanks

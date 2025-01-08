@@ -53,7 +53,7 @@ Following list of external sources was used to develop this application and can 
   * https://github.com/atdotde/realblender
   * https://github.com/subsurface/subsurface/blob/master/core/gas-model.c
   * https://thetheoreticaldiver.org/wordpress/index.php/2021/11/16/blending-real-gases/
-
+* Thalmann algorithm for deeper depths (https://indepthmag.com/thalmann-algorithm/)
 
 ## Rebreathers
 

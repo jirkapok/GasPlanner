@@ -20,6 +20,16 @@ Following list of features and improvements ordered by priority is under develop
   * Add to results and diff:
     * TTS is not longer (offgassing start): Moment/depth during ascent at which all tissues saturation is equal or lower than the current ambient pressure
     * Add Surface GF
+* Gas consumption:
+    * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80
+    * Clarify another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
+    * Restore 1/2 and 1/3 reserve strategies
+    * Adjust consumption by Z factor: <https://en.wikipedia.org/wiki/Cubic_foot>
+        * Fix RMV/SAC calculator based on Nominal volume
+        * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
+        * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
+        * <https://youtu.be/OI4ZzqJLQjw>
+* Add CCR support
 * UI Tweaks
   * Tanks complex view: Add check box to be able enable or disable tanks
   * Add clone dive button
@@ -33,16 +43,6 @@ Following list of features and improvements ordered by priority is under develop
   * Mouse middle button click removes dive
   * Add option to define custom distance between deco stops
   * Rounding to minutes should round also the ascent time, not only the deco stops
-* Add CCR support
-* Gas consumption:
-  * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80
-  * Clarify another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
-  * Restore 1/2 and 1/3 reserve strategies
-  * Adjust consumption by Z factor: <https://en.wikipedia.org/wiki/Cubic_foot>
-    * Fix RMV/SAC calculator based on Nominal volume
-    * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
-    * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
-    * <https://youtu.be/OI4ZzqJLQjw>
 * Add undo/redo to all pages
 * Add localizations
 * Add calculation trainings

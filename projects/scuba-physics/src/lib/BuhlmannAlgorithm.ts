@@ -211,7 +211,7 @@ export class BuhlmannAlgorithm {
         const depthConverter = new DepthConverterFactory(options).create();
         const context = new AlgorithmContext(gases, segments, options, depthConverter, previousTissues);
         this.swim(context, restingSegment);
-        // TODO we don't have here the saturation from the dive, so we can return only the surface changes
+        // we don't have here the saturation from the dive, so we can return only the surface changes
         return {
             finalTissues: context.tissues.finalState(),
             tissueOverPressures: context.tissueOverPressures

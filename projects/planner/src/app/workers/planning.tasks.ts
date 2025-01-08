@@ -2,7 +2,8 @@ import {
     Segments, Gases, ProfileEvents, DepthConverterFactory,
     Consumption, Time, Diver, OtuCalculator, CnsCalculator,
     DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm,
-    RestingParameters, Segment, PlanFactory, ConsumptionOptions, ProfileMoment
+    RestingParameters, Segment, PlanFactory, ConsumptionOptions,
+    ProfileMoment, Tank
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
@@ -13,7 +14,8 @@ import { DtoSerialization } from '../shared/dtoSerialization';
 export class PlanningTasks {
     /** 1. Calculate profile */
     public static calculateDecompression(task: ProfileRequestDto): ProfileResultDto {
-        const parameters = this.profileParametersFromTask(task);
+        const tanks = DtoSerialization.toTanks(task.tanks);
+        const parameters = this.profileParametersFromTask(task, tanks);
         const algorithm = new BuhlmannAlgorithm();
         const profile = algorithm.decompression(parameters);
         const profileDto = DtoSerialization.fromProfile(profile);
@@ -36,16 +38,17 @@ export class PlanningTasks {
 
     /** 2.A calculate dive results */
     public static diveInfo(task: DiveInfoRequestDto): DiveInfoResultDto {
+        const tanks = DtoSerialization.toTanks(task.tanks);
+        const parameters = this.profileParametersFromTask(task, tanks);
+        const algorithm = new BuhlmannAlgorithm();
+
         // we can't speedup the prediction from already obtained profile,
         // since it may happen, the deco starts during ascent.
         // we cant use the maxDepth, because its purpose is only for single level dives
-        const parameters = this.profileParametersFromTask(task);
-        const algorithm = new BuhlmannAlgorithm();
         const noDecoLimit = algorithm.noDecoLimit(parameters);
+
         const depthConverter = new DepthConverterFactory(task.options).create();
-        const tanks = DtoSerialization.toTanks(task.tanks);
         const originalProfile = DtoSerialization.toSegments(task.calculatedProfile, tanks);
-        // TODO following need full calculated profile, not the original one
         const otu = new OtuCalculator(depthConverter).calculateForProfile(originalProfile);
         const cns = new CnsCalculator(depthConverter).calculateForProfile(originalProfile);
         const density = new DensityAtDepth(depthConverter).forProfile(originalProfile);
@@ -116,8 +119,7 @@ export class PlanningTasks {
         return Segments.fromCollection(descent);
     }
 
-    private static profileParametersFromTask(task: ProfileRequestDto): AlgorithmParams {
-        const tanks = DtoSerialization.toTanks(task.tanks);
+    private static profileParametersFromTask(task: ProfileRequestDto, tanks: Tank[]): AlgorithmParams {
         const gases = Gases.fromTanks(tanks);
         const originPlan = DtoSerialization.toSegments(task.plan, tanks);
         const segments = Segments.fromCollection(originPlan);

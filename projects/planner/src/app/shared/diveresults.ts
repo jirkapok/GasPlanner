@@ -1,6 +1,6 @@
 import {
     Ceiling, EventType, Event, HighestDensity,
-    OtuCalculator, LoadedTissue, TissueOverPressures
+    OtuCalculator, LoadedTissue, TissueOverPressures, ProfileMoment
 } from 'scuba-physics';
 import { Injectable } from '@angular/core';
 import { WayPoint } from './wayPoint';
@@ -19,6 +19,11 @@ export class DiveResults {
     public planDuration = 0;
     public emergencyAscentStart = 0;
     public averageDepth = 0;
+    public surfaceGradient = 0;
+    public offgasingStart: ProfileMoment = {
+        runtime: 0,
+        depth: 0
+    };
     public otu = 0;
     public cns = 0;
     public highestDensity = HighestDensity.createDefault();

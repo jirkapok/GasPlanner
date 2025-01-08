@@ -15,3 +15,10 @@ export interface LoadedTissue {
      */
     pHe: number;
 }
+
+export interface ProfileMoment {
+    /** In seconds from start of the dive */
+    runtime: number;
+    /** In meters */
+    depth: number;
+}

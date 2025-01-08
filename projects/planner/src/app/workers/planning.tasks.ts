@@ -2,7 +2,7 @@ import {
     Segments, Gases, ProfileEvents, DepthConverterFactory,
     Consumption, Time, Diver, OtuCalculator, CnsCalculator,
     DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm,
-    RestingParameters, Segment, PlanFactory, ConsumptionOptions
+    RestingParameters, Segment, PlanFactory, ConsumptionOptions, ProfileMoment
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
@@ -47,13 +47,17 @@ export class PlanningTasks {
         const otu = new OtuCalculator(depthConverter).calculateForProfile(originalProfile);
         const cns = new CnsCalculator(depthConverter).calculateForProfile(originalProfile);
         const density = new DensityAtDepth(depthConverter).forProfile(originalProfile);
+        // TODO fill surfaceGF (from LoadedTissues)
+        // TODO offgasingStartTime and offgasingStartDepth (from Overpressures first from overpressures going trom end, where )
 
         return {
             diveId: task.diveId,
             noDeco: noDecoLimit,
             otu: otu,
             cns: cns,
-            density: DtoSerialization.fromDensity(density)
+            density: DtoSerialization.fromDensity(density),
+            surfaceGradient: 0,
+            offgasingStart: { runtime: 0, depth: 0 }
         };
     }
 

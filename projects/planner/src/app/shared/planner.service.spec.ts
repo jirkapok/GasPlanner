@@ -418,8 +418,10 @@ describe('PlannerService', () => {
                                 fHe: 0
                             },
                             depth: 0,
-                            density: 0
-                        }
+                            density: 0,
+                        },
+                        surfaceGradient: 0,
+                        offgasingStart: { runtime: 0, depth: 0 }
                     }));
 
                 expect( () => planner.calculate(1)).not.toThrow();

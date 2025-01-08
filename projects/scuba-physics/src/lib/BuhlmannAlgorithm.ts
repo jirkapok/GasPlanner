@@ -123,6 +123,14 @@ export class AlgorithmParams {
 
 export class BuhlmannAlgorithm {
     /**
+     * Calculates current gradient factor from tissues state in range 0 - 1 (representing percents).
+     * @param finalTissues last known state of the tissues
+     */
+    public surfaceGradient(finalTissues: LoadedTissue[]): number {
+        return 0;
+    }
+
+    /**
      * Calculates no decompression limit in minutes.
      * Returns positive number or Infinity, in case there is no more tissues loading
      * usually at small depths (bellow 10 meters).

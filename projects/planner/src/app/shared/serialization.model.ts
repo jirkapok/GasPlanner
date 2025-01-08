@@ -1,6 +1,6 @@
 import {
     Tank, Ceiling, EventType,
-    Salinity, SafetyStop
+    Salinity, SafetyStop, ProfileMoment
 } from 'scuba-physics';
 import { ViewState } from './views.model';
 
@@ -77,6 +77,8 @@ export interface DiveInfoResultDto {
     otu: number;
     cns: number;
     density: DensityDto;
+    surfaceGradient: number;
+    offgasingStart: ProfileMoment;
 }
 
 export interface DensityDto {

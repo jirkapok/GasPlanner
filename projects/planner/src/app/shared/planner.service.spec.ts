@@ -90,12 +90,12 @@ describe('PlannerService', () => {
 
         it('OTU limit is calculated', () => {
             const otuLimit = dive.otu;
-            expect(otuLimit).toBeCloseTo(7.6712, 4);
+            expect(otuLimit).toBeCloseTo(8.2858, 4);
         });
 
         it('CNS limit is calculated', () => {
             const cnsLimit = dive.cns;
-            expect(cnsLimit).toBeCloseTo(2.570248, 6);
+            expect(cnsLimit).toBeCloseTo(2.928569, 6);
         });
 
         it('Highest density is calculated', () => {

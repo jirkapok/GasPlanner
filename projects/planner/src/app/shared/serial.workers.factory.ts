@@ -1,4 +1,11 @@
-import { ConsumptionRequestDto, ConsumptionResultDto, DiveInfoResultDto, ProfileRequestDto, ProfileResultDto } from './serialization.model';
+import {
+    ConsumptionRequestDto,
+    ConsumptionResultDto,
+    DiveInfoRequestDto,
+    DiveInfoResultDto,
+    ProfileRequestDto,
+    ProfileResultDto
+} from './serialization.model';
 import { IBackgroundTask } from '../workers/background-task';
 import { Subject } from 'rxjs';
 import { PlanningTasks } from '../workers/planning.tasks';
@@ -17,12 +24,12 @@ export class WorkersFactoryCommon {
         };
     }
 
-    public createDiveInfoWorker(): IBackgroundTask<ProfileRequestDto, DiveInfoResultDto> {
+    public createDiveInfoWorker(): IBackgroundTask<DiveInfoRequestDto, DiveInfoResultDto> {
         const subject = new Subject<DiveInfoResultDto>();
         const failedSubject = new Subject<void>();
         return {
             calculated$: subject,
-            calculate: (request: ProfileRequestDto): void => {
+            calculate: (request: DiveInfoRequestDto): void => {
                 this.tryAction((r) => PlanningTasks.diveInfo(r), request, subject, failedSubject);
             },
             failed$: failedSubject,

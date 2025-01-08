@@ -6,7 +6,7 @@ import {
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
-    ConsumptionResultDto, DiveInfoResultDto
+    ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto
 } from '../shared/serialization.model';
 import { DtoSerialization } from '../shared/dtoSerialization';
 
@@ -35,7 +35,7 @@ export class PlanningTasks {
     }
 
     /** 2.A calculate dive results */
-    public static diveInfo(task: ProfileRequestDto): DiveInfoResultDto {
+    public static diveInfo(task: DiveInfoRequestDto): DiveInfoResultDto {
         // we can't speedup the prediction from already obtained profile,
         // since it may happen, the deco starts during ascent.
         // we cant use the maxDepth, because its purpose is only for single level dives
@@ -43,7 +43,8 @@ export class PlanningTasks {
         const algorithm = new BuhlmannAlgorithm();
         const noDecoLimit = algorithm.noDecoLimit(parameters);
         const depthConverter = new DepthConverterFactory(task.options).create();
-        const originalProfile = parameters.segments.items;
+        const tanks = DtoSerialization.toTanks(task.tanks);
+        const originalProfile = DtoSerialization.toSegments(task.calculatedProfile, tanks);
         // TODO following need full calculated profile, not the original one
         const otu = new OtuCalculator(depthConverter).calculateForProfile(originalProfile);
         const cns = new CnsCalculator(depthConverter).calculateForProfile(originalProfile);
@@ -118,8 +119,8 @@ export class PlanningTasks {
     private static profileParametersFromTask(task: ProfileRequestDto): AlgorithmParams {
         const tanks = DtoSerialization.toTanks(task.tanks);
         const gases = Gases.fromTanks(tanks);
-        const originProfile = DtoSerialization.toSegments(task.plan, tanks);
-        const segments = Segments.fromCollection(originProfile);
+        const originPlan = DtoSerialization.toSegments(task.plan, tanks);
+        const segments = Segments.fromCollection(originPlan);
         const options = DtoSerialization.toOptions(task.options);
         const tissues = DtoSerialization.toTissues(task.tissues);
         const rest = new RestingParameters(tissues, task.surfaceInterval);

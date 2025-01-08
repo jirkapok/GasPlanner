@@ -44,11 +44,15 @@ export class PlanningTasks {
         const noDecoLimit = algorithm.noDecoLimit(parameters);
         const depthConverter = new DepthConverterFactory(task.options).create();
         const originalProfile = parameters.segments.items;
+        // TODO following need full calculated profile, not the original one
         const otu = new OtuCalculator(depthConverter).calculateForProfile(originalProfile);
         const cns = new CnsCalculator(depthConverter).calculateForProfile(originalProfile);
         const density = new DensityAtDepth(depthConverter).forProfile(originalProfile);
+        const averageDepth = Segments.averageDepth(originalProfile);
         // TODO fill surfaceGF (from LoadedTissues)
+        const surfaceGradient = 0;
         // TODO offgasingStartTime and offgasingStartDepth (from Overpressures first from overpressures going trom end, where )
+        const offgasingStart = { runtime: 0, depth: 0 };
 
         return {
             diveId: task.diveId,
@@ -56,8 +60,9 @@ export class PlanningTasks {
             otu: otu,
             cns: cns,
             density: DtoSerialization.fromDensity(density),
-            surfaceGradient: 0,
-            offgasingStart: { runtime: 0, depth: 0 }
+            averageDepth: averageDepth,
+            surfaceGradient: surfaceGradient,
+            offgasingStart: offgasingStart
         };
     }
 

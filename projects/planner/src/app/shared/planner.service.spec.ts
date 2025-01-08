@@ -420,6 +420,7 @@ describe('PlannerService', () => {
                             depth: 0,
                             density: 0,
                         },
+                        averageDepth: 0,
                         surfaceGradient: 0,
                         offgasingStart: { runtime: 0, depth: 0 }
                     }));

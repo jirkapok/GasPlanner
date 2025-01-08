@@ -9,7 +9,8 @@ import {
 } from 'scuba-physics';
 import {
     ConsumptionResultDto, ConsumptionRequestDto, EventOptionsDto,
-    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto, ITankBound
+    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto, ITankBound,
+    DiveInfoRequestDto, SegmentDto
 } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
 import { IBackgroundTask } from '../workers/background-task';
@@ -99,11 +100,10 @@ export class PlannerService extends Streamed {
         diveResult.events = this.ignoredIssues.filterIgnored(events.items);
         diveResult.finalTissues = calculatedProfile.tissues;
         diveResult.tissueOverPressures = calculatedProfile.tissueOverPressures;
-        // TODO move to dive info task
         diveResult.averageDepth = Segments.averageDepth(calculatedProfile.segments);
 
         if (diveResult.endsOnSurface) {
-            this.processCalculatedProfile(calculatedProfile, dive);
+            this.processCalculatedProfile(result.profile.segments, dive);
         } else {
             // fires info finished before the profile finished, case of error it doesn't matter
             diveResult.endFailed();
@@ -111,15 +111,16 @@ export class PlannerService extends Streamed {
         }
     }
 
-    private processCalculatedProfile(calculatedProfile: CalculatedProfile, dive: DiveSchedule) {
-        const infoRequest = this.createProfileRequest(dive);
+    private processCalculatedProfile(calculatedProfile: SegmentDto[], dive: DiveSchedule) {
+        const infoRequest = this.createProfileRequest(dive) as DiveInfoRequestDto;
+        infoRequest.calculatedProfile = calculatedProfile;
         this.diveInfoTask.calculate(infoRequest);
 
         const consumptionRequest = {
             diveId: dive.id,
             isComplex: this.viewSwitch.isComplex,
             plan: infoRequest.plan,
-            profile: DtoSerialization.fromSegments(calculatedProfile.segments),
+            profile: calculatedProfile,
             options: infoRequest.options,
             consumptionOptions: {
                 diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
@@ -184,6 +185,7 @@ export class PlannerService extends Streamed {
         diveResult.planDuration = dive.depths.planDuration;
         diveResult.notEnoughTime = dive.depths.notEnoughTime;
         diveResult.highestDensity = DtoSerialization.toDensity(diveInfoResult.density);
+        //diveResult.averageDepth = diveInfoResult.averageDepth;
         diveResult.surfaceGradient = diveInfoResult.surfaceGradient;
         diveResult.offgasingStart = diveInfoResult.offgasingStart;
         diveResult.diveInfoFinished();

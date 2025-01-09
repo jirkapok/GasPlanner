@@ -117,14 +117,13 @@ export class Tissue extends Compartment implements LoadedTissue {
         return this.a + pressure / this.b;
     }
 
-    // TODO Test and add to the UI as surface Gradient factor at end of the dive
     /**
      * Returns the gradient factor from the original Buhlmann M-value for the tissue at the given pressure.
-     * @param pressure in bars (e.g. surface or ambient).
+     * @param ambientPressure in bars (e.g. surface or ambient).
      */
-    public gradientFactor(pressure: number): number {
-        const surfaceMValue = this.mValue(pressure);
-        return (this.pTotal - pressure) / (surfaceMValue - pressure);
+    public gradientFactor(ambientPressure: number): number {
+        const surfaceMValue = this.mValue(ambientPressure);
+        return (this.pTotal - ambientPressure) / (surfaceMValue - ambientPressure);
     }
 
     /**
@@ -330,6 +329,15 @@ export class Tissues {
             loadChange = loadChange + tissueChange;
         }
         return loadChange;
+    }
+
+    /**
+     * Returns the gradient factor from the original Buhlmann M-value for the tissue at the given pressure.
+     * @param ambientPressure in bars (e.g. surface or ambient).
+     */
+    public gradientFactor(ambientPressure: number): number {
+        // TODO implement gradient factor for tissues
+        return 0;
     }
 }
 

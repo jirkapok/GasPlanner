@@ -185,6 +185,7 @@ export class PlannerService extends Streamed {
         diveResult.notEnoughTime = dive.depths.notEnoughTime;
         diveResult.highestDensity = DtoSerialization.toDensity(diveInfoResult.density);
         diveResult.averageDepth = diveInfoResult.averageDepth;
+        //  TODO add to the UI surface gradient and offgasing start
         diveResult.surfaceGradient = diveInfoResult.surfaceGradient;
         diveResult.offgasingStart = diveInfoResult.offgasingStart;
         diveResult.diveInfoFinished();

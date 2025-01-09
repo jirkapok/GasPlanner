@@ -336,8 +336,10 @@ export class Tissues {
      * @param ambientPressure in bars (e.g. surface or ambient).
      */
     public gradientFactor(ambientPressure: number): number {
-        // TODO implement gradient factor for tissues
-        return 0;
+        const maxGradient = _(this._compartments)
+            .map(t => t.gradientFactor(ambientPressure))
+            .max() || 0;
+        return maxGradient;
     }
 }
 

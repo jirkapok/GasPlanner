@@ -55,7 +55,8 @@ export class PlanningTasks {
         const averageDepth = Segments.averageDepth(originalProfile);
 
         const profileTissues = new ProfileTissues();
-        const surfaceGradient = profileTissues.surfaceGradient(parameters.surfaceInterval.previousTissues);
+        const loadedTissues = parameters.surfaceInterval.previousTissues;
+        const surfaceGradient = profileTissues.surfaceGradient(loadedTissues, depthConverter.surfacePressure);
         const offgasingStart = profileTissues.offgasingStart([]); // TODO fill the overpressures parameter
 
         return {

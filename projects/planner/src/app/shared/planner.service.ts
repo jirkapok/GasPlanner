@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { takeUntil } from 'rxjs';
-import { DiveResults } from './diveresults';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
@@ -155,9 +154,12 @@ export class PlannerService extends Streamed {
     private previousDiveTissues(diveId: number): LoadedTissue[] {
         if(diveId > 1) {
             const previousDiveId = diveId - 1;
-            return this.diveResult(previousDiveId).finalTissues;
+            const dive = this.diveById(previousDiveId);
+            return dive.diveResult.finalTissues;
         }
 
+        // TODO test that throws an error, when trying to build tissues from empty array
+        // Should be replaced by default tissues
         return [];
     }
 
@@ -224,10 +226,7 @@ export class PlannerService extends Streamed {
         };
     }
 
-    private diveResult(diveId: number): DiveResults {
-        return this.diveById(diveId).diveResult;
-    }
-
+    // TODO Test: the dive may be deleted before the calculation is finished
     private diveById(diveId: number): DiveSchedule {
         const found = this.schedules.byId(diveId);
 

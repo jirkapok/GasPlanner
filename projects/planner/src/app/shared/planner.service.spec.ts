@@ -7,7 +7,7 @@ import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
 import {
     ConsumptionRequestDto,
-    ConsumptionResultDto,
+    ConsumptionResultDto, DiveInfoRequestDto,
     DiveInfoResultDto,
     ProfileRequestDto,
     ProfileResultDto
@@ -223,7 +223,7 @@ describe('PlannerService', () => {
         };
 
         describe('Profile calculated with errors', () => {
-            let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => DiveInfoResultDto>;
+            let noDecoSpy: jasmine.Spy<(data: DiveInfoRequestDto) => DiveInfoResultDto>;
             let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
             let wayPointsFinished = false;
             let infoFinished = false;
@@ -269,7 +269,7 @@ describe('PlannerService', () => {
         });
 
         describe('Profile task failed', () => {
-            let noDecoSpy: jasmine.Spy<(data: ProfileRequestDto) => DiveInfoResultDto>;
+            let noDecoSpy: jasmine.Spy<(data: DiveInfoRequestDto) => DiveInfoResultDto>;
             let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
             let wayPointsFinished = false;
             // serial processing in tests results in wrong behavior, the task is still finished

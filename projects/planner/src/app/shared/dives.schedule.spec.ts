@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { UnitConversion } from './UnitConversion';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { ReloadDispatcher } from './reloadDispatcher';
@@ -113,6 +114,27 @@ describe('Scheduled dives', () => {
             sut.add();
             sut.remove(sut.dives[1]);
             expect(sut.dives[1].id).toEqual(2);
+        });
+    });
+
+    describe('Calculating', () => {
+        it('Marks Still running also all following repetitive dives', () => {
+            const sut = createSut();
+            sut.add();
+            const third = sut.add();
+            third.surfaceInterval = Time.oneHour;
+            sut.add();
+
+            sut.dives.forEach(d => {
+                d.diveResult.profileFinished();
+                d.diveResult.consumptionFinished();
+                d.diveResult.diveInfoFinished();
+            });
+            sut.markStart(2);
+            sut.markStillRunning(2);
+
+            const states = _(sut.dives).map(d => d.diveResult.calculated).value();
+            expect(states).toEqual([ true, false, false, true ]);
         });
     });
 });

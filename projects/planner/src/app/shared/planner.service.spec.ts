@@ -307,7 +307,7 @@ describe('PlannerService', () => {
             });
         });
 
-        describe('No deco task failed', () => {
+        describe('DiveInfo task failed', () => {
             // serial processing in tests results in wrong behavior, the task is still finished
             const infoFinished: (number | undefined)[] = [];
 

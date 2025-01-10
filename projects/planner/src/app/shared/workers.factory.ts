@@ -1,4 +1,11 @@
-import { ConsumptionRequestDto, ConsumptionResultDto, DiveInfoResultDto, ProfileRequestDto, ProfileResultDto } from './serialization.model';
+import {
+    ConsumptionRequestDto,
+    ConsumptionResultDto,
+    DiveInfoRequestDto,
+    DiveInfoResultDto,
+    ProfileRequestDto,
+    ProfileResultDto
+} from './serialization.model';
 import { BackgroundTask, IBackgroundTask } from '../workers/background-task';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 
@@ -8,9 +15,9 @@ export class WorkersFactory extends WorkersFactoryCommon {
         return new BackgroundTask<ProfileRequestDto, ProfileResultDto>(profileWorker);
     }
 
-    public createDiveInfoWorker(): IBackgroundTask<ProfileRequestDto, DiveInfoResultDto> {
+    public createDiveInfoWorker(): IBackgroundTask<DiveInfoRequestDto, DiveInfoResultDto> {
         const diveInfoWorker = new Worker(new URL('../workers/diveInfo.worker', import.meta.url));
-        return new BackgroundTask<ProfileRequestDto, DiveInfoResultDto>(diveInfoWorker);
+        return new BackgroundTask<DiveInfoRequestDto, DiveInfoResultDto>(diveInfoWorker);
     }
 
     public createConsumptionWorker(): IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto> {

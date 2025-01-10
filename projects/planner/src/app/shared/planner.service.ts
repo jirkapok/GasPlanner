@@ -69,15 +69,13 @@ export class PlannerService extends Streamed {
         }
 
         Logger.debug(`Planner calculated: ${diveId}`);
-        const dive = this.diveById(diveId);
-        const diveResult = dive.diveResult;
-        diveResult.start();
+        this.schedules.markStart(diveId);
 
         setTimeout(() => {
-            // TODO mark all following dives not calculated immediately
-            diveResult.showStillRunning();
+            this.schedules.markStillRunning(diveId);
         }, 500);
 
+        const dive = this.diveById(diveId);
         const profileRequest = this.createPlanRequest(dive) as ProfileRequestDto;
         // TODO consider move events calculation to dive info task.
         profileRequest.eventOptions = this.createEventOptions();

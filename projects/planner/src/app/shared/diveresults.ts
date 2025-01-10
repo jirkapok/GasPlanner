@@ -139,13 +139,15 @@ export class DiveResults {
         return count > 0 && this.wayPoints[count - 1].endDepthMeters === 0;
     }
 
+    /** Marks dive calculation in progress */
     public start(): void {
-        this._calculatingConsumption = true;
         this._calculatingProfile = true;
+        this._calculatingConsumption = true;
         this._calculatingDiveInfo = true;
         this._calculationFailed = false;
     }
 
+    /** Marks each part as not calculated */
     public showStillRunning(): void {
         if (this._calculatingProfile) {
             this._profileCalculated = false;
@@ -188,5 +190,6 @@ export class DiveResults {
         this.wayPoints = [];
         this.ceilings = [];
         this.events = [];
+        this.tissueOverPressures = [];
     }
 }

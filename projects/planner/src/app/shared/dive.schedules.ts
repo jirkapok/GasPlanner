@@ -151,10 +151,6 @@ export class DiveSchedules {
         return this._dives.length;
     }
 
-    public get hasMany(): boolean {
-        return this._dives.length > 1;
-    }
-
     public get empty(): boolean {
         return this.length <= 1;
     }
@@ -235,6 +231,35 @@ export class DiveSchedules {
         return _(this.dives)
             .filter(d => d.id === diveId)
             .first();
+    }
+
+    /** Marks all following repetitive dives as started. */
+    public markStart(diveId: number): void {
+        this.processOnFollowingRepetitiveDives(diveId, (dive) => dive.diveResult.start());
+    }
+
+    /** Marks all following repetitive dives as still running. */
+    public markStillRunning(diveId: number): void {
+        this.processOnFollowingRepetitiveDives(diveId, (dive) => dive.diveResult.showStillRunning());
+    }
+
+    private processOnFollowingRepetitiveDives(diveId: number, action: (dive: DiveSchedule) => void): void {
+        const dive = this.byId(diveId);
+
+        if(!dive) {
+            return;
+        }
+
+        action(dive);
+
+        for (let index = dive.index + 1; index < this._dives.length; index++) {
+            const currentDive = this._dives[index];
+            if(!currentDive.isRepetitive) {
+                return;
+            }
+
+            action(currentDive);
+        }
     }
 
     private createDiveSchedule(): DiveSchedule {

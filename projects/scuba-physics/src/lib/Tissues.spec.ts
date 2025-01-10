@@ -28,6 +28,18 @@ describe('Tissues', () => {
         });
     });
 
+    describe('Create loaded', () => {
+        it('Create from loaded tissues creates valid tissues', () => {
+            const loaded = Tissues.create(1);
+            const copy = Tissues.createLoaded(loaded.finalState());
+            expect(copy).toEqual(loaded);
+        });
+
+        it('Empty loaded throws Error', () => {
+            expect(() => Tissues.createLoaded([])).toThrow();
+        });
+    });
+
     describe('Validation', () => {
         it('Empty is invalid', () => {
             const valid = TissuesValidator.valid([]);
@@ -49,7 +61,7 @@ describe('Tissues', () => {
     });
 
 
-    describe('Tissue', () => {
+    describe('Ceiling', () => {
         it('Not loaded tissue ceiling above surface', () => {
             const tissue = createTissue();
             const ceiling = tissue.ceiling(1);

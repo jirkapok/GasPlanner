@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
-import { GasToxicity, Precision, Time } from 'scuba-physics';
+import { GasToxicity, LoadedTissue, Precision, Time } from 'scuba-physics';
 import _ from 'lodash';
 import { DateFormats } from './formaters';
 
@@ -231,6 +231,21 @@ export class DiveSchedules {
         return _(this.dives)
             .filter(d => d.id === diveId)
             .first();
+    }
+
+    public previousDiveTissues(diveId: number): LoadedTissue[] {
+        if(diveId > 1) {
+            const previousDiveId = diveId - 1;
+            const dive = this.byId(previousDiveId);
+
+            if(dive) {
+                return dive.diveResult.finalTissues;
+            }
+        }
+
+        // TODO test that throws an error, when trying to build tissues from empty array
+        // Should be replaced by default tissues
+        return [];
     }
 
     /** Marks all following repetitive dives as started. */

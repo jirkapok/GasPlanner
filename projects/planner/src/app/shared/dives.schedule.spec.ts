@@ -117,6 +117,39 @@ describe('Scheduled dives', () => {
         });
     });
 
+    describe('Previous dive tissues', () => {
+        const sut: DiveSchedules = createSut();
+        const loadedTissues = [{ pN2: 1, pHe: 1 }];
+        sut.byId(1)!.diveResult.finalTissues = loadedTissues;
+
+        const repetitive = sut.add();
+        repetitive.surfaceInterval = Time.oneHour;
+        const loadedTissues2 = [{ pN2: 2, pHe: 2 }];
+        repetitive.diveResult.finalTissues = loadedTissues2;
+
+        sut.add();
+
+        it('First dive returns empty tissues', () => {
+            const tissues = sut.previousDiveTissues(1)
+            expect(tissues).toEqual([]);
+        });
+
+        it('Repetitive dive returns previous dive tissues', () => {
+            const tissues = sut.previousDiveTissues(2)
+            expect(tissues).toEqual(loadedTissues);
+        });
+
+        it('Non repetitive dive returns empty tissues', () => {
+            const tissues = sut.previousDiveTissues(3)
+            expect(tissues).toEqual([]);
+        });
+
+        it('Non existing dive returns empty tissues', () => {
+            const tissues = sut.previousDiveTissues(5)
+            expect(tissues).toEqual([]);
+        });
+    });
+
     describe('Calculating', () => {
         it('Marks Still running also all following repetitive dives', () => {
             const sut = createSut();

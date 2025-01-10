@@ -136,7 +136,7 @@ export class PlannerService extends Streamed {
     }
 
     private createPlanRequest(dive: DiveSchedule): PlanRequestDto {
-        const previousTissues = this.previousDiveTissues(dive.id);
+        const previousTissues = this.schedules.previousDiveTissues(dive.id);
         const serializableTanks = dive.tanksService.tanks as ITankBound[];
         return {
             diveId: dive.id,
@@ -146,19 +146,6 @@ export class PlannerService extends Streamed {
             tissues: DtoSerialization.fromTissues(previousTissues),
             surfaceInterval: dive.surfaceInterval
         };
-    }
-
-    // TODO move to dive schedule
-    private previousDiveTissues(diveId: number): LoadedTissue[] {
-        if(diveId > 1) {
-            const previousDiveId = diveId - 1;
-            const dive = this.diveById(previousDiveId);
-            return dive.diveResult.finalTissues;
-        }
-
-        // TODO test that throws an error, when trying to build tissues from empty array
-        // Should be replaced by default tissues
-        return [];
     }
 
     private wayPointsFromResult(calculatedProfile: CalculatedProfile): WayPoint[] {

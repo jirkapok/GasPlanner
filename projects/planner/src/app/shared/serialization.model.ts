@@ -57,19 +57,25 @@ export interface ITankBound {
     tank: Tank;
 }
 
-export interface ProfileRequestDto {
+export interface PlanRequestDto {
     diveId: number;
     tanks: TankDto[];
     /** Only the source plan segments defined by user */
     plan: SegmentDto[];
     options: OptionsDto;
     tissues: LoadedTissueDto[];
-    eventOptions: EventOptionsDto;
     surfaceInterval: number;
 }
 
-export interface DiveInfoRequestDto extends ProfileRequestDto {
+export interface ProfileRequestDto extends PlanRequestDto {
+    eventOptions: EventOptionsDto;
+}
+
+export interface DiveInfoRequestDto extends PlanRequestDto{
     calculatedProfile: SegmentDto[];
+    /** At end of the calculated profile, not previous one */
+    calculatedTissues: LoadedTissueDto[];
+    calculatedOverPressures: number[][];
 }
 
 export interface EventOptionsDto {

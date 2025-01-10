@@ -5,12 +5,12 @@ import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
     CalculatedProfile, Precision,
-    Segments, LoadedTissue
+    LoadedTissue
 } from 'scuba-physics';
 import {
     ConsumptionResultDto, ConsumptionRequestDto, EventOptionsDto,
     ProfileRequestDto, ProfileResultDto, DiveInfoResultDto, ITankBound,
-    DiveInfoRequestDto, SegmentDto
+    DiveInfoRequestDto, CalculatedProfileDto, PlanRequestDto
 } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
 import { IBackgroundTask } from '../workers/background-task';
@@ -29,7 +29,7 @@ import { IgnoredIssuesService } from './IgnoredIssues.service';
 export class PlannerService extends Streamed {
     private profileTask: IBackgroundTask<ProfileRequestDto, ProfileResultDto>;
     private consumptionTask: IBackgroundTask<ConsumptionRequestDto, ConsumptionResultDto>;
-    private diveInfoTask: IBackgroundTask<ProfileRequestDto, DiveInfoResultDto>;
+    private diveInfoTask: IBackgroundTask<DiveInfoRequestDto, DiveInfoResultDto>;
     private waypoints: WayPointsService;
     private ignoredIssues: IgnoredIssuesService;
 
@@ -79,7 +79,9 @@ export class PlannerService extends Streamed {
             diveResult.showStillRunning();
         }, 500);
 
-        const profileRequest = this.createProfileRequest(dive);
+        const profileRequest = this.createPlanRequest(dive) as ProfileRequestDto;
+        // TODO consider move events calculation to dive info task.
+        profileRequest.eventOptions = this.createEventOptions();
         this.profileTask.calculate(profileRequest);
     }
 
@@ -102,7 +104,7 @@ export class PlannerService extends Streamed {
         diveResult.tissueOverPressures = calculatedProfile.tissueOverPressures;
 
         if (diveResult.endsOnSurface) {
-            this.processCalculatedProfile(result.profile.segments, dive);
+            this.processCalculatedProfile(result.profile, dive);
         } else {
             // fires info finished before the profile finished, case of error it doesn't matter
             diveResult.endFailed();
@@ -110,16 +112,18 @@ export class PlannerService extends Streamed {
         }
     }
 
-    private processCalculatedProfile(calculatedProfile: SegmentDto[], dive: DiveSchedule) {
-        const infoRequest = this.createProfileRequest(dive) as DiveInfoRequestDto;
-        infoRequest.calculatedProfile = calculatedProfile;
+    private processCalculatedProfile(calculatedProfile: CalculatedProfileDto, dive: DiveSchedule) {
+        const infoRequest = this.createPlanRequest(dive) as DiveInfoRequestDto;
+        infoRequest.calculatedProfile = calculatedProfile.segments;
+        infoRequest.calculatedTissues = calculatedProfile.tissues;
+        infoRequest.calculatedOverPressures = calculatedProfile.tissueOverPressures;
         this.diveInfoTask.calculate(infoRequest);
 
         const consumptionRequest = {
             diveId: dive.id,
             isComplex: this.viewSwitch.isComplex,
             plan: infoRequest.plan,
-            profile: calculatedProfile,
+            profile: calculatedProfile.segments,
             options: infoRequest.options,
             consumptionOptions: {
                 diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
@@ -134,7 +138,7 @@ export class PlannerService extends Streamed {
         this.dispatcher.sendWayPointsCalculated(dive.id);
     }
 
-    private createProfileRequest(dive: DiveSchedule): ProfileRequestDto {
+    private createPlanRequest(dive: DiveSchedule): PlanRequestDto {
         const previousTissues = this.previousDiveTissues(dive.id);
         const serializableTanks = dive.tanksService.tanks as ITankBound[];
         return {
@@ -143,11 +147,11 @@ export class PlannerService extends Streamed {
             plan: DtoSerialization.fromSegments(dive.depths.segments),
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
             tissues: DtoSerialization.fromTissues(previousTissues),
-            surfaceInterval: dive.surfaceInterval,
-            eventOptions: this.createEventOptions()
+            surfaceInterval: dive.surfaceInterval
         };
     }
 
+    // TODO move to dive schedule
     private previousDiveTissues(diveId: number): LoadedTissue[] {
         if(diveId > 1) {
             const previousDiveId = diveId - 1;

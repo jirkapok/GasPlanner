@@ -7,7 +7,8 @@ import {
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
-    ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto
+    ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto,
+    PlanRequestDto
 } from '../shared/serialization.model';
 import { DtoSerialization } from '../shared/dtoSerialization';
 
@@ -57,7 +58,7 @@ export class PlanningTasks {
         const profileTissues = new ProfileTissues();
         const loadedTissues = parameters.surfaceInterval.previousTissues;
         const surfaceGradient = profileTissues.surfaceGradient(loadedTissues, depthConverter.surfacePressure);
-        const offgasingStart = profileTissues.offgasingStart([]); // TODO fill the overpressures parameter
+        const offgasingStart = profileTissues.offgasingStart(task.calculatedOverPressures);
 
         return {
             diveId: task.diveId,
@@ -120,7 +121,7 @@ export class PlanningTasks {
         return Segments.fromCollection(descent);
     }
 
-    private static profileParametersFromTask(task: ProfileRequestDto, tanks: Tank[]): AlgorithmParams {
+    private static profileParametersFromTask(task: PlanRequestDto, tanks: Tank[]): AlgorithmParams {
         const gases = Gases.fromTanks(tanks);
         const originPlan = DtoSerialization.toSegments(task.plan, tanks);
         const segments = Segments.fromCollection(originPlan);

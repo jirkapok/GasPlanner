@@ -8,7 +8,7 @@
     "build": "ng build --configuration production planner",
     "build-lib": "ng build scuba-physics",
     "test": "ng test",
-    "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch --reporters=verbose",
+    "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch",
     "test-lib": "ng test --project scuba-physics",
     "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch",
     "lint": "ng lint"

@@ -235,16 +235,15 @@ export class DiveSchedules {
 
     public previousDiveTissues(diveId: number): LoadedTissue[] {
         if(diveId > 1) {
-            const previousDiveId = diveId - 1;
-            const dive = this.byId(previousDiveId);
+            const previousDive = this.byId(diveId - 1);
+            const dive = this.byId(diveId);
 
-            if(dive) {
-                return dive.diveResult.finalTissues;
+            if(previousDive && dive && dive.isRepetitive) {
+                return previousDive.diveResult.finalTissues;
             }
         }
 
-        // TODO test that throws an error, when trying to build tissues from empty array
-        // Should be replaced by default tissues
+        // This is replaced when applying the surface interval
         return [];
     }
 

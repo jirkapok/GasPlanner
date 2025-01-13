@@ -119,11 +119,13 @@ export class Tissue extends Compartment implements LoadedTissue {
 
     /**
      * Returns the gradient factor from the original Buhlmann M-value for the tissue at the given pressure.
+     * The returned number is always greater or equal to 0.
      * @param ambientPressure in bars (e.g. surface or ambient).
      */
     public gradientFactor(ambientPressure: number): number {
         const surfaceMValue = this.mValue(ambientPressure);
-        return (this.pTotal - ambientPressure) / (surfaceMValue - ambientPressure);
+        const result = (this.pTotal - ambientPressure) / (surfaceMValue - ambientPressure);
+        return result < 0 ? 0 : result;
     }
 
     /**
@@ -143,6 +145,7 @@ export class Tissue extends Compartment implements LoadedTissue {
             return this.pTotal / ambientPressure - 1;
         }
 
+        // previous check also prevents this method to return negative value.
         return this.gradientFactor(ambientPressure);
     }
 

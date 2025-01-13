@@ -23,7 +23,7 @@ const durationFor = (depthDifference: number, speed: number): number => {
 export interface SurfaceIntervalApplied {
     /** Snapshot of the tissues at end of the applied surface interval */
     finalTissues: LoadedTissue[];
-    /** Only the over pressures collected when applying the surface interval */
+    /** Only the over pressures collected when applying the surface interval. One sample per second. */
     tissueOverPressures: TissueOverPressures[];
 }
 

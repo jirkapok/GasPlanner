@@ -257,6 +257,14 @@ export class Segments {
         return total;
     }
 
+    /**
+     * Find depth in bars, at which the diver was at given runtime in seconds for given profile.
+     **/
+    public static depthAt(profile: Segment[], runtime: number): number {
+        // TODO implement method Segments.depthAt
+        return 0;
+    }
+
     /** Calculates average depth in meters from provided segments */
     public static averageDepth(segments: Segment[]): number {
         if (segments.length <= 0) {
@@ -340,6 +348,7 @@ export class Segments {
         this.fixStartDepths();
     }
 
+    // TODO breaks contract replace by forEach
     public withAll(callBack: (segment: Segment) => void): void {
         for (let index = 0; index < this.segments.length; index++) {
             callBack(this.segments[index]);

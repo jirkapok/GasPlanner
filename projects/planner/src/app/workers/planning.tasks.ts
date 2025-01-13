@@ -57,7 +57,8 @@ export class PlanningTasks {
 
         const profileTissues = new ProfileTissues();
         const surfaceGradient = profileTissues.surfaceGradient(task.calculatedTissues, depthConverter.surfacePressure);
-        const offgasingStart = profileTissues.offgasingStart(task.calculatedOverPressures);
+        const offgasingStartRuntime = profileTissues.offgasingStart(task.calculatedOverPressures).runtime;
+        const offgasingStartDepth = Segments.depthAt(originalProfile, offgasingStartRuntime);
 
         return {
             diveId: task.diveId,
@@ -68,7 +69,10 @@ export class PlanningTasks {
             averageDepth: averageDepth,
             events: eventsDto,
             surfaceGradient: surfaceGradient,
-            offgasingStart: offgasingStart
+            offgasingStart: {
+                runtime: Time.toMinutes(offgasingStartRuntime),
+                depth: offgasingStartDepth
+            }
         };
     }
 

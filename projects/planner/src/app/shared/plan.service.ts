@@ -55,14 +55,9 @@ export class Plan {
         return this.strategy !== Strategies.ALL;
     }
 
-    public copySegments(): Segments {
-        return this._segments.copy();
-    }
-
     public setSimple(depth: number, duration: number, tank: Tank, options: Options): void {
         this.reset(depth, duration, tank, options);
     }
-
 
     public assignDepth(newDepth: number, tank: Tank, options: Options): void {
         this._segments = PlanFactory.createPlan(newDepth, this.duration, tank, options);

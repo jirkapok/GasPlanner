@@ -341,7 +341,7 @@ export class BuhlmannAlgorithm {
         // initial ceiling doesn't have to be 0m, because of previous tissues loading.
         context.addCeiling();
 
-        context.segments.withAll(segment => {
+        context.segments.items.forEach(segment => {
             this.swim(context, segment);
         });
     }

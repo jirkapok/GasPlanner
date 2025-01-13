@@ -12,7 +12,7 @@ export class SegmentsValidator {
             events.push(error);
         }
 
-        segments.withAll(segment => {
+        segments.items.forEach(segment => {
             SegmentsValidator.validateRegisteredGas(events, gases, segment);
         });
 
@@ -346,13 +346,6 @@ export class Segments {
         const endIndex = this.segments.length - count;
         this.segments = this.segments.slice(0, endIndex);
         this.fixStartDepths();
-    }
-
-    // TODO breaks contract replace by forEach
-    public withAll(callBack: (segment: Segment) => void): void {
-        for (let index = 0; index < this.segments.length; index++) {
-            callBack(this.segments[index]);
-        }
     }
 
     public any(): boolean {

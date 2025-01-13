@@ -56,8 +56,7 @@ export class PlanningTasks {
         const eventsDto = DtoSerialization.fromEvents(events.items);
 
         const profileTissues = new ProfileTissues();
-        const loadedTissues = parameters.surfaceInterval.previousTissues;
-        const surfaceGradient = profileTissues.surfaceGradient(loadedTissues, depthConverter.surfacePressure);
+        const surfaceGradient = profileTissues.surfaceGradient(task.calculatedTissues, depthConverter.surfacePressure);
         const offgasingStart = profileTissues.offgasingStart(task.calculatedOverPressures);
 
         return {
@@ -117,7 +116,7 @@ export class PlanningTasks {
         }
 
         // In simple view we are able to calculate the max time from descent only.
-        // Otherwise the maxTime is always 0 min if already planned dive which takes longer than maximum.
+        // Otherwise, the maxTime is always 0 min if already planned dive which takes longer than maximum.
         const descent = segments.slice(0, 1);
         return Segments.fromCollection(descent);
     }

@@ -75,6 +75,19 @@
                                     <strong *ngIf="dive.calculated">{{ dive.maxTime | number:'1.0-0' }}</strong>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>Surface gradient [%]:</td>
+                                <td class="table-active">
+                                    <strong *ngIf="dive.calculated">{{ surfaceGradient  | number:'1.0-0' }}</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Offgasing start:</td>
+                                <td class="table-active">
+                                    <strong *ngIf="dive.calculated">{{ offgasingStartTime | duration:offgasingStartTime }} min at
+                                        {{ offgasingStartDepth | number:'1.0-0' }} {{ units.length }}</strong>
+                                </td>
+                            </tr>
                             <tr *ngIf="isComplex">
                                 <td>
                                     Highest gas density [{{units.density}}]:<br>

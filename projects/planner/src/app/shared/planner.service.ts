@@ -176,8 +176,9 @@ export class PlannerService extends Streamed {
         diveResult.averageDepth = diveInfoResult.averageDepth;
         const events = DtoSerialization.toEvents(diveInfoResult.events);
         diveResult.events = this.ignoredIssues.filterIgnored(events.items);
-        // TODO add to the UI surface gradient and offgasing start
         diveResult.surfaceGradient = diveInfoResult.surfaceGradient;
+
+        // TODO find depth for the offgasing start runtime
         diveResult.offgasingStart = diveInfoResult.offgasingStart;
         diveResult.diveInfoFinished();
         this.fireFinishedEvents(dive);

@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
 
-import { Tank, GasToxicity } from 'scuba-physics';
+import { Tank, GasToxicity, Time, ProfileMoment } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { Streamed } from '../../shared/streamed';
@@ -85,6 +85,18 @@ export class DiveInfoComponent extends Streamed {
         }
 
         return formatNumber(this.dive.cns, 'en', '1.0-0');
+    }
+
+    public get surfaceGradient(): number {
+        return this.dive.surfaceGradient * 100;
+    }
+
+    public get offgasingStartTime(): number {
+        return Time.toMinutes(this.dive.offgasingStart.runtime);
+    }
+
+    public get offgasingStartDepth(): number {
+        return this.dive.offgasingStart.depth;
     }
 
     public get dive(): DiveResults {

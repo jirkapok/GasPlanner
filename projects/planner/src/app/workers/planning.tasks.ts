@@ -20,20 +20,10 @@ export class PlanningTasks {
         const algorithm = new BuhlmannAlgorithm();
         const profile = algorithm.decompression(parameters);
         const profileDto = DtoSerialization.fromProfile(profile);
-        const eventOptions: EventOptions = {
-            maxDensity: task.eventOptions.maxDensity,
-            startAscentIndex: parameters.segments.startAscentIndex,
-            profile: profile.segments,
-            ceilings: profile.ceilings,
-            profileOptions: parameters.options
-        };
-        const events = ProfileEvents.fromProfile(eventOptions);
-        const eventsDto = DtoSerialization.fromEvents(events.items);
 
         return {
             diveId: task.diveId,
-            profile: profileDto,
-            events: eventsDto
+            profile: profileDto
         };
     }
 
@@ -55,6 +45,16 @@ export class PlanningTasks {
         const density = new DensityAtDepth(depthConverter).forProfile(originalProfile);
         const averageDepth = Segments.averageDepth(originalProfile);
 
+        const eventOptions: EventOptions = {
+            maxDensity: task.eventOptions.maxDensity,
+            startAscentIndex: parameters.segments.startAscentIndex,
+            profile: originalProfile,
+            ceilings: task.ceilings,
+            profileOptions: parameters.options
+        };
+        const events = ProfileEvents.fromProfile(eventOptions);
+        const eventsDto = DtoSerialization.fromEvents(events.items);
+
         const profileTissues = new ProfileTissues();
         const loadedTissues = parameters.surfaceInterval.previousTissues;
         const surfaceGradient = profileTissues.surfaceGradient(loadedTissues, depthConverter.surfacePressure);
@@ -67,6 +67,7 @@ export class PlanningTasks {
             cns: cns,
             density: DtoSerialization.fromDensity(density),
             averageDepth: averageDepth,
+            events: eventsDto,
             surfaceGradient: surfaceGradient,
             offgasingStart: offgasingStart
         };

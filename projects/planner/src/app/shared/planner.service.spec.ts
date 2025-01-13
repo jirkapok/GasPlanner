@@ -211,8 +211,7 @@ describe('PlannerService', () => {
             const profileDto = DtoSerialization.fromProfile(profile);
             return {
                 diveId: 1,
-                profile: profileDto,
-                events: []
+                profile: profileDto
             };
         };
 
@@ -421,6 +420,7 @@ describe('PlannerService', () => {
                             density: 0,
                         },
                         averageDepth: 0,
+                        events: [],
                         surfaceGradient: 0,
                         offgasingStart: { runtime: 0, depth: 0 }
                     }));
@@ -432,7 +432,7 @@ describe('PlannerService', () => {
     });
 
     describe('App settings are applied', () => {
-        let decompressionSpy: jasmine.Spy<(data: ProfileRequestDto) => ProfileResultDto>;
+        let diveInfoSpy: jasmine.Spy<(data: DiveInfoRequestDto) => DiveInfoResultDto>;
 
         beforeEach(() => {
             const appSettings = TestBed.inject(ApplicationSettingsService);
@@ -443,12 +443,12 @@ describe('PlannerService', () => {
             depthsService.planDuration = 20; // enforce small deco, but don't hurt the second tank reserve
             appSettings.noDecoIgnored = true;
 
-            decompressionSpy = spyOn(PlanningTasks, 'calculateDecompression').and.callThrough();
+            diveInfoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
             planner.calculate(1);
         });
 
         it('Uses gas density', () => {
-            expect(decompressionSpy).toHaveBeenCalledWith(
+            expect(diveInfoSpy).toHaveBeenCalledWith(
                 jasmine.objectContaining({
                     eventOptions: jasmine.objectContaining({ maxDensity: 6 })
                 })

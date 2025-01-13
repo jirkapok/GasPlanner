@@ -77,8 +77,6 @@ export class PlannerService extends Streamed {
 
         const dive = this.schedules.byId(diveId)!;
         const profileRequest = this.createPlanRequest(dive) as ProfileRequestDto;
-        // TODO consider move events calculation to dive info task.
-        profileRequest.eventOptions = this.createEventOptions();
         this.profileTask.calculate(profileRequest);
     }
 
@@ -92,11 +90,9 @@ export class PlannerService extends Streamed {
         const dive = this.schedules.byId(result.diveId)!;
         const tankData = dive.tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
-        const events = DtoSerialization.toEvents(result.events);
         const diveResult = dive.diveResult;
         diveResult.wayPoints = this.wayPointsFromResult(calculatedProfile);
         diveResult.ceilings = calculatedProfile.ceilings;
-        diveResult.events = this.ignoredIssues.filterIgnored(events.items);
         diveResult.finalTissues = calculatedProfile.tissues;
         diveResult.tissueOverPressures = calculatedProfile.tissueOverPressures;
 
@@ -114,6 +110,8 @@ export class PlannerService extends Streamed {
         infoRequest.calculatedProfile = calculatedProfile.segments;
         infoRequest.calculatedTissues = calculatedProfile.tissues;
         infoRequest.calculatedOverPressures = calculatedProfile.tissueOverPressures;
+        infoRequest.eventOptions = this.createEventOptions();
+        infoRequest.ceilings = calculatedProfile.ceilings;
         this.diveInfoTask.calculate(infoRequest);
 
         const consumptionRequest = {
@@ -176,7 +174,10 @@ export class PlannerService extends Streamed {
         diveResult.notEnoughTime = dive.depths.notEnoughTime;
         diveResult.highestDensity = DtoSerialization.toDensity(diveInfoResult.density);
         diveResult.averageDepth = diveInfoResult.averageDepth;
-        //  TODO add to the UI surface gradient and offgasing start
+        const events = DtoSerialization.toEvents(diveInfoResult.events);
+        diveResult.events = this.ignoredIssues.filterIgnored(events.items);
+        // TODO add to the UI surface gradient and offgasing start
+        // TODO add Surface gradient and offgasing start to documentation
         diveResult.surfaceGradient = diveInfoResult.surfaceGradient;
         diveResult.offgasingStart = diveInfoResult.offgasingStart;
         diveResult.diveInfoFinished();

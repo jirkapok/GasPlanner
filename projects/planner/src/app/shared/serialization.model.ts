@@ -68,11 +68,12 @@ export interface PlanRequestDto {
 }
 
 export interface ProfileRequestDto extends PlanRequestDto {
-    eventOptions: EventOptionsDto;
 }
 
 export interface DiveInfoRequestDto extends PlanRequestDto{
+    eventOptions: EventOptionsDto;
     calculatedProfile: SegmentDto[];
+    ceilings: Ceiling[];
     /** At end of the calculated profile, not previous one */
     calculatedTissues: LoadedTissueDto[];
     calculatedOverPressures: number[][];
@@ -89,6 +90,7 @@ export interface DiveInfoResultDto {
     cns: number;
     density: DensityDto;
     averageDepth: number;
+    events: EventDto[];
     surfaceGradient: number;
     offgasingStart: ProfileMoment;
 }
@@ -102,7 +104,6 @@ export interface DensityDto {
 export interface ProfileResultDto {
     diveId: number;
     profile: CalculatedProfileDto;
-    events: EventDto[];
 }
 
 export interface EventDto {
@@ -115,7 +116,7 @@ export interface EventDto {
 
 export interface CalculatedProfileDto {
     segments: SegmentDto[];
-    ceilings: Ceiling[];
+    ceilings: Ceiling[]; // TODO ceilings methods may not work after serialization
     tissues: LoadedTissueDto[];
     tissueOverPressures: number[][];
     errors: EventDto[];

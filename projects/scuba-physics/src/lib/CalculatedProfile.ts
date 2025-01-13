@@ -172,12 +172,12 @@ export class Ceiling {
  * Result of the Algorithm calculation
  */
 export class CalculatedProfile {
-    public static readonly emptyTissueOverPressures: TissueOverPressures = [];
+    public static readonly emptyTissueOverPressures: TissueOverPressures[] = [];
     private constructor(
         private seg: Segment[],
         private ceil: Ceiling[],
         private tiss: LoadedTissue[],
-        private _tissueOverPressures: TissueOverPressures,
+        private _tissueOverPressures: TissueOverPressures[],
         private err: Event[]
     ) { }
 
@@ -206,7 +206,7 @@ export class CalculatedProfile {
     }
 
     // TODO consider collect all loaded tissue snapshosts instead and calculate the overpressures later
-    public get tissueOverPressures(): number[][] {
+    public get tissueOverPressures(): TissueOverPressures[] {
         return this._tissueOverPressures;
     }
 
@@ -221,7 +221,7 @@ export class CalculatedProfile {
         return new CalculatedProfile(segments, [], [], CalculatedProfile.emptyTissueOverPressures, errors);
     }
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: number[][],
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
         tissues: LoadedTissue[]): CalculatedProfile {
         return new CalculatedProfile(segments, ceilings, tissues, tissueOverPressures, []);
     }

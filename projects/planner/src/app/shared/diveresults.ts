@@ -32,7 +32,7 @@ export class DiveResults {
     /** In meaning of at end of the dive */
     public finalTissues: LoadedTissue[] = [];
     // 16 tissues overpressure history
-    public tissueOverPressures: TissueOverPressures = [];
+    public tissueOverPressures: TissueOverPressures[] = [];
     public events: Event[] = [];
 
 

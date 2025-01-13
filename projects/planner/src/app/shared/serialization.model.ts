@@ -1,6 +1,7 @@
 import {
     Tank, Ceiling, EventType,
-    Salinity, SafetyStop, ProfileMoment
+    Salinity, SafetyStop, ProfileMoment,
+    TissueOverPressures
 } from 'scuba-physics';
 import { ViewState } from './views.model';
 
@@ -76,7 +77,7 @@ export interface DiveInfoRequestDto extends PlanRequestDto{
     ceilings: Ceiling[];
     /** At end of the calculated profile, not previous one */
     calculatedTissues: LoadedTissueDto[];
-    calculatedOverPressures: number[][];
+    calculatedOverPressures: TissueOverPressures[];
 }
 
 export interface EventOptionsDto {
@@ -116,9 +117,9 @@ export interface EventDto {
 
 export interface CalculatedProfileDto {
     segments: SegmentDto[];
-    ceilings: Ceiling[]; // TODO ceilings methods may not work after serialization
+    ceilings: Ceiling[]; // ceilings methods may not work after serialization
     tissues: LoadedTissueDto[];
-    tissueOverPressures: number[][];
+    tissueOverPressures: TissueOverPressures[];
     errors: EventDto[];
 }
 

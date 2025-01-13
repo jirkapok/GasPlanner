@@ -22,7 +22,7 @@ export class ProfileTissues {
      * The required values are calculated using Tissues.saturationRatio method.
      * @returns Index of first overpressure sample, where saturation speed is positive.
      **/
-    public offgasingStart(tissueOverPressures: TissueOverPressures): ProfileMoment {
+    public offgasingStart(tissueOverPressures: TissueOverPressures[]): ProfileMoment {
         const tissue5index = 4;
 
         // multilevel dives may switch multiple times between on/offgasing

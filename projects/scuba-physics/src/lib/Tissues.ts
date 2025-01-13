@@ -3,7 +3,7 @@ import { Gas } from './Gases';
 import _ from 'lodash';
 import { AltitudePressure, PressureConverter } from './pressure-converter';
 import { GasMixtures } from './GasMixtures';
-import { LoadedTissue } from "./Tissues.api";
+import { LoadedTissue, TissueOverPressures } from "./Tissues.api";
 
 /**
  * Represents transition between depths during dive
@@ -293,9 +293,9 @@ export class Tissues {
      * @param surfacePressure The surface pressure in bars at beginning of the dive.
      * @param gradient Gradient factor constant in range 0-1
      */
-    public saturationRatio(ambientPressure: number, surfacePressure: number, gradient: number): number[] {
+    public saturationRatio(ambientPressure: number, surfacePressure: number, gradient: number): TissueOverPressures {
         return _(this._compartments).map(t => t.saturationRatio(ambientPressure, surfacePressure, gradient))
-            .value();
+            .value() as TissueOverPressures;
     }
 
     /**

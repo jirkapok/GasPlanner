@@ -25,7 +25,7 @@ export interface ContextMemento {
 export class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
-    public tissueOverPressures: TissueOverPressures = [];
+    public tissueOverPressures: TissueOverPressures[] = [];
     /** in seconds */
     public runTime = 0;
 

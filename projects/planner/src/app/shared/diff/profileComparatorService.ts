@@ -189,7 +189,7 @@ export class ProfileComparatorService extends Streamed {
         }
     }
 
-    private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): TissueOverPressures {
+    private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): TissueOverPressures[] {
         const altitude = profile.optionsService.altitude;
         const tissues = profile.diveResult.finalTissues;
         const parameters = new SurfaceIntervalParameters(tissues, altitude, surfaceInterval);

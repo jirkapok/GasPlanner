@@ -24,7 +24,7 @@ export interface SurfaceIntervalApplied {
     /** Snapshot of the tissues at end of the applied surface interval */
     finalTissues: LoadedTissue[];
     /** Only the over pressures collected when applying the surface interval */
-    tissueOverPressures: TissueOverPressures;
+    tissueOverPressures: TissueOverPressures[];
 }
 
 /** Represents surface interval between two dives */

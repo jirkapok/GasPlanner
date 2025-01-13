@@ -47,7 +47,7 @@ describe('Profile tissues', () => {
         it('Empty saturation returns dive start', () => {
             const overPressures: TissueOverPressures[] = [];
             const result = sut.offgasingStart(overPressures);
-            expect(result).toEqual({ runtime: 0, depth: 0 });
+            expect(result).toEqual(0);
         });
 
         it('Wrong number of tissues in any sample throws Error', () => {
@@ -58,25 +58,25 @@ describe('Profile tissues', () => {
         it('No submerging saturation returns dive start', () => {
            const overPressures = createFilledOverPressures([0, 0, 0, 0, 0]);
            const result = sut.offgasingStart(overPressures);
-           expect(result).toEqual({ runtime: 0, depth: 0 });
+           expect(result).toEqual(0);
         });
 
         it('Simple profile saturation returns 5th sample index', () => {
             const overPressures = createFilledOverPressures([0, -0.1, -0.2, -0.1, 0, 0.1, 0.1]);
             const result = sut.offgasingStart(overPressures);
-            expect(result).toEqual({ runtime: 5, depth: 0 });
+            expect(result).toEqual(5);
         });
 
         it('Multi-level profile saturation returns 5th sample index', () => {
             const overPressures = createFilledOverPressures([0, -0.1, 0, 0.1, -0.1, 0, 0.1, 0.1]);
             const result = sut.offgasingStart(overPressures);
-            expect(result).toEqual({ runtime: 6, depth: 0 });
+            expect(result).toEqual(6);
         });
 
         it('5th tissues stops offgasing on long deco stop', () => {
             const overPressures = createFilledOverPressures([0, -0.1, 0, 0.1, 0, 0.1, 0.1]);
             const result = sut.offgasingStart(overPressures);
-            expect(result).toEqual({ runtime: 3, depth: 0 });
+            expect(result).toEqual(3);
         });
 
         it('5th tissues is not the leading tissue', () => {
@@ -86,7 +86,7 @@ describe('Profile tissues', () => {
             overPressures[3][4] = 0.1;
 
             const result = sut.offgasingStart(overPressures);
-            expect(result).toEqual({ runtime: 3, depth: 0 });
+            expect(result).toEqual(3);
         });
     });
 });

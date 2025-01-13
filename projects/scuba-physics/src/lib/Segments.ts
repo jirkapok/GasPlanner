@@ -258,7 +258,7 @@ export class Segments {
     }
 
     /**
-     * Find depth in bars, at which the diver was at given runtime in seconds for given profile.
+     * Find depth in meters, at which the diver was at given runtime in seconds for given profile.
      **/
     public static depthAt(profile: Segment[], runtime: number): number {
         // TODO implement method Segments.depthAt

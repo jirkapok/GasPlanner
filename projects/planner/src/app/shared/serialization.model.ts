@@ -1,6 +1,6 @@
 import {
     Tank, Ceiling, EventType,
-    Salinity, SafetyStop, ProfileMoment,
+    Salinity, SafetyStop,
     TissueOverPressures
 } from 'scuba-physics';
 import { ViewState } from './views.model';
@@ -93,7 +93,8 @@ export interface DiveInfoResultDto {
     averageDepth: number;
     events: EventDto[];
     surfaceGradient: number;
-    offgasingStart: ProfileMoment;
+    offgasingStartTime: number;
+    offgasingStartDepth: number;
 }
 
 export interface DensityDto {

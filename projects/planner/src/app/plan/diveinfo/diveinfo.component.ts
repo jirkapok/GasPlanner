@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
 
-import { Tank, GasToxicity, Time, ProfileMoment } from 'scuba-physics';
+import { Tank, GasToxicity, Time } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { Streamed } from '../../shared/streamed';
@@ -92,11 +92,11 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get offgasingStartTime(): number {
-        return Time.toMinutes(this.dive.offgasingStart.runtime);
+        return Time.toMinutes(this.dive.offgasingStartTime);
     }
 
     public get offgasingStartDepth(): number {
-        return this.dive.offgasingStart.depth;
+        return this.dive.offgasingStartDepth;
     }
 
     public get dive(): DiveResults {

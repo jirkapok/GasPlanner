@@ -177,9 +177,8 @@ export class PlannerService extends Streamed {
         const events = DtoSerialization.toEvents(diveInfoResult.events);
         diveResult.events = this.ignoredIssues.filterIgnored(events.items);
         diveResult.surfaceGradient = diveInfoResult.surfaceGradient;
-
-        // TODO find depth for the offgasing start runtime
-        diveResult.offgasingStart = diveInfoResult.offgasingStart;
+        diveResult.offgasingStartTime = diveInfoResult.offgasingStartTime;
+        diveResult.offgasingStartDepth = diveInfoResult.offgasingStartDepth;
         diveResult.diveInfoFinished();
         this.fireFinishedEvents(dive);
     }

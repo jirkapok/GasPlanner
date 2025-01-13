@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { LoadedTissue, ProfileMoment, TissueOverPressures } from "./Tissues.api";
+import { LoadedTissue, TissueOverPressures } from "./Tissues.api";
 import { Tissues } from "./Tissues";
 
 export class ProfileTissues {
@@ -22,7 +22,7 @@ export class ProfileTissues {
      * The required values are calculated using Tissues.saturationRatio method.
      * @returns Index of first overpressure sample, where saturation speed is positive.
      **/
-    public offgasingStart(tissueOverPressures: TissueOverPressures[]): ProfileMoment {
+    public offgasingStart(tissueOverPressures: TissueOverPressures[]): number {
         const tissue5index = 4;
 
         // multilevel dives may switch multiple times between on/offgasing
@@ -38,6 +38,6 @@ export class ProfileTissues {
 
         // Not submerged or never offgased
         foundIndex = (foundIndex < 0 || foundIndex >= tissueOverPressures.length - 1) ? 0 : foundIndex;
-        return { runtime: foundIndex, depth: 0 };
+        return foundIndex;
     }
 }

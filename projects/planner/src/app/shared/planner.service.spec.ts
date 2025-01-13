@@ -422,7 +422,8 @@ describe('PlannerService', () => {
                         averageDepth: 0,
                         events: [],
                         surfaceGradient: 0,
-                        offgasingStart: { runtime: 0, depth: 0 }
+                        offgasingStartTime: 0,
+                        offgasingStartDepth: 0
                     }));
 
                 expect( () => planner.calculate(1)).not.toThrow();

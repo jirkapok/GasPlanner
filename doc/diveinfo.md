@@ -1,9 +1,14 @@
 # Dive info table
 
+* `Total dive time` [minutes]: Total duration of the dive from the descent to the surfacing.
 * `Time to surface (TTS)` [minutes]: Total duration of ascent from critical point of dive in case of emergency. Problem solving duration minutes are added to ascent duration to be able respond to situation at depth as recommended during scuba trainings.
-* `No decompression time` [minutes]: The longes time diver can stay at required depth where direct ascent to the surface is considered to be safe. There may be small deco, which disappears during the ascent.
+* `Average depth` [meters]: Average depth of whole profile at end of the dive.
+* `Rock bottom at` [minutes]: The moment at which the emergency ascent is calculated used to calculate the rock bottom. It is the last moment at highest depth.
+* `No decompression time` [minutes]: The longest time diver can stay at required depth where direct ascent to the surface is considered to be safe. There may be small deco, which disappears during the ascent.
 * `Maximum bottom time` [minutes]: The longest time diver can stay at required depth considering provided gases. Even, it may lead to decompression dive.
-* `Rock bottom at` time: The moment at which the emergency ascent is calculated used to calculate the rock bottom. It is the last moment at highest depth.
+* `Highest gas density` [gram/liter]: The highest breathed gas density in the lungs during the dive. It depends on the gas and depth at the moment. 
+* `Surface gradient` [percents]: Gradient factor at moment user surfaces. This can be used to identify risks when planning emergency profiles or identify relative state of the tissues after the dive. 
+* `Off gasing start` [minutes/depth]: The moment during the dive, at which the 5th theoretical tissue starts to off gas. This is guessed moment, where decompression starts.
 
 > **Emergency ascent may differ from calculated ascent**, because it is calculated at different time during the dive.
 

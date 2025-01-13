@@ -177,7 +177,6 @@ export class PlannerService extends Streamed {
         const events = DtoSerialization.toEvents(diveInfoResult.events);
         diveResult.events = this.ignoredIssues.filterIgnored(events.items);
         // TODO add to the UI surface gradient and offgasing start
-        // TODO add Surface gradient and offgasing start to documentation
         diveResult.surfaceGradient = diveInfoResult.surfaceGradient;
         diveResult.offgasingStart = diveInfoResult.offgasingStart;
         diveResult.diveInfoFinished();

@@ -75,7 +75,7 @@ export class PlannerService extends Streamed {
             this.schedules.markStillRunning(diveId);
         }, 500);
 
-        const dive = this.diveById(diveId);
+        const dive = this.schedules.byId(diveId)!;
         const profileRequest = this.createPlanRequest(dive) as ProfileRequestDto;
         // TODO consider move events calculation to dive info task.
         profileRequest.eventOptions = this.createEventOptions();
@@ -89,7 +89,7 @@ export class PlannerService extends Streamed {
             return;
         }
 
-        const dive = this.diveById(result.diveId);
+        const dive = this.schedules.byId(result.diveId)!;
         const tankData = dive.tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const events = DtoSerialization.toEvents(result.events);
@@ -167,7 +167,7 @@ export class PlannerService extends Streamed {
             return;
         }
 
-        const dive = this.diveById(diveInfoResult.diveId);
+        const dive = this.schedules.byId(diveInfoResult.diveId)!;
         const diveResult = dive.diveResult;
         diveResult.noDecoTime = diveInfoResult.noDeco;
         diveResult.otu = diveInfoResult.otu;
@@ -188,7 +188,7 @@ export class PlannerService extends Streamed {
             return;
         }
 
-        const dive = this.diveById(result.diveId);
+        const dive = this.schedules.byId(result.diveId)!;
         const tanks = dive.tanksService;
         tanks.copyTanksConsumption(result.tanks);
         const diveResult = dive.diveResult;
@@ -209,17 +209,6 @@ export class PlannerService extends Streamed {
         return {
             maxDensity: this.appSettings.settings.maxGasDensity
         };
-    }
-
-    // TODO Test: the dive may be deleted before the calculation is finished
-    private diveById(diveId: number): DiveSchedule {
-        const found = this.schedules.byId(diveId);
-
-        if(found) {
-            return found;
-        }
-
-        throw new Error(`Unable to find dive by Id '${ diveId }'.`);
     }
 
     private fireFinishedEvents(dive: DiveSchedule) {

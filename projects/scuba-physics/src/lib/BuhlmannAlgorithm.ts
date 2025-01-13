@@ -33,6 +33,7 @@ export class RestingParameters {
      * Creates new instance of algorithm parameters representing surface interval between two dives.
      * Used as input for repetitive dives.
      * @param current Not empty collection of tissues at end of previous dive (when surfacing).
+     * If no tissues are provided, default (first dive) are created and surfaceInterval has no effect.
      * @param surfaceInterval Duration of diver rest between two dives in seconds.
      */
     constructor(public current: LoadedTissue[], public surfaceInterval: number) {
@@ -59,6 +60,9 @@ export class AlgorithmParams {
         private _segments: Segments,
         private _gases: Gases,
         private _options: Options,
+        /** If no valid tissues are provided from previous dive,
+         * then first dive default tissues are created, ignoring surface interval.
+         **/
         surface?: RestingParameters
     ) {
         this._surface = this.resolveSurfaceParameters(surface);

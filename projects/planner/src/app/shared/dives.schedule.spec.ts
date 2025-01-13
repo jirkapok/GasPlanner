@@ -124,8 +124,7 @@ describe('Scheduled dives', () => {
 
         const repetitive = sut.add();
         repetitive.surfaceInterval = Time.oneHour;
-        const loadedTissues2 = [{ pN2: 2, pHe: 2 }];
-        repetitive.diveResult.finalTissues = loadedTissues2;
+        repetitive.diveResult.finalTissues = [{ pN2: 2, pHe: 2 }];
 
         sut.add();
 

@@ -15,7 +15,6 @@ Following list of features and improvements ordered by priority is under develop
 
 * Fix PWA support for iPhone (offline mode and Add to Home screen)
 * Add tissues heat map
-  * to the profile chart
   * Show tissues after amount of time spend at surface
   * Add to results and diff:
     * TTS is not longer (offgassing start): Moment/depth during ascent at which all tissues saturation is equal or lower than the current ambient pressure
@@ -39,10 +38,6 @@ Following list of features and improvements ordered by priority is under develop
   * Profile comparison: Add option to compare dives aligned by the end of dive
   * Read only fields should be distinguish able
   * Tanks complex view: Add check box to be able enable or disable tanks
-  * Add clone dive button
-  * Mouse middle button click removes dive
-  * Add option to define custom distance between deco stops
-  * Rounding to minutes should round also the ascent time, not only the deco stops
 * Add undo/redo to all pages
 * Add localizations
 * Add calculation trainings

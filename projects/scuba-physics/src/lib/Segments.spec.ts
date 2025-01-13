@@ -346,4 +346,37 @@ describe('Segments', () => {
             expect(segments.startAscentTime).toBe(60);
         });
     });
+
+    describe('Depth at', () => {
+        const profile = [
+            new Segment(5, 10, StandardGases.air, 20), // 5 m to distinguish from default 0 m
+            new Segment(10, 20, StandardGases.air, 20),
+            new Segment(20, 30, StandardGases.air, 20)
+        ];
+
+        it('No elements returns 0 m', () => {
+            const depth = Segments.depthAt([], 0);
+            expect(depth).toEqual(0);
+        });
+
+        it('0 s runtime returns start depth', () => {
+            const depth = Segments.depthAt(profile, 0);
+            expect(depth).toEqual(5);
+        });
+
+        it('Runtime from an element returns depth 15 meters', () => {
+            const depth = Segments.depthAt(profile, 30);
+            expect(depth).toEqual(15);
+        });
+
+        it('End runtime returns end depth', () => {
+            const depth = Segments.depthAt(profile, 60);
+            expect(depth).toEqual(30);
+        });
+
+        it('Runtime outside of the depths returns 0 m', () => {
+            const depth = Segments.depthAt(profile, 70);
+            expect(depth).toEqual(0);
+        });
+    });
 });

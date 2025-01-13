@@ -259,9 +259,24 @@ export class Segments {
 
     /**
      * Find depth in meters, at which the diver was at given runtime in seconds for given profile.
+     * @param profile Not empty array of elements of valid profile.
+     * @param runtime Positive number in seconds within the profile segments total duration.
+     * @returns Returns 0 m, if no segments fits the runtime or the segments array is empty.
      **/
     public static depthAt(profile: Segment[], runtime: number): number {
-        // TODO implement method Segments.depthAt
+        let elapsedSince = 0;
+
+        for (let index = 0; index < profile.length; index++) {
+            const segment = profile[index];
+            const remainingDuration = runtime - elapsedSince;
+
+            if (elapsedSince <= runtime && remainingDuration <= segment.duration) {
+                return segment.depthAt(remainingDuration);
+            }
+
+            elapsedSince += segment.duration;
+        }
+
         return 0;
     }
 

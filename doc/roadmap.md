@@ -14,11 +14,6 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Fix PWA support for iPhone (offline mode and Add to Home screen)
-* Add tissues heat map
-  * Show tissues after amount of time spend at surface
-  * Add to results and diff:
-    * TTS is not longer (offgassing start): Moment/depth during ascent at which all tissues saturation is equal or lower than the current ambient pressure
-    * Add Surface GF
 * Gas consumption:
     * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80
     * Clarify another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
@@ -38,6 +33,7 @@ Following list of features and improvements ordered by priority is under develop
   * Profile comparison: Add option to compare dives aligned by the end of dive
   * Read only fields should be distinguish able
   * Tanks complex view: Add check box to be able enable or disable tanks
+  * Tissues heatmap: Show tissues after amount of time spend at surface
 * Add undo/redo to all pages
 * Add localizations
 * Add calculation trainings

@@ -92,7 +92,7 @@ export class DiveInfoComponent extends Streamed {
     }
 
     public get offgasingStartTime(): number {
-        return Time.toMinutes(this.dive.offgasingStartTime);
+        return this.dive.offgasingStartTime;
     }
 
     public get offgasingStartDepth(): number {

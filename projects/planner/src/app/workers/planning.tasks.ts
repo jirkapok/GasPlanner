@@ -69,7 +69,7 @@ export class PlanningTasks {
             averageDepth: averageDepth,
             events: eventsDto,
             surfaceGradient: surfaceGradient,
-            offgasingStartTime: Time.toMinutes(offgasingStartRuntime),
+            offgasingStartTime: offgasingStartRuntime,
             offgasingStartDepth: offgasingStartDepth
         };
     }

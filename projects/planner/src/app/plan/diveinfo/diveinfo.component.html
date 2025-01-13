@@ -54,7 +54,7 @@
                                 <td>Rock bottom at [min]:</td>
                                 <td class="table-active">
                                     <strong *ngIf="dive.calculated">{{ dive.emergencyAscentStart |
-                                        duration:dive.emergencyAscentStart }} </strong>
+                                        duration:dive.totalDuration }} </strong>
                                 </td>
                             </tr>
                             <tr>
@@ -82,19 +82,23 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Offgasing start:</td>
+                                <td>Offgasing start [min]:</td>
                                 <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ offgasingStartTime | duration:offgasingStartTime }} min at
-                                        {{ offgasingStartDepth | number:'1.0-0' }} {{ units.length }}</strong>
+                                    <span *ngIf="dive.calculated">
+                                        <strong *ngIf="dive.calculated">{{ offgasingStartTime | duration:dive.totalDuration }}</strong>
+                                        (at {{ offgasingStartDepth | number:'1.0-0' }} {{ units.length }})
+                                    </span>
                                 </td>
                             </tr>
                             <tr *ngIf="isComplex">
                                 <td>
                                     Highest gas density [{{units.density}}]:<br>
-                                    ({{densityText}})
                                 </td>
                                 <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ highestDensity | number:'1.0-2' }}</strong>
+                                    <span  *ngIf="dive.calculated">
+                                         <strong >{{ highestDensity | number:'1.0-2' }}</strong>
+                                         ({{densityText}})
+                                    </span>
                                 </td>
                             </tr>
                             <tr *ngIf="dive.needsReturn">

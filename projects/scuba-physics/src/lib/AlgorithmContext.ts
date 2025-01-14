@@ -1,4 +1,4 @@
-import { Tissue, Tissues } from './Tissues';
+import { Tissues } from './Tissues';
 import { Ceiling } from './CalculatedProfile';
 import { BestGasOptions, Gas, Gases, OCGasSource } from './Gases';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
@@ -13,7 +13,7 @@ import { FeatureFlags } from './featureFlags';
 import { LoadedTissue, TissueOverPressures } from "./Tissues.api";
 
 export interface ContextMemento {
-    tissues: Tissue[];
+    tissues: LoadedTissue[];
     ceilings: number;
     tissueOverPressures: number;
     segments: number;
@@ -26,6 +26,7 @@ export class AlgorithmContext {
     public tissues: Tissues;
     public ceilings: Ceiling[] = [];
     public tissueOverPressures: TissueOverPressures[] = [];
+    public tissuesHistory: LoadedTissue[][] = [];
     /** in seconds */
     public runTime = 0;
 
@@ -139,6 +140,7 @@ export class AlgorithmContext {
 
     public addSaturation(currentDepth: number): void {
         if (!FeatureFlags.Instance.collectSaturation) {
+            this.tissuesHistory.push(this.tissues.finalState());
             return;
         }
 
@@ -151,7 +153,7 @@ export class AlgorithmContext {
         return {
             runTime: this.runTime,
             oxygenStarted: this._oxygenStarted,
-            tissues: Tissues.copy(this.tissues.compartments),
+            tissues: this.tissues.finalState(),
             ceilings: this.ceilings.length,
             tissueOverPressures: this.tissueOverPressures.length,
             segments: this.segments.length,
@@ -197,7 +199,6 @@ export class AlgorithmContext {
         return this.gasSource.airBreakGas(this.currentDepth, this.currentGas);
     }
 }
-
 
 export class AirBreakContext {
     /** in seconds */

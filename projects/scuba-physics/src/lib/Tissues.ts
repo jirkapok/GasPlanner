@@ -41,7 +41,6 @@ export class Tissue extends Compartment implements LoadedTissue {
 
         this._pN2 = Tissue.inspiredN2Pressure(surfacePressure);
         this._pHe = 0;
-        this.updateTotal();
         this.updateCoefficients();
     }
 
@@ -82,10 +81,7 @@ export class Tissue extends Compartment implements LoadedTissue {
 
     public static fromCurrent(loaded: LoadedTissue, compartment: Compartment): Tissue {
         const copy = new Tissue(compartment, 1); // irrelevant pressure wouldn't be used
-        copy._pN2 = loaded.pN2;
-        copy._pHe = loaded.pHe;
-        copy.updateTotal();
-        copy.updateCoefficients();
+        copy.restoreFrom(loaded);
         return copy;
     }
 
@@ -103,6 +99,12 @@ export class Tissue extends Compartment implements LoadedTissue {
         /** as constant for body temperature 37°C */
         const waterVapourPressure = 0.0627;
         return ambientPressure - waterVapourPressure;
+    }
+
+    public restoreFrom(source: LoadedTissue): void {
+        this._pN2 = source.pN2;
+        this._pHe = source.pHe;
+        this.updateCoefficients();
     }
 
     public copy(): Tissue {
@@ -166,7 +168,6 @@ export class Tissue extends Compartment implements LoadedTissue {
         this._pN2 = this.loadGas(segment, gas.fN2, this.pN2, this.n2HalfTime);
         this._pHe = this.loadGas(segment, gas.fHe, this.pHe, this.heHalfTime);
         const prevTotal = this.pTotal;
-        this.updateTotal();
         this.updateCoefficients();
         // return difference - how much load was added
         return this.pTotal - prevTotal;
@@ -198,11 +199,8 @@ export class Tissue extends Compartment implements LoadedTissue {
         return (pGas + (gasRate * (time - (1.0 / timeConstant))) - ((pGas - pBegin - (gasRate / timeConstant)) * exp));
     }
 
-    private updateTotal(): void {
-        this._pTotal = this.pN2 + this.pHe;
-    }
-
     private updateCoefficients() {
+        this._pTotal = this.pN2 + this.pHe;
         this._a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
         this._b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
     }
@@ -271,15 +269,21 @@ export class Tissues {
         return backup;
     }
 
-    public restoreFrom(source: Tissue[]): void {
-        this._compartments = Tissues.copy(source);
+    // TODO introduce LoadedTissues to fix the count of tissues
+    public restoreFrom(source: LoadedTissue[]): void {
+        this._compartments.forEach((t, index) => t.restoreFrom(source[index]));
     }
 
     /**
      * Returns current state/snapshot of the tissues.
      */
     public finalState(): LoadedTissue[] {
-        return Tissues.copy(this._compartments);
+        return _(this._compartments).map(t => {
+            return {
+                pN2: t.pN2,
+                pHe: t.pHe
+            };
+        }).value();
     }
 
     // TODO Define type for Tissue saturion snapshot and move doc to algorithm CalculatedProfile

@@ -14,6 +14,7 @@ export class ProfileTissues {
         return surfaceGradient;
     }
 
+    // TODO replace TissueOverPressures with LoadedTissue, since we cant use speed to determine offgasing
     /**
      * Finds the first moment, where the 5th tissue starts off gasing.
      * Throws Error in case any sample has wrong number of tissues.

@@ -286,7 +286,7 @@ export class Tissues {
         }).value();
     }
 
-    // TODO Define type for Tissue saturion snapshot and move doc to algorithm CalculatedProfile
+    // TODO Define type for Tissue saturation snapshot and move doc to algorithm CalculatedProfile
     // TODO verify the doc and meaning of the values
     /**
      * Calculates saturation ratio for all tissues as percents relative to ambient pressure.

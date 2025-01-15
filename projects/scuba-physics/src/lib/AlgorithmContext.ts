@@ -138,12 +138,13 @@ export class AlgorithmContext {
         return newGas;
     }
 
+    // TODO split methods with/without collecting statistics (ceilings, tissues, overPressures)
     public addSaturation(currentDepth: number): void {
         if (!FeatureFlags.Instance.collectSaturation) {
-            this.tissuesHistory.push(this.tissues.finalState());
             return;
         }
 
+        this.tissuesHistory.push(this.tissues.finalState());
         const ambientPressure = this.depthConverter.toBar(currentDepth);
         const currentOverPressures = this.tissues.saturationRatio(ambientPressure, this.depthConverter.surfacePressure, 1);
         this.tissueOverPressures.push(currentOverPressures);

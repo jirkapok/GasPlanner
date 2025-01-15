@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Time } from './Time';
 import { AlgorithmParams, BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gas, Gases } from './Gases';
@@ -24,13 +25,21 @@ describe('Performance', () => {
     });
 
     const assertDuration = (message: string, limit: number, actionToMeasure: () => void): void => {
-        const startTime = performance.now();
-        actionToMeasure();
-        const endTime = performance.now();
+        const iterations = 1;
+        const results: number[] = [];
 
-        const methodDuration = Precision.round(endTime - startTime);
-        console.log(`${message}: ${methodDuration} ms (max ${limit} ms)`);
-        expect(methodDuration).toBeLessThan(limit);
+        for (let i = 0; i < iterations; i++) {
+            const startTime = performance.now();
+            actionToMeasure();
+            const endTime = performance.now();
+
+            const methodDuration = Precision.round(endTime - startTime);
+            results.push(methodDuration);
+        }
+
+        const averageDuration = _(results).mean();
+        console.log(`${message}: ${averageDuration} ms (max ${limit} ms)`);
+        expect(averageDuration).toBeLessThan(limit);
     };
 
     it('Decompression is calculated within 100 ms', () => {

@@ -1,5 +1,5 @@
 /**
- * List of 16 tissues over pressure snapshots.
+ * Set of 16 tissues over pressure snapshots.
  * Saturation ratio for all tissues is percents relative to ambient pressure.
  * -1..0: is offgasing, -1 = surface pressure.
  *    =0: is equilibrium (tissue is not offgasing or ongasing), at ambient pressure.
@@ -10,6 +10,14 @@ export type TissueOverPressures = [
     number, number, number, number,
     number, number, number, number,
     number, number, number, number
+];
+
+/** Set of 16 tissues. */
+export type LoadedTissues = [
+    LoadedTissue, LoadedTissue, LoadedTissue, LoadedTissue,
+    LoadedTissue, LoadedTissue, LoadedTissue, LoadedTissue,
+    LoadedTissue, LoadedTissue, LoadedTissue, LoadedTissue,
+    LoadedTissue, LoadedTissue, LoadedTissue, LoadedTissue
 ];
 
 /**

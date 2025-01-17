@@ -10,7 +10,7 @@ import { Segments } from './Segments';
 import { Options } from './Options';
 import { StandardGases } from './StandardGases';
 import { FeatureFlags } from "./featureFlags";
-import { LoadedTissue } from "./Tissues.api";
+import { LoadedTissue, LoadedTissues } from "./Tissues.api";
 
 describe('Buhlmann Algorithm - Repetitive dives', () => {
     const sut = new BuhlmannAlgorithm();
@@ -47,7 +47,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         }))
         .value();
 
-    const applySurfaceInterval = (loaded: LoadedTissue[], altitude: number, duration: number): LoadedTissue[] => {
+    const applySurfaceInterval = (loaded: LoadedTissues, altitude: number, duration: number): LoadedTissue[] => {
         const parameters = new SurfaceIntervalParameters(loaded, altitude, duration);
         return sut.applySurfaceInterval(parameters).finalTissues;
     };

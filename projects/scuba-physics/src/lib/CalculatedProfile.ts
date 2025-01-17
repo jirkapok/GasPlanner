@@ -1,6 +1,6 @@
 import { Gas } from './Gases';
 import { Segment } from './Segments';
-import { LoadedTissue, TissueOverPressures } from './Tissues.api';
+import { LoadedTissue, LoadedTissues, TissueOverPressures } from './Tissues.api';
 
 export enum EventType {
     noAction = 0,
@@ -176,7 +176,7 @@ export class CalculatedProfile {
     private constructor(
         private seg: Segment[],
         private ceil: Ceiling[],
-        private tiss: LoadedTissue[],
+        private tiss: LoadedTissues,
         private _tissueOverPressures: TissueOverPressures[],
         private err: Event[]
     ) { }
@@ -196,9 +196,9 @@ export class CalculatedProfile {
         return this.ceil;
     }
 
-    public get lastTissues(): LoadedTissue[] {
+    public get lastTissues(): LoadedTissues {
         if(this.tiss.length < 1) {
-            return [];
+            return new Array(0) as LoadedTissues;
         }
         return this.tiss;
         // return this.tiss[this.tiss.length - 1];
@@ -227,11 +227,11 @@ export class CalculatedProfile {
     }
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
-        return new CalculatedProfile(segments, [], [], CalculatedProfile.emptyTissueOverPressures, errors);
+        return new CalculatedProfile(segments, [], new Array(0) as LoadedTissues, CalculatedProfile.emptyTissueOverPressures, errors);
     }
 
     public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
-        tissues: LoadedTissue[]): CalculatedProfile {
+        tissues: LoadedTissues): CalculatedProfile {
         return new CalculatedProfile(segments, ceilings, tissues, tissueOverPressures, []);
     }
 }

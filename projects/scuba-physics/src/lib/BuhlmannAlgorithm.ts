@@ -12,7 +12,7 @@ import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
 import { Salinity } from './pressure-converter';
 import { AirBreakContext, AlgorithmContext, ContextMemento } from './AlgorithmContext';
 import { StandardGases } from './StandardGases';
-import { LoadedTissue, TissueOverPressures } from "./Tissues.api";
+import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
 
 // Speed in meters / min.
 const durationFor = (depthDifference: number, speed: number): number => {
@@ -22,7 +22,7 @@ const durationFor = (depthDifference: number, speed: number): number => {
 
 export interface SurfaceIntervalApplied {
     /** Snapshot of the tissues at end of the applied surface interval */
-    finalTissues: LoadedTissue[];
+    finalTissues: LoadedTissues;
     /** Only the over pressures collected when applying the surface interval. One sample per second. */
     tissueOverPressures: TissueOverPressures[];
 }
@@ -36,7 +36,7 @@ export class RestingParameters {
      * If no tissues are provided, default (first dive) are created and surfaceInterval has no effect.
      * @param surfaceInterval Duration of diver rest between two dives in seconds.
      */
-    constructor(public current: LoadedTissue[], public surfaceInterval: number) {
+    constructor(public current: LoadedTissues, public surfaceInterval: number) {
     }
 }
 
@@ -50,7 +50,7 @@ export class SurfaceIntervalParameters {
      * Usually altitude of the following dive.
      * @param surfaceInterval Duration of diver rest between two dives in seconds.
      */
-    constructor(public previousTissues: LoadedTissue[], public altitude: number, public surfaceInterval: number) {
+    constructor(public previousTissues: LoadedTissues, public altitude: number, public surfaceInterval: number) {
     }
 }
 

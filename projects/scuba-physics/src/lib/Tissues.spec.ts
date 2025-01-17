@@ -3,14 +3,14 @@ import { LoadSegment, Tissue, Tissues, TissuesValidator } from './Tissues';
 import { Compartments } from './Compartments';
 import { Time } from './Time';
 import { StandardGases } from './StandardGases';
-import { LoadedTissue } from "./Tissues.api";
+import { LoadedTissue, LoadedTissues } from "./Tissues.api";
 
 describe('Tissues', () => {
     const createTissue = () => new Tissue(Compartments.buhlmannZHL16C[0], 1);
 
     describe('Creation', () => {
         it('Tissues Create generates valid tissues', () => {
-            const loadedTissues: LoadedTissue[] = Tissues.create(1).finalState();
+            const loadedTissues: LoadedTissues = Tissues.create(1).finalState();
             const valid = TissuesValidator.valid(loadedTissues);
             expect(valid).toBeTruthy();
         });
@@ -36,24 +36,24 @@ describe('Tissues', () => {
         });
 
         it('Empty loaded throws Error', () => {
-            expect(() => Tissues.createLoaded([])).toThrow();
+            expect(() => Tissues.createLoaded(new Array(0) as LoadedTissues)).toThrow();
         });
     });
 
     describe('Validation', () => {
         it('Empty is invalid', () => {
-            const valid = TissuesValidator.valid([]);
+            const valid = TissuesValidator.valid(new Array(0) as LoadedTissues);
             expect(valid).toBeFalsy();
         });
 
         it('Non 16 compartments is invalid', () => {
-            const wrongCount: LoadedTissue[] = Tissues.create(1).finalState().slice(14);
+            const wrongCount: LoadedTissues = Tissues.create(1).finalState().slice(14) as LoadedTissues;
             const valid = TissuesValidator.valid(wrongCount);
             expect(valid).toBeFalsy();
         });
 
         it('One invalid item', () => {
-            const tissues: LoadedTissue[] = Tissues.create(1).finalState();
+            const tissues: LoadedTissues = Tissues.create(1).finalState();
             tissues[0] = { pHe: 0, pN2: -1 };
             const valid = TissuesValidator.valid(tissues);
             expect(valid).toBeFalsy();

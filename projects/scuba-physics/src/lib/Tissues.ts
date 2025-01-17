@@ -3,7 +3,7 @@ import { Gas } from './Gases';
 import _ from 'lodash';
 import { AltitudePressure, PressureConverter } from './pressure-converter';
 import { GasMixtures } from './GasMixtures';
-import { LoadedTissue, TissueOverPressures } from "./Tissues.api";
+import { LoadedTissue, LoadedTissues, TissueOverPressures } from "./Tissues.api";
 
 /**
  * Represents transition between depths during dive
@@ -219,7 +219,7 @@ export class Tissues {
      * @param current not null instance of currently loaded tissues.
      * Can be obtained from algorithm calculated dive profile.
      */
-    public static createLoaded(current: LoadedTissue[]): Tissues {
+    public static createLoaded(current: LoadedTissues): Tissues {
         if(current.length !== Compartments.buhlmannZHL16C.length) {
             throw new Error('Provided incompatible count of tissues');
         }
@@ -252,7 +252,7 @@ export class Tissues {
      * Creates new loaded tissues at altitude
      * @param altitude in m.a.s.l
      */
-    public static createLoadedAt(altitude: number): LoadedTissue[] {
+    public static createLoadedAt(altitude: number): LoadedTissues {
         const surfacePressurePascal = AltitudePressure.pressure(altitude);
         const surfacePressure = PressureConverter.pascalToBar(surfacePressurePascal);
         const tissues = Tissues.create(surfacePressure).finalState();
@@ -269,21 +269,20 @@ export class Tissues {
         return backup;
     }
 
-    // TODO introduce LoadedTissues to fix the count of tissues
-    public restoreFrom(source: LoadedTissue[]): void {
+    public restoreFrom(source: LoadedTissues): void {
         this._compartments.forEach((t, index) => t.restoreFrom(source[index]));
     }
 
     /**
      * Returns current state/snapshot of the tissues.
      */
-    public finalState(): LoadedTissue[] {
+    public finalState(): LoadedTissues {
         return _(this._compartments).map(t => {
             return {
                 pN2: t.pN2,
                 pHe: t.pHe
             };
-        }).value();
+        }).value() as LoadedTissues;
     }
 
     // TODO Define type for Tissue saturation snapshot and move doc to algorithm CalculatedProfile
@@ -357,11 +356,11 @@ export class TissuesValidator {
                item.pHe >= 0;
     }
 
-    public static validCount(current?: LoadedTissue[]): boolean {
+    public static validCount(current?: LoadedTissues): boolean {
         return !!current && current.length === Compartments.buhlmannZHL16C.length;
     }
 
-    public static valid(current: LoadedTissue[]) {
+    public static valid(current: LoadedTissues) {
         if(!TissuesValidator.validCount(current)) {
             return false;
         }

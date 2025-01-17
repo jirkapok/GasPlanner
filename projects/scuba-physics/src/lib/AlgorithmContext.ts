@@ -10,10 +10,10 @@ import { DepthConverter } from './depth-converter';
 import { Time } from './Time';
 import { StandardGases } from './StandardGases';
 import { FeatureFlags } from './featureFlags';
-import { LoadedTissue, TissueOverPressures } from "./Tissues.api";
+import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
 
 export interface ContextMemento {
-    tissues: LoadedTissue[];
+    tissues: LoadedTissues;
     ceilings: number;
     tissueOverPressures: number;
     segments: number;
@@ -25,7 +25,7 @@ export interface ContextMemento {
 export class AlgorithmContext {
     public ceilings: Ceiling[] = [];
     public tissueOverPressures: TissueOverPressures[] = [];
-    public tissuesHistory: LoadedTissue[][] = [];
+    public tissuesHistory: LoadedTissues[] = [];
     /** in seconds */
     public runTime = 0;
 
@@ -43,7 +43,7 @@ export class AlgorithmContext {
         public segments: Segments,
         public options: Options,
         public depthConverter: DepthConverter,
-        currentTissues: LoadedTissue[]) {
+        currentTissues: LoadedTissues) {
         this.tissues = Tissues.createLoaded(currentTissues);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
         const last = segments.last();
@@ -95,7 +95,7 @@ export class AlgorithmContext {
         return this.runTime - this._oxygenStarted;
     }
 
-    public get finalTissues(): LoadedTissue[] {
+    public get finalTissues(): LoadedTissues {
         //TODO  replace with tissuesHistory.last
         return this.tissues.finalState();
     }

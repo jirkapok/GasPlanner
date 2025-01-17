@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { LoadedTissue, TissueOverPressures } from "./Tissues.api";
+import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
 import { Tissues } from "./Tissues";
 
 export class ProfileTissues {
@@ -8,7 +8,7 @@ export class ProfileTissues {
      * @param finalTissues last known state of the tissues
      * @param surfacePressure pressure at the surface in bars
      **/
-    public surfaceGradient(finalTissues: LoadedTissue[], surfacePressure: number): number {
+    public surfaceGradient(finalTissues: LoadedTissues, surfacePressure: number): number {
         const tissues = Tissues.createLoaded(finalTissues);
         const surfaceGradient = tissues.gradientFactor(surfacePressure);
         return surfaceGradient;

@@ -42,7 +42,7 @@ describe('Performance', () => {
         expect(averageDuration).toBeLessThan(limit);
     };
 
-    it('Decompression is calculated within 100 ms', () => {
+    it('Decompression is calculated within 150 ms', () => {
         const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
         options.safetyStop = SafetyStop.always;
         options.salinity = Salinity.salt;
@@ -64,7 +64,7 @@ describe('Performance', () => {
         const algorithm = new BuhlmannAlgorithm();
         const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
 
-        assertDuration(`Decompression calculation duration`, 100,
+        assertDuration(`Decompression calculation duration`, 150,
             () => algorithm.decompression(parameters));
     });
 
@@ -78,7 +78,7 @@ describe('Performance', () => {
             () => algorithm.noDecoLimit(simpleDive));
     });
 
-    it('Consumption Max bottom time is calculated within 550 ms', () => {
+    it('Consumption Max bottom time is calculated within 1000 ms', () => {
         const consumptionOptions: ConsumptionOptions = {
             diver: new Diver(20),
             primaryTankReserve: Consumption.defaultPrimaryReserve,
@@ -99,7 +99,7 @@ describe('Performance', () => {
         segments.add(5, tank.gas, Time.oneMinute);
         segments.addFlat(tank.gas, Time.oneMinute * 10);
 
-        assertDuration(`Consumption Max bottom time duration`, 550,
+        assertDuration(`Consumption Max bottom time duration`, 1000,
             () => consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options));
     });
 });

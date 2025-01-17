@@ -1,4 +1,4 @@
-import { Tissues } from './Tissues';
+import { LoadSegment, Tissues } from './Tissues';
 import { Ceiling } from './CalculatedProfile';
 import { BestGasOptions, Gas, Gases, OCGasSource } from './Gases';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
@@ -23,13 +23,13 @@ export interface ContextMemento {
 }
 
 export class AlgorithmContext {
-    public tissues: Tissues;
     public ceilings: Ceiling[] = [];
     public tissueOverPressures: TissueOverPressures[] = [];
     public tissuesHistory: LoadedTissue[][] = [];
     /** in seconds */
     public runTime = 0;
 
+    private tissues: Tissues;
     private _oxygenStarted = 0;
     private _currentGas: Gas;
     private gradients: GradientFactors;
@@ -95,6 +95,11 @@ export class AlgorithmContext {
         return this.runTime - this._oxygenStarted;
     }
 
+    public get finalTissues(): LoadedTissue[] {
+        //TODO  replace with tissuesHistory.last
+        return this.tissues.finalState();
+    }
+
     /**
      * Current gas is oxygen - For Air breaks.
      * Correct is to compare ppO2 is high (>= 1.6),
@@ -150,11 +155,15 @@ export class AlgorithmContext {
         this.tissueOverPressures.push(currentOverPressures);
     }
 
+    public loadTissues(segment: LoadSegment, gas: Gas): number {
+        return this.tissues.load(segment, gas);
+    }
+
     public createMemento(): ContextMemento {
         return {
             runTime: this.runTime,
             oxygenStarted: this._oxygenStarted,
-            tissues: this.tissues.finalState(),
+            tissues: this.finalTissues,
             ceilings: this.ceilings.length,
             tissueOverPressures: this.tissueOverPressures.length,
             segments: this.segments.length,

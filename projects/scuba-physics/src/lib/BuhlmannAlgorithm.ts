@@ -172,8 +172,7 @@ export class BuhlmannAlgorithm {
         }
 
         const merged = context.segments.mergeFlat(segments.length);
-        const finalTissues = context.tissues.finalState();
-        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissueOverPressures, finalTissues);
+        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.finalTissues);
     }
 
     /**
@@ -217,7 +216,7 @@ export class BuhlmannAlgorithm {
         this.swim(context, restingSegment);
         // we don't have here the saturation from the dive, so we can return only the surface changes
         return {
-            finalTissues: context.tissues.finalState(),
+            finalTissues: context.finalTissues,
             tissueOverPressures: context.tissueOverPressures
         };
     }
@@ -360,7 +359,7 @@ export class BuhlmannAlgorithm {
 
     private swimPart(context: AlgorithmContext, segment: Segment) {
         const loadSegment = this.toLoadSegment(context.depthConverter, segment);
-        context.tissues.load(loadSegment, segment.gas);
+        context.loadTissues(loadSegment, segment.gas);
         context.runTime += segment.duration;
         // following methods slow down calculation 2x - consider speedup by extracting them
         context.addCeiling();
@@ -394,7 +393,7 @@ export class BuhlmannAlgorithm {
         let change = 1;
 
         while (context.ceiling() <= 0 && change > 0) {
-            change = context.tissues.load(hoverLoad, last.gas);
+            change = context.loadTissues(hoverLoad, last.gas);
             context.runTime += Time.oneMinute;
         }
 

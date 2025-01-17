@@ -196,6 +196,14 @@ export class CalculatedProfile {
         return this.ceil;
     }
 
+    public get lastTissues(): LoadedTissue[] {
+        if(this.tiss.length < 1) {
+            return [];
+        }
+        return this.tiss;
+        // return this.tiss[this.tiss.length - 1];
+    }
+
     /**
      * Not null tissues state at end of the dive or empty in case of error.
      * Items are ordered as Compartments by their half time Buhlmann m-values table.

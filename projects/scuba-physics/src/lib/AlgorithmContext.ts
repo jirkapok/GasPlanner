@@ -13,7 +13,8 @@ import { FeatureFlags } from './featureFlags';
 import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
 
 export interface ContextMemento {
-    tissues: LoadedTissues;
+    lastTissues: LoadedTissues;
+    tissuesHistory: number;
     ceilings: number;
     tissueOverPressures: number;
     segments: number;
@@ -163,7 +164,8 @@ export class AlgorithmContext {
         return {
             runTime: this.runTime,
             oxygenStarted: this._oxygenStarted,
-            tissues: this.finalTissues,
+            tissuesHistory: this.tissuesHistory.length,
+            lastTissues: this.finalTissues,
             ceilings: this.ceilings.length,
             tissueOverPressures: this.tissueOverPressures.length,
             segments: this.segments.length,
@@ -173,7 +175,8 @@ export class AlgorithmContext {
 
     public restore(memento: ContextMemento): void {
         // here we don't copy, since we expect it wasn't touched
-        this.tissues.restoreFrom(memento.tissues);
+        this.tissuesHistory = this.tissuesHistory.slice(0, memento.tissuesHistory);
+        this.tissues.restoreFrom(memento.lastTissues);
         this.gradients.lowestCeiling = memento.lowestCeiling;
         this.runTime = memento.runTime;
         this._oxygenStarted = memento.oxygenStarted;

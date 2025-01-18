@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import {
     CalculatedProfile, Diver, Events, Event, Gas,
-    HighestDensity, Options, Segment, Tank, Tanks, LoadedTissue, AirBreakOptions
+    HighestDensity, Options, Segment, Tank, Tanks,
+    LoadedTissue, AirBreakOptions, LoadedTissues
 } from 'scuba-physics';
 import {
     AirBreaksDto,
@@ -118,11 +119,11 @@ export class DtoSerialization {
         };
     }
 
-    public static toTissues(tissues: LoadedTissueDto[]): LoadedTissue[] {
+    public static toTissues(tissues: LoadedTissueDto[]): LoadedTissues {
         return _(tissues).map(t => ({
             pN2: t.pN2,
             pHe: t.pHe
-        })).value();
+        })).value() as LoadedTissues;
     }
 
     public static fromTissues(tissues: LoadedTissue[]): LoadedTissueDto[] {

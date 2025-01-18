@@ -209,7 +209,7 @@ export class CalculatedProfile {
      * Items are ordered as Compartments by their half time Buhlmann m-values table.
      * See Compartments class.
      */
-    public get tissues(): LoadedTissue[] {
+    public get tissues(): LoadedTissues {
         return this.tiss;
     }
 

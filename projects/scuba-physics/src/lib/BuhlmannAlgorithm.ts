@@ -115,7 +115,7 @@ export class AlgorithmParams {
     }
 
     private resolveSurfaceParameters(provided?: RestingParameters): RestingParameters {
-        // helps calculator to dont generate tissues for first dive
+        // helps calculator to don't generate tissues for first dive
         if(provided && TissuesValidator.validCount(provided?.current)) {
             return provided;
         }
@@ -172,7 +172,7 @@ export class BuhlmannAlgorithm {
         }
 
         const merged = context.segments.mergeFlat(segments.length);
-        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.finalTissues);
+        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.tissuesHistory);
     }
 
     /**

@@ -97,7 +97,7 @@ export class AlgorithmContext {
     }
 
     public get finalTissues(): LoadedTissues {
-        //TODO  replace with tissuesHistory.last
+        // Is the same as replace with tissuesHistory.last in case collected history.
         return this.tissues.finalState();
     }
 
@@ -146,11 +146,12 @@ export class AlgorithmContext {
 
     // TODO split methods with/without collecting statistics (ceilings, tissues, overPressures)
     public addSaturation(currentDepth: number): void {
+        this.tissuesHistory.push(this.tissues.finalState());
+
         if (!FeatureFlags.Instance.collectSaturation) {
             return;
         }
 
-        this.tissuesHistory.push(this.tissues.finalState());
         const ambientPressure = this.depthConverter.toBar(currentDepth);
         const currentOverPressures = this.tissues.saturationRatio(ambientPressure, this.depthConverter.surfacePressure, 1);
         this.tissueOverPressures.push(currentOverPressures);

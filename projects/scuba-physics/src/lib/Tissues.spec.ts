@@ -36,13 +36,13 @@ describe('Tissues', () => {
         });
 
         it('Empty loaded throws Error', () => {
-            expect(() => Tissues.createLoaded(new Array(0) as LoadedTissues)).toThrow();
+            expect(() => Tissues.createLoaded(new Array(15) as LoadedTissues)).toThrow();
         });
     });
 
     describe('Validation', () => {
         it('Empty is invalid', () => {
-            const valid = TissuesValidator.valid(new Array(0) as LoadedTissues);
+            const valid = TissuesValidator.valid(new Array(15) as LoadedTissues);
             expect(valid).toBeFalsy();
         });
 

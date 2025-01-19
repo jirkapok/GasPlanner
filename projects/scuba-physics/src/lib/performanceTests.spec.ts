@@ -16,12 +16,15 @@ import { Consumption, ConsumptionOptions } from './consumption';
 
 // Lets assign reserve to all asserts on slower machines at github.
 describe('Performance', () => {
+    let originalFlag = false;
+
     beforeEach(() => {
+        originalFlag = FeatureFlags.Instance.collectSaturation;
         FeatureFlags.Instance.collectSaturation = true;
     });
 
     afterEach(() => {
-        FeatureFlags.Instance.collectSaturation = false;
+        FeatureFlags.Instance.collectSaturation = originalFlag;
     });
 
     const assertDuration = (message: string, limit: number, actionToMeasure: () => void): void => {

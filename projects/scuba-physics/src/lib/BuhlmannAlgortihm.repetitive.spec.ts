@@ -40,14 +40,14 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         return sut.noDecoLimit(parameters);
     }).value();
 
-    const toTissueResult = (loaded: LoadedTissue[], precision = 8) => _(loaded)
+    const toTissueResult = (loaded: LoadedTissues, precision = 8) => _(loaded)
         .map(t => ({
             pN2: Precision.round(t.pN2, precision),
             pHe: Precision.round(t.pHe, precision)
         }))
         .value();
 
-    const applySurfaceInterval = (loaded: LoadedTissues, altitude: number, duration: number): LoadedTissue[] => {
+    const applySurfaceInterval = (loaded: LoadedTissues, altitude: number, duration: number): LoadedTissues => {
         const parameters = new SurfaceIntervalParameters(loaded, altitude, duration);
         return sut.applySurfaceInterval(parameters).finalTissues;
     };
@@ -117,12 +117,13 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         });
 
         it('Fills the over pressures', () => {
+            const original = FeatureFlags.Instance.collectSaturation;
             FeatureFlags.Instance.collectSaturation = true;
             const duration = Time.oneMinute * 10;
             const parameters = new SurfaceIntervalParameters(stableTissues, 0, duration);
             const result = sut.applySurfaceInterval(parameters);
             expect(result.tissueOverPressures.length).toEqual(duration);
-            FeatureFlags.Instance.collectSaturation = false;
+            FeatureFlags.Instance.collectSaturation = original;
         });
     });
 

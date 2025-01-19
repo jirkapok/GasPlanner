@@ -176,7 +176,7 @@ export class CalculatedProfile {
     private constructor(
         private seg: Segment[],
         private ceil: Ceiling[],
-        private tiss: LoadedTissues,
+        private _tissues: LoadedTissues[],
         private _tissueOverPressures: TissueOverPressures[],
         private err: Event[]
     ) { }
@@ -196,21 +196,21 @@ export class CalculatedProfile {
         return this.ceil;
     }
 
-    public get lastTissues(): LoadedTissues {
-        if(this.tiss.length < 1) {
-            return new Array(0) as LoadedTissues;
-        }
-        return this.tiss;
-        // return this.tiss[this.tiss.length - 1];
-    }
-
     /**
      * Not null tissues state at end of the dive or empty in case of error.
      * Items are ordered as Compartments by their half time Buhlmann m-values table.
      * See Compartments class.
      */
-    public get tissues(): LoadedTissues {
-        return this.tiss;
+    public get lastTissues(): LoadedTissues {
+        if(this._tissues.length < 1) {
+            return new Array(15) as LoadedTissues;
+        }
+
+        return this._tissues[this._tissues.length - 1];
+    }
+
+    public get tissues(): LoadedTissues[] {
+        return this._tissues;
     }
 
     /** One tissues sample per second */
@@ -227,11 +227,11 @@ export class CalculatedProfile {
     }
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
-        return new CalculatedProfile(segments, [], new Array(0) as LoadedTissues, CalculatedProfile.emptyTissueOverPressures, errors);
+        return new CalculatedProfile(segments, [], [], CalculatedProfile.emptyTissueOverPressures, errors);
     }
 
     public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
-        tissues: LoadedTissues): CalculatedProfile {
+        tissues: LoadedTissues[]): CalculatedProfile {
         return new CalculatedProfile(segments, ceilings, tissues, tissueOverPressures, []);
     }
 }

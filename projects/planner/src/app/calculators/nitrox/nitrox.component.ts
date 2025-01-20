@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { faPercent } from '@fortawesome/free-solid-svg-icons';
+import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { MujModalComponent } from "../../muj-modal/muj-modal.component";
 import {
     FormControl, NonNullableFormBuilder, FormGroup
 } from '@angular/forms';
@@ -35,6 +37,7 @@ export class NitroxComponent implements OnInit {
     private pO2Control!: FormControl<number>;
     private modControl!: FormControl<number>;
     private failingMod = false;
+    private modalRef: MdbModalRef<MujModalComponent> | null = null;
 
     constructor(
         public calc: NitroxCalculatorService,
@@ -44,7 +47,8 @@ export class NitroxComponent implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private schedules: DiveSchedules,
-        private viewStates: SubViewStorage) {
+        private viewStates: SubViewStorage,
+        private modalService: MdbModalService) {
         this.loadState();
         this.saveState();
     }
@@ -139,6 +143,10 @@ export class NitroxComponent implements OnInit {
         this.calc.toPO2();
         this.enableAll();
         this.nitroxForm.removeControl('pO2');
+    }
+
+    public openModal(): void {
+        this.modalRef = this.modalService.open(MujModalComponent)
     }
 
     private enableAll(): void {

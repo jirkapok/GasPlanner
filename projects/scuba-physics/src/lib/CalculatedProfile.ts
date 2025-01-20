@@ -215,7 +215,8 @@ export class CalculatedProfile {
 
     /** One tissues sample per second */
     public get tissueOverPressures(): TissueOverPressures[] {
-        // TODO consider collect all loaded tissue snapshosts instead and calculate the overpressures later
+        // Can't collect all the overpressures later, because we would need to
+        // restore the depth of all the loaded tissue snapshosts and calculate.
         return this._tissueOverPressures;
     }
 

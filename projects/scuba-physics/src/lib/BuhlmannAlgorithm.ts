@@ -337,10 +337,11 @@ export class BuhlmannAlgorithm {
     }
 
     private swimPlan(context: AlgorithmContext): void {
+        const segments = context.segments.items;
         // initial ceiling doesn't have to be 0m, because of previous tissues loading.
-        context.addCeiling();
+        context.addStatistics(segments[0].startDepth);
 
-        context.segments.items.forEach(segment => {
+        segments.forEach(segment => {
             this.swim(context, segment);
         });
     }
@@ -361,9 +362,7 @@ export class BuhlmannAlgorithm {
         const loadSegment = this.toLoadSegment(context.depthConverter, segment);
         context.loadTissues(loadSegment, segment.gas);
         context.runTime += segment.duration;
-        // following methods slow down calculation 2x - consider speedup by extracting them
-        context.addCeiling();
-        context.addSaturation(segment.averageDepth);
+        context.addStatistics(segment.averageDepth);
     }
 
     /**

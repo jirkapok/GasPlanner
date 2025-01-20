@@ -145,7 +145,10 @@ export class AlgorithmContext {
     }
 
     // TODO split methods with/without collecting statistics (ceilings, tissues, overPressures)
-    public addSaturation(currentDepth: number): void {
+    public addStatistics(currentDepth: number): void {
+        this.addCeiling();
+
+        // following methods slow down calculation 2x - consider speedup by extracting them
         this.tissuesHistory.push(this.tissues.finalState());
 
         if (!FeatureFlags.Instance.collectSaturation) {

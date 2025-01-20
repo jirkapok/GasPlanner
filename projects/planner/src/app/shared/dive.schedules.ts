@@ -5,7 +5,9 @@ import { Injectable } from '@angular/core';
 import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
-import { GasToxicity, LoadedTissue, Precision, Time } from 'scuba-physics';
+import {
+    GasToxicity, LoadedTissues, Precision, Time
+} from 'scuba-physics';
 import _ from 'lodash';
 import { DateFormats } from './formaters';
 
@@ -233,7 +235,7 @@ export class DiveSchedules {
             .first();
     }
 
-    public previousDiveTissues(diveId: number): LoadedTissue[] {
+    public previousDiveTissues(diveId: number): LoadedTissues {
         if(diveId > 1) {
             const previousDive = this.byId(diveId - 1);
             const dive = this.byId(diveId);
@@ -244,7 +246,7 @@ export class DiveSchedules {
         }
 
         // This is replaced when applying the surface interval
-        return [];
+        return new Array(0) as LoadedTissues;
     }
 
     /** Marks all following repetitive dives as started. */

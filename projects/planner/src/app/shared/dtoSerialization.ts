@@ -102,8 +102,8 @@ export class DtoSerialization {
             return CalculatedProfile.fromErrors(segments, errors.items);
         }
 
+        const tissues = DtoSerialization.toTissuesHistory(profile.tissues);
         // ceilings have simple data, no custom conversion needed
-        const tissues = DtoSerialization.toTissues(profile.tissues);
         return CalculatedProfile.fromProfile(segments, profile.ceilings, profile.tissueOverPressures, tissues);
     }
 
@@ -113,7 +113,7 @@ export class DtoSerialization {
         return {
             segments: segments,
             ceilings: profile.ceilings,
-            tissues: DtoSerialization.fromTissues(profile.tissues),
+            tissues: DtoSerialization.fromTissuesHistory(profile.tissues),
             tissueOverPressures: profile.tissueOverPressures,
             errors: DtoSerialization.fromEvents(profile.errors)
         };
@@ -126,11 +126,21 @@ export class DtoSerialization {
         })).value() as LoadedTissues;
     }
 
-    public static fromTissues(tissues: LoadedTissue[]): LoadedTissueDto[] {
+    public static toTissuesHistory(tissuesHistory: LoadedTissueDto[][]): LoadedTissues[] {
+        return _(tissuesHistory).map(t => DtoSerialization.toTissues(t))
+            .value();
+    }
+
+    public static fromTissues(tissues: LoadedTissues): LoadedTissueDto[] {
         return _(tissues).map(t => ({
             pN2: t.pN2,
             pHe: t.pHe
         })).value();
+    }
+
+    public static fromTissuesHistory(tissuesHistory: LoadedTissues[]): LoadedTissueDto[][] {
+        return _(tissuesHistory).map(t => DtoSerialization.fromTissues(t))
+            .value();
     }
 
     public static toEvents(dto: EventDto[]): Events {

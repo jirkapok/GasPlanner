@@ -93,7 +93,7 @@ export class PlannerService extends Streamed {
         const diveResult = dive.diveResult;
         diveResult.wayPoints = this.wayPointsFromResult(calculatedProfile);
         diveResult.ceilings = calculatedProfile.ceilings;
-        diveResult.finalTissues = calculatedProfile.tissues;
+        diveResult.finalTissues = calculatedProfile.lastTissues;
         diveResult.tissueOverPressures = calculatedProfile.tissueOverPressures;
 
         if (diveResult.endsOnSurface) {
@@ -108,7 +108,7 @@ export class PlannerService extends Streamed {
     private processCalculatedProfile(calculatedProfile: CalculatedProfileDto, dive: DiveSchedule) {
         const infoRequest = this.createPlanRequest(dive) as DiveInfoRequestDto;
         infoRequest.calculatedProfile = calculatedProfile.segments;
-        infoRequest.calculatedTissues = calculatedProfile.tissues;
+        infoRequest.calculatedTissues = calculatedProfile.tissues[calculatedProfile.tissues.length - 1];
         infoRequest.calculatedOverPressures = calculatedProfile.tissueOverPressures;
         infoRequest.eventOptions = this.createEventOptions();
         infoRequest.ceilings = calculatedProfile.ceilings;

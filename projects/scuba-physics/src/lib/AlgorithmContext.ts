@@ -38,6 +38,8 @@ export class AlgorithmContext {
     private speeds: AscentSpeeds;
     private levels: DepthLevels;
     private gasSource: OCGasSource;
+    /** This is performance optimization to call only necessary methods */
+    private collectStatistics: (depth: number) => void = this.addFullStatistics;
 
     constructor(
         public gases: Gases,
@@ -144,11 +146,20 @@ export class AlgorithmContext {
         return newGas;
     }
 
-    // TODO split methods with/without collecting statistics (ceilings, tissues, overPressures)
     public addStatistics(currentDepth: number): void {
+        this.collectStatistics(currentDepth);
+    }
+
+    private noStatistics(currentDepth: number): void {}
+
+    private addCeilingStatistics(currentDepth: number): void {
+        this.addCeiling();
+    }
+
+    private addFullStatistics(currentDepth: number): void {
         this.addCeiling();
 
-        // following methods slow down calculation 2x - consider speedup by extracting them
+        // following methods slow down calculation 2x
         this.tissuesHistory.push(this.tissues.finalState());
 
         if (!FeatureFlags.Instance.collectSaturation) {

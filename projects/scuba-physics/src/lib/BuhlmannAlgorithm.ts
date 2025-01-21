@@ -134,7 +134,7 @@ export class BuhlmannAlgorithm {
     public noDecoLimit({ segments, gases, options, surfaceInterval }: AlgorithmParams): number {
         const depthConverter = new DepthConverterFactory(options).create();
         const rested = this.applySurfaceInterval(surfaceInterval);
-        const context = new AlgorithmContext(gases, segments, options, depthConverter, rested.finalTissues);
+        const context = AlgorithmContext.createForCeilings(gases, segments, options, depthConverter, rested.finalTissues);
         return this.swimNoDecoLimit(segments, gases, context);
     }
 
@@ -156,7 +156,7 @@ export class BuhlmannAlgorithm {
         }
 
         const rested = this.applySurfaceInterval(surfaceInterval);
-        const context = new AlgorithmContext(gases, newSegments, options, depthConverter, rested.finalTissues);
+        const context = AlgorithmContext.createForFullStatistics(gases, newSegments, options, depthConverter, rested.finalTissues);
         this.swimPlan(context);
         context.markAverageDepth();
         let nextStop = context.nextStop(context.currentDepth);
@@ -212,7 +212,7 @@ export class BuhlmannAlgorithm {
         const options = new Options(1, 1, 1.6, 1.6, Salinity.salt);
         options.altitude = altitude;
         const depthConverter = new DepthConverterFactory(options).create();
-        const context = new AlgorithmContext(gases, segments, options, depthConverter, previousTissues);
+        const context = AlgorithmContext.createForFullStatistics(gases, segments, options, depthConverter, previousTissues);
         this.swim(context, restingSegment);
         // we don't have here the saturation from the dive, so we can return only the surface changes
         return {
@@ -374,13 +374,16 @@ export class BuhlmannAlgorithm {
             return 0;
         }
 
+        // possible performance optimization: don't swim the whole profile, only till we reach NDL
         this.swimPlan(context);
         // We may already passed the Ndl during descent or user defined profile
+
         const currentNdl = this.currentNdl(context.ceilings);
         if (currentNdl !== Number.POSITIVE_INFINITY) {
             return currentNdl;
         }
 
+        context = context.withoutStatistics();
         return this.predictNoDecoLimit(segments, context);
     }
 

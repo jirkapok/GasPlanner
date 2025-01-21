@@ -39,9 +39,9 @@ export class AlgorithmContext {
     private levels: DepthLevels;
     private gasSource: OCGasSource;
     /** This is performance optimization to call only necessary methods */
-    private collectStatistics: (depth: number) => void = this.addFullStatistics;
+    private collectStatistics: (depth: number) => void = this.noStatistics;
 
-    constructor(
+    private constructor(
         public gases: Gases,
         public segments: Segments,
         public options: Options,
@@ -63,6 +63,37 @@ export class AlgorithmContext {
         this.speeds = new AscentSpeeds(this.options);
         this.levels = new DepthLevels(depthConverter, options);
         this.gasSource = new OCGasSource(gases, options);
+    }
+
+    public static createWithoutStatistics(
+        gases: Gases,
+        segments: Segments,
+        options: Options,
+        depthConverter: DepthConverter,
+        currentTissues: LoadedTissues): AlgorithmContext {
+        return new AlgorithmContext(gases, segments, options, depthConverter, currentTissues);
+    }
+
+    public static createForCeilings(
+        gases: Gases,
+        segments: Segments,
+        options: Options,
+        depthConverter: DepthConverter,
+        currentTissues: LoadedTissues): AlgorithmContext {
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, currentTissues);
+        context.collectStatistics = context.addCeilingStatistics;
+        return context;
+    }
+
+    public static createForFullStatistics(
+        gases: Gases,
+        segments: Segments,
+        options: Options,
+        depthConverter: DepthConverter,
+        currentTissues: LoadedTissues): AlgorithmContext {
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, currentTissues);
+        context.collectStatistics = context.addFullStatistics;
+        return context;
     }
 
     public get currentGas(): Gas {
@@ -127,6 +158,11 @@ export class AlgorithmContext {
     /** use this just before calculating ascent to be able calculate correct speeds */
     public markAverageDepth(): void {
         this.speeds.markAverageDepth(this.segments);
+    }
+
+    public withoutStatistics() : AlgorithmContext {
+        this.collectStatistics = this.noStatistics;
+        return this;
     }
 
     public addCeiling() {

@@ -1,4 +1,4 @@
-import {AlgorithmParams, BuhlmannAlgorithm} from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Salinity } from './pressure-converter';
 import { Gas, Gases } from './Gases';
 import { Options, SafetyStop } from './Options';
@@ -11,6 +11,7 @@ import { Tank } from './Tanks';
 import { GasDensity } from './GasDensity';
 import { Precision } from './precision';
 import { StandardGases } from './StandardGases';
+import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
 interface EventAssert {
     depth: number;

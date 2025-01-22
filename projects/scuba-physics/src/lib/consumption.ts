@@ -1,5 +1,5 @@
 import { Precision } from './precision';
-import { AlgorithmParams, BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { DepthConverter } from './depth-converter';
 import { Diver } from './Diver';
 import { Gases } from './Gases';
@@ -10,6 +10,7 @@ import { Tank, Tanks } from './Tanks';
 import { Time } from './Time';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
 import { PlanFactory } from './PlanFactory';
+import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
 class GasVolumes {
     private remaining: Map<number, number> = new Map<number, number>();

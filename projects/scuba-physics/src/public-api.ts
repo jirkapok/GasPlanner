@@ -4,6 +4,7 @@
 
 export * from './lib/altitudeCalculator';
 export * from './lib/BuhlmannAlgorithm';
+export * from './lib/BuhlmannAlgorithmParameters';
 export * from './lib/consumption';
 export * from './lib/consumptionByMix';
 export * from './lib/Compartments';

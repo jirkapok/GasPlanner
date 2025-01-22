@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import { Time } from './Time';
-import { AlgorithmParams, BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gas, Gases } from './Gases';
-import { Segment, Segments } from './Segments';
+import { Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
 import { Salinity } from './pressure-converter';
-import { Options, SafetyStop } from './Options';
+import { SafetyStop } from './Options';
 import { StandardGases } from './StandardGases';
 import { Precision } from './precision';
 import { FeatureFlags } from './featureFlags';
@@ -13,6 +13,7 @@ import { Tank } from './Tanks';
 import { Diver } from './Diver';
 import { DepthConverter } from './depth-converter';
 import { Consumption, ConsumptionOptions } from './consumption';
+import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
 // Lets assign reserve to all asserts on slower machines at github.
 describe('Performance', () => {

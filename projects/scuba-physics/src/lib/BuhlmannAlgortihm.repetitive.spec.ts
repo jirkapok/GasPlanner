@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import { Time } from './Time';
-import {
-    AlgorithmParams, BuhlmannAlgorithm, RestingParameters, SurfaceIntervalParameters
-} from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Tissues } from './Tissues';
 import { Precision } from './precision';
 import { Gases } from './Gases';
@@ -10,7 +8,10 @@ import { Segments } from './Segments';
 import { Options } from './Options';
 import { StandardGases } from './StandardGases';
 import { FeatureFlags } from "./featureFlags";
-import { LoadedTissue, LoadedTissues } from "./Tissues.api";
+import { LoadedTissues } from "./Tissues.api";
+import {
+    AlgorithmParams, RestingParameters, SurfaceIntervalParameters
+} from './BuhlmannAlgorithmParameters';
 
 describe('Buhlmann Algorithm - Repetitive dives', () => {
     const sut = new BuhlmannAlgorithm();

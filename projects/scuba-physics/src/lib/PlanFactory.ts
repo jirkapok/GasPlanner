@@ -4,7 +4,8 @@ import { Time } from './Time';
 import { Precision } from './precision';
 import { Segment, Segments } from './Segments';
 import { Gases } from './Gases';
-import { AlgorithmParams, BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
 /** Creates skeleton for dive profile */
 export class PlanFactory {

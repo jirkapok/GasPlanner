@@ -1,11 +1,12 @@
 import { Time } from './Time';
-import {AlgorithmParams, BuhlmannAlgorithm} from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gas, Gases } from './Gases';
 import { Segment, Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
 import { Salinity } from './pressure-converter';
 import { Options, SafetyStop } from './Options';
 import { StandardGases } from './StandardGases';
+import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
 function concatenatePlan(decoPlan: Segment[]): string {
     let planText = '';

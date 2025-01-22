@@ -194,7 +194,7 @@ export class ProfileComparatorService extends Streamed {
         const tissues = profile.diveResult.finalTissues;
         const parameters = new SurfaceIntervalParameters(tissues, altitude, surfaceInterval);
         const algorithm = new BuhlmannAlgorithm();
-        const changes = algorithm.applySurfaceInterval(parameters);
+        const changes = algorithm.applySurfaceIntervalStatistics(parameters);
         return changes.tissueOverPressures;
     }
 }

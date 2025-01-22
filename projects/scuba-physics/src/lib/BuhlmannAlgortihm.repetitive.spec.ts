@@ -121,7 +121,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             FeatureFlags.Instance.collectSaturation = true;
             const duration = Time.oneMinute * 10;
             const parameters = new SurfaceIntervalParameters(stableTissues, 0, duration);
-            const result = sut.applySurfaceInterval(parameters);
+            const result = sut.applySurfaceIntervalStatistics(parameters);
             expect(result.tissueOverPressures.length).toEqual(duration);
             FeatureFlags.Instance.collectSaturation = original;
         });

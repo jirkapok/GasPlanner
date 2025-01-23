@@ -5,7 +5,9 @@ import { Gas, Gases, GasesValidator } from './Gases';
 import { Segment, Segments, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Time } from './Time';
-import { CalculatedProfile, Ceiling, Event } from './CalculatedProfile';
+import {
+    CalculatedProfile, CalculatedProfileStatistics, Ceiling, Event
+} from './CalculatedProfile';
 import { Options } from './Options';
 import { Precision } from './precision';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
@@ -20,7 +22,10 @@ import {
     SurfaceIntervalParameters
 } from "./BuhlmannAlgorithmParameters";
 
-type CreateAlgorithmContext = (gases: Gases, segments: Segments, options: Options, depthConverter: DepthConverter, previousTissues: LoadedTissues) => AlgorithmContext;
+type CreateAlgorithmContext = (
+    gases: Gases, segments: Segments, options: Options,
+    depthConverter: DepthConverter, previousTissues: LoadedTissues
+) => AlgorithmContext;
 
 export class BuhlmannAlgorithm {
     /**
@@ -43,33 +48,23 @@ export class BuhlmannAlgorithm {
      * @param options Customization of the required profile
      * @param surfaceInterval Rested tissues after surface interval from previous dive
      */
-    public decompression({ segments, gases, options, surfaceInterval }: AlgorithmParams): CalculatedProfile {
-        const depthConverter = new DepthConverterFactory(options).create();
-        const newSegments = segments.copy();
-        const errors = this.validate(segments, gases);
-        if (errors.length > 0) {
-            const origProfile = newSegments.mergeFlat(segments.length);
-            return CalculatedProfile.fromErrors(origProfile, errors);
-        }
+    public decompression(algorithmParams: AlgorithmParams): CalculatedProfile {
+        // TODO replace const result = this.decompressionInternal(algorithmParams, AlgorithmContext.createWithoutStatistics, this.toSimpleProfile);
+        const result = this.decompressionInternal(algorithmParams, AlgorithmContext.createForFullStatistics, this.toFullProfile);
+        return result;
+    }
 
-        const rested = this.applySurfaceInterval(surfaceInterval);
-        const context = AlgorithmContext.createForFullStatistics(gases, newSegments, options, depthConverter, rested.finalTissues);
-        this.swimPlan(context);
-        context.markAverageDepth();
-        let nextStop = context.nextStop(context.currentDepth);
-
-        // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.
-        while (nextStop >= 0 && !context.isAtSurface) {
-            // Next steps need to be in this order
-            this.tryGasSwitch(context); // multiple gas switches may happen before first deco stop
-            this.stayAtDecoStop(context, nextStop);
-            this.stayAtSafetyStop(context);
-            this.ascentToNextStop(context, nextStop);
-            nextStop = context.nextStop(nextStop);
-        }
-
-        const merged = context.segments.mergeFlat(segments.length);
-        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.tissuesHistory);
+    /**
+     * Calculates decompression: generating missing ascent for the planned profile,
+     * ceilings during the dive and tissues at end of the dive.
+     * @param segments Not empty planned depths collection
+     * @param gases Not empty gases used during the plan
+     * @param options Customization of the required profile
+     * @param surfaceInterval Rested tissues after surface interval from previous dive
+     */
+    public decompressionStatistics(algorithmParams: AlgorithmParams): CalculatedProfile {
+        const result = this.decompressionInternal(algorithmParams, AlgorithmContext.createForFullStatistics, this.toFullProfile);
+        return result;
     }
 
     /**
@@ -117,6 +112,49 @@ export class BuhlmannAlgorithm {
             finalTissues: context.finalTissues,
             tissueOverPressures: context.tissueOverPressures
         };
+    }
+
+    private decompressionInternal(
+        algorithmParams: AlgorithmParams,
+        createContext: CreateAlgorithmContext,
+        toResult: (c: AlgorithmContext, a: AlgorithmParams) => CalculatedProfile
+    ): CalculatedProfile {
+        const { segments, gases, options, surfaceInterval } = algorithmParams;
+        const newSegments = segments.copy();
+        const errors = this.validate(segments, gases);
+        if (errors.length > 0) {
+            const origProfile = newSegments.mergeFlat(segments.length);
+            return CalculatedProfile.fromErrors(origProfile, errors);
+        }
+
+        const rested = this.applySurfaceInterval(surfaceInterval);
+        const depthConverter = new DepthConverterFactory(options).create();
+        const context = createContext(gases, newSegments, options, depthConverter, rested.finalTissues);
+        this.swimPlan(context);
+        context.markAverageDepth();
+        let nextStop = context.nextStop(context.currentDepth);
+
+        // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.
+        while (nextStop >= 0 && !context.isAtSurface) {
+            // Next steps need to be in this order
+            this.tryGasSwitch(context); // multiple gas switches may happen before first deco stop
+            this.stayAtDecoStop(context, nextStop);
+            this.stayAtSafetyStop(context);
+            this.ascentToNextStop(context, nextStop);
+            nextStop = context.nextStop(nextStop);
+        }
+
+        return toResult(context, algorithmParams);
+    }
+
+    private toFullProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
+       const merged = context.segments.mergeFlat(algorithmParams.segments.length);
+       return CalculatedProfileStatistics.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.tissuesHistory);
+    }
+
+    private toSimpleProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfile {
+        const merged = context.segments.mergeFlat(algorithmParams.segments.length);
+        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.tissuesHistory);
     }
 
     private applySurfaceIntervalInternal(

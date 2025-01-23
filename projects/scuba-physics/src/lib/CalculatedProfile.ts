@@ -173,7 +173,8 @@ export class Ceiling {
  */
 export class CalculatedProfile {
     public static readonly emptyTissueOverPressures: TissueOverPressures[] = [];
-    private constructor(
+
+    protected constructor(
         private seg: Segment[],
         private ceil: Ceiling[],
         private _tissues: LoadedTissues[],
@@ -234,5 +235,27 @@ export class CalculatedProfile {
     public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
         tissues: LoadedTissues[]): CalculatedProfile {
         return new CalculatedProfile(segments, ceilings, tissues, tissueOverPressures, []);
+    }
+}
+
+
+export class CalculatedProfileStatistics extends CalculatedProfile {
+    private constructor(
+        seg: Segment[],
+        ceil: Ceiling[],
+        tissues: LoadedTissues[],
+        tissueOverPressures: TissueOverPressures[],
+        err: Event[]
+    ) {
+        super(seg, ceil, tissues, tissueOverPressures, err);
+    }
+
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[], tissues: LoadedTissues[])
+        : CalculatedProfileStatistics {
+        return new CalculatedProfileStatistics(segments, ceilings, tissues, tissueOverPressures, []);
+    }
+
+    public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
+        return new CalculatedProfileStatistics(segments, [], [], CalculatedProfile.emptyTissueOverPressures, errors);
     }
 }

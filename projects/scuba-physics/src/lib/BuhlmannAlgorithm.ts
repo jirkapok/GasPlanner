@@ -40,14 +40,11 @@ export class BuhlmannAlgorithm {
         return this.swimNoDecoLimit(segments, gases, context);
     }
 
-    // TODO fix Algorithm methods documentation
     /**
-     * Calculates decompression: generating missing ascent for the planned profile,
-     * ceilings during the dive and tissues at end of the dive.
-     * @param segments Not empty planned depths collection
-     * @param gases Not empty gases used during the plan
-     * @param options Customization of the required profile
-     * @param surfaceInterval Rested tissues after surface interval from previous dive
+     * Calculates decompression: generating missing ascent for the planned profile.
+     * For other profile data, like ceiling, Tissue loadings or saturation overpressures history use decompressionStatistics method.
+     * This method is faster then the statistics methods.
+     * @param algorithmParams Not null dive definition all parameters see container definition.
      */
     public decompression(algorithmParams: AlgorithmParams): CalculatedProfile {
         const result = this.decompressionInternal(algorithmParams,
@@ -59,11 +56,9 @@ export class BuhlmannAlgorithm {
 
     /**
      * Calculates decompression: generating missing ascent for the planned profile,
-     * ceilings during the dive and tissues at end of the dive.
-     * @param segments Not empty planned depths collection
-     * @param gases Not empty gases used during the plan
-     * @param options Customization of the required profile
-     * @param surfaceInterval Rested tissues after surface interval from previous dive
+     * and collects dive statistics like ceilings, tissues overpressures or Tissues loading.
+     * This method is slow, if you dont need the statistics use "decompression" method.
+     * @param algorithmParams Not null dive definition all parameters see container definition.
      */
     public decompressionStatistics(algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
         const result = this.decompressionInternal(algorithmParams,
@@ -77,9 +72,8 @@ export class BuhlmannAlgorithm {
     /**
      * Takes current tissues (usually at end of the dive) and applies required surface interval.
      * This simulates diver resting at surface and breathing air for required time.
-     * @param current not empty collection of valid tissues ordered by compartment half time. See Compartments class.
-     * @param altitude in meters
-     * @param surfaceInterval in seconds to align units with segments
+     * This method is faster then the statistics method.
+     * @param surfaceInterval Not null surface interval definition.
      * @returns tissues at end of the surface interval.
      */
     public applySurfaceInterval(surfaceInterval: SurfaceIntervalParameters): SurfaceIntervalApplied {
@@ -104,11 +98,9 @@ export class BuhlmannAlgorithm {
     /**
      * Takes current tissues (usually at end of the dive) and applies required surface interval.
      * This simulates diver resting at surface and breathing air for required time.
-     * Collects statistics during the surface interval.
-     * @param current not empty collection of valid tissues ordered by compartment half time. See Compartments class.
-     * @param altitude in meters
-     * @param surfaceInterval in seconds to align units with segments
-     * @returns tissues at end of the surface interval.
+     * Collects statistics during the surface interval. It is slow, use only to collect statistics.
+     * @param surfaceInterval Not null surface interval definition.
+     * @returns tissues, Tissues loading, Tissues Overpressures of the surface interval.
      */
     public applySurfaceIntervalStatistics(surfaceInterval: SurfaceIntervalParameters): SurfaceIntervalAppliedStatistics {
         const result = this.applySurfaceIntervalInternal(

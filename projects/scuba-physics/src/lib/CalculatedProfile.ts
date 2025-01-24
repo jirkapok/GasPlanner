@@ -179,7 +179,7 @@ export class CalculatedProfile {
         private ceil: Ceiling[],
         private _finalTissues: LoadedTissues,
         private _tissues: LoadedTissues[],
-        private _tissueOverPressures: TissueOverPressures[],
+
         private err: Event[]
     ) { }
 
@@ -212,13 +212,6 @@ export class CalculatedProfile {
         return this._tissues;
     }
 
-    /** One tissues sample per second */
-    public get tissueOverPressures(): TissueOverPressures[] {
-        // Can't collect all the overpressures later, because we would need to
-        // restore the depth of all the loaded tissue snapshosts and calculate.
-        return this._tissueOverPressures;
-    }
-
     /**
      * Not null collection of errors. Or empty in case of successfully calculated profile.
      */
@@ -228,12 +221,12 @@ export class CalculatedProfile {
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
         // TODO define default static value for Tissues
-        return new CalculatedProfile(segments, [], new Array(15) as LoadedTissues, [], CalculatedProfile.emptyTissueOverPressures, errors);
+        return new CalculatedProfile(segments, [], new Array(15) as LoadedTissues, [], errors);
     }
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
-                              finalTissues: LoadedTissues, tissues: LoadedTissues[]): CalculatedProfile {
-        return new CalculatedProfile(segments, ceilings, finalTissues, tissues, tissueOverPressures, []);
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[],
+        finalTissues: LoadedTissues, tissues: LoadedTissues[]): CalculatedProfile {
+        return new CalculatedProfile(segments, ceilings, finalTissues, tissues, []);
     }
 }
 
@@ -243,20 +236,27 @@ export class CalculatedProfileStatistics extends CalculatedProfile {
         ceil: Ceiling[],
         finalTissues: LoadedTissues,
         tissues: LoadedTissues[],
-        tissueOverPressures: TissueOverPressures[],
+        private _tissueOverPressures: TissueOverPressures[],
         err: Event[]
     ) {
-        super(seg, ceil, finalTissues, tissues, tissueOverPressures, err);
+        super(seg, ceil, finalTissues, tissues, err);
     }
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
+    public static fromStatisticsProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
                               finalTissues: LoadedTissues, tissues: LoadedTissues[])
         : CalculatedProfileStatistics {
         return new CalculatedProfileStatistics(segments, ceilings, finalTissues, tissues, tissueOverPressures, []);
     }
 
-    public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
+    public static fromStatisticsErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
         return new CalculatedProfileStatistics(segments, [], new Array(15) as LoadedTissues, [],
             CalculatedProfile.emptyTissueOverPressures, errors);
+    }
+
+    /** One tissues sample per second */
+    public get tissueOverPressures(): TissueOverPressures[] {
+        // Can't collect all the overpressures later, because we would need to
+        // restore the depth of all the loaded tissue snapshosts and calculate.
+        return this._tissueOverPressures;
     }
 }

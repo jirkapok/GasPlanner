@@ -93,7 +93,7 @@ export class PlannerService extends Streamed {
         const diveResult = dive.diveResult;
         diveResult.wayPoints = this.wayPointsFromResult(calculatedProfile);
         diveResult.ceilings = calculatedProfile.ceilings;
-        diveResult.finalTissues = calculatedProfile.lastTissues;
+        diveResult.finalTissues = calculatedProfile.finalTissues;
         diveResult.tissueOverPressures = calculatedProfile.tissueOverPressures;
 
         if (diveResult.endsOnSurface) {

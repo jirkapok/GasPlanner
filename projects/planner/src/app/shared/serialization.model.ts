@@ -119,6 +119,7 @@ export interface EventDto {
 export interface CalculatedProfileDto {
     segments: SegmentDto[];
     ceilings: Ceiling[]; // ceilings methods may not work after serialization
+    finalTissues: LoadedTissueDto[];
     tissues: LoadedTissueDto[][];
     tissueOverPressures: TissueOverPressures[];
     errors: EventDto[];

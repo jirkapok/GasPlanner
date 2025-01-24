@@ -58,15 +58,15 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
     describe('Surface interval', () => {
         it('Isn\'t applied for 0 seconds surface interval duration', () => {
             const diveResult = diveOnTrimix();
-            const restedTissues = applySurfaceInterval(diveResult.lastTissues, 0, 0);
-            const r1 = toTissueResult(diveResult.lastTissues);
+            const restedTissues = applySurfaceInterval(diveResult.finalTissues, 0, 0);
+            const r1 = toTissueResult(diveResult.finalTissues);
             const r2 = toTissueResult(restedTissues);
             expect(r1).toEqual(r2);
         });
 
         it('Reset tissues to stable for infinite surface interval', () => {
             const diveResult = diveOnTrimix();
-            const restedTissues = applySurfaceInterval(diveResult.lastTissues, 0, Number.POSITIVE_INFINITY);
+            const restedTissues = applySurfaceInterval(diveResult.finalTissues, 0, Number.POSITIVE_INFINITY);
             const r1 = toTissueResult(restedTissues);
             const r2 = toTissueResult(stableTissues);
             expect(r1).toEqual(r2);
@@ -100,8 +100,8 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
 
         it('Adapts helium loading', () => {
             const diveResult = diveOnTrimix();
-            const r1 = toTissueResult(diveResult.lastTissues);
-            const result2 = applySurfaceInterval(diveResult.lastTissues, 0, Time.oneMinute * 10);
+            const r1 = toTissueResult(diveResult.finalTissues);
+            const result2 = applySurfaceInterval(diveResult.finalTissues, 0, Time.oneMinute * 10);
             const r2 = toTissueResult(result2);
             expect(_(r1).every((item, index) =>
                 item.pHe > r2[index].pHe && item.pHe !== 0 && r2[index].pHe !== 0
@@ -110,7 +110,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
 
         it('Tissue come back to original state after 1.5 days surface interval', () => {
             const diveResult = diveOnTrimix();
-            const restedTissues = applySurfaceInterval(diveResult.lastTissues, 0, Time.oneHour * 36);
+            const restedTissues = applySurfaceInterval(diveResult.finalTissues, 0, Time.oneHour * 36);
             const roundto = 2; // rounding to less than 1 % of error
             const r1 = toTissueResult(restedTissues, roundto);
             const r2 = toTissueResult(stableTissues, roundto);
@@ -131,11 +131,11 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
     describe('Following dive', () => {
         it('Deco calculation ends with different tissues loading', () => {
             const firstDive = diveOnTrimix();
-            const restingParameters = new RestingParameters(firstDive.lastTissues, Time.oneMinute * 5);
+            const restingParameters = new RestingParameters(firstDive.finalTissues, Time.oneMinute * 5);
             const secondDive = diveOnTrimix(restingParameters);
 
-            const firstTissues = toTissueResult(firstDive.lastTissues);
-            const secondTissues = toTissueResult(secondDive.lastTissues);
+            const firstTissues = toTissueResult(firstDive.finalTissues);
+            const secondTissues = toTissueResult(secondDive.finalTissues);
 
             // there is difference in both he and N2, some tissues have higher loading, some lower.
             expect(firstTissues).not.toEqual(secondTissues);
@@ -144,15 +144,15 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         it('Deco calculation generates reproducible results', () => {
             const firstDive = diveOnTrimix();
             const secondDive = diveOnTrimix();
-            const firstTissues = toTissueResult(firstDive.lastTissues);
-            const secondTissues = toTissueResult(secondDive.lastTissues);
+            const firstTissues = toTissueResult(firstDive.finalTissues);
+            const secondTissues = toTissueResult(secondDive.finalTissues);
             expect(firstTissues).toEqual(secondTissues);
         });
 
         it('Nodeco limit are lower', () => {
             const firstDive = diveOnTrimix();
             const firstDiveNdl = noDecoLimits();
-            const restingParameters = new RestingParameters(firstDive.lastTissues, Time.oneMinute * 10);
+            const restingParameters = new RestingParameters(firstDive.finalTissues, Time.oneMinute * 10);
             const secondDiveNdl = noDecoLimits(restingParameters);
             expect(_(firstDiveNdl).every((item, index) => item > secondDiveNdl[index] ))
                 .toBeTruthy();

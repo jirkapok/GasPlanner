@@ -177,6 +177,7 @@ export class CalculatedProfile {
     protected constructor(
         private seg: Segment[],
         private ceil: Ceiling[],
+        private _finalTissues: LoadedTissues,
         private _tissues: LoadedTissues[],
         private _tissueOverPressures: TissueOverPressures[],
         private err: Event[]
@@ -202,14 +203,11 @@ export class CalculatedProfile {
      * Items are ordered as Compartments by their half time Buhlmann m-values table.
      * See Compartments class.
      */
-    public get lastTissues(): LoadedTissues {
-        if(this._tissues.length < 1) {
-            return new Array(15) as LoadedTissues;
-        }
-
-        return this._tissues[this._tissues.length - 1];
+    public get finalTissues(): LoadedTissues {
+        return this._finalTissues;
     }
 
+    /** Tissues history */
     public get tissues(): LoadedTissues[] {
         return this._tissues;
     }
@@ -229,33 +227,36 @@ export class CalculatedProfile {
     }
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
-        return new CalculatedProfile(segments, [], [], CalculatedProfile.emptyTissueOverPressures, errors);
+        // TODO define default static value for Tissues
+        return new CalculatedProfile(segments, [], new Array(15) as LoadedTissues, [], CalculatedProfile.emptyTissueOverPressures, errors);
     }
 
     public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
-        tissues: LoadedTissues[]): CalculatedProfile {
-        return new CalculatedProfile(segments, ceilings, tissues, tissueOverPressures, []);
+                              finalTissues: LoadedTissues, tissues: LoadedTissues[]): CalculatedProfile {
+        return new CalculatedProfile(segments, ceilings, finalTissues, tissues, tissueOverPressures, []);
     }
 }
-
 
 export class CalculatedProfileStatistics extends CalculatedProfile {
     private constructor(
         seg: Segment[],
         ceil: Ceiling[],
+        finalTissues: LoadedTissues,
         tissues: LoadedTissues[],
         tissueOverPressures: TissueOverPressures[],
         err: Event[]
     ) {
-        super(seg, ceil, tissues, tissueOverPressures, err);
+        super(seg, ceil, finalTissues, tissues, tissueOverPressures, err);
     }
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[], tissues: LoadedTissues[])
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
+                              finalTissues: LoadedTissues, tissues: LoadedTissues[])
         : CalculatedProfileStatistics {
-        return new CalculatedProfileStatistics(segments, ceilings, tissues, tissueOverPressures, []);
+        return new CalculatedProfileStatistics(segments, ceilings, finalTissues, tissues, tissueOverPressures, []);
     }
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
-        return new CalculatedProfileStatistics(segments, [], [], CalculatedProfile.emptyTissueOverPressures, errors);
+        return new CalculatedProfileStatistics(segments, [], new Array(15) as LoadedTissues, [],
+            CalculatedProfile.emptyTissueOverPressures, errors);
     }
 }

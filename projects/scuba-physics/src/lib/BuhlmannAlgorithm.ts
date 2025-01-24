@@ -160,12 +160,12 @@ export class BuhlmannAlgorithm {
 
     private toFullProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
        const merged = context.segments.mergeFlat(algorithmParams.segments.length);
-       return CalculatedProfileStatistics.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.tissuesHistory);
+       return CalculatedProfileStatistics.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.finalTissues, context.tissuesHistory);
     }
 
     private toSimpleProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfile {
         const merged = context.segments.mergeFlat(algorithmParams.segments.length);
-        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.tissuesHistory);
+        return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.finalTissues, context.tissuesHistory);
     }
 
     private applySurfaceIntervalInternal<TResult extends SurfaceIntervalApplied>(

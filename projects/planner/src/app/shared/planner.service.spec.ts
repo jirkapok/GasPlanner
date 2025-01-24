@@ -378,6 +378,7 @@ describe('PlannerService', () => {
                         profile: {
                             segments: [],
                             ceilings: [],
+                            finalTissues: [],
                             tissues: [],
                             tissueOverPressures: CalculatedProfile.emptyTissueOverPressures,
                             errors: []

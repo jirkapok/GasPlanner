@@ -6,8 +6,7 @@ import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import {
-    CalculatedProfile,
-    GasToxicity, LoadedTissues, Precision, Time
+    GasToxicity, LoadedTissues, Precision, ProfileTissues, Time
 } from 'scuba-physics';
 import _ from 'lodash';
 import { DateFormats } from './formaters';
@@ -237,18 +236,20 @@ export class DiveSchedules {
     }
 
     public previousDiveTissues(diveId: number): LoadedTissues {
-        if(diveId > 1) {
-            const previousDive = this.byId(diveId - 1);
-            const dive = this.byId(diveId);
+        const previousDive = this.byId(diveId - 1);
+        const dive = this.byId(diveId);
 
-            if(previousDive && dive && dive.isRepetitive) {
-                return previousDive.diveResult.finalTissues;
-            }
+        if(previousDive && dive && dive.isRepetitive) {
+            return previousDive.diveResult.finalTissues;
         }
 
-        // This is replaced when applying the surface interval
-        // return CalculatedProfile.emptyTissues;
-        return new Array(0) as LoadedTissues;
+        if(dive) {
+            const currentDiveAltitude = dive.optionsService.altitude || 0;
+            ProfileTissues.createAtSurface(currentDiveAltitude);
+        }
+
+        // Should never happen, but let us recover at sea level.
+        return ProfileTissues.createAtSurface(0);
     }
 
     /** Marks all following repetitive dives as started. */

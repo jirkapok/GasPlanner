@@ -1,6 +1,7 @@
 import { Gas } from './Gases';
 import { Segment } from './Segments';
-import { LoadedTissue, LoadedTissues, TissueOverPressures } from './Tissues.api';
+import { LoadedTissues, TissueOverPressures } from './Tissues.api';
+import { ProfileTissues } from "./ProfileTissues";
 
 export enum EventType {
     noAction = 0,
@@ -173,16 +174,12 @@ export class Ceiling {
  */
 export class CalculatedProfile {
     public static readonly emptyTissueOverPressures: TissueOverPressures[] = [];
-    // TODO remove emptyTissues
-    /** Contains Incorrect loaded partial pressures. Dont use, to be removed. */
-    public static readonly emptyTissues: LoadedTissues = new Array(16).fill({ pN2: 0, pHe: 0 }) as LoadedTissues;
 
     protected constructor(
         private seg: Segment[],
         private ceil: Ceiling[],
         private _finalTissues: LoadedTissues,
         private _tissues: LoadedTissues[],
-
         private err: Event[]
     ) { }
 
@@ -223,7 +220,8 @@ export class CalculatedProfile {
     }
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
-        return new CalculatedProfile(segments, [], CalculatedProfile.emptyTissues, [], errors);
+        // we are lying here, since dont know the altitude for tissues
+        return new CalculatedProfile(segments, [], ProfileTissues.createAtSurface(), [], errors);
     }
 
     public static fromProfile(segments: Segment[], ceilings: Ceiling[],
@@ -251,7 +249,8 @@ export class CalculatedProfileStatistics extends CalculatedProfile {
     }
 
     public static fromStatisticsErrors(segments: Segment[], errors: Event[]): CalculatedProfileStatistics {
-        return new CalculatedProfileStatistics(segments, [], CalculatedProfile.emptyTissues, [],
+        // we are lying here, since dont know the altitude for tissues
+        return new CalculatedProfileStatistics(segments, [], ProfileTissues.createAtSurface(), [],
             CalculatedProfile.emptyTissueOverPressures, errors);
     }
 

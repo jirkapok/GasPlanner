@@ -4,6 +4,13 @@ import { Tissues } from "./Tissues";
 
 export class ProfileTissues {
     /**
+     * Creates tissues loaded at the surface based on the altitude in meters above sea level.
+     **/
+    public static createAtSurface(altitude: number = 0): LoadedTissues {
+        return Tissues.createLoadedAt(altitude);
+    }
+
+    /**
      * Calculates current gradient factor from tissues state in range 0 - 1 (representing percents).
      * @param finalTissues last known state of the tissues
      * @param surfacePressure pressure at the surface in bars

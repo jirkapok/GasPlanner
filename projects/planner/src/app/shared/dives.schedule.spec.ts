@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { UnitConversion } from './UnitConversion';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { ReloadDispatcher } from './reloadDispatcher';
-import { CalculatedProfile, LoadedTissues, Time } from 'scuba-physics';
+import { ProfileTissues, Time } from 'scuba-physics';
 
 describe('Scheduled dives', () => {
     let sut: DiveSchedules;
@@ -119,18 +119,20 @@ describe('Scheduled dives', () => {
 
     describe('Previous dive tissues', () => {
         const sut: DiveSchedules = createSut();
-        const loadedTissues = CalculatedProfile.emptyTissues;
+        const loadedTissues = ProfileTissues.createAtSurface();
         sut.byId(1)!.diveResult.finalTissues = loadedTissues;
 
         const repetitive = sut.add();
         repetitive.surfaceInterval = Time.oneHour;
-        repetitive.diveResult.finalTissues = CalculatedProfile.emptyTissues;
+        repetitive.diveResult.finalTissues = ProfileTissues.createAtSurface();
 
         sut.add();
 
+        const defaultTissues = ProfileTissues.createAtSurface(0);
+
         it('First dive returns empty tissues', () => {
             const tissues = sut.previousDiveTissues(1)
-            expect(tissues).toEqual([]);
+            expect(tissues).toEqual(defaultTissues);
         });
 
         it('Repetitive dive returns previous dive tissues', () => {
@@ -140,12 +142,12 @@ describe('Scheduled dives', () => {
 
         it('Non repetitive dive returns empty tissues', () => {
             const tissues = sut.previousDiveTissues(3)
-            expect(tissues).toEqual([]);
+            expect(tissues).toEqual(defaultTissues);
         });
 
         it('Non existing dive returns empty tissues', () => {
             const tissues = sut.previousDiveTissues(5)
-            expect(tissues).toEqual([]);
+            expect(tissues).toEqual(defaultTissues);
         });
     });
 

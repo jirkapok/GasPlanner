@@ -111,7 +111,7 @@ export class AlgorithmParams {
 
     private resolveSurfaceParameters(provided?: RestingParameters): RestingParameters {
         // helps calculator to don't generate tissues for first dive
-        if(provided && TissuesValidator.validCount(provided?.current)) {
+        if(provided && TissuesValidator.valid(provided?.current)) {
             return provided;
         }
 

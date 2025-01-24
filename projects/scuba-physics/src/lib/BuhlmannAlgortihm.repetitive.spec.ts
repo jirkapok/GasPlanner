@@ -12,9 +12,12 @@ import { LoadedTissues } from "./Tissues.api";
 import {
     AlgorithmParams, RestingParameters, SurfaceIntervalParameters
 } from './BuhlmannAlgorithmParameters';
+import { CalculatedProfile } from "./CalculatedProfile";
+import { AltitudePressure } from "./pressure-converter";
 
 describe('Buhlmann Algorithm - Repetitive dives', () => {
     const sut = new BuhlmannAlgorithm();
+    const options = new Options(1, 1, 1.6, 1.6);
 
     const createDiveParameters = (depth: number, rest?: RestingParameters) => {
         const gases = new Gases();
@@ -22,7 +25,6 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         const segments = new Segments();
         segments.add(depth, StandardGases.trimix1845, Time.oneMinute * 2);
         segments.addFlat(StandardGases.trimix1845, Time.oneMinute * 60);
-        const options = new Options(1, 1, 1.6, 1.6);
         return AlgorithmParams.forMultilevelDive(segments, gases, options, rest);
     };
 
@@ -54,6 +56,14 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
     };
 
     const stableTissues = Tissues.createLoadedAt(0);
+
+    it('Algorithm params set default tissues for incorrect loaded tissues', () => {
+        const surfaceParams = new RestingParameters(CalculatedProfile.emptyTissues, Time.oneMinute * 10);
+        const params = AlgorithmParams.forSimpleDive(10, StandardGases.air, options, surfaceParams);
+        const resolvedTissues = params.surfaceInterval.previousTissues;
+        const surfaceDefaultTissues = Tissues.create(AltitudePressure.standard).finalState();
+        expect(resolvedTissues).toEqual(surfaceDefaultTissues);
+    });
 
     describe('Surface interval', () => {
         it('Isn\'t applied for 0 seconds surface interval duration', () => {

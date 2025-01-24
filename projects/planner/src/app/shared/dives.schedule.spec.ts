@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { UnitConversion } from './UnitConversion';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { ReloadDispatcher } from './reloadDispatcher';
-import { LoadedTissues, Time } from 'scuba-physics';
+import { CalculatedProfile, LoadedTissues, Time } from 'scuba-physics';
 
 describe('Scheduled dives', () => {
     let sut: DiveSchedules;
@@ -119,13 +119,12 @@ describe('Scheduled dives', () => {
 
     describe('Previous dive tissues', () => {
         const sut: DiveSchedules = createSut();
-        // we should consider replace empty array by valid default tissues.
-        const loadedTissues = new Array(15) as LoadedTissues;
+        const loadedTissues = CalculatedProfile.emptyTissues;
         sut.byId(1)!.diveResult.finalTissues = loadedTissues;
 
         const repetitive = sut.add();
         repetitive.surfaceInterval = Time.oneHour;
-        repetitive.diveResult.finalTissues = new Array(15) as LoadedTissues;
+        repetitive.diveResult.finalTissues = CalculatedProfile.emptyTissues;
 
         sut.add();
 

@@ -6,6 +6,7 @@ import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import {
+    CalculatedProfile,
     GasToxicity, LoadedTissues, Precision, Time
 } from 'scuba-physics';
 import _ from 'lodash';
@@ -246,6 +247,7 @@ export class DiveSchedules {
         }
 
         // This is replaced when applying the surface interval
+        // return CalculatedProfile.emptyTissues;
         return new Array(0) as LoadedTissues;
     }
 

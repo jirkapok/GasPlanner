@@ -173,6 +173,9 @@ export class Ceiling {
  */
 export class CalculatedProfile {
     public static readonly emptyTissueOverPressures: TissueOverPressures[] = [];
+    // TODO remove emptyTissues
+    /** Contains Incorrect loaded partial pressures. Dont use, to be removed. */
+    public static readonly emptyTissues: LoadedTissues = new Array(16).fill({ pN2: 0, pHe: 0 }) as LoadedTissues;
 
     protected constructor(
         private seg: Segment[],
@@ -220,8 +223,7 @@ export class CalculatedProfile {
     }
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
-        // TODO define default static value for Tissues
-        return new CalculatedProfile(segments, [], new Array(15) as LoadedTissues, [], errors);
+        return new CalculatedProfile(segments, [], CalculatedProfile.emptyTissues, [], errors);
     }
 
     public static fromProfile(segments: Segment[], ceilings: Ceiling[],
@@ -249,7 +251,7 @@ export class CalculatedProfileStatistics extends CalculatedProfile {
     }
 
     public static fromStatisticsErrors(segments: Segment[], errors: Event[]): CalculatedProfileStatistics {
-        return new CalculatedProfileStatistics(segments, [], new Array(15) as LoadedTissues, [],
+        return new CalculatedProfileStatistics(segments, [], CalculatedProfile.emptyTissues, [],
             CalculatedProfile.emptyTissueOverPressures, errors);
     }
 

@@ -50,15 +50,10 @@ export class BuhlmannAlgorithm {
      * @param surfaceInterval Rested tissues after surface interval from previous dive
      */
     public decompression(algorithmParams: AlgorithmParams): CalculatedProfile {
-        // TODO replace const result = this.decompressionInternal(algorithmParams,
-        //  AlgorithmContext.createWithoutStatistics,
-        //  this.toSimpleProfile,
-        //  (p, e)  => CalculatedProfile.fromErrors(p, e));
         const result = this.decompressionInternal(algorithmParams,
-            AlgorithmContext.createForFullStatistics,
-            this.toFullProfile,
-            (p, e)  => CalculatedProfile.fromErrors(p, e)
-        );
+             AlgorithmContext.createWithoutStatistics,
+             this.toSimpleProfile,
+             (p, e)  => CalculatedProfile.fromErrors(p, e));
         return result;
     }
 

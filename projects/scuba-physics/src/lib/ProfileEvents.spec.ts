@@ -40,7 +40,7 @@ describe('Profile Events', () => {
     const calculateEventsByOptions = (gases: Gases, segments: Segments, algorithmOptions: Options): Events => {
         const algorithm = new BuhlmannAlgorithm();
         const parameters = AlgorithmParams.forMultilevelDive(segments, gases, algorithmOptions);
-        const decoPlan = algorithm.decompression(parameters);
+        const decoPlan = algorithm.decompressionStatistics(parameters);
         const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, algorithmOptions);
         const events = ProfileEvents.fromProfile(eventOptions);
         return events;

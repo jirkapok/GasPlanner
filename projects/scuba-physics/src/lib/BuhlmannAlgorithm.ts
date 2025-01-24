@@ -40,6 +40,7 @@ export class BuhlmannAlgorithm {
         return this.swimNoDecoLimit(segments, gases, context);
     }
 
+    // TODO fix Algorithm methods documentation
     /**
      * Calculates decompression: generating missing ascent for the planned profile,
      * ceilings during the dive and tissues at end of the dive.
@@ -76,17 +77,22 @@ export class BuhlmannAlgorithm {
      * @returns tissues at end of the surface interval.
      */
     public applySurfaceInterval(surfaceInterval: SurfaceIntervalParameters): SurfaceIntervalApplied {
-        const context = this.applySurfaceIntervalInternal(surfaceInterval, AlgorithmContext.createWithoutStatistics);
+        const result = this.applySurfaceIntervalInternal(
+            surfaceInterval,
+            AlgorithmContext.createWithoutStatistics,
+            () => {
+                return {
+                    finalTissues: Tissues.createLoadedAt(surfaceInterval.altitude)
+                };
+            },
+            (context) => {
+                return {
+                    finalTissues: context.finalTissues
+                };
+            }
+        );
 
-        if (!context) {
-            return {
-                finalTissues: Tissues.createLoadedAt(surfaceInterval.altitude),
-            };
-        }
-
-        return {
-            finalTissues: context.finalTissues,
-        };
+        return result as SurfaceIntervalApplied;
     }
 
     /**
@@ -99,19 +105,24 @@ export class BuhlmannAlgorithm {
      * @returns tissues at end of the surface interval.
      */
     public applySurfaceIntervalStatistics(surfaceInterval: SurfaceIntervalParameters): SurfaceIntervalAppliedStatistics {
-        const context = this.applySurfaceIntervalInternal(surfaceInterval, AlgorithmContext.createForFullStatistics);
+        const result = this.applySurfaceIntervalInternal(
+            surfaceInterval,
+            AlgorithmContext.createForFullStatistics,
+            () => {
+                return {
+                    finalTissues: Tissues.createLoadedAt(surfaceInterval.altitude),
+                    tissueOverPressures: []
+                };
+            },
+            (context) => {
+                return {
+                    finalTissues: context.finalTissues,
+                    tissueOverPressures: context.tissueOverPressures
+                };
+            }
+        );
 
-        if (!context) {
-            return {
-                finalTissues: Tissues.createLoadedAt(surfaceInterval.altitude),
-                tissueOverPressures: []
-            };
-        }
-
-        return {
-            finalTissues: context.finalTissues,
-            tissueOverPressures: context.tissueOverPressures
-        };
+        return result as SurfaceIntervalAppliedStatistics;
     }
 
     private decompressionInternal(
@@ -157,10 +168,12 @@ export class BuhlmannAlgorithm {
         return CalculatedProfile.fromProfile(merged, context.ceilings, context.tissueOverPressures, context.tissuesHistory);
     }
 
-    private applySurfaceIntervalInternal(
+    private applySurfaceIntervalInternal<TResult extends SurfaceIntervalApplied>(
         { previousTissues, altitude, surfaceInterval }: SurfaceIntervalParameters,
-         createContext: CreateAlgorithmContext
-    ): AlgorithmContext | null {
+        createContext: CreateAlgorithmContext,
+        toErrorResult: () => TResult,
+        toValidResult: (c: AlgorithmContext) => TResult
+    ): TResult {
         if(!TissuesValidator.valid(previousTissues)) {
             throw Error('Provided tissues collection isn`t valid. It needs have valid items of 16 compartments ordered by halftime.');
         }
@@ -174,7 +187,7 @@ export class BuhlmannAlgorithm {
         }
 
         if(surfaceInterval === Number.POSITIVE_INFINITY) {
-            return null;
+            return toErrorResult();
         }
 
         // at surface, there is no depth change, even we are at different elevation and we are always breathing air
@@ -189,7 +202,7 @@ export class BuhlmannAlgorithm {
         const context = createContext(gases, segments, options, depthConverter, previousTissues);
         this.swim(context, restingSegment);
         // we don't have here the saturation from the dive, so we can return only the surface changes
-        return context;
+        return toValidResult(context);
     }
 
     private tryGasSwitch(context: AlgorithmContext) {

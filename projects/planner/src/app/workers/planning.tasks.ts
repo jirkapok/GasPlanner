@@ -18,7 +18,7 @@ export class PlanningTasks {
         const tanks = DtoSerialization.toTanks(task.tanks);
         const parameters = this.profileParametersFromTask(task, tanks);
         const algorithm = new BuhlmannAlgorithm();
-        const profile = algorithm.decompression(parameters);
+        const profile = algorithm.decompressionStatistics(parameters);
         const profileDto = DtoSerialization.fromProfile(profile);
 
         return {

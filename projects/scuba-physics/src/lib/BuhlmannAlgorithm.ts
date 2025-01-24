@@ -50,8 +50,15 @@ export class BuhlmannAlgorithm {
      * @param surfaceInterval Rested tissues after surface interval from previous dive
      */
     public decompression(algorithmParams: AlgorithmParams): CalculatedProfile {
-        // TODO replace const result = this.decompressionInternal(algorithmParams, AlgorithmContext.createWithoutStatistics, this.toSimpleProfile);
-        const result = this.decompressionInternal(algorithmParams, AlgorithmContext.createForFullStatistics, this.toFullProfile);
+        // TODO replace const result = this.decompressionInternal(algorithmParams,
+        //  AlgorithmContext.createWithoutStatistics,
+        //  this.toSimpleProfile,
+        //  (p, e)  => CalculatedProfile.fromErrors(p, e));
+        const result = this.decompressionInternal(algorithmParams,
+            AlgorithmContext.createForFullStatistics,
+            this.toFullProfile,
+            (p, e)  => CalculatedProfile.fromErrors(p, e)
+        );
         return result;
     }
 
@@ -63,8 +70,12 @@ export class BuhlmannAlgorithm {
      * @param options Customization of the required profile
      * @param surfaceInterval Rested tissues after surface interval from previous dive
      */
-    public decompressionStatistics(algorithmParams: AlgorithmParams): CalculatedProfile {
-        const result = this.decompressionInternal(algorithmParams, AlgorithmContext.createForFullStatistics, this.toFullProfile);
+    public decompressionStatistics(algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
+        const result = this.decompressionInternal(algorithmParams,
+            AlgorithmContext.createForFullStatistics,
+            this.toFullProfile,
+            (p, e) => CalculatedProfileStatistics.fromStatisticsErrors(p, e)
+        );
         return result;
     }
 
@@ -125,17 +136,18 @@ export class BuhlmannAlgorithm {
         return result as SurfaceIntervalAppliedStatistics;
     }
 
-    private decompressionInternal(
+    private decompressionInternal<TResult extends CalculatedProfile>(
         algorithmParams: AlgorithmParams,
         createContext: CreateAlgorithmContext,
-        toResult: (c: AlgorithmContext, a: AlgorithmParams) => CalculatedProfile
-    ): CalculatedProfile {
+        toResult: (c: AlgorithmContext, a: AlgorithmParams) => TResult,
+        toErrorResult: (segments: Segment[], errors: Event[]) => TResult
+    ): TResult {
         const { segments, gases, options, surfaceInterval } = algorithmParams;
         const newSegments = segments.copy();
         const errors = this.validate(segments, gases);
         if (errors.length > 0) {
             const origProfile = newSegments.mergeFlat(segments.length);
-            return CalculatedProfile.fromErrors(origProfile, errors);
+            return toErrorResult(origProfile, errors);
         }
 
         const rested = this.applySurfaceInterval(surfaceInterval);

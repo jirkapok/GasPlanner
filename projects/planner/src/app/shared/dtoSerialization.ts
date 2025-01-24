@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {
     CalculatedProfile, Diver, Events, Event, Gas,
     HighestDensity, Options, Segment, Tank, Tanks,
-    LoadedTissue, AirBreakOptions, LoadedTissues
+    AirBreakOptions, LoadedTissues, CalculatedProfileStatistics
 } from 'scuba-physics';
 import {
     AirBreaksDto,
@@ -94,21 +94,21 @@ export class DtoSerialization {
         return result;
     }
 
-    public static toProfile(profile: CalculatedProfileDto, tanks: Tank[]): CalculatedProfile {
+    public static toProfile(profile: CalculatedProfileDto, tanks: Tank[]): CalculatedProfileStatistics {
         const segments = DtoSerialization.toSegments(profile.segments, tanks);
 
         if(profile.errors.length > 0) {
             const errors = DtoSerialization.toEvents(profile.errors);
-            return CalculatedProfile.fromErrors(segments, errors.items);
+            return CalculatedProfileStatistics.fromStatisticsErrors(segments, errors.items);
         }
 
         const tissues = DtoSerialization.toTissuesHistory(profile.tissues);
         const finalTissues = DtoSerialization.toTissues(profile.finalTissues);
         // ceilings have simple data, no custom conversion needed
-        return CalculatedProfile.fromProfile(segments, profile.ceilings, profile.tissueOverPressures, finalTissues, tissues);
+        return CalculatedProfileStatistics.fromStatisticsProfile(segments, profile.ceilings, profile.tissueOverPressures, finalTissues, tissues);
     }
 
-    public static fromProfile(profile: CalculatedProfile): CalculatedProfileDto {
+    public static fromProfile(profile: CalculatedProfileStatistics): CalculatedProfileDto {
         const segments = DtoSerialization.fromSegments(profile.segments);
 
         return {

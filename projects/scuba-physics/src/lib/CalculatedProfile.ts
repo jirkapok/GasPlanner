@@ -248,7 +248,7 @@ export class CalculatedProfileStatistics extends CalculatedProfile {
         return new CalculatedProfileStatistics(segments, ceilings, finalTissues, tissues, tissueOverPressures, []);
     }
 
-    public static fromStatisticsErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
+    public static fromStatisticsErrors(segments: Segment[], errors: Event[]): CalculatedProfileStatistics {
         return new CalculatedProfileStatistics(segments, [], new Array(15) as LoadedTissues, [],
             CalculatedProfile.emptyTissueOverPressures, errors);
     }

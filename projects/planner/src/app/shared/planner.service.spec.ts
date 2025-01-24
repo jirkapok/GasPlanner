@@ -1,4 +1,7 @@
-import { CalculatedProfile, Event, EventType, StandardGases, Time } from 'scuba-physics';
+import {
+    CalculatedProfile, CalculatedProfileStatistics,
+    Event, EventType, StandardGases, Time
+} from 'scuba-physics';
 import _ from 'lodash';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from './Options.spec';
@@ -207,7 +210,7 @@ describe('PlannerService', () => {
     describe('Errors', () => {
         const createProfileResultDto = (): ProfileResultDto => {
             const events: Event[] = [ Event.createError('') ];
-            const profile = CalculatedProfile.fromErrors(depthsService.segments, events);
+            const profile = CalculatedProfileStatistics.fromStatisticsErrors(depthsService.segments, events);
             const profileDto = DtoSerialization.fromProfile(profile);
             return {
                 diveId: 1,

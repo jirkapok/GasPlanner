@@ -11,7 +11,8 @@
     "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch",
     "test-lib": "ng test --project scuba-physics",
     "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "e2e": "playwright test"
   },
   "private": true,
   "dependencies": {

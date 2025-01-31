@@ -7,7 +7,7 @@ export default defineConfig({
         timeout: 5000
     },
     use: {
-        baseURL: 'https://dugong.online',
+        baseURL: process.env.BASE_URL || 'https://dugong.online',
         trace: 'on-first-retry',
     },
     projects: [

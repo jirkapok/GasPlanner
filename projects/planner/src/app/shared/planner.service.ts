@@ -108,7 +108,7 @@ export class PlannerService extends Streamed {
     private processCalculatedProfile(calculatedProfile: CalculatedProfileDto, dive: DiveSchedule) {
         const infoRequest = this.createPlanRequest(dive) as DiveInfoRequestDto;
         infoRequest.calculatedProfile = calculatedProfile.segments;
-        infoRequest.calculatedTissues = calculatedProfile.tissues[calculatedProfile.tissues.length - 1];
+        infoRequest.calculatedTissues = calculatedProfile.finalTissues;
         infoRequest.calculatedOverPressures = calculatedProfile.tissueOverPressures;
         infoRequest.eventOptions = this.createEventOptions();
         infoRequest.ceilings = calculatedProfile.ceilings;

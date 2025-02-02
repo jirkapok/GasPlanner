@@ -164,7 +164,7 @@ export class BuhlmannAlgorithm {
 
     private toSimpleProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfile {
         const merged = context.segments.mergeFlat(algorithmParams.segments.length);
-        return CalculatedProfile.fromProfile(merged, context.ceilings, context.finalTissues, context.tissuesHistory);
+        return CalculatedProfile.fromProfile(merged, context.ceilings, context.finalTissues);
     }
 
     private applySurfaceIntervalInternal<TResult extends SurfaceIntervalApplied>(

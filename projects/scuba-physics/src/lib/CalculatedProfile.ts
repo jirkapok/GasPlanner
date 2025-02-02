@@ -179,7 +179,6 @@ export class CalculatedProfile {
         private seg: Segment[],
         private ceil: Ceiling[],
         private _finalTissues: LoadedTissues,
-        private _tissues: LoadedTissues[],
         private err: Event[]
     ) { }
 
@@ -207,11 +206,6 @@ export class CalculatedProfile {
         return this._finalTissues;
     }
 
-    /** Tissues history */
-    public get tissues(): LoadedTissues[] {
-        return this._tissues;
-    }
-
     /**
      * Not null collection of errors. Or empty in case of successfully calculated profile.
      */
@@ -221,12 +215,12 @@ export class CalculatedProfile {
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
         // we are lying here, since dont know the altitude for tissues
-        return new CalculatedProfile(segments, [], ProfileTissues.createAtSurface(), [], errors);
+        return new CalculatedProfile(segments, [], ProfileTissues.createAtSurface(), errors);
     }
 
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[],
-        finalTissues: LoadedTissues, tissues: LoadedTissues[]): CalculatedProfile {
-        return new CalculatedProfile(segments, ceilings, finalTissues, tissues, []);
+    // TODO consider move ceilings to statistics
+    public static fromProfile(segments: Segment[], ceilings: Ceiling[], finalTissues: LoadedTissues): CalculatedProfile {
+        return new CalculatedProfile(segments, ceilings, finalTissues, []);
     }
 }
 
@@ -235,11 +229,16 @@ export class CalculatedProfileStatistics extends CalculatedProfile {
         seg: Segment[],
         ceil: Ceiling[],
         finalTissues: LoadedTissues,
-        tissues: LoadedTissues[],
+        private _tissues: LoadedTissues[],
         private _tissueOverPressures: TissueOverPressures[],
         err: Event[]
     ) {
-        super(seg, ceil, finalTissues, tissues, err);
+        super(seg, ceil, finalTissues, err);
+    }
+
+    /** Tissues history */
+    public get tissues(): LoadedTissues[] {
+        return this._tissues;
     }
 
     public static fromStatisticsProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],

@@ -23,7 +23,7 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Run Playwright tests
-      run: BASE_URL=https://staging.dugong.online npm run e2e
+      run: npm run e2e
 
     - uses: actions/upload-artifact@v4
       if: always()

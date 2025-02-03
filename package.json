@@ -12,8 +12,7 @@
     "test-lib": "ng test --project scuba-physics",
     "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch",
     "lint": "ng lint",
-    "e2e": "playwright test",
-    "e2e:staging": "BASE_URL=https://staging.dugong.online playwright test"
+    "e2e": "playwright test"
   },
   "private": true,
   "dependencies": {

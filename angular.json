@@ -1,177 +1,187 @@
 {
-    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-    "version": 1,
-    "newProjectRoot": "projects",
-    "projects": {
-        "planner": {
-            "projectType": "application",
-            "root": "projects/planner",
-            "sourceRoot": "projects/planner/src",
-            "schematics": {
-                "@schematics/angular:application": {
-                    "strict": true
-                },
-                "@schematics/angular:component": {
-                    "style": "scss"
-                }
-            },
-            "prefix": "app",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:application",
-                    "options": {
-                        "outputPath": {
-                          "base": "dist/planner",
-                          "browser": ""
-                        },
-                        "index": "projects/planner/src/index.html",
-                        "polyfills": [
-                          "projects/planner/src/polyfills.ts"
-                        ],
-                        "tsConfig": "projects/planner/tsconfig.app.json",
-                        "assets": [
-                            "projects/planner/src/assets",
-                            "projects/planner/src/favicon.ico",
-                            "projects/planner/src/manifest.webmanifest"
-                        ],
-                        "styles": [
-                            "projects/planner/src/styles.scss"
-                        ],
-                        "scripts": [
-                        ],
-                        "serviceWorker": "projects/planner/ngsw-config.json",
-                        "webWorkerTsConfig": "projects/planner/tsconfig.worker.json",
-                        "allowedCommonJsDependencies":[
-                            "lodash",
-                            "plotly.js-dist"
-                        ],
-                        "browser": "projects/planner/src/main.ts"
-                    },
-                    "configurations": {
-                        "production": {
-                            "budgets": [
-                                {
-                                    "type": "initial",
-                                    "maximumWarning": "1Mb",
-                                    "maximumError": "3.5mb"
-                                },
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "2kb",
-                                    "maximumError": "4kb"
-                                }
-                            ],
-                            "fileReplacements": [
-                                {
-                                    "replace": "projects/planner/src/environments/environment.ts",
-                                    "with": "projects/planner/src/environments/environment.prod.ts"
-                                }
-                            ],
-                            "outputHashing": "all",
-                            "serviceWorker": "projects/planner/ngsw-config.json"
-                        },
-                        "development": {
-                          "optimization": false,
-                            "extractLicenses": false,
-                            "sourceMap": true,
-                            "namedChunks": true
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "configurations": {
-                        "production": {
-                          "buildTarget": "planner:build:production"
-                        },
-                        "development": {
-                          "buildTarget": "planner:build:development"
-                        }
-                    },
-                    "defaultConfiguration": "development"
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                      "buildTarget": "planner:build"
-                    }
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "projects/planner/src/test.ts",
-                        "polyfills": "projects/planner/src/polyfills.ts",
-                        "tsConfig": "projects/planner/tsconfig.spec.json",
-                        "karmaConfig": "projects/planner/karma.conf.js",
-                        "assets": [
-                            "projects/planner/src/favicon.ico",
-                            "projects/planner/src/assets",
-                            "projects/planner/src/manifest.webmanifest"
-                        ],
-                        "styles": [
-                            "projects/planner/src/styles.scss"
-                        ],
-                        "scripts": [],
-                        "webWorkerTsConfig": "projects/planner/tsconfig.worker.json"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "projects/planner/**/*.ts",
-                            "projects/planner/**/*.html"
-                        ]
-                    }
-                }
-            }
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "planner": {
+      "projectType": "application",
+      "root": "projects/planner",
+      "sourceRoot": "projects/planner/src",
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
         },
-        "scuba-physics": {
-            "projectType": "library",
-            "root": "projects/scuba-physics",
-            "sourceRoot": "projects/scuba-physics/src",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
-                    "options": {
-                        "project": "projects/scuba-physics/ng-package.json"
-                    },
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "projects/scuba-physics/tsconfig.lib.prod.json"
-                        },
-                        "development": {
-                            "tsConfig": "projects/scuba-physics/tsconfig.lib.json"
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "projects/scuba-physics/src/test.ts",
-                        "tsConfig": "projects/scuba-physics/tsconfig.spec.json",
-                        "karmaConfig": "projects/scuba-physics/karma.conf.js"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "projects/scuba-physics/**/*.ts",
-                            "projects/scuba-physics/**/*.html"
-                        ]
-                    }
-                }
-            }
+        "@schematics/angular:component": {
+          "style": "scss"
         }
+      },
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": {
+              "base": "dist/planner",
+              "browser": ""
+            },
+            "index": "projects/planner/src/index.html",
+            "polyfills": [
+              "projects/planner/src/polyfills.ts"
+            ],
+            "tsConfig": "projects/planner/tsconfig.app.json",
+            "assets": [
+              "projects/planner/src/assets",
+              "projects/planner/src/favicon.ico",
+              "projects/planner/src/manifest.webmanifest"
+            ],
+            "styles": [
+              "projects/planner/src/styles.scss"
+            ],
+            "scripts": [],
+            "serviceWorker": "projects/planner/ngsw-config.json",
+            "webWorkerTsConfig": "projects/planner/tsconfig.worker.json",
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "plotly.js-dist"
+            ],
+            "browser": "projects/planner/src/main.ts"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1Mb",
+                  "maximumError": "3.5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/planner/src/environments/environment.ts",
+                  "with": "projects/planner/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "serviceWorker": "projects/planner/ngsw-config.json"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "planner:build:production"
+            },
+            "development": {
+              "buildTarget": "planner:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "planner:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/planner/src/test.ts",
+            "polyfills": "projects/planner/src/polyfills.ts",
+            "tsConfig": "projects/planner/tsconfig.spec.json",
+            "karmaConfig": "projects/planner/karma.conf.js",
+            "assets": [
+              "projects/planner/src/favicon.ico",
+              "projects/planner/src/assets",
+              "projects/planner/src/manifest.webmanifest"
+            ],
+            "styles": [
+              "projects/planner/src/styles.scss"
+            ],
+            "scripts": [],
+            "webWorkerTsConfig": "projects/planner/tsconfig.worker.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/planner/**/*.ts",
+              "projects/planner/**/*.html"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "playwright-ng-schematics:playwright",
+          "options": {
+            "devServerTarget": "planner:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "planner:serve:production"
+            }
+          }
+        }
+      }
     },
-    "cli": {
-        "schematicCollections": [
-            "@angular-eslint/schematics"
-        ],
-        "analytics": false
+    "scuba-physics": {
+      "projectType": "library",
+      "root": "projects/scuba-physics",
+      "sourceRoot": "projects/scuba-physics/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/scuba-physics/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/scuba-physics/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/scuba-physics/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/scuba-physics/src/test.ts",
+            "tsConfig": "projects/scuba-physics/tsconfig.spec.json",
+            "karmaConfig": "projects/scuba-physics/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/scuba-physics/**/*.ts",
+              "projects/scuba-physics/**/*.html"
+            ]
+          }
+        }
+      }
     }
+  },
+  "cli": {
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ],
+    "analytics": false
+  }
 }

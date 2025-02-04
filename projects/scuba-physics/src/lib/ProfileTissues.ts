@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
-import { Tissues } from "./Tissues";
+import { LoadedTissues } from "./Tissues.api";
+import { Tissue, Tissues } from "./Tissues";
 
 export class ProfileTissues {
     /**
@@ -21,31 +21,38 @@ export class ProfileTissues {
         return surfaceGradient;
     }
 
-    // TODO replace TissueOverPressures with LoadedTissue, since we cant use speed to determine offgasing
     /**
      * Finds the first moment, where the 5th tissue starts off gasing.
      * Throws Error in case any sample has wrong number of tissues.
-     * @param tissueOverPressures Not null array of over pressures.
-     * Expects every sample to have 16 items representing the 16 tissues in range -1 .. +1,
-     * The required values are calculated using Tissues.saturationRatio method.
+     * @param loadedTissues Not null array of tissues history, (usually one sample per second).
+     * The required values are calculated using BuhlmannAlgorithm.decompressionStatistics method.
      * @returns Index of first overpressure sample, where saturation speed is positive.
      **/
-    public offgasingStart(tissueOverPressures: TissueOverPressures[]): number {
+    public offgasingStart(loadedTissues: LoadedTissues[]): number {
         const tissue5index = 4;
-
-        // multilevel dives may switch multiple times between on/offgasing
-        const lastLoading = _(tissueOverPressures).findLastIndex(op => {
-            if (op.length !== 16) {
+        const tissueHistory = _(loadedTissues).map(ts => {
+            if (ts.length !== 16) {
                 throw new Error('Wrong number of tissues in any sample');
             }
 
-            return op[tissue5index] < 0;
+            return Tissue.totalPressure(ts[tissue5index]);
         });
 
-        let foundIndex = _(tissueOverPressures).findIndex(op => op[tissue5index] > 0, lastLoading);
+        // multilevel dives may switch multiple times between on/offgasing
+        const lastLoading = tissueHistory.findLastIndex((op, index, items) => {
+            let previous = index > 0 ? items[index - 1] : op;
+            return previous < op;
+        });
 
-        // Not submerged or never offgased
-        foundIndex = (foundIndex < 0 || foundIndex >= tissueOverPressures.length - 1) ? 0 : foundIndex;
-        return foundIndex;
+        if(lastLoading < 0) {
+            return loadedTissues.length === 0 ? -1 : loadedTissues.length - 1;
+        }
+
+        let foundIndex = tissueHistory.findIndex((op, index, items) => {
+            let previous = index > 0 ? items[index - 1] : op;
+            return previous > op;
+        }, lastLoading);
+
+        return foundIndex < 0 ? lastLoading : foundIndex;
     }
 }

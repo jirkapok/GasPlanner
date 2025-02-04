@@ -79,6 +79,10 @@ export class Tissue extends Compartment implements LoadedTissue {
         return this._b;
     }
 
+    public static totalPressure(tissue: LoadedTissue): number {
+        return tissue.pN2 + tissue.pHe;
+    }
+
     public static fromCurrent(loaded: LoadedTissue, compartment: Compartment): Tissue {
         const copy = new Tissue(compartment, 1); // irrelevant pressure wouldn't be used
         copy.restoreFrom(loaded);
@@ -200,7 +204,7 @@ export class Tissue extends Compartment implements LoadedTissue {
     }
 
     private updateCoefficients() {
-        this._pTotal = this.pN2 + this.pHe;
+        this._pTotal = Tissue.totalPressure(this);
         this._a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
         this._b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
     }

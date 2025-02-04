@@ -3,7 +3,7 @@ import { ProfileTissues } from "./ProfileTissues";
 import { LoadSegment, Tissues } from "./Tissues";
 import { StandardGases } from "./StandardGases";
 import { Time } from "./Time";
-import { TissueOverPressures } from "./Tissues.api";
+import { LoadedTissues } from "./Tissues.api";
 
 describe('Profile tissues', () => {
     const sut = new ProfileTissues();
@@ -34,59 +34,62 @@ describe('Profile tissues', () => {
         });
     });
 
-    const createTissuesState = (overPressure: number): TissueOverPressures =>
-        new Array(16).fill(overPressure) as TissueOverPressures;
+    const createTissuesState = (tissue5pN2: number): LoadedTissues => {
+        const sample= Tissues.create(1).finalState();
+        sample[4].pN2 = tissue5pN2;
+        return sample;
+    };
 
-    const createFilledOverPressures = (saturations: number[]): TissueOverPressures[] => {
-
-        const created = _(saturations).map((s) => createTissuesState(s)).value();
+    const createLoadedTissues = (nitrogenHistory: number[]): LoadedTissues[] => {
+        const created = _(nitrogenHistory).map((s) => createTissuesState(s))
+            .value();
         return created;
     };
 
     describe('Off gasing Start', () => {
-        it('Empty saturation returns dive start', () => {
-            const overPressures: TissueOverPressures[] = [];
-            const result = sut.offgasingStart(overPressures);
-            expect(result).toEqual(0);
+        it('Empty tissues returns negative index', () => {
+            const loadedTissues: LoadedTissues[] = [];
+            const result = sut.offgasingStart(loadedTissues);
+            expect(result).toEqual(-1);
         });
 
         it('Wrong number of tissues in any sample throws Error', () => {
-            const wrongSample = new Array(15).fill(0) as TissueOverPressures;
+            const wrongSample = new Array(15).fill({ pHe: 0, pN2: 0 }) as LoadedTissues;
             expect(() => sut.offgasingStart([wrongSample])).toThrow();
         });
 
         it('No submerging saturation returns dive start', () => {
-           const overPressures = createFilledOverPressures([0, 0, 0, 0, 0]);
-           const result = sut.offgasingStart(overPressures);
-           expect(result).toEqual(0);
+           const loadedTissues = createLoadedTissues([1, 1, 1, 1, 1]);
+           const result = sut.offgasingStart(loadedTissues);
+           expect(result).toEqual(4);
         });
 
         it('Simple profile saturation returns 5th sample index', () => {
-            const overPressures = createFilledOverPressures([0, -0.1, -0.2, -0.1, 0, 0.1, 0.1]);
-            const result = sut.offgasingStart(overPressures);
+            const loadedTissues = createLoadedTissues([1, 2, 3, 4, 4, 3, 2]);
+            const result = sut.offgasingStart(loadedTissues);
             expect(result).toEqual(5);
         });
 
         it('Multi-level profile saturation returns 5th sample index', () => {
-            const overPressures = createFilledOverPressures([0, -0.1, 0, 0.1, -0.1, 0, 0.1, 0.1]);
-            const result = sut.offgasingStart(overPressures);
+            const loadedTissues = createLoadedTissues([1, 2, 3, 2, 3, 4, 3, 2]);
+            const result = sut.offgasingStart(loadedTissues);
             expect(result).toEqual(6);
         });
 
         it('5th tissues stops offgasing on long deco stop', () => {
-            const overPressures = createFilledOverPressures([0, -0.1, 0, 0.1, 0, 0.1, 0.1]);
-            const result = sut.offgasingStart(overPressures);
-            expect(result).toEqual(3);
+            const loadedTissues = createLoadedTissues([1, 2, 3, 4, 3, 3, 3]);
+            const result = sut.offgasingStart(loadedTissues);
+            expect(result).toEqual(4);
         });
 
         it('5th tissues is not the leading tissue', () => {
-            const overPressures = createFilledOverPressures([0, -0.1, 0, 0.1, 0, 0.1, 0.1]);
-            // shift the leading tissue, all other tissues offgas at 5th sample
-            overPressures[3] = createTissuesState(-0.1);
-            overPressures[3][4] = 0.1;
+            const loadedTissues = createLoadedTissues([1, 2, 3, 2, 3, 2, 1]);
+            // shift the leading tissue, all other tissues offgas at 4th sample
+            loadedTissues[3] = createTissuesState(3);
+            loadedTissues[3][4].pN2 = 4;
 
-            const result = sut.offgasingStart(overPressures);
-            expect(result).toEqual(3);
+            const result = sut.offgasingStart(loadedTissues);
+            expect(result).toEqual(4);
         });
     });
 });

@@ -60,7 +60,7 @@ export class PlanningTasks {
         const profileTissues = new ProfileTissues();
         const lastTissues = DtoSerialization.toTissues(task.calculatedTissues);
         const surfaceGradient = profileTissues.surfaceGradient(lastTissues, depthConverter.surfacePressure);
-        const offgasingStartRuntime = profileTissues.offgasingStart(statistics.tissueOverPressures);
+        const offgasingStartRuntime = profileTissues.offgasingStart(statistics.tissues);
         const offgasingStartDepth = Segments.depthAt(originalProfile, offgasingStartRuntime);
 
         return {

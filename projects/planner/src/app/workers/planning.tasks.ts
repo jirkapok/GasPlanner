@@ -18,7 +18,7 @@ export class PlanningTasks {
         const tanks = DtoSerialization.toTanks(task.tanks);
         const parameters = this.profileParametersFromTask(task, tanks);
         const algorithm = new BuhlmannAlgorithm();
-        const profile = algorithm.decompressionStatistics(parameters);
+        const profile = algorithm.decompression(parameters);
         const profileDto = DtoSerialization.fromProfile(profile);
 
         return {
@@ -32,6 +32,8 @@ export class PlanningTasks {
         const tanks = DtoSerialization.toTanks(task.tanks);
         const parameters = this.profileParametersFromTask(task, tanks);
         const algorithm = new BuhlmannAlgorithm();
+        // Theoretically cant fail, since the profile was already calculated without an issue.
+        const statistics = algorithm.decompressionStatistics(parameters);
 
         // we can't speedup the prediction from already obtained profile,
         // since it may happen, the deco starts during ascent.
@@ -49,7 +51,7 @@ export class PlanningTasks {
             maxDensity: task.eventOptions.maxDensity,
             startAscentIndex: parameters.segments.startAscentIndex,
             profile: originalProfile,
-            ceilings: task.ceilings,
+            ceilings: statistics.ceilings,
             profileOptions: parameters.options
         };
         const events = ProfileEvents.fromProfile(eventOptions);
@@ -58,7 +60,7 @@ export class PlanningTasks {
         const profileTissues = new ProfileTissues();
         const lastTissues = DtoSerialization.toTissues(task.calculatedTissues);
         const surfaceGradient = profileTissues.surfaceGradient(lastTissues, depthConverter.surfacePressure);
-        const offgasingStartRuntime = profileTissues.offgasingStart(task.calculatedOverPressures);
+        const offgasingStartRuntime = profileTissues.offgasingStart(statistics.tissueOverPressures);
         const offgasingStartDepth = Segments.depthAt(originalProfile, offgasingStartRuntime);
 
         return {
@@ -71,7 +73,10 @@ export class PlanningTasks {
             events: eventsDto,
             surfaceGradient: surfaceGradient,
             offgasingStartTime: offgasingStartRuntime,
-            offgasingStartDepth: offgasingStartDepth
+            offgasingStartDepth: offgasingStartDepth,
+            ceilings: statistics.ceilings,
+            tissues: DtoSerialization.fromTissuesHistory(statistics.tissues),
+            tissueOverPressures: statistics.tissueOverPressures
         };
     }
 

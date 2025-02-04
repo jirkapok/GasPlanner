@@ -94,7 +94,7 @@ export class DtoSerialization {
         return result;
     }
 
-    public static toProfile(profile: CalculatedProfileDto, tanks: Tank[]): CalculatedProfileStatistics {
+    public static toProfile(profile: CalculatedProfileDto, tanks: Tank[]): CalculatedProfile {
         const segments = DtoSerialization.toSegments(profile.segments, tanks);
 
         if(profile.errors.length > 0) {
@@ -102,21 +102,16 @@ export class DtoSerialization {
             return CalculatedProfileStatistics.fromStatisticsErrors(segments, errors.items);
         }
 
-        const tissues = DtoSerialization.toTissuesHistory(profile.tissues);
         const finalTissues = DtoSerialization.toTissues(profile.finalTissues);
-        // ceilings have simple data, no custom conversion needed
-        return CalculatedProfileStatistics.fromStatisticsProfile(segments, profile.ceilings, profile.tissueOverPressures, finalTissues, tissues);
+        return CalculatedProfile.fromProfile(segments, [], finalTissues);
     }
 
-    public static fromProfile(profile: CalculatedProfileStatistics): CalculatedProfileDto {
+    public static fromProfile(profile: CalculatedProfile): CalculatedProfileDto {
         const segments = DtoSerialization.fromSegments(profile.segments);
 
         return {
             segments: segments,
-            ceilings: profile.ceilings,
             finalTissues: DtoSerialization.fromTissues(profile.finalTissues),
-            tissues: DtoSerialization.fromTissuesHistory(profile.tissues),
-            tissueOverPressures: profile.tissueOverPressures,
             errors: DtoSerialization.fromEvents(profile.errors)
         };
     }

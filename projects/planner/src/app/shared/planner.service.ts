@@ -91,10 +91,9 @@ export class PlannerService extends Streamed {
         const tankData = dive.tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const diveResult = dive.diveResult;
+        diveResult.ceilings = [];
         diveResult.wayPoints = this.wayPointsFromResult(calculatedProfile);
-        diveResult.ceilings = calculatedProfile.ceilings;
         diveResult.finalTissues = calculatedProfile.finalTissues;
-        diveResult.tissueOverPressures = calculatedProfile.tissueOverPressures;
 
         if (diveResult.endsOnSurface) {
             this.processCalculatedProfile(result.profile, dive);
@@ -109,9 +108,7 @@ export class PlannerService extends Streamed {
         const infoRequest = this.createPlanRequest(dive) as DiveInfoRequestDto;
         infoRequest.calculatedProfile = calculatedProfile.segments;
         infoRequest.calculatedTissues = calculatedProfile.finalTissues;
-        infoRequest.calculatedOverPressures = calculatedProfile.tissueOverPressures;
         infoRequest.eventOptions = this.createEventOptions();
-        infoRequest.ceilings = calculatedProfile.ceilings;
         this.diveInfoTask.calculate(infoRequest);
 
         const consumptionRequest = {
@@ -179,6 +176,9 @@ export class PlannerService extends Streamed {
         diveResult.surfaceGradient = diveInfoResult.surfaceGradient;
         diveResult.offgasingStartTime = diveInfoResult.offgasingStartTime;
         diveResult.offgasingStartDepth = diveInfoResult.offgasingStartDepth;
+        // ceilings and overpressures have simple data, no custom conversion needed
+        diveResult.ceilings = diveInfoResult.ceilings;
+        diveResult.tissueOverPressures = diveInfoResult.tissueOverPressures;
         diveResult.diveInfoFinished();
         this.fireFinishedEvents(dive);
     }

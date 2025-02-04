@@ -50,6 +50,15 @@ export class ProfileChartComponent extends Streamed implements OnInit {
                     this.plotlyHoverLeave();
                 }
             });
+
+        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((diveId?: number) => {
+                if (this.schedules.selected.id === diveId) {
+                    this.plotCharts();
+                    this.plotlyHoverLeave();
+                }
+            });
+
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.plotCharts());
         this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))

@@ -6,7 +6,7 @@ Because you can choose from lot of combinations, we provide list of common gases
   * 1.4 max PpO2
   * 1.2 ppO2 at working depth
   * decompression ppO2 1.6
-  * Both Oxygen and nitrogen as toxic
+  * Both Oxygen and nitrogen as narcotic
   * Maximum narcotic depth 30 meters (100 ft)
 
 Source:

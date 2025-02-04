@@ -11,7 +11,8 @@
     "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch",
     "test-lib": "ng test --project scuba-physics",
     "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "e2e": "playwright test"
   },
   "private": true,
   "dependencies": {
@@ -50,6 +51,7 @@
     "@angular-eslint/template-parser": "^18.2.7",
     "@angular/cli": "^18.2.7",
     "@angular/compiler-cli": "^18.2.7",
+    "@playwright/test": "^1.50.0",
     "@types/jasmine": "^5.1.5",
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.10.1",

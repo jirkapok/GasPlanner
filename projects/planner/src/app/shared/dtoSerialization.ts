@@ -103,7 +103,7 @@ export class DtoSerialization {
         }
 
         const finalTissues = DtoSerialization.toTissues(profile.finalTissues);
-        return CalculatedProfile.fromProfile(segments, [], finalTissues);
+        return CalculatedProfile.fromProfile(segments, finalTissues);
     }
 
     public static fromProfile(profile: CalculatedProfile): CalculatedProfileDto {

@@ -427,7 +427,10 @@ describe('PlannerService', () => {
                         events: [],
                         surfaceGradient: 0,
                         offgasingStartTime: 0,
-                        offgasingStartDepth: 0
+                        offgasingStartDepth: 0,
+                        ceilings: [],
+                        tissues: [],
+                        tissueOverPressures: []
                     }));
 
                 expect( () => planner.calculate(1)).not.toThrow();

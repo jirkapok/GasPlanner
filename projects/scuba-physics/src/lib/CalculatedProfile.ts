@@ -177,7 +177,6 @@ export class CalculatedProfile {
 
     protected constructor(
         private seg: Segment[],
-        private ceil: Ceiling[],
         private _finalTissues: LoadedTissues,
         private err: Event[]
     ) { }
@@ -188,13 +187,6 @@ export class CalculatedProfile {
      */
     public get segments(): Segment[] {
         return this.seg;
-    }
-
-    /**
-     * Not null collection of ceilings. Empty in case of error.
-     */
-    public get ceilings(): Ceiling[] {
-        return this.ceil;
     }
 
     /**
@@ -215,25 +207,31 @@ export class CalculatedProfile {
 
     public static fromErrors(segments: Segment[], errors: Event[]): CalculatedProfile {
         // we are lying here, since dont know the altitude for tissues
-        return new CalculatedProfile(segments, [], ProfileTissues.createAtSurface(), errors);
+        return new CalculatedProfile(segments, ProfileTissues.createAtSurface(), errors);
     }
 
-    // TODO consider move ceilings to statistics
-    public static fromProfile(segments: Segment[], ceilings: Ceiling[], finalTissues: LoadedTissues): CalculatedProfile {
-        return new CalculatedProfile(segments, ceilings, finalTissues, []);
+    public static fromProfile(segments: Segment[], finalTissues: LoadedTissues): CalculatedProfile {
+        return new CalculatedProfile(segments, finalTissues, []);
     }
 }
 
 export class CalculatedProfileStatistics extends CalculatedProfile {
     private constructor(
         seg: Segment[],
-        ceil: Ceiling[],
+        private ceil: Ceiling[],
         finalTissues: LoadedTissues,
         private _tissues: LoadedTissues[],
         private _tissueOverPressures: TissueOverPressures[],
         err: Event[]
     ) {
-        super(seg, ceil, finalTissues, err);
+        super(seg, finalTissues, err);
+    }
+
+    /**
+     * Not null collection of ceilings. Empty in case of error.
+     */
+    public get ceilings(): Ceiling[] {
+        return this.ceil;
     }
 
     /** Tissues history */

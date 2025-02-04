@@ -146,6 +146,7 @@ export class DiveResults {
         this._calculationFailed = false;
     }
 
+    // TODO adapt to move of ceiling to dive info task
     /** Marks each part as not calculated */
     public showStillRunning(): void {
         if (this._calculatingProfile) {

@@ -69,6 +69,11 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         return this.dive.profileCalculated;
     }
 
+    /** Since ceilings are calculated in dive info task */
+    public get infoCalculated(): boolean {
+        return this.dive.diveInfoCalculated;
+    }
+
     private get dive(): DiveResults {
         return this.schedules.selected.diveResult;
     }
@@ -102,6 +107,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.plotter.plotCharts(this.dive.totalDuration);
 
         if (this.showHeatMap) {
+            // TODO clear the heatmap if the dive is not calculated
             const overPressures = this.dive.tissueOverPressures;
             this.heatmapPlotter.plotHeatMap(overPressures);
         }

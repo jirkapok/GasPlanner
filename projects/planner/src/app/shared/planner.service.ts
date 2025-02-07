@@ -91,7 +91,7 @@ export class PlannerService extends Streamed {
         const tankData = dive.tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const diveResult = dive.diveResult;
-        diveResult.ceilings = [];
+        diveResult.ceilings = []; // TODO reset DiveInfo results
         diveResult.wayPoints = this.wayPointsFromResult(calculatedProfile);
         diveResult.finalTissues = calculatedProfile.finalTissues;
 

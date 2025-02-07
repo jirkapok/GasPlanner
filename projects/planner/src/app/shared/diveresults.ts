@@ -6,6 +6,34 @@ import {
 import { Injectable } from '@angular/core';
 import { WayPoint } from './wayPoint';
 
+class CalculationState {
+    private _calculating = false;
+    private _calculated = false;
+
+    public get calculated(): boolean {
+        return this._calculated;
+    }
+
+    public get running(): boolean {
+        return this._calculating;
+    }
+
+    public start(): void {
+        this._calculating = true;
+    }
+
+    public stillRunning(): void {
+        if (this._calculating) {
+            this._calculated = false;
+        }
+    }
+
+    public Finished(): void {
+        this._calculated = true;
+        this._calculating = false;
+    }
+}
+
 @Injectable()
 export class DiveResults {
     private static readonly maxAcceptableNdl = 1000;
@@ -34,33 +62,35 @@ export class DiveResults {
     public tissueOverPressures: TissueOverPressures[] = [];
     public events: Event[] = [];
 
-
-    private _calculatingProfile = false;
-    private _calculatingDiveInfo = false;
-    private _calculatingConsumption = false;
-    private _profileCalculated = false;
-    private _diveInfoCalculated = false;
-    private _consumptionCalculated = false;
+    private profileCalculation = new CalculationState();
+    private consumptionCalculation = new CalculationState();
+    private diveInfoCalculation = new CalculationState();
     private _calculationFailed = false;
-
-    public get diveInfoCalculated(): boolean {
-        return this._diveInfoCalculated;
-    }
 
     /**
      * Only if both consumption and dive info finished already, since they are running in parallel.
      * Not checking if background calculation is still running, so this only shows last known state.
      * */
     public get calculated(): boolean {
-        return this._consumptionCalculated && this.diveInfoCalculated;
+        return this.consumptionCalculated && this.diveInfoCalculated;
+    }
+
+    // TODO CNS, OTU and average depth are calculated in dive info, not in profile
+    // issues should be updated after dive info finished
+    public get profileCalculated(): boolean {
+        return this.profileCalculation.calculated;
+    }
+
+    public get diveInfoCalculated(): boolean {
+        return this.diveInfoCalculation.calculated;
+    }
+
+    public get consumptionCalculated(): boolean {
+        return this.consumptionCalculation.calculated;
     }
 
     public get running(): boolean {
-        return !this.calculated || this._calculatingConsumption || this._calculatingDiveInfo;
-    }
-
-    public get profileCalculated(): boolean {
-        return this._profileCalculated;
+        return !this.calculated || this.consumptionCalculation.running || this.diveInfoCalculation.running;
     }
 
     public get failed(): boolean {
@@ -77,7 +107,7 @@ export class DiveResults {
     }
 
     public get ndlValid(): boolean {
-        return this._diveInfoCalculated && this.noDecoTime < DiveResults.maxAcceptableNdl;
+        return this.diveInfoCalculated && this.noDecoTime < DiveResults.maxAcceptableNdl;
     }
 
     public get noDecoExceeded(): boolean {
@@ -90,7 +120,7 @@ export class DiveResults {
     }
 
     public get showResults(): boolean {
-        return this._consumptionCalculated && !this.hasErrors;
+        return this.consumptionCalculated && !this.hasErrors;
     }
 
     public get otuExceeded(): boolean {
@@ -102,7 +132,7 @@ export class DiveResults {
     }
 
     public get showMaxDuration(): boolean {
-        return this._consumptionCalculated && this.showMaxBottomTime;
+        return this.consumptionCalculated && this.showMaxBottomTime;
     }
 
     public get showMaxBottomTime(): boolean {
@@ -140,56 +170,48 @@ export class DiveResults {
 
     /** Marks dive calculation in progress */
     public start(): void {
-        this._calculatingProfile = true;
-        this._calculatingConsumption = true;
-        this._calculatingDiveInfo = true;
+        this.profileCalculation.start();
+        this.consumptionCalculation.start();
+        this.diveInfoCalculation.start();
         this._calculationFailed = false;
     }
 
-    // TODO adapt to move of ceiling to dive info task
     /** Marks each part as not calculated */
     public showStillRunning(): void {
-        if (this._calculatingProfile) {
-            this._profileCalculated = false;
-            this.emptyProfile();
+        if(this.profileCalculation.running) {
+            this.emptyProfile();  // TODO adapt to move of ceiling to dive info task
         }
 
-        if (this._calculatingDiveInfo) {
-            this._diveInfoCalculated = false;
-        }
-
-        if (this._calculatingConsumption) {
-            this._consumptionCalculated = false;
-        }
-    }
-
-    public profileFinished(): void {
-        this._profileCalculated = true;
-        this._calculatingProfile = false;
-    }
-
-    public diveInfoFinished(): void {
-        this._diveInfoCalculated = true;
-        this._calculatingDiveInfo = false;
-    }
-
-    public consumptionFinished(): void {
-        this._consumptionCalculated = true;
-        this._calculatingConsumption = false;
+        this.profileCalculation.stillRunning();
+        this.consumptionCalculation.stillRunning();
+        this.diveInfoCalculation.stillRunning();
     }
 
     public endFailed(): void {
-        this.profileFinished();
-        this.diveInfoFinished();
-        this.consumptionFinished();
+        this.profileCalculation.Finished();
+        this.consumptionCalculation.Finished();
+        this.diveInfoCalculation.Finished();
         this.emptyProfile();
         this._calculationFailed = true;
+    }
+
+    public profileFinished(): void {
+        this.profileCalculation.Finished();
+    }
+
+    public diveInfoFinished(): void {
+        this.diveInfoCalculation.Finished();
+    }
+
+    public consumptionFinished(): void {
+        this.consumptionCalculation.Finished();
     }
 
     private emptyProfile(): void {
         this.wayPoints = [];
         this.ceilings = [];
         this.events = [];
+        // TODO empty between profile and dive info or empty all?
         this.tissueOverPressures = [];
     }
 }

@@ -4,7 +4,7 @@ import { DiveSchedules } from '../dive.schedules';
 import { UnitConversion } from '../UnitConversion';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { WayPointsService } from '../waypoints.service';
-import { Segment, StandardGases } from 'scuba-physics';
+import { HighestDensity, ProfileTissues, Segment, StandardGases } from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
 import _ from 'lodash';
 
@@ -17,6 +17,7 @@ interface AssertedWayPoint {
 }
 
 describe('WayPoints Difference Service', () => {
+    const irrelevantTissues = ProfileTissues.createAtSurface(0);
     let sut: ProfileComparatorService;
     let schedules: DiveSchedules;
     let wayPoints: WayPointsService;
@@ -46,8 +47,8 @@ describe('WayPoints Difference Service', () => {
 
     const setDiveCalculated = (index: number) => {
         const result = schedules.dives[index].diveResult;
-        result.consumptionFinished();
-        result.diveInfoFinished();
+        result.updateConsumption(0, 0, 0, 0, 0, false, false);
+        result.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
     };
 
     const setCalculationRunning = (index: number) => {
@@ -95,8 +96,8 @@ describe('WayPoints Difference Service', () => {
     }
 
     const assertDivesWayPointsCompare = (profileA: Segment[], profileB: Segment[], expected: AssertedWayPoint[])=> {
-        schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(profileA);
-        schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(profileB);
+        schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(profileA), irrelevantTissues);
+        schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(profileB), irrelevantTissues);
         // simulate calculation behavior to enforce cache of waypoints
         dispatcher.sendInfoCalculated(1);
         dispatcher.sendInfoCalculated(2);
@@ -116,12 +117,12 @@ describe('WayPoints Difference Service', () => {
 
     it('Failed profile A with valid profile B', () => {
         schedules.dives[0].diveResult.endFailed();
-        schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(segments3_minutes6);
+        schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3_minutes6), irrelevantTissues);
         expect(sut.difference).toEqual([]);
     });
 
     it('Failed profile B with valid profile A', () => {
-        schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(segments3_minutes6);
+        schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3_minutes6), irrelevantTissues);
         schedules.dives[1].diveResult.endFailed();
         expect(sut.difference).toEqual([]);
     });
@@ -203,8 +204,8 @@ describe('WayPoints Difference Service', () => {
 
     it('Comparison returns cached diff', () => {
         // irrelevant profiles
-        schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(segments3_minutes6);
-        schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(segments6_minutes11);
+        schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3_minutes6), irrelevantTissues);
+        schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(segments6_minutes11), irrelevantTissues);
         dispatcher.sendInfoCalculated(1);
         dispatcher.sendInfoCalculated(2);
         expect(sut.difference).toBe(sut.difference);
@@ -212,8 +213,8 @@ describe('WayPoints Difference Service', () => {
 
     it('Recalculated even same profile refreshes diff', () => {
         // irrelevant profiles
-        schedules.dives[0].diveResult.wayPoints = wayPoints.calculateWayPoints(segments3_minutes6);
-        schedules.dives[1].diveResult.wayPoints = wayPoints.calculateWayPoints(segments6_minutes11);
+        schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3_minutes6), irrelevantTissues);
+        schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(segments6_minutes11), irrelevantTissues);
         dispatcher.sendInfoCalculated(1);
         dispatcher.sendInfoCalculated(2);
         const first = sut.difference;

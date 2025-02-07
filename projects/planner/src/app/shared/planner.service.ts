@@ -71,6 +71,7 @@ export class PlannerService extends Streamed {
         Logger.debug(`Planner calculated: ${diveId}`);
         this.schedules.markStart(diveId);
 
+        // TODO move to the diveresult.start method
         setTimeout(() => {
             this.schedules.markStillRunning(diveId);
         }, 500);
@@ -91,9 +92,8 @@ export class PlannerService extends Streamed {
         const tankData = dive.tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const diveResult = dive.diveResult;
-        diveResult.ceilings = []; // TODO reset DiveInfo results
-        diveResult.wayPoints = this.wayPointsFromResult(calculatedProfile);
-        diveResult.finalTissues = calculatedProfile.finalTissues;
+        const wayPoints = this.wayPointsFromResult(calculatedProfile);
+        diveResult.updateProfile(wayPoints, calculatedProfile.finalTissues);
 
         if (diveResult.endsOnSurface) {
             this.processCalculatedProfile(result.profile, dive);
@@ -125,7 +125,6 @@ export class PlannerService extends Streamed {
             tanks: infoRequest.tanks
         };
 
-        dive.diveResult.profileFinished();
         this.consumptionTask.calculate(consumptionRequest);
         this.dispatcher.sendWayPointsCalculated(dive.id);
     }
@@ -164,22 +163,25 @@ export class PlannerService extends Streamed {
 
         const dive = this.schedules.byId(diveInfoResult.diveId)!;
         const diveResult = dive.diveResult;
-        diveResult.noDecoTime = diveInfoResult.noDeco;
-        diveResult.otu = diveInfoResult.otu;
-        diveResult.cns = diveInfoResult.cns;
-        diveResult.planDuration = dive.depths.planDuration;
-        diveResult.notEnoughTime = dive.depths.notEnoughTime;
-        diveResult.highestDensity = DtoSerialization.toDensity(diveInfoResult.density);
-        diveResult.averageDepth = diveInfoResult.averageDepth;
         const events = DtoSerialization.toEvents(diveInfoResult.events);
-        diveResult.events = this.ignoredIssues.filterIgnored(events.items);
-        diveResult.surfaceGradient = diveInfoResult.surfaceGradient;
-        diveResult.offgasingStartTime = diveInfoResult.offgasingStartTime;
-        diveResult.offgasingStartDepth = diveInfoResult.offgasingStartDepth;
-        // ceilings and overpressures have simple data, no custom conversion needed
-        diveResult.ceilings = diveInfoResult.ceilings;
-        diveResult.tissueOverPressures = diveInfoResult.tissueOverPressures;
-        diveResult.diveInfoFinished();
+        const filteredEvents = this.ignoredIssues.filterIgnored(events.items);
+        const density = DtoSerialization.toDensity(diveInfoResult.density);
+        diveResult.updateDiveInfo(
+            diveInfoResult.noDeco,
+            dive.depths.notEnoughTime,
+            dive.depths.planDuration,
+            diveInfoResult.averageDepth,
+            diveInfoResult.surfaceGradient,
+            diveInfoResult.offgasingStartTime,
+            diveInfoResult.offgasingStartDepth,
+            diveInfoResult.otu,
+            diveInfoResult.cns,
+            density,
+            // ceilings and overpressures have simple data, no custom conversion needed
+            diveInfoResult.ceilings,
+            diveInfoResult.tissueOverPressures,
+            filteredEvents
+        );
         this.fireFinishedEvents(dive);
     }
 
@@ -192,16 +194,21 @@ export class PlannerService extends Streamed {
         const tanks = dive.tanksService;
         tanks.copyTanksConsumption(result.tanks);
         const diveResult = dive.diveResult;
-        diveResult.maxTime = result.maxTime;
-        diveResult.timeToSurface = result.timeToSurface;
-
-        diveResult.emergencyAscentStart = dive.depths.startAscentTime;
-        diveResult.turnPressure = tanks.calculateTurnPressure();
-        diveResult.turnTime = Precision.floor(dive.depths.planDuration / 2);
+        const turnPressure = tanks.calculateTurnPressure();
         // this needs to be moved to each gas or do we have other option?
-        diveResult.needsReturn = dive.depths.needsReturn && tanks.singleTank;
-        diveResult.notEnoughGas = !tanks.enoughGas;
-        diveResult.consumptionFinished();
+        const needsReturn = dive.depths.needsReturn && tanks.singleTank;
+        const turnTime = Precision.floor(dive.depths.planDuration / 2);
+
+        diveResult.updateConsumption(
+            result.maxTime,
+            result.timeToSurface,
+            dive.depths.startAscentTime,
+            turnPressure,
+            turnTime,
+            needsReturn,
+            !tanks.enoughGas
+        );
+
         this.fireFinishedEvents(dive);
     }
 

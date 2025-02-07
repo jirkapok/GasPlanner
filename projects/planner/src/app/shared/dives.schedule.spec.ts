@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { UnitConversion } from './UnitConversion';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { ReloadDispatcher } from './reloadDispatcher';
-import { ProfileTissues, Time } from 'scuba-physics';
+import { HighestDensity, ProfileTissues, Time } from 'scuba-physics';
 
 describe('Scheduled dives', () => {
     let sut: DiveSchedules;
@@ -120,11 +120,11 @@ describe('Scheduled dives', () => {
     describe('Previous dive tissues', () => {
         const sut: DiveSchedules = createSut();
         const loadedTissues = ProfileTissues.createAtSurface();
-        sut.byId(1)!.diveResult.finalTissues = loadedTissues;
+        sut.byId(1)!.diveResult.updateProfile([], loadedTissues);
 
         const repetitive = sut.add();
         repetitive.surfaceInterval = Time.oneHour;
-        repetitive.diveResult.finalTissues = ProfileTissues.createAtSurface();
+        repetitive.diveResult.updateProfile([], ProfileTissues.createAtSurface());
 
         sut.add();
 
@@ -160,9 +160,10 @@ describe('Scheduled dives', () => {
             sut.add();
 
             sut.dives.forEach(d => {
-                d.diveResult.profileFinished();
-                d.diveResult.consumptionFinished();
-                d.diveResult.diveInfoFinished();
+                // irrelevant values only to be able mark the dive calculated
+                d.diveResult.updateProfile([], ProfileTissues.createAtSurface(0));
+                d.diveResult.updateConsumption(0, 0, 0, 0, 0, false, false);
+                d.diveResult.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
             });
             sut.markStart(2);
             sut.markStillRunning(2);

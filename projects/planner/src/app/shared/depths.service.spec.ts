@@ -6,6 +6,7 @@ import { OptionsService } from './options.service';
 import { DiveResults } from './diveresults';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
+import { HighestDensity } from "scuba-physics";
 
 describe('Depths service', () => {
     let depthService: DepthsService;
@@ -47,8 +48,8 @@ describe('Depths service', () => {
         const expectedNdl = 12;
         beforeEach(() => {
             const diveResults = TestBed.inject(DiveResults);
-            diveResults.noDecoTime = expectedNdl;
-            diveResults.maxTime = expectedDuration;
+            diveResults.updateDiveInfo(expectedNdl, false, 0,0,0,0,0,0,0, HighestDensity.createDefault(), [], [], []);
+            diveResults.updateConsumption(expectedDuration, 0,0,0,0, false, false);
         });
 
         describe('When Calculated', () => {

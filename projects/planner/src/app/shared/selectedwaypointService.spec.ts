@@ -1,6 +1,6 @@
 import { SelectedWaypoint } from './selectedwaypointService';
 import { inject, TestBed } from '@angular/core/testing';
-import { Segment, StandardGases } from 'scuba-physics';
+import { ProfileTissues, Segment, StandardGases } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import {ReloadDispatcher} from './reloadDispatcher';
 import {DiveSchedules} from './dive.schedules';
@@ -56,7 +56,7 @@ describe('Selected Waypoint', () => {
             });
 
             const dive = schedules.selected.diveResult;
-            dive.wayPoints = TestBedExtensions.sampleWayPoints();
+            dive.updateProfile(TestBedExtensions.sampleWayPoints(), ProfileTissues.createAtSurface(0));
             sut.selectedTimeStamp = '1/1/1970 0:8:00';
             const expected = schedules.selected.diveResult.wayPoints[1];
 

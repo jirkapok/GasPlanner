@@ -2,7 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Time } from 'scuba-physics';
+import { HighestDensity, Time } from 'scuba-physics';
 import { DepthsService } from '../../shared/depths.service';
 import { InputControls } from '../../shared/inputcontrols';
 import { OptionsService } from '../../shared/options.service';
@@ -89,7 +89,7 @@ describe('Depths Simple Component', () => {
             (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {
                 let eventFired = false;
                 dispatcher.depthChanged$.subscribe(() => eventFired = true );
-                schedule.selected.diveResult.noDecoTime = 21;
+                schedule.selected.diveResult.updateDiveInfo(21, false, 0,0,0,0,0,0,0, HighestDensity.createDefault(), [], [], []);
                 const assignDurationSpy = spyOn(schedule.selected.depths, 'applyNdlDuration').and.callThrough();
                 simplePage.applyNdlButton.click();
                 expect(assignDurationSpy).toHaveBeenCalledWith();
@@ -100,7 +100,7 @@ describe('Depths Simple Component', () => {
         it('Apply max duration', inject([DiveSchedules, ReloadDispatcher],
             (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {
                 let eventFired = false;
-                schedule.selected.diveResult.maxTime = 19;
+                schedule.selected.diveResult.updateConsumption(19, 0, 0, 0, 0, false, false);
                 dispatcher.depthChanged$.subscribe(() => eventFired = true );
                 simplePage.applyMaxDurationButton.click();
                 expect(eventFired).toBeTruthy();

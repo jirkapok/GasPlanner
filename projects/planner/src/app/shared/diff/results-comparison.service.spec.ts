@@ -5,6 +5,7 @@ import { ReloadDispatcher } from '../reloadDispatcher';
 import { UnitConversion } from '../UnitConversion';
 import { ResultDiff, ResultsComparison } from './results-comparison.service';
 import { DiveResults } from '../diveresults';
+import { HighestDensity } from "scuba-physics";
 
 describe('ResultsComparison service current values', () => {
     let sut: ResultsComparison;
@@ -29,6 +30,8 @@ describe('ResultsComparison service current values', () => {
 
         schedules.add();
         profileB = schedules.add().diveResult;
+        profileB.updateDiveInfo(84, false, 0, 86, 0, 0, 0, 81, 80, HighestDensity.createDefault(), [], [], []);
+        profileB.updateConsumption(85, 82, 83, 0, 0, false, false);
         const selection = TestBed.inject(ProfileComparatorService);
         selection.selectProfile(2);
     });
@@ -39,37 +42,30 @@ describe('ResultsComparison service current values', () => {
     };
 
     it('cns', () => {
-        profileB.cns = 80;
         assertResultsDiff(sut.cns, 80);
     });
 
     it('otu', () => {
-        profileB.otu = 81;
         assertResultsDiff(sut.otu, 81);
     });
 
     it('Time to surface', () => {
-        profileB.timeToSurface = 82;
         assertResultsDiff(sut.timeToSurface, 82);
     });
 
     it('Emergency ascent starts', () => {
-        profileB.emergencyAscentStart = 83;
         assertResultsDiff(sut.emergencyAscentStart, 83);
     });
 
     it('No deco limit', () => {
-        profileB.noDecoTime = 84;
         assertResultsDiff(sut.noDeco, 84);
     });
 
     it('Max time', () => {
-        profileB.maxTime = 85;
         assertResultsDiff(sut.maxTime, 85);
     });
 
     it('Average depth', () => {
-        profileB.averageDepth = 86;
         assertResultsDiff(sut.averageDepth, 86);
     });
 
@@ -85,12 +81,12 @@ describe('ResultsComparison service current values', () => {
         });
 
         it('Average depth ft', () => {
-            profileB.averageDepth = 30;
+            profileB.updateDiveInfo(84, false, 0, 30, 0, 0, 0, 81, 80, HighestDensity.createDefault(), [], [], []);
             assertResultsDiff(sut.averageDepth,  98.4251969);
         });
 
         it('Max density lb/cuft', () => {
-            profileB.highestDensity.density = 6;
+            profileB.highestDensity.density = 6; // highest density should be readonly
             assertResultsDiff(sut.highestDensity, 0.374568);
         });
     });

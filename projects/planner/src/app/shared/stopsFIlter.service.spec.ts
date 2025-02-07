@@ -6,9 +6,10 @@ import { DiveSchedules } from './dive.schedules';
 import { TestBedExtensions } from './TestbedExtensions.spec';
 import { DiveResults } from './diveresults';
 import { WayPointsService } from './waypoints.service';
-import { Segment, StandardGases } from 'scuba-physics';
+import { ProfileTissues, Segment, StandardGases } from 'scuba-physics';
 
 describe('Stops filter', () => {
+    const irrelevantTissues = ProfileTissues.createAtSurface(0);
     let service: StopsFilter;
     let dive: DiveResults;
 
@@ -24,7 +25,8 @@ describe('Stops filter', () => {
         service = TestBed.inject(StopsFilter);
         const schedules = TestBed.inject(DiveSchedules);
         dive = schedules.selected.diveResult;
-        dive.wayPoints = TestBedExtensions.sampleWayPoints();
+
+        dive.updateProfile(TestBedExtensions.sampleWayPoints(), irrelevantTissues);
     });
 
     it('When disabled returns all waypoints', () => {
@@ -66,7 +68,7 @@ describe('Stops filter', () => {
         ];
 
         // this is incorrect, because we don't set the used defined waypoints in depths plan
-        dive.wayPoints = wayPointService.calculateWayPoints(profile);
+        dive.updateProfile(wayPointService.calculateWayPoints(profile), irrelevantTissues);
         service.switchFilter();
 
         const expected = [

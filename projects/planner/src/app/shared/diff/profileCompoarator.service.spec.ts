@@ -4,7 +4,9 @@ import { ProfileComparatorService } from './profileComparatorService';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { UnitConversion } from '../UnitConversion';
 import {
-    ConsumptionByMix, FeatureFlags, IConsumedMix, Segment, StandardGases, Tank
+    ConsumptionByMix, FeatureFlags, HighestDensity,
+    IConsumedMix, ProfileTissues, Segment,
+    StandardGases, Tank
 } from 'scuba-physics';
 import { WayPoint } from '../wayPoint';
 import { PlannerService } from '../planner.service';
@@ -13,6 +15,7 @@ import { ApplicationSettingsService } from "../ApplicationSettings";
 import { WorkersFactoryCommon } from "../serial.workers.factory";
 
 describe('ProfileComparison service', () => {
+    const irrelevantTissues = ProfileTissues.createAtSurface(0);
     let sut: ProfileComparatorService;
     let schedules: DiveSchedules;
 
@@ -56,22 +59,22 @@ describe('ProfileComparison service', () => {
     });
 
     it('Total duration of one dive', inject([UnitConversion], (units: UnitConversion) => {
-        schedules.selected.diveResult.wayPoints = [
-            WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 600))
-        ];
+        schedules.selected.diveResult.updateProfile([
+             WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 600))
+        ], irrelevantTissues);
 
         expect(sut.totalDuration).toEqual(600);
     }));
 
     it('Total duration Profile B dive', inject([UnitConversion], (units: UnitConversion) => {
         schedules.add();
-        schedules.dives[0].diveResult.wayPoints = [
-            WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 500))
-        ];
+        schedules.dives[0].diveResult.updateProfile([
+             WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 500))
+        ], irrelevantTissues);
 
-        schedules.dives[1].diveResult.wayPoints = [
-            WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 700))
-        ];
+        schedules.dives[1].diveResult.updateProfile([
+             WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 700))
+         ], irrelevantTissues);
 
         sut.selectProfile(1);
 
@@ -107,22 +110,22 @@ describe('ProfileComparison service', () => {
         });
 
         it('Dive profiles are already calculated', () => {
-            sut.profileAResults.profileFinished();
-            sut.profileBResults.profileFinished();
+            sut.profileAResults.updateProfile([], irrelevantTissues);
+            sut.profileBResults.updateProfile([], irrelevantTissues);
             expect(sut.profilesCalculated).toBeTruthy();
         });
 
         it('Dive results are already calculated', () => {
-            sut.profileAResults.diveInfoFinished();
-            sut.profileAResults.consumptionFinished();
-            sut.profileBResults.diveInfoFinished();
-            sut.profileBResults.consumptionFinished();
+            sut.profileAResults.updateConsumption(0, 0, 0, 0, 0, false, false);
+            sut.profileAResults.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
+            sut.profileBResults.updateConsumption(0, 0, 0, 0, 0, false, false);
+            sut.profileBResults.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
             expect(sut.bothResultsCalculated).toBeTruthy();
         });
 
         it('Consumption are already calculated', () => {
-            sut.profileAResults.consumptionFinished();
-            sut.profileBResults.consumptionFinished();
+            sut.profileAResults.updateConsumption(0, 0, 0, 0, 0, false, false);
+            sut.profileBResults.updateConsumption(0, 0, 0, 0, 0, false, false);
             expect(sut.showConsumption).toBeTruthy();
         });
     });

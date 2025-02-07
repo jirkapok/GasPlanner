@@ -169,8 +169,6 @@ export class DiveResults {
         return this.consumptionCalculated && this.diveInfoCalculated;
     }
 
-    // TODO CNS, OTU and average depth are calculated in dive info, not in profile
-    // issues should be updated after dive info finished
     public get profileCalculated(): boolean {
         return this.profileCalculation.calculated;
     }

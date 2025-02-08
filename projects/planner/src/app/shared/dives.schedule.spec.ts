@@ -152,7 +152,7 @@ describe('Scheduled dives', () => {
     });
 
     describe('Calculating', () => {
-        it('Marks Still running also all following repetitive dives', () => {
+        it('Marks Still running also all following repetitive dives', (done) => {
             const sut = createSut();
             sut.add();
             const third = sut.add();
@@ -165,11 +165,14 @@ describe('Scheduled dives', () => {
                 d.diveResult.updateConsumption(0, 0, 0, 0, 0, false, false);
                 d.diveResult.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
             });
-            sut.markStart(2);
-            sut.markStillRunning(2);
 
-            const states = _(sut.dives).map(d => d.diveResult.calculated).value();
-            expect(states).toEqual([ true, false, false, true ]);
+            sut.markStart(2);
+
+            setTimeout(() => {
+                const states = _(sut.dives).map(d => d.diveResult.calculated).value();
+                expect(states).toEqual([ true, false, false, true ]);
+                done();
+            }, 500);
         });
     });
 });

@@ -257,11 +257,6 @@ export class DiveSchedules {
         this.processOnFollowingRepetitiveDives(diveId, (dive) => dive.diveResult.start());
     }
 
-    /** Marks all following repetitive dives as still running. */
-    public markStillRunning(diveId: number): void {
-        this.processOnFollowingRepetitiveDives(diveId, (dive) => dive.diveResult.showStillRunning());
-    }
-
     private processOnFollowingRepetitiveDives(diveId: number, action: (dive: DiveSchedule) => void): void {
         const dive = this.byId(diveId);
 

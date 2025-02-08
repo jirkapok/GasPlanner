@@ -266,10 +266,14 @@ export class DiveResults {
         this.consumptionCalculation.start();
         this.diveInfoCalculation.start();
         this._calculationFailed = false;
+
+        setTimeout(() => {
+            this.showStillRunning();
+        }, 500);
     }
 
     /** Marks each part as not calculated */
-    public showStillRunning(): void {
+    private showStillRunning(): void {
         if(this.profileCalculation.running) {
             this.emptyProfile();
         }

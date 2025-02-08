@@ -70,12 +70,6 @@ export class PlannerService extends Streamed {
 
         Logger.debug(`Planner calculated: ${diveId}`);
         this.schedules.markStart(diveId);
-
-        // TODO move to the diveresult.start method
-        setTimeout(() => {
-            this.schedules.markStillRunning(diveId);
-        }, 500);
-
         const dive = this.schedules.byId(diveId)!;
         const profileRequest = this.createPlanRequest(dive) as ProfileRequestDto;
         this.profileTask.calculate(profileRequest);

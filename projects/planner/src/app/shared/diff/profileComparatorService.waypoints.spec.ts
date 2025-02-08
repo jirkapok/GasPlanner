@@ -54,7 +54,6 @@ describe('WayPoints Difference Service', () => {
     const setCalculationRunning = (index: number) => {
         const result = schedules.dives[index].diveResult;
         result.start();
-        result.showStillRunning();
     };
 
     const segments3_minutes6: Segment[] = [
@@ -105,14 +104,22 @@ describe('WayPoints Difference Service', () => {
         expect(current).toEqual(expected);
     };
 
-    it('Not calculated profile A', () => {
+    it('Not calculated profile A', (done) => {
         setCalculationRunning(0);
-        assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes6, []);
+
+        setTimeout(() => {
+            assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes6, []);
+            done();
+        }, 500);
     });
 
-    it('Not calculated profile B', () => {
+    it('Not calculated profile B', (done) => {
         setCalculationRunning(1);
-        assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes6, []);
+
+        setTimeout(() => {
+            assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes6, []);
+            done();
+        }, 500);
     });
 
     it('Failed profile A with valid profile B', () => {

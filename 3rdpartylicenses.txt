@@ -52,7 +52,7 @@ licenses; we recommend you read them, as their terms may differ from the
 terms above.
 
 --------------------------------------------------------------------------------
-Package: plotly.js-basic-dist
+Package: plotly.js-dist
 License: "MIT"
 
 The MIT License (MIT)

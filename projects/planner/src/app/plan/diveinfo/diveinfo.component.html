@@ -28,6 +28,7 @@
     <div class="card-body card-minheight">
         <mdb-tabs #tabs>
             <mdb-tab title="Results">
+                <app-calculating [show]="!dive.calculated"></app-calculating>
                 <div class="pb-3">
                     <table class="table table-sm">
                         <tbody>
@@ -128,18 +129,17 @@
                         </tbody>
                     </table>
                 </div>
-                <app-calculating [show]="!dive.calculated"></app-calculating>
             </mdb-tab>
             <mdb-tab>
                 <ng-template mdbTabTitle>
                     <span>Consumed</span>
                     <fa-icon *ngIf="dive.notEnoughGas" [icon]="warnIcon" class="ms-2 fa-xl text-danger"></fa-icon>
                 </ng-template>
+                <app-calculating [show]="!dive.calculated"></app-calculating>
                 <ng-container *ngIf="dive.showResults">
                     <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="isComplex" [toxicity]="toxicity">
                     </app-tankchart>
                 </ng-container>
-                <app-calculating [show]="!dive.calculated"></app-calculating>
             </mdb-tab>
             <mdb-tab>
                 <ng-template mdbTabTitle>
@@ -149,6 +149,7 @@
                              [icon]="warnIcon" class="ms-2 fa-xl">
                     </fa-icon>
                 </ng-template>
+                <app-calculating [show]="!dive.calculated"></app-calculating>
                 <app-dive-issues></app-dive-issues>
             </mdb-tab>
         </mdb-tabs>

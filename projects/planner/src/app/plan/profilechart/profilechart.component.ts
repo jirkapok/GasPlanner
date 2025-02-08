@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
-import { FeatureFlags } from 'scuba-physics';
+import { FeatureFlags, TissueOverPressures } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
 import { SelectedWaypoint } from '../../shared/selectedwaypointService';
 import { Streamed } from '../../shared/streamed';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
-import { ChartPlotter, ChartPlotterFactory } from '../../shared/chartPlotter';
+import {
+    ChartPlotter, ChartPlotterFactory, DiveTracesBuilder
+} from '../../shared/chartPlotter';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
@@ -28,6 +30,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private readonly heatMapElementName = 'heatmapplot';
     private plotter: ChartPlotter;
     private heatmapPlotter: HeatMapPlotter;
+    private profileTraces: DiveTracesBuilder;
 
     constructor(
         units: UnitConversion,
@@ -38,15 +41,15 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
-        const profileTraces = chartPlotterFactory.withNamePrefix('')
+        this.profileTraces = chartPlotterFactory.withNamePrefix('')
             .create(() => this.dive);
-        this.plotter = new ChartPlotter(this.elementName, chartPlotterFactory, profileTraces);
+        this.plotter = new ChartPlotter(this.elementName, () => this.dive.totalDuration, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
 
         this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((diveId?: number) => {
                 if (this.schedules.selected.id === diveId) {
-                    this.plotCharts();
+                    this.plotProfile();
                     this.plotlyHoverLeave();
                 }
             });
@@ -54,13 +57,13 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((diveId?: number) => {
                 if (this.schedules.selected.id === diveId) {
-                    this.plotCharts();
+                    this.plotAllCharts();
                     this.plotlyHoverLeave();
                 }
             });
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.plotCharts());
+            .subscribe(() => this.plotAllCharts());
         this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))
             .subscribe((wayPoint) => this.selectWayPoint(wayPoint));
     }
@@ -79,7 +82,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.plotCharts();
+        this.plotAllCharts();
         this.hookChartEvents();
     }
 
@@ -91,7 +94,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     public switchHeatMap(): void {
         this.showHeatMap = !this.showHeatMap;
-        this.plotCharts();
+        this.plotAllCharts();
     }
 
     private plotlyHoverLeave() {
@@ -103,13 +106,19 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.plotter.plotCursor(wayPoint);
     }
 
-    private plotCharts(): void {
-        this.plotter.plotCharts(this.dive.totalDuration);
+    private plotProfile(): void {
+        this.plotter.plotProfileChartsOnly();
+        this.plotHeatMap([]);
+    }
 
+    private plotAllCharts(): void {
+        this.plotter.plotAllCharts();
+        this.plotHeatMap(this.dive.tissueOverPressures);
+    }
+
+    private plotHeatMap(tissueOverPressures: TissueOverPressures[]): void {
         if (this.showHeatMap) {
-            // TODO clear the heatmap if the dive is not calculated
-            const overPressures = this.dive.tissueOverPressures;
-            this.heatmapPlotter.plotHeatMap(overPressures);
+            this.heatmapPlotter.plotHeatMap(tissueOverPressures);
         }
     }
 

@@ -47,7 +47,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthEventLineColor('rgb(118,119,120)')
             .create(() => this.profileComparatorService.profileBResults);
 
-        this.plotter = new ChartPlotter('diveplotdiff', chartPlotterFactory, profileBTraces, profileATraces);
+        this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,
+            chartPlotterFactory, profileBTraces, profileATraces);
         this.heatMapPlotterA = new HeatMapPlotter('heatmapPlotA');
         this.heatMapPlotterB = new HeatMapPlotter('heatmapPlotB');
 
@@ -109,7 +110,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     private plotCharts(): void {
-        this.plotter.plotCharts(this.profileComparatorService.totalDuration);
+        this.plotter.plotAllCharts();
 
         if(this.showHeatMap) {
             var overPressures = this.profileComparatorService.overPressures;

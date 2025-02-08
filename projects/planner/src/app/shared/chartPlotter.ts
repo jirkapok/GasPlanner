@@ -150,14 +150,20 @@ export class DiveTracesBuilder {
         this.eventFillColor = eventFillColor;
     }
 
-    public traces(): Partial<Plotly.PlotData>[] {
+    public allTraces(): Partial<Plotly.PlotData>[] {
         const diveResult = this.dive();
         // performance: number of samples shown in chart doesn't speedup the drawing significantly
-        const averageDepths = this.plotAverageDepth(diveResult.wayPoints);
-        const depths = this.plotDepths(diveResult.wayPoints);
+        const profileTraces = this.profileTraces();
         const ceilings = this.plotCeilings(diveResult.ceilings);
         const events = this.plotEvents(diveResult.events);
-        return [ averageDepths, depths, ceilings, events ];
+        return [ ...profileTraces, ceilings, events ];
+    }
+
+    public profileTraces(): Partial<Plotly.PlotData>[] {
+        const diveResult = this.dive();
+        const averageDepths = this.plotAverageDepth(diveResult.wayPoints);
+        const depths = this.plotDepths(diveResult.wayPoints);
+        return [averageDepths, depths];
     }
 
     private plotAverageDepth(wayPoints: WayPoint[]): Partial<Plotly.PlotData> {
@@ -250,19 +256,22 @@ export class ChartPlotter {
     private layout: Partial<Plotly.Layout>;
 
     /** Provide traces in reverse order to keep the last on top */
-    constructor(public elementName: string, chartPlotterFactory: ChartPlotterFactory, ...traceBuilders: DiveTracesBuilder[]) {
+    constructor(public elementName: string,
+                private totalDuration: () => number,
+                chartPlotterFactory: ChartPlotterFactory,
+                ...traceBuilders: DiveTracesBuilder[]) {
         this.builders = traceBuilders;
         this.cursor1 = chartPlotterFactory.createCursor();
         this.layout = chartPlotterFactory.createLayout();
         this.options = chartPlotterFactory.createOptions();
     }
 
-    public plotCharts(totalDuration: number): void {
-        this.updateLayoutThickFormat(totalDuration);
-        const traces: Plotly.Data[] = _(this.builders).map(b => b.traces())
-            .flatten()
-            .toArray().value();
-        void Plotly.react(this.elementName, traces, this.layout, this.options);
+    public plotAllCharts(): void {
+        this.plotCharts(b => b.allTraces());
+    }
+
+    public plotProfileChartsOnly(): void {
+        this.plotCharts(b => b.profileTraces());
     }
 
     public plotCursor(wayPoint: WayPoint | undefined): void {
@@ -278,9 +287,18 @@ export class ChartPlotter {
         void Plotly.relayout(this.elementName, update);
     }
 
-    private updateLayoutThickFormat(totalDuration: number): void {
+    public plotCharts(getTraces: (b: DiveTracesBuilder) => Partial<Plotly.PlotData>[]): void {
+        this.updateLayoutThickFormat();
+        const traces: Plotly.Data[] = _(this.builders).map(b => getTraces(b))
+            .flatten()
+            .toArray().value();
+        void Plotly.react(this.elementName, traces, this.layout, this.options);
+    }
+
+    private updateLayoutThickFormat(): void {
         // setting to string instead expected d3 formatting function causes warning in console = want fix
-        this.layout.xaxis!.tickformat = DateFormats.selectChartTimeFormat(totalDuration);
+        const maxDuration = this.totalDuration();
+        this.layout.xaxis!.tickformat = DateFormats.selectChartTimeFormat(maxDuration);
     }
 
     private updateCursor(wayPoint: WayPoint, cursor: Partial<Plotly.Shape>): void {

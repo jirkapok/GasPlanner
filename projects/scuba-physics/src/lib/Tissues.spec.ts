@@ -77,41 +77,41 @@ describe('Tissues', () => {
         });
     });
 
-    xdescribe('Saturation ratio', () => {
+    describe('Saturation ratio', () => {
         const segment = new LoadSegment(6, Time.oneMinute * 60, 0);
 
-        xit('Is 0 at surface', () => {
-            const tissue = createTissue();
-            const saturationRatio = tissue.saturationRatio(1, 1, 1);
+        // saturation values are not precise, because of M-values evaluate to decimal places.
+        const createLoadedTissue = (pN2: number) =>
+            Tissue.fromCurrent({ pN2: pN2, pHe: 0}, Compartments.buhlmannZHL16C[0]);
+
+        it('Is 0 at equilibrium (surface)', () => {
+            const tissue = createLoadedTissue(1);
+            const saturationRatio = tissue.saturationRatio(1);
             expect(saturationRatio).toBeCloseTo(0, 8);
         });
 
-        xit('Is less than 0 when descending ongassing tissues', () => {
-            const tissue = createTissue();
-            tissue.load(segment, StandardGases.air);
-            const ceiling = tissue.ceiling(1);
-            expect(ceiling).toBeCloseTo(0.19547818, 8);
+        it('Is less than 0 when descending ongassing tissues', () => {
+            const tissue = createLoadedTissue(1);
+            const saturationRatio = tissue.saturationRatio(2);
+            expect(saturationRatio).toBeCloseTo(-0.5, 8);
         });
 
-        xit('Is more than +1 when exceeded M-value', () => {
-            const tissue = createTissue();
-            tissue.load(segment, StandardGases.air);
-            const ceiling = tissue.ceiling(1);
-            expect(ceiling).toBeCloseTo(0.19547818, 8);
+        it('Is more than +1 when exceeded M-value', () => {
+            const tissue = createLoadedTissue(4);
+            const saturationRatio = tissue.saturationRatio(1);
+            expect(saturationRatio).toBeCloseTo(1.52877361, 8);
         });
 
-        xit('Is more than 0 when offgasing', () => {
-            const tissue = createTissue();
-            tissue.load(segment, StandardGases.air);
-            const ceiling = tissue.ceiling(1);
-            expect(ceiling).toBeCloseTo(0.19547818, 8);
+        it('Is more than 0 when offgasing', () => {
+            const tissue = createLoadedTissue(2);
+            const saturationRatio = tissue.saturationRatio(1);
+            expect(saturationRatio).toBeCloseTo(0.50959120, 8);
         });
 
-        xit('Is -1 when descending when start ongassing', () => {
-            const tissue = createTissue();
-            tissue.load(segment, StandardGases.air);
-            const ceiling = tissue.ceiling(1);
-            expect(ceiling).toBeCloseTo(0.19547818, 8);
+        it('Is -1 when descending when start ongassing', () => {
+            const tissue = createLoadedTissue(1);
+            const saturationRatio = tissue.saturationRatio(100);
+            expect(saturationRatio).toBeCloseTo(-0.99, 8);
         });
     });
 });

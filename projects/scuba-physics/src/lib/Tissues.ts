@@ -136,17 +136,13 @@ export class Tissue extends Compartment implements LoadedTissue {
 
     /**
      * Calculates saturation ratio for all tissues as percents relative to ambient pressure.
+     * This is absolute ration against orgininal M-value, so no user gradient is applied.
      * -1..0: is offgasing, -1 = surface pressure.
      *    =0: is equilibrium (tissue is not offgasing or ongasing), at ambient pressure.
      *    >0: is ongasing, +1 = 100% gradient i.e. at m-value, more means exceeded limit.
      * @param ambientPressure The current ambient pressure in bars.
-     * @param surfacePressure The surface pressure in bars at beginning of the dive.
-     * @param gradient Gradient factor constant in range 0-1
      */
-    public saturationRatio(ambientPressure: number, surfacePressure: number, gradient: number): number {
-        // TODO do we need adjust m-value against user gradient factors and surface pressure?
-        // We need use Gradient here, since we want to show the saturation aligned with profile and ceilings.
-        // Or should the heat map change when changing gradient factors?
+    public saturationRatio(ambientPressure: number): number {
         if (this.pTotal < ambientPressure) {
             return this.pTotal / ambientPressure - 1;
         }
@@ -289,18 +285,15 @@ export class Tissues {
         }).value() as LoadedTissues;
     }
 
-    // TODO verify the doc and meaning of the values
     /**
      * Calculates saturation ratio for all tissues as percents relative to ambient pressure.
      * -1..0: is offgasing, -1 = surface pressure.
      *    =0: is equilibrium (tissue is not offgasing or ongasing), at ambient pressure.
      *    >0: is ongasing, +1 = 100% gradient i.e. at m-value, more means exceeded limit.
      * @param ambientPressure The current ambient pressure in bars.
-     * @param surfacePressure The surface pressure in bars at beginning of the dive.
-     * @param gradient Gradient factor constant in range 0-1
      */
-    public saturationRatio(ambientPressure: number, surfacePressure: number, gradient: number): TissueOverPressures {
-        return _(this._compartments).map(t => t.saturationRatio(ambientPressure, surfacePressure, gradient))
+    public saturationRatio(ambientPressure: number): TissueOverPressures {
+        return _(this._compartments).map(t => t.saturationRatio(ambientPressure))
             .value() as TissueOverPressures;
     }
 

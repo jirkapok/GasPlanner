@@ -9,12 +9,11 @@ Following list of features and improvements ordered by priority is under develop
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
 * Loading of simple dive URL with segment shorter than 60 seconds (simple dive to 15 m) shows no validation issue
 * Air breaks result in overlapping gas switch text in profile chart
-* Gas consumption calculates duplicate gas reserve for deco tanks 
 
 ## Improvements / Features
 
-* Fix PWA support for iPhone (offline mode and Add to Home screen)
 * Gas consumption:
+    * Gas consumption calculates duplicate gas reserve for deco tanks
     * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80
     * Clarify another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
     * Restore 1/2 and 1/3 reserve strategies
@@ -23,7 +22,9 @@ Following list of features and improvements ordered by priority is under develop
         * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)
         * [Z factor](https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities)
         * <https://youtu.be/OI4ZzqJLQjw>
+        * Use Z factor in gas blender calculator instead of ideal gas law
 * Add CCR support
+* Fix PWA support for iPhone (offline mode and Add to Home screen)
 * UI Tweaks
   * Tanks complex view: Add check box to be able enable or disable tanks
   * Add clone dive button
@@ -32,7 +33,6 @@ Following list of features and improvements ordered by priority is under develop
   * Rounding to minutes should round also the ascent time, not only the deco stops
   * Profile comparison: Add option to compare dives aligned by the end of dive
   * Read only fields should be distinguish able
-  * Tanks complex view: Add check box to be able enable or disable tanks
   * Tissues heatmap: Show tissues after amount of time spend at surface
 * Add undo/redo to all pages
 * Add localizations

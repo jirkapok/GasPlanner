@@ -130,7 +130,6 @@ export class Consumption {
             maxValue: Time.oneDay,
             doWork: (newValue: number) => {
                 addedSegment.duration = newValue;
-                // TODO add test for repetitive dive using surface interval
                 this.consumeFromProfile(testSegments, tanks, consumptionOptions, options, surfaceInterval);
             },
             meetsCondition: () => Tanks.haveReserve(tanks)

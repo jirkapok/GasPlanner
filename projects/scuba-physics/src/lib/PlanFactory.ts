@@ -57,7 +57,6 @@ export class PlanFactory {
         const emergencyPlan = Segments.fromCollection(emergencySegments);
         const gases = Gases.fromTanks(tanks);
         const algorithm = new BuhlmannAlgorithm();
-        // TODO add test, that the surface interval is used
         const parameters = AlgorithmParams.forMultilevelDive(emergencyPlan, gases, options, surfaceInterval);
         const calculatedProfile = algorithm.decompression(parameters);
         const emergencyProfile = calculatedProfile.segments;

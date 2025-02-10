@@ -28,7 +28,7 @@ export class DiveIssuesComponent {
     /** Needs to be sorted by order we want to show them */
     public get events(): BoundEvent[] {
         return _(this.dive.events)
-            .sortBy(e => this.priorityDescending(e), e => e.timeStamp)
+            .sortBy(e => this.severityDescending(e), e => e.timeStamp)
             .value();
     }
 
@@ -44,7 +44,7 @@ export class DiveIssuesComponent {
         return this.schedules.selectedResult;
     }
 
-    private priorityDescending(event: BoundEvent): number {
-        return 100 - event.priority;
+    private severityDescending(event: BoundEvent): number {
+        return 100 - event.severity;
     }
 }

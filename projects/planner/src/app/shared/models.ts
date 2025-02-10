@@ -243,6 +243,11 @@ export class TankBound implements IGasContent, ITankSize {
     }
 }
 
+export enum EventSeverity {
+    None = 0,
+    Warning = 1,
+    Error = 2
+}
 
 export class BoundEvent {
     constructor(private units: UnitConversion, private event: Event) {
@@ -313,12 +318,12 @@ export class BoundEvent {
         }
     }
 
-    public get priority(): number {
+    public get severity(): EventSeverity {
         switch (this.event.type) {
             case EventType.error:
             case EventType.brokenCeiling:
             case EventType.lowPpO2:
-                return 2;
+                return EventSeverity.Error;
 
             case EventType.highPpO2:
             case EventType.highAscentSpeed:
@@ -329,18 +334,18 @@ export class BoundEvent {
             case EventType.minDepth:
             case EventType.maxDepth:
             case EventType.missingAirBreak:
-                return 1;
+                return EventSeverity.Warning;
             default:
-                return 0;
+                return EventSeverity.None;
         }
     }
 
     public get isWarning(): boolean {
-        return this.priority === 1;
+        return this.severity === EventSeverity.Warning;
     }
 
     public get isError(): boolean {
-        return this.priority === 2;
+        return this.severity === EventSeverity.Error;
     }
 
     public get chartEventText(): string {

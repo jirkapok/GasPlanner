@@ -235,6 +235,7 @@ export class DiveResults {
         // TODO move csn and otu to events
         return this.otuExceeded ||
             this.cnsExceeded ||
+            // TODO move to BoundEvent
             !this._events.every(e => {
                 switch (e.type) {
                     case EventType.lowPpO2:

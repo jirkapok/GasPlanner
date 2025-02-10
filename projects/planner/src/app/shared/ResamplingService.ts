@@ -37,6 +37,7 @@ export class ResamplingService {
         const yValues: number[] = [];
         const labels: string[] = [];
 
+        // TODO replace by BoundEvent.showInProfileChart
         events.forEach((event) => {
             if (this.isSupportedEvent(event)) {
                 xValues.push(DateFormats.toDate(event.timeStamp));
@@ -141,6 +142,7 @@ export class ResamplingService {
         }
     }
 
+    // TODO move to BoundEvent
     private formatChartEventText(event: Event): string {
         switch (event.type) {
             case EventType.gasSwitch: {

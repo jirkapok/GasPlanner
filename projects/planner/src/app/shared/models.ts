@@ -303,6 +303,16 @@ export class BoundEvent {
         return this.units.fromMeters(this.event.depth);
     }
 
+    public get showInProfileChart(): boolean {
+        switch (this.event.type) {
+            case EventType.gasSwitch:
+            case EventType.noDecoEnd:
+            case EventType.safetyStop:
+                return true;
+            default: return false;
+        }
+    }
+
     public get priority(): number {
         switch (this.event.type) {
             case EventType.error:

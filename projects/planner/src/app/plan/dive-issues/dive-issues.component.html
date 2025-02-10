@@ -19,31 +19,16 @@
             shorter than currently planned dive. Use larger tank, fill it with more gas, reduce dive
             duration or planned depth.</span>
     </div>
-    <div *ngIf="dive.diveInfoCalculated && dive.otuExceeded" class="alert alert-warning">
-        <fa-icon [icon]="warning" class="me-2"></fa-icon>
-        <span>Exceeded 80 % of maximum single exposure oxygen toxicity units
-            ({{ dive.otu | number:'1.0-0'}}/{{ otuLimit }} OTU)! There is a high risk of lungs injury.
-            Reduce amount of oxygen in your gases, dive duration or target depths.</span>
-    </div>
-
-    <div *ngIf="dive.diveInfoCalculated && dive.cnsExceeded" class="alert alert-warning">
-        <fa-icon [icon]="warning" class="me-2"></fa-icon>
-        <span>Exceeded 80 % of maximum single exposure oxygen toxicity
-            ({{ dive.cns | number:'1.0-0'}} %)! There is a high risk of CNS injury.
-            Reduce amount of oxygen in your gases, dive duration or target depths.</span>
-    </div>
 
     <ng-container *ngFor="let event of events">
-        <div *ngIf="showNoDeco(event)" class="alert alert-info">
-            <fa-icon [icon]="info" class="me-2"></fa-icon>
+        <div *ngIf="isBrokenCeiling(event)" class="alert alert-danger">
+            <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
                 }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>No decompression time for current depth exceeded (For no decompression dive set dive time
-            maximum
-            to {{ noDeco | number:'1.0-0' }} min)!</span>
+            <span>Exceeded minimum safe (ceiling) depth! Change your plan to higher depth at this point.</span>
         </div>
-        <div *ngIf="isLowPpO2(event)" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
+        <div *ngIf="isLowPpO2(event)" class="alert alert-danger">
+            <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
                 }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Reached low partial pressure of oxygen (minimum depth exceeded)! There is a risk of hypoxia.
@@ -67,12 +52,6 @@
             <strong>{{ event.timeStamp | duration:event.timeStamp
                 }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
             <span>High ascent speed! Ascent to higher depth only or ascent longer time.</span>
-        </div>
-        <div *ngIf="isBrokenCeiling(event)" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>Exceeded minimum safe (ceiling) depth! Change your plan to higher depth at this point.</span>
         </div>
         <div *ngIf="isHighN2Switch(event)" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
@@ -115,5 +94,27 @@
             <span>It is recommended to don't breath pure oxygen longer than 20 minutes.
                 Use air break option to generate proper gas switches or manually add switch to bottom gas.</span>
         </div>
+        <div *ngIf="showNoDeco(event)" class="alert alert-info">
+            <fa-icon [icon]="info" class="me-2"></fa-icon>
+            <strong>{{ event.timeStamp | duration:event.timeStamp
+                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+            <span>No decompression time for current depth exceeded (For no decompression dive set dive time
+            maximum
+            to {{ noDeco | number:'1.0-0' }} min)!</span>
+        </div>
     </ng-container>
+
+    <div *ngIf="dive.diveInfoCalculated && dive.otuExceeded" class="alert alert-warning">
+        <fa-icon [icon]="warning" class="me-2"></fa-icon>
+        <span>Exceeded 80 % of maximum single exposure oxygen toxicity units
+            ({{ dive.otu | number:'1.0-0'}}/{{ otuLimit }} OTU)! There is a high risk of lungs injury.
+            Reduce amount of oxygen in your gases, dive duration or target depths.</span>
+    </div>
+
+    <div *ngIf="dive.diveInfoCalculated && dive.cnsExceeded" class="alert alert-warning">
+        <fa-icon [icon]="warning" class="me-2"></fa-icon>
+        <span>Exceeded 80 % of maximum single exposure oxygen toxicity
+            ({{ dive.cns | number:'1.0-0'}} %)! There is a high risk of CNS injury.
+            Reduce amount of oxygen in your gases, dive duration or target depths.</span>
+    </div>
 </ng-container>

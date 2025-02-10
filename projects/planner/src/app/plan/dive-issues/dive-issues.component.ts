@@ -24,8 +24,10 @@ export class DiveIssuesComponent {
         private schedules: DiveSchedules) {
     }
 
+    /** Needs to be sorted by order we want to show them */
     public get events(): Event[] {
-        return _(this.dive.events).sortBy(e => e.timeStamp)
+        return _(this.dive.events)
+            .sortBy(e => this.priorityDescending(e), e => e.timeStamp)
             .value();
     }
 
@@ -41,7 +43,9 @@ export class DiveIssuesComponent {
         return this.schedules.selectedResult;
     }
 
+    // TODO move methods to custom UI Event object
     public showNoDeco(event: Event): boolean {
+        // TODO do we need noDecoExceeded?
         return event.type === EventType.noDecoEnd && this.dive.noDecoExceeded;
     }
 
@@ -91,5 +95,32 @@ export class DiveIssuesComponent {
 
     public eventDepthFor(event: Event): number {
         return this.units.fromMeters(event.depth);
+    }
+
+    private priorityDescending(event: Event): number {
+        return 100 - this.priority(event);
+    }
+
+    // TODO merge with diveResult.HasErrorEvent
+    private priority(event: Event): number {
+        switch (event.type) {
+            case EventType.error:
+            case EventType.brokenCeiling:
+            case EventType.lowPpO2:
+                return 2;
+
+            case EventType.highPpO2:
+            case EventType.highAscentSpeed:
+            case EventType.highDescentSpeed:
+            case EventType.maxEndExceeded:
+            case EventType.isobaricCounterDiffusion:
+            case EventType.highGasDensity:
+            case EventType.minDepth:
+            case EventType.maxDepth:
+            case EventType.missingAirBreak:
+                return 1;
+            default:
+                return 0;
+        }
     }
 }

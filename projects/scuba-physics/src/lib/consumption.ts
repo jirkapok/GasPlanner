@@ -10,7 +10,7 @@ import { Tank, Tanks } from './Tanks';
 import { Time } from './Time';
 import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
 import { PlanFactory } from './PlanFactory';
-import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
+import { AlgorithmParams, RestingParameters } from "./BuhlmannAlgorithmParameters";
 
 class GasVolumes {
     private remaining: Map<number, number> = new Map<number, number>();
@@ -51,6 +51,7 @@ export class Consumption {
         const algorithm = new BuhlmannAlgorithm();
         const segmentsCopy = segments.copy();
         const parameters = AlgorithmParams.forMultilevelDive(segmentsCopy, bGases, options);
+        // TODO emergency ascent needs to be calculated also from previous dive surface interval
         const profile = algorithm.decompression(parameters);
         return profile;
     }
@@ -63,13 +64,15 @@ export class Consumption {
      * @param options Not null profile behavior options.
      * @param tanks All tanks used to generate the profile, their gases need to fit all used in segments param
      * @param consumptionOptions Not null definition how to consume the gases.
+     * @param surfaceInterval Optional surface interval, resting from previous dive. Null, for first dive.
      */
-    public consumeFromTanks(segments: Segment[], options: Options, tanks: Tank[], consumptionOptions: ConsumptionOptions): void {
+    public consumeFromTanks(segments: Segment[], options: Options, tanks: Tank[],
+                            consumptionOptions: ConsumptionOptions, surfaceInterval?: RestingParameters): void {
         if (segments.length < 2) {
             throw new Error('Profile needs to contain at least 2 segments.');
         }
 
-        const emergencyAscent = PlanFactory.emergencyAscent(segments, options, tanks);
+        const emergencyAscent = PlanFactory.emergencyAscent(segments, options, tanks, surfaceInterval);
         this.consumeFromTanks2(segments, emergencyAscent, tanks, consumptionOptions);
     }
 
@@ -112,11 +115,12 @@ export class Consumption {
      * @param tanks The tanks used during the dive to check available gases
      * @param consumptionOptions Not null consumption definition
      * @param options ppO2 definitions needed to estimate ascent profile
+     * @param surfaceInterval Optional surface interval, resting from previous dive. Null, for first dive.
      * @returns Number of minutes representing maximum time we can spend as bottom time.
      * Returns 0 in case the duration is shorter than user defined segments.
      */
     public calculateMaxBottomTime(sourceSegments: Segments, tanks: Tank[],
-        consumptionOptions: ConsumptionOptions, options: Options): number {
+        consumptionOptions: ConsumptionOptions, options: Options, surfaceInterval?: RestingParameters): number {
         const testSegments = this.createTestProfile(sourceSegments);
         const addedSegment = testSegments.last();
 
@@ -127,7 +131,7 @@ export class Consumption {
             maxValue: Time.oneDay,
             doWork: (newValue: number) => {
                 addedSegment.duration = newValue;
-                this.consumeFromProfile(testSegments, tanks, consumptionOptions, options);
+                this.consumeFromProfile(testSegments, tanks, consumptionOptions, options, surfaceInterval);
             },
             meetsCondition: () => Tanks.haveReserve(tanks)
         };
@@ -145,9 +149,10 @@ export class Consumption {
         return Precision.floor(totalDuration);
     }
 
-    private consumeFromProfile(testSegments: Segments, tanks: Tank[], consumptionOptions: ConsumptionOptions, options: Options) {
+    private consumeFromProfile(testSegments: Segments, tanks: Tank[], consumptionOptions: ConsumptionOptions,
+                               options: Options, surfaceInterval?: RestingParameters) {
         const profile = Consumption.calculateDecompression(testSegments, tanks, options);
-        this.consumeFromTanks(profile.segments, options, tanks, consumptionOptions);
+        this.consumeFromTanks(profile.segments, options, tanks, consumptionOptions, surfaceInterval);
     }
 
     private createTestProfile(sourceSegments: Segments): Segments {

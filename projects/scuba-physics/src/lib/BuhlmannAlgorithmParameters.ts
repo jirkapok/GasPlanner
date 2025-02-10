@@ -29,7 +29,7 @@ export class RestingParameters {
      * Used as input for repetitive dives.
      * @param current Not empty collection of tissues at end of previous dive (when surfacing).
      * If no tissues are provided, default (first dive) are created and surfaceInterval has no effect.
-     * @param surfaceInterval Duration of diver rest between two dives in seconds.
+     * @param surfaceInterval Duration of diver rest between two dives in seconds, Infinity for first dive.
      */
     constructor(public current: LoadedTissues, public surfaceInterval: number) {
     }

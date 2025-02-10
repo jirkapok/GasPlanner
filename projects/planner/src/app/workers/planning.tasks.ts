@@ -102,10 +102,12 @@ export class PlanningTasks {
             stageTankReserve: task.consumptionOptions.stageTankReserve,
         };
 
+        // TODO provide the surface interval
+        const surfaceInterval = new RestingParameters(ProfileTissues.createAtSurface(options.altitude), 0);
         // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
-        const maxTime = consumption.calculateMaxBottomTime(plan, tanks, consumptionOptions, options);
+        const maxTime = consumption.calculateMaxBottomTime(plan, tanks, consumptionOptions, options, surfaceInterval);
 
-        const emergencyAscent = PlanFactory.emergencyAscent(originProfile, options, tanks);
+        const emergencyAscent = PlanFactory.emergencyAscent(originProfile, options, tanks, surfaceInterval);
         let timeToSurface = Segments.duration(emergencyAscent);
         timeToSurface = Time.toMinutes(timeToSurface);
         consumption.consumeFromTanks2(originProfile, emergencyAscent, tanks, consumptionOptions);

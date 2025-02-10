@@ -5,7 +5,7 @@ import { Precision } from './precision';
 import { Segment, Segments } from './Segments';
 import { Gases } from './Gases';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
-import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
+import { AlgorithmParams, RestingParameters } from "./BuhlmannAlgorithmParameters";
 
 /** Creates skeleton for dive profile */
 export class PlanFactory {
@@ -41,7 +41,7 @@ export class PlanFactory {
         return Precision.ceil(estimate);
     }
 
-    public static emergencyAscent(originalPlan: Segment[], options: Options, tanks: Tank[]): Segment[] {
+    public static emergencyAscent(originalPlan: Segment[], options: Options, tanks: Tank[], surfaceInterval?: RestingParameters): Segment[] {
         const profile = Segments.fromCollection(originalPlan);
         const emergencySegments = profile.deepestPart();
         const issueSegmentIndex = emergencySegments.length;
@@ -57,7 +57,8 @@ export class PlanFactory {
         const emergencyPlan = Segments.fromCollection(emergencySegments);
         const gases = Gases.fromTanks(tanks);
         const algorithm = new BuhlmannAlgorithm();
-        const parameters = AlgorithmParams.forMultilevelDive(emergencyPlan, gases, options);
+        // TODO add test, that the surface interval is used
+        const parameters = AlgorithmParams.forMultilevelDive(emergencyPlan, gases, options, surfaceInterval);
         const calculatedProfile = algorithm.decompression(parameters);
         const emergencyProfile = calculatedProfile.segments;
         const ascent = emergencyProfile.slice(issueSegmentIndex, emergencyProfile.length);

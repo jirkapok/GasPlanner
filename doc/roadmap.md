@@ -18,8 +18,6 @@ Following list of features and improvements ordered by priority is under develop
     * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80 - 
 The 3th minute is considered as deepest point and rock bottom is calculated from there and the last user defined segment is considered as necessary return.
 It looks like we will something like user defined time at which to calculate the rock bottom.
-    * Applied surface interval is not used when calculating max bottom time After previous deco dive the max time nolonger is 29 minutes, but 26 only: 
-http://localhost:4200/?t=1-21-0-210-0.209-0&de=0-30-102-1,30-30-1638-1&di=15,30&o=0,9,3,3,3,18,3,0.85,0.4,6,1.6,30,1.4,10,1,1,1,1,1,0,20,5&si=1800&ao=0,0
     * Clarify another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
 Looks like we need to calculate for the ascent time only the 1x reserve from deco tanks
     * Restore 1/2 and 1/3 reserve strategies

@@ -45,13 +45,12 @@ export class Consumption {
 
     constructor(private depthConverter: DepthConverter) { }
 
-    private static calculateDecompression(segments: Segments, tanks: Tank[], options: Options): CalculatedProfile {
-        const bGases = Gases.fromTanks(tanks);
-
+    private static calculateDecompression(segments: Segments, tanks: Tank[],
+        options: Options, surfaceInterval?: RestingParameters): CalculatedProfile {
+        const gases = Gases.fromTanks(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const segmentsCopy = segments.copy();
-        const parameters = AlgorithmParams.forMultilevelDive(segmentsCopy, bGases, options);
-        // TODO emergency ascent needs to be calculated also from previous dive surface interval
+        const parameters = AlgorithmParams.forMultilevelDive(segmentsCopy, gases, options, surfaceInterval);
         const profile = algorithm.decompression(parameters);
         return profile;
     }
@@ -67,7 +66,7 @@ export class Consumption {
      * @param surfaceInterval Optional surface interval, resting from previous dive. Null, for first dive.
      */
     public consumeFromTanks(segments: Segment[], options: Options, tanks: Tank[],
-                            consumptionOptions: ConsumptionOptions, surfaceInterval?: RestingParameters): void {
+        consumptionOptions: ConsumptionOptions, surfaceInterval?: RestingParameters): void {
         if (segments.length < 2) {
             throw new Error('Profile needs to contain at least 2 segments.');
         }
@@ -131,6 +130,7 @@ export class Consumption {
             maxValue: Time.oneDay,
             doWork: (newValue: number) => {
                 addedSegment.duration = newValue;
+                // TODO add test for repetitive dive using surface interval
                 this.consumeFromProfile(testSegments, tanks, consumptionOptions, options, surfaceInterval);
             },
             meetsCondition: () => Tanks.haveReserve(tanks)
@@ -150,8 +150,8 @@ export class Consumption {
     }
 
     private consumeFromProfile(testSegments: Segments, tanks: Tank[], consumptionOptions: ConsumptionOptions,
-                               options: Options, surfaceInterval?: RestingParameters) {
-        const profile = Consumption.calculateDecompression(testSegments, tanks, options);
+        options: Options, surfaceInterval?: RestingParameters) {
+        const profile = Consumption.calculateDecompression(testSegments, tanks, options, surfaceInterval);
         this.consumeFromTanks(profile.segments, options, tanks, consumptionOptions, surfaceInterval);
     }
 

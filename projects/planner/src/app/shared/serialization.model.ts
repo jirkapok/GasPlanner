@@ -136,6 +136,8 @@ export interface ConsumptionRequestDto {
     options: OptionsDto;
     consumptionOptions: ConsumptionOptionsDto;
     tanks: TankDto[];
+    tissues: LoadedTissueDto[];
+    surfaceInterval: number;
 }
 
 export interface ConsumptionOptionsDto {

@@ -106,6 +106,7 @@ export class PlannerService extends Streamed {
         infoRequest.eventOptions = this.createEventOptions();
         this.diveInfoTask.calculate(infoRequest);
 
+        const previousTissues = this.schedules.previousDiveTissues(dive.id);
         const consumptionRequest = {
             diveId: dive.id,
             isComplex: this.viewSwitch.isComplex,
@@ -117,7 +118,9 @@ export class PlannerService extends Streamed {
                 primaryTankReserve: this.appSettings.primaryTankReserve,
                 stageTankReserve: this.appSettings.stageTankReserve
             },
-            tanks: infoRequest.tanks
+            tanks: infoRequest.tanks,
+            tissues: previousTissues,
+            surfaceInterval: dive.surfaceInterval
         };
 
         this.consumptionTask.calculate(consumptionRequest);

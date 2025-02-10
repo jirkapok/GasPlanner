@@ -45,8 +45,7 @@ export class DiveIssuesComponent {
 
     // TODO move methods to custom UI Event object
     public showNoDeco(event: Event): boolean {
-        // TODO do we need noDecoExceeded?
-        return event.type === EventType.noDecoEnd && this.dive.noDecoExceeded;
+        return event.type === EventType.noDecoEnd;
     }
 
     public isLowPpO2(event: Event): boolean {

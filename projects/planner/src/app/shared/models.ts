@@ -1,7 +1,8 @@
 import {
     Time, Segment, Tank,
     Precision, TankTemplate, Options,
-    Diver, GasDensity, Consumption
+    Diver, GasDensity, Consumption,
+    Event, EventType
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -239,5 +240,88 @@ export class TankBound implements IGasContent, ITankSize {
 
     public assignStandardGas(gasName: string): void {
         this.tank.assignStandardGas(gasName);
+    }
+}
+
+
+export class BoundEvent {
+    constructor(private units: UnitConversion, private event: Event) {
+    }
+
+    public get isNoDeco(): boolean {
+        return this.event.type === EventType.noDecoEnd;
+    }
+
+    public get isLowPpO2(): boolean {
+        return this.event.type === EventType.lowPpO2;
+    }
+
+    public get isHighPpO2(): boolean {
+        return this.event.type === EventType.highPpO2;
+    }
+
+    public get isHighAscentSpeed(): boolean {
+        return this.event.type === EventType.highAscentSpeed;
+    }
+
+    public get isHighDescentSpeed(): boolean {
+        return this.event.type === EventType.highDescentSpeed;
+    }
+
+    public get isBrokenCeiling(): boolean {
+        return this.event.type === EventType.brokenCeiling;
+    }
+
+    public get isHighN2Switch(): boolean {
+        return this.event.type === EventType.isobaricCounterDiffusion;
+    }
+
+    public get isMndExceeded(): boolean {
+        return this.event.type === EventType.maxEndExceeded;
+    }
+
+    public get isHighDensity(): boolean {
+        return this.event.type === EventType.highGasDensity;
+    }
+
+    public get isMinDepth(): boolean {
+        return this.event.type === EventType.minDepth;
+    }
+
+    public get isMaxDepth(): boolean {
+        return this.event.type === EventType.maxDepth;
+    }
+
+    public get isMissingAirbreak(): boolean {
+        return this.event.type === EventType.missingAirBreak;
+    }
+
+    public get timeStamp(): number {
+        return this.event.timeStamp;
+    }
+    public get depth(): number {
+        return this.units.fromMeters(this.event.depth);
+    }
+
+    public get priority(): number {
+        switch (this.event.type) {
+            case EventType.error:
+            case EventType.brokenCeiling:
+            case EventType.lowPpO2:
+                return 2;
+
+            case EventType.highPpO2:
+            case EventType.highAscentSpeed:
+            case EventType.highDescentSpeed:
+            case EventType.maxEndExceeded:
+            case EventType.isobaricCounterDiffusion:
+            case EventType.highGasDensity:
+            case EventType.minDepth:
+            case EventType.maxDepth:
+            case EventType.missingAirBreak:
+                return 1;
+            default:
+                return 0;
+        }
     }
 }

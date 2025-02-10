@@ -3,10 +3,11 @@ import {
     faExclamationCircle, faExclamationTriangle, faInfoCircle
 } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
-import { Event, EventType, OtuCalculator } from 'scuba-physics';
+import { OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
-import {DiveSchedules} from '../../shared/dive.schedules';
+import { DiveSchedules } from '../../shared/dive.schedules';
 import { DiveResults } from '../../shared/diveresults';
+import { BoundEvent } from "../../shared/models";
 
 @Component({
     selector: 'app-dive-issues',
@@ -25,8 +26,9 @@ export class DiveIssuesComponent {
     }
 
     /** Needs to be sorted by order we want to show them */
-    public get events(): Event[] {
+    public get events(): BoundEvent[] {
         return _(this.dive.events)
+            .map(e => new BoundEvent(this.units, e))
             .sortBy(e => this.priorityDescending(e), e => e.timeStamp)
             .value();
     }
@@ -43,83 +45,7 @@ export class DiveIssuesComponent {
         return this.schedules.selectedResult;
     }
 
-    // TODO move methods to custom UI Event object
-    public showNoDeco(event: Event): boolean {
-        return event.type === EventType.noDecoEnd;
-    }
-
-    public isLowPpO2(event: Event): boolean {
-        return event.type === EventType.lowPpO2;
-    }
-
-    public isHighPpO2(event: Event): boolean {
-        return event.type === EventType.highPpO2;
-    }
-
-    public isHighAscentSpeed(event: Event): boolean {
-        return event.type === EventType.highAscentSpeed;
-    }
-
-    public isHighDescentSpeed(event: Event): boolean {
-        return event.type === EventType.highDescentSpeed;
-    }
-
-    public isBrokenCeiling(event: Event): boolean {
-        return event.type === EventType.brokenCeiling;
-    }
-
-    public isHighN2Switch(event: Event): boolean {
-        return event.type === EventType.isobaricCounterDiffusion;
-    }
-
-    public isMndExceeded(event: Event): boolean {
-        return event.type === EventType.maxEndExceeded;
-    }
-
-    public isHighDensity(event: Event): boolean {
-        return event.type === EventType.highGasDensity;
-    }
-
-    public isMinDepth(event: Event): boolean {
-        return event.type === EventType.minDepth;
-    }
-
-    public isMaxDepth(event: Event): boolean {
-        return event.type === EventType.maxDepth;
-    }
-
-    public isMissingAirbreak(event: Event): boolean {
-        return event.type === EventType.missingAirBreak;
-    }
-
-    public eventDepthFor(event: Event): number {
-        return this.units.fromMeters(event.depth);
-    }
-
-    private priorityDescending(event: Event): number {
-        return 100 - this.priority(event);
-    }
-
-    // TODO merge with diveResult.HasErrorEvent
-    private priority(event: Event): number {
-        switch (event.type) {
-            case EventType.error:
-            case EventType.brokenCeiling:
-            case EventType.lowPpO2:
-                return 2;
-
-            case EventType.highPpO2:
-            case EventType.highAscentSpeed:
-            case EventType.highDescentSpeed:
-            case EventType.maxEndExceeded:
-            case EventType.isobaricCounterDiffusion:
-            case EventType.highGasDensity:
-            case EventType.minDepth:
-            case EventType.maxDepth:
-            case EventType.missingAirBreak:
-                return 1;
-            default:
-                return 0;
-        }
+    private priorityDescending(event: BoundEvent): number {
+        return 100 - event.priority;
     }
 }

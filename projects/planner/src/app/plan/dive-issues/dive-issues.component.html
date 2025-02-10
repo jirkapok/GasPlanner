@@ -21,83 +21,83 @@
     </div>
 
     <ng-container *ngFor="let event of events">
-        <div *ngIf="isBrokenCeiling(event)" class="alert alert-danger">
+        <div *ngIf="event.isBrokenCeiling" class="alert alert-danger">
             <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Exceeded minimum safe (ceiling) depth! Change your plan to higher depth at this point.</span>
         </div>
-        <div *ngIf="isLowPpO2(event)" class="alert alert-danger">
+        <div *ngIf="event.isLowPpO2" class="alert alert-danger">
             <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Reached low partial pressure of oxygen (minimum depth exceeded)! There is a risk of hypoxia.
                 Use gas with higher oxygen content.</span>
         </div>
-        <div *ngIf="isHighPpO2(event)" class="alert alert-warning">
+        <div *ngIf="event.isHighPpO2" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Reached high partial pressure of oxygen (maximum depth exceeded)! There is a risk of oxygen toxicity.
                 Reduce the depth or use gas with lower oxygen content.</span>
         </div>
-        <div *ngIf="isHighDescentSpeed(event)" class="alert alert-warning">
+        <div *ngIf="event.isHighDescentSpeed" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>High descent speed! Descent longer time or descent to lower depth.</span>
         </div>
-        <div *ngIf="isHighAscentSpeed(event)" class="alert alert-warning">
+        <div *ngIf="event.isHighAscentSpeed" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>High ascent speed! Ascent to higher depth only or ascent longer time.</span>
         </div>
-        <div *ngIf="isHighN2Switch(event)" class="alert alert-warning">
+        <div *ngIf="event.isHighN2Switch" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Gas switch to gas with higher nitrogen content is not recommended!
                 There is a risk od isobaric counter diffusion (IDC).
                 Switch to another gas with higher helium content or lower nitrogen content.</span>
         </div>
-        <div *ngIf="isMndExceeded(event)" class="alert alert-warning">
+        <div *ngIf="event.isMndExceeded" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Exceeded maximum narcotic depth for selected gas! Reduce the depth or use gas with higher helium
                 content.</span>
         </div>
-        <div *ngIf="isHighDensity(event)" class="alert alert-warning">
+        <div *ngIf="event.isHighDensity" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Exceeded maximum recommended gas density! Reduce the depth or use gas with higher helium content (i.e. lower density).</span>
         </div>
 
-        <div *ngIf="isMinDepth(event)" class="alert alert-warning">
+        <div *ngIf="event.isMinDepth" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+            <strong>{{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Dives planned to shallow depth for long time may lead to saturation diving! Reduce the dive duration shorter than 5 hours.</span>
         </div>
 
-        <div *ngIf="isMaxDepth(event)" class="alert alert-warning">
+        <div *ngIf="event.isMaxDepth" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+            <strong>{{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>Exceeded maximum depth where the algorithm was well tested on real life data! Reduce the maximum depth.</span>
         </div>
 
-        <div *ngIf="isMissingAirbreak(event)" class="alert alert-warning">
+        <div *ngIf="event.isMissingAirbreak" class="alert alert-warning">
             <fa-icon [icon]="warning" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>It is recommended to don't breath pure oxygen longer than 20 minutes.
                 Use air break option to generate proper gas switches or manually add switch to bottom gas.</span>
         </div>
-        <div *ngIf="showNoDeco(event)" class="alert alert-info">
+        <div *ngIf="event.isNoDeco" class="alert alert-info">
             <fa-icon [icon]="info" class="me-2"></fa-icon>
             <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ eventDepthFor(event) | number:'1.0-0' }} {{units.length}}: </strong>
+                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
             <span>No decompression time for current depth exceeded (For no decompression dive set dive time
             maximum
             to {{ noDeco | number:'1.0-0' }} min)!</span>

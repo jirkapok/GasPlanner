@@ -64,7 +64,7 @@ export interface PlanRequestDto {
     /** Only the source plan segments defined by user */
     plan: SegmentDto[];
     options: OptionsDto;
-    tissues: LoadedTissueDto[];
+    previousTissues: LoadedTissueDto[];
     surfaceInterval: number;
 }
 
@@ -136,7 +136,7 @@ export interface ConsumptionRequestDto {
     options: OptionsDto;
     consumptionOptions: ConsumptionOptionsDto;
     tanks: TankDto[];
-    tissues: LoadedTissueDto[];
+    previousTissues: LoadedTissueDto[];
     surfaceInterval: number;
 }
 

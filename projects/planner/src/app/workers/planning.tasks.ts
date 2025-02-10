@@ -103,7 +103,7 @@ export class PlanningTasks {
         };
 
         // TODO add test, that surface interval is applied
-        const previousTissues = DtoSerialization.toTissues(task.tissues);
+        const previousTissues = DtoSerialization.toTissues(task.previousTissues);
         const surfaceInterval = new RestingParameters(previousTissues, task.surfaceInterval);
         // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
         const maxTime = consumption.calculateMaxBottomTime(plan, tanks, consumptionOptions, options, surfaceInterval);
@@ -137,8 +137,8 @@ export class PlanningTasks {
         const originPlan = DtoSerialization.toSegments(task.plan, tanks);
         const segments = Segments.fromCollection(originPlan);
         const options = DtoSerialization.toOptions(task.options);
-        const tissues = DtoSerialization.toTissues(task.tissues);
-        const rest = new RestingParameters(tissues, task.surfaceInterval);
+        const previousTissues = DtoSerialization.toTissues(task.previousTissues);
+        const rest = new RestingParameters(previousTissues, task.surfaceInterval);
         return AlgorithmParams.forMultilevelDive(segments, gases, options, rest);
     }
 }

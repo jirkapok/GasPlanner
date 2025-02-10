@@ -119,7 +119,7 @@ export class PlannerService extends Streamed {
                 stageTankReserve: this.appSettings.stageTankReserve
             },
             tanks: infoRequest.tanks,
-            tissues: previousTissues,
+            previousTissues: previousTissues,
             surfaceInterval: dive.surfaceInterval
         };
 
@@ -135,7 +135,7 @@ export class PlannerService extends Streamed {
             tanks: DtoSerialization.fromTanks(serializableTanks),
             plan: DtoSerialization.fromSegments(dive.depths.segments),
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
-            tissues: DtoSerialization.fromTissues(previousTissues),
+            previousTissues: DtoSerialization.fromTissues(previousTissues),
             surfaceInterval: dive.surfaceInterval
         };
     }

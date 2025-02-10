@@ -232,7 +232,7 @@ export class DiveResults {
     }
 
     public get hasErrorEvent(): boolean {
-        return this.hasErrors || this._notEnoughGas;
+        return this.hasErrors || this.notEnoughGas;
     }
 
     public get hasWarningEvent(): boolean {

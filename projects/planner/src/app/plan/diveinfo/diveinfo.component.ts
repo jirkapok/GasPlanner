@@ -1,11 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { formatNumber } from '@angular/common';
 import { takeUntil } from 'rxjs';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import {
     faSlidersH, faShareFromSquare, faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons';
-import { MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
+import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
 
 import { Tank, GasToxicity, Time } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
@@ -22,12 +22,14 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss']
 })
-export class DiveInfoComponent extends Streamed {
+export class DiveInfoComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
     public readonly warnIcon = faExclamationTriangle;
     public toastVisible = false;
+    private lastSelected = 0;
+    private readonly issuesTabIndex = 2;
 
     constructor(
         private clipboard: ClipboardService,
@@ -111,6 +113,13 @@ export class DiveInfoComponent extends Streamed {
         return this.schedules.selectedDepths;
     }
 
+    public ngAfterViewInit(): void {
+        this.tabs?.activeTabChange.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((e: MdbTabChange) => {
+                this.selectedChanged(e);
+            });
+    }
+
     public applyMaxDuration(): void {
         this.depthsService.applyMaxDuration();
     }
@@ -127,11 +136,16 @@ export class DiveInfoComponent extends Streamed {
         this.toastVisible = false;
     }
 
+    private selectedChanged(e: MdbTabChange): void {
+        this.lastSelected = e.index;
+    }
+
     private checkIssuesTab(diveId: number | undefined) {
         const selectedDive = this.schedules.selected;
-        if (selectedDive.id === diveId && (selectedDive.diveResult.hasErrorEvent || selectedDive.diveResult.hasErrorEvent)) {
-            const issuesTab = 2;
-            this.tabs?.setActiveTab(issuesTab);
+        if (selectedDive.id === diveId &&
+            (selectedDive.diveResult.hasErrorEvent || selectedDive.diveResult.hasWarningEvent) &&
+            (this.lastSelected === 0 || (!selectedDive.diveResult.notEnoughGas && this.lastSelected === 1))) {
+            this.tabs?.setActiveTab(this.issuesTabIndex);
         }
     }
 

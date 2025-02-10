@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MdbTabComponent, MdbTabsComponent } from "mdb-angular-ui-kit/tabs";
 
 import { DiveInfoComponent } from './diveinfo.component';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -20,7 +21,7 @@ describe('DiveInfoComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
-                DiveInfoComponent,
+                DiveInfoComponent, MdbTabComponent, MdbTabsComponent
             ],
             providers: [
                 UnitConversion, PlannerService, SubViewStorage,

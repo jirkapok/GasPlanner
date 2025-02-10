@@ -1,10 +1,11 @@
 import {
-    Ceiling, EventType, Event, HighestDensity,
-    OtuCalculator, TissueOverPressures, LoadedTissues,
-    ProfileTissues
+    Ceiling, HighestDensity,
+    TissueOverPressures, LoadedTissues,
+    OtuCalculator, ProfileTissues
 } from 'scuba-physics';
 import { Injectable } from '@angular/core';
 import { WayPoint } from './wayPoint';
+import { BoundEvent } from "./models";
 
 class CalculationState {
     private _calculating = false;
@@ -56,7 +57,7 @@ export class DiveResults {
     private _ceilings: Ceiling[] = [];
     // 16 tissues overpressure history
     private _tissueOverPressures: TissueOverPressures[] = [];
-    private _events: Event[] = [];
+    private _events: BoundEvent[] = [];
 
     // Consumption related
     private _maxTime = 0;
@@ -129,7 +130,7 @@ export class DiveResults {
         return this._tissueOverPressures;
     }
 
-    public get events(): Event[] {
+    public get events(): BoundEvent[] {
         return this._events;
     }
 
@@ -228,28 +229,14 @@ export class DiveResults {
     }
 
     public get hasErrorEvent(): boolean {
-        return this.hasErrors || this.notEnoughGas;
+        return this.hasErrors || this.notEnoughGas ||
+            this._events.some(e => e.isError);
     }
 
     public get hasWarningEvent(): boolean {
         // TODO move csn and otu to events
-        return this.otuExceeded ||
-            this.cnsExceeded ||
-            // TODO move to BoundEvent
-            !this._events.every(e => {
-                switch (e.type) {
-                    case EventType.lowPpO2:
-                    case EventType.highPpO2:
-                    case EventType.highAscentSpeed:
-                    case EventType.highDescentSpeed:
-                    case EventType.brokenCeiling:
-                    case EventType.isobaricCounterDiffusion:
-                    case EventType.maxEndExceeded:
-                    case EventType.highGasDensity:
-                        return false;
-                    default: return true;
-                }
-            });
+        return this.otuExceeded || this.cnsExceeded ||
+            this._events.some(e => e.isWarning);
     }
 
     public get endsOnSurface(): boolean {
@@ -316,7 +303,7 @@ export class DiveResults {
         highestDensity: HighestDensity,
         ceilings: Ceiling[],
         tissueOverPressures: TissueOverPressures[],
-        events: Event[]): void {
+        events: BoundEvent[]): void {
         this.updateDiveInfoInternal(noDecoTime, notEnoughTime, planDuration, averageDepth, surfaceGradient,
             offgasingStartTime, offgasingStartDepth, otu, cns, highestDensity, ceilings, tissueOverPressures, events);
         this.diveInfoCalculation.Finished();
@@ -365,7 +352,7 @@ export class DiveResults {
         highestDensity: HighestDensity,
         ceilings: Ceiling[],
         tissueOverPressures: TissueOverPressures[],
-        events: Event[]): void {
+        events: BoundEvent[]): void {
         this._noDecoTime = noDecoTime;
         this._notEnoughTime = notEnoughTime;
         this._planDuration = planDuration;

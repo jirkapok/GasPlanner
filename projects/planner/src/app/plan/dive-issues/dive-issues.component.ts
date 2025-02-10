@@ -28,7 +28,6 @@ export class DiveIssuesComponent {
     /** Needs to be sorted by order we want to show them */
     public get events(): BoundEvent[] {
         return _(this.dive.events)
-            .map(e => new BoundEvent(this.units, e))
             .sortBy(e => this.priorityDescending(e), e => e.timeStamp)
             .value();
     }

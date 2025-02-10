@@ -2,7 +2,7 @@ import {
     Time, Segment, Tank,
     Precision, TankTemplate, Options,
     Diver, GasDensity, Consumption,
-    Event, EventType
+    Event, EventType, StandardGases
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -332,6 +332,33 @@ export class BoundEvent {
                 return 1;
             default:
                 return 0;
+        }
+    }
+
+    public get isWarning(): boolean {
+        return this.priority === 1;
+    }
+
+    public get isError(): boolean {
+        return this.priority === 2;
+    }
+
+    public get chartEventText(): string {
+        switch (this.event.type) {
+            case EventType.gasSwitch: {
+                const gas = this.event.gas;
+                if (gas) {
+                    const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
+                    return gasName;
+                }
+
+                return '';
+            }
+            case EventType.noDecoEnd:
+                return 'Deco';
+            case EventType.safetyStop:
+                return 'Safety stop';
+            default: return '';
         }
     }
 }

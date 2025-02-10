@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Event, EventType, StandardGases, Precision, Ceiling } from 'scuba-physics';
+import { Precision, Ceiling } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import { DateFormats } from './formaters';
 import { WayPoint } from './wayPoint';
+import { BoundEvent } from "./models";
 
 export interface AxisValues {
     xValues: Date[];
@@ -32,18 +33,17 @@ export class ResamplingService {
         };
     }
 
-    public convertEvents(events: Event[]): EventValues {
+    public convertEvents(events: BoundEvent[]): EventValues {
         const xValues: Date[] = [];
         const yValues: number[] = [];
         const labels: string[] = [];
 
-        // TODO replace by BoundEvent.showInProfileChart
         events.forEach((event) => {
-            if (this.isSupportedEvent(event)) {
+            if (event.showInProfileChart) {
                 xValues.push(DateFormats.toDate(event.timeStamp));
                 const convertedDepth = this.convertDepth(event.depth);
                 yValues.push(convertedDepth);
-                const text = this.formatChartEventText(event);
+                const text = event.chartEventText;
                 labels.push(text);
             }
         });
@@ -130,35 +130,5 @@ export class ResamplingService {
     private convertDepth(metersDepth: number): number {
         const converted = this.units.fromMeters(metersDepth);
         return Precision.round(converted, 1);
-    }
-
-    private isSupportedEvent(event: Event): boolean {
-        switch (event.type) {
-            case EventType.gasSwitch:
-            case EventType.noDecoEnd:
-            case EventType.safetyStop:
-                return true;
-            default: return false;
-        }
-    }
-
-    // TODO move to BoundEvent
-    private formatChartEventText(event: Event): string {
-        switch (event.type) {
-            case EventType.gasSwitch: {
-                const gas = event.gas;
-                if (gas) {
-                    const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
-                    return gasName;
-                }
-
-                return '';
-            }
-            case EventType.noDecoEnd:
-                return 'Deco';
-            case EventType.safetyStop:
-                return 'Safety stop';
-            default: return '';
-        }
     }
 }

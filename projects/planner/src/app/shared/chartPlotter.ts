@@ -4,8 +4,9 @@ import { UnitConversion } from './UnitConversion';
 import { ResamplingService } from './ResamplingService';
 import { DiveResults } from './diveresults';
 import { DateFormats } from './formaters';
-import { Ceiling, Event } from 'scuba-physics';
+import { Ceiling } from 'scuba-physics';
 import { WayPoint } from './wayPoint';
+import { BoundEvent } from "./models";
 
 /** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {
@@ -217,7 +218,7 @@ export class DiveTracesBuilder {
         return <Partial<Plotly.PlotData>>dataCeilings;
     }
 
-    private plotEvents(events: Event[]): Partial<Plotly.PlotData> {
+    private plotEvents(events: BoundEvent[]): Partial<Plotly.PlotData> {
         const resampled = this.resampling.convertEvents(events);
 
         const dataEvents = {

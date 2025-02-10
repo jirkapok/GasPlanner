@@ -22,6 +22,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { WayPoint } from './wayPoint';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { IgnoredIssuesService } from './IgnoredIssues.service';
+import { BoundEvent } from "./models";
 
 
 @Injectable()
@@ -38,7 +39,7 @@ export class PlannerService extends Streamed {
         private viewSwitch: ViewSwitchService,
         private appSettings: ApplicationSettingsService,
         workerFactory: WorkersFactoryCommon,
-        units: UnitConversion) {
+        private units: UnitConversion) {
         super();
 
         this.waypoints = new WayPointsService(units);
@@ -158,7 +159,8 @@ export class PlannerService extends Streamed {
         const dive = this.schedules.byId(diveInfoResult.diveId)!;
         const diveResult = dive.diveResult;
         const events = DtoSerialization.toEvents(diveInfoResult.events);
-        const filteredEvents = this.ignoredIssues.filterIgnored(events.items);
+        const filteredEvents = this.ignoredIssues.filterIgnored(events.items)
+            .map(e => new BoundEvent(this.units, e));
         const density = DtoSerialization.toDensity(diveInfoResult.density);
         diveResult.updateDiveInfo(
             diveInfoResult.noDeco,

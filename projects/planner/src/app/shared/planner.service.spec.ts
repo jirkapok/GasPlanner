@@ -463,7 +463,7 @@ describe('PlannerService', () => {
         });
 
         it('Filters events', () => {
-            expect(_(dive.events).some(e => e.type === EventType.noDecoEnd)).toBeFalsy();
+            expect(_(dive.events).some(e => e.isNoDeco)).toBeFalsy();
         });
     });
 });

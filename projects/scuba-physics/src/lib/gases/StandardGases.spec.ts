@@ -1,41 +1,42 @@
 import { Gas } from './Gases';
 import { StandardGases } from './StandardGases';
+import { GasNames } from "./GasNames";
 
 
 describe('Standard gases', () => {
     describe('Find name by fractions', () => {
         it('Air', () => {
-            const found = StandardGases.nameFor(.21);
+            const found = GasNames.nameFor(.21);
             expect(found).toBe('Air');
         });
 
         it('EAN32', () => {
-            const found = StandardGases.nameFor(.32);
+            const found = GasNames.nameFor(.32);
             expect(found).toBe('EAN32');
         });
 
         it('Name Oxygen', () => {
-            const found = StandardGases.nameFor(1);
+            const found = GasNames.nameFor(1);
             expect(found).toBe('Oxygen');
         });
 
         it('Trimix 10/70', () => {
-            const found = StandardGases.nameFor(0.1, 0.7);
+            const found = GasNames.nameFor(0.1, 0.7);
             expect(found).toBe('Trimix 10/70');
         });
 
         it('Helitrox 21/35', () => {
-            const found = StandardGases.nameFor(0.21, 0.35);
+            const found = GasNames.nameFor(0.21, 0.35);
             expect(found).toBe('Helitrox 21/35');
         });
 
         it('0% oxygen = empty name', () => {
-            const found = StandardGases.nameFor(0);
+            const found = GasNames.nameFor(0);
             expect(found).toBe('');
         });
 
         it('Trimix 0% oxygen = empty name', () => {
-            const found = StandardGases.nameFor(0, 70);
+            const found = GasNames.nameFor(0, 70);
             expect(found).toBe('');
         });
     });

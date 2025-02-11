@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DefaultValues, Precision, StandardGases, Tank, Tanks } from 'scuba-physics';
+import { DefaultValues, Precision, GasNames, Tank, Tanks } from 'scuba-physics';
 import { TankBound } from './models';
 import { ConsumedDto } from './serialization.model';
 import { UnitConversion } from './UnitConversion';
@@ -86,7 +86,7 @@ export class TanksService {
         this._tanks = this._tanks.slice(0, 1);
 
         if (this.firstTank.he > 0) {
-            this.firstTank.tank.assignStandardGas(StandardGases.airName);
+            this.firstTank.tank.assignStandardGas(GasNames.airName);
         }
     }
 

@@ -7,7 +7,7 @@ import { Streamed } from './streamed';
 import { takeUntil } from 'rxjs';
 import { OptionsService } from './options.service';
 import {
-    Tank, Segment, StandardGases, Precision, GasToxicity
+    Tank, Segment, GasNames, Precision, GasToxicity
 } from 'scuba-physics';
 import { DiveResults } from './diveresults';
 import { ReloadDispatcher } from './reloadDispatcher';
@@ -51,7 +51,7 @@ export class DepthsService extends Streamed {
 
     public get bestNitroxMix(): string {
         const o2 = this.toxicity.bestNitroxMix(this.plan.maxDepth) / 100;
-        return StandardGases.nameFor(o2);
+        return GasNames.nameFor(o2);
     }
 
     public get plannedDepth(): number {

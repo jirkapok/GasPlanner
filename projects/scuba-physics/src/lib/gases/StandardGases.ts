@@ -1,7 +1,7 @@
-import { Precision } from '../common/precision';
 import { GasMixtures } from './GasMixtures';
 import { Gas } from './Gases';
 import _ from 'lodash';
+import { GasNames } from "./GasNames";
 
 export class StandardGases {
     // theoretical range for ppo2 1.3 test data (even not used all gases with these values)
@@ -52,20 +52,16 @@ export class StandardGases {
     /** 8 - 120 m */
     public static readonly trimix1070 = new Gas(0.1, 0.7);
 
-
-    public static readonly airName = 'Air';
-    public static readonly oxygenName = 'Oxygen';
-
     /** Parse EanXX group as oxygen of nitrox (e.g. Ean50) or O2 and He fractions of trimix (e.g. 10/70) */
     private static readonly namesRegEx = /[EAN](?<fO2>\d{2})|(?<fO2b>\d{2})\/(?<fHe>\d{2})/i;
 
     private static readonly map = new Map([
-        [StandardGases.airName, StandardGases.air],
+        [GasNames.airName, StandardGases.air],
         ['EAN32', StandardGases.ean32],
         ['EAN36', StandardGases.ean36],
         ['EAN38', StandardGases.ean38],
         ['EAN50', StandardGases.ean50],
-        [StandardGases.oxygenName, StandardGases.oxygen],
+        [GasNames.oxygenName, StandardGases.oxygen],
         ['Helitrox 35/25', StandardGases.trimix3525],
         ['Helitrox 25/25', StandardGases.trimix2525],
         ['Helitrox 21/35', StandardGases.trimix2135],
@@ -87,38 +83,6 @@ export class StandardGases {
     /** Gets names of all predefined gases including both nitrox and trimix gases */
     public static allNames(): string[] {
         return Array.from(StandardGases.map.keys());
-    }
-
-    /**
-     * Returns label of ths standard nitrox gas based on its O2 content
-     * @param fO2 partial pressure of O2 in range 0-1.
-     * @param fHe partial pressure of He in range 0-1.
-     */
-    public static nameFor(fO2: number, fHe: number = 0): string {
-        const simpleO2InAir = 21;
-        // not sure, if this rounding is acceptable for the UI
-        const percentO2 = Precision.round(fO2 * 100);
-        const percentHe = Precision.round(fHe * 100);
-
-        if (percentO2 <= 0) {
-            return '';
-        }
-
-        if (percentHe <= 0) {
-            // prevent best gas overflow
-            if (percentO2 >= 100) {
-                return StandardGases.oxygenName;
-            }
-
-            if (percentO2 === simpleO2InAir) {
-                return StandardGases.airName;
-            }
-
-            return 'EAN' + percentO2.toString();
-        }
-
-        const prefix = percentO2 >= simpleO2InAir ? 'Helitrox' : 'Trimix';
-        return `${prefix} ${percentO2.toString()}/${percentHe.toString()}`;
     }
 
     /** Case insensitive search. If nothing found returns null */
@@ -157,7 +121,3 @@ export class StandardGases {
         return null;
     }
 }
-
-// TODO To remove circular dependency
-Gas.init((fO2: number, fHe: number) => StandardGases.nameFor(fO2, fHe),
-    (name: string) => StandardGases.byName(name));

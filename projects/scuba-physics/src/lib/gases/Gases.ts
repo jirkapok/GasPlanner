@@ -4,6 +4,7 @@ import { DepthConverter } from '../physics/depth-converter';
 import { DepthLevelOptions, DepthLevels } from '../depths/DepthLevels';
 import { Event, EventsFactory } from '../algorithm/CalculatedProfile';
 import { GasMixtures } from './GasMixtures';
+import { GasNames } from "./GasNames";
 
 /**
  * The only issue with gases is, that there is no gas.
@@ -129,8 +130,6 @@ export class Gases {
 }
 
 export class Gas {
-    private static nameFor: (fO2: number, fHe: number) => string;
-    private static byName: (gasName: string) => Gas | null;
     private _contentCode = 0;
 
     /**
@@ -162,7 +161,7 @@ export class Gas {
 
     /** Gets not null name of the content gas based on O2 and he fractions */
     public get name(): string {
-        return Gas.nameFor(this.fO2, this.fHe);
+        return GasNames.nameFor(this.fO2, this.fHe);
     }
 
     /** Unique identifier of content */
@@ -188,12 +187,6 @@ export class Gas {
         }
 
         this.updateContentCode();
-    }
-
-    /** For internal use only */
-    public static init(nameFor: (fO2: number, fHe: number) => string, byName: (gasName: string) => Gas | null) {
-        Gas.nameFor = nameFor;
-        Gas.byName = byName;
     }
 
     public copy(): Gas {
@@ -248,17 +241,6 @@ export class Gas {
         return !!other &&
             this._fO2 === other._fO2 &&
             this._fHe === other._fHe;
-    }
-
-    public assignStandardGas(gasName: string): void {
-        const found = Gas.byName(gasName);
-
-        if (!found) {
-            return;
-        }
-
-        this.fO2 = found.fO2;
-        this.fHe = found.fHe;
     }
 
     private contentExceeds100percent(): boolean {

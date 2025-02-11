@@ -2,7 +2,7 @@ import {
     Time, Segment, Tank,
     Precision, TankTemplate, Options,
     Diver, GasDensity, Consumption,
-    Event, EventType, StandardGases
+    Event, EventType, GasNames
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -353,7 +353,7 @@ export class BoundEvent {
             case EventType.gasSwitch: {
                 const gas = this.event.gas;
                 if (gas) {
-                    const gasName = StandardGases.nameFor(gas.fO2, gas.fHe);
+                    const gasName = GasNames.nameFor(gas.fO2, gas.fHe);
                     return gasName;
                 }
 

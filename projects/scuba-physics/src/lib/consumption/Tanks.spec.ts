@@ -158,6 +158,12 @@ describe('Tank', () => {
             modified.assignStandardGas('unknown');
             expect(modified.gas).toEqual(StandardGases.air);
         });
+
+        it('standard gas assignment', () => {
+            const modified = new Tank(10, 200, 21);
+            modified.assignStandardGas('Trimix 18/45');
+            expect(modified.gas.contentCode).toBeCloseTo(18004500);
+        });
     });
 
 

@@ -343,10 +343,5 @@ describe('Gases', () => {
             sut.fHe = 0.48;
             expect(sut.contentCode).toBeCloseTo(20904800);
         });
-
-        it('standard gas assignment', () => {
-            sut.assignStandardGas('Trimix 18/45');
-            expect(sut.contentCode).toBeCloseTo(18004500);
-        });
     });
 });

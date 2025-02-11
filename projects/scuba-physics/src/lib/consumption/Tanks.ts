@@ -187,7 +187,14 @@ export class Tank implements TankFill {
     }
 
     public assignStandardGas(gasName: string): void {
-        this.gas.assignStandardGas(gasName);
+        const found = StandardGases.byName(gasName);
+
+        if (!found) {
+            return;
+        }
+
+        this.gas.fO2 = found.fO2;
+        this.gas.fHe = found.fHe;
     }
 
     public loadFrom(other: Tank): void {

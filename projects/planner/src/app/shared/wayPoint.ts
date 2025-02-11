@@ -1,5 +1,5 @@
 import { UnitConversion } from './UnitConversion';
-import { Precision, Segment, StandardGases } from 'scuba-physics';
+import { Precision, Segment, GasNames } from 'scuba-physics';
 
 export enum SwimAction {
     hover = 0,
@@ -68,7 +68,7 @@ export class WayPoint {
 
     public static fromSegment(units: UnitConversion, segment: Segment): WayPoint {
         const newWayPoint = new WayPoint(units, segment.duration, segment.endDepth);
-        const gasName = StandardGases.nameFor(segment.gas.fO2, segment.gas.fHe);
+        const gasName = GasNames.nameFor(segment.gas.fO2, segment.gas.fHe);
         newWayPoint._gasName = gasName;
         newWayPoint.speed = segment.speed;
         return newWayPoint;

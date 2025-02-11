@@ -3,7 +3,7 @@ import { DepthConverter } from '../depth-converter';
 import { ToxicityProfiles } from './OtuCalculator.spec';
 import { Segment } from '../Segments';
 import { Time } from '../Time';
-import { StandardGases } from '../StandardGases';
+import { StandardGases } from '../gases/StandardGases';
 
 describe('CNSCalculatorService', () => {
     const depthConverter = DepthConverter.simple();

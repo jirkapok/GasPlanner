@@ -1,5 +1,5 @@
 import { ConsumptionByMix, IConsumedMix } from './consumptionByMix';
-import { Tank } from './Tanks';
+import { Tank } from './gases/Tanks';
 import _ from 'lodash';
 
 describe('ConsumedByMix', () => {

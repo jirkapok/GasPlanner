@@ -1,6 +1,6 @@
-import { Gas, Gases } from './Gases';
+import { Gas, Gases } from './gases/Gases';
 import { Event, EventsFactory } from './CalculatedProfile';
-import { Tank } from './Tanks';
+import { Tank } from './gases/Tanks';
 import { LinearFunction } from './common/linearFunction';
 
 export class SegmentsValidator {

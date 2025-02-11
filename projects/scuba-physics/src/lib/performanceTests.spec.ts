@@ -1,15 +1,15 @@
 import _ from 'lodash';
 import { Time } from './Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
-import { Gas, Gases } from './Gases';
+import { Gas, Gases } from './gases/Gases';
 import { Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
 import { Salinity } from './pressure-converter';
 import { SafetyStop } from './Options';
-import { StandardGases } from './StandardGases';
+import { StandardGases } from './gases/StandardGases';
 import { Precision } from './common/precision';
 import { FeatureFlags } from './common/featureFlags';
-import { Tank } from './Tanks';
+import { Tank } from './gases/Tanks';
 import { Diver } from './Diver';
 import { DepthConverter } from './depth-converter';
 import { Consumption, ConsumptionOptions } from './consumption';

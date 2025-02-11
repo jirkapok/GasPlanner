@@ -1,4 +1,4 @@
-import { Gas } from './Gases';
+import { Gas } from './gases/Gases';
 import { Segment } from './Segments';
 import { LoadedTissues, TissueOverPressures } from './Tissues.api';
 import { ProfileTissues } from "./ProfileTissues";

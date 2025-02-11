@@ -5,10 +5,10 @@ import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { AscentSpeeds } from './speeds';
 import { Precision } from './common/precision';
-import { DensityAtDepth } from './GasDensity';
+import { DensityAtDepth } from './gases/GasDensity';
 import { DepthLevels } from './DepthLevels';
 import { LinearFunction } from './common/linearFunction';
-import { StandardGases } from './StandardGases';
+import { StandardGases } from './gases/StandardGases';
 
 /** all values in bar */
 class PressureSegment {

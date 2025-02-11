@@ -1,6 +1,6 @@
 import { LoadSegment, Tissues } from './Tissues';
 import { Ceiling } from './CalculatedProfile';
-import { BestGasOptions, Gas, Gases, OCGasSource } from './Gases';
+import { BestGasOptions, Gas, Gases, OCGasSource } from './gases/Gases';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
 import { AscentSpeeds } from './speeds';
 import { DepthLevels } from './DepthLevels';
@@ -8,7 +8,7 @@ import { Segment, Segments } from './Segments';
 import { Options } from './Options';
 import { DepthConverter } from './depth-converter';
 import { Time } from './Time';
-import { StandardGases } from './StandardGases';
+import { StandardGases } from './gases/StandardGases';
 import { FeatureFlags } from './common/featureFlags';
 import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
 

@@ -1,7 +1,7 @@
 import {
     LoadSegment, TissuesValidator, Tissues
 } from './Tissues';
-import { Gas, Gases, GasesValidator } from './Gases';
+import { Gas, Gases, GasesValidator } from './gases/Gases';
 import { Segment, Segments, SegmentsValidator } from './Segments';
 import { DepthConverter, DepthConverterFactory } from './depth-converter';
 import { Time } from './Time';
@@ -13,7 +13,7 @@ import { Precision } from './common/precision';
 import { BinaryIntervalSearch, SearchContext } from './common/BinaryIntervalSearch';
 import { Salinity } from './pressure-converter';
 import { AirBreakContext, AlgorithmContext, ContextMemento } from './AlgorithmContext';
-import { StandardGases } from './StandardGases';
+import { StandardGases } from './gases/StandardGases';
 import { LoadedTissues } from "./Tissues.api";
 import {
     AlgorithmParams,

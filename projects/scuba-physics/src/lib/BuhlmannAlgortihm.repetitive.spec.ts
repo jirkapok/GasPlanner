@@ -3,10 +3,10 @@ import { Time } from './Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Tissues } from './Tissues';
 import { Precision } from './common/precision';
-import { Gases } from './Gases';
+import { Gases } from './gases/Gases';
 import { Segments } from './Segments';
 import { Options } from './Options';
-import { StandardGases } from './StandardGases';
+import { StandardGases } from './gases/StandardGases';
 import { FeatureFlags } from "./common/featureFlags";
 import { LoadedTissues } from "./Tissues.api";
 import {

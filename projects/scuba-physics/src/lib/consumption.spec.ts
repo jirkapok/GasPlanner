@@ -1,6 +1,6 @@
 import { Diver } from './Diver';
 import { DepthConverter } from './depth-converter';
-import { Tank } from './Tanks';
+import { Tank } from './gases/Tanks';
 import { Consumption, ConsumptionOptions } from './consumption';
 import { Time } from './Time';
 import { Segment, Segments } from './Segments';

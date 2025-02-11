@@ -1,4 +1,4 @@
-import { DepthConverter } from './depth-converter';
+import { DepthConverter } from '../depth-converter';
 
 export class GasMixtures {
     /** Relative partial pressure of oxygen in air at surface */

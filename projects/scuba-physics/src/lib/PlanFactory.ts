@@ -1,9 +1,9 @@
-import { Tank } from './Tanks';
+import { Tank } from './gases/Tanks';
 import { Options } from './Options';
 import { Time } from './Time';
 import { Precision } from './common/precision';
 import { Segment, Segments } from './Segments';
-import { Gases } from './Gases';
+import { Gases } from './gases/Gases';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { AlgorithmParams, RestingParameters } from "./BuhlmannAlgorithmParameters";
 

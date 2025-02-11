@@ -1,9 +1,9 @@
 import { DepthOptions } from './depth-converter';
 import { DepthLevelOptions } from './DepthLevels';
-import { GasOptions } from './Gases';
+import { GasOptions } from './gases/Gases';
 import { Salinity } from './pressure-converter';
 import { SpeedOptions } from './speeds';
-import { GasMixtures } from './GasMixtures';
+import { GasMixtures } from './gases/GasMixtures';
 
 export enum SafetyStop {
     never = 1,

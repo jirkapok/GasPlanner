@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { ProfileTissues } from "./ProfileTissues";
 import { LoadSegment, Tissues } from "./Tissues";
-import { StandardGases } from "./StandardGases";
+import { StandardGases } from "./gases/StandardGases";
 import { Time } from "./Time";
 import { LoadedTissues } from "./Tissues.api";
 

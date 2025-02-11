@@ -1,6 +1,6 @@
 import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
 import { Segments } from "./Segments";
-import { Gas, Gases } from "./Gases";
+import { Gas, Gases } from "./gases/Gases";
 import { Options } from "./Options";
 import { Tissues, TissuesValidator } from "./Tissues";
 import { Time } from "./Time";

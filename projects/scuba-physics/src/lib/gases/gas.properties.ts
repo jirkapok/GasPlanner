@@ -1,7 +1,7 @@
 import { DensityAtDepth, GasDensity } from './GasDensity';
 import { Gas } from './Gases';
 import { Tank } from './Tanks';
-import { DepthConverter } from './depth-converter';
+import { DepthConverter } from '../depth-converter';
 import { GasMixtures } from './GasMixtures';
 
 /** Calculator for gas properties of selected mix at defined depth. */

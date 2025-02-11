@@ -1,4 +1,4 @@
-import { ImperialTanks, MetricTanks, StandardTanks } from './StandardTanks';
+import { ImperialTanks, MetricTanks, StandardTanks } from './gases/StandardTanks';
 import { OptionDefaults } from './Options';
 
 /** Tank and depths default values, when creating new data in respective units */

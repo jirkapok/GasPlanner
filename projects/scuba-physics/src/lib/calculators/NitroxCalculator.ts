@@ -1,7 +1,7 @@
 import { Precision } from '../common/precision';
 import { DepthConverter } from '../depth-converter';
 import { DepthLevels } from '../DepthLevels';
-import { GasMixtures } from '../GasMixtures';
+import { GasMixtures } from '../gases/GasMixtures';
 
 export class GasSwitchCalculator {
     constructor(private depthLevels: DepthLevels) {

@@ -1,5 +1,5 @@
-import { Tank, TankFill } from './Tanks';
-import { Precision } from './common/precision';
+import { Tank, TankFill } from '../gases/Tanks';
+import { Precision } from '../common/precision';
 
 /**
  * Blending result showing amount of each component used

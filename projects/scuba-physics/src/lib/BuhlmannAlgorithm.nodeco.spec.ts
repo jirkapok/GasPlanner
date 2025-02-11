@@ -1,10 +1,10 @@
 import { Time } from './Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
-import { Gases } from './Gases';
+import { Gases } from './gases/Gases';
 import { Segments } from './Segments';
 import { OptionExtensions } from './Options.spec';
 import { Salinity } from './pressure-converter';
-import { StandardGases } from './StandardGases';
+import { StandardGases } from './gases/StandardGases';
 import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
 describe('Buhlmann Algorithm - No decompression times', () => {

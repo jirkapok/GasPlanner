@@ -1,7 +1,7 @@
 import { Tank } from './Tanks';
 import { Options } from './Options';
 import { Time } from './Time';
-import { Precision } from './precision';
+import { Precision } from './common/precision';
 import { Segment, Segments } from './Segments';
 import { Gases } from './Gases';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';

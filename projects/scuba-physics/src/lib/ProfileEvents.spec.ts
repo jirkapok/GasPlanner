@@ -9,7 +9,7 @@ import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { Tank } from './Tanks';
 import { GasDensity } from './GasDensity';
-import { Precision } from './precision';
+import { Precision } from './common/precision';
 import { StandardGases } from './StandardGases';
 import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 

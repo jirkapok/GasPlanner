@@ -5,7 +5,7 @@ import {
 } from './Gases';
 import { DepthConverter } from './depth-converter';
 import { SafetyStop } from './Options';
-import { Precision } from './precision';
+import { Precision } from './common/precision';
 import { GasMixtures } from './GasMixtures';
 import { StandardGases } from './StandardGases';
 

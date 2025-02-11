@@ -1,7 +1,7 @@
 import {GasSwitchCalculator, NitroxCalculator} from './NitroxCalculator';
-import { DepthConverter } from './depth-converter';
-import { DepthLevels } from './DepthLevels';
-import { SafetyStop } from './Options';
+import { DepthConverter } from '../depth-converter';
+import { DepthLevels } from '../DepthLevels';
+import { SafetyStop } from '../Options';
 
 describe('GasSwitchCalculator', () => {
     it('Sets switch depth for Ean50 to 21 m', () => {

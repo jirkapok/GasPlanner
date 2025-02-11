@@ -1,6 +1,6 @@
 import {
     AltitudePressure, PressureConverter
-} from './pressure-converter';
+} from '../pressure-converter';
 
 
 /** Inspired by https://www.divebuddy.com/calculator/ */

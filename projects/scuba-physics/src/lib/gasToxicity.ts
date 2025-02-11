@@ -1,10 +1,10 @@
 import { DepthConverter } from './depth-converter';
-import { GasSwitchCalculator, NitroxCalculator } from './NitroxCalculator';
+import { GasSwitchCalculator, NitroxCalculator } from './calculators/NitroxCalculator';
 import { Options } from './Options';
 import { DepthLevels } from './DepthLevels';
 import { Tank } from './Tanks';
 import { Gas } from './Gases';
-import { Precision } from './precision';
+import { Precision } from './common/precision';
 
 /**
  * Combines all gas limits into one service

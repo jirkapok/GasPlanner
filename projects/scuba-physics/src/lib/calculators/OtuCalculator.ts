@@ -1,6 +1,6 @@
-import { DepthConverter } from './depth-converter';
-import { Segment } from './Segments';
-import { Time } from './Time';
+import { DepthConverter } from '../depth-converter';
+import { Segment } from '../Segments';
+import { Time } from '../Time';
 
 /**
  * OTU - Oxygen Toxicity Units

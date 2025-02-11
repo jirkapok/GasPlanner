@@ -1,4 +1,4 @@
-import { Precision } from './precision';
+import { Precision } from './common/precision';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { DepthConverter } from './depth-converter';
 import { Diver } from './Diver';
@@ -8,7 +8,7 @@ import { CalculatedProfile } from './CalculatedProfile';
 import { Segment, Segments } from './Segments';
 import { Tank, Tanks } from './Tanks';
 import { Time } from './Time';
-import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
+import { BinaryIntervalSearch, SearchContext } from './common/BinaryIntervalSearch';
 import { PlanFactory } from './PlanFactory';
 import { AlgorithmParams, RestingParameters } from "./BuhlmannAlgorithmParameters";
 

@@ -9,8 +9,8 @@ import {
     CalculatedProfile, CalculatedProfileStatistics, Ceiling, Event
 } from './CalculatedProfile';
 import { Options } from './Options';
-import { Precision } from './precision';
-import { BinaryIntervalSearch, SearchContext } from './BinaryIntervalSearch';
+import { Precision } from './common/precision';
+import { BinaryIntervalSearch, SearchContext } from './common/BinaryIntervalSearch';
 import { Salinity } from './pressure-converter';
 import { AirBreakContext, AlgorithmContext, ContextMemento } from './AlgorithmContext';
 import { StandardGases } from './StandardGases';

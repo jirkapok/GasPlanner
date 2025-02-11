@@ -9,7 +9,7 @@ import { Options } from './Options';
 import { DepthConverter } from './depth-converter';
 import { Time } from './Time';
 import { StandardGases } from './StandardGases';
-import { FeatureFlags } from './featureFlags';
+import { FeatureFlags } from './common/featureFlags';
 import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
 
 export interface ContextMemento {

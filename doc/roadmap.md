@@ -21,6 +21,7 @@ It looks like we will something like user defined time at which to calculate the
     * Clarify another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
 Looks like we need to calculate for the ascent time only the 1x reserve from deco tanks
     * Restore 1/2 and 1/3 reserve strategies
+    * Add switch to show consumption in liters grouped by gas content not per tank
     * Adjust consumption by Z factor: <https://en.wikipedia.org/wiki/Cubic_foot>
         * Fix RMV/SAC calculator based on Nominal volume
         * [Nominal volume](https://en.wikipedia.org/wiki/Diving_cylinder#Nominal_volume_of_gas_stored)

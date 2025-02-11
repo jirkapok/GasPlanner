@@ -1,6 +1,6 @@
 import { DepthConverter } from './depth-converter';
 import { SafetyStop } from './Options';
-import { Precision } from './precision';
+import { Precision } from './common/precision';
 
 export interface DepthLevelOptions {
     /** depth of the last stop in meters, needs to be positive number */

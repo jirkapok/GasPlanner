@@ -1,4 +1,4 @@
-import { Precision } from './precision';
+import { Precision } from './common/precision';
 import { GasMixtures } from './GasMixtures';
 import { Gas } from './Gases';
 import { StandardGases } from './StandardGases';

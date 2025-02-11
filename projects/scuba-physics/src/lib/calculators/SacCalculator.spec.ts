@@ -1,4 +1,4 @@
-import { DepthConverter } from './depth-converter';
+import { DepthConverter } from '../depth-converter';
 import { SacCalculator } from './SacCalculator';
 
 describe('RMV/Sac Calculator', () => {

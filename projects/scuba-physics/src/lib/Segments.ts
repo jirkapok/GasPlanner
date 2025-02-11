@@ -1,7 +1,7 @@
 import { Gas, Gases } from './Gases';
 import { Event, EventsFactory } from './CalculatedProfile';
 import { Tank } from './Tanks';
-import { LinearFunction } from './linearFunction';
+import { LinearFunction } from './common/linearFunction';
 
 export class SegmentsValidator {
     public static validate(segments: Segments, gases: Gases): Event[] {

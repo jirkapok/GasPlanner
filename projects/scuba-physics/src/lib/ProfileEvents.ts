@@ -4,10 +4,10 @@ import { Ceiling, EventsFactory, Events } from './CalculatedProfile';
 import { Segment, Segments } from './Segments';
 import { Time } from './Time';
 import { AscentSpeeds } from './speeds';
-import { Precision } from './precision';
+import { Precision } from './common/precision';
 import { DensityAtDepth } from './GasDensity';
 import { DepthLevels } from './DepthLevels';
-import { LinearFunction } from './linearFunction';
+import { LinearFunction } from './common/linearFunction';
 import { StandardGases } from './StandardGases';
 
 /** all values in bar */

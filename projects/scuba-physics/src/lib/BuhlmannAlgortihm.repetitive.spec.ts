@@ -2,12 +2,12 @@ import _ from 'lodash';
 import { Time } from './Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Tissues } from './Tissues';
-import { Precision } from './precision';
+import { Precision } from './common/precision';
 import { Gases } from './Gases';
 import { Segments } from './Segments';
 import { Options } from './Options';
 import { StandardGases } from './StandardGases';
-import { FeatureFlags } from "./featureFlags";
+import { FeatureFlags } from "./common/featureFlags";
 import { LoadedTissues } from "./Tissues.api";
 import {
     AlgorithmParams, RestingParameters, SurfaceIntervalParameters

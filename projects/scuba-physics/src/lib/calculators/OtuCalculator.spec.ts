@@ -1,8 +1,8 @@
-import { DepthConverter } from './depth-converter';
+import { DepthConverter } from '../depth-converter';
 import { OtuCalculator } from './OtuCalculator';
-import { Segment } from './Segments';
-import { Time } from './Time';
-import { StandardGases } from './StandardGases';
+import { Segment } from '../Segments';
+import { Time } from '../Time';
+import { StandardGases } from '../StandardGases';
 
 /**
  *  fresh water, sea level altitude, 1032 bar surface, 1000 density

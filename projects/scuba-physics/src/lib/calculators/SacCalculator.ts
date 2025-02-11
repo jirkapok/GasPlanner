@@ -1,5 +1,5 @@
-import { Precision } from './precision';
-import { DepthConverter } from './depth-converter';
+import { Precision } from '../common/precision';
+import { DepthConverter } from '../depth-converter';
 
 /**
  * Surface air consumption formulas

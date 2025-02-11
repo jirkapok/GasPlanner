@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Precision } from './precision';
+import { Precision } from './common/precision';
 import { DepthConverter } from './depth-converter';
 import { DepthLevelOptions, DepthLevels } from './DepthLevels';
 import { Event, EventsFactory } from './CalculatedProfile';

@@ -1,6 +1,6 @@
-import { DepthConverter } from './depth-converter';
+import { DepthConverter } from '../depth-converter';
 import { DepthLevels } from './DepthLevels';
-import { SafetyStop } from './Options';
+import { SafetyStop } from '../algorithm/Options';
 
 describe('Depth Levels', () => {
     const irrelevantDepthConverter = DepthConverter.simple();

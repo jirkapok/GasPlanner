@@ -1,5 +1,5 @@
-import { Gas } from './gases/Gases';
-import { Segment } from './Segments';
+import { Gas } from '../gases/Gases';
+import { Segment } from '../depths/Segments';
 import { LoadedTissues, TissueOverPressures } from './Tissues.api';
 import { ProfileTissues } from "./ProfileTissues";
 

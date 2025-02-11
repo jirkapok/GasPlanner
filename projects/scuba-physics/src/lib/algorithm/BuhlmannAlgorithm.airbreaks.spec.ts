@@ -1,10 +1,10 @@
-import { Time } from './Time';
-import { Gases } from './gases/Gases';
-import { Segment, Segments } from './Segments';
+import { Time } from '../Time';
+import { Gases } from '../gases/Gases';
+import { Segment, Segments } from '../depths/Segments';
 import { OptionExtensions } from './Options.spec';
-import { Salinity } from './pressure-converter';
+import { Salinity } from '../pressure-converter';
 import { SafetyStop } from './Options';
-import { StandardGases } from './gases/StandardGases';
+import { StandardGases } from '../gases/StandardGases';
 import { calculatePlanFor } from './BuhlmannAlgorithm.spec';
 
 describe('Buhlmann Algorithm - Air breaks', () => {

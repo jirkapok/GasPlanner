@@ -1,5 +1,5 @@
 import { DensityAtDepth, GasDensity, HighestDensity } from './GasDensity';
-import { Segment } from '../Segments';
+import { Segment } from '../depths/Segments';
 import { Time } from '../Time';
 import { DepthConverter } from '../depth-converter';
 import { StandardGases } from './StandardGases';

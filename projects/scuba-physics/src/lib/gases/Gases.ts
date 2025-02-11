@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { Precision } from '../common/precision';
 import { DepthConverter } from '../depth-converter';
-import { DepthLevelOptions, DepthLevels } from '../DepthLevels';
-import { Event, EventsFactory } from '../CalculatedProfile';
+import { DepthLevelOptions, DepthLevels } from '../depths/DepthLevels';
+import { Event, EventsFactory } from '../algorithm/CalculatedProfile';
 import { Tank } from './Tanks';
 import { GasMixtures } from './GasMixtures';
 

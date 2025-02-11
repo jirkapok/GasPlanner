@@ -1,5 +1,5 @@
 import { DepthConverter } from '../depth-converter';
-import { Segment } from '../Segments';
+import { Segment } from '../depths/Segments';
 
 /**
  * Reference: https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf

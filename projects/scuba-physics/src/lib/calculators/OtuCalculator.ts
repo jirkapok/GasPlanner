@@ -1,5 +1,5 @@
 import { DepthConverter } from '../depth-converter';
-import { Segment } from '../Segments';
+import { Segment } from '../depths/Segments';
 import { Time } from '../Time';
 
 /**

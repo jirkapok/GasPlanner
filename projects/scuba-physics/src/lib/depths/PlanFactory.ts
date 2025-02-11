@@ -1,11 +1,11 @@
-import { Tank } from './gases/Tanks';
-import { Options } from './Options';
-import { Time } from './Time';
-import { Precision } from './common/precision';
+import { Tank } from '../gases/Tanks';
+import { Options } from '../algorithm/Options';
+import { Time } from '../Time';
+import { Precision } from '../common/precision';
 import { Segment, Segments } from './Segments';
-import { Gases } from './gases/Gases';
-import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
-import { AlgorithmParams, RestingParameters } from "./BuhlmannAlgorithmParameters";
+import { Gases } from '../gases/Gases';
+import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
+import { AlgorithmParams, RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
 
 /** Creates skeleton for dive profile */
 export class PlanFactory {

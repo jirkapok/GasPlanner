@@ -1,7 +1,7 @@
 import { CnsCalculator } from './cnsCalculator';
 import { DepthConverter } from '../depth-converter';
 import { ToxicityProfiles } from './OtuCalculator.spec';
-import { Segment } from '../Segments';
+import { Segment } from '../depths/Segments';
 import { Time } from '../Time';
 import { StandardGases } from '../gases/StandardGases';
 

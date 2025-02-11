@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import _ from 'lodash';
 import {
-    AirBreakOptions,
+    AirBreakOptions, OptionDefaults,
     Diver, Options, SafetyStop, Salinity, Segment
 } from 'scuba-physics';
 import { PlanValidation } from './PlanValidation';
@@ -18,7 +18,6 @@ import { DiveSchedules } from './dive.schedules';
 import { Logger } from './Logger';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { ApplicationSettingsService } from './ApplicationSettings';
-import { OptionDefaults } from "../../../../scuba-physics/src/lib/Options";
 
 class ParseContext {
     private static readonly trueValue = '1';

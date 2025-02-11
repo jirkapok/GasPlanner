@@ -1,4 +1,4 @@
-import { Salinity } from './pressure-converter';
+import { Salinity } from '../pressure-converter';
 import { Options, SafetyStop } from './Options';
 
 export class OptionExtensions {

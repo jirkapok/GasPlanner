@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { LoadSegment, Tissue, Tissues, TissuesValidator } from './Tissues';
 import { Compartments } from './Compartments';
-import { Time } from './Time';
-import { StandardGases } from './gases/StandardGases';
+import { Time } from '../Time';
+import { StandardGases } from '../gases/StandardGases';
 import { LoadedTissues } from "./Tissues.api";
 
 describe('Tissues', () => {

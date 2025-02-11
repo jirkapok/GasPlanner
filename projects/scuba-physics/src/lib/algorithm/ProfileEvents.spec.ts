@@ -1,16 +1,16 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
-import { Salinity } from './pressure-converter';
-import { Gas, Gases } from './gases/Gases';
+import { Salinity } from '../pressure-converter';
+import { Gas, Gases } from '../gases/Gases';
 import { Options, SafetyStop } from './Options';
 import { OptionExtensions } from './Options.spec';
 import { Ceiling, EventType, Events, Event } from './CalculatedProfile';
 import { EventOptions, ProfileEvents } from './ProfileEvents';
-import { Segment, Segments } from './Segments';
-import { Time } from './Time';
-import { Tank } from './gases/Tanks';
-import { GasDensity } from './gases/GasDensity';
-import { Precision } from './common/precision';
-import { StandardGases } from './gases/StandardGases';
+import { Segment, Segments } from '../depths/Segments';
+import { Time } from '../Time';
+import { Tank } from '../gases/Tanks';
+import { GasDensity } from '../gases/GasDensity';
+import { Precision } from '../common/precision';
+import { StandardGases } from '../gases/StandardGases';
 import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
 interface EventAssert {

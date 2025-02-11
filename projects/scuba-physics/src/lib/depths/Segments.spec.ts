@@ -1,6 +1,6 @@
 import { Segment, Segments, SegmentsValidator } from './Segments';
-import { Gases } from './gases/Gases';
-import { StandardGases } from './gases/StandardGases';
+import { Gases } from '../gases/Gases';
+import { StandardGases } from '../gases/StandardGases';
 
 describe('Segments', () => {
 

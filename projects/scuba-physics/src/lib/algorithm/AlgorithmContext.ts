@@ -1,15 +1,15 @@
 import { LoadSegment, Tissues } from './Tissues';
 import { Ceiling } from './CalculatedProfile';
-import { BestGasOptions, Gas, Gases, OCGasSource } from './gases/Gases';
+import { BestGasOptions, Gas, Gases, OCGasSource } from '../gases/Gases';
 import { GradientFactors, SubSurfaceGradientFactors } from './GradientFactors';
-import { AscentSpeeds } from './speeds';
-import { DepthLevels } from './DepthLevels';
-import { Segment, Segments } from './Segments';
+import { AscentSpeeds } from '../depths/speeds';
+import { DepthLevels } from '../depths/DepthLevels';
+import { Segment, Segments } from '../depths/Segments';
 import { Options } from './Options';
-import { DepthConverter } from './depth-converter';
-import { Time } from './Time';
-import { StandardGases } from './gases/StandardGases';
-import { FeatureFlags } from './common/featureFlags';
+import { DepthConverter } from '../depth-converter';
+import { Time } from '../Time';
+import { StandardGases } from '../gases/StandardGases';
+import { FeatureFlags } from '../common/featureFlags';
 import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
 
 export interface ContextMemento {

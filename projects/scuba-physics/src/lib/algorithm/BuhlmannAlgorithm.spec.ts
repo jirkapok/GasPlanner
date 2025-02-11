@@ -1,11 +1,11 @@
-import { Time } from './Time';
+import { Time } from '../Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
-import { Gas, Gases } from './gases/Gases';
-import { Segment, Segments } from './Segments';
+import { Gas, Gases } from '../gases/Gases';
+import { Segment, Segments } from '../depths/Segments';
 import { OptionExtensions } from './Options.spec';
-import { Salinity } from './pressure-converter';
+import { Salinity } from '../pressure-converter';
 import { Options, SafetyStop } from './Options';
-import { StandardGases } from './gases/StandardGases';
+import { StandardGases } from '../gases/StandardGases';
 import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
 function concatenatePlan(decoPlan: Segment[]): string {

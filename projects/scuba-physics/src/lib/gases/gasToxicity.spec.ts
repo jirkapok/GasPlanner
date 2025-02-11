@@ -1,4 +1,4 @@
-import { OptionExtensions } from '../Options.spec';
+import { OptionExtensions } from '../algorithm/Options.spec';
 import { GasToxicity } from './gasToxicity';
 import { StandardGases } from './StandardGases';
 

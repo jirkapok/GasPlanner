@@ -1,6 +1,6 @@
 import { DepthConverter } from '../depth-converter';
 import { OtuCalculator } from './OtuCalculator';
-import { Segment } from '../Segments';
+import { Segment } from '../depths/Segments';
 import { Time } from '../Time';
 import { StandardGases } from '../gases/StandardGases';
 

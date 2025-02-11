@@ -1,16 +1,16 @@
 import { Precision } from './common/precision';
-import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
+import { BuhlmannAlgorithm } from './algorithm/BuhlmannAlgorithm';
 import { DepthConverter } from './depth-converter';
 import { Diver } from './Diver';
 import { Gases } from './gases/Gases';
-import { Options } from './Options';
-import { CalculatedProfile } from './CalculatedProfile';
-import { Segment, Segments } from './Segments';
+import { Options } from './algorithm/Options';
+import { CalculatedProfile } from './algorithm/CalculatedProfile';
+import { Segment, Segments } from './depths/Segments';
 import { Tank, Tanks } from './gases/Tanks';
 import { Time } from './Time';
 import { BinaryIntervalSearch, SearchContext } from './common/BinaryIntervalSearch';
-import { PlanFactory } from './PlanFactory';
-import { AlgorithmParams, RestingParameters } from "./BuhlmannAlgorithmParameters";
+import { PlanFactory } from './depths/PlanFactory';
+import { AlgorithmParams, RestingParameters } from "./algorithm/BuhlmannAlgorithmParameters";
 
 class GasVolumes {
     private remaining: Map<number, number> = new Map<number, number>();

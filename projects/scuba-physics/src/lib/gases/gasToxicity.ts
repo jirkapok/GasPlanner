@@ -1,7 +1,7 @@
 import { DepthConverter } from '../depth-converter';
 import { GasSwitchCalculator, NitroxCalculator } from '../calculators/NitroxCalculator';
-import { Options } from '../Options';
-import { DepthLevels } from '../DepthLevels';
+import { Options } from '../algorithm/Options';
+import { DepthLevels } from '../depths/DepthLevels';
 import { Tank } from './Tanks';
 import { Gas } from './Gases';
 import { Precision } from '../common/precision';

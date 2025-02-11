@@ -1,13 +1,13 @@
 import { Tank } from './gases/Tanks';
-import { Segment } from './Segments';
+import { Segment } from './depths/Segments';
 import { Time } from './Time';
 import { StandardGases } from './gases/StandardGases';
 import { Consumption, ConsumptionOptions } from './consumption';
 import { Diver } from './Diver';
 import { DepthConverter } from './depth-converter';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './algorithm/Options.spec';
 import { Salinity } from './pressure-converter';
-import { SafetyStop } from './Options';
+import { SafetyStop } from './algorithm/Options';
 
 describe('Consumption - Preserve reserved gas', ()=> {
     const consumptionOptions: ConsumptionOptions = {

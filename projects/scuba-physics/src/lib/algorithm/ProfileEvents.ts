@@ -1,14 +1,14 @@
 import { Options } from './Options';
-import { DepthConverter, DepthConverterFactory } from './depth-converter';
+import { DepthConverter, DepthConverterFactory } from '../depth-converter';
 import { Ceiling, EventsFactory, Events } from './CalculatedProfile';
-import { Segment, Segments } from './Segments';
-import { Time } from './Time';
-import { AscentSpeeds } from './speeds';
-import { Precision } from './common/precision';
-import { DensityAtDepth } from './gases/GasDensity';
-import { DepthLevels } from './DepthLevels';
-import { LinearFunction } from './common/linearFunction';
-import { StandardGases } from './gases/StandardGases';
+import { Segment, Segments } from '../depths/Segments';
+import { Time } from '../Time';
+import { AscentSpeeds } from '../depths/speeds';
+import { Precision } from '../common/precision';
+import { DensityAtDepth } from '../gases/GasDensity';
+import { DepthLevels } from '../depths/DepthLevels';
+import { LinearFunction } from '../common/linearFunction';
+import { StandardGases } from '../gases/StandardGases';
 
 /** all values in bar */
 class PressureSegment {

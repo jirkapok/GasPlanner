@@ -1,5 +1,5 @@
 import { Gas } from './Gases';
-import { Segment } from '../Segments';
+import { Segment } from '../depths/Segments';
 import { DepthConverter } from '../depth-converter';
 import { StandardGases } from './StandardGases';
 

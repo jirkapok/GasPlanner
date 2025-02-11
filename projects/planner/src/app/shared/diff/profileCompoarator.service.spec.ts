@@ -174,8 +174,6 @@ describe('ProfileComparison service', () => {
     });
 
     it('Tissue saturation Both have the same amount of samples', () => {
-        const original = FeatureFlags.Instance.collectSaturation;
-        FeatureFlags.Instance.collectSaturation = true;
         schedules.add();
         schedules.dives[1].depths.planDuration = 14;
         sut.selectProfile(1);
@@ -188,6 +186,5 @@ describe('ProfileComparison service', () => {
         const lengthB = overPressures.profileAOverPressures.length;
         const lengthA = overPressures.profileBOverPressures.length;
         expect(lengthA).toEqual(lengthB);
-        FeatureFlags.Instance.collectSaturation = original;
     });
 });

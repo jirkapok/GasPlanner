@@ -1,9 +1,7 @@
+/** Placeholder for features conditionally available. */
 export class FeatureFlags
 {
     private static _instance: FeatureFlags;
-
-    // TODO remove, no longer used
-    public collectSaturation = true;
 
     private constructor() {
     }

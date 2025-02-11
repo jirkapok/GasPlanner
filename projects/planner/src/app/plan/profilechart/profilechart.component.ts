@@ -24,7 +24,6 @@ import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;
     public readonly heatmapIcon = faFire;
-    public heatMapEnabled = FeatureFlags.Instance.collectSaturation;
     public showHeatMap = false;
     private readonly elementName = 'diveplot';
     private readonly heatMapElementName = 'heatmapplot';

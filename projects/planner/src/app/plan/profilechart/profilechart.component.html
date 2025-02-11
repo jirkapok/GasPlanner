@@ -5,7 +5,7 @@
             <span>Profile chart</span>
         </div>
         <div class="float-end me-1">
-            <button *ngIf="heatMapEnabled" class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button"
+            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button"
                     data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="switchHeatMap()">
                 <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
             </button>

@@ -17,17 +17,6 @@ import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
 // Lets assign reserve to all asserts on slower machines at github.
 describe('Performance', () => {
-    let originalFlag = false;
-
-    beforeEach(() => {
-        originalFlag = FeatureFlags.Instance.collectSaturation;
-        FeatureFlags.Instance.collectSaturation = true;
-    });
-
-    afterEach(() => {
-        FeatureFlags.Instance.collectSaturation = originalFlag;
-    });
-
     const assertDuration = (message: string, limit: number, actionToMeasure: () => void): void => {
         const iterations = 1;
         const results: number[] = [];

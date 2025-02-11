@@ -22,7 +22,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     public icon = faChartArea;
     protected readonly heatmapIcon = faFire;
     public showHeatMap = true;
-    public heatMapEnabled = FeatureFlags.Instance.collectSaturation;
     private plotter: ChartPlotter;
     private heatMapPlotterA: HeatMapPlotter;
     private heatMapPlotterB: HeatMapPlotter;

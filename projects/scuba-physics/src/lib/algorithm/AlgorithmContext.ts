@@ -197,11 +197,6 @@ export class AlgorithmContext {
 
         // following methods slow down calculation 2x
         this.tissuesHistory.push(this.tissues.finalState());
-
-        if (!FeatureFlags.Instance.collectSaturation) {
-            return;
-        }
-
         const ambientPressure = this.depthConverter.toBar(currentDepth);
         const currentOverPressures = this.tissues.saturationRatio(ambientPressure);
         this.tissueOverPressures.push(currentOverPressures);

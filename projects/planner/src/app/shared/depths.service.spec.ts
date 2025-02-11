@@ -103,6 +103,18 @@ describe('Depths service', () => {
             const middle = depthService.segments[1];
             expect(middle.startDepth).toBe(30);
         });
+
+        it('Remove Tank Updates segment reference to first tank', () => {
+            tanksService.addTank();
+            tanksService.addTank();
+            const secondTank = tanksService.tanks[1];
+            depthService.addSegment();
+            const lastSegment = depthService.segments[1];
+            lastSegment.tank = secondTank.tank;
+            tanksService.removeTank(secondTank);
+
+            expect(lastSegment.tank).toEqual(tanksService.firstTank.tank);
+        });
     });
 
     describe('Imperial Units', () => {

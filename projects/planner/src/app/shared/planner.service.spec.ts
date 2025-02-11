@@ -160,21 +160,6 @@ describe('PlannerService', () => {
         });
     });
 
-    // TODO move to TanksService tests
-    describe('Manage tanks', () => {
-        it('Remove Updates segment reference to first tank', () => {
-            tanksService.addTank();
-            tanksService.addTank();
-            const secondTank = tanksService.tanks[1];
-            depthsService.addSegment();
-            const lastSegment = depthsService.segments[1];
-            lastSegment.tank = secondTank.tank;
-            tanksService.removeTank(secondTank);
-
-            expect(lastSegment.tank).toEqual(tanksService.firstTank.tank);
-        });
-    });
-
     describe('Updates dive', () => {
         it('Average depth is calculated', () => {
             expect(dive.averageDepth).toEqual(21.75);

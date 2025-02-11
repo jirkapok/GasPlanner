@@ -1,6 +1,6 @@
 import {
     CalculatedProfile, CalculatedProfileStatistics,
-    Event, EventType, StandardGases, Time
+    Event, StandardGases, Time
 } from 'scuba-physics';
 import _ from 'lodash';
 import { PlannerService } from './planner.service';
@@ -12,7 +12,6 @@ import {
     ConsumptionRequestDto,
     ConsumptionResultDto, DiveInfoRequestDto,
     DiveInfoResultDto,
-    ProfileRequestDto,
     ProfileResultDto
 } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
@@ -161,6 +160,7 @@ describe('PlannerService', () => {
         });
     });
 
+    // TODO move to TanksService tests
     describe('Manage tanks', () => {
         it('Remove Updates segment reference to first tank', () => {
             tanksService.addTank();
@@ -199,6 +199,18 @@ describe('PlannerService', () => {
             // 4. segment - gas switch
             expect(dive.wayPoints[3].endDepth).toEqual(21);
         });
+
+        it('Max bottom time uses previous dive surface interval',  inject([DiveSchedules],
+            (schedules: DiveSchedules) => {
+            const firstDive = schedules.dives[0];
+            // make some interesting dive
+            firstDive.depths.plannedDepth = 40;
+            firstDive.depths.planDuration = 20;
+            const followingDive = schedules.add();
+            followingDive.surfaceInterval = Time.oneMinute * 10;
+            planner.calculate(2);
+            expect(followingDive.diveResult.maxTime).toEqual(15); // without surface intrval should be 18
+        }));
     });
 
     describe('Errors', () => {

@@ -102,7 +102,6 @@ export class PlanningTasks {
             stageTankReserve: task.consumptionOptions.stageTankReserve,
         };
 
-        // TODO add test, that surface interval is applied
         const previousTissues = DtoSerialization.toTissues(task.previousTissues);
         const surfaceInterval = new RestingParameters(previousTissues, task.surfaceInterval);
         // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption

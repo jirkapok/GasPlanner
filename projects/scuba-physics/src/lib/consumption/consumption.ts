@@ -2,7 +2,6 @@ import { Precision } from '../common/precision';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { DepthConverter } from '../physics/depth-converter';
 import { Diver } from './Diver';
-import { Gases } from '../gases/Gases';
 import { Options } from '../algorithm/Options';
 import { CalculatedProfile } from '../algorithm/CalculatedProfile';
 import { Segment, Segments } from '../depths/Segments';
@@ -47,7 +46,7 @@ export class Consumption {
 
     private static calculateDecompression(segments: Segments, tanks: Tank[],
         options: Options, surfaceInterval?: RestingParameters): CalculatedProfile {
-        const gases = Gases.fromTanks(tanks);
+        const gases = Tanks.toGases(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const segmentsCopy = segments.copy();
         const parameters = AlgorithmParams.forMultilevelDive(segmentsCopy, gases, options, surfaceInterval);

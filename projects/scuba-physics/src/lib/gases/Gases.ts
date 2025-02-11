@@ -3,8 +3,6 @@ import { Precision } from '../common/precision';
 import { DepthConverter } from '../physics/depth-converter';
 import { DepthLevelOptions, DepthLevels } from '../depths/DepthLevels';
 import { Event, EventsFactory } from '../algorithm/CalculatedProfile';
-// TODO why gases reference tanks?
-import { Tank } from '../consumption/Tanks';
 import { GasMixtures } from './GasMixtures';
 
 /**
@@ -119,17 +117,6 @@ export class Gases {
 
     public get hasBottomGas(): boolean {
         return this.items.length >= 1;
-    }
-
-    public static fromTanks(tanks: Tank[]): Gases {
-        const gases = new Gases();
-
-        // everything except first gas is considered as deco gas
-        tanks.forEach((tank) => {
-            gases.add(tank.gas);
-        });
-
-        return gases;
     }
 
     public add(gas: Gas): void {

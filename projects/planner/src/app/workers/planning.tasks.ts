@@ -1,5 +1,5 @@
 import {
-    Segments, Gases, ProfileEvents, DepthConverterFactory,
+    Segments, Tanks, ProfileEvents, DepthConverterFactory,
     Consumption, Time, Diver, OtuCalculator, CnsCalculator,
     DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm,
     RestingParameters, Segment, PlanFactory, ConsumptionOptions,
@@ -132,7 +132,7 @@ export class PlanningTasks {
     }
 
     private static profileParametersFromTask(task: PlanRequestDto, tanks: Tank[]): AlgorithmParams {
-        const gases = Gases.fromTanks(tanks);
+        const gases = Tanks.toGases(tanks);
         const originPlan = DtoSerialization.toSegments(task.plan, tanks);
         const segments = Segments.fromCollection(originPlan);
         const options = DtoSerialization.toOptions(task.options);

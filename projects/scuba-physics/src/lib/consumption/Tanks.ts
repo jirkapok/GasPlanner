@@ -1,6 +1,6 @@
 import { Precision } from '../common/precision';
 import { GasMixtures } from '../gases/GasMixtures';
-import { Gas } from '../gases/Gases';
+import { Gas, Gases } from '../gases/Gases';
 import { StandardGases } from '../gases/StandardGases';
 
 export interface TankFill {
@@ -11,6 +11,17 @@ export interface TankFill {
 }
 
 export class Tanks {
+    public static toGases(tanks: Tank[]): Gases {
+        const gases = new Gases();
+
+        // everything except first gas is considered as deco gas
+        tanks.forEach((tank) => {
+            gases.add(tank.gas);
+        });
+
+        return gases;
+    }
+
     /**
      * Checks, if all tanks have more remaining gas than their reserve.
      * See also Tank.hasReserve

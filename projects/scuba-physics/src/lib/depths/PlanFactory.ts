@@ -1,9 +1,8 @@
-import { Tank } from '../consumption/Tanks';
+import { Tank, Tanks } from '../consumption/Tanks';
 import { Options } from '../algorithm/Options';
 import { Time } from '../physics/Time';
 import { Precision } from '../common/precision';
 import { Segment, Segments } from './Segments';
-import { Gases } from '../gases/Gases';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { AlgorithmParams, RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
 
@@ -55,7 +54,7 @@ export class PlanFactory {
 
         // 3. calculate real ascent and return all segments after the deepest part
         const emergencyPlan = Segments.fromCollection(emergencySegments);
-        const gases = Gases.fromTanks(tanks);
+        const gases = Tanks.toGases(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const parameters = AlgorithmParams.forMultilevelDive(emergencyPlan, gases, options, surfaceInterval);
         const calculatedProfile = algorithm.decompression(parameters);

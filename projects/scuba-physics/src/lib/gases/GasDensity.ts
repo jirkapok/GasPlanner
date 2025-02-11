@@ -1,6 +1,6 @@
 import { Gas } from './Gases';
 import { Segment } from '../depths/Segments';
-import { DepthConverter } from '../depth-converter';
+import { DepthConverter } from '../physics/depth-converter';
 import { StandardGases } from './StandardGases';
 
 export class HighestDensity {

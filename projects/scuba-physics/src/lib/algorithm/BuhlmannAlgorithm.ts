@@ -3,15 +3,15 @@ import {
 } from './Tissues';
 import { Gas, Gases, GasesValidator } from '../gases/Gases';
 import { Segment, Segments, SegmentsValidator } from '../depths/Segments';
-import { DepthConverter, DepthConverterFactory } from '../depth-converter';
-import { Time } from '../Time';
+import { DepthConverter, DepthConverterFactory } from '../physics/depth-converter';
+import { Time } from '../physics/Time';
 import {
     CalculatedProfile, CalculatedProfileStatistics, Ceiling, Event
 } from './CalculatedProfile';
 import { Options } from './Options';
 import { Precision } from '../common/precision';
 import { BinaryIntervalSearch, SearchContext } from '../common/BinaryIntervalSearch';
-import { Salinity } from '../pressure-converter';
+import { Salinity } from '../physics/pressure-converter';
 import { AirBreakContext, AlgorithmContext, ContextMemento } from './AlgorithmContext';
 import { StandardGases } from '../gases/StandardGases';
 import { LoadedTissues } from "./Tissues.api";

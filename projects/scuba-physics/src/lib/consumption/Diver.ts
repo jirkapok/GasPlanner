@@ -1,4 +1,4 @@
-import { Tank } from './gases/Tanks';
+import { Tank } from './Tanks';
 
 export class Diver {
     /** liters/min **/

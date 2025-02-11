@@ -1,8 +1,8 @@
 import { Options } from './Options';
-import { DepthConverter, DepthConverterFactory } from '../depth-converter';
+import { DepthConverter, DepthConverterFactory } from '../physics/depth-converter';
 import { Ceiling, EventsFactory, Events } from './CalculatedProfile';
 import { Segment, Segments } from '../depths/Segments';
-import { Time } from '../Time';
+import { Time } from '../physics/Time';
 import { AscentSpeeds } from '../depths/speeds';
 import { Precision } from '../common/precision';
 import { DensityAtDepth } from '../gases/GasDensity';

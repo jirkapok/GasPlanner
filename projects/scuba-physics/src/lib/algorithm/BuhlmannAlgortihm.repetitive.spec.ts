@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Time } from '../Time';
+import { Time } from '../physics/Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Tissues } from './Tissues';
 import { Precision } from '../common/precision';
@@ -12,7 +12,7 @@ import { LoadedTissues } from "./Tissues.api";
 import {
     AlgorithmParams, RestingParameters, SurfaceIntervalParameters
 } from './BuhlmannAlgorithmParameters';
-import { AltitudePressure } from "../pressure-converter";
+import { AltitudePressure } from "../physics/pressure-converter";
 
 describe('Buhlmann Algorithm - Repetitive dives', () => {
     const sut = new BuhlmannAlgorithm();

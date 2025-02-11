@@ -1,4 +1,4 @@
-import { Tank } from '../gases/Tanks';
+import { Tank } from '../consumption/Tanks';
 import { AirWeight } from './weight';
 
 describe('Air weight', () => {

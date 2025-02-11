@@ -1,5 +1,5 @@
 import { Diver} from './Diver';
-import { Tank} from './gases/Tanks';
+import { Tank} from './Tanks';
 
 describe('Diver', () => {
     describe('Create', () => {

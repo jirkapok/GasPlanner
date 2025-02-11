@@ -3,7 +3,7 @@ import {
     GasOptions, BestGasOptions,
     OCGasSource
 } from './Gases';
-import { DepthConverter } from '../depth-converter';
+import { DepthConverter } from '../physics/depth-converter';
 import { SafetyStop } from '../algorithm/Options';
 import { Precision } from '../common/precision';
 import { GasMixtures } from './GasMixtures';

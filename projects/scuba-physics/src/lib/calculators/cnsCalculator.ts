@@ -1,4 +1,4 @@
-import { DepthConverter } from '../depth-converter';
+import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
 
 /**

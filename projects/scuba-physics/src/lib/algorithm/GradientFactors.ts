@@ -1,5 +1,5 @@
 import { Options } from './Options';
-import { DepthConverter } from '../depth-converter';
+import { DepthConverter } from '../physics/depth-converter';
 import { Tissues } from './Tissues';
 
 export interface GradientFactors {

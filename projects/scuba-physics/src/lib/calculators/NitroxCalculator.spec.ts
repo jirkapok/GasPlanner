@@ -1,5 +1,5 @@
 import {GasSwitchCalculator, NitroxCalculator} from './NitroxCalculator';
-import { DepthConverter } from '../depth-converter';
+import { DepthConverter } from '../physics/depth-converter';
 import { DepthLevels } from '../depths/DepthLevels';
 import { SafetyStop } from '../algorithm/Options';
 

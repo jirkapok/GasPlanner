@@ -1,8 +1,8 @@
-import { Time } from '../Time';
+import { Time } from '../physics/Time';
 import { Gases } from '../gases/Gases';
 import { Segment, Segments } from '../depths/Segments';
 import { OptionExtensions } from './Options.spec';
-import { Salinity } from '../pressure-converter';
+import { Salinity } from '../physics/pressure-converter';
 import { SafetyStop } from './Options';
 import { StandardGases } from '../gases/StandardGases';
 import { calculatePlanFor } from './BuhlmannAlgorithm.spec';

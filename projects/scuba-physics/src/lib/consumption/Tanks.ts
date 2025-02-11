@@ -1,7 +1,7 @@
 import { Precision } from '../common/precision';
-import { GasMixtures } from './GasMixtures';
-import { Gas } from './Gases';
-import { StandardGases } from './StandardGases';
+import { GasMixtures } from '../gases/GasMixtures';
+import { Gas } from '../gases/Gases';
+import { StandardGases } from '../gases/StandardGases';
 
 export interface TankFill {
     /** start pressure in bars as non zero positive number.*/

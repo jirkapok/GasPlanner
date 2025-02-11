@@ -1,8 +1,8 @@
 import { CnsCalculator } from './cnsCalculator';
-import { DepthConverter } from '../depth-converter';
+import { DepthConverter } from '../physics/depth-converter';
 import { ToxicityProfiles } from './OtuCalculator.spec';
 import { Segment } from '../depths/Segments';
-import { Time } from '../Time';
+import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
 
 describe('CNSCalculatorService', () => {

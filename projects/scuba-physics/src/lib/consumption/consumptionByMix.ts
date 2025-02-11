@@ -1,5 +1,5 @@
-import { Gas } from './gases/Gases';
-import { Tank } from './gases/Tanks';
+import { Gas } from '../gases/Gases';
+import { Tank } from './Tanks';
 import _ from 'lodash';
 
 export interface IConsumedMix {

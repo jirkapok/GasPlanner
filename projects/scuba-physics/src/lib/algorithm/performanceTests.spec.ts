@@ -1,18 +1,18 @@
 import _ from 'lodash';
-import { Time } from '../Time';
+import { Time } from '../physics/Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gas, Gases } from '../gases/Gases';
 import { Segments } from '../depths/Segments';
 import { OptionExtensions } from './Options.spec';
-import { Salinity } from '../pressure-converter';
+import { Salinity } from '../physics/pressure-converter';
 import { SafetyStop } from './Options';
 import { StandardGases } from '../gases/StandardGases';
 import { Precision } from '../common/precision';
 import { FeatureFlags } from '../common/featureFlags';
-import { Tank } from '../gases/Tanks';
-import { Diver } from '../Diver';
-import { DepthConverter } from '../depth-converter';
-import { Consumption, ConsumptionOptions } from '../consumption';
+import { Tank } from '../consumption/Tanks';
+import { Diver } from '../consumption/Diver';
+import { DepthConverter } from '../physics/depth-converter';
+import { Consumption, ConsumptionOptions } from '../consumption/consumption';
 import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
 // Lets assign reserve to all asserts on slower machines at github.

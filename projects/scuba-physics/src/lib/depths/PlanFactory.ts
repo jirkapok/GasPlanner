@@ -1,6 +1,6 @@
-import { Tank } from '../gases/Tanks';
+import { Tank } from '../consumption/Tanks';
 import { Options } from '../algorithm/Options';
-import { Time } from '../Time';
+import { Time } from '../physics/Time';
 import { Precision } from '../common/precision';
 import { Segment, Segments } from './Segments';
 import { Gases } from '../gases/Gases';

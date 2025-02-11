@@ -1,4 +1,4 @@
-import { DepthConverter } from '../depth-converter';
+import { DepthConverter } from '../physics/depth-converter';
 import { DepthLevels } from './DepthLevels';
 import { SafetyStop } from '../algorithm/Options';
 

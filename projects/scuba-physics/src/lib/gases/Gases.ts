@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import { Precision } from '../common/precision';
-import { DepthConverter } from '../depth-converter';
+import { DepthConverter } from '../physics/depth-converter';
 import { DepthLevelOptions, DepthLevels } from '../depths/DepthLevels';
 import { Event, EventsFactory } from '../algorithm/CalculatedProfile';
-import { Tank } from './Tanks';
+// TODO why gases reference tanks?
+import { Tank } from '../consumption/Tanks';
 import { GasMixtures } from './GasMixtures';
 
 /**

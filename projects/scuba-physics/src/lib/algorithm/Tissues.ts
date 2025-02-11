@@ -1,7 +1,7 @@
 import { Compartments, Compartment } from './Compartments';
 import { Gas } from '../gases/Gases';
 import _ from 'lodash';
-import { AltitudePressure, PressureConverter } from '../pressure-converter';
+import { AltitudePressure, PressureConverter } from '../physics/pressure-converter';
 import { GasMixtures } from '../gases/GasMixtures';
 import { LoadedTissue, LoadedTissues, TissueOverPressures } from "./Tissues.api";
 

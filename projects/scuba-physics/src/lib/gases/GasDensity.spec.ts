@@ -1,7 +1,7 @@
 import { DensityAtDepth, GasDensity, HighestDensity } from './GasDensity';
 import { Segment } from '../depths/Segments';
-import { Time } from '../Time';
-import { DepthConverter } from '../depth-converter';
+import { Time } from '../physics/Time';
+import { DepthConverter } from '../physics/depth-converter';
 import { StandardGases } from './StandardGases';
 
 describe('Gas Density', () => {

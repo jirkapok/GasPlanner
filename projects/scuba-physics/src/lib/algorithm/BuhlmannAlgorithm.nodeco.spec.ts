@@ -1,9 +1,9 @@
-import { Time } from '../Time';
+import { Time } from '../physics/Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gases } from '../gases/Gases';
 import { Segments } from '../depths/Segments';
 import { OptionExtensions } from './Options.spec';
-import { Salinity } from '../pressure-converter';
+import { Salinity } from '../physics/pressure-converter';
 import { StandardGases } from '../gases/StandardGases';
 import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 

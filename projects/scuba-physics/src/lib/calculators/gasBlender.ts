@@ -1,4 +1,4 @@
-import { Tank, TankFill } from '../gases/Tanks';
+import { Tank, TankFill } from '../consumption/Tanks';
 import { Precision } from '../common/precision';
 
 /**

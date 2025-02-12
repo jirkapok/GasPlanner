@@ -1,6 +1,6 @@
-import { GasMix, RealBlender } from "./Compressibility";
+import { GasMix, RealBlender } from './realGasBlender';
 
-describe('Compresibility', () => {
+describe('Real Gas blender', () => {
     it('Glend Trimix', () => {
         // Current tank pressure -
         const pi = 0;

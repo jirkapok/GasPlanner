@@ -1,3 +1,7 @@
+import { Compressibility } from '../physics/compresibility';
+import { Gas } from "../gases/Gases";
+
+/** Custom Gas mix crate for the blender, because rounding issues result in different number, when using partials directly */
 export class GasMix {
     public static readonly air: GasMix  = new GasMix(21, 0);
 
@@ -28,38 +32,9 @@ export class GasMix {
             return this.fO2 === GasMix.air.fO2 ? "AIR" : `EAN${Math.round(this.fO2 * 100)}`;
         }
     }
-}
 
-export class Compressibility {
-    private readonly o2Coefficients = [-7.18092073703e-4, 2.81852572808e-6, -1.50290620492e-9];
-    private readonly n2Coefficients = [-2.19260353292e-4, 2.92844845532e-6, -2.07613482075e-9];
-    private readonly heCoefficients = [4.87320026468e-4, -8.83632921053e-8, 5.33304543646e-11];
-
-    private virial(pressure: number, coefficients: number[]): number {
-        return coefficients[0] * pressure +
-            coefficients[1] * pressure * pressure +
-            coefficients[2] * pressure * pressure * pressure;
-    }
-
-    public zFactor(p: number, gas: GasMix): number {
-        return (
-            1 +
-            gas.fO2 * this.virial(p, this.o2Coefficients) +
-            gas.fHe * this.virial(p, this.heCoefficients) +
-            gas.fN2 * this.virial(p, this.n2Coefficients)
-        );
-    }
-
-    public normalVolumeFactor(gasPressure: number, gas: GasMix): number {
-        return (gasPressure * this.zFactor(1, gas)) / this.zFactor(gasPressure, gas);
-    }
-
-    public findPressure(gas: GasMix, volume: number): number {
-        let foundPressure = volume;
-        while (Math.abs(this.zFactor(1, gas) * foundPressure - this.zFactor(foundPressure, gas) * volume) > 0.000001) {
-            foundPressure = (volume * this.zFactor(foundPressure, gas)) / this.zFactor(1, gas);
-        }
-        return foundPressure;
+    public toGas(): Gas {
+        return new Gas(this.fO2, this.fHe);
     }
 }
 
@@ -101,8 +76,8 @@ export class RealBlender {
             return "Cannot mix with degenerate gases!\n";
         }
 
-        const ivol = this.compress.normalVolumeFactor(pi, gasi);
-        const fvol = this.compress.normalVolumeFactor(pf, gasf);
+        const ivol = this.compress.normalVolumeFactor(pi, gasi.toGas());
+        const fvol = this.compress.normalVolumeFactor(pf, gasf.toGas());
 
         const top1 = ((gas3.fN2 * gas2.fO2 - gas2.fN2 * gas3.fO2) * (gasf.fHe * fvol - gasi.fHe * ivol)
         + (gas2.fHe * gas3.fO2 - gas3.fHe * gas2.fO2) * (gasf.fN2 * fvol - gasi.fN2 * ivol)
@@ -123,12 +98,12 @@ export class RealBlender {
         const newmix1 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1),
         100 * (gasi.fHe * ivol + gas1.fHe * top1) / (ivol + top1));
 
-        const p1 = this.compress.findPressure(newmix1, ivol + top1);
+        const p1 = this.compress.findPressure(newmix1.toGas(), ivol + top1);
 
         const newmix2 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1 + gas2.fO2 * top2) / (ivol + top1 + top2),
         100 * (gasi.fHe * ivol + gas1.fHe * top1 + gas2.fHe * top2) / (ivol + top1 + top2));
 
-        const p2 = this.compress.findPressure(newmix2, ivol + top1 + top2);
+        const p2 = this.compress.findPressure(newmix2.toGas(), ivol + top1 + top2);
 
 
         return `
@@ -150,8 +125,8 @@ ${this.format(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
             return "Cannot mix with identical gases!\n";
         }
 
-        const ivol = this.compress.normalVolumeFactor(pi, gasi);
-        const fvol = this.compress.normalVolumeFactor(pf, gasf);
+        const ivol = this.compress.normalVolumeFactor(pi, gasi.toGas());
+        const fvol = this.compress.normalVolumeFactor(pf, gasf.toGas());
 
         const top1 = (gas2.fO2 - gasf.fO2) / (gas2.fO2 - gas1.fO2) * fvol
         - (gas2.fO2 - gasi.fO2) / (gas2.fO2 - gas1.fO2) * ivol;
@@ -164,7 +139,7 @@ ${this.format(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
 
         const newmix = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1));
 
-        const p1 = this.compress.findPressure(newmix, ivol + top1);
+        const p1 = this.compress.findPressure(newmix.toGas(), ivol + top1);
 
         return `
 Start with ${this.format(pi)} bar of ${ gasi.name}.

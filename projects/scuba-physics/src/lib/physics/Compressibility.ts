@@ -59,12 +59,12 @@ export class Compressibility {
         return (gasPressure * this.zFactor(1, gas)) / this.zFactor(gasPressure, gas);
     }
 
-    private findP(mix: GasMix, originalV: number): number {
-        let p = originalV;
-        while (Math.abs(this.zFactor(1, mix) * p - this.zFactor(p, mix) * originalV) > 0.000001) {
-            p = (originalV * this.zFactor(p, mix)) / this.zFactor(1, mix);
+    private findPressure(gas: GasMix, volume: number): number {
+        let foundPressure = volume;
+        while (Math.abs(this.zFactor(1, gas) * foundPressure - this.zFactor(foundPressure, gas) * volume) > 0.000001) {
+            foundPressure = (volume * this.zFactor(foundPressure, gas)) / this.zFactor(1, gas);
         }
-        return p;
+        return foundPressure;
     }
 
     private format(value: number): string {
@@ -128,12 +128,12 @@ export class Compressibility {
         const newmix1 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1),
         100 * (gasi.fHe * ivol + gas1.fHe * top1) / (ivol + top1));
 
-        const p1 = this.findP(newmix1, ivol + top1);
+        const p1 = this.findPressure(newmix1, ivol + top1);
 
         const newmix2 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1 + gas2.fO2 * top2) / (ivol + top1 + top2),
         100 * (gasi.fHe * ivol + gas1.fHe * top1 + gas2.fHe * top2) / (ivol + top1 + top2));
 
-        const p2 = this.findP(newmix2, ivol + top1 + top2);
+        const p2 = this.findPressure(newmix2, ivol + top1 + top2);
 
 
         return `
@@ -173,7 +173,7 @@ ${this.format(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
 
         const newmix = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1));
 
-        const p1 = this.findP(newmix, ivol + top1);
+        const p1 = this.findPressure(newmix, ivol + top1);
 
         return `
 Start with ${this.format(pi)} bar of ${ gasi.name}.

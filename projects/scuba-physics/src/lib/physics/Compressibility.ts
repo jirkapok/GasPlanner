@@ -1,4 +1,4 @@
-class GasMix {
+export class GasMix {
     public static readonly air: GasMix  = new GasMix(21, 0);
 
     public _fO2: number;
@@ -75,23 +75,14 @@ export class RealBlender {
         return value.toFixed(1);
     }
 
-    public blend(pi: number, o2i: number, hei: number,
-                 pf: number, o2f: number, hef: number,
-                 o21: number, he1: number,
-                 o22: number, he2: number,
-                 o23: number, he3: number): string {
+    public blend(pi: number, gasi: GasMix, pf: number, gasf: GasMix,
+                 gas1: GasMix, gas2: GasMix, gas3: GasMix): string {
 
-        const gasi = new GasMix(o2i, hei);
-        const gas1 = new GasMix(o21, he1);
-        const gas2 = new GasMix(o22, he2);
-        const gas3 = new GasMix(o23, he3);
-        const gasf = new GasMix(o2f, hef);
-
-        if (o2i) {
-            if (hef > 0) {
+        if (gasi.fO2) {
+            if (gasf.fHe > 0) {
                 return this.blendTrimix(pi, pf, gasi, gas1, gas2, gas3, gasf);
             } else {
-                return this.blendNitrox(pi, o2i, pf, o2f, o21, o23);
+                return this.blendNitrox(pi, gasi, pf, gasf, gas1, gas3);
             }
         } else {
             return "Only print the params form.";
@@ -150,14 +141,10 @@ ${this.format(top2)} litres of ${gas2.name} and
 ${this.format(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
     }
 
-    private blendNitrox(pi: number, o2i: number,
-                        pf: number, o2f: number,
-                        o21: number, o23: number): string  {
+    private blendNitrox(pi: number, gasi: GasMix,
+                        pf: number, gasf: GasMix,
+                        gas1: GasMix, gas2: GasMix): string  {
 
-        const gasi = new GasMix(o2i);
-        const gas1 = new GasMix(o21);
-        const gas2 = new GasMix(o23);
-        const gasf = new GasMix(o2f);
 
         if (gas1.fO2 === gas2.fO2) {
             return "Cannot mix with identical gases!\n";

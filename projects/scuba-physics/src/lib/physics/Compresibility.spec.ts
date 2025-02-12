@@ -1,31 +1,22 @@
-import { Compressibility, RealBlender } from "./Compressibility";
+import { GasMix, RealBlender } from "./Compressibility";
 
-fdescribe('Compresibility', () => {
+describe('Compresibility', () => {
     it('Glend Trimix', () => {
         // Current tank pressure -
         const pi = 0;
-        const o2i = 21;
-        const hei = 0;
+        const gasi = new GasMix(21, 0);
         // Required/Final tank pressure -
         const pf = 200;
-        const o2f = 25;
-        const hef = 25;
+        const gasf = new GasMix(25, 25);
         // First top mix -
-        const o21 = 100;
-        const he1 = 0;
+        const gas1 = new GasMix(100, 0);
         // Second top mix -
-        const o22 = 0;
-        const he2 = 100;
+        const gas2 = new GasMix(0, 100);
         // Third top mix -
-        const o23 = 21;
-        const he3 = 0;
+        const gas3 = new GasMix(21, 0);
 
 
-        const result =new RealBlender().blend(pi, o2i, hei,
-            pf, o2f, hef,
-            o21, he1,
-            o22, he2,
-            o23, he3);
+        const result =new RealBlender().blend(pi, gasi, pf, gasf, gas1, gas2, gas3);
         const expected = `
 Start with 0.0 bar of AIR.
 Top up with EAN100 up to 22.2 bar and end up with EAN100.
@@ -41,28 +32,18 @@ Use 22.5 litres of EAN100
     it('Blend Nitrox', () => {
         // Current tank pressure -
         const pi = 50;
-        const o2i = 21;
-        const hei = 0; // not used
+        const gasi = new GasMix(21, 0);
         // Required/Final tank pressure -
         const pf = 200;
-        const o2f = 32;
-        const hef = 0; // not used
+        const gasf = new GasMix(32, 0);
         // First top mix -
-        const o21 = 100;
-        const he1 = 0;
+        const gas1 = new GasMix(100, 0);
         // Second top mix - not used
-        const o22 = 99;
-        const he2 = 99;
+        const gas2 = new GasMix(99, 99);
         // Third top mix -
-        const o23 = 21;
-        const he3 = 0; // not used
+        const gas3 = new GasMix(21, 0);
 
-
-        const result =new RealBlender().blend(pi, o2i, hei,
-            pf, o2f, hef,
-            o21, he1,
-            o22, he2,
-            o23, he3);
+        const result =new RealBlender().blend(pi, gasi, pf, gasf, gas1, gas2, gas3);
         const expected = `
 Start with 50.0 bar of AIR.
 Top up with EAN100 up to 76.1 bar and end up with EAN49.

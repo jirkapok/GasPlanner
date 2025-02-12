@@ -20,6 +20,14 @@ class GasMix {
     public get fN2(): number {
         return 1 - this.fO2 - this.fHe;
     }
+
+    public get name(): string {
+        if (this.fHe > 0) {
+            return `TMX ${Math.round(this.fO2 * 100)}/${Math.round(this.fHe * 100)}`;
+        } else {
+            return this.fO2 === GasMix.air.fO2 ? "AIR" : `EAN${Math.round(this.fO2 * 100)}`;
+        }
+    }
 }
 
 /**
@@ -55,14 +63,6 @@ export class Compressibility {
             p = (originalV * this.zfactor(p, mix)) / this.zfactor(1, mix);
         }
         return p;
-    }
-
-    private gasName(mix: GasMix): string {
-        if (mix.fHe > 0) {
-            return `TMX ${Math.round(mix.fO2 * 100)}/${Math.round(mix.fHe * 100)}`;
-        } else {
-            return mix.fO2 === GasMix.air.fO2 ? "AIR" : `EAN${Math.round(mix.fO2 * 100)}`;
-        }
     }
 
     private r(v: number): string {
@@ -120,7 +120,7 @@ export class Compressibility {
         + (gas2.fHe * gas1.fN2 - gas1.fHe * gas2.fN2) * (gasf.fO2 * fvol - gasi.fO2 * ivol)) / det;
 
         if (top1 < 0 || top2 < 0 || top3 < 0) {
-            return `Impossible to blend ", ${this.gasName(gasf)}, " with these gases!\n`;
+            return `Impossible to blend ", ${gasf.name}, " with these gases!\n`;
         }
 
         const newmix1 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1),
@@ -135,13 +135,13 @@ export class Compressibility {
 
 
         return `
-Start with ${ this.r(pi)} bar of ${ this.gasName(gasi)}.
-Top up with ${this.gasName(gas1)} up to ${this.r(p1)} bar and end up with ${this.gasName(newmix1)}.
-Then top up with ${this.gasName(gas2)} up to ${this.r(p2)} bar and end up with ${this.gasName(newmix2)}.
-Finally, top up with ${this.gasName(gas3)} up to ${this.r(pf)} bar and end up with ${this.gasName(gasf)}.
-Use ${this.r(top1)} litres of ${this.gasName(gas1)}
-${this.r(top2)} litres of ${this.gasName(gas2)} and
-${this.r(top3)} litres of ${this.gasName(gas3)} per litre of cylinder volume.`;
+Start with ${ this.r(pi)} bar of ${ gasi.name }.
+Top up with ${gas1.name} up to ${this.r(p1)} bar and end up with ${newmix1.name}.
+Then top up with ${gas2.name} up to ${this.r(p2)} bar and end up with ${newmix2.name}.
+Finally, top up with ${gas3.name} up to ${this.r(pf)} bar and end up with ${gasf.name}.
+Use ${this.r(top1)} litres of ${gas1.name}
+${this.r(top2)} litres of ${gas2.name} and
+${this.r(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
     }
 
     private blendNitrox(pi: number, o2i: number,
@@ -174,9 +174,9 @@ ${this.r(top3)} litres of ${this.gasName(gas3)} per litre of cylinder volume.`;
         const p1 = this.findP(newmix, ivol + top1);
 
         return `
-Start with ${this.r(pi)} bar of ${ this.gasName(gasi)}.
-Top up with ${this.gasName(gas1)} up to ${this.r(p1)} bar and end up with ${this.gasName(newmix)}.
-Finally, top up with ${this.gasName(gas2)} up to ${this.r(pf)} bar and end up with ${this.gasName(gasf)}.
-Use ${this.r(top1)} litres of ${this.gasName(gas1)} and ${this.r(top2)} litres of ${this.gasName(gas2)} per litre of cylinder volume.`;
+Start with ${this.r(pi)} bar of ${ gasi.name}.
+Top up with ${gas1.name} up to ${this.r(p1)} bar and end up with ${newmix.name}.
+Finally, top up with ${gas2.name} up to ${this.r(pf)} bar and end up with ${gasf.name}.
+Use ${this.r(top1)} litres of ${gas1.name} and ${this.r(top2)} litres of ${gas2.name} per litre of cylinder volume.`;
     }
 }

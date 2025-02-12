@@ -1,24 +1,36 @@
-interface GasMix {
-    o2: number;
-    he: number;
+class GasMix {
+    public static readonly air: GasMix  = new GasMix(21, 0);
+
+    public _fO2: number;
+    public _fHe: number;
+
+    constructor(o2: number, he: number = 0) {
+        this._fO2 = o2 / 100;
+        this._fHe = he / 100;
+    }
+
+    public get fO2(): number {
+        return this._fO2;
+    }
+
+    public get fHe(): number {
+        return this._fHe;
+    }
+
+    public get fN2(): number {
+        return 1 - this.fO2 - this.fHe;
+    }
 }
 
+/**
+ * Real gas compression calculator.
+ * Based on https://github.com/atdotde/realblender
+ * Started as original perl script rewrite to typescript.
+ */
 export class Compressibility {
     private readonly o2Coefficients = [-7.18092073703e-4, 2.81852572808e-6, -1.50290620492e-9];
     private readonly n2Coefficients = [-2.19260353292e-4, 2.92844845532e-6, -2.07613482075e-9];
     private readonly heCoefficients = [4.87320026468e-4, -8.83632921053e-8, 5.33304543646e-11];
-
-    private fo2(gasmix: GasMix): number {
-        return gasmix.o2 / 100;
-    }
-
-    private fhe(gasmix: GasMix): number {
-        return gasmix.he / 100;
-    }
-
-    private fn2(gasmix: GasMix): number {
-        return (100 - gasmix.o2 - gasmix.he) / 100;
-    }
 
     private virial(p: number, coef: number[]): number {
         return coef[0] * p + coef[1] * p * p + coef[2] * p * p * p;
@@ -27,26 +39,14 @@ export class Compressibility {
     private zfactor(p: number, gasmix: GasMix): number {
         return (
             1 +
-            this.fo2(gasmix) * this.virial(p, this.o2Coefficients) +
-            this.fhe(gasmix) * this.virial(p, this.heCoefficients) +
-            this.fn2(gasmix) * this.virial(p, this.n2Coefficients)
+            gasmix.fO2 * this.virial(p, this.o2Coefficients) +
+            gasmix.fHe * this.virial(p, this.heCoefficients) +
+            gasmix.fN2 * this.virial(p, this.n2Coefficients)
         );
     }
 
     private normalVolumeFactor(p: number, gasmix: GasMix): number {
         return (p * this.zfactor(1, gasmix)) / this.zfactor(p, gasmix);
-    }
-
-    private trimix(o2: number, he: number): GasMix {
-        return { o2, he };
-    }
-
-    private nitrox(o2: number): GasMix {
-        return this.trimix(o2, 0);
-    }
-
-    private air(): GasMix {
-        return this.nitrox(21);
     }
 
     private findP(mix: GasMix, originalV: number): number {
@@ -58,10 +58,10 @@ export class Compressibility {
     }
 
     private gasName(mix: GasMix): string {
-        if (this.fhe(mix)) {
-            return `TMX ${Math.round(this.fo2(mix) * 100)}/${Math.round(this.fhe(mix) * 100)}`;
+        if (mix.fHe > 0) {
+            return `TMX ${Math.round(mix.fO2 * 100)}/${Math.round(mix.fHe * 100)}`;
         } else {
-            return this.fo2(mix) === this.fo2(this.air()) ? "AIR" : `EAN${Math.round(this.fo2(mix) * 100)}`;
+            return mix.fO2 === GasMix.air.fO2 ? "AIR" : `EAN${Math.round(mix.fO2 * 100)}`;
         }
     }
 
@@ -75,11 +75,11 @@ export class Compressibility {
                  o22: number, he2: number,
                  o23: number, he3: number): string {
 
-        const gasi = this.trimix(o2i, hei);
-        const gas1 = this.trimix(o21, he1);
-        const gas2 = this.trimix(o22, he2);
-        const gas3 = this.trimix(o23, he3);
-        const gasf = this.trimix(o2f, hef);
+        const gasi = new GasMix(o2i, hei);
+        const gas1 = new GasMix(o21, he1);
+        const gas2 = new GasMix(o22, he2);
+        const gas3 = new GasMix(o23, he3);
+        const gasf = new GasMix(o2f, hef);
 
         if (o2i) {
             if (hef > 0) {
@@ -93,12 +93,12 @@ export class Compressibility {
     }
 
     private blendTrimix(pi: number, pf: number, gasi: GasMix, gas1: GasMix, gas2: GasMix, gas3: GasMix, gasf: GasMix): string {
-        const det =   this.fhe(gas3) * this.fn2(gas2) * this.fo2(gas1)
-                    - this.fhe(gas2) * this.fn2(gas3) * this.fo2(gas1)
-                    - this.fhe(gas3) * this.fn2(gas1) * this.fo2(gas2)
-                    + this.fhe(gas1) * this.fn2(gas3) * this.fo2(gas2)
-                    + this.fhe(gas2) * this.fn2(gas1) * this.fo2(gas3)
-                    - this.fhe(gas1) * this.fn2(gas2) * this.fo2(gas3);
+        const det =   gas3.fHe * gas2.fN2 * gas1.fN2
+                    - gas2.fHe * gas3.fN2 * gas1.fO2
+                    - gas3.fHe * gas1.fN2 * gas2.fO2
+                    + gas1.fHe * gas3.fN2 * gas2.fO2
+                    + gas2.fHe * gas1.fN2 * gas3.fO2
+                    - gas1.fHe * gas2.fN2 * gas3.fO2;
 
         if (!det) {
             return "Cannot mix with degenerate gases!\n";
@@ -107,29 +107,29 @@ export class Compressibility {
         const ivol = this.normalVolumeFactor(pi, gasi);
         const fvol = this.normalVolumeFactor(pf, gasf);
 
-        const top1 = ((this.fn2(gas3) * this.fo2(gas2) - this.fn2(gas2) * this.fo2(gas3)) * (this.fhe(gasf) * fvol - this.fhe(gasi) * ivol)
-        + (this.fhe(gas2) * this.fo2(gas3) - this.fhe(gas3) * this.fo2(gas2)) * (this.fn2(gasf) * fvol - this.fn2(gasi) * ivol)
-        + (this.fhe(gas3) * this.fn2(gas2) - this.fhe(gas2) * this.fn2(gas3)) * (this.fo2(gasf) * fvol - this.fo2(gasi) * ivol)) / det;
+        const top1 = ((gas3.fN2 * gas2.fO2 - gas2.fN2 * gas3.fO2) * (gasf.fHe * fvol - gasi.fHe * ivol)
+        + (gas2.fHe * gas3.fO2 - gas3.fHe * gas2.fO2) * (gasf.fN2 * fvol - gasi.fN2 * ivol)
+        + (gas3.fHe * gas2.fN2 - gas2.fHe * gas3.fN2) * (gasf.fO2 * fvol - gasi.fO2 * ivol)) / det;
 
-        const top2 = ((this.fn2(gas1) * this.fo2(gas3) - this.fn2(gas3) * this.fo2(gas1)) * (this.fhe(gasf) * fvol - this.fhe(gasi) * ivol)
-        + (this.fhe(gas3) * this.fo2(gas1) - this.fhe(gas1) * this.fo2(gas3)) * (this.fn2(gasf) * fvol - this.fn2(gasi) * ivol)
-        + (this.fhe(gas1) * this.fn2(gas3) - this.fhe(gas3) * this.fn2(gas1)) * (this.fo2(gasf) * fvol - this.fo2(gasi) * ivol)) / det;
+        const top2 = ((gas1.fN2 * gas3.fO2 - gas3.fN2 * gas1.fO2) * (gasf.fHe * fvol - gasi.fHe * ivol)
+        + (gas3.fHe * gas1.fO2 - gas1.fHe * gas3.fO2) * (gasf.fN2 * fvol - gasi.fN2 * ivol)
+        + (gas1.fHe * gas3.fN2 - gas3.fHe * gas1.fN2) * (gasf.fO2 * fvol - gasi.fO2 * ivol)) / det;
 
-        const top3 = ((this.fn2(gas2) * this.fo2(gas1) - this.fn2(gas1) * this.fo2(gas2)) * (this.fhe(gasf) * fvol - this.fhe(gasi) * ivol)
-        + (this.fhe(gas1) * this.fo2(gas2) - this.fhe(gas2) * this.fo2(gas1)) * (this.fn2(gasf) * fvol - this.fn2(gasi) * ivol)
-        + (this.fhe(gas2) * this.fn2(gas1) - this.fhe(gas1) * this.fn2(gas2)) * (this.fo2(gasf) * fvol - this.fo2(gasi) * ivol)) / det;
+        const top3 = ((gas2.fN2 * gas1.fO2 - gas1.fN2 * gas2.fO2) * (gasf.fHe * fvol - gasi.fHe * ivol)
+        + (gas1.fHe * gas2.fO2 - gas2.fHe * gas1.fO2) * (gasf.fN2 * fvol - gasi.fN2 * ivol)
+        + (gas2.fHe * gas1.fN2 - gas1.fHe * gas2.fN2) * (gasf.fO2 * fvol - gasi.fO2 * ivol)) / det;
 
         if (top1 < 0 || top2 < 0 || top3 < 0) {
             return `Impossible to blend ", ${this.gasName(gasf)}, " with these gases!\n`;
         }
 
-        const newmix1 = this.trimix(100 * (this.fo2(gasi) * ivol + this.fo2(gas1) * top1) / (ivol + top1),
-        100 * (this.fhe(gasi) * ivol + this.fhe(gas1) * top1) / (ivol + top1));
+        const newmix1 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1),
+        100 * (gasi.fHe * ivol + gas1.fHe * top1) / (ivol + top1));
 
         const p1 = this.findP(newmix1, ivol + top1);
 
-        const newmix2 = this.trimix(100 * (this.fo2(gasi) * ivol + this.fo2(gas1) * top1 + this.fo2(gas2) * top2) / (ivol + top1 + top2),
-        100 * (this.fhe(gasi) * ivol + this.fhe(gas1) * top1 + this.fhe(gas2) * top2) / (ivol + top1 + top2));
+        const newmix2 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1 + gas2.fO2 * top2) / (ivol + top1 + top2),
+        100 * (gasi.fHe * ivol + gas1.fHe * top1 + gas2.fHe * top2) / (ivol + top1 + top2));
 
         const p2 = this.findP(newmix2, ivol + top1 + top2);
 
@@ -148,28 +148,28 @@ ${this.r(top3)} litres of ${this.gasName(gas3)} per litre of cylinder volume.`;
                         pf: number, o2f: number,
                         o21: number, o23: number): string  {
 
-        const gasi = this.nitrox(o2i);
-        const gas1 = this.nitrox(o21);
-        const gas2 = this.nitrox(o23);
-        const gasf = this.nitrox(o2f);
+        const gasi = new GasMix(o2i);
+        const gas1 = new GasMix(o21);
+        const gas2 = new GasMix(o23);
+        const gasf = new GasMix(o2f);
 
-        if (this.fo2(gas1) === this.fo2(gas2)) {
-            return "Cannot mix with idential gases!\n";
+        if (gas1.fO2 === gas2.fO2) {
+            return "Cannot mix with identical gases!\n";
         }
 
         const ivol = this.normalVolumeFactor(pi, gasi);
         const fvol = this.normalVolumeFactor(pf, gasf);
 
-        const top1 = (this.fo2(gas2) - this.fo2(gasf)) / (this.fo2(gas2) - this.fo2(gas1)) * fvol
-        - (this.fo2(gas2) - this.fo2(gasi)) / (this.fo2(gas2) - this.fo2(gas1)) * ivol;
-        const top2 = (this.fo2(gas1) - this.fo2(gasf)) / (this.fo2(gas1) - this.fo2(gas2)) * fvol
-        - (this.fo2(gas1) - this.fo2(gasi)) / (this.fo2(gas1) - this.fo2(gas2)) * ivol;
+        const top1 = (gas2.fO2 - gasf.fO2) / (gas2.fO2 - gas1.fO2) * fvol
+        - (gas2.fO2 - gasi.fO2) / (gas2.fO2 - gas1.fO2) * ivol;
+        const top2 = (gas1.fO2 - gasf.fO2) / (gas1.fO2 - gas2.fO2) * fvol
+        - (gas1.fO2 - gasi.fO2) / (gas1.fO2 - gas2.fO2) * ivol;
 
         if (top1 <= 0) {
             return "Impossible to blend with these gases!\n";
         }
 
-        const newmix = this.nitrox(100 * (this.fo2(gasi) * ivol + this.fo2(gas1) * top1) / (ivol + top1));
+        const newmix = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1));
 
         const p1 = this.findP(newmix, ivol + top1);
 

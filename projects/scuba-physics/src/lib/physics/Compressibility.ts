@@ -173,13 +173,10 @@ ${this.r(top3)} litres of ${this.gasName(gas3)} per litre of cylinder volume.`;
 
         const p1 = this.findP(newmix, ivol + top1);
 
-        return `Start with ", ${this.r(pi)} bar of ${ this.gasName(gasi)}.\n` +
-        `\n` +
-        `Top up with ${this.gasName(gas1)} up to ${this.r(p1)} bar and end up with ${this.gasName(newmix)}.\n` +
-        `\n` +
-        `Finally, top up with ", &gasname($gas2), " up to ", &r($pf), " bar and end up with ", &gasname($gasf), ".\n";` +
-
-        `\n";` +
-        `Use ", &r($top1), " litres of ", &gasname($gas1), " and ", &r($top2)," litres of ", &gasname($gas2), " per litre of cylinder volume.\n";`;
+        return `
+Start with ${this.r(pi)} bar of ${ this.gasName(gasi)}.
+Top up with ${this.gasName(gas1)} up to ${this.r(p1)} bar and end up with ${this.gasName(newmix)}.
+Finally, top up with ${this.gasName(gas2)} up to ${this.r(pf)} bar and end up with ${this.gasName(gasf)}.
+Use ${this.r(top1)} litres of ${this.gasName(gas1)} and ${this.r(top2)} litres of ${this.gasName(gas2)} per litre of cylinder volume.`;
     }
 }

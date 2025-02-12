@@ -40,33 +40,35 @@ export class Compressibility {
     private readonly n2Coefficients = [-2.19260353292e-4, 2.92844845532e-6, -2.07613482075e-9];
     private readonly heCoefficients = [4.87320026468e-4, -8.83632921053e-8, 5.33304543646e-11];
 
-    private virial(p: number, coef: number[]): number {
-        return coef[0] * p + coef[1] * p * p + coef[2] * p * p * p;
+    private virial(pressure: number, coefficients: number[]): number {
+        return coefficients[0] * pressure +
+               coefficients[1] * pressure * pressure +
+               coefficients[2] * pressure * pressure * pressure;
     }
 
-    private zfactor(p: number, gasmix: GasMix): number {
+    private zFactor(p: number, gas: GasMix): number {
         return (
             1 +
-            gasmix.fO2 * this.virial(p, this.o2Coefficients) +
-            gasmix.fHe * this.virial(p, this.heCoefficients) +
-            gasmix.fN2 * this.virial(p, this.n2Coefficients)
+            gas.fO2 * this.virial(p, this.o2Coefficients) +
+            gas.fHe * this.virial(p, this.heCoefficients) +
+            gas.fN2 * this.virial(p, this.n2Coefficients)
         );
     }
 
-    private normalVolumeFactor(p: number, gasmix: GasMix): number {
-        return (p * this.zfactor(1, gasmix)) / this.zfactor(p, gasmix);
+    private normalVolumeFactor(gasPressure: number, gas: GasMix): number {
+        return (gasPressure * this.zFactor(1, gas)) / this.zFactor(gasPressure, gas);
     }
 
     private findP(mix: GasMix, originalV: number): number {
         let p = originalV;
-        while (Math.abs(this.zfactor(1, mix) * p - this.zfactor(p, mix) * originalV) > 0.000001) {
-            p = (originalV * this.zfactor(p, mix)) / this.zfactor(1, mix);
+        while (Math.abs(this.zFactor(1, mix) * p - this.zFactor(p, mix) * originalV) > 0.000001) {
+            p = (originalV * this.zFactor(p, mix)) / this.zFactor(1, mix);
         }
         return p;
     }
 
-    private r(v: number): string {
-        return v.toFixed(1);
+    private format(value: number): string {
+        return value.toFixed(1);
     }
 
     public blend(pi: number, o2i: number, hei: number,
@@ -135,13 +137,13 @@ export class Compressibility {
 
 
         return `
-Start with ${ this.r(pi)} bar of ${ gasi.name }.
-Top up with ${gas1.name} up to ${this.r(p1)} bar and end up with ${newmix1.name}.
-Then top up with ${gas2.name} up to ${this.r(p2)} bar and end up with ${newmix2.name}.
-Finally, top up with ${gas3.name} up to ${this.r(pf)} bar and end up with ${gasf.name}.
-Use ${this.r(top1)} litres of ${gas1.name}
-${this.r(top2)} litres of ${gas2.name} and
-${this.r(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
+Start with ${ this.format(pi)} bar of ${ gasi.name }.
+Top up with ${gas1.name} up to ${this.format(p1)} bar and end up with ${newmix1.name}.
+Then top up with ${gas2.name} up to ${this.format(p2)} bar and end up with ${newmix2.name}.
+Finally, top up with ${gas3.name} up to ${this.format(pf)} bar and end up with ${gasf.name}.
+Use ${this.format(top1)} litres of ${gas1.name}
+${this.format(top2)} litres of ${gas2.name} and
+${this.format(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
     }
 
     private blendNitrox(pi: number, o2i: number,
@@ -174,9 +176,9 @@ ${this.r(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
         const p1 = this.findP(newmix, ivol + top1);
 
         return `
-Start with ${this.r(pi)} bar of ${ gasi.name}.
-Top up with ${gas1.name} up to ${this.r(p1)} bar and end up with ${newmix.name}.
-Finally, top up with ${gas2.name} up to ${this.r(pf)} bar and end up with ${gasf.name}.
-Use ${this.r(top1)} litres of ${gas1.name} and ${this.r(top2)} litres of ${gas2.name} per litre of cylinder volume.`;
+Start with ${this.format(pi)} bar of ${ gasi.name}.
+Top up with ${gas1.name} up to ${this.format(p1)} bar and end up with ${newmix.name}.
+Finally, top up with ${gas2.name} up to ${this.format(pf)} bar and end up with ${gasf.name}.
+Use ${this.format(top1)} litres of ${gas1.name} and ${this.format(top2)} litres of ${gas2.name} per litre of cylinder volume.`;
     }
 }

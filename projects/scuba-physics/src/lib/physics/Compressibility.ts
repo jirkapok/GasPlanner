@@ -85,22 +85,22 @@ export class Compressibility {
             if (hef > 0) {
                 return this.blendTrimix(pi, pf, gasi, gas1, gas2, gas3, gasf);
             } else {
-                return this.blendNitrox();
+                return this.blendNitrox(pi, o2i, pf, o2f, o21, o23);
             }
         } else {
-            return "Missing parameters";
+            return "Only print the params form.";
         }
     }
 
     private blendTrimix(pi: number, pf: number, gasi: GasMix, gas1: GasMix, gas2: GasMix, gas3: GasMix, gasf: GasMix): string {
         const det =   this.fhe(gas3) * this.fn2(gas2) * this.fo2(gas1)
-                            - this.fhe(gas2) * this.fn2(gas3) * this.fo2(gas1)
-                            - this.fhe(gas3) * this.fn2(gas1) * this.fo2(gas2)
-                            + this.fhe(gas1) * this.fn2(gas3) * this.fo2(gas2)
-                            + this.fhe(gas2) * this.fn2(gas1) * this.fo2(gas3)
-                            - this.fhe(gas1) * this.fn2(gas2) * this.fo2(gas3);
+                    - this.fhe(gas2) * this.fn2(gas3) * this.fo2(gas1)
+                    - this.fhe(gas3) * this.fn2(gas1) * this.fo2(gas2)
+                    + this.fhe(gas1) * this.fn2(gas3) * this.fo2(gas2)
+                    + this.fhe(gas2) * this.fn2(gas1) * this.fo2(gas3)
+                    - this.fhe(gas1) * this.fn2(gas2) * this.fo2(gas3);
 
-        if (det) {
+        if (!det) {
             return "Cannot mix with degenerate gases!\n";
         }
 
@@ -134,14 +134,55 @@ export class Compressibility {
         const p2 = this.findP(newmix2, ivol + top1 + top2);
 
 
-        return p2.toString();
+        return `Start with ${ this.r(pi)} bar of ${ this.gasName(gasi)}.\n` +
+               `\n` +
+                `Top up with ${this.gasName(gas1)} up to ${this.r(p1)} bar and end up with ${this.gasName(newmix1)}.\n` +
+                `\n` +
+                `Then top up with ${this.gasName(gas2)} up to ${this.r(p2)} bar and end up with ${this.gasName(newmix2)}.\n` +
+                `\n`+
+                `Finally, top up with ${this.gasName(gas3)} up to ${this.r(pf)} bar and end up with ${this.gasName(gasf)}.\n` +
+                `\n`+
+                `Use ${this.r(top1)} litres of ${this.gasName(gas1)} \n`+
+                `${this.r(top2)} litres of ${this.gasName(gas2)} and \n`+
+                `${this.r(top3)} litres of ${this.gasName(gas3)} per litre of cylinder volume.\n`;
     }
 
-    private blendNitrox(): string {
-        return "";
-    }
+    private blendNitrox(pi: number, o2i: number,
+                        pf: number, o2f: number,
+                        o21: number, o23: number): string  {
 
-    private blendElse(): string {
-        return "Only print params";
+        const gasi = this.nitrox(o2i);
+        const gas1 = this.nitrox(o21);
+        const gas2 = this.nitrox(o23);
+        const gasf = this.nitrox(o2f);
+
+        if (this.fo2(gas1) === this.fo2(gas2)) {
+            return "Cannot mix with idential gases!\n";
+        }
+
+        const ivol = this.normalVolumeFactor(pi, gasi);
+        const fvol = this.normalVolumeFactor(pf, gasf);
+
+        const top1 = (this.fo2(gas2) - this.fo2(gasf)) / (this.fo2(gas2) - this.fo2(gas1)) * fvol
+        - (this.fo2(gas2) - this.fo2(gasi)) / (this.fo2(gas2) - this.fo2(gas1)) * ivol;
+        const top2 = (this.fo2(gas1) - this.fo2(gasf)) / (this.fo2(gas1) - this.fo2(gas2)) * fvol
+        - (this.fo2(gas1) - this.fo2(gasi)) / (this.fo2(gas1) - this.fo2(gas2)) * ivol;
+
+        if (top1 <= 0) {
+            return "Impossible to blend with these gases!\n";
+        }
+
+        const newmix = this.nitrox(100 * (this.fo2(gasi) * ivol + this.fo2(gas1) * top1) / (ivol + top1));
+
+        const p1 = this.findP(newmix, ivol + top1);
+
+        return `Start with ", ${this.r(pi)} bar of ${ this.gasName(gasi)}.\n` +
+        `\n` +
+        `Top up with ${this.gasName(gas1)} up to ${this.r(p1)} bar and end up with ${this.gasName(newmix)}.\n` +
+        `\n` +
+        `Finally, top up with ", &gasname($gas2), " up to ", &r($pf), " bar and end up with ", &gasname($gasf), ".\n";` +
+
+        `\n";` +
+        `Use ", &r($top1), " litres of ", &gasname($gas1), " and ", &r($top2)," litres of ", &gasname($gas2), " per litre of cylinder volume.\n";`;
     }
 }

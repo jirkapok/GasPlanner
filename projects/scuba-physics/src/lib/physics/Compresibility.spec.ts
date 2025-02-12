@@ -22,12 +22,17 @@ xdescribe('Compresibility', () => {
         const he3 = 0;
 
 
-        new Compressibility().blend(pi, o2i, hei,
+        const result =new Compressibility().blend(pi, o2i, hei,
             pf, o2f, hef,
             o21, he1,
             o22, he2,
             o23, he3);
 
+        // Start with 0.0 bar of AIR.
+        // Top up with EAN100 up to 22.2 bar and end up with EAN100.
+        // Then top up with TMX 0/100 up to 71.3 bar and end up with TMX 32/68.
+        // Finally, top up with AIR up to 200.0 bar and end up with TMX 25/25.
+        // Use 22.5 litres of EAN100, 48.0 litres of TMX 0/100 and 121.6 litres of AIR per litre of cylinder volume.
         expect(true).toBeTruthy();
     });
 });

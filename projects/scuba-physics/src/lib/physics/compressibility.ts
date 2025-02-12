@@ -1,5 +1,11 @@
 import { Gas } from '../gases/Gases';
 
+/**
+ * Real gas compression calculator. Does not use Gas ideal law, instead uses Z-factor.
+ * See also https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities
+ * Formulas reused from https://github.com/atdotde/realblender.
+ * The same formula is also used in Subsurface.
+ */
 export class Compressibility {
     private readonly normalPressure = 1;
     private readonly o2Coefficients = [-7.18092073703e-4, 2.81852572808e-6, -1.50290620492e-9];

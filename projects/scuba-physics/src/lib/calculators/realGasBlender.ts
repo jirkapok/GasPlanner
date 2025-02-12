@@ -1,4 +1,4 @@
-import { Compressibility } from '../physics/compresibility';
+import { Compressibility } from '../physics/compressibility';
 import { Gas } from "../gases/Gases";
 
 /** Custom Gas mix crate for the blender, because rounding issues result in different number, when using partials directly */

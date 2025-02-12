@@ -1,4 +1,4 @@
-import { Compressibility } from "./Compressibility";
+import { Compressibility, RealBlender } from "./Compressibility";
 
 fdescribe('Compresibility', () => {
     it('Glend Trimix', () => {
@@ -21,7 +21,7 @@ fdescribe('Compresibility', () => {
         const he3 = 0;
 
 
-        const result =new Compressibility().blend(pi, o2i, hei,
+        const result =new RealBlender().blend(pi, o2i, hei,
             pf, o2f, hef,
             o21, he1,
             o22, he2,
@@ -58,7 +58,7 @@ Use 22.5 litres of EAN100
         const he3 = 0; // not used
 
 
-        const result =new Compressibility().blend(pi, o2i, hei,
+        const result =new RealBlender().blend(pi, o2i, hei,
             pf, o2f, hef,
             o21, he1,
             o22, he2,

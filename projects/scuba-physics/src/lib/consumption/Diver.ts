@@ -24,19 +24,22 @@ export class Diver {
     }
 
     /**
-     * Returns Bar/minute or Bar/second based on sac for given tank
+     * Returns theoretical average consumption rate
+     * in Bar/minute or Bar/second based on sac for given tank.
      * @param rmv in Liters/min or Liters/second
      * @param tankSize in Liters
      */
     public static gasSac(rmv: number, tankSize: number): number {
+        // not using compressibility here, because we dont know the gas and we have no idea
+        // what is the available pressure difference on the tank.
         return rmv / tankSize;
     }
 
     /**
-     * Returns Bar/minute or Bar/second based on sac for given tank
+     * Returns theoretical average consumption rate
+     * in Bar/minute or Bar/second based on sac for given tank.
      */
     public gasSac(tank: Tank): number {
-        // TODO verify, if using compressibility at 1 atm makes sense here
         return Diver.gasSac(this.rmv, tank.size);
     }
 

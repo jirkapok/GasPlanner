@@ -63,6 +63,7 @@ export class GasBlender {
         }
 
         const combinedSize = tankA.size + tankB.size;
+        // TODO Use compressibility
         const tankVolumeA = Tank.volume(tankA);
         const tankVolumeB = Tank.volume(tankB);
         const result = (tankVolumeA + tankVolumeB) / combinedSize;

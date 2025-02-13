@@ -149,6 +149,7 @@ export interface ConsumptionOptionsDto {
 export interface ConsumedDto {
     /** Tank id */
     id: number;
+    // TODO consider using volume instead of bars, to prevent precision loss when serializing
     consumed: number;
     reserve: number;
 }

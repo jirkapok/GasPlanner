@@ -12,6 +12,7 @@ export class AirWeight {
      * @param tank used to extract consumed bars and size
      */
     public static tankVolumeWeight(tank: Tank): number {
+        // TODO should be replaced by tank.consumedVolume for Air
         const consumedVolume = tank.size * tank.consumed;
         return AirWeight.volumeWeight(consumedVolume);
     }

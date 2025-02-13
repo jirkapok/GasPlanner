@@ -92,6 +92,7 @@ export class Consumption {
         Tanks.resetConsumption(tanks);
         // Reserve needs to be first to be able to preserve it.
         this.updateReserve(emergencyAscent, tanks, consumptionOptions);
+        // TODO use volume instead of bars for minimum reserve to prevent rounding errors
         const tankMinimum = (t: Tank) => t.reserve;
         const rmv = consumptionOptions.diver.rmv;
         let remainToConsume: GasVolumes = this.toBeConsumedYet(segments, rmv, new GasVolumes(), (s) => !!s.tank);
@@ -172,6 +173,7 @@ export class Consumption {
             const gasCode = tank.gas.contentCode;
             const consumedLiters = gasesConsumed.get(gasCode);
             this.updateTankReserve(tank, index, options, consumedLiters);
+            // TODO use compressibility
             const remaining = consumedLiters - (tank.reserve * tank.size);
             gasesConsumed.set(gasCode, remaining);
         }
@@ -181,6 +183,7 @@ export class Consumption {
         // here we update only once, so we can directly round up
         const consumedBars = Precision.ceil(consumedLiters / tank.size);
         const tankConsumedBars = consumedBars > tank.startPressure ? tank.startPressure : consumedBars;
+        // TODO reserve needs to be updated using compressibility
         tank.reserve = this.ensureMinimalReserve(tankConsumedBars, index, options);
     }
 
@@ -240,10 +243,12 @@ export class Consumption {
 
     /** Requires already calculated reserve */
     private consumeFromTank(tank: Tank, consumedLiters: number, minimum: (t: Tank) => number): number {
-        let available = tank.endPressure - minimum(tank);
-        available = available > 0 ? available : 0;
-        const availableLiters = available * tank.size;
+        let availableBars = tank.endPressure - minimum(tank);
+        availableBars = availableBars > 0 ? availableBars : 0;
+        // TODO use compressibility
+        const availableLiters = availableBars * tank.size;
         const reallyConsumedLiters = consumedLiters > availableLiters ? availableLiters : consumedLiters;
+        // TODO use compressibility
         tank.consumed += reallyConsumedLiters / tank.size;
         return reallyConsumedLiters;
     }
@@ -275,7 +280,7 @@ export class Consumption {
      * Returns consumption in Liters at given segment average depth
      * @param rmvSeconds Liter/second
      */
-    private consumedBySegment(segment: Segment, rmvSeconds: number) {
+    private consumedBySegment(segment: Segment, rmvSeconds: number): number {
         const averagePressure = this.depthConverter.toBar(segment.averageDepth);
         const duration = Precision.roundTwoDecimals(segment.duration);
         const consumed = duration * averagePressure * rmvSeconds;

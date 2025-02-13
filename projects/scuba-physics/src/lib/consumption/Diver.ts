@@ -36,6 +36,7 @@ export class Diver {
      * Returns Bar/minute or Bar/second based on sac for given tank
      */
     public gasSac(tank: Tank): number {
+        // TODO verify, if using compressibility at 1 atm makes sense here
         return Diver.gasSac(this.rmv, tank.size);
     }
 

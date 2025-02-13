@@ -66,6 +66,8 @@ export class Tanks {
 export class Tank implements TankFill {
     /** Gets or sets a unique identifier of the tank in its collection */
     public id = 0;
+
+    // TODO Tank Consumed needs to be internally stored in liters, since changing tank size or start pressure should not affect it.
     /** Gets or sets the consumed pressure of gas in bars */
     public consumed = 0;
     /** Gets or sets the reserve which should remain in the tank in bars */
@@ -83,6 +85,7 @@ export class Tank implements TankFill {
     constructor(public size: number,
         public startPressure: number,
         o2Percent: number) {
+        // TODO Tank.size cant be changed directly, since it would affect consumed volume, the same applies to startPressure.
         this.o2 = o2Percent;
     }
 
@@ -129,21 +132,28 @@ export class Tank implements TankFill {
         return this._gas.name;
     }
 
-    /** Current pressure in bars. As calculated value of remaining gas in range 0 - start pressure.  */
+    /**
+     * Current pressure in bars. As calculated value of remaining gas in range 0 - start pressure.
+     * 0 b minimum means from usage perspective, there always should remain atmospheric pressure.
+     **/
     public get endPressure(): number {
+        // TODO use compressibility
         const remaining = this.startPressure - this.consumed;
 
         if (remaining > 0) {
             return remaining;
         }
 
+        // TODO we cant end on 0 b, since there is always gas left at atmospheric pressure.
         return 0;
     }
 
+    /** In meaning of percents of pressure not volume. */
     public get percentsRemaining(): number {
         return this.endPressure / this.startPressure * 100;
     }
 
+    /** In meaning of percents of pressure not volume. */
     public get percentsReserve(): number {
         const result = this.reserve / this.startPressure * 100;
 

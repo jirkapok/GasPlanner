@@ -1,5 +1,8 @@
-import { Tank, TankFill } from '../consumption/Tanks';
+import { TankFill } from '../consumption/Tanks';
 import { Precision } from '../common/precision';
+import { Compressibility } from "../physics/compressibility";
+import { StandardGases } from "../gases/StandardGases";
+import { Gas } from "../gases/Gases";
 
 /**
  * Blending result showing amount of each component used
@@ -62,12 +65,27 @@ export class GasBlender {
             return 0;
         }
 
+        // see https://thetheoreticaldiver.org/wordpress/index.php/2019/02/23/equalizing-real-gases/
+        const gas = StandardGases.air; // consider make it configurable
+        const tankVolumeA = this.realVolume(tankA, gas);
+        const tankVolumeB = this.realVolume(tankB, gas);
+        const totalVolume = tankVolumeA + tankVolumeB;
         const combinedSize = tankA.size + tankB.size;
-        // TODO Use compressibility
-        const tankVolumeA = Tank.volume(tankA);
-        const tankVolumeB = Tank.volume(tankB);
-        const result = (tankVolumeA + tankVolumeB) / combinedSize;
-        return result;
+
+        const compressibility = new Compressibility();
+        const zFactorA = compressibility.zFactor(tankA.startPressure, gas);
+        const zFactorB = compressibility.zFactor(tankB.startPressure, gas);
+        const weigthedZfactor = (tankVolumeA * zFactorA + tankVolumeB * zFactorB) / (tankVolumeA + tankVolumeB);
+        const idealPressure =  totalVolume / combinedSize * weigthedZfactor;
+        const zFactor = compressibility.zFactor(idealPressure, gas);
+        const final = idealPressure * zFactor / weigthedZfactor;
+        return final;
+    }
+
+    private static realVolume(tank: TankFill, gas: Gas): number {
+        const compressibility = new Compressibility();
+        const zFactor = compressibility.zFactor(tank.startPressure, gas);
+        return tank.startPressure * tank.size / zFactor;
     }
 
     /**

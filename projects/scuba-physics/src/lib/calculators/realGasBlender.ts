@@ -76,8 +76,8 @@ export class RealBlender {
             return "Cannot mix with degenerate gases!\n";
         }
 
-        const ivol = this.compress.normalVolumeFactor(pi, gasi.toGas());
-        const fvol = this.compress.normalVolumeFactor(pf, gasf.toGas());
+        const ivol = this.compress.normalVolume(pi, gasi.toGas());
+        const fvol = this.compress.normalVolume(pf, gasf.toGas());
 
         const top1 = ((gas3.fN2 * gas2.fO2 - gas2.fN2 * gas3.fO2) * (gasf.fHe * fvol - gasi.fHe * ivol)
         + (gas2.fHe * gas3.fO2 - gas3.fHe * gas2.fO2) * (gasf.fN2 * fvol - gasi.fN2 * ivol)
@@ -98,12 +98,12 @@ export class RealBlender {
         const newmix1 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1),
         100 * (gasi.fHe * ivol + gas1.fHe * top1) / (ivol + top1));
 
-        const p1 = this.compress.findPressure(newmix1.toGas(), ivol + top1);
+        const p1 = this.compress.pressure(newmix1.toGas(), ivol + top1);
 
         const newmix2 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1 + gas2.fO2 * top2) / (ivol + top1 + top2),
         100 * (gasi.fHe * ivol + gas1.fHe * top1 + gas2.fHe * top2) / (ivol + top1 + top2));
 
-        const p2 = this.compress.findPressure(newmix2.toGas(), ivol + top1 + top2);
+        const p2 = this.compress.pressure(newmix2.toGas(), ivol + top1 + top2);
 
 
         return `
@@ -125,8 +125,8 @@ ${this.format(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
             return "Cannot mix with identical gases!\n";
         }
 
-        const ivol = this.compress.normalVolumeFactor(pi, gasi.toGas());
-        const fvol = this.compress.normalVolumeFactor(pf, gasf.toGas());
+        const ivol = this.compress.normalVolume(pi, gasi.toGas());
+        const fvol = this.compress.normalVolume(pf, gasf.toGas());
 
         const top1 = (gas2.fO2 - gasf.fO2) / (gas2.fO2 - gas1.fO2) * fvol
         - (gas2.fO2 - gasi.fO2) / (gas2.fO2 - gas1.fO2) * ivol;
@@ -139,7 +139,7 @@ ${this.format(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
 
         const newmix = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1));
 
-        const p1 = this.compress.findPressure(newmix.toGas(), ivol + top1);
+        const p1 = this.compress.pressure(newmix.toGas(), ivol + top1);
 
         return `
 Start with ${this.format(pi)} bar of ${ gasi.name}.

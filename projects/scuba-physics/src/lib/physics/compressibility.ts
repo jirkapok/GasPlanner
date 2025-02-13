@@ -41,7 +41,7 @@ export class Compressibility {
      * @param gasPressure current gas pressure in bar
      * @param gas Not empty gas mixture
      **/
-    public normalVolumeFactor(gasPressure: number, gas: Gas): number {
+    public normalVolume(gasPressure: number, gas: Gas): number {
         return (gasPressure * this.zFactor(this.normalPressure, gas)) / this.zFactor(gasPressure, gas);
     }
 
@@ -50,7 +50,7 @@ export class Compressibility {
      * @param gas Not empty gas mixture
      * @param volume Gas volume in liters
      */
-    public findPressure(gas: Gas, volume: number): number {
+    public pressure(gas: Gas, volume: number): number {
         let foundPressure = volume;
         while (Math.abs(this.zFactor(this.normalPressure, gas) * foundPressure - this.zFactor(foundPressure, gas) * volume) > 0.000001) {
             foundPressure = (volume * this.zFactor(foundPressure, gas)) / this.zFactor(this.normalPressure, gas);

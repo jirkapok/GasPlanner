@@ -9,11 +9,11 @@ export class AirWeight {
 
     /**
      * Calculates approximate weight of air in kilograms in tank by consumed amount in bars.
+     * We don't check, if the content of the tank is really an air.
      * @param tank used to extract consumed bars and size
      */
     public static tankVolumeWeight(tank: Tank): number {
-        // TODO should be replaced by tank.consumedVolume for Air
-        const consumedVolume = tank.size * tank.consumed;
+        const consumedVolume = tank.consumedVolume;
         return AirWeight.volumeWeight(consumedVolume);
     }
 

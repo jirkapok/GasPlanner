@@ -46,14 +46,15 @@ export class Compressibility {
     }
 
     /**
-     * Finds current gas pressure for given gas volume.
+     * Finds current gas pressure for given gas volume with precision of 0.000001 b.
      * @param gas Not empty gas mixture
      * @param volume Gas volume in liters
      */
     public pressure(gas: Gas, volume: number): number {
         let foundPressure = volume;
-        while (Math.abs(this.zFactor(this.normalPressure, gas) * foundPressure - this.zFactor(foundPressure, gas) * volume) > 0.000001) {
-            foundPressure = (volume * this.zFactor(foundPressure, gas)) / this.zFactor(this.normalPressure, gas);
+        const normalZfactor = this.zFactor(this.normalPressure, gas);
+        while (Math.abs(normalZfactor * foundPressure - this.zFactor(foundPressure, gas) * volume) > 0.000001) {
+            foundPressure = (volume * this.zFactor(foundPressure, gas)) / normalZfactor;
         }
         return foundPressure;
     }

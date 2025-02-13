@@ -4,8 +4,9 @@ Following list of features and improvements ordered by priority is under develop
 
 ## Known issues
 
+* Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3 - Won't fix
+* RMV/SAC calculator uses ideal gas law to calculated gas consumption, should use Z-factor and real gas compressibility. - Won`t fix, until requested. 
 * Fix the duplicate load needed when accessing the page as pwa - Clear browser cache
-* Fix wrong time format message in console created by plotly - requires more customization and additional reference to d3, won't fix
 * Main menu overlaps the tabs, when text is wrapped on two rows (and some other responsiveness glitches)
 * Loading of simple dive URL with segment shorter than 60 seconds (simple dive to 15 m) shows no validation issue
 * Air breaks result in overlapping gas switch text in profile chart
@@ -22,9 +23,9 @@ Following list of features and improvements ordered by priority is under develop
       Looks like we need to calculate for the ascent time only the 1x reserve from deco tanks
     * Restore 1/2 and 1/3 reserve strategies
     * Add switch to show consumption in liters grouped by gas content not per tank
-    * Adjust consumption by Z factor:
-        * Fix RMV/SAC calculator based on Nominal volume
-        * Use Z-factor in gas blender calculator instead of ideal gas law
+    * Adjust consumption by Z-factor:
+        * Use in gas blender calculator instead of ideal gas law
+        * Use in gas consumed gas calculation task
 * Add CCR support
 * Fix PWA support for iPhone (offline mode and Add to Home screen)
 * UI Tweaks

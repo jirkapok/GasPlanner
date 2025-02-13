@@ -2,7 +2,7 @@ import { Precision } from '../common/precision';
 import { DepthConverter } from '../physics/depth-converter';
 
 /**
- * Surface air consumption formulas
+ * Surface air consumption formulas using ideal gas law.
  */
 export class SacCalculator {
 

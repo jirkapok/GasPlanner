@@ -6,28 +6,78 @@ describe('Gas compressibility', () => {
     const sut = new Compressibility();
 
     describe('Normal volume', () => {
-        it('200 b of Trimix 25/25 is 192.054 L', () => {
-            const gas = StandardGases.trimix2525.copy();
+        it('200 b of Trimix 25/25 is 192.05 L', () => {
+            const gas = StandardGases.trimix2525;
             const result = sut.normalVolumeFactor(200, gas);
             expect(result).toBeCloseTo(192.05390841, 8);
         });
 
-        it('50 b of Air is 192.054 L', () => {
-            const gas = StandardGases.air.copy();
+        it('50 b of Air is 50.4 L', () => {
+            const gas = StandardGases.air;
             const result = sut.normalVolumeFactor(50, gas);
             expect(result).toBeCloseTo(50.44588538, 8);
         });
 
-        it('100 b of Helium is 192.054 L', () => {
-            const gas = new Gas(0, 1).copy();
-            const result = sut.normalVolumeFactor(50, gas);
-            expect(result).toBeCloseTo(48.84467671, 8);
+        it('100 b of Helium is 95.5 L', () => {
+            const gas = new Gas(0, 1);
+            const result = sut.normalVolumeFactor(100, gas);
+            expect(result).toBeCloseTo(95.47529425, 8);
         });
 
         it('1 b of Air is 1 L', () => {
-            const gas = StandardGases.air.copy();
+            const gas = StandardGases.air;
             const result = sut.normalVolumeFactor(1, gas);
             expect(result).toBeCloseTo(1, 8);
+        });
+    });
+
+    describe('Normal volume', () => {
+        it('192.054 L of Trimix 25/25 is at 200 b', () => {
+            const gas = StandardGases.trimix2525;
+            const result = sut.findPressure(gas, 192.05390841);
+            expect(result).toBeCloseTo(200, 5);
+        });
+
+        it('50.45 L of Air is at 50 b', () => {
+            const gas = StandardGases.air;
+            const result = sut.findPressure(gas, 50.44588538);
+            expect(result).toBeCloseTo(50, 7);
+        });
+
+        it('95.5 L of Helium is at 100 b', () => {
+            const gas = new Gas(0, 1);
+            const result = sut.findPressure(gas, 95.47529425);
+            expect(result).toBeCloseTo(100, 5);
+        });
+
+        it('1 L of Air is at 1 b', () => {
+            const gas = StandardGases.air;
+            const result = sut.findPressure(gas, 1);
+            expect(result).toBeCloseTo(1, 8);
+        });
+    });
+
+    describe('Z-factor at 207 b', () => {
+        const zFactor = (gas: Gas)=> sut.zFactor(207, gas);
+
+        it('Air is 1.04', () => {
+            const result = zFactor(StandardGases.air);
+            expect(result).toBeCloseTo(1.04017669, 8);
+        });
+
+        it('Oxygen is 0.96', () => {
+            const result = zFactor(StandardGases.oxygen);
+            expect(result).toBeCloseTo(0.95879556, 8);
+        });
+
+        it('Helium is 1.098', () => {
+            const result = zFactor(new Gas(0, 1));
+            expect(result).toBeCloseTo(1.09756199, 8);
+        });
+
+        it('Trimix 18/45 is 1.06', () => {
+            const result = zFactor(StandardGases.trimix1845);
+            expect(result).toBeCloseTo(1.05930748, 8);
         });
     });
 });

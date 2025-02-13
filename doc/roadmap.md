@@ -24,7 +24,8 @@ Following list of features and improvements ordered by priority is under develop
     * Add switch to show consumption in liters grouped by gas content not per tank
     * Adjust consumption by Z factor:
         * Fix RMV/SAC calculator based on Nominal volume
-        * Use Z factor in gas blender calculator instead of ideal gas law
+        * Use Z-factor in gas blender calculator instead of ideal gas law
+        * Use Z-factor in redundancies calculator (https://thetheoreticaldiver.org/wordpress/index.php/2019/02/23/equalizing-real-gases/) 
 * Add CCR support
 * Fix PWA support for iPhone (offline mode and Add to Home screen)
 * UI Tweaks

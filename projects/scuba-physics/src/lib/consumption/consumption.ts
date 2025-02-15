@@ -95,14 +95,15 @@ export class Consumption {
         // TODO use volume instead of bars for minimum reserve to prevent rounding errors
         const tankMinimum = (t: Tank) => t.reserve;
         const rmv = consumptionOptions.diver.rmv;
-        let remainToConsume: GasVolumes = this.toBeConsumedYet(segments, rmv, new GasVolumes(), (s) => !!s.tank);
+        const getRmv = (_: Segment) => rmv;
+        let remainToConsume: GasVolumes = this.toBeConsumedYet(segments, new GasVolumes(), getRmv, (s) => !!s.tank);
         // First satisfy user defined segments where tank is assigned (also in ascent).
         // assigned tank will be consumed from that tank directly
         remainToConsume = this.consumeByTanks(segments, remainToConsume, rmv, tankMinimum);
         remainToConsume = this.consumeByTanksRemaining(segments, remainToConsume, () => 0);
 
         // and only now we can consume the remaining gas from all other segments
-        remainToConsume = this.toBeConsumedYet(segments, rmv, remainToConsume, (s) => !s.tank);
+        remainToConsume = this.toBeConsumedYet(segments, remainToConsume, getRmv, (s) => !s.tank);
         remainToConsume = this.consumeByGases(tanks, remainToConsume, tankMinimum);
         this.consumeByGases(tanks, remainToConsume, () => 0);
         this.roundTanksConsumedToBars(tanks);
@@ -161,11 +162,17 @@ export class Consumption {
         return testSegments;
     }
 
+    private resolveReserveSacBySegment(segment: Segment, options: ConsumptionOptions): number {
+        // TODO Dont take only first tank as bottom gas
+        // Bottom gas = team stress rmv, deco gas = diver stress rmv, stage tank == ?
+        return segment.tank?.id === 1 ? options.diver.stressRmv : options.diver.stressRmv;
+    }
+
     private updateReserve(emergencyAscent: Segment[], tanks: Tank[], options: ConsumptionOptions): void {
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
-        const gasesConsumed: GasVolumes = this.toBeConsumedYet(emergencyAscent, options.diver.teamStressRmv,
-            new GasVolumes(), () => true);
+        const getRmv = (segment: Segment) => this.resolveReserveSacBySegment(segment, options);
+        const gasesConsumed: GasVolumes = this.toBeConsumedYet(emergencyAscent, new GasVolumes(), getRmv, () => true);
 
         // add the reserve from opposite order than consumed gas
         for (let index = 0; index <= tanks.length - 1; index++) {
@@ -254,14 +261,16 @@ export class Consumption {
     }
 
     /** The only method which add gas */
-    private toBeConsumedYet(segments: Segment[], rmv: number,
+    private toBeConsumedYet(
+        segments: Segment[],
         remainToConsume: GasVolumes,
-        includeSegment: (segment: Segment) => boolean): GasVolumes {
-
-        const rmvSeconds = Time.toMinutes(rmv);
-
+        getRmv: (segment: Segment) => number,
+        includeSegment: (segment: Segment) => boolean,
+    ): GasVolumes {
         for (let index = 0; index < segments.length; index++) {
             const segment = segments[index];
+            const rmv = getRmv(segment);
+            const rmvSeconds = Time.toMinutes(rmv);
 
             if (includeSegment(segment)) {
                 const gas = segment.gas;

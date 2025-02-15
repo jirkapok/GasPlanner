@@ -99,7 +99,7 @@ describe('Gas Blender - Redundancies', () => {
         expect(finalPressure).toBeCloseTo(74.834818, 6); // 75 b ideal gas law
     });
 
-    fit('Different pressure in both different tanks combines gas volume', () => {
+    it('Different pressure in both different tanks combines gas volume', () => {
         const tankA = {
             startPressure: 232,
             size: 24

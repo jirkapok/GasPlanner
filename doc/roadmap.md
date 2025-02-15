@@ -38,6 +38,7 @@ Following list of features and improvements ordered by priority is under develop
   * Profile comparison: Add option to compare dives aligned by the end of dive
   * Read only fields should be distinguish able
   * Tissues heatmap: Show tissues after amount of time spend at surface
+  * Add emergency ascent to the profile chart
 * Add undo/redo to all pages
 * Add localizations
 * Add calculation trainings

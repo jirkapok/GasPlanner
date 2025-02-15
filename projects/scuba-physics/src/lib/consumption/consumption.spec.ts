@@ -10,8 +10,7 @@ import { Salinity } from '../physics/pressure-converter';
 import { ProfileTissues } from "../algorithm/ProfileTissues";
 import { RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
 
-// TODO consumption test case: /?t=1-24-0-220-0.21-0.35,2-11.1-0-200-0.5-0&de=0-53-360-1,53-53-660-1,53-46-60-1,46-46-360-1,46-24-120-1,24-21-60-1&di=20&o=300,9,3,1,3,20,3,0.75,0.3,6,1.6,30,1.4,10,1,1,1,1,1&ao=1,0
-// Ensure if it si valid: generates too high reserve for S80 = 200 b, twin = 120 b
+// TODO add test case for 2x more reserve of Ean50: ?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
 describe('Consumption', () => {
     const consumptionOptions: ConsumptionOptions = {
         diver: new Diver(20),

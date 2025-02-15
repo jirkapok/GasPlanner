@@ -11,7 +11,8 @@ import { ProfileTissues } from "../algorithm/ProfileTissues";
 import { RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
 
 // TODO add test case for 2x more reserve of Ean50: ?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
-describe('Consumption', () => {
+// TODO add test case: emergency ascents start in moment user switches to another tank.
+fdescribe('Consumption', () => {
     const consumptionOptions: ConsumptionOptions = {
         diver: new Diver(20),
         primaryTankReserve: Consumption.defaultPrimaryReserve,

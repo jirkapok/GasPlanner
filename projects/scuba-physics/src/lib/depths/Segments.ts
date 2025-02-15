@@ -176,6 +176,10 @@ export class Segment {
         this.duration += toAdd.duration;
         this.endDepth = toAdd.endDepth;
     }
+
+    public toString(): string {
+        return `Segment:${this.startDepth}-${this.endDepth} m,${this.duration} s, ${this.gas.toString()}`;
+    }
 }
 
 export class Segments {

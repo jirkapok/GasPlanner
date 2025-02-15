@@ -216,6 +216,10 @@ export class Tank implements TankFill {
         this.gas.fO2 = other._gas.fO2;
         this.gas.fHe = other._gas.fHe;
     }
+
+    public toString(): string {
+        return `Tank ${this.id}:${this.name},${this.size} L,${this.startPressure} b`;
+    }
 }
 
 

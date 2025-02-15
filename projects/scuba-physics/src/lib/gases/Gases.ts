@@ -243,6 +243,10 @@ export class Gas {
             this._fHe === other._fHe;
     }
 
+    public toString(): string {
+        return `Gas:${this.name}`;
+    }
+
     private contentExceeds100percent(): boolean {
         return this._fO2 + this._fHe > 1;
     }

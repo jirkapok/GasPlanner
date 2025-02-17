@@ -15,12 +15,6 @@ Following list of features and improvements ordered by priority is under develop
 ## Improvements / Features
 
 * Gas consumption:
-    * Gas consumption calculates duplicate gas reserve for deco tanks
-    * Clarify: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b, should be around 80 -
-      The 3th minute is considered as deepest point and rock bottom is calculated from there and the last user defined segment is considered as necessary return.
-      It looks like we will something like user defined time at which to calculate the rock bottom.
-    * Clarify another test case: https://dugong.online/?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
-      Looks like we need to calculate for the ascent time only the 1x reserve from deco tanks
     * Restore 1/2 and 1/3 reserve strategies
     * Add switch to show consumption in liters grouped by gas content not per tank
     * Adjust consumption by Z-factor:
@@ -38,7 +32,8 @@ Following list of features and improvements ordered by priority is under develop
   * Profile comparison: Add option to compare dives aligned by the end of dive
   * Read only fields should be distinguish able
   * Tissues heatmap: Show tissues after amount of time spend at surface
-  * Add emergency ascent to the profile chart
+  * Add emergency ascent to the profile chart 
+  * Add option for user define Rock bottom at time: Dive to 30 m in extended view and reduce depth on second segment to 29 m - reserve is 200 b
 * Add undo/redo to all pages
 * Add localizations
 * Add calculation trainings

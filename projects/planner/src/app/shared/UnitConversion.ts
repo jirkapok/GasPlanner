@@ -261,7 +261,7 @@ class ImperialRanges implements RangeConstants {
     public readonly rmvRounding = 4;
     public readonly tankHe: [number, number] = [0, 99];
     public readonly tankHeLabel: string = toLabel(this.tankHe, '%');
-    public readonly tankPressure: [number, number] = [1, 5100];
+    public readonly tankPressure: [number, number] = [15, 5100]; // min. 1 bar to cover atm pressure
     public readonly tankPressureLabel: string = toLabel(this.tankPressure, this.units.pressureShortcut);
     public readonly tankSize: [number, number] = [1, 300];
     public readonly tankSizeLabel: string = toLabel(this.tankSize, this.units.volumeShortcut);

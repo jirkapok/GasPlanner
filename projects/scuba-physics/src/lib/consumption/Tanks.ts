@@ -64,12 +64,14 @@ export class Tanks {
 }
 
 export class Tank implements TankFill {
+    // TODO fix to at least 1 atm to cover atmospheric pressure, see also endPressure
+    private static minimumPressure = 0;
     /** Gets or sets a unique identifier of the tank in its collection */
     public id = 0;
-    // TODO Tank.size cant be changed directly, since it would affect consumed volume, the same applies to startPressure.
     private _size = 0;
     private _startPressure = 0;
-    // TODO Tank Consumed needs to be internally stored in liters, since changing tank size or start pressure should not affect it.
+    // Not storing Consumed and reserve internally in liters,
+    // since they are independent on tank size and start pressure.
     private _consumed = 0;
     private _reserve = 0;
     private _gas: Gas = StandardGases.air.copy();
@@ -86,7 +88,7 @@ export class Tank implements TankFill {
             throw new Error('Size needs to be non zero positive amount in liters');
         }
 
-        if(startPressure <= 0) {
+        if(startPressure <= Tank.minimumPressure) {
             throw new Error('Start pressure needs to be positive number greater than atmospheric pressure in bars');
         }
 
@@ -166,12 +168,11 @@ export class Tank implements TankFill {
         // TODO use compressibility
         const remaining = this.startPressure - this.consumed;
 
-        if (remaining > 0) {
+        if (remaining > Tank.minimumPressure) {
             return remaining;
         }
 
-        // TODO we cant end on 0 b, since there is always gas left at atmospheric pressure.
-        return 0;
+        return Tank.minimumPressure;
     }
 
     /** In meaning of percents of pressure not volume. */

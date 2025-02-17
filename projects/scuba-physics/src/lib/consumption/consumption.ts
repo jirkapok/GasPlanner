@@ -197,7 +197,7 @@ export class Consumption {
             const consumedLiters = gasesConsumed.get(gasCode);
             this.updateTankReserve(tank, index, options, consumedLiters);
             // TODO use compressibility
-            const remaining = consumedLiters - (tank.reserve * tank.size);
+            const remaining = consumedLiters - tank.reserveVolume;
             gasesConsumed.set(gasCode, remaining);
         }
     }

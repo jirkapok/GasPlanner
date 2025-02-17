@@ -53,7 +53,8 @@ export interface TopRequest {
 /** Gas mix blending math */
 export class GasBlender {
     /**
-     * Calculates final pressure combining two tanks A and B with different volume and start pressure using ideal gas law.
+     * Calculates final pressure combining two tanks A and B with different volume and start pressure
+     * using real gas compressibility.
      *
      * @returns final pressure in both tanks in bars
      */
@@ -96,9 +97,16 @@ export class GasBlender {
         GasBlender.validate(request.source, 'Source');
         GasBlender.validate(request.topMix, 'Target');
 
-        const finalO2 = GasBlender.pressureO2(request.source) + GasBlender.pressureO2(request.topMix);
-        const finalHe = GasBlender.pressureHe(request.source) + GasBlender.pressureHe(request.topMix);
-        const finalPressure = request.source.pressure + request.topMix.pressure;
+        const compressibility = new Compressibility();
+        const sourceGas = new Gas(request.source.o2, request.source.he);
+        const currentVolume = compressibility.normalVolume(request.source.pressure, sourceGas);
+        const topGas = new Gas(request.topMix.o2, request.topMix.he);
+        const topVolume = compressibility.normalVolume(request.topMix.pressure, topGas);
+        const finalO2Volume = sourceGas.fO2 * currentVolume + topGas.fO2 * topVolume;
+        const finalHeVolume = sourceGas.fHe * currentVolume + topGas.fHe * topVolume;
+        const totalVolume = currentVolume + topVolume;
+        const finalGas = new Gas(finalO2Volume / totalVolume, finalHeVolume / totalVolume);
+        const finalPressure = compressibility.pressure(finalGas, totalVolume);
 
         if(finalPressure === 0) {
             return {
@@ -109,8 +117,8 @@ export class GasBlender {
         }
 
         return {
-            o2: finalO2 / finalPressure,
-            he: finalHe / finalPressure,
+            o2: finalGas.fO2,
+            he: finalGas.fHe,
             pressure: finalPressure
         };
     }
@@ -229,10 +237,6 @@ export class GasBlender {
             he: source.he,
             pressure: source.pressure
         };
-    }
-
-    private static pressureO2(tank: TankMix): number {
-        return tank.o2 * tank.pressure;
     }
 
     private static pressureHe(tank: TankMix): number {

@@ -20,11 +20,9 @@ describe('Gas Blender Topping', () => {
             topMix: { o2: .21, he: .20, pressure: 120 }
         });
 
-        expect(result).toEqual({
-            o2: .21,
-            he: .20,
-            pressure: 120
-        });
+        expect(result.o2).toBeCloseTo(0.21, 6);
+        expect(result.he).toBeCloseTo(0.20, 6);
+        expect(result.pressure).toBeCloseTo(120, 6);
     });
 
     it('No topping tank topping adds source content only', () => {
@@ -33,11 +31,9 @@ describe('Gas Blender Topping', () => {
             topMix: { o2: .21, he: .20, pressure: 0 }
         });
 
-        expect(result).toEqual({
-            o2: .31,
-            he: .25,
-            pressure: 110
-        });
+        expect(result.o2).toBeCloseTo(0.31, 6);
+        expect(result.he).toBeCloseTo(0.25, 6);
+        expect(result.pressure).toBeCloseTo(110, 6);
     });
 
     it('Both tanks adds mix of both', () => {
@@ -46,10 +42,8 @@ describe('Gas Blender Topping', () => {
             topMix: { o2: .40, he: .10, pressure: 60 }
         });
 
-        expect(result).toEqual({
-            o2: .275,
-            he: .225,
-            pressure: 160
-        });
+        expect(result.o2).toBeCloseTo(0.275927, 6);
+        expect(result.he).toBeCloseTo(0.224073, 6);
+        expect(result.pressure).toBeCloseTo(163.214842, 6);
     });
 });

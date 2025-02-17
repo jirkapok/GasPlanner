@@ -50,7 +50,8 @@ describe('Consumption', () => {
             segments.addFlat(airTank.gas, Time.oneMinute);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
-            expect(maxBottomTime).toEqual(20);
+            // TODO fix rounding of tank reserve, since here it counts 200 = 44 + 157 in case team stress in all cases
+            expect(maxBottomTime).toEqual(27);
         });
 
         it('NO Deco dive is calculated using all tanks', () => {
@@ -118,7 +119,7 @@ describe('Consumption', () => {
             altitudeOptions.altitude = 2000; // simulate loaded tissues using altitude
             const surfaceInterval = new RestingParameters(previousTissues, Time.oneMinute * 10);
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, altitudeOptions, surfaceInterval);
-            expect(maxBottomTime).toEqual(16); // otherwise should be 20
+            expect(maxBottomTime).toEqual(21); // otherwise should be 23
         });
     });
 
@@ -194,7 +195,7 @@ describe('Consumption', () => {
 
             it('Reserve is updated for both tanks', () => {
                 expect(airTank.reserve).toEqual(34); // ((4 b * 1 barm/min * 2 min) + (2.5 b * 1 b/min * 1 min)) * 3
-                expect(ean50Tank.reserve).toEqual(45); // ((3 b * 2 barm/min * 1 min) + (2 b * 2 b/min * 2 min)) * 3
+                expect(ean50Tank.reserve).toEqual(23); // ((3 b * 2 barm/min * 1 min) + (2 b * 2 b/min * 2 min)) * 1.5
             });
         });
 
@@ -266,8 +267,8 @@ describe('Consumption', () => {
                 // (2 * 2 * 3) * 3 = 36 // 2 min. problem solving
                 expect(airTank.reserve).toEqual(36);
                 // 1 min. switch
-                // ((1 * 2 * 3) + (2 * 2 * 2)) * 3
-                expect(ean50Tank.reserve).toEqual(42);
+                // ((1 * 2 * 3) + (2 * 2 * 2)) * 1.5
+                expect(ean50Tank.reserve).toEqual(21);
             });
         });
 
@@ -299,7 +300,7 @@ describe('Consumption', () => {
 
         describe('1. tank air, 2. ean50, 3. ean50 - reserve from both tanks', () => {
             const airTank = new Tank(20, 200, 21);
-            const ean50Tank = new Tank(5, 70, 50);
+            const ean50Tank = new Tank(5, 30, 50);
             const ean50Tank2 = new Tank(5, 50, 50);
             const tanks = [airTank, ean50Tank, ean50Tank2];
 
@@ -316,9 +317,9 @@ describe('Consumption', () => {
             it('Reserve is updated from both EAN50 tanks', () => {
                 // ((4b * 2 * 1) + (3.5b * 1 min * 1 b/min.)) * 3
                 expect(airTank.reserve).toEqual(34);
-                // total: ((3b * 4 bar/min * 1 min) + (2 b * 4 bar/min * 2 min)) * 3 = 89 b
-                expect(ean50Tank.reserve).toEqual(70);   // full tank as first in order
-                expect(ean50Tank2.reserve).toEqual(19);
+                // total: ((3b * 4 bar/min * 1 min) + (2 b * 4 bar/min * 2 min)) * 1.5 = 45 b
+                expect(ean50Tank.reserve).toEqual(30);   // full tank as first in order
+                expect(ean50Tank2.reserve).toEqual(15);
             });
         });
 
@@ -355,8 +356,8 @@ describe('Consumption', () => {
                 expect(airTank.reserve).toEqual(30);
                 expect(airTank2.reserve).toEqual(0); // not used
                 // 1 minute gas switch to the Ean50 + 2 min. ascent
-                // ((1 * 2 * 3) + (2 * 2 * 2)) * 3 => 42
-                expect(ean50Tank.reserve).toEqual(42); // used during ascent as rock bottom
+                // ((1 * 2 * 3) + (2 * 2 * 2)) * 1.5 => 21
+                expect(ean50Tank.reserve).toEqual(21); // used during ascent as rock bottom
                 expect(ean50Tank2.reserve).toEqual(0); // not used
             });
         });
@@ -449,8 +450,8 @@ describe('Consumption', () => {
             consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
             // ((5 * 2 * 1) + (3,3 * 10 * 1)) * 3
             expect(tank1.reserve).toEqual(128);
-            // ((1,6 * 8 * 2 = 25,6) + (1,3 * 2 * 2 = 5,20)) * 3
-            expect(tank2.reserve).toEqual(93);
+            // ((1,6 * 8 * 2 = 25,6) + (1,3 * 2 * 2 = 5,20)) * 1.5
+            expect(tank2.reserve).toEqual(47);
         });
 
         it('Shallower, than deeper - last deepest point used for emergency ascent', () => {

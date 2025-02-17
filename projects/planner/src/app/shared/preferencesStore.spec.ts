@@ -112,7 +112,7 @@ describe('PreferencesStore', () => {
                 options.gasSwitchDuration = 1;
                 options.problemSolvingDuration = 2;
                 depthsService.plannedDepth = 30;
-                depthsService.planDuration = 12;
+                depthsService.planDuration = 20;
 
                 tanksService.addTank();
                 const tanks = tanksService.tanks;
@@ -130,12 +130,12 @@ describe('PreferencesStore', () => {
                 planner.calculate(1); // not called automatically
                 const expected1 = new Tank(15, 150, 21);
                 expected1.id = 1;
-                expected1.consumed = 65;
+                expected1.consumed = 107;
                 expected1.reserve = 45;
                 const expected2 = new Tank(11.1, 200, 50);
                 expected2.id = 2;
-                expected2.consumed = 21;
-                expected2.reserve = 62;
+                expected2.consumed = 22;
+                expected2.reserve = 36;
                 // JSON serialization prevents order of items in an array
                 const expected: Tank[] = [expected1, expected2];
                 expect(tanksService.tankData).toEqual(expected);

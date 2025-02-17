@@ -82,6 +82,14 @@ export class Tank implements TankFill {
      * @param startPressure Filled in bars of gas
      */
     constructor(size: number, startPressure: number, o2Percent: number) {
+        if(size <= 0) {
+            throw new Error('Size needs to be non zero positive amount in liters');
+        }
+
+        if(startPressure <= 0) {
+            throw new Error('Start pressure needs to be positive number greater than atmospheric pressure in bars');
+        }
+
         this._size = size;
         this._startPressure = startPressure;
         this.o2 = o2Percent;

@@ -176,4 +176,14 @@ describe('Tank', () => {
             expect(tank).toEqual(Tank.createDefault());
         });
     });
+
+    describe('Create valid', () => {
+        it('Size needs to at least 1 liter', () => {
+            expect(() => new Tank(0, 100, 18)).toThrow();
+        });
+
+        it('Start pressure needs to be at least 1 b', () => {
+            expect(() => new Tank(10, 0, 18)).toThrow();
+        });
+    });
 });

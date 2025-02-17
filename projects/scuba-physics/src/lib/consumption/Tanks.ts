@@ -66,13 +66,12 @@ export class Tanks {
 export class Tank implements TankFill {
     /** Gets or sets a unique identifier of the tank in its collection */
     public id = 0;
-
+    // TODO Tank.size cant be changed directly, since it would affect consumed volume, the same applies to startPressure.
+    private _size = 0;
+    private _startPressure = 0;
     // TODO Tank Consumed needs to be internally stored in liters, since changing tank size or start pressure should not affect it.
-    /** Gets or sets the consumed pressure of gas in bars */
-    public consumed = 0;
-    /** Gets or sets the reserve which should remain in the tank in bars */
-    public reserve = 0;
-
+    private _consumed = 0;
+    private _reserve = 0;
     private _gas: Gas = StandardGases.air.copy();
 
     /**
@@ -82,11 +81,30 @@ export class Tank implements TankFill {
      * @param o2Percent Percents of oxygen e.g. 20%
      * @param startPressure Filled in bars of gas
      */
-    constructor(public size: number,
-        public startPressure: number,
-        o2Percent: number) {
-        // TODO Tank.size cant be changed directly, since it would affect consumed volume, the same applies to startPressure.
+    constructor(size: number, startPressure: number, o2Percent: number) {
+        this._size = size;
+        this._startPressure = startPressure;
         this.o2 = o2Percent;
+    }
+
+    /** Filled in bars of gas */
+    public get startPressure(): number {
+        return this._startPressure;
+    }
+
+    /** Volume in liters */
+    public get size(): number {
+        return this._size;
+    }
+
+    /** Gets or sets the consumed pressure of gas in bars */
+    public get consumed(): number {
+        return this._consumed;
+    }
+
+    /** Gets or sets the reserve which should remain in the tank in bars */
+    public get reserve(): number {
+        return this._reserve;
     }
 
     public get gas(): Gas {
@@ -182,12 +200,28 @@ export class Tank implements TankFill {
         this.gas.fHe = newValue / 100;
     }
 
+    public set startPressure(newValue: number) {
+        this._startPressure = newValue;
+    }
+
+    public set size(newValue: number) {
+        this._size = newValue;
+    }
+
+    public set consumed(newValue: number) {
+        this._consumed = newValue;
+    }
+
+    public set reserve(newValue: number) {
+        this._reserve = newValue;
+    }
+
     /** Creates 15 L, filled with 200 bar Air */
     public static createDefault(): Tank {
         return new Tank(15, 200, GasMixtures.o2InAir * 100);
     }
 
-    /** Gets total volume at start pressure in liters */
+    /** Gets total volume of stored gas at start pressure in liters */
     public static volume(tank: TankFill): number {
         return Tank.volume2(tank.size, tank.startPressure);
     }

@@ -91,6 +91,10 @@ export class Consumption {
             throw new Error('Profile needs to contain at least 2 segments.');
         }
 
+        if (emergencyAscent.length < 1) {
+            throw new Error('Emergency ascent needs to contain at least 1 segment.');
+        }
+
         Tanks.resetConsumption(tanks);
         // Reserve needs to be first to be able to preserve it.
         this.updateReserve(emergencyAscent, tanks, consumptionOptions);
@@ -168,12 +172,18 @@ export class Consumption {
     private resolveReserveSacBySegment(diver: Diver, bottomTank: Tank, segment: Segment): number {
         // Bottom gas = team stress rmv, deco gas = diver stress rmv,
         // TODO stage tank RMV == ?
-        return segment.tank === bottomTank ? diver.teamStressRmv : diver.stressRmv;
+        // User is on bottom tank, or calculated ascent using bottom gas.
+        // The only issue is breathing bottom gas as travel and in such case it is user defined segment with tank assigned.
+        if (segment.tank === bottomTank || segment.gas.compositionEquals(bottomTank.gas)) {
+            return diver.teamStressRmv;
+        }
+
+        return diver.stressRmv;
     }
 
     private updateReserve(emergencyAscent: Segment[], tanks: Tank[], options: ConsumptionOptions): void {
         // Not all segments have tank assigned, but the emergency ascent is calculated
-        // from last user defined segment, so there should be a tank.
+        // from last user defined segment, so there should be a tank, otherwise we no other option.
         const bottomTank = emergencyAscent[0]?.tank ?? tanks[0];
         const getRmv = (segment: Segment) => this.resolveReserveSacBySegment(options.diver, bottomTank, segment);
         // here the consumed during emergency ascent means reserve
@@ -202,6 +212,7 @@ export class Consumption {
 
     private ensureMinimalReserve(reserve: number, tankIndex: number, options: ConsumptionOptions): number {
         // maybe use the tank.id instead of index
+        // TODO Use bottom tank as in reserve, not by index
         const minimalReserve = tankIndex === 0 ? options.primaryTankReserve : options.stageTankReserve;
 
         if(reserve < minimalReserve) {

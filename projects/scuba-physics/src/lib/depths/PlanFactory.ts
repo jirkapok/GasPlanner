@@ -74,7 +74,8 @@ export class PlanFactory {
         const solvingDuration = problemSolvingDuration * Time.oneMinute;
         const last = plan[plan.length - 1];
         const ascentDepth = last.endDepth;
-        const problemSolving = new Segment(ascentDepth, ascentDepth, last.gas, solvingDuration);
+        const gasSource = last.tank ?? last.gas;
+        const problemSolving = new Segment(ascentDepth, ascentDepth, gasSource, solvingDuration);
         plan.push(problemSolving);
     }
 

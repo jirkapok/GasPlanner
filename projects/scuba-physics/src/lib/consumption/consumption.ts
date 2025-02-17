@@ -26,9 +26,9 @@ class GasVolumes {
 
 export interface ConsumptionOptions {
     diver: Diver;
-    /** Minimum tank reserve for first tank in bars */
+    /** Minimum tank reserve for bottom gas tank in bars */
     primaryTankReserve: number;
-    /** Minimum tank reserve for all other stage tanks in bars */
+    /** Minimum tank reserve for all other stage/deco tanks in bars */
     stageTankReserve: number;
 }
 

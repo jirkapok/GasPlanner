@@ -165,7 +165,6 @@ export class Tank implements TankFill {
      * 0 b minimum means from usage perspective, there always should remain atmospheric pressure.
      **/
     public get endPressure(): number {
-        // TODO use compressibility
         const remaining = this.startPressure - this.consumed;
 
         if (remaining > Tank.minimumPressure) {
@@ -218,6 +217,7 @@ export class Tank implements TankFill {
     }
 
     public set consumed(newValue: number) {
+        // TODO should never allow to set less than remaining tank.minimumPressure
         this._consumed = newValue;
     }
 

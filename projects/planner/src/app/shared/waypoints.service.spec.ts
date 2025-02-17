@@ -30,7 +30,7 @@ describe('WayPointsService', () => {
     it('With gas switch adds event', () => {
         const plan = new Plan();
         plan.setSimple(40, 20, airTank, options);
-        plan.addSegment(new Tank(10, 0, 50));
+        plan.addSegment(new Tank(10, 1, 50));
 
         const wayPoints = sut.calculateWayPoints(plan.segments);
         expect(wayPoints[2].swimAction).toEqual(SwimAction.switch);

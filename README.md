@@ -22,7 +22,6 @@ None of the authors, contributors, administrators, or anyone else connected with
 * Bühlmann ZHL-16C algorithm with Gradient factors
 * Lot of calculators: RMV/SAC, Nitrox, Trimix properties, Redundancies, NDL table ...
 * See more in **[Application help](./doc/readme.md)**
-* See also [Road map of planned features](./doc/roadmap.md)
 
 ## Donate
 

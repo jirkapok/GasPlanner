@@ -1,17 +1,14 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Issue
+about: Suggest an idea for this project
 title: ''
-labels: ['bug']
+labels: ''
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
-
-**To Reproduce**
-Steps to reproduce the behavior.
+**Describe the issue**
+A clear and concise description of what the issue is.
 
 **Current behavior**
 A clear and concise description of what currently happens.

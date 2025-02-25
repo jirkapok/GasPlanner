@@ -31,7 +31,7 @@ export class Compartment {
 export class Compartments {
     /**
     *  Removed 1, used 1b compartment instead
-    *  Verified by subsuface, wiki and http://www.nigelhewitt.co.uk/stuff/aab.jpg
+    *  Verified by Subsurface, wiki and http://www.nigelhewitt.co.uk/stuff/aab.jpg
     *  Using values from Subsurface
     *  Not implementing version A (not conservative), nor B (for tables)
     */

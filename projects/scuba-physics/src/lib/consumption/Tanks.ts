@@ -64,9 +64,10 @@ export class Tanks {
 }
 
 export class Tank implements TankFill {
+    private static minimumSize = 0.1;
     // doesn't need to be altitude pressure, since its effect is negligible. See also Compressibility.normalPressure.
-    private atmosphericPressure: number = 1;
     // TODO fix to at least 1 atm to cover atmospheric pressure, see also endPressure
+    private atmosphericPressure: number = 1;
     private static minimumPressure = 0;
     /** Gets or sets a unique identifier of the tank in its collection */
     public id = 0;
@@ -86,7 +87,7 @@ export class Tank implements TankFill {
      * @param startPressure Filled in bars of gas
      */
     constructor(size: number, startPressure: number, o2Percent: number) {
-        if(size <= 0) {
+        if(size < Tank.minimumSize) {
             throw new Error('Size needs to be non zero positive amount in liters');
         }
 
@@ -108,7 +109,8 @@ export class Tank implements TankFill {
     }
 
     /**
-     * Volume in liters. Changing the value does not preserve the total volume of stored gas.
+     * Gets or sets the volume in liters. Changing the value does not preserve the total volume of stored gas.
+     * Minimum value is 0.1 liter.
      **/
     public get size(): number {
         return this._size;
@@ -225,29 +227,37 @@ export class Tank implements TankFill {
     }
 
     public set startPressure(newValue: number) {
-        this._startPressure = newValue;
+       if(newValue < Tank.minimumPressure) {
+           this._startPressure = Tank.minimumPressure;
+       } else {
+           this._startPressure = newValue;
+       }
     }
 
     public set size(newValue: number) {
-        this._size = newValue;
+        if(newValue < Tank.minimumSize) {
+            this._size = Tank.minimumSize;
+        } else {
+            this._size = newValue;
+        }
     }
 
     public set consumed(newValue: number) {
-        if(newValue < Tank.minimumPressure) {
-            this._consumed = Tank.minimumPressure;
-            return;
-        }
-
         if(newValue > this.startPressure) {
             this._consumed = this.startPressure;
-            return;
+        } else if(newValue < Tank.minimumPressure) {
+            this._consumed = Tank.minimumPressure;
+        } else {
+            this._consumed = newValue;
         }
-
-        this._consumed = newValue;
     }
 
     public set reserve(newValue: number) {
-        this._reserve = newValue;
+        if(newValue < Tank.minimumPressure) {
+            this._reserve = Tank.minimumPressure;
+        } else {
+            this._reserve = newValue;
+        }
     }
 
     /** Creates 15 L, filled with 200 bar Air */

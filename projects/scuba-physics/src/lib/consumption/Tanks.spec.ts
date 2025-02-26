@@ -158,6 +158,23 @@ describe('Tank', () => {
         });
     });
 
+    describe('Sets only valid values', () => {
+        it('Size cant be negative', () => {
+            tank.size = -10;
+            expect(tank.size).toBe(0.1);
+        });
+
+        it('Start pressure can`t be negative', () => {
+            tank.startPressure = -100;
+            expect(tank.startPressure).toBe(0);
+        });
+
+        it('Reserve can`t be negative', () => {
+            tank.reserve = -100;
+            expect(tank.reserve).toBe(0);
+        });
+    });
+
     describe('Assign standard gas', () => {
         it('Assigns both O2 and He fractions', () => {
             const modified = new Tank(10, 200, 21);

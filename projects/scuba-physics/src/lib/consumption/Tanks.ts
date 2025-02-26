@@ -99,12 +99,17 @@ export class Tank implements TankFill {
         this.o2 = o2Percent;
     }
 
-    /** Filled in bars of gas. Relative to atmospheric pressure. The same value as shown on manometer. */
+    /**
+     * Filled in bars of gas. Relative to atmospheric pressure. The same value as shown on manometer.
+     * Changing the value does not preserve the total volume of stored gas.
+     **/
     public get startPressure(): number {
         return this._startPressure;
     }
 
-    /** Volume in liters */
+    /**
+     * Volume in liters. Changing the value does not preserve the total volume of stored gas.
+     **/
     public get size(): number {
         return this._size;
     }
@@ -131,12 +136,17 @@ export class Tank implements TankFill {
 
     /**
      * Gets or sets the reserve which should remain in the tank in bars.
-     * Relative to atmospheric pressure. The same value as shown on manometer.
+     * This value is informative, does not affect other pressure related properties.
+     * Relative to atmospheric pressure, the same value as shown on manometer.
      **/
     public get reserve(): number {
         return this._reserve;
     }
 
+    /**
+     * Gets or sets the gas mixture in the tank.
+     * Changing the gas does not preserve the total volume of stored gas.
+     **/
     public get gas(): Gas {
         return this._gas;
     }
@@ -256,6 +266,7 @@ export class Tank implements TankFill {
         this.gas.fHe = found.fHe;
     }
 
+    /** Copies all properties from another tank except id */
     public loadFrom(other: Tank): void {
         this.size = other.size;
         this.startPressure = other.startPressure;

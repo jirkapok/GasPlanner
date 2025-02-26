@@ -233,7 +233,16 @@ export class Tank implements TankFill {
     }
 
     public set consumed(newValue: number) {
-        // TODO should never allow to set less than remaining tank.minimumPressure
+        if(newValue < Tank.minimumPressure) {
+            this._consumed = Tank.minimumPressure;
+            return;
+        }
+
+        if(newValue > this.startPressure) {
+            this._consumed = this.startPressure;
+            return;
+        }
+
         this._consumed = newValue;
     }
 

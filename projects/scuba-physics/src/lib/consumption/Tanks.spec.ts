@@ -146,6 +146,18 @@ describe('Tank', () => {
         });
     });
 
+    describe('Set consumed', () => {
+        it('more than available sets only available', () => {
+            tank.consumed = 300;
+            expect(tank.consumed).toBe(200);
+        });
+
+        it('negative amount sets 0 bars consumed', () => {
+            tank.consumed = -100;
+            expect(tank.consumed).toBe(0);
+        });
+    });
+
     describe('Assign standard gas', () => {
         it('Assigns both O2 and He fractions', () => {
             const modified = new Tank(10, 200, 21);

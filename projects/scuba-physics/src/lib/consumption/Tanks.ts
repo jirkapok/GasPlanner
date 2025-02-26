@@ -64,6 +64,8 @@ export class Tanks {
 }
 
 export class Tank implements TankFill {
+    // doesn't need to be altitude pressure, since its effect is negligible. See also Compressibility.normalPressure.
+    private atmosphericPressure: number = 1;
     // TODO fix to at least 1 atm to cover atmospheric pressure, see also endPressure
     private static minimumPressure = 0;
     /** Gets or sets a unique identifier of the tank in its collection */
@@ -97,7 +99,7 @@ export class Tank implements TankFill {
         this.o2 = o2Percent;
     }
 
-    /** Filled in bars of gas */
+    /** Filled in bars of gas. Relative to atmospheric pressure. The same value as shown on manometer. */
     public get startPressure(): number {
         return this._startPressure;
     }
@@ -107,12 +109,30 @@ export class Tank implements TankFill {
         return this._size;
     }
 
-    /** Gets or sets the consumed pressure of gas in bars */
+    /** Gets or sets the consumed pressure of gas in bars. */
     public get consumed(): number {
         return this._consumed;
     }
 
-    /** Gets or sets the reserve which should remain in the tank in bars */
+    /**
+     * Calculated value representing the current pressure in bars as shown on manometer.
+     * As calculated value of remaining gas in range 0 - start pressure.
+     * Relative to atmospheric pressure.
+     **/
+    public get endPressure(): number {
+        const remaining = this.startPressure - this.consumed;
+
+        if (remaining > Tank.minimumPressure) {
+            return remaining;
+        }
+
+        return Tank.minimumPressure;
+    }
+
+    /**
+     * Gets or sets the reserve which should remain in the tank in bars.
+     * Relative to atmospheric pressure. The same value as shown on manometer.
+     **/
     public get reserve(): number {
         return this._reserve;
     }
@@ -140,12 +160,12 @@ export class Tank implements TankFill {
         return Precision.roundTwoDecimals(current);
     }
 
-    /** Gets total volume at start pressure in liters */
+    /** Gets total volume of stored gas at start pressure in liters */
     public get volume(): number {
         return Tank.volume(this);
     }
 
-    /** Gets total volume of reserve in liters */
+    /** Gets total volume of gas reserve in liters */
     public get reserveVolume(): number {
         return Tank.volume2(this.size, this.reserve);
     }
@@ -158,20 +178,6 @@ export class Tank implements TankFill {
     /** Gets not null name of the content gas based on O2 and he fractions */
     public get name(): string {
         return this._gas.name;
-    }
-
-    /**
-     * Current pressure in bars. As calculated value of remaining gas in range 0 - start pressure.
-     * 0 b minimum means from usage perspective, there always should remain atmospheric pressure.
-     **/
-    public get endPressure(): number {
-        const remaining = this.startPressure - this.consumed;
-
-        if (remaining > Tank.minimumPressure) {
-            return remaining;
-        }
-
-        return Tank.minimumPressure;
     }
 
     /** In meaning of percents of pressure not volume. */

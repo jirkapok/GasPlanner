@@ -2,6 +2,7 @@ import { Precision } from '../common/precision';
 import { GasMixtures } from '../gases/GasMixtures';
 import { Gas, Gases } from '../gases/Gases';
 import { StandardGases } from '../gases/StandardGases';
+import { Compressibility } from "../physics/compressibility";
 
 export interface TankFill {
     /** start pressure in bars as non zero positive number.*/
@@ -91,7 +92,7 @@ export class Tank implements TankFill {
             throw new Error('Size needs to be non zero positive amount in liters');
         }
 
-        if(startPressure <= Tank.minimumPressure) {
+        if(startPressure < Tank.minimumPressure) {
             throw new Error('Start pressure needs to be positive number greater than atmospheric pressure in bars');
         }
 
@@ -172,19 +173,34 @@ export class Tank implements TankFill {
         return Precision.roundTwoDecimals(current);
     }
 
-    /** Gets total volume of stored gas at start pressure in liters */
+    /** Gets total volume of stored gas at start pressure in liters using ideal gas law */
     public get volume(): number {
         return Tank.volume(this);
     }
 
-    /** Gets total volume of gas reserve in liters */
+    /** Gets total volume of stored gas at start pressure in liters using real gas compressibility */
+    public get realVolume(): number {
+        return Tank.realVolume(this, this.gas);
+    }
+
+    /** Gets total volume of gas reserve in liters using ideal gas law */
     public get reserveVolume(): number {
         return Tank.volume2(this.size, this.reserve);
     }
 
-    /** Gets total volume of consumed gas in liters */
+    /** Gets total volume of gas reserve in liters using real gas compressibility */
+    public get realReserveVolume(): number {
+        return Tank.realVolume2(this.size, this.reserve, this.gas);
+    }
+
+    /** Gets total volume of consumed gas in liters using ideal gas law */
     public get consumedVolume(): number {
         return Tank.volume2(this.size, this.consumed);
+    }
+
+    /** Gets total volume of consumed gas in liters using real gas compressibility */
+    public get realConsumedVolume(): number {
+        return Tank.realVolume2(this.size, this.consumed, this.gas);
     }
 
     /** Gets not null name of the content gas based on O2 and he fractions */
@@ -265,13 +281,25 @@ export class Tank implements TankFill {
         return new Tank(15, 200, GasMixtures.o2InAir * 100);
     }
 
-    /** Gets total volume of stored gas at start pressure in liters */
+    /** Gets total volume of stored gas at start pressure in liters using ideal gas law */
     public static volume(tank: TankFill): number {
         return Tank.volume2(tank.size, tank.startPressure);
     }
 
+    /** Gets total volume of stored gas at start pressure in liters using real gas compressibility */
+    public static realVolume(tank: TankFill, gas: Gas): number {
+        const compressibility = new Compressibility();
+        const realVolume = compressibility.realVolume(tank, gas);
+        return realVolume;
+    }
+
     private static volume2(size: number, pressure: number): number {
         return size * pressure;
+    }
+
+    private static realVolume2(size: number, pressure: number, gas: Gas): number {
+        const tank = { size, startPressure: pressure };
+        return Tank.realVolume(tank, gas);
     }
 
     public assignStandardGas(gasName: string): void {

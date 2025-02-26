@@ -207,12 +207,34 @@ describe('Tank', () => {
     });
 
     describe('Create valid', () => {
-        it('Size needs to at least 1 liter', () => {
+        it('Size needs to at least 0.1 liter', () => {
             expect(() => new Tank(0, 100, 18)).toThrow();
         });
 
-        it('Start pressure needs to be at least 1 b', () => {
-            expect(() => new Tank(10, 0, 18)).toThrow();
+        it('Start pressure needs to be positive number', () => {
+            expect(() => new Tank(10, -1, 18)).toThrow();
+        });
+
+        it('0 b Start pressure is valid', () => {
+            expect(() => new Tank(10, 0, 18)).not.toThrow();
+        });
+    });
+
+    describe('Real volumes', () => {
+        const filledTank = new Tank(10, 200, 21);
+
+        it('Real volume', () => {
+            expect(filledTank.realVolume).toBeCloseTo(1930.753, 3);
+        });
+
+        it('Real reserve volume', () => {
+            filledTank.reserve = 50;
+            expect(filledTank.realReserveVolume).toBeCloseTo(504.621, 3);
+        });
+
+        it('Real consumed volume', () => {
+            filledTank.consumed = 100;
+            expect(filledTank.realConsumedVolume).toBeCloseTo(1005.281, 3);
         });
     });
 });

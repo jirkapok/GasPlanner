@@ -258,6 +258,7 @@ export class Tank implements TankFill {
         }
     }
 
+    // TODO store consumed in liters internally
     public set consumed(newValue: number) {
         if(newValue > this.startPressure) {
             this._consumed = this.startPressure;

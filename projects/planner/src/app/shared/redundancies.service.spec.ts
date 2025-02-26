@@ -14,6 +14,6 @@ describe('Redundancies service', () => {
         const sut = new RedundanciesService(units);
         sut.firstTank.startPressure = 1000;
         sut.secondTank.startPressure = 3000;
-        expect(sut.finalPressure).toBeCloseTo(1957.5 , 1);
+        expect(sut.finalPressure).toBeCloseTo(1956.9 , 1);
     });
 });

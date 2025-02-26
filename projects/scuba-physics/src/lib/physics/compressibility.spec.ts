@@ -92,29 +92,29 @@ describe('Gas compressibility', () => {
 
         it('10 l of Air at 200 b is 1930 l', () => {
             const result = sut.realVolume(tank, StandardGases.air);
-            expect(result).toBeCloseTo(1930.753, 3);
+            expect(result).toBeCloseTo(1930.134, 3);
         });
 
         it('10 l of Oxygen at 200 b is 2090 l', () => {
             const result = sut.realVolume(tank, StandardGases.oxygen);
-            expect(result).toBeCloseTo(2089.647, 3);
+            expect(result).toBeCloseTo(2088.152, 3);
         });
 
         it('10 l of Trimix 18/45 at 200 b is 1894', () => {
             const result = sut.realVolume(tank, StandardGases.trimix1845);
-            expect(result).toBeCloseTo(1894.462, 3);
+            expect(result).toBeCloseTo(1894.482, 3);
         });
 
         it('20 l of air at 200 b is 3861 l', () => {
             const tank20 = { size: 20, startPressure: 200 };
             const result = sut.realVolume(tank20, StandardGases.air);
-            expect(result).toBeCloseTo(3861.507, 3);
+            expect(result).toBeCloseTo(3860.269, 3);
         });
 
         it('10 l of air at 50 b is 505', () => {
             const tank50b = { size: 10, startPressure: 50 };
             const result = sut.realVolume(tank50b, StandardGases.air);
-            expect(result).toBeCloseTo(504.621, 3);
+            expect(result).toBeCloseTo(504.459, 3);
         });
     });
 });

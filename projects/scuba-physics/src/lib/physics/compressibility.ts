@@ -44,12 +44,12 @@ export class Compressibility {
      * @returns Real volume of given gas in liters stored in the tank.
      **/
     public realVolume(tank: TankFill, gas: Gas): number {
-        const zFactor = this.zFactor(tank.startPressure, gas);
-        return tank.startPressure * tank.size / zFactor;
+        const unitVolume = this.normalVolume(tank.startPressure, gas);
+        return unitVolume * tank.size;
     }
 
     /**
-     * Calculates normal volume in liters for given gas mixture at 1 bar.
+     * Calculates real volume in liters of gas in 1 L container for given gas mixture at 1 bar.
      * @param gasPressure current gas pressure in bar
      * @param gas Not empty gas mixture
      **/

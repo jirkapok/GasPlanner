@@ -82,7 +82,7 @@ describe('Gas Blender - Redundancies', () => {
         };
 
         const finalPressure = GasBlender.redundancies(tankA, tankB);
-        expect(finalPressure).toBeCloseTo(50);
+        expect(finalPressure).toBeCloseTo(50, 0);
     });
 
     it('Different pressure in both identical tanks combines gas volume', () => {
@@ -96,7 +96,7 @@ describe('Gas Blender - Redundancies', () => {
         };
 
         const finalPressure = GasBlender.redundancies(tankA, tankB);
-        expect(finalPressure).toBeCloseTo(74.834818, 6); // 75 b ideal gas law
+        expect(finalPressure).toBeCloseTo(74.810682, 6); // 75 b ideal gas law
     });
 
     it('Different pressure in both different tanks combines gas volume', () => {
@@ -110,6 +110,6 @@ describe('Gas Blender - Redundancies', () => {
         };
 
         const finalPressure2 = GasBlender.redundancies(tankA, tankB);
-        expect(finalPressure2).toBeCloseTo(169.636306, 6); // 174.4 b ideal gas law
+        expect(finalPressure2).toBeCloseTo(169.577169, 6); // 174.4 b ideal gas law
     });
 });

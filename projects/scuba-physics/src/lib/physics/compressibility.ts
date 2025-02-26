@@ -1,4 +1,5 @@
 import { Gas } from '../gases/Gases';
+import { TankFill } from "../consumption/Tanks";
 
 /**
  * Real gas compression calculator. Does not use Gas ideal law, instead uses Z-factor.
@@ -34,6 +35,17 @@ export class Compressibility {
             gas.fHe * this.virial(gasPressure, this.heCoefficients) +
             gas.fN2 * this.virial(gasPressure, this.n2Coefficients)
         );
+    }
+
+    /**
+     * Calculates real volume in liters for given tank.
+     * @param tank Not empty tank fill.
+     * @param gas Not empty gas mixture.
+     * @returns Real volume of given gas in liters stored in the tank.
+     **/
+    public realVolume(tank: TankFill, gas: Gas): number {
+        const zFactor = this.zFactor(tank.startPressure, gas);
+        return tank.startPressure * tank.size / zFactor;
     }
 
     /**

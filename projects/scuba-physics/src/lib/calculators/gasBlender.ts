@@ -68,12 +68,11 @@ export class GasBlender {
 
         // see https://thetheoreticaldiver.org/wordpress/index.php/2019/02/23/equalizing-real-gases/
         const gas = StandardGases.air; // consider make it configurable
-        const tankVolumeA = this.realVolume(tankA, gas);
-        const tankVolumeB = this.realVolume(tankB, gas);
+        const compressibility = new Compressibility();
+        const tankVolumeA = compressibility.realVolume(tankA, gas);
+        const tankVolumeB = compressibility.realVolume(tankB, gas);
         const totalVolume = tankVolumeA + tankVolumeB;
         const combinedSize = tankA.size + tankB.size;
-
-        const compressibility = new Compressibility();
         const zFactorA = compressibility.zFactor(tankA.startPressure, gas);
         const zFactorB = compressibility.zFactor(tankB.startPressure, gas);
         const weigthedZfactor = (tankVolumeA * zFactorA + tankVolumeB * zFactorB) / (tankVolumeA + tankVolumeB);
@@ -81,12 +80,6 @@ export class GasBlender {
         const zFactor = compressibility.zFactor(idealPressure, gas);
         const final = idealPressure * zFactor / weigthedZfactor;
         return final;
-    }
-
-    private static realVolume(tank: TankFill, gas: Gas): number {
-        const compressibility = new Compressibility();
-        const zFactor = compressibility.zFactor(tank.startPressure, gas);
-        return tank.startPressure * tank.size / zFactor;
     }
 
     /**

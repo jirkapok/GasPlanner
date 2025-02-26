@@ -71,7 +71,6 @@ export class Consumption {
             throw new Error('Profile needs to contain at least 2 segments.');
         }
 
-        // TODO merge these two methods, since they are in both cases used together
         const emergencyAscent = PlanFactory.emergencyAscent(segments, options, tanks, surfaceInterval);
         this.consumeFromTanks2(segments, emergencyAscent, tanks, consumptionOptions);
     }
@@ -195,25 +194,24 @@ export class Consumption {
             const tank = tanks[index];
             const gasCode = tank.gas.contentCode;
             const consumedLiters = gasesConsumed.get(gasCode);
-            this.updateTankReserve(tank, index, options, consumedLiters);
+            this.updateTankReserve(tank, bottomTank, options, consumedLiters);
             // TODO use compressibility
             const remaining = consumedLiters - tank.reserveVolume;
             gasesConsumed.set(gasCode, remaining);
         }
     }
 
-    private updateTankReserve(tank: Tank, index: number, options: ConsumptionOptions, consumedLiters: number): void {
+    private updateTankReserve(tank: Tank, bottomTank: Tank, options: ConsumptionOptions, consumedLiters: number): void {
         // here we update only once, so we can directly round up
         const consumedBars = Precision.ceil(consumedLiters / tank.size);
         const tankConsumedBars = consumedBars > tank.startPressure ? tank.startPressure : consumedBars;
         // TODO reserve needs to be updated using compressibility
-        tank.reserve = this.ensureMinimalReserve(tankConsumedBars, index, options);
+        const isBottomTank = tank === bottomTank;
+        tank.reserve = this.ensureMinimalReserve(tankConsumedBars, isBottomTank, options);
     }
 
-    private ensureMinimalReserve(reserve: number, tankIndex: number, options: ConsumptionOptions): number {
-        // maybe use the tank.id instead of index
-        // TODO Use bottom tank as in reserve, not by index
-        const minimalReserve = tankIndex === 0 ? options.primaryTankReserve : options.stageTankReserve;
+    private ensureMinimalReserve(reserve: number, isBottomTank: boolean, options: ConsumptionOptions): number {
+        const minimalReserve = isBottomTank ? options.primaryTankReserve : options.stageTankReserve;
 
         if(reserve < minimalReserve) {
             return minimalReserve;

@@ -14,6 +14,7 @@ import { KnownViews } from '../../shared/viewStates';
 import { WeightViewState } from '../../shared/views.model';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { TankBound } from '../../shared/models';
+import { ApplicationSettingsService } from "../../shared/ApplicationSettings";
 
 interface WeightForm {
     workPressure?: FormControl<number>;
@@ -36,7 +37,8 @@ export class WeightCalcComponent implements OnInit {
         private inputs: InputControls,
         public units: UnitConversion,
         public location: Location,
-        private viewStates: SubViewStorage) {
+        private viewStates: SubViewStorage,
+        private setttings: ApplicationSettingsService) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
         this.loadState();
         this.saveState();
@@ -103,7 +105,10 @@ export class WeightCalcComponent implements OnInit {
 
         const values = this.weightForm.value;
         const consumed = Number(values.consumed);
-        this.tank.tank.consumed = this.units.toBar(consumed);
+        const t = this.tank.tank;
+        t.consumed = this.units.toBar(consumed);
+        const reserve = this.setttings.appSettings.primaryTankReserve;
+        t.startPressure = reserve + t.consumed;
         this.setWorkingPressure(Number(values.workPressure));
         this.saveState();
     }

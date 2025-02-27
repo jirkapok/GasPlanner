@@ -14,13 +14,16 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { By } from "@angular/platform-browser";
+import { RouterTestingModule } from "@angular/router/testing";
+import { ReactiveFormsModule } from "@angular/forms";
 
-describe('WeightCalcComponent', () => {
+fdescribe('WeightCalcComponent', () => {
     let component: WeightCalcComponent;
     let fixture: ComponentFixture<WeightCalcComponent>;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             declarations: [WeightCalcComponent],
             providers: [
                 UnitConversion, ValidatorGroups, InputControls,
@@ -29,15 +32,24 @@ describe('WeightCalcComponent', () => {
                 Preferences, ViewSwitchService,
                 ReloadDispatcher, DiveSchedules,
                 ApplicationSettingsService
-            ]
-        });
+            ],
+            imports: [
+                RouterTestingModule.withRoutes([]),
+                ReactiveFormsModule]
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
         fixture = TestBed.createComponent(WeightCalcComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    it('Calculates theoretical depth', () => {
-        component.tank.tank.consumed = 150;
-        expect(component.weight).toBeCloseTo(2.8, 3);
+    it('Calculates weight', () => {
+        const consumedInput = fixture.debugElement.query(By.css('#consumed'))?.nativeElement as HTMLInputElement;
+        consumedInput.value = '75';
+        consumedInput.dispatchEvent(new Event('input'));
+        expect(component.tank.startPressure).toBeCloseTo(105, 3);
+        expect(component.weight).toBeCloseTo(1.4, 3);
     });
 });

@@ -18,7 +18,7 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ReactiveFormsModule } from "@angular/forms";
 
-fdescribe('WeightCalcComponent', () => {
+describe('WeightCalcComponent', () => {
     let component: WeightCalcComponent;
     let fixture: ComponentFixture<WeightCalcComponent>;
 
@@ -47,9 +47,9 @@ fdescribe('WeightCalcComponent', () => {
 
     it('Calculates weight', () => {
         const consumedInput = fixture.debugElement.query(By.css('#consumed'))?.nativeElement as HTMLInputElement;
-        consumedInput.value = '75';
+        consumedInput.value = '150';
         consumedInput.dispatchEvent(new Event('input'));
-        expect(component.tank.startPressure).toBeCloseTo(105, 3);
-        expect(component.weight).toBeCloseTo(1.4, 3);
+        expect(component.tank.startPressure).toBeCloseTo(180, 3);
+        expect(component.weight).toBeCloseTo(2.7, 3);
     });
 });

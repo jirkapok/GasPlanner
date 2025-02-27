@@ -16,6 +16,6 @@ describe('Air weight', () => {
         const tank = new Tank(10, 150, 20);
         tank.consumed  = 150;
         const weight = AirWeight.tankVolumeWeight(tank);
-        expect(weight).toBeCloseTo(1.8375, 4);
+        expect(weight).toBeCloseTo(1.8171, 4);
     });
 });

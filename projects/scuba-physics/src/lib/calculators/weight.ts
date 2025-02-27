@@ -13,7 +13,7 @@ export class AirWeight {
      * @param tank used to extract consumed bars and size
      */
     public static tankVolumeWeight(tank: Tank): number {
-        const consumedVolume = tank.consumedVolume;
+        const consumedVolume = tank.realConsumedVolume;
         return AirWeight.volumeWeight(consumedVolume);
     }
 

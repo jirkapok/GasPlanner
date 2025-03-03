@@ -280,6 +280,10 @@ export class Tank implements TankFill {
         }
     }
 
+    public set consumedVolume(newValue: number) {
+        this.consumed = Tank.toPressure(this.size, newValue);
+    }
+
     public set reserve(newValue: number) {
         if(newValue < Tank.minimumPressure) {
             this._reserve = Tank.minimumPressure;
@@ -307,6 +311,10 @@ export class Tank implements TankFill {
 
     private static volume2(size: number, pressure: number): number {
         return size * pressure;
+    }
+
+    private static toPressure(size: number, volume: number): number {
+        return volume / size;
     }
 
     private static realVolume2(size: number, pressure: number, gas: Gas): number {
@@ -343,7 +351,7 @@ export class Tank implements TankFill {
     private fitConsumedToAvailableVolume(originalConsumedVolume: number): void {
         const availableVolume = this.volume;
         const newConsumedVolume = originalConsumedVolume > availableVolume ? availableVolume : originalConsumedVolume;
-        this.consumed = newConsumedVolume / this.size;
+        this.consumed = Tank.toPressure(this.size, newConsumedVolume);
     }
 }
 

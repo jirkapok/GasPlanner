@@ -201,16 +201,24 @@ describe('Tank', () => {
             });
         });
 
-        xdescribe('Consumed Volume', () => {
-            it('Cent set negative consumed volume', () => {
-                // tank.consumedVolume = 300;
-                expect(tank.consumed).toBe(200);
+        describe('Consumed Volume', () => {
+            it('Can`t set negative consumed volume', () => {
+                tank.consumedVolume = -300;
+                expect(tank.consumedVolume).toBe(0);
+                expect(tank.consumed).toBe(0);
             });
 
-            // TODO add test cases:
-            // - consumed volume result in negative end pressure
-            // - end volume = startVolume - consumedVolume
-            // - consumed volume is preserved when changing startPressure and size - not needed, since it is
+            it('Sets corresponding volume', () => {
+                tank.consumedVolume = 1500;
+                expect(tank.consumedVolume).toBe(1500);
+                expect(tank.consumed).toBe(100);
+            });
+
+            it('Can`t set more consumed volume then available', () => {
+                tank.consumedVolume = 3200;
+                expect(tank.consumedVolume).toBe(3000);
+                expect(tank.consumed).toBe(200);
+            });
         });
 
         it('Reserve can`t be negative', () => {

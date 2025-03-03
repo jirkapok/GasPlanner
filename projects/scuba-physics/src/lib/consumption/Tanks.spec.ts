@@ -146,27 +146,71 @@ describe('Tank', () => {
         });
     });
 
-    describe('Set consumed', () => {
-        it('more than available sets only available', () => {
-            tank.consumed = 300;
-            expect(tank.consumed).toBe(200);
-        });
-
-        it('negative amount sets 0 bars consumed', () => {
-            tank.consumed = -100;
-            expect(tank.consumed).toBe(0);
-        });
-    });
-
     describe('Sets only valid values', () => {
-        it('Size cant be negative', () => {
-            tank.size = -10;
-            expect(tank.size).toBe(0.1);
+        describe('Start pressure', () => {
+            it('can`t be negative', () => {
+                tank.startPressure = -100;
+                expect(tank.startPressure).toBe(0);
+            });
+
+            it('prevents minimum 0 b end pressure', () => {
+                tank.consumed = 150;
+                tank.startPressure = 100;
+                expect(tank.endPressure).toBe(0);
+                expect(tank.consumed).toBe(100);
+            });
+
+            it('preserves consumed volume', () => {
+                tank.consumed = 50;
+                tank.startPressure = 150;
+                expect(tank.endPressure).toBe(100);
+                expect(tank.consumed).toBe(50);
+            });
         });
 
-        it('Start pressure can`t be negative', () => {
-            tank.startPressure = -100;
-            expect(tank.startPressure).toBe(0);
+        describe('Size', () => {
+            it('can`t be negative', () => {
+                tank.size = -10;
+                expect(tank.size).toBe(0.1);
+            });
+
+            it('prevents minimum 0 b end pressure', () => {
+                tank.consumed = 150;
+                tank.size = 5;
+                expect(tank.endPressure).toBe(0);
+                expect(tank.consumed).toBe(200);
+            });
+
+            it('preserves consumed volume', () => {
+                tank.consumed = 50;
+                tank.size = 7.5;
+                expect(tank.endPressure).toBe(100);
+                expect(tank.consumed).toBe(100);
+            });
+        });
+
+        describe('Consumed', () => {
+            it('Set more than available sets only available', () => {
+                tank.consumed = 300;
+                expect(tank.consumed).toBe(200);
+            });
+
+            it('Set negative amount sets 0 bars consumed', () => {
+                tank.consumed = -100;
+                expect(tank.consumed).toBe(0);
+            });
+        });
+
+        xdescribe('Consumed Volume', () => {
+            it('Cent set negative consumed volume', () => {
+                // tank.consumedVolume = 300;
+                expect(tank.consumed).toBe(200);
+            });
+
+            // TODO add test cases:
+            // - consumed volume result in negative end pressure
+            // - end volume = startVolume - consumedVolume
+            // - consumed volume is preserved when changing startPressure and size - not needed, since it is
         });
 
         it('Reserve can`t be negative', () => {

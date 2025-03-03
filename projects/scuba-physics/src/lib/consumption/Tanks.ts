@@ -66,9 +66,6 @@ export class Tanks {
 
 export class Tank implements TankFill {
     private static minimumSize = 0.1;
-    // doesn't need to be altitude pressure, since its effect is negligible. See also Compressibility.normalPressure.
-    // TODO fix to at least 1 atm to cover atmospheric pressure, see also endPressure
-    private atmosphericPressure: number = 1;
     private static minimumPressure = 0;
     /** Gets or sets a unique identifier of the tank in its collection */
     public id = 0;
@@ -128,8 +125,10 @@ export class Tank implements TankFill {
      * Relative to atmospheric pressure.
      **/
     public get endPressure(): number {
+        // TODO fix to at least 1 atm to cover atmospheric pressure
         const remaining = this.startPressure - this.consumed;
 
+        // covered in size, startPressure and consumed setter, here to prevent rounding issues
         if (remaining > Tank.minimumPressure) {
             return remaining;
         }
@@ -201,6 +200,9 @@ export class Tank implements TankFill {
     /** Gets total volume of consumed gas in liters using real gas compressibility */
     public get realConsumedVolume(): number {
         return Tank.realVolume2(this.size, this.consumed, this.gas);
+        // TODO add test, that both real volume, ideal volume and pressure are always valid: end = start - consumed
+        const endVolume = Tank.realVolume2(this.size, this.endPressure, this.gas);
+        return this.realVolume - endVolume;
     }
 
     /** Gets not null name of the content gas based on O2 and he fractions */
@@ -243,22 +245,31 @@ export class Tank implements TankFill {
     }
 
     public set startPressure(newValue: number) {
+        const originalConsumedVolume = this.consumedVolume;
+
        if(newValue < Tank.minimumPressure) {
            this._startPressure = Tank.minimumPressure;
        } else {
            this._startPressure = newValue;
        }
+
+       this.fitConsumedToAvailableVolume(originalConsumedVolume);
     }
 
+    /** Dont use the size setter, will be removed in the future. */
     public set size(newValue: number) {
+        const originalConsumedVolume = this.consumedVolume;
+        // TODO make the size readonly
         if(newValue < Tank.minimumSize) {
             this._size = Tank.minimumSize;
         } else {
             this._size = newValue;
         }
+
+        this.fitConsumedToAvailableVolume(originalConsumedVolume);
     }
 
-    // TODO store consumed in liters internally
+    // TODO store consumed in liters internally, store both in bars and liters, and update simultaneously
     public set consumed(newValue: number) {
         if(newValue > this.startPressure) {
             this._consumed = this.startPressure;
@@ -327,6 +338,12 @@ export class Tank implements TankFill {
 
     public toString(): string {
         return `Tank ${this.id}:${this.name},${this.size} L,${this.startPressure} b`;
+    }
+
+    private fitConsumedToAvailableVolume(originalConsumedVolume: number): void {
+        const availableVolume = this.volume;
+        const newConsumedVolume = originalConsumedVolume > availableVolume ? availableVolume : originalConsumedVolume;
+        this.consumed = newConsumedVolume / this.size;
     }
 }
 

@@ -70,11 +70,12 @@ export class Tank implements TankFill {
     /** Gets or sets a unique identifier of the tank in its collection */
     public id = 0;
     private _size = 0;
-    // TODO store start pressure and reserve also in liters
+    // TODO store start pressure (volume) also in liters
     private _startPressure = 0;
-    // Storing consumed and reserve internally in liters to keep precision.
+    // Primary storage is always in liters to keep precision.
     private _consumedVolume = 0;
-    // Storing both volume and pressure to prevent calculations on every getter
+    private _reserveVolume = 0;
+    // Storing both volume and pressure to prevent calculations on every getter.
     private _consumed = 0;
     private _reserve = 0;
     private _gas: Gas = StandardGases.air.copy();
@@ -186,7 +187,7 @@ export class Tank implements TankFill {
 
     /** Gets total volume of gas reserve in liters using ideal gas law */
     public get reserveVolume(): number {
-        return Tank.volume2(this.size, this.reserve);
+        return this._reserveVolume;
     }
 
     /** Gets total volume of gas reserve in liters using real gas compressibility */
@@ -258,7 +259,6 @@ export class Tank implements TankFill {
        this.fitConsumedToAvailableVolume(originalConsumedVolume);
     }
 
-    /** Don`t use the size setter, will be removed in the future. */
     public set size(newValue: number) {
         const originalConsumedVolume = this.consumedVolume;
         // TODO make the size readonly
@@ -271,7 +271,6 @@ export class Tank implements TankFill {
         this.fitConsumedToAvailableVolume(originalConsumedVolume);
     }
 
-    /** Don`t use setter, will be removed in the future. */
     public set consumed(newValue: number) {
         this.consumedVolume = Tank.volume2(this.size, newValue);
     }
@@ -281,11 +280,18 @@ export class Tank implements TankFill {
     }
 
     public set reserve(newValue: number) {
+        const reserveVolume = Tank.volume2(this.size, newValue);
+        this.reserveVolume  = reserveVolume;
+    }
+
+    public set reserveVolume(newValue: number) {
         if(newValue < Tank.minimumPressure) {
-            this._reserve = Tank.minimumPressure;
+            this._reserveVolume = Tank.minimumPressure;
         } else {
-            this._reserve = newValue;
+            this._reserveVolume = newValue;
         }
+
+        this._reserve = Tank.toPressure(this.size, this._reserveVolume);
     }
 
     /** Creates 15 L, filled with 200 bar Air */

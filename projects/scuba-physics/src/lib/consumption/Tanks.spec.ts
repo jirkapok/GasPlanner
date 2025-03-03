@@ -221,9 +221,26 @@ describe('Tank', () => {
             });
         });
 
-        it('Reserve can`t be negative', () => {
-            tank.reserve = -100;
-            expect(tank.reserve).toBe(0);
+        describe('Reserve', () => {
+            it('Reserve can`t be negative', () => {
+                tank.reserve = -100;
+                expect(tank.reserve).toBe(0);
+            });
+
+            it('Reserve volume can`t be negative', () => {
+                tank.reserveVolume = -100;
+                expect(tank.reserveVolume).toBe(0);
+            });
+
+            it('Set reserve volume updates also pressure', () => {
+                tank.reserveVolume = 450;
+                expect(tank.reserve).toBe(30);
+            });
+
+            it('Set reserve pressure updates also volume', () => {
+                tank.reserve = 20;
+                expect(tank.reserveVolume).toBe(300);
+            });
         });
     });
 

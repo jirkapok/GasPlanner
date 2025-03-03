@@ -70,9 +70,11 @@ export class Tank implements TankFill {
     /** Gets or sets a unique identifier of the tank in its collection */
     public id = 0;
     private _size = 0;
+    // TODO store start pressure and reserve also in liters
     private _startPressure = 0;
-    // Not storing Consumed and reserve internally in liters,
-    // since they are independent on tank size and start pressure.
+    // Storing consumed and reserve internally in liters to keep precision.
+    private _consumedVolume = 0;
+    // Storing both volume and pressure to prevent calculations on every getter
     private _consumed = 0;
     private _reserve = 0;
     private _gas: Gas = StandardGases.air.copy();
@@ -194,7 +196,7 @@ export class Tank implements TankFill {
 
     /** Gets total volume of consumed gas in liters using ideal gas law */
     public get consumedVolume(): number {
-        return Tank.volume2(this.size, this.consumed);
+        return this._consumedVolume;
     }
 
     /** Gets total volume of consumed gas in liters using real gas compressibility */
@@ -256,7 +258,7 @@ export class Tank implements TankFill {
        this.fitConsumedToAvailableVolume(originalConsumedVolume);
     }
 
-    /** Dont use the size setter, will be removed in the future. */
+    /** Don`t use the size setter, will be removed in the future. */
     public set size(newValue: number) {
         const originalConsumedVolume = this.consumedVolume;
         // TODO make the size readonly
@@ -269,19 +271,13 @@ export class Tank implements TankFill {
         this.fitConsumedToAvailableVolume(originalConsumedVolume);
     }
 
-    // TODO store consumed in liters internally, store both in bars and liters, and update simultaneously
+    /** Don`t use setter, will be removed in the future. */
     public set consumed(newValue: number) {
-        if(newValue > this.startPressure) {
-            this._consumed = this.startPressure;
-        } else if(newValue < Tank.minimumPressure) {
-            this._consumed = Tank.minimumPressure;
-        } else {
-            this._consumed = newValue;
-        }
+        this.consumedVolume = Tank.volume2(this.size, newValue);
     }
 
     public set consumedVolume(newValue: number) {
-        this.consumed = Tank.toPressure(this.size, newValue);
+        this.updateConsumed(newValue);
     }
 
     public set reserve(newValue: number) {
@@ -337,7 +333,7 @@ export class Tank implements TankFill {
     public loadFrom(other: Tank): void {
         this.size = other.size;
         this.startPressure = other.startPressure;
-        this.consumed = other.consumed;
+        this.consumedVolume = other.consumedVolume;
         this.reserve = other.reserve;
         // copy private fields as serialized
         this.gas.fO2 = other._gas.fO2;
@@ -351,7 +347,19 @@ export class Tank implements TankFill {
     private fitConsumedToAvailableVolume(originalConsumedVolume: number): void {
         const availableVolume = this.volume;
         const newConsumedVolume = originalConsumedVolume > availableVolume ? availableVolume : originalConsumedVolume;
-        this.consumed = Tank.toPressure(this.size, newConsumedVolume);
+        this.updateConsumed(newConsumedVolume);
+    }
+
+    private updateConsumed(newVolume: number): void {
+        if(newVolume > this.volume) {
+            this._consumedVolume = this.volume;
+        } else if(newVolume < Tank.minimumPressure) {
+            this._consumedVolume = Tank.minimumPressure;
+        } else {
+            this._consumedVolume = newVolume;
+        }
+
+        this._consumed = Tank.toPressure(this.size, this._consumedVolume);
     }
 }
 

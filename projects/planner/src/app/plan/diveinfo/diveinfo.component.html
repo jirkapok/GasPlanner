@@ -2,7 +2,7 @@
     <div class="card-header">
         <div class="float-start mt-1">
             <fa-icon [icon]="icon" class="me-3"></fa-icon>
-            <span>Dive info</span>
+            <span id="dive-info-title">Dive info</span>
         </div>
         <div class="float-end">
             <button class="btn btn-sm btn-secondary" type="button" (click)="sharePlan()">
@@ -33,9 +33,9 @@
                     <table class="table table-sm">
                         <tbody>
                             <tr>
-                                <td>Total dive time [min]:</td>
+                                <td id="total-dive-time">Total dive time [min]:</td>
                                 <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ dive.totalDuration | duration:dive.totalDuration
+                                    <strong id="total-dive-time-value" *ngIf="dive.calculated">{{ dive.totalDuration | duration:dive.totalDuration
                                         }} </strong>
                                 </td>
                             </tr>

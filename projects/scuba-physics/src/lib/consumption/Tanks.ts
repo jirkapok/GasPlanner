@@ -128,8 +128,20 @@ export class Tank implements TankFill {
      * Relative to atmospheric pressure.
      **/
     public get endPressure(): number {
-        // TODO fix to at least 1 atm to cover atmospheric pressure
         const remaining = this.startPressure - this.consumed;
+
+        // covered in size, startPressure and consumed setter, here to prevent rounding issues
+        if (remaining > Tank.minimumPressure) {
+            return remaining;
+        }
+
+        return Tank.minimumPressure;
+    }
+
+    /** Gets volume of remaining gas in liters */
+    public get endVolume(): number {
+        // TODO fix to at least 1 atm to cover atmospheric pressure
+        const remaining = this.volume - this.consumedVolume;
 
         // covered in size, startPressure and consumed setter, here to prevent rounding issues
         if (remaining > Tank.minimumPressure) {
@@ -280,7 +292,6 @@ export class Tank implements TankFill {
     }
 
     public set reserve(newValue: number) {
-        // TODO use compressibility
         const reserveVolume = Tank.volume2(this.size, newValue);
         this.reserveVolume  = reserveVolume;
     }
@@ -317,10 +328,12 @@ export class Tank implements TankFill {
     }
 
     public static volume2(size: number, pressure: number): number {
+        // TODO use compressibility
         return size * pressure;
     }
 
     private static toPressure(size: number, volume: number): number {
+        // TODO use compressibility
         return volume / size;
     }
 

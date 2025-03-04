@@ -144,17 +144,17 @@ describe('Consumption - Preserve reserved gas', ()=> {
             const s1 = new Segment(0, 60, tank1, Time.oneMinute * 2);
             const s2 = new Segment(60, 60, tank1, Time.oneMinute * 32);
             const s3 = new Segment(60, 20, tank1, Time.oneMinute * 4);
-            const s4 = new Segment(20, 20, StandardGases.ean50, Time.oneMinute * 47); // 282 b
+            const s4 = new Segment(20, 20, StandardGases.ean50, Time.oneMinute * 47); // 283 b
             const s5 = new Segment(20, 0, StandardGases.ean50, Time.oneMinute); // 2 bar
             const segments = [s1, s2, s3, s4, s5];
 
             consumption.consumeFromTanks(segments, options, tanks, consumptionOptions);
 
             expect(tank2.consumed).toEqual(0); // 200 - 0
-            expect(tank3.consumed).toEqual(104); // 200 - 96
+            expect(tank3.consumed).toEqual(105); // 200 - 95
             // crossed reserve, subtracted -5 b even from reserve
-            expect(tank4.consumed).toEqual(180); // 284 -104
-            // emergency reserve: 200, 96, 25
+            expect(tank4.consumed).toEqual(180); // 285 -105
+            // emergency reserve: 200, 95, 25
         });
 
         it('Reserve respects what user already consumed', () => {

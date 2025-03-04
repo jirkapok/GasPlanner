@@ -103,8 +103,8 @@ export class Consumption {
         let remainToConsume: GasVolumes = this.toBeConsumedYet(segments, new GasVolumes(), getRmvPerSecond, (s) => !!s.tank);
         // First satisfy user defined segments where tank is assigned (also in ascent).
         // assigned tank will be consumed from that tank directly
-        remainToConsume = this.consumeByTanks(segments, remainToConsume, rmvPerSecond, tankMinimum);
-        remainToConsume = this.consumeByTanksRemaining(segments, remainToConsume, () => 0);
+        remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, tankMinimum, (s, _) => this.consumedBySegment(s, rmvPerSecond));
+        remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, () => 0, (_: Segment, remaining: number) => remaining);
 
         // and only now we can consume the remaining gas from all other segments
         remainToConsume = this.toBeConsumedYet(segments, remainToConsume, getRmvPerSecond, (s) => !s.tank);
@@ -228,14 +228,6 @@ export class Consumption {
         }
 
         return remainToConsume;
-    }
-
-    private consumeByTanks(segments: Segment[], remainToConsume: GasVolumes, rmvPerSecond: number, minimumVolume: (t: Tank) => number): GasVolumes {
-        return this.consumeBySegmentTank(segments, remainToConsume, minimumVolume, (s) => this.consumedBySegment(s, rmvPerSecond));
-    }
-
-    private consumeByTanksRemaining(segments: Segment[], remainToConsume: GasVolumes, minimumVolume: (t: Tank) => number): GasVolumes {
-        return this.consumeBySegmentTank(segments, remainToConsume, minimumVolume, (_: Segment, remaining: number) => remaining);
     }
 
     private consumeBySegmentTank(segments: Segment[], remainToConsume: GasVolumes,

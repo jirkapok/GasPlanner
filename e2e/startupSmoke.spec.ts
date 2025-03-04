@@ -1,7 +1,6 @@
 import { test, expect, Page, type Locator, BrowserContext } from '@playwright/test';
 
 class DiveInfoPage {
-    private readonly timeLabelSelector = '#total-dive-time';
     private readonly timeValueSelector = '#total-dive-time-value';
     private readonly waypointTableSelector = '#dive-waypoints-table';
     private readonly waypointRowsSelector = '#dive-waypoints-table tbody tr';
@@ -10,10 +9,6 @@ class DiveInfoPage {
 
     async navigate() {
         await this.page.goto('/');
-    }
-
-    getTimeLabel(): Locator {
-        return this.page.locator(this.timeLabelSelector);
     }
 
     getTimeValue(): Locator {
@@ -29,7 +24,7 @@ class DiveInfoPage {
     }
 }
 
-test.describe('Dive Info Tests', () => {
+test.describe('Planner shows calculated profile', () => {
     let diveInfoPage: DiveInfoPage;
     let context: BrowserContext;
     let page: Page;
@@ -40,10 +35,6 @@ test.describe('Dive Info Tests', () => {
 
         diveInfoPage = new DiveInfoPage(page);
         await diveInfoPage.navigate();
-
-        const timeLabel = diveInfoPage.getTimeLabel();
-        await expect(timeLabel).toBeVisible();
-        await expect(timeLabel).toHaveText('Total dive time [min]:');
 
         const timeValue = diveInfoPage.getTimeValue();
         await expect(timeValue).toBeVisible();

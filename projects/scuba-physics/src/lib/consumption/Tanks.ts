@@ -293,7 +293,9 @@ export class Tank implements TankFill {
             this._reserveVolume = newValue;
         }
 
-        this._reserve = Tank.toPressure(this.size, this._reserveVolume);
+        const toRound = Tank.toPressure(this.size, this._reserveVolume);
+        // here we update only once, so we can directly round up
+        this._reserve = Precision.ceil(toRound);
     }
 
     /** Creates 15 L, filled with 200 bar Air */
@@ -313,7 +315,7 @@ export class Tank implements TankFill {
         return realVolume;
     }
 
-    private static volume2(size: number, pressure: number): number {
+    public static volume2(size: number, pressure: number): number {
         return size * pressure;
     }
 

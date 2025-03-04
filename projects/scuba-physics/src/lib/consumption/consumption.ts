@@ -202,21 +202,20 @@ export class Consumption {
     }
 
     private updateTankReserve(tank: Tank, bottomTank: Tank, options: ConsumptionOptions, consumedLiters: number): void {
-        // here we update only once, so we can directly round up
-        const consumedBars = Precision.ceil(consumedLiters / tank.size);
-        // TODO reserve needs to be updated using compressibility
         const isBottomTank = tank === bottomTank;
-        tank.reserve = this.ensureMinimalReserve(consumedBars, isBottomTank, options);
+        tank.reserveVolume = this.ensureMinimalReserve(consumedLiters, tank.size, isBottomTank, options);
     }
 
-    private ensureMinimalReserve(reserve: number, isBottomTank: boolean, options: ConsumptionOptions): number {
+    private ensureMinimalReserve(reserveVolume: number, tanksSize: number, isBottomTank: boolean, options: ConsumptionOptions): number {
         const minimalReserve = isBottomTank ? options.primaryTankReserve : options.stageTankReserve;
+        // TODO reserve needs to be updated using compressibility
+        const minimalReserveVolume = Tank.volume2(tanksSize, minimalReserve);
 
-        if(reserve < minimalReserve) {
-            return minimalReserve;
+        if(reserveVolume < minimalReserveVolume) {
+            return minimalReserveVolume;
         }
 
-        return reserve;
+        return reserveVolume;
     }
 
     private consumeByGases(tanks: Tank[], remainToConsume: GasVolumes, minimum: (t: Tank) => number): GasVolumes {

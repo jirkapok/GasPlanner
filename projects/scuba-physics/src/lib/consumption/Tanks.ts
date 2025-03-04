@@ -280,6 +280,7 @@ export class Tank implements TankFill {
     }
 
     public set reserve(newValue: number) {
+        // TODO use compressibility
         const reserveVolume = Tank.volume2(this.size, newValue);
         this.reserveVolume  = reserveVolume;
     }
@@ -370,7 +371,8 @@ export class Tank implements TankFill {
             this._consumedVolume = newVolume;
         }
 
-        this._consumed = Tank.toPressure(this.size, this._consumedVolume);
+        const toRound = Tank.toPressure(this.size, this._consumedVolume)
+        this._consumed = Precision.ceil(toRound);
     }
 }
 

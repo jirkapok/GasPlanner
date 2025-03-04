@@ -111,7 +111,6 @@ export class Consumption {
         remainToConsume = this.toBeConsumedYet(segments, remainToConsume, getRmv, (s) => !s.tank);
         remainToConsume = this.consumeByGases(tanks, remainToConsume, tankMinimum);
         this.consumeByGases(tanks, remainToConsume, () => 0);
-        this.roundTanksConsumedToBars(tanks);
     }
 
     /**
@@ -195,7 +194,6 @@ export class Consumption {
             const gasCode = tank.gas.contentCode;
             const consumedLiters = gasesConsumed.get(gasCode);
             this.updateTankReserve(tank, bottomTank, options, consumedLiters);
-            // TODO use compressibility
             const remaining = consumedLiters - tank.reserveVolume;
             gasesConsumed.set(gasCode, remaining);
         }
@@ -268,8 +266,7 @@ export class Consumption {
         // TODO use compressibility
         const availableLiters = availableBars * tank.size;
         const reallyConsumedLiters = consumedLiters > availableLiters ? availableLiters : consumedLiters;
-        // TODO use compressibility
-        tank.consumed += reallyConsumedLiters / tank.size;
+        tank.consumedVolume += reallyConsumedLiters;
         return reallyConsumedLiters;
     }
 
@@ -308,9 +305,4 @@ export class Consumption {
         const consumed = duration * averagePressure * rmvSeconds;
         return consumed;
     }
-
-    private roundTanksConsumedToBars(tanks: Tank[]) {
-        tanks.forEach((tank: Tank) => tank.consumed = Precision.ceil(tank.consumed));
-    }
 }
-

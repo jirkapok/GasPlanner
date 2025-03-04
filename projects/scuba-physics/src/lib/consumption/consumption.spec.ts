@@ -274,9 +274,9 @@ describe('Consumption', () => {
 
         describe('Used tank wasn\'t provided to update consumption', () => {
             const airTank = new Tank(10, 200, 21);
-            airTank.reserve = 300;
+            airTank.reserve = 200;
             const ean50Tank = new Tank(10, 100, 50);
-            ean50Tank.reserve = 290;
+            ean50Tank.reserve = 100;
             const tanks = [ean50Tank];
 
             const profile = [
@@ -293,7 +293,7 @@ describe('Consumption', () => {
             });
 
             it('Reserve is not touched', () => {
-                expect(airTank.reserve).toEqual(300); // not touched
+                expect(airTank.reserve).toEqual(200); // not touched
                 expect(ean50Tank.reserve).toEqual(30);
             });
         });

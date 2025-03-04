@@ -285,9 +285,10 @@ export class Tank implements TankFill {
     }
 
     public set reserveVolume(newValue: number) {
-        // TODO should reserve be limited max. to volume?
         if(newValue < Tank.minimumPressure) {
             this._reserveVolume = Tank.minimumPressure;
+        } else if(newValue > this.volume) {
+            this._reserveVolume = this.volume;
         } else {
             this._reserveVolume = newValue;
         }

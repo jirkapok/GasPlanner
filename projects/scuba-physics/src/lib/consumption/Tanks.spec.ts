@@ -232,6 +232,11 @@ describe('Tank', () => {
                 expect(tank.reserveVolume).toBe(0);
             });
 
+            it('Reserve volume can`t exceed available volume', () => {
+                tank.reserveVolume = 4000;
+                expect(tank.reserveVolume).toBe(3000);
+            });
+
             it('Set reserve volume updates also pressure', () => {
                 tank.reserveVolume = 450;
                 expect(tank.reserve).toBe(30);

@@ -204,10 +204,9 @@ export class Consumption {
     private updateTankReserve(tank: Tank, bottomTank: Tank, options: ConsumptionOptions, consumedLiters: number): void {
         // here we update only once, so we can directly round up
         const consumedBars = Precision.ceil(consumedLiters / tank.size);
-        const tankConsumedBars = consumedBars > tank.startPressure ? tank.startPressure : consumedBars;
         // TODO reserve needs to be updated using compressibility
         const isBottomTank = tank === bottomTank;
-        tank.reserve = this.ensureMinimalReserve(tankConsumedBars, isBottomTank, options);
+        tank.reserve = this.ensureMinimalReserve(consumedBars, isBottomTank, options);
     }
 
     private ensureMinimalReserve(reserve: number, isBottomTank: boolean, options: ConsumptionOptions): number {
@@ -275,7 +274,7 @@ export class Consumption {
         return reallyConsumedLiters;
     }
 
-    /** The only method which add gas */
+    /** The only method which adds gas to GasVolumes */
     private toBeConsumedYet(
         segments: Segment[],
         remainToConsume: GasVolumes,

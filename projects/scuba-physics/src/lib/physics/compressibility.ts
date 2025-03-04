@@ -3,7 +3,6 @@ import { TankFill } from "../consumption/Tanks";
 
 /**
  * Real gas compression calculator. Does not use Gas ideal law, instead uses Z-factor.
- * See also https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities
  * Formulas reused from https://github.com/atdotde/realblender.
  * The same formula is also used in Subsurface.
  * The formulas work in range 0-500 b.
@@ -25,7 +24,7 @@ export class Compressibility {
     /**
      * Calculates compressibility Z-factor for given gas mixture at given pressure.
      * See also https://www.divegearexpress.com/library/articles/zfactors-for-scuba
-     * @param gasPressure Gas pressure in bar
+     * @param gasPressure Absolute gas pressure in bar
      * @param gas Not empty gas mixture
      **/
     public zFactor(gasPressure: number, gas: Gas): number {
@@ -39,18 +38,22 @@ export class Compressibility {
 
     /**
      * Calculates real volume in liters for given tank.
+     * See also https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities
      * @param tank Not empty tank fill.
      * @param gas Not empty gas mixture.
      * @returns Real volume of given gas in liters stored in the tank.
      **/
     public realVolume(tank: TankFill, gas: Gas): number {
+        // TODO probably needs:
+        // add 1 atm to the pressure gauge to become absolute pressure, since all calculations here an absolute pressure
+        // Convert from bars to Atm
         const unitVolume = this.normalVolume(tank.startPressure, gas);
         return unitVolume * tank.size;
     }
 
     /**
      * Calculates real volume in liters of gas in 1 L container for given gas mixture at 1 bar.
-     * @param gasPressure current gas pressure in bar
+     * @param gasPressure current absolute gas pressure in bar
      * @param gas Not empty gas mixture
      **/
     public normalVolume(gasPressure: number, gas: Gas): number {
@@ -58,7 +61,7 @@ export class Compressibility {
     }
 
     /**
-     * Finds current gas pressure for given gas volume with precision of 0.000001 b.
+     * Finds current gas absolute pressure for given gas volume with precision of 0.000001 b.
      * @param gas Not empty gas mixture
      * @param volume Gas volume in liters
      */

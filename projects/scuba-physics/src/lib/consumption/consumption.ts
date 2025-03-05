@@ -137,20 +137,23 @@ export class Consumption {
         const bottomTank = emergencyAscent[0]?.tank ?? tanks[0];
         const rmvContext = new RmvContext(consumptionOptions, bottomTank);
 
-        // Reserve needs to be first to be able to preserve it.
-        this.updateReserve(emergencyAscent, tanks, consumptionOptions, rmvContext);
+        // Reserve needs to be first to be able to preserve it, when possible.
+        this.updateReserve(emergencyAscent, tanks, rmvContext);
         const tankMinimum = (t: Tank) => t.reserveVolume;
-        const rmvPerSecond = Time.toMinutes(consumptionOptions.diver.rmv);
-        const getRmvPerSecond = (_: Segment) => rmvPerSecond;
-        let remainToConsume: GasVolumes = this.toBeConsumedYet(segments, new GasVolumes(), getRmvPerSecond, (s) => !!s.tank);
+        const getRmvPerSecond = (_: Segment) => rmvContext.rmvPerSecond;
+        const consumedBySegmentRmv = (s: Segment, _: number) => this.consumedBySegment(s, rmvContext.rmvPerSecond);
+
         // First satisfy user defined segments where tank is assigned (also in ascent).
         // assigned tank will be consumed from that tank directly
-        remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, tankMinimum, (s, _) => this.consumedBySegment(s, rmvPerSecond));
+        let remainToConsume: GasVolumes = this.toBeConsumedYet(segments, new GasVolumes(), getRmvPerSecond, (s) => !!s.tank);
+        remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, tankMinimum, consumedBySegmentRmv);
+        // if more consumed, drain the tanks
         remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, () => 0, (_: Segment, remaining: number) => remaining);
 
         // and only now we can consume the remaining gas from all other segments
         remainToConsume = this.toBeConsumedYet(segments, remainToConsume, getRmvPerSecond, (s) => !s.tank);
         remainToConsume = this.consumeByGases(tanks, remainToConsume, tankMinimum);
+        // if more consumed, drain the tanks
         this.consumeByGases(tanks, remainToConsume, () => 0);
     }
 
@@ -208,8 +211,8 @@ export class Consumption {
         return testSegments;
     }
 
-    private updateReserve(emergencyAscent: Segment[], tanks: Tank[], options: ConsumptionOptions, rmvContext: RmvContext): void {
-        const getRmvPerSecond = (segment: Segment) => rmvContext.stressRmvPerSecond(segment);
+    private updateReserve(emergencyAscent: Segment[], tanks: Tank[], rmvContext: RmvContext): void {
+        const getRmvPerSecond = (s: Segment) => rmvContext.stressRmvPerSecond(s);
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
         const gasesConsumed: GasVolumes = this.toBeConsumedYet(emergencyAscent, new GasVolumes(), getRmvPerSecond, () => true);

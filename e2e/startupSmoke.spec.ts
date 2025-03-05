@@ -2,7 +2,6 @@ import { test, expect, Page, type Locator, BrowserContext } from '@playwright/te
 
 class DiveInfoPage {
     private readonly timeValueSelector = '#total-dive-time-value';
-    private readonly waypointTableSelector = '#dive-waypoints-table';
     private readonly waypointRowsSelector = '#dive-waypoints-table tbody tr';
 
     constructor(private page: Page) {}
@@ -13,10 +12,6 @@ class DiveInfoPage {
 
     getTimeValue(): Locator {
         return this.page.locator(this.timeValueSelector);
-    }
-
-    getWaypointTable(): Locator {
-        return this.page.locator(this.waypointTableSelector);
     }
 
     getWaypointRows(): Locator {

@@ -18,9 +18,18 @@ class GasVolumes {
         return this.remaining.get(gasCode) || 0;
     }
 
-    public set(gasCode: number, value: number): void {
-        const newValue = value > 0 ? value : 0;
+    public add(gasCode: number, toAdd: number): void {
+        toAdd = toAdd > 0 ? toAdd : 0;
+        const newValue = this.get(gasCode) + toAdd;
         this.remaining.set(gasCode, newValue);
+    }
+
+    public subtract(gasCode: number, tosSubtract: number): void {
+        const current = this.get(gasCode);
+        tosSubtract = tosSubtract > 0 ? tosSubtract : 0;
+        let remaining = current - tosSubtract;
+        remaining = remaining < 0 ? 0 : remaining;
+        this.remaining.set(gasCode, remaining);
     }
 }
 
@@ -223,8 +232,7 @@ export class Consumption {
             const gasCode = tank.gas.contentCode;
             const consumedLiters = gasesConsumed.get(gasCode);
             tank.reserveVolume = rmvContext.ensureMinimalReserve(tank, consumedLiters);
-            const remaining = consumedLiters - tank.reserveVolume;
-            gasesConsumed.set(gasCode, remaining);
+            gasesConsumed.subtract(gasCode, tank.reserveVolume);
         }
     }
 
@@ -236,9 +244,7 @@ export class Consumption {
             const gasCode = tank.gas.contentCode;
             let remaining = remainToConsume.get(gasCode);
             let reallyConsumed = this.consumeFromTank(tank, remaining, minimumVolume);
-            reallyConsumed = reallyConsumed < 0 ? 0 : reallyConsumed;
-            remaining -= reallyConsumed;
-            remainToConsume.set(gasCode, remaining);
+            remainToConsume.subtract(gasCode, reallyConsumed);
         }
 
         return remainToConsume;
@@ -253,9 +259,7 @@ export class Consumption {
                 let remaining: number = remainToConsume.get(gasCode);
                 const consumeLiters = getConsumed(segment, remaining);
                 let reallyConsumed = this.consumeFromTank(segment.tank, consumeLiters, minimumVolume);
-                reallyConsumed = reallyConsumed < 0 ? 0 : reallyConsumed;
-                remaining -= reallyConsumed;
-                remainToConsume.set(gasCode, remaining);
+                remainToConsume.subtract(gasCode, reallyConsumed);
             }
         });
 
@@ -286,9 +290,7 @@ export class Consumption {
                 const gasCode = gas.contentCode;
                 const rmvPerSecond = getRmvPerSecond(segment);
                 const consumedLiters = this.consumedBySegment(segment, rmvPerSecond);
-                let consumedByGas: number = remainToConsume.get(gasCode);
-                consumedByGas += consumedLiters;
-                remainToConsume.set(gasCode, consumedByGas);
+                remainToConsume.add(gasCode, consumedLiters);
             }
         }
 

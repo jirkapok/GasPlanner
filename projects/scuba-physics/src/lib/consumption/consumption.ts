@@ -24,6 +24,42 @@ class GasVolumes {
     }
 }
 
+class RmvContext {
+    public readonly rmvPerSecond: number;
+    private readonly _stressRmvPerSecond: number;
+    private readonly _teamStressRmvPerSecond: number;
+
+    constructor(private options: ConsumptionOptions, public readonly bottomTank: Tank) {
+        this.rmvPerSecond = Time.toMinutes(options.diver.rmv);
+        this._teamStressRmvPerSecond = Time.toMinutes(options.diver.teamStressRmv);
+        this._stressRmvPerSecond = Time.toMinutes(options.diver.stressRmv);
+    }
+
+    public stressRmvPerSecond(segment: Segment): number {
+        // Bottom gas = team stress rmv, deco gas = diver stress rmv,
+        // TODO stage tank RMV == ?
+        // User is on bottom tank, or calculated ascent using bottom gas.
+        // The only issue is breathing bottom gas as travel and in such case it is user defined segment with tank assigned.
+        if (segment.tank === this.bottomTank || segment.gas.compositionEquals(this.bottomTank.gas)) {
+            return this._teamStressRmvPerSecond;
+        }
+
+        return this._stressRmvPerSecond;
+    }
+
+    public ensureMinimalReserve(tank: Tank, reserveVolume: number): number {
+        const isBottomTank = tank === this.bottomTank;
+        const minimalReserve = isBottomTank ? this.options.primaryTankReserve : this.options.stageTankReserve;
+        const minimalReserveVolume = Tank.volume2(tank.size, minimalReserve);
+
+        if(reserveVolume < minimalReserveVolume) {
+            return minimalReserveVolume;
+        }
+
+        return reserveVolume;
+    }
+}
+
 export interface ConsumptionOptions {
     diver: Diver;
     /** Minimum tank reserve for bottom gas tank in bars */
@@ -95,8 +131,14 @@ export class Consumption {
         }
 
         Tanks.resetConsumption(tanks);
+
+        // Not all segments have tank assigned, but the emergency ascent is calculated
+        // from last user defined segment, so there should be a tank, otherwise we have no other option.
+        const bottomTank = emergencyAscent[0]?.tank ?? tanks[0];
+        const rmvContext = new RmvContext(consumptionOptions, bottomTank);
+
         // Reserve needs to be first to be able to preserve it.
-        this.updateReserve(emergencyAscent, tanks, consumptionOptions);
+        this.updateReserve(emergencyAscent, tanks, consumptionOptions, rmvContext);
         const tankMinimum = (t: Tank) => t.reserveVolume;
         const rmvPerSecond = Time.toMinutes(consumptionOptions.diver.rmv);
         const getRmvPerSecond = (_: Segment) => rmvPerSecond;
@@ -166,23 +208,8 @@ export class Consumption {
         return testSegments;
     }
 
-    private resolveReserveSacBySegment(diver: Diver, bottomTank: Tank, segment: Segment): number {
-        // Bottom gas = team stress rmv, deco gas = diver stress rmv,
-        // TODO stage tank RMV == ?
-        // User is on bottom tank, or calculated ascent using bottom gas.
-        // The only issue is breathing bottom gas as travel and in such case it is user defined segment with tank assigned.
-        if (segment.tank === bottomTank || segment.gas.compositionEquals(bottomTank.gas)) {
-            return Time.toMinutes(diver.teamStressRmv);
-        }
-
-        return Time.toMinutes(diver.stressRmv);
-    }
-
-    private updateReserve(emergencyAscent: Segment[], tanks: Tank[], options: ConsumptionOptions): void {
-        // Not all segments have tank assigned, but the emergency ascent is calculated
-        // from last user defined segment, so there should be a tank, otherwise we no other option.
-        const bottomTank = emergencyAscent[0]?.tank ?? tanks[0];
-        const getRmvPerSecond = (segment: Segment) => this.resolveReserveSacBySegment(options.diver, bottomTank, segment);
+    private updateReserve(emergencyAscent: Segment[], tanks: Tank[], options: ConsumptionOptions, rmvContext: RmvContext): void {
+        const getRmvPerSecond = (segment: Segment) => rmvContext.stressRmvPerSecond(segment);
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
         const gasesConsumed: GasVolumes = this.toBeConsumedYet(emergencyAscent, new GasVolumes(), getRmvPerSecond, () => true);
@@ -192,26 +219,10 @@ export class Consumption {
             const tank = tanks[index];
             const gasCode = tank.gas.contentCode;
             const consumedLiters = gasesConsumed.get(gasCode);
-            this.updateTankReserve(tank, bottomTank, options, consumedLiters);
+            tank.reserveVolume = rmvContext.ensureMinimalReserve(tank, consumedLiters);
             const remaining = consumedLiters - tank.reserveVolume;
             gasesConsumed.set(gasCode, remaining);
         }
-    }
-
-    private updateTankReserve(tank: Tank, bottomTank: Tank, options: ConsumptionOptions, consumedLiters: number): void {
-        const isBottomTank = tank === bottomTank;
-        tank.reserveVolume = this.ensureMinimalReserve(consumedLiters, tank.size, isBottomTank, options);
-    }
-
-    private ensureMinimalReserve(reserveVolume: number, tanksSize: number, isBottomTank: boolean, options: ConsumptionOptions): number {
-        const minimalReserve = isBottomTank ? options.primaryTankReserve : options.stageTankReserve;
-        const minimalReserveVolume = Tank.volume2(tanksSize, minimalReserve);
-
-        if(reserveVolume < minimalReserveVolume) {
-            return minimalReserveVolume;
-        }
-
-        return reserveVolume;
     }
 
     private consumeByGases(tanks: Tank[], remainToConsume: GasVolumes, minimumVolume: (t: Tank) => number): GasVolumes {

@@ -38,6 +38,7 @@ describe('Buhlmann Algorithm - Plan', () => {
         options.safetyStop = SafetyStop.always;
         options.salinity = Salinity.salt;
         options.roundStopsToMinutes = true;
+        options.roundRuntimesToMinutes = false;
         options.decoStopDistance = 3;
         options.altitude = 0;
     });
@@ -249,6 +250,25 @@ describe('Buhlmann Algorithm - Plan', () => {
 
         const expectedPlan = '0,40,120; 40,40,1680; 40,21,114; 21,21,60; 21,15,36; 15,15,60; 15,12,18; ' +
             '12,12,120; 12,9,18; 9,9,180; 9,6,18; 6,6,360; 6,3,18; 3,3,900; 3,0,18;';
+        expect(planText).toBe(expectedPlan);
+    });
+
+    it('40m for 30 minutes using air, ean50, oxygen rounding for runtime', () => {
+        const gases = new Gases();
+        gases.add(StandardGases.air);
+        gases.add(StandardGases.ean50);
+        gases.add(StandardGases.oxygen);
+
+        const segments = new Segments();
+        segments.add(40, StandardGases.air, 2 * Time.oneMinute);
+        segments.addFlat(StandardGases.air, 28 * Time.oneMinute);
+        options.roundRuntimesToMinutes = true;
+        options.roundStopsToMinutes = false;
+        const planText = calculatePlan(gases, segments);
+
+        // gas switch at 21 meters is not rounded in runtime
+        const expectedPlan = '0,40,120; 40,40,1680; 40,21,114; 21,21,60; 21,15,36; 15,15,30; 15,12,18; ' +
+            '12,12,162; 12,9,18; 9,9,222; 9,6,18; 6,6,222; 6,3,18; 3,3,582; 3,0,18;';
         expect(planText).toBe(expectedPlan);
     });
 

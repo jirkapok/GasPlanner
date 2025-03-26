@@ -16,6 +16,7 @@ export class OptionDefaults {
     public static readonly altitude = 0;
     public static readonly saltWater = Salinity.salt;
     public static readonly roundStopsToMinutes = false;
+    public static readonly roundRuntimesToMinutes = false;
     public static readonly gasSwitchDuration = 2;
     public static readonly problemSolvingDuration = 1;
     public static readonly lastStopDepth = 3;
@@ -89,6 +90,10 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
     /** If true (default) deco stops are rounded up to whole minutes (I.e. longer ascent).
      *  Otherwise, length of stops is not rounded and profile generates precise stops in seconds .  */
     public roundStopsToMinutes = OptionDefaults.roundStopsToMinutes;
+
+    /** If true deco stops are rounded up to whole minutes for runtime (I.e. longer ascent).
+     *  Otherwise (default), length of stops is not rounded and profile generates precise stops in seconds .  */
+    public roundRuntimesToMinutes = OptionDefaults.roundRuntimesToMinutes;
 
     /** Gas switch stop length in minutes */
     public gasSwitchDuration = OptionDefaults.gasSwitchDuration;

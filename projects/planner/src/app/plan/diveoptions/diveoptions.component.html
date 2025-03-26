@@ -168,6 +168,14 @@
                                     minutes</label>
                             </div>
                         </div>
+                        <div class="row ms-2">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input" id="roundRuntimes" mdbCheckbox
+                                    [checked]="options.roundRuntimesToMinutes" (change)="switchRuntimesRounding()" />
+                                <label class="form-check-label" for="roundRuntimes">Round runtimes to
+                                    minutes</label>
+                            </div>
+                        </div>
                     </div>
                 </mdb-tab>
                 <mdb-tab title="Speeds">

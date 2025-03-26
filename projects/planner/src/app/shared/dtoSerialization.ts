@@ -196,6 +196,7 @@ export class DtoSerialization {
             salinity: options.salinity,
             altitude: options.altitude,
             roundStopsToMinutes: options.roundStopsToMinutes,
+            roundRuntimesToMinutes: options.roundRuntimesToMinutes,
             gasSwitchDuration: options.gasSwitchDuration,
             safetyStop: options.safetyStop,
             lastStopDepth: options.lastStopDepth,
@@ -216,6 +217,7 @@ export class DtoSerialization {
         const options = new Options(dto.gfLow, dto.gfHigh, dto.maxPpO2, dto.maxDecoPpO2, dto.salinity);
         options.altitude = dto.altitude;
         options.roundStopsToMinutes = dto.roundStopsToMinutes;
+        options.roundRuntimesToMinutes = dto.roundRuntimesToMinutes;
         options.gasSwitchDuration = dto.gasSwitchDuration;
         options.safetyStop = dto.safetyStop;
         options.lastStopDepth = dto.lastStopDepth;

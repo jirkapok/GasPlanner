@@ -204,6 +204,7 @@ export interface OptionsDto {
     salinity: Salinity;
     altitude: number;
     roundStopsToMinutes: boolean;
+    roundRuntimesToMinutes: boolean;
     gasSwitchDuration: number;
     safetyStop: SafetyStop;
     lastStopDepth: number;

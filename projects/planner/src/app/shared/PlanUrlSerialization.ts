@@ -114,6 +114,7 @@ export class PlanUrlSerialization {
             roundStopsToMinutes: context.parseBoolean(16),
             safetyStop: context.parseEnum<SafetyStop>(17),
             salinity: context.parseEnum<Salinity>(18),
+            roundRuntimesToMinutes: context.parseBoolean(19),
             airBreaks: PlanUrlSerialization.fromAirBreakParam(context)
         };
         return result;
@@ -122,6 +123,7 @@ export class PlanUrlSerialization {
     private static toOptionsParam(o: Options): string {
         const oxygenNarcotic = ParseContext.serializeBoolean(o.oxygenNarcotic);
         const roundStopsToMinutes = ParseContext.serializeBoolean(o.roundStopsToMinutes);
+        const roundRuntimesToMinutes = ParseContext.serializeBoolean(o.roundRuntimesToMinutes);
         const airBreaks = PlanUrlSerialization.toAirBreakParams(o.airBreaks);
 
         const optionsParam = `${o.altitude},` +
@@ -129,7 +131,7 @@ export class PlanUrlSerialization {
             `${o.decoStopDistance},${o.descentSpeed},${o.gasSwitchDuration},` +
             `${o.gfHigh},${o.gfLow},${o.lastStopDepth},${o.maxDecoPpO2},${o.maxEND},` +
             `${o.maxPpO2},${o.minimumAutoStopDepth},${oxygenNarcotic},${o.problemSolvingDuration},` +
-            `${roundStopsToMinutes},${o.safetyStop},${o.salinity},` +
+            `${roundStopsToMinutes},${o.safetyStop},${o.salinity},${roundRuntimesToMinutes}` +
             `${airBreaks}`;
         return optionsParam;
     }

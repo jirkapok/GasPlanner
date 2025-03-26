@@ -51,6 +51,7 @@ export class OptionDefaults {
     public static useGeneralRecommended(options: Options): void {
         options.safetyStop = OptionDefaults.safetyStopRecre;
         options.roundStopsToMinutes = OptionDefaults.roundStopsToMinutes;
+        options.roundRuntimesToMinutes = OptionDefaults.roundRuntimesToMinutes;
         options.gasSwitchDuration = OptionDefaults.gasSwitchDuration;
         options.oxygenNarcotic = OptionDefaults.oxygenNarcotic;
     }
@@ -207,6 +208,7 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         // altitude is the only one property, which accepts 0;
         this.altitude = (other.altitude || other.altitude === 0) ? other.altitude : this.altitude;
         this.roundStopsToMinutes = other.roundStopsToMinutes;
+        this.roundRuntimesToMinutes = other.roundRuntimesToMinutes;
         this.gasSwitchDuration = other.gasSwitchDuration || this.gasSwitchDuration;
         this.problemSolvingDuration = other.problemSolvingDuration || this.problemSolvingDuration;
 

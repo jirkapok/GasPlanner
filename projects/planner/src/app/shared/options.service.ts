@@ -104,6 +104,10 @@ export class OptionsService {
         return this.options.roundStopsToMinutes;
     }
 
+    public get roundRuntimesToMinutes(): boolean {
+        return this.options.roundRuntimesToMinutes;
+    }
+
     public get salinity(): Salinity {
         return this.options.salinity;
     }
@@ -215,6 +219,10 @@ export class OptionsService {
 
     public set roundStopsToMinutes(newValue: boolean) {
         this.options.roundStopsToMinutes = newValue;
+    }
+
+    public set roundRuntimesToMinutes(newValue: boolean) {
+        this.options.roundRuntimesToMinutes = newValue;
     }
 
     public set salinity(newValue: Salinity) {

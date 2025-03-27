@@ -240,11 +240,17 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     public switchStopsRounding(): void {
         this.options.roundStopsToMinutes = !this.options.roundStopsToMinutes;
+        if (this.options.roundStopsToMinutes){
+            this.options.roundRuntimesToMinutes = false;
+        }
         this.applyOptions();
     }
 
     public switchRuntimesRounding(): void {
         this.options.roundRuntimesToMinutes = !this.options.roundRuntimesToMinutes;
+        if (this.options.roundRuntimesToMinutes){
+            this.options.roundStopsToMinutes = false;
+        }
         this.applyOptions();
     }
 

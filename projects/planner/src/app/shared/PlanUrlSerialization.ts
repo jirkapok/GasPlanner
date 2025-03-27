@@ -114,8 +114,8 @@ export class PlanUrlSerialization {
             roundStopsToMinutes: context.parseBoolean(16),
             safetyStop: context.parseEnum<SafetyStop>(17),
             salinity: context.parseEnum<Salinity>(18),
-            roundRuntimesToMinutes: context.parseBoolean(19),
-            airBreaks: PlanUrlSerialization.fromAirBreakParam(context)
+            airBreaks: PlanUrlSerialization.fromAirBreakParam(context),
+            roundRuntimesToMinutes: context.parseBoolean(22),
         };
         return result;
     }
@@ -131,8 +131,8 @@ export class PlanUrlSerialization {
             `${o.decoStopDistance},${o.descentSpeed},${o.gasSwitchDuration},` +
             `${o.gfHigh},${o.gfLow},${o.lastStopDepth},${o.maxDecoPpO2},${o.maxEND},` +
             `${o.maxPpO2},${o.minimumAutoStopDepth},${oxygenNarcotic},${o.problemSolvingDuration},` +
-            `${roundStopsToMinutes},${o.safetyStop},${o.salinity},${roundRuntimesToMinutes}` +
-            `${airBreaks}`;
+            `${roundStopsToMinutes},${o.safetyStop},${o.salinity},` +
+            `${airBreaks},${roundRuntimesToMinutes}`;
         return optionsParam;
     }
 

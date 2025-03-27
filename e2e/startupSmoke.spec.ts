@@ -18,17 +18,41 @@ class DiveInfoPage {
         return this.page.locator(this.waypointRowsSelector);
     }
 }
+class SacCalculatorPage {
+    private readonly calculatorsMenuSelector = '#calculators-menu';
+    private readonly rmvSacOptionSelector = 'a[routerLink="/sac"]';
+    private readonly diveTimeInputSelector = '#dive-time-input';
+    private readonly rmvValueSelector = '#total-rmv-valuesac';
 
-test.describe('Planner shows calculated profile', () => {
-    let diveInfoPage: DiveInfoPage;
+    constructor(private page: Page) {}
+
+    async navigateToRmvSacCalculator() {
+        await this.page.goto('/');
+        await this.page.locator(this.calculatorsMenuSelector).click();
+        await this.page.locator(this.rmvSacOptionSelector).click();
+    }
+
+    async setDiveTime(value: string) {
+        await this.page.locator(this.diveTimeInputSelector).fill(value);
+    }
+
+    getRMVValue(): Locator {
+        return this.page.locator(this.rmvValueSelector);
+    }
+}
+
+test.describe('Dive planner smoke tests', () => {
     let context: BrowserContext;
     let page: Page;
 
-    test('should show total dive time and display six waypoint rows', async ({ browser }) => {
+    test.beforeEach(async ({ browser }) => {
         context = await browser.newContext();
         page = await context.newPage();
+    });
 
-        diveInfoPage = new DiveInfoPage(page);
+    test('should show total dive time and display six waypoint rows', async () => {
+
+        const diveInfoPage = new DiveInfoPage(page);
         await diveInfoPage.navigate();
 
         const timeValue = diveInfoPage.getTimeValue();
@@ -37,5 +61,15 @@ test.describe('Planner shows calculated profile', () => {
 
         const waypointRows = diveInfoPage.getWaypointRows();
         await expect(waypointRows).toHaveCount(6);
+    });
+
+    test('should go to RMV/SAC calculator and calculate RMV after changing dive time', async() => {
+        const sacCalculatorPage = new SacCalculatorPage(page);
+
+        await sacCalculatorPage.navigateToRmvSacCalculator();
+        await sacCalculatorPage.setDiveTime('60');
+
+        await expect(sacCalculatorPage.getRMVValue()).toBeVisible();
+        await expect(sacCalculatorPage.getRMVValue()).toHaveValue('15');
     });
 });

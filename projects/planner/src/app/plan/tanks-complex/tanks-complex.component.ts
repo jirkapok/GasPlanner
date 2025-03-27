@@ -159,17 +159,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         bound.startPressure = Number(values.tankStartPressure);
         bound.o2 = Number(values.tankO2);
         bound.he = Number(values.tankHe);
-        let updates: {[i: string]: number} = {
-            tankO2: bound.o2,
-            tankHe: bound.he,
-        }
-        const roundedTankSize = Precision.round(bound.size, 1);
-        if (bound.size !== Precision.round(bound.size, 1)){
-            updates.tankSize = Precision.round(bound.size, 1)
-        }
-        // to enforce reload he and O2 fields in case the affected each other
-        tankControl.patchValue(updates);
 
+        this.reloadGas(bound, tankControl);
         this.dispatcher.sendTankChanged();
     }
 
@@ -190,10 +181,20 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.createTankControls().forEach(c => this.tanksGroup.push(c));
     }
 
+    private reloadGas(bound: TankBound, tankControl: FormGroup<TankRow>): void {
+        // to enforce reload he and O2 fields in case the affected each other
+        tankControl.patchValue({
+            tankO2: bound.o2,
+            tankHe: bound.he
+        });
+    }
+
     private reload(bound: TankBound, index: number): void {
         const tankControl = this.tanksGroup.at(index);
+
         tankControl.patchValue({
-            tankSize: bound.size, // because of HP100
+            // TODO tank size is inconsistently reloaded (allows save precise value, but reloads rounded)
+            tankSize: Precision.round(bound.size, 1), // because of HP100 template
             tankWorkPressure: bound.workingPressure,
             tankStartPressure: bound.startPressure,
             tankO2: bound.o2,

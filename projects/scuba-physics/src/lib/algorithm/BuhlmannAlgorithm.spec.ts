@@ -253,22 +253,48 @@ describe('Buhlmann Algorithm - Plan', () => {
         expect(planText).toBe(expectedPlan);
     });
 
-    it('40m for 30 minutes using air, ean50, oxygen rounding for runtime', () => {
-        const gases = new Gases();
-        gases.add(StandardGases.air);
-        gases.add(StandardGases.ean50);
-        gases.add(StandardGases.oxygen);
+    describe ('Round runtimes to minutes', () => {
+        beforeEach(() => {
+            options.roundStopsToMinutes = false;
+            options.roundRuntimesToMinutes = true;
+        });
 
-        const segments = new Segments();
-        segments.add(40, StandardGases.air, 2 * Time.oneMinute);
-        segments.addFlat(StandardGases.air, 28 * Time.oneMinute);
-        options.roundRuntimesToMinutes = true;
-        options.roundStopsToMinutes = false;
-        const planText = calculatePlan(gases, segments);
+        it('40m for 30 minutes using air, ean50, oxygen rounding for runtime', () => {
+            const gases = new Gases();
+            gases.add(StandardGases.air);
+            gases.add(StandardGases.ean50);
+            gases.add(StandardGases.oxygen);
 
-        // gas switch at 21 meters is not rounded in runtime
-        const expectedPlan = '0,40,120; 40,40,1680; 40,21,114; 21,21,60; 21,15,36; 15,15,30; 15,12,18; 12,12,162; 12,9,18; 9,9,222; 9,6,18; 6,6,222; 6,3,18; 3,3,582; 3,0,18;';
-        expect(planText).toBe(expectedPlan);
+            const segments = new Segments();
+            segments.add(40, StandardGases.air, 2 * Time.oneMinute);
+            segments.addFlat(StandardGases.air, 28 * Time.oneMinute);
+            options.roundRuntimesToMinutes = true;
+            options.roundStopsToMinutes = false;
+            const planText = calculatePlan(gases, segments);
+
+            // gas switch at 21 meters is not rounded in runtime
+            const expectedPlan = '0,40,120; 40,40,1680; 40,21,114; 21,21,60; 21,15,36; 15,15,30; 15,12,18; ' +
+                '12,12,162; 12,9,18; 9,9,222; 9,6,18; 6,6,222; 6,3,18; 3,3,582; 3,0,18;';
+            expect(planText).toBe(expectedPlan);
+        });
+
+        it('50m for 25 minutes using 21/35 and 50% nitrox', () => {
+            const gases = new Gases();
+            gases.add(StandardGases.trimix2135);
+            gases.add(StandardGases.ean50);
+
+            const segments = new Segments();
+            segments.add(50, StandardGases.trimix2135, 2.5 * Time.oneMinute);
+            segments.addFlat(StandardGases.trimix2135, 22.5 * Time.oneMinute);
+
+            options.roundStopsToMinutes = true;
+            const planText = calculatePlan(gases, segments);
+
+            const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
+                '18,18,48; 18,15,18; 15,15,102; 15,12,18; 12,12,102; 12,9,18; ' +
+                '9,9,222; 9,6,18; 6,6,402; 6,3,18; 3,3,942; 3,0,18;';
+            expect(planText).toBe(expectedPlan);
+        });
     });
 
     describe('Trimix, deco stops rounding', () => {

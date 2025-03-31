@@ -310,7 +310,10 @@ export class BuhlmannAlgorithm {
 
     private ascentToNextStop(context: AlgorithmContext, nextStop: number): void {
         const depthDifference = context.currentDepth - nextStop;
-        const duration = Precision.ceilDistance(durationFor(depthDifference, context.ascentSpeed), Time.oneSecond);
+        let duration = durationFor(depthDifference, context.ascentSpeed);
+        if(context.options.roundRuntimesToMinutes){
+            duration = Precision.ceilDistance(duration, Time.oneSecond);
+        }
         const ascent = context.addAscentSegment(nextStop, duration);
         this.swim(context, ascent);
     }

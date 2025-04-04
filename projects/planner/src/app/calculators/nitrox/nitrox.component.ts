@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { faPercent } from '@fortawesome/free-solid-svg-icons';
-import {
-    FormControl, NonNullableFormBuilder, FormGroup
-} from '@angular/forms';
+import { faPercent, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
 import { Precision } from 'scuba-physics';
 import { NitroxCalculatorService } from '../../shared/nitrox-calculator.service';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
@@ -25,10 +23,12 @@ interface NitroxForm {
 @Component({
     selector: 'app-nitrox',
     templateUrl: './nitrox.component.html',
-    styleUrls: ['./nitrox.component.scss']
+    styleUrls: ['./nitrox.component.scss'],
 })
 export class NitroxComponent implements OnInit {
     public calcIcon = faPercent;
+    public helpIcon = faCircleInfo;
+    public showHelpModal = false;
     public nitroxForm!: FormGroup<NitroxForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
     private fO2Control!: FormControl<number>;
@@ -44,7 +44,8 @@ export class NitroxComponent implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private schedules: DiveSchedules,
-        private viewStates: SubViewStorage) {
+        private viewStates: SubViewStorage
+    ) {
         this.loadState();
         this.saveState();
     }
@@ -82,12 +83,24 @@ export class NitroxComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.fO2Control = this.fb.control(Precision.round(this.calc.fO2, 1), this.validators.nitroxOxygen);
-        this.pO2Control = this.fb.control(Precision.round(this.calc.pO2, 2), this.validators.ppO2);
-        this.modControl = this.fb.control(Precision.round(this.calcMod, 1), this.validators.depth);
-        this.nitroxForm = this.fb.group({}, {
-            validators: NitroxValidators.lowMod(() => this.failingMod),
-        });
+        this.fO2Control = this.fb.control(
+            Precision.round(this.calc.fO2, 1),
+            this.validators.nitroxOxygen
+        );
+        this.pO2Control = this.fb.control(
+            Precision.round(this.calc.pO2, 2),
+            this.validators.ppO2
+        );
+        this.modControl = this.fb.control(
+            Precision.round(this.calcMod, 1),
+            this.validators.depth
+        );
+        this.nitroxForm = this.fb.group(
+            {},
+            {
+                validators: NitroxValidators.lowMod(() => this.failingMod),
+            }
+        );
         this.toMod();
     }
 
@@ -141,6 +154,14 @@ export class NitroxComponent implements OnInit {
         this.nitroxForm.removeControl('pO2');
     }
 
+    public openHelp(): void {
+        this.showHelpModal = true;
+    }
+
+    public closeHelp(): void {
+        this.showHelpModal = false;
+    }
+
     private enableAll(): void {
         this.nitroxForm.addControl('mod', this.modControl);
         this.nitroxForm.addControl('fO2', this.fO2Control);
@@ -157,7 +178,9 @@ export class NitroxComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: NitroxViewState = this.viewStates.loadView(KnownViews.nitrox);
+        let state: NitroxViewState = this.viewStates.loadView(
+            KnownViews.nitrox
+        );
 
         if (!state) {
             state = this.createState();

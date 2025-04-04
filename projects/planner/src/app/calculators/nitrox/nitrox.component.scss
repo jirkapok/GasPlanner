@@ -1,0 +1,44 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+  }
+
+  .modal-content-box {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
+  }
+
+  .modal-header .btn-close {
+    border: none;
+    background: transparent;
+    font-size: 1.2rem;
+  }
+
+  .markdown-content {
+    h1, h2, h3 {
+      margin-top: 1rem;
+      color: #0d6efd;
+    }
+    p, li {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    blockquote {
+      font-style: italic;
+      color: #666;
+      border-left: 4px solid #ccc;
+      padding-left: 1rem;
+    }
+  }

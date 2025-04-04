@@ -5,6 +5,7 @@ import {ServiceWorkerModule} from '@angular/service-worker';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {DatePipe, DecimalPipe} from '@angular/common';
+import {HttpClientModule} from '@angular/common/http';
 
 import {ClipboardModule} from 'ngx-clipboard';
 import {MdbCollapseModule} from 'mdb-angular-ui-kit/collapse';
@@ -16,6 +17,7 @@ import {MdbAccordionModule} from 'mdb-angular-ui-kit/accordion';
 import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
+import {NgxMdModule} from 'ngx-md';
 
 import {SacComponent} from './calculators/sac/sac.component';
 import {NitroxComponent} from './calculators/nitrox/nitrox.component';
@@ -230,6 +232,8 @@ const SERVICES = [
         ...ANGULAR_MODULES,
         ...MDB_MODULES,
         STANDALONE,
+        HttpClientModule,
+        NgxMdModule.forRoot(),
         ClipboardModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,

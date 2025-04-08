@@ -10,8 +10,6 @@ import { Salinity } from '../physics/pressure-converter';
 import { ProfileTissues } from "../algorithm/ProfileTissues";
 import { RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
 
-// TODO add test case for 2x more reserve of Ean50: ?t=1-24-0-200-0.209-0,2-11.1-0-200-0.5-0&de=0-50-168-1,50-50-900-1&di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0
-// TODO add test case: emergency ascents start in moment user switches to another tank.
 describe('Consumption', () => {
     const consumptionOptions: ConsumptionOptions = {
         diver: new Diver(20),
@@ -307,9 +305,9 @@ describe('Consumption', () => {
             const profile = [
                 new Segment(0, 30, airTank.gas, 2 * Time.oneMinute),
                 new Segment(30, 30, airTank.gas, 15 * Time.oneMinute),  // air relevant only during ascent
-                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute),   // 3.5b * 1 bar/min * 2 minute = 7b
-                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute), // 3b * 4 bar/min * 1 minutes = 12b
-                new Segment(20, 0, ean50Tank.gas, 10 * Time.oneMinute)  // 2b * 4 bar/min * 10 minutes = 80b
+                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute),   // ascent not relevant for emergency
+                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute),
+                new Segment(20, 0, ean50Tank.gas, 10 * Time.oneMinute)
             ];
 
             consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
@@ -323,6 +321,54 @@ describe('Consumption', () => {
             });
         });
 
+        describe('User switch at ascent start to identical gas', () => {
+            const airTank = new Tank(20, 100, 21);
+            const airTank2 = new Tank(5, 200, 21);
+            const ean50Tank = new Tank(5, 200, 50);
+            const tanks = [airTank, airTank2, ean50Tank];
+
+            const profile = [
+                new Segment(0, 30, airTank, 2 * Time.oneMinute),
+                new Segment(30, 30, airTank, 29 * Time.oneMinute),
+                new Segment(30, 30, airTank2, 1 * Time.oneMinute),      // user switch to the same gas
+                new Segment(30, 20, airTank2, 10 * Time.oneMinute),
+                new Segment(20, 0, ean50Tank.gas, 11 * Time.oneMinute)
+            ];
+
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
+
+            // Emergency ascent: 30-20 600, 20-20 60, 20-3 102, 3-3 549, 3-0 18
+            it('Reserve is updated from both EAN50 tanks', () => {
+                expect(airTank.reserve).toEqual(100);
+                expect(airTank2.reserve).toEqual(111); // the same gas, still team reserve used
+                expect(ean50Tank.reserve).toEqual(114);
+            });
+        });
+
+        describe('User switch at ascent start to different gas', () => {
+            const ean32Tank = new Tank(20, 100, 32);
+            const airTank = new Tank(5, 200, 21);
+            const ean50Tank = new Tank(5, 200, 50);
+            const tanks = [ean32Tank, airTank, ean50Tank];
+
+            const profile = [
+                new Segment(0, 30, ean32Tank, 2 * Time.oneMinute),
+                new Segment(30, 30, ean32Tank, 29 * Time.oneMinute),
+                new Segment(30, 30, airTank, 1 * Time.oneMinute),      // user switch to the same gas
+                new Segment(30, 20, airTank.gas, 10 * Time.oneMinute),
+                new Segment(20, 0, ean50Tank.gas, 11 * Time.oneMinute)
+            ];
+
+            consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
+
+            // Emergency ascent: 30-30 120, 30-21 54, 21-21 60, 21-3 108, 3-3 4, 3-0 18
+            it('Reserve is updated from both EAN50 tanks', () => {
+                // ean32Tank handled as stage, since bottom tank is considered airTank
+                expect(ean32Tank.reserve).toEqual(11); // minimum reserve 0 b from options
+                expect(airTank.reserve).toEqual(95); // the same gas, still team reserve used
+                expect(ean50Tank.reserve).toEqual(45);
+            });
+        });
     });
 
     describe('Tank assigned to user segment', () => {

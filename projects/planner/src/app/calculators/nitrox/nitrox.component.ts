@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { faPercent, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
-import { Precision } from 'scuba-physics';
+import { FeatureFlags, Precision } from 'scuba-physics';
 import { NitroxCalculatorService } from '../../shared/nitrox-calculator.service';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { InputControls } from '../../shared/inputcontrols';
@@ -28,6 +28,7 @@ interface NitroxForm {
     styleUrls: ['./nitrox.component.scss'],
 })
 export class NitroxComponent implements OnInit {
+    public integratedHelp = FeatureFlags.Instance.integratedHelp;
     public calcIcon = faPercent;
     public helpIcon = faCircleInfo;
     public nitroxForm!: FormGroup<NitroxForm>;

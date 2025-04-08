@@ -6,7 +6,8 @@
                   <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
                   <span>Nitrox calculator</span>
                 </div>
-                <button type="button"
+                <button *ngIf="integratedHelp"
+                    type="button"
                     class="btn btn-link text-secondary ms-2 d-flex align-items-center"
                     style="font-size: 1.2rem;"
                     title="More info"

@@ -37,6 +37,7 @@ import {OxygenComponent} from './controls/oxygen/oxygen.component';
 import {TankSizeComponent} from './controls/tank.size/tank.size.component';
 import {GradientsComponent} from './controls/gradients/gradients.component';
 import {PpO2Component} from './controls/pp-o2/pp-o2.component';
+import {HelpModalComponent} from './help/help-modal.component';
 
 import {SurfaceIntervalComponent} from './plan/surface-interval/surface-interval.component';
 import {PlanTabsComponent} from './plan/plan.tabs/plan.tabs.component';
@@ -181,6 +182,7 @@ const COMPONENTS = [
 
 const STANDALONE = [
     SurfaceIntervalComponent,
+    HelpModalComponent
 ];
 
 const SERVICES = [

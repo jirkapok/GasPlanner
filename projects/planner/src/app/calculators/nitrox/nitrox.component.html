@@ -94,18 +94,3 @@
         </div>
     </div>
 </div>
-
-<!-- Angular-native modal -->
-<div *ngIf="showHelpModal" class="modal-overlay">
-    <div class="modal-content-box">
-      <div class="modal-header d-flex justify-content-between align-items-center">
-        <button class="btn-close" aria-label="Close" (click)="closeHelp()"></button>
-      </div>
-      <div class="modal-body mt-3">
-        <ngx-md [path]="'assets/docs/nitrox.md'"> </ngx-md>
-      </div>
-      <div class="modal-footer text-end mt-3">
-        <button class="btn btn-secondary" (click)="closeHelp()">Close</button>
-      </div>
-    </div>
-  </div>

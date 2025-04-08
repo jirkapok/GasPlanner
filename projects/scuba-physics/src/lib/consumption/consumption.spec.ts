@@ -48,7 +48,6 @@ describe('Consumption', () => {
             segments.addFlat(airTank.gas, Time.oneMinute);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
-            // TODO fix rounding of tank reserve, since here it counts 200 = 44 + 157 in case team stress in all cases
             expect(maxBottomTime).toEqual(27);
         });
 

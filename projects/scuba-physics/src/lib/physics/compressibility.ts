@@ -37,22 +37,22 @@ export class Compressibility {
     }
 
     /**
-     * Calculates real volume in liters for given tank.
+     * Calculates real available volume in liters for given tank.
      * See also https://www.divegearexpress.com/library/articles/calculating-scuba-cylinder-capacities
      * @param tank Not empty tank fill.
      * @param gas Not empty gas mixture.
      * @returns Real volume of given gas in liters stored in the tank.
      **/
-    public realVolume(tank: TankFill, gas: Gas): number {
-        // TODO probably needs:
-        // add 1 atm to the pressure gauge to become absolute pressure, since all calculations here an absolute pressure
-        // Convert from bars to Atm
-        const unitVolume = this.normalVolume(tank.startPressure, gas);
-        return unitVolume * tank.size;
+    public realVolume(tank: TankFill, gas: Gas): number { // TODO rename to tankVolume
+        // Add 1 atm to the pressure gauge to become absolute pressure, since all calculations here an absolute pressure.
+        const absolutePressure = tank.startPressure + this.normalPressure;
+        const unitVolume = this.normalVolume(absolutePressure, gas);
+        // Subtracting the size of the tank, because 0 b pressure gauge means the remaining gas is still approximately at 1 atm.
+        return (unitVolume * tank.size) - tank.size;
     }
 
     /**
-     * Calculates real volume in liters of gas in 1 L container for given gas mixture at 1 bar.
+     * Calculates absolute real volume in liters of gas in 1 L container for given gas mixture at 1 bar.
      * @param gasPressure current absolute gas pressure in bar
      * @param gas Not empty gas mixture
      **/
@@ -63,7 +63,7 @@ export class Compressibility {
     /**
      * Finds current gas absolute pressure for given gas volume with precision of 0.000001 b.
      * @param gas Not empty gas mixture
-     * @param volume Gas volume in liters
+     * @param volume Absolute gas volume in liters
      */
     public pressure(gas: Gas, volume: number): number {
         let foundPressure = volume;

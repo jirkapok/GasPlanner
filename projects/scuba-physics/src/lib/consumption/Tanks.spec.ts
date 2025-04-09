@@ -298,17 +298,17 @@ describe('Tank', () => {
         const filledTank = new Tank(10, 200, 21);
 
         it('Real volume', () => {
-            expect(filledTank.realVolume).toBeCloseTo(1930.134, 3);
+            expect(filledTank.realVolume).toBeCloseTo(1928.651, 3);
         });
 
         it('Real reserve volume', () => {
             filledTank.reserve = 50;
-            expect(filledTank.realReserveVolume).toBeCloseTo(504.459, 3);
+            expect(filledTank.realReserveVolume).toBeCloseTo(504.571, 3);
         });
 
         it('Real consumed volume', () => {
             filledTank.consumed = 100;
-            expect(filledTank.realConsumedVolume).toBeCloseTo(1004.959, 3);
+            expect(filledTank.realConsumedVolume).toBeCloseTo(1004.803, 3);
         });
     });
 });

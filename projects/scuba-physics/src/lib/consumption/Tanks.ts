@@ -362,13 +362,15 @@ export class Tank implements TankFill {
 
     /** Copies all properties from another tank except id */
     public loadFrom(other: Tank): void {
+        // copy private fields as serialized
+        // gas needs to be first, since it affects compressibility factor
+        this.gas.fO2 = other._gas.fO2;
+        this.gas.fHe = other._gas.fHe;
+
         this.size = other.size;
         this.startPressure = other.startPressure;
         this.consumedVolume = other.consumedVolume;
         this.reserve = other.reserve;
-        // copy private fields as serialized
-        this.gas.fO2 = other._gas.fO2;
-        this.gas.fHe = other._gas.fHe;
     }
 
     public toString(): string {

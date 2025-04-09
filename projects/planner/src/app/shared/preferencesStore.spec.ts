@@ -131,11 +131,11 @@ describe('PreferencesStore', () => {
                 const expected1 = new Tank(15, 150, 21);
                 expected1.id = 1;
                 expected1.consumed = 107;
-                expected1.reserve = 45;
+                expected1.reserveVolume = 665.8107445570627; // precise value to simplify the assertion
                 const expected2 = new Tank(11.1, 200, 50);
                 expected2.id = 2;
                 expected2.consumed = 22;
-                expected2.reserve = 36;
+                expected2.reserveVolume = 393.6696946571216;
                 // JSON serialization prevents order of items in an array
                 const expected: Tank[] = [expected1, expected2];
                 expect(tanksService.tankData).toEqual(expected);

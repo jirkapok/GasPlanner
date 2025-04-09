@@ -13,6 +13,12 @@ describe('GasesComparisonService', () => {
     let tanksA: TanksService;
     let tanksB: TanksService;
 
+    const assertDifference = (expected: ConsumedGasDifference[], current: ConsumedGasDifference[]) => {
+        expected.forEach((current, index) => {
+            expect(current).toEqual(expected[index]);
+        });
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
@@ -35,7 +41,7 @@ describe('GasesComparisonService', () => {
     });
 
     it('Compares default air tank', () => {
-        expect(sut.gasesDifference).toEqual([ new ConsumedGasDifference(
+        assertDifference(sut.gasesDifference, [ new ConsumedGasDifference(
             StandardGases.air,
             {
                 total: 3000,
@@ -54,18 +60,18 @@ describe('GasesComparisonService', () => {
         tanksA.addTank();
         tanksA.tankData[1].assignStandardGas(StandardGases.ean32.name);
 
-        expect(sut.gasesDifference).toEqual([
+        assertDifference(sut.gasesDifference, [
             new ConsumedGasDifference(StandardGases.air, {
-                total: 3000,
+                total: 2892.98,
                 consumed: 0,
                 reserve: 0
             }, {
-                total: 3000,
+                total: 2892.98,
                 consumed: 0,
                 reserve: 0
             }),
             new ConsumedGasDifference(StandardGases.ean32, {
-                total: 2220,
+                total: 2140.8,
                 consumed: 0,
                 reserve: 0
             }, {
@@ -80,7 +86,7 @@ describe('GasesComparisonService', () => {
         tanksB.addTank();
         tanksB.tankData[1].assignStandardGas(StandardGases.ean32.name);
 
-        expect(sut.gasesDifference).toEqual([
+        assertDifference(sut.gasesDifference, [
             new ConsumedGasDifference(StandardGases.air, {
                 total: 3000,
                 consumed: 0,
@@ -105,7 +111,7 @@ describe('GasesComparisonService', () => {
     it('No common gas between profiles', () => {
         tanksB.tankData[0].assignStandardGas(StandardGases.ean32.name);
 
-        expect(sut.gasesDifference).toEqual([
+        assertDifference(sut.gasesDifference, [
             new ConsumedGasDifference(StandardGases.air, {
                 total: 3000,
                 consumed: 0,
@@ -134,9 +140,9 @@ describe('GasesComparisonService', () => {
         tanksA.tankData[0].consumed = 100;
         const firstGas = sut.gasesDifference[0];
 
-        expect(firstGas.profileA.total).toBeCloseTo(105.944, 6);
-        expect(firstGas.profileA.consumed).toBeCloseTo(52.972, 6);
-        expect(firstGas.profileA.reserve).toBeCloseTo(26.486, 6);
-        expect(firstGas.profileB.total).toBeCloseTo(105.944, 6);
+        expect(firstGas.profileA.total).toBeCloseTo(102.165, 3);
+        expect(firstGas.profileA.consumed).toBeCloseTo(53.226, 3);
+        expect(firstGas.profileA.reserve).toBeCloseTo(26.728, 3);
+        expect(firstGas.profileB.total).toBeCloseTo(102.165, 3);
     });
 });

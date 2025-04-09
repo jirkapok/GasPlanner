@@ -307,7 +307,7 @@ export class Tank implements TankFill {
             this._reserveVolume = newValue;
         }
 
-        // TODO const toRound = Tank.toRealPressure(this.gas, this._reserveVolume);
+        // TODO const toRound = Tank.toTankPressure(this.gas, this.size, this._reserveVolume);
         const toRound = Tank.toPressure(this.size, this._reserveVolume);
         // here we update only once, so we can directly round up
         this._reserve = Precision.ceil(toRound);
@@ -341,9 +341,9 @@ export class Tank implements TankFill {
         return volume / size;
     }
 
-    public static toRealPressure(gas: Gas, volume: number): number {
+    public static toTankPressure(gas: Gas, tankSize: number, volume: number): number {
         const compressibility = new Compressibility();
-        const pressure = compressibility.pressure(gas, volume);
+        const pressure = compressibility.tankPressure(gas, tankSize, volume);
         return pressure;
     }
 
@@ -393,7 +393,7 @@ export class Tank implements TankFill {
             this._consumedVolume = newVolume;
         }
 
-        // TODO const toRound = Tank.toRealPressure(this.gas, this._consumedVolume);
+        // TODO const toRound = Tank.toTankPressure(this.gas, this.size, this._consumedVolume);
         const toRound = Tank.toPressure(this.size, this._consumedVolume)
         this._consumed = Precision.ceil(toRound);
     }

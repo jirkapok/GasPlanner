@@ -52,6 +52,19 @@ export class Compressibility {
     }
 
     /**
+     * Finds current tank pressure for given gas volume with precision of 0.000001 b.
+     * Returns relative pressure shown on the tank pressure gauge.
+     * @param gas Not empty gas mixture.
+     * @param tankSize Tank dimension in liters.
+     * @param volume gas volume in liters Stored in the tank.
+     */
+    public tankPressure(gas: Gas, tankSize: number, volume: number): number {
+        const absoluteVolume = (volume + tankSize) / tankSize;
+        const absolutePressure = this.pressure(gas, absoluteVolume);
+        return absolutePressure - this.normalPressure;
+    }
+
+    /**
      * Calculates absolute real volume in liters of gas in 1 L container for given gas mixture at 1 bar.
      * @param gasPressure current absolute gas pressure in bar
      * @param gas Not empty gas mixture

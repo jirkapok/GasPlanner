@@ -43,7 +43,7 @@ export class Compressibility {
      * @param gas Not empty gas mixture.
      * @returns Real volume of given gas in liters stored in the tank.
      **/
-    public tankVolume(tank: TankFill, gas: Gas): number { // TODO rename to tankVolume
+    public tankVolume(tank: TankFill, gas: Gas): number {
         // Add 1 atm to the pressure gauge to become absolute pressure, since all calculations here an absolute pressure.
         const absolutePressure = tank.startPressure + this.normalPressure;
         const unitVolume = this.normalVolume(absolutePressure, gas);

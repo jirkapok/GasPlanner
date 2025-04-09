@@ -140,7 +140,6 @@ export class Tank implements TankFill {
 
     /** Gets volume of remaining gas in liters */
     public get endVolume(): number {
-        // TODO fix to at least 1 atm to cover atmospheric pressure
         const remaining = this.volume - this.consumedVolume;
 
         // covered in size, startPressure and consumed setter, here to prevent rounding issues
@@ -214,8 +213,9 @@ export class Tank implements TankFill {
 
     /** Gets total volume of consumed gas in liters using real gas compressibility */
     public get realConsumedVolume(): number {
-        return Tank.realVolume2(this.size, this.consumed, this.gas);
+        return this._consumedVolume;
         // TODO add test, that both real volume, ideal volume and pressure are always valid: end = start - consumed
+        // return Tank.realVolume2(this.size, this.consumed, this.gas);
         const endVolume = Tank.realVolume2(this.size, this.endPressure, this.gas);
         return this.realVolume - endVolume;
     }
@@ -284,8 +284,7 @@ export class Tank implements TankFill {
     }
 
     public set consumed(newValue: number) {
-        this.consumedVolume = Tank.volume2(this.size, newValue);
-        // TODO this.consumedVolume = Tank.realVolume2(this.size, newValue, this.gas);
+        this.consumedVolume = Tank.realVolume2(this.size, newValue, this.gas);
     }
 
     public set consumedVolume(newValue: number) {
@@ -293,8 +292,7 @@ export class Tank implements TankFill {
     }
 
     public set reserve(newValue: number) {
-        const reserveVolume = Tank.volume2(this.size, newValue);
-        // TODO const reserveVolume = Tank.realVolume2(this.size, newValue, this.gas);
+        const reserveVolume = Tank.realVolume2(this.size, newValue, this.gas);
         this.reserveVolume  = reserveVolume;
     }
 
@@ -307,8 +305,7 @@ export class Tank implements TankFill {
             this._reserveVolume = newValue;
         }
 
-        // TODO const toRound = Tank.toTankPressure(this.gas, this.size, this._reserveVolume);
-        const toRound = Tank.toPressure(this.size, this._reserveVolume);
+        const toRound = Tank.toTankPressure(this.gas, this.size, this._reserveVolume);
         // here we update only once, so we can directly round up
         this._reserve = Precision.ceil(toRound);
     }
@@ -379,8 +376,7 @@ export class Tank implements TankFill {
     }
 
     private fitStoredVolumes(originalConsumedVolume: number): void {
-        // TODO this._startVolume = Tank.realVolume2(this.size, this.startPressure, this.gas);
-        this._startVolume = Tank.volume2(this.size, this.startPressure);
+        this._startVolume = Tank.realVolume2(this.size, this.startPressure, this.gas);
         this.updateConsumed(originalConsumedVolume);
     }
 
@@ -393,8 +389,7 @@ export class Tank implements TankFill {
             this._consumedVolume = newVolume;
         }
 
-        // TODO const toRound = Tank.toTankPressure(this.gas, this.size, this._consumedVolume);
-        const toRound = Tank.toPressure(this.size, this._consumedVolume)
+        const toRound = Tank.toTankPressure(this.gas, this.size, this._consumedVolume);
         this._consumed = Precision.ceil(toRound);
     }
 }

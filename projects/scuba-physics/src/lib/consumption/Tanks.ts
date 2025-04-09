@@ -327,7 +327,7 @@ export class Tank implements TankFill {
     /** Gets total volume of stored gas at start pressure in liters using real gas compressibility */
     public static realVolume(tank: TankFill, gas: Gas): number {
         const compressibility = new Compressibility();
-        const realVolume = compressibility.realVolume(tank, gas);
+        const realVolume = compressibility.tankVolume(tank, gas);
         return realVolume;
     }
 

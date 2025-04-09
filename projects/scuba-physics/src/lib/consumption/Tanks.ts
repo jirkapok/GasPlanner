@@ -186,38 +186,23 @@ export class Tank implements TankFill {
         return Precision.roundTwoDecimals(current);
     }
 
-    /** Gets total volume of stored gas at start pressure in liters using ideal gas law */
+    /** Gets total volume of stored gas at start pressure in liters using real gas compressibility */
     public get volume(): number {
         return this._startVolume;
     }
 
-    /** Gets total volume of stored gas at start pressure in liters using real gas compressibility */
-    public get realVolume(): number {
-        return Tank.realVolume(this, this.gas);
-    }
-
-    /** Gets total volume of gas reserve in liters using ideal gas law */
+    /** Gets total volume of gas reserve in liters using real gas compressibility */
     public get reserveVolume(): number {
         return this._reserveVolume;
     }
 
-    /** Gets total volume of gas reserve in liters using real gas compressibility */
-    public get realReserveVolume(): number {
-        return Tank.realVolume2(this.size, this.reserve, this.gas);
-    }
-
-    /** Gets total volume of consumed gas in liters using ideal gas law */
-    public get consumedVolume(): number {
-        return this._consumedVolume;
-    }
-
     /** Gets total volume of consumed gas in liters using real gas compressibility */
-    public get realConsumedVolume(): number {
+    public get consumedVolume(): number {
         return this._consumedVolume;
         // TODO add test, that both real volume, ideal volume and pressure are always valid: end = start - consumed
         // return Tank.realVolume2(this.size, this.consumed, this.gas);
         const endVolume = Tank.realVolume2(this.size, this.endPressure, this.gas);
-        return this.realVolume - endVolume;
+        return this.volume - endVolume;
     }
 
     /** Gets not null name of the content gas based on O2 and he fractions */
@@ -315,27 +300,11 @@ export class Tank implements TankFill {
         return new Tank(15, 200, GasMixtures.o2InAir * 100);
     }
 
-    /** Gets total volume of stored gas at start pressure in liters using ideal gas law */
-    // TODO remove Tank.volume
-    public static volume(tank: TankFill): number {
-        return Tank.volume2(tank.size, tank.startPressure);
-    }
-
     /** Gets total volume of stored gas at start pressure in liters using real gas compressibility */
     public static realVolume(tank: TankFill, gas: Gas): number {
         const compressibility = new Compressibility();
         const realVolume = compressibility.tankVolume(tank, gas);
         return realVolume;
-    }
-
-    // TODO remove Tank.volume2
-    public static volume2(size: number, pressure: number): number {
-        return size * pressure;
-    }
-
-    // TODO remove toPressure
-    private static toPressure(size: number, volume: number): number {
-        return volume / size;
     }
 
     public static toTankPressure(gas: Gas, tankSize: number, volume: number): number {

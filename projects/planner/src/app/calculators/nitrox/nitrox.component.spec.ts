@@ -20,6 +20,8 @@ import { SubViewStorage } from '../../shared/subViewStorage';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+
 
 export class NitroxPage {
     constructor(private fixture: ComponentFixture<NitroxComponent>) { }
@@ -48,7 +50,8 @@ describe('Nitrox component', () => {
                 PlannerService, WorkersFactoryCommon,
                 ViewSwitchService, SubViewStorage,
                 ReloadDispatcher, DiveSchedules,
-                OptionsService, ApplicationSettingsService
+                OptionsService, ApplicationSettingsService,
+                MdbModalService
             ],
             imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
         }).compileComponents();

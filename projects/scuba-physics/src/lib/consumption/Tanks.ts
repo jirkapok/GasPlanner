@@ -379,12 +379,9 @@ export class Tank implements TankFill {
     }
 
     private fitStoredVolumes(originalConsumedVolume: number): void {
-        // TODO const availableVolume  = Tank.realVolume2(this.size, this.startPressure, this.gas);
-        const availableVolume  = Tank.volume2(this.size, this.startPressure);
-        this._startVolume = availableVolume;
-        // TODO remove redundant check
-        const newConsumedVolume = originalConsumedVolume > availableVolume ? availableVolume : originalConsumedVolume;
-        this.updateConsumed(newConsumedVolume);
+        // TODO this._startVolume = Tank.realVolume2(this.size, this.startPressure, this.gas);
+        this._startVolume = Tank.volume2(this.size, this.startPressure);
+        this.updateConsumed(originalConsumedVolume);
     }
 
     private updateConsumed(newVolume: number): void {

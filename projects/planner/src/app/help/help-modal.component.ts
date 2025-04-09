@@ -11,7 +11,7 @@ import { NgxMdModule } from 'ngx-md';
 })
 
 export class HelpModalComponent {
-    private _path = 'not-implemented.md';
+    private _path = 'not-implemented';
 
     constructor(public modalRef: MdbModalRef<HelpModalComponent>) {}
 

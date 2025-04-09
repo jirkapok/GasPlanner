@@ -285,6 +285,7 @@ export class Tank implements TankFill {
 
     public set consumed(newValue: number) {
         this.consumedVolume = Tank.volume2(this.size, newValue);
+        // TODO this.consumedVolume = Tank.realVolume2(this.size, newValue, this.gas);
     }
 
     public set consumedVolume(newValue: number) {
@@ -293,6 +294,7 @@ export class Tank implements TankFill {
 
     public set reserve(newValue: number) {
         const reserveVolume = Tank.volume2(this.size, newValue);
+        // TODO const reserveVolume = Tank.realVolume2(this.size, newValue, this.gas);
         this.reserveVolume  = reserveVolume;
     }
 
@@ -316,6 +318,7 @@ export class Tank implements TankFill {
     }
 
     /** Gets total volume of stored gas at start pressure in liters using ideal gas law */
+    // TODO remove Tank.volume
     public static volume(tank: TankFill): number {
         return Tank.volume2(tank.size, tank.startPressure);
     }
@@ -327,17 +330,24 @@ export class Tank implements TankFill {
         return realVolume;
     }
 
+    // TODO remove Tank.volume2
     public static volume2(size: number, pressure: number): number {
-        // TODO use compressibility
         return size * pressure;
     }
 
+    // TODO remove toPressure
     private static toPressure(size: number, volume: number): number {
-        // TODO use compressibility
         return volume / size;
     }
 
-    private static realVolume2(size: number, pressure: number, gas: Gas): number {
+    // TODO add tests toRealPressure
+    public static toRealPressure(gas: Gas, volume: number): number {
+        const compressibility = new Compressibility();
+        const pressure = compressibility.pressure(gas, volume);
+        return pressure;
+    }
+
+    public static realVolume2(size: number, pressure: number, gas: Gas): number {
         const tank = { size, startPressure: pressure };
         return Tank.realVolume(tank, gas);
     }
@@ -369,8 +379,10 @@ export class Tank implements TankFill {
     }
 
     private fitStoredVolumes(originalConsumedVolume: number): void {
+        // TODO const availableVolume  = Tank.realVolume2(this.size, this.startPressure, this.gas);
         const availableVolume  = Tank.volume2(this.size, this.startPressure);
         this._startVolume = availableVolume;
+        // TODO remove redundant check
         const newConsumedVolume = originalConsumedVolume > availableVolume ? availableVolume : originalConsumedVolume;
         this.updateConsumed(newConsumedVolume);
     }

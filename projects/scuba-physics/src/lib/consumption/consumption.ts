@@ -59,6 +59,7 @@ class RmvContext {
     public ensureMinimalReserve(tank: Tank, reserveVolume: number): number {
         const isBottomTank = tank === this.bottomTank;
         const minimalReserve = isBottomTank ? this.options.primaryTankReserve : this.options.stageTankReserve;
+        //TODO const minimalReserveVolume = Tank.realVolume2(tank.size, minimalReserve, tank.gas);
         const minimalReserveVolume = Tank.volume2(tank.size, minimalReserve);
 
         if(reserveVolume < minimalReserveVolume) {

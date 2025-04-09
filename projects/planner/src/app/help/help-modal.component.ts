@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { NgxMdModule } from 'ngx-md';
 
@@ -11,5 +11,16 @@ import { NgxMdModule } from 'ngx-md';
 })
 
 export class HelpModalComponent {
+    private _path = 'not-implemented.md';
+
     constructor(public modalRef: MdbModalRef<HelpModalComponent>) {}
+
+    get path() {
+        return this._path;
+    }
+
+    @Input()
+    set path(value) {
+        this._path = `assets/docs/${value}.md`;
+    }
 }

@@ -6,14 +6,14 @@
                   <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
                   <span>Nitrox calculator</span>
                 </div>
-                <button *ngIf="integratedHelp"
+                <button
+                    *ngIf="integratedHelp"
                     type="button"
-                    class="btn btn-link text-secondary ms-2 d-flex align-items-center"
-                    style="font-size: 1.2rem;"
+                    class="btn btn-sm btn-secondary"
+                    (click)="openHelp()"
                     title="More info"
-                    aria-label="Open help panel"
-                    (click)="openHelp()">
-                    <fa-icon [icon]="helpIcon" class="text-primary"></fa-icon>
+                    aria-label="Open help panel"            >
+                    <fa-icon [icon]="helpIcon" class="fa-lg"></fa-icon>
                 </button>
               </div>
             <div class="card-body">

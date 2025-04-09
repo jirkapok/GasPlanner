@@ -147,7 +147,11 @@ export class NitroxComponent implements OnInit {
     }
 
     public openHelp(): void {
-        this.modalRef = this.modalService.open(HelpModalComponent);
+        this.modalRef = this.modalService.open(HelpModalComponent, {
+            data: {
+                path: 'nitrox'
+            }
+        });
     }
 
     private enableAll(): void {

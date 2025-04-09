@@ -69,8 +69,8 @@ export class GasBlender {
         // see https://thetheoreticaldiver.org/wordpress/index.php/2019/02/23/equalizing-real-gases/
         const gas = StandardGases.air; // consider make it configurable
         const compressibility = new Compressibility();
-        const tankVolumeA = compressibility.realVolume(tankA, gas);
-        const tankVolumeB = compressibility.realVolume(tankB, gas);
+        const tankVolumeA = compressibility.tankVolume(tankA, gas);
+        const tankVolumeB = compressibility.tankVolume(tankB, gas);
         const totalVolume = tankVolumeA + tankVolumeB;
         const combinedSize = tankA.size + tankB.size;
         const zFactorA = compressibility.zFactor(tankA.startPressure, gas);

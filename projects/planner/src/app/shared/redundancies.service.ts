@@ -20,7 +20,6 @@ export class RedundanciesService {
         return this._secondTank;
     }
 
-    // TODO Fix equal tanks and equal values dont match the final pressure 15L/200 b => 199.8 b final
     public get finalPressure(): number {
         const tankA= this._firstTank.tank;
         const tankB= this._secondTank.tank;

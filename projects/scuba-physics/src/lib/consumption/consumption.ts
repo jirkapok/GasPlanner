@@ -46,7 +46,7 @@ class RmvContext {
 
     public stressRmvPerSecond(segment: Segment): number {
         // Bottom gas = team stress rmv, deco gas = diver stress rmv,
-        // TODO stage tank RMV == ?
+        // Consider separate stage tank RMV
         // User is on bottom tank, or calculated ascent using bottom gas.
         // The only issue is breathing bottom gas as travel and in such case it is user defined segment with tank assigned.
         if (segment.tank === this.bottomTank || segment.gas.compositionEquals(this.bottomTank.gas)) {

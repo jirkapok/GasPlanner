@@ -19,17 +19,14 @@ class DiveInfoPage {
     }
 }
 class SacCalculatorPage {
-    private readonly calculatorsMenuSelector = '#calculators-menu';
-    private readonly rmvSacOptionSelector = 'a[routerLink="/sac"]';
+
     private readonly diveTimeInputSelector = '#dive-time-input';
     private readonly rmvValueSelector = '#total-rmv-valuesac';
 
     constructor(private page: Page) {}
 
-    async navigateToRmvSacCalculator() {
-        await this.page.goto('/');
-        await this.page.locator(this.calculatorsMenuSelector).click();
-        await this.page.locator(this.rmvSacOptionSelector).click();
+    async navigate() {
+        await this.page.goto('/sac');
     }
 
     async setDiveTime(value: string) {
@@ -66,7 +63,7 @@ test.describe('Dive planner smoke tests', () => {
     test('should go to RMV/SAC calculator and calculate RMV after changing dive time', async() => {
         const sacCalculatorPage = new SacCalculatorPage(page);
 
-        await sacCalculatorPage.navigateToRmvSacCalculator();
+        await sacCalculatorPage.navigate();
         await sacCalculatorPage.setDiveTime('60');
 
         await expect(sacCalculatorPage.getRMVValue()).toBeVisible();

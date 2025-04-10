@@ -153,7 +153,7 @@ describe('Tank', () => {
                 expect(tank.startPressure).toBe(0);
             });
 
-            xit('prevents minimum 0 b end pressure', () => {
+            fit('prevents minimum 0 b end pressure', () => {
                 tank.consumed = 150;
                 tank.startPressure = 100;
                 expect(tank.endPressure).toBe(0);

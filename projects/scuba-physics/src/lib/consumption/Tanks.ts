@@ -361,7 +361,9 @@ export class Tank implements TankFill {
         }
 
         const toRound = Tank.toTankPressure(this.gas, this.size, this._consumedVolume);
-        this._consumed = Precision.ceil(toRound);
+        const rounded = Precision.ceil(toRound);
+        // to keep volume and pressure aligned
+        this._consumed = rounded > this.startPressure ? this.startPressure : rounded;
     }
 }
 

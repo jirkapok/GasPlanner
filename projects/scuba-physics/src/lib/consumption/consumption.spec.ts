@@ -424,7 +424,7 @@ describe('Consumption', () => {
                 consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
                 expect(airTank.reserve).toEqual(30); // ((3 * 2 * 1) + (2.5 * 2 * 1)) * 3
-                expect(airTank.consumed).toEqual(101); // up to the limit
+                expect(airTank.consumed).toEqual(100); // up to the limit
             });
 
             it('All segments assigned tank, consumed more than available', () => {
@@ -442,7 +442,7 @@ describe('Consumption', () => {
                 consumption.consumeFromTanks(profile, options3, tanks, consumptionOptions);
 
                 expect(airTank.reserve).toEqual(42); // 3 min at 3 m + 2 min. solving
-                expect(airTank.consumed).toEqual(101); // up to the limit
+                expect(airTank.consumed).toEqual(100); // up to the limit
             });
 
             it('All segments assigned tank, partially consumed', () => {

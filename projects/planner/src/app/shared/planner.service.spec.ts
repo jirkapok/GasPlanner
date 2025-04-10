@@ -455,8 +455,8 @@ describe('PlannerService', () => {
         });
 
         it('Uses primary and secondary tank reserve', () => {
-            expect(tanksService.tankData[0].reserve).toEqual(99);
-            expect(tanksService.tankData[1].reserve).toEqual(88);
+            expect(tanksService.tankData[0].reserve).toEqual(101);
+            expect(tanksService.tankData[1].reserve).toEqual(90);
         });
 
         it('Filters events', () => {

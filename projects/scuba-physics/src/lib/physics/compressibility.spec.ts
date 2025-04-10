@@ -87,34 +87,61 @@ describe('Gas compressibility', () => {
         });
     });
 
-    describe('Real volume', () => {
+    describe('Tank volume', () => {
         const tank = { size: 10, startPressure: 200 };
 
-        it('10 l of Air at 200 b is 1930 l', () => {
-            const result = sut.realVolume(tank, StandardGases.air);
-            expect(result).toBeCloseTo(1930.134, 3);
+        it('10 l of Air at 200 b is 1928 l', () => {
+            const result = sut.tankVolume(tank, StandardGases.air);
+            expect(result).toBeCloseTo(1928.651, 3);
         });
 
-        it('10 l of Oxygen at 200 b is 2090 l', () => {
-            const result = sut.realVolume(tank, StandardGases.oxygen);
-            expect(result).toBeCloseTo(2088.152, 3);
+        it('10 l of Oxygen at 200 b is 2088 l', () => {
+            const result = sut.tankVolume(tank, StandardGases.oxygen);
+            expect(result).toBeCloseTo(2088.087, 3);
         });
 
-        it('10 l of Trimix 18/45 at 200 b is 1894', () => {
-            const result = sut.realVolume(tank, StandardGases.trimix1845);
-            expect(result).toBeCloseTo(1894.482, 3);
+        it('10 l of Trimix 18/45 at 200 b is 1893', () => {
+            const result = sut.tankVolume(tank, StandardGases.trimix1845);
+            expect(result).toBeCloseTo(1893.038, 3);
         });
 
-        it('20 l of air at 200 b is 3861 l', () => {
+        it('20 l of air at 200 b is 3857 l', () => {
             const tank20 = { size: 20, startPressure: 200 };
-            const result = sut.realVolume(tank20, StandardGases.air);
-            expect(result).toBeCloseTo(3860.269, 3);
+            const result = sut.tankVolume(tank20, StandardGases.air);
+            expect(result).toBeCloseTo(3857.303, 3);
         });
 
         it('10 l of air at 50 b is 505', () => {
             const tank50b = { size: 10, startPressure: 50 };
-            const result = sut.realVolume(tank50b, StandardGases.air);
-            expect(result).toBeCloseTo(504.459, 3);
+            const result = sut.tankVolume(tank50b, StandardGases.air);
+            expect(result).toBeCloseTo(504.571, 3);
+        });
+    });
+
+    describe('Tank pressure', () => {
+        it('1928 l in 10 l tank of Air is 200 b', () => {
+            const result = sut.tankPressure(StandardGases.air, 10, 1928.651);
+            expect(result).toBeCloseTo(200, 3);
+        });
+
+        it('2088 l in 10 l tank of Oxygen is 200 b', () => {
+            const result = sut.tankPressure(StandardGases.oxygen, 10, 2088.087);
+            expect(result).toBeCloseTo(200, 3);
+        });
+
+        it('1894 l in 10 l tank of Trimix 18/45 is 200 b', () => {
+            const result = sut.tankPressure(StandardGases.trimix1845, 10, 1893.038);
+            expect(result).toBeCloseTo(200, 3);
+        });
+
+        it(' 3861 l in 20 l tank of air is 200 b', () => {
+            const result = sut.tankPressure(StandardGases.air, 20, 3857.303);
+            expect(result).toBeCloseTo(200, 3);
+        });
+
+        it('505 l in 10 l tank of air is 50 b', () => {
+            const result = sut.tankPressure(StandardGases.air, 10, 504.571);
+            expect(result).toBeCloseTo(50, 3);
         });
     });
 });

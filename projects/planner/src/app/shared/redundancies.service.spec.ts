@@ -5,7 +5,7 @@ describe('Redundancies service', () => {
     it('Calculates final pressure', () => {
         const sut = new RedundanciesService(new UnitConversion());
         sut.firstTank.startPressure = 100;
-        expect(sut.finalPressure).toBeCloseTo(148.3 , 1);
+        expect(sut.finalPressure).toBeCloseTo(148.2 , 1);
     });
 
     it('Calculates Imperial final pressure', () => {
@@ -14,6 +14,6 @@ describe('Redundancies service', () => {
         const sut = new RedundanciesService(units);
         sut.firstTank.startPressure = 1000;
         sut.secondTank.startPressure = 3000;
-        expect(sut.finalPressure).toBeCloseTo(1956.9 , 1);
+        expect(sut.finalPressure).toBeCloseTo(1955.7, 1);
     });
 });

@@ -5,7 +5,7 @@ import { StandardGases } from '../gases/StandardGases';
 import { Compressibility } from "../physics/compressibility";
 
 export interface TankFill {
-    /** start pressure in bars as non zero positive number.*/
+    /** Start pressure in bars as non zero positive number as shown on the pressure gauge (not absolute pressure). */
     startPressure: number;
     /** internal tank water volume in liters as non zero positive number. */
     size: number;
@@ -140,7 +140,6 @@ export class Tank implements TankFill {
 
     /** Gets volume of remaining gas in liters */
     public get endVolume(): number {
-        // TODO fix to at least 1 atm to cover atmospheric pressure
         const remaining = this.volume - this.consumedVolume;
 
         // covered in size, startPressure and consumed setter, here to prevent rounding issues
@@ -187,37 +186,23 @@ export class Tank implements TankFill {
         return Precision.roundTwoDecimals(current);
     }
 
-    /** Gets total volume of stored gas at start pressure in liters using ideal gas law */
+    /** Gets total volume of stored gas at start pressure in liters using real gas compressibility */
     public get volume(): number {
         return this._startVolume;
     }
 
-    /** Gets total volume of stored gas at start pressure in liters using real gas compressibility */
-    public get realVolume(): number {
-        return Tank.realVolume(this, this.gas);
-    }
-
-    /** Gets total volume of gas reserve in liters using ideal gas law */
+    /** Gets total volume of gas reserve in liters using real gas compressibility */
     public get reserveVolume(): number {
         return this._reserveVolume;
     }
 
-    /** Gets total volume of gas reserve in liters using real gas compressibility */
-    public get realReserveVolume(): number {
-        return Tank.realVolume2(this.size, this.reserve, this.gas);
-    }
-
-    /** Gets total volume of consumed gas in liters using ideal gas law */
+    /** Gets total volume of consumed gas in liters using real gas compressibility */
     public get consumedVolume(): number {
         return this._consumedVolume;
-    }
-
-    /** Gets total volume of consumed gas in liters using real gas compressibility */
-    public get realConsumedVolume(): number {
-        return Tank.realVolume2(this.size, this.consumed, this.gas);
         // TODO add test, that both real volume, ideal volume and pressure are always valid: end = start - consumed
+        // return Tank.realVolume2(this.size, this.consumed, this.gas);
         const endVolume = Tank.realVolume2(this.size, this.endPressure, this.gas);
-        return this.realVolume - endVolume;
+        return this.volume - endVolume;
     }
 
     /** Gets not null name of the content gas based on O2 and he fractions */
@@ -284,7 +269,7 @@ export class Tank implements TankFill {
     }
 
     public set consumed(newValue: number) {
-        this.consumedVolume = Tank.volume2(this.size, newValue);
+        this.consumedVolume = Tank.realVolume2(this.size, newValue, this.gas);
     }
 
     public set consumedVolume(newValue: number) {
@@ -292,7 +277,7 @@ export class Tank implements TankFill {
     }
 
     public set reserve(newValue: number) {
-        const reserveVolume = Tank.volume2(this.size, newValue);
+        const reserveVolume = Tank.realVolume2(this.size, newValue, this.gas);
         this.reserveVolume  = reserveVolume;
     }
 
@@ -305,7 +290,7 @@ export class Tank implements TankFill {
             this._reserveVolume = newValue;
         }
 
-        const toRound = Tank.toPressure(this.size, this._reserveVolume);
+        const toRound = Tank.toTankPressure(this.gas, this.size, this._reserveVolume);
         // here we update only once, so we can directly round up
         this._reserve = Precision.ceil(toRound);
     }
@@ -315,29 +300,20 @@ export class Tank implements TankFill {
         return new Tank(15, 200, GasMixtures.o2InAir * 100);
     }
 
-    /** Gets total volume of stored gas at start pressure in liters using ideal gas law */
-    public static volume(tank: TankFill): number {
-        return Tank.volume2(tank.size, tank.startPressure);
-    }
-
     /** Gets total volume of stored gas at start pressure in liters using real gas compressibility */
     public static realVolume(tank: TankFill, gas: Gas): number {
         const compressibility = new Compressibility();
-        const realVolume = compressibility.realVolume(tank, gas);
+        const realVolume = compressibility.tankVolume(tank, gas);
         return realVolume;
     }
 
-    public static volume2(size: number, pressure: number): number {
-        // TODO use compressibility
-        return size * pressure;
+    public static toTankPressure(gas: Gas, tankSize: number, volume: number): number {
+        const compressibility = new Compressibility();
+        const pressure = compressibility.tankPressure(gas, tankSize, volume);
+        return pressure;
     }
 
-    private static toPressure(size: number, volume: number): number {
-        // TODO use compressibility
-        return volume / size;
-    }
-
-    private static realVolume2(size: number, pressure: number, gas: Gas): number {
+    public static realVolume2(size: number, pressure: number, gas: Gas): number {
         const tank = { size, startPressure: pressure };
         return Tank.realVolume(tank, gas);
     }
@@ -355,13 +331,15 @@ export class Tank implements TankFill {
 
     /** Copies all properties from another tank except id */
     public loadFrom(other: Tank): void {
+        // copy private fields as serialized
+        // gas needs to be first, since it affects compressibility factor
+        this.gas.fO2 = other._gas.fO2;
+        this.gas.fHe = other._gas.fHe;
+
         this.size = other.size;
         this.startPressure = other.startPressure;
         this.consumedVolume = other.consumedVolume;
         this.reserve = other.reserve;
-        // copy private fields as serialized
-        this.gas.fO2 = other._gas.fO2;
-        this.gas.fHe = other._gas.fHe;
     }
 
     public toString(): string {
@@ -369,10 +347,8 @@ export class Tank implements TankFill {
     }
 
     private fitStoredVolumes(originalConsumedVolume: number): void {
-        const availableVolume  = Tank.volume2(this.size, this.startPressure);
-        this._startVolume = availableVolume;
-        const newConsumedVolume = originalConsumedVolume > availableVolume ? availableVolume : originalConsumedVolume;
-        this.updateConsumed(newConsumedVolume);
+        this._startVolume = Tank.realVolume2(this.size, this.startPressure, this.gas);
+        this.updateConsumed(originalConsumedVolume);
     }
 
     private updateConsumed(newVolume: number): void {
@@ -384,7 +360,7 @@ export class Tank implements TankFill {
             this._consumedVolume = newVolume;
         }
 
-        const toRound = Tank.toPressure(this.size, this._consumedVolume)
+        const toRound = Tank.toTankPressure(this.gas, this.size, this._consumedVolume);
         this._consumed = Precision.ceil(toRound);
     }
 }

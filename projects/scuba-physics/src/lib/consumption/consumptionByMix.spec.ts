@@ -28,7 +28,7 @@ describe('ConsumedByMix', () => {
 
         const assertResult = (mapFn: (s: IConsumedMix) => number, expected: number[]): void => {
             const mapped = _(result).map(mapFn).value();
-            expect(mapped).toEqual(expected);
+            mapped.forEach((n, index) => expect(n).toBeCloseTo(expected[index], 1))
         };
 
         it('Groups by Gas', () => {
@@ -37,17 +37,17 @@ describe('ConsumedByMix', () => {
         });
 
         it('Sums total volume', () => {
-            const expected = [3100, 3000];
+            const expected = [3082.8, 2893];
             assertResult(r => r.total, expected);
         });
 
         it('Sums consumed volume', () => {
-            const expected = [1450, 1350];
+            const expected = [1463.1, 1359];
             assertResult(r => r.consumed, expected);
         });
 
         it('Sums reserve volume', () => {
-            const expected = [2700, 750];
+            const expected = [2706.9, 756.9];
             assertResult(r => r.reserve, expected);
         });
     });

@@ -78,7 +78,7 @@ describe('Consumption - Preserve reserved gas', ()=> {
             });
 
             it('Stage tanks reserve from last', () => {
-                expect(tank2.reserve).toEqual(194); // start pressure, whole tank reserve
+                expect(tank2.reserve).toEqual(200); // start pressure, whole tank reserve
                 expect(tank3.reserve).toEqual(74); // calculated reserve
                 expect(tank4.reserve).toEqual(25); // minimal reserve
             });

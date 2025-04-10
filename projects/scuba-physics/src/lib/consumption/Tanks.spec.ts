@@ -142,7 +142,7 @@ describe('Tank', () => {
         });
 
         it('percent rock bottom is 50', () => {
-            expect(tank.percentsReserve).toBeCloseTo(50.5, 1);
+            expect(tank.percentsReserve).toBeCloseTo(50, 1);
         });
     });
 
@@ -245,6 +245,12 @@ describe('Tank', () => {
             it('Set reserve pressure updates also volume', () => {
                 tank.reserve = 20;
                 expect(tank.reserveVolume).toBeCloseTo(301.7, 1);
+            });
+
+            it('Set reserve pressure does not round the set value', () => {
+                const expected = 2;
+                tank.reserve = expected;
+                expect(tank.reserve).toBeCloseTo(expected, 6);
             });
         });
     });

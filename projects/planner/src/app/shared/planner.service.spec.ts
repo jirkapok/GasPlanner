@@ -136,8 +136,8 @@ describe('PlannerService', () => {
             expect(dive.maxTime).toEqual(18);
         });
 
-        it('78 bar rock bottom', () => {
-            expect(tanksService.firstTank.tank.reserve).toEqual(78);
+        it('77 bar rock bottom', () => {
+            expect(tanksService.firstTank.tank.reserve).toEqual(77);
         });
 
         it('125 bar remaining gas', () => {
@@ -455,8 +455,8 @@ describe('PlannerService', () => {
         });
 
         it('Uses primary and secondary tank reserve', () => {
-            expect(tanksService.tankData[0].reserve).toEqual(101);
-            expect(tanksService.tankData[1].reserve).toEqual(90);
+            expect(tanksService.tankData[0].reserve).toEqual(100);
+            expect(tanksService.tankData[1].reserve).toEqual(89);
         });
 
         it('Filters events', () => {

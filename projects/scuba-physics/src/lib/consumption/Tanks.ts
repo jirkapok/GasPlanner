@@ -199,10 +199,6 @@ export class Tank implements TankFill {
     /** Gets total volume of consumed gas in liters using real gas compressibility */
     public get consumedVolume(): number {
         return this._consumedVolume;
-        // TODO add test, that both real volume, ideal volume and pressure are always valid: end = start - consumed
-        // return Tank.realVolume2(this.size, this.consumed, this.gas);
-        const endVolume = Tank.realVolume2(this.size, this.endPressure, this.gas);
-        return this.volume - endVolume;
     }
 
     /** Gets not null name of the content gas based on O2 and he fractions */
@@ -267,34 +263,26 @@ export class Tank implements TankFill {
         this.fitStoredVolumes(newConsumedPressure, this.consumedVolume);
     }
 
-    public set consumed(newValue: number) {
-        const newConsumedVolume = Tank.realVolume2(this.size, newValue, this.gas);
-        this.updateConsumed(newValue, newConsumedVolume);
+    public set consumed(newPressure: number) {
+        const newConsumedVolume = Tank.realVolume2(this.size, newPressure, this.gas);
+        this.updateConsumed(newPressure, newConsumedVolume);
     }
 
-    public set consumedVolume(newValue: number) {
-        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, newValue);
+    public set consumedVolume(newVolume: number) {
+        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, newVolume);
         newConsumedPressure = Precision.ceil(newConsumedPressure);
-        this.updateConsumed(newConsumedPressure, newValue);
+        this.updateConsumed(newConsumedPressure, newVolume);
     }
 
-    public set reserve(newValue: number) {
-        const reserveVolume = Tank.realVolume2(this.size, newValue, this.gas);
-        this.reserveVolume  = reserveVolume;
+    public set reserve(newPressure: number) {
+        const reserveVolume = Tank.realVolume2(this.size, newPressure, this.gas);
+        this.updateReserve(newPressure, reserveVolume);
     }
 
-    public set reserveVolume(newValue: number) {
-        if(newValue < Tank.minimumPressure) {
-            this._reserveVolume = Tank.minimumPressure;
-        } else if(newValue > this.volume) {
-            this._reserveVolume = this.volume;
-        } else {
-            this._reserveVolume = newValue;
-        }
-
-        const toRound = Tank.toTankPressure(this.gas, this.size, this._reserveVolume);
-        // here we update only once, so we can directly round up
-        this._reserve = Precision.ceil(toRound);
+    public set reserveVolume(newVolume: number) {
+        let newPressure = Tank.toTankPressure(this.gas, this.size, newVolume);
+        newPressure = Precision.ceil(newPressure);
+        this.updateReserve(newPressure, newVolume);
     }
 
     /** Creates 15 L, filled with 200 bar Air */
@@ -369,6 +357,24 @@ export class Tank implements TankFill {
             this._consumed = Tank.minimumPressure;
         } else {
             this._consumed = newPressure;
+        }
+    }
+
+    private updateReserve(newPressure: number, newVolume: number) {
+        if(newVolume > this.volume) {
+            this._reserveVolume = this.volume;
+        } else if(newVolume < Tank.minimumPressure) {
+            this._reserveVolume = Tank.minimumPressure;
+        } else {
+            this._reserveVolume = newVolume;
+        }
+
+        if(newPressure > this.startPressure) {
+            this._reserve = this.startPressure;
+        } else if(newPressure < Tank.minimumPressure) {
+            this._reserve = Tank.minimumPressure;
+        } else {
+            this._reserve = newPressure;
         }
     }
 }

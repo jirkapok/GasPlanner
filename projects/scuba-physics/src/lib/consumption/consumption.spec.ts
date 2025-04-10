@@ -338,7 +338,7 @@ describe('Consumption', () => {
 
             // Emergency ascent: 30-20 600, 20-20 60, 20-3 102, 3-3 549, 3-0 18
             it('Reserve is updated from both EAN50 tanks', () => {
-                expect(airTank.reserve).toEqual(101);
+                expect(airTank.reserve).toEqual(100);
                 expect(airTank2.reserve).toEqual(109); // the same gas, still team reserve used
                 expect(ean50Tank.reserve).toEqual(112);
             });

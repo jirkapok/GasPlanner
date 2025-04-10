@@ -136,12 +136,12 @@ describe('PlannerService', () => {
             expect(dive.maxTime).toEqual(18);
         });
 
-        it('74 bar rock bottom', () => {
+        it('78 bar rock bottom', () => {
             expect(tanksService.firstTank.tank.reserve).toEqual(78);
         });
 
-        it('124 bar remaining gas', () => {
-            expect(tanksService.firstTank.tank.endPressure).toEqual(124);
+        it('125 bar remaining gas', () => {
+            expect(tanksService.firstTank.tank.endPressure).toEqual(125);
         });
     });
 

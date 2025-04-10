@@ -107,7 +107,7 @@ describe('Tank', () => {
         });
 
         it('end pressure 100', () => {
-            expect(tank.endPressure).toBe(99);
+            expect(tank.endPressure).toBe(100);
         });
 
         it('consumed has reserve', () => {
@@ -115,7 +115,7 @@ describe('Tank', () => {
         });
 
         it('percent remaining is 50', () => {
-            expect(tank.percentsRemaining).toBeCloseTo(49.5, 1);
+            expect(tank.percentsRemaining).toBeCloseTo(50, 1);
         });
 
         it('percent rock bottom is 25', () => {
@@ -309,6 +309,24 @@ describe('Tank', () => {
         it('Real consumed volume', () => {
             filledTank.consumed = 100;
             expect(filledTank.consumedVolume).toBeCloseTo(1004.803, 3);
+        });
+
+        it('End pressure is complement of start pressure and consumed', () => {
+            const sut = Tank.createDefault();
+            sut.startPressure = 150;
+            sut.consumed = 100;
+
+            expect(sut.endPressure).toBeCloseTo(50, 3);
+        });
+
+        it('End volume is complement of start pressure and consumed', () => {
+            const sut = Tank.createDefault();
+            sut.startPressure = 150;
+            sut.consumed = 100;
+
+            expect(sut.volume).toBeCloseTo(2225.388, 3);
+            expect(sut.consumedVolume).toBeCloseTo(1507.204, 3);
+            expect(sut.endVolume).toBeCloseTo(718.184, 3);
         });
     });
 });

@@ -245,19 +245,16 @@ export class Tank implements TankFill {
     }
 
     public set startPressure(newValue: number) {
-        const originalConsumedVolume = this.consumedVolume;
-
        if(newValue < Tank.minimumPressure) {
            this._startPressure = Tank.minimumPressure;
        } else {
            this._startPressure = newValue;
        }
 
-       this.fitStoredVolumes(originalConsumedVolume);
+       this.fitStoredVolumes(this.consumed, this.consumedVolume);
     }
 
     public set size(newValue: number) {
-        const originalConsumedVolume = this.consumedVolume;
         // Consider to make the size readonly
         if(newValue < Tank.minimumSize) {
             this._size = Tank.minimumSize;
@@ -265,15 +262,20 @@ export class Tank implements TankFill {
             this._size = newValue;
         }
 
-        this.fitStoredVolumes(originalConsumedVolume);
+        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, this.consumedVolume);
+        newConsumedPressure = Precision.ceil(newConsumedPressure);
+        this.fitStoredVolumes(newConsumedPressure, this.consumedVolume);
     }
 
     public set consumed(newValue: number) {
-        this.consumedVolume = Tank.realVolume2(this.size, newValue, this.gas);
+        const newConsumedVolume = Tank.realVolume2(this.size, newValue, this.gas);
+        this.updateConsumed(newValue, newConsumedVolume);
     }
 
     public set consumedVolume(newValue: number) {
-        this.updateConsumed(newValue);
+        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, newValue);
+        newConsumedPressure = Precision.ceil(newConsumedPressure);
+        this.updateConsumed(newConsumedPressure, newValue);
     }
 
     public set reserve(newValue: number) {
@@ -346,12 +348,13 @@ export class Tank implements TankFill {
         return `Tank ${this.id}:${this.name},${this.size} L,${this.startPressure} b`;
     }
 
-    private fitStoredVolumes(originalConsumedVolume: number): void {
+    private fitStoredVolumes(newConsumedPressure: number, newConsumedVolume: number): void {
         this._startVolume = Tank.realVolume2(this.size, this.startPressure, this.gas);
-        this.updateConsumed(originalConsumedVolume);
+        this.updateConsumed(newConsumedPressure, newConsumedVolume);
     }
 
-    private updateConsumed(newVolume: number): void {
+    /** to keep volume and pressure aligned */
+    private updateConsumed(newPressure: number, newVolume: number): void {
         if(newVolume > this.volume) {
             this._consumedVolume = this.volume;
         } else if(newVolume < Tank.minimumPressure) {
@@ -360,10 +363,13 @@ export class Tank implements TankFill {
             this._consumedVolume = newVolume;
         }
 
-        const toRound = Tank.toTankPressure(this.gas, this.size, this._consumedVolume);
-        const rounded = Precision.ceil(toRound);
-        // to keep volume and pressure aligned
-        this._consumed = rounded > this.startPressure ? this.startPressure : rounded;
+        if(newPressure > this.startPressure) {
+            this._consumed = this.startPressure;
+        } else if(newPressure < Tank.minimumPressure) {
+            this._consumed = Tank.minimumPressure;
+        } else {
+            this._consumed = newPressure;
+        }
     }
 }
 

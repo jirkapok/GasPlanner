@@ -193,7 +193,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         const tankControl = this.tanksGroup.at(index);
 
         tankControl.patchValue({
-            // TODO tank size is inconsistently reloaded (allows save precise value, but reloads rounded)
             tankSize: Precision.round(bound.size, 1), // because of HP100 template
             tankWorkPressure: bound.workingPressure,
             tankStartPressure: bound.startPressure,

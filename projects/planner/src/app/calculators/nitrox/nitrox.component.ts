@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { faPercent } from '@fortawesome/free-solid-svg-icons';
-import {
-    FormControl, NonNullableFormBuilder, FormGroup
-} from '@angular/forms';
-import { Precision } from 'scuba-physics';
+import { faPercent, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { FeatureFlags, Precision } from 'scuba-physics';
 import { NitroxCalculatorService } from '../../shared/nitrox-calculator.service';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { InputControls } from '../../shared/inputcontrols';
@@ -15,6 +13,8 @@ import { SubViewStorage } from '../../shared/subViewStorage';
 import { NitroxViewState } from '../../shared/views.model';
 import { KnownViews } from '../../shared/viewStates';
 import { DiveSchedules } from '../../shared/dive.schedules';
+import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { HelpModalComponent } from '../../help/help-modal.component';
 
 interface NitroxForm {
     mod?: FormControl<number>;
@@ -25,16 +25,19 @@ interface NitroxForm {
 @Component({
     selector: 'app-nitrox',
     templateUrl: './nitrox.component.html',
-    styleUrls: ['./nitrox.component.scss']
+    styleUrls: ['./nitrox.component.scss'],
 })
 export class NitroxComponent implements OnInit {
+    public integratedHelp = FeatureFlags.Instance.integratedHelp;
     public calcIcon = faPercent;
+    public helpIcon = faCircleInfo;
     public nitroxForm!: FormGroup<NitroxForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
     private fO2Control!: FormControl<number>;
     private pO2Control!: FormControl<number>;
     private modControl!: FormControl<number>;
     private failingMod = false;
+    private modalRef: MdbModalRef<HelpModalComponent> | null = null;
 
     constructor(
         public calc: NitroxCalculatorService,
@@ -44,7 +47,9 @@ export class NitroxComponent implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private schedules: DiveSchedules,
-        private viewStates: SubViewStorage) {
+        private viewStates: SubViewStorage,
+        private modalService: MdbModalService
+    ) {
         this.loadState();
         this.saveState();
     }
@@ -141,6 +146,14 @@ export class NitroxComponent implements OnInit {
         this.nitroxForm.removeControl('pO2');
     }
 
+    public openHelp(): void {
+        this.modalRef = this.modalService.open(HelpModalComponent, {
+            data: {
+                path: 'nitrox'
+            }
+        });
+    }
+
     private enableAll(): void {
         this.nitroxForm.addControl('mod', this.modControl);
         this.nitroxForm.addControl('fO2', this.fO2Control);
@@ -157,7 +170,9 @@ export class NitroxComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: NitroxViewState = this.viewStates.loadView(KnownViews.nitrox);
+        let state: NitroxViewState = this.viewStates.loadView(
+            KnownViews.nitrox
+        );
 
         if (!state) {
             state = this.createState();

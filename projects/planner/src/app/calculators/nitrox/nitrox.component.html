@@ -1,10 +1,21 @@
 <div class="row mt-5">
     <div class="col col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
         <div class="card">
-            <div class="card-header">
-                <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
-                <span>Nitrox calculator</span>
-            </div>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                  <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
+                  <span>Nitrox calculator</span>
+                </div>
+                <button
+                    *ngIf="integratedHelp"
+                    type="button"
+                    class="btn btn-sm btn-secondary"
+                    (click)="openHelp()"
+                    title="More info"
+                    aria-label="Open help panel"            >
+                    <fa-icon [icon]="helpIcon" class="fa-lg"></fa-icon>
+                </button>
+              </div>
             <div class="card-body">
                 <form [formGroup]="nitroxForm">
                     <div class="mb-4">{{ depthConverterWarning }}</div>

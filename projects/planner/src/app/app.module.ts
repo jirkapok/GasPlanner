@@ -5,6 +5,7 @@ import {ServiceWorkerModule} from '@angular/service-worker';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {DatePipe, DecimalPipe} from '@angular/common';
+import {HttpClientModule} from '@angular/common/http';
 
 import {ClipboardModule} from 'ngx-clipboard';
 import {MdbCollapseModule} from 'mdb-angular-ui-kit/collapse';
@@ -16,6 +17,7 @@ import {MdbAccordionModule} from 'mdb-angular-ui-kit/accordion';
 import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
+import {NgxMdModule} from 'ngx-md';
 
 import {SacComponent} from './calculators/sac/sac.component';
 import {NitroxComponent} from './calculators/nitrox/nitrox.component';
@@ -35,6 +37,7 @@ import {OxygenComponent} from './controls/oxygen/oxygen.component';
 import {TankSizeComponent} from './controls/tank.size/tank.size.component';
 import {GradientsComponent} from './controls/gradients/gradients.component';
 import {PpO2Component} from './controls/pp-o2/pp-o2.component';
+import {HelpModalComponent} from './help/help-modal.component';
 
 import {SurfaceIntervalComponent} from './plan/surface-interval/surface-interval.component';
 import {PlanTabsComponent} from './plan/plan.tabs/plan.tabs.component';
@@ -110,6 +113,7 @@ import { ResamplingService } from './shared/ResamplingService';
 import { ApplicationSettingsService } from './shared/ApplicationSettings';
 import { IgnoredIssuesService } from './shared/IgnoredIssues.service';
 import { BlendPricingService } from './shared/blend-pricing.service';
+import { MdbModalModule } from "mdb-angular-ui-kit/modal";
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -124,7 +128,8 @@ const MDB_MODULES = [
     MdbDropdownModule,
     MdbFormsModule,
     MdbTabsModule,
-    MdbAccordionModule
+    MdbAccordionModule,
+    MdbModalModule
 ];
 
 const COMPONENTS = [
@@ -179,6 +184,7 @@ const COMPONENTS = [
 
 const STANDALONE = [
     SurfaceIntervalComponent,
+    HelpModalComponent
 ];
 
 const SERVICES = [
@@ -230,6 +236,8 @@ const SERVICES = [
         ...ANGULAR_MODULES,
         ...MDB_MODULES,
         STANDALONE,
+        HttpClientModule,
+        NgxMdModule.forRoot(),
         ClipboardModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,

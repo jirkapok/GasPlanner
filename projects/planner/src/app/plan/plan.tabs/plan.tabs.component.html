@@ -2,7 +2,7 @@
     <mdb-tabs #tabs [pills]="true">
         <mdb-tab *ngFor="let dive of this.schedules.dives; let i = index">
             <ng-template mdbTabTitle>
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center" (mouseup)="tabClick($event, dive)">
                     <fa-icon *ngIf="!dive.diveResult.calculated" [icon]="reloadIcon" class="me-1 fa-xl small text-info"></fa-icon>
                     <div class="justifycontent-center">{{dive.title}}</div>
                     <button *ngIf="!schedules.empty" type="button" class="btn-close ms-2" aria-label="Close"

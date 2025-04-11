@@ -15,6 +15,7 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
     public addIcon = faPlus;
     public reloadIcon = faRotate;
+    private activeTabIndex = 0;
 
     constructor(public schedules: ManagedDiveSchedules, private cd: ChangeDetectorRef) {
         super();
@@ -24,6 +25,7 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
         // hack to fix missing initial value of the selected tab
         const selectedIndex = this.schedules.selectedIndex;
         this.tabs?.setActiveTab(selectedIndex);
+        this.activeTabIndex = selectedIndex;
         this.cd.detectChanges();
 
         this.tabs?.activeTabChange.pipe(takeUntil(this.unsubscribe$))
@@ -34,6 +36,12 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
 
     public closeTab(dive: DiveSchedule): void {
         this.schedules.remove(dive);
+    }
+
+    public tabClick(event: MouseEvent, dive: DiveSchedule): void {
+        if (event.button === 1 && this.activeTabIndex == dive.index) {
+            this.closeTab(dive);
+        }
     }
 
     public addTab(): void {
@@ -48,5 +56,6 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
         }
 
         this.schedules.select(newIndex);
+        this.activeTabIndex = newIndex;
     }
 }

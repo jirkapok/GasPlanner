@@ -1,7 +1,7 @@
 import {
     Ceiling, HighestDensity,
     TissueOverPressures, LoadedTissues,
-    OtuCalculator, ProfileTissues
+    OtuCalculator, ProfileTissues, Segment
 } from 'scuba-physics';
 import { Injectable } from '@angular/core';
 import { WayPoint } from './wayPoint';
@@ -63,6 +63,7 @@ export class DiveResults {
     private _maxTime = 0;
     private _timeToSurface = 0;
     private _emergencyAscentStart = 0;
+    private _emergencyAscent: WayPoint[]  = [];
     private _turnPressure = 0;
     private _turnTime = 0;
     private _needsReturn = false;
@@ -75,6 +76,10 @@ export class DiveResults {
 
     public get wayPoints(): WayPoint[] {
         return this._wayPoints;
+    }
+
+    public get emergencyAscent(): WayPoint[] {
+        return this._emergencyAscent;
     }
 
     /** In meaning of at end of the dive */
@@ -316,10 +321,12 @@ export class DiveResults {
         turnPressure: number,
         turnTime: number,
         needsReturn: boolean,
-        notEnoughGas: boolean): void {
+        notEnoughGas: boolean,
+        emergencyAscent: WayPoint[]): void {
         this.updateConsumptionInternal(maxTime, timeToSurface, emergencyAscentStart,
             turnPressure, turnTime, needsReturn, notEnoughGas);
         this.consumptionCalculation.Finished();
+        this._emergencyAscent = emergencyAscent;
     }
 
     private emptyProfile(): void {

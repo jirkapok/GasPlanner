@@ -117,6 +117,7 @@ export class PlanningTasks {
             maxTime: maxTime,
             timeToSurface: timeToSurface,
             tanks: DtoSerialization.toConsumed(tanks),
+            emergencyAscent: DtoSerialization.fromSegments(emergencyAscent),
         };
     }
 

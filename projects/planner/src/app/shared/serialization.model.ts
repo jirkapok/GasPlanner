@@ -159,6 +159,7 @@ export interface ConsumptionResultDto {
     maxTime: number;
     timeToSurface: number;
     tanks: ConsumedDto[];
+    emergencyAscent: SegmentDto[];
 }
 
 export interface TankDto {

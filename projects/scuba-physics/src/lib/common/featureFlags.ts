@@ -4,6 +4,7 @@ export class FeatureFlags
     private static _instance: FeatureFlags;
 
     public integratedHelp = false;
+    public emergencyAscent = false;
 
     private constructor() {
     }

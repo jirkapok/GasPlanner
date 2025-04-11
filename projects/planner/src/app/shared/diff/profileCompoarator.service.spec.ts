@@ -116,16 +116,16 @@ describe('ProfileComparison service', () => {
         });
 
         it('Dive results are already calculated', () => {
-            sut.profileAResults.updateConsumption(0, 0, 0, 0, 0, false, false);
+            sut.profileAResults.updateConsumption(0, 0, 0, 0, 0, false, false, []);
             sut.profileAResults.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
-            sut.profileBResults.updateConsumption(0, 0, 0, 0, 0, false, false);
+            sut.profileBResults.updateConsumption(0, 0, 0, 0, 0, false, false, []);
             sut.profileBResults.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
             expect(sut.bothResultsCalculated).toBeTruthy();
         });
 
         it('Consumption are already calculated', () => {
-            sut.profileAResults.updateConsumption(0, 0, 0, 0, 0, false, false);
-            sut.profileBResults.updateConsumption(0, 0, 0, 0, 0, false, false);
+            sut.profileAResults.updateConsumption(0, 0, 0, 0, 0, false, false, []);
+            sut.profileBResults.updateConsumption(0, 0, 0, 0, 0, false, false, []);
             expect(sut.showConsumption).toBeTruthy();
         });
     });

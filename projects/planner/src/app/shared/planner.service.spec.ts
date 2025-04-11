@@ -392,7 +392,8 @@ describe('PlannerService', () => {
                         diveId: unknownDiveId,
                         maxTime: 0,
                         timeToSurface: 0,
-                        tanks: []
+                        tanks: [],
+                        emergencyAscent: []
                     }));
 
                 expect( () => planner.calculate(1)).not.toThrow();

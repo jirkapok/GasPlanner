@@ -31,7 +31,7 @@ describe('ResultsComparison service current values', () => {
         schedules.add();
         profileB = schedules.add().diveResult;
         profileB.updateDiveInfo(84, false, 0, 86, 0, 0, 0, 81, 80, HighestDensity.createDefault(), [], [], []);
-        profileB.updateConsumption(85, 82, 83, 0, 0, false, false);
+        profileB.updateConsumption(85, 82, 83, 0, 0, false, false, []);
         const selection = TestBed.inject(ProfileComparatorService);
         selection.selectProfile(2);
     });

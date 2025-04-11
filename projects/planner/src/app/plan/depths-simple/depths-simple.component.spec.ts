@@ -100,7 +100,7 @@ describe('Depths Simple Component', () => {
         it('Apply max duration', inject([DiveSchedules, ReloadDispatcher],
             (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {
                 let eventFired = false;
-                schedule.selected.diveResult.updateConsumption(19, 0, 0, 0, 0, false, false);
+                schedule.selected.diveResult.updateConsumption(19, 0, 0, 0, 0, false, false, []);
                 dispatcher.depthChanged$.subscribe(() => eventFired = true );
                 simplePage.applyMaxDurationButton.click();
                 expect(eventFired).toBeTruthy();

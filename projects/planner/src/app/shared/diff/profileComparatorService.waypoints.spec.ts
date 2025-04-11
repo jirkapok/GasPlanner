@@ -47,7 +47,7 @@ describe('WayPoints Difference Service', () => {
 
     const setDiveCalculated = (index: number) => {
         const result = schedules.dives[index].diveResult;
-        result.updateConsumption(0, 0, 0, 0, 0, false, false);
+        result.updateConsumption(0, 0, 0, 0, 0, false, false, []);
         result.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
     };
 

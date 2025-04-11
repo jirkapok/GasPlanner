@@ -334,5 +334,25 @@ describe('Tank', () => {
             expect(sut.consumedVolume).toBeCloseTo(1507.204, 3);
             expect(sut.endVolume).toBeCloseTo(718.184, 3);
         });
+
+        it('Real volume of helium in 50 L tank at 200 b is 9134 L', () => {
+            const sut = new Tank(50, 200, 21);
+            sut.he = 100;
+
+            expect(sut.volume).toBeCloseTo(9134, 0);
+            expect(sut.startPressure).toBeCloseTo(200, 3);
+            expect(sut.he).toBeCloseTo(100, 0);
+            expect(sut.o2).toBeCloseTo(0, 0);
+        });
+
+        it('Real volume of oxygen in 50 L tank at 200 b is 9134 L', () => {
+            const sut = new Tank(50, 200, 21);
+            sut.o2 = 100;
+
+            expect(sut.volume).toBeCloseTo(10440, 0);
+            expect(sut.startPressure).toBeCloseTo(200, 3);
+            expect(sut.he).toBeCloseTo(0, 0);
+            expect(sut.o2).toBeCloseTo(100, 0);
+        });
     });
 });

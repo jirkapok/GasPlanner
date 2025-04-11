@@ -97,8 +97,9 @@ export class Tank implements TankFill {
         }
 
         this._size = size;
-        this.startPressure = startPressure;
         this.o2 = o2Percent;
+        // changing the gas content affects stored volumes, so we need to set it first before start pressure.
+        this.startPressure = startPressure;
     }
 
     /**
@@ -160,8 +161,9 @@ export class Tank implements TankFill {
     }
 
     /**
-     * Gets or sets the gas mixture in the tank.
+     * Gets the gas mixture in the tank.
      * Changing the gas does not preserve the total volume of stored gas.
+     * DO NOT change the gas properties directly on the gas object.
      **/
     public get gas(): Gas {
         return this._gas;
@@ -232,12 +234,18 @@ export class Tank implements TankFill {
 
     /** o2 content in percent adjusted to iterate to Air*/
     public set o2(newValue: number) {
+        // gas needs to be set first, since it affects compressibility factor.
         this._gas.fO2 = AirO2Pin.setO2(newValue, this.gas.fHe);
+        // update volume based on compressibility, protecting pressure defined by user, not volume.
+        this.startPressure = this.startPressure;
     }
 
     /** The helium part of tank gas in percents */
     public set he(newValue: number) {
+        // gas needs to be set first, since it affects compressibility factor.
         this.gas.fHe = newValue / 100;
+        // update volume based on compressibility, protecting pressure defined by user, not volume.
+        this.startPressure = this.startPressure;
     }
 
     public set startPressure(newValue: number) {

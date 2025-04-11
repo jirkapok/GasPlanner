@@ -178,7 +178,7 @@ describe('Url Serialization', () => {
 
     describe('Air break options', () => {
         it('Serialize air break options', () => {
-            expect(simpleViewUrl).toContain('o=0,9,3,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1,0,20,5&');
+            expect(simpleViewUrl).toContain('o=0,9,3,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1,0,20,5,0');
         });
 
         it('Deserialize missing Air break options', () => {

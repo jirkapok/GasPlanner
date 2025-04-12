@@ -3,7 +3,7 @@ import { Urls } from '../shared/navigation.service';
 import {
     faBars, faMountainSun, faHouse, faLungs, faTable,
     faWeightHanging, faPercent, faFileLines,
-    faFaucet
+    faFaucet, faShareFromSquare
 } from '@fortawesome/free-solid-svg-icons';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 
@@ -23,6 +23,7 @@ export class MainMenuComponent {
     public iconGasProperties = faFileLines;
     public iconNitrox = faPercent;
     public iconBlender = faFaucet;
+    public iconShare = faShareFromSquare;
 
     constructor(private schedules: ManagedDiveSchedules, public urls: Urls) { }
 
@@ -32,5 +33,20 @@ export class MainMenuComponent {
 
     public loadDefaults(): void {
         this.schedules.loadDefaults();
+    }
+
+    public cloneDive(): void {
+        this.schedules.add();
+        // TODO load added dive from current dive
+        // this.schedules.loadDefaults();
+    }
+
+    public shareDive(): void {
+        // TODO share dive
+    }
+
+    public deleteDive(): void {
+        const dive = this.schedules.selected;
+        this.schedules.remove(dive);
     }
 }

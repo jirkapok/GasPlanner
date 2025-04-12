@@ -33,6 +33,10 @@ export class ManagedDiveSchedules {
         return this.schedules.selected.index;
     }
 
+    public get selected(): DiveSchedule {
+        return this.schedules.selected;
+    }
+
     public add(): void {
         const added = this.schedules.add();
         this.loadDefaultTo(added);

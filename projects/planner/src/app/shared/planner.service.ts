@@ -197,7 +197,6 @@ export class PlannerService extends Streamed {
         // this needs to be moved to each gas or do we have other option?
         const needsReturn = dive.depths.needsReturn && tanks.singleTank;
         const turnTime = Precision.floor(dive.depths.planDuration / 2);
-        // TODO convert emergency ascent to waypoints with correct start
         const emergencyAscentSegments = DtoSerialization.toSegments(result.emergencyAscent, tanks.tankData);
         const ascentStart = dive.depths.startAscentTime;
         const emergencyAscent = this.waypoints.calculateWayPoints(emergencyAscentSegments, ascentStart);

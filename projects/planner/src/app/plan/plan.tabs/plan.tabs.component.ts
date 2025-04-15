@@ -39,7 +39,7 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
     }
 
     public tabClick(event: MouseEvent, dive: DiveSchedule): void {
-        if (event.button === 1 && this.activeTabIndex == dive.index) {
+        if (event.button === 1) {
             this.closeTab(dive);
         }
     }

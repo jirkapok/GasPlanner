@@ -131,6 +131,7 @@ export class DiveTracesBuilder {
     private readonly ceilingLineColor: string = 'rgb(255, 160, 73)';
     private readonly eventLineColor: string = 'rgba(31, 119, 180, 0.7)';
     private readonly eventFillColor: string = 'rgba(31, 119, 180, 0.5)';
+    public showEmergencyAscent = false;
 
     constructor(
         private dive: () => DiveResults,
@@ -159,7 +160,7 @@ export class DiveTracesBuilder {
         const events = this.plotEvents(diveResult.events);
         const emergencyDepths = this.plotEmergencyDepths(diveResult.emergencyAscent);
 
-        if(FeatureFlags.Instance.emergencyAscent) {
+        if(this.showEmergencyAscent) {
             return [ ...profileTraces, emergencyDepths, ceilings, events ];
         }
 

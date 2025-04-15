@@ -10,6 +10,12 @@
                 <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
             </button>
         </div>
+        <div class="float-end me-1">
+            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showEmergencyAscent }" type="button"
+                    data-toggle="button" [attr.aria-pressed]="showEmergencyAscent" autocomplete="off" (click)="switchEmergencyAscent()">
+                <fa-icon [icon]="emergencyIcon" class="fa-lg"></fa-icon>
+            </button>
+        </div>
     </div>
     <div class="card-body card-minheight">
         <app-calculating [show]="!infoCalculated"></app-calculating>

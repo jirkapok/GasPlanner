@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
-import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
-import { FeatureFlags, TissueOverPressures } from 'scuba-physics';
+import { faChartArea, faFire, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { TissueOverPressures } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
 import { SelectedWaypoint } from '../../shared/selectedwaypointService';
 import { Streamed } from '../../shared/streamed';
@@ -23,6 +23,7 @@ import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;
+    public readonly emergencyIcon = faThumbsUp;
     public readonly heatmapIcon = faFire;
     public showHeatMap = false;
     private readonly elementName = 'diveplot';
@@ -76,6 +77,10 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         return this.dive.diveInfoCalculated;
     }
 
+    public get showEmergencyAscent(): boolean {
+        return this.profileTraces.showEmergencyAscent;
+    }
+
     private get dive(): DiveResults {
         return this.schedules.selected.diveResult;
     }
@@ -93,6 +98,11 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     public switchHeatMap(): void {
         this.showHeatMap = !this.showHeatMap;
+        this.plotAllCharts();
+    }
+
+    public switchEmergencyAscent(): void {
+        this.profileTraces.showEmergencyAscent = !this.profileTraces.showEmergencyAscent;
         this.plotAllCharts();
     }
 

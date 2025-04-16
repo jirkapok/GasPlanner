@@ -123,7 +123,7 @@ export class Preferences {
         };
     }
 
-    private toDiveFrom(dive: DiveSchedule): DiveDto {
+    public toDiveFrom(dive: DiveSchedule): DiveDto {
         const surfaceInterval = dive.isRepetitive ? dive.surfaceInterval : undefined;
         return {
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),

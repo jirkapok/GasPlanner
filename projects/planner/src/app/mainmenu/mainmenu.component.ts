@@ -36,9 +36,7 @@ export class MainMenuComponent {
     }
 
     public cloneDive(): void {
-        this.schedules.add();
-        // TODO load added dive from current dive
-        // this.schedules.loadDefaults();
+        this.schedules.cloneSelected();
     }
 
     public shareDive(): void {

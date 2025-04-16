@@ -37,6 +37,14 @@ export class ManagedDiveSchedules {
         return this.schedules.selected;
     }
 
+    // TODO add test
+    public cloneSelected(): void {
+        const toLoadFrom = this.schedules.selected;
+        const added = this.schedules.add();
+        this.preferences.loadFrom(toLoadFrom, added);
+        this.preferences.save();
+    }
+
     public add(): void {
         const added = this.schedules.add();
         this.loadDefaultTo(added);

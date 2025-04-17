@@ -3,7 +3,8 @@ import { Urls } from '../shared/navigation.service';
 import {
     faBars, faMountainSun, faHouse, faLungs, faTable,
     faWeightHanging, faPercent, faFileLines,
-    faFaucet, faShareFromSquare
+    faFaucet, faShareFromSquare, faTrashCan,
+    faClone
 } from '@fortawesome/free-solid-svg-icons';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 
@@ -24,6 +25,8 @@ export class MainMenuComponent {
     public iconNitrox = faPercent;
     public iconBlender = faFaucet;
     public iconShare = faShareFromSquare;
+    public iconClone = faClone;
+    public iconDelete = faTrashCan;
 
     constructor(private schedules: ManagedDiveSchedules, public urls: Urls) { }
 
@@ -40,7 +43,7 @@ export class MainMenuComponent {
     }
 
     public shareDive(): void {
-        // TODO share dive
+        // TODO share dive - extract ShareDiveService and toast, so it be reused here
     }
 
     public deleteDive(): void {

@@ -1,21 +1,21 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { formatNumber } from '@angular/common';
 import { takeUntil } from 'rxjs';
-import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import {
     faSlidersH, faShareFromSquare, faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
 
-import { Tank, GasToxicity, Time } from 'scuba-physics';
+import { Tank, GasToxicity } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { Streamed } from '../../shared/streamed';
 import { DepthsService } from '../../shared/depths.service';
 import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { DiveSchedules } from '../../shared/dive.schedules';
-import {TextConstants} from '../../shared/TextConstants';
+import { TextConstants } from '../../shared/TextConstants';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { ShareDiveService } from "../../shared/ShareDiveService";
 
 @Component({
     selector: 'app-diveinfo',
@@ -27,22 +27,16 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
     public readonly warnIcon = faExclamationTriangle;
-    public toastVisible = false;
     private lastSelected = 0;
     private readonly issuesTabIndex = 2;
 
     constructor(
-        private clipboard: ClipboardService,
+        private shareDive: ShareDiveService,
         private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
         super();
-
-        this.clipboard.copyResponse$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((res: IClipboardResponse) => {
-                this.copyToClipBoard(res);
-            });
 
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((diveId)=> {
@@ -129,11 +123,7 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
     }
 
     public sharePlan(): void {
-        this.clipboard.copy(window.location.href);
-    }
-
-    public hideToast(): void {
-        this.toastVisible = false;
+        this.shareDive.sharePlan();
     }
 
     private selectedChanged(e: MdbTabChange): void {
@@ -146,16 +136,6 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
             (selectedDive.diveResult.hasErrorEvent || selectedDive.diveResult.hasWarningEvent) &&
             (this.lastSelected === 0 || (!selectedDive.diveResult.notEnoughGas && this.lastSelected === 1))) {
             this.tabs?.setActiveTab(this.issuesTabIndex);
-        }
-    }
-
-    private copyToClipBoard(res: IClipboardResponse) {
-        // stupid replacement of Bootstrap toasts, because not part of the free mdb package
-        if (res.isSuccess) {
-            this.toastVisible = true;
-            setTimeout(() => {
-                this.hideToast();
-            }, 5000);
         }
     }
 }

@@ -7,6 +7,7 @@ import {
     faClone
 } from '@fortawesome/free-solid-svg-icons';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
+import { ShareDiveService } from "../shared/ShareDiveService";
 
 @Component({
     selector: 'app-mainmenu',
@@ -28,7 +29,10 @@ export class MainMenuComponent {
     public iconClone = faClone;
     public iconDelete = faTrashCan;
 
-    constructor(private schedules: ManagedDiveSchedules, public urls: Urls) { }
+    constructor(
+        private schedules: ManagedDiveSchedules,
+        private share: ShareDiveService,
+        public urls: Urls,) { }
 
     public saveDefaults(): void {
         this.schedules.saveDefaults();
@@ -43,7 +47,7 @@ export class MainMenuComponent {
     }
 
     public shareDive(): void {
-        // TODO share dive - extract ShareDiveService and toast, so it be reused here
+        this.share.sharePlan();
     }
 
     public deleteDive(): void {

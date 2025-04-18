@@ -111,7 +111,7 @@ describe('Managed Schedules', () => {
         });
     });
 
-    fdescribe('Clone dive', () => {
+    describe('Clone dive', () => {
         let loadFromPreferencesSpy: Spy<() => void>;
         beforeEach(() => {
             loadFromPreferencesSpy = spyOn(preferencesStore, 'loadFrom').and.callThrough();

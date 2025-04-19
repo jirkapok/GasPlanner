@@ -15,7 +15,7 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { TextConstants } from '../../shared/TextConstants';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
-import { ShareDiveService } from "../../shared/ShareDiveService";
+import { ShareDiveService } from '../../shared/ShareDiveService';
 
 @Component({
     selector: 'app-diveinfo',

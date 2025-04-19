@@ -78,8 +78,8 @@ describe('Consumption - Preserve reserved gas', ()=> {
             });
 
             it('Stage tanks reserve from last', () => {
-                expect(tank2.reserve).toEqual(194); // start pressure, whole tank reserve
-                expect(tank3.reserve).toEqual(74); // calculated reserve
+                expect(tank2.reserve).toEqual(200); // start pressure, whole tank reserve
+                expect(tank3.reserve).toEqual(69); // calculated reserve
                 expect(tank4.reserve).toEqual(25); // minimal reserve
             });
         });
@@ -102,8 +102,8 @@ describe('Consumption - Preserve reserved gas', ()=> {
 
             // in total 242 bar consumed
             expect(tank2.consumed).toEqual(0);
-            expect(tank3.consumed).toEqual(73);  // 242 - 175
-            expect(tank4.consumed).toEqual(167); // 200 - minimal reserve 25 b
+            expect(tank3.consumed).toEqual(68);  // 242 - 175
+            expect(tank4.consumed).toEqual(173); // 200 - 25 b (minimal reserve)
             // emergency reserve: 200, 105, 25
         });
 
@@ -127,8 +127,8 @@ describe('Consumption - Preserve reserved gas', ()=> {
             consumption.consumeFromTanks(segments, options, tanks, consumptionOptions);
 
             expect(tank2.consumed).toEqual(59);
-            expect(tank3.consumed).toEqual(15);
-            expect(tank4.consumed).toEqual(167);
+            expect(tank3.consumed).toEqual(10);
+            expect(tank4.consumed).toEqual(173);
             // emergency reserve: 200, 113, 25
         });
     });
@@ -151,9 +151,9 @@ describe('Consumption - Preserve reserved gas', ()=> {
             consumption.consumeFromTanks(segments, options, tanks, consumptionOptions);
 
             expect(tank2.consumed).toEqual(0); // 200 - 0
-            expect(tank3.consumed).toEqual(89); // 200 - 95
+            expect(tank3.consumed).toEqual(99); // 200 - 95
             // crossed reserve, subtracted -5 b even from reserve
-            expect(tank4.consumed).toEqual(194); // 285 -105
+            expect(tank4.consumed).toEqual(183); // 285 -105
             // emergency reserve: 200, 95, 25
         });
 
@@ -175,8 +175,8 @@ describe('Consumption - Preserve reserved gas', ()=> {
             consumption.consumeFromTanks(segments, options, tanks, consumptionOptions);
 
             expect(tank2.consumed).toEqual(59);  // only user defined consumption
-            expect(tank3.consumed).toEqual(49);  // remaining 242-200
-            expect(tank4.consumed).toEqual(194); // whole tank, since reserve crossed for all tanks
+            expect(tank3.consumed).toEqual(43);  // remaining 242-200
+            expect(tank4.consumed).toEqual(200); // whole tank, since reserve crossed for all tanks
             // emergency reserve: 200, 200, 25
         });
 
@@ -197,9 +197,9 @@ describe('Consumption - Preserve reserved gas', ()=> {
             consumption.consumeFromTanks(segments, options, tanks, consumptionOptions);
 
             // but needs to consume more than available from all tanks
-            expect(tank2.consumed).toEqual(194);
-            expect(tank3.consumed).toEqual(194);
-            expect(tank4.consumed).toEqual(194);
+            expect(tank2.consumed).toEqual(200);
+            expect(tank3.consumed).toEqual(200);
+            expect(tank4.consumed).toEqual(200);
             // emergency reserve: 200, 105, 25
         });
 
@@ -221,8 +221,8 @@ describe('Consumption - Preserve reserved gas', ()=> {
             consumption.consumeFromTanks(segments, options, tanks, consumptionOptions);
 
             expect(tank2.consumed).toEqual(0);   // cant touch because whole tank reserved
-            expect(tank3.consumed).toEqual(137); // Remaining to consume 332-200
-            expect(tank4.consumed).toEqual(194); // whole tank since reserve crossed
+            expect(tank3.consumed).toEqual(131); // Remaining to consume 332-200
+            expect(tank4.consumed).toEqual(200); // whole tank since reserve crossed
             // emergency reserve: 200, 128, 25
         });
     });
@@ -244,9 +244,9 @@ describe('Consumption - Preserve reserved gas', ()=> {
 
         consumption.consumeFromTanks(segments, options, tanks, consumptionOptions);
 
-        expect(tank2.consumed).toEqual(118); // consumed the remaining (480-175-200)
-        expect(tank3.consumed).toEqual(194); // user enforced to use whole tank
-        expect(tank4.consumed).toEqual(167); // consumed up to reserve
+        expect(tank2.consumed).toEqual(107); // consumed the remaining (480-175-200)
+        expect(tank3.consumed).toEqual(200); // user enforced to use whole tank
+        expect(tank4.consumed).toEqual(173); // consumed up to reserve
         // emergency reserve: 36, 25, 25
     });
 });

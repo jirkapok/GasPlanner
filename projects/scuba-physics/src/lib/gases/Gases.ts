@@ -180,7 +180,7 @@ export class Gas {
     }
 
     public set fHe(newValue: number) {
-        this._fHe = newValue > 0.99 ? 0.99 : newValue;
+        this._fHe = newValue > 1 ? 1 : newValue;
 
         if (this.contentExceeds100percent()) {
             this._fO2 = this.countRemaining(this._fHe);
@@ -253,6 +253,7 @@ export class Gas {
 
     private countRemaining(part: number): number {
         const rest = 1 - part;
+        // Consider: changing the rounding at part level, when setting new value, otherwise this can lead to rounding errors.
         return Precision.round(rest, 5);
     }
 

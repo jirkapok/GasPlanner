@@ -32,7 +32,7 @@ describe('TankChartComponent', () => {
         });
 
         it('End pressure is converted', () => {
-            expect(component.endPressure).toBeCloseTo(1435.874, 3);
+            expect(component.endPressure).toBeCloseTo(1450.377, 3);
         });
 
         it('Reserve is converted', () => {

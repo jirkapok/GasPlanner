@@ -149,7 +149,7 @@ export interface ConsumptionOptionsDto {
 export interface ConsumedDto {
     /** Tank id */
     id: number;
-    // TODO consider using volume instead of bars, to prevent precision loss when serializing
+    // Using pressure instead of volumes, to prevent precision loss when serializing, volume isn't rounded anyway.
     consumed: number;
     reserve: number;
 }
@@ -159,6 +159,7 @@ export interface ConsumptionResultDto {
     maxTime: number;
     timeToSurface: number;
     tanks: ConsumedDto[];
+    emergencyAscent: SegmentDto[];
 }
 
 export interface TankDto {

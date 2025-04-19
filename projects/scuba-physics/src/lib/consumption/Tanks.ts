@@ -97,8 +97,9 @@ export class Tank implements TankFill {
         }
 
         this._size = size;
-        this.startPressure = startPressure;
         this.o2 = o2Percent;
+        // changing the gas content affects stored volumes, so we need to set it first before start pressure.
+        this.startPressure = startPressure;
     }
 
     /**
@@ -160,8 +161,9 @@ export class Tank implements TankFill {
     }
 
     /**
-     * Gets or sets the gas mixture in the tank.
+     * Gets the gas mixture in the tank.
      * Changing the gas does not preserve the total volume of stored gas.
+     * DO NOT change the gas properties directly on the gas object.
      **/
     public get gas(): Gas {
         return this._gas;
@@ -199,10 +201,6 @@ export class Tank implements TankFill {
     /** Gets total volume of consumed gas in liters using real gas compressibility */
     public get consumedVolume(): number {
         return this._consumedVolume;
-        // TODO add test, that both real volume, ideal volume and pressure are always valid: end = start - consumed
-        // return Tank.realVolume2(this.size, this.consumed, this.gas);
-        const endVolume = Tank.realVolume2(this.size, this.endPressure, this.gas);
-        return this.volume - endVolume;
     }
 
     /** Gets not null name of the content gas based on O2 and he fractions */
@@ -236,28 +234,31 @@ export class Tank implements TankFill {
 
     /** o2 content in percent adjusted to iterate to Air*/
     public set o2(newValue: number) {
+        // gas needs to be set first, since it affects compressibility factor.
         this._gas.fO2 = AirO2Pin.setO2(newValue, this.gas.fHe);
+        // update volume based on compressibility, protecting pressure defined by user, not volume.
+        this.startPressure = this.startPressure;
     }
 
     /** The helium part of tank gas in percents */
     public set he(newValue: number) {
+        // gas needs to be set first, since it affects compressibility factor.
         this.gas.fHe = newValue / 100;
+        // update volume based on compressibility, protecting pressure defined by user, not volume.
+        this.startPressure = this.startPressure;
     }
 
     public set startPressure(newValue: number) {
-        const originalConsumedVolume = this.consumedVolume;
-
        if(newValue < Tank.minimumPressure) {
            this._startPressure = Tank.minimumPressure;
        } else {
            this._startPressure = newValue;
        }
 
-       this.fitStoredVolumes(originalConsumedVolume);
+       this.fitStoredVolumes(this.consumed, this.consumedVolume);
     }
 
     public set size(newValue: number) {
-        const originalConsumedVolume = this.consumedVolume;
         // Consider to make the size readonly
         if(newValue < Tank.minimumSize) {
             this._size = Tank.minimumSize;
@@ -265,34 +266,31 @@ export class Tank implements TankFill {
             this._size = newValue;
         }
 
-        this.fitStoredVolumes(originalConsumedVolume);
+        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, this.consumedVolume);
+        newConsumedPressure = Precision.ceil(newConsumedPressure);
+        this.fitStoredVolumes(newConsumedPressure, this.consumedVolume);
     }
 
-    public set consumed(newValue: number) {
-        this.consumedVolume = Tank.realVolume2(this.size, newValue, this.gas);
+    public set consumed(newPressure: number) {
+        const newConsumedVolume = Tank.realVolume2(this.size, newPressure, this.gas);
+        this.updateConsumed(newPressure, newConsumedVolume);
     }
 
-    public set consumedVolume(newValue: number) {
-        this.updateConsumed(newValue);
+    public set consumedVolume(newVolume: number) {
+        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, newVolume);
+        newConsumedPressure = Precision.ceil(newConsumedPressure);
+        this.updateConsumed(newConsumedPressure, newVolume);
     }
 
-    public set reserve(newValue: number) {
-        const reserveVolume = Tank.realVolume2(this.size, newValue, this.gas);
-        this.reserveVolume  = reserveVolume;
+    public set reserve(newPressure: number) {
+        const reserveVolume = Tank.realVolume2(this.size, newPressure, this.gas);
+        this.updateReserve(newPressure, reserveVolume);
     }
 
-    public set reserveVolume(newValue: number) {
-        if(newValue < Tank.minimumPressure) {
-            this._reserveVolume = Tank.minimumPressure;
-        } else if(newValue > this.volume) {
-            this._reserveVolume = this.volume;
-        } else {
-            this._reserveVolume = newValue;
-        }
-
-        const toRound = Tank.toTankPressure(this.gas, this.size, this._reserveVolume);
-        // here we update only once, so we can directly round up
-        this._reserve = Precision.ceil(toRound);
+    public set reserveVolume(newVolume: number) {
+        let newPressure = Tank.toTankPressure(this.gas, this.size, newVolume);
+        newPressure = Precision.ceil(newPressure);
+        this.updateReserve(newPressure, newVolume);
     }
 
     /** Creates 15 L, filled with 200 bar Air */
@@ -346,12 +344,13 @@ export class Tank implements TankFill {
         return `Tank ${this.id}:${this.name},${this.size} L,${this.startPressure} b`;
     }
 
-    private fitStoredVolumes(originalConsumedVolume: number): void {
+    private fitStoredVolumes(newConsumedPressure: number, newConsumedVolume: number): void {
         this._startVolume = Tank.realVolume2(this.size, this.startPressure, this.gas);
-        this.updateConsumed(originalConsumedVolume);
+        this.updateConsumed(newConsumedPressure, newConsumedVolume);
     }
 
-    private updateConsumed(newVolume: number): void {
+    /** to keep volume and pressure aligned */
+    private updateConsumed(newPressure: number, newVolume: number): void {
         if(newVolume > this.volume) {
             this._consumedVolume = this.volume;
         } else if(newVolume < Tank.minimumPressure) {
@@ -360,8 +359,31 @@ export class Tank implements TankFill {
             this._consumedVolume = newVolume;
         }
 
-        const toRound = Tank.toTankPressure(this.gas, this.size, this._consumedVolume);
-        this._consumed = Precision.ceil(toRound);
+        if(newPressure > this.startPressure) {
+            this._consumed = this.startPressure;
+        } else if(newPressure < Tank.minimumPressure) {
+            this._consumed = Tank.minimumPressure;
+        } else {
+            this._consumed = newPressure;
+        }
+    }
+
+    private updateReserve(newPressure: number, newVolume: number) {
+        if(newVolume > this.volume) {
+            this._reserveVolume = this.volume;
+        } else if(newVolume < Tank.minimumPressure) {
+            this._reserveVolume = Tank.minimumPressure;
+        } else {
+            this._reserveVolume = newVolume;
+        }
+
+        if(newPressure > this.startPressure) {
+            this._reserve = this.startPressure;
+        } else if(newPressure < Tank.minimumPressure) {
+            this._reserve = Tank.minimumPressure;
+        } else {
+            this._reserve = newPressure;
+        }
     }
 }
 

@@ -57,7 +57,7 @@
                         <ng-container *ngIf="!calc.inDuration">
                             <div class="pt-2 mb-4">
                                 <label for="duration" class="form-label" mdbLabel>Dive time [min]:</label>
-                                <input formControlName="duration" class="form-control" name="duration" id="duration"
+                                <input formControlName="duration" class="form-control" name="duration" id="dive-time-input"
                                     type="number" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
                                     (input)="inputChanged()" [class.is-invalid]="durationInvalid" />
                                 <div class="invalid-feedback position-absolute">
@@ -78,7 +78,7 @@
                         <ng-container *ngIf="!calc.inSac">
                             <div class="pt-2 mb-4">
                                 <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                                <input formControlName="rmv" class="form-control" name="sac" id="sac" type="number"
+                                <input formControlName="rmv" class="form-control" name="sac" id="total-rmv-value" type="number"
                                     [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="1"
                                     (input)="inputChanged()" aria-describedby="rmvDescribe"
                                     [class.is-invalid]="rmvInvalid" />
@@ -93,7 +93,7 @@
                         <ng-container *ngIf="calc.inSac">
                             <div class="pt-2 mb-4">
                                 <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                                <input class="form-control" [readonly]="true" [value]="calcRmv" id="sac" />
+                                <input class="form-control" [readonly]="true" [value]="calcRmv" id="total-rmv-valuesac" />
                                 <small class="form-text text-muted">SAC: {{ gasSac | number:'1.0-2'}}
                                     {{units.sac}}</small>
                             </div>

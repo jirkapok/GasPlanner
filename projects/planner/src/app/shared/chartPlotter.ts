@@ -4,7 +4,7 @@ import { UnitConversion } from './UnitConversion';
 import { ResamplingService } from './ResamplingService';
 import { DiveResults } from './diveresults';
 import { DateFormats } from './formaters';
-import { Ceiling } from 'scuba-physics';
+import { Ceiling, FeatureFlags } from 'scuba-physics';
 import { WayPoint } from './wayPoint';
 import { BoundEvent } from "./models";
 
@@ -131,6 +131,7 @@ export class DiveTracesBuilder {
     private readonly ceilingLineColor: string = 'rgb(255, 160, 73)';
     private readonly eventLineColor: string = 'rgba(31, 119, 180, 0.7)';
     private readonly eventFillColor: string = 'rgba(31, 119, 180, 0.5)';
+    public showEmergencyAscent = false;
 
     constructor(
         private dive: () => DiveResults,
@@ -157,6 +158,12 @@ export class DiveTracesBuilder {
         const profileTraces = this.profileTraces();
         const ceilings = this.plotCeilings(diveResult.ceilings);
         const events = this.plotEvents(diveResult.events);
+        const emergencyDepths = this.plotEmergencyDepths(diveResult.emergencyAscent);
+
+        if(this.showEmergencyAscent) {
+            return [ ...profileTraces, emergencyDepths, ceilings, events ];
+        }
+
         return [ ...profileTraces, ceilings, events ];
     }
 
@@ -195,6 +202,24 @@ export class DiveTracesBuilder {
             name: this.namePrefix + 'Depth',
             marker: {
                 color: this.depthLineColor
+            },
+            hovertemplate: `%{y:.2f}  ${this.units.length}`
+        };
+    }
+
+    private plotEmergencyDepths(wayPoints: WayPoint[]): Partial<Plotly.PlotData> {
+        const resampled = this.resampling.resampleWaypoints(wayPoints);
+
+        return {
+            x: resampled.xValues,
+            y: resampled.yValues,
+            type: <Plotly.PlotType>'scatter',
+            name: this.namePrefix + 'Emergency',
+            line: {
+                dash: <Plotly.Dash>'dash'
+            },
+            marker: {
+                color: 'rgb(255, 77, 77)'
             },
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         };

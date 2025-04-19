@@ -29,6 +29,20 @@ describe('Gas Blender - Redundancies', () => {
         });
     });
 
+    it('Identical tanks with identical pressure do not change final pressure', () => {
+        const tankA = {
+            startPressure: 200,
+            size: 15
+        };
+        const tankB = {
+            startPressure: 200,
+            size: 15
+        };
+
+        const finalPressure = GasBlender.redundancies(tankA, tankB);
+        expect(finalPressure).toBeCloseTo(200, 3);
+    });
+
     it('0 l volume in tankA returns tankB pressure', () => {
         const tankA = {
             startPressure: 10,
@@ -40,7 +54,7 @@ describe('Gas Blender - Redundancies', () => {
         };
 
         const finalPressure = GasBlender.redundancies(tankA, tankB);
-        expect(finalPressure).toBeCloseTo(10);
+        expect(finalPressure).toBeCloseTo(10.002, 3);
     });
 
     it('0 l volume in tankB returns tankA pressure', () => {
@@ -54,7 +68,7 @@ describe('Gas Blender - Redundancies', () => {
         };
 
         const finalPressure = GasBlender.redundancies(tankA, tankB);
-        expect(finalPressure).toBeCloseTo(10);
+        expect(finalPressure).toBeCloseTo(10.002, 3);
     });
 
     it('No volume in any tankB returns 0 bar pressure', () => {
@@ -68,7 +82,7 @@ describe('Gas Blender - Redundancies', () => {
         };
 
         const finalPressure = GasBlender.redundancies(tankA, tankB);
-        expect(finalPressure).toBeCloseTo(0);
+        expect(finalPressure).toBeCloseTo(0, 3);
     });
 
     it('Identical pressure in both different tanks combines total volume', () => {
@@ -82,7 +96,7 @@ describe('Gas Blender - Redundancies', () => {
         };
 
         const finalPressure = GasBlender.redundancies(tankA, tankB);
-        expect(finalPressure).toBeCloseTo(50, 0);
+        expect(finalPressure).toBeCloseTo(50, 2);
     });
 
     it('Different pressure in both identical tanks combines gas volume', () => {

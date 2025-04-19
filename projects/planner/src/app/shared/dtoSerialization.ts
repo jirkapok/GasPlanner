@@ -20,6 +20,8 @@ export class DtoSerialization {
             converted.id = tank.id;
             converted.gas.fO2 = tank.gas.fO2;
             converted.gas.fHe = tank.gas.fHe;
+            // design gap, changing content of the gas does not fix the volumes
+            converted.startPressure = tank.startPressure;
             result.push(converted);
         });
 

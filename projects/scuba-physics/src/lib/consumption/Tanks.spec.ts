@@ -107,7 +107,7 @@ describe('Tank', () => {
         });
 
         it('end pressure 100', () => {
-            expect(tank.endPressure).toBe(99);
+            expect(tank.endPressure).toBe(100);
         });
 
         it('consumed has reserve', () => {
@@ -115,7 +115,7 @@ describe('Tank', () => {
         });
 
         it('percent remaining is 50', () => {
-            expect(tank.percentsRemaining).toBeCloseTo(49.5, 1);
+            expect(tank.percentsRemaining).toBeCloseTo(50, 1);
         });
 
         it('percent rock bottom is 25', () => {
@@ -142,7 +142,7 @@ describe('Tank', () => {
         });
 
         it('percent rock bottom is 50', () => {
-            expect(tank.percentsReserve).toBeCloseTo(50.5, 1);
+            expect(tank.percentsReserve).toBeCloseTo(50, 1);
         });
     });
 
@@ -153,7 +153,7 @@ describe('Tank', () => {
                 expect(tank.startPressure).toBe(0);
             });
 
-            xit('prevents minimum 0 b end pressure', () => {
+            it('prevents minimum 0 b end pressure', () => {
                 tank.consumed = 150;
                 tank.startPressure = 100;
                 expect(tank.endPressure).toBe(0);
@@ -246,6 +246,12 @@ describe('Tank', () => {
                 tank.reserve = 20;
                 expect(tank.reserveVolume).toBeCloseTo(301.7, 1);
             });
+
+            it('Set reserve pressure does not round the set value', () => {
+                const expected = 2;
+                tank.reserve = expected;
+                expect(tank.reserve).toBeCloseTo(expected, 6);
+            });
         });
     });
 
@@ -309,6 +315,44 @@ describe('Tank', () => {
         it('Real consumed volume', () => {
             filledTank.consumed = 100;
             expect(filledTank.consumedVolume).toBeCloseTo(1004.803, 3);
+        });
+
+        it('End pressure is complement of start pressure and consumed', () => {
+            const sut = Tank.createDefault();
+            sut.startPressure = 150;
+            sut.consumed = 100;
+
+            expect(sut.endPressure).toBeCloseTo(50, 3);
+        });
+
+        it('End volume is complement of start pressure and consumed', () => {
+            const sut = Tank.createDefault();
+            sut.startPressure = 150;
+            sut.consumed = 100;
+
+            expect(sut.volume).toBeCloseTo(2225.388, 3);
+            expect(sut.consumedVolume).toBeCloseTo(1507.204, 3);
+            expect(sut.endVolume).toBeCloseTo(718.184, 3);
+        });
+
+        it('Real volume of helium in 50 L tank at 200 b is 9134 L', () => {
+            const sut = new Tank(50, 200, 21);
+            sut.he = 100;
+
+            expect(sut.volume).toBeCloseTo(9134, 0);
+            expect(sut.startPressure).toBeCloseTo(200, 3);
+            expect(sut.he).toBeCloseTo(100, 0);
+            expect(sut.o2).toBeCloseTo(0, 0);
+        });
+
+        it('Real volume of oxygen in 50 L tank at 200 b is 9134 L', () => {
+            const sut = new Tank(50, 200, 21);
+            sut.o2 = 100;
+
+            expect(sut.volume).toBeCloseTo(10440, 0);
+            expect(sut.startPressure).toBeCloseTo(200, 3);
+            expect(sut.he).toBeCloseTo(0, 0);
+            expect(sut.o2).toBeCloseTo(100, 0);
         });
     });
 });

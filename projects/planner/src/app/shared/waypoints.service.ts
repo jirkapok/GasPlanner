@@ -7,7 +7,7 @@ import { WayPoint } from "./wayPoint";
 export class WayPointsService {
     constructor(private units: UnitConversion){}
 
-    public calculateWayPoints(profile: Segment[]): WayPoint[] {
+    public calculateWayPoints(profile: Segment[], startOffset: number = 0): WayPoint[] {
         const wayPoints = [];
 
         if(profile.length === 0) {
@@ -15,7 +15,7 @@ export class WayPointsService {
         }
 
         const descent = profile[0];
-        let lastWayPoint = WayPoint.fromSegment(this.units, descent);
+        let lastWayPoint = WayPoint.fromSegment(this.units, descent, startOffset);
         let lastSegment = descent;
         wayPoints.push(lastWayPoint);
         const exceptDescend = profile.slice(1);

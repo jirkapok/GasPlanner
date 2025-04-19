@@ -41,7 +41,7 @@ export class ResamplingService {
         events.forEach((event) => {
             if (event.showInProfileChart) {
                 xValues.push(DateFormats.toDate(event.timeStamp));
-                const convertedDepth = this.convertDepth(event.depth);
+                const convertedDepth = event.depth;
                 yValues.push(convertedDepth);
                 const text = event.chartEventText;
                 labels.push(text);

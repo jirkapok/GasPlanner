@@ -162,7 +162,7 @@ describe('Scheduled dives', () => {
             sut.dives.forEach(d => {
                 // irrelevant values only to be able mark the dive calculated
                 d.diveResult.updateProfile([], ProfileTissues.createAtSurface(0));
-                d.diveResult.updateConsumption(0, 0, 0, 0, 0, false, false);
+                d.diveResult.updateConsumption(0, 0, 0, 0, 0, false, false, []);
                 d.diveResult.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
             });
 

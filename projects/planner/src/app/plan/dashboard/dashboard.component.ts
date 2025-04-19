@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import { Streamed } from '../../shared/streamed';
 import { ViewSwitchService } from '../../shared/viewSwitchService';
@@ -8,6 +8,7 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { DashboardStartUp } from '../../shared/startUp';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
+import { ShareDiveService } from "../../shared/ShareDiveService";
 
 @Component({
     selector: 'app-dashboard',
@@ -16,9 +17,11 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 })
 export class DashboardComponent extends Streamed implements OnInit {
     public exclamation = faExclamationTriangle;
+    public iconShare = faShareFromSquare;
     public rootForm!: FormGroup;
 
     constructor(
+        private shareDive: ShareDiveService,
         private viewSwitch: ViewSwitchService,
         private units: UnitConversion,
         private dispatcher: ReloadDispatcher,
@@ -53,6 +56,14 @@ export class DashboardComponent extends Streamed implements OnInit {
             .subscribe(() => {
                 this.startup.updateQueryParams();
             });
+    }
+
+    public get toastVisible(): boolean {
+        return this.shareDive.toastVisible;
+    }
+
+    public hideToast(): void {
+        this.shareDive.hideToast();
     }
 
     @HostListener('window:beforeinstallprompt', ['$event'])

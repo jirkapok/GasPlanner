@@ -136,12 +136,12 @@ describe('PlannerService', () => {
             expect(dive.maxTime).toEqual(18);
         });
 
-        it('74 bar rock bottom', () => {
-            expect(tanksService.firstTank.tank.reserve).toEqual(78);
+        it('77 bar rock bottom', () => {
+            expect(tanksService.firstTank.tank.reserve).toEqual(77);
         });
 
-        it('124 bar remaining gas', () => {
-            expect(tanksService.firstTank.tank.endPressure).toEqual(124);
+        it('125 bar remaining gas', () => {
+            expect(tanksService.firstTank.tank.endPressure).toEqual(125);
         });
     });
 
@@ -392,7 +392,8 @@ describe('PlannerService', () => {
                         diveId: unknownDiveId,
                         maxTime: 0,
                         timeToSurface: 0,
-                        tanks: []
+                        tanks: [],
+                        emergencyAscent: []
                     }));
 
                 expect( () => planner.calculate(1)).not.toThrow();
@@ -455,8 +456,8 @@ describe('PlannerService', () => {
         });
 
         it('Uses primary and secondary tank reserve', () => {
-            expect(tanksService.tankData[0].reserve).toEqual(101);
-            expect(tanksService.tankData[1].reserve).toEqual(90);
+            expect(tanksService.tankData[0].reserve).toEqual(100);
+            expect(tanksService.tankData[1].reserve).toEqual(89);
         });
 
         it('Filters events', () => {

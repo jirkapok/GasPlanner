@@ -49,7 +49,7 @@ describe('Depths service', () => {
         beforeEach(() => {
             const diveResults = TestBed.inject(DiveResults);
             diveResults.updateDiveInfo(expectedNdl, false, 0,0,0,0,0,0,0, HighestDensity.createDefault(), [], [], []);
-            diveResults.updateConsumption(expectedDuration, 0,0,0,0, false, false);
+            diveResults.updateConsumption(expectedDuration, 0,0,0,0, false, false, []);
         });
 
         describe('When Calculated', () => {

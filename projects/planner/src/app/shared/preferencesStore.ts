@@ -36,6 +36,11 @@ export class PreferencesStore {
         }
     }
 
+    public loadFrom(from: DiveSchedule, to: DiveSchedule): void {
+        const source = this.preferencesFactory.toDiveFrom(from);
+        this.preferencesFactory.loadDive(to, source);
+    }
+
     public save(): void {
         const toSave = this.preferencesFactory.toPreferences();
         const serialized = JSON.stringify(toSave);

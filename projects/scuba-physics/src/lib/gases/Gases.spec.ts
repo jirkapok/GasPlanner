@@ -143,18 +143,18 @@ describe('Gases', () => {
                 expect(sut.fO2).toBe(0.2);
             });
 
-            it('O2 itself cant exceed 100%', () => {
+            it('O2 itself can`t exceed 100%', () => {
                 const sut = new Gas(0.5, 0.5);
                 sut.fO2 = 1.8;
                 expect(sut.fO2).toBe(1);
                 expect(sut.fHe).toBe(0);
             });
 
-            it('He itself cant exceed 99% event it doesn\'t matter', () => {
+            it('He itself can`t exceed 100% to support gas blender scenarios', () => {
                 const sut = new Gas(0.5, 0.5);
                 sut.fHe = 1.8;
-                expect(sut.fO2).toBe(0.01);
-                expect(sut.fHe).toBe(0.99);
+                expect(sut.fO2).toBe(0);
+                expect(sut.fHe).toBe(1);
             });
         });
     });

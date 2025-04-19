@@ -111,6 +111,27 @@ describe('Managed Schedules', () => {
         });
     });
 
+    describe('Clone dive', () => {
+        let loadFromPreferencesSpy: Spy<() => void>;
+        beforeEach(() => {
+            loadFromPreferencesSpy = spyOn(preferencesStore, 'loadFrom').and.callThrough();
+            localStorage.clear();
+            sut.cloneSelected();
+        });
+
+        it('Loads dive from selected', () => {
+            expect(loadFromPreferencesSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('Saves new dive in preferences', () => {
+            expect(savePreferencesSpy).toHaveBeenCalledTimes(2);
+        });
+
+        it('Calls scheduler after add', () => {
+            expect(dispatcherSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
     describe('Remove dive', () => {
         let scheduleRemoveSpy: Spy<(d: DiveSchedule) => void>;
         let depthChangedSpy: Spy<() => void>;

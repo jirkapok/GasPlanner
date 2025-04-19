@@ -3,9 +3,11 @@ import { Urls } from '../shared/navigation.service';
 import {
     faBars, faMountainSun, faHouse, faLungs, faTable,
     faWeightHanging, faPercent, faFileLines,
-    faFaucet
+    faFaucet, faShareFromSquare, faTrashCan,
+    faClone
 } from '@fortawesome/free-solid-svg-icons';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
+import { ShareDiveService } from "../shared/ShareDiveService";
 
 @Component({
     selector: 'app-mainmenu',
@@ -23,8 +25,14 @@ export class MainMenuComponent {
     public iconGasProperties = faFileLines;
     public iconNitrox = faPercent;
     public iconBlender = faFaucet;
+    public iconShare = faShareFromSquare;
+    public iconClone = faClone;
+    public iconDelete = faTrashCan;
 
-    constructor(private schedules: ManagedDiveSchedules, public urls: Urls) { }
+    constructor(
+        private schedules: ManagedDiveSchedules,
+        private share: ShareDiveService,
+        public urls: Urls,) { }
 
     public saveDefaults(): void {
         this.schedules.saveDefaults();
@@ -32,5 +40,18 @@ export class MainMenuComponent {
 
     public loadDefaults(): void {
         this.schedules.loadDefaults();
+    }
+
+    public cloneDive(): void {
+        this.schedules.cloneSelected();
+    }
+
+    public shareDive(): void {
+        this.share.sharePlan();
+    }
+
+    public deleteDive(): void {
+        const dive = this.schedules.selected;
+        this.schedules.remove(dive);
     }
 }

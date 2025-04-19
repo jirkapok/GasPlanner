@@ -113,11 +113,8 @@ import { ResamplingService } from './shared/ResamplingService';
 import { ApplicationSettingsService } from './shared/ApplicationSettings';
 import { IgnoredIssuesService } from './shared/IgnoredIssues.service';
 import { BlendPricingService } from './shared/blend-pricing.service';
-import { MdbModalModule } from "mdb-angular-ui-kit/modal";
-<<<<<<< HEAD
-=======
-import { ShareDiveService } from "./shared/ShareDiveService";
->>>>>>> develop
+import { MdbModalModule } from 'mdb-angular-ui-kit/modal';
+import { ShareDiveService } from './shared/ShareDiveService';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,

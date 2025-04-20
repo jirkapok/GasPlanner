@@ -141,7 +141,6 @@ export class GasBlenderComponent implements OnInit {
 
     public togglePricing(): void {
         this.showPricing = !this.showPricing;
-        console.log('Pricing toggled:', this.showPricing);
     }
 
     public applyTemplate(): void {

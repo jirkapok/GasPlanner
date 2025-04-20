@@ -1,8 +1,9 @@
 <div class="card" [formGroup]="tanksForm">
-        <div class="card-header ">
-            <fa-icon [icon]="icon" class="me-3"></fa-icon>
-            <span>Tanks</span>
-        </div>
+    <app-card-header
+        title="Tanks"
+        helpName="tanks"
+        [headerIcon]="icon">
+    </app-card-header>
 
         <!-- Small devices -->
         <div class="card-body d-md-none d-block" formArrayName="boundTanks">

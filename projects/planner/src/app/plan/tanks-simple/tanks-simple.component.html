@@ -1,8 +1,9 @@
 <div class="card" [formGroup]="tanksForm">
-    <div class="card-header ">
-        <fa-icon [icon]="icon" class="me-3"></fa-icon>
-        <span>Bottom gas tank</span>
-    </div>
+    <app-card-header
+        title="Bottom gas tank"
+        [headerIcon]="icon"
+        helpName="tanks">
+    </app-card-header>
     <div class="card-body row">
         <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
             <label for="sizeFirstTank" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>

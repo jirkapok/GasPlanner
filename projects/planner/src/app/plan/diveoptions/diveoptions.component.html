@@ -1,17 +1,14 @@
 <div class="card" [formGroup]="optionsForm">
-    <div class="card-header">
-        <div class="float-start">
-            <fa-icon [icon]="icon" class="me-3"></fa-icon>
-            <span>Options</span>
+    <app-card-header
+        title="Options"
+        [headerIcon]="icon"
+        helpName="options">
+        <div class="form-check form-switch ms-2">
+            <input type="checkbox" class="form-check-input" id="isComplex" [checked]="isComplex"
+                (change)="isComplex = !isComplex" mdbCheckbox />
+            <label class="custom-control-label" for="isComplex">Extended (Trimix)</label>
         </div>
-        <div class="float-end">
-            <div class="form-check form-switch">
-                <input type="checkbox" class="form-check-input" id="isComplex" [checked]="isComplex"
-                    (change)="isComplex = !isComplex" mdbCheckbox />
-                <label class="custom-control-label" for="isComplex">Extended (Trimix)</label>
-            </div>
-        </div>
-    </div>
+    </app-card-header>
     <div class="card-body">
         <div *ngIf="!isComplex">
             <div class="mt-3 row">

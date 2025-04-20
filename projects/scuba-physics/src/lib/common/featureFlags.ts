@@ -3,7 +3,7 @@ export class FeatureFlags
 {
     private static _instance: FeatureFlags;
 
-    public integratedHelp = true;
+    public integratedHelp = false;
 
     private constructor() {
     }

@@ -7,7 +7,7 @@ import {
     faClone
 } from '@fortawesome/free-solid-svg-icons';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
-import { ShareDiveService } from "../shared/ShareDiveService";
+import { ShareDiveService } from '../shared/ShareDiveService';
 
 @Component({
     selector: 'app-mainmenu',

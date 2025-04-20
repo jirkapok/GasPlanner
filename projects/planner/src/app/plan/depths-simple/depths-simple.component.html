@@ -1,8 +1,9 @@
 <div class="card" [formGroup]="simpleForm">
-    <div class="card-header">
-        <fa-icon [icon]="cardIcon" class="me-3"></fa-icon>
-        <span>Depth</span>
-    </div>
+    <app-card-header
+        title="Depth"
+        helpName="depths"
+        [headerIcon]="cardIcon">
+    </app-card-header>
     <div class="card-body row">
         <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
             <label for="duration" class="form-label" mdbLabel>Bottom time [min]:</label>

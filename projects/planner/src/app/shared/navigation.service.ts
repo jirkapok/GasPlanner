@@ -16,4 +16,8 @@ export class Urls {
     public get helpUrl(): string {
         return Urls.rootHelpUrl +'/readme.md';
     }
+
+    public infoUrl(fileName: string): string {
+        return `assets/docs/${fileName}.md`;
+    }
 }

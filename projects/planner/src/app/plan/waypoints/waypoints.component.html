@@ -1,16 +1,12 @@
 <div class="card">
-    <div class="card-header">
-        <div class="float-start">
-            <fa-icon [icon]="tasks" class="me-3"></fa-icon>
-            <span>Dive way points</span>
-        </div>
-        <div class="float-end me-1">
-            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': stops.stopsOnly }" type="button"
-                data-toggle="button" [attr.aria-pressed]="stops.stopsOnly" autocomplete="off" (click)="stops.switchFilter()">
-                <fa-icon [icon]="filterIcon" class="fa-lg"></fa-icon>
-            </button>
-        </div>
-    </div>
+    <app-card-header
+    title="Dive way points"
+    [headerIcon]="tasks">
+        <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': stops.stopsOnly }" type="button"
+        data-toggle="button" [attr.aria-pressed]="stops.stopsOnly" autocomplete="off" (click)="stops.switchFilter()">
+            <fa-icon [icon]="filterIcon" class="fa-lg"></fa-icon>
+        </button>
+    </app-card-header>
     <div class="card-body card-minheight table-responsive">
         <table id="dive-waypoints-table" class="table table-sm p-0">
             <thead class="table-light">

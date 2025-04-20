@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
-import { faLungs, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faLungs } from '@fortawesome/free-solid-svg-icons';
 import { Diver, Precision, Tank, TankTemplate, FeatureFlags } from 'scuba-physics';
 import { SacCalculatorService } from '../../shared/sac-calculator.service';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
@@ -13,9 +13,6 @@ import { TankBound } from '../../shared/models';
 import { SacViewState } from '../../shared/views.model';
 import { KnownViews } from '../../shared/viewStates';
 import { SubViewStorage } from '../../shared/subViewStorage';
-import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { HelpModalComponent } from '../../help/help-modal.component';
-
 interface SacForm {
     depth: FormControl<number>;
     tankSize: FormControl<number>;
@@ -33,7 +30,6 @@ interface SacForm {
 export class SacComponent implements OnInit {
     public calcIcon = faLungs;
     public formSac!: FormGroup<SacForm>;
-    public helpIcon = faCircleInfo;
     public integratedHelp = FeatureFlags.Instance.integratedHelp;
     public depthConverterWarning = TextConstants.depthConverterWarning;
     // used as store for working pressure, keep in mind to sync size
@@ -41,7 +37,6 @@ export class SacComponent implements OnInit {
     private durationControl!: FormControl<number>;
     private rmvControl!: FormControl<number>;
     private usedControl!: FormControl<number>;
-    private modalRef: MdbModalRef<HelpModalComponent> | null = null;
 
     constructor(
         private validators: ValidatorGroups,
@@ -52,8 +47,7 @@ export class SacComponent implements OnInit {
         public calc: SacCalculatorService,
         public units: UnitConversion,
         public location: Location,
-        private viewStates: SubViewStorage,
-        private modalService: MdbModalService) {
+        private viewStates: SubViewStorage) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
     }
 
@@ -206,14 +200,6 @@ export class SacComponent implements OnInit {
         }
 
         this.options.diverOptions.rmv = this.calc.rmv;
-    }
-
-    public openHelp(): void {
-        this.modalRef = this.modalService.open(HelpModalComponent, {
-            data: {
-                path: 'sac'
-            }
-        });
     }
 
     private enableAll(): void {

@@ -2,19 +2,15 @@
     <div class="row mt-5">
         <div class="col col-12 col-md-8 col-lg-6 col-xxl-5 mt-3">
             <div class="card">
-                <div class="card-header">
-                    <div class="float-start">
-                        <fa-icon [icon]="calcIcon" class="me-3"></fa-icon>
-                        <span>Gas blender</span>
-                    </div>
-                    <div class="float-end me-1">
-                        <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showPricing }" type="button"
-                                id="pricingToggle"
-                                data-toggle="button" [attr.aria-pressed]="showPricing" autocomplete="off" (click)="togglePricing()">
+                <app-card-header
+                    title="Gas blender"
+                    [headerIcon]="calcIcon">
+                        <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': togglePricing }" type="button"
+                        id="pricingToggle"
+                        data-toggle="button" [attr.aria-pressed]="togglePricing" autocomplete="off" (click)="togglePricing()">
                             <fa-icon [icon]="dollarIcon" class="fa-lg"></fa-icon>
                         </button>
-                    </div>
-                </div>
+                </app-card-header>
                 <div class="card-body row">
                     <div class="col col-12 col-sm-4 mb-2">
                         <div>Source</div>

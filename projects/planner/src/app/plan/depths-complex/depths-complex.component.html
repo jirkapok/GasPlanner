@@ -1,8 +1,9 @@
 <div class="card">
-    <div class="card-header">
-        <fa-icon [icon]="cardIcon" class="me-3"></fa-icon>
-        <span>Depths</span>
-    </div>
+    <app-card-header
+        title="Depths"
+        helpName="depths_complex"
+        [headerIcon]="cardIcon">
+    </app-card-header>
     <form [formGroup]="complexForm">
 
     <div class="card-body">

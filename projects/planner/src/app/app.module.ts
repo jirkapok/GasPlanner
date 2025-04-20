@@ -73,6 +73,7 @@ import {AppFooterComponent} from './footer/footer.component';
 import {AppSettingsComponent} from './app-settings/app-settings.component';
 import {DurationPipe} from './pipes/duration.pipe';
 import {AppinfoComponent} from './appinfo/appinfo.component';
+import {CardHeaderComponent} from './card-header/card-header.component';
 
 import {PlannerService} from './shared/planner.service';
 import {PreferencesStore} from './shared/preferencesStore';
@@ -113,8 +114,8 @@ import { ResamplingService } from './shared/ResamplingService';
 import { ApplicationSettingsService } from './shared/ApplicationSettings';
 import { IgnoredIssuesService } from './shared/IgnoredIssues.service';
 import { BlendPricingService } from './shared/blend-pricing.service';
-import { MdbModalModule } from "mdb-angular-ui-kit/modal";
-import { ShareDiveService } from "./shared/ShareDiveService";
+import { MdbModalModule } from 'mdb-angular-ui-kit/modal';
+import { ShareDiveService } from './shared/ShareDiveService';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -141,6 +142,7 @@ const COMPONENTS = [
     AppComponent,
     AppinfoComponent,
     AppSettingsComponent,
+    CardHeaderComponent,
     CalculatingComponent,
     DashboardComponent,
     DepthComponent,

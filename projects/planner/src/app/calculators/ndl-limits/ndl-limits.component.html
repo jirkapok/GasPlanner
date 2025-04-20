@@ -1,10 +1,11 @@
 <div class="row mt-5">
     <div class="col col-12 col-sm-7 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
         <div class="card ndl-minheight">
-            <div class="card-header">
-                <fa-icon [icon]="icon" class="me-3"></fa-icon>
-                <span>Options</span>
-            </div>
+            <app-card-header
+                title="Options"
+                [headerIcon]="icon"
+                helpName="calculators">
+            </app-card-header>
             <div class="card-body">
                 <div class="pt-2 mb-4">
                     <app-oxygen [tank]="tank" [showBestMix]="false" (gasChange)="calculate()"

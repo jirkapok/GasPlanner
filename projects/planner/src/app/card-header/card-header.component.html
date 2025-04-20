@@ -4,31 +4,8 @@
     <span>{{ title }}</span>
     </div>
     <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-sm btn-secondary" *ngIf="showTogglePricing" [ngClass]="{ 'active': showTogglePricing }" type="button"
-            id="pricingToggle"
-            data-toggle="button" [attr.aria-pressed]="showTogglePricing" autocomplete="off" (click)="onTogglePricing()">
-            <fa-icon [icon]="dollarIcon" class="fa-lg"></fa-icon>
-        </button>
 
-        <button class="btn btn-sm btn-secondary ms-2" *ngIf="showHeatMap" [ngClass]="{ 'active': showHeatMap }" type="button"
-                data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="onSwitchHeatMap()">
-            <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
-        </button>
-
-        <button class="btn btn-sm btn-secondary ms-2" *ngIf="showEmergencyAscent" [ngClass]="{ 'active': showEmergencyAscent }" type="button"
-                data-toggle="button" [attr.aria-pressed]="showEmergencyAscent" autocomplete="off" (click)="onSwitchEmergencyAscent()">
-            <fa-icon [icon]="emergencyIcon" class="fa-lg"></fa-icon>
-        </button>
-
-        <button class="btn btn-sm btn-secondary ms-2" *ngIf="showFilter" [ngClass]="{ 'active': showFilter }" type="button"
-            data-toggle="button" [attr.aria-pressed]="showFilter" autocomplete="off" (click)="onSwitchFilter()">
-            <fa-icon [icon]="filterIcon" class="fa-lg"></fa-icon>
-        </button>
-
-        <button class="btn btn-sm btn-secondary ms-2" *ngIf="showEmergencyAscent" [ngClass]="{ 'active': showEmergencyAscent }" type="button"
-        [attr.aria-pressed]="showEmergencyAscent" (click)="onSharePlan()">
-            <fa-icon [icon]="iconShare" class="me-2"></fa-icon>Share
-        </button>
+        <ng-content></ng-content>
 
         <button
             *ngIf="integratedHelp"

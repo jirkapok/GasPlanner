@@ -1,22 +1,17 @@
 <div class="card">
-    <div class="card-header">
-        <div class="float-start">
-            <fa-icon [icon]="profileIcon" class="me-3" flip="vertical">></fa-icon>
-            <span>Profile chart</span>
-        </div>
-        <div class="float-end me-1">
-            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button"
-                    data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="switchHeatMap()">
-                <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
-            </button>
-        </div>
-        <div class="float-end me-1">
-            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showEmergencyAscent }" type="button"
-                    data-toggle="button" [attr.aria-pressed]="showEmergencyAscent" autocomplete="off" (click)="switchEmergencyAscent()">
-                <fa-icon [icon]="emergencyIcon" class="fa-lg"></fa-icon>
-            </button>
-        </div>
-    </div>
+    <app-card-header
+        title="Dive profile"
+        helpName="profile_chart"
+        [headerIcon]="profileIcon">
+        <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': showHeatMap }" type="button"
+                data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="switchHeatMap()">
+            <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
+        </button>
+        <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': showEmergencyAscent }" type="button"
+                data-toggle="button" [attr.aria-pressed]="showEmergencyAscent" autocomplete="off" (click)="switchEmergencyAscent()">
+            <fa-icon [icon]="emergencyIcon" class="fa-lg"></fa-icon>
+        </button>
+    </app-card-header>
     <div class="card-body card-minheight">
         <app-calculating [show]="!infoCalculated"></app-calculating>
         <div id="diveplot" class="dive-plot" [ngClass]="{

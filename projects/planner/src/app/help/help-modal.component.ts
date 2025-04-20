@@ -16,7 +16,7 @@ import { of } from 'rxjs';
 })
 
 export class HelpModalComponent {
-    private _path = this.urls.infoUrl('not-implemented');
+    private _path = this.urls.infoUrl(Urls.notAvailable);
 
     constructor(
         public modalRef: MdbModalRef<HelpModalComponent>,

@@ -3,6 +3,7 @@ import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { HelpModalComponent } from '../help/help-modal.component';
 import { FeatureFlags } from 'scuba-physics';
 import { faCircleInfo} from '@fortawesome/free-solid-svg-icons';
+import { Urls } from "../shared/navigation.service";
 
 @Component({
     selector: 'app-card-header',
@@ -13,7 +14,7 @@ import { faCircleInfo} from '@fortawesome/free-solid-svg-icons';
 export class CardHeaderComponent {
 
     @Input() public title = 'Untitled';
-    @Input() public helpName = 'not-implemented';
+    @Input() public helpName = Urls.notAvailable;
     @Input() public headerIcon = faCircleInfo;
 
     public readonly helpIcon = faCircleInfo;
@@ -24,6 +25,7 @@ export class CardHeaderComponent {
     constructor(private modalService: MdbModalService) {}
 
     public openHelp(): void {
+        console.log(`Help for: ${this.helpName}`);
         this.modalRef = this.modalService.open(HelpModalComponent, {
             data: {
                 path: this.helpName

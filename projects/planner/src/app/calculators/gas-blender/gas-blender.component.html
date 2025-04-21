@@ -4,12 +4,14 @@
             <div class="card">
                 <app-card-header
                     title="Gas blender"
-                    [headerIcon]="calcIcon">
-                        <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': togglePricing }" type="button"
-                        id="pricingToggle"
-                        data-toggle="button" [attr.aria-pressed]="togglePricing" autocomplete="off" (click)="togglePricing()">
-                            <fa-icon [icon]="dollarIcon" class="fa-lg"></fa-icon>
-                        </button>
+                    [headerIcon]="calcIcon"
+                    helpName="gas_blender"
+                >
+                    <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': togglePricing }" type="button"
+                    id="pricingToggle"
+                    data-toggle="button" [attr.aria-pressed]="togglePricing" autocomplete="off" (click)="togglePricing()">
+                        <fa-icon [icon]="dollarIcon" class="fa-lg"></fa-icon>
+                    </button>
                 </app-card-header>
                 <div class="card-body row">
                     <div class="col col-12 col-sm-4 mb-2">

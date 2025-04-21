@@ -2,10 +2,11 @@
     <form [formGroup]="settingsForm" class="row">
         <div class="col col-12 col-sm-7 col-lg-5 col-xl-4 col-xxl-3 mt-3">
             <div class="card">
-                <div class="card-header">
-                    <fa-icon [icon]="flagIcon" class="me-3"></fa-icon>
-                    <span>Units</span>
-                </div>
+                <app-card-header
+                    title="Units"
+                    [headerIcon]="flagIcon"
+                    helpName="settings">
+                </app-card-header>
                 <div class="card-body">
                     <div class="form-check">
                         <input type="radio" id="metricRadio" class="form-check-input" formControlName="imperialUnits"
@@ -24,10 +25,11 @@
         </div>
         <div class="col col-12 col-sm-7 col-lg-5 col-xl-4 col-xxl-3 mt-3">
             <div class="card">
-                <div class="card-header">
-                    <fa-icon [icon]="diverIcon" class="me-3"></fa-icon>
-                    <span>Limits</span>
-                </div>
+                <app-card-header
+                    title="Limits"
+                    [headerIcon]="diverIcon"
+                    helpName="settings">
+                </app-card-header>
                 <div class="card-body">
                     <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
                         <label for="maxDensity" class="form-label" mdbLabel>Max gas density [{{units.density}}]:
@@ -58,10 +60,11 @@
         </div>
         <div class="col col-12 col-sm-7 col-lg-5 col-xl-4 col-xxl-3 mt-3">
             <div class="card">
-                <div class="card-header">
-                    <fa-icon [icon]="diverIcon" class="me-3"></fa-icon>
-                    <span>Ignored Issues (warnings/errors)</span>
-                </div>
+                <app-card-header
+                    title="Ignored Issues (warnings/errors)"
+                    [headerIcon]="diverIcon"
+                    helpName="settings">
+                </app-card-header>
                 <div class="card-body">
                     <div class="form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="icdIgnored" formControlName="icdIgnored" mdbCheckbox />

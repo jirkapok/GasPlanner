@@ -25,15 +25,15 @@
   * [Dive profile chart](./profile_chart.md)
   * [Tissues heat map](./profile_chart.md#tissues-heat-map)
 * [Application settings](./settings.md)
-* [Calculators](./calculators.md)
+* Calculators
     * [RMV/SAC](./sac.md)
     * [Nitrox](./nitrox.md)
-    * [No decompression limits (NDL) table](./calculators.md#no-decompression-limits)
-    * [Altitude](./calculators.md#altitude)
-    * [Weight](./calculators.md#weight)
-    * [Gas properties](./calculators.md#gas-properties)
-    * [Redundancies](./calculators.md#redundancies)
-    * [Gas blender](./calculators.md#gas-blender)
+    * [No decompression limits (NDL) table](./ndl_limits.md)
+    * [Altitude](./altitude.md)
+    * [Weight](./weight.md)
+    * [Gas properties](./gas_properties.md)
+    * [Redundancies](./redundancies.md)
+    * [Gas blender](./gas_blender.md)
 * [External reading](./links.md)
 
 ## Supported platforms

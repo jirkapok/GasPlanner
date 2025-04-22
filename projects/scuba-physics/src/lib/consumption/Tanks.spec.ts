@@ -357,7 +357,7 @@ describe('Tank', () => {
 
         it('Set reserve volume to reasonable volume', () => {
             const sut = new Tank(24, 200, 21);
-            sut.reserveVolume = 18500;
+            sut.reserveVolume = 18500; // cca 770 b theoretical pressure
             expect(sut.reserve).toBeCloseTo(200, 6);
             expect(sut.reserveVolume).toBeCloseTo(4628.763582, 6);
         })

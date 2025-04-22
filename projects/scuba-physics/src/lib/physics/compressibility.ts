@@ -79,6 +79,7 @@ export class Compressibility {
      * @param volume Absolute gas volume in liters
      */
     public pressure(gas: Gas, volume: number): number {
+        // TODO find limits for max. volume otherwise this method never ends.
         let foundPressure = volume;
         const normalZfactor = this.zFactor(this.normalPressure, gas);
         while (Math.abs(normalZfactor * foundPressure - this.zFactor(foundPressure, gas) * volume) > 0.000001) {

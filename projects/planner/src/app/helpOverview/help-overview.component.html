@@ -1,0 +1,61 @@
+<div class="row mt-5">
+    <div class="col col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+        <div class="card">
+            <div class="card-header d-flex">
+                <fa-icon [icon]="headerIcon" class="me-3"></fa-icon>
+                <span>Help Overview</span>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li>Plan
+                        <ul class="list-unstyled ms-3">
+                            <li><button class="btn btn-link p-0" (click)="updatePath('tanks')">Tanks</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('standard_gases')">Standard gases</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('depths')">Depths</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('depths#repetitive-dives-and-surface-interval')">Surface interval</button></li>
+                            <li>Options
+                                <ul class="list-unstyled ms-3">
+                                    <li><button class="btn btn-link p-0" (click)="updatePath('environment')">Environment</button></li>
+                                    <li><button class="btn btn-link p-0" (click)="updatePath('gradient_factors')">Conservatism</button></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Results
+                        <ul class="list-unstyled ms-3">
+                            <li><button class="btn btn-link p-0" (click)="updatePath('diveinfo')">Dive info table</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('diveinfo#oxygen-toxicity')">Oxygen toxicity</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('events')">Events causing errors and warnings</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('consumed')">Consumed gas charts</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('waypoints_table')">Dive way points table</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('profile_chart')">Dive profile chart</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('profile_chart#tissues-heat-map')">Tissues heat map</button></li>
+                        </ul>
+                    </li>
+                    <li><button class="btn btn-link p-0" (click)="updatePath('settings')">Application settings</button></li>
+                    <li>Calculators
+                        <ul class="list-unstyled ms-3">
+                            <li><button class="btn btn-link p-0" (click)="updatePath('sac')">RMV/SAC</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('nitrox')">Nitrox</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">No decompression limits (NDL) table</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">Altitude</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">Weight</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">Gas properties</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">Redundancies</button></li>
+                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">Gas blender</button></li>
+                        </ul>
+                    </li>
+                    <li><button class="btn btn-link p-0" (click)="updatePath('links')">External reading</button></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-6 mt-3">
+        <div class="card">
+            <div class="card-body">
+                <ngx-md [path]="path"> </ngx-md>
+            </div>
+        </div>
+    </div>
+</div>

@@ -34,7 +34,9 @@
                 <li><a class="nav-link" routerLink="/settings">Settings</a></li>
                 <li><a class="nav-link" routerLink="/diff">Compare dives</a></li>
                 <li><a class="nav-link" href="{{urls.standardGases}}" target="_blank">Standard gases</a></li>
-                <li><a class="nav-link" href="{{urls.helpUrl}}" target="_blank">Help/Learn</a></li>
+                <li><a class="nav-link" *ngIf="notIntegratedHelp" href="{{urls.helpUrl}}">Help/Learn</a></li>
+                <li><a class="nav-link" *ngIf="integratedHelp" href="/helpoverview">Help</a></li>
+                <li><a class="nav-link" *ngIf="gamification" href="{{urls.helpUrl}}">Learn</a></li>
                 <li><a class="nav-link" routerLink="/about">About</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

@@ -19,6 +19,6 @@ export class Urls {
     }
 
     public infoUrl(fileName: string): string {
-        return `assets/docs/${fileName}.md`;
+        return `assets/doc/${fileName}.md`;
     }
 }

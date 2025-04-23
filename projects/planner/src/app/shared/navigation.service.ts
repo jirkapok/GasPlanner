@@ -26,4 +26,9 @@ export class Urls {
         imageName = imageName.replace('./', '');
         return `assets/doc/${imageName}`;
     }
+
+    public infoFullLinkUrl(fileName: string): string {
+        fileName = fileName.replace('./', '');
+        return `assets/doc/${fileName}`;
+    }
 }

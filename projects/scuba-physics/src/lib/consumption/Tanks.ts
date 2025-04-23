@@ -249,6 +249,7 @@ export class Tank implements TankFill {
     }
 
     public set startPressure(newValue: number) {
+        // TODO limit the pressure to reasonable maximum value, since for high pressures compressibility factor no longer works.
        if(newValue < Tank.minimumPressure) {
            this._startPressure = Tank.minimumPressure;
        } else {
@@ -277,6 +278,10 @@ export class Tank implements TankFill {
     }
 
     public set consumedVolume(newVolume: number) {
+        if(newVolume > this.volume) { // This ensures reasonable pressure
+            newVolume = this.volume;
+        }
+
         let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, newVolume);
         newConsumedPressure = Precision.ceil(newConsumedPressure);
         this.updateConsumed(newConsumedPressure, newVolume);
@@ -288,6 +293,10 @@ export class Tank implements TankFill {
     }
 
     public set reserveVolume(newVolume: number) {
+        if(newVolume > this.volume) { // This ensures reasonable pressure
+            newVolume = this.volume;
+        }
+
         let newPressure = Tank.toTankPressure(this.gas, this.size, newVolume);
         newPressure = Precision.ceil(newPressure);
         this.updateReserve(newPressure, newVolume);
@@ -305,7 +314,7 @@ export class Tank implements TankFill {
         return realVolume;
     }
 
-    public static toTankPressure(gas: Gas, tankSize: number, volume: number): number {
+    private static toTankPressure(gas: Gas, tankSize: number, volume: number): number {
         const compressibility = new Compressibility();
         const pressure = compressibility.tankPressure(gas, tankSize, volume);
         return pressure;
@@ -359,6 +368,7 @@ export class Tank implements TankFill {
             this._consumedVolume = newVolume;
         }
 
+        // because rounding still does not have to fit
         if(newPressure > this.startPressure) {
             this._consumed = this.startPressure;
         } else if(newPressure < Tank.minimumPressure) {
@@ -377,6 +387,7 @@ export class Tank implements TankFill {
             this._reserveVolume = newVolume;
         }
 
+        // because rounding still does not have to fit
         if(newPressure > this.startPressure) {
             this._reserve = this.startPressure;
         } else if(newPressure < Tank.minimumPressure) {

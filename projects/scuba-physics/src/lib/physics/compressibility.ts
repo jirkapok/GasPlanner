@@ -79,8 +79,14 @@ export class Compressibility {
      * @param volume Absolute gas volume in liters
      */
     public pressure(gas: Gas, volume: number): number {
+        if(volume > 750) {
+            throw new Error('Volume cannot be larger than 750 L');
+        }
+
         let foundPressure = volume;
         const normalZfactor = this.zFactor(this.normalPressure, gas);
+
+        // This check never ends for air, Ean32 at cca 770 b
         while (Math.abs(normalZfactor * foundPressure - this.zFactor(foundPressure, gas) * volume) > 0.000001) {
             foundPressure = (volume * this.zFactor(foundPressure, gas)) / normalZfactor;
         }

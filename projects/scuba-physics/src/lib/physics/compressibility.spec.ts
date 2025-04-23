@@ -55,6 +55,11 @@ describe('Gas compressibility', () => {
             const result = sut.pressure(gas, 1);
             expect(result).toBeCloseTo(1, 8);
         });
+
+        it('Maximum volume 750 L for Air', () => {
+            const gas = StandardGases.air;
+            expect(() => sut.pressure(gas, 751)).toThrow();
+        });
     });
 
     describe('Z-factor', () => {

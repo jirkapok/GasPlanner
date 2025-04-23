@@ -4,7 +4,7 @@ import {
 } from '@angular/forms';
 import { Location } from '@angular/common';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
-import { faUserCog } from '@fortawesome/free-solid-svg-icons';
+import { faBatteryHalf, faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { SubViewStorage } from '../shared/subViewStorage';
@@ -150,4 +150,6 @@ export class AppSettingsComponent implements OnInit {
             stageTankReserve: this.stageTankReserve,
         });
     }
+
+    protected readonly icon = faBatteryHalf;
 }

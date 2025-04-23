@@ -1,61 +1,52 @@
 <div class="row mt-5">
-    <div class="col col-sm-10 col-md-10 col-lg-5 col-xl-4 col-xxl-3 mt-3">
-        <div class="card">
-            <div class="card-header d-flex">
-                <fa-icon [icon]="headerIcon" class="me-3"></fa-icon>
-                <span>Help Overview</span>
-            </div>
-            <div class="card-body">
-                <ul class="list-unstyled">
-                    <li>Plan
-                        <ul class="list-unstyled ms-3">
-                            <li><button class="btn btn-link p-0" (click)="updatePath('tanks')">Tanks</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('standard_gases')">Standard gases</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('depths')">Depths</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('depths#repetitive-dives-and-surface-interval')">Surface interval</button></li>
-                            <li>Options
-                                <ul class="list-unstyled ms-3">
-                                    <li><button class="btn btn-link p-0" (click)="updatePath('environment')">Environment</button></li>
-                                    <li><button class="btn btn-link p-0" (click)="updatePath('gradient_factors')">Conservatism</button></li>
-                                </ul>
-                            </li>
+    <div class="col col-sm-12 col-md-12 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div class="accordion" id="helpAccordion">
+            <div class="accordion-item" *ngFor="let section of sections">
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button"
+                  [class.collapsed]="activeSection !== section.id"
+                  (click)="toggleSection(section.id)">
+                  {{ section.title }}
+                </button>
+              </h2>
+              <div class="accordion-collapse collapse" [class.show]="activeSection === section.id">
+                <div class="accordion-body py-2 px-3">
+                  <ul>
+                    <ng-container *ngFor="let item of section.items">
+                      <li *ngIf="item.children" class="mb-2">
+                        <div class="fw-semibold m-1">{{ item.label }}</div>
+                        <ul class="ps-3">
+                          <li *ngFor="let child of item.children">
+                            <button class="btn btn-link p-0" (click)="updatePath(child.path)">
+                              {{ child.label }}
+                            </button>
+                          </li>
                         </ul>
-                    </li>
-                    <li>Results
-                        <ul class="list-unstyled ms-3">
-                            <li><button class="btn btn-link p-0" (click)="updatePath('diveinfo')">Dive info table</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('diveinfo#oxygen-toxicity')">Oxygen toxicity</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('events')">Events causing errors and warnings</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('consumed')">Consumed gas charts</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('waypoints_table')">Dive way points table</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('profile_chart')">Dive profile chart</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('profile_chart#tissues-heat-map')">Tissues heat map</button></li>
-                        </ul>
-                    </li>
-                    <li><button class="btn btn-link p-0" (click)="updatePath('settings')">Application settings</button></li>
-                    <li>Calculators
-                        <ul class="list-unstyled ms-3">
-                            <li><button class="btn btn-link p-0" (click)="updatePath('sac')">RMV/SAC</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('nitrox')">Nitrox</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">No decompression limits (NDL) table</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">Altitude</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">Weight</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">Gas properties</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">Redundancies</button></li>
-                            <li><button class="btn btn-link p-0" (click)="updatePath('calculators')">Gas blender</button></li>
-                        </ul>
-                    </li>
-                    <li><button class="btn btn-link p-0" (click)="updatePath('links')">External reading</button></li>
-                </ul>
-            </div>
-        </div>
+                      </li>
 
-    </div>
-    <div class="col-sm-10 col-md-10 col-lg-7 col-xl-8 col-xxl-6 mt-3">
-        <div class="card">
-            <div class="card-body">
-                <ngx-md [path]="path" (loaded)="onLoad()"> </ngx-md>
+                      <li *ngIf="!item.children" class="mb-1">
+                        <button class="btn btn-link p-0" (click)="updatePath(item.path)">
+                          {{ item.label }}
+                        </button>
+                      </li>
+                    </ng-container>
+                  </ul>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+
+    <div class="col-sm-12 col-md-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <ngx-md [path]="path" (loaded)="onLoad()"></ngx-md>
+        </div>
+      </div>
+    </div>
+  </div>

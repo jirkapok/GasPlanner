@@ -80,7 +80,7 @@ export class Compressibility {
      */
     public pressure(gas: Gas, volume: number): number {
         if(volume > 750) {
-            throw new Error('Volume cannot be larger than 750 L');
+            //throw new Error('Volume cannot be larger than 750 L');
         }
 
         let foundPressure = volume;

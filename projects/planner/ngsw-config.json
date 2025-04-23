@@ -16,6 +16,16 @@
       }
     },
     {
+      "name": "markdown-docs",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/doc/**/*.(md|png)"
+        ]
+      }
+    },
+    {
       "name": "assets",
       "installMode": "lazy",
       "updateMode": "prefetch",

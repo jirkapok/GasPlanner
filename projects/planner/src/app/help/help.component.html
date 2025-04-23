@@ -16,18 +16,7 @@
                 <div class="accordion-body py-2 px-3">
                   <ul>
                     <ng-container *ngFor="let item of section.items">
-                      <li *ngIf="item.children" class="mb-2">
-                        <div class="fw-semibold m-1">{{ item.label }}</div>
-                        <ul class="ps-3">
-                          <li *ngFor="let child of item.children">
-                            <button class="btn btn-link p-0" (click)="updatePath(child.path)">
-                              {{ child.label }}
-                            </button>
-                          </li>
-                        </ul>
-                      </li>
-
-                      <li *ngIf="!item.children" class="mb-1">
+                      <li class="mb-1">
                         <button class="btn btn-link p-0" (click)="updatePath(item.path)">
                           {{ item.label }}
                         </button>

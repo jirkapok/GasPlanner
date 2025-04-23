@@ -1,6 +1,6 @@
 import { Component,Input } from '@angular/core';
 import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { HelpModalComponent } from '../help/help-modal.component';
+import { HelpModalComponent } from '../help-modal/help-modal.component';
 import { FeatureFlags } from 'scuba-physics';
 import { faCircleInfo} from '@fortawesome/free-solid-svg-icons';
 import { Urls } from '../shared/navigation.service';

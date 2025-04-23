@@ -23,7 +23,7 @@ import { WeightCalcComponent } from './calculators/weight/weight.component';
 import { GasPropertiesCalcComponent } from './calculators/gas.props/gas.props.component';
 import { RedundanciesComponent } from './calculators/redundancies/redundancies.component';
 import { GasBlenderComponent } from './calculators/gas-blender/gas-blender.component';
-import { HelpOverviewComponent } from './helpOverview/help-overview.component';
+import { HelpComponent } from './help/help.component';
 
 const canActivateDashboard: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
     const router = inject(Router);
@@ -54,8 +54,8 @@ const routes: Routes = [
     { path: KnownViews.diff, component: DiffComponent },
     { path: KnownViews.redundancies, component: RedundanciesComponent },
     { path: KnownViews.blender, component: GasBlenderComponent },
-    { path: `${KnownViews.helpOverview}/:label`, component: HelpOverviewComponent},
-    { path: KnownViews.helpOverview, redirectTo: `${KnownViews.helpOverview}/readme`, pathMatch: 'full' },
+    { path: `${KnownViews.help}/:label`, component: HelpComponent},
+    { path: KnownViews.help, redirectTo: `${KnownViews.help}/readme`, pathMatch: 'full' },
     {
         path: '**',
         component: DashboardComponent,

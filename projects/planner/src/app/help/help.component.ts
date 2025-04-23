@@ -9,11 +9,11 @@ import { faCircleInfo} from '@fortawesome/free-solid-svg-icons';
     selector: 'app-help',
     standalone: true,
     imports: [ NgxMdModule, FontAwesomeModule, NgForOf, NgIf],
-    templateUrl: './help-overview.component.html',
-    styleUrls: ['./help-overview.component.scss']
+    templateUrl: './help.component.html',
+    styleUrls: ['./help.component.scss']
 })
 
-export class HelpOverviewComponent {
+export class HelpComponent {
     public activeSection = 'plan';
     public path = this.urls.infoUrl(this.label);
     public headerIcon = faCircleInfo;
@@ -27,18 +27,19 @@ export class HelpOverviewComponent {
                 { label: 'Tanks', path: 'tanks' },
                 { label: 'Standard gases', path: 'standard_gases' },
                 { label: 'Depths', path: 'depths' },
-                { label: 'Surface interval', path: 'depths#repetitive-dives-and-surface-interval' },
-                {
-                    label: 'Options',
-                    children: [
-                        { label: 'Environment', path: 'environment' },
-                        { label: 'Conservatism', path: 'gradient_factors' },
-                        { label: 'Gases', path: 'plan_options#gases' },
-                        { label: 'Stops', path: 'stops' },
-                        { label: 'Speeds', path: 'speeds' },
-                        { label: 'Diver', path: 'plan_options#diver' }
-                    ]
-                }
+                { label: 'Surface interval', path: 'depths#repetitive-dives-and-surface-interval' }
+            ]
+        },
+        {
+            id: 'options',
+            title: 'Options',
+            items: [
+                { label: 'Environment', path: 'environment' },
+                { label: 'Conservatism', path: 'gradient_factors' },
+                { label: 'Gases', path: 'plan_options#gases' },
+                { label: 'Stops', path: 'stops' },
+                { label: 'Speeds', path: 'speeds' },
+                { label: 'Diver', path: 'plan_options#diver' }
             ]
         },
         {
@@ -69,10 +70,10 @@ export class HelpOverviewComponent {
             ]
         },
         {
-            id: 'external',
-            title: 'External Reading',
+            id: 'settings',
+            title: 'Application settings',
             items: [
-                { label: 'External reading', path: 'links' }
+                { label: 'Application settings', path: 'settings' }
             ]
         }
     ];
@@ -85,12 +86,12 @@ export class HelpOverviewComponent {
         console.log('HelpOverviewComponent', this.label, this.path);}
 
 
-    get label(): string {
+    public get label(): string {
         return this._label;
     }
 
     @Input()
-    set label(value: string) {
+    public set label(value: string) {
         this._label = value || 'readme';
         this.path = this.urls.infoUrl(this._label);
     }

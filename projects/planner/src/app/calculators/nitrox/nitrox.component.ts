@@ -14,7 +14,7 @@ import { NitroxViewState } from '../../shared/views.model';
 import { KnownViews } from '../../shared/viewStates';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { HelpModalComponent } from '../../help/help-modal.component';
+import { HelpModalComponent } from '../../help-modal/help-modal.component';
 
 interface NitroxForm {
     mod?: FormControl<number>;

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
-import { NgxMdModule } from 'ngx-md';
+import { NgxMdModule, NgxMdService } from 'ngx-md';
 import { Urls } from '../shared/navigation.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
@@ -10,7 +10,8 @@ import { of } from 'rxjs';
 @Component({
     selector: 'app-help-modal',
     standalone: true,
-    imports: [ NgxMdModule, HttpClientModule ],
+    imports: [ NgxMdModule, HttpClientModule],
+    providers: [ Urls, NgxMdService ],
     templateUrl: './help-modal.component.html',
     styleUrl: './help-modal.component.scss'
 })
@@ -22,6 +23,7 @@ export class HelpModalComponent {
         public modalRef: MdbModalRef<HelpModalComponent>,
         private http: HttpClient,
         public urls: Urls,
+        private _markdown: NgxMdService
     ) {}
 
     get path() {
@@ -30,17 +32,11 @@ export class HelpModalComponent {
 
     @Input()
     set path(value: string) {
-        const filePath = this.urls.infoUrl(value);
+        this._path  = this.urls.infoUrl(value);
+    }
 
-        this.http.head(filePath, { observe: 'response' })
-            .pipe(
-                catchError(() => of(null)) // Suppress error
-            )
-            .subscribe(response => {
-                if (response && response.status === 200) {
-                    this._path = filePath; // Only set if the file exists
-                }
-                // Else: silently do nothing
-            });
+    onLoad() {
+        this._markdown.renderer.image = (href: string, text: string) =>
+            `<img src="${this.urls.infoImageUrl(href)}" alt="${text}" class="w-100 p-3" title="${text}">`;
     }
 }

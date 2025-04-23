@@ -25,7 +25,6 @@ export class HelpOverviewComponent {
     }
 
     onLoad() {
-        console.log('HelpOverviewComponent ngOnInit');
         this._markdown.renderer.image = (href: string, title: string,  text: string) =>
             `<img src="${this.urls.infoImageUrl(href)}" alt="${text}" class="w-100 p-3" title="${text}">`;
     }

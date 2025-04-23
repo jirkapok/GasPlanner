@@ -4,9 +4,6 @@ import { NgxMdModule, NgxMdService } from 'ngx-md';
 import { Urls } from '../shared/navigation.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
-
 @Component({
     selector: 'app-help-modal',
     standalone: true,

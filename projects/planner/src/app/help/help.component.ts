@@ -20,6 +20,7 @@ export class HelpComponent {
     public path = this.urls.helpUrl(this.label);
     public headerIcon = faCircleInfo;
     private _label = 'readme';
+    private _anchor= '';
 
     public sections = [
         {
@@ -29,7 +30,7 @@ export class HelpComponent {
                 { label: 'Tanks', path: 'tanks' },
                 { label: 'Standard gases', path: 'standard_gases' },
                 { label: 'Depths', path: 'depths' },
-                { label: 'Surface interval', path: 'depths#repetitive-dives-and-surface-interval' }
+                { label: 'Surface interval', path: 'depths', anchor: 'repetitive-dives-and-surface-interval' }
             ]
         },
         {
@@ -38,10 +39,10 @@ export class HelpComponent {
             items: [
                 { label: 'Environment', path: 'environment' },
                 { label: 'Conservatism', path: 'gradient_factors' },
-                { label: 'Gases', path: 'plan_options#gases' },
+                { label: 'Gases', path: 'plan_options', anchor: 'gases' },
                 { label: 'Stops', path: 'stops' },
                 { label: 'Speeds', path: 'speeds' },
-                { label: 'Diver', path: 'plan_options#diver' }
+                { label: 'Diver', path: 'plan_options', anchor: 'diver' }
             ]
         },
         {
@@ -49,12 +50,12 @@ export class HelpComponent {
             title: 'Results',
             items: [
                 { label: 'Dive info table', path: 'diveinfo' },
-                { label: 'Oxygen toxicity', path: 'diveinfo#oxygen-toxicity' },
+                { label: 'Oxygen toxicity', path: 'diveinfo', anchor: 'oxygen-toxicity' },
                 { label: 'Events causing errors and warnings', path: 'events' },
                 { label: 'Consumed gas charts', path: 'consumed' },
                 { label: 'Dive way points table', path: 'waypoints_table' },
                 { label: 'Dive profile chart', path: 'profile_chart' },
-                { label: 'Tissues heat map', path: 'profile_chart#tissues-heat-map' }
+                { label: 'Tissues heat map', path: 'profile_chart', anchor: 'tissues-heat-map' }
             ]
         },
         {
@@ -63,12 +64,12 @@ export class HelpComponent {
             items: [
                 { label: 'RMV/SAC', path: 'sac' },
                 { label: 'Nitrox', path: 'nitrox' },
-                { label: 'No decompression limits (NDL) table', path: 'calculators' },
-                { label: 'Altitude', path: 'calculators' },
-                { label: 'Weight', path: 'calculators' },
-                { label: 'Gas properties', path: 'calculators' },
-                { label: 'Redundancies', path: 'calculators' },
-                { label: 'Gas blender', path: 'calculators' }
+                { label: 'No decompression limits (NDL) table', path: 'ndl_limits' },
+                { label: 'Altitude', path: 'altitude' },
+                { label: 'Weight', path: 'weight' },
+                { label: 'Gas properties', path: 'gas_properties' },
+                { label: 'Redundancies', path: 'redundancies' },
+                { label: 'Gas blender', path: 'gas_blender' }
             ]
         },
         {
@@ -88,10 +89,19 @@ export class HelpComponent {
         return this._label;
     }
 
+    public get anchor(): string {
+        return this._anchor;
+    }
+
     @Input()
     public set label(value: string) {
         this._label = value || 'readme';
-        this.path = this.urls.helpUrl(this._label);
+        this.updatePath(this._label);
+    }
+
+    @Input()
+    public set anchor(value: string) {
+        this._anchor = value;
     }
 
     public updatePath(value: string): void {
@@ -100,5 +110,11 @@ export class HelpComponent {
 
     public toggleSection(id: string): void {
         this.activeSection = this.activeSection === id ? '' : id;
+    }
+
+    // TODO scroll to anchor
+    private scrollToElement(id: string): void {
+        const el = document.getElementById(id);
+        el?.scrollIntoView({ behavior: 'smooth' });
     }
 }

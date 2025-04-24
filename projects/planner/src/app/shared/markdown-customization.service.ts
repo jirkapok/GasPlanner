@@ -17,13 +17,14 @@ export class MarkdownCustomization {
         renderer.link = (href: string, _: string, text: string) => {
             if (href && href.startsWith('./') && href.endsWith('.md')) {
                 const sanitizedHref = href.replace('./', '').replace('.md', '');
-                return `<a href="/help/${sanitizedHref}/limitations">${text}</a>`;
+                return `<a href="/help/${sanitizedHref}">${text}</a>`;
             }
             return `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
         };
 
         renderer.heading = (text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger) => {
             // add id to be able scroll to the anchor
+            // TODO angular removes ids, needs to be sanitized
             return `<h${level} id="${slugger.slug(raw)}">${text}</h${level}>`;
         }
 

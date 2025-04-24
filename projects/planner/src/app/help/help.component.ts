@@ -17,9 +17,9 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
 
 export class HelpComponent {
     public activeSection = 'plan';
-    public path = this.urls.helpUrl(this.label);
+    public path = this.urls.helpUrl(this.document);
     public headerIcon = faCircleInfo;
-    private _label = 'readme';
+    private _document = 'readme';
     private _anchor= '';
 
     public sections = [
@@ -85,8 +85,8 @@ export class HelpComponent {
         markdown.configure();
     }
 
-    public get label(): string {
-        return this._label;
+    public get document(): string {
+        return this._document;
     }
 
     public get anchor(): string {
@@ -94,9 +94,9 @@ export class HelpComponent {
     }
 
     @Input()
-    public set label(value: string) {
-        this._label = value || 'readme';
-        this.updatePath(this._label);
+    public set document(value: string) {
+        this._document = value || 'readme';
+        this.updatePath(this._document);
     }
 
     @Input()

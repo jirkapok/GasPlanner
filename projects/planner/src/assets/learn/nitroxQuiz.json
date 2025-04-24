@@ -1,10 +1,34 @@
 [
     {
+      "question": "Jaký je parciální tlak kyslíku při použití směsi EAN50 v hloubce 22 metrů?",
+      "answer": "1.6"
+    },
+    {
       "question": "Jaká je maximální hloubka pro směs 36% kyslíku při parciálním tlaku 1,4?",
       "answer": "28.9"
     },
     {
+      "question": "Jaká je nejlepší směs pro hloubku 30 metrů při limitu ppO2 1,4?",
+      "answer": "0.47"
+    },
+    {
+      "question": "Jaký je parciální tlak kyslíku při použití směsi EAN32 v hloubce 20 metrů?",
+      "answer": "1.02"
+    },
+    {
       "question": "Kolik procent dusíku obsahuje směs EAN32?",
       "answer": "68"
+    },
+    {
+      "question": "Jaký je EAD pro směs EAN36 v hloubce 30 metrů?",
+      "answer": "23.2"
+    },
+    {
+      "question": "Jaká je nejlepší směs pro hloubku 25 metrů při limitu ppO2 1,6?",
+      "answer": "0.49"
+    },
+    {
+      "question": "Jaký je parciální tlak kyslíku při použití směsi EAN36 v hloubce 10 metrů?",
+      "answer": "0.97"
     }
   ]

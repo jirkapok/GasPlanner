@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgxMdModule, NgxMdService } from 'ngx-md';
-import { NgForOf, NgIf, NgClass  } from '@angular/common';
+import { NgForOf, NgIf, NgClass, CommonModule  } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
 import {  faGraduationCap } from '@fortawesome/free-solid-svg-icons';
@@ -28,7 +28,7 @@ interface QuizItem {
 @Component({
     selector: 'app-learn',
     standalone: true,
-    imports: [NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule],
+    imports: [CommonModule, NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule],
     templateUrl: './learn.component.html',
     styleUrls: ['./learn.component.scss']
 })
@@ -41,6 +41,9 @@ export class LearnComponent implements OnInit {
     public activeSection = 'plan';
     public selectedPath = 'readme';
     public trophyIcon = faGraduationCap;
+    public currentQuestionIndex = 0;
+    public totalAnswered = 0;
+    public answeredPaths = new Set<string>();
 
     private _label = 'readme';
     constructor(
@@ -48,6 +51,10 @@ export class LearnComponent implements OnInit {
         private _markdown: NgxMdService,
         private http: HttpClient
     ) {}
+
+    get currentQuiz(): QuizItem {
+        return this.quizzes[this.currentQuestionIndex];
+    }
 
     public get label(): string {
         return this._label;
@@ -91,33 +98,44 @@ export class LearnComponent implements OnInit {
         this.activeSection = this.activeSection === id ? '' : id;
     }
 
-    submitAnswers(): void {
-        this.correctCount = 0;
+    validateCurrentAnswer(): void {
+        const quiz = this.currentQuiz;
+        const userAns = (quiz.userAnswer || '').trim();
+        const correctAns = quiz.answer.trim();
 
-        this.quizzes.forEach(quiz => {
-            const userAns = (quiz.userAnswer || '').trim();
-            const correctAns = quiz.answer.trim();
+        const userNum = parseFloat(userAns);
+        const correctNum = parseFloat(correctAns);
+        const isNumeric = !isNaN(userNum) && !isNaN(correctNum);
 
-            // Try parsing as numbers
-            const userNum = parseFloat(userAns);
-            const correctNum = parseFloat(correctAns);
+        if (isNumeric) {
+            quiz.isCorrect = Math.floor(userNum) === Math.floor(correctNum);
+        } else {
+            quiz.isCorrect = userAns.toLowerCase() === correctAns.toLowerCase();
+        }
 
-            const isNumeric = !isNaN(userNum) && !isNaN(correctNum);
+        if (quiz.isCorrect) {
+            this.correctCount++;
+        }
 
-            if (isNumeric) {
-                // Accept if floored user input matches floored correct answer
-                quiz.isCorrect = Math.floor(userNum) === Math.floor(correctNum);
-            } else {
-                // Fall back to text comparison
-                quiz.isCorrect = userAns.toLowerCase() === correctAns.toLowerCase();
-            }
-
-            if (quiz.isCorrect) {
-                this.correctCount++;
-            }
-        });
-
-        this.correctPercentage = Math.round((this.correctCount / this.quizzes.length) * 100);
-        this.showScore = true;
+        this.totalAnswered++;
     }
+
+    goToNextQuestion(): void {
+        if (this.currentQuestionIndex < this.quizzes.length - 1) {
+            this.currentQuestionIndex++;
+        }
+    }
+
+    submitAnswers(): void {
+        const percent = (this.correctCount / this.totalAnswered) * 100;
+
+        this.correctPercentage = Math.round(percent);
+        this.showScore = true;
+
+        // Mark the current section's path as "answered"
+        this.answeredPaths.add(this.selectedPath);
+
+        console.log('Answered paths:', Array.from(this.answeredPaths));
+    }
+
 }

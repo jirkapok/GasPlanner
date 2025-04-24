@@ -24,7 +24,14 @@
                         }"
                         (click)="updatePath(item.path)">
                         {{ item.label }}
-                        <fa-icon [icon]="trophyIcon" class="ms-2 text-muted small"></fa-icon>
+                        <fa-icon
+                            [icon]="trophyIcon"
+                            class="ms-2 small"
+                            [ngClass]="{
+                              'text-muted': !answeredPaths.has(item.path),
+                              'text-warning': answeredPaths.has(item.path)
+                            }">
+                        </fa-icon>
                       </div>
                     </li>
                   </ul>
@@ -37,37 +44,67 @@
     </div>
 
     <div class="col-sm-12 col-md-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <form (ngSubmit)="submitAnswers()">
-            <div *ngFor="let quiz of quizzes; let i = index" class="mb-4">
-              <p class="fw-bold">Question {{ i + 1 }}:</p>
-              <p>{{ quiz.question }}</p>
-              <input
-                type="text"
-                class="form-control mb-2"
-                [(ngModel)]="quiz.userAnswer"
-                name="answer-{{ i }}"
-                [ngClass]="{
-                  'is-valid': quiz.isCorrect === true,
-                  'is-invalid': quiz.isCorrect === false
-                }"
-              />
-              <div *ngIf="quiz.isCorrect === true" class="valid-feedback">Correct</div>
-              <div *ngIf="quiz.isCorrect === false" class="invalid-feedback">Incorrect</div>
-              <hr />
-            </div>
-            <button type="submit" class="btn btn-primary">Submit Answers</button>
-          </form>
+        <div class="card shadow-sm position-relative">
 
-          <div *ngIf="showScore" class="mt-4">
-            <h5>Result:</h5>
-            <p>
-              {{ correctCount }} out of {{ quizzes.length }} correct
-              ({{ correctPercentage }}%)
-            </p>
+          <div class="position-absolute top-0 end-0 m-3">
+            <span class="badge bg-primary text-light">
+                Score:
+                {{ correctCount }} / {{ totalAnswered }} —
+                {{
+                  totalAnswered > 0
+                    ? (correctCount / totalAnswered * 100 | number: '1.0-0') + '%'
+                    : '0%'
+                }}
+            </span>
           </div>
+
+          <div class="card-body">
+            <form (ngSubmit)="submitAnswers()" *ngIf="!showScore && quizzes.length">
+              <div class="mb-4">
+                <p class="fw-bold">Question {{ currentQuestionIndex + 1 }} of {{ quizzes.length }}:</p>
+                <p>{{ currentQuiz.question }}</p>
+
+                <input
+                  type="text"
+                  class="form-control mb-2"
+                  [(ngModel)]="currentQuiz.userAnswer"
+                  name="answer-{{ currentQuestionIndex }}"
+                  [disabled]="currentQuiz.isCorrect !== undefined"
+                  [ngClass]="{
+                    'is-valid': currentQuiz.isCorrect === true,
+                    'is-invalid': currentQuiz.isCorrect === false
+                  }"
+                />
+
+                <div *ngIf="currentQuiz.isCorrect === true" class="valid-feedback d-block">Correct</div>
+                <div *ngIf="currentQuiz.isCorrect === false" class="invalid-feedback d-block">Incorrect</div>
+
+                <div class="mt-3">
+                  <button
+                    *ngIf="currentQuiz.isCorrect === undefined"
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="validateCurrentAnswer()">
+                    Submit Answer
+                  </button>
+
+                  <button
+                    *ngIf="currentQuiz.isCorrect !== undefined && currentQuestionIndex < quizzes.length - 1"
+                    type="button"
+                    class="btn btn-outline-primary ms-2"
+                    (click)="goToNextQuestion()">
+                    Next Question
+                  </button>
+
+                    <button
+                        *ngIf="currentQuiz.isCorrect !== undefined && currentQuestionIndex >= 4"
+                        type="submit"
+                        class="btn btn-success ms-2">
+                        Finish Quiz
+                    </button>
+                </div>
+              </div>
+            </form>
         </div>
       </div>
-    </div>
-  </div>
+

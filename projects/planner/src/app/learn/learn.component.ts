@@ -43,6 +43,7 @@ export class LearnComponent implements OnInit {
     public trophyIcon = faGraduationCap;
     public currentQuestionIndex = 0;
     public totalAnswered = 0;
+    public currentPercentage = 0;
     public answeredPaths = new Set<string>();
 
     private _label = 'readme';
@@ -118,6 +119,7 @@ export class LearnComponent implements OnInit {
         }
 
         this.totalAnswered++;
+        this.currentPercentage = Math.round((this.correctCount / this.totalAnswered) * 100);
     }
 
     goToNextQuestion(): void {

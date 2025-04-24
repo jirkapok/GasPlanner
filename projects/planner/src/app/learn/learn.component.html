@@ -50,11 +50,7 @@
             <span class="badge bg-primary text-light">
                 Score:
                 {{ correctCount }} / {{ totalAnswered }} —
-                {{
-                  totalAnswered > 0
-                    ? (correctCount / totalAnswered * 100 | number: '1.0-0') + '%'
-                    : '0%'
-                }}
+                {{ currentPercentage + '%' }}
             </span>
           </div>
 
@@ -71,12 +67,12 @@
                   name="answer-{{ currentQuestionIndex }}"
                   [disabled]="currentQuiz.isCorrect !== undefined"
                   [ngClass]="{
-                    'is-valid': currentQuiz.isCorrect === true,
+                    'is-valid': currentQuiz.isCorrect,
                     'is-invalid': currentQuiz.isCorrect === false
                   }"
                 />
 
-                <div *ngIf="currentQuiz.isCorrect === true" class="valid-feedback d-block">Correct</div>
+                <div *ngIf="currentQuiz.isCorrect" class="valid-feedback d-block">Correct</div>
                 <div *ngIf="currentQuiz.isCorrect === false" class="invalid-feedback d-block">Incorrect</div>
 
                 <div class="mt-3">

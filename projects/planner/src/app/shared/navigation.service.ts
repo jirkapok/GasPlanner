@@ -22,19 +22,6 @@ export class Urls {
         imageName = imageName.replace('./', '');
         return Urls.assetsDoc + imageName;
     }
-    public infoUrl(fileName: string): string {
-        return Urls.assetsDoc + fileName + '.md';
-    }
-
-    public infoImageUrl(imageName: string): string {
-        imageName = imageName.replace('./', '');
-        return Urls.assetsDoc + imageName;
-    }
-
-    public infoFullLinkUrl(fileName: string): string {
-        fileName = fileName.replace('./', '');
-        return Urls.assetsDoc + fileName;
-    }
 
     public quizUrl(fileName: string): string {
         return Urls.assetsLearn + fileName + 'Quiz.json';

@@ -10,25 +10,12 @@ export class Urls {
         return Urls.rootUrl;
     }
 
-    public get standardGases(): string {
-        return Urls.rootHelpUrl + '/standard_gases.md';
-    }
-
-    public get helpUrl(): string {
-        return Urls.rootHelpUrl +'/readme.md';
-    }
-
-    public infoUrl(fileName: string): string {
+    public helpUrl(fileName: string): string {
         return `assets/doc/${fileName}.md`;
     }
 
-    public infoImageUrl(imageName: string): string {
+    public imageUrl(imageName: string): string {
         imageName = imageName.replace('./', '');
         return `assets/doc/${imageName}`;
-    }
-
-    public infoFullLinkUrl(fileName: string): string {
-        fileName = fileName.replace('./', '');
-        return `assets/doc/${fileName}`;
     }
 }

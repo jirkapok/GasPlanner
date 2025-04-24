@@ -1,25 +1,27 @@
 import { Component, Input } from '@angular/core';
-import { NgxMdModule, NgxMdService  } from 'ngx-md';
-import { NgForOf, NgIf } from '@angular/common';
+import { NgxMdModule  } from 'ngx-md';
+import { NgForOf } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
-import { faCircleInfo} from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { MarkdownCustomization } from '../shared/markdown-customization.service';
 
 @Component({
     selector: 'app-help',
     standalone: true,
-    imports: [ NgxMdModule, FontAwesomeModule, NgForOf, NgIf],
+    imports: [ NgxMdModule, FontAwesomeModule, NgForOf ],
+    providers: [ MarkdownCustomization ],
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
 })
 
 export class HelpComponent {
     public activeSection = 'plan';
-    public path = this.urls.infoUrl(this.label);
+    public path = this.urls.helpUrl(this.label);
     public headerIcon = faCircleInfo;
+    private _label = 'readme';
 
-
-    sections = [
+    public sections = [
         {
             id: 'plan',
             title: 'Plan',
@@ -78,13 +80,9 @@ export class HelpComponent {
         }
     ];
 
-    private _label = 'readme';
-
-    constructor(public urls: Urls,
-        private _markdown: NgxMdService
-    ) {
-        console.log('HelpOverviewComponent', this.label, this.path);}
-
+    constructor(public urls: Urls, markdown: MarkdownCustomization) {
+        markdown.configure();
+    }
 
     public get label(): string {
         return this._label;
@@ -93,29 +91,14 @@ export class HelpComponent {
     @Input()
     public set label(value: string) {
         this._label = value || 'readme';
-        this.path = this.urls.infoUrl(this._label);
+        this.path = this.urls.helpUrl(this._label);
     }
 
-    updatePath(value: string): void {
-        this.path = this.urls.infoUrl(value);
+    public updatePath(value: string): void {
+        this.path = this.urls.helpUrl(value);
     }
 
-    onLoad() {
-        this._markdown.renderer.image = (href: string, title: string,  text: string) =>
-            `<img src="${this.urls.infoImageUrl(href)}" alt="${text}" class="w-100 p-3" title="${text}">`;
-
-        this._markdown.renderer.link = (href: string, title: string, text: string) => {
-            console.log('Original href:', href);
-            if (href?.startsWith('./') && href?.endsWith('.md')) {
-                const sanitizedHref = href.replace('./', '').replace('.md', '');
-                console.log('sanitizedHref', sanitizedHref);
-                return `<a href="/help/${sanitizedHref}">${text}</a>`;
-            }
-            return `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-        };
-    }
-
-    toggleSection(id: string): void {
+    public toggleSection(id: string): void {
         this.activeSection = this.activeSection === id ? '' : id;
     }
 }

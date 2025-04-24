@@ -3,9 +3,10 @@ import { NgxMdModule, NgxMdService } from 'ngx-md';
 import { NgForOf, NgIf, NgClass  } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 
 interface SectionItem {
     label: string;
@@ -28,7 +29,7 @@ interface QuizItem {
 @Component({
     selector: 'app-learn',
     standalone: true,
-    imports: [NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule],
+    imports: [NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule, MdbTabsModule],
     templateUrl: './learn.component.html',
     styleUrls: ['./learn.component.scss']
 })
@@ -39,9 +40,10 @@ export class LearnComponent implements OnInit {
     public correctPercentage = 0;
     public showScore = false;
     public activeSection = 'plan';
-    public selectedPath: string = 'readme';
+    public selectedPath = 'readme';
     public path = this.urls.infoUrl(this.label);
     public headerIcon = faCircleInfo;
+    public trophyIcon = faGraduationCap;
 
     private _label = 'readme';
     constructor(

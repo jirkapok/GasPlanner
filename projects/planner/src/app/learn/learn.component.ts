@@ -82,7 +82,7 @@ export class LearnComponent implements OnInit {
         });
     }
 
-    updatePath(value: string): void {
+    public updatePath(value: string): void {
         this.selectedPath = value;
 
         this.http.get<QuizItem[]>(this.urls.quizUrl(value)).subscribe(data => {
@@ -95,11 +95,11 @@ export class LearnComponent implements OnInit {
         });
     }
 
-    toggleSection(id: string): void {
+    public toggleSection(id: string): void {
         this.activeSection = this.activeSection === id ? '' : id;
     }
 
-    validateCurrentAnswer(): void {
+    public validateCurrentAnswer(): void {
         const quiz = this.currentQuiz;
         const userAns = (quiz.userAnswer || '').trim();
         const correctAns = quiz.answer.trim();
@@ -122,13 +122,13 @@ export class LearnComponent implements OnInit {
         this.currentPercentage = Math.round((this.correctCount / this.totalAnswered) * 100);
     }
 
-    goToNextQuestion(): void {
+    public goToNextQuestion(): void {
         if (this.currentQuestionIndex < this.quizzes.length - 1) {
             this.currentQuestionIndex++;
         }
     }
 
-    submitAnswers(): void {
+    public submitAnswers(): void {
         const percent = (this.correctCount / this.totalAnswered) * 100;
 
         this.correctPercentage = Math.round(percent);

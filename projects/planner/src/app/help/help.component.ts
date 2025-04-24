@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgxMdModule  } from 'ngx-md';
 import { NgForOf } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -14,15 +14,14 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
 })
-
-export class HelpComponent {
+export class HelpComponent implements OnInit {
     public activeSection = 'plan';
     public path = this.urls.helpUrl(this.document);
     public headerIcon = faCircleInfo;
     private _document = 'readme';
-    private _anchor= '';
+    private _anchor?: string = '';
 
-    public sections = [
+    public sections: any[] = [
         {
             id: 'plan',
             title: 'Plan',
@@ -89,32 +88,39 @@ export class HelpComponent {
         return this._document;
     }
 
-    public get anchor(): string {
+    public get anchor(): string | undefined {
         return this._anchor;
     }
 
     @Input()
     public set document(value: string) {
         this._document = value || 'readme';
-        this.updatePath(this._document);
+        this.path = this.urls.helpUrl(value);
     }
 
     @Input()
-    public set anchor(value: string) {
+    public set anchor(value: string | undefined) {
         this._anchor = value;
     }
 
-    public updatePath(value: string): void {
-        this.path = this.urls.helpUrl(value);
+    public ngOnInit(): void {
+        this.scrollToAnchor();
+    }
+
+    public updatePath(newPath: string, newAnchor?: string): void {
+        this.path = this.urls.helpUrl(newPath);
+        this.anchor = newAnchor;
+        this.scrollToAnchor();
     }
 
     public toggleSection(id: string): void {
         this.activeSection = this.activeSection === id ? '' : id;
     }
 
-    // TODO scroll to anchor
-    private scrollToElement(id: string): void {
-        const el = document.getElementById(id);
-        el?.scrollIntoView({ behavior: 'smooth' });
+    private scrollToAnchor(): void {
+        if (this.anchor) {
+            const el = document.getElementById(this.anchor);
+            el?.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 }

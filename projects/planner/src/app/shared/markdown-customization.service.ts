@@ -9,6 +9,7 @@ export class MarkdownCustomization {
 
     public configure(): void {
         const renderer = this.markdown.renderer;
+
         renderer.image = (href: string, _: string, text: string) => {
             const resolvedUrl = this.urls.imageUrl(href);
             return `<img src="${resolvedUrl}" alt="${text}" class="img-fluid p-3" title="${text}">`;
@@ -24,7 +25,6 @@ export class MarkdownCustomization {
 
         renderer.heading = (text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger) => {
             // add id to be able scroll to the anchor
-            // TODO angular removes ids, needs to be sanitized
             return `<h${level} id="${slugger.slug(raw)}">${text}</h${level}>`;
         }
 

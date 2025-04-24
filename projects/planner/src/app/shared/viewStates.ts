@@ -15,6 +15,7 @@ export class KnownViews {
     public static readonly diff = 'diff';
     public static readonly redundancies = 'redundancies';
     public static readonly blender = 'blender';
+    public static readonly help = 'help';
 }
 
 @Injectable()

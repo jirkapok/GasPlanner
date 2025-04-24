@@ -1,0 +1,41 @@
+<div class="row mt-5">
+    <div class="col col-sm-12 col-md-12 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div class="accordion" id="helpAccordion">
+            <div class="accordion-item" *ngFor="let section of sections">
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button"
+                  [class.collapsed]="activeSection !== section.id"
+                  (click)="toggleSection(section.id)">
+                  {{ section.title }}
+                </button>
+              </h2>
+              <div class="accordion-collapse collapse" [class.show]="activeSection === section.id">
+                <div class="accordion-body py-2 px-3">
+                  <ul>
+                    <ng-container *ngFor="let item of section.items">
+                      <li class="mb-1">
+                        <button class="btn btn-link p-0" (click)="updatePath(item.path)">
+                          {{ item.label }}
+                        </button>
+                      </li>
+                    </ng-container>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-md-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <ngx-md [path]="path" (loaded)="onLoad()"></ngx-md>
+        </div>
+      </div>
+    </div>
+  </div>

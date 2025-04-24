@@ -19,6 +19,16 @@ export class Urls {
     }
 
     public infoUrl(fileName: string): string {
-        return `assets/docs/${fileName}.md`;
+        return `assets/doc/${fileName}.md`;
+    }
+
+    public infoImageUrl(imageName: string): string {
+        imageName = imageName.replace('./', '');
+        return `assets/doc/${imageName}`;
+    }
+
+    public infoFullLinkUrl(fileName: string): string {
+        fileName = fileName.replace('./', '');
+        return `assets/doc/${fileName}`;
     }
 }

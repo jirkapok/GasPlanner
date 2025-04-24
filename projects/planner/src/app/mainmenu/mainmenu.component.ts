@@ -8,6 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 import { ShareDiveService } from '../shared/ShareDiveService';
+import { FeatureFlags } from 'scuba-physics';
 
 @Component({
     selector: 'app-mainmenu',
@@ -28,6 +29,10 @@ export class MainMenuComponent {
     public iconShare = faShareFromSquare;
     public iconClone = faClone;
     public iconDelete = faTrashCan;
+
+    public notIntegratedHelp = !FeatureFlags.Instance.integratedHelp;
+    public integratedHelp = FeatureFlags.Instance.integratedHelp;
+    public gamification = FeatureFlags.Instance.gamification;
 
     constructor(
         private schedules: ManagedDiveSchedules,

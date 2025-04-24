@@ -32,7 +32,12 @@
             "assets": [
               "projects/planner/src/assets",
               "projects/planner/src/favicon.ico",
-              "projects/planner/src/manifest.webmanifest"
+              "projects/planner/src/manifest.webmanifest",
+                {
+                  "glob": "**/*.(md|png)",
+                  "input": "doc",
+                  "output": "assets/doc"
+                }
             ],
             "styles": [
               "projects/planner/src/styles.scss"
@@ -106,7 +111,12 @@
             "assets": [
               "projects/planner/src/favicon.ico",
               "projects/planner/src/assets",
-              "projects/planner/src/manifest.webmanifest"
+              "projects/planner/src/manifest.webmanifest",
+              {
+                "glob": "**/*.(md,png)",
+                "input": "doc",
+                "output": "assets/doc"
+              }
             ],
             "styles": [
               "projects/planner/src/styles.scss"

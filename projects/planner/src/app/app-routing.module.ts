@@ -1,10 +1,12 @@
 import {
     ActivatedRouteSnapshot,
     CanActivateFn,
+    provideRouter,
     Router,
     RouterModule,
     Routes,
-    UrlTree
+    UrlTree,
+    withComponentInputBinding
 } from '@angular/router';
 import { Location } from '@angular/common';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
@@ -21,6 +23,7 @@ import { WeightCalcComponent } from './calculators/weight/weight.component';
 import { GasPropertiesCalcComponent } from './calculators/gas.props/gas.props.component';
 import { RedundanciesComponent } from './calculators/redundancies/redundancies.component';
 import { GasBlenderComponent } from './calculators/gas-blender/gas-blender.component';
+import { HelpComponent } from './help/help.component';
 
 const canActivateDashboard: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
     const router = inject(Router);
@@ -51,6 +54,8 @@ const routes: Routes = [
     { path: KnownViews.diff, component: DiffComponent },
     { path: KnownViews.redundancies, component: RedundanciesComponent },
     { path: KnownViews.blender, component: GasBlenderComponent },
+    { path: `${KnownViews.help}/:label`, component: HelpComponent},
+    { path: KnownViews.help, redirectTo: `${KnownViews.help}/readme`, pathMatch: 'full' },
     {
         path: '**',
         component: DashboardComponent,
@@ -63,6 +68,9 @@ const routes: Routes = [
         RouterModule.forRoot(routes)
     ],
     exports: [RouterModule],
+    providers: [
+        provideRouter(routes, withComponentInputBinding()),
+    ],
     declarations: []
 })
 export class AppRoutingModule { }

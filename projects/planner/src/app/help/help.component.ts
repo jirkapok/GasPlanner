@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgxMdModule  } from 'ngx-md';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
@@ -9,19 +9,20 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
 @Component({
     selector: 'app-help',
     standalone: true,
-    imports: [ NgxMdModule, FontAwesomeModule, NgForOf ],
+    imports: [ NgxMdModule, FontAwesomeModule, NgForOf, NgClass ],
     providers: [ MarkdownCustomization ],
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
 })
-export class HelpComponent implements OnInit {
+
+export class HelpComponent {
     public activeSection = 'plan';
     public path = this.urls.helpUrl(this.document);
     public headerIcon = faCircleInfo;
     private _document = 'readme';
-    private _anchor?: string = '';
+    private _anchor= '';
 
-    public sections: any[] = [
+    public sections = [
         {
             id: 'plan',
             title: 'Plan',
@@ -88,39 +89,50 @@ export class HelpComponent implements OnInit {
         return this._document;
     }
 
-    public get anchor(): string | undefined {
+    public get anchor(): string {
         return this._anchor;
     }
 
     @Input()
     public set document(value: string) {
         this._document = value || 'readme';
-        this.path = this.urls.helpUrl(value);
+        this.updatePath(this._document);
     }
 
     @Input()
-    public set anchor(value: string | undefined) {
+    public set anchor(value: string) {
         this._anchor = value;
+        if (value) {
+            setTimeout(() => this.scrollToElement(value), 100);
+        }
     }
 
-    public ngOnInit(): void {
-        this.scrollToAnchor();
-    }
+    public updatePath(path: string, anchor?: string): void {
+        this._document = path;
+        this._anchor = anchor || '';
+        this.path = this.urls.helpUrl(path);
 
-    public updatePath(newPath: string, newAnchor?: string): void {
-        this.path = this.urls.helpUrl(newPath);
-        this.anchor = newAnchor;
-        this.scrollToAnchor();
+        // Auto-expand section based on selected item
+        const match = this.sections.find(section =>
+            section.items.some(item => item.path === path)
+        );
+        if (match) {
+            this.activeSection = match.id;
+        }
+
+        // Scroll after markdown loads
+        if (this._anchor) {
+            setTimeout(() => this.scrollToElement(this._anchor), 100);
+        }
     }
 
     public toggleSection(id: string): void {
         this.activeSection = this.activeSection === id ? '' : id;
     }
 
-    private scrollToAnchor(): void {
-        if (this.anchor) {
-            const el = document.getElementById(this.anchor);
-            el?.scrollIntoView({ behavior: 'smooth' });
-        }
+    // TODO scroll to anchor
+    private scrollToElement(id: string): void {
+        const el = document.getElementById(id);
+        el?.scrollIntoView({ behavior: 'smooth' });
     }
 }

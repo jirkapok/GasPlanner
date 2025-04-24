@@ -14,14 +14,20 @@
               </h2>
               <div class="accordion-collapse collapse" [class.show]="activeSection === section.id">
                 <div class="accordion-body py-2 px-3">
-                  <ul>
-                    <ng-container *ngFor="let item of section.items">
-                      <li class="mb-1">
-                        <button class="btn btn-link p-0" (click)="updatePath(item.path, item.anchor)">
-                          {{ item.label }}
-                        </button>
-                      </li>
-                    </ng-container>
+                  <ul class="list-group list-group-flush">
+                    <li *ngFor="let item of section.items" class="list-group-item px-0">
+                        <div
+                        mdbRipple
+                        class="d-flex justify-content-between align-items-center px-3 py-2 rounded"
+                        style="cursor: pointer;"
+                        [ngClass]="{
+                            'bg-primary bg-opacity-10 text-primary fw-semibold':
+                              document === item.path && anchor === (item.anchor || '')
+                          }"
+                        (click)="updatePath(item.path, item.anchor)">
+                        {{ item.label }}
+                      </div>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -34,7 +40,7 @@
     <div class="col-sm-12 col-md-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
       <div class="card shadow-sm">
         <div class="card-body">
-          <ngx-md [path]="path" [sanitizeHtml]="false"></ngx-md>
+          <ngx-md [path]="path" ></ngx-md>
         </div>
       </div>
     </div>

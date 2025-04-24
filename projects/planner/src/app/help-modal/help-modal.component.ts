@@ -9,7 +9,7 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
     selector: 'app-help-modal',
     standalone: true,
     imports: [ NgxMdModule ],
-    providers: [ Urls, NgxMdService ],
+    providers: [ Urls, NgxMdService, MarkdownCustomization ],
     templateUrl: './help-modal.component.html',
     styleUrl: './help-modal.component.scss'
 })

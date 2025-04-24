@@ -3,10 +3,9 @@ import { NgxMdModule, NgxMdService } from 'ngx-md';
 import { NgForOf, NgIf, NgClass  } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
-import { faCircleInfo, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
+import {  faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 
 interface SectionItem {
     label: string;
@@ -29,7 +28,7 @@ interface QuizItem {
 @Component({
     selector: 'app-learn',
     standalone: true,
-    imports: [NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule, MdbTabsModule],
+    imports: [NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule],
     templateUrl: './learn.component.html',
     styleUrls: ['./learn.component.scss']
 })
@@ -41,8 +40,6 @@ export class LearnComponent implements OnInit {
     public showScore = false;
     public activeSection = 'plan';
     public selectedPath = 'readme';
-    public path = this.urls.infoUrl(this.label);
-    public headerIcon = faCircleInfo;
     public trophyIcon = faGraduationCap;
 
     private _label = 'readme';
@@ -59,7 +56,6 @@ export class LearnComponent implements OnInit {
     @Input()
     public set label(value: string) {
         this._label = value || 'readme';
-        this.path = this.urls.infoUrl(this._label);
         this.selectedPath = this._label;
     }
 
@@ -80,7 +76,6 @@ export class LearnComponent implements OnInit {
 
     updatePath(value: string): void {
         this.selectedPath = value;
-        this.path = this.urls.infoUrl(value);
 
         this.http.get<QuizItem[]>(this.urls.quizUrl(value)).subscribe(data => {
             this.quizzes = data.map(q => ({
@@ -90,20 +85,6 @@ export class LearnComponent implements OnInit {
             }));
             this.showScore = false;
         });
-    }
-
-    onLoad() {
-        this._markdown.renderer.image = (href: string, title: string, text: string) =>
-            `<img src="${this.urls.infoImageUrl(href)}" alt="${text}" class="w-100 p-3" title="${text}">`;
-
-        this._markdown.renderer.link = (href: string, title: string, text: string) => {
-
-            if (href?.startsWith('./') && href?.endsWith('.md')) {
-                const sanitizedHref = href.replace('./', '').replace('.md', '');
-                return `<a href="/help/${sanitizedHref}">${text}</a>`;
-            }
-            return `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-        };
     }
 
     toggleSection(id: string): void {

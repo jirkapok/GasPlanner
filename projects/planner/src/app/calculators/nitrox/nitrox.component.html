@@ -47,26 +47,26 @@
                         </div>
                     </ng-container>
                     <ng-container *ngIf="calc.inMod">
-                        <div class="pt-2 mb-4">
+                        <div class="pt-2 mb-4 form-outline" data-mdb-input-init>
                             <label for="mod" class="form-label" mdbLabel>MOD [{{units.length}}]:</label>
-                            <input class="form-control" [readonly]="true" [value]="calcMod | number: '1.0-1'"
-                                id="mod" />
+                            <input class="form-control" [value]="calcMod | number: '1.0-1'"
+                                id="mod" readonly/>
                             <small class="form-text text-muted">EAD: {{ ead | number: '1.0-1' }}
                                 {{units.length}}</small>
                         </div>
                     </ng-container>
                     <ng-container *ngIf="calc.inBestMix">
-                        <div class="pt-2 mb-4">
+                        <div class="pt-2 mb-4 form-outline">
                             <label for="fO2" class="form-label" mdbLabel>O2 [%]:</label>
-                            <input class="form-control" [readonly]="true" [value]="calc.fO2 | number: '1.0-1'"
-                                id="fO2" />
+                            <input class="form-control" [value]="calc.fO2 | number: '1.0-1'"
+                                id="fO2" readonly/>
                         </div>
                     </ng-container>
                     <ng-container *ngIf="calc.inPO2">
-                        <div class="pt-2 mb-4">
+                        <div class="pt-2 mb-4 form-outline">
                             <label for="pO2" class="form-label" mdbLabel>ppO2:</label>
-                            <input class="form-control" [readonly]="true" [value]="calc.pO2 | number: '1.0-2'"
-                                id="pO2" />
+                            <input class="form-control" [value]="calc.pO2 | number: '1.0-2'"
+                                id="pO2" readonly/>
                         </div>
                     </ng-container>
                     <div class="pt-2 pb-4 pe-3 mb-4">

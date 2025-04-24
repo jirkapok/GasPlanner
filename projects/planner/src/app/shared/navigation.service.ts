@@ -14,18 +14,14 @@ export class Urls {
         return Urls.rootUrl;
     }
 
-    public get standardGases(): string {
-        return Urls.rootHelpUrl + '/standard_gases.md';
+    public helpUrl(fileName: string): string {
+        return `assets/doc/${fileName}.md`;
     }
 
-    public get helpUrl(): string {
-        return Urls.rootHelpUrl +'/readme.md';
+    public imageUrl(imageName: string): string {
+        imageName = imageName.replace('./', '');
+        return Urls.assetsDoc + imageName;
     }
-
-    public quizUrl(fileName: string): string {
-        return Urls.assetsLearn + fileName + 'Quiz.json';
-    }
-
     public infoUrl(fileName: string): string {
         return Urls.assetsDoc + fileName + '.md';
     }
@@ -38,5 +34,9 @@ export class Urls {
     public infoFullLinkUrl(fileName: string): string {
         fileName = fileName.replace('./', '');
         return Urls.assetsDoc + fileName;
+    }
+
+    public quizUrl(fileName: string): string {
+        return Urls.assetsLearn + fileName + 'Quiz.json';
     }
 }

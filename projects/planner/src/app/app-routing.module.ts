@@ -56,7 +56,8 @@ const routes: Routes = [
     { path: KnownViews.redundancies, component: RedundanciesComponent },
     { path: KnownViews.blender, component: GasBlenderComponent },
     { path: KnownViews.learn, component: LearnComponent },
-    { path: `${KnownViews.help}/:label`, component: HelpComponent},
+    { path: `${KnownViews.help}/:document/:anchor`, component: HelpComponent },
+    { path: `${KnownViews.help}/:document`, component: HelpComponent },
     { path: KnownViews.help, redirectTo: `${KnownViews.help}/readme`, pathMatch: 'full' },
     {
         path: '**',

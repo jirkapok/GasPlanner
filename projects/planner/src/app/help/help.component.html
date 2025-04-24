@@ -14,15 +14,14 @@
               </h2>
               <div class="accordion-collapse collapse" [class.show]="activeSection === section.id">
                 <div class="accordion-body py-2 px-3">
-                  <ul class="nav flex-column nav-underline">
-                    <li *ngFor="let item of section.items" class="nav-item mb-1">
-                      <a
-                        class="nav-link"
-                        [class.active]="selectedPath === item.path"
-                        (click)="updatePath(item.path)">
-                        {{ item.label }}
-                      </a>
-                    </li>
+                  <ul>
+                    <ng-container *ngFor="let item of section.items">
+                      <li class="mb-1">
+                        <button class="btn btn-link p-0" (click)="updatePath(item.path)">
+                          {{ item.label }}
+                        </button>
+                      </li>
+                    </ng-container>
                   </ul>
                 </div>
               </div>
@@ -32,11 +31,10 @@
       </div>
     </div>
 
-    <!-- Markdown Viewer -->
     <div class="col-sm-12 col-md-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
       <div class="card shadow-sm">
         <div class="card-body">
-          <ngx-md [path]="path" (loaded)="onLoad()"></ngx-md>
+          <ngx-md [path]="path" ></ngx-md>
         </div>
       </div>
     </div>

@@ -1,25 +1,28 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgxMdModule, NgxMdService } from 'ngx-md';
-import { NgForOf, NgIf } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { NgxMdModule  } from 'ngx-md';
+import { NgForOf } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { MarkdownCustomization } from '../shared/markdown-customization.service';
 
 @Component({
     selector: 'app-help',
     standalone: true,
-    imports: [NgxMdModule, FontAwesomeModule, NgForOf, NgIf],
+    imports: [ NgxMdModule, FontAwesomeModule, NgForOf ],
+    providers: [ MarkdownCustomization ],
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
 })
-export class HelpComponent implements OnInit {
+
+export class HelpComponent {
     public activeSection = 'plan';
-    public selectedPath = 'readme';
-    public path = this.urls.infoUrl(this.label);
+    public path = this.urls.helpUrl(this.document);
     public headerIcon = faCircleInfo;
+    private _document = 'readme';
+    private _anchor= '';
 
-
-    sections = [
+    public sections = [
         {
             id: 'plan',
             title: 'Plan',
@@ -27,7 +30,7 @@ export class HelpComponent implements OnInit {
                 { label: 'Tanks', path: 'tanks' },
                 { label: 'Standard gases', path: 'standard_gases' },
                 { label: 'Depths', path: 'depths' },
-                { label: 'Surface interval', path: 'depths#repetitive-dives-and-surface-interval' }
+                { label: 'Surface interval', path: 'depths', anchor: 'repetitive-dives-and-surface-interval' }
             ]
         },
         {
@@ -36,10 +39,10 @@ export class HelpComponent implements OnInit {
             items: [
                 { label: 'Environment', path: 'environment' },
                 { label: 'Conservatism', path: 'gradient_factors' },
-                { label: 'Gases', path: 'plan_options#gases' },
+                { label: 'Gases', path: 'plan_options', anchor: 'gases' },
                 { label: 'Stops', path: 'stops' },
                 { label: 'Speeds', path: 'speeds' },
-                { label: 'Diver', path: 'plan_options#diver' }
+                { label: 'Diver', path: 'plan_options', anchor: 'diver' }
             ]
         },
         {
@@ -47,12 +50,12 @@ export class HelpComponent implements OnInit {
             title: 'Results',
             items: [
                 { label: 'Dive info table', path: 'diveinfo' },
-                { label: 'Oxygen toxicity', path: 'diveinfo#oxygen-toxicity' },
+                { label: 'Oxygen toxicity', path: 'diveinfo', anchor: 'oxygen-toxicity' },
                 { label: 'Events causing errors and warnings', path: 'events' },
                 { label: 'Consumed gas charts', path: 'consumed' },
                 { label: 'Dive way points table', path: 'waypoints_table' },
                 { label: 'Dive profile chart', path: 'profile_chart' },
-                { label: 'Tissues heat map', path: 'profile_chart#tissues-heat-map' }
+                { label: 'Tissues heat map', path: 'profile_chart', anchor: 'tissues-heat-map' }
             ]
         },
         {
@@ -61,12 +64,12 @@ export class HelpComponent implements OnInit {
             items: [
                 { label: 'RMV/SAC', path: 'sac' },
                 { label: 'Nitrox', path: 'nitrox' },
-                { label: 'No decompression limits (NDL) table', path: 'calculators' },
-                { label: 'Altitude', path: 'calculators' },
-                { label: 'Weight', path: 'calculators' },
-                { label: 'Gas properties', path: 'calculators' },
-                { label: 'Redundancies', path: 'calculators' },
-                { label: 'Gas blender', path: 'calculators' }
+                { label: 'No decompression limits (NDL) table', path: 'ndl_limits' },
+                { label: 'Altitude', path: 'altitude' },
+                { label: 'Weight', path: 'weight' },
+                { label: 'Gas properties', path: 'gas_properties' },
+                { label: 'Redundancies', path: 'redundancies' },
+                { label: 'Gas blender', path: 'gas_blender' }
             ]
         },
         {
@@ -78,55 +81,40 @@ export class HelpComponent implements OnInit {
         }
     ];
 
-
-    private _label = 'readme';
-    constructor(
-        public urls: Urls,
-        private _markdown: NgxMdService
-    ) {
-        console.log('HelpComponent', this.label, this.path);
+    constructor(public urls: Urls, markdown: MarkdownCustomization) {
+        markdown.configure();
     }
 
-    public get label(): string {
-        return this._label;
+    public get document(): string {
+        return this._document;
+    }
+
+    public get anchor(): string {
+        return this._anchor;
     }
 
     @Input()
-    public set label(value: string) {
-        this._label = value || 'readme';
-        this.path = this.urls.infoUrl(this._label);
-        this.selectedPath = this._label;
+    public set document(value: string) {
+        this._document = value || 'readme';
+        this.updatePath(this._document);
     }
 
-    ngOnInit(): void {
-        if (!this.selectedPath) {
-            const first = this.sections[0]?.items[0];
-            if (first) {
-                this.updatePath(first.path);
-            }
-        }
+    @Input()
+    public set anchor(value: string) {
+        this._anchor = value;
     }
 
-    updatePath(value: string): void {
-        this.selectedPath = value;
-        this.path = this.urls.infoUrl(value);
+    public updatePath(value: string): void {
+        this.path = this.urls.helpUrl(value);
     }
 
-    onLoad() {
-        this._markdown.renderer.image = (href: string, title: string, text: string) =>
-            `<img src="${this.urls.infoImageUrl(href)}" alt="${text}" class="w-100 p-3" title="${text}">`;
-
-        this._markdown.renderer.link = (href: string, title: string, text: string) => {
-            if (href?.startsWith('./') && href?.endsWith('.md')) {
-                console.log('Original href:', href);
-                const sanitizedHref = href.replace('./', '').replace('.md', '');
-                return `<a href="/help/${sanitizedHref}">${text}</a>`;
-            }
-            return `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-        };
-    }
-
-    toggleSection(id: string): void {
+    public toggleSection(id: string): void {
         this.activeSection = this.activeSection === id ? '' : id;
+    }
+
+    // TODO scroll to anchor
+    private scrollToElement(id: string): void {
+        const el = document.getElementById(id);
+        el?.scrollIntoView({ behavior: 'smooth' });
     }
 }

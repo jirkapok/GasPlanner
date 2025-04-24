@@ -16,6 +16,7 @@ export class KnownViews {
     public static readonly redundancies = 'redundancies';
     public static readonly blender = 'blender';
     public static readonly help = 'help';
+    public static readonly learn = 'learn';
 }
 
 @Injectable()

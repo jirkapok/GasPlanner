@@ -24,6 +24,7 @@ import { GasPropertiesCalcComponent } from './calculators/gas.props/gas.props.co
 import { RedundanciesComponent } from './calculators/redundancies/redundancies.component';
 import { GasBlenderComponent } from './calculators/gas-blender/gas-blender.component';
 import { HelpComponent } from './help/help.component';
+import { LearnComponent } from './learn/learn.component';
 
 const canActivateDashboard: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
     const router = inject(Router);
@@ -54,6 +55,7 @@ const routes: Routes = [
     { path: KnownViews.diff, component: DiffComponent },
     { path: KnownViews.redundancies, component: RedundanciesComponent },
     { path: KnownViews.blender, component: GasBlenderComponent },
+    { path: KnownViews.learn, component: LearnComponent },
     { path: `${KnownViews.help}/:label`, component: HelpComponent},
     { path: KnownViews.help, redirectTo: `${KnownViews.help}/readme`, pathMatch: 'full' },
     {

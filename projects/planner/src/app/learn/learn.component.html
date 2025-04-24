@@ -32,12 +32,36 @@
       </div>
     </div>
 
-    <!-- Markdown Viewer -->
     <div class="col-sm-12 col-md-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <ngx-md [path]="path" (loaded)="onLoad()"></ngx-md>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <form (ngSubmit)="submitAnswers()">
+              <div *ngFor="let quiz of quizzes; let i = index" class="mb-4">
+                <p class="fw-bold">Question {{ i + 1 }}:</p>
+                <p>{{ quiz.question }}</p>
+                <input
+                  type="text"
+                  class="form-control mb-2"
+                  [(ngModel)]="quiz.userAnswer"
+                  name="answer-{{ i }}"
+                  [ngClass]="{
+                    'is-valid': quiz.isCorrect === true,
+                    'is-invalid': quiz.isCorrect === false
+                  }"
+                />
+                <div *ngIf="quiz.isCorrect === true" class="valid-feedback">Correct</div>
+                <div *ngIf="quiz.isCorrect === false" class="invalid-feedback">Incorrect</div>
+                <hr />
+              </div>
+              <button type="submit" class="btn btn-primary">Submit Answers</button>
+            </form>
+
+            <div *ngIf="showScore" class="mt-4">
+              <h5>Result:</h5>
+              <p>{{ correctCount }} out of {{ quizzes.length }} correct ({{ correctPercentage }}%)</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+
+

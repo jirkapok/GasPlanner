@@ -21,6 +21,7 @@ export class HelpComponent {
     private _document = HelpComponent.defaultDocument;
     private _anchor?: string = '';
 
+    // TODO router path is not updated when clicking on the link in menu or document
     public sections: any[] = [
         {
             id: HelpComponent.defaultDocument,
@@ -44,9 +45,11 @@ export class HelpComponent {
             id: 'options',
             title: 'Dive Options',
             items: [
+                { label: 'General', path: 'plan_options' },
                 { label: 'Environment', path: 'environment' },
                 { label: 'Conservatism', path: 'gradient_factors' },
                 { label: 'Gases', path: 'plan_options', anchor: 'gases' },
+                { label: 'Air breaks', path: 'plan_options', anchor: 'air-breaks' },
                 { label: 'Stops', path: 'stops' },
                 { label: 'Speeds', path: 'speeds' },
                 { label: 'Diver', path: 'plan_options', anchor: 'diver' }
@@ -100,6 +103,7 @@ export class HelpComponent {
     @Input()
     public set document(value: string) {
         this._document = value || HelpComponent.defaultDocument;
+        // TODO update the active section
     }
 
     @Input()

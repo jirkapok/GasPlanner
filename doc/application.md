@@ -19,7 +19,8 @@ Also keep in mind the value provided are only valid, if verified. E.g. there wer
 
 > We recommend to use Bühlmann algorithm with heavy decompression only in range 10 - 150 m (30 - 500 ft).
 
-> Don`t use the calculated decompression for saturaion diving! 
+> Don`t use the calculated decompression for saturaion diving!
+
 ## Screen structure
 
 To be able calculate dive profile you need to enter Gases used during the dive, depth and calculation options, each of these is placed within its own box. Every time you change any option new profile is calculated. We distinguish two kind of views.

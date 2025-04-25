@@ -14,8 +14,13 @@ export class Urls {
         return Urls.rootUrl;
     }
 
-    public helpUrl(fileName: string): string {
-        return `assets/doc/${fileName}.md`;
+    public helpMarkdownUrl(fileName: string): string {
+        return Urls.assetsDoc + `${fileName}.md`;
+    }
+
+    public helpUrl(document: string, anchor: string | undefined): string {
+        const anchorPath = anchor ?? '';
+        return `/help/${document}/${anchorPath}`;
     }
 
     public imageUrl(imageName: string): string {

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
+import _ from 'lodash';
 import { NgxMdModule  } from 'ngx-md';
-import { NgForOf, NgClass } from '@angular/common';
+import { NgForOf, NgClass, Location } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
@@ -16,12 +17,11 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
 })
 export class HelpComponent {
     private static defaultDocument = 'application';
-    public activeSection = HelpComponent.defaultDocument;
     public headerIcon = faCircleInfo;
+    private activeSection = HelpComponent.defaultDocument;
     private _document = HelpComponent.defaultDocument;
     private _anchor?: string = '';
 
-    // TODO router path is not updated when clicking on the link in menu or document
     public sections: any[] = [
         {
             id: HelpComponent.defaultDocument,
@@ -84,7 +84,7 @@ export class HelpComponent {
         }
     ];
 
-    constructor(public urls: Urls, markdown: MarkdownCustomization) {
+    constructor(public urls: Urls, private location: Location, markdown: MarkdownCustomization) {
         markdown.configure();
     }
 
@@ -97,13 +97,12 @@ export class HelpComponent {
     }
 
     public get path(): string {
-        return this.urls.helpUrl(this.document);
+        return this.urls.helpMarkdownUrl(this.document);
     }
 
     @Input()
     public set document(value: string) {
         this._document = value || HelpComponent.defaultDocument;
-        // TODO update the active section
     }
 
     @Input()
@@ -122,6 +121,11 @@ export class HelpComponent {
     }
 
     public scrollToAnchor(): void {
+        const section = _(this.sections).find(s => _(s.items).find(i => i.path === this.document && i.anchor === this.anchor));
+        this.activeSection = section ? section.id : HelpComponent.defaultDocument;
+        const location = this.urls.helpUrl(this.document, this.anchor);
+        this.location.go(location);
+
         if (this.anchor) {
             const el = document.getElementById(this.anchor);
             el?.scrollIntoView({ behavior: 'smooth' });

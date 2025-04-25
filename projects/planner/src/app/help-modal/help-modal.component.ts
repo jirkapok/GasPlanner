@@ -15,7 +15,7 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
 })
 
 export class HelpModalComponent {
-    private _path = this.urls.helpUrl(Urls.notAvailable);
+    private _path = this.urls.helpMarkdownUrl(Urls.notAvailable);
 
     constructor(
         public modalRef: MdbModalRef<HelpModalComponent>,
@@ -32,6 +32,6 @@ export class HelpModalComponent {
 
     @Input()
     public set path(value: string) {
-        this._path  = this.urls.helpUrl(value);
+        this._path  = this.urls.helpMarkdownUrl(value);
     }
 }

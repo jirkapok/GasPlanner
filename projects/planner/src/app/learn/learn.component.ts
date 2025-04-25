@@ -178,4 +178,19 @@ export class LearnComponent implements OnInit {
         }
         return count;
     }
+
+    public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; color: string } {
+        const total = topic.categories.length;
+        let finished = 0;
+
+        for (const category of topic.categories) {
+            if (this.answeredCategories.has(`${topic.topic}::${category.name}`)) {
+                finished++;
+            }
+        }
+
+        const color = finished === total ? 'bg-success' : 'bg-warning';
+
+        return { finished, total, color };
+    }
 }

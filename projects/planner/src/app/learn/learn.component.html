@@ -9,10 +9,17 @@
                                 class="accordion-button"
                                 [class.collapsed]="activeTopic !== topic.topic"
                                 (click)="toggleTopic(topic.topic)">
+
                                 {{ topic.topic }}
-                                <span class="badge bg-success text-light ms-2" *ngIf="countFinishedCategories(topic) as finished">
-                                  {{ finished }}/{{ topic.categories.length }}
-                                </span>
+
+                                <ng-container *ngIf="getTopicCompletionStatus(topic) as status">
+                                    <span
+                                        class="badge text-light ms-2"
+                                        [class]="status.color">
+                                        {{ status.finished }}/{{ status.total }}
+                                    </span>
+                                </ng-container>
+
                             </button>
                         </h2>
                         <div class="accordion-collapse collapse" [class.show]="activeTopic === topic.topic">

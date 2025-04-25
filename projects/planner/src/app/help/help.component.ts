@@ -14,7 +14,6 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
 })
-
 export class HelpComponent {
     public activeSection = 'plan';
     public path = this.urls.helpUrl(this.document);
@@ -107,32 +106,21 @@ export class HelpComponent {
         }
     }
 
-    public updatePath(path: string, anchor?: string): void {
-        this._document = path;
-        this._anchor = anchor || '';
-        this.path = this.urls.helpUrl(path);
-
-        // Auto-expand section based on selected item
-        const match = this.sections.find(section =>
-            section.items.some(item => item.path === path)
-        );
-        if (match) {
-            this.activeSection = match.id;
-        }
-
-        // Scroll after markdown loads
-        if (this._anchor) {
-            setTimeout(() => this.scrollToElement(this._anchor), 100);
-        }
+    public updatePath(newPath: string, newAnchor?: string): void {
+        this.path = this.urls.helpUrl(newPath);
+        this.anchor = newAnchor;
+        this.scrollToAnchor();
     }
 
     public toggleSection(id: string): void {
         this.activeSection = this.activeSection === id ? '' : id;
     }
 
-    // TODO scroll to anchor
-    private scrollToElement(id: string): void {
-        const el = document.getElementById(id);
-        el?.scrollIntoView({ behavior: 'smooth' });
+    public scrollToAnchor(): void {
+        if (this.anchor) {
+            const el = document.getElementById(this.anchor);
+            el?.scrollIntoView({ behavior: 'smooth' });
+        }
+
     }
 }

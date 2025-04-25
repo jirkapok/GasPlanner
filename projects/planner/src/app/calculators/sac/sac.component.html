@@ -81,23 +81,23 @@
                             </div>
                         </ng-container>
                         <ng-container *ngIf="calc.inSac">
-                            <div class="pt-2 mb-4">
+                            <div class="pt-2 mb-4 form-outline">
                                 <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                                <input class="form-control" [readonly]="true" [value]="calcRmv" id="total-rmv-valuesac" />
+                                <input class="form-control" [value]="calcRmv" id="total-rmv-valuesac" readonly/>
                                 <small class="form-text text-muted">SAC: {{ gasSac | number:'1.0-2'}}
                                     {{units.sac}}</small>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="calc.inUsed">
-                            <div class="pt-2 mb-4">
+                            <div class="pt-2 mb-4 form-outline">
                                 <label for="used" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
-                                <input class="form-control" [readonly]="true" [value]="calcUsed" id="used" />
+                                <input class="form-control" [value]="calcUsed" id="used" readonly/>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="calc.inDuration">
-                            <div class="pt-2 mb-4">
+                            <div class="pt-2 mb-4 form-outline">
                                 <label for="duration" class="form-label" mdbLabel>Dive time [min]:</label>
-                                <input class="form-control" [readonly]="true" [value]="calcDuration" id="duration" />
+                                <input class="form-control" [value]="calcDuration" id="duration" readonly/>
                             </div>
                         </ng-container>
                     </form>

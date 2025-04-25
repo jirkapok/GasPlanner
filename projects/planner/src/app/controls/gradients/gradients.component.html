@@ -5,9 +5,8 @@
     <div class="mb-4 col col-12" [ngClass]="{ 'col-sm-6': !simple }">
         <div>
             <label *ngIf="!simple" for="gfLowField" class="form-label" mdbLabel>Gradient low [%]:</label>
-            <div mdbDropdown class="input-group dropdown">
-                <input id="gfLowField" *ngIf="simple" [value]="conservatism" class="form-control" type="text"
-                    [readonly]="true" />
+            <div mdbDropdown class="input-group dropdown" [class.form-outline]="simple">
+                <input id="gfLowField" *ngIf="simple" [value]="conservatism" class="form-control" type="text" readonly />
                 <input id="gfLowField" *ngIf="!simple" class="form-control" type="number" formControlName="gfLow"
                     (input)="gfLowChanged()" required [min]="minGradient" [max]="maxGradient" step="1" [class.is-invalid]="gfLowInvalid" />
                 <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"

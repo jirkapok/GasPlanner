@@ -14,7 +14,6 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
 })
-
 export class HelpComponent {
     public activeSection = 'plan';
     public path = this.urls.helpUrl(this.document);
@@ -22,10 +21,18 @@ export class HelpComponent {
     private _document = 'readme';
     private _anchor= '';
 
-    public sections = [
+    public sections: any[] = [
+        {
+            id: 'settings',
+            title: 'Application',
+            items: [
+                { label: 'Application usage', path: 'readme' },
+                { label: 'Application settings', path: 'settings' }
+            ]
+        },
         {
             id: 'plan',
-            title: 'Plan',
+            title: 'Dive Plan',
             items: [
                 { label: 'Tanks', path: 'tanks' },
                 { label: 'Standard gases', path: 'standard_gases' },
@@ -35,7 +42,7 @@ export class HelpComponent {
         },
         {
             id: 'options',
-            title: 'Options',
+            title: 'Dive Options',
             items: [
                 { label: 'Environment', path: 'environment' },
                 { label: 'Conservatism', path: 'gradient_factors' },
@@ -47,7 +54,7 @@ export class HelpComponent {
         },
         {
             id: 'results',
-            title: 'Results',
+            title: 'Dive Results',
             items: [
                 { label: 'Dive info table', path: 'diveinfo' },
                 { label: 'Oxygen toxicity', path: 'diveinfo', anchor: 'oxygen-toxicity' },
@@ -70,13 +77,6 @@ export class HelpComponent {
                 { label: 'Gas properties', path: 'gas_properties' },
                 { label: 'Redundancies', path: 'redundancies' },
                 { label: 'Gas blender', path: 'gas_blender' }
-            ]
-        },
-        {
-            id: 'settings',
-            title: 'Application settings',
-            items: [
-                { label: 'Application settings', path: 'settings' }
             ]
         }
     ];
@@ -102,37 +102,22 @@ export class HelpComponent {
     @Input()
     public set anchor(value: string) {
         this._anchor = value;
-        if (value) {
-            setTimeout(() => this.scrollToElement(value), 100);
-        }
     }
 
     public updatePath(path: string, anchor?: string): void {
         this._document = path;
         this._anchor = anchor || '';
         this.path = this.urls.helpUrl(path);
-
-        // Auto-expand section based on selected item
-        const match = this.sections.find(section =>
-            section.items.some(item => item.path === path)
-        );
-        if (match) {
-            this.activeSection = match.id;
-        }
-
-        // Scroll after markdown loads
-        if (this._anchor) {
-            setTimeout(() => this.scrollToElement(this._anchor), 100);
-        }
     }
 
     public toggleSection(id: string): void {
         this.activeSection = this.activeSection === id ? '' : id;
     }
 
-    // TODO scroll to anchor
-    private scrollToElement(id: string): void {
-        const el = document.getElementById(id);
-        el?.scrollIntoView({ behavior: 'smooth' });
+    public scrollToAnchor(): void {
+        if (this.anchor) {
+            const el = document.getElementById(this.anchor);
+            el?.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 }

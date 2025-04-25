@@ -68,10 +68,10 @@
                                 {{ranges.tankPressureLabel}}</div>
                         </div>
                     </div>
-                    <div class="col col-12 col-sm-6 col-md-4">
+                    <div class="col col-12 col-sm-6 col-md-4 form-outline">
                         <label for="finalPressure" class="form-label" mdbLabel>Final pressure [{{units.pressure}}]:</label>
-                        <input class="form-control readonly" name="finalPressure" id="finalPressure"
-                            [readonly]="true" [value]="calc.finalPressure | number: '1.0-1'" readonly />
+                        <input class="form-control" name="finalPressure" id="finalPressure"
+                            [value]="calc.finalPressure | number: '1.0-1'" readonly />
                     </div>
                 </div>
             </div>

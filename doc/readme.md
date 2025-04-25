@@ -1,41 +1,5 @@
 # Application help
 
-* [Supported platforms](./readme.md#supported-platforms)
-* [Theoretical model](./readme.md#theoretical-model)
-* [Limitations](./readme.md#limitations)
-* [Screen structure](./readme.md#screen-structure)
-* Plan
-    * [Tanks](./tanks.md)
-    * [Standard gases](./standard_gases.md) 
-    * [Depths](./depths.md)
-    * [Surface interval](./depths.md#repetitive-dives-and-surface-interval)
-    * [Options](./plan_options.md)
-      * [Environment](./environment.md)
-      * [Conservatism](./gradient_factors.md)
-      * [Gases](./plan_options.md#gases)
-      * [Stops](./stops.md)
-      * [Speeds](./speeds.md)
-      * [Diver](./plan_options.md#diver)
-* Results
-  * [Dive info table](./diveinfo.md)
-  * [Oxygen toxicity](./diveinfo.md#oxygen-toxicity)
-  * [Events causing errors and warnings](./events.md)
-  * [Consumed gas charts](./consumed.md)
-  * [Dive way points table](./waypoints_table.md)
-  * [Dive profile chart](./profile_chart.md)
-  * [Tissues heat map](./profile_chart.md#tissues-heat-map)
-* [Application settings](./settings.md)
-* Calculators
-    * [RMV/SAC](./sac.md)
-    * [Nitrox](./nitrox.md)
-    * [No decompression limits (NDL) table](./ndl_limits.md)
-    * [Altitude](./altitude.md)
-    * [Weight](./weight.md)
-    * [Gas properties](./gas_properties.md)
-    * [Redundancies](./redundancies.md)
-    * [Gas blender](./gas_blender.md)
-* [External reading](./links.md)
-
 ## Supported platforms
 
 This application works in Edge, Chrome, Safari and doesnt work in Firefox and Opera. Currently you can use it offline mode using "Add to home screen" in Edge or Chrome browsers. On mobile devices this feature works only on Android.

@@ -23,8 +23,16 @@ export class HelpComponent implements OnInit {
 
     public sections: any[] = [
         {
+            id: 'settings',
+            title: 'Application',
+            items: [
+                { label: 'Application usage', path: 'readme' },
+                { label: 'Application settings', path: 'settings' }
+            ]
+        },
+        {
             id: 'plan',
-            title: 'Plan',
+            title: 'Dive Plan',
             items: [
                 { label: 'Tanks', path: 'tanks' },
                 { label: 'Standard gases', path: 'standard_gases' },
@@ -34,7 +42,7 @@ export class HelpComponent implements OnInit {
         },
         {
             id: 'options',
-            title: 'Options',
+            title: 'Dive Options',
             items: [
                 { label: 'Environment', path: 'environment' },
                 { label: 'Conservatism', path: 'gradient_factors' },
@@ -46,7 +54,7 @@ export class HelpComponent implements OnInit {
         },
         {
             id: 'results',
-            title: 'Results',
+            title: 'Dive Results',
             items: [
                 { label: 'Dive info table', path: 'diveinfo' },
                 { label: 'Oxygen toxicity', path: 'diveinfo', anchor: 'oxygen-toxicity' },
@@ -69,13 +77,6 @@ export class HelpComponent implements OnInit {
                 { label: 'Gas properties', path: 'gas_properties' },
                 { label: 'Redundancies', path: 'redundancies' },
                 { label: 'Gas blender', path: 'gas_blender' }
-            ]
-        },
-        {
-            id: 'settings',
-            title: 'Application settings',
-            items: [
-                { label: 'Application settings', path: 'settings' }
             ]
         }
     ];

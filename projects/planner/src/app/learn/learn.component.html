@@ -18,8 +18,7 @@
                     <li *ngFor="let item of section.items" class="list-group-item px-0">
                       <div
                         mdbRipple
-                        class="d-flex justify-content-between align-items-center px-3 py-2 rounded "
-                        style="cursor: pointer;"
+                        class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
                         [ngClass]="{
                           'bg-primary bg-opacity-10 text-primary fw-semibold': selectedPath === item.path
                         }"

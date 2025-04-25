@@ -120,4 +120,8 @@ export class HelpComponent {
             el?.scrollIntoView({ behavior: 'smooth' });
         }
     }
+
+    public isActiveSection(itemPath: string, itemAnchor: string): boolean {
+        return this.document === itemPath && (this.anchor || '') === (itemAnchor || '');
+    }
 }

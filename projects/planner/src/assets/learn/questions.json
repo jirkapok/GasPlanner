@@ -1,50 +1,108 @@
-[{
-    "topic": "Nitrox",
-    "categories": [
+[
+    {
+      "topic": "Nitrox",
+      "categories": [
         {
-            "name": "Maximum operational depth",
-            "help": "nitrox",
-            "questions": [
+          "name": "Maximum operational depth",
+          "help": "nitrox",
+          "questions": [
+            {
+              "question": "What is maximum operational depth for gas with {o2_percent}% oxygen at partial pressure {pp} ?",
+              "roundTo": 1,
+              "variables": [
                 {
-                    "question": "What is maximum operational depth for gas with 36 % oxygen at partial pressure 1.4?",
-                    "answer": "28.9"
+                  "name": "o2_percent",
+                  "options": [21, 32, 36, 38, 50, 100]
+                },
+                {
+                  "name": "pp",
+                  "min": 0.21,
+                  "max": 2.91
                 }
-            ]
+              ]
+            }
+          ]
         },
         {
-            "name": "Best mix",
-            "help": "nitrox",
-            "questions": [
+          "name": "Best mix",
+          "help": "nitrox",
+          "questions": [
+            {
+              "question": "What is best mix (in percents) at partial pressure {pp} at depth {depth} m?",
+              "roundTo": 0,
+              "variables": [
                 {
-                    "question": "What is best mix (in percents) at partial pressure 1.6 at depth 21 m?",
-                    "answer": "50"
+                  "name": "pp",
+                  "min": 0.21,
+                  "max": 2.91
+                },
+                {
+                  "name": "depth",
+                  "min": 0,
+                  "max": 350
                 }
-            ]
+              ]
+            }
+          ]
         },
         {
-            "name": "Partial pressure",
-            "help": "nitrox",
-            "questions": [
+          "name": "Partial pressure",
+          "help": "nitrox",
+          "questions": [
+            {
+              "question": "What is partial pressure of {o2_percent}% at {depth} m?",
+              "roundTo": 1,
+              "variables": [
                 {
-                    "question": "What is partial pressure of Ean36 at 26 m?",
-                    "answer": "1.3"
+                  "name": "o2_percent",
+                  "options": [21, 32, 36, 38, 50, 100]
+                },
+                {
+                  "name": "depth",
+                  "min": 0,
+                  "max": 350
                 }
-            ]
+              ]
+            }
+          ]
         }
-    ]
-},
-{
-    "topic": "Consumption",
-    "categories": [
+      ]
+    },
+    {
+      "topic": "Consumption",
+      "categories": [
         {
-            "name": "Respiratory minute volume",
-            "help": "sac",
-            "questions": [
+          "name": "Respiratory minute volume",
+          "help": "sac",
+          "questions": [
+            {
+              "question": "What is respiratory minute volume of dive to average depth {depth} m, with tank {tank_size} L for {time} minutes where diver consumed {consumed_pressure} b?",
+              "roundTo": 0,
+              "variables": [
                 {
-                    "question": "What is respiratory minute volume of dive to average depth 15 m, with tank 15 L for 45 minutes where diver consumed 150 b?",
-                    "answer": "20"
+                  "name": "depth",
+                  "min": 10,
+                  "max": 30
+                },
+                {
+                  "name": "tank_size",
+                  "min": 10,
+                  "max": 18
+                },
+                {
+                  "name": "time",
+                  "min": 30,
+                  "max": 60
+                },
+                {
+                  "name": "consumed_pressure",
+                  "min": 100,
+                  "max": 200
                 }
-            ]
+              ]
+            }
+          ]
         }
-    ]
-}]
+      ]
+    }
+  ]

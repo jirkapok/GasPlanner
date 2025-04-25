@@ -26,7 +26,7 @@ export class LearnComponent implements OnInit {
     public currentQuestionIndex = 0;
     public totalAnswered = 0;
     public currentPercentage = 0;
-    public answeredTopics = new Set<string>();
+    public answeredCategories = new Set<string>();
     public trophyIcon = faMedal;
 
     private _label = '';
@@ -62,10 +62,16 @@ export class LearnComponent implements OnInit {
     public updateTopic(topicName: string, categoryName: string): void {
         this.selectedTopic = topicName;
         this.selectedCategoryName = categoryName;
+        this.activeTopic = topicName;
 
         const topic = this.topics.find(t => t.topic === topicName);
         if (topic) {
             this.quizzes = this.quizService.getQuizzesForCategory(topic, categoryName);
+
+            this.quizzes.forEach(quiz => {
+                this.quizService.randomizeQuizVariables(quiz);
+                quiz.renderedQuestion = this.renderQuestion(quiz);
+            });
 
             this.showScore = false;
             this.correctCount = 0;
@@ -74,6 +80,7 @@ export class LearnComponent implements OnInit {
             this.currentQuestionIndex = 0;
         }
     }
+
 
     public toggleTopic(topicName: string): void {
         this.activeTopic = this.activeTopic === topicName ? '' : topicName;
@@ -85,7 +92,9 @@ export class LearnComponent implements OnInit {
             return;
         }
 
-        quiz.isCorrect = this.quizService.validateAnswer(quiz.userAnswer || '', quiz.answer);
+        const correctAnswer = this.quizService.generateCorrectAnswer(quiz);
+
+        quiz.isCorrect = this.quizService.validateAnswer(quiz.userAnswer || '', correctAnswer, quiz.roundTo ?? 1);
 
         if (quiz.isCorrect) {
             this.correctCount++;
@@ -104,10 +113,36 @@ export class LearnComponent implements OnInit {
     public submitAnswers(): void {
         this.correctPercentage = Math.round((this.correctCount / this.totalAnswered) * 100);
         this.showScore = true;
-        this.answeredTopics.add(this.selectedTopic);
+
+        const key = `${this.selectedTopic}::${this.selectedCategoryName}`;
+        this.answeredCategories.add(key);
     }
 
     public isCategorySelected(topicName: string, categoryName: string): boolean {
         return this.selectedTopic === topicName && this.selectedCategoryName === categoryName;
     }
+
+    public renderQuestion(quiz: QuizItem): string {
+        let questionText = quiz.question;
+
+        if (Array.isArray(quiz.variables)) {
+            quiz.variables.forEach(variable => {
+                const value = variable.value ?? '';
+
+                let displayValue = value;
+                if (typeof value === 'number') {
+                    if (variable.name.includes('percent') || variable.name.includes('tank_size') || variable.name.includes('depth')) {
+                        displayValue = value.toFixed(0); // Whole numbers for percentages, tank sizes, depth
+                    } else {
+                        displayValue = value.toFixed(2); // Default to 2 decimals for pressures etc.
+                    }
+                }
+
+                questionText = questionText.replace(new RegExp(`{${variable.name}}`, 'g'), displayValue.toString());
+            });
+        }
+
+        return questionText;
+    }
+
 }

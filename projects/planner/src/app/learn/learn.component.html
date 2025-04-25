@@ -28,8 +28,8 @@
                                                 [icon]="trophyIcon"
                                                 class="ms-2 small"
                                                 [ngClass]="{
-                                                    'text-muted': !answeredTopics.has(topic.topic),
-                                                    'text-warning': answeredTopics.has(topic.topic)
+                                                    'text-muted': !answeredCategories.has(topic.topic + '::' + category.name),
+                                                    'text-warning': answeredCategories.has(topic.topic + '::' + category.name)
                                                 }">
                                             </fa-icon>
                                         </div>
@@ -55,7 +55,7 @@
                 <form (ngSubmit)="submitAnswers()" *ngIf="!showScore && quizzes.length">
                     <div class="mb-4">
                         <p class="fw-bold">Question {{ currentQuestionIndex + 1 }} of {{ quizzes.length }}:</p>
-                        <p>{{ currentQuiz.question }}</p>
+                        <p>{{ currentQuiz.renderedQuestion }}</p>
 
                         <input
                             type="text"

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgxMdModule  } from 'ngx-md';
 import { NgForOf } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -14,7 +14,7 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
 })
-export class HelpComponent implements OnInit {
+export class HelpComponent {
     public activeSection = 'plan';
     public path = this.urls.helpUrl(this.document);
     public headerIcon = faCircleInfo;
@@ -104,10 +104,6 @@ export class HelpComponent implements OnInit {
         this._anchor = value;
     }
 
-    public ngOnInit(): void {
-        this.scrollToAnchor();
-    }
-
     public updatePath(newPath: string, newAnchor?: string): void {
         this.path = this.urls.helpUrl(newPath);
         this.anchor = newAnchor;
@@ -118,7 +114,7 @@ export class HelpComponent implements OnInit {
         this.activeSection = this.activeSection === id ? '' : id;
     }
 
-    private scrollToAnchor(): void {
+    public scrollToAnchor(): void {
         if (this.anchor) {
             const el = document.getElementById(this.anchor);
             el?.scrollIntoView({ behavior: 'smooth' });

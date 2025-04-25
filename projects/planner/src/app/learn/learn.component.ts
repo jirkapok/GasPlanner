@@ -169,4 +169,13 @@ export class LearnComponent implements OnInit {
         return stats ? stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8 : false;
     }
 
+    public countFinishedCategories(topic: Topic): number {
+        let count = 0;
+        for (const category of topic.categories) {
+            if (this.answeredCategories.has(`${topic.topic}::${category.name}`)) {
+                count++;
+            }
+        }
+        return count;
+    }
 }

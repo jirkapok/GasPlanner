@@ -10,6 +10,9 @@
                                 [class.collapsed]="activeTopic !== topic.topic"
                                 (click)="toggleTopic(topic.topic)">
                                 {{ topic.topic }}
+                                <span class="badge bg-success text-light ms-2" *ngIf="countFinishedCategories(topic) as finished">
+                                  {{ finished }}/{{ topic.categories.length }}
+                                </span>
                             </button>
                         </h2>
                         <div class="accordion-collapse collapse" [class.show]="activeTopic === topic.topic">

@@ -111,9 +111,9 @@ export class HelpComponent {
         this._anchor = value;
     }
 
-    public updatePath(newPath: string, newAnchor?: string): void {
-        this.document = newPath;
-        this.anchor = newAnchor;
+    public updatePath(item: { path: string, anchor?: string }): void {
+        this.document = item.path;
+        this.anchor = item.anchor;
         this.scrollToAnchor();
     }
 
@@ -128,7 +128,11 @@ export class HelpComponent {
         }
     }
 
-    public isActiveSection(itemPath: string, itemAnchor: string): boolean {
-        return this.document === itemPath && (this.anchor || '') === (itemAnchor || '');
+    public isActiveDocument(item: {path: string, anchor: string }): boolean {
+        return this.document === item.path && (this.anchor || '') === (item.anchor || '');
+    }
+
+    public isActiveSection(section: { id: string }): boolean {
+        return this.activeSection === section.id;
     }
 }

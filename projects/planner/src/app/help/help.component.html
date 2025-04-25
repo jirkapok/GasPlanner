@@ -22,7 +22,7 @@
                         style="cursor: pointer;"
                         [ngClass]="{
                             'bg-primary bg-opacity-10 text-primary fw-semibold':
-                              document === item.path && anchor === (item.anchor || '')
+                              document === item.path && (anchor || '') === (item.anchor || '')
                           }"
                         (click)="updatePath(item.path, item.anchor)">
                         {{ item.label }}

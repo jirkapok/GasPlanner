@@ -19,7 +19,7 @@ export class HelpComponent {
     public path = this.urls.helpUrl(this.document);
     public headerIcon = faCircleInfo;
     private _document = 'readme';
-    private _anchor= '';
+    private _anchor?: string = '';
 
     public sections: any[] = [
         {
@@ -89,25 +89,25 @@ export class HelpComponent {
         return this._document;
     }
 
-    public get anchor(): string {
+    public get anchor(): string | undefined {
         return this._anchor;
     }
 
     @Input()
     public set document(value: string) {
         this._document = value || 'readme';
-        this.updatePath(this._document);
+        this.path = this.urls.helpUrl(value);
     }
 
     @Input()
-    public set anchor(value: string) {
+    public set anchor(value: string | undefined) {
         this._anchor = value;
     }
 
-    public updatePath(path: string, anchor?: string): void {
-        this._document = path;
-        this._anchor = anchor || '';
-        this.path = this.urls.helpUrl(path);
+    public updatePath(newPath: string, newAnchor?: string): void {
+        this.document = newPath;
+        this.anchor = newAnchor;
+        this.scrollToAnchor();
     }
 
     public toggleSection(id: string): void {

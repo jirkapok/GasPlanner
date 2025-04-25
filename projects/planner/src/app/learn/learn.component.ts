@@ -1,29 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NgxMdModule, NgxMdService } from 'ngx-md';
-import { NgForOf, NgIf, NgClass, CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { Urls } from '../shared/navigation.service';
-import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
-import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Category {
-    name: string;
-    help: string;
-    questions: QuizItem[];
-}
-
-interface Topic {
-    topic: string;
-    categories: Category[];
-}
-
-interface QuizItem {
-    question: string;
-    answer: string;
-    userAnswer?: string;
-    isCorrect?: boolean;
-}
+import { NgForOf, NgIf, NgClass } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faMedal } from '@fortawesome/free-solid-svg-icons';
+import { NgxMdModule } from 'ngx-md';
+import { QuizService, Topic, QuizItem } from '../shared/quiz.service';
 
 @Component({
     selector: 'app-learn',
@@ -40,20 +22,16 @@ export class LearnComponent implements OnInit {
     public showScore = false;
     public activeTopic = '';
     public selectedTopic = '';
-    public trophyIcon = faGraduationCap;
+    public selectedCategoryName = '';
     public currentQuestionIndex = 0;
     public totalAnswered = 0;
     public currentPercentage = 0;
     public answeredTopics = new Set<string>();
-    public selectedCategoryName = '';
+    public trophyIcon = faMedal;
 
     private _label = '';
 
-    constructor(
-        public urls: Urls,
-        private _markdown: NgxMdService,
-        private http: HttpClient
-    ) {}
+    constructor(private quizService: QuizService) {}
 
     get currentQuiz(): QuizItem {
         return this.quizzes[this.currentQuestionIndex];
@@ -70,7 +48,7 @@ export class LearnComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.http.get<Topic[]>(Urls.learnSections).subscribe(data => {
+        this.quizService.loadTopics().subscribe(data => {
             this.topics = data;
             const firstTopic = this.topics[0];
             const firstCategory = firstTopic?.categories[0];
@@ -87,14 +65,7 @@ export class LearnComponent implements OnInit {
 
         const topic = this.topics.find(t => t.topic === topicName);
         if (topic) {
-            const category = topic.categories.find(c => c.name === categoryName);
-            if (category) {
-                this.quizzes = category.questions.map((q: QuizItem) => ({
-                    ...q,
-                    userAnswer: '',
-                    isCorrect: undefined
-                }));
-            }
+            this.quizzes = this.quizService.getQuizzesForCategory(topic, categoryName);
 
             this.showScore = false;
             this.correctCount = 0;
@@ -104,26 +75,17 @@ export class LearnComponent implements OnInit {
         }
     }
 
-
-
     public toggleTopic(topicName: string): void {
         this.activeTopic = this.activeTopic === topicName ? '' : topicName;
     }
 
     public validateCurrentAnswer(): void {
         const quiz = this.currentQuiz;
-        const userAns = (quiz.userAnswer || '').trim();
-        const correctAns = quiz.answer.trim();
-
-        const userNum = parseFloat(userAns);
-        const correctNum = parseFloat(correctAns);
-        const isNumeric = !isNaN(userNum) && !isNaN(correctNum);
-
-        if (isNumeric) {
-            quiz.isCorrect = Math.floor(userNum) === Math.floor(correctNum);
-        } else {
-            quiz.isCorrect = userAns.toLowerCase() === correctAns.toLowerCase();
+        if (!quiz) {
+            return;
         }
+
+        quiz.isCorrect = this.quizService.validateAnswer(quiz.userAnswer || '', quiz.answer);
 
         if (quiz.isCorrect) {
             this.correctCount++;
@@ -140,11 +102,9 @@ export class LearnComponent implements OnInit {
     }
 
     public submitAnswers(): void {
-        const percent = (this.correctCount / this.totalAnswered) * 100;
-        this.correctPercentage = Math.round(percent);
+        this.correctPercentage = Math.round((this.correctCount / this.totalAnswered) * 100);
         this.showScore = true;
         this.answeredTopics.add(this.selectedTopic);
-        console.log('Answered topics:', Array.from(this.answeredTopics));
     }
 
     public isCategorySelected(topicName: string, categoryName: string): boolean {

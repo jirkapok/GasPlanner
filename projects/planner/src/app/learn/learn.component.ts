@@ -28,6 +28,7 @@ export class LearnComponent implements OnInit {
     public currentPercentage = 0;
     public answeredCategories = new Set<string>();
     public trophyIcon = faMedal;
+    public attemptsByCategory = new Map<string, { attempts: number; correct: number }>();
 
     private _label = '';
 
@@ -93,15 +94,32 @@ export class LearnComponent implements OnInit {
         }
 
         const correctAnswer = this.quizService.generateCorrectAnswer(quiz);
-
         quiz.isCorrect = this.quizService.validateAnswer(quiz.userAnswer || '', correctAnswer, quiz.roundTo ?? 1);
 
+        const key = `${this.selectedTopic}::${this.selectedCategoryName}`;
+        const stats = this.attemptsByCategory.get(key) || { attempts: 0, correct: 0 };
+
+        stats.attempts += 1;
         if (quiz.isCorrect) {
-            this.correctCount++;
+            stats.correct += 1;
+        }
+
+        this.attemptsByCategory.set(key, stats);
+
+        if (stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8) {
+            this.answeredCategories.add(key);
         }
 
         this.totalAnswered++;
+        if (quiz.isCorrect) {
+            this.correctCount++;
+        }
         this.currentPercentage = Math.round((this.correctCount / this.totalAnswered) * 100);
+
+        this.quizService.randomizeQuizVariables(quiz);
+        quiz.renderedQuestion = this.renderQuestion(quiz);
+        quiz.userAnswer = '';
+        quiz.isCorrect = undefined;
     }
 
     public goToNextQuestion(): void {
@@ -143,6 +161,12 @@ export class LearnComponent implements OnInit {
         }
 
         return questionText;
+    }
+
+    public hasPassedCategory(): boolean {
+        const key = `${this.selectedTopic}::${this.selectedCategoryName}`;
+        const stats = this.attemptsByCategory.get(key);
+        return stats ? stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8 : false;
     }
 
 }

@@ -23,7 +23,14 @@
                                                 'bg-primary bg-opacity-10 text-primary fw-semibold': isCategorySelected(topic.topic, category.name)
                                             }"
                                             (click)="updateTopic(topic.topic, category.name)">
-                                            {{ category.name }}
+
+                                            <div class="d-flex align-items-center">
+                                                {{ category.name }}
+                                                <span class="small text-muted ms-2" *ngIf="attemptsByCategory.get(topic.topic + '::' + category.name) as stat">
+                                                    ({{ stat.correct }}/{{ stat.attempts }})
+                                                </span>
+                                            </div>
+
                                             <fa-icon
                                                 [icon]="trophyIcon"
                                                 class="ms-2 small"
@@ -32,6 +39,7 @@
                                                     'text-warning': answeredCategories.has(topic.topic + '::' + category.name)
                                                 }">
                                             </fa-icon>
+
                                         </div>
                                     </li>
                                 </ul>
@@ -54,7 +62,7 @@
             <div class="card-body">
                 <form (ngSubmit)="submitAnswers()" *ngIf="!showScore && quizzes.length">
                     <div class="mb-4">
-                        <p class="fw-bold">Question {{ currentQuestionIndex + 1 }} of {{ quizzes.length }}:</p>
+                        <p class="fw-bold">Question:</p>
                         <p>{{ currentQuiz.renderedQuestion }}</p>
 
                         <input
@@ -91,7 +99,8 @@
                             <button
                                 *ngIf="currentQuiz.isCorrect !== undefined && currentQuestionIndex >= quizzes.length - 1"
                                 type="submit"
-                                class="btn btn-success ms-2">
+                                class="btn btn-success ms-2"
+                                [disabled]="!hasPassedCategory()">
                                 Finish Quiz
                             </button>
                         </div>

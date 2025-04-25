@@ -15,18 +15,18 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
     styleUrls: ['./help.component.scss']
 })
 export class HelpComponent {
-    public activeSection = 'plan';
-    public path = this.urls.helpUrl(this.document);
+    private static defaultDocument = 'application';
+    public activeSection = HelpComponent.defaultDocument;
     public headerIcon = faCircleInfo;
-    private _document = 'readme';
+    private _document = HelpComponent.defaultDocument;
     private _anchor?: string = '';
 
     public sections: any[] = [
         {
-            id: 'settings',
+            id: HelpComponent.defaultDocument,
             title: 'Application',
             items: [
-                { label: 'Application usage', path: 'readme' },
+                { label: 'Application usage', path: HelpComponent.defaultDocument },
                 { label: 'Application settings', path: 'settings' }
             ]
         },
@@ -93,10 +93,13 @@ export class HelpComponent {
         return this._anchor;
     }
 
+    public get path(): string {
+        return this.urls.helpUrl(this.document);
+    }
+
     @Input()
     public set document(value: string) {
-        this._document = value || 'readme';
-        this.path = this.urls.helpUrl(value);
+        this._document = value || HelpComponent.defaultDocument;
     }
 
     @Input()

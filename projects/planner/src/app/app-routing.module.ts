@@ -58,7 +58,7 @@ const routes: Routes = [
     { path: KnownViews.learn, component: LearnComponent },
     { path: `${KnownViews.help}/:document/:anchor`, component: HelpComponent },
     { path: `${KnownViews.help}/:document`, component: HelpComponent },
-    { path: KnownViews.help, redirectTo: `${KnownViews.help}/readme`, pathMatch: 'full' },
+    { path: KnownViews.help, redirectTo: `${KnownViews.help}/application`, pathMatch: 'full' },
     {
         path: '**',
         component: DashboardComponent,

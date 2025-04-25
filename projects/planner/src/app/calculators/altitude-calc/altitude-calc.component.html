@@ -31,11 +31,11 @@
                             [max]="ranges.depth[1]" step="1" [class.is-invalid]="actualDepthInvalid" />
                     </div>
 
-                    <div class="pt-2 mb-4">
+                    <div class="pt-2 mb-4 form-outline">
                         <label for="actualDepth" class="form-label" mdbLabel>Theoretical sea level depth
                             [{{units.length}}]:</label>
-                        <input class="form-control readonly" name="theoreticalDepth" id="theoreticalDepth" type="number"
-                            [readonly]="true" [value]="theoreticalDepth | number: '1.0-2'" readonly />
+                        <input class="form-control" name="theoreticalDepth" id="theoreticalDepth" type="number"
+                            [value]="theoreticalDepth | number: '1.0-2'" readonly />
                     </div>
                 </form>
             </div>

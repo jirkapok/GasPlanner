@@ -1,8 +1,8 @@
 <ng-container [formGroup]="form">
     <label for="surfaceInterval" class="form-label" mdbLabel>Surface interval [min]:</label>
     <div class="input-group dropdown" mdbDropdown>
-        <input id="surfaceInterval" [formControlName]="this.controlName" class="form-control" (input)="surfaceIntervalChanged()"
-               type="text" [class.is-invalid]="surfaceIntervalInvalid"
+        <input id="surfaceInterval" [formControlName]="this.controlName" class="form-control"
+               type="text" [class.is-invalid]="surfaceIntervalInvalid" (input)="surfaceIntervalChanged()"
                [maskito]="maskitoTimeOptions"  [placeholder]="placeHolder" [readonly]="surfaceReadOnly" />
         <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="surfaceIntervalMenu"
                 type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>

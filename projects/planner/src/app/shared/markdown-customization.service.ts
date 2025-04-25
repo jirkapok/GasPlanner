@@ -16,9 +16,10 @@ export class MarkdownCustomization {
         };
 
         renderer.link = (href: string, _: string, text: string) => {
-            if (href && href.startsWith('./') && href.endsWith('.md')) {
+            if (href && href.startsWith('./') && href.indexOf('.md') > 0) {
                 const sanitizedHref = href.replace('./', '').replace('.md', '');
-                return `<a href="/help/${sanitizedHref}">${text}</a>`;
+                const parts = sanitizedHref.split('#');
+                return `<a href="/help/${parts[0]}/${parts[1]}">${text}</a>`;
             }
             return `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
         };

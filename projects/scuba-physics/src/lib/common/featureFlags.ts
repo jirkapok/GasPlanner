@@ -3,8 +3,8 @@ export class FeatureFlags
 {
     private static _instance: FeatureFlags;
 
-    public integratedHelp = false;
-    public gamification = false;
+    public integratedHelp = true;
+    public gamification = true;
 
     private constructor() {
     }

@@ -1,106 +1,109 @@
 <div class="row mt-5">
     <div class="col col-sm-12 col-md-12 col-lg-5 col-xl-4 col-xxl-3 mt-3">
-      <div class="card shadow-sm">
-        <div class="card-body p-0">
-          <div class="accordion" id="helpAccordion">
-            <div class="accordion-item" *ngFor="let section of sections">
-              <h2 class="accordion-header">
-                <button
-                  class="accordion-button"
-                  [class.collapsed]="activeSection !== section.id"
-                  (click)="toggleSection(section.id)">
-                  {{ section.title }}
-                </button>
-              </h2>
-              <div class="accordion-collapse collapse" [class.show]="activeSection === section.id">
-                <div class="accordion-body py-2 px-3">
-                  <ul class="list-group list-group-flush">
-                    <li *ngFor="let item of section.items" class="list-group-item px-0">
-                      <div
-                        mdbRipple
-                        class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
-                        [ngClass]="{
-                          'bg-primary bg-opacity-10 text-primary fw-semibold': selectedPath === item.path
-                        }"
-                        (click)="updatePath(item.path)">
-                        {{ item.label }}
-                        <fa-icon
-                            [icon]="trophyIcon"
-                            class="ms-2 small"
-                            [ngClass]="{
-                              'text-muted': !answeredPaths.has(item.path),
-                              'text-warning': answeredPaths.has(item.path)
-                            }">
-                        </fa-icon>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="accordion" id="topicsAccordion">
+                    <div class="accordion-item" *ngFor="let topic of topics">
+                        <h2 class="accordion-header">
+                            <button
+                                class="accordion-button"
+                                [class.collapsed]="activeTopic !== topic.topic"
+                                (click)="toggleTopic(topic.topic)">
+                                {{ topic.topic }}
+                            </button>
+                        </h2>
+                        <div class="accordion-collapse collapse" [class.show]="activeTopic === topic.topic">
+                            <div class="accordion-body py-2 px-3">
+                                <ul class="list-group list-group-flush">
+                                    <li *ngFor="let category of topic.categories" class="list-group-item px-0">
+                                        <div
+                                            mdbRipple
+                                            class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
+                                            [ngClass]="{
+                                                'bg-primary bg-opacity-10 text-primary fw-semibold': isCategorySelected(topic.topic, category.name)
+                                            }"
+                                            (click)="updateTopic(topic.topic, category.name)">
+                                            {{ category.name }}
+                                            <fa-icon
+                                                [icon]="trophyIcon"
+                                                class="ms-2 small"
+                                                [ngClass]="{
+                                                    'text-muted': !answeredTopics.has(topic.topic),
+                                                    'text-warning': answeredTopics.has(topic.topic)
+                                                }">
+                                            </fa-icon>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> <!-- accordion-item -->
+                </div> <!-- accordion -->
+            </div> <!-- card-body -->
+        </div> <!-- card -->
+    </div> <!-- col -->
 
     <div class="col-sm-12 col-md-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
         <div class="card shadow-sm position-relative">
+            <div class="position-absolute top-0 end-0 m-3">
+                <span class="badge bg-primary text-light">
+                    Score: {{ correctCount }} / {{ totalAnswered }} — {{ currentPercentage + '%' }}
+                </span>
+            </div>
 
-          <div class="position-absolute top-0 end-0 m-3">
-            <span class="badge bg-primary text-light">
-                Score:
-                {{ correctCount }} / {{ totalAnswered }} —
-                {{ currentPercentage + '%' }}
-            </span>
-          </div>
+            <div class="card-body">
+                <form (ngSubmit)="submitAnswers()" *ngIf="!showScore && quizzes.length">
+                    <div class="mb-4">
+                        <p class="fw-bold">Question {{ currentQuestionIndex + 1 }} of {{ quizzes.length }}:</p>
+                        <p>{{ currentQuiz.question }}</p>
 
-          <div class="card-body">
-            <form (ngSubmit)="submitAnswers()" *ngIf="!showScore && quizzes.length">
-              <div class="mb-4">
-                <p class="fw-bold">Question {{ currentQuestionIndex + 1 }} of {{ quizzes.length }}:</p>
-                <p>{{ currentQuiz.question }}</p>
+                        <input
+                            type="text"
+                            class="form-control mb-2"
+                            [(ngModel)]="currentQuiz.userAnswer"
+                            name="answer-{{ currentQuestionIndex }}"
+                            [disabled]="currentQuiz.isCorrect !== undefined"
+                            [ngClass]="{
+                                'is-valid': currentQuiz.isCorrect,
+                                'is-invalid': currentQuiz.isCorrect === false
+                            }" />
 
-                <input
-                  type="text"
-                  class="form-control mb-2"
-                  [(ngModel)]="currentQuiz.userAnswer"
-                  name="answer-{{ currentQuestionIndex }}"
-                  [disabled]="currentQuiz.isCorrect !== undefined"
-                  [ngClass]="{
-                    'is-valid': currentQuiz.isCorrect,
-                    'is-invalid': currentQuiz.isCorrect === false
-                  }"
-                />
+                        <div *ngIf="currentQuiz.isCorrect" class="valid-feedback d-block">Correct</div>
+                        <div *ngIf="currentQuiz.isCorrect === false" class="invalid-feedback d-block">Incorrect</div>
 
-                <div *ngIf="currentQuiz.isCorrect" class="valid-feedback d-block">Correct</div>
-                <div *ngIf="currentQuiz.isCorrect === false" class="invalid-feedback d-block">Incorrect</div>
+                        <div class="mt-3">
+                            <button
+                                *ngIf="currentQuiz.isCorrect === undefined"
+                                type="button"
+                                class="btn btn-primary"
+                                (click)="validateCurrentAnswer()">
+                                Submit Answer
+                            </button>
 
-                <div class="mt-3">
-                  <button
-                    *ngIf="currentQuiz.isCorrect === undefined"
-                    type="button"
-                    class="btn btn-primary"
-                    (click)="validateCurrentAnswer()">
-                    Submit Answer
-                  </button>
+                            <button
+                                *ngIf="currentQuiz.isCorrect !== undefined && currentQuestionIndex < quizzes.length - 1"
+                                type="button"
+                                class="btn btn-outline-primary ms-2"
+                                (click)="goToNextQuestion()">
+                                Next Question
+                            </button>
 
-                  <button
-                    *ngIf="currentQuiz.isCorrect !== undefined && currentQuestionIndex < quizzes.length - 1"
-                    type="button"
-                    class="btn btn-outline-primary ms-2"
-                    (click)="goToNextQuestion()">
-                    Next Question
-                  </button>
+                            <button
+                                *ngIf="currentQuiz.isCorrect !== undefined && currentQuestionIndex >= quizzes.length - 1"
+                                type="submit"
+                                class="btn btn-success ms-2">
+                                Finish Quiz
+                            </button>
+                        </div>
+                    </div>
+                </form>
 
-                    <button
-                        *ngIf="currentQuiz.isCorrect !== undefined && currentQuestionIndex >= 4"
-                        type="submit"
-                        class="btn btn-success ms-2">
-                        Finish Quiz
-                    </button>
+                <div *ngIf="showScore" class="text-center">
+                    <h4>Quiz Completed!</h4>
+                    <p>Correct answers: {{ correctCount }} out of {{ totalAnswered }}</p>
+                    <p>Score: {{ correctPercentage }}%</p>
                 </div>
-              </div>
-            </form>
+            </div>
         </div>
-      </div>
-
+    </div>
+</div>

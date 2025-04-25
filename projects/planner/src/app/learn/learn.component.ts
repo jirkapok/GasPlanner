@@ -1,21 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgxMdModule, NgxMdService } from 'ngx-md';
-import { NgForOf, NgIf, NgClass, CommonModule  } from '@angular/common';
+import { NgForOf, NgIf, NgClass, CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
-import {  faGraduationCap } from '@fortawesome/free-solid-svg-icons';
+import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
-interface SectionItem {
-    label: string;
-    path: string;
+interface Category {
+    name: string;
+    help: string;
+    questions: QuizItem[];
 }
 
-interface Section {
-    id: string;
-    title: string;
-    items: SectionItem[];
+interface Topic {
+    topic: string;
+    categories: Category[];
 }
 
 interface QuizItem {
@@ -33,20 +33,22 @@ interface QuizItem {
     styleUrls: ['./learn.component.scss']
 })
 export class LearnComponent implements OnInit {
-    public sections: Section[] = [];
+    public topics: Topic[] = [];
     public quizzes: QuizItem[] = [];
     public correctCount = 0;
     public correctPercentage = 0;
     public showScore = false;
-    public activeSection = 'plan';
-    public selectedPath = 'readme';
+    public activeTopic = '';
+    public selectedTopic = '';
     public trophyIcon = faGraduationCap;
     public currentQuestionIndex = 0;
     public totalAnswered = 0;
     public currentPercentage = 0;
-    public answeredPaths = new Set<string>();
+    public answeredTopics = new Set<string>();
+    public selectedCategoryName = '';
 
-    private _label = 'readme';
+    private _label = '';
+
     constructor(
         public urls: Urls,
         private _markdown: NgxMdService,
@@ -63,40 +65,49 @@ export class LearnComponent implements OnInit {
 
     @Input()
     public set label(value: string) {
-        this._label = value || 'readme';
-        this.selectedPath = this._label;
+        this._label = value || '';
+        this.selectedTopic = this._label;
     }
 
     ngOnInit(): void {
-        this.http.get<Section[]>(Urls.learnSections).subscribe(data => {
-            this.sections = data;
+        this.http.get<Topic[]>(Urls.learnSections).subscribe(data => {
+            this.topics = data;
+            const firstTopic = this.topics[0];
+            const firstCategory = firstTopic?.categories[0];
 
-            const first = this.sections[0]?.items[0];
-            if (first) {
-                this.updatePath(first.path);
+            if (firstTopic && firstCategory) {
+                this.updateTopic(firstTopic.topic, firstCategory.name);
             }
         });
-
-        this.http.get<QuizItem[]>(this.urls.quizUrl(this.selectedPath)).subscribe(data => {
-            this.quizzes = data;
-        });
     }
 
-    public updatePath(value: string): void {
-        this.selectedPath = value;
+    public updateTopic(topicName: string, categoryName: string): void {
+        this.selectedTopic = topicName;
+        this.selectedCategoryName = categoryName;
 
-        this.http.get<QuizItem[]>(this.urls.quizUrl(value)).subscribe(data => {
-            this.quizzes = data.map(q => ({
-                ...q,
-                userAnswer: '',
-                isCorrect: undefined
-            }));
+        const topic = this.topics.find(t => t.topic === topicName);
+        if (topic) {
+            const category = topic.categories.find(c => c.name === categoryName);
+            if (category) {
+                this.quizzes = category.questions.map((q: QuizItem) => ({
+                    ...q,
+                    userAnswer: '',
+                    isCorrect: undefined
+                }));
+            }
+
             this.showScore = false;
-        });
+            this.correctCount = 0;
+            this.totalAnswered = 0;
+            this.currentPercentage = 0;
+            this.currentQuestionIndex = 0;
+        }
     }
 
-    public toggleSection(id: string): void {
-        this.activeSection = this.activeSection === id ? '' : id;
+
+
+    public toggleTopic(topicName: string): void {
+        this.activeTopic = this.activeTopic === topicName ? '' : topicName;
     }
 
     public validateCurrentAnswer(): void {
@@ -130,14 +141,13 @@ export class LearnComponent implements OnInit {
 
     public submitAnswers(): void {
         const percent = (this.correctCount / this.totalAnswered) * 100;
-
         this.correctPercentage = Math.round(percent);
         this.showScore = true;
-
-        // Mark the current section's path as "answered"
-        this.answeredPaths.add(this.selectedPath);
-
-        console.log('Answered paths:', Array.from(this.answeredPaths));
+        this.answeredTopics.add(this.selectedTopic);
+        console.log('Answered topics:', Array.from(this.answeredTopics));
     }
 
+    public isCategorySelected(topicName: string, categoryName: string): boolean {
+        return this.selectedTopic === topicName && this.selectedCategoryName === categoryName;
+    }
 }

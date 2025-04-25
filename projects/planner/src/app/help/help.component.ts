@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { NgxMdModule  } from 'ngx-md';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,7 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
 @Component({
     selector: 'app-help',
     standalone: true,
-    imports: [ NgxMdModule, FontAwesomeModule, NgForOf ],
+    imports: [ NgxMdModule, FontAwesomeModule, NgForOf, NgClass ],
     providers: [ MarkdownCustomization ],
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
@@ -105,7 +105,7 @@ export class HelpComponent {
     }
 
     public updatePath(newPath: string, newAnchor?: string): void {
-        this.path = this.urls.helpUrl(newPath);
+        this.document = newPath;
         this.anchor = newAnchor;
         this.scrollToAnchor();
     }
@@ -119,5 +119,9 @@ export class HelpComponent {
             const el = document.getElementById(this.anchor);
             el?.scrollIntoView({ behavior: 'smooth' });
         }
+    }
+
+    public isActiveSection(itemPath: string, itemAnchor: string): boolean {
+        return this.document === itemPath && (this.anchor || '') === (itemAnchor || '');
     }
 }

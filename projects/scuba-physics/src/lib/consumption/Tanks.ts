@@ -66,7 +66,7 @@ export class Tanks {
 
 export class Tank implements TankFill {
     private static minimumSize = 0.1;
-    private static minimumPressure = 0;
+    private static minimumZero = 0;
     /** Gets or sets a unique identifier of the tank in its collection */
     public id = 0;
     private _size = 0;
@@ -92,7 +92,7 @@ export class Tank implements TankFill {
             throw new Error('Size needs to be non zero positive amount in liters');
         }
 
-        if(startPressure < Tank.minimumPressure) {
+        if(startPressure < Tank.minimumZero) {
             throw new Error('Start pressure needs to be positive number greater than atmospheric pressure in bars');
         }
 
@@ -132,11 +132,11 @@ export class Tank implements TankFill {
         const remaining = this.startPressure - this.consumed;
 
         // covered in size, startPressure and consumed setter, here to prevent rounding issues
-        if (remaining > Tank.minimumPressure) {
+        if (remaining > Tank.minimumZero) {
             return remaining;
         }
 
-        return Tank.minimumPressure;
+        return Tank.minimumZero;
     }
 
     /** Gets volume of remaining gas in liters */
@@ -144,11 +144,11 @@ export class Tank implements TankFill {
         const remaining = this.volume - this.consumedVolume;
 
         // covered in size, startPressure and consumed setter, here to prevent rounding issues
-        if (remaining > Tank.minimumPressure) {
+        if (remaining > Tank.minimumZero) {
             return remaining;
         }
 
-        return Tank.minimumPressure;
+        return Tank.minimumZero;
     }
 
     /**
@@ -249,27 +249,24 @@ export class Tank implements TankFill {
     }
 
     public set startPressure(newValue: number) {
-        // TODO limit the pressure to reasonable maximum value, since for high pressures compressibility factor no longer works.
-       if(newValue < Tank.minimumPressure) {
-           this._startPressure = Tank.minimumPressure;
+       if(newValue < Tank.minimumZero) {
+           this._startPressure = Tank.minimumZero;
        } else {
            this._startPressure = newValue;
        }
 
-       this.fitStoredVolumes(this.consumed, this.consumedVolume);
+       this.fitStoredVolumes();
     }
 
     public set size(newValue: number) {
         // Consider to make the size readonly
         if(newValue < Tank.minimumSize) {
-            this._size = Tank.minimumSize;
+            this._size = Tank.minimumSize
         } else {
             this._size = newValue;
         }
 
-        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, this.consumedVolume);
-        newConsumedPressure = Precision.ceil(newConsumedPressure);
-        this.fitStoredVolumes(newConsumedPressure, this.consumedVolume);
+        this.fitStoredVolumes();
     }
 
     public set consumed(newPressure: number) {
@@ -353,8 +350,12 @@ export class Tank implements TankFill {
         return `Tank ${this.id}:${this.name},${this.size} L,${this.startPressure} b`;
     }
 
-    private fitStoredVolumes(newConsumedPressure: number, newConsumedVolume: number): void {
+    private fitStoredVolumes(): void {
         this._startVolume = Tank.realVolume2(this.size, this.startPressure, this.gas);
+        // limit the pressure to reasonable maximum value, since for high pressures compressibility factor no longer works.
+        const newConsumedVolume = this.consumedVolume > this._startVolume ? this._startVolume : this.consumedVolume;
+        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, newConsumedVolume);
+        newConsumedPressure = Precision.ceil(newConsumedPressure);
         this.updateConsumed(newConsumedPressure, newConsumedVolume);
     }
 
@@ -362,8 +363,8 @@ export class Tank implements TankFill {
     private updateConsumed(newPressure: number, newVolume: number): void {
         if(newVolume > this.volume) {
             this._consumedVolume = this.volume;
-        } else if(newVolume < Tank.minimumPressure) {
-            this._consumedVolume = Tank.minimumPressure;
+        } else if(newVolume < Tank.minimumZero) {
+            this._consumedVolume = Tank.minimumZero;
         } else {
             this._consumedVolume = newVolume;
         }
@@ -371,8 +372,8 @@ export class Tank implements TankFill {
         // because rounding still does not have to fit
         if(newPressure > this.startPressure) {
             this._consumed = this.startPressure;
-        } else if(newPressure < Tank.minimumPressure) {
-            this._consumed = Tank.minimumPressure;
+        } else if(newPressure < Tank.minimumZero) {
+            this._consumed = Tank.minimumZero;
         } else {
             this._consumed = newPressure;
         }
@@ -381,8 +382,8 @@ export class Tank implements TankFill {
     private updateReserve(newPressure: number, newVolume: number) {
         if(newVolume > this.volume) {
             this._reserveVolume = this.volume;
-        } else if(newVolume < Tank.minimumPressure) {
-            this._reserveVolume = Tank.minimumPressure;
+        } else if(newVolume < Tank.minimumZero) {
+            this._reserveVolume = Tank.minimumZero;
         } else {
             this._reserveVolume = newVolume;
         }
@@ -390,8 +391,8 @@ export class Tank implements TankFill {
         // because rounding still does not have to fit
         if(newPressure > this.startPressure) {
             this._reserve = this.startPressure;
-        } else if(newPressure < Tank.minimumPressure) {
-            this._reserve = Tank.minimumPressure;
+        } else if(newPressure < Tank.minimumZero) {
+            this._reserve = Tank.minimumZero;
         } else {
             this._reserve = newPressure;
         }

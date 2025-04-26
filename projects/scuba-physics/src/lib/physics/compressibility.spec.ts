@@ -56,7 +56,7 @@ describe('Gas compressibility', () => {
             expect(result).toBeCloseTo(1, 8);
         });
 
-        xit('Maximum volume 750 L for Air', () => {
+        it('Maximum volume 750 L for Air', () => {
             const gas = StandardGases.air;
             expect(() => sut.pressure(gas, 751)).toThrow();
         });

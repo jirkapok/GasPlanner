@@ -14,7 +14,6 @@ import { DepthConverter } from '../physics/depth-converter';
 import { Consumption, ConsumptionOptions } from '../consumption/consumption';
 import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
 
-// TODO test Air dive to 40 m/70 min. - consumption calculation never ends. => needs option interrupt the task.
 // Lets assign reserve to all asserts on slower machines at github.
 describe('Performance', () => {
     const assertDuration = (message: string, limit: number, actionToMeasure: () => void): void => {

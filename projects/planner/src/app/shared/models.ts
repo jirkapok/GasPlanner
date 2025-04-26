@@ -144,12 +144,12 @@ export interface ITankSize {
 }
 
 export class TankBound implements IGasContent, ITankSize {
-    private _workingPressure: number;
+    private _workingPressureBars: number;
 
     constructor(public tank: Tank, private units: UnitConversion) {
         const defaultTanks = this.units.defaults.tanks;
         const newWorkPressure = defaultTanks.primary.workingPressure;
-        this._workingPressure = this.units.toBar(newWorkPressure);
+        this._workingPressureBars = this.units.toBar(newWorkPressure);
     }
 
     public get id(): number {
@@ -157,7 +157,7 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public get size(): number {
-        return this.units.fromTankLiters(this.tank.size, this._workingPressure);
+        return this.units.fromTankLiters(this.tank.size, this._workingPressureBars);
     }
 
     public get startPressure(): number {
@@ -165,11 +165,11 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public get workingPressure(): number {
-        return this.units.fromBar(this._workingPressure);
+        return this.units.fromBar(this._workingPressureBars);
     }
 
     public get workingPressureBars(): number {
-        return this._workingPressure;
+        return this._workingPressureBars;
     }
 
     public get o2(): number {
@@ -185,8 +185,7 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public get label(): string {
-        let volume = this.units.fromTankLiters(this.tank.size, this._workingPressure);
-        volume = Precision.round(volume, 1);
+        const volume = Precision.round(this.size, 1);
         let startPressure = this.units.fromBar(this.tank.startPressure);
         startPressure = Precision.round(startPressure, 1);
         return `${this.tank.id}. ${this.tank.name}/${volume}/${startPressure}`;
@@ -197,7 +196,7 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public set size(newValue: number) {
-        this.tank.size = this.units.toTankLiters(newValue, this._workingPressure);
+        this.tank.size = this.units.toTankLiters(newValue, this._workingPressureBars);
     }
 
     public set startPressure(newValue: number) {
@@ -210,19 +209,20 @@ export class TankBound implements IGasContent, ITankSize {
         }
 
         const sizeBackup = this.size;
-        this._workingPressure = this.units.toBar(newValue);
+        this._workingPressureBars = this.units.toBar(newValue);
         this.size = sizeBackup;
     }
 
-    /** For serialization purpose only */
+    /**
+     * Does not preserve size in UI units.
+     * Use only for serialization or switching between units.
+     **/
     public set workingPressureBars(newValue: number) {
         if (isNaN(newValue)) {
             return;
         }
 
-        const sizeBackup = this.size;
-        this._workingPressure = newValue;
-        this.size = sizeBackup;
+        this._workingPressureBars = newValue;
     }
 
     public set o2(newValue: number) {

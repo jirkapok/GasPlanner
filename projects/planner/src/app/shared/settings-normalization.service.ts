@@ -82,19 +82,18 @@ export class SettingsNormalizationService {
 
         tanks.forEach(t => {
             const tank = t.tank;
-            // otherwise loosing precision in metric, where the value is even not relevant
+            // otherwise loosing precision in metric, where the volume of compressed gas is even not relevant
             if(this.units.imperialUnits) {
-                const size = tank.size;
+                // not changing the size since units are already switched e.g. t.size === 0
 
                 // reset only in case switching to imperial
-                if(t.workingPressure === 0) {
-                    t.workingPressure = defaultTanks.primary.workingPressure;
+                if(t.workingPressureBars === 0) {
+                    const newWorkingPressure = defaultTanks.primary.workingPressure;
+                    t.workingPressureBars = this.units.toBar(newWorkingPressure);
                 }
 
                 // may cause rounding of size, but this happens in when loading metric dive to imperial units
                 t.workingPressureBars = this.fitPressureToRange(t.workingPressureBars, this.ranges.tankPressure);
-                // to keep it aligned with previous value in bars
-                t.size = this.units.fromTankLiters(size, t.workingPressureBars);
             } else {
                 t.workingPressureBars = 0;
             }
@@ -117,26 +116,26 @@ export class SettingsNormalizationService {
         depthsService.fixDepths();
     }
 
-    private fitLengthToRange(meters: number, range: [number, number]): number {
-        return this.fitUnit(v => this.units.fromMeters(v), v => this.units.toMeters(v), meters, range);
+    private fitLengthToRange(meters: number, uiRange: [number, number]): number {
+        return this.fitUnit(v => this.units.fromMeters(v), v => this.units.toMeters(v), meters, uiRange);
     }
 
-    private fitPressureToRange(bars: number, range: [number, number]): number {
-        return this.fitUnit(v => this.units.fromBar(v), v => this.units.toBar(v), bars, range);
+    private fitPressureToRange(bars: number, uiRange: [number, number]): number {
+        return this.fitUnit(v => this.units.fromBar(v), v => this.units.toBar(v), bars, uiRange);
     }
 
-    private fitTankSizeToRange(size: number, workingPressureBars: number, range: [number, number]): number {
+    private fitTankSizeToRange(litersSize: number, workingPressureBars: number, uiRange: [number, number]): number {
         return this.fitUnit(v => this.units.fromTankLiters(v, workingPressureBars),
             v => this.units.toTankLiters(v, workingPressureBars),
-            size, range, 1);
+            litersSize, uiRange, 1);
     }
 
     /** Ranges are in UI units, we are rounding for the UI */
     private fitUnit(fromMetric: (v: number) => number, toMetric: (v: number) => number,
-        unitValue: number, range: [number, number], precision: number = 0): number {
-        let newValue = fromMetric(unitValue);
+        metricValue: number, uiRange: [number, number], precision: number = 0): number {
+        let newValue = fromMetric(metricValue);
         newValue = Precision.round(newValue, precision);
-        newValue = this.fitToRange(newValue, range[0], range[1]);
+        newValue = this.fitToRange(newValue, uiRange[0], uiRange[1]);
         return toMetric(newValue);
     }
 

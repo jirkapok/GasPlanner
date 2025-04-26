@@ -166,6 +166,15 @@ describe('Tank', () => {
                 expect(tank.endPressure).toBe(100);
                 expect(tank.consumed).toBe(50);
             });
+
+            it('0 b start pressure does not preserve consumed', () => {
+                tank.consumed = 50;
+                tank.startPressure = 0;
+
+                expect(tank.endPressure).toBe(0);
+                expect(tank.consumed).toBe(0);
+                expect(tank.volume).toBe(0);
+            });
         });
 
         describe('Size', () => {
@@ -186,6 +195,26 @@ describe('Tank', () => {
                 tank.size = 7.5;
                 expect(tank.endPressure).toBe(99);
                 expect(tank.consumed).toBe(101);
+            });
+
+            it('0 L size preserves consumed', () => {
+                tank.consumed = 50;
+                tank.size = 0;
+
+                expect(tank.startPressure).toBe(200);
+                expect(tank.endPressure).toBe(0);
+                expect(tank.consumed).toBe(200);
+                expect(tank.volume).toBeCloseTo(19.2865149, 6);
+            });
+
+            it('0.2 L size preserves consumed', () => {
+                tank.consumed = 50;
+                tank.size = 0.2;
+
+                expect(tank.startPressure).toBe(200);
+                expect(tank.endPressure).toBe(0);
+                expect(tank.consumed).toBe(200);
+                expect(tank.volume).toBeCloseTo(38.573030, 6);
             });
         });
 

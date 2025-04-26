@@ -30,8 +30,6 @@ export class MainMenuComponent {
     public iconClone = faClone;
     public iconDelete = faTrashCan;
 
-    public notIntegratedHelp = !FeatureFlags.Instance.integratedHelp;
-    public integratedHelp = FeatureFlags.Instance.integratedHelp;
     public gamification = FeatureFlags.Instance.gamification;
 
     constructor(

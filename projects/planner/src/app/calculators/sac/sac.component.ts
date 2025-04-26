@@ -30,7 +30,6 @@ interface SacForm {
 export class SacComponent implements OnInit {
     public calcIcon = faLungs;
     public formSac!: FormGroup<SacForm>;
-    public integratedHelp = FeatureFlags.Instance.integratedHelp;
     public depthConverterWarning = TextConstants.depthConverterWarning;
     // used as store for working pressure, keep in mind to sync size
     public tank: TankBound;

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { faPercent, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faPercent } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
-import { FeatureFlags, Precision } from 'scuba-physics';
+import { Precision } from 'scuba-physics';
 import { NitroxCalculatorService } from '../../shared/nitrox-calculator.service';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { InputControls } from '../../shared/inputcontrols';
@@ -13,7 +13,7 @@ import { SubViewStorage } from '../../shared/subViewStorage';
 import { NitroxViewState } from '../../shared/views.model';
 import { KnownViews } from '../../shared/viewStates';
 import { DiveSchedules } from '../../shared/dive.schedules';
-import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { HelpModalComponent } from '../../help-modal/help-modal.component';
 
 interface NitroxForm {
@@ -28,16 +28,13 @@ interface NitroxForm {
     styleUrls: ['./nitrox.component.scss'],
 })
 export class NitroxComponent implements OnInit {
-    public integratedHelp = FeatureFlags.Instance.integratedHelp;
     public calcIcon = faPercent;
-    public helpIcon = faCircleInfo;
     public nitroxForm!: FormGroup<NitroxForm>;
     public depthConverterWarning = TextConstants.depthConverterWarning;
     private fO2Control!: FormControl<number>;
     private pO2Control!: FormControl<number>;
     private modControl!: FormControl<number>;
     private failingMod = false;
-    private modalRef: MdbModalRef<HelpModalComponent> | null = null;
 
     constructor(
         public calc: NitroxCalculatorService,
@@ -144,14 +141,6 @@ export class NitroxComponent implements OnInit {
         this.calc.toPO2();
         this.enableAll();
         this.nitroxForm.removeControl('pO2');
-    }
-
-    public openHelp(): void {
-        this.modalRef = this.modalService.open(HelpModalComponent, {
-            data: {
-                path: 'nitrox'
-            }
-        });
     }
 
     private enableAll(): void {

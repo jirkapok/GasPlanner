@@ -18,7 +18,6 @@ export class CardHeaderComponent {
     @Input() public headerIcon = faCircleInfo;
 
     public readonly helpIcon = faCircleInfo;
-    public integratedHelp = FeatureFlags.Instance.integratedHelp;
 
     private modalRef: MdbModalRef<HelpModalComponent> | null = null;
 

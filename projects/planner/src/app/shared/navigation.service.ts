@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class Urls {
     public static readonly notAvailable = 'not-available';
-    public static readonly learnSections = 'assets/learn/learnSections.json';
+    public static readonly learnSections = 'assets/learn/questions.json';
 
     private static readonly rootUrl = 'https://github.com/jirkapok/GasPlanner';
     private static readonly rootHelpUrl = Urls.rootUrl + '/blob/master/doc';

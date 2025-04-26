@@ -55,11 +55,11 @@
                                 </ul>
                             </div>
                         </div>
-                    </div> <!-- accordion-item -->
-                </div> <!-- accordion -->
-            </div> <!-- card-body -->
-        </div> <!-- card -->
-    </div> <!-- col -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="col-sm-12 col-md-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
         <div class="card shadow-sm position-relative">
@@ -70,7 +70,7 @@
             </div>
 
             <div class="card-body">
-                <form (ngSubmit)="submitAnswers()" *ngIf="!showScore && quizzes.length">
+                <form (ngSubmit)="submitAnswers()" *ngIf="shouldShowForm()">
                     <div class="mb-4">
                         <p class="fw-bold">Question:</p>
                         <p>{{ currentQuiz.renderedQuestion }}</p>
@@ -83,15 +83,15 @@
                             [disabled]="currentQuiz.isCorrect !== undefined"
                             [ngClass]="{
                                 'is-valid': currentQuiz.isCorrect,
-                                'is-invalid': !currentQuiz.isCorrect
+                                'is-invalid': currentQuiz.isCorrect === false
                             }" />
 
                         <div *ngIf="currentQuiz.isCorrect" class="valid-feedback d-block">Correct</div>
-                        <div *ngIf="!currentQuiz.isCorrect" class="invalid-feedback d-block">Incorrect</div>
+                        <div *ngIf="currentQuiz.isCorrect === false" class="invalid-feedback d-block">Incorrect</div>
 
                         <div class="mt-3">
                             <button
-                                *ngIf="currentQuiz.isCorrect === undefined"
+                                *ngIf="shouldShowSubmitButton()"
                                 type="button"
                                 class="btn btn-primary"
                                 (click)="validateCurrentAnswer()">
@@ -99,7 +99,7 @@
                             </button>
 
                             <button
-                                *ngIf="currentQuiz.isCorrect !== undefined && currentQuestionIndex < quizzes.length - 1"
+                                *ngIf="shouldShowNextQuestionButton()"
                                 type="button"
                                 class="btn btn-outline-primary ms-2"
                                 (click)="goToNextQuestion()">
@@ -107,7 +107,7 @@
                             </button>
 
                             <button
-                                *ngIf="currentQuiz.isCorrect !== undefined && currentQuestionIndex >= quizzes.length - 1"
+                                *ngIf="shouldShowFinishButton()"
                                 type="submit"
                                 class="btn btn-success ms-2"
                                 [disabled]="!hasPassedCategory()">
@@ -117,7 +117,7 @@
                     </div>
                 </form>
 
-                <div *ngIf="showScore" class="text-center">
+                <div *ngIf="shouldShowScore()" class="text-center">
                     <h4>Quiz Completed!</h4>
                     <p>Correct answers: {{ correctCount }} out of {{ totalAnswered }}</p>
                     <p>Score: {{ correctPercentage }}%</p>

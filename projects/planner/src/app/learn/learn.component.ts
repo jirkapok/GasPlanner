@@ -131,9 +131,6 @@ export class LearnComponent implements OnInit {
     public submitAnswers(): void {
         this.correctPercentage = Math.round((this.correctCount / this.totalAnswered) * 100);
         this.showScore = true;
-
-        const key = `${this.selectedTopic}::${this.selectedCategoryName}`;
-        this.answeredCategories.add(key);
     }
 
     public isCategorySelected(topicName: string, categoryName: string): boolean {
@@ -193,4 +190,25 @@ export class LearnComponent implements OnInit {
 
         return { finished, total, color };
     }
+
+    public shouldShowSubmitButton(): boolean {
+        return this.currentQuiz.isCorrect === undefined;
+    }
+
+    public shouldShowNextQuestionButton(): boolean {
+        return this.currentQuiz.isCorrect !== undefined && this.currentQuestionIndex < this.quizzes.length - 1;
+    }
+
+    public shouldShowFinishButton(): boolean {
+        return this.currentQuiz.isCorrect !== undefined && this.currentQuestionIndex >= this.quizzes.length - 1;
+    }
+
+    public shouldShowScore(): boolean {
+        return this.showScore;
+    }
+
+    public shouldShowForm(): boolean {
+        return !this.showScore && this.quizzes.length > 0;
+    }
+
 }

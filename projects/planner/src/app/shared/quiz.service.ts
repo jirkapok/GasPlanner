@@ -20,7 +20,8 @@ export interface QuizItem {
     roundTo: number;
     variables: QuizVariable[];
     userAnswer?: string;
-    isCorrect?: boolean;
+    isAnswered: boolean;
+    isCorrect: boolean;
     renderedQuestion?: string;
 }
 
@@ -58,7 +59,8 @@ export class QuizService {
         return category.questions.map((q: QuizItem) => ({
             ...q,
             userAnswer: '',
-            isCorrect: undefined
+            isCorrect: false,
+            isAnswered: false,
         }));
     }
 

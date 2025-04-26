@@ -80,14 +80,14 @@
                             class="form-control mb-2"
                             [(ngModel)]="currentQuiz.userAnswer"
                             name="answer-{{ currentQuestionIndex }}"
-                            [disabled]="currentQuiz.isCorrect !== undefined"
+                            [disabled]="currentQuiz.isAnswered"
                             [ngClass]="{
-                                'is-valid': currentQuiz.isCorrect,
-                                'is-invalid': currentQuiz.isCorrect === false
+                                'is-valid': currentQuiz.isAnswered && currentQuiz.isCorrect,
+                                'is-invalid': currentQuiz.isAnswered && !currentQuiz.isCorrect
                             }" />
 
-                        <div *ngIf="currentQuiz.isCorrect" class="valid-feedback d-block">Correct</div>
-                        <div *ngIf="currentQuiz.isCorrect === false" class="invalid-feedback d-block">Incorrect</div>
+                        <div *ngIf="currentQuiz.isAnswered && currentQuiz.isCorrect" class="valid-feedback d-block">Correct</div>
+                        <div *ngIf="currentQuiz.isAnswered && !currentQuiz.isCorrect" class="invalid-feedback d-block">Incorrect</div>
 
                         <div class="mt-3">
                             <button

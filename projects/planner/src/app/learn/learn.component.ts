@@ -67,12 +67,20 @@ export class LearnComponent implements OnInit {
 
         const topic = this.topics.find(t => t.topic === topicName);
         if (topic) {
-            this.quizzes = this.quizService.getQuizzesForCategory(topic, categoryName);
+            const baseQuizzes = this.quizService.getQuizzesForCategory(topic, categoryName);
 
-            this.quizzes.forEach(quiz => {
-                this.quizService.randomizeQuizVariables(quiz);
-                quiz.renderedQuestion = this.renderQuestion(quiz);
-            });
+            this.quizzes = [];
+
+            // Create at least 5 quizzes
+            for (let i = 0; i < 5; i++) {
+                const randomQuiz = { ...baseQuizzes[0] }; // assuming you have one template
+                this.quizService.randomizeQuizVariables(randomQuiz);
+                randomQuiz.renderedQuestion = this.renderQuestion(randomQuiz);
+                randomQuiz.userAnswer = '';
+                randomQuiz.isAnswered = false;
+                randomQuiz.isCorrect = false;
+                this.quizzes.push(randomQuiz);
+            }
 
             this.showScore = false;
             this.correctCount = 0;
@@ -95,6 +103,7 @@ export class LearnComponent implements OnInit {
 
         const correctAnswer = this.quizService.generateCorrectAnswer(quiz);
         quiz.isCorrect = this.quizService.validateAnswer(quiz.userAnswer || '', correctAnswer, quiz.roundTo ?? 1);
+        quiz.isAnswered = true;
 
         const key = `${this.selectedTopic}::${this.selectedCategoryName}`;
         const stats = this.attemptsByCategory.get(key) || { attempts: 0, correct: 0 };
@@ -115,12 +124,8 @@ export class LearnComponent implements OnInit {
             this.correctCount++;
         }
         this.currentPercentage = Math.round((this.correctCount / this.totalAnswered) * 100);
-
-        this.quizService.randomizeQuizVariables(quiz);
-        quiz.renderedQuestion = this.renderQuestion(quiz);
-        quiz.userAnswer = '';
-        quiz.isCorrect = undefined;
     }
+
 
     public goToNextQuestion(): void {
         if (this.currentQuestionIndex < this.quizzes.length - 1) {
@@ -192,15 +197,15 @@ export class LearnComponent implements OnInit {
     }
 
     public shouldShowSubmitButton(): boolean {
-        return this.currentQuiz.isCorrect === undefined;
+        return !this.currentQuiz.isAnswered;
     }
 
     public shouldShowNextQuestionButton(): boolean {
-        return this.currentQuiz.isCorrect !== undefined && this.currentQuestionIndex < this.quizzes.length - 1;
+        return this.currentQuiz.isAnswered && this.currentQuestionIndex < this.quizzes.length - 1;
     }
 
     public shouldShowFinishButton(): boolean {
-        return this.currentQuiz.isCorrect !== undefined && this.currentQuestionIndex >= this.quizzes.length - 1;
+        return this.currentQuiz.isAnswered && this.currentQuestionIndex >= this.quizzes.length - 1;
     }
 
     public shouldShowScore(): boolean {
@@ -210,5 +215,4 @@ export class LearnComponent implements OnInit {
     public shouldShowForm(): boolean {
         return !this.showScore && this.quizzes.length > 0;
     }
-
 }

@@ -8,8 +8,8 @@
                     helpName="gas_blender"
                 >
                     <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': togglePricing }" type="button"
-                    id="pricingToggle"
-                    data-toggle="button" [attr.aria-pressed]="togglePricing" autocomplete="off" (click)="togglePricing()">
+                            id="pricingToggle" data-toggle="button" title="Show pricing"
+                            [attr.aria-pressed]="togglePricing" autocomplete="off" (click)="togglePricing()">
                         <fa-icon [icon]="dollarIcon" class="fa-lg"></fa-icon>
                     </button>
                 </app-card-header>

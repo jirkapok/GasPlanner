@@ -4,7 +4,8 @@
     helpName="waypoints_table"
     [headerIcon]="tasks">
         <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': stops.stopsOnly }" type="button"
-        data-toggle="button" [attr.aria-pressed]="stops.stopsOnly" autocomplete="off" (click)="stops.switchFilter()">
+                data-toggle="button" [attr.aria-pressed]="stops.stopsOnly"
+                autocomplete="off" (click)="stops.switchFilter()" title="Filter to show stops only">
             <fa-icon [icon]="filterIcon" class="fa-lg"></fa-icon>
         </button>
     </app-card-header>

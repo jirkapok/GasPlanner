@@ -3,7 +3,7 @@
         cardTitle="Dive Info"
         helpName="diveinfo"
         [headerIcon]="icon">
-        <button class="btn btn-sm btn-secondary ms-2" type="button" (click)="sharePlan()">
+        <button class="btn btn-sm btn-secondary ms-2" type="button" (click)="sharePlan()" title="Share the dive address">
             <fa-icon [icon]="iconShare" class="me-2"></fa-icon>Share
         </button>
         </app-card-header>
@@ -43,8 +43,9 @@
                             </tr>
                             <tr>
                                 <td>No decompression time [min]:
-                                    <button type="button" class="btn btn-secondary btn-sm ml-2"
-                                        (click)="applyNdlDuration()" *ngIf="showApply">Use</button>
+                                    <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="applyNdlDuration()"
+                                            *ngIf="showApply" title="Set dive time to no deco limit"
+                                    >Use</button>
                                 </td>
                                 <td class="table-active">
                                     <strong *ngIf="dive.diveInfoCalculated">{{ noDeco | number:'1.0-0' }}</strong>
@@ -52,8 +53,9 @@
                             </tr>
                             <tr *ngIf="dive.showMaxBottomTime">
                                 <td>Maximum bottom time [min]:
-                                    <button type="button" class="btn btn-secondary btn-sm ml-2"
-                                        (click)="applyMaxDuration()" *ngIf="showApply">Use</button>
+                                    <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="applyMaxDuration()"
+                                         *ngIf="showApply" title="Set dive time to maximum by consumed gas"
+                                    >Use</button>
                                 </td>
                                 <td class="table-active">
                                     <strong *ngIf="dive.calculated">{{ dive.maxTime | number:'1.0-0' }}</strong>

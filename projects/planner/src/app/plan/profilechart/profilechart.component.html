@@ -4,11 +4,13 @@
         helpName="profile_chart"
         [headerIcon]="profileIcon">
         <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': showHeatMap }" type="button"
-                data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="switchHeatMap()">
+                data-toggle="button" [attr.aria-pressed]="showHeatMap" title="Show tissues heatmap"
+                autocomplete="off" (click)="switchHeatMap()">
             <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
         </button>
         <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': showEmergencyAscent }" type="button"
-                data-toggle="button" [attr.aria-pressed]="showEmergencyAscent" autocomplete="off" (click)="switchEmergencyAscent()">
+                data-toggle="button" [attr.aria-pressed]="showEmergencyAscent" title="Show emergency ascent"
+                autocomplete="off" (click)="switchEmergencyAscent()">
             <fa-icon [icon]="emergencyIcon" class="fa-lg"></fa-icon>
         </button>
     </app-card-header>

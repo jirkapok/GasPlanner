@@ -130,6 +130,7 @@
           "options": {
             "lintFilePatterns": [
               "projects/planner/**/*.ts",
+              "projects/planner/shared/learn/**/*.ts",
               "projects/planner/**/*.html"
             ]
           }

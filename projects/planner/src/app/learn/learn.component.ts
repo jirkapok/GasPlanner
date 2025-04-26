@@ -5,7 +5,8 @@ import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
-import { QuizService, Topic, QuizItem } from '../shared/quiz.service';
+import { QuizService, QuizItem } from '../shared/learn/quiz.service';
+import { Topic, Category } from '../shared/learn/learn.models'; // <-- Correct import
 
 @Component({
     selector: 'app-learn',
@@ -49,15 +50,15 @@ export class LearnComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.quizService.loadTopics().subscribe(data => {
-            this.topics = data;
-            const firstTopic = this.topics[0];
-            const firstCategory = firstTopic?.categories[0];
+        // Updated here: No more subscribe, just direct assignment
+        this.topics = this.quizService.topics;
 
-            if (firstTopic && firstCategory) {
-                this.updateTopic(firstTopic.topic, firstCategory.name);
-            }
-        });
+        const firstTopic = this.topics[0];
+        const firstCategory = firstTopic?.categories[0];
+
+        if (firstTopic && firstCategory) {
+            this.updateTopic(firstTopic.topic, firstCategory.name);
+        }
     }
 
     public updateTopic(topicName: string, categoryName: string): void {
@@ -67,19 +68,15 @@ export class LearnComponent implements OnInit {
 
         const topic = this.topics.find(t => t.topic === topicName);
         if (topic) {
-            const baseQuizzes = this.quizService.getQuizzesForCategory(topic, categoryName);
-
             this.quizzes = [];
 
-            // Create at least 5 quizzes
-            for (let i = 0; i < 5; i++) {
-                const randomQuiz = { ...baseQuizzes[0] }; // assuming you have one template
-                this.quizService.randomizeQuizVariables(randomQuiz);
-                randomQuiz.renderedQuestion = this.renderQuestion(randomQuiz);
-                randomQuiz.userAnswer = '';
-                randomQuiz.isAnswered = false;
-                randomQuiz.isCorrect = false;
-                this.quizzes.push(randomQuiz);
+            // Generate 5 random quizzes from selected category
+            const category = topic.categories.find((c: Category) => c.name === categoryName);
+            if (category) {
+                for (let i = 0; i < 5; i++) {
+                    const quizItem = this.quizService.getQuizItemForCategory(category);
+                    this.quizzes.push(quizItem);
+                }
             }
 
             this.showScore = false;
@@ -89,7 +86,6 @@ export class LearnComponent implements OnInit {
             this.currentQuestionIndex = 0;
         }
     }
-
 
     public toggleTopic(topicName: string): void {
         this.activeTopic = this.activeTopic === topicName ? '' : topicName;
@@ -101,8 +97,7 @@ export class LearnComponent implements OnInit {
             return;
         }
 
-        const correctAnswer = this.quizService.generateCorrectAnswer(quiz);
-        quiz.isCorrect = this.quizService.validateAnswer(quiz.userAnswer || '', correctAnswer, quiz.roundTo ?? 1);
+        quiz.isCorrect = this.quizService.validateAnswer(quiz);
         quiz.isAnswered = true;
 
         const key = `${this.selectedTopic}::${this.selectedCategoryName}`;
@@ -126,7 +121,6 @@ export class LearnComponent implements OnInit {
         this.currentPercentage = Math.round((this.correctCount / this.totalAnswered) * 100);
     }
 
-
     public goToNextQuestion(): void {
         if (this.currentQuestionIndex < this.quizzes.length - 1) {
             this.currentQuestionIndex++;
@@ -140,29 +134,6 @@ export class LearnComponent implements OnInit {
 
     public isCategorySelected(topicName: string, categoryName: string): boolean {
         return this.selectedTopic === topicName && this.selectedCategoryName === categoryName;
-    }
-
-    public renderQuestion(quiz: QuizItem): string {
-        let questionText = quiz.question;
-
-        if (Array.isArray(quiz.variables)) {
-            quiz.variables.forEach(variable => {
-                const value = variable.value ?? '';
-
-                let displayValue = value;
-                if (typeof value === 'number') {
-                    if (variable.name.includes('percent') || variable.name.includes('tank_size') || variable.name.includes('depth')) {
-                        displayValue = value.toFixed(0); // Whole numbers for percentages, tank sizes, depth
-                    } else {
-                        displayValue = value.toFixed(2); // Default to 2 decimals for pressures etc.
-                    }
-                }
-
-                questionText = questionText.replace(new RegExp(`{${variable.name}}`, 'g'), displayValue.toString());
-            });
-        }
-
-        return questionText;
     }
 
     public hasPassedCategory(): boolean {

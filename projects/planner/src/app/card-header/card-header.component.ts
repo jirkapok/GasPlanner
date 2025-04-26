@@ -13,7 +13,7 @@ import { Urls } from '../shared/navigation.service';
 
 export class CardHeaderComponent {
 
-    @Input() public title = 'Untitled';
+    @Input() public cardTitle = 'Untitled';
     @Input() public helpName = Urls.notAvailable;
     @Input() public headerIcon = faCircleInfo;
 

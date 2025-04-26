@@ -1,7 +1,7 @@
 <div class="card-header d-flex justify-content-between align-items-center">
     <div>
       <fa-icon [icon]="headerIcon" class="me-3"></fa-icon>
-    <span>{{ title }}</span>
+    <span>{{ cardTitle }}</span>
     </div>
     <div class="d-flex justify-content-between align-items-center">
 
@@ -11,7 +11,7 @@
             type="button"
             class="btn btn-sm btn-secondary ms-2"
             (click)="openHelp()"
-            title="More info"
+            title="Show Help"
             aria-label="Open help panel"            >
             <fa-icon [icon]="helpIcon" class="fa-lg"></fa-icon>
         </button>

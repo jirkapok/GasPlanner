@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
 import { QuizService, QuizItem } from '../shared/learn/quiz.service';
-import { Topic, Category } from '../shared/learn/learn.models'; // <-- Correct import
+import { Topic, Category } from '../shared/learn/learn.models';
 
 @Component({
     selector: 'app-learn',

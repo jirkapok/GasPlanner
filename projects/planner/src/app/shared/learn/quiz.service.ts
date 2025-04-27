@@ -109,8 +109,6 @@ export class QuizService {
     public attemptsByCategory = new Map<string, { attempts: number; correct: number }>();
     public answeredCategories = new Set<string>();
     public sessionsByCategory = new Map<string, QuizSession>();
-    public minimalSuccessRate = 80;
-    public requiredQuestions = 5;
 
     constructor() {}
 

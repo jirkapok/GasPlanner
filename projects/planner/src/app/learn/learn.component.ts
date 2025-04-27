@@ -77,7 +77,7 @@ export class LearnComponent implements OnInit {
             let session = this.quizService.sessionsByCategory.get(key);
 
             if (!session) {
-                const quizzes = Array.from({ length: this.quizService.requiredQuestions }, () => category.getQuizItemForCategory());
+                const quizzes = Array.from({ length: QuizSession.requiredAnsweredCount }, () => category.getQuizItemForCategory());
                 session = new QuizSession(quizzes);
                 this.quizService.sessionsByCategory.set(key, session);
             }
@@ -104,15 +104,8 @@ export class LearnComponent implements OnInit {
     }
 
     public submitAnswers(): void {
-        if (this.session) {
-            if (this.session.canFinishSession()) {
-                this.session.finished = true;
-            } else {
-                this.session.generateNewQuizzes();
-            }
-        }
+        this.session?.finishIfEligible();
     }
-
 
     public isCategorySelected(topicName: string, categoryName: string): boolean {
         return this.selectedTopic === topicName && this.selectedCategoryName === categoryName;

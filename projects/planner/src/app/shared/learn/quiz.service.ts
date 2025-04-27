@@ -4,7 +4,6 @@ import { Topic, QuestionTemplate, RoundType } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
 import { AppPreferences, QuizAnswerStats } from '../serialization.model';
-import { PreferencesStore } from '../../shared/preferencesStore';
 
 export class QuizItem {
     public template: QuestionTemplate;
@@ -117,8 +116,7 @@ export class QuizService {
     public quizAnswers: Record<string, QuizAnswerStats> = {};
     public sessionsByCategory = new Map<string, QuizSession>();
 
-    constructor() {
-    }
+    constructor() {}
 
     public applyApp(loaded: AppPreferences): void {
         if (loaded.quizAnswers) {
@@ -128,16 +126,11 @@ export class QuizService {
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {
         const key = `${topic}::${category}`;
-        const stats = this.quizAnswers[key] ?? { completed: false, attempts: 0, correct: 0 };
+        const stats = this.quizAnswers[key] ?? { attempts: 0, correct: 0 };
 
         stats.attempts++;
         if (correct) {
             stats.correct++;
-        }
-
-        // Update completion status
-        if (stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8) {
-            stats.completed = true;
         }
 
         this.quizAnswers[key] = stats;
@@ -145,12 +138,13 @@ export class QuizService {
 
     public hasPassedCategory(topic: string, category: string): boolean {
         const key = `${topic}::${category}`;
-        return this.quizAnswers[key]?.completed ?? false;
+        const stats = this.quizAnswers[key];
+        return stats ? this.isQuizCompleted(stats) : false;
     }
 
     public countFinishedCategories(topic: Topic): number {
         return topic.categories.filter(cat =>
-            this.quizAnswers[`${topic.topic}::${cat.name}`]?.completed
+            this.hasPassedCategory(topic.topic, cat.name)
         ).length;
     }
 
@@ -159,6 +153,11 @@ export class QuizService {
         const total = topic.categories.length;
         const color = finished === total ? 'bg-success' : 'bg-warning';
         return { finished, total, color };
+    }
+
+    public isQuizCompleted(quizAnswers: QuizAnswerStats): boolean {
+        return quizAnswers.attempts >= QuizSession.requiredAnsweredCount
+            && (quizAnswers.correct / quizAnswers.attempts) >= QuizSession.minimalAcceptableSuccessRate;
     }
 }
 

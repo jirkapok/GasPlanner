@@ -221,7 +221,6 @@ export interface OptionsDto {
 }
 
 export interface QuizAnswerStats {
-    completed: boolean;
     attempts: number;
     correct: number;
 }

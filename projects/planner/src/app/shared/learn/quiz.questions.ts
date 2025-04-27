@@ -16,7 +16,7 @@ export const topics: Topic[] = [
         new Category('Best mix', 'examples_bestmix', [
             new QuestionTemplate(
                 'What is best mix (in percents) at partial pressure {pp} at depth {depth} m?',
-                1,
+                0,
                 RoundType.floor,
                 [
                     new Variable('pp', undefined, 1, 2),
@@ -38,8 +38,8 @@ export const topics: Topic[] = [
         new Category('Equivalent air depth', 'examples_ead', [
             new QuestionTemplate(
                 'What is the equivalent air depth of nitrox mix with {o2_percent} % oxygen at {depth} m?',
-                1,
-                RoundType.round,
+                0,
+                RoundType.ceil,
                 [
                     new Variable('o2_percent', [21, 32, 36, 38, 50, 100]),
                     new Variable('depth', undefined, 1, 50)
@@ -53,7 +53,7 @@ export const topics: Topic[] = [
             new QuestionTemplate(
                 'What is respiratory minute volume (RMV in liters per minute) of dive to average depth {depth} m, ' +
                 'with tank {tank_size} L for {time} minutes where diver consumed {consumed} b?',
-                0,
+                1,
                 RoundType.ceil,
                 [
                     new Variable('depth', undefined, 10, 30),
@@ -68,7 +68,7 @@ export const topics: Topic[] = [
                 'How much gas did i use (in bars) at average depth {depth} m, with tank {tank_size} L for {time} minutes ' +
                 'where my respiratory minute volume (RMV) was {rmv} L/min?',
                 0,
-                RoundType.floor,
+                RoundType.ceil,
                 [
                     new Variable('depth', undefined, 10, 30),
                     new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
@@ -82,7 +82,7 @@ export const topics: Topic[] = [
                 'How long can i stay (in minutest) at average depth {depth} m with available {consumed} in {tank_size} L tank, ' +
                 'where my respiratory minute volume (RMV) is {rmv} L/min?',
                 0,
-                RoundType.round,
+                RoundType.floor,
                 [
                     new Variable('depth', undefined, 10, 30),
                     new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
@@ -101,6 +101,6 @@ export const topics: Topic[] = [
         // * Unit conversions: Depth <-> pressure conversions
         // * partial pressures - oxygen, nitrogen, helium, total
         // * Trimix - Maximum narcotic depth, Equivalent narcotic depth, Maximum operational depth, minimum operational depth
-        // Consider oxygen toxicity CNS/OTU using simplified table based text book formula
+        // * Consider oxygen toxicity CNS/OTU using simplified table based text book formula
     ])
 ];

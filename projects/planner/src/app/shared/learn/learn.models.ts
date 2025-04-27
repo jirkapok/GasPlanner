@@ -98,7 +98,7 @@ export const topics: Topic[] = [
             new QuestionTemplate(
                 'What is best mix (in percents) at partial pressure {pp} at depth {depth} m?',
                 1,
-                RoundType.round,
+                RoundType.floor,
                 [
                     new Variable('pp', undefined, 1, 2),
                     new Variable('depth', undefined, 1, 50)
@@ -135,7 +135,7 @@ export const topics: Topic[] = [
                 'What is respiratory minute volume (RMV in liters per minute) of dive to average depth {depth} m, ' +
                 'with tank {tank_size} L for {time} minutes where diver consumed {consumed} b?',
                 0,
-                RoundType.round,
+                RoundType.ceil,
                 [
                     new Variable('depth', undefined, 10, 30),
                     new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
@@ -147,9 +147,9 @@ export const topics: Topic[] = [
         new Category('Used gas', 'sac', [
             new QuestionTemplate(
                 'How much gas did i use (in bars) at average depth {depth} m, with tank {tank_size} L for {time} minutes ' +
-                'where my respiratory minute volume (RMV) was {rmv} b?',
+                'where my respiratory minute volume (RMV) was {rmv} L/min?',
                 0,
-                RoundType.round,
+                RoundType.floor,
                 [
                     new Variable('depth', undefined, 10, 30),
                     new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
@@ -161,7 +161,7 @@ export const topics: Topic[] = [
         new Category('Dive duration', 'sac', [
             new QuestionTemplate(
                 'How long can i stay (in minutest) at average depth {depth} m with available {consumed} in {tank_size} L tank, ' +
-                'where my respiratory minute volume (RMV) is {rmv} b?',
+                'where my respiratory minute volume (RMV) is {rmv} L/min?',
                 0,
                 RoundType.round,
                 [
@@ -173,9 +173,11 @@ export const topics: Topic[] = [
             )
         ])
 
+        // TODO fix help links for options and dive info.
         // TODO fix help topics and generate md files for the questions
-        // TODO fix rounding tipes for each question and result precission
+        // TODO fix rounding types for each question and result precision
         // TODO add EAD to gas properties calculator in case Helium is 0 %
+        // TODO add rounding type and precision to the question rendered text.
         // TODO add Learn topics:
         // * Unit conversions: Depth <-> pressure conversions
         // * partial pressures - oxygen, nitrogen, helium, total

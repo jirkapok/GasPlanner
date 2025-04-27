@@ -35,7 +35,6 @@ export class Variable {
     }
 }
 
-
 export class QuestionTemplate {
     constructor(
         public question: string,
@@ -83,7 +82,7 @@ export class Topic {
 
 export const topics: Topic[] = [
     new Topic('Nitrox', [
-        new Category('Maximum operational depth', 'nitrox', [
+        new Category('Maximum operational depth', 'examples_mod', [
             new QuestionTemplate(
                 'What is maximum operational depth for gas with {o2_percent} % oxygen at partial pressure {pp} ?',
                 0,
@@ -94,7 +93,7 @@ export const topics: Topic[] = [
                 ]
             )
         ]),
-        new Category('Best mix', 'nitrox', [
+        new Category('Best mix', 'examples_bestmix', [
             new QuestionTemplate(
                 'What is best mix (in percents) at partial pressure {pp} at depth {depth} m?',
                 1,
@@ -105,7 +104,7 @@ export const topics: Topic[] = [
                 ]
             )
         ]),
-        new Category('Partial pressure', 'nitrox', [
+        new Category('Partial pressure', 'examples_ppO2', [
             new QuestionTemplate(
                 'What is partial pressure of {o2_percent} % at {depth} m?',
                 1,
@@ -116,9 +115,9 @@ export const topics: Topic[] = [
                 ]
             )
         ]),
-        new Category('Equivalent air depth', 'nitrox', [
+        new Category('Equivalent air depth', 'examples_ead', [
             new QuestionTemplate(
-                'What is the equivalent air depth of {o2_percent} % at {depth} m?',
+                'What is the equivalent air depth of nitrox mix with {o2_percent} % oxygen at {depth} m?',
                 1,
                 RoundType.round,
                 [
@@ -130,7 +129,7 @@ export const topics: Topic[] = [
     ]),
 
     new Topic('Consumption', [
-        new Category('Respiratory minute volume', 'sac', [
+        new Category('Respiratory minute volume', 'examples_consumed', [
             new QuestionTemplate(
                 'What is respiratory minute volume (RMV in liters per minute) of dive to average depth {depth} m, ' +
                 'with tank {tank_size} L for {time} minutes where diver consumed {consumed} b?',
@@ -144,7 +143,7 @@ export const topics: Topic[] = [
                 ]
             )
         ]),
-        new Category('Used gas', 'sac', [
+        new Category('Used gas', 'examples_consumed', [
             new QuestionTemplate(
                 'How much gas did i use (in bars) at average depth {depth} m, with tank {tank_size} L for {time} minutes ' +
                 'where my respiratory minute volume (RMV) was {rmv} L/min?',
@@ -158,7 +157,7 @@ export const topics: Topic[] = [
                 ]
             )
         ]),
-        new Category('Dive duration', 'sac', [
+        new Category('Dive duration', 'examples_consumed', [
             new QuestionTemplate(
                 'How long can i stay (in minutest) at average depth {depth} m with available {consumed} in {tank_size} L tank, ' +
                 'where my respiratory minute volume (RMV) is {rmv} L/min?',

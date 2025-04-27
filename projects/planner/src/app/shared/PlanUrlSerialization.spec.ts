@@ -13,6 +13,7 @@ import { DiveSchedules } from './dive.schedules';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { AirBreakOptions, Diver } from 'scuba-physics';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { QuizService } from './learn/quiz.service';
 
 class TestSut {
     constructor(
@@ -49,7 +50,7 @@ describe('Url Serialization', () => {
         const viewSwitch = new ViewSwitchService(schedules);
         const appSettings = new ApplicationSettingsService(units);
         const planner = new PlannerService(schedules, dispatcher, viewSwitch, appSettings, irrelevantFactory, units);
-        const preferences = new Preferences(viewSwitch, units, schedules, appSettings, new ViewStates());
+        const preferences = new Preferences(viewSwitch, units, schedules, appSettings, new ViewStates(), new QuizService());
         const normalization = new SettingsNormalizationService(units, appSettings, schedules);
         const urlSerialization = new PlanUrlSerialization(viewSwitch, units, normalization,
             schedules, appSettings, preferences);

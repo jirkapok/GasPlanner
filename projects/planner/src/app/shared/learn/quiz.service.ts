@@ -3,6 +3,7 @@ import { NitroxCalculator, SacCalculator, DepthConverter, Precision } from 'scub
 import { Topic, QuestionTemplate, RoundType } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
+import { AppPreferences, QuizAnswerStats } from '../serialization.model';
 
 export class QuizItem {
     public template: QuestionTemplate;
@@ -33,6 +34,8 @@ export class QuizItem {
             this.variables = this.template.variables.map(variable => variable.randomizeVariable());
             indexSafe++;
         } while (Number.isNaN(this.generateCorrectAnswer()) && indexSafe < 100);
+
+        console.log(`Randomized result: ${this.generateCorrectAnswer()}`);
     }
 
     public generateCorrectAnswer(): number {
@@ -108,43 +111,40 @@ export class QuizItem {
 @Injectable({
     providedIn: 'root'
 })
-
 export class QuizService {
     public topics: Topic[] = topics;
-    public attemptsByCategory = new Map<string, { attempts: number; correct: number }>();
-    public answeredCategories = new Set<string>();
+    public quizAnswers: Record<string, QuizAnswerStats> = {};
     public sessionsByCategory = new Map<string, QuizSession>();
 
-    constructor() {
-        this.loadProgress();
+    constructor() {}
+
+    public applyApp(loaded: AppPreferences): void {
+        if (loaded.quizAnswers) {
+            this.quizAnswers = loaded.quizAnswers;
+        }
     }
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {
         const key = `${topic}::${category}`;
-        const stats = this.attemptsByCategory.get(key) || { attempts: 0, correct: 0 };
+        const stats = this.quizAnswers[key] ?? { attempts: 0, correct: 0 };
 
         stats.attempts++;
         if (correct) {
             stats.correct++;
         }
 
-        this.attemptsByCategory.set(key, stats);
-
-        if (stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8) {
-            this.answeredCategories.add(key);
-        }
-        this.saveProgress();
+        this.quizAnswers[key] = stats;
     }
 
     public hasPassedCategory(topic: string, category: string): boolean {
         const key = `${topic}::${category}`;
-        const stats = this.attemptsByCategory.get(key);
-        return stats ? stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8 : false;
+        const stats = this.quizAnswers[key];
+        return stats ? this.isQuizCompleted(stats) : false;
     }
 
     public countFinishedCategories(topic: Topic): number {
         return topic.categories.filter(cat =>
-            this.answeredCategories.has(`${topic.topic}::${cat.name}`)
+            this.hasPassedCategory(topic.topic, cat.name)
         ).length;
     }
 
@@ -155,36 +155,10 @@ export class QuizService {
         return { finished, total, color };
     }
 
-    public saveProgress(): void {
-        const attemptsArray = Array.from(this.attemptsByCategory.entries());
-        const answeredArray = Array.from(this.answeredCategories);
-
-        localStorage.setItem('quiz-attempts', JSON.stringify(attemptsArray));
-        localStorage.setItem('quiz-answered', JSON.stringify(answeredArray));
+    public isQuizCompleted(quizAnswers: QuizAnswerStats): boolean {
+        return quizAnswers.attempts >= QuizSession.requiredAnsweredCount
+            && (quizAnswers.correct / quizAnswers.attempts) >= QuizSession.minimalAcceptableSuccessRate;
     }
-
-    public loadProgress(): void {
-        const attemptsJson = localStorage.getItem('quiz-attempts');
-        const answeredJson = localStorage.getItem('quiz-answered');
-
-        if (attemptsJson) {
-            const attemptsArray = JSON.parse(attemptsJson) as [string, { attempts: number; correct: number }][];
-            this.attemptsByCategory = new Map<string, { attempts: number; correct: number }>(attemptsArray);
-        }
-
-        if (answeredJson) {
-            const answeredArray = JSON.parse(answeredJson) as string[];
-            this.answeredCategories = new Set<string>(answeredArray);
-        }
-    }
-
-    public resetProgress(): void {
-        localStorage.removeItem('quiz-attempts');
-        localStorage.removeItem('quiz-answered');
-        this.attemptsByCategory.clear();
-        this.answeredCategories.clear();
-    }
-
 }
 
 // const isValid = Precision.isInRange(value, min, max);

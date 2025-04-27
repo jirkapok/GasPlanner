@@ -7,6 +7,7 @@ import { ViewState } from './views.model';
 
 export interface AppPreferences extends AppPreferencesDto {
     states: AppStates;
+    quizAnswers?: Record<string, QuizAnswerStats>;
 }
 
 export interface AppStates {
@@ -217,4 +218,9 @@ export interface OptionsDto {
     problemSolvingDuration: number;
     /** optional because of upgrade */
     airBreaks?: AirBreaksDto;
+}
+
+export interface QuizAnswerStats {
+    attempts: number;
+    correct: number;
 }

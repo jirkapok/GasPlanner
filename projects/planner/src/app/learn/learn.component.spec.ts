@@ -1,23 +1,46 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { LearnComponent } from "./learn.component";
-import { Urls } from "../shared/navigation.service";
-import { NgxMdModule } from "ngx-md";
-import { provideHttpClient } from "@angular/common/http";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { LearnComponent } from './learn.component';
+import { NgxMdModule } from 'ngx-md';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Urls } from '../shared/navigation.service';
+import { QuizService } from '../shared/learn/quiz.service';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-describe('Learn component', () => {
+const mockPreferencesStore = {
+    load: () => {},
+    save: () => {},
+    loadDefault: () => {},
+    saveDefault: () => {},
+    disableDisclaimer: () => {},
+    disclaimerEnabled: () => true,
+    disableShowInstall: () => {},
+    installEnabled: () => true,
+};
+
+describe('LearnComponent', () => {
     let component: LearnComponent;
     let fixture: ComponentFixture<LearnComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [],
-            imports: [ReactiveFormsModule, NgxMdModule],
+            imports: [
+                CommonModule,
+                FormsModule,
+                ReactiveFormsModule,
+                NgxMdModule,
+                FontAwesomeModule,
+                LearnComponent, // protože standalone: true
+            ],
             providers: [
                 provideHttpClient(),
                 provideHttpClientTesting(),
-                Urls
+                Urls,
+                QuizService,
+                { provide: PreferencesStore, useValue: mockPreferencesStore }
             ]
         }).compileComponents();
     });
@@ -28,13 +51,14 @@ describe('Learn component', () => {
         fixture.detectChanges();
     });
 
-    it('Creates learn with default topic', () => {
+    it('creates learn with default topic', () => {
         expect(component.activeTopic).toBe('Nitrox');
     });
 
-    it('Changes quiz question', () => {
+    it('changes quiz question', () => {
         const expectedCategory = 'Used gas';
         component.updateTopic('Consumption', expectedCategory);
+        fixture.detectChanges();
 
         expect(component.currentQuiz?.categoryName).toBe(expectedCategory);
     });

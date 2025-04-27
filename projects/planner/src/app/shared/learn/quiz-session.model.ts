@@ -3,6 +3,8 @@ import { QuizItem } from './quiz.service';
 export class QuizSession {
     public static readonly minimalAcceptableSuccessRate = 80;
     public static readonly requiredAnsweredCount = 5;
+    public static readonly pointsCorrect = 2;
+    public static readonly pointsHinted = 1;
 
     public quizzes: QuizItem[] = [];
     public correctCount = 0;
@@ -11,9 +13,6 @@ export class QuizSession {
     public finished = false;
     public hintUsed = false;
     public totalScore = 0;
-
-    private readonly pointsCorrect = 2;
-    private readonly pointsHinted = 1;
 
     constructor(quizzes: QuizItem[]) {
         this.quizzes = quizzes;
@@ -46,7 +45,9 @@ export class QuizSession {
 
         if (quiz.isCorrect) {
             this.correctCount++;
-            this.totalScore += this.hintUsed ? this.pointsHinted : this.pointsCorrect;
+            this.totalScore += this.hintUsed
+                ? QuizSession.pointsHinted
+                : QuizSession.pointsCorrect;
         }
 
         this.hintUsed = false;
@@ -72,11 +73,7 @@ export class QuizSession {
     public goToNextQuestion(): void {
         this.currentQuestionIndex++;
         if (this.currentQuestionIndex >= this.quizzes.length) {
-            if (this.canFinishSession()) {
-                this.finished = true;
-            } else {
-                this.generateNewQuizzes();
-            }
+            this.finishIfEligible();
         }
     }
 
@@ -97,7 +94,7 @@ export class QuizSession {
 
     public canFinishSession(): boolean {
         return this.totalAnswered >= QuizSession.requiredAnsweredCount
-        && this.correctPercentage >= QuizSession.minimalAcceptableSuccessRate;
+            && this.correctPercentage >= QuizSession.minimalAcceptableSuccessRate;
     }
 
     public finishIfEligible(): void {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Preferences } from './preferences';
-import { AppPreferences, DiveDto } from './serialization.model';
+import { AppPreferences, DiveDto, QuizAnswerStats } from './serialization.model';
 import { DiveSchedule } from './dive.schedules';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class PreferencesStore {
 
         const loaded = JSON.parse(toParse) as DiveDto;
 
-        if(loaded) {
+        if (loaded) {
             this.preferencesFactory.loadDive(dive, loaded);
         }
     }
@@ -43,6 +43,7 @@ export class PreferencesStore {
 
     public save(): void {
         const toSave = this.preferencesFactory.toPreferences();
+
         const serialized = JSON.stringify(toSave);
         localStorage.setItem(PreferencesStore.storageKey, serialized);
     }

@@ -33,22 +33,24 @@
                                             }"
                                             (click)="updateTopic(topic.topic, category.name)">
 
-                                            <div class="d-flex align-items-center">
-                                                {{ category.name }}
-                                                <span class="small text-muted ms-2" *ngIf="quizService.attemptsByCategory.get(topic.topic + '::' + category.name) as stat">
-                                                    ({{ stat.correct }}/{{ stat.attempts }})
-                                                </span>
-                                            </div>
-
-                                            <fa-icon
-                                                [icon]="trophyIcon"
-                                                class="ms-2 small"
-                                                [ngClass]="{
-                                                    'text-muted': !quizService.answeredCategories.has(topic.topic + '::' + category.name),
-                                                    'text-warning': quizService.answeredCategories.has(topic.topic + '::' + category.name)
-                                                }">
-                                            </fa-icon>
-
+                                                <div class="d-flex align-items-center">
+                                                    {{ category.name }}
+                                                    <ng-container *ngIf="quizService.quizAnswers[topic.topic + '::' + category.name] as stats">
+                                                        <span class="small text-muted ms-2" *ngIf="quizService.isQuizCompleted(stats)">
+                                                            ({{ stats.correct }}/{{ stats.attempts }})
+                                                        </span>
+                                                    </ng-container>
+                                                </div>
+                                            <ng-container *ngIf="quizService.quizAnswers[topic.topic + '::' + category.name] as stats">
+                                                <fa-icon
+                                                    [icon]="trophyIcon"
+                                                    class="ms-2 small"
+                                                    [ngClass]="{
+                                                        'text-muted': !quizService.isQuizCompleted(stats),
+                                                        'text-warning': quizService.isQuizCompleted(stats)
+                                                    }">
+                                                </fa-icon>
+                                            </ng-container>
                                         </div>
                                     </li>
                                 </ul>

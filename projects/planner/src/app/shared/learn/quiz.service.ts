@@ -71,9 +71,13 @@ export class QuizItem {
 
         const calculatedAnswer = this.generateCorrectAnswer();
 
+        console.log(`Calculated Answer: ${calculatedAnswer}`);
+
         const expectedAnswer = this.roundValue(calculatedAnswer, this.roundTo, this.roundType);
 
         const userAnswerRounded = this.roundValue(userNum, this.roundTo, this.roundType);
+
+        console.log(`User Answer: ${userAnswerRounded}, Expected Answer: ${expectedAnswer}`);
 
         return userAnswerRounded === expectedAnswer;
     }
@@ -111,7 +115,9 @@ export class QuizService {
     public answeredCategories = new Set<string>();
     public sessionsByCategory = new Map<string, QuizSession>();
 
-    constructor() {}
+    constructor() {
+        this.loadProgress();
+    }
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {
         const key = `${topic}::${category}`;
@@ -127,6 +133,7 @@ export class QuizService {
         if (stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8) {
             this.answeredCategories.add(key);
         }
+        this.saveProgress();
     }
 
     public hasPassedCategory(topic: string, category: string): boolean {
@@ -147,6 +154,37 @@ export class QuizService {
         const color = finished === total ? 'bg-success' : 'bg-warning';
         return { finished, total, color };
     }
+
+    public saveProgress(): void {
+        const attemptsArray = Array.from(this.attemptsByCategory.entries());
+        const answeredArray = Array.from(this.answeredCategories);
+
+        localStorage.setItem('quiz-attempts', JSON.stringify(attemptsArray));
+        localStorage.setItem('quiz-answered', JSON.stringify(answeredArray));
+    }
+
+    public loadProgress(): void {
+        const attemptsJson = localStorage.getItem('quiz-attempts');
+        const answeredJson = localStorage.getItem('quiz-answered');
+
+        if (attemptsJson) {
+            const attemptsArray = JSON.parse(attemptsJson) as [string, { attempts: number; correct: number }][];
+            this.attemptsByCategory = new Map<string, { attempts: number; correct: number }>(attemptsArray);
+        }
+
+        if (answeredJson) {
+            const answeredArray = JSON.parse(answeredJson) as string[];
+            this.answeredCategories = new Set<string>(answeredArray);
+        }
+    }
+
+    public resetProgress(): void {
+        localStorage.removeItem('quiz-attempts');
+        localStorage.removeItem('quiz-answered');
+        this.attemptsByCategory.clear();
+        this.answeredCategories.clear();
+    }
+
 }
 
 // const isValid = Precision.isInRange(value, min, max);

@@ -7,6 +7,7 @@ import { ViewState } from './views.model';
 
 export interface AppPreferences extends AppPreferencesDto {
     states: AppStates;
+    quizAnswers?: Record<string, QuizAnswerStats>;
 }
 
 export interface AppStates {
@@ -20,7 +21,6 @@ export interface AppStates {
 export interface AppPreferencesDto {
     options: AppOptionsDto;
     dives: DiveDto[];
-    quizAnswers?: Record<string, QuizAnswerStats>;
 }
 
 export interface DiveDto {

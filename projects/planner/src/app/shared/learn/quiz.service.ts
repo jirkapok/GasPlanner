@@ -3,7 +3,7 @@ import { NitroxCalculator, SacCalculator, DepthConverter, Precision } from 'scub
 import { Topic, QuestionTemplate, RoundType } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
-import { QuizAnswerStats } from '../serialization.model';
+import { AppPreferences, QuizAnswerStats } from '../serialization.model';
 import { PreferencesStore } from '../../shared/preferencesStore';
 
 export class QuizItem {
@@ -117,8 +117,13 @@ export class QuizService {
     public quizAnswers: Record<string, QuizAnswerStats> = {};
     public sessionsByCategory = new Map<string, QuizSession>();
 
-    constructor(private preferencesStore: PreferencesStore) {
-        this.loadProgress();
+    constructor() {
+    }
+
+    public applyApp(loaded: AppPreferences): void {
+        if (loaded.quizAnswers) {
+            this.quizAnswers = loaded.quizAnswers;
+        }
     }
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {
@@ -136,7 +141,6 @@ export class QuizService {
         }
 
         this.quizAnswers[key] = stats;
-        this.saveProgress();
     }
 
     public hasPassedCategory(topic: string, category: string): boolean {
@@ -155,18 +159,6 @@ export class QuizService {
         const total = topic.categories.length;
         const color = finished === total ? 'bg-success' : 'bg-warning';
         return { finished, total, color };
-    }
-
-    private saveProgress(): void {
-        this.preferencesStore.quizAnswers = this.quizAnswers;
-        this.preferencesStore.save();
-    }
-
-    private loadProgress(): void {
-        this.preferencesStore.load();
-        if (this.preferencesStore.quizAnswers) {
-            this.quizAnswers = this.preferencesStore.quizAnswers;
-        }
     }
 }
 

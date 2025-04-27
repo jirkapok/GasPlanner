@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import _ from 'lodash';
 import {
     AppOptionsDto, AppPreferences, AppPreferencesDto,
-    AppStates, DiveDto, ITankBound, TankDto
+    AppStates, DiveDto, ITankBound, QuizAnswerStats, TankDto
 } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
 import { UnitConversion } from './UnitConversion';
@@ -12,6 +12,7 @@ import { DiveSetup } from './models';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { DashBoardViewState } from './views.model';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { QuizService } from './learn/quiz.service';
 
 @Injectable()
 export class Preferences {
@@ -20,7 +21,8 @@ export class Preferences {
         private units: UnitConversion,
         private schedules: DiveSchedules,
         private appSettings: ApplicationSettingsService,
-        private viewStates: ViewStates
+        private viewStates: ViewStates,
+        private quizService: QuizService
     ) { }
 
     private static loadWorkingPressure(source: TankDto[], target: ITankBound[]): void {

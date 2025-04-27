@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import _ from 'lodash';
 import {
     AppOptionsDto, AppPreferences, AppPreferencesDto,
-    AppStates, DiveDto, ITankBound, QuizAnswerStats, TankDto
+    AppStates, DiveDto, ITankBound, TankDto
 } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
 import { UnitConversion } from './UnitConversion';

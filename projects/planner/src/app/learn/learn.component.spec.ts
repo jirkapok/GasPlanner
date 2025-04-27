@@ -7,10 +7,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Urls } from '../shared/navigation.service';
 import { QuizService } from '../shared/learn/quiz.service';
-import { PreferencesStore } from '../shared/preferences.store';
+import { PreferencesStore } from '../shared/preferencesStore';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-// Mock PreferencesStore, protože QuizService ho potřebuje
 const mockPreferencesStore = {
     load: () => {},
     save: () => {},

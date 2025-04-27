@@ -1,137 +1,80 @@
 import { Injectable } from '@angular/core';
 import { NitroxCalculator, SacCalculator, DepthConverter, Precision } from 'scuba-physics';
-import { Topic, Category, QuestionTemplate, topics, Variable, RoundType } from './learn.models';
+import { Topic, QuestionTemplate, topics, RoundType } from './learn.models';
+import { QuizSession } from './quiz-session.model';
 
-export interface QuizItem {
-    readonly categoryName: string;
-    renderedQuestion: string;
-    readonly roundTo: number;
-    readonly roundType: RoundType;
-    readonly variables: number[];
-    userAnswer?: string;
-    isAnswered: boolean;
-    isCorrect: boolean;
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-
-export class QuizService {
-    public topics: Topic[] = topics;
-
+export class QuizItem {
+    public template: QuestionTemplate;
     private nitroxCalculator: NitroxCalculator;
     private sacCalculator: SacCalculator;
 
-    constructor() {
+    constructor(
+        template: QuestionTemplate,
+        public categoryName: string,
+        public renderedQuestion: string,
+        public roundTo: number,
+        public roundType: RoundType,
+        public variables: number[],
+        public isAnswered: boolean,
+        public isCorrect: boolean,
+        public userAnswer?: string,
+    ) {
+        this.template = template;
         const depthConverter = DepthConverter.simple();
         this.nitroxCalculator = new NitroxCalculator(depthConverter, 0.21);
         this.sacCalculator = new SacCalculator(depthConverter);
     }
 
-    public getQuizItemForCategory(category: Category): QuizItem {
+    public randomizeQuizVariables(): void {
+        let indexSafe = 0;
 
-        const randomIndex = Math.floor(Math.random() * category.questions.length);
-        const selectedQuestion = category.questions[randomIndex];
-
-        const quizItem: QuizItem = {
-            categoryName: category.name,
-            renderedQuestion: selectedQuestion.question,
-            roundTo: selectedQuestion.roundTo,
-            roundType: selectedQuestion.roundType,
-            variables: [],
-            userAnswer: undefined,
-            isAnswered: false,
-            isCorrect: false
-        };
-        this.randomizeQuizVariables(selectedQuestion, quizItem);
-        this.renderQuestion(selectedQuestion, quizItem);
-
-        return quizItem;
+        do {
+            this.variables = this.template.variables.map(variable => variable.randomizeVariable());
+            indexSafe++;
+        } while (Number.isNaN(this.generateCorrectAnswer()) && indexSafe < 100);
     }
 
-    public validateAnswer(quizItem: QuizItem): boolean {
-        const userAns = (quizItem.userAnswer || '').trim();
-        const userNum = parseFloat(userAns);
+    public generateCorrectAnswer(): number {
 
-        if (isNaN(userNum)) {
-            return false;
+        if (this.categoryName.toLowerCase().includes('maximum operational depth')) {
+            return this.nitroxCalculator.mod(this.variables[0], this.variables[1]);
         }
 
-        const expectedAnswer = this.roundValue(this.generateCorrectAnswer(quizItem), quizItem.roundTo, quizItem.roundType);
-
-        const userAnswerRounded = this.roundValue(userNum, quizItem.roundTo, quizItem.roundType);
-
-        console.log(`User Answer: ${userAnswerRounded}, Expected Answer: ${expectedAnswer}`);
-
-        return userAnswerRounded === expectedAnswer;
-    }
-
-    public generateCorrectAnswer(quizItem: QuizItem): number {
-
-        if (quizItem.categoryName.toLowerCase().includes('maximum operational depth')) {
-            console.log('PPO2: ', quizItem.variables[0], 'O2%: ', quizItem.variables[1]);
-            return this.nitroxCalculator.mod(quizItem.variables[0], quizItem.variables[1]);
+        if (this.categoryName.toLowerCase().includes('best mix')) {
+            return this.nitroxCalculator.bestMix(this.variables[0], this.variables[1]);
         }
 
-        if (quizItem.categoryName.toLowerCase().includes('best mix')) {
-            return this.nitroxCalculator.bestMix(quizItem.variables[0], quizItem.variables[1]);
+        if (this.categoryName.toLowerCase().includes('partial pressure')) {
+            return this.nitroxCalculator.partialPressure(this.variables[0], this.variables[1]);
         }
 
-        if (quizItem.categoryName.toLowerCase().includes('partial pressure')) {
-            return this.nitroxCalculator.partialPressure(quizItem.variables[0], quizItem.variables[1]);
-        }
-
-        if (quizItem.categoryName.toLowerCase().includes('respiratory minute volume')) {
+        if (this.categoryName.toLowerCase().includes('respiratory minute volume')) {
             return this.sacCalculator.calculateSac(
-                quizItem.variables[0],
-                quizItem.variables[1],
-                quizItem.variables[2],
-                quizItem.variables[3]
+                this.variables[0],
+                this.variables[1],
+                this.variables[2],
+                this.variables[3]
             );
         }
 
         return NaN; // Make it clear that the question type was not recognized
     }
 
+    public validateAnswer(): boolean {
+        const userAns = (this.userAnswer || '').trim();
+        const userNum = parseFloat(userAns);
 
-    public randomizeVariable(variable: Variable): number {
-        if (typeof variable.min === 'number' && typeof variable.max === 'number') {
-            const min = variable.min;
-            const max = variable.max;
-            const decimals = Math.max(
-                (min.toString().split('.')[1]?.length || 0),
-                (max.toString().split('.')[1]?.length || 0)
-            );
-
-            const randomValue = Math.random() * (max - min) + min;
-            return parseFloat(randomValue.toFixed(decimals));
-        } else if (Array.isArray(variable.options)) {
-            const randomIndex = Math.floor(Math.random() * variable.options.length);
-            return variable.options[randomIndex];
+        if (isNaN(userNum)) {
+            return false;
         }
-        return 1; // Default value if no options or range is provided
-    }
 
-    public randomizeQuizVariables(questionTemplate: QuestionTemplate, quizItem: QuizItem): void {
-        let indexSafe = 0;
-        do{
-            questionTemplate.variables.forEach(variable => {
+        const calculatedAnswer = this.generateCorrectAnswer();
 
-                quizItem.variables.push(this.randomizeVariable(variable));
+        const expectedAnswer = this.roundValue(calculatedAnswer, this.roundTo, this.roundType);
 
-            });
-        }   while(!Number.isNaN(this.generateCorrectAnswer(quizItem)) && indexSafe++ < 100);
-    }
+        const userAnswerRounded = this.roundValue(userNum, this.roundTo, this.roundType);
 
-    public renderQuestion(questionTemplate: QuestionTemplate, quizItem: QuizItem): void {
-        let rendered = questionTemplate.question;
-        if (Array.isArray(questionTemplate.variables)) {
-            questionTemplate.variables.forEach((variable, index) => {
-                rendered = rendered.replace(new RegExp(`{${variable.name}}`, 'g'), quizItem.variables[index].toString());
-            });
-        }
-        quizItem.renderedQuestion = rendered;
+        return userAnswerRounded === expectedAnswer;
     }
 
     public roundValue(value: number, roundTo: number, roundType: RoundType): number {
@@ -144,6 +87,66 @@ export class QuizService {
             default:
                 return Precision.round(value, roundTo);
         }
+    }
+
+    public renderQuestion(): void {
+        let rendered = this.template.question;
+        if (Array.isArray(this.template.variables)) {
+            this.template.variables.forEach((variable, index) => {
+                rendered = rendered.replace(new RegExp(`{${variable.name}}`, 'g'), this.variables[index].toString());
+            });
+        }
+        this.renderedQuestion = rendered;
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+
+export class QuizService {
+    public topics: Topic[] = topics;
+    public attemptsByCategory = new Map<string, { attempts: number; correct: number }>();
+    public answeredCategories = new Set<string>();
+    public sessionsByCategory = new Map<string, QuizSession>();
+    public minimalSuccessRate = 80;
+    public requiredQuestions = 5;
+
+    constructor() {}
+
+    public registerAnswer(topic: string, category: string, correct: boolean): void {
+        const key = `${topic}::${category}`;
+        const stats = this.attemptsByCategory.get(key) || { attempts: 0, correct: 0 };
+
+        stats.attempts++;
+        if (correct) {
+            stats.correct++;
+        }
+
+        this.attemptsByCategory.set(key, stats);
+
+        if (stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8) {
+            this.answeredCategories.add(key);
+        }
+    }
+
+    public hasPassedCategory(topic: string, category: string): boolean {
+        const key = `${topic}::${category}`;
+        const stats = this.attemptsByCategory.get(key);
+        return stats ? stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8 : false;
+    }
+
+    public countFinishedCategories(topic: Topic): number {
+        return topic.categories.filter(cat =>
+            this.answeredCategories.has(`${topic.topic}::${cat.name}`)
+        ).length;
+    }
+
+    public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; color: string } {
+        const finished = this.countFinishedCategories(topic);
+        const total = topic.categories.length;
+        const color = finished === total ? 'bg-success' : 'bg-warning';
+        return { finished, total, color };
     }
 }
 

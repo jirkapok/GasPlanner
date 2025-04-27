@@ -1,3 +1,5 @@
+import { QuizItem } from './quiz.service';
+
 export type VariableOption = number;
 
 export enum RoundType {
@@ -13,7 +15,26 @@ export class Variable {
         public min?: number,
         public max?: number
     ) {}
+
+    public randomizeVariable(): number {
+        if (typeof this.min === 'number' && typeof this.max === 'number') {
+            const min = this.min;
+            const max = this.max;
+            const decimals = Math.max(
+                (min.toString().split('.')[1]?.length || 0),
+                (max.toString().split('.')[1]?.length || 0)
+            );
+
+            const randomValue = Math.random() * (max - min) + min;
+            return parseFloat(randomValue.toFixed(decimals));
+        } else if (Array.isArray(this.options)) {
+            const randomIndex = Math.floor(Math.random() * this.options.length);
+            return this.options[randomIndex];
+        }
+        return 1;
+    }
 }
+
 
 export class QuestionTemplate {
     constructor(
@@ -30,6 +51,27 @@ export class Category {
         public help: string,
         public questions: QuestionTemplate[]
     ) {}
+
+    public getQuizItemForCategory(): QuizItem {
+        const randomIndex = Math.floor(Math.random() * this.questions.length);
+        const selectedQuestion = this.questions[randomIndex];
+
+        const quizItem = new QuizItem(
+            selectedQuestion,
+            this.name,
+            selectedQuestion.question,
+            selectedQuestion.roundTo,
+            selectedQuestion.roundType,
+            [],
+            false,
+            false,
+        );
+
+        quizItem.randomizeQuizVariables();
+        quizItem.renderQuestion();
+
+        return quizItem;
+    }
 }
 
 export class Topic {
@@ -55,7 +97,7 @@ export const topics: Topic[] = [
         new Category('Best mix', 'nitrox', [
             new QuestionTemplate(
                 'What is best mix (in percents) at partial pressure {pp} at depth {depth} m?',
-                0,
+                1,
                 RoundType.round,
                 [
                     new Variable('pp', undefined, 1, 2),

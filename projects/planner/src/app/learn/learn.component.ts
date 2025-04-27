@@ -6,7 +6,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
 import { QuizService, QuizItem } from '../shared/learn/quiz.service';
-import { Topic, Category } from '../shared/learn/learn.models';
+import { Topic } from '../shared/learn/learn.models';
+import { QuizSession } from '../shared/learn/quiz-session.model';
 
 @Component({
     selector: 'app-learn',
@@ -16,31 +17,35 @@ import { Topic, Category } from '../shared/learn/learn.models';
     styleUrls: ['./learn.component.scss']
 })
 export class LearnComponent implements OnInit {
-    public topics: Topic[] = [];
-    public quizzes: QuizItem[] = [];
-    public correctCount = 0;
-    public correctPercentage = 0;
-    public showScore = false;
+
+    public readonly trophyIcon = faMedal;
+    public readonly topics: Topic[] = [];
+
+    public session: QuizSession | undefined;
     public activeTopic = '';
     public selectedTopic = '';
     public selectedCategoryName = '';
-    public currentQuestionIndex = 0;
-    public totalAnswered = 0;
-    public currentPercentage = 0;
-    public answeredCategories = new Set<string>();
-    public trophyIcon = faMedal;
-    public attemptsByCategory = new Map<string, { attempts: number; correct: number }>();
 
     private _label = '';
 
-    constructor(private quizService: QuizService) {}
+    constructor(public quizService: QuizService) {
+        this.topics = quizService.topics;
+    }
 
-    get currentQuiz(): QuizItem {
-        return this.quizzes[this.currentQuestionIndex];
+    get currentQuiz(): QuizItem | undefined {
+        return this.session?.currentQuiz;
+    }
+
+    public get correctPercentage(): number {
+        return this.session?.correctPercentage ?? 0;
     }
 
     public get label(): string {
         return this._label;
+    }
+
+    public get scoreSummary(): string {
+        return this.session?.scoreSummary ?? '';
     }
 
     @Input()
@@ -50,9 +55,6 @@ export class LearnComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // Updated here: No more subscribe, just direct assignment
-        this.topics = this.quizService.topics;
-
         const firstTopic = this.topics[0];
         const firstCategory = firstTopic?.categories[0];
 
@@ -67,23 +69,20 @@ export class LearnComponent implements OnInit {
         this.activeTopic = topicName;
 
         const topic = this.topics.find(t => t.topic === topicName);
-        if (topic) {
-            this.quizzes = [];
+        const category = topic?.categories.find(c => c.name === categoryName);
 
-            // Generate 5 random quizzes from selected category
-            const category = topic.categories.find((c: Category) => c.name === categoryName);
-            if (category) {
-                for (let i = 0; i < 5; i++) {
-                    const quizItem = this.quizService.getQuizItemForCategory(category);
-                    this.quizzes.push(quizItem);
-                }
+        if (category) {
+            const key = `${topicName}::${categoryName}`;
+
+            let session = this.quizService.sessionsByCategory.get(key);
+
+            if (!session) {
+                const quizzes = Array.from({ length: QuizSession.requiredAnsweredCount }, () => category.getQuizItemForCategory());
+                session = new QuizSession(quizzes);
+                this.quizService.sessionsByCategory.set(key, session);
             }
 
-            this.showScore = false;
-            this.correctCount = 0;
-            this.totalAnswered = 0;
-            this.currentPercentage = 0;
-            this.currentQuestionIndex = 0;
+            this.session = session;
         }
     }
 
@@ -92,44 +91,20 @@ export class LearnComponent implements OnInit {
     }
 
     public validateCurrentAnswer(): void {
-        const quiz = this.currentQuiz;
-        if (!quiz) {
+        if (!this.session) {
             return;
         }
 
-        quiz.isCorrect = this.quizService.validateAnswer(quiz);
-        quiz.isAnswered = true;
-
-        const key = `${this.selectedTopic}::${this.selectedCategoryName}`;
-        const stats = this.attemptsByCategory.get(key) || { attempts: 0, correct: 0 };
-
-        stats.attempts += 1;
-        if (quiz.isCorrect) {
-            stats.correct += 1;
-        }
-
-        this.attemptsByCategory.set(key, stats);
-
-        if (stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8) {
-            this.answeredCategories.add(key);
-        }
-
-        this.totalAnswered++;
-        if (quiz.isCorrect) {
-            this.correctCount++;
-        }
-        this.currentPercentage = Math.round((this.correctCount / this.totalAnswered) * 100);
+        this.session.validateCurrentAnswer();
+        this.quizService.registerAnswer(this.selectedTopic, this.selectedCategoryName, this.session.currentQuiz?.isCorrect ?? false);
     }
 
     public goToNextQuestion(): void {
-        if (this.currentQuestionIndex < this.quizzes.length - 1) {
-            this.currentQuestionIndex++;
-        }
+        this.session?.goToNextQuestion();
     }
 
     public submitAnswers(): void {
-        this.correctPercentage = Math.round((this.correctCount / this.totalAnswered) * 100);
-        this.showScore = true;
+        this.session?.finishIfEligible();
     }
 
     public isCategorySelected(topicName: string, categoryName: string): boolean {
@@ -137,53 +112,34 @@ export class LearnComponent implements OnInit {
     }
 
     public hasPassedCategory(): boolean {
-        const key = `${this.selectedTopic}::${this.selectedCategoryName}`;
-        const stats = this.attemptsByCategory.get(key);
-        return stats ? stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8 : false;
+        return this.quizService.hasPassedCategory(this.selectedTopic, this.selectedCategoryName);
     }
 
     public countFinishedCategories(topic: Topic): number {
-        let count = 0;
-        for (const category of topic.categories) {
-            if (this.answeredCategories.has(`${topic.topic}::${category.name}`)) {
-                count++;
-            }
-        }
-        return count;
+        return this.quizService.countFinishedCategories(topic);
     }
 
     public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; color: string } {
-        const total = topic.categories.length;
-        let finished = 0;
-
-        for (const category of topic.categories) {
-            if (this.answeredCategories.has(`${topic.topic}::${category.name}`)) {
-                finished++;
-            }
-        }
-
-        const color = finished === total ? 'bg-success' : 'bg-warning';
-
-        return { finished, total, color };
+        return this.quizService.getTopicCompletionStatus(topic);
     }
 
     public shouldShowSubmitButton(): boolean {
-        return !this.currentQuiz.isAnswered;
+        return this.currentQuiz !== undefined && !this.currentQuiz.isAnswered;
     }
 
     public shouldShowNextQuestionButton(): boolean {
-        return this.currentQuiz.isAnswered && this.currentQuestionIndex < this.quizzes.length - 1;
+        return !!this.currentQuiz?.isAnswered && !(this.session?.finished);
     }
 
     public shouldShowFinishButton(): boolean {
-        return this.currentQuiz.isAnswered && this.currentQuestionIndex >= this.quizzes.length - 1;
+        return !!(this.currentQuiz?.isAnswered ?? false) && !!this.session?.canFinishSession();
     }
 
     public shouldShowScore(): boolean {
-        return this.showScore;
+        return this.session?.finished ?? false;
     }
 
     public shouldShowForm(): boolean {
-        return !this.showScore && this.quizzes.length > 0;
+        return !this.session?.finished && (this.session?.quizzes?.length ?? 0) > 0;
     }
 }

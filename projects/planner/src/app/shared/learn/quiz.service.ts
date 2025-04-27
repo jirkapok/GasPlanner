@@ -3,6 +3,8 @@ import { NitroxCalculator, SacCalculator, DepthConverter, Precision } from 'scub
 import { Topic, QuestionTemplate, RoundType } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
+import { QuizAnswerStats } from '../serialization.model';
+import { PreferencesStore } from '../../shared/preferencesStore';
 
 export class QuizItem {
     public template: QuestionTemplate;
@@ -33,6 +35,8 @@ export class QuizItem {
             this.variables = this.template.variables.map(variable => variable.randomizeVariable());
             indexSafe++;
         } while (Number.isNaN(this.generateCorrectAnswer()) && indexSafe < 100);
+
+        console.log(`Randomized result: ${this.generateCorrectAnswer()}`);
     }
 
     public generateCorrectAnswer(): number {
@@ -108,43 +112,41 @@ export class QuizItem {
 @Injectable({
     providedIn: 'root'
 })
-
 export class QuizService {
     public topics: Topic[] = topics;
-    public attemptsByCategory = new Map<string, { attempts: number; correct: number }>();
-    public answeredCategories = new Set<string>();
+    public quizAnswers: Record<string, QuizAnswerStats> = {};
     public sessionsByCategory = new Map<string, QuizSession>();
 
-    constructor() {
+    constructor(private preferencesStore: PreferencesStore) {
         this.loadProgress();
     }
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {
         const key = `${topic}::${category}`;
-        const stats = this.attemptsByCategory.get(key) || { attempts: 0, correct: 0 };
+        const stats = this.quizAnswers[key] ?? { completed: false, attempts: 0, correct: 0 };
 
         stats.attempts++;
         if (correct) {
             stats.correct++;
         }
 
-        this.attemptsByCategory.set(key, stats);
-
+        // Update completion status
         if (stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8) {
-            this.answeredCategories.add(key);
+            stats.completed = true;
         }
+
+        this.quizAnswers[key] = stats;
         this.saveProgress();
     }
 
     public hasPassedCategory(topic: string, category: string): boolean {
         const key = `${topic}::${category}`;
-        const stats = this.attemptsByCategory.get(key);
-        return stats ? stats.attempts >= 5 && (stats.correct / stats.attempts) >= 0.8 : false;
+        return this.quizAnswers[key]?.completed ?? false;
     }
 
     public countFinishedCategories(topic: Topic): number {
         return topic.categories.filter(cat =>
-            this.answeredCategories.has(`${topic.topic}::${cat.name}`)
+            this.quizAnswers[`${topic.topic}::${cat.name}`]?.completed
         ).length;
     }
 
@@ -155,36 +157,17 @@ export class QuizService {
         return { finished, total, color };
     }
 
-    public saveProgress(): void {
-        const attemptsArray = Array.from(this.attemptsByCategory.entries());
-        const answeredArray = Array.from(this.answeredCategories);
-
-        localStorage.setItem('quiz-attempts', JSON.stringify(attemptsArray));
-        localStorage.setItem('quiz-answered', JSON.stringify(answeredArray));
+    private saveProgress(): void {
+        this.preferencesStore.quizAnswers = this.quizAnswers;
+        this.preferencesStore.save();
     }
 
-    public loadProgress(): void {
-        const attemptsJson = localStorage.getItem('quiz-attempts');
-        const answeredJson = localStorage.getItem('quiz-answered');
-
-        if (attemptsJson) {
-            const attemptsArray = JSON.parse(attemptsJson) as [string, { attempts: number; correct: number }][];
-            this.attemptsByCategory = new Map<string, { attempts: number; correct: number }>(attemptsArray);
-        }
-
-        if (answeredJson) {
-            const answeredArray = JSON.parse(answeredJson) as string[];
-            this.answeredCategories = new Set<string>(answeredArray);
+    private loadProgress(): void {
+        this.preferencesStore.load();
+        if (this.preferencesStore.quizAnswers) {
+            this.quizAnswers = this.preferencesStore.quizAnswers;
         }
     }
-
-    public resetProgress(): void {
-        localStorage.removeItem('quiz-attempts');
-        localStorage.removeItem('quiz-answered');
-        this.attemptsByCategory.clear();
-        this.answeredCategories.clear();
-    }
-
 }
 
 // const isValid = Precision.isInRange(value, min, max);

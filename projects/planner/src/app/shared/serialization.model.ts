@@ -20,6 +20,7 @@ export interface AppStates {
 export interface AppPreferencesDto {
     options: AppOptionsDto;
     dives: DiveDto[];
+    quizAnswers?: Record<string, QuizAnswerStats>;
 }
 
 export interface DiveDto {
@@ -217,4 +218,10 @@ export interface OptionsDto {
     problemSolvingDuration: number;
     /** optional because of upgrade */
     airBreaks?: AirBreaksDto;
+}
+
+export interface QuizAnswerStats {
+    completed: boolean;
+    attempts: number;
+    correct: number;
 }

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { NitroxCalculator, SacCalculator, DepthConverter, Precision } from 'scuba-physics';
-import { Topic, QuestionTemplate, topics, RoundType } from './learn.models';
+import { Topic, QuestionTemplate, RoundType } from './learn.models';
 import { QuizSession } from './quiz-session.model';
+import { topics } from './quiz.questions';
 
 export class QuizItem {
     public template: QuestionTemplate;

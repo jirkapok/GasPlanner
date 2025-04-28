@@ -9,13 +9,20 @@ import {
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 import { ShareDiveService } from '../shared/ShareDiveService';
 import { FeatureFlags } from 'scuba-physics';
+import {
+    ActivatedRoute,
+    NavigationEnd,
+    Router,
+} from "@angular/router";
+import { filter, map, takeUntil } from "rxjs";
+import { Streamed } from "../shared/streamed";
 
 @Component({
     selector: 'app-mainmenu',
     templateUrl: './mainmenu.component.html',
     styleUrls: ['./mainmenu.component.scss']
 })
-export class MainMenuComponent {
+export class MainMenuComponent extends Streamed {
     public isNavbarCollapsed = true;
     public iconMenu = faBars;
     public iconAltitude = faMountainSun;
@@ -31,11 +38,31 @@ export class MainMenuComponent {
     public iconDelete = faTrashCan;
 
     public gamification = FeatureFlags.Instance.gamification;
+    public inPlanner = false;
 
     constructor(
+        private router: Router,
+        private route: ActivatedRoute,
         private schedules: ManagedDiveSchedules,
         private share: ShareDiveService,
-        public urls: Urls,) { }
+        public urls: Urls) {
+        super();
+        this.router.events.pipe(
+            takeUntil(this.unsubscribe$),
+            filter((event) => event instanceof NavigationEnd),
+            map(() => this.rootRoute(this.route)),
+            filter((route: ActivatedRoute) => route.outlet === 'primary'),
+        ).subscribe((route: ActivatedRoute) => {
+            this.inPlanner = (route.component?.name?.indexOf('DashboardComponent') ?? -1) >= 0;
+        });
+    }
+
+    private rootRoute(route: ActivatedRoute): ActivatedRoute {
+        while (route.firstChild) {
+            route = route.firstChild;
+        }
+        return route;
+    }
 
     public saveDefaults(): void {
         this.schedules.saveDefaults();

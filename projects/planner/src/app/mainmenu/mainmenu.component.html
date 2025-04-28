@@ -21,7 +21,7 @@
                        <li><a class="dropdown-item" routerLink="/blender"><fa-icon [icon]="iconBlender" class="me-2"></fa-icon>Gas blender</a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown" mdbDropdown>
+                <li *ngIf="inPlanner" class="nav-item dropdown" mdbDropdown>
                     <a class="nav-link dropdown-toggle" id="dive" mdbDropdownToggle>Dive</a>
                     <ul class="dropdown-menu" aria-labelledby="dive" mdbDropdownMenu>
                         <li><a class="dropdown-item" (click)="cloneDive()"><fa-icon [icon]="iconClone" class="me-2" (click)="shareDive()"></fa-icon>Clone</a></li>

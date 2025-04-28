@@ -42,5 +42,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-test-results/**/*.xml
+/test-results
 /ssl
+/.nx

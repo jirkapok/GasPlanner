@@ -9,6 +9,7 @@ import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
     selector: 'app-diff-waypoints',
     templateUrl: './diff-waypoints.component.html',
     styleUrls: ['./diff-waypoints.component.scss', '../diff.component.scss'],
+    standalone: false
 })
 export class WaypointsDifferenceComponent {
     public tasks = faTasks;

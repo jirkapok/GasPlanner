@@ -23,7 +23,8 @@ interface RedundanciesForm {
 @Component({
     selector: 'app-redundancies',
     templateUrl: './redundancies.component.html',
-    styleUrls: ['./redundancies.component.scss']
+    styleUrls: ['./redundancies.component.scss'],
+    standalone: false
 })
 export class RedundanciesComponent implements OnInit {
     public calcIcon = faCalculator;

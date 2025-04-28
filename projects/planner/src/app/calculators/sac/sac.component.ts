@@ -25,7 +25,8 @@ interface SacForm {
 @Component({
     selector: 'app-sac',
     templateUrl: './sac.component.html',
-    styleUrls: ['./sac.component.scss']
+    styleUrls: ['./sac.component.scss'],
+    standalone: false
 })
 export class SacComponent implements OnInit {
     public calcIcon = faLungs;

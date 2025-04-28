@@ -9,7 +9,8 @@ import { Streamed } from '../../shared/streamed';
 @Component({
     selector: 'app-plan-tabs',
     templateUrl: './plan.tabs.component.html',
-    styleUrls: ['./plan.tabs.component.scss']
+    styleUrls: ['./plan.tabs.component.scss'],
+    standalone: false
 })
 export class PlanTabsComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;

@@ -9,13 +9,13 @@ import { ProfileComparatorService } from '../../../shared/diff/profileComparator
     templateUrl: './diff-tabs-button.component.html',
     styleUrls: ['./diff-tabs-button.component.scss'],
     animations: [
-        trigger('labelState',[
+        trigger('labelState', [
             state('primary', style({
                 transform: 'rotateX(180deg)',
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0
             })),
-            state('secondary', style({ transform: 'none'})),
+            state('secondary', style({ transform: 'none' })),
             state('disabled', style({
                 visibility: 'hidden',
                 transform: 'translateY(21px)',
@@ -23,11 +23,12 @@ import { ProfileComparatorService } from '../../../shared/diff/profileComparator
             transition('disabled => secondary', [animate('400ms')]),
             transition('secondary => primary', [animate('500ms')]),
             transition('primary => disabled', [animate('400ms', keyframes([
-                style({transform: 'rotateX(180deg)', offset: 0}),
-                style({transform: 'rotateX(180deg) translateY(-21px)', offset: 1})
-            ]))]),
+                    style({ transform: 'rotateX(180deg)', offset: 0 }),
+                    style({ transform: 'rotateX(180deg) translateY(-21px)', offset: 1 })
+                ]))]),
         ]),
-    ]
+    ],
+    standalone: false
 })
 export class DiffTabsButtonComponent {
     @Input({required: true}) index = 0;

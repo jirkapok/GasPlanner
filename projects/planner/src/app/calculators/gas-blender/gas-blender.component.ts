@@ -30,7 +30,8 @@ interface IGasBlenderForm {
 @Component({
     selector: 'app-gas-blender',
     templateUrl: './gas-blender.component.html',
-    styleUrls: ['./gas-blender.component.scss']
+    styleUrls: ['./gas-blender.component.scss'],
+    standalone: false
 })
 export class GasBlenderComponent implements OnInit {
     public readonly calcIcon = faFaucet;

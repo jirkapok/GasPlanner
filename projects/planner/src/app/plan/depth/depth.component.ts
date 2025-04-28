@@ -8,7 +8,8 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 @Component({
     selector: 'app-depth',
     templateUrl: './depth.component.html',
-    styleUrls: ['./depth.component.scss']
+    styleUrls: ['./depth.component.scss'],
+    standalone: false
 })
 export class DepthComponent implements OnInit {
     @Input() public depthForm!: FormGroup;

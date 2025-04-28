@@ -12,7 +12,8 @@ import { BoundEvent } from "../../shared/models";
 @Component({
     selector: 'app-dive-issues',
     templateUrl: './dive-issues.component.html',
-    styleUrls: ['./dive-issues.component.scss']
+    styleUrls: ['./dive-issues.component.scss'],
+    standalone: false
 })
 export class DiveIssuesComponent {
     public exclamation = faExclamationCircle;

@@ -6,7 +6,8 @@ import { ProfileComparatorService } from '../../../shared/diff/profileComparator
 @Component({
     selector: 'app-diff-gas-consumed',
     templateUrl: './diff-gas-consumed.component.html',
-    styleUrls: ['./diff-gas-consumed.component.scss', '../../diff.component.scss']
+    styleUrls: ['./diff-gas-consumed.component.scss', '../../diff.component.scss'],
+    standalone: false
 })
 export class GasConsumedDifferenceComponent {
     public icon = faSlidersH;

@@ -13,7 +13,8 @@ import { ShareDiveService } from "../../shared/ShareDiveService";
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss']
+    styleUrls: ['./dashboard.component.scss'],
+    standalone: false
 })
 export class DashboardComponent extends Streamed implements OnInit {
     public exclamation = faExclamationTriangle;

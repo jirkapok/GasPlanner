@@ -21,7 +21,6 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
     selector: 'app-surface-interval',
     templateUrl: './surface-interval.component.html',
     styleUrls: ['./surface-interval.component.scss'],
-    standalone: true,
     imports: [
         MaskitoDirective, ReactiveFormsModule,
         MdbDropdownModule, MdbFormsModule, NgIf

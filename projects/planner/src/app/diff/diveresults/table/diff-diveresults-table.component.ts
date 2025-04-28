@@ -8,7 +8,8 @@ import { DiveResults } from '../../../shared/diveresults';
 @Component({
     selector: 'app-diff-diveresults-table',
     templateUrl: './diff-diveresults-table.component.html',
-    styleUrls: ['./diff-diveresults-table.component.scss', '../../diff.component.scss']
+    styleUrls: ['./diff-diveresults-table.component.scss', '../../diff.component.scss'],
+    standalone: false
 })
 export class DiveResultsTableDifferenceComponent {
     public constructor(

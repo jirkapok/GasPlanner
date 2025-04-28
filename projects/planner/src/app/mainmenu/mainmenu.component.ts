@@ -20,7 +20,8 @@ import { Streamed } from "../shared/streamed";
 @Component({
     selector: 'app-mainmenu',
     templateUrl: './mainmenu.component.html',
-    styleUrls: ['./mainmenu.component.scss']
+    styleUrls: ['./mainmenu.component.scss'],
+    standalone: false
 })
 export class MainMenuComponent extends Streamed {
     public isNavbarCollapsed = true;

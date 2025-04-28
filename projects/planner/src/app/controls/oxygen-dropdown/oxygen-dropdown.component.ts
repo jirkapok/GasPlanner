@@ -9,7 +9,8 @@ import { IGasContent } from '../../shared/models';
 @Component({
     selector: 'app-oxygen-dropdown',
     templateUrl: './oxygen-dropdown.component.html',
-    styleUrls: ['./oxygen-dropdown.component.scss']
+    styleUrls: ['./oxygen-dropdown.component.scss'],
+    standalone: false
 })
 export class OxygenDropDownComponent implements OnInit {
     @Input() public showBestMix = true;

@@ -20,7 +20,8 @@ import { ShareDiveService } from '../../shared/ShareDiveService';
 @Component({
     selector: 'app-diveinfo',
     templateUrl: './diveinfo.component.html',
-    styleUrls: ['./diveinfo.component.scss']
+    styleUrls: ['./diveinfo.component.scss'],
+    standalone: false
 })
 export class DiveInfoComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;

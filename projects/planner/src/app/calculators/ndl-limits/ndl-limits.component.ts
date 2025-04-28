@@ -18,7 +18,8 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 @Component({
     selector: 'app-ndl-limits',
     templateUrl: './ndl-limits.component.html',
-    styleUrls: ['./ndl-limits.component.scss']
+    styleUrls: ['./ndl-limits.component.scss'],
+    standalone: false
 })
 export class NdlLimitsComponent implements OnInit {
     public icon = faTable;

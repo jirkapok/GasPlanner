@@ -17,7 +17,8 @@ import { ReloadDispatcher } from '../shared/reloadDispatcher';
 @Component({
     selector: 'app-app-settings',
     templateUrl: './app-settings.component.html',
-    styleUrls: ['./app-settings.component.scss']
+    styleUrls: ['./app-settings.component.scss'],
+    standalone: false
 })
 export class AppSettingsComponent implements OnInit {
     public flagIcon = faFlag;

@@ -9,9 +9,8 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
 
 @Component({
     selector: 'app-help',
-    standalone: true,
-    imports: [ NgxMdModule, FontAwesomeModule, NgForOf, NgClass ],
-    providers: [ MarkdownCustomization ],
+    imports: [NgxMdModule, FontAwesomeModule, NgForOf, NgClass],
+    providers: [MarkdownCustomization],
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
 })

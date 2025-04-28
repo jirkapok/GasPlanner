@@ -24,7 +24,8 @@ interface WeightForm {
 @Component({
     selector: 'app-weight-calc',
     templateUrl: './weight.component.html',
-    styleUrls: ['./weight.component.scss']
+    styleUrls: ['./weight.component.scss'],
+    standalone: false
 })
 export class WeightCalcComponent implements OnInit {
     public calcIcon = faWeightHanging;

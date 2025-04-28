@@ -26,6 +26,7 @@ interface NitroxForm {
     selector: 'app-nitrox',
     templateUrl: './nitrox.component.html',
     styleUrls: ['./nitrox.component.scss'],
+    standalone: false
 })
 export class NitroxComponent implements OnInit {
     public calcIcon = faPercent;

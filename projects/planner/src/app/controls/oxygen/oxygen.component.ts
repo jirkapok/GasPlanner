@@ -7,7 +7,8 @@ import { TankBound } from '../../shared/models';
 @Component({
     selector: 'app-oxygen',
     templateUrl: './oxygen.component.html',
-    styleUrls: ['./oxygen.component.scss']
+    styleUrls: ['./oxygen.component.scss'],
+    standalone: false
 })
 export class OxygenComponent implements OnInit {
     @Input() public tank = new TankBound(new Tank(15, 200, 21), this.units);

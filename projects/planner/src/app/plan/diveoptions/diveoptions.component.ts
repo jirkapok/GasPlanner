@@ -17,7 +17,8 @@ import { PreferencesStore } from '../../shared/preferencesStore';
 @Component({
     selector: 'app-diveoptions',
     templateUrl: './diveoptions.component.html',
-    styleUrls: ['./diveoptions.component.scss']
+    styleUrls: ['./diveoptions.component.scss'],
+    standalone: false
 })
 export class DiveOptionsComponent extends Streamed implements OnInit {
     @Input() public formValid = true;

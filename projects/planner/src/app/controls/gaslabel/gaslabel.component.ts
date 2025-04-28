@@ -5,7 +5,8 @@ import { UnitConversion } from '../../shared/UnitConversion';
 @Component({
     selector: 'app-gaslabel',
     templateUrl: './gaslabel.component.html',
-    styleUrls: ['./gaslabel.component.scss']
+    styleUrls: ['./gaslabel.component.scss'],
+    standalone: false
 })
 export class GaslabelComponent {
     @Input()

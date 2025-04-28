@@ -8,7 +8,8 @@ import { ConsumedGasDifference } from '../../../../shared/diff/gases-comparison.
 @Component({
     selector: 'app-diff-gas-consumed-tank-chart',
     templateUrl: './diff-gas-consumed-tank-chart.component.html',
-    styleUrl: './diff-gas-consumed-tank-chart.component.scss'
+    styleUrl: './diff-gas-consumed-tank-chart.component.scss',
+    standalone: false
 })
 export class GasConsumedDifferenceTankComponent {
     @Input({required: true})

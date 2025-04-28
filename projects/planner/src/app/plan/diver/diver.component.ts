@@ -13,7 +13,8 @@ import { DiverOptions } from '../../shared/models';
 @Component({
     selector: 'app-diver',
     templateUrl: './diver.component.html',
-    styleUrls: ['./diver.component.scss']
+    styleUrls: ['./diver.component.scss'],
+    standalone: false
 })
 export class DiverComponent extends Streamed implements OnInit {
     @Input() public diver: DiverOptions = new DiverOptions();

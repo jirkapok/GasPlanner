@@ -19,7 +19,8 @@ import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 @Component({
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
-    styleUrls: ['./profilechart.component.scss']
+    styleUrls: ['./profilechart.component.scss'],
+    standalone: false
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;

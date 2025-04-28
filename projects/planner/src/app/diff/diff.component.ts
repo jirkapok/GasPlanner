@@ -12,7 +12,8 @@ import { DiveSchedules } from '../shared/dive.schedules';
 @Component({
     selector: 'app-diff',
     templateUrl: './diff.component.html',
-    styleUrls: ['./diff.component.scss']
+    styleUrls: ['./diff.component.scss'],
+    standalone: false
 })
 export class DiffComponent extends Streamed implements OnInit {
     public readonly exclamation = faExclamationCircle;

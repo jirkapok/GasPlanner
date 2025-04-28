@@ -8,7 +8,8 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 @Component({
     selector: 'app-pp-o2',
     templateUrl: './pp-o2.component.html',
-    styleUrls: ['./pp-o2.component.scss']
+    styleUrls: ['./pp-o2.component.scss'],
+    standalone: false
 })
 export class PpO2Component implements OnInit {
     @Input() public maxPpO2 = 1.4;

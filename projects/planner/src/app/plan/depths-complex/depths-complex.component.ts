@@ -27,7 +27,8 @@ interface DepthsForm {
 @Component({
     selector: 'app-depths-complex',
     templateUrl: './depths-complex.component.html',
-    styleUrls: ['./depths-complex.component.scss']
+    styleUrls: ['./depths-complex.component.scss'],
+    standalone: false
 })
 export class DepthsComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

@@ -12,7 +12,8 @@ import { WayPoint, SwimAction } from '../../shared/wayPoint';
 @Component({
     selector: 'app-waypoints',
     templateUrl: './waypoints.component.html',
-    styleUrls: ['./waypoints.component.scss']
+    styleUrls: ['./waypoints.component.scss'],
+    standalone: false
 })
 export class WayPointsComponent {
     public down = faArrowDown;

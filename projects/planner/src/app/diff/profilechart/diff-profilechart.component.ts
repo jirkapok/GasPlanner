@@ -11,12 +11,12 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
-import { FeatureFlags } from 'scuba-physics';
 
 @Component({
     selector: 'app-diff-profilechart',
     templateUrl: './diff-profilechart.component.html',
-    styleUrls: ['./diff-profilechart.component.scss']
+    styleUrls: ['./diff-profilechart.component.scss'],
+    standalone: false
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;

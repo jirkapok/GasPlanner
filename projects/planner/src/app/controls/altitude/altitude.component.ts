@@ -7,7 +7,8 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 @Component({
     selector: 'app-altitude',
     templateUrl: './altitude.component.html',
-    styleUrls: ['./altitude.component.scss']
+    styleUrls: ['./altitude.component.scss'],
+    standalone: false
 })
 export class AltitudeComponent implements OnInit {
     @Output() public inputChange = new EventEmitter<number>();

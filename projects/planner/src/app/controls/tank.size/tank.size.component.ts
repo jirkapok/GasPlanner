@@ -9,7 +9,8 @@ import { InputControls } from '../../shared/inputcontrols';
 @Component({
     selector: 'app-tank-size',
     templateUrl: './tank.size.component.html',
-    styleUrls: ['./tank.size.component.scss']
+    styleUrls: ['./tank.size.component.scss'],
+    standalone: false
 })
 export class TankSizeComponent implements OnInit {
     @Input() public sizeForm!: FormGroup;

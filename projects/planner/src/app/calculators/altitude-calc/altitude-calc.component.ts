@@ -21,7 +21,8 @@ interface AltitudeDepthForm {
 @Component({
     selector: 'app-altitude-calc',
     templateUrl: './altitude-calc.component.html',
-    styleUrls: ['./altitude-calc.component.scss']
+    styleUrls: ['./altitude-calc.component.scss'],
+    standalone: false
 })
 export class AltitudeCalcComponent implements OnInit {
     public calcIcon = faMountainSun;

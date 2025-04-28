@@ -5,7 +5,8 @@ import { UnitConversion } from '../../shared/UnitConversion';
 @Component({
     selector: 'app-tankchart',
     templateUrl: './tank-chart.component.html',
-    styleUrls: ['./tank-chart.component.scss']
+    styleUrls: ['./tank-chart.component.scss'],
+    standalone: false
 })
 export class TankChartComponent {
     @Input()

@@ -8,7 +8,8 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 @Component({
     selector: 'app-gradients',
     templateUrl: './gradients.component.html',
-    styleUrls: ['./gradients.component.scss']
+    styleUrls: ['./gradients.component.scss'],
+    standalone: false
 })
 export class GradientsComponent implements OnInit {
     @Input() public showTitle = false;

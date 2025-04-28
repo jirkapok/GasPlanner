@@ -25,7 +25,8 @@ interface GasForm {
 @Component({
     selector: 'app-gas-props-calc',
     templateUrl: './gas.props.component.html',
-    styleUrls: ['./gas.props.component.scss']
+    styleUrls: ['./gas.props.component.scss'],
+    standalone: false
 })
 export class GasPropertiesCalcComponent implements OnInit {
     public calcIcon = faFileLines;

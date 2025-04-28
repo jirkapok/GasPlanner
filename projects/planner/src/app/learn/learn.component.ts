@@ -11,7 +11,6 @@ import { QuizSession } from '../shared/learn/quiz-session.model';
 
 @Component({
     selector: 'app-learn',
-    standalone: true,
     imports: [CommonModule, NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule],
     templateUrl: './learn.component.html',
     styleUrls: ['./learn.component.scss']

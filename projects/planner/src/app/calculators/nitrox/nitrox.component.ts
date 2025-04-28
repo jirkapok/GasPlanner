@@ -14,12 +14,12 @@ import { NitroxViewState } from '../../shared/views.model';
 import { KnownViews } from '../../shared/viewStates';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { HelpModalComponent } from '../../help-modal/help-modal.component';
 
 interface NitroxForm {
     mod?: FormControl<number>;
     fO2?: FormControl<number>;
     pO2?: FormControl<number>;
+    depth?: FormControl<number>;
 }
 
 @Component({
@@ -35,6 +35,7 @@ export class NitroxComponent implements OnInit {
     private fO2Control!: FormControl<number>;
     private pO2Control!: FormControl<number>;
     private modControl!: FormControl<number>;
+    private depthControl!: FormControl<number>;
     private failingMod = false;
 
     constructor(
@@ -71,9 +72,9 @@ export class NitroxComponent implements OnInit {
         return this.inputs.controlInValid(mod);
     }
 
-    public get fO2Invalid(): boolean {
-        const fO2 = this.nitroxForm.controls.fO2;
-        return this.inputs.controlInValid(fO2);
+    public get depthInvalid(): boolean {
+        const depth = this.nitroxForm.controls.depth;
+        return this.inputs.controlInValid(depth);
     }
 
     public get calcMod(): number {
@@ -84,10 +85,15 @@ export class NitroxComponent implements OnInit {
         return this.units.fromMeters(this.calc.mod);
     }
 
+    public get calcDepth(): number {
+        return this.units.fromMeters(this.calc.depth);
+    }
+
     public ngOnInit(): void {
         this.fO2Control = this.fb.control(Precision.round(this.calc.fO2, 1), this.validators.nitroxOxygen);
         this.pO2Control = this.fb.control(Precision.round(this.calc.pO2, 2), this.validators.ppO2);
         this.modControl = this.fb.control(Precision.round(this.calcMod, 1), this.validators.depth);
+        this.depthControl = this.fb.control(Precision.round(this.calcDepth, 1), this.validators.depth);
         this.nitroxForm = this.fb.group({}, {
             validators: NitroxValidators.lowMod(() => this.failingMod),
         });
@@ -103,12 +109,7 @@ export class NitroxComponent implements OnInit {
                 return;
             }
 
-            const values = this.nitroxForm.value;
-            this.calc.pO2 = Number(values.pO2);
-            this.calc.fO2 = Number(values.fO2);
-            const newMod = Number(values.mod);
-            this.calc.mod = this.units.toMeters(newMod);
-
+            this.updateCalc();
             this.reload();
             this.saveState();
         } catch (e) {
@@ -144,10 +145,19 @@ export class NitroxComponent implements OnInit {
         this.nitroxForm.removeControl('pO2');
     }
 
+    public toEad(): void {
+        this.calc.toEad();
+        this.enableAll();
+        this.nitroxForm.removeControl('pO2');
+        this.nitroxForm.removeControl('mod');
+        this.nitroxForm.addControl('depth', this.depthControl);
+    }
+
     private enableAll(): void {
         this.nitroxForm.addControl('mod', this.modControl);
         this.nitroxForm.addControl('fO2', this.fO2Control);
         this.nitroxForm.addControl('pO2', this.pO2Control);
+        this.nitroxForm.removeControl('depth');
         this.reload();
     }
 
@@ -155,7 +165,8 @@ export class NitroxComponent implements OnInit {
         this.nitroxForm.patchValue({
             fO2: Precision.round(this.calc.fO2, 1),
             pO2: Precision.round(this.calc.pO2, 2),
-            mod: Precision.round(this.calcMod, 1)
+            mod: Precision.round(this.calcMod, 1),
+            depth: Precision.round(this.calcDepth, 1)
         });
     }
 
@@ -183,5 +194,21 @@ export class NitroxComponent implements OnInit {
             pO2: pO2,
             id: KnownViews.nitrox
         };
+    }
+
+    private updateCalc(): void {
+        const values = this.nitroxForm.value;
+        this.calc.fO2 = Number(values.fO2);
+
+        // TODO add EAD tests for nitrox calculator and service and gas properties
+        // TODO Add depth for Ead to view state as optional default
+        if(this.calc.inEad) {
+            const newDepth = Number(values.depth);
+            this.calc.depth = this.units.toMeters(newDepth);
+        } else {
+            this.calc.pO2 = Number(values.pO2);
+            const newMod = Number(values.mod);
+            this.calc.mod = this.units.toMeters(newMod);
+        }
     }
 }

@@ -16,8 +16,10 @@
                             (click)="toBestMix()">Best mix</button>
                         <button type="button" class="btn" [class.btn-primary]="calc.inPO2"
                             (click)="toPO2()">ppO2</button>
+                        <button type="button" class="btn" [class.btn-primary]="calc.inEad"
+                                (click)="toEad()">EAD</button>
                     </div>
-                    <ng-container *ngIf="!calc.inPO2">
+                    <ng-container *ngIf="!calc.inPO2 && !calc.inEad">
                         <div class="pt-2 mb-4">
                             <label for="pO2" class="form-label" mdbLabel>ppO2:</label>
                             <input class="form-control" name="pO2" id="pO2" type="number" formControlName="pO2"
@@ -34,7 +36,7 @@
                                 controlName="fO2"></app-oxygen-dropdown>
                         </div>
                     </ng-container>
-                    <ng-container *ngIf="!calc.inMod">
+                    <ng-container *ngIf="!calc.inMod && !calc.inEad">
                         <div class="pt-2 mb-4">
                             <label for="mod" class="form-label" mdbLabel>MOD [{{units.length}}]:</label>
                             <input class="form-control" name="mod" id="mod" type="number" formControlName="mod"
@@ -48,25 +50,42 @@
                     </ng-container>
                     <ng-container *ngIf="calc.inMod">
                         <div class="pt-2 mb-4 form-outline" data-mdb-input-init>
-                            <label for="mod" class="form-label" mdbLabel>MOD [{{units.length}}]:</label>
+                            <label for="modr" class="form-label" mdbLabel>MOD [{{units.length}}]:</label>
                             <input class="form-control" [value]="calcMod | number: '1.0-1'"
-                                id="mod" readonly/>
+                                id="modr" readonly/>
                             <small class="form-text text-muted">EAD: {{ ead | number: '1.0-1' }}
                                 {{units.length}}</small>
                         </div>
                     </ng-container>
+                    <ng-container *ngIf="calc.inEad">
+                        <div class="pt-2 mb-4">
+                            <label for="depth" class="form-label" mdbLabel>Depth [{{units.length}}]:</label>
+                            <input class="form-control" name="depth" id="depth" type="number" formControlName="depth"
+                                   (input)="inputChanged()" [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1"
+                                   [class.is-invalid]="depthInvalid" />
+                            <div class="invalid-feedback position-absolute">Needs to
+                                be number {{ranges.depthLabel}}</div>
+                        </div>
+                    </ng-container>
                     <ng-container *ngIf="calc.inBestMix">
                         <div class="pt-2 mb-4 form-outline">
-                            <label for="fO2" class="form-label" mdbLabel>O2 [%]:</label>
+                            <label for="fO2r" class="form-label" mdbLabel>O2 [%]:</label>
                             <input class="form-control" [value]="calc.fO2 | number: '1.0-1'"
-                                id="fO2" readonly/>
+                                id="fO2r" readonly/>
                         </div>
                     </ng-container>
                     <ng-container *ngIf="calc.inPO2">
                         <div class="pt-2 mb-4 form-outline">
-                            <label for="pO2" class="form-label" mdbLabel>ppO2:</label>
+                            <label for="pO2r" class="form-label" mdbLabel>ppO2:</label>
                             <input class="form-control" [value]="calc.pO2 | number: '1.0-2'"
-                                id="pO2" readonly/>
+                                id="pO2r" readonly/>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="calc.inEad">
+                        <div class="pt-2 mb-4 form-outline">
+                            <label for="eadr" class="form-label" mdbLabel>EAD [{{units.length}}]:</label>
+                            <input class="form-control" [value]="calc.eadAtDepth | number: '1.0-2'"
+                                   id="eadr" readonly/>
                         </div>
                     </ng-container>
                     <div class="pt-2 pb-4 pe-3 mb-4">

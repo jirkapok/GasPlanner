@@ -77,6 +77,12 @@ export class GasProperties {
         return this.depthConverter.fromBar(maxDepthPressure);
     }
 
+    /** Gets current mix equivalent air depth. This value makes sense only for Nitrox mixtures. */
+    public get ead(): number {
+        const eadDepthPressure = GasMixtures.ead(this.gas.fO2, this.depthPressure);
+        return this.depthConverter.fromBar(eadDepthPressure);
+    }
+
     /** Gets current mix equivalent narcotic depth based on current depth. */
     public get end(): number {
         let endDepthPressure = this.gas.end(this.depthPressure, this.oxygenNarcotic);

@@ -37,6 +37,10 @@ export class BoundGasProperties {
         return this.units.fromMeters(this.calc.maxDepth);
     }
 
+    public get ead(): number {
+        return this.units.fromMeters(this.calc.ead);
+    }
+
     public get end(): number {
         return this.units.fromMeters(this.calc.end);
     }

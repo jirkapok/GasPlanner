@@ -14,7 +14,7 @@
                                 <app-oxygen-dropdown [tank]="tank" id="o2Item" (gasChange)="inputChanged()"
                                                      (standardGasApplied)="standardGasApplied()" [nitroxForm]="gasForm" controlName="o2"
                                                      [showBestMix]="false" [showTrimixGases]="true"></app-oxygen-dropdown>
-                                <small class="text-muted">Nitrox {{ nitrox | number: '1.0-2' }} [%]</small>
+                                <small class="text-muted">Nitrox {{ nitrogen | number: '1.0-2' }} [%]</small>
                             </div>
                             <div class="pt-2 mb-4">
                                 <label for="heItem" class="form-label">He [%]:</label>
@@ -97,6 +97,10 @@
                                 <fa-icon *ngIf="calc.maxPpO2Exceeded" [icon]="warningIcon" class="me-2 text-warning"></fa-icon>
                             </td>
                             <td class="table-active">{{ calc.maxDepth | number: '1.0-1' }}</td>
+                        </tr>
+                        <tr *ngIf="isNitrox">
+                            <td>Equivalent air depth [{{units.length}}]</td>
+                            <td class="table-active">{{ calc.ead | number: '1.0-1' }}</td>
                         </tr>
                         <tr>
                             <td>Equivalent narcotic depth [{{units.length}}]

@@ -70,8 +70,12 @@ export class GasPropertiesCalcComponent implements OnInit {
         return this.inputs.controlInValid(mndLimitControl);
     }
 
-    public get nitrox(): number {
+    public get nitrogen(): number {
         return this.tank.n2;
+    }
+
+    public get isNitrox(): boolean {
+        return this.tank.he === 0;
     }
 
     public ngOnInit(): void {

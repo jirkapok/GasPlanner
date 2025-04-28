@@ -1,0 +1,58 @@
+[
+    {
+        "id": "plan",
+        "title": "Plan",
+        "items": [
+            { "label": "Tanks", "path": "tanks" },
+            { "label": "Standard gases", "path": "standard_gases" },
+            { "label": "Depths", "path": "depths" },
+            { "label": "Surface interval", "path": "depths", "anchor": "repetitive-dives-and-surface-interval" }
+        ]
+    },
+    {
+        "id": "options",
+        "title": "Options",
+        "items": [
+            { "label": "Environment", "path": "environment" },
+            { "label": "Conservatism", "path": "gradient_factors" },
+            { "label": "Gases", "path": "plan_options", "anchor": "gases" },
+            { "label": "Stops", "path": "stops" },
+            { "label": "Speeds", "path": "speeds" },
+            { "label": "Diver", "path": "plan_options", "anchor": "diver" }
+        ]
+    },
+    {
+        "id": "results",
+        "title": "Results",
+        "items": [
+            { "label": "Dive info table", "path": "diveinfo" },
+            { "label": "Oxygen toxicity", "path": "diveinfo", "anchor": "oxygen-toxicity" },
+            { "label": "Events causing errors and warnings", "path": "events" },
+            { "label": "Consumed gas charts", "path": "consumed" },
+            { "label": "Dive way points table", "path": "waypoints_table" },
+            { "label": "Dive profile chart", "path": "profile_chart" },
+            { "label": "Tissues heat map", "path": "profile_chart", "anchor": "tissues-heat-map" }
+        ]
+    },
+    {
+        "id": "calculators",
+        "title": "Calculators",
+        "items": [
+            { "label": "RMV/SAC", "path": "sac" },
+            { "label": "Nitrox", "path": "nitrox" },
+            { "label": "No decompression limits (NDL) table", "path": "ndl_limits" },
+            { "label": "Altitude", "path": "altitude" },
+            { "label": "Weight", "path": "weight" },
+            { "label": "Gas properties", "path": "gas_properties" },
+            { "label": "Redundancies", "path": "redundancies" },
+            { "label": "Gas blender", "path": "gas_blender" }
+        ]
+    },
+    {
+        "id": "settings",
+        "title": "Application settings",
+        "items": [
+            { "label": "Application settings", "path": "settings" }
+        ]
+    }
+]

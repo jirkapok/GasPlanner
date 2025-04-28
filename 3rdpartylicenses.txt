@@ -52,32 +52,6 @@ licenses; we recommend you read them, as their terms may differ from the
 terms above.
 
 --------------------------------------------------------------------------------
-Package: plotly.js-dist
-License: "MIT"
-
-The MIT License (MIT)
-
-Copyright (c) 2021 Plotly, Inc
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
---------------------------------------------------------------------------------
 Package: prismjs
 License: "MIT"
 
@@ -107,6 +81,32 @@ THE SOFTWARE.
 Package: he
 License: "MIT"
 
+
+--------------------------------------------------------------------------------
+Package: plotly.js-dist
+License: "MIT"
+
+The MIT License (MIT)
+
+Copyright (c) 2021 Plotly, Inc
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 Package: @angular/core
@@ -1109,21 +1109,6 @@ Awesome, nor vice versa. **Please do not use brand logos for any purpose except
 to represent the company, product, or service to which they refer.**
 
 --------------------------------------------------------------------------------
-Package: @maskito/core
-License: "Apache-2.0"
-
-
---------------------------------------------------------------------------------
-Package: @maskito/kit
-License: "Apache-2.0"
-
-
---------------------------------------------------------------------------------
-Package: @maskito/angular
-License: "Apache-2.0"
-
-
---------------------------------------------------------------------------------
 Package: marked
 License: "MIT"
 
@@ -1175,6 +1160,21 @@ This software is provided by the copyright holders and contributors “as is” 
 --------------------------------------------------------------------------------
 Package: ngx-md
 License: "MIT"
+
+
+--------------------------------------------------------------------------------
+Package: @maskito/core
+License: "Apache-2.0"
+
+
+--------------------------------------------------------------------------------
+Package: @maskito/kit
+License: "Apache-2.0"
+
+
+--------------------------------------------------------------------------------
+Package: @maskito/angular
+License: "Apache-2.0"
 
 
 --------------------------------------------------------------------------------

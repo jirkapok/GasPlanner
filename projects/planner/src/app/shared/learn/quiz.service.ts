@@ -119,9 +119,9 @@ export class QuizService {
     constructor() {}
 
     public applyApp(loaded: AppPreferences): void {
-        if (loaded.quizAnswers) {
-            this.quizAnswers = loaded.quizAnswers;
-        }
+        // if (loaded.quizAnswers) {
+        //     this.quizAnswers = loaded.quizAnswers;
+        // }
     }
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {

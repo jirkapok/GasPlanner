@@ -1,6 +1,6 @@
 {
   "name": "planner",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "license": "MIT",
   "scripts": {
     "start": "ng build scuba-physics && ng serve",

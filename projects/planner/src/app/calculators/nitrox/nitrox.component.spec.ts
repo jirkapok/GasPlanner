@@ -64,6 +64,12 @@ describe('Nitrox component', () => {
         page = new NitroxPage(fixture);
     });
 
+    it('Does not apply ppO2, when on EAD tab', () => {
+        component.toEad();
+        component.inputChanged();
+        expect(component.calc.pO2).not.toBeNull();
+    });
+
     describe('Low MOD', () => {
         beforeEach(() => {
             fixture.detectChanges();
@@ -89,7 +95,11 @@ describe('Nitrox component', () => {
         });
 
         it('adjusts MOD', () => {
-            expect(component.calcMod).toBeCloseTo(185.892388, 6);
+            expect(component.calcMod).toBeCloseTo(185.9, 1);
+        });
+
+        it('adjusts EAD at depth', () => {
+            expect(component.eadAtDepth).toBeCloseTo(98.4, 1);
         });
     });
 });

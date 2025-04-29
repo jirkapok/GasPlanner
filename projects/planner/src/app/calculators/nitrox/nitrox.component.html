@@ -84,7 +84,7 @@
                     <ng-container *ngIf="calc.inEad">
                         <div class="pt-2 mb-4 form-outline">
                             <label for="eadr" class="form-label" mdbLabel>EAD [{{units.length}}]:</label>
-                            <input class="form-control" [value]="calc.eadAtDepth | number: '1.0-2'"
+                            <input class="form-control" [value]="eadAtDepth | number: '1.0-2'"
                                    id="eadr" readonly/>
                         </div>
                     </ng-container>

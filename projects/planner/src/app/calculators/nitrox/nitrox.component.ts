@@ -57,11 +57,6 @@ export class NitroxComponent implements OnInit {
         return this.units.ranges;
     }
 
-    public get ead(): number {
-        const ead = this.calc.ead;
-        return this.units.fromMeters(ead);
-    }
-
     public get pO2Invalid(): boolean {
         const pO2 = this.nitroxForm.controls.pO2;
         return this.inputs.controlInValid(pO2);
@@ -85,8 +80,17 @@ export class NitroxComponent implements OnInit {
         return this.units.fromMeters(this.calc.mod);
     }
 
+    public get ead(): number {
+        const ead = this.calc.ead;
+        return this.units.fromMeters(ead);
+    }
+
     public get calcDepth(): number {
         return this.units.fromMeters(this.calc.depth);
+    }
+
+    public get eadAtDepth(): number {
+        return this.units.fromMeters(this.calc.eadAtDepth);
     }
 
     public ngOnInit(): void {
@@ -200,8 +204,6 @@ export class NitroxComponent implements OnInit {
         const values = this.nitroxForm.value;
         this.calc.fO2 = Number(values.fO2);
 
-        // TODO add EAD tests for nitrox calculator and service and gas properties
-        // TODO Add depth for Ead to view state as optional default
         if(this.calc.inEad) {
             const newDepth = Number(values.depth);
             this.calc.depth = this.units.toMeters(newDepth);

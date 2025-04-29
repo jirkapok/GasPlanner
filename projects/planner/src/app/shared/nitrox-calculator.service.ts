@@ -41,10 +41,12 @@ export class NitroxCalculatorService {
         return this._fO2;
     }
 
+    /** Ead for MOD in meters */
     public get ead(): number {
         return this.nitroxCalculator.ead(this._fO2, this._mod);
     }
 
+    /** Ead for given depth in meters */
     public get eadAtDepth(): number {
         return this.nitroxCalculator.ead(this._fO2, this.depth);
     }

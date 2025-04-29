@@ -34,7 +34,7 @@
 npm-debug.log
 testem.log
 /typings
-.nx
+/.nx
 
 # e2e
 /e2e/*.js
@@ -43,12 +43,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-test-results/**/*.xml
+/test-results
 /ssl
 
 # Playwright
-node_modules/
-/test-results/
-/playwright-report/
+/playwright-report
 /blob-report/
 /playwright/.cache/

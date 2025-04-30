@@ -13,6 +13,6 @@ What is maximum operational depth for gas with 32 % oxygen at partial pressure 1
 
 O2 fraction of 32 % oxygen in the mix => 32 % O2 => 0.32 bar at surface
 
-maximum depth pressure = 1.9 / 0.32 = 5 bar
+maximum depth pressure = 1.6 / 0.32 = 5 bar
 
-maximum operational depth = 5 bar => (5 - 1)/ 10 = 40 meters
+maximum operational depth = 5 bar => (5 - 1) * 10 = 40 meters

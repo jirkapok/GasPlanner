@@ -32,6 +32,7 @@ const canActivateDashboard: CanActivateFn = (route: ActivatedRouteSnapshot): boo
     // the only view with params is dashboard
     const isEmptyAddress = route.queryParamMap.keys.length === 0;
 
+    // TODO consider Settings, Help, About and learn to be able redirect to them
     if (isEmptyAddress && viewStates.redirectToView) {
         const target = `/${viewStates.lastView}`;
         const location = inject(Location);

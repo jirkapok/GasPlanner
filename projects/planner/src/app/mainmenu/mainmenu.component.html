@@ -24,11 +24,13 @@
                 <li *ngIf="inPlanner" class="nav-item dropdown" mdbDropdown>
                     <a class="nav-link dropdown-toggle" id="dive" mdbDropdownToggle>Dive</a>
                     <ul class="dropdown-menu" aria-labelledby="dive" mdbDropdownMenu>
-                        <li><a class="dropdown-item" (click)="cloneDive()"><fa-icon [icon]="iconClone" class="me-2" (click)="shareDive()"></fa-icon>Clone</a></li>
+                        <li><a class="dropdown-item" (click)="cloneDive()"><fa-icon [icon]="iconClone" class="me-2"></fa-icon>Clone</a></li>
                         <li><a class="dropdown-item" (click)="saveDefaults()">Save as default</a></li>
                         <li><a class="dropdown-item" (click)="loadDefaults()">Load default</a></li>
-                        <li><a class="dropdown-item" (click)="shareDive()"><fa-icon [icon]="iconShare" class="me-2" ></fa-icon>Share</a></li>
-                        <li><a class="dropdown-item" (click)="deleteDive()"><fa-icon [icon]="iconDelete" class="me-2" (click)="shareDive()"></fa-icon>Delete</a></li>
+                        <li><a class="dropdown-item" (click)="shareDive()"><fa-icon [icon]="iconShare" class="me-2"></fa-icon>Share</a></li>
+                        <li><a class="dropdown-item" (click)="deleteDive()" *ngIf="canDeleteDive">
+                            <fa-icon [icon]="iconDelete" class="me-2"></fa-icon>Delete</a>
+                        </li>
                     </ul>
                 </li>
                 <li><a class="nav-link" routerLink="/settings">Settings</a></li>

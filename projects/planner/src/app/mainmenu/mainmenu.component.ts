@@ -52,10 +52,14 @@ export class MainMenuComponent extends Streamed {
             takeUntil(this.unsubscribe$),
             filter((event) => event instanceof NavigationEnd),
             map(() => this.rootRoute(this.route)),
-            filter((route: ActivatedRoute) => route.outlet === 'primary'),
-        ).subscribe((route: ActivatedRoute) => {
-            this.inPlanner = (route.component?.name?.indexOf('DashboardComponent') ?? -1) >= 0;
+            filter((r: ActivatedRoute) => r.outlet === 'primary'),
+        ).subscribe((currentRoute: ActivatedRoute) => {
+            this.inPlanner = currentRoute.snapshot.url.length == 0;
         });
+    }
+
+    public get canDeleteDive(): boolean {
+        return !this.schedules.empty;
     }
 
     private rootRoute(route: ActivatedRoute): ActivatedRoute {

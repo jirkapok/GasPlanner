@@ -12,8 +12,8 @@ Minimum depth = Minimum ppO2 / oxygen fraction = 0.18 / 0.21 = 0.86 < 1 bar i.e.
 
 MOD = Maximum ppO2 / oxygen fraction = 1.4 / 0.21 = 6.6 bar => 56 meters
 
-Equivalent narcotic depth = (1 - Helium fraction) * depth = 0.65 * 5.5 = 3.58 bar => 25.8 meters
+Equivalent narcotic depth = (1 - Helium fraction) * depth = 0.65 * 5.6 = 3.64 bar => 26.4 meters
 
-Maximum narcotic depth = depth limit / (1 - Helium fraction) = 4 / 0.65 = 6.15 bar => 51.5 meters
+Maximum narcotic depth = MOD / (1 - Helium fraction) = 4 / 0.65 = 6.15 bar => 51.5 meters
 
 Result: Selected gas is good choice for target depth 45 meters, because its range is 0 - 51.5 m.

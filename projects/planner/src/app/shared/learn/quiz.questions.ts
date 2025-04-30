@@ -95,7 +95,6 @@ export const topics: Topic[] = [
         // TODO fix help links for options and dive info.
         // TODO fix help topics and generate md files for the questions
         // TODO fix rounding types for each question and result precision
-        // TODO add EAD to gas properties calculator in case Helium is 0 %
         // TODO add rounding type and precision to the question rendered text.
         // TODO add Learn topics:
         // * Unit conversions: Depth <-> pressure conversions

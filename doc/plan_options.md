@@ -12,12 +12,14 @@ For faster customization or to be able reset options to default values, you can 
 * `Maximum narcotic depth` [m]: Limits, at which depth gas mixture is considered to be narcotic. Exceeding this depth means the risk of narcosis significantly increases. Default value is 30 meters (100 ft). Increasing this values allows you to use also nitrox mixes to higher depth, which is not recommended.
 * `Is oxygen narcotic`: If enabled (default), counts also oxygen as narcotic gas, otherwise only nitrogen is considered to be narcotic. Most agencies count both oxygen and nitrogen as narcotic gases. Disabling this option allows to you to use gases deeper, but is less safer.
 
+> How this switches affect gas, see also [Gas properties](./gas_properties.md).
+
 ## Diver
 
 Here you can set respiratory minute volume (RMV) and maximum acceptable partial pressure of oxygen (ppO2).
 
 * `RMV [l/min]`: Default value is 20 l/min. This is the amount of gas you consume during the normal part of the dive by one diver. For deco tanks this value is also used during normal ascent.
-*  `Stress RMV [l/min]`: Default value is 30 l/min. This is the amount of gas you consume during the `emergency ascent part` of the dive. First tank or all other tanks with the same gas mix are used for bottom part as stress consumption for two divers. Deco tanks consumption is accounted only for one diver.
+* `Stress RMV [l/min]`: Default value is 30 l/min. This is the amount of gas you consume during the `emergency ascent part` of the dive. First tank or all other tanks with the same gas mix are used for bottom part as stress consumption for two divers. Deco tanks consumption is accounted only for one diver.
 * `Maximum ppO2 [bar]`: Default value is 1.4 bar. This is the maximum acceptable partial pressure of oxygen during normal part of the dive for all tanks. This value is used to calculate maximum depth and generates waring if exceeded.
 * `Maximum ppO2 for deco [bar]`: Default value is 1.6 bar. This is the maximum acceptable partial pressure of oxygen during decompression part of the dive for all tanks. This value is used also to identify depth at which user should switch to next deco gas.
 

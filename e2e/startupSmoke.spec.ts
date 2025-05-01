@@ -18,8 +18,8 @@ class DiveInfoPage {
         return this.page.locator(this.waypointRowsSelector);
     }
 }
-class SacCalculatorPage {
 
+class SacCalculatorPage {
     private readonly diveTimeInputSelector = '#dive-time-input';
     private readonly rmvValueSelector = '#total-rmv-valuesac';
 
@@ -38,6 +38,44 @@ class SacCalculatorPage {
     }
 }
 
+class GasPlannerPage {
+    private readonly bottomTimeInputSelector = '#duration';
+    private readonly addDiveSelector = 'fa-icon.fa-xl';
+    private readonly compareTabSelector = 'a.nav-link:has-text("Compare dives")';
+
+    constructor(private page: Page) {}
+
+    async navigate() {
+        await this.page.goto('/');
+        await this.page.locator(this.bottomTimeInputSelector).waitFor({ timeout: 10000 });
+    }
+
+    async addSecondDive() {
+        await this.page.locator(this.addDiveSelector).last().click({ force: true });
+    }
+
+    async setSecondDiveDuration(value: string) {
+        await this.page.locator(this.bottomTimeInputSelector).fill(value);
+    }
+
+    async navigateToCompare() {
+        const compareTab = this.page.locator(this.compareTabSelector);
+        await expect(compareTab).toBeVisible({ timeout: 10000 });
+        await compareTab.click();
+    }
+}
+
+class ComparisonPage {
+    private readonly totalTimeDiffSelector =
+        'table:has-text("Total dive time"):has-text("Difference") tr:has-text("Total dive time") td:last-of-type strong';
+
+    constructor(private page: Page) {}
+
+    getTotalTimeDifference(): Locator {
+        return this.page.locator(this.totalTimeDiffSelector);
+    }
+}
+
 test.describe('Dive planner smoke tests', () => {
     let context: BrowserContext;
     let page: Page;
@@ -48,7 +86,6 @@ test.describe('Dive planner smoke tests', () => {
     });
 
     test('should show total dive time and display six waypoint rows', async () => {
-
         const diveInfoPage = new DiveInfoPage(page);
         await diveInfoPage.navigate();
 
@@ -60,13 +97,29 @@ test.describe('Dive planner smoke tests', () => {
         await expect(waypointRows).toHaveCount(6);
     });
 
-    test('should go to RMV/SAC calculator and calculate RMV after changing dive time', async() => {
+    test('should go to RMV/SAC calculator and calculate RMV after changing dive time', async () => {
         const sacCalculatorPage = new SacCalculatorPage(page);
-
         await sacCalculatorPage.navigate();
         await sacCalculatorPage.setDiveTime('60');
 
         await expect(sacCalculatorPage.getRMVValue()).toBeVisible();
         await expect(sacCalculatorPage.getRMVValue()).toHaveValue('15');
     });
+
+    test('should go to planner, add second dive, change duration and see difference in compare dives', async () => {
+        const gasPlannerPage = new GasPlannerPage(page);
+        await gasPlannerPage.navigate();
+
+        await gasPlannerPage.addSecondDive();
+        await gasPlannerPage.setSecondDiveDuration('30');
+
+        await gasPlannerPage.navigateToCompare();
+
+        const totalDiff = new ComparisonPage(page).getTotalTimeDifference();
+        await expect(totalDiff).toBeVisible();
+        await expect(totalDiff).not.toHaveText('');
+
+    });
 });
+
+

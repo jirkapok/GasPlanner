@@ -1,6 +1,29 @@
 import { Category, QuestionTemplate, RoundType, Topic, Variable } from "./learn.models";
 
 export const topics: Topic[] = [
+    new Topic('Pressure at depth', [
+        new Category('Depth', 'examples_depth', [
+            new QuestionTemplate(
+                'What is the depth (in meters) at which the ambient pressure is {pressure} bar?',
+                1,
+                RoundType.round,
+                [
+                    new Variable('pressure', undefined, 1, 11)
+                ]
+            )
+        ]),
+        new Category('Pressure', 'examples_pressure', [
+            new QuestionTemplate(
+                'What is the ambient pressure in bars at depth {depth} meters?',
+                1,
+                RoundType.round,
+                [
+                    new Variable('depth', undefined, 0, 100)
+                ]
+            )
+        ]),
+    ]),
+
     new Topic('Nitrox', [
         new Category('Maximum operational depth', 'examples_mod', [
             new QuestionTemplate(
@@ -24,7 +47,7 @@ export const topics: Topic[] = [
                 ]
             )
         ]),
-        new Category('Partial pressure', 'examples_ppO2', [
+        new Category('Oxygen partial pressure', 'examples_ppO2', [
             new QuestionTemplate(
                 'What is partial pressure of {o2_percent} % at {depth} m?',
                 1,
@@ -108,7 +131,6 @@ export const topics: Topic[] = [
     // TODO fix help links for options and dive info.
     // TODO add rounding type and precision to the question rendered text.
     // TODO add Learn topics:
-    // * Unit conversions: Depth <-> pressure conversions
     // * partial pressures - oxygen, nitrogen, helium, total
     // * Trimix - Maximum narcotic depth, Equivalent narcotic depth, Maximum operational depth, minimum operational depth
     // * Consider oxygen toxicity CNS/OTU using simplified table based text book formula

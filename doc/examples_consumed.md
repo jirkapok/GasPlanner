@@ -1,4 +1,4 @@
-# Example Respiratory minute volume calculations
+# Example Gas consumed calculation
 
 ## Formulas
 

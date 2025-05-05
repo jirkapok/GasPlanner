@@ -1,4 +1,4 @@
-# Example Respiratory minute volume calculations
+# Example Duration of dive by available gas calculation
 
 ## Formulas
 

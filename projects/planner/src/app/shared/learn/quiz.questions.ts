@@ -49,6 +49,18 @@ export const topics: Topic[] = [
     ]),
 
     new Topic('Consumption', [
+        new Category('Surface air consumption', 'examples_sac', [
+            new QuestionTemplate(
+                'My respiratory minute volume (RMV in liters per minute) is {rmv} L/min. ' +
+                'What is my surface air consumption (SAC) when breathing from {tank_size} L tank?',
+                1,
+                RoundType.ceil,
+                [
+                    new Variable('rmv', undefined, 10, 30),
+                    new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24])
+                ]
+            )
+        ]),
         new Category('Respiratory minute volume', 'examples_rmv', [
             new QuestionTemplate(
                 'What is respiratory minute volume (RMV in liters per minute) of dive to average depth {depth} m, ' +
@@ -91,14 +103,13 @@ export const topics: Topic[] = [
                 ]
             )
         ])
-
-        // TODO fix help links for options and dive info.
-        // TODO add rounding type and precision to the question rendered text.
-        // TODO add Learn topics:
-        // * Consumption - SAC/RMV per tank size
-        // * Unit conversions: Depth <-> pressure conversions
-        // * partial pressures - oxygen, nitrogen, helium, total
-        // * Trimix - Maximum narcotic depth, Equivalent narcotic depth, Maximum operational depth, minimum operational depth
-        // * Consider oxygen toxicity CNS/OTU using simplified table based text book formula
     ])
+
+    // TODO fix help links for options and dive info.
+    // TODO add rounding type and precision to the question rendered text.
+    // TODO add Learn topics:
+    // * Unit conversions: Depth <-> pressure conversions
+    // * partial pressures - oxygen, nitrogen, helium, total
+    // * Trimix - Maximum narcotic depth, Equivalent narcotic depth, Maximum operational depth, minimum operational depth
+    // * Consider oxygen toxicity CNS/OTU using simplified table based text book formula
 ];

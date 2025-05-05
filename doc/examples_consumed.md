@@ -2,16 +2,17 @@
 
 ## Formulas
 
-SAC = consumed gas / (average depth in bars * duration)
+SAC =  RMV / tank size
 
-RMV = SAC * tank size
+consumed gas = SAC * average depth in bars * duration
+
 
 ## Example
 
-During dive where average depth was 15 meters for 45 minutes i consumed 150 bars from 15 liter tank. What is my SAC and RMV?
+How much gas did i use (in bars) at average depth 15 m, with tank 10 L for 45 minutes where my respiratory minute volume (RMV) was 20 L/min?
 
 depth in bars =  15 / 10 + 1 = 2.5 bar (simplified depth conversion)
 
-SAC = 150 / (2.5 * 45) = 1.333 bar/minute
+SAC = 20 / 10 = 2 bar/minute
 
-RMV = 1.333 * 15 = 20 liters/minute
+consumed = 2 * 2.5 * 30 = 150 bars

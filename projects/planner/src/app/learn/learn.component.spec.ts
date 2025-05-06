@@ -33,7 +33,7 @@ describe('LearnComponent', () => {
                 ReactiveFormsModule,
                 NgxMdModule,
                 FontAwesomeModule,
-                LearnComponent, // protože standalone: true
+                LearnComponent, // because standalone: true
             ],
             providers: [
                 provideHttpClient(),
@@ -52,7 +52,7 @@ describe('LearnComponent', () => {
     });
 
     it('creates learn with default topic', () => {
-        expect(component.activeTopic).toBe('Nitrox');
+        expect(component.activeTopic).toBe('Pressure at depth');
     });
 
     it('changes quiz question', () => {

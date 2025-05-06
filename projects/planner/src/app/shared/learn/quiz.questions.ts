@@ -1,6 +1,29 @@
 import { Category, QuestionTemplate, RoundType, Topic, Variable } from "./learn.models";
 
 export const topics: Topic[] = [
+    new Topic('Pressure at depth', [
+        new Category('Depth', 'examples_depth', [
+            new QuestionTemplate(
+                'What is the depth (in meters) at which the ambient pressure is {pressure} bar?',
+                1,
+                RoundType.round,
+                [
+                    new Variable('pressure', undefined, 1, 11)
+                ]
+            )
+        ]),
+        new Category('Pressure', 'examples_pressure', [
+            new QuestionTemplate(
+                'What is the ambient pressure in bars at depth {depth} meters?',
+                1,
+                RoundType.round,
+                [
+                    new Variable('depth', undefined, 0, 100)
+                ]
+            )
+        ]),
+    ]),
+
     new Topic('Nitrox', [
         new Category('Maximum operational depth', 'examples_mod', [
             new QuestionTemplate(
@@ -24,7 +47,7 @@ export const topics: Topic[] = [
                 ]
             )
         ]),
-        new Category('Partial pressure', 'examples_ppO2', [
+        new Category('Oxygen partial pressure', 'examples_ppO2', [
             new QuestionTemplate(
                 'What is partial pressure of {o2_percent} % at {depth} m?',
                 1,
@@ -49,7 +72,19 @@ export const topics: Topic[] = [
     ]),
 
     new Topic('Consumption', [
-        new Category('Respiratory minute volume', 'examples_consumed', [
+        new Category('Surface air consumption', 'examples_sac', [
+            new QuestionTemplate(
+                'My respiratory minute volume (RMV in liters per minute) is {rmv} L/min. ' +
+                'What is my surface air consumption (SAC) when breathing from {tank_size} L tank?',
+                1,
+                RoundType.ceil,
+                [
+                    new Variable('rmv', undefined, 10, 30),
+                    new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24])
+                ]
+            )
+        ]),
+        new Category('Respiratory minute volume', 'examples_rmv', [
             new QuestionTemplate(
                 'What is respiratory minute volume (RMV in liters per minute) of dive to average depth {depth} m, ' +
                 'with tank {tank_size} L for {time} minutes where diver consumed {consumed} b?',
@@ -77,7 +112,7 @@ export const topics: Topic[] = [
                 ]
             )
         ]),
-        new Category('Dive duration', 'examples_consumed', [
+        new Category('Dive duration', 'examples_durationbyrmv', [
             new QuestionTemplate(
                 'How long can i stay (in minutest) at average depth {depth} m with available {consumed} in {tank_size} L tank, ' +
                 'where my respiratory minute volume (RMV) is {rmv} L/min?',
@@ -91,15 +126,12 @@ export const topics: Topic[] = [
                 ]
             )
         ])
-
-        // TODO fix help links for options and dive info.
-        // TODO fix help topics and generate md files for the questions
-        // TODO fix rounding types for each question and result precision
-        // TODO add rounding type and precision to the question rendered text.
-        // TODO add Learn topics:
-        // * Unit conversions: Depth <-> pressure conversions
-        // * partial pressures - oxygen, nitrogen, helium, total
-        // * Trimix - Maximum narcotic depth, Equivalent narcotic depth, Maximum operational depth, minimum operational depth
-        // * Consider oxygen toxicity CNS/OTU using simplified table based text book formula
     ])
+
+    // TODO fix help links for options and dive info.
+    // TODO add rounding type and precision to the question rendered text.
+    // TODO add Learn topics:
+    // * partial pressures - oxygen, nitrogen, helium, total
+    // * Trimix - Maximum narcotic depth, Equivalent narcotic depth, Maximum operational depth, minimum operational depth
+    // * Consider oxygen toxicity CNS/OTU using simplified table based text book formula
 ];

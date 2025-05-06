@@ -40,18 +40,18 @@ class SacCalculatorPage {
 
 class GasPlannerPage {
     private readonly bottomTimeInputSelector = '#duration';
-    private readonly addDiveSelector = 'fa-icon.fa-xl';
+    private readonly addDiveButton = '#add-dive';
     private readonly compareTabSelector = 'a.nav-link:has-text("Compare dives")';
 
     constructor(private page: Page) {}
 
     async navigate() {
         await this.page.goto('/');
-        await this.page.locator(this.bottomTimeInputSelector).waitFor({ timeout: 10000 });
+        await expect(this.page.locator(this.bottomTimeInputSelector)).toBeVisible();
     }
 
     async addSecondDive() {
-        await this.page.locator(this.addDiveSelector).last().click({ force: true });
+        await this.page.locator(this.addDiveButton).last().click({ force: true });
     }
 
     async setSecondDiveDuration(value: string) {
@@ -66,8 +66,7 @@ class GasPlannerPage {
 }
 
 class ComparisonPage {
-    private readonly totalTimeDiffSelector =
-        'table:has-text("Total dive time"):has-text("Difference") tr:has-text("Total dive time") td:last-of-type strong';
+    private readonly totalTimeDiffSelector = '#total-time-diff';
 
     constructor(private page: Page) {}
 

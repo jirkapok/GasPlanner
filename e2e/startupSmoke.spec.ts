@@ -6,15 +6,15 @@ class DiveInfoPage {
 
     constructor(private page: Page) {}
 
-    async navigate() {
+    public async navigate() {
         await this.page.goto('/');
     }
 
-    getTimeValue(): Locator {
+    public getTimeValue(): Locator {
         return this.page.locator(this.timeValueSelector);
     }
 
-    getWaypointRows(): Locator {
+    public getWaypointRows(): Locator {
         return this.page.locator(this.waypointRowsSelector);
     }
 }
@@ -25,15 +25,15 @@ class SacCalculatorPage {
 
     constructor(private page: Page) {}
 
-    async navigate() {
+    public async navigate(): Promise<void> {
         await this.page.goto('/sac');
     }
 
-    async setDiveTime(value: string) {
+    public async setDiveTime(value: string): Promise<void> {
         await this.page.locator(this.diveTimeInputSelector).fill(value);
     }
 
-    getRMVValue(): Locator {
+    public getRMVValue(): Locator {
         return this.page.locator(this.rmvValueSelector);
     }
 }
@@ -41,27 +41,20 @@ class SacCalculatorPage {
 class GasPlannerPage {
     private readonly bottomTimeInputSelector = '#duration';
     private readonly addDiveButton = '#add-dive';
-    private readonly compareTabSelector = 'a.nav-link:has-text("Compare dives")';
 
     constructor(private page: Page) {}
 
-    async navigate() {
+    public async navigate(): Promise<void> {
         await this.page.goto('/');
         await expect(this.page.locator(this.bottomTimeInputSelector)).toBeVisible();
     }
 
-    async addSecondDive() {
+    public async addSecondDive(): Promise<void> {
         await this.page.locator(this.addDiveButton).last().click({ force: true });
     }
 
-    async setSecondDiveDuration(value: string) {
+    public async setSecondDiveDuration(value: string): Promise<void> {
         await this.page.locator(this.bottomTimeInputSelector).fill(value);
-    }
-
-    async navigateToCompare() {
-        const compareTab = this.page.locator(this.compareTabSelector);
-        await expect(compareTab).toBeVisible({ timeout: 10000 });
-        await compareTab.click();
     }
 }
 
@@ -70,7 +63,11 @@ class ComparisonPage {
 
     constructor(private page: Page) {}
 
-    getTotalTimeDifference(): Locator {
+    public async navigate(): Promise<void> {
+        await this.page.goto('/diff');
+    }
+
+    public getTotalTimeDifference(): Locator {
         return this.page.locator(this.totalTimeDiffSelector);
     }
 }
@@ -108,17 +105,13 @@ test.describe('Dive planner smoke tests', () => {
     test('should go to planner, add second dive, change duration and see difference in compare dives', async () => {
         const gasPlannerPage = new GasPlannerPage(page);
         await gasPlannerPage.navigate();
-
         await gasPlannerPage.addSecondDive();
         await gasPlannerPage.setSecondDiveDuration('30');
 
-        await gasPlannerPage.navigateToCompare();
-
-        const totalDiff = new ComparisonPage(page).getTotalTimeDifference();
+        const diffPage  = new ComparisonPage(page);
+        await diffPage.navigate();
+        const totalDiff = diffPage.getTotalTimeDifference();
         await expect(totalDiff).toBeVisible();
         await expect(totalDiff).not.toHaveText('');
-
     });
 });
-
-

@@ -126,12 +126,51 @@ export const topics: Topic[] = [
                 ]
             )
         ])
+    ]),
+
+    new Topic('Trimix', [
+        new Category('Minimum depth', 'examples_mindepth', [
+            new QuestionTemplate(
+                'Team selects Trimix {oxygen}/{helium} as a gas for a dive. Minimum partial pressure of oxygen (ppO2) is 0.18 b. ' +
+                'What is the minimum depth for this gas?',
+                0,
+                RoundType.ceil,
+                [
+                    new Variable('oxygen', undefined, 10, 21),
+                    new Variable('helium', undefined, 20, 70)
+                ]
+            )
+        ]),
+        new Category('Equivalent narcotic depth', 'examples_end', [
+            new QuestionTemplate(
+                'You plan a dive to {depth} meters. Team selects Trimix {oxygen}/{helium} as a gas for the dive. ' +
+                'What is the equivalent narcotic depth for this gas?',
+                0,
+                RoundType.ceil,
+                [
+                    new Variable('oxygen', undefined, 10, 21),
+                    new Variable('helium', undefined, 10, 30),
+                    new Variable('depth', undefined, 10, 80)
+                ]
+            )
+        ]),
+        new Category('Maximum narcotic depth', 'examples_mnd', [
+            new QuestionTemplate(
+                'You plan a dive and consider Air narcotic for depths below 30 meters. ' +
+                'Team selects Trimix {oxygen}/{helium} as a gas. What is the maximum narcotic depth for this gas?',
+                0,
+                RoundType.floor,
+                [
+                    new Variable('oxygen', undefined, 10, 21),
+                    new Variable('helium', undefined, 20, 70),
+                ]
+            )
+        ]),
     ])
 
     // TODO fix help links for options and dive info.
     // TODO add rounding type and precision to the question rendered text.
-    // TODO add Learn topics:
-    // * partial pressures - oxygen, nitrogen, helium, total
-    // * Trimix - Maximum narcotic depth, Equivalent narcotic depth, Maximum operational depth, minimum operational depth
-    // * Consider oxygen toxicity CNS/OTU using simplified table based text book formula
+    // TODO Consider add learn topics:
+    // * Partial pressures - oxygen, nitrogen, helium, total
+    // * Oxygen toxicity CNS/OTU using simplified table based text book formula
 ];

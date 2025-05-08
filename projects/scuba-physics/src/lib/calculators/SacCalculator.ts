@@ -2,7 +2,7 @@ import { Precision } from '../common/precision';
 import { DepthConverter } from '../physics/depth-converter';
 
 /**
- * Surface air consumption formulas using ideal gas law.
+ * Respiratory minute volume formulas using ideal gas law.
  */
 export class SacCalculator {
 
@@ -10,15 +10,15 @@ export class SacCalculator {
     }
 
     /**
-     * Calculate surface air consumption in liter/minute
+     * Calculate respiratory minute volume (RMV) in liter/minute
      *
      * @param depth - average depth in meters
      * @param tank - tank size in liters
      * @param used - amount of gas consumed in bars
      * @param duration - duration of the dive at depth in minutes
-     * @returns Sac rounded to 0 digits in liter/minute.
+     * @returns Rmv rounded to 2 digits in liter/minute.
      */
-    public calculateSac(depth: number, tank: number, used: number, duration: number): number {
+    public calculateRmv(depth: number, tank: number, used: number, duration: number): number {
         const bars = this.depthConverter.toBar(depth);
         const result = tank * used / duration / bars;
         return Precision.ceilTwoDecimals(result);

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { NitroxCalculator, SacCalculator, DepthConverter, Precision } from 'scuba-physics';
+import {
+    NitroxCalculator, SacCalculator, DepthConverter,
+    Precision, GasProperties
+} from 'scuba-physics';
 import { Topic, QuestionTemplate, RoundType } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
@@ -7,8 +10,10 @@ import { AppPreferences, QuizAnswerStats } from '../serialization.model';
 
 export class QuizItem {
     public template: QuestionTemplate;
+    private depthConverter: DepthConverter;
     private nitroxCalculator: NitroxCalculator;
     private sacCalculator: SacCalculator;
+    private gasProperties: GasProperties;
 
     constructor(
         template: QuestionTemplate,
@@ -22,9 +27,10 @@ export class QuizItem {
         public userAnswer?: string,
     ) {
         this.template = template;
-        const depthConverter = DepthConverter.simple();
-        this.nitroxCalculator = new NitroxCalculator(depthConverter, 0.21);
-        this.sacCalculator = new SacCalculator(depthConverter);
+        this.depthConverter = DepthConverter.simple();
+        this.nitroxCalculator = new NitroxCalculator(this.depthConverter, 0.21);
+        this.sacCalculator = new SacCalculator(this.depthConverter);
+        this.gasProperties = new GasProperties();
     }
 
     public randomizeQuizVariables(): void {
@@ -39,6 +45,16 @@ export class QuizItem {
     }
 
     public generateCorrectAnswer(): number {
+        // Depth: this.depthConverter.fromBar(this.variables[0])
+        // Pressure: this.depthConverter.toBar(this.variables[0])
+        // Equivalent air depth: this.nitroxCalculator.ead(this.variables[0], this.variables[1]);
+        // SAC: this.sacCalculator.calculateSac() / tank size
+        // Used gas: this.sacCalculator.calculateUsed()
+        // Dive Duration: this.sacCalculator.calculateDuration()
+        // Minimum depth: this.gasProperties.minDepth
+        // Equivalent narcotic depth:  this.gasProperties.end
+        // Maximum narcotic depth this.gasProperties.mnd
+
 
         if (this.categoryName.toLowerCase().includes('maximum operational depth')) {
             return this.nitroxCalculator.mod(this.variables[0], this.variables[1]);
@@ -53,7 +69,7 @@ export class QuizItem {
         }
 
         if (this.categoryName.toLowerCase().includes('respiratory minute volume')) {
-            return this.sacCalculator.calculateSac(
+            return this.sacCalculator.calculateRmv(
                 this.variables[0],
                 this.variables[1],
                 this.variables[2],

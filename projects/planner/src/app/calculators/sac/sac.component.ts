@@ -140,7 +140,7 @@ export class SacComponent implements OnInit {
             this.formSac.addControl('workPressure', workPressureControl);
         }
 
-        this.toSac();
+        this.toRmv();
     }
 
     public applyTemplate(template: TankTemplate): void {
@@ -187,8 +187,8 @@ export class SacComponent implements OnInit {
         this.cd.detectChanges();
     }
 
-    public toSac(): void {
-        this.calc.toSac();
+    public toRmv(): void {
+        this.calc.toRmv();
         this.enableAll();
         this.formSac.removeControl('rmv');
         this.cd.detectChanges();

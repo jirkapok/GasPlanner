@@ -87,27 +87,27 @@ export const topics: Topic[] = [
         new Category('Respiratory minute volume', 'examples_rmv', [
             new QuestionTemplate(
                 'What is respiratory minute volume (RMV in liters per minute) of dive to average depth {depth} m, ' +
-                'with tank {tank_size} L for {time} minutes where diver consumed {consumed} b?',
+                'with tank {tank_size} L for {duration} minutes where diver consumed {consumed} b?',
                 1,
                 RoundType.ceil,
                 [
                     new Variable('depth', undefined, 10, 30),
                     new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
                     new Variable('consumed', undefined, 50, 200),
-                    new Variable('time', undefined, 30, 60)
+                    new Variable('duration', undefined, 30, 60)
                 ]
             )
         ]),
         new Category('Used gas', 'examples_consumed', [
             new QuestionTemplate(
-                'How much gas did i use (in bars) at average depth {depth} m, with tank {tank_size} L for {time} minutes ' +
+                'How much gas did i use (in bars) at average depth {depth} m, with tank {tank_size} L for {duration} minutes ' +
                 'where my respiratory minute volume (RMV) was {rmv} L/min?',
                 0,
                 RoundType.ceil,
                 [
                     new Variable('depth', undefined, 10, 30),
                     new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
-                    new Variable('time', undefined, 30, 60),
+                    new Variable('duration', undefined, 30, 60),
                     new Variable('rmv', undefined, 15, 25)
                 ]
             )

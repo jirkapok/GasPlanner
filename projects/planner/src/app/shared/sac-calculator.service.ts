@@ -14,7 +14,7 @@ export class SacCalculatorService {
     constructor() {
         const depthConverter = DepthConverter.simple();
         this.sacCalculator = new SacCalculator(depthConverter);
-        this.calculate = this.calculateSac;
+        this.calculate = this.calculateRmv;
         this.calculate();
     }
 
@@ -47,7 +47,7 @@ export class SacCalculatorService {
     }
 
     public get inSac(): boolean {
-        return this.calculate === this.calculateSac;
+        return this.calculate === this.calculateRmv;
     }
 
     public set depth(newValue: number) {
@@ -83,12 +83,12 @@ export class SacCalculatorService {
         this.calculate = this.calculateUsed;
     }
 
-    public toSac(): void {
-        this.calculate = this.calculateSac;
+    public toRmv(): void {
+        this.calculate = this.calculateRmv;
     }
 
-    private calculateSac(): void {
-        this._rmv = this.sacCalculator.calculateSac(this.depth, this.tankSize, this.used, this.duration);
+    private calculateRmv(): void {
+        this._rmv = this.sacCalculator.calculateRmv(this.depth, this.tankSize, this.used, this.duration);
     }
 
     private calculateDuration(): void {

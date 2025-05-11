@@ -9,7 +9,7 @@ duration = consumed gas / (average depth in bars * SAC)
 
 ## Example
 
-How long can i stay (in minutest) at average depth 15 m with available 150 b in 10 L tank, where my respiratory minute volume (RMV) is 20 L/min?
+How long can i stay (in minutes) at average depth 15 m with available 150 b in 10 L tank, where my respiratory minute volume (RMV) is 20 L/min?
 
 During dive where average depth was 15 meters for 45 minutes i consumed 150 bars from 15 liter tank. What is my SAC and RMV?
 

@@ -66,8 +66,19 @@
         <div class="card shadow-sm position-relative">
             <div class="position-absolute top-0 end-0 m-3">
                 <span class="badge bg-primary text-light">
-                    Score: {{ session?.correctCount }} / {{ session?.totalAnswered }} — {{ correctPercentage }}%
+                    <span class="badge bg-primary text-light">
+                        {{ scoreSummary }} — {{ correctPercentage }}%
+                    </span>
                 </span>
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-secondary ms-2"
+                    (click)="openHelp()"
+                    title="Show Help"
+                    aria-label="Open help panel"            >
+                    <fa-icon [icon]="helpIcon" class="fa-lg"></fa-icon>
+                </button>
             </div>
 
             <div class="card-body">
@@ -87,8 +98,19 @@
                                 'is-invalid': quiz.isAnswered && !quiz.isCorrect
                             }" />
 
-                        <div *ngIf="quiz.isAnswered && quiz.isCorrect" class="valid-feedback d-block">Correct</div>
-                        <div *ngIf="quiz.isAnswered && !quiz.isCorrect" class="invalid-feedback d-block">Incorrect</div>
+                            <div *ngIf="quiz.isAnswered">
+                                <div *ngIf="quiz.isCorrect" class="alert alert-success">
+                                  Correct!
+                                </div>
+                                <div *ngIf="!quiz.isCorrect" class="alert alert-danger">
+                                  Incorrect. The correct answer is: {{ quiz.correctAnswer }}
+                                </div>
+                            </div>
+                            <div *ngIf="!quiz.isAnswered">
+                                <div class="alert alert-info">
+                                 Round {{getRoundingExplanation(quiz.roundType)}} your answer to {{quiz.roundTo}} decimal place(s).
+                                </div>
+                              </div>
 
                         <div class="mt-3">
                             <button
@@ -105,6 +127,14 @@
                                 class="btn btn-outline-primary ms-2"
                                 (click)="goToNextQuestion()">
                                 Next Question
+                            </button>
+
+                            <button
+                                *ngIf="!shouldShowNextQuestionButton()"
+                                type="button"
+                                class="btn btn-outline-info ms-2"
+                                (click)="openHelpModal()">
+                                Need Hint?
                             </button>
 
                             <button

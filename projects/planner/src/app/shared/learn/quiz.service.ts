@@ -3,34 +3,41 @@ import {
     NitroxCalculator, SacCalculator, DepthConverter,
     Precision, GasProperties
 } from 'scuba-physics';
-import { Topic, QuestionTemplate, RoundType } from './learn.models';
+import { Topic, QuestionTemplate, RoundType, QuizItemTools } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
 import { AppPreferences, QuizAnswerStats } from '../serialization.model';
 
 export class QuizItem {
-    public template: QuestionTemplate;
+    public correctAnswer?: number;
+
+    public roundTo: number;
+    public roundType: RoundType;
+    public variables: number[] = [];
+    public isAnswered = false;
+    public isCorrect = false;
+    public userAnswer?: string;
+    public renderedQuestion = '';
+
     private depthConverter: DepthConverter;
     private nitroxCalculator: NitroxCalculator;
     private sacCalculator: SacCalculator;
     private gasProperties: GasProperties;
 
     constructor(
-        template: QuestionTemplate,
-        public categoryName: string,
-        public renderedQuestion: string,
-        public roundTo: number,
-        public roundType: RoundType,
-        public variables: number[],
-        public isAnswered: boolean,
-        public isCorrect: boolean,
-        public userAnswer?: string,
+        public template: QuestionTemplate,
+        public categoryName: string
     ) {
-        this.template = template;
+        this.roundTo = template.roundTo;
+        this.roundType = template.roundType;
+
         this.depthConverter = DepthConverter.simple();
         this.nitroxCalculator = new NitroxCalculator(this.depthConverter, 0.21);
         this.sacCalculator = new SacCalculator(this.depthConverter);
         this.gasProperties = new GasProperties();
+
+        this.randomizeQuizVariables();
+        this.renderQuestion();
     }
 
     public randomizeQuizVariables(): void {
@@ -55,29 +62,18 @@ export class QuizItem {
         // Equivalent narcotic depth:  this.gasProperties.end
         // Maximum narcotic depth this.gasProperties.mnd
 
+        const tools: QuizItemTools = {
+            depthConverter: this.depthConverter,
+            nitroxCalculator: this.nitroxCalculator,
+            sacCalculator: this.sacCalculator,
+            gasProperties: this.gasProperties
+        };
 
-        if (this.categoryName.toLowerCase().includes('maximum operational depth')) {
-            return this.nitroxCalculator.mod(this.variables[0], this.variables[1]);
+        if (typeof this.template.calculateAnswer === 'function') {
+            return this.template.calculateAnswer(this.variables, tools);
         }
 
-        if (this.categoryName.toLowerCase().includes('best mix')) {
-            return this.nitroxCalculator.bestMix(this.variables[0], this.variables[1]);
-        }
-
-        if (this.categoryName.toLowerCase().includes('partial pressure')) {
-            return this.nitroxCalculator.partialPressure(this.variables[0], this.variables[1]);
-        }
-
-        if (this.categoryName.toLowerCase().includes('respiratory minute volume')) {
-            return this.sacCalculator.calculateRmv(
-                this.variables[0],
-                this.variables[1],
-                this.variables[2],
-                this.variables[3]
-            );
-        }
-
-        return NaN; // Make it clear that the question type was not recognized
+        throw new Error('Invalid question template: missing calculateAnswer');
     }
 
     public validateAnswer(): boolean {
@@ -88,12 +84,11 @@ export class QuizItem {
             return false;
         }
 
-        const calculatedAnswer = this.generateCorrectAnswer();
+        this.correctAnswer = this.generateCorrectAnswer();
 
-        console.log(`Calculated Answer: ${calculatedAnswer}`);
+        console.log(`Calculated Answer: ${this.correctAnswer}`);
 
-        const expectedAnswer = this.roundValue(calculatedAnswer, this.roundTo, this.roundType);
-
+        const expectedAnswer = this.roundValue(this.correctAnswer, this.roundTo, this.roundType);
         const userAnswerRounded = this.roundValue(userNum, this.roundTo, this.roundType);
 
         console.log(`User Answer: ${userAnswerRounded}, Expected Answer: ${expectedAnswer}`);
@@ -152,8 +147,23 @@ export class QuizService {
         this.quizAnswers[key] = stats;
     }
 
+    public initializeStats(): void {
+        for (const topic of this.topics) {
+            for (const category of topic.categories) {
+                const key = `${topic.topic}::${category.name}`;
+                if (!this.quizAnswers[key]) {
+                    this.quizAnswers[key] = { attempts: 0, correct: 0 };
+                }
+            }
+        }
+    }
+
     public hasPassedCategory(topic: string, category: string): boolean {
         const key = `${topic}::${category}`;
+
+        if (!this.quizAnswers) {
+            return false;
+        }
         const stats = this.quizAnswers[key];
         return stats ? this.isQuizCompleted(stats) : false;
     }
@@ -172,8 +182,8 @@ export class QuizService {
     }
 
     public isQuizCompleted(quizAnswers: QuizAnswerStats): boolean {
-        return quizAnswers.attempts >= QuizSession.requiredAnsweredCount
-            && (quizAnswers.correct / quizAnswers.attempts) >= QuizSession.minimalAcceptableSuccessRate;
+        return !!quizAnswers && quizAnswers.attempts >= QuizSession.requiredAnsweredCount
+            && (quizAnswers.correct / quizAnswers.attempts) * 100 >= QuizSession.minimalAcceptableSuccessRate;
     }
 }
 

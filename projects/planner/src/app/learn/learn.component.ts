@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMedal } from '@fortawesome/free-solid-svg-icons';
+import { faMedal,faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
 import { QuizService, QuizItem } from '../shared/learn/quiz.service';
-import { Topic } from '../shared/learn/learn.models';
+import { Category, RoundType, Topic } from '../shared/learn/learn.models';
 import { QuizSession } from '../shared/learn/quiz-session.model';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { HelpModalComponent } from '../help-modal/help-modal.component';
 
 @Component({
     selector: 'app-learn',
@@ -18,16 +20,21 @@ import { QuizSession } from '../shared/learn/quiz-session.model';
 export class LearnComponent implements OnInit {
 
     public readonly trophyIcon = faMedal;
+    public readonly helpIcon = faCircleInfo;
     public readonly topics: Topic[] = [];
 
     public session: QuizSession | undefined;
     public activeTopic = '';
     public selectedTopic = '';
+    public selectedCategory: Category | undefined;
     public selectedCategoryName = '';
 
     private _label = '';
 
-    constructor(public quizService: QuizService) {
+    constructor(
+        public quizService: QuizService,
+        private modalService: MdbModalService
+    ) {
         this.topics = quizService.topics;
     }
 
@@ -54,6 +61,8 @@ export class LearnComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.quizService.initializeStats();
+
         const firstTopic = this.topics[0];
         const firstCategory = firstTopic?.categories[0];
 
@@ -70,19 +79,50 @@ export class LearnComponent implements OnInit {
         const topic = this.topics.find(t => t.topic === topicName);
         const category = topic?.categories.find(c => c.name === categoryName);
 
-        if (category) {
-            const key = `${topicName}::${categoryName}`;
+        this.selectedCategory = category;
 
-            let session = this.quizService.sessionsByCategory.get(key);
-
-            if (!session) {
-                const quizzes = Array.from({ length: QuizSession.requiredAnsweredCount }, () => category.getQuizItemForCategory());
-                session = new QuizSession(quizzes);
-                this.quizService.sessionsByCategory.set(key, session);
-            }
-
-            this.session = session;
+        if (!category) {
+            this.session = new QuizSession([], {} as Category);
+            return;
         }
+
+        const key = `${topicName}::${categoryName}`;
+        let session = this.quizService.sessionsByCategory.get(key);
+
+        if (!session) {
+            const quizzes = [category.getQuizItemForCategory()];
+            session = new QuizSession(quizzes, category);
+            this.quizService.sessionsByCategory.set(key, session);
+        }
+
+        this.session = session;
+    }
+
+    public openHelp(): void {
+
+        this.modalService.open(HelpModalComponent, {
+            data: {
+                path: 'quiz-help'
+            }
+        });
+
+    }
+
+    public openHelpModal(): void {
+        const category = this.selectedCategory;
+
+        if (!category || !category.help) {
+            return;
+        }
+        if (this.session) {
+            this.session.useHint();
+        }
+
+        this.modalService.open(HelpModalComponent, {
+            data: {
+                path: category.help
+            }
+        });
     }
 
     public toggleTopic(topicName: string): void {
@@ -96,6 +136,19 @@ export class LearnComponent implements OnInit {
 
         this.session.validateCurrentAnswer();
         this.quizService.registerAnswer(this.selectedTopic, this.selectedCategoryName, this.session.currentQuiz?.isCorrect ?? false);
+    }
+
+    public getRoundingExplanation(roundType: RoundType): string {
+        switch (roundType) {
+            case RoundType.round:
+                return 'your answer';
+            case RoundType.floor:
+                return 'down';
+            case RoundType.ceil:
+                return 'up';
+            default:
+                return ' ';
+        }
     }
 
     public goToNextQuestion(): void {
@@ -131,7 +184,7 @@ export class LearnComponent implements OnInit {
     }
 
     public shouldShowFinishButton(): boolean {
-        return !!(this.currentQuiz?.isAnswered ?? false) && !!this.session?.canFinishSession();
+        return this.session?.canFinishSession() ?? false;
     }
 
     public shouldShowScore(): boolean {

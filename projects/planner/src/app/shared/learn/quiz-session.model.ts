@@ -1,4 +1,5 @@
 import { QuizItem } from './quiz.service';
+import { Category } from './learn.models';
 
 export class QuizSession {
     public static readonly minimalAcceptableSuccessRate = 80;
@@ -14,7 +15,10 @@ export class QuizSession {
     public hintUsed = false;
     public totalScore = 0;
 
-    constructor(quizzes: QuizItem[]) {
+    constructor(
+        quizzes: QuizItem[],
+        private readonly sourceCategory: Category
+    ) {
         this.quizzes = quizzes;
     }
 
@@ -40,7 +44,6 @@ export class QuizSession {
 
         quiz.isCorrect = quiz.validateAnswer();
         quiz.isAnswered = true;
-
         this.totalAnswered++;
 
         if (quiz.isCorrect) {
@@ -57,24 +60,18 @@ export class QuizSession {
         this.hintUsed = true;
     }
 
-    public generateNewQuizzes(): void {
-        this.finished = false;
-        this.currentQuestionIndex = 0;
-
-        this.quizzes.forEach(q => {
-            q.randomizeQuizVariables();
-            q.renderQuestion();
-            q.isAnswered = false;
-            q.isCorrect = false;
-            q.userAnswer = '';
-        });
+    public goToNextQuestion(): void {
+        if (this.currentQuestionIndex < this.quizzes.length - 1) {
+            this.currentQuestionIndex++;
+        } else {
+            this.addNewQuestion();
+            this.currentQuestionIndex++;
+        }
     }
 
-    public goToNextQuestion(): void {
-        this.currentQuestionIndex++;
-        if (this.currentQuestionIndex >= this.quizzes.length) {
-            this.finishIfEligible();
-        }
+    public addNewQuestion(): void {
+        const newQuiz = this.sourceCategory.getQuizItemForCategory();
+        this.quizzes.push(newQuiz);
     }
 
     public reset(): void {
@@ -84,6 +81,7 @@ export class QuizSession {
         this.finished = false;
         this.totalScore = 0;
         this.hintUsed = false;
+
         this.quizzes.forEach(q => {
             q.isAnswered = false;
             q.isCorrect = false;
@@ -93,15 +91,17 @@ export class QuizSession {
     }
 
     public canFinishSession(): boolean {
-        return this.totalAnswered >= QuizSession.requiredAnsweredCount
-            && this.correctPercentage >= QuizSession.minimalAcceptableSuccessRate;
+        const maxPossibleScore = this.totalAnswered * QuizSession.pointsCorrect;
+        const scorePercentage = maxPossibleScore === 0 ? 0 : (this.totalScore / maxPossibleScore) * 100;
+        return this.totalAnswered >= QuizSession.requiredAnsweredCount &&
+               scorePercentage >= QuizSession.minimalAcceptableSuccessRate;
     }
+
 
     public finishIfEligible(): void {
         if (this.canFinishSession()) {
             this.finished = true;
-        } else {
-            this.generateNewQuizzes();
         }
     }
 }
+

@@ -3,7 +3,7 @@ import {
     NitroxCalculator, SacCalculator, DepthConverter,
     Precision, GasProperties
 } from 'scuba-physics';
-import { Topic, QuestionTemplate, RoundType, QuizItemTools } from './learn.models';
+import { Topic, QuestionTemplate, RoundType, QuizItemTools, Category } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
 import { AppPreferences, QuizAnswerStats } from '../serialization.model';
@@ -52,16 +52,6 @@ export class QuizItem {
     }
 
     public generateCorrectAnswer(): number {
-        // Depth: this.depthConverter.fromBar(this.variables[0])
-        // Pressure: this.depthConverter.toBar(this.variables[0])
-        // Equivalent air depth: this.nitroxCalculator.ead(this.variables[0], this.variables[1]);
-        // SAC: this.sacCalculator.calculateSac() / tank size
-        // Used gas: this.sacCalculator.calculateUsed()
-        // Dive Duration: this.sacCalculator.calculateDuration()
-        // Minimum depth: this.gasProperties.minDepth
-        // Equivalent narcotic depth:  this.gasProperties.end
-        // Maximum narcotic depth this.gasProperties.mnd
-
         const tools: QuizItemTools = {
             depthConverter: this.depthConverter,
             nitroxCalculator: this.nitroxCalculator,
@@ -85,13 +75,8 @@ export class QuizItem {
         }
 
         this.correctAnswer = this.generateCorrectAnswer();
-
-        console.log(`Calculated Answer: ${this.correctAnswer}`);
-
         const expectedAnswer = this.roundValue(this.correctAnswer, this.roundTo, this.roundType);
         const userAnswerRounded = this.roundValue(userNum, this.roundTo, this.roundType);
-
-        console.log(`User Answer: ${userAnswerRounded}, Expected Answer: ${expectedAnswer}`);
 
         return userAnswerRounded === expectedAnswer;
     }
@@ -126,13 +111,12 @@ export class QuizService {
     public topics: Topic[] = topics;
     public quizAnswers: Record<string, QuizAnswerStats> = {};
     public sessionsByCategory = new Map<string, QuizSession>();
+    public readonly completedCategories: Set<string> = new Set(); // ✅ Persist earned badges
 
     constructor() {}
 
     public applyApp(loaded: AppPreferences): void {
-        // if (loaded.quizAnswers) {
-        //     this.quizAnswers = loaded.quizAnswers;
-        // }
+        // Load persisted data here if needed
     }
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {
@@ -145,6 +129,11 @@ export class QuizService {
         }
 
         this.quizAnswers[key] = stats;
+
+        // ✅ Permanently mark badge as earned
+        if (this.isQuizCompleted(stats)) {
+            this.completedCategories.add(key);
+        }
     }
 
     public initializeStats(): void {
@@ -160,12 +149,7 @@ export class QuizService {
 
     public hasPassedCategory(topic: string, category: string): boolean {
         const key = `${topic}::${category}`;
-
-        if (!this.quizAnswers) {
-            return false;
-        }
-        const stats = this.quizAnswers[key];
-        return stats ? this.isQuizCompleted(stats) : false;
+        return this.completedCategories.has(key);
     }
 
     public countFinishedCategories(topic: Topic): number {
@@ -181,9 +165,15 @@ export class QuizService {
         return { finished, total, color };
     }
 
+    public isCategoryCompleted(topic: Topic, category: Category): boolean {
+        const key = `${topic.topic}::${category.name}`;
+        return this.completedCategories.has(key);
+    }
+
     public isQuizCompleted(quizAnswers: QuizAnswerStats): boolean {
-        return !!quizAnswers && quizAnswers.attempts >= QuizSession.requiredAnsweredCount
-            && (quizAnswers.correct / quizAnswers.attempts) * 100 >= QuizSession.minimalAcceptableSuccessRate;
+        return !!quizAnswers &&
+            quizAnswers.attempts >= QuizSession.requiredAnsweredCount &&
+            (quizAnswers.correct / quizAnswers.attempts) * 100 >= QuizSession.minimalAcceptableSuccessRate;
     }
 }
 

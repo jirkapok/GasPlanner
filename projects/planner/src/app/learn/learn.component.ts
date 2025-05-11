@@ -6,8 +6,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
 import { QuizService, QuizItem } from '../shared/learn/quiz.service';
-import { Topic } from '../shared/learn/learn.models';
+import { Category, Topic } from '../shared/learn/learn.models';
 import { QuizSession } from '../shared/learn/quiz-session.model';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { HelpModalComponent } from '../help-modal/help-modal.component';
 
 @Component({
     selector: 'app-learn',
@@ -23,11 +25,15 @@ export class LearnComponent implements OnInit {
     public session: QuizSession | undefined;
     public activeTopic = '';
     public selectedTopic = '';
+    public selectedCategory: Category | undefined;
     public selectedCategoryName = '';
 
     private _label = '';
 
-    constructor(public quizService: QuizService) {
+    constructor(
+        public quizService: QuizService,
+        private modalService: MdbModalService
+    ) {
         this.topics = quizService.topics;
     }
 
@@ -72,6 +78,8 @@ export class LearnComponent implements OnInit {
         const topic = this.topics.find(t => t.topic === topicName);
         const category = topic?.categories.find(c => c.name === categoryName);
 
+        this.selectedCategory = category;
+
         if (category) {
             const key = `${topicName}::${categoryName}`;
 
@@ -85,6 +93,20 @@ export class LearnComponent implements OnInit {
 
             this.session = session;
         }
+    }
+
+    public openHelpModal(): void {
+        const category = this.selectedCategory;
+
+        if (!category || !category.help) {
+            return;
+        }
+
+        this.modalService.open(HelpModalComponent, {
+            data: {
+                path: category.help
+            }
+        });
     }
 
     public toggleTopic(topicName: string): void {

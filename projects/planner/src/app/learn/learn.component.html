@@ -87,10 +87,14 @@
                                 'is-invalid': quiz.isAnswered && !quiz.isCorrect
                             }" />
 
-                        <div *ngIf="quiz.isAnswered && quiz.isCorrect" class="valid-feedback d-block">Correct</div>
-                        <div *ngIf="quiz.isAnswered && !quiz.isCorrect" class="invalid-feedback d-block">
-                            Incorrect — correct answer is: {{ quiz.correctAnswer }}
-                        </div>
+                            <div *ngIf="quiz.isAnswered">
+                                <div *ngIf="quiz.isCorrect" class="alert alert-success">
+                                  Correct!
+                                </div>
+                                <div *ngIf="!quiz.isCorrect" class="alert alert-danger">
+                                  Incorrect. The correct answer is: {{ quiz.correctAnswer }}
+                                </div>
+                            </div>
 
                         <div class="mt-3">
                             <button
@@ -107,6 +111,14 @@
                                 class="btn btn-outline-primary ms-2"
                                 (click)="goToNextQuestion()">
                                 Next Question
+                            </button>
+
+                            <button
+                                *ngIf="!shouldShowNextQuestionButton()"
+                                type="button"
+                                class="btn btn-outline-info ms-2"
+                                (click)="openHelpModal()">
+                                Need Help?
                             </button>
 
                             <button

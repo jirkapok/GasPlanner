@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
 import { QuizService, QuizItem } from '../shared/learn/quiz.service';
-import { Category, Topic } from '../shared/learn/learn.models';
+import { Category, RoundType, Topic } from '../shared/learn/learn.models';
 import { QuizSession } from '../shared/learn/quiz-session.model';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { HelpModalComponent } from '../help-modal/help-modal.component';
@@ -120,6 +120,19 @@ export class LearnComponent implements OnInit {
 
         this.session.validateCurrentAnswer();
         this.quizService.registerAnswer(this.selectedTopic, this.selectedCategoryName, this.session.currentQuiz?.isCorrect ?? false);
+    }
+
+    public getRoundingExplanation(roundType: RoundType, roundTo: number): string {
+        switch (roundType) {
+            case RoundType.round:
+                return `Round your answer to ${roundTo} decimal place(s).`;
+            case RoundType.floor:
+                return `Round down to ${roundTo} decimal place(s).`;
+            case RoundType.ceil:
+                return `Round up to ${roundTo} decimal place(s).`;
+            default:
+                return ' ';
+        }
     }
 
     public goToNextQuestion(): void {

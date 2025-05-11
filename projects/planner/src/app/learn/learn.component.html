@@ -64,7 +64,7 @@
 
     <div class="col-sm-12 col-md-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
         <div class="card shadow-sm position-relative">
-            <div class="position-absolute top-0 end-0 m-3">
+            <div class="position-absolute top-0 end-0 m-3" *ngIf="!shouldShowScore()">
                 <span class="badge bg-primary text-light">
                     <span class="badge bg-primary text-light">
                         {{ scoreSummary }} — {{ correctPercentage }}%

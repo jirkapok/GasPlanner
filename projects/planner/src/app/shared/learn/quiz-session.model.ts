@@ -98,10 +98,13 @@ export class QuizSession {
     }
 
 
-    public finishIfEligible(): void {
+    public finishIfEligible(): boolean {
         if (this.canFinishSession()) {
             this.finished = true;
+            return true;
         }
+        return false;
     }
+
 }
 

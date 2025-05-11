@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
@@ -10,6 +10,7 @@ import { Category, RoundType, Topic } from '../shared/learn/learn.models';
 import { QuizSession } from '../shared/learn/quiz-session.model';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { HelpModalComponent } from '../help-modal/help-modal.component';
+import confetti from 'canvas-confetti';
 
 @Component({
     selector: 'app-learn',
@@ -19,6 +20,8 @@ import { HelpModalComponent } from '../help-modal/help-modal.component';
     styleUrls: ['./learn.component.scss']
 })
 export class LearnComponent implements OnInit {
+
+    @ViewChild('completionBlock', { static: false }) completionBlockRef!: ElementRef<HTMLElement>;
 
     public readonly trophyIcon = faMedal;
     public readonly helpIcon = faCircleInfo;
@@ -90,7 +93,6 @@ export class LearnComponent implements OnInit {
         const key = `${topicName}::${categoryName}`;
         let session = this.quizService.sessionsByCategory.get(key);
 
-        // ✅ Allow re-practice after finishing without affecting badge
         if (!session || session.finished) {
             const quizzes = [category.getQuizItemForCategory()];
             session = new QuizSession(quizzes, category);
@@ -131,7 +133,9 @@ export class LearnComponent implements OnInit {
     }
 
     public validateCurrentAnswer(): void {
-        if (!this.session) return;
+        if (!this.session) {
+            return;
+        }
 
         this.session.validateCurrentAnswer();
         this.quizService.registerAnswer(
@@ -153,12 +157,42 @@ export class LearnComponent implements OnInit {
         }
     }
 
+    public launchConfetti(): void {
+        confetti({
+            particleCount: 150,
+            spread: 90,
+            origin: { y: 0.6 },
+            colors: ['#00c6ff', '#0072ff', '#ffffff'],
+        });
+    }
+
+    public launchConfettiFromElement(el: HTMLElement): void {
+        const rect = el.getBoundingClientRect();
+        const x = (rect.left + rect.width / 2) / window.innerWidth;
+        const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+        confetti({
+            particleCount: 120,
+            spread: 80,
+            origin: { x, y }
+        });
+    }
+
     public goToNextQuestion(): void {
         this.session?.goToNextQuestion();
     }
 
     public submitAnswers(): void {
-        this.session?.finishIfEligible();
+        if (this.session?.finishIfEligible()) {
+            // Wait for Angular to render the #completionBlock element
+            setTimeout(() => {
+                if (this.completionBlockRef?.nativeElement) {
+                    this.launchConfettiFromElement(this.completionBlockRef.nativeElement);
+                } else {
+                    this.launchConfetti();
+                }
+            }, 50);
+        }
     }
 
     public isCategorySelected(topicName: string, categoryName: string): boolean {

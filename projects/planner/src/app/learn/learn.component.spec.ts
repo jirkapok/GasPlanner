@@ -37,20 +37,7 @@ describe('LearnComponent', () => {
             roundType: RoundType.round,
         };
 
-        const item = new QuizItem(
-            template,
-            'Mock Category',
-            '',
-            1,
-            RoundType.round,
-            [],
-            false,
-            false,
-            ''
-        );
-
-        item.renderQuestion();
-        return item;
+        return new QuizItem(template, 'Mock Category');
     };
 
     beforeEach(async () => {

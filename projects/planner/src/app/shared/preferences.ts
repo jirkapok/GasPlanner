@@ -49,6 +49,8 @@ export class Preferences {
         this.viewStates.loadFrom(loaded.states);
         const mainView: DashBoardViewState | null = this.viewStates.get(KnownViews.dashboard);
 
+        this.quizService.applyApp(loaded);
+
         if(mainView) {
             this.schedules.setSelectedIndex(mainView.selectedDiveIndex);
         }

@@ -7,6 +7,8 @@ import { Topic, QuestionTemplate, RoundType, QuizItemTools, Category } from './l
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
 import { AppPreferences, QuizAnswerStats } from '../serialization.model';
+import { HelpModalComponent } from '../../help-modal/help-modal.component';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 export class QuizItem {
     public correctAnswer?: number;
@@ -111,13 +113,29 @@ export class QuizService {
     public topics: Topic[] = topics;
     public quizAnswers: Record<string, QuizAnswerStats> = {};
     public sessionsByCategory = new Map<string, QuizSession>();
-    public readonly completedCategories: Set<string> = new Set(); // ✅ Persist earned badges
+    public readonly completedCategories: Set<string> = new Set();
+    private readonly welcomeKey = 'quizWelcomeWasShown';
 
-    constructor() {}
+    constructor(private modalService: MdbModalService) {}
 
     public applyApp(loaded: AppPreferences): void {
-        // Load persisted data here if needed
+        console.log('QuizService: applyApp');
+        if (loaded.quizAnswers) {
+            this.quizAnswers = loaded.quizAnswers;
+            for (const [key, stats] of Object.entries(this.quizAnswers)) {
+                if (this.isQuizCompleted(stats)) {
+                    this.completedCategories.add(key);
+                }
+            }
+        } else if (!localStorage.getItem(this.welcomeKey)) {
+            console.log('QuizService: Showing welcome modal for new user');
+            this.modalService.open(HelpModalComponent, {
+                data: { path: 'learn-welcome' }
+            });
+            localStorage.setItem(this.welcomeKey, 'true');
+        }
     }
+
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {
         const key = `${topic}::${category}`;
@@ -130,7 +148,6 @@ export class QuizService {
 
         this.quizAnswers[key] = stats;
 
-        // ✅ Permanently mark badge as earned
         if (this.isQuizCompleted(stats)) {
             this.completedCategories.add(key);
         }

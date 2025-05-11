@@ -9,29 +9,35 @@ import { topics } from './quiz.questions';
 import { AppPreferences, QuizAnswerStats } from '../serialization.model';
 
 export class QuizItem {
-    public template: QuestionTemplate;
     public correctAnswer?: number;
+
+    public roundTo: number;
+    public roundType: RoundType;
+    public variables: number[] = [];
+    public isAnswered = false;
+    public isCorrect = false;
+    public userAnswer?: string;
+    public renderedQuestion = '';
+
     private depthConverter: DepthConverter;
     private nitroxCalculator: NitroxCalculator;
     private sacCalculator: SacCalculator;
     private gasProperties: GasProperties;
 
     constructor(
-        template: QuestionTemplate,
-        public categoryName: string,
-        public renderedQuestion: string,
-        public roundTo: number,
-        public roundType: RoundType,
-        public variables: number[],
-        public isAnswered: boolean,
-        public isCorrect: boolean,
-        public userAnswer?: string,
+        public template: QuestionTemplate,
+        public categoryName: string
     ) {
-        this.template = template;
+        this.roundTo = template.roundTo;
+        this.roundType = template.roundType;
+
         this.depthConverter = DepthConverter.simple();
         this.nitroxCalculator = new NitroxCalculator(this.depthConverter, 0.21);
         this.sacCalculator = new SacCalculator(this.depthConverter);
         this.gasProperties = new GasProperties();
+
+        this.randomizeQuizVariables();
+        this.renderQuestion();
     }
 
     public randomizeQuizVariables(): void {

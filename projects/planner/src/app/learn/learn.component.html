@@ -108,7 +108,7 @@
                             </div>
                             <div *ngIf="!quiz.isAnswered">
                                 <div class="alert alert-info">
-                                  {{ getRoundingExplanation(quiz.roundType, quiz.roundTo) }}
+                                 Round {{getRoundingExplanation(quiz.rounded)}} your answer to {{quiz.roundTo}} decimal place(s).
                                 </div>
                               </div>
 

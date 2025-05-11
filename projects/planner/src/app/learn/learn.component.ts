@@ -82,7 +82,7 @@ export class LearnComponent implements OnInit {
         this.selectedCategory = category;
 
         if (!category) {
-            this.session = undefined;
+            this.session = new QuizSession([], {} as Category);
             return;
         }
 
@@ -138,14 +138,14 @@ export class LearnComponent implements OnInit {
         this.quizService.registerAnswer(this.selectedTopic, this.selectedCategoryName, this.session.currentQuiz?.isCorrect ?? false);
     }
 
-    public getRoundingExplanation(roundType: RoundType, roundTo: number): string {
+    public getRoundingExplanation(roundType: RoundType): string {
         switch (roundType) {
             case RoundType.round:
-                return `Round your answer to ${roundTo} decimal place(s).`;
+                return 'your answer';
             case RoundType.floor:
-                return `Round down to ${roundTo} decimal place(s).`;
+                return 'down';
             case RoundType.ceil:
-                return `Round up to ${roundTo} decimal place(s).`;
+                return 'up';
             default:
                 return ' ';
         }

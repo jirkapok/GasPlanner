@@ -88,7 +88,9 @@
                             }" />
 
                         <div *ngIf="quiz.isAnswered && quiz.isCorrect" class="valid-feedback d-block">Correct</div>
-                        <div *ngIf="quiz.isAnswered && !quiz.isCorrect" class="invalid-feedback d-block">Incorrect</div>
+                        <div *ngIf="quiz.isAnswered && !quiz.isCorrect" class="invalid-feedback d-block">
+                            Incorrect — correct answer is: {{ quiz.correctAnswer }}
+                        </div>
 
                         <div class="mt-3">
                             <button

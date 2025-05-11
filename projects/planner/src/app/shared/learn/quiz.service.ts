@@ -10,6 +10,7 @@ import { AppPreferences, QuizAnswerStats } from '../serialization.model';
 
 export class QuizItem {
     public template: QuestionTemplate;
+    public correctAnswer?: number;
     private depthConverter: DepthConverter;
     private nitroxCalculator: NitroxCalculator;
     private sacCalculator: SacCalculator;
@@ -77,11 +78,11 @@ export class QuizItem {
             return false;
         }
 
-        const calculatedAnswer = this.generateCorrectAnswer();
+        this.correctAnswer = this.generateCorrectAnswer();
 
-        console.log(`Calculated Answer: ${calculatedAnswer}`);
+        console.log(`Calculated Answer: ${this.correctAnswer}`);
 
-        const expectedAnswer = this.roundValue(calculatedAnswer, this.roundTo, this.roundType);
+        const expectedAnswer = this.roundValue(this.correctAnswer, this.roundTo, this.roundType);
         const userAnswerRounded = this.roundValue(userNum, this.roundTo, this.roundType);
 
         console.log(`User Answer: ${userAnswerRounded}, Expected Answer: ${expectedAnswer}`);

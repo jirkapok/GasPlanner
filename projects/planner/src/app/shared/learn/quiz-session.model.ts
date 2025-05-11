@@ -91,9 +91,12 @@ export class QuizSession {
     }
 
     public canFinishSession(): boolean {
+        const maxPossibleScore = this.totalAnswered * QuizSession.pointsCorrect;
+        const scorePercentage = maxPossibleScore === 0 ? 0 : (this.totalScore / maxPossibleScore) * 100;
         return this.totalAnswered >= QuizSession.requiredAnsweredCount &&
-               this.correctPercentage >= QuizSession.minimalAcceptableSuccessRate;
+               scorePercentage >= QuizSession.minimalAcceptableSuccessRate;
     }
+
 
     public finishIfEligible(): void {
         if (this.canFinishSession()) {

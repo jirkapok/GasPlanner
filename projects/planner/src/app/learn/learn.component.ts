@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMedal } from '@fortawesome/free-solid-svg-icons';
+import { faMedal,faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
 import { QuizService, QuizItem } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
@@ -20,6 +20,7 @@ import { HelpModalComponent } from '../help-modal/help-modal.component';
 export class LearnComponent implements OnInit {
 
     public readonly trophyIcon = faMedal;
+    public readonly helpIcon = faCircleInfo;
     public readonly topics: Topic[] = [];
 
     public session: QuizSession | undefined;
@@ -80,19 +81,31 @@ export class LearnComponent implements OnInit {
 
         this.selectedCategory = category;
 
-        if (category) {
-            const key = `${topicName}::${categoryName}`;
-
-            let session = this.quizService.sessionsByCategory.get(key);
-
-            if (!session) {
-                const quizzes = Array.from({ length: QuizSession.requiredAnsweredCount }, () => category.getQuizItemForCategory());
-                session = new QuizSession(quizzes, category);
-                this.quizService.sessionsByCategory.set(key, session);
-            }
-
-            this.session = session;
+        if (!category) {
+            this.session = undefined;
+            return;
         }
+
+        const key = `${topicName}::${categoryName}`;
+        let session = this.quizService.sessionsByCategory.get(key);
+
+        if (!session) {
+            const quizzes = [category.getQuizItemForCategory()];
+            session = new QuizSession(quizzes, category);
+            this.quizService.sessionsByCategory.set(key, session);
+        }
+
+        this.session = session;
+    }
+
+    public openHelp(): void {
+
+        this.modalService.open(HelpModalComponent, {
+            data: {
+                path: 'quiz-help'
+            }
+        });
+
     }
 
     public openHelpModal(): void {
@@ -100,6 +113,9 @@ export class LearnComponent implements OnInit {
 
         if (!category || !category.help) {
             return;
+        }
+        if (this.session) {
+            this.session.useHint();
         }
 
         this.modalService.open(HelpModalComponent, {
@@ -168,7 +184,7 @@ export class LearnComponent implements OnInit {
     }
 
     public shouldShowFinishButton(): boolean {
-        return !!(this.currentQuiz?.isAnswered ?? false) && !!this.session?.canFinishSession();
+        return this.session?.canFinishSession() ?? false;
     }
 
     public shouldShowScore(): boolean {

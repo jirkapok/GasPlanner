@@ -66,8 +66,19 @@
         <div class="card shadow-sm position-relative">
             <div class="position-absolute top-0 end-0 m-3">
                 <span class="badge bg-primary text-light">
-                    Score: {{ session?.correctCount }} / {{ session?.totalAnswered }} — {{ correctPercentage }}%
+                    <span class="badge bg-primary text-light">
+                        {{ scoreSummary }} — {{ correctPercentage }}%
+                    </span>
                 </span>
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-secondary ms-2"
+                    (click)="openHelp()"
+                    title="Show Help"
+                    aria-label="Open help panel"            >
+                    <fa-icon [icon]="helpIcon" class="fa-lg"></fa-icon>
+                </button>
             </div>
 
             <div class="card-body">
@@ -123,7 +134,7 @@
                                 type="button"
                                 class="btn btn-outline-info ms-2"
                                 (click)="openHelpModal()">
-                                Need Help?
+                                Need Hint?
                             </button>
 
                             <button

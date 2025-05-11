@@ -1,4 +1,5 @@
 import { QuizItem } from './quiz.service';
+import { DepthConverter, NitroxCalculator, SacCalculator, GasProperties } from 'scuba-physics';
 
 export type VariableOption = number;
 
@@ -35,12 +36,20 @@ export class Variable {
     }
 }
 
+export interface QuizItemTools {
+    depthConverter: DepthConverter;
+    nitroxCalculator: NitroxCalculator;
+    sacCalculator: SacCalculator;
+    gasProperties: GasProperties;
+}
+
 export class QuestionTemplate {
     constructor(
         public question: string,
         public roundTo: number,
         public roundType: RoundType,
-        public variables: Variable[]
+        public variables: Variable[],
+        public calculateAnswer: (variables: number[], tools: QuizItemTools) => number
     ) {}
 }
 

@@ -54,6 +54,8 @@ export class LearnComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.quizService.initializeStats();
+
         const firstTopic = this.topics[0];
         const firstCategory = firstTopic?.categories[0];
 

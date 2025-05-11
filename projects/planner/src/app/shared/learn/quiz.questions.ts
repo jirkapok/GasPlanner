@@ -1,4 +1,4 @@
-import { Category, QuestionTemplate, RoundType, Topic, Variable } from "./learn.models";
+import { Category, QuestionTemplate, RoundType, Topic, Variable, QuizItemTools } from './learn.models';
 
 export const topics: Topic[] = [
     new Topic('Pressure at depth', [
@@ -9,7 +9,8 @@ export const topics: Topic[] = [
                 RoundType.round,
                 [
                     new Variable('pressure', undefined, 1, 11)
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => tools.depthConverter.fromBar(vars[0])
             )
         ]),
         new Category('Pressure', 'examples_pressure', [
@@ -19,7 +20,8 @@ export const topics: Topic[] = [
                 RoundType.round,
                 [
                     new Variable('depth', undefined, 0, 100)
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => tools.depthConverter.toBar(vars[0])
             )
         ]),
     ]),
@@ -33,7 +35,8 @@ export const topics: Topic[] = [
                 [
                     new Variable('pp', undefined, 1, 2),
                     new Variable('o2_percent', [21, 32, 36, 38, 50, 100])
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.mod(vars[0], vars[1] / 100)
             )
         ]),
         new Category('Best mix', 'examples_bestmix', [
@@ -44,7 +47,8 @@ export const topics: Topic[] = [
                 [
                     new Variable('pp', undefined, 1, 2),
                     new Variable('depth', undefined, 1, 50)
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.bestMix(vars[1], vars[0]) * 100
             )
         ]),
         new Category('Oxygen partial pressure', 'examples_ppO2', [
@@ -55,7 +59,8 @@ export const topics: Topic[] = [
                 [
                     new Variable('o2_percent', [21, 32, 36, 38, 50, 100]),
                     new Variable('depth', undefined, 1, 50)
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.partialPressure(vars[0] / 100, vars[1])
             )
         ]),
         new Category('Equivalent air depth', 'examples_ead', [
@@ -66,7 +71,8 @@ export const topics: Topic[] = [
                 [
                     new Variable('o2_percent', [21, 32, 36, 38, 50, 100]),
                     new Variable('depth', undefined, 1, 50)
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.ead(vars[1], vars[0] / 100)
             )
         ]),
     ]),
@@ -81,7 +87,8 @@ export const topics: Topic[] = [
                 [
                     new Variable('rmv', undefined, 10, 30),
                     new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24])
-                ]
+                ],
+                (vars: number[]) => vars[0]/ vars[1]
             )
         ]),
         new Category('Respiratory minute volume', 'examples_rmv', [
@@ -95,13 +102,14 @@ export const topics: Topic[] = [
                     new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
                     new Variable('consumed', undefined, 50, 200),
                     new Variable('duration', undefined, 30, 60)
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateRmv(vars[0], vars[1], vars[2], vars[3])
             )
         ]),
         new Category('Used gas', 'examples_consumed', [
             new QuestionTemplate(
-                'How much gas did i use (in bars) at average depth {depth} m, with tank {tank_size} L for {duration} minutes ' +
-                'where my respiratory minute volume (RMV) was {rmv} L/min?',
+                'How much gas did i use (in bars) at average depth {depth} m, with tank {tank_size} L for {duration} ' +
+                'minutes where my respiratory minute volume (RMV) was {rmv} L/min?',
                 0,
                 RoundType.ceil,
                 [
@@ -109,7 +117,8 @@ export const topics: Topic[] = [
                     new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
                     new Variable('duration', undefined, 30, 60),
                     new Variable('rmv', undefined, 15, 25)
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateUsed(vars[0], vars[1], vars[2], vars[3])
             )
         ]),
         new Category('Dive duration', 'examples_durationbyrmv', [
@@ -123,7 +132,8 @@ export const topics: Topic[] = [
                     new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
                     new Variable('consumed', undefined, 30, 60),
                     new Variable('rmv', undefined, 15, 25)
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateDuration(vars[0], vars[1], vars[2], vars[3])
             )
         ])
     ]),
@@ -131,27 +141,35 @@ export const topics: Topic[] = [
     new Topic('Trimix', [
         new Category('Minimum depth', 'examples_mindepth', [
             new QuestionTemplate(
-                'Team selects Trimix {oxygen}/{helium} as a gas for a dive. Minimum partial pressure of oxygen (ppO2) is 0.18 b. ' +
-                'What is the minimum depth for this gas?',
+                'Team selects Trimix {oxygen}/{helium} as a gas for a dive. ' +
+                'Minimum partial pressure of oxygen (ppO2) is 0.18 b. What is the minimum depth for this gas?',
                 0,
                 RoundType.ceil,
                 [
                     new Variable('oxygen', undefined, 10, 21),
                     new Variable('helium', undefined, 20, 70)
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => {
+                    tools.gasProperties.maxPpO2 = 0.18;
+                    return tools.gasProperties.minDepth;
+                }
             )
         ]),
         new Category('Equivalent narcotic depth', 'examples_end', [
             new QuestionTemplate(
-                'You plan a dive to {depth} meters. Team selects Trimix {oxygen}/{helium} as a gas for the dive. ' +
-                'What is the equivalent narcotic depth for this gas?',
+                'You plan a dive to {depth} meters. ' +
+                'Team selects Trimix {oxygen}/{helium} as a gas for the dive. What is the equivalent narcotic depth for this gas?',
                 0,
                 RoundType.ceil,
                 [
                     new Variable('oxygen', undefined, 10, 21),
                     new Variable('helium', undefined, 10, 30),
                     new Variable('depth', undefined, 10, 80)
-                ]
+                ],
+                (vars: number[], tools: QuizItemTools) => {
+                    tools.gasProperties.depth = vars[2];
+                    return tools.gasProperties.end;
+                }
             )
         ]),
         new Category('Maximum narcotic depth', 'examples_mnd', [
@@ -162,10 +180,15 @@ export const topics: Topic[] = [
                 RoundType.floor,
                 [
                     new Variable('oxygen', undefined, 10, 21),
-                    new Variable('helium', undefined, 20, 70),
-                ]
+                    new Variable('helium', undefined, 20, 70)
+                ],
+                (vars: number[], tools: QuizItemTools) => {
+                    tools.gasProperties.narcoticDepthLimit = vars[0];
+                    tools.gasProperties.depth = vars[1];
+                    return tools.gasProperties.mnd;
+                }
             )
-        ]),
+        ])
     ])
 
     // TODO fix help links for options and dive info.

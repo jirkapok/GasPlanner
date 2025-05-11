@@ -10,6 +10,7 @@ import { QuizService, QuizItem } from '../shared/learn/quiz.service';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RoundType, Topic, QuestionTemplate } from '../shared/learn/learn.models';
+import { MdbModalModule } from 'mdb-angular-ui-kit/modal';
 
 const mockPreferencesStore = {
     load: () => {},
@@ -61,6 +62,7 @@ describe('LearnComponent', () => {
                 NgxMdModule,
                 FontAwesomeModule,
                 LearnComponent,
+                MdbModalModule,
             ],
             providers: [
                 provideHttpClient(),

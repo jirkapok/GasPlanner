@@ -62,7 +62,11 @@ export class QuizItem {
             gasProperties: this.gasProperties
         };
 
-        return this.template.calculateAnswer(this.variables, tools);
+        if (typeof this.template.calculateAnswer === 'function') {
+            return this.template.calculateAnswer(this.variables, tools);
+        }
+
+        throw new Error('Invalid question template: missing calculateAnswer');
     }
 
     public validateAnswer(): boolean {

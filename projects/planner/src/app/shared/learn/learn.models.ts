@@ -1,5 +1,6 @@
 import { QuizItem } from './quiz.service';
 import { DepthConverter, NitroxCalculator, SacCalculator, GasProperties } from 'scuba-physics';
+import { QuizItemFactory } from './quiz.utils';
 
 export type VariableOption = number;
 
@@ -62,23 +63,8 @@ export class Category {
 
     public getQuizItemForCategory(): QuizItem {
         const randomIndex = Math.floor(Math.random() * this.questions.length);
-        const selectedQuestion = this.questions[randomIndex];
-
-        const quizItem = new QuizItem(
-            selectedQuestion,
-            this.name,
-            selectedQuestion.question,
-            selectedQuestion.roundTo,
-            selectedQuestion.roundType,
-            [],
-            false,
-            false,
-        );
-
-        quizItem.randomizeQuizVariables();
-        quizItem.renderQuestion();
-
-        return quizItem;
+        const selectedTemplate = this.questions[randomIndex];
+        return QuizItemFactory.create(selectedTemplate, this.name);
     }
 }
 

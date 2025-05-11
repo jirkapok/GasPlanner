@@ -79,7 +79,7 @@ export class LearnComponent implements OnInit {
 
             if (!session) {
                 const quizzes = Array.from({ length: QuizSession.requiredAnsweredCount }, () => category.getQuizItemForCategory());
-                session = new QuizSession(quizzes);
+                session = new QuizSession(quizzes, category);
                 this.quizService.sessionsByCategory.set(key, session);
             }
 

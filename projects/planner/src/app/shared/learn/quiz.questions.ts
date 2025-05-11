@@ -123,7 +123,7 @@ export const topics: Topic[] = [
         ]),
         new Category('Dive duration', 'examples_durationbyrmv', [
             new QuestionTemplate(
-                'How long can i stay (in minutest) at average depth {depth} m with available {consumed} in {tank_size} L tank, ' +
+                'How long can i stay (in minutes) at average depth {depth} m with available {consumed} in {tank_size} L tank, ' +
                 'where my respiratory minute volume (RMV) is {rmv} L/min?',
                 0,
                 RoundType.floor,

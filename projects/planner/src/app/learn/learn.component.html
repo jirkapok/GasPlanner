@@ -36,18 +36,18 @@
                                                 <div class="d-flex align-items-center">
                                                     {{ category.name }}
                                                     <ng-container *ngIf="quizService.quizAnswers[topic.topic + '::' + category.name] as stats">
-                                                        <span class="small text-muted ms-2" *ngIf="quizService.isQuizCompleted(stats)">
-                                                            ({{ stats.correct }}/{{ stats.attempts }})
-                                                        </span>
+                                                      <span class="small text-muted ms-2">
+                                                        ({{ stats.correct }}/{{ stats.attempts }})
+                                                      </span>
                                                     </ng-container>
                                                 </div>
                                             <ng-container *ngIf="quizService.quizAnswers[topic.topic + '::' + category.name] as stats">
-                                                <fa-icon
+                                               <fa-icon
                                                     [icon]="trophyIcon"
                                                     class="ms-2 small"
                                                     [ngClass]="{
-                                                        'text-muted': !quizService.isQuizCompleted(stats),
-                                                        'text-warning': quizService.isQuizCompleted(stats)
+                                                        'text-muted': !isBadgeEarned(topic, category),
+                                                        'text-warning': isBadgeEarned(topic, category)
                                                     }">
                                                 </fa-icon>
                                             </ng-container>
@@ -149,9 +149,15 @@
                 </form>
 
                 <div *ngIf="shouldShowScore()" class="text-center">
-                    <h4>Quiz Completed!</h4>
-                    <p>Correct answers: {{ session?.correctCount }} out of {{ session?.totalAnswered }}</p>
-                    <p>Score: {{ correctPercentage }}%</p>
+                  <h4>Quiz Completed!</h4>
+                  <p>Correct answers: {{ session?.correctCount }} out of {{ session?.totalAnswered }}</p>
+                  <p>Score: {{ correctPercentage }}%</p>
+
+                  <button
+                    class="btn btn-outline-secondary mt-3"
+                    (click)="updateTopic(selectedTopic, selectedCategoryName)">
+                    Continue Practicing
+                  </button>
                 </div>
             </div>
         </div>

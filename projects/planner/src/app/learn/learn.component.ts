@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMedal,faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faMedal, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
 import { QuizService, QuizItem } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
@@ -13,6 +13,7 @@ import { HelpModalComponent } from '../help-modal/help-modal.component';
 
 @Component({
     selector: 'app-learn',
+    standalone: true,
     imports: [CommonModule, NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule],
     templateUrl: './learn.component.html',
     styleUrls: ['./learn.component.scss']
@@ -89,7 +90,8 @@ export class LearnComponent implements OnInit {
         const key = `${topicName}::${categoryName}`;
         let session = this.quizService.sessionsByCategory.get(key);
 
-        if (!session) {
+        // ✅ Allow re-practice after finishing without affecting badge
+        if (!session || session.finished) {
             const quizzes = [category.getQuizItemForCategory()];
             session = new QuizSession(quizzes, category);
             this.quizService.sessionsByCategory.set(key, session);
@@ -99,13 +101,11 @@ export class LearnComponent implements OnInit {
     }
 
     public openHelp(): void {
-
         this.modalService.open(HelpModalComponent, {
             data: {
                 path: 'quiz-help'
             }
         });
-
     }
 
     public openHelpModal(): void {
@@ -114,6 +114,7 @@ export class LearnComponent implements OnInit {
         if (!category || !category.help) {
             return;
         }
+
         if (this.session) {
             this.session.useHint();
         }
@@ -130,24 +131,25 @@ export class LearnComponent implements OnInit {
     }
 
     public validateCurrentAnswer(): void {
-        if (!this.session) {
-            return;
-        }
+        if (!this.session) return;
 
         this.session.validateCurrentAnswer();
-        this.quizService.registerAnswer(this.selectedTopic, this.selectedCategoryName, this.session.currentQuiz?.isCorrect ?? false);
+        this.quizService.registerAnswer(
+            this.selectedTopic,
+            this.selectedCategoryName,
+            this.session.currentQuiz?.isCorrect ?? false
+        );
     }
 
     public getRoundingExplanation(roundType: RoundType): string {
         switch (roundType) {
-            case RoundType.round:
-                return 'your answer';
             case RoundType.floor:
                 return 'down';
             case RoundType.ceil:
                 return 'up';
+            case RoundType.round:
             default:
-                return ' ';
+                return 'your answer';
         }
     }
 
@@ -193,5 +195,9 @@ export class LearnComponent implements OnInit {
 
     public shouldShowForm(): boolean {
         return !this.session?.finished && (this.session?.quizzes?.length ?? 0) > 0;
+    }
+
+    public isBadgeEarned(topic: Topic, category: Category): boolean {
+        return this.quizService.isCategoryCompleted(topic, category);
     }
 }

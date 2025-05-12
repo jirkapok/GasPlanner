@@ -40,7 +40,8 @@ export class Preferences {
         return {
             states: this.toStates(),
             options: this.toAppSettings(),
-            dives: this.toDives()
+            dives: this.toDives(),
+            quizAnswers: this.quizService.getQuizAnswers()
         };
     }
 

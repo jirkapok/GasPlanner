@@ -192,6 +192,10 @@ export class QuizService {
             quizAnswers.attempts >= QuizSession.requiredAnsweredCount &&
             (quizAnswers.correct / quizAnswers.attempts) * 100 >= QuizSession.minimalAcceptableSuccessRate;
     }
+
+    public getQuizAnswers(): Record<string, QuizAnswerStats> {
+        return { ...this.quizAnswers };
+    }
 }
 
 // const isValid = Precision.isInRange(value, min, max);

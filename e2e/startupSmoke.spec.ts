@@ -72,6 +72,41 @@ class ComparisonPage {
     }
 }
 
+class HelpPage {
+    private readonly helpContentSelector = '#application-help';
+
+    constructor(private readonly page: Page) {}
+
+    public async navigate(): Promise<void> {
+        await this.page.goto('/help');
+    }
+
+    public getHelpContent(): Locator {
+        return this.page.locator(this.helpContentSelector);
+    }
+}
+
+class LearnPage {
+    private readonly answerInputSelector = '#answer-input';
+    private readonly submitAnswerSelector = '#submit-answer';
+    private readonly nextQuestionSelector = '#next-question';
+
+    constructor(private readonly page: Page) {}
+
+    public async navigate(): Promise<void> {
+        await this.page.goto('/learn');
+    }
+
+    public async answerQuestion(value: string): Promise<void> {
+        await this.page.locator(this.answerInputSelector).fill(value);
+        await this.page.locator(this.submitAnswerSelector).click();
+    }
+
+    public getNextButton(): Locator {
+        return this.page.locator(this.nextQuestionSelector);
+    }
+}
+
 test.describe('Dive planner smoke tests', () => {
     let context: BrowserContext;
     let page: Page;
@@ -113,5 +148,24 @@ test.describe('Dive planner smoke tests', () => {
         const totalDiff = diffPage.getTotalTimeDifference();
         await expect(totalDiff).toBeVisible();
         await expect(totalDiff).not.toHaveText('');
+    });
+
+    test('should go to help page and see content', async () => {
+        const helpPage = new HelpPage(page);
+        await helpPage.navigate();
+
+        const helpContent = helpPage.getHelpContent();
+        await expect(helpContent).toBeVisible();
+        await expect(helpContent).not.toHaveText('');
+    });
+
+    test('should go to learn page, enter dummy answer, click verify answer button and see next question button', async () => {
+        const learnPage = new LearnPage(page);
+        await learnPage.navigate();
+
+        await learnPage.answerQuestion('999');
+
+        const nextButton = learnPage.getNextButton();
+        await expect(nextButton).toBeVisible();
     });
 });

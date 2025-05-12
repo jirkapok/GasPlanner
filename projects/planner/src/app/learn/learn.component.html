@@ -86,10 +86,11 @@
                         <p>{{ quiz.renderedQuestion }}</p>
 
                         <input
+                            id="answer-input"
                             type="text"
                             class="form-control mb-2"
                             [(ngModel)]="quiz.userAnswer"
-                            name="answer-{{ session?.currentQuestionIndex }}"
+                            name="{{ session?.currentQuestionIndex }}"
                             [disabled]="quiz.isAnswered"
                             [ngClass]="{
                                 'is-valid': quiz.isAnswered && quiz.isCorrect,
@@ -112,6 +113,7 @@
 
                         <div class="mt-3">
                             <button
+                                id="submit-answer"
                                 *ngIf="shouldShowSubmitButton()"
                                 type="button"
                                 class="btn btn-primary"
@@ -120,6 +122,7 @@
                             </button>
 
                             <button
+                                id="next-question"
                                 *ngIf="shouldShowNextQuestionButton()"
                                 type="button"
                                 class="btn btn-outline-primary ms-2"

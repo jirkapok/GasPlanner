@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Preferences } from './preferences';
-import { AppPreferences, DiveDto } from './serialization.model';
+import { AppPreferences, DiveDto, QuizAnswerStats } from './serialization.model';
 import { DiveSchedule } from './dive.schedules';
+
+type SerializableAppPreferences = Omit<AppPreferences, 'quizAnswers'> & {
+    quizAnswers: [string, QuizAnswerStats][] | Record<string, QuizAnswerStats>;
+};
 
 @Injectable()
 export class PreferencesStore {
@@ -19,8 +23,19 @@ export class PreferencesStore {
             return;
         }
 
-        const loaded = JSON.parse(toParse) as AppPreferences;
-        this.preferencesFactory.applyApp(loaded);
+        const raw = JSON.parse(toParse) as SerializableAppPreferences;
+
+        const quizAnswersRaw = raw.quizAnswers;
+        const quizAnswersMap = Array.isArray(quizAnswersRaw)
+            ? new Map<string, QuizAnswerStats>(quizAnswersRaw)
+            : new Map<string, QuizAnswerStats>(Object.entries(quizAnswersRaw));
+
+        const fixed: AppPreferences = {
+            ...raw,
+            quizAnswers: quizAnswersMap
+        };
+
+        this.preferencesFactory.applyApp(fixed);
     }
 
     public loadDefault(dive: DiveSchedule): void {
@@ -44,7 +59,12 @@ export class PreferencesStore {
     public save(): void {
         const toSave = this.preferencesFactory.toPreferences();
 
-        const serialized = JSON.stringify(toSave);
+        const serializable: SerializableAppPreferences = {
+            ...toSave,
+            quizAnswers: [...toSave.quizAnswers.entries()]
+        };
+
+        const serialized = JSON.stringify(serializable);
         localStorage.setItem(PreferencesStore.storageKey, serialized);
     }
 

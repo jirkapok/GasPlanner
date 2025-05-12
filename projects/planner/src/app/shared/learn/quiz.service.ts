@@ -118,6 +118,8 @@ export class QuizService {
     constructor(private modalService: MdbModalService) {}
 
     public applyApp(loaded: AppPreferences): void {
+        return;
+
         console.log('QuizService: applyApp', loaded.quizWelcomeWasShown, loaded.quizAnswers);
 
         this.quizAnswers = loaded.quizAnswers;

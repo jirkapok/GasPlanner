@@ -17,6 +17,7 @@ import { SubViewStorage } from './subViewStorage';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { MdbModalService } from "mdb-angular-ui-kit/modal";
 
 describe('PreferencesStore', () => {
     beforeEach(() => {
@@ -29,6 +30,7 @@ describe('PreferencesStore', () => {
                 SettingsNormalizationService,
                 WayPointsService, DiveSchedules,
                 ReloadDispatcher, ApplicationSettingsService,
+                MdbModalService
             ]
         });
 

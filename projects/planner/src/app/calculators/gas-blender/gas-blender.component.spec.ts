@@ -16,6 +16,7 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { BlendPricingService } from '../../shared/blend-pricing.service';
+import { MdbModalService } from "mdb-angular-ui-kit/modal";
 
 class GasBlenderPage {
     constructor(private fixture: ComponentFixture<GasBlenderComponent>) { }
@@ -55,7 +56,8 @@ describe('GasBlenderComponent', () => {
                 ValidatorGroups, InputControls, DecimalPipe,
                 SubViewStorage, ViewStates, PreferencesStore,
                 Preferences, ViewSwitchService, DiveSchedules,
-                ReloadDispatcher, ApplicationSettingsService
+                ReloadDispatcher, ApplicationSettingsService,
+                MdbModalService
             ]
         }).compileComponents();
     });

@@ -10,6 +10,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
+import { MdbModalService } from "mdb-angular-ui-kit/modal";
 
 describe('DiffComponent', () => {
     let component: DiffComponent;
@@ -24,7 +25,8 @@ describe('DiffComponent', () => {
                 ViewStates, SubViewStorage,
                 PreferencesStore, Preferences,
                 ViewSwitchService, ReloadDispatcher,
-                ApplicationSettingsService
+                ApplicationSettingsService,
+                MdbModalService
             ]
         });
         fixture = TestBed.createComponent(DiffComponent);

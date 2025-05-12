@@ -17,6 +17,7 @@ import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ReactiveFormsModule } from "@angular/forms";
+import { MdbModalService } from "mdb-angular-ui-kit/modal";
 
 describe('WeightCalcComponent', () => {
     let component: WeightCalcComponent;
@@ -31,7 +32,8 @@ describe('WeightCalcComponent', () => {
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
                 Preferences, ViewSwitchService,
                 ReloadDispatcher, DiveSchedules,
-                ApplicationSettingsService
+                ApplicationSettingsService,
+                MdbModalService
             ],
             imports: [
                 RouterTestingModule.withRoutes([]),

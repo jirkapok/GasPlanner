@@ -118,7 +118,6 @@ export class QuizService {
     constructor(private modalService: MdbModalService) {}
 
     public applyApp(loaded: AppPreferences): void {
-        return;
 
         console.log('QuizService: applyApp', loaded.quizWelcomeWasShown, loaded.quizAnswers);
 
@@ -130,12 +129,12 @@ export class QuizService {
                     this.completedCategories.add(key);
                 }
             }
-        } else if (loaded.quizWelcomeWasShown === undefined || loaded.quizWelcomeWasShown === false) {
-            console.log('QuizService: Showing welcome modal for new user');
+        } else if (loaded.quizWelcomeWasShown === false) {
+            loaded.quizWelcomeWasShown = true;
+            console.log('QuizService: Showing welcome modal for new user', loaded.quizWelcomeWasShown);
             this.modalService.open(HelpModalComponent, {
                 data: { path: 'learn-welcome' }
             });
-            loaded.quizWelcomeWasShown = true;
         }
     }
 

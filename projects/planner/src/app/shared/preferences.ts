@@ -51,6 +51,9 @@ export class Preferences {
         this.viewStates.loadFrom(loaded.states);
         const mainView: DashBoardViewState | null = this.viewStates.get(KnownViews.dashboard);
 
+        loaded.quizWelcomeWasShown = false;
+        loaded.quizAnswers = this.quizService.getQuizAnswers();
+
         this.quizService.applyApp(loaded);
 
         if(mainView) {

@@ -35,7 +35,6 @@ export class LearnComponent implements OnInit {
     public selectedCategoryName = '';
 
     private _label = '';
-    private defaultStats: QuizAnswerStats = { attempts: 0, correct: 0 };
 
     constructor(
         public quizService: QuizService,
@@ -181,7 +180,7 @@ export class LearnComponent implements OnInit {
     }
 
     public getQuizStats(key: string): QuizAnswerStats {
-        return this.quizService.quizAnswers.get(key) ?? this.defaultStats;
+        return this.quizService.quizAnswers.get(key) ?? this.quizService.createDefaultStats();
     }
 
     public goToNextQuestion(): void {

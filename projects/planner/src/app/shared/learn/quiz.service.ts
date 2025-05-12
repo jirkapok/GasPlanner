@@ -105,7 +105,6 @@ export class QuizItem {
         this.renderedQuestion = rendered;
     }
 }
-
 @Injectable({
     providedIn: 'root'
 })
@@ -141,7 +140,7 @@ export class QuizService {
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {
         const key = `${topic}::${category}`;
-        const stats = this.quizAnswers.get(key) ?? { attempts: 0, correct: 0 };
+        const stats = this.quizAnswers.get(key) ?? this.createDefaultStats();
 
         stats.attempts++;
         if (correct) {
@@ -160,7 +159,7 @@ export class QuizService {
             for (const category of topic.categories) {
                 const key = `${topic.topic}::${category.name}`;
                 if (!this.quizAnswers.has(key)) {
-                    this.quizAnswers.set(key, { attempts: 0, correct: 0 });
+                    this.quizAnswers.set(key, this.createDefaultStats());
                 }
             }
         }
@@ -197,6 +196,10 @@ export class QuizService {
 
     public getQuizAnswers(): Map<string, QuizAnswerStats> {
         return new Map(this.quizAnswers);
+    }
+
+    public createDefaultStats(): QuizAnswerStats {
+        return { attempts: 0, correct: 0 };
     }
 }
 

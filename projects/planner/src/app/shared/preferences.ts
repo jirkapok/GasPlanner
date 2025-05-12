@@ -42,7 +42,7 @@ export class Preferences {
             options: this.toAppSettings(),
             dives: this.toDives(),
             quizAnswers: this.quizService.getQuizAnswers(),
-            quizWelcomeWasShown: false
+            quizWelcomeWasShown: this.quizService.quizWelcomeWasShown
         };
     }
 
@@ -50,9 +50,6 @@ export class Preferences {
         this.applyLoaded(loaded);
         this.viewStates.loadFrom(loaded.states);
         const mainView: DashBoardViewState | null = this.viewStates.get(KnownViews.dashboard);
-
-        loaded.quizWelcomeWasShown = false;
-        loaded.quizAnswers = this.quizService.getQuizAnswers();
 
         this.quizService.applyApp(loaded);
 

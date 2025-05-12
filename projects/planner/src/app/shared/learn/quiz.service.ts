@@ -114,6 +114,7 @@ export class QuizService {
     public quizAnswers: Record<string, QuizAnswerStats> = {};
     public sessionsByCategory = new Map<string, QuizSession>();
     public readonly completedCategories: Set<string> = new Set();
+    public quizWelcomeWasShown = false;
 
     constructor(private modalService: MdbModalService) {}
 
@@ -122,6 +123,7 @@ export class QuizService {
         console.log('QuizService: applyApp', loaded.quizWelcomeWasShown, loaded.quizAnswers);
 
         this.quizAnswers = loaded.quizAnswers;
+        this.quizWelcomeWasShown = loaded.quizWelcomeWasShown;
 
         if (Object.keys(loaded.quizAnswers).length > 0) {
             for (const [key, stats] of Object.entries(this.quizAnswers)) {
@@ -129,15 +131,16 @@ export class QuizService {
                     this.completedCategories.add(key);
                 }
             }
-        } else if (loaded.quizWelcomeWasShown === false) {
-            loaded.quizWelcomeWasShown = true;
-            console.log('QuizService: Showing welcome modal for new user', loaded.quizWelcomeWasShown);
+        }
+
+        if (!this.quizWelcomeWasShown) {
+            this.quizWelcomeWasShown = true;
+            console.log('QuizService: Showing welcome modal for new user', this.quizWelcomeWasShown);
             this.modalService.open(HelpModalComponent, {
                 data: { path: 'learn-welcome' }
             });
         }
     }
-
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {
         const key = `${topic}::${category}`;

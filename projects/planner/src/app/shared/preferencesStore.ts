@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Preferences } from './preferences';
-import { AppPreferences, DiveDto, QuizAnswerStats } from './serialization.model';
+import { AppPreferences, DiveDto } from './serialization.model';
 import { DiveSchedule } from './dive.schedules';
 
 @Injectable()

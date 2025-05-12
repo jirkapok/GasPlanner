@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { NgxMdModule, NgxMdService } from 'ngx-md';
 import { Urls } from '../shared/navigation.service';
-import { HttpClient } from '@angular/common/http';
 import { MarkdownCustomization } from '../shared/markdown-customization.service';
 
 @Component({
@@ -18,7 +17,6 @@ export class HelpModalComponent {
 
     constructor(
         public modalRef: MdbModalRef<HelpModalComponent>,
-        private http: HttpClient,
         public urls: Urls,
         private markdown: MarkdownCustomization
     ) {

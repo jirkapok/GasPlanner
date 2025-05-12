@@ -35,13 +35,13 @@
 
                                                 <div class="d-flex align-items-center">
                                                     {{ category.name }}
-                                                    <ng-container *ngIf="quizService.quizAnswers[topic.topic + '::' + category.name] as stats">
+                                                    <ng-container *ngIf="getQuizStats(topic.topic + '::' + category.name) as stats">
                                                       <span class="small text-muted ms-2">
                                                         ({{ stats.correct }}/{{ stats.attempts }})
                                                       </span>
                                                     </ng-container>
                                                 </div>
-                                            <ng-container *ngIf="quizService.quizAnswers[topic.topic + '::' + category.name] as stats">
+                                            <ng-container *ngIf="getQuizStats(topic.topic + '::' + category.name) as stats">
                                                <fa-icon
                                                     [icon]="trophyIcon"
                                                     class="ms-2 small"

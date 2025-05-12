@@ -111,7 +111,7 @@ export class QuizItem {
 })
 export class QuizService {
     public topics: Topic[] = topics;
-    public quizAnswers: Record<string, QuizAnswerStats> = {};
+    public quizAnswers: Map<string, QuizAnswerStats> = new Map();
     public sessionsByCategory = new Map<string, QuizSession>();
     public readonly completedCategories: Set<string> = new Set();
     public quizWelcomeWasShown = false;
@@ -119,17 +119,17 @@ export class QuizService {
     constructor(private modalService: MdbModalService) {}
 
     public applyApp(loaded: AppPreferences): void {
+        this.quizAnswers = new Map<string, QuizAnswerStats>(
+            Object.entries(loaded.quizAnswers)
+        );
 
-        this.quizAnswers = loaded.quizAnswers;
-        this.quizWelcomeWasShown = loaded.quizWelcomeWasShown;
-
-        if (Object.keys(loaded.quizAnswers).length > 0) {
-            for (const [key, stats] of Object.entries(this.quizAnswers)) {
-                if (this.isQuizCompleted(stats)) {
-                    this.completedCategories.add(key);
-                }
+        for (const [key, stats] of this.quizAnswers.entries()) {
+            if (this.isQuizCompleted(stats)) {
+                this.completedCategories.add(key);
             }
         }
+
+        this.quizWelcomeWasShown = loaded.quizWelcomeWasShown;
 
         if (!this.quizWelcomeWasShown) {
             this.quizWelcomeWasShown = true;
@@ -141,14 +141,14 @@ export class QuizService {
 
     public registerAnswer(topic: string, category: string, correct: boolean): void {
         const key = `${topic}::${category}`;
-        const stats = this.quizAnswers[key] ?? { attempts: 0, correct: 0 };
+        const stats = this.quizAnswers.get(key) ?? { attempts: 0, correct: 0 };
 
         stats.attempts++;
         if (correct) {
             stats.correct++;
         }
 
-        this.quizAnswers[key] = stats;
+        this.quizAnswers.set(key, stats);
 
         if (this.isQuizCompleted(stats)) {
             this.completedCategories.add(key);
@@ -159,8 +159,8 @@ export class QuizService {
         for (const topic of this.topics) {
             for (const category of topic.categories) {
                 const key = `${topic.topic}::${category.name}`;
-                if (!this.quizAnswers[key]) {
-                    this.quizAnswers[key] = { attempts: 0, correct: 0 };
+                if (!this.quizAnswers.has(key)) {
+                    this.quizAnswers.set(key, { attempts: 0, correct: 0 });
                 }
             }
         }
@@ -195,8 +195,8 @@ export class QuizService {
             (quizAnswers.correct / quizAnswers.attempts) * 100 >= QuizSession.minimalAcceptableSuccessRate;
     }
 
-    public getQuizAnswers(): Record<string, QuizAnswerStats> {
-        return { ...this.quizAnswers };
+    public getQuizAnswers(): Map<string, QuizAnswerStats> {
+        return new Map(this.quizAnswers);
     }
 }
 

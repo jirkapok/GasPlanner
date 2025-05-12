@@ -11,6 +11,7 @@ import { QuizSession } from '../shared/learn/quiz-session.model';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { HelpModalComponent } from '../help-modal/help-modal.component';
 import confetti from 'canvas-confetti';
+import { QuizAnswerStats } from '../shared/serialization.model';
 
 @Component({
     selector: 'app-learn',
@@ -34,6 +35,7 @@ export class LearnComponent implements OnInit {
     public selectedCategoryName = '';
 
     private _label = '';
+    private defaultStats: QuizAnswerStats = { attempts: 0, correct: 0 };
 
     constructor(
         public quizService: QuizService,
@@ -176,6 +178,10 @@ export class LearnComponent implements OnInit {
             spread: 80,
             origin: { x, y }
         });
+    }
+
+    public getQuizStats(key: string): QuizAnswerStats {
+        return this.quizService.quizAnswers.get(key) ?? this.defaultStats;
     }
 
     public goToNextQuestion(): void {

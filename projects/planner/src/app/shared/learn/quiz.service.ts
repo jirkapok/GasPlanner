@@ -114,25 +114,26 @@ export class QuizService {
     public quizAnswers: Record<string, QuizAnswerStats> = {};
     public sessionsByCategory = new Map<string, QuizSession>();
     public readonly completedCategories: Set<string> = new Set();
-    private readonly welcomeKey = 'quizWelcomeWasShown';
 
     constructor(private modalService: MdbModalService) {}
 
     public applyApp(loaded: AppPreferences): void {
-        console.log('QuizService: applyApp');
-        if (loaded.quizAnswers) {
-            this.quizAnswers = loaded.quizAnswers;
+        console.log('QuizService: applyApp', loaded.quizWelcomeWasShown, loaded.quizAnswers);
+
+        this.quizAnswers = loaded.quizAnswers;
+
+        if (Object.keys(loaded.quizAnswers).length > 0) {
             for (const [key, stats] of Object.entries(this.quizAnswers)) {
                 if (this.isQuizCompleted(stats)) {
                     this.completedCategories.add(key);
                 }
             }
-        } else if (!localStorage.getItem(this.welcomeKey)) {
+        } else if (loaded.quizWelcomeWasShown === undefined || loaded.quizWelcomeWasShown === false) {
             console.log('QuizService: Showing welcome modal for new user');
             this.modalService.open(HelpModalComponent, {
                 data: { path: 'learn-welcome' }
             });
-            localStorage.setItem(this.welcomeKey, 'true');
+            loaded.quizWelcomeWasShown = true;
         }
     }
 

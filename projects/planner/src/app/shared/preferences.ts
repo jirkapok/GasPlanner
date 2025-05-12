@@ -41,7 +41,8 @@ export class Preferences {
             states: this.toStates(),
             options: this.toAppSettings(),
             dives: this.toDives(),
-            quizAnswers: this.quizService.getQuizAnswers()
+            quizAnswers: this.quizService.getQuizAnswers(),
+            quizWelcomeWasShown: false
         };
     }
 

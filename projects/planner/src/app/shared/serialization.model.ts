@@ -8,6 +8,7 @@ import { ViewState } from './views.model';
 export interface AppPreferences extends AppPreferencesDto {
     states: AppStates;
     quizAnswers: Record<string, QuizAnswerStats>;
+    quizWelcomeWasShown: boolean;
 }
 
 export interface AppStates {

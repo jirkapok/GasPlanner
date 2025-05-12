@@ -120,8 +120,6 @@ export class QuizService {
 
     public applyApp(loaded: AppPreferences): void {
 
-        console.log('QuizService: applyApp', loaded.quizWelcomeWasShown, loaded.quizAnswers);
-
         this.quizAnswers = loaded.quizAnswers;
         this.quizWelcomeWasShown = loaded.quizWelcomeWasShown;
 
@@ -135,7 +133,6 @@ export class QuizService {
 
         if (!this.quizWelcomeWasShown) {
             this.quizWelcomeWasShown = true;
-            console.log('QuizService: Showing welcome modal for new user', this.quizWelcomeWasShown);
             this.modalService.open(HelpModalComponent, {
                 data: { path: 'learn-welcome' }
             });

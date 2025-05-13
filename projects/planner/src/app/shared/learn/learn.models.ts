@@ -72,4 +72,19 @@ export class Topic {
         public topic: string,
         public categories: Category[]
     ) {}
+
+
+    public static getEmptyCategory(): Category {
+        return new Category('newCat', 'readme', []);
+    }
+
+    public getCategoryByNameOrEmpty(categoryName: string): Category {
+        if (this.categories.length > 0) {
+            const category = this.categories.find(c => c.name === categoryName);
+            if (category) {
+                return category;
+            }
+        }
+        return Topic.getEmptyCategory();
+    }
 }

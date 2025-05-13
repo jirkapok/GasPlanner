@@ -239,7 +239,12 @@ export class LearnComponent implements OnInit {
 
     private findCategory(topicName: string, categoryName: string): Category {
         const topic = this.topics.find(t => t.topic === topicName);
-        return topic?.categories.find(c => c.name === categoryName) ?? {} as Category;
+
+        if (!topic) {
+            return Topic.getEmptyCategory();
+        }
+
+        return topic.getCategoryByNameOrEmpty(categoryName);
     }
 
     private getOrCreateSession(categoryName: string): QuizSession {

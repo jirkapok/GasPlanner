@@ -120,6 +120,7 @@ export class QuizSession {
 
     public toDto(): QuizSessionDto {
         return {
+            category: this.sourceCategory.name,
             correctCount: this.correctCount,
             totalAnswered: this.totalAnswered,
             currentQuestionIndex: this.currentQuestionIndex,

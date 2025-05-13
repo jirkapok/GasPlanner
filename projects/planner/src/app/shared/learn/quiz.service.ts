@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Topic} from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
-import { AppPreferences, QuizSessionDtoEntry } from '../serialization.model';
+import { AppPreferences, QuizSessionDto } from '../serialization.model';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +10,6 @@ import { AppPreferences, QuizSessionDtoEntry } from '../serialization.model';
 export class QuizService {
     public topics: Topic[] = topics;
     public sessionsByCategory = new Map<string, QuizSession>();
-    public quizWelcomeWasShown = false;
 
     constructor() {}
 
@@ -38,20 +37,18 @@ export class QuizService {
         return { finished, total, color };
     }
 
-    public getSerializableSessions(): QuizSessionDtoEntry[] {
-        const entries: QuizSessionDtoEntry[] = [];
+    public getSerializableSessions(): QuizSessionDto[] {
+        const entries: QuizSessionDto[] = [];
 
         for (const [category, session] of this.sessionsByCategory.entries()) {
-            entries.push({
-                category,
-                session: session.toDto()
-            });
+            var sessionDto = session.toDto();
+            entries.push(sessionDto);
         }
 
         return entries;
     }
 
-    public restoreSessions(entries: QuizSessionDtoEntry[] | undefined): void {
+    public restoreSessions(entries: QuizSessionDto[] | undefined): void {
         if (!Array.isArray(entries)) {
             return;
         }
@@ -60,18 +57,13 @@ export class QuizService {
             const category = this.topics
                 .flatMap(topic => topic.categories)
                 .find(c => c.name === entry.category);
+
             if (!category) {
                 continue;
             }
 
-            const session = QuizSession.fromDto(entry.session, category);
+            const session = QuizSession.fromDto(entry, category);
             this.sessionsByCategory.set(entry.category, session);
         }
     }
 }
-// const isValid = Precision.isInRange(value, min, max);
-// kumulativni prumer
-// pokusu  = 10 , aktualini prumer 0.7
-// prumer = (10 * 0.7 + novaodpoved) / (10 + 1), pokusy + 1
-// spatne = 0b, s napovdedou = 1 (0.5), bez napovedy spravne  = 2 (1)
-// help pokud spocital spatne

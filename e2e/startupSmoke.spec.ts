@@ -117,6 +117,7 @@ test.describe('Dive planner smoke tests', () => {
 
         await page.goto('/');
         await page.evaluate(() => {
+            // TODO remove dirty hack to close the learn popup, after we replace the popups
             localStorage.setItem('quizShown', 'confirmed');
         });
         await page.reload();

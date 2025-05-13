@@ -41,6 +41,7 @@ export class QuizItem {
         do {
             this.variables = this.template.variables.map(variable => variable.randomizeVariable());
             indexSafe++;
+            // TODO If this happens, it means that the question definition variables are incorrect.
         } while (Number.isNaN(this.generateCorrectAnswer()) && indexSafe < 100);
 
         console.log(`Randomized result: ${this.generateCorrectAnswer()}`);

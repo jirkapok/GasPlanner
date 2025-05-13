@@ -3,8 +3,6 @@ import { Topic} from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
 import { AppPreferences, QuizSessionDtoEntry } from '../serialization.model';
-import { HelpModalComponent } from '../../help-modal/help-modal.component';
-import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 @Injectable({
     providedIn: 'root'
@@ -14,26 +12,12 @@ export class QuizService {
     public sessionsByCategory = new Map<string, QuizSession>();
     public quizWelcomeWasShown = false;
 
-    constructor(
-        private modalService: MdbModalService
-    ) {}
+    constructor() {}
 
     public applyApp(loaded: AppPreferences): void {
-
         console.log('applyApp', loaded);
         this.sessionsByCategory.clear();
         this.restoreSessions(loaded.quizSessions);
-
-        this.quizWelcomeWasShown = loaded.quizWelcomeWasShown;
-
-        console.log('applyApp', this.quizWelcomeWasShown);
-
-        if (!this.quizWelcomeWasShown) {
-            this.quizWelcomeWasShown = true;
-            this.modalService.open(HelpModalComponent, {
-                data: { path: 'learn-welcome' }
-            });
-        }
     }
 
     public countGainedTrophies(topic: Topic): number {

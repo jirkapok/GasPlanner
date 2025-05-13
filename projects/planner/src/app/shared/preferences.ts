@@ -41,8 +41,7 @@ export class Preferences {
             states: this.toStates(),
             options: this.toAppSettings(),
             dives: this.toDives(),
-            quizSessions: this.quizService.getSerializableSessions(),
-            quizWelcomeWasShown: this.quizService.quizWelcomeWasShown
+            quizSessions: this.quizService.getSerializableSessions()
         };
     }
 

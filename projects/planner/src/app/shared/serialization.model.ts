@@ -8,7 +8,6 @@ import { ViewState } from './views.model';
 export interface AppPreferences extends AppPreferencesDto {
     states: AppStates;
     quizSessions:  QuizSessionDtoEntry[];
-    quizWelcomeWasShown: boolean;
 }
 
 export interface AppStates {

@@ -115,11 +115,11 @@ test.describe('Dive planner smoke tests', () => {
         context = await browser.newContext();
         page = await context.newPage();
 
-        await page.goto('about:blank');
+        await page.goto('/');
         await page.evaluate(() => {
             localStorage.setItem('quizShown', 'confirmed');
         });
-
+        await page.reload();
     });
 
     test('should show total dive time and display six waypoint rows', async () => {

@@ -25,6 +25,13 @@ export class QuizSession {
     }
 
     public get currentQuiz(): QuizItem {
+        if (this.currentQuestionIndex >= this.quizzes.length) {
+            if (this.quizzes[this.quizzes.length-1].isAnswered) {
+                this.addNewQuestion();
+            } else {
+                this.currentQuestionIndex = this.quizzes.length - 1;
+            }
+        }
         return this.quizzes[this.currentQuestionIndex];
     }
 

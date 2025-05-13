@@ -25,13 +25,26 @@ export class QuizSession {
     }
 
     public get currentQuiz(): QuizItem {
+        if (this.currentQuestionIndex >= this.quizzes.length) {
+            if (this.quizzes[this.quizzes.length-1].isAnswered) {
+                this.addNewQuestion();
+            } else {
+                this.currentQuestionIndex = this.quizzes.length - 1;
+            }
+        }
         return this.quizzes[this.currentQuestionIndex];
     }
 
     public get correctPercentage(): number {
-        return this.totalAnswered === 0
-            ? 0
-            : Math.round((this.correctCount / this.totalAnswered) * 100);
+        return this.maxPoints === 0 ? 0 : Math.round((this.totalScore / this.maxPoints) * 100);
+    }
+
+    public get maxPoints(): number {
+        return this.totalAnswered * QuizSession.pointsCorrect;
+    }
+
+    public get anyHintsUsed(): boolean {
+        return (this.maxPoints !== this.totalScore) && ((this.totalScore / QuizSession.pointsCorrect) < this.totalAnswered);
     }
 
     public get scoreSummary(): string {

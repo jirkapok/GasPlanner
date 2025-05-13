@@ -151,7 +151,7 @@ export class LearnComponent implements OnInit {
                 return 'up';
             case RoundType.round:
             default:
-                return 'your answer';
+                return '';
         }
     }
 

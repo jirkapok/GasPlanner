@@ -218,7 +218,7 @@ export class LearnComponent implements OnInit {
     }
 
     public getQuizStats(categoryName: string): { attempts: number; correct: number } {
-        const session = this.getOrCreateSession(categoryName);
+        const session = this.quizService.sessionsByCategory.get(categoryName);
         if (!session) {
             return { attempts: 0, correct: 0 };
         }

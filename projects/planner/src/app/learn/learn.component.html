@@ -63,9 +63,9 @@
         <form (ngSubmit)="submitAnswers()" *ngIf="shouldShowForm()">
           <div class="mb-4" *ngIf="currentQuiz as quiz">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
-              <p class="fw-bold mb-0">
-                Question — {{ selectedTopic }} / {{ selectedCategory?.name }}
-              </p>
+                <h6 class="text-muted mb-1">
+                    {{ selectedTopic }} / {{ selectedCategory?.name }}
+                </h6>
               <div class="d-flex align-items-center gap-2 flex-wrap">
                 <span class="badge bg-primary text-light small">
                   {{ scoreSummary }} — {{ correctPercentage }}%
@@ -81,7 +81,9 @@
               </div>
             </div>
 
-            <p>{{ quiz.renderedQuestion }}</p>
+            <p class="fw-semibold fs-5 mt-3 border-bottom pb-2">
+              {{ quiz.renderedQuestion }}
+            </p>
 
             <input
               id="answer-input"
@@ -96,16 +98,17 @@
               }" />
 
             <div *ngIf="quiz.isAnswered">
-              <div *ngIf="quiz.isCorrect" class="alert alert-success">
+              <div *ngIf="quiz.isCorrect" class="alert alert-success border-0 bg-success bg-opacity-10 text-success small py-2 px-3">
                 Correct!
               </div>
-              <div *ngIf="!quiz.isCorrect" class="alert alert-danger">
-                Incorrect. The correct answer is: {{ quiz.correctAnswer }}
+              <div *ngIf="!quiz.isCorrect" class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger small py-2 px-3">
+                Incorrect. Correct answer: <strong>{{ quiz.correctAnswer }}</strong>
               </div>
             </div>
+
             <div *ngIf="!quiz.isAnswered">
-              <div class="alert alert-info">
-                Round {{ getRoundingExplanation(quiz.roundType) }} your answer to {{ quiz.roundTo }} decimal place(s).
+              <div class="alert alert-info border-0 bg-info bg-opacity-10 text-info small py-2 px-3">
+                Round {{ getRoundingExplanation(quiz.roundType) }} your answer to <strong>{{ quiz.roundTo }}</strong> decimal place(s).
               </div>
             </div>
 
@@ -148,7 +151,7 @@
         <div *ngIf="shouldShowScore()" class="text-center p-4">
           <div class="mb-4">
             <h4 class="fw-bold text-success mb-3">
-              🎉 {{ selectedTopic }} — {{ selectedCategory?.name }} Completed!
+              🎉 {{ selectedTopic }} / {{ selectedCategory?.name }} Completed!
             </h4>
             <p class="fs-5 mb-1">
               🧠 <strong>Points:</strong> {{ session?.totalScore }} out of {{ session?.maxPoints }}

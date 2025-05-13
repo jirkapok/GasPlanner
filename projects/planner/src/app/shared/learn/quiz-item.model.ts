@@ -68,11 +68,11 @@ export class QuizItem {
             return false;
         }
 
-        this.correctAnswer = this.generateCorrectAnswer();
-        const expectedAnswer = this.roundValue(this.correctAnswer, this.roundTo, this.roundType);
+        const expected = this.generateCorrectAnswer();
+        this.correctAnswer = this.roundValue(expected, this.roundTo, this.roundType);
         const userAnswerRounded = this.roundValue(userNum, this.roundTo, this.roundType);
 
-        return userAnswerRounded === expectedAnswer;
+        return userAnswerRounded === this.correctAnswer;
     }
 
     public roundValue(value: number, roundTo: number, roundType: RoundType): number {

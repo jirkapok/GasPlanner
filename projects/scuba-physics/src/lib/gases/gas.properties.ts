@@ -16,6 +16,7 @@ export class GasProperties {
     private readonly depthConverter = DepthConverter.simple();
     private readonly densityCalc = new DensityAtDepth(this.depthConverter);
 
+    // TODO replace the tank with interface since here we propagate only the gas
     public get tank(): Tank {
         return this._tank;
     }

@@ -36,7 +36,7 @@ export const topics: Topic[] = [
                     new Variable('pp', undefined, 1, 2),
                     new Variable('o2_percent', [21, 32, 36, 38, 50, 100])
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.mod(vars[0], vars[1] / 100)
+                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.mod(vars[0], vars[1])
             )
         ]),
         new Category('Best mix', 'examples_bestmix', [
@@ -48,7 +48,7 @@ export const topics: Topic[] = [
                     new Variable('pp', undefined, 1, 2),
                     new Variable('depth', undefined, 1, 50)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.bestMix(vars[1], vars[0]) * 100
+                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.bestMix(vars[0], vars[1])
             )
         ]),
         new Category('Oxygen partial pressure', 'examples_ppO2', [
@@ -60,7 +60,7 @@ export const topics: Topic[] = [
                     new Variable('o2_percent', [21, 32, 36, 38, 50, 100]),
                     new Variable('depth', undefined, 1, 50)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.partialPressure(vars[0] / 100, vars[1])
+                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.partialPressure(vars[0], vars[1])
             )
         ]),
         new Category('Equivalent air depth', 'examples_ead', [
@@ -72,7 +72,7 @@ export const topics: Topic[] = [
                     new Variable('o2_percent', [21, 32, 36, 38, 50, 100]),
                     new Variable('depth', undefined, 1, 50)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.ead(vars[1], vars[0] / 100)
+                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.ead(vars[0], vars[1])
             )
         ]),
     ]),
@@ -151,6 +151,8 @@ export const topics: Topic[] = [
                 ],
                 (vars: number[], tools: QuizItemTools) => {
                     tools.gasProperties.maxPpO2 = 0.18;
+                    tools.gasProperties.tank.o2 = vars[0];
+                    tools.gasProperties.tank.he = vars[1];
                     return tools.gasProperties.minDepth;
                 }
             )
@@ -158,6 +160,7 @@ export const topics: Topic[] = [
         new Category('Equivalent narcotic depth', 'examples_end', [
             new QuestionTemplate(
                 'You plan a dive to {depth} meters. ' +
+                'Oxygen is considered as narcotic. ' +
                 'Team selects Trimix {oxygen}/{helium} as a gas for the dive. What is the equivalent narcotic depth for this gas?',
                 0,
                 RoundType.ceil,
@@ -167,6 +170,8 @@ export const topics: Topic[] = [
                     new Variable('depth', undefined, 10, 80)
                 ],
                 (vars: number[], tools: QuizItemTools) => {
+                    tools.gasProperties.tank.o2 = vars[0];
+                    tools.gasProperties.tank.he = vars[1];
                     tools.gasProperties.depth = vars[2];
                     return tools.gasProperties.end;
                 }
@@ -174,17 +179,20 @@ export const topics: Topic[] = [
         ]),
         new Category('Maximum narcotic depth', 'examples_mnd', [
             new QuestionTemplate(
-                'You plan a dive and consider Air narcotic for depths below 30 meters. ' +
+                'You plan a dive and consider Air narcotic for depths below {narc_depth} meters. ' +
+                'Oxygen is considered as narcotic. ' +
                 'Team selects Trimix {oxygen}/{helium} as a gas. What is the maximum narcotic depth for this gas?',
                 0,
                 RoundType.floor,
                 [
                     new Variable('oxygen', undefined, 10, 21),
-                    new Variable('helium', undefined, 20, 70)
+                    new Variable('helium', undefined, 20, 70),
+                    new Variable('narc_depth', [30, 40]),
                 ],
                 (vars: number[], tools: QuizItemTools) => {
-                    tools.gasProperties.narcoticDepthLimit = vars[0];
-                    tools.gasProperties.depth = vars[1];
+                    tools.gasProperties.tank.o2 = vars[0];
+                    tools.gasProperties.tank.he = vars[1];
+                    tools.gasProperties.narcoticDepthLimit = vars[2];
                     return tools.gasProperties.mnd;
                 }
             )

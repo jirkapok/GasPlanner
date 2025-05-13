@@ -32,7 +32,7 @@ export class LearnComponent implements OnInit {
     public session: QuizSession;
     public activeTopic = '';
     public selectedTopic = '';
-    public selectedCategory: Category  = {} as Category;
+    public selectedCategory: Category;
     public selectedCategoryName = '';
 
     private _label = '';
@@ -85,15 +85,6 @@ export class LearnComponent implements OnInit {
         this.selectedTopic = topicName;
         this.selectedCategoryName = categoryName;
         this.activeTopic = topicName;
-
-        const topic = this.topics.find(t => t.topic === topicName) ?? {} as Topic;
-        const category = topic?.categories?.find(c => c.name === categoryName);
-
-        if (!category) {
-            this.session = new QuizSession([], {} as Category);
-            return;
-        }
-
         this.session = this.getOrCreateSession(categoryName);
     }
 

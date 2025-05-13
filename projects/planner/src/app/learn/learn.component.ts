@@ -29,10 +29,10 @@ export class LearnComponent implements OnInit {
     public readonly helpIcon = faCircleInfo;
     public readonly topics: Topic[] = [];
 
-    public session: QuizSession | undefined;
+    public session: QuizSession;
     public activeTopic = '';
     public selectedTopic = '';
-    public selectedCategory: Category | undefined;
+    public selectedCategory: Category  = {} as Category;
     public selectedCategoryName = '';
 
     private _label = '';
@@ -43,14 +43,18 @@ export class LearnComponent implements OnInit {
         private preferencesStore: PreferencesStore
     ) {
         this.topics = quizService.topics;
+        this.selectedTopic = this.topics[0]?.topic ?? '';
+        this.selectedCategoryName = this.topics[0]?.categories[0]?.name ?? '';
+        this.selectedCategory = this.findCategory(this.selectedTopic, this.selectedCategoryName);
+        this.session = this.getOrCreateSession(this.selectedCategory);
     }
 
     get currentQuiz(): QuizItem | undefined {
-        return this.session?.currentQuiz;
+        return this.session.currentQuiz;
     }
 
     public get correctPercentage(): number {
-        return this.session?.correctPercentage ?? 0;
+        return this.session.correctPercentage ?? 0;
     }
 
     public get label(): string {
@@ -58,7 +62,7 @@ export class LearnComponent implements OnInit {
     }
 
     public get scoreSummary(): string {
-        return this.session?.scoreSummary ?? '';
+        return this.session.scoreSummary ?? '';
     }
 
     @Input()
@@ -82,10 +86,8 @@ export class LearnComponent implements OnInit {
         this.selectedCategoryName = categoryName;
         this.activeTopic = topicName;
 
-        const topic = this.topics.find(t => t.topic === topicName);
-        const category = topic?.categories.find(c => c.name === categoryName);
-
-        this.selectedCategory = category;
+        const topic = this.topics.find(t => t.topic === topicName) ?? {} as Topic;
+        const category = topic?.categories?.find(c => c.name === categoryName);
 
         if (!category) {
             this.session = new QuizSession([], {} as Category);
@@ -119,9 +121,7 @@ export class LearnComponent implements OnInit {
             return;
         }
 
-        if (this.session) {
-            this.session.useHint();
-        }
+        this.session.useHint();
 
         this.modalService.open(HelpModalComponent, {
             data: {
@@ -135,10 +135,6 @@ export class LearnComponent implements OnInit {
     }
 
     public validateCurrentAnswer(): void {
-        if (!this.session) {
-            return;
-        }
-
         this.session.validateCurrentAnswer();
         this.preferencesStore.save();
     }
@@ -177,10 +173,6 @@ export class LearnComponent implements OnInit {
     }
 
     public continuePracticing(): void {
-        if (!this.session) {
-            return;
-        }
-
         this.session.finished = false;
         this.goToNextQuestion();
         this.session.currentQuestionIndex = this.session.quizzes.length - 1;
@@ -197,7 +189,7 @@ export class LearnComponent implements OnInit {
     }
 
     public submitAnswers(): void {
-        if (this.session?.canFinishSession()) {
+        if (this.session.canFinishSession()) {
             const didFinish = this.session.finishIfEligible();
 
             if (didFinish) {
@@ -232,15 +224,15 @@ export class LearnComponent implements OnInit {
     }
 
     public shouldShowFinishButton(): boolean {
-        return this.session?.canFinishSession() ?? false;
+        return this.session.canFinishSession() ?? false;
     }
 
     public shouldShowScore(): boolean {
-        return this.session?.finished ?? false;
+        return this.session.finished ?? false;
     }
 
     public shouldShowForm(): boolean {
-        return !this.session?.finished && (this.session?.quizzes?.length ?? 0) > 0;
+        return !this.session.finished && (this.session.quizzes?.length ?? 0) > 0;
     }
 
     public getQuizStats(categoryName: string): { attempts: number; correct: number } {
@@ -252,5 +244,21 @@ export class LearnComponent implements OnInit {
             attempts: session.totalAnswered,
             correct: session.correctCount
         };
+    }
+    private findCategory(topicName: string, categoryName: string): Category {
+        const topic = this.topics.find(t => t.topic === topicName);
+        return topic?.categories.find(c => c.name === categoryName) ?? {} as Category;
+    }
+
+    private getOrCreateSession(category: Category): QuizSession {
+        const key = category.name;
+        const existing = this.quizService.sessionsByCategory.get(key);
+        if (existing) {
+            return existing;
+        }
+
+        const session = new QuizSession([category.getQuizItemForCategory()], category);
+        this.quizService.sessionsByCategory.set(key, session);
+        return session;
     }
 }

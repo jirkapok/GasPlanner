@@ -10,6 +10,8 @@ export class PreferencesStore {
     private static readonly storageDefaultsKey = 'defaults';
     private static readonly disclaimerKey = 'disclaimer';
     private static readonly showInstallKey = 'showInstall';
+    private static readonly quizShownKey = 'quizShown';
+    private static readonly confirmedValue = 'confirmed';
 
     constructor(private preferencesFactory: Preferences) {}
 
@@ -71,6 +73,15 @@ export class PreferencesStore {
     public disclaimerEnabled(): boolean {
         const saved = localStorage.getItem(PreferencesStore.disclaimerKey);
         return saved !== PreferencesStore.disclaimerValue;
+    }
+
+    public quizWelcomeEnabled(): boolean {
+        const saved = localStorage.getItem(PreferencesStore.quizShownKey);
+        return saved !== PreferencesStore.confirmedValue;
+    }
+
+    public disableQuizWelcome(): void {
+        localStorage.setItem(PreferencesStore.quizShownKey, PreferencesStore.confirmedValue);
     }
 
     public disableShowInstall(): void {

@@ -1,4 +1,4 @@
-import { QuizItem } from './quiz.service';
+import { QuizItem } from './quiz-item.model';
 import { DepthConverter, NitroxCalculator, SacCalculator, GasProperties } from 'scuba-physics';
 
 export type VariableOption = number;

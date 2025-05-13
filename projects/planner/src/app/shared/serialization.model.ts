@@ -7,8 +7,7 @@ import { ViewState } from './views.model';
 
 export interface AppPreferences extends AppPreferencesDto {
     states: AppStates;
-    quizSessions: [string, SerializableQuizSession][];
-    quizWelcomeWasShown: boolean;
+    quizSessions:  QuizSessionDtoEntry[];
 }
 
 export interface AppStates {
@@ -221,7 +220,12 @@ export interface OptionsDto {
     airBreaks?: AirBreaksDto;
 }
 
-export interface SerializableQuizSession {
+export interface QuizSessionDtoEntry {
+    category: string;
+    session: QuizSessionDto;
+}
+
+export interface QuizSessionDto {
     correctCount: number;
     totalAnswered: number;
     currentQuestionIndex: number;

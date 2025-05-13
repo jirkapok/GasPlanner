@@ -5,13 +5,14 @@ import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
-import { QuizService, QuizItem } from '../shared/learn/quiz.service';
+import { QuizService } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
 import { QuizSession } from '../shared/learn/quiz-session.model';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { HelpModalComponent } from '../help-modal/help-modal.component';
 import confetti from 'canvas-confetti';
 import { PreferencesStore } from '../shared/preferencesStore';
+import { QuizItem } from '../shared/learn/quiz-item.model';
 
 @Component({
     selector: 'app-learn',

@@ -4,6 +4,9 @@ import { PreferencesStore } from './preferencesStore';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
 import { SubViewStorage } from './subViewStorage';
 import { ViewStates } from './viewStates';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { HelpModalComponent } from '../help-modal/help-modal.component'; // adjust path as needed
+
 
 @Injectable()
 export class DashboardStartUp {
@@ -17,7 +20,9 @@ export class DashboardStartUp {
         private preferences: PreferencesStore,
         private urlSerialization: PlanUrlSerialization,
         private viewStore: SubViewStorage,
-        private views: ViewStates) {
+        private views: ViewStates,
+        private modalService: MdbModalService
+) {
         this._showDisclaimer = this.preferences.disclaimerEnabled();
         this._showInstallButton = this.preferences.installEnabled();
     }
@@ -50,6 +55,14 @@ export class DashboardStartUp {
 
         // cant do in constructor, since the state may be changed
         this.viewStore.saveMainView();
+
+        if (this.preferences.quizWelcomeEnabled()) {
+            this.preferences.disableQuizWelcome();
+            this.modalService.open(HelpModalComponent, {
+                data: { path: 'learn-welcome' }
+            });
+        }
+
         // in case it fails we need to reset the parameters
         // or in case of navigation to dashboard with only one dive
         this.updateQueryParams();

@@ -37,8 +37,6 @@ export class MainMenuComponent extends Streamed {
     public iconShare = faShareFromSquare;
     public iconClone = faClone;
     public iconDelete = faTrashCan;
-
-    public gamification = FeatureFlags.Instance.gamification;
     public inPlanner = false;
 
     constructor(

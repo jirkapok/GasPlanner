@@ -14,7 +14,6 @@ export class QuizService {
     constructor() {}
 
     public applyApp(loaded: AppPreferences): void {
-        console.log('applyApp', loaded);
         this.sessionsByCategory.clear();
         this.restoreSessions(loaded.quizSessions);
     }
@@ -40,8 +39,8 @@ export class QuizService {
     public getSerializableSessions(): QuizSessionDto[] {
         const entries: QuizSessionDto[] = [];
 
-        for (const [category, session] of this.sessionsByCategory.entries()) {
-            var sessionDto = session.toDto();
+        for (const [, session] of this.sessionsByCategory.entries()) {
+            const sessionDto = session.toDto();
             entries.push(sessionDto);
         }
 

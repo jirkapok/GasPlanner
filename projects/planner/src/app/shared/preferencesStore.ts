@@ -22,8 +22,6 @@ export class PreferencesStore {
         }
 
         const raw = JSON.parse(toParse) as AppPreferences;
-
-        console.log('Loaded preferences', raw);
         this.preferencesFactory.applyApp(raw);
     }
 
@@ -49,7 +47,6 @@ export class PreferencesStore {
         const toSave = this.preferencesFactory.toPreferences();
 
         const serialized = JSON.stringify(toSave);
-        console.log('Saving preferences', toSave);
         localStorage.setItem(PreferencesStore.storageKey, serialized);
     }
 

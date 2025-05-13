@@ -71,7 +71,10 @@ describe('LearnComponent', () => {
                         name: 'Basic Pressure',
                         getQuizItemForCategory: () => createMockQuizItem()
                     }
-                ]
+                ],
+                getCategoryByNameOrEmpty: function (name: string) {
+                    return this.categories.find(c => c.name === name);
+                }
             },
             {
                 topic: 'Consumption',
@@ -80,7 +83,10 @@ describe('LearnComponent', () => {
                         name: 'Used gas',
                         getQuizItemForCategory: () => createMockQuizItem()
                     }
-                ]
+                ],
+                getCategoryByNameOrEmpty: function (name: string) {
+                    return this.categories.find(c => c.name === name);
+                }
             }
         ] as Topic[];
     });

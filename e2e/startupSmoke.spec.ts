@@ -1,12 +1,5 @@
 import { test, expect, Page, type Locator, BrowserContext } from '@playwright/test';
 
-async function closeWelcomeModalIfVisible(page: Page): Promise<void> {
-    const closeButton = page.locator('#modalCloseButton');
-    if (await closeButton.isVisible().catch(() => false)) {
-        await closeButton.click();
-    }
-}
-
 class DiveInfoPage {
     private readonly timeValueSelector = '#total-dive-time-value';
     private readonly waypointRowsSelector = '#dive-waypoints-table tbody tr';
@@ -53,7 +46,6 @@ class GasPlannerPage {
 
     public async navigate(): Promise<void> {
         await this.page.goto('/');
-        await closeWelcomeModalIfVisible(this.page);
         await expect(this.page.locator(this.bottomTimeInputSelector)).toBeVisible();
     }
 
@@ -73,7 +65,6 @@ class ComparisonPage {
 
     public async navigate(): Promise<void> {
         await this.page.goto('/diff');
-        await closeWelcomeModalIfVisible(this.page);
     }
 
     public getTotalTimeDifference(): Locator {
@@ -88,7 +79,6 @@ class HelpPage {
 
     public async navigate(): Promise<void> {
         await this.page.goto('/help');
-        await closeWelcomeModalIfVisible(this.page);
     }
 
     public getHelpContent(): Locator {
@@ -105,7 +95,6 @@ class LearnPage {
 
     public async navigate(): Promise<void> {
         await this.page.goto('/learn');
-        await closeWelcomeModalIfVisible(this.page);
     }
 
     public async answerQuestion(value: string): Promise<void> {
@@ -125,12 +114,17 @@ test.describe('Dive planner smoke tests', () => {
     test.beforeEach(async ({ browser }) => {
         context = await browser.newContext();
         page = await context.newPage();
+
+        await page.goto('/');
+        await page.evaluate(() => {
+            localStorage.setItem('quizShown', 'confirmed');
+        });
+        await page.reload();
     });
 
     test('should show total dive time and display six waypoint rows', async () => {
         const diveInfoPage = new DiveInfoPage(page);
         await diveInfoPage.navigate();
-        await closeWelcomeModalIfVisible(page);
 
         const timeValue = diveInfoPage.getTimeValue();
         await expect(timeValue).toBeVisible();
@@ -143,8 +137,6 @@ test.describe('Dive planner smoke tests', () => {
     test('should go to RMV/SAC calculator and calculate RMV after changing dive time', async () => {
         const sacCalculatorPage = new SacCalculatorPage(page);
         await sacCalculatorPage.navigate();
-        await closeWelcomeModalIfVisible(page);
-
         await sacCalculatorPage.setDiveTime('60');
 
         await expect(sacCalculatorPage.getRMVValue()).toBeVisible();
@@ -157,7 +149,7 @@ test.describe('Dive planner smoke tests', () => {
         await gasPlannerPage.addSecondDive();
         await gasPlannerPage.setSecondDiveDuration('30');
 
-        const diffPage = new ComparisonPage(page);
+        const diffPage  = new ComparisonPage(page);
         await diffPage.navigate();
         const totalDiff = diffPage.getTotalTimeDifference();
         await expect(totalDiff).toBeVisible();

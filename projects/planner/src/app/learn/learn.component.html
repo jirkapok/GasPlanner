@@ -145,15 +145,24 @@
             </div>
           </div>
         </form>
+        <div *ngIf="shouldShowScore()" class="text-center p-4">
+          <div class="mb-4">
+            <h4 class="fw-bold text-success mb-3">
+              🎉 {{ selectedTopic }} — {{ selectedCategory?.name }} Completed!
+            </h4>
+            <p class="fs-5 mb-1">
+              🧠 <strong>Points:</strong> {{ session?.totalScore }} out of {{ session?.maxPoints }}
+            </p>
+            <p class="fs-5 mb-1">
+              ✅ <strong>Correct Answers:</strong> {{ session?.correctCount }} / {{ session?.totalAnswered }}
+              <span *ngIf="session?.anyHintsUsed" class="text-warning">(some with hints)</span>
+            </p>
+            <p class="fs-5 mb-1">
+              📊 <strong>Score:</strong> {{ correctPercentage }}%
+            </p>
+          </div>
 
-        <div *ngIf="shouldShowScore()" class="text-center">
-          <h4>Quiz Completed!</h4>
-          <p>Correct answers: {{ session?.correctCount }} out of {{ session?.totalAnswered }}</p>
-          <p>Score: {{ correctPercentage }}%</p>
-
-          <button
-            class="btn btn-outline-secondary mt-3"
-            (click)="continuePracticing()">
+          <button class="btn btn-primary btn-lg" (click)="continuePracticing()">
             Continue Practicing
           </button>
         </div>

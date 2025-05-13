@@ -47,7 +47,7 @@ export class Preferences {
     }
 
     public applyApp(loaded: AppPreferences): void {
-        this.quizService.restoreSessions(loaded.quizSessions);
+        this.quizService.applyApp(loaded);
 
         this.applyLoaded(loaded);
         this.viewStates.loadFrom(loaded.states);

@@ -118,9 +118,13 @@ export class QuizService {
 
     public applyApp(loaded: AppPreferences): void {
 
+        console.log('applyApp', loaded);
         this.sessionsByCategory.clear();
+        this.restoreSessions(loaded.quizSessions);
 
         this.quizWelcomeWasShown = loaded.quizWelcomeWasShown;
+
+        console.log('applyApp', this.quizWelcomeWasShown);
 
         if (!this.quizWelcomeWasShown) {
             this.quizWelcomeWasShown = true;

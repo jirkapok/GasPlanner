@@ -14,7 +14,6 @@ export class QuizService {
     constructor() {}
 
     public applyApp(loaded: AppPreferences): void {
-        console.log('applyApp', loaded);
         this.sessionsByCategory.clear();
         this.restoreSessions(loaded.quizSessions);
     }

@@ -43,18 +43,18 @@ export class LearnComponent implements OnInit {
         private preferencesStore: PreferencesStore
     ) {
         this.topics = quizService.topics;
-        this.selectedTopic = this.topics[0]?.topic;
-        this.selectedCategoryName = this.topics[0]?.categories[0]?.name;
+        this.selectedTopic = this.topics[0].topic;
+        this.selectedCategoryName = this.topics[0].categories[0].name;
         this.selectedCategory = this.findCategory(this.selectedTopic, this.selectedCategoryName);
         this.session = this.getOrCreateSession(this.selectedCategoryName);
     }
 
-    get currentQuiz(): QuizItem | undefined {
+    public get currentQuiz(): QuizItem {
         return this.session.currentQuiz;
     }
 
     public get correctPercentage(): number {
-        return this.session.correctPercentage ?? 0;
+        return this.session.correctPercentage;
     }
 
     public get label(): string {
@@ -62,7 +62,7 @@ export class LearnComponent implements OnInit {
     }
 
     public get scoreSummary(): string {
-        return this.session.scoreSummary ?? '';
+        return this.session.scoreSummary;
     }
 
     @Input()
@@ -71,7 +71,7 @@ export class LearnComponent implements OnInit {
         this.selectedTopic = this._label;
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         setTimeout(() => {
             const firstTopic = this.topics[0];
             const firstCategory = firstTopic?.categories[0];
@@ -161,7 +161,7 @@ export class LearnComponent implements OnInit {
     }
 
     public goToNextQuestion(): void {
-        this.session?.goToNextQuestion();
+        this.session.goToNextQuestion();
     }
 
     public getTrophyColor(topic: Topic, category: Category): string {
@@ -188,7 +188,6 @@ export class LearnComponent implements OnInit {
         }
     }
 
-
     public isCategorySelected(topicName: string, categoryName: string): boolean {
         return this.selectedTopic === topicName && this.selectedCategoryName === categoryName;
     }
@@ -202,19 +201,19 @@ export class LearnComponent implements OnInit {
     }
 
     public shouldShowNextQuestionButton(): boolean {
-        return !!this.currentQuiz?.isAnswered && !(this.session.finished);
+        return this.currentQuiz.isAnswered && !(this.session.finished);
     }
 
     public shouldShowFinishButton(): boolean {
-        return this.session.canFinishSession() ?? false;
+        return this.session.canFinishSession();
     }
 
     public shouldShowScore(): boolean {
-        return this.session.finished ?? false;
+        return this.session.finished;
     }
 
     public shouldShowForm(): boolean {
-        return !this.session.finished && (this.session.quizzes?.length ?? 0) > 0;
+        return !this.session.finished && this.session.quizzes.length > 0;
     }
 
     public getQuizStats(categoryName: string): { attempts: number; correct: number } {

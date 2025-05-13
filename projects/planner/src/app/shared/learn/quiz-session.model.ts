@@ -109,7 +109,6 @@ export class QuizSession {
     }
 
     public finishIfEligible(): boolean {
-        console.log('Finishing session', this.canFinishSession());
         if (this.canFinishSession()) {
             this.finished = true;
             this.trophyGained = true;

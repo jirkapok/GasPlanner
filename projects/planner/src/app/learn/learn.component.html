@@ -45,10 +45,7 @@
                                                     <fa-icon
                                                         [icon]="trophyIcon"
                                                         class="ms-2 small"
-                                                        [ngClass]="{
-                                                            'text-muted': !isBadgeEarned(topic, category),
-                                                            'text-warning': isBadgeEarned(topic, category)
-                                                        }">
+                                                        [ngClass]="getTrophyColor(topic, category)">
                                                     </fa-icon>
                                                 </ng-container>
                                             </div>
@@ -139,8 +136,7 @@
                             <button
                                 *ngIf="shouldShowFinishButton()"
                                 type="submit"
-                                class="btn btn-success ms-2"
-                                [disabled]="!hasPassedCategory()">
+                                class="btn btn-success ms-2">
                                 Finish Quiz
                             </button>
                         </div>
@@ -154,7 +150,7 @@
 
                   <button
                     class="btn btn-outline-secondary mt-3"
-                    (click)="updateTopic(selectedTopic, selectedCategoryName)">
+                    (click)="continuePracticing()">
                     Continue Practicing
                   </button>
                 </div>

@@ -41,17 +41,17 @@ export class Preferences {
             states: this.toStates(),
             options: this.toAppSettings(),
             dives: this.toDives(),
-            quizAnswers: this.quizService.getQuizAnswers(),
+            quizSessions: this.quizService.getSerializableSessions(),
             quizWelcomeWasShown: this.quizService.quizWelcomeWasShown
         };
     }
 
     public applyApp(loaded: AppPreferences): void {
+        this.quizService.restoreSessions(loaded.quizSessions);
+
         this.applyLoaded(loaded);
         this.viewStates.loadFrom(loaded.states);
         const mainView: DashBoardViewState | null = this.viewStates.get(KnownViews.dashboard);
-
-        this.quizService.applyApp(loaded);
 
         if(mainView) {
             this.schedules.setSelectedIndex(mainView.selectedDiveIndex);

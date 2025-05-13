@@ -14,6 +14,7 @@ export class QuizSession {
     public finished = false;
     public hintUsed = false;
     public totalScore = 0;
+    public trophyGained = false;
 
     constructor(
         quizzes: QuizItem[],
@@ -74,22 +75,6 @@ export class QuizSession {
         this.quizzes.push(newQuiz);
     }
 
-    public reset(): void {
-        this.correctCount = 0;
-        this.totalAnswered = 0;
-        this.currentQuestionIndex = 0;
-        this.finished = false;
-        this.totalScore = 0;
-        this.hintUsed = false;
-
-        this.quizzes.forEach(q => {
-            q.isAnswered = false;
-            q.isCorrect = false;
-            q.userAnswer = '';
-            q.renderedQuestion = '';
-        });
-    }
-
     public canFinishSession(): boolean {
         const maxPossibleScore = this.totalAnswered * QuizSession.pointsCorrect;
         const scorePercentage = maxPossibleScore === 0 ? 0 : (this.totalScore / maxPossibleScore) * 100;
@@ -97,10 +82,11 @@ export class QuizSession {
                scorePercentage >= QuizSession.minimalAcceptableSuccessRate;
     }
 
-
     public finishIfEligible(): boolean {
+        console.log('Finishing session', this.canFinishSession());
         if (this.canFinishSession()) {
             this.finished = true;
+            this.trophyGained = true;
             return true;
         }
         return false;

@@ -11,4 +11,4 @@ Here’s how to get started:
 
 👉 [Start learning now](/learn)
 
-Need help later? Click the ❓ icon at any time!
+Need help later? Click the ℹ️ icon at any time!

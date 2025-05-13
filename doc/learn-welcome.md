@@ -2,7 +2,7 @@
 
 It looks like you're new here — welcome! 🎉
 
-Would you like a quick walkthrough to learn how to use this app?
+Would you like a quick walkthrough to learn scuba diving math?
 
 Here’s how to get started:
 - ✅ Choose a **topic** and **category**

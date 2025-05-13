@@ -63,7 +63,7 @@ export class Category {
     public getQuizItemForCategory(): QuizItem {
         const randomIndex = Math.floor(Math.random() * this.questions.length);
         const selectedTemplate = this.questions[randomIndex];
-        return new QuizItem(selectedTemplate, this.name);
+        return new QuizItem(selectedTemplate);
     }
 }
 

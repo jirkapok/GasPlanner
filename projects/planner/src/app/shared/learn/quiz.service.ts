@@ -3,7 +3,7 @@ import {
     NitroxCalculator, SacCalculator, DepthConverter,
     Precision, GasProperties
 } from 'scuba-physics';
-import { Topic, QuestionTemplate, RoundType, QuizItemTools, Category } from './learn.models';
+import { Topic, QuestionTemplate, RoundType, QuizItemTools } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
 import { AppPreferences, SerializableQuizSession } from '../serialization.model';
@@ -27,8 +27,7 @@ export class QuizItem {
     private gasProperties: GasProperties;
 
     constructor(
-        public template: QuestionTemplate,
-        public categoryName: string
+        public template: QuestionTemplate
     ) {
         this.roundTo = template.roundTo;
         this.roundType = template.roundType;

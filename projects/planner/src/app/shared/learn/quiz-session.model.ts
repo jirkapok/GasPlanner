@@ -1,5 +1,6 @@
-import { QuizItem } from './quiz.service';
 import { Category } from './learn.models';
+import { QuizSessionDto } from '../serialization.model';
+import { QuizItem } from './quiz-item.model';
 
 export class QuizSession {
     public static readonly minimalAcceptableSuccessRate = 80;
@@ -35,6 +36,18 @@ export class QuizSession {
 
     public get scoreSummary(): string {
         return `${this.totalScore} points (${this.correctCount}/${this.totalAnswered} correct)`;
+    }
+
+    public static fromDto(dto: QuizSessionDto, sourceCategory: Category): QuizSession {
+        const session = new QuizSession([sourceCategory.getQuizItemForCategory()], sourceCategory);
+        session.correctCount = dto.correctCount;
+        session.totalAnswered = dto.totalAnswered;
+        session.currentQuestionIndex = dto.currentQuestionIndex;
+        session.finished = dto.finished;
+        session.hintUsed = dto.hintUsed;
+        session.totalScore = dto.totalScore;
+        session.trophyGained = dto.trophyGained;
+        return session;
     }
 
     public validateCurrentAnswer(): void {
@@ -92,5 +105,16 @@ export class QuizSession {
         return false;
     }
 
+    public toDto(): QuizSessionDto {
+        return {
+            correctCount: this.correctCount,
+            totalAnswered: this.totalAnswered,
+            currentQuestionIndex: this.currentQuestionIndex,
+            finished: this.finished,
+            hintUsed: this.hintUsed,
+            totalScore: this.totalScore,
+            trophyGained: this.trophyGained
+        };
+    }
 }
 

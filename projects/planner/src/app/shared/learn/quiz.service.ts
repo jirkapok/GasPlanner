@@ -134,7 +134,7 @@ export class QuizService {
     public countGainedTrophies(topic: Topic): number {
         let count = 0;
         for (const category of topic.categories) {
-            const key = `${topic.topic}::${category.name}`;
+            const key = category.name;
             if (this.sessionsByCategory.get(key)?.trophyGained) {
                 count++;
             }
@@ -166,20 +166,18 @@ export class QuizService {
                 }
             ]);
         }
-
         return result;
     }
 
     public restoreSessions(entries: [string, SerializableQuizSession][] | undefined): void {
         if (!Array.isArray(entries)) {
-            console.log('No quiz sessions to restore', entries);
             return;
         }
 
-        for (const [key, value] of entries) {
-            const [topicName, categoryName] = key.split('::');
-            const topic = this.topics.find(t => t.topic === topicName);
-            const category = topic?.categories.find(c => c.name === categoryName);
+        for (const [categoryName, value] of entries) {
+            const category = this.topics
+                .flatMap(topic => topic.categories)
+                .find(c => c.name === categoryName);
             if (!category) {
                 continue;
             }
@@ -195,7 +193,7 @@ export class QuizService {
             session.totalScore = value.totalScore;
             session.trophyGained = value.trophyGained;
 
-            this.sessionsByCategory.set(key, session);
+            this.sessionsByCategory.set(categoryName, session);
         }
     }
 }

@@ -26,7 +26,7 @@
                             <div class="accordion-body py-2 px-3">
                                 <ul class="list-group list-group-flush">
                                     <li *ngFor="let category of topic.categories" class="list-group-item px-0">
-                                        <ng-container *ngIf="topic.topic + '::' + category.name as quizKey">
+                                        <ng-container>
                                             <div
                                                 class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
                                                 [ngClass]="{
@@ -35,13 +35,13 @@
                                                 (click)="updateTopic(topic.topic, category.name)">
                                                 <div class="d-flex align-items-center">
                                                     {{ category.name }}
-                                                    <ng-container *ngIf="getQuizStats(quizKey) as stats">
+                                                    <ng-container *ngIf="getQuizStats(category.name) as stats">
                                                         <span class="small text-muted ms-2">
                                                             ({{ stats.correct }}/{{ stats.attempts }})
                                                         </span>
                                                     </ng-container>
                                                 </div>
-                                                <ng-container *ngIf="getQuizStats(quizKey) as stats">
+                                                <ng-container *ngIf="getQuizStats(category.name) as stats">
                                                     <fa-icon
                                                         [icon]="trophyIcon"
                                                         class="ms-2 small"

@@ -91,7 +91,7 @@ export class LearnComponent implements OnInit {
             return;
         }
 
-        const key = `${topicName}::${categoryName}`;
+        const key = categoryName;
         let session = this.quizService.sessionsByCategory.get(key);
 
         if (!session) {
@@ -190,7 +190,7 @@ export class LearnComponent implements OnInit {
     }
 
     public getTrophyColor(topic: Topic, category: Category): string {
-        const key = `${topic.topic}::${category.name}`;
+        const key = category.name;
         const session = this.quizService.sessionsByCategory.get(key);
         return session?.trophyGained ? 'text-warning' : 'text-muted';
     }
@@ -242,8 +242,8 @@ export class LearnComponent implements OnInit {
         return !this.session?.finished && (this.session?.quizzes?.length ?? 0) > 0;
     }
 
-    public getQuizStats(key: string): { attempts: number; correct: number } {
-        const session = this.quizService.sessionsByCategory.get(key);
+    public getQuizStats(categoryName: string): { attempts: number; correct: number } {
+        const session = this.quizService.sessionsByCategory.get(categoryName);
         if (!session) {
             return { attempts: 0, correct: 0 };
         }

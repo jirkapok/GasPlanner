@@ -14,6 +14,7 @@ import { SettingsNormalizationService } from './settings-normalization.service';
 import { AirBreakOptions, Diver } from 'scuba-physics';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { QuizService } from './learn/quiz.service';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 class TestSut {
     constructor(
@@ -40,6 +41,8 @@ class TestSut {
 
 describe('Url Serialization', () => {
     const irrelevantFactory = new WorkersFactoryCommon();
+    const mockModalService = jasmine.createSpyObj<MdbModalService>('MdbModalService', ['open']);
+
 
     // because we need custom instances to compare
     const createSimpleSut = (imperial = false): TestSut => {
@@ -50,7 +53,7 @@ describe('Url Serialization', () => {
         const viewSwitch = new ViewSwitchService(schedules);
         const appSettings = new ApplicationSettingsService(units);
         const planner = new PlannerService(schedules, dispatcher, viewSwitch, appSettings, irrelevantFactory, units);
-        const preferences = new Preferences(viewSwitch, units, schedules, appSettings, new ViewStates(), new QuizService());
+        const preferences = new Preferences(viewSwitch, units, schedules, appSettings, new ViewStates(), new QuizService(mockModalService));
         const normalization = new SettingsNormalizationService(units, appSettings, schedules);
         const urlSerialization = new PlanUrlSerialization(viewSwitch, units, normalization,
             schedules, appSettings, preferences);

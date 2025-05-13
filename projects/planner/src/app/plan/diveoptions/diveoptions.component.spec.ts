@@ -16,6 +16,7 @@ import { PreferencesStore } from '../../shared/preferencesStore';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { MdbModalService } from "mdb-angular-ui-kit/modal";
 
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
@@ -33,7 +34,8 @@ describe('Dive options component', () => {
                 ViewSwitchService, WayPointsService,
                 ViewStates, SubViewStorage,
                 Preferences, PreferencesStore,
-                ApplicationSettingsService
+                ApplicationSettingsService,
+                MdbModalService
             ]
         })
             .compileComponents();

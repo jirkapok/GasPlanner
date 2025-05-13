@@ -14,6 +14,9 @@ import { PlannerService } from '../../shared/planner.service';
 import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('PlanTabsComponent', () => {
     let component: PlanTabsComponent;
@@ -24,13 +27,16 @@ describe('PlanTabsComponent', () => {
             declarations: [PlanTabsComponent],
             imports: [MdbTabsModule],
             providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
                 UnitConversion, ReloadDispatcher,
                 DiveSchedules, ManagedDiveSchedules,
                 PreferencesStore, Preferences,
                 ViewSwitchService, ViewStates,
                 DelayedScheduleService, PlannerService,
                 WorkersFactoryCommon, SubViewStorage,
-                ApplicationSettingsService
+                ApplicationSettingsService,
+                MdbModalService
             ]
         });
         fixture = TestBed.createComponent(PlanTabsComponent);

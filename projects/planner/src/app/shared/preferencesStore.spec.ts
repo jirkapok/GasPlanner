@@ -17,11 +17,16 @@ import { SubViewStorage } from './subViewStorage';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 describe('PreferencesStore', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
                 WorkersFactoryCommon,
                 PreferencesStore, PlannerService,
                 UnitConversion, ViewSwitchService,
@@ -29,6 +34,7 @@ describe('PreferencesStore', () => {
                 SettingsNormalizationService,
                 WayPointsService, DiveSchedules,
                 ReloadDispatcher, ApplicationSettingsService,
+                MdbModalService
             ]
         });
 

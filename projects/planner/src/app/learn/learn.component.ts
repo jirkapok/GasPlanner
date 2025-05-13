@@ -11,6 +11,7 @@ import { QuizSession } from '../shared/learn/quiz-session.model';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { HelpModalComponent } from '../help-modal/help-modal.component';
 import confetti from 'canvas-confetti';
+import { PreferencesStore } from '../shared/preferencesStore';
 
 @Component({
     selector: 'app-learn',
@@ -37,7 +38,8 @@ export class LearnComponent implements OnInit {
 
     constructor(
         public quizService: QuizService,
-        private modalService: MdbModalService
+        private modalService: MdbModalService,
+        private preferencesStore: PreferencesStore
     ) {
         this.topics = quizService.topics;
     }
@@ -65,14 +67,13 @@ export class LearnComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.quizService.initializeStats();
-
-        const firstTopic = this.topics[0];
-        const firstCategory = firstTopic?.categories[0];
-
-        if (firstTopic && firstCategory) {
-            this.updateTopic(firstTopic.topic, firstCategory.name);
-        }
+        setTimeout(() => {
+            const firstTopic = this.topics[0];
+            const firstCategory = firstTopic?.categories[0];
+            if (firstTopic && firstCategory) {
+                this.updateTopic(firstTopic.topic, firstCategory.name);
+            }
+        });
     }
 
     public updateTopic(topicName: string, categoryName: string): void {
@@ -90,10 +91,10 @@ export class LearnComponent implements OnInit {
             return;
         }
 
-        const key = `${topicName}::${categoryName}`;
+        const key = categoryName;
         let session = this.quizService.sessionsByCategory.get(key);
 
-        if (!session || session.finished) {
+        if (!session) {
             const quizzes = [category.getQuizItemForCategory()];
             session = new QuizSession(quizzes, category);
             this.quizService.sessionsByCategory.set(key, session);
@@ -138,11 +139,7 @@ export class LearnComponent implements OnInit {
         }
 
         this.session.validateCurrentAnswer();
-        this.quizService.registerAnswer(
-            this.selectedTopic,
-            this.selectedCategoryName,
-            this.session.currentQuiz?.isCorrect ?? false
-        );
+        this.preferencesStore.save();
     }
 
     public getRoundingExplanation(roundType: RoundType): string {
@@ -178,33 +175,47 @@ export class LearnComponent implements OnInit {
         });
     }
 
+    public continuePracticing(): void {
+        if (!this.session) {
+            return;
+        }
+
+        this.session.finished = false;
+        this.goToNextQuestion();
+        this.session.currentQuestionIndex = this.session.quizzes.length - 1;
+    }
+
     public goToNextQuestion(): void {
         this.session?.goToNextQuestion();
     }
 
+    public getTrophyColor(topic: Topic, category: Category): string {
+        const key = category.name;
+        const session = this.quizService.sessionsByCategory.get(key);
+        return session?.trophyGained ? 'text-warning' : 'text-muted';
+    }
+
     public submitAnswers(): void {
-        if (this.session?.finishIfEligible()) {
-            // Wait for Angular to render the #completionBlock element
-            setTimeout(() => {
-                if (this.completionBlockRef?.nativeElement) {
-                    this.launchConfettiFromElement(this.completionBlockRef.nativeElement);
-                } else {
-                    this.launchConfetti();
-                }
-            }, 50);
+        if (this.session?.canFinishSession()) {
+            const didFinish = this.session.finishIfEligible();
+
+            if (didFinish) {
+                setTimeout(() => {
+                    if (this.completionBlockRef?.nativeElement) {
+                        this.launchConfettiFromElement(this.completionBlockRef.nativeElement);
+                    } else {
+                        this.launchConfetti();
+                    }
+                }, 50);
+            }
+
+            this.preferencesStore.save();
         }
     }
 
+
     public isCategorySelected(topicName: string, categoryName: string): boolean {
         return this.selectedTopic === topicName && this.selectedCategoryName === categoryName;
-    }
-
-    public hasPassedCategory(): boolean {
-        return this.quizService.hasPassedCategory(this.selectedTopic, this.selectedCategoryName);
-    }
-
-    public countFinishedCategories(topic: Topic): number {
-        return this.quizService.countFinishedCategories(topic);
     }
 
     public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; color: string } {
@@ -231,7 +242,14 @@ export class LearnComponent implements OnInit {
         return !this.session?.finished && (this.session?.quizzes?.length ?? 0) > 0;
     }
 
-    public isBadgeEarned(topic: Topic, category: Category): boolean {
-        return this.quizService.isCategoryCompleted(topic, category);
+    public getQuizStats(categoryName: string): { attempts: number; correct: number } {
+        const session = this.quizService.sessionsByCategory.get(categoryName);
+        if (!session) {
+            return { attempts: 0, correct: 0 };
+        }
+        return {
+            attempts: session.totalAnswered,
+            correct: session.correctCount
+        };
     }
 }

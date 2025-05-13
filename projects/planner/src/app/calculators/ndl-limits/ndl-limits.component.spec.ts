@@ -18,6 +18,7 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { MdbModalService } from "mdb-angular-ui-kit/modal";
 
 describe('NdlLimits component', () => {
     let component: NdlLimitsComponent;
@@ -34,7 +35,8 @@ describe('NdlLimits component', () => {
                 WorkersFactoryCommon, ViewSwitchService,
                 ReloadDispatcher, DiveSchedules,
                 OptionsService, ValidatorGroups,
-                ApplicationSettingsService
+                ApplicationSettingsService,
+                MdbModalService
             ],
             imports: [RouterTestingModule.withRoutes([])]
         })

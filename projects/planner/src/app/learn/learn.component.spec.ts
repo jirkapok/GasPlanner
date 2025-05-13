@@ -37,7 +37,7 @@ describe('LearnComponent', () => {
             roundType: RoundType.round,
         };
 
-        return new QuizItem(template, 'Mock Category');
+        return new QuizItem(template);
     };
 
     beforeEach(async () => {
@@ -77,27 +77,26 @@ describe('LearnComponent', () => {
                 categories: [
                     {
                         name: 'Used gas',
-                        getQuizItemForCategory: () => {
-                            const item = createMockQuizItem();
-                            item.categoryName = 'Used gas';
-                            return item;
-                        }
+                        getQuizItemForCategory: () => createMockQuizItem()
                     }
                 ]
             }
         ] as Topic[];
     });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(LearnComponent);
         component = fixture.componentInstance;
+        fixture.detectChanges();
+
+        // Wait for async initialization to complete
+        await fixture.whenStable();
         fixture.detectChanges();
     });
 
     it('creates learn with default topic', () => {
         expect(component.activeTopic).toBe('Pressure at depth');
         expect(component.selectedCategoryName).toBe('Basic Pressure');
-        expect(component.currentQuiz?.categoryName).toBe('Mock Category');
     });
 
     it('changes quiz question', () => {
@@ -106,6 +105,5 @@ describe('LearnComponent', () => {
         fixture.detectChanges();
 
         expect(component.selectedCategoryName).toBe(expectedCategory);
-        expect(component.currentQuiz?.categoryName).toBe(expectedCategory);
     });
 });

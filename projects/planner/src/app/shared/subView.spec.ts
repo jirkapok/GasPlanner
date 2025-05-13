@@ -12,6 +12,7 @@ import { SubViewStorage } from './subViewStorage';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { MdbModalService } from "mdb-angular-ui-kit/modal";
 
 const viewId = 'testView';
 interface TestView extends ViewState {
@@ -45,7 +46,8 @@ describe('SubView', () => {
                 UnitConversion, WayPointsService,
                 Preferences, ViewSwitchService,
                 ReloadDispatcher, DiveSchedules,
-                ApplicationSettingsService
+                ApplicationSettingsService,
+                MdbModalService
             ],
             imports: []
         }).compileComponents();

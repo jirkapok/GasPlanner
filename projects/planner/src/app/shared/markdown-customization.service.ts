@@ -21,6 +21,8 @@ export class MarkdownCustomization {
                 const parts = sanitizedHref.split('#');
                 const helpUrl = this.urls.helpUrl(parts[0], parts[1]);
                 return `<a href="${helpUrl}">${text}</a>`;
+            } else if (href && href.startsWith('/learn')) {
+                return `<a href="${href}">${text}</a>`;
             }
             return `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
         };

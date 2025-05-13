@@ -3,10 +3,12 @@ import {
     NitroxCalculator, SacCalculator, DepthConverter,
     Precision, GasProperties
 } from 'scuba-physics';
-import { Topic, QuestionTemplate, RoundType, QuizItemTools, Category } from './learn.models';
+import { Topic, QuestionTemplate, RoundType, QuizItemTools } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
-import { AppPreferences, QuizAnswerStats } from '../serialization.model';
+import { AppPreferences, SerializableQuizSession } from '../serialization.model';
+import { HelpModalComponent } from '../../help-modal/help-modal.component';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 export class QuizItem {
     public correctAnswer?: number;
@@ -25,8 +27,7 @@ export class QuizItem {
     private gasProperties: GasProperties;
 
     constructor(
-        public template: QuestionTemplate,
-        public categoryName: string
+        public template: QuestionTemplate
     ) {
         this.roundTo = template.roundTo;
         this.roundType = template.roundType;
@@ -103,77 +104,96 @@ export class QuizItem {
         this.renderedQuestion = rendered;
     }
 }
-
 @Injectable({
     providedIn: 'root'
 })
 export class QuizService {
     public topics: Topic[] = topics;
-    public quizAnswers: Record<string, QuizAnswerStats> = {};
     public sessionsByCategory = new Map<string, QuizSession>();
-    public readonly completedCategories: Set<string> = new Set(); // ✅ Persist earned badges
+    public quizWelcomeWasShown = false;
 
-    constructor() {}
+    constructor(
+        private modalService: MdbModalService
+    ) {}
 
     public applyApp(loaded: AppPreferences): void {
-        // Load persisted data here if needed
-    }
 
-    public registerAnswer(topic: string, category: string, correct: boolean): void {
-        const key = `${topic}::${category}`;
-        const stats = this.quizAnswers[key] ?? { attempts: 0, correct: 0 };
+        this.sessionsByCategory.clear();
 
-        stats.attempts++;
-        if (correct) {
-            stats.correct++;
-        }
+        this.quizWelcomeWasShown = loaded.quizWelcomeWasShown;
 
-        this.quizAnswers[key] = stats;
-
-        // ✅ Permanently mark badge as earned
-        if (this.isQuizCompleted(stats)) {
-            this.completedCategories.add(key);
+        if (!this.quizWelcomeWasShown) {
+            this.quizWelcomeWasShown = true;
+            this.modalService.open(HelpModalComponent, {
+                data: { path: 'learn-welcome' }
+            });
         }
     }
 
-    public initializeStats(): void {
-        for (const topic of this.topics) {
-            for (const category of topic.categories) {
-                const key = `${topic.topic}::${category.name}`;
-                if (!this.quizAnswers[key]) {
-                    this.quizAnswers[key] = { attempts: 0, correct: 0 };
-                }
+    public countGainedTrophies(topic: Topic): number {
+        let count = 0;
+        for (const category of topic.categories) {
+            const key = category.name;
+            if (this.sessionsByCategory.get(key)?.trophyGained) {
+                count++;
             }
         }
-    }
-
-    public hasPassedCategory(topic: string, category: string): boolean {
-        const key = `${topic}::${category}`;
-        return this.completedCategories.has(key);
-    }
-
-    public countFinishedCategories(topic: Topic): number {
-        return topic.categories.filter(cat =>
-            this.hasPassedCategory(topic.topic, cat.name)
-        ).length;
+        return count;
     }
 
     public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; color: string } {
-        const finished = this.countFinishedCategories(topic);
+        const finished = this.countGainedTrophies(topic);
         const total = topic.categories.length;
         const color = finished === total ? 'bg-success' : 'bg-warning';
         return { finished, total, color };
     }
 
-    public isCategoryCompleted(topic: Topic, category: Category): boolean {
-        const key = `${topic.topic}::${category.name}`;
-        return this.completedCategories.has(key);
+    public getSerializableSessions(): [string, SerializableQuizSession][] {
+        const result: [string, SerializableQuizSession][] = [];
+
+        for (const [key, session] of this.sessionsByCategory.entries()) {
+            result.push([
+                key,
+                {
+                    correctCount: session.correctCount,
+                    totalAnswered: session.totalAnswered,
+                    currentQuestionIndex: session.currentQuestionIndex,
+                    finished: session.finished,
+                    hintUsed: session.hintUsed,
+                    totalScore: session.totalScore,
+                    trophyGained: session.trophyGained
+                }
+            ]);
+        }
+        return result;
     }
 
-    public isQuizCompleted(quizAnswers: QuizAnswerStats): boolean {
-        return !!quizAnswers &&
-            quizAnswers.attempts >= QuizSession.requiredAnsweredCount &&
-            (quizAnswers.correct / quizAnswers.attempts) * 100 >= QuizSession.minimalAcceptableSuccessRate;
+    public restoreSessions(entries: [string, SerializableQuizSession][] | undefined): void {
+        if (!Array.isArray(entries)) {
+            return;
+        }
+
+        for (const [categoryName, value] of entries) {
+            const category = this.topics
+                .flatMap(topic => topic.categories)
+                .find(c => c.name === categoryName);
+            if (!category) {
+                continue;
+            }
+
+            const quizzes = [category.getQuizItemForCategory()];
+            const session = new QuizSession(quizzes, category);
+
+            session.correctCount = value.correctCount;
+            session.totalAnswered = value.totalAnswered;
+            session.currentQuestionIndex = value.currentQuestionIndex;
+            session.finished = value.finished;
+            session.hintUsed = value.hintUsed;
+            session.totalScore = value.totalScore;
+            session.trophyGained = value.trophyGained;
+
+            this.sessionsByCategory.set(categoryName, session);
+        }
     }
 }
 

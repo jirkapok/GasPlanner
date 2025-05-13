@@ -40,11 +40,15 @@ export class Preferences {
         return {
             states: this.toStates(),
             options: this.toAppSettings(),
-            dives: this.toDives()
+            dives: this.toDives(),
+            quizSessions: this.quizService.getSerializableSessions(),
+            quizWelcomeWasShown: this.quizService.quizWelcomeWasShown
         };
     }
 
     public applyApp(loaded: AppPreferences): void {
+        this.quizService.restoreSessions(loaded.quizSessions);
+
         this.applyLoaded(loaded);
         this.viewStates.loadFrom(loaded.states);
         const mainView: DashBoardViewState | null = this.viewStates.get(KnownViews.dashboard);

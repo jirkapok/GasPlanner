@@ -14,6 +14,7 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { MdbModalService } from "mdb-angular-ui-kit/modal";
 
 describe('AltitudeCalcComponent', () => {
     let component: AltitudeCalcComponent;
@@ -28,7 +29,8 @@ describe('AltitudeCalcComponent', () => {
                 PreferencesStore, PlannerService, WorkersFactoryCommon,
                 Preferences, ViewSwitchService,
                 ReloadDispatcher, DiveSchedules,
-                ApplicationSettingsService
+                ApplicationSettingsService,
+                MdbModalService
             ]
         });
         fixture = TestBed.createComponent(AltitudeCalcComponent);

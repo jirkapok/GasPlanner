@@ -15,6 +15,9 @@ import Spy = jasmine.Spy;
 import {ReloadDispatcher} from './reloadDispatcher';
 import { DepthsService } from './depths.service';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('Managed Schedules', () => {
     const expectedSecondTankSize = 24;
@@ -57,13 +60,16 @@ describe('Managed Schedules', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
                 ManagedDiveSchedules, UnitConversion,
                 DiveSchedules, PreferencesStore,
                 PlannerService, WorkersFactoryCommon,
                 ReloadDispatcher, WayPointsService,
                 Preferences, ViewSwitchService,
                 ViewStates, DelayedScheduleService,
-                SubViewStorage, ApplicationSettingsService
+                SubViewStorage, ApplicationSettingsService,
+                MdbModalService
             ],
         }).compileComponents();
 

@@ -85,6 +85,7 @@ export class LearnComponent implements OnInit {
         this.selectedTopic = topicName;
         this.selectedCategoryName = categoryName;
         this.activeTopic = topicName;
+        this.selectedCategory = this.findCategory(topicName, categoryName);
         this.session = this.getOrCreateSession(categoryName);
     }
 

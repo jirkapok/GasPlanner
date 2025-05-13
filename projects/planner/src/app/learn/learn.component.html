@@ -1,163 +1,163 @@
 <div class="row mt-5">
-    <div class="col col-sm-12 col-md-12 col-lg-5 col-xl-4 col-xxl-3 mt-3">
-        <div class="card shadow-sm">
-            <div class="card-body p-0">
-                <div class="accordion" id="topicsAccordion">
-                    <div class="accordion-item" *ngFor="let topic of topics">
-                        <h2 class="accordion-header">
-                            <button
-                                class="accordion-button"
-                                [class.collapsed]="activeTopic !== topic.topic"
-                                (click)="toggleTopic(topic.topic)">
-
-                                {{ topic.topic }}
-
-                                <ng-container *ngIf="getTopicCompletionStatus(topic) as status">
-                                    <span
-                                        class="badge text-light ms-2"
-                                        [class]="status.color">
-                                        {{ status.finished }}/{{ status.total }}
-                                    </span>
-                                </ng-container>
-
-                            </button>
-                        </h2>
-                        <div class="accordion-collapse collapse" [class.show]="activeTopic === topic.topic">
-                            <div class="accordion-body py-2 px-3">
-                                <ul class="list-group list-group-flush">
-                                    <li *ngFor="let category of topic.categories" class="list-group-item px-0">
-                                        <ng-container>
-                                            <div
-                                                class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
-                                                [ngClass]="{
-                                                    'bg-primary bg-opacity-10 text-primary fw-semibold': isCategorySelected(topic.topic, category.name)
-                                                }"
-                                                (click)="updateTopic(topic.topic, category.name)">
-                                                <div class="d-flex align-items-center">
-                                                    {{ category.name }}
-                                                    <ng-container *ngIf="getQuizStats(category.name) as stats">
-                                                        <span class="small text-muted ms-2">
-                                                            ({{ stats.correct }}/{{ stats.attempts }})
-                                                        </span>
-                                                    </ng-container>
-                                                </div>
-                                                <ng-container *ngIf="getQuizStats(category.name) as stats">
-                                                    <fa-icon
-                                                        [icon]="trophyIcon"
-                                                        class="ms-2 small"
-                                                        [ngClass]="getTrophyColor(topic, category)">
-                                                    </fa-icon>
-                                                </ng-container>
-                                            </div>
-                                        </ng-container>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+  <div class="col-12 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <div class="accordion" id="topicsAccordion">
+          <div class="accordion-item" *ngFor="let topic of topics">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button"
+                [class.collapsed]="activeTopic !== topic.topic"
+                (click)="toggleTopic(topic.topic)"
+              >
+                {{ topic.topic }}
+                <ng-container *ngIf="getTopicCompletionStatus(topic) as status">
+                  <span
+                    class="badge text-light ms-2"
+                    [class]="status.color">
+                    {{ status.finished }}/{{ status.total }}
+                  </span>
+                </ng-container>
+              </button>
+            </h2>
+            <div class="accordion-collapse collapse" [class.show]="activeTopic === topic.topic">
+              <div class="accordion-body py-2 px-3">
+                <ul class="list-group list-group-flush">
+                  <li *ngFor="let category of topic.categories" class="list-group-item px-0">
+                    <div
+                      class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
+                      [ngClass]="{
+                        'bg-primary bg-opacity-10 text-primary fw-semibold':
+                          isCategorySelected(topic.topic, category.name)
+                      }"
+                      (click)="updateTopic(topic.topic, category.name)">
+                      <div class="d-flex align-items-center">
+                        {{ category.name }}
+                        <ng-container *ngIf="getQuizStats(category.name) as stats">
+                          <span class="small text-muted ms-2">
+                            ({{ stats.correct }}/{{ stats.attempts }})
+                          </span>
+                        </ng-container>
+                      </div>
+                      <ng-container *ngIf="getQuizStats(category.name) as stats">
+                        <fa-icon
+                          [icon]="trophyIcon"
+                          class="ms-2 small"
+                          [ngClass]="getTrophyColor(topic, category)">
+                        </fa-icon>
+                      </ng-container>
                     </div>
-                </div>
+                  </li>
+                </ul>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div class="col-sm-12 col-md-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
-        <div class="card shadow-sm position-relative">
-            <div class="position-absolute top-0 end-0 m-3 d-flex align-items-center gap-2" *ngIf="!shouldShowScore()">
-                <span class="badge bg-primary text-light d-flex align-items-center">
+  <div class="col-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
+    <div class="card shadow-sm position-relative">
+      <div class="card-body">
+        <form (ngSubmit)="submitAnswers()" *ngIf="shouldShowForm()">
+          <div class="mb-4" *ngIf="currentQuiz as quiz">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
+              <p class="fw-bold mb-0">
+                Question — {{ selectedTopic }} / {{ selectedCategory?.name }}
+              </p>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="badge bg-primary text-light small">
                   {{ scoreSummary }} — {{ correctPercentage }}%
                 </span>
-
                 <button
-                    type="button"
-                    class="btn btn-sm btn-secondary ms-2"
-                    (click)="openHelp()"
-                    title="Show Help"
-                    aria-label="Open help panel"            >
-                    <fa-icon [icon]="helpIcon" class="fa-lg"></fa-icon>
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="openHelp()"
+                  title="Show Help"
+                  aria-label="Open help panel" >
+                  <fa-icon [icon]="helpIcon" class="fa-lg"></fa-icon>
                 </button>
+              </div>
             </div>
 
-            <div class="card-body">
-                <form (ngSubmit)="submitAnswers()" *ngIf="shouldShowForm()">
-                    <div class="mb-4" *ngIf="currentQuiz as quiz">
-                        <p class="fw-bold">Question:</p>
-                        <p>{{ quiz.renderedQuestion }}</p>
+            <p>{{ quiz.renderedQuestion }}</p>
 
-                        <input
-                            id="answer-input"
-                            type="text"
-                            class="form-control mb-2"
-                            [(ngModel)]="quiz.userAnswer"
-                            name="{{ session?.currentQuestionIndex }}"
-                            [disabled]="quiz.isAnswered"
-                            [ngClass]="{
-                                'is-valid': quiz.isAnswered && quiz.isCorrect,
-                                'is-invalid': quiz.isAnswered && !quiz.isCorrect
-                            }" />
+            <input
+              id="answer-input"
+              type="text"
+              class="form-control mb-2"
+              [(ngModel)]="quiz.userAnswer"
+              name="{{ session?.currentQuestionIndex }}"
+              [disabled]="quiz.isAnswered"
+              [ngClass]="{
+                'is-valid': quiz.isAnswered && quiz.isCorrect,
+                'is-invalid': quiz.isAnswered && !quiz.isCorrect
+              }" />
 
-                            <div *ngIf="quiz.isAnswered">
-                                <div *ngIf="quiz.isCorrect" class="alert alert-success">
-                                  Correct!
-                                </div>
-                                <div *ngIf="!quiz.isCorrect" class="alert alert-danger">
-                                  Incorrect. The correct answer is: {{ quiz.correctAnswer }}
-                                </div>
-                            </div>
-                            <div *ngIf="!quiz.isAnswered">
-                                <div class="alert alert-info">
-                                 Round {{getRoundingExplanation(quiz.roundType)}} your answer to {{quiz.roundTo}} decimal place(s).
-                                </div>
-                              </div>
-
-                        <div class="mt-3">
-                            <button
-                                id="submit-answer"
-                                *ngIf="shouldShowSubmitButton()"
-                                type="button"
-                                class="btn btn-primary"
-                                (click)="validateCurrentAnswer()">
-                                Submit Answer
-                            </button>
-
-                            <button
-                                id="next-question"
-                                *ngIf="shouldShowNextQuestionButton()"
-                                type="button"
-                                class="btn btn-outline-primary ms-2"
-                                (click)="goToNextQuestion()">
-                                Next Question
-                            </button>
-
-                            <button
-                                *ngIf="!shouldShowNextQuestionButton()"
-                                type="button"
-                                class="btn btn-outline-info ms-2"
-                                (click)="openHelpModal()">
-                                Need Hint?
-                            </button>
-
-                            <button
-                                *ngIf="shouldShowFinishButton()"
-                                type="submit"
-                                class="btn btn-success ms-2">
-                                Finish Quiz
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <div *ngIf="shouldShowScore()" class="text-center">
-                  <h4>Quiz Completed!</h4>
-                  <p>Correct answers: {{ session?.correctCount }} out of {{ session?.totalAnswered }}</p>
-                  <p>Score: {{ correctPercentage }}%</p>
-
-                  <button
-                    class="btn btn-outline-secondary mt-3"
-                    (click)="continuePracticing()">
-                    Continue Practicing
-                  </button>
-                </div>
+            <div *ngIf="quiz.isAnswered">
+              <div *ngIf="quiz.isCorrect" class="alert alert-success">
+                Correct!
+              </div>
+              <div *ngIf="!quiz.isCorrect" class="alert alert-danger">
+                Incorrect. The correct answer is: {{ quiz.correctAnswer }}
+              </div>
             </div>
+            <div *ngIf="!quiz.isAnswered">
+              <div class="alert alert-info">
+                Round {{ getRoundingExplanation(quiz.roundType) }} your answer to {{ quiz.roundTo }} decimal place(s).
+              </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mt-3">
+              <button
+                id="submit-answer"
+                *ngIf="shouldShowSubmitButton()"
+                type="button"
+                class="btn btn-primary"
+                (click)="validateCurrentAnswer()">
+                Submit Answer
+              </button>
+
+              <button
+                id="next-question"
+                *ngIf="shouldShowNextQuestionButton()"
+                type="button"
+                class="btn btn-outline-primary"
+                (click)="goToNextQuestion()">
+                Next Question
+              </button>
+
+              <button
+                *ngIf="!shouldShowNextQuestionButton()"
+                type="button"
+                class="btn btn-outline-info"
+                (click)="openHelpModal()">
+                Need Hint?
+              </button>
+
+              <button
+                *ngIf="shouldShowFinishButton()"
+                type="submit"
+                class="btn btn-success">
+                Finish Quiz
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div *ngIf="shouldShowScore()" class="text-center">
+          <h4>Quiz Completed!</h4>
+          <p>Correct answers: {{ session?.correctCount }} out of {{ session?.totalAnswered }}</p>
+          <p>Score: {{ correctPercentage }}%</p>
+
+          <button
+            class="btn btn-outline-secondary mt-3"
+            (click)="continuePracticing()">
+            Continue Practicing
+          </button>
         </div>
+      </div>
     </div>
+  </div>
 </div>

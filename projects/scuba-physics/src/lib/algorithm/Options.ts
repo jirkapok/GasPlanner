@@ -16,6 +16,7 @@ export class OptionDefaults {
     public static readonly altitude = 0;
     public static readonly saltWater = Salinity.salt;
     public static readonly roundStopsToMinutes = false;
+    public static readonly roundRuntimesToMinutes = false;
     public static readonly gasSwitchDuration = 2;
     public static readonly problemSolvingDuration = 1;
     public static readonly lastStopDepth = 3;
@@ -50,6 +51,7 @@ export class OptionDefaults {
     public static useGeneralRecommended(options: Options): void {
         options.safetyStop = OptionDefaults.safetyStopRecre;
         options.roundStopsToMinutes = OptionDefaults.roundStopsToMinutes;
+        options.roundRuntimesToMinutes = OptionDefaults.roundRuntimesToMinutes;
         options.gasSwitchDuration = OptionDefaults.gasSwitchDuration;
         options.oxygenNarcotic = OptionDefaults.oxygenNarcotic;
     }
@@ -89,6 +91,10 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
     /** If true (default) deco stops are rounded up to whole minutes (I.e. longer ascent).
      *  Otherwise, length of stops is not rounded and profile generates precise stops in seconds .  */
     public roundStopsToMinutes = OptionDefaults.roundStopsToMinutes;
+
+    /** If true deco stops are rounded up to whole minutes for runtime (I.e. longer ascent).
+     *  Otherwise (default), length of stops is not rounded and profile generates precise stops in seconds .  */
+    public roundRuntimesToMinutes = OptionDefaults.roundRuntimesToMinutes;
 
     /** Gas switch stop length in minutes */
     public gasSwitchDuration = OptionDefaults.gasSwitchDuration;
@@ -202,6 +208,7 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         // altitude is the only one property, which accepts 0;
         this.altitude = (other.altitude || other.altitude === 0) ? other.altitude : this.altitude;
         this.roundStopsToMinutes = other.roundStopsToMinutes;
+        this.roundRuntimesToMinutes = other.roundRuntimesToMinutes;
         this.gasSwitchDuration = other.gasSwitchDuration || this.gasSwitchDuration;
         this.problemSolvingDuration = other.problemSolvingDuration || this.problemSolvingDuration;
 

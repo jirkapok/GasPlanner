@@ -232,7 +232,17 @@ export class BuhlmannAlgorithm {
             // the algorithm returns lowest value, so the last second where the deco isn't enough
             // so we need to add one more second to be safe and adjust it to the required rounding
             const stopDuration = interval.search(searchContext) + Time.oneSecond;
-            const rounded = Precision.ceilDistance(stopDuration, context.decoStopDuration);
+            let rounded = stopDuration;
+            if (context.options.roundRuntimesToMinutes){
+                context.restore(memento);
+                const secondsDeco = (context.runTime + stopDuration) % 60;
+                if (secondsDeco !== 0){
+                    rounded += 60 - secondsDeco;
+                }
+                rounded = Precision.round(rounded, context.decoStopDuration);
+            } else if (context.decoStopDuration !== Time.oneSecond) {
+                rounded = Precision.ceilDistance(rounded, context.decoStopDuration);
+            }
             this.swimDecoStop(context, memento, rounded);
         }
     }
@@ -300,7 +310,10 @@ export class BuhlmannAlgorithm {
 
     private ascentToNextStop(context: AlgorithmContext, nextStop: number): void {
         const depthDifference = context.currentDepth - nextStop;
-        const duration = durationFor(depthDifference, context.ascentSpeed);
+        let duration = durationFor(depthDifference, context.ascentSpeed);
+        if(context.options.roundRuntimesToMinutes){
+            duration = Precision.ceilDistance(duration, Time.oneSecond);
+        }
         const ascent = context.addAscentSegment(nextStop, duration);
         this.swim(context, ascent);
     }

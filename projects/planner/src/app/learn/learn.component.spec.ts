@@ -102,15 +102,15 @@ describe('LearnComponent', () => {
     });
 
     it('creates learn with default topic', () => {
-        expect(component.activeTopic).toBe('Pressure at depth');
-        expect(component.selectedCategoryName).toBe('Basic Pressure');
+        expect(component.selectedTopic.topic).toBe('Pressure at depth');
+        expect(component.selectedCategory.name).toBe('Basic Pressure');
     });
 
     it('changes quiz question', () => {
         const expectedCategory = 'Used gas';
-        component.updateTopic('Consumption', expectedCategory);
+        component.updateTopic(quizService.topics[1], quizService.topics[1].categories[0]);
         fixture.detectChanges();
 
-        expect(component.selectedCategoryName).toBe(expectedCategory);
+        expect(component.selectedCategory.name).toBe(expectedCategory);
     });
 });

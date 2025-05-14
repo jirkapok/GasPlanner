@@ -30,12 +30,8 @@ export class LearnComponent implements OnInit {
     public readonly topics: Topic[] = [];
 
     public session: QuizSession;
-    public activeTopic = '';
-    public selectedTopic = '';
+    public selectedTopic: Topic;
     public selectedCategory: Category;
-    public selectedCategoryName = '';
-
-    private _label = '';
 
     constructor(
         public quizService: QuizService,
@@ -43,10 +39,9 @@ export class LearnComponent implements OnInit {
         private preferencesStore: PreferencesStore
     ) {
         this.topics = quizService.topics;
-        this.selectedTopic = this.topics[0].topic;
-        this.selectedCategoryName = this.topics[0].categories[0].name;
-        this.selectedCategory = this.findCategory(this.selectedTopic, this.selectedCategoryName);
-        this.session = this.getOrCreateSession(this.selectedCategoryName);
+        this.selectedTopic = this.topics[0];
+        this.selectedCategory = this.topics[0].categories[0];
+        this.session = this.getOrCreateSession(this.selectedCategory.name);
     }
 
     public get currentQuiz(): QuizItem {
@@ -57,18 +52,8 @@ export class LearnComponent implements OnInit {
         return this.session.correctPercentage;
     }
 
-    public get label(): string {
-        return this._label;
-    }
-
     public get scoreSummary(): string {
         return this.session.scoreSummary;
-    }
-
-    @Input()
-    public set label(value: string) {
-        this._label = value || '';
-        this.selectedTopic = this._label;
     }
 
     public ngOnInit(): void {
@@ -76,17 +61,15 @@ export class LearnComponent implements OnInit {
             const firstTopic = this.topics[0];
             const firstCategory = firstTopic?.categories[0];
             if (firstTopic && firstCategory) {
-                this.updateTopic(firstTopic.topic, firstCategory.name);
+                this.updateTopic(firstTopic, firstCategory);
             }
         });
     }
 
-    public updateTopic(topicName: string, categoryName: string): void {
-        this.selectedTopic = topicName;
-        this.selectedCategoryName = categoryName;
-        this.activeTopic = topicName;
-        this.selectedCategory = this.findCategory(topicName, categoryName);
-        this.session = this.getOrCreateSession(categoryName);
+    public updateTopic(topic: Topic, category: Category): void {
+        this.selectedTopic = topic;
+        this.selectedCategory = category;
+        this.session = this.getOrCreateSession(category.name);
     }
 
     public openHelp(): void {
@@ -113,8 +96,8 @@ export class LearnComponent implements OnInit {
         });
     }
 
-    public toggleTopic(topicName: string): void {
-        this.activeTopic = this.activeTopic === topicName ? '' : topicName;
+    public toggleTopic(topic: Topic): void {
+        this.updateTopic(topic, topic.categories[0]);
     }
 
     public validateCurrentAnswer(): void {
@@ -136,7 +119,7 @@ export class LearnComponent implements OnInit {
 
     public launchConfetti(): void {
         confetti({
-            particleCount: 150,
+            particleCount: 240,
             spread: 90,
             origin: { y: 0.6 },
             colors: ['#00c6ff', '#0072ff', '#ffffff'],
@@ -149,8 +132,8 @@ export class LearnComponent implements OnInit {
         const y = (rect.top + rect.height / 2) / window.innerHeight;
 
         confetti({
-            particleCount: 120,
-            spread: 80,
+            particleCount: 240,
+            spread: 90,
             origin: { x, y }
         });
     }
@@ -177,9 +160,12 @@ export class LearnComponent implements OnInit {
 
             if (didFinish) {
                 setTimeout(() => {
+                    console.log('Confetti launched', this.completionBlockRef?.nativeElement);
                     if (this.completionBlockRef?.nativeElement) {
+                        console.log('Launching confetti from element');
                         this.launchConfettiFromElement(this.completionBlockRef.nativeElement);
                     } else {
+                        console.log('Launching confetti from default position');
                         this.launchConfetti();
                     }
                 }, 50);
@@ -190,7 +176,7 @@ export class LearnComponent implements OnInit {
     }
 
     public isCategorySelected(topicName: string, categoryName: string): boolean {
-        return this.selectedTopic === topicName && this.selectedCategoryName === categoryName;
+        return this.selectedTopic.topic === topicName && this.selectedCategory.name === categoryName;
     }
 
     public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; color: string } {
@@ -244,7 +230,7 @@ export class LearnComponent implements OnInit {
         if (existing) {
             return existing;
         }
-        const category = this.findCategory(this.selectedTopic, categoryName);
+        const category = this.findCategory(this.selectedTopic.topic, categoryName);
 
         const session = new QuizSession([category.getQuizItemForCategory()], category);
         this.quizService.sessionsByCategory.set(key, session);

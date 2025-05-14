@@ -148,7 +148,7 @@ export class LearnComponent implements OnInit {
         this.session.goToNextQuestion();
     }
 
-    public getTrophyColor(topic: Topic, category: Category): string {
+    public getTrophyColor(category: Category): string {
         const key = category.name;
         const session = this.quizService.sessionsByCategory.get(key);
         return session?.trophyGained ? 'text-warning' : 'text-muted';
@@ -160,12 +160,9 @@ export class LearnComponent implements OnInit {
 
             if (didFinish) {
                 setTimeout(() => {
-                    console.log('Confetti launched', this.completionBlockRef?.nativeElement);
                     if (this.completionBlockRef?.nativeElement) {
-                        console.log('Launching confetti from element');
                         this.launchConfettiFromElement(this.completionBlockRef.nativeElement);
                     } else {
-                        console.log('Launching confetti from default position');
                         this.launchConfetti();
                     }
                 }, 50);
@@ -175,8 +172,8 @@ export class LearnComponent implements OnInit {
         }
     }
 
-    public isCategorySelected(topicName: string, categoryName: string): boolean {
-        return this.selectedTopic.topic === topicName && this.selectedCategory.name === categoryName;
+    public isCategorySelected(topic: Topic, category: Category): boolean {
+        return this.selectedTopic === topic && this.selectedCategory === category;
     }
 
     public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; color: string } {
@@ -213,24 +210,13 @@ export class LearnComponent implements OnInit {
             correct: session.correctCount
         };
     }
-
-    private findCategory(topicName: string, categoryName: string): Category {
-        const topic = this.topics.find(t => t.topic === topicName);
-
-        if (!topic) {
-            return Topic.getEmptyCategory();
-        }
-
-        return topic.getCategoryByNameOrEmpty(categoryName);
-    }
-
     private getOrCreateSession(categoryName: string): QuizSession {
         const key = categoryName;
         const existing = this.quizService.sessionsByCategory.get(key);
         if (existing) {
             return existing;
         }
-        const category = this.findCategory(this.selectedTopic.topic, categoryName);
+        const category = this.selectedTopic.getCategoryByNameOrEmpty(categoryName);
 
         const session = new QuizSession([category.getQuizItemForCategory()], category);
         this.quizService.sessionsByCategory.set(key, session);

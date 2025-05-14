@@ -28,7 +28,7 @@
                       class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
                       [ngClass]="{
                         'bg-primary bg-opacity-10 text-primary fw-semibold':
-                          isCategorySelected(topic.topic, category.name)
+                          isCategorySelected(topic, category)
                       }"
                       (click)="updateTopic(topic, category)">
                       <div class="d-flex align-items-center">
@@ -43,7 +43,7 @@
                         <fa-icon
                           [icon]="trophyIcon"
                           class="ms-2 small"
-                          [ngClass]="getTrophyColor(topic, category)">
+                          [ngClass]="getTrophyColor(category)">
                         </fa-icon>
                       </ng-container>
                     </div>

@@ -200,6 +200,10 @@ export class LearnComponent implements OnInit {
         return !this.session.finished && this.session.quizzes.length > 0;
     }
 
+    public shouldShowResetButton(): boolean {
+        return this.session.totalAnswered > 0;
+    }
+
     public getQuizStats(categoryName: string): { attempts: number; correct: number } {
         const session = this.quizService.sessionsByCategory.get(categoryName);
         if (!session) {
@@ -210,6 +214,11 @@ export class LearnComponent implements OnInit {
             correct: session.correctCount
         };
     }
+
+    public resetSession(): void {
+        this.session.reset();
+    }
+
     private getOrCreateSession(categoryName: string): QuizSession {
         const key = categoryName;
         const existing = this.quizService.sessionsByCategory.get(key);

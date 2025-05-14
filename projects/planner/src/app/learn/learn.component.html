@@ -111,40 +111,49 @@
                 Round {{ getRoundingExplanation(quiz.roundType) }} your answer to <strong>{{ quiz.roundTo }}</strong> decimal place(s).
               </div>
             </div>
+            <div class="d-flex flex-wrap justify-content-between">
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                  <button
+                    id="submit-answer"
+                    *ngIf="shouldShowSubmitButton()"
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="validateCurrentAnswer()">
+                    Submit Answer
+                  </button>
 
-            <div class="d-flex flex-wrap gap-2 mt-3">
-              <button
-                id="submit-answer"
-                *ngIf="shouldShowSubmitButton()"
-                type="button"
-                class="btn btn-primary"
-                (click)="validateCurrentAnswer()">
-                Submit Answer
-              </button>
+                  <button
+                    id="next-question"
+                    *ngIf="shouldShowNextQuestionButton()"
+                    type="button"
+                    class="btn btn-outline-primary"
+                    (click)="goToNextQuestion()">
+                    Next Question
+                  </button>
 
-              <button
-                id="next-question"
-                *ngIf="shouldShowNextQuestionButton()"
-                type="button"
-                class="btn btn-outline-primary"
-                (click)="goToNextQuestion()">
-                Next Question
-              </button>
+                  <button
+                    *ngIf="!shouldShowNextQuestionButton()"
+                    type="button"
+                    class="btn btn-outline-info"
+                    (click)="openHelpModal()">
+                    Need Hint?
+                  </button>
 
-              <button
-                *ngIf="!shouldShowNextQuestionButton()"
-                type="button"
-                class="btn btn-outline-info"
-                (click)="openHelpModal()">
-                Need Hint?
-              </button>
-
-              <button
-                *ngIf="shouldShowFinishButton()"
-                type="submit"
-                class="btn btn-success">
-                Finish Quiz
-              </button>
+                  <button
+                    *ngIf="shouldShowFinishButton()"
+                    type="submit"
+                    class="btn btn-success">
+                    Finish Quiz
+                  </button>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <button
+                    *ngIf="shouldShowResetButton()"
+                    type="button"
+                    class="btn btn-danger">
+                    Reset Category
+                    </button>
+                </div>
             </div>
           </div>
         </form>

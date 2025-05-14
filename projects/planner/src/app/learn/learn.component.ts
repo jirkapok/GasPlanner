@@ -217,6 +217,7 @@ export class LearnComponent implements OnInit {
 
     public resetSession(): void {
         this.session.reset();
+        this.preferencesStore.save();
     }
 
     private getOrCreateSession(categoryName: string): QuizSession {

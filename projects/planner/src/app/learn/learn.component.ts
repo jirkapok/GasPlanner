@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMedal, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faMedal, faCircleInfo, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
 import { QuizService } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
@@ -27,6 +27,7 @@ export class LearnComponent implements OnInit {
 
     public readonly trophyIcon = faMedal;
     public readonly helpIcon = faCircleInfo;
+    public readonly resetIcon = faUndo;
     public readonly topics: Topic[] = [];
 
     public session: QuizSession;
@@ -41,7 +42,7 @@ export class LearnComponent implements OnInit {
         this.topics = quizService.topics;
         this.selectedTopic = this.topics[0];
         this.selectedCategory = this.topics[0].categories[0];
-        this.session = this.getOrCreateSession(this.selectedCategory.name);
+        this.session = this.getOrCreateSession(this.selectedCategory);
     }
 
     public get currentQuiz(): QuizItem {
@@ -69,7 +70,7 @@ export class LearnComponent implements OnInit {
     public updateTopic(topic: Topic, category: Category): void {
         this.selectedTopic = topic;
         this.selectedCategory = category;
-        this.session = this.getOrCreateSession(category.name);
+        this.session = this.getOrCreateSession(category);
     }
 
     public openHelp(): void {
@@ -220,16 +221,14 @@ export class LearnComponent implements OnInit {
         this.preferencesStore.save();
     }
 
-    private getOrCreateSession(categoryName: string): QuizSession {
-        const key = categoryName;
-        const existing = this.quizService.sessionsByCategory.get(key);
+    private getOrCreateSession(category: Category): QuizSession {
+        const existing = this.quizService.sessionsByCategory.get(category.name);
         if (existing) {
             return existing;
         }
-        const category = this.selectedTopic.getCategoryByNameOrEmpty(categoryName);
 
         const session = new QuizSession([category.getQuizItemForCategory()], category);
-        this.quizService.sessionsByCategory.set(key, session);
+        this.quizService.sessionsByCategory.set(category.name, session);
         return session;
     }
 }

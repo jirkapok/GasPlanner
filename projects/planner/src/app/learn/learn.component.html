@@ -7,7 +7,7 @@
             <h2 class="accordion-header">
               <button
                 class="accordion-button"
-                [class.collapsed]="selectedTopic.topic !== topic.topic"
+                [class.collapsed]="selectedTopic !== topic"
                 (click)="toggleTopic(topic)"
               >
                 {{ topic.topic }}
@@ -20,7 +20,7 @@
                 </ng-container>
               </button>
             </h2>
-            <div class="accordion-collapse collapse" [class.show]="selectedTopic.topic === topic.topic">
+            <div class="accordion-collapse collapse" [class.show]="selectedTopic === topic">
               <div class="accordion-body py-2 px-3">
                 <ul class="list-group list-group-flush">
                   <li *ngFor="let category of topic.categories" class="list-group-item px-0">
@@ -71,8 +71,20 @@
                   {{ scoreSummary }} — {{ correctPercentage }}%
                 </span>
                 <button
+                    type="button"
+                  [disabled]="!shouldShowResetButton()"
+                  class="btn btn-sm"
+                  [ngClass]="{
+                    'btn-danger': shouldShowResetButton(),
+                    'btn-secondary': !shouldShowResetButton()
+                  }"
+                  (click)="resetSession()"
+                  aria-label="Reset Category">
+                  <fa-icon [icon]="resetIcon" class="fa-lg"></fa-icon>
+                </button>
+                <button
                   type="button"
-                  class="btn btn-sm btn-outline-secondary"
+                  class="btn btn-sm btn-secondary fa-lg"
                   (click)="openHelp()"
                   title="Show Help"
                   aria-label="Open help panel" >
@@ -117,7 +129,7 @@
                     id="submit-answer"
                     *ngIf="shouldShowSubmitButton()"
                     type="button"
-                    class="btn btn-primary"
+                    class="btn btn-outline-primary"
                     (click)="validateCurrentAnswer()">
                     Submit Answer
                   </button>
@@ -138,22 +150,14 @@
                     (click)="openHelpModal()">
                     Need Hint?
                   </button>
-
+                </div>
+                <div class="d-flex flex-wrap gap-2 mt-3">
                   <button
                     *ngIf="shouldShowFinishButton()"
                     type="submit"
-                    class="btn btn-success">
+                    class="btn btn-primary">
                     Finish Quiz
                   </button>
-                </div>
-                <div class="d-flex flex-wrap gap-2 mt-3">
-                    <button
-                    *ngIf="shouldShowResetButton()"
-                    type="button"
-                    (click)="resetSession()"
-                    class="btn btn-danger">
-                    Reset Category
-                    </button>
                 </div>
             </div>
           </div>

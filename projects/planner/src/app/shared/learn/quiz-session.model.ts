@@ -129,5 +129,17 @@ export class QuizSession {
             trophyGained: this.trophyGained
         };
     }
+
+    public reset(): void {
+        this.quizzes = [];
+        this.correctCount = 0;
+        this.totalAnswered = 0;
+        this.currentQuestionIndex = 0;
+        this.finished = false;
+        this.hintUsed = false;
+        this.totalScore = 0;
+        this.trophyGained = false;
+        this.goToNextQuestion();
+    }
 }
 

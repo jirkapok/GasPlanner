@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMedal, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faMedal, faCircleInfo, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
 import { QuizService } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
@@ -27,15 +27,12 @@ export class LearnComponent implements OnInit {
 
     public readonly trophyIcon = faMedal;
     public readonly helpIcon = faCircleInfo;
+    public readonly resetIcon = faUndo;
     public readonly topics: Topic[] = [];
 
     public session: QuizSession;
-    public activeTopic = '';
-    public selectedTopic = '';
+    public selectedTopic: Topic;
     public selectedCategory: Category;
-    public selectedCategoryName = '';
-
-    private _label = '';
 
     constructor(
         public quizService: QuizService,
@@ -43,10 +40,9 @@ export class LearnComponent implements OnInit {
         private preferencesStore: PreferencesStore
     ) {
         this.topics = quizService.topics;
-        this.selectedTopic = this.topics[0].topic;
-        this.selectedCategoryName = this.topics[0].categories[0].name;
-        this.selectedCategory = this.findCategory(this.selectedTopic, this.selectedCategoryName);
-        this.session = this.getOrCreateSession(this.selectedCategoryName);
+        this.selectedTopic = this.topics[0];
+        this.selectedCategory = this.topics[0].categories[0];
+        this.session = this.getOrCreateSession(this.selectedCategory);
     }
 
     public get currentQuiz(): QuizItem {
@@ -57,18 +53,8 @@ export class LearnComponent implements OnInit {
         return this.session.correctPercentage;
     }
 
-    public get label(): string {
-        return this._label;
-    }
-
     public get scoreSummary(): string {
         return this.session.scoreSummary;
-    }
-
-    @Input()
-    public set label(value: string) {
-        this._label = value || '';
-        this.selectedTopic = this._label;
     }
 
     public ngOnInit(): void {
@@ -76,16 +62,15 @@ export class LearnComponent implements OnInit {
             const firstTopic = this.topics[0];
             const firstCategory = firstTopic?.categories[0];
             if (firstTopic && firstCategory) {
-                this.updateTopic(firstTopic.topic, firstCategory.name);
+                this.updateTopic(firstTopic, firstCategory);
             }
         });
     }
 
-    public updateTopic(topicName: string, categoryName: string): void {
-        this.selectedTopic = topicName;
-        this.selectedCategoryName = categoryName;
-        this.activeTopic = topicName;
-        this.session = this.getOrCreateSession(categoryName);
+    public updateTopic(topic: Topic, category: Category): void {
+        this.selectedTopic = topic;
+        this.selectedCategory = category;
+        this.session = this.getOrCreateSession(category);
     }
 
     public openHelp(): void {
@@ -112,8 +97,8 @@ export class LearnComponent implements OnInit {
         });
     }
 
-    public toggleTopic(topicName: string): void {
-        this.activeTopic = this.activeTopic === topicName ? '' : topicName;
+    public toggleTopic(topic: Topic): void {
+        this.updateTopic(topic, topic.categories[0]);
     }
 
     public validateCurrentAnswer(): void {
@@ -135,7 +120,7 @@ export class LearnComponent implements OnInit {
 
     public launchConfetti(): void {
         confetti({
-            particleCount: 150,
+            particleCount: 240,
             spread: 90,
             origin: { y: 0.6 },
             colors: ['#00c6ff', '#0072ff', '#ffffff'],
@@ -148,8 +133,8 @@ export class LearnComponent implements OnInit {
         const y = (rect.top + rect.height / 2) / window.innerHeight;
 
         confetti({
-            particleCount: 120,
-            spread: 80,
+            particleCount: 240,
+            spread: 90,
             origin: { x, y }
         });
     }
@@ -164,7 +149,7 @@ export class LearnComponent implements OnInit {
         this.session.goToNextQuestion();
     }
 
-    public getTrophyColor(topic: Topic, category: Category): string {
+    public getTrophyColor(category: Category): string {
         const key = category.name;
         const session = this.quizService.sessionsByCategory.get(key);
         return session?.trophyGained ? 'text-warning' : 'text-muted';
@@ -188,8 +173,8 @@ export class LearnComponent implements OnInit {
         }
     }
 
-    public isCategorySelected(topicName: string, categoryName: string): boolean {
-        return this.selectedTopic === topicName && this.selectedCategoryName === categoryName;
+    public isCategorySelected(topic: Topic, category: Category): boolean {
+        return this.selectedTopic === topic && this.selectedCategory === category;
     }
 
     public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; color: string } {
@@ -216,6 +201,10 @@ export class LearnComponent implements OnInit {
         return !this.session.finished && this.session.quizzes.length > 0;
     }
 
+    public shouldShowResetButton(): boolean {
+        return this.session.totalAnswered > 0;
+    }
+
     public getQuizStats(categoryName: string): { attempts: number; correct: number } {
         const session = this.quizService.sessionsByCategory.get(categoryName);
         if (!session) {
@@ -227,26 +216,19 @@ export class LearnComponent implements OnInit {
         };
     }
 
-    private findCategory(topicName: string, categoryName: string): Category {
-        const topic = this.topics.find(t => t.topic === topicName);
-
-        if (!topic) {
-            return Topic.getEmptyCategory();
-        }
-
-        return topic.getCategoryByNameOrEmpty(categoryName);
+    public resetSession(): void {
+        this.session.reset();
+        this.preferencesStore.save();
     }
 
-    private getOrCreateSession(categoryName: string): QuizSession {
-        const key = categoryName;
-        const existing = this.quizService.sessionsByCategory.get(key);
+    private getOrCreateSession(category: Category): QuizSession {
+        const existing = this.quizService.sessionsByCategory.get(category.name);
         if (existing) {
             return existing;
         }
-        const category = this.findCategory(this.selectedTopic, categoryName);
 
         const session = new QuizSession([category.getQuizItemForCategory()], category);
-        this.quizService.sessionsByCategory.set(key, session);
+        this.quizService.sessionsByCategory.set(category.name, session);
         return session;
     }
 }

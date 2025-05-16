@@ -13,6 +13,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RoundType, Topic, QuestionTemplate } from '../shared/learn/learn.models';
 import { MdbModalModule } from 'mdb-angular-ui-kit/modal';
 
+// TODO Add missing test cases for: getQuizStats, resetSession, shouldShowForm, shouldShowFinishButton,
+//  submitAnswers, continuePracticing, validateCurrentAnswer
+// TODO replace by Spy object
 const mockPreferencesStore = {
     load: () => {},
     save: () => {},

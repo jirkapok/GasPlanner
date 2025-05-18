@@ -64,7 +64,7 @@ export class QuizItem {
         const userAns = (this.userAnswer || '').trim();
         const userNum = parseFloat(userAns);
 
-        if (isNaN(userNum)) {
+        if (Number.isNaN(userNum)) {
             return false;
         }
 

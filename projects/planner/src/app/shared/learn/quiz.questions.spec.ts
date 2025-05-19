@@ -20,9 +20,9 @@ describe('Quiz questions basic setup', () => {
             topic.categories.forEach((category: Category) => {
                 category.questions.forEach((q: QuestionTemplate) => {
                     const placeholders = new Set<string>();
-                    let m: RegExpExecArray | null;
-                    while ((m = placeholderRe.exec(q.question)) !== null) {
-                        placeholders.add(m[1]);
+                    let matchResult: RegExpExecArray | null;
+                    while ((matchResult = placeholderRe.exec(q.question)) !== null) {
+                        placeholders.add(matchResult[1]);
                     }
 
                     const varNames = new Set(q.variables.map(v => v.name));

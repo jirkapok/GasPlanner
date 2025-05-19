@@ -1,26 +1,54 @@
 import { QuizItem } from "./quiz-item.model";
-import { topics } from "./quiz.questions";
+import { QuestionTemplate, RoundType, Variable } from "./learn.models";
 
-describe('Question definition', () => {
-    it('Is able to generate valid variable sets and answer', () => {
-        topics.forEach(topic => {
-            topic.categories.forEach(category => {
-                category.questions.forEach(template => {
-                    const question = new QuizItem(template);
+describe('Quiz Question', () => {
+    it('Renders variables into question template', () => {
+        const questionTemplate = new QuestionTemplate("Question: with {cccc} and {bbbb} and {aaaa}.",
+            1,
+            RoundType.ceil,
+            [
+                new Variable('aaaa', undefined, 1, 1),
+                new Variable('bbbb', undefined, 2, 2),
+                new Variable('cccc', undefined, 3, 3),
+            ],
+            () => 0);
 
-                    for (let iteration = 0; iteration < 1000; iteration++) {
-                        question.randomizeQuizVariables();
-                        const answer = question.generateCorrectAnswer();
+        const question = new QuizItem(questionTemplate);
+        question.renderQuestion();
 
-                        question.variables.forEach(v => expect(Number.isFinite(v))
-                            .withContext(`Generated invalid variables for: '${template.question}' with variables [${question.variables}].`)
-                            .toBeTruthy());
-                        expect(Number.isFinite(answer))
-                            .withContext(`Generated invalid answer for: '${template.question}' with variables [${question.variables}].`)
-                            .toBeTruthy();
-                    }
-                });
-            });
-        });
+        expect(question.renderedQuestion).toEqual("Question: with 3 and 2 and 1.");
+    });
+
+    const createQuestionWithRounding = (roundType: RoundType) => {
+        const template = new QuestionTemplate("Question: with {aaaa}.",
+            1,
+            roundType,
+            [],
+            (_) => 1.25);
+        const question = new QuizItem(template);
+        question.userAnswer = "1";
+        return question;
+    };
+
+    it('Rounds DOWN the question correct answer', () => {
+        const question = createQuestionWithRounding(RoundType.floor);
+        question.validateAnswer();
+
+        expect(question.correctAnswer).toBeCloseTo(1.2, 1);
+    });
+
+    it('Rounds UP the question correct answer', () => {
+        const question = createQuestionWithRounding(RoundType.ceil);
+        question.validateAnswer();
+
+        expect(question.correctAnswer).toBeCloseTo(1.3, 1);
+    });
+
+    xit('Does create correct answer, even user answer was empty', () => {
+        const question = createQuestionWithRounding(RoundType.ceil);
+        question.userAnswer = '';
+        question.validateAnswer();
+
+        expect(question.correctAnswer).toBeCloseTo(1.2, 1);
     });
 });

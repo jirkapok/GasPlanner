@@ -3,19 +3,19 @@ import { QuizSessionDto } from '../serialization.model';
 import { QuizItem } from './quiz-item.model';
 
 export class QuizSession {
-    public static readonly minimalAcceptableSuccessRate = 80;
-    public static readonly requiredAnsweredCount = 5;
-    public static readonly pointsCorrect = 2;
-    public static readonly pointsHinted = 1;
+    private static readonly minimalAcceptableSuccessRate = 80;
+    private static readonly requiredAnsweredCount = 5;
+    private static readonly pointsCorrect = 2;
+    private static readonly pointsHinted = 1;
 
     public quizzes: QuizItem[] = [];
     public correctCount = 0;
     public totalAnswered = 0;
     public currentQuestionIndex = 0;
     public finished = false;
-    public hintUsed = false;
     public totalScore = 0;
     public trophyGained = false;
+    private hintUsed = false;
 
     constructor(
         quizzes: QuizItem[],
@@ -96,7 +96,7 @@ export class QuizSession {
         }
     }
 
-    public addNewQuestion(): void {
+    private addNewQuestion(): void {
         const newQuiz = this.sourceCategory.getQuizItemForCategory();
         this.quizzes.push(newQuiz);
     }

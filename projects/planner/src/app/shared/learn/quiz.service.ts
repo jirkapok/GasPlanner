@@ -47,7 +47,7 @@ export class QuizService {
         return entries;
     }
 
-    public restoreSessions(entries: QuizSessionDto[] | undefined): void {
+    private restoreSessions(entries: QuizSessionDto[] | undefined): void {
         if (!Array.isArray(entries)) {
             return;
         }

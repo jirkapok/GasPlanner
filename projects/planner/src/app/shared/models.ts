@@ -204,7 +204,7 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public set workingPressure(newValue: number) {
-        if (isNaN(newValue)) {
+        if (Number.isNaN(newValue)) {
             return;
         }
 
@@ -218,7 +218,7 @@ export class TankBound implements IGasContent, ITankSize {
      * Use only for serialization or switching between units.
      **/
     public set workingPressureBars(newValue: number) {
-        if (isNaN(newValue)) {
+        if (Number.isNaN(newValue)) {
             return;
         }
 

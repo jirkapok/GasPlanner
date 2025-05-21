@@ -6,7 +6,7 @@ describe('Quiz questions definition', () => {
     it('All topics have at least one category with one question', () => {
         const wrongCategories = topics
             .flatMap((t: Topic) => t.categories.map(c => ({
-                    topic: t.topic,
+                    topic: t.name,
                     category: c.name,
                     questions: c.questions.length
                 })))

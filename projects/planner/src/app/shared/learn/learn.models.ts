@@ -86,7 +86,7 @@ export class Category {
 
 export class Topic {
     constructor(
-        public topic: string,
+        public name: string,
         public categories: Category[]
     ) {}
 

@@ -238,7 +238,7 @@ export class LearnComponent {
             state = this.createState();
         }
 
-        const foundTopic = this.topics.find(t => t.topic === state.topic);
+        const foundTopic = this.topics.find(t => t.name === state.topic);
         const loadedTopic = foundTopic || this.topics[0];
         const foundCategory = loadedTopic.categories.find(c => c.name === state.category);
         const loadedCategory = foundCategory || loadedTopic.categories[0];
@@ -253,7 +253,7 @@ export class LearnComponent {
     private createState(): LearnViewState {
         return {
             id:  KnownViews.learn,
-            topic: this.selectedTopic.topic,
+            topic: this.selectedTopic.name,
             category: this.selectedCategory.name
         }
     }

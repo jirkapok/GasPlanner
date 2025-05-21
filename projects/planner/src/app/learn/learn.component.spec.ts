@@ -81,7 +81,7 @@ describe('LearnComponent', () => {
 
         quizService.topics = [
             {
-                topic: 'Pressure at depth',
+                name: 'Pressure at depth',
                 categories: [
                     {
                         name: 'Basic Pressure',
@@ -93,7 +93,7 @@ describe('LearnComponent', () => {
                 }
             },
             {
-                topic: 'Consumption',
+                name: 'Consumption',
                 categories: [
                     {
                         name: 'Used gas',
@@ -118,7 +118,7 @@ describe('LearnComponent', () => {
     });
 
     it('creates learn with default topic', () => {
-        expect(component.selectedTopic.topic).toBe('Pressure at depth');
+        expect(component.selectedTopic.name).toBe('Pressure at depth');
         expect(component.selectedCategory.name).toBe('Basic Pressure');
     });
 

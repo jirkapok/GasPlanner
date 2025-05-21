@@ -16,7 +16,7 @@ export const topics: Topic[] = [
                 1,
                 RoundType.round,
                 [
-                    new NumberVariable('pressure', 1, 11)
+                    new NumberVariable('pressure', 1, 11, 1)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.depthConverter.fromBar(vars[0])
             )
@@ -27,7 +27,7 @@ export const topics: Topic[] = [
                 1,
                 RoundType.round,
                 [
-                    new NumberVariable('depth', 0, 100)
+                    new NumberVariable('depth', 0, 100, 0)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.depthConverter.toBar(vars[0])
             )
@@ -41,7 +41,7 @@ export const topics: Topic[] = [
                 0,
                 RoundType.floor,
                 [
-                    new NumberVariable('pp', 1, 2),
+                    new NumberVariable('pp', 1, 1.6, 1),
                     new OptionsVariable('o2_percent', [21, 32, 36, 38, 50, 100])
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.mod(vars[0], vars[1])
@@ -53,8 +53,8 @@ export const topics: Topic[] = [
                 0,
                 RoundType.floor,
                 [
-                    new NumberVariable('pp', 1, 2),
-                    new NumberVariable('depth', 1, 50)
+                    new NumberVariable('pp', 1, 1.6, 1),
+                    new NumberVariable('depth', 6, 36)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.bestMix(vars[0], vars[1])
             )
@@ -62,11 +62,11 @@ export const topics: Topic[] = [
         new Category('Oxygen partial pressure', 'examples_ppO2', [
             new QuestionTemplate(
                 'What is partial pressure of {o2_percent} % at {depth} m?',
-                1,
+                2,
                 RoundType.round,
                 [
-                    new OptionsVariable('o2_percent', [21, 32, 36, 38, 50, 100]),
-                    new NumberVariable('depth', 1, 50)
+                    new NumberVariable('o2_percent', 21, 36,),
+                    new NumberVariable('depth', 1, 34)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.partialPressure(vars[0], vars[1])
             )
@@ -77,8 +77,8 @@ export const topics: Topic[] = [
                 0,
                 RoundType.ceil,
                 [
-                    new OptionsVariable('o2_percent', [21, 32, 36, 38, 50, 100]),
-                    new NumberVariable('depth', 1, 50)
+                    new NumberVariable('o2_percent', 21, 36),
+                    new NumberVariable('depth', 10, 34)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.ead(vars[0], vars[1])
             )
@@ -108,7 +108,7 @@ export const topics: Topic[] = [
                 [
                     new NumberVariable('depth', 10, 30),
                     new OptionsVariable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
-                    new NumberVariable('consumed', 50, 200),
+                    new NumberVariable('consumed', 50, 150),
                     new NumberVariable('duration', 30, 60)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateRmv(vars[0], vars[1], vars[2], vars[3])
@@ -138,7 +138,7 @@ export const topics: Topic[] = [
                 [
                     new NumberVariable('depth', 10, 30),
                     new OptionsVariable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
-                    new NumberVariable('consumed', 30, 60),
+                    new NumberVariable('consumed', 30, 150),
                     new NumberVariable('rmv', 15, 25)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateDuration(vars[0], vars[1], vars[2], vars[3])
@@ -207,7 +207,8 @@ export const topics: Topic[] = [
         ])
     ])
 
-    // TODO add rounding to variables to generate more meaningful questions.
+    // TODO nitrox calculator ppO2 field has issue with decimal separator.
+    // TODO fix gas properties calculator: Error, when oxygen is selected and at low depth.
     // TODO fix help links for options and dive info.
     // Consider add learn topics:
     // * Partial pressures - oxygen, nitrogen, helium, total

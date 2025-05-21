@@ -1,5 +1,8 @@
 import { QuizItem } from './quiz-item.model';
-import { DepthConverter, NitroxCalculator, SacCalculator, GasProperties } from 'scuba-physics';
+import {
+    DepthConverter, NitroxCalculator, SacCalculator,
+    GasProperties, Precision
+} from 'scuba-physics';
 
 export type VariableOption = number;
 
@@ -11,24 +14,30 @@ export enum RoundType {
 
 export interface Variable {
     name: string;
-    randomizeVariable(): number;
+    nextRandomValue(): number;
 }
 
 export class NumberVariable implements Variable {
     constructor(
         public name: string,
         public min: number,
-        public max: number
+        public max: number,
+        private decimals: number = 0
     ) {}
 
-    public randomizeVariable(): number {
-        const decimals = Math.max(
-            (this.min.toString().split('.')[1]?.length || 0),
-            (this.max.toString().split('.')[1]?.length || 0)
-        );
-
+    public nextRandomValue(): number {
         const randomValue = Math.random() * (this.max - this.min) + this.min;
-        return parseFloat(randomValue.toFixed(decimals));
+        const rounded =  Precision.round(randomValue, this.decimals);
+
+        if (rounded > this.max) {
+            return this.max;
+        }
+
+        if (rounded < this.min) {
+            return this.min;
+        }
+
+        return rounded;
     }
 }
 
@@ -38,7 +47,7 @@ export class OptionsVariable implements Variable {
         private options: VariableOption[]
     ) {}
 
-    public randomizeVariable(): number {
+    public nextRandomValue(): number {
         const randomIndex = Math.floor(Math.random() * this.options.length);
         return this.options[randomIndex];
     }
@@ -93,6 +102,7 @@ export class Topic {
                 return category;
             }
         }
+        // TODO remove Topic.getEmptyCategory
         return Topic.getEmptyCategory();
     }
 }

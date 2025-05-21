@@ -39,7 +39,7 @@ export class QuizItem {
         let indexSafe = 0;
 
         do {
-            this.variables = this.template.variables.map(variable => variable.randomizeVariable());
+            this.variables = this.template.variables.map(variable => variable.nextRandomValue());
             indexSafe++;
             // TODO If this happens, it means that the question definition variables are incorrect.
         } while (Number.isNaN(this.generateCorrectAnswer()) && indexSafe < 100);

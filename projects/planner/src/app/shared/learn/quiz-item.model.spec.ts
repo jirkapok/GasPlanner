@@ -7,9 +7,9 @@ describe('Quiz Question', () => {
             1,
             RoundType.ceil,
             [
-                new NumberVariable('aaaa', undefined, 1, 1),
-                new NumberVariable('bbbb', undefined, 2, 2),
-                new NumberVariable('cccc', undefined, 3, 3),
+                new NumberVariable('aaaa', 1, 1),
+                new NumberVariable('bbbb', 2, 2),
+                new NumberVariable('cccc', 3, 3),
             ],
             () => 0);
 

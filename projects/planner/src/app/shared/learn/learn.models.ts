@@ -17,27 +17,30 @@ export interface Variable {
 export class NumberVariable implements Variable {
     constructor(
         public name: string,
-        public options?: VariableOption[],
-        public min?: number,
-        public max?: number
+        public min: number,
+        public max: number
     ) {}
 
     public randomizeVariable(): number {
-        if (typeof this.min === 'number' && typeof this.max === 'number') {
-            const min = this.min;
-            const max = this.max;
-            const decimals = Math.max(
-                (min.toString().split('.')[1]?.length || 0),
-                (max.toString().split('.')[1]?.length || 0)
-            );
+        const decimals = Math.max(
+            (this.min.toString().split('.')[1]?.length || 0),
+            (this.max.toString().split('.')[1]?.length || 0)
+        );
 
-            const randomValue = Math.random() * (max - min) + min;
-            return parseFloat(randomValue.toFixed(decimals));
-        } else if (Array.isArray(this.options)) {
-            const randomIndex = Math.floor(Math.random() * this.options.length);
-            return this.options[randomIndex];
-        }
-        return 1;
+        const randomValue = Math.random() * (this.max - this.min) + this.min;
+        return parseFloat(randomValue.toFixed(decimals));
+    }
+}
+
+export class OptionsVariable implements Variable {
+    constructor(
+        public name: string,
+        private options: VariableOption[]
+    ) {}
+
+    public randomizeVariable(): number {
+        const randomIndex = Math.floor(Math.random() * this.options.length);
+        return this.options[randomIndex];
     }
 }
 

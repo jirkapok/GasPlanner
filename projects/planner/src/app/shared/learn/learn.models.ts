@@ -9,7 +9,12 @@ export enum RoundType {
     ceil = 'ceil'
 }
 
-export class Variable {
+export interface Variable {
+    name: string;
+    randomizeVariable(): number;
+}
+
+export class NumberVariable implements Variable {
     constructor(
         public name: string,
         public options?: VariableOption[],

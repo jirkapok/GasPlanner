@@ -1,4 +1,4 @@
-import { Category, QuestionTemplate, RoundType, Topic, Variable, QuizItemTools } from './learn.models';
+import { Category, QuestionTemplate, RoundType, Topic, NumberVariable, QuizItemTools } from './learn.models';
 
 export const topics: Topic[] = [
     new Topic('Pressure at depth', [
@@ -8,7 +8,7 @@ export const topics: Topic[] = [
                 1,
                 RoundType.round,
                 [
-                    new Variable('pressure', undefined, 1, 11)
+                    new NumberVariable('pressure', undefined, 1, 11)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.depthConverter.fromBar(vars[0])
             )
@@ -19,7 +19,7 @@ export const topics: Topic[] = [
                 1,
                 RoundType.round,
                 [
-                    new Variable('depth', undefined, 0, 100)
+                    new NumberVariable('depth', undefined, 0, 100)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.depthConverter.toBar(vars[0])
             )
@@ -33,8 +33,8 @@ export const topics: Topic[] = [
                 0,
                 RoundType.floor,
                 [
-                    new Variable('pp', undefined, 1, 2),
-                    new Variable('o2_percent', [21, 32, 36, 38, 50, 100])
+                    new NumberVariable('pp', undefined, 1, 2),
+                    new NumberVariable('o2_percent', [21, 32, 36, 38, 50, 100])
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.mod(vars[0], vars[1])
             )
@@ -45,8 +45,8 @@ export const topics: Topic[] = [
                 0,
                 RoundType.floor,
                 [
-                    new Variable('pp', undefined, 1, 2),
-                    new Variable('depth', undefined, 1, 50)
+                    new NumberVariable('pp', undefined, 1, 2),
+                    new NumberVariable('depth', undefined, 1, 50)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.bestMix(vars[0], vars[1])
             )
@@ -57,8 +57,8 @@ export const topics: Topic[] = [
                 1,
                 RoundType.round,
                 [
-                    new Variable('o2_percent', [21, 32, 36, 38, 50, 100]),
-                    new Variable('depth', undefined, 1, 50)
+                    new NumberVariable('o2_percent', [21, 32, 36, 38, 50, 100]),
+                    new NumberVariable('depth', undefined, 1, 50)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.partialPressure(vars[0], vars[1])
             )
@@ -69,8 +69,8 @@ export const topics: Topic[] = [
                 0,
                 RoundType.ceil,
                 [
-                    new Variable('o2_percent', [21, 32, 36, 38, 50, 100]),
-                    new Variable('depth', undefined, 1, 50)
+                    new NumberVariable('o2_percent', [21, 32, 36, 38, 50, 100]),
+                    new NumberVariable('depth', undefined, 1, 50)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.ead(vars[0], vars[1])
             )
@@ -85,8 +85,8 @@ export const topics: Topic[] = [
                 1,
                 RoundType.ceil,
                 [
-                    new Variable('rmv', undefined, 10, 30),
-                    new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24])
+                    new NumberVariable('rmv', undefined, 10, 30),
+                    new NumberVariable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24])
                 ],
                 (vars: number[]) => vars[0]/ vars[1]
             )
@@ -98,10 +98,10 @@ export const topics: Topic[] = [
                 1,
                 RoundType.ceil,
                 [
-                    new Variable('depth', undefined, 10, 30),
-                    new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
-                    new Variable('consumed', undefined, 50, 200),
-                    new Variable('duration', undefined, 30, 60)
+                    new NumberVariable('depth', undefined, 10, 30),
+                    new NumberVariable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
+                    new NumberVariable('consumed', undefined, 50, 200),
+                    new NumberVariable('duration', undefined, 30, 60)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateRmv(vars[0], vars[1], vars[2], vars[3])
             )
@@ -113,10 +113,10 @@ export const topics: Topic[] = [
                 0,
                 RoundType.ceil,
                 [
-                    new Variable('depth', undefined, 10, 30),
-                    new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
-                    new Variable('duration', undefined, 30, 60),
-                    new Variable('rmv', undefined, 15, 25)
+                    new NumberVariable('depth', undefined, 10, 30),
+                    new NumberVariable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
+                    new NumberVariable('duration', undefined, 30, 60),
+                    new NumberVariable('rmv', undefined, 15, 25)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateUsed(vars[0], vars[1], vars[2], vars[3])
             )
@@ -128,10 +128,10 @@ export const topics: Topic[] = [
                 0,
                 RoundType.floor,
                 [
-                    new Variable('depth', undefined, 10, 30),
-                    new Variable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
-                    new Variable('consumed', undefined, 30, 60),
-                    new Variable('rmv', undefined, 15, 25)
+                    new NumberVariable('depth', undefined, 10, 30),
+                    new NumberVariable('tank_size', [7, 8, 10, 11, 12, 15, 18, 24]),
+                    new NumberVariable('consumed', undefined, 30, 60),
+                    new NumberVariable('rmv', undefined, 15, 25)
                 ],
                 (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateDuration(vars[0], vars[1], vars[2], vars[3])
             )
@@ -146,8 +146,8 @@ export const topics: Topic[] = [
                 0,
                 RoundType.ceil,
                 [
-                    new Variable('oxygen', undefined, 10, 21),
-                    new Variable('helium', undefined, 20, 70)
+                    new NumberVariable('oxygen', undefined, 10, 21),
+                    new NumberVariable('helium', undefined, 20, 70)
                 ],
                 (vars: number[], tools: QuizItemTools) => {
                     tools.gasProperties.maxPpO2 = 0.18;
@@ -165,9 +165,9 @@ export const topics: Topic[] = [
                 0,
                 RoundType.ceil,
                 [
-                    new Variable('oxygen', undefined, 10, 21),
-                    new Variable('helium', undefined, 10, 30),
-                    new Variable('depth', undefined, 10, 80)
+                    new NumberVariable('oxygen', undefined, 10, 21),
+                    new NumberVariable('helium', undefined, 10, 30),
+                    new NumberVariable('depth', undefined, 10, 80)
                 ],
                 (vars: number[], tools: QuizItemTools) => {
                     tools.gasProperties.tank.o2 = vars[0];
@@ -185,9 +185,9 @@ export const topics: Topic[] = [
                 0,
                 RoundType.floor,
                 [
-                    new Variable('oxygen', undefined, 10, 21),
-                    new Variable('helium', undefined, 20, 70),
-                    new Variable('narc_depth', [30, 40]),
+                    new NumberVariable('oxygen', undefined, 10, 21),
+                    new NumberVariable('helium', undefined, 20, 70),
+                    new NumberVariable('narc_depth', [30, 40]),
                 ],
                 (vars: number[], tools: QuizItemTools) => {
                     tools.gasProperties.tank.o2 = vars[0];

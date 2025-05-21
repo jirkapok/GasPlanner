@@ -1,5 +1,5 @@
 import { QuizItem } from "./quiz-item.model";
-import { QuestionTemplate, RoundType, Variable } from "./learn.models";
+import { QuestionTemplate, RoundType, NumberVariable } from "./learn.models";
 
 describe('Quiz Question', () => {
     it('Renders variables into question template', () => {
@@ -7,9 +7,9 @@ describe('Quiz Question', () => {
             1,
             RoundType.ceil,
             [
-                new Variable('aaaa', undefined, 1, 1),
-                new Variable('bbbb', undefined, 2, 2),
-                new Variable('cccc', undefined, 3, 3),
+                new NumberVariable('aaaa', undefined, 1, 1),
+                new NumberVariable('bbbb', undefined, 2, 2),
+                new NumberVariable('cccc', undefined, 3, 3),
             ],
             () => 0);
 

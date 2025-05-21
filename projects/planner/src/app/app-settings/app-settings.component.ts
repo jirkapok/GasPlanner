@@ -4,7 +4,7 @@ import {
 } from '@angular/forms';
 import { Location } from '@angular/common';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
-import { faBatteryHalf, faUserCog } from '@fortawesome/free-solid-svg-icons';
+import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
 import { RangeConstants, UnitConversion } from '../shared/UnitConversion';
 import { SubViewStorage } from '../shared/subViewStorage';
@@ -13,6 +13,8 @@ import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { ViewState } from "../shared/views.model";
+import { KnownViews } from "../shared/viewStates";
 
 @Component({
     selector: 'app-app-settings',
@@ -21,8 +23,8 @@ import { ReloadDispatcher } from '../shared/reloadDispatcher';
     standalone: false
 })
 export class AppSettingsComponent implements OnInit {
-    public flagIcon = faFlag;
-    public diverIcon = faUserCog;
+    public readonly flagIcon = faFlag;
+    public readonly diverIcon = faUserCog;
 
     public settingsForm!: FormGroup<{
         imperialUnits: FormControl<boolean>;
@@ -41,11 +43,14 @@ export class AppSettingsComponent implements OnInit {
         private views: SubViewStorage,
         public appSettings: ApplicationSettingsService,
         private dispatcher: ReloadDispatcher,
+        private viewStates: SubViewStorage,
         private formBuilder: NonNullableFormBuilder,
         private cd: ChangeDetectorRef,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         public location: Location) {
+        this.loadState();
+        this.saveState();
     }
 
     public get ranges(): RangeConstants {
@@ -152,5 +157,14 @@ export class AppSettingsComponent implements OnInit {
         });
     }
 
-    protected readonly icon = faBatteryHalf;
+    private loadState(): void {
+        // nothing to do
+    }
+
+    private saveState(): void {
+        this.viewStates.saveView<ViewState>({
+           // Not implemented saving of form values, only to be able navigate to the view
+           id:  KnownViews.settings,
+        });
+    }
 }

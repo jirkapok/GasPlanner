@@ -12,6 +12,14 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RoundType, Topic, QuestionTemplate } from '../shared/learn/learn.models';
 import { MdbModalModule } from 'mdb-angular-ui-kit/modal';
+import { SubViewStorage } from "../shared/subViewStorage";
+import { ViewStates } from "../shared/viewStates";
+import { Preferences } from "../shared/preferences";
+import { ViewSwitchService } from "../shared/viewSwitchService";
+import { DiveSchedules } from "../shared/dive.schedules";
+import { UnitConversion } from "../shared/UnitConversion";
+import { ReloadDispatcher } from "../shared/reloadDispatcher";
+import { ApplicationSettingsService } from "../shared/ApplicationSettings";
 
 // TODO Add missing test cases for: getQuizStats, resetSession, shouldShowForm, shouldShowFinishButton,
 //  submitAnswers, continuePracticing, validateCurrentAnswer
@@ -61,6 +69,11 @@ describe('LearnComponent', () => {
                 Urls,
                 QuizService,
                 { provide: PreferencesStore, useValue: mockPreferencesStore },
+                SubViewStorage, ViewStates,
+                PreferencesStore, Preferences,
+                ViewSwitchService, DiveSchedules,
+                UnitConversion, ReloadDispatcher,
+                ApplicationSettingsService
             ]
         }).compileComponents();
 

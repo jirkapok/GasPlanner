@@ -5,6 +5,15 @@ import { Urls } from "../shared/navigation.service";
 import { NgxMdModule } from "ngx-md";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { SubViewStorage } from "../shared/subViewStorage";
+import { ViewStates } from "../shared/viewStates";
+import { PreferencesStore } from "../shared/preferencesStore";
+import { Preferences } from "../shared/preferences";
+import { ViewSwitchService } from "../shared/viewSwitchService";
+import { DiveSchedules } from "../shared/dive.schedules";
+import { UnitConversion } from "../shared/UnitConversion";
+import { ReloadDispatcher } from "../shared/reloadDispatcher";
+import { ApplicationSettingsService } from "../shared/ApplicationSettings";
 
 describe('Help component', () => {
     let component: HelpComponent;
@@ -17,7 +26,11 @@ describe('Help component', () => {
             providers: [
                 provideHttpClient(),
                 provideHttpClientTesting(),
-                Urls
+                Urls, SubViewStorage, ViewStates,
+                PreferencesStore, Preferences,
+                ViewSwitchService, DiveSchedules,
+                UnitConversion, ReloadDispatcher,
+                ApplicationSettingsService
             ]
         }).compileComponents();
     });

@@ -88,6 +88,17 @@ export interface DiffViewState extends ViewState {
     profileB: number;
 }
 
+
+export interface LearnViewState extends ViewState {
+    topic: string;
+    category: string;
+}
+
+export interface HelpViewState extends ViewState {
+    document: string;
+    anchor: string | undefined;
+}
+
 /** all data are stored in metric */
 export interface ViewState {
     /** case sensitive id as view key */

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
@@ -13,6 +13,9 @@ import { HelpModalComponent } from '../help-modal/help-modal.component';
 import confetti from 'canvas-confetti';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { QuizItem } from '../shared/learn/quiz-item.model';
+import { LearnViewState } from "../shared/views.model";
+import { KnownViews } from "../shared/viewStates";
+import { SubViewStorage } from "../shared/subViewStorage";
 
 @Component({
     selector: 'app-learn',
@@ -21,7 +24,7 @@ import { QuizItem } from '../shared/learn/quiz-item.model';
     templateUrl: './learn.component.html',
     styleUrls: ['./learn.component.scss']
 })
-export class LearnComponent implements OnInit {
+export class LearnComponent {
 
     @ViewChild('completionBlock', { static: false }) completionBlockRef!: ElementRef<HTMLElement>;
 
@@ -30,19 +33,20 @@ export class LearnComponent implements OnInit {
     public readonly resetIcon = faUndo;
     public readonly topics: Topic[] = [];
 
-    public session: QuizSession;
+    public session!: QuizSession;
     public selectedTopic: Topic;
     public selectedCategory: Category;
 
     constructor(
         public quizService: QuizService,
         private modalService: MdbModalService,
-        private preferencesStore: PreferencesStore
+        private preferencesStore: PreferencesStore,
+        private viewStates: SubViewStorage,
     ) {
         this.topics = quizService.topics;
         this.selectedTopic = this.topics[0];
-        this.selectedCategory = this.topics[0].categories[0];
-        this.session = this.getOrCreateSession(this.selectedCategory);
+        this.selectedCategory = this.selectedTopic.categories[0];
+        this.loadState();
     }
 
     public get currentQuiz(): QuizItem {
@@ -57,23 +61,15 @@ export class LearnComponent implements OnInit {
         return this.session.scoreSummary;
     }
 
-    public ngOnInit(): void {
-        setTimeout(() => {
-            const firstTopic = this.topics[0];
-            const firstCategory = firstTopic?.categories[0];
-            if (firstTopic && firstCategory) {
-                this.updateTopic(firstTopic, firstCategory);
-            }
-        });
-    }
-
     public updateTopic(topic: Topic, category: Category): void {
         this.selectedTopic = topic;
         this.selectedCategory = category;
         this.session = this.getOrCreateSession(category);
+        this.saveState();
     }
 
     public openHelp(): void {
+        // TODO merge this call to one function and put path constants to the urls class
         this.modalService.open(HelpModalComponent, {
             data: {
                 path: 'quiz-help'
@@ -230,5 +226,34 @@ export class LearnComponent implements OnInit {
         const session = new QuizSession([category.getQuizItemForCategory()], category);
         this.quizService.sessionsByCategory.set(category.name, session);
         return session;
+    }
+
+    private loadState(): void {
+        let state: LearnViewState = this.viewStates.loadView(
+            KnownViews.learn
+        );
+
+        if (!state) {
+            state = this.createState();
+        }
+
+        const foundTopic = this.topics.find(t => t.topic === state.topic);
+        const loadedTopic = foundTopic || this.topics[0];
+        const foundCategory = loadedTopic.categories.find(c => c.name === state.category);
+        const loadedCategory = foundCategory || loadedTopic.categories[0];
+        this.updateTopic(loadedTopic, loadedCategory);
+    }
+
+    private saveState(): void {
+        const state = this.createState();
+        this.viewStates.saveView<LearnViewState>(state);
+    }
+
+    private createState(): LearnViewState {
+        return {
+            id:  KnownViews.learn,
+            topic: this.selectedTopic.topic,
+            category: this.selectedCategory.name
+        }
     }
 }

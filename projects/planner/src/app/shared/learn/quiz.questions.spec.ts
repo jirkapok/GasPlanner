@@ -3,6 +3,8 @@ import { Topic, Category, QuestionTemplate} from './learn.models';
 import { QuizItem } from "./quiz-item.model";
 
 describe('Quiz questions definition', () => {
+    // TODO add test: Every topic has at least one category and category has at least one question.
+
     it('category names should be unique across all topics', () => {
         const allNames = topics
             .flatMap((t: Topic) => t.categories)

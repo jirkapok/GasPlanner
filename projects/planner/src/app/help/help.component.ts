@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import _ from 'lodash';
 import { NgxMdModule  } from 'ngx-md';
 import { NgForOf, NgClass, Location } from '@angular/common';
@@ -6,6 +6,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { MarkdownCustomization } from '../shared/markdown-customization.service';
+import { HelpViewState } from "../shared/views.model";
+import { KnownViews } from "../shared/viewStates";
+import { SubViewStorage } from "../shared/subViewStorage";
 
 @Component({
     selector: 'app-help',
@@ -14,7 +17,7 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
 })
-export class HelpComponent {
+export class HelpComponent implements OnInit {
     private static defaultDocument = 'application';
     public headerIcon = faCircleInfo;
     private activeSection = HelpComponent.defaultDocument;
@@ -83,7 +86,11 @@ export class HelpComponent {
         }
     ];
 
-    constructor(public urls: Urls, private location: Location, markdown: MarkdownCustomization) {
+    constructor(
+        public urls: Urls,
+        private location: Location,
+        private viewStates: SubViewStorage,
+        markdown: MarkdownCustomization) {
         markdown.configure();
     }
 
@@ -109,10 +116,17 @@ export class HelpComponent {
         this._anchor = value;
     }
 
+    public ngOnInit(): void {
+        if(this.document === HelpComponent.defaultDocument && !this.anchor) {
+            this.loadState();
+        }
+    }
+
     public updatePath(item: { path: string, anchor?: string }): void {
         this.document = item.path;
         this.anchor = item.anchor;
         this.scrollToAnchor();
+        this.saveState();
     }
 
     public toggleSection(id: string): void {
@@ -137,5 +151,33 @@ export class HelpComponent {
 
     public isActiveSection(section: { id: string }): boolean {
         return this.activeSection === section.id;
+    }
+
+    private loadState(): void {
+        let state: HelpViewState = this.viewStates.loadView(
+            KnownViews.help
+        );
+
+        if (!state) {
+            state = this.createState();
+        }
+
+        this.updatePath({
+            path: state.document,
+            anchor: state.anchor
+        });
+    }
+
+    private saveState(): void {
+        const state = this.createState();
+        this.viewStates.saveView<HelpViewState>(state);
+    }
+
+    private createState(): HelpViewState {
+        return {
+            id:  KnownViews.help,
+            document: this.document,
+            anchor: this.anchor
+        }
     }
 }

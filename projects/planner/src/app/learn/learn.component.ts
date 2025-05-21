@@ -69,7 +69,8 @@ export class LearnComponent {
     }
 
     public openHelp(): void {
-        // TODO merge this call to one function and put path constants to the urls class
+        // TODO Replace modal by some non popup component and merge this call to one function
+        //  and put path constants to the urls class
         this.modalService.open(HelpModalComponent, {
             data: {
                 path: 'quiz-help'

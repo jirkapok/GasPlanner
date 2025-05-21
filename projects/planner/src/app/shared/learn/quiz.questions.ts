@@ -199,9 +199,9 @@ export const topics: Topic[] = [
         ])
     ])
 
+    // TODO add rounding to variables to generate more meaningful questions.
     // TODO fix help links for options and dive info.
-    // TODO consider reuse questions from one topic in another (e.g. MOD or oxygen partial pressure)
-    // TODO Consider add learn topics:
+    // Consider add learn topics:
     // * Partial pressures - oxygen, nitrogen, helium, total
     // * Oxygen toxicity CNS/OTU using simplified table based text book formula
 ];

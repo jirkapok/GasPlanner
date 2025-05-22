@@ -36,7 +36,11 @@ export class QuizSession {
     }
 
     public get correctPercentage(): number {
-        return this.maxPoints === 0 ? 0 : Math.round((this.totalScore / this.maxPoints) * 100);
+        if(this.maxPoints === 0) {
+            return 0;
+        }
+
+        return Math.round((this.totalScore / this.maxPoints) * 100);
     }
 
     public get maxPoints(): number {
@@ -44,7 +48,7 @@ export class QuizSession {
     }
 
     public get anyHintsUsed(): boolean {
-        return (this.maxPoints !== this.totalScore) && ((this.totalScore / QuizSession.pointsCorrect) < this.totalAnswered);
+        return (this.maxPoints !== this.totalScore) && (this.totalAnswered > 0);
     }
 
     public static fromDto(dto: QuizSessionDto, sourceCategory: Category): QuizSession {
@@ -98,10 +102,8 @@ export class QuizSession {
     }
 
     public canFinishSession(): boolean {
-        const maxPossibleScore = this.totalAnswered * QuizSession.pointsCorrect;
-        const scorePercentage = maxPossibleScore === 0 ? 0 : (this.totalScore / maxPossibleScore) * 100;
         return this.totalAnswered >= QuizSession.requiredAnsweredCount &&
-               scorePercentage >= QuizSession.minimalAcceptableSuccessRate;
+            this.correctPercentage >= QuizSession.minimalAcceptableSuccessRate;
     }
 
     public finishIfEligible(): boolean {

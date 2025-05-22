@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMedal, faCircleInfo, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faMedal, faCircleInfo, faUndo, faChartSimple } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
 import { QuizService } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
@@ -30,6 +30,7 @@ export class LearnComponent {
 
     public readonly trophyIcon = faMedal;
     public readonly helpIcon = faCircleInfo;
+    public readonly statsIcon = faChartSimple;
     public readonly resetIcon = faUndo;
     public readonly topics: Topic[] = [];
 
@@ -174,10 +175,6 @@ export class LearnComponent {
 
     public shouldShowNextQuestionButton(): boolean {
         return this.currentQuiz.isAnswered && !(this.session.finished);
-    }
-
-    public shouldShowFinishButton(): boolean {
-        return this.session.canFinishSession();
     }
 
     public shouldShowScore(): boolean {

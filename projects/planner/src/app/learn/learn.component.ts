@@ -59,7 +59,7 @@ export class LearnComponent {
     }
 
     public get currentQuiz(): QuizItem {
-        return this.session.currentQuiz;
+        return this.quizService.question;
     }
 
     public get correctPercentage(): number {
@@ -72,10 +72,6 @@ export class LearnComponent {
 
     public get showNextQuestionButton(): boolean {
         return this.currentQuiz.isAnswered;
-    }
-
-    public get showQuestion(): boolean {
-        return !this.showScore && this.session.quizzes.length > 0;
     }
 
     public select(topic: Topic, category: Category): void {
@@ -103,7 +99,7 @@ export class LearnComponent {
     }
 
     public validateCurrentAnswer(): void {
-        this.session.validateCurrentAnswer();
+        this.quizService.validateCurrentAnswer();
         this.preferencesStore.save();
 
         if(this.session.shouldCelebrate) {
@@ -147,11 +143,10 @@ export class LearnComponent {
     public continuePracticing(): void {
         this.showScore = false;
         this.goToNextQuestion();
-        this.session.currentQuestionIndex = this.session.quizzes.length - 1;
     }
 
     public goToNextQuestion(): void {
-        this.session.goToNextQuestion();
+        this.quizService.goToNextQuestion();
     }
 
     // TODO fix primary button to submit

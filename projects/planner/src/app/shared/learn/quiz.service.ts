@@ -3,6 +3,7 @@ import { Category, Topic } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
 import { QuizSessionDto } from '../serialization.model';
+import { QuizItem } from "./quiz-item.model";
 
 export interface TopicStatus {
    finished: number;
@@ -22,16 +23,19 @@ export interface CategoryStatus {
     providedIn: 'root'
 })
 export class QuizService {
-    public topics: Topic[] = topics;
+    public readonly topics: Topic[];
     private _selectedTopic: Topic;
     private _selectedCategory: Category;
-    private _session!: QuizSession;
+    private _session: QuizSession;
+    public _question!: QuizItem;
     private sessionsByCategory = new Map<string, QuizSession>();
 
-    constructor() {
+    constructor(tops : Topic[] | undefined) {
+        this.topics = tops || topics;
         this._selectedTopic = this.topics[0];
         this._selectedCategory = this.selectedTopic.categories[0];
         this._session = this.resolveSession(this.selectedCategory);
+        this.goToNextQuestion();
     }
 
     public get selectedTopic(): Topic {
@@ -46,6 +50,10 @@ export class QuizService {
         return this._session;
     }
 
+    public get question(): QuizItem {
+        return this._question;
+    }
+
     public selectByName(topic: string, category: string): void {
         const foundTopic = this.topics.find(t => t.name === topic);
         const loadedTopic = foundTopic || this.topics[0];
@@ -58,22 +66,37 @@ export class QuizService {
         this._selectedTopic = topic || this.topics[0];
         this._selectedCategory = category || this.selectedTopic.categories[0];
         this._session = this.resolveSession(this.selectedCategory);
+        this.goToNextQuestion();
+    }
+
+    public goToNextQuestion(): void {
+        this._question = this.selectedCategory.createQuestion();
+    }
+
+    public validateCurrentAnswer(userAnswer: number): void {
+        // const quiz = this.currentQuiz;
+        // if (!quiz) {
+        //     return;
+        // }
+        //
+        // quiz.isCorrect = quiz.validateAnswer();
+        // quiz.isAnswered = true;
+        // this.totalAnswered++;
+        //
+        // if (quiz.isCorrect) {
+        //     this.correctCount++;
+        //     this.totalScore += this.hintUsed
+        //         ? QuizSession.pointsHinted
+        //         : QuizSession.pointsCorrect;
+        // }
+        //
+        // this.hintUsed = false;
+        // this.finishIfEligible();
     }
 
     public loadFrom(loaded: QuizSessionDto[]): void {
         this.sessionsByCategory.clear();
         this.restoreSessions(loaded);
-    }
-
-    public countGainedTrophies(topic: Topic): number {
-        let count = 0;
-        for (const category of topic.categories) {
-            const key = category.name;
-            if (this.sessionsByCategory.get(key)?.trophyGained) {
-                count++;
-            }
-        }
-        return count;
     }
 
     public topicStatus(topic: Topic): TopicStatus {
@@ -114,9 +137,20 @@ export class QuizService {
             return existing;
         }
 
-        const session = new QuizSession([category.getQuizItemForCategory()], category);
+        const session = new QuizSession(category);
         this.sessionsByCategory.set(category.name, session);
         return session;
+    }
+
+    private countGainedTrophies(topic: Topic): number {
+        let count = 0;
+        for (const category of topic.categories) {
+            const key = category.name;
+            if (this.sessionsByCategory.get(key)?.trophyGained) {
+                count++;
+            }
+        }
+        return count;
     }
 
     private restoreSessions(entries: QuizSessionDto[] | undefined): void {

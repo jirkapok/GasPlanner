@@ -224,7 +224,6 @@ export interface QuizSessionDto {
     category: string;
     correctCount: number;
     totalAnswered: number;
-    currentQuestionIndex: number;
     hintUsed: boolean;
     totalScore: number;
     trophyGained: boolean;

@@ -85,7 +85,7 @@ describe('LearnComponent', () => {
                 categories: [
                     {
                         name: 'Basic Pressure',
-                        getQuizItemForCategory: () => createMockQuizItem()
+                        createQuestion: () => createMockQuizItem()
                     }
                 ]
             },
@@ -94,7 +94,7 @@ describe('LearnComponent', () => {
                 categories: [
                     {
                         name: 'Used gas',
-                        getQuizItemForCategory: () => createMockQuizItem()
+                        createQuestion: () => createMockQuizItem()
                     }
                 ]
             }

@@ -66,6 +66,7 @@ export class QuestionTemplate {
         public roundTo: number,
         public roundType: RoundType,
         public variables: Variable[],
+        // TODO Remove QuizItemTools
         public calculateAnswer: (variables: number[], tools: QuizItemTools) => number
     ) {}
 }
@@ -77,7 +78,7 @@ export class Category {
         public questions: QuestionTemplate[]
     ) {}
 
-    public getQuizItemForCategory(): QuizItem {
+    public createQuestion(): QuizItem {
         const randomIndex = Math.floor(Math.random() * this.questions.length);
         const selectedTemplate = this.questions[randomIndex];
         return new QuizItem(selectedTemplate);

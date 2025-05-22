@@ -1,66 +1,63 @@
 import { QuizSession } from "./quiz-session.model";
-import { Category, QuestionTemplate, RoundType } from "./learn.models";
-import { QuizItem } from "./quiz-item.model";
+import { Category, QuestionTemplate, RoundType, Topic } from "./learn.models";
 import { QuizService } from "./quiz.service";
-import { topics } from "./quiz.questions";
 
 describe('Quiz Service', () => {
+    let expectedAnswer = 0;
+
+    const topics: Topic[] = [
+        new Topic('First topic', [
+            new Category('Category 1', '', [
+                new QuestionTemplate('Ask me', 1, RoundType.floor,
+                    [],
+                    () => expectedAnswer),
+            ]),
+            new Category('Category 1', '', [
+                new QuestionTemplate('Ask me', 1, RoundType.floor,
+                    [],
+                    () => expectedAnswer),
+            ])
+        ])
+    ];
+
     const firstTopic = topics[0];
 
     const finishCategory = (sut: QuizService, category: Category) => {
-        const session = new QuizSession([category.getQuizItemForCategory()], category);
-        session.trophyGained = true;
-        sut.sessionsByCategory.set(category.name, session);
+        sut.select(firstTopic, category);
+
+        for (let index = 0; index < QuizSession.requiredAnsweredCount; index++) {
+            sut.goToNextQuestion();
+            sut.validateCurrentAnswer(expectedAnswer);
+        }
     };
 
-    describe('Initial state', () => {
-        const sut = new QuizService();
+    it('Initial state Has no completion status', () => {
+        const sut = new QuizService(topics);
+        const status = sut.topicStatus(firstTopic);
 
-        it('Has no trophies', () => {
-            const trophies = sut.countGainedTrophies(firstTopic);
-            expect(trophies).toBe(0);
-        });
-
-        it('Has no completion status', () => {
-            const status = sut.topicStatus(firstTopic);
-            expect(status.finished).toBe(0);
-            expect(status.total).toBe(2);
-        });
+        expect(status.finished).toBe(0);
+        expect(status.hasTrophy).toBeFalsy();
+        expect(status.total).toBe(2);
     });
 
-    describe('Some categories finished', () => {
-        const sut = new QuizService();
-        const firstCategory = firstTopic.categories[0];
-        finishCategory(sut, firstCategory);
+   it('Some categories finished Has some completion status', () => {
+        const sut = new QuizService(topics);
+        finishCategory(sut, firstTopic.categories[0]);
 
-        it('Has trophy', () => {
-            const trophies = sut.countGainedTrophies(firstTopic);
-            expect(trophies).toBe(1);
-        });
-
-        it('Has some completion status', () => {
-            const status = sut.topicStatus(firstTopic);
-            expect(status.finished).toBe(1);
-            expect(status.total).toBe(2);
-        });
+        const status = sut.topicStatus(firstTopic);
+        expect(status.finished).toBe(1);
+        expect(status.hasTrophy).toBeFalsy();
+        expect(status.total).toBe(2);
     });
 
-    describe('Topic finished', () => {
-        const sut = new QuizService();
+    it('Topic finished Has finished completion status', () => {
+        const sut = new QuizService(topics);
+        finishCategory(sut, firstTopic.categories[0]);
+        finishCategory(sut, firstTopic.categories[1]);
 
-        firstTopic.categories.forEach(category => {
-            finishCategory(sut, category);
-        })
-
-        it('Has trophies', () => {
-            const trophies = sut.countGainedTrophies(firstTopic);
-            expect(trophies).toBe(2);
-        });
-
-        it('Has all completion status', () => {
-            const status = sut.topicStatus(firstTopic);
-            expect(status.finished).toBe(2);
-            expect(status.total).toBe(2);
-        });
+        const status = sut.topicStatus(firstTopic);
+        expect(status.finished).toBe(2);
+        expect(status.hasTrophy).toBeTruthy();
+        expect(status.total).toBe(2);
     });
 });

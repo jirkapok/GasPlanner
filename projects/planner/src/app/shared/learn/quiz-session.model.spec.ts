@@ -6,7 +6,7 @@ describe('Quiz Session', () => {
     const expectedAnswer = 99;
     const questionTemplate = new QuestionTemplate("Question 1", 0, RoundType.round, [], () => expectedAnswer);
     const category = new Category("Category", "category_help", [ questionTemplate ]);
-    const quizItem = category.getQuizItemForCategory();
+    const quizItem = category.createQuestion();
 
     const assertSessionInInitialState = (sut: QuizSession) => {
         expect(sut.canFinishSession()).toBeFalsy();

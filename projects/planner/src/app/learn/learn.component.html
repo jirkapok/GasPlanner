@@ -56,7 +56,7 @@
     <div class="card shadow-sm position-relative">
         <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
             <div>{{ selectedTopic.name }} / {{ selectedCategory.name }}</div>
-            <div *ngIf="showQuestion" class="">
+            <div *ngIf="!showScore" class="">
                 <span class="badge bg-primary text-light small m-1">
                   {{ session.correctCount }}/{{ session.totalAnswered }} ({{ correctPercentage }} %)
                 </span>
@@ -74,7 +74,7 @@
             </div>
         </div>
       <div class="card-body">
-        <form *ngIf="showQuestion">
+        <form *ngIf="!showScore">
           <div class="mb-4" *ngIf="currentQuiz as quiz">
               <div class="mt-2 fs-5">
               {{ quiz.renderedQuestion }}
@@ -82,10 +82,8 @@
               <div class="small pb-5">
                   Round {{ getRoundingExplanation(quiz.roundType) }} your answer to <strong>{{ quiz.roundTo }}</strong> decimal place(s).
               </div>
-            <input id="answer-input" type="text" class="form-control mb-2"
-              [(ngModel)]="quiz.userAnswer"
-              name="{{ session.currentQuestionIndex }}"
-              [disabled]="quiz.isAnswered"/>
+            <input id="answer-input" name="answer-input" type="text" class="form-control mb-2"
+              [(ngModel)]="quiz.userAnswer" [disabled]="quiz.isAnswered"/>
 
             <div *ngIf="quiz.isAnswered">
               <div *ngIf="quiz.isCorrect" class="alert alert-success border-0 bg-success bg-opacity-10 text-success small py-2 px-3">

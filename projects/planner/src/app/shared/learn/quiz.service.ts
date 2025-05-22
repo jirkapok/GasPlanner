@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { Category, Topic } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
@@ -30,7 +30,7 @@ export class QuizService {
     public _question!: QuizItem;
     private sessionsByCategory = new Map<string, QuizSession>();
 
-    constructor(tops : Topic[] | undefined) {
+    constructor(@Optional()  tops?: Topic[]) {
         this.topics = tops || topics;
         this._selectedTopic = this.topics[0];
         this._selectedCategory = this.selectedTopic.categories[0];
@@ -71,27 +71,21 @@ export class QuizService {
 
     public goToNextQuestion(): void {
         this._question = this.selectedCategory.createQuestion();
+        this.session.resetHinted();
     }
 
-    public validateCurrentAnswer(userAnswer: number): void {
-        // const quiz = this.currentQuiz;
-        // if (!quiz) {
-        //     return;
-        // }
-        //
-        // quiz.isCorrect = quiz.validateAnswer();
-        // quiz.isAnswered = true;
-        // this.totalAnswered++;
-        //
-        // if (quiz.isCorrect) {
-        //     this.correctCount++;
-        //     this.totalScore += this.hintUsed
-        //         ? QuizSession.pointsHinted
-        //         : QuizSession.pointsCorrect;
-        // }
-        //
-        // this.hintUsed = false;
-        // this.finishIfEligible();
+    public validateCurrentAnswer(): void {
+        const quiz = this.question;
+
+        // TODO move to question
+        quiz.isCorrect = quiz.validateAnswer();
+        quiz.isAnswered = true;
+
+        if (quiz.isCorrect) {
+            this.session.answerCorrectly();
+        } else {
+            this.session.answerWrong();
+        }
     }
 
     public loadFrom(loaded: QuizSessionDto[]): void {

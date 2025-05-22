@@ -12,7 +12,7 @@ describe('Quiz Service', () => {
                     [],
                     () => expectedAnswer),
             ]),
-            new Category('Category 1', '', [
+            new Category('Category 2', '', [
                 new QuestionTemplate('Ask me', 1, RoundType.floor,
                     [],
                     () => expectedAnswer),
@@ -27,7 +27,8 @@ describe('Quiz Service', () => {
 
         for (let index = 0; index < QuizSession.requiredAnsweredCount; index++) {
             sut.goToNextQuestion();
-            sut.validateCurrentAnswer(expectedAnswer);
+            sut.question.userAnswer = expectedAnswer.toString();
+            sut.validateCurrentAnswer();
         }
     };
 

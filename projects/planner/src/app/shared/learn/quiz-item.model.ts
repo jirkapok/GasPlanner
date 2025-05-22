@@ -20,9 +20,7 @@ export class QuizItem {
     private sacCalculator: SacCalculator;
     private gasProperties: GasProperties;
 
-    constructor(
-        public template: QuestionTemplate
-    ) {
+    constructor(private template: QuestionTemplate) {
         this.roundTo = template.roundTo;
         this.roundType = template.roundType;
 
@@ -45,6 +43,7 @@ export class QuizItem {
         } while (Number.isNaN(this.generateCorrectAnswer()) && indexSafe < 100);
     }
 
+    // TODO make private
     public generateCorrectAnswer(): number {
         const tools: QuizItemTools = {
             depthConverter: this.depthConverter,
@@ -60,6 +59,7 @@ export class QuizItem {
         throw new Error('Invalid question template: missing calculateAnswer');
     }
 
+    // TODO validateAnswer with user provided value
     public validateAnswer(): boolean {
         const userAns = (this.userAnswer || '').trim();
         const userNum = parseFloat(userAns);
@@ -75,7 +75,7 @@ export class QuizItem {
         return userAnswerRounded === this.correctAnswer;
     }
 
-    public roundValue(value: number, roundTo: number, roundType: RoundType): number {
+    private roundValue(value: number, roundTo: number, roundType: RoundType): number {
         switch (roundType) {
             case RoundType.floor:
                 return Precision.floor(value, roundTo);

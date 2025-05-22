@@ -58,7 +58,7 @@
             <div>{{ selectedTopic.name }} / {{ selectedCategory.name }}</div>
             <div *ngIf="!showScore" class="">
                 <span class="badge bg-primary text-light small m-1">
-                  {{ session.correctCount }}/{{ session.totalAnswered }} ({{ correctPercentage }} %)
+                  {{ session.correctAnswers }}/{{ session.totalAnswered }} ({{ correctPercentage }} %)
                 </span>
                 <button type="button" class="btn btn-sm btn-secondary mx-1" (click)="switchToScore()">
                     <fa-icon [icon]="statsIcon" class="fa-lg"></fa-icon>
@@ -132,8 +132,8 @@
               <strong>Points:</strong> {{ session.totalScore }} out of {{ session.maxPoints }}
             </p>
             <p>
-              <strong>Correct Answers:</strong> {{ session.correctCount }} / {{ session.totalAnswered }}
-              <span *ngIf="session.anyHintsUsed" class="text-warning">(some with hints)</span>
+              <strong>Correct Answers:</strong> {{ session.correctAnswers }} / {{ session.totalAnswered }}
+              <span *ngIf="session.anyHintUsed" class="text-warning">(some with hints)</span>
             </p>
             <p>
               <strong>Score:</strong> {{ correctPercentage }}%

@@ -76,34 +76,12 @@ describe('LearnComponent', () => {
                 ApplicationSettingsService
             ]
         }).compileComponents();
-
-        quizService = TestBed.inject(QuizService);
-
-        quizService.topics = [
-            {
-                name: 'Pressure at depth',
-                categories: [
-                    {
-                        name: 'Basic Pressure',
-                        createQuestion: () => createMockQuizItem()
-                    }
-                ]
-            },
-            {
-                name: 'Consumption',
-                categories: [
-                    {
-                        name: 'Used gas',
-                        createQuestion: () => createMockQuizItem()
-                    }
-                ]
-            }
-        ] as Topic[];
     });
 
     beforeEach(async () => {
         fixture = TestBed.createComponent(LearnComponent);
         component = fixture.componentInstance;
+        quizService = TestBed.inject(QuizService);
         fixture.detectChanges();
 
         // Wait for async initialization to complete
@@ -113,11 +91,11 @@ describe('LearnComponent', () => {
 
     it('creates learn with default topic', () => {
         expect(component.selectedTopic.name).toBe('Pressure at depth');
-        expect(component.selectedCategory.name).toBe('Basic Pressure');
+        expect(component.selectedCategory.name).toBe('Depth');
     });
 
     it('changes quiz question', () => {
-        const expectedCategory = 'Used gas';
+        const expectedCategory = 'Maximum operational depth';
         component.select(quizService.topics[1], quizService.topics[1].categories[0]);
         fixture.detectChanges();
 

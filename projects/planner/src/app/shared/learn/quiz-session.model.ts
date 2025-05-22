@@ -8,14 +8,26 @@ export class QuizSession {
     private static readonly pointsCorrect = 2;
     private static readonly pointsHinted = 1;
 
-    public correctCount = 0;
-    public totalAnswered = 0;
-    public totalScore = 0;
+    private _correctAnswers = 0;
+    private _totalAnswered = 0;
+    private _totalScore = 0;
     private _trophyGained = false;
     private _celebrated = false;
-    private hintUsed = false;
+    private _hintUsed = false;
 
     constructor(private readonly sourceCategory: Category) {
+    }
+
+    public get correctAnswers(): number {
+        return this._correctAnswers;
+    }
+
+    public get totalAnswered(): number {
+        return this._totalAnswered;
+    }
+
+    public get totalScore(): number {
+        return this._totalScore;
     }
 
     public get trophyGained(): boolean {
@@ -46,18 +58,31 @@ export class QuizSession {
         return this.totalAnswered * QuizSession.pointsCorrect;
     }
 
-    public get anyHintsUsed(): boolean {
+    public get anyHintUsed(): boolean {
         return (this.maxPoints !== this.totalScore) && (this.totalAnswered > 0);
     }
 
     public static fromDto(dto: QuizSessionDto, sourceCategory: Category): QuizSession {
         const session = new QuizSession(sourceCategory);
-        session.correctCount = dto.correctCount;
-        session.totalAnswered = dto.totalAnswered;
-        session.hintUsed = dto.hintUsed;
-        session.totalScore = dto.totalScore;
+        session._correctAnswers = dto.correctCount;
+        session._totalAnswered = dto.totalAnswered;
+        session._totalScore = dto.totalScore;
         session._trophyGained = dto.trophyGained;
         return session;
+    }
+
+    public answerCorrectly(): void {
+        this._totalAnswered++;
+        this._correctAnswers++;
+        const points= this._hintUsed ? QuizSession.pointsHinted : QuizSession.pointsCorrect;
+        this._totalScore += points;
+        this.resetHinted();
+        this.finishIfEligible();
+    }
+
+    public answerWrong(): void {
+        this._totalAnswered++;
+        this.resetHinted();
     }
 
     public markCelebrated(): void {
@@ -65,7 +90,7 @@ export class QuizSession {
     }
 
     public useHint(): void {
-        this.hintUsed = true;
+        this._hintUsed = true;
     }
 
     private get canFinishSession(): boolean {
@@ -82,22 +107,25 @@ export class QuizSession {
     public toDto(): QuizSessionDto {
         return {
             category: this.sourceCategory.name,
-            correctCount: this.correctCount,
+            correctCount: this.correctAnswers,
             totalAnswered: this.totalAnswered,
-            hintUsed: this.hintUsed,
             totalScore: this.totalScore,
             trophyGained: this.trophyGained
         };
     }
 
     public reset(): void {
-        this.correctCount = 0;
-        this.totalAnswered = 0;
-        this.hintUsed = false;
-        this.totalScore = 0;
+        this._correctAnswers = 0;
+        this._totalAnswered = 0;
+        this._totalScore = 0;
         this._trophyGained = false;
         this._celebrated = false;
+        this.resetHinted();
         // TODO this.goToNextQuestion();
+    }
+
+    public resetHinted(): void {
+        this._hintUsed = false;
     }
 }
 

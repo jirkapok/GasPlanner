@@ -29,7 +29,7 @@
                       }"
                       (click)="select(topic, category)">
                       {{ category.name }}
-                      <ng-container *ngIf="getQuizStats(category) as stats">
+                      <ng-container *ngIf="categoryStatus(category) as stats">
                           <ng-container *ngIf="!stats.finished">
                               <span class="ms-2 badge text-light bg-warning" *ngIf="stats.showScore">
                                 {{ stats.score }} %

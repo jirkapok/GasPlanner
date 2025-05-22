@@ -23,9 +23,42 @@ export interface CategoryStatus {
 })
 export class QuizService {
     public topics: Topic[] = topics;
+    private _selectedTopic: Topic;
+    private _selectedCategory: Category;
+    private _session!: QuizSession;
     private sessionsByCategory = new Map<string, QuizSession>();
 
-    constructor() {}
+    constructor() {
+        this._selectedTopic = this.topics[0];
+        this._selectedCategory = this.selectedTopic.categories[0];
+        this._session = this.resolveSession(this.selectedCategory);
+    }
+
+    public get selectedTopic(): Topic {
+        return this._selectedTopic;
+    }
+
+    public get selectedCategory(): Category {
+        return this._selectedCategory;
+    }
+
+    public get session(): QuizSession {
+        return this._session;
+    }
+
+    public selectByName(topic: string, category: string): void {
+        const foundTopic = this.topics.find(t => t.name === topic);
+        const loadedTopic = foundTopic || this.topics[0];
+        const foundCategory = loadedTopic.categories.find(c => c.name === category);
+        const loadedCategory = foundCategory || loadedTopic.categories[0];
+        this.select(loadedTopic, loadedCategory);
+    }
+
+    public select(topic: Topic, category: Category): void {
+        this._selectedTopic = topic || this.topics[0];
+        this._selectedCategory = category || this.selectedTopic.categories[0];
+        this._session = this.resolveSession(this.selectedCategory);
+    }
 
     public loadFrom(loaded: QuizSessionDto[]): void {
         this.sessionsByCategory.clear();
@@ -64,17 +97,6 @@ export class QuizService {
         };
     }
 
-    public session(category: Category): QuizSession {
-        const existing = this.sessionsByCategory.get(category.name);
-        if (existing) {
-            return existing;
-        }
-
-        const session = new QuizSession([category.getQuizItemForCategory()], category);
-        this.sessionsByCategory.set(category.name, session);
-        return session;
-    }
-
     public serializeSessions(): QuizSessionDto[] {
         const entries: QuizSessionDto[] = [];
 
@@ -84,6 +106,17 @@ export class QuizService {
         }
 
         return entries;
+    }
+
+    private resolveSession(category: Category): QuizSession {
+        const existing = this.sessionsByCategory.get(category.name);
+        if (existing) {
+            return existing;
+        }
+
+        const session = new QuizSession([category.getQuizItemForCategory()], category);
+        this.sessionsByCategory.set(category.name, session);
+        return session;
     }
 
     private restoreSessions(entries: QuizSessionDto[] | undefined): void {

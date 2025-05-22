@@ -32,10 +32,6 @@ export class LearnComponent {
     public readonly statsIcon = faChartSimple;
     public readonly resetIcon = faUndo;
     public showScore = false;
-    // TODO move session to the quiz services
-    public session!: QuizSession;
-    public selectedTopic: Topic;
-    public selectedCategory: Category;
 
     constructor(
         public quizService: QuizService,
@@ -43,13 +39,23 @@ export class LearnComponent {
         private preferencesStore: PreferencesStore,
         private viewStates: SubViewStorage,
     ) {
-        this.selectedTopic = this.topics[0];
-        this.selectedCategory = this.selectedTopic.categories[0];
         this.loadState();
     }
 
     public get topics(): Topic[] {
         return this.quizService.topics;
+    }
+
+    public get session(): QuizSession {
+        return this.quizService.session;
+    }
+
+    public get selectedTopic(): Topic {
+        return this.quizService.selectedTopic;
+    }
+
+    public get selectedCategory(): Category {
+        return this.quizService.selectedCategory;
     }
 
     public get currentQuiz(): QuizItem {
@@ -73,9 +79,7 @@ export class LearnComponent {
     }
 
     public select(topic: Topic, category: Category): void {
-        this.selectedTopic = topic;
-        this.selectedCategory = category;
-        this.session = this.quizService.session(category);
+        this.quizService.select(topic, category);
         this.saveState();
     }
 
@@ -175,7 +179,7 @@ export class LearnComponent {
         return this.quizService.topicStatus(topic);
     }
 
-    public getQuizStats(category: Category): CategoryStatus {
+    public categoryStatus(category: Category): CategoryStatus {
         return this.quizService.categoryStatus(category);
     }
 
@@ -193,11 +197,8 @@ export class LearnComponent {
             state = this.createState();
         }
 
-        const foundTopic = this.topics.find(t => t.name === state.topic);
-        const loadedTopic = foundTopic || this.topics[0];
-        const foundCategory = loadedTopic.categories.find(c => c.name === state.category);
-        const loadedCategory = foundCategory || loadedTopic.categories[0];
-        this.select(loadedTopic, loadedCategory);
+        this.quizService.selectByName(state.topic, state.category);
+        this.saveState();
     }
 
     private saveState(): void {

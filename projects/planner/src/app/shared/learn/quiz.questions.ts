@@ -207,7 +207,6 @@ export const topics: Topic[] = [
         ])
     ])
 
-    // TODO fix gas properties calculator: Error, when oxygen is selected and at low depth.
     // TODO fix help links for options and dive info.
     // Consider add learn topics:
     // * Partial pressures - oxygen, nitrogen, helium, total

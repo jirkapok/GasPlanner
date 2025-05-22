@@ -8,6 +8,14 @@ describe('Gas properties calculator', () => {
         sut.depth = 30;
     });
 
+    it('Ead for oxygen at 10 m is 0 m', () => {
+        sut.depth = 0;
+        sut.tank.o2 = 50;
+        sut.tank.he = 0;
+        sut.depth = 5;
+        expect(sut.ead).toBeCloseTo(0, 3);
+    });
+
     it('Trimix 18/45 at surface END is 0 m', () => {
         sut.depth = 0;
         sut.tank.o2 = 18;

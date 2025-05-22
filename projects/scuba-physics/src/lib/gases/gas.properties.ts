@@ -81,6 +81,11 @@ export class GasProperties {
     /** Gets current mix equivalent air depth. This value makes sense only for Nitrox mixtures. */
     public get ead(): number {
         const eadDepthPressure = GasMixtures.ead(this.gas.fO2, this.depthPressure);
+
+        if(eadDepthPressure <= this.depthConverter.surfacePressure) {
+            return 0;
+        }
+
         return this.depthConverter.fromBar(eadDepthPressure);
     }
 

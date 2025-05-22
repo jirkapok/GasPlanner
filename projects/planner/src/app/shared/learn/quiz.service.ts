@@ -29,11 +29,11 @@ export class QuizService {
         return count;
     }
 
-    public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; color: string } {
+    public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; hasTrophy: boolean } {
         const finished = this.countGainedTrophies(topic);
         const total = topic.categories.length;
-        const color = finished === total ? 'bg-success' : 'bg-warning';
-        return { finished, total, color };
+        const hasTrophy = finished === total;
+        return { finished, total, hasTrophy };
     }
 
     public getSerializableSessions(): QuizSessionDto[] {

@@ -5,46 +5,43 @@
         <div class="accordion" id="topicsAccordion">
           <div class="accordion-item" *ngFor="let topic of topics">
             <h2 class="accordion-header">
-              <button
-                class="accordion-button"
+              <button class="accordion-button "
                 [class.collapsed]="selectedTopic !== topic"
-                (click)="toggleTopic(topic)"
-              >
-                {{ topic.name }}
-                <ng-container *ngIf="getTopicCompletionStatus(topic) as status">
-                  <span
-                    class="badge text-light ms-2"
-                    [class]="status.color">
-                    {{ status.finished }}/{{ status.total }}
-                  </span>
-                </ng-container>
+                (click)="toggleTopic(topic)">
+                  {{ topic.topic }}
+                  <ng-container *ngIf="getTopicCompletionStatus(topic) as status">
+                      <span class="badge text-light ms-2 bg-warning" *ngIf="!status.hasTrophy">
+                        {{ status.finished }}/{{ status.total }}
+                      </span>
+                      <fa-icon [icon]="trophyIcon" class="ms-2 text-success" *ngIf="status.hasTrophy">
+                      </fa-icon>
+                  </ng-container>
               </button>
             </h2>
             <div class="accordion-collapse collapse" [class.show]="selectedTopic === topic">
               <div class="accordion-body py-2 px-3">
                 <ul class="list-group list-group-flush">
                   <li *ngFor="let category of topic.categories" class="list-group-item px-0">
-                    <div
-                      class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
+                    <div class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
                       [ngClass]="{
                         'bg-primary bg-opacity-10 text-primary fw-semibold':
                           isCategorySelected(topic, category)
                       }"
                       (click)="updateTopic(topic, category)">
-                      <div class="d-flex align-items-center">
-                        {{ category.name }}
-                        <ng-container *ngIf="getQuizStats(category.name) as stats">
-                          <span class="small text-muted ms-2">
-                            ({{ stats.correct }}/{{ stats.attempts }})
-                          </span>
-                        </ng-container>
-                      </div>
+                      <div>{{ category.name }}</div>
                       <ng-container *ngIf="getQuizStats(category.name) as stats">
-                        <fa-icon
-                          [icon]="trophyIcon"
-                          class="ms-2 small"
-                          [ngClass]="getTrophyColor(category)">
-                        </fa-icon>
+                        <div>
+                          <ng-container *ngIf="!stats.finished">
+                              <span class="ms-2 badge text-light bg-warning" *ngIf="stats.showScore">
+                                {{ stats.score }} %
+                              </span>
+                              <span class="ms-2 badge text-light bg-warning" *ngIf="!stats.showScore">
+                                {{ stats.attempts }} / {{ stats.required }}
+                              </span>
+                          </ng-container>
+                          <fa-icon [icon]="trophyIcon" *ngIf="stats.finished" class="ms-2 text-success small">
+                          </fa-icon>
+                        </div>
                       </ng-container>
                     </div>
                   </li>

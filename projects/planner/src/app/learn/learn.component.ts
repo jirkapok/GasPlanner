@@ -146,12 +146,6 @@ export class LearnComponent {
         this.session.goToNextQuestion();
     }
 
-    public getTrophyColor(category: Category): string {
-        const key = category.name;
-        const session = this.quizService.sessionsByCategory.get(key);
-        return session?.trophyGained ? 'text-warning' : 'text-muted';
-    }
-
     public submitAnswers(): void {
         if (this.session.canFinishSession()) {
             const didFinish = this.session.finishIfEligible();
@@ -174,7 +168,7 @@ export class LearnComponent {
         return this.selectedTopic === topic && this.selectedCategory === category;
     }
 
-    public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; color: string } {
+    public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; hasTrophy: boolean  } {
         return this.quizService.getTopicCompletionStatus(topic);
     }
 
@@ -202,14 +196,17 @@ export class LearnComponent {
         return this.session.totalAnswered > 0;
     }
 
-    public getQuizStats(categoryName: string): { attempts: number; correct: number } {
+    public getQuizStats(categoryName: string): { score: number; showScore: boolean; finished: boolean; attempts:number;  required: number } {
         const session = this.quizService.sessionsByCategory.get(categoryName);
         if (!session) {
-            return { attempts: 0, correct: 0 };
+            return { score: 0, showScore: false, finished: false, attempts:0,  required: QuizSession.requiredAnsweredCount };
         }
         return {
+            score: session.correctPercentage,
+            showScore: session.totalAnswered > QuizSession.requiredAnsweredCount,
+            finished: session.finished,
             attempts: session.totalAnswered,
-            correct: session.correctCount
+            required: QuizSession.requiredAnsweredCount,
         };
     }
 

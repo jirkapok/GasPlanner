@@ -4,7 +4,7 @@ import { QuizItem } from './quiz-item.model';
 
 export class QuizSession {
     private static readonly minimalAcceptableSuccessRate = 80;
-    private static readonly requiredAnsweredCount = 5;
+    public static readonly requiredAnsweredCount = 5;
     private static readonly pointsCorrect = 2;
     private static readonly pointsHinted = 1;
 

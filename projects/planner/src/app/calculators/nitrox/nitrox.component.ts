@@ -114,7 +114,6 @@ export class NitroxComponent implements OnInit {
             }
 
             this.updateCalc();
-            this.reload();
             this.saveState();
         } catch (e) {
             this.failingMod = true;
@@ -168,7 +167,7 @@ export class NitroxComponent implements OnInit {
     private reload(): void {
         this.nitroxForm.patchValue({
             fO2: Precision.round(this.calc.fO2, 1),
-            pO2: Precision.round(this.calc.pO2, 2),
+            pO2: this.calc.pO2,
             mod: Precision.round(this.calcMod, 1),
             depth: Precision.round(this.calcDepth, 1)
         });

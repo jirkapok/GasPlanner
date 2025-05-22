@@ -207,7 +207,6 @@ export const topics: Topic[] = [
         ])
     ])
 
-    // TODO nitrox calculator ppO2 field has issue with decimal separator.
     // TODO fix gas properties calculator: Error, when oxygen is selected and at low depth.
     // TODO fix help links for options and dive info.
     // Consider add learn topics:

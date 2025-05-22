@@ -4,8 +4,7 @@ import { PreferencesStore } from './preferencesStore';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
 import { SubViewStorage } from './subViewStorage';
 import { ViewStates } from './viewStates';
-import { MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { HelpModalComponent } from '../help-modal/help-modal.component'; // adjust path as needed
+import { HelpService } from "./learn/help.service"; // adjust path as needed
 
 
 @Injectable()
@@ -21,7 +20,7 @@ export class DashboardStartUp {
         private urlSerialization: PlanUrlSerialization,
         private viewStore: SubViewStorage,
         private views: ViewStates,
-        private modalService: MdbModalService
+        private help: HelpService
 ) {
         this._showDisclaimer = this.preferences.disclaimerEnabled();
         this._showInstallButton = this.preferences.installEnabled();
@@ -58,9 +57,7 @@ export class DashboardStartUp {
 
         if (this.preferences.quizWelcomeEnabled()) {
             this.preferences.disableQuizWelcome();
-            this.modalService.open(HelpModalComponent, {
-                data: { path: 'learn-welcome' }
-            });
+            this.help.openLearnWelcome();
         }
 
         // in case it fails we need to reset the parameters

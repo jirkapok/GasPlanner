@@ -8,14 +8,13 @@ import { NgxMdModule } from 'ngx-md';
 import { QuizService } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
 import { QuizSession } from '../shared/learn/quiz-session.model';
-import { MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { HelpModalComponent } from '../help-modal/help-modal.component';
 import confetti from 'canvas-confetti';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { QuizItem } from '../shared/learn/quiz-item.model';
 import { LearnViewState } from "../shared/views.model";
 import { KnownViews } from "../shared/viewStates";
 import { SubViewStorage } from "../shared/subViewStorage";
+import { HelpService } from "../shared/learn/help.service";
 
 @Component({
     selector: 'app-learn',
@@ -40,7 +39,7 @@ export class LearnComponent {
 
     constructor(
         public quizService: QuizService,
-        private modalService: MdbModalService,
+        private help: HelpService,
         private preferencesStore: PreferencesStore,
         private viewStates: SubViewStorage,
     ) {
@@ -66,16 +65,10 @@ export class LearnComponent {
     }
 
     public openHelp(): void {
-        // TODO Replace modal by some non popup component and merge this call to one function
-        //  and put path constants to the urls class
-        this.modalService.open(HelpModalComponent, {
-            data: {
-                path: 'quiz-help'
-            }
-        });
+        this.help.openQuizHelp();
     }
 
-    public openHelpModal(): void {
+    public openQuestionHelp(): void {
         const category = this.selectedCategory;
 
         if (!category || !category.help) {
@@ -83,12 +76,7 @@ export class LearnComponent {
         }
 
         this.session.useHint();
-
-        this.modalService.open(HelpModalComponent, {
-            data: {
-                path: category.help
-            }
-        });
+        this.help.openHelp(category.help);
     }
 
     public toggleTopic(topic: Topic): void {

@@ -53,21 +53,13 @@ export class OptionsVariable implements Variable {
     }
 }
 
-export interface QuizItemTools {
-    depthConverter: DepthConverter;
-    nitroxCalculator: NitroxCalculator;
-    sacCalculator: SacCalculator;
-    gasProperties: GasProperties;
-}
-
 export class QuestionTemplate {
     constructor(
         public question: string,
         public roundTo: number,
         public roundType: RoundType,
         public variables: Variable[],
-        // TODO Remove QuizItemTools
-        public calculateAnswer: (variables: number[], tools: QuizItemTools) => number
+        public calculateAnswer: (variables: number[]) => number
     ) {}
 }
 

@@ -4,9 +4,14 @@ import {
     RoundType,
     Topic,
     NumberVariable,
-    QuizItemTools,
     OptionsVariable
 } from './learn.models';
+import { DepthConverter, GasProperties, NitroxCalculator, SacCalculator } from "scuba-physics";
+
+const depthConverter = DepthConverter.simple();
+const nitroxCalculator = new NitroxCalculator(depthConverter, 0.21);
+const sacCalculator = new SacCalculator(depthConverter);
+const gasProperties = new GasProperties();
 
 export const topics: Topic[] = [
     new Topic('Pressure at depth', [
@@ -18,7 +23,7 @@ export const topics: Topic[] = [
                 [
                     new NumberVariable('pressure', 1, 11, 1)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.depthConverter.fromBar(vars[0])
+                (vars: number[]) => depthConverter.fromBar(vars[0])
             )
         ]),
         new Category('Pressure', 'examples_pressure', [
@@ -29,7 +34,7 @@ export const topics: Topic[] = [
                 [
                     new NumberVariable('depth', 0, 100, 0)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.depthConverter.toBar(vars[0])
+                (vars: number[]) => depthConverter.toBar(vars[0])
             )
         ]),
     ]),
@@ -44,7 +49,7 @@ export const topics: Topic[] = [
                     new NumberVariable('pp', 1, 1.6, 1),
                     new OptionsVariable('o2_percent', [21, 32, 36, 38, 50, 100])
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.mod(vars[0], vars[1])
+                (vars: number[]) => nitroxCalculator.mod(vars[0], vars[1])
             )
         ]),
         new Category('Best mix', 'examples_bestmix', [
@@ -56,7 +61,7 @@ export const topics: Topic[] = [
                     new NumberVariable('pp', 1, 1.6, 1),
                     new NumberVariable('depth', 6, 36)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.bestMix(vars[0], vars[1])
+                (vars: number[]) => nitroxCalculator.bestMix(vars[0], vars[1])
             )
         ]),
         new Category('Oxygen partial pressure', 'examples_ppO2', [
@@ -68,7 +73,7 @@ export const topics: Topic[] = [
                     new NumberVariable('o2_percent', 21, 36,),
                     new NumberVariable('depth', 1, 34)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.partialPressure(vars[0], vars[1])
+                (vars: number[]) => nitroxCalculator.partialPressure(vars[0], vars[1])
             )
         ]),
         new Category('Equivalent air depth', 'examples_ead', [
@@ -80,7 +85,7 @@ export const topics: Topic[] = [
                     new NumberVariable('o2_percent', 21, 36),
                     new NumberVariable('depth', 10, 34)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.nitroxCalculator.ead(vars[0], vars[1])
+                (vars: number[]) => nitroxCalculator.ead(vars[0], vars[1])
             )
         ]),
     ]),
@@ -111,7 +116,7 @@ export const topics: Topic[] = [
                     new NumberVariable('consumed', 50, 150),
                     new NumberVariable('duration', 30, 60)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateRmv(vars[0], vars[1], vars[2], vars[3])
+                (vars: number[]) => sacCalculator.calculateRmv(vars[0], vars[1], vars[2], vars[3])
             )
         ]),
         new Category('Used gas', 'examples_consumed', [
@@ -126,7 +131,7 @@ export const topics: Topic[] = [
                     new NumberVariable('duration', 30, 60),
                     new NumberVariable('rmv', 15, 25)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateUsed(vars[0], vars[1], vars[2], vars[3])
+                (vars: number[]) => sacCalculator.calculateUsed(vars[0], vars[1], vars[2], vars[3])
             )
         ]),
         new Category('Dive duration', 'examples_durationbyrmv', [
@@ -141,7 +146,7 @@ export const topics: Topic[] = [
                     new NumberVariable('consumed', 30, 150),
                     new NumberVariable('rmv', 15, 25)
                 ],
-                (vars: number[], tools: QuizItemTools) => tools.sacCalculator.calculateDuration(vars[0], vars[1], vars[2], vars[3])
+                (vars: number[]) => sacCalculator.calculateDuration(vars[0], vars[1], vars[2], vars[3])
             )
         ])
     ]),
@@ -157,11 +162,11 @@ export const topics: Topic[] = [
                     new NumberVariable('oxygen', 10, 21),
                     new NumberVariable('helium', 20, 70)
                 ],
-                (vars: number[], tools: QuizItemTools) => {
-                    tools.gasProperties.maxPpO2 = 0.18;
-                    tools.gasProperties.tank.o2 = vars[0];
-                    tools.gasProperties.tank.he = vars[1];
-                    return tools.gasProperties.minDepth;
+                (vars: number[]) => {
+                    gasProperties.maxPpO2 = 0.18;
+                    gasProperties.tank.o2 = vars[0];
+                    gasProperties.tank.he = vars[1];
+                    return gasProperties.minDepth;
                 }
             )
         ]),
@@ -177,11 +182,11 @@ export const topics: Topic[] = [
                     new NumberVariable('helium', 10, 30),
                     new NumberVariable('depth', 10, 80)
                 ],
-                (vars: number[], tools: QuizItemTools) => {
-                    tools.gasProperties.tank.o2 = vars[0];
-                    tools.gasProperties.tank.he = vars[1];
-                    tools.gasProperties.depth = vars[2];
-                    return tools.gasProperties.end;
+                (vars: number[]) => {
+                    gasProperties.tank.o2 = vars[0];
+                    gasProperties.tank.he = vars[1];
+                    gasProperties.depth = vars[2];
+                    return gasProperties.end;
                 }
             )
         ]),
@@ -197,11 +202,11 @@ export const topics: Topic[] = [
                     new NumberVariable('helium', 20, 70),
                     new OptionsVariable('narc_depth', [30, 40]),
                 ],
-                (vars: number[], tools: QuizItemTools) => {
-                    tools.gasProperties.tank.o2 = vars[0];
-                    tools.gasProperties.tank.he = vars[1];
-                    tools.gasProperties.narcoticDepthLimit = vars[2];
-                    return tools.gasProperties.mnd;
+                (vars: number[]) => {
+                    gasProperties.tank.o2 = vars[0];
+                    gasProperties.tank.he = vars[1];
+                    gasProperties.narcoticDepthLimit = vars[2];
+                    return gasProperties.mnd;
                 }
             )
         ])

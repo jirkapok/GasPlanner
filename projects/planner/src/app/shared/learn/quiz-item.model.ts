@@ -2,7 +2,7 @@ import {
     NitroxCalculator, SacCalculator, DepthConverter,
     Precision, GasProperties
 } from 'scuba-physics';
-import { QuestionTemplate, RoundType, QuizItemTools } from './learn.models';
+import { QuestionTemplate, RoundType } from './learn.models';
 
 export class QuizItem {
     public correctAnswer?: number;
@@ -15,20 +15,9 @@ export class QuizItem {
     public userAnswer?: string;
     public renderedQuestion = '';
 
-    private depthConverter: DepthConverter;
-    private nitroxCalculator: NitroxCalculator;
-    private sacCalculator: SacCalculator;
-    private gasProperties: GasProperties;
-
     constructor(private template: QuestionTemplate) {
         this.roundTo = template.roundTo;
         this.roundType = template.roundType;
-
-        this.depthConverter = DepthConverter.simple();
-        this.nitroxCalculator = new NitroxCalculator(this.depthConverter, 0.21);
-        this.sacCalculator = new SacCalculator(this.depthConverter);
-        this.gasProperties = new GasProperties();
-
         this.randomizeQuizVariables();
         this.renderQuestion();
     }
@@ -45,15 +34,8 @@ export class QuizItem {
 
     // TODO make private
     public generateCorrectAnswer(): number {
-        const tools: QuizItemTools = {
-            depthConverter: this.depthConverter,
-            nitroxCalculator: this.nitroxCalculator,
-            sacCalculator: this.sacCalculator,
-            gasProperties: this.gasProperties
-        };
-
         if (typeof this.template.calculateAnswer === 'function') {
-            return this.template.calculateAnswer(this.variables, tools);
+            return this.template.calculateAnswer(this.variables);
         }
 
         throw new Error('Invalid question template: missing calculateAnswer');

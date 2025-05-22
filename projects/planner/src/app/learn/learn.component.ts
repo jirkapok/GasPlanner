@@ -57,10 +57,6 @@ export class LearnComponent {
         return this.session.correctPercentage;
     }
 
-    public get scoreSummary(): string {
-        return this.session.scoreSummary;
-    }
-
     public updateTopic(topic: Topic, category: Category): void {
         this.selectedTopic = topic;
         this.selectedCategory = category;

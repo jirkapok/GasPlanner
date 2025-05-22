@@ -47,10 +47,6 @@ export class QuizSession {
         return (this.maxPoints !== this.totalScore) && ((this.totalScore / QuizSession.pointsCorrect) < this.totalAnswered);
     }
 
-    public get scoreSummary(): string {
-        return `${this.totalScore} points (${this.correctCount}/${this.totalAnswered} correct)`;
-    }
-
     public static fromDto(dto: QuizSessionDto, sourceCategory: Category): QuizSession {
         const session = new QuizSession([sourceCategory.getQuizItemForCategory()], sourceCategory);
         session.correctCount = dto.correctCount;

@@ -56,7 +56,7 @@
     <div class="card shadow-sm position-relative">
         <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
             <div>{{ selectedTopic.name }} / {{ selectedCategory.name }}</div>
-            <div *ngIf="shouldShowForm()" class="">
+            <div *ngIf="showQuestion" class="">
                 <span class="badge bg-primary text-light small m-1">
                   {{ session.correctCount }}/{{ session.totalAnswered }} ({{ correctPercentage }} %)
                 </span>
@@ -74,7 +74,7 @@
             </div>
         </div>
       <div class="card-body">
-        <form *ngIf="shouldShowForm()">
+        <form *ngIf="showQuestion">
           <div class="mb-4" *ngIf="currentQuiz as quiz">
               <div class="mt-2 fs-5">
               {{ quiz.renderedQuestion }}
@@ -98,7 +98,7 @@
             <div class="d-flex flex-wrap justify-content-between">
                 <div class="d-flex flex-wrap gap-2 mt-3">
                   <button id="submit-answer"
-                    *ngIf="shouldShowSubmitButton()"
+                    *ngIf="showSubmitButton"
                     type="submit"
                     class="btn btn-primary"
                     (click)="validateCurrentAnswer()">
@@ -107,7 +107,7 @@
 
                   <button
                     id="next-question"
-                    *ngIf="shouldShowNextQuestionButton()"
+                    *ngIf="showNextQuestionButton"
                     type="submit"
                     class="btn btn-primary"
                     (click)="goToNextQuestion()">
@@ -115,7 +115,7 @@
                   </button>
 
                   <button
-                    *ngIf="!shouldShowNextQuestionButton()"
+                    *ngIf="!showNextQuestionButton"
                     type="button"
                     class="btn btn-secondary"
                     (click)="openQuestionHelp()">
@@ -140,7 +140,7 @@
             <p>
               <strong>Score:</strong> {{ correctPercentage }}%
             </p>
-              <button type="button" [disabled]="!shouldShowResetButton()"
+              <button type="button" [disabled]="!showResetButton"
                 class="btn btn-secondary m-1" (click)="resetSession()"
                 aria-label="Reset Category">
                 <fa-icon [icon]="resetIcon" class="fa-lg"></fa-icon> Reset

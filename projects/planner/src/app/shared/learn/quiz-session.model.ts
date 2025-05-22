@@ -12,7 +12,6 @@ export class QuizSession {
     public correctCount = 0;
     public totalAnswered = 0;
     public currentQuestionIndex = 0;
-    public finished = false;
     public totalScore = 0;
     public trophyGained = false;
     private hintUsed = false;
@@ -56,7 +55,6 @@ export class QuizSession {
         session.correctCount = dto.correctCount;
         session.totalAnswered = dto.totalAnswered;
         session.currentQuestionIndex = dto.currentQuestionIndex;
-        session.finished = dto.finished;
         session.hintUsed = dto.hintUsed;
         session.totalScore = dto.totalScore;
         session.trophyGained = dto.trophyGained;
@@ -106,9 +104,9 @@ export class QuizSession {
             this.correctPercentage >= QuizSession.minimalAcceptableSuccessRate;
     }
 
+    // TODO call from answer question
     public finishIfEligible(): boolean {
         if (this.canFinishSession()) {
-            this.finished = true;
             this.trophyGained = true;
             return true;
         }
@@ -121,7 +119,6 @@ export class QuizSession {
             correctCount: this.correctCount,
             totalAnswered: this.totalAnswered,
             currentQuestionIndex: this.currentQuestionIndex,
-            finished: this.finished,
             hintUsed: this.hintUsed,
             totalScore: this.totalScore,
             trophyGained: this.trophyGained
@@ -133,7 +130,6 @@ export class QuizSession {
         this.correctCount = 0;
         this.totalAnswered = 0;
         this.currentQuestionIndex = 0;
-        this.finished = false;
         this.hintUsed = false;
         this.totalScore = 0;
         this.trophyGained = false;

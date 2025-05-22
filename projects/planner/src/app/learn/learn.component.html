@@ -60,7 +60,7 @@
                 <span class="badge bg-primary text-light small m-1">
                   {{ session.correctCount }}/{{ session.totalAnswered }} ({{ correctPercentage }} %)
                 </span>
-                <button type="button" class="btn btn-sm btn-secondary mx-1" (click)="submitAnswers()">
+                <button type="button" class="btn btn-sm btn-secondary mx-1" (click)="switchToScore()">
                     <fa-icon [icon]="statsIcon" class="fa-lg"></fa-icon>
                 </button>
                 <button
@@ -74,7 +74,7 @@
             </div>
         </div>
       <div class="card-body">
-        <form (ngSubmit)="submitAnswers()" *ngIf="shouldShowForm()">
+        <form *ngIf="shouldShowForm()">
           <div class="mb-4" *ngIf="currentQuiz as quiz">
               <div class="mt-2 fs-5">
               {{ quiz.renderedQuestion }}
@@ -126,7 +126,7 @@
           </div>
         </form>
 
-        <div *ngIf="shouldShowScore()" class="card-body text-center p-4">
+        <div *ngIf="showScore" class="card-body text-center p-4">
             <h4 class="fw-bold mb-3">
                 <fa-icon [icon]="trophyIcon" class="fa-lg text-success"></fa-icon> Completed!
             </h4>

@@ -33,6 +33,7 @@ export class LearnComponent {
     public readonly resetIcon = faUndo;
     public readonly topics: Topic[] = [];
 
+    public showScore = false;
     public session!: QuizSession;
     public selectedTopic: Topic;
     public selectedCategory: Category;
@@ -122,7 +123,7 @@ export class LearnComponent {
     }
 
     public continuePracticing(): void {
-        this.session.finished = false;
+        this.showScore = false;
         this.goToNextQuestion();
         this.session.currentQuestionIndex = this.session.quizzes.length - 1;
     }
@@ -131,22 +132,24 @@ export class LearnComponent {
         this.session.goToNextQuestion();
     }
 
-    public submitAnswers(): void {
-        if (this.session.canFinishSession()) {
-            const didFinish = this.session.finishIfEligible();
+    public switchToScore(): void {
+        this.showScore = true;
 
-            if (didFinish) {
-                setTimeout(() => {
-                    if (this.completionBlockRef?.nativeElement) {
-                        this.launchConfettiFromElement(this.completionBlockRef.nativeElement);
-                    } else {
-                        this.launchConfetti();
-                    }
-                }, 50);
-            }
 
-            this.preferencesStore.save();
+        const didFinish = this.session.finishIfEligible();
+
+        if (didFinish) {
+            setTimeout(() => {
+                if (this.completionBlockRef?.nativeElement) {
+                    this.launchConfettiFromElement(this.completionBlockRef.nativeElement);
+                } else {
+                    this.launchConfetti();
+                }
+            }, 50);
         }
+
+        // TODO move to submit answer
+        this.preferencesStore.save();
     }
 
     public isCategorySelected(topic: Topic, category: Category): boolean {
@@ -157,20 +160,18 @@ export class LearnComponent {
         return this.quizService.getTopicCompletionStatus(topic);
     }
 
+    // TODO switch to property
     public shouldShowSubmitButton(): boolean {
         return this.currentQuiz !== undefined && !this.currentQuiz.isAnswered;
     }
 
     public shouldShowNextQuestionButton(): boolean {
-        return this.currentQuiz.isAnswered && !(this.session.finished);
+        return this.currentQuiz.isAnswered;
     }
 
-    public shouldShowScore(): boolean {
-        return this.session.finished;
-    }
-
+    // TODO switch to property
     public shouldShowForm(): boolean {
-        return !this.session.finished && this.session.quizzes.length > 0;
+        return !this.showScore && this.session.quizzes.length > 0;
     }
 
     public shouldShowResetButton(): boolean {
@@ -185,7 +186,7 @@ export class LearnComponent {
         return {
             score: session.correctPercentage,
             showScore: session.totalAnswered > QuizSession.requiredAnsweredCount,
-            finished: session.finished,
+            finished: session.trophyGained,
             attempts: session.totalAnswered,
             required: QuizSession.requiredAnsweredCount,
         };

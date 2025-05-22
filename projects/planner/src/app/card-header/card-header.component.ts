@@ -12,14 +12,13 @@ import { HelpService } from "../shared/learn/help.service";
 
 export class CardHeaderComponent {
     @Input() public cardTitle = '';
-    // TODO rename to helpDocument
-    @Input() public helpName = Urls.notAvailable;
+    @Input() public helpDocument = Urls.notAvailable;
     @Input() public headerIcon = faCircleInfo;
     public readonly helpIcon = faCircleInfo;
 
     constructor(private help: HelpService) {}
 
     public openHelp(): void {
-        this.help.openHelp(this.helpName);
+        this.help.openHelp(this.helpDocument);
     }
 }

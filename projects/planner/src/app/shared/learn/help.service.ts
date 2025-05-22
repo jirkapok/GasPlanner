@@ -8,6 +8,7 @@ import { MdbModalRef, MdbModalService } from "mdb-angular-ui-kit/modal";
 export class HelpService {
     private modalRef: MdbModalRef<HelpModalComponent> | null = null;
 
+    // TODO add support for scrolling the help using gestures https://hammerjs.github.io/tips/
     constructor(private modalService: MdbModalService) {
     }
 

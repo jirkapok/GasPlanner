@@ -121,7 +121,6 @@ export class QuizSession {
         this._trophyGained = false;
         this._celebrated = false;
         this.resetHinted();
-        // TODO this.goToNextQuestion();
     }
 
     public resetHinted(): void {

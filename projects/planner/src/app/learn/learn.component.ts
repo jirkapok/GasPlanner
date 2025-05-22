@@ -180,6 +180,7 @@ export class LearnComponent {
 
     public resetSession(): void {
         this.session.reset();
+        this.goToNextQuestion();
         this.preferencesStore.save();
     }
 

@@ -103,6 +103,10 @@ export class LearnComponent {
     public validateCurrentAnswer(): void {
         this.session.validateCurrentAnswer();
         this.preferencesStore.save();
+
+        if(this.session.shouldCelebrate) {
+            this.switchToScore();
+        }
     }
 
     public getRoundingExplanation(roundType: RoundType): string {
@@ -151,10 +155,9 @@ export class LearnComponent {
     public switchToScore(): void {
         this.showScore = true;
 
-        // TODO move to submit answer
-        const didFinish = this.session.finishIfEligible();
+        if (this.session.shouldCelebrate) {
+            this.session.markCelebrated();
 
-        if (didFinish) {
             setTimeout(() => {
                 if (this.completionBlockRef?.nativeElement) {
                     this.launchConfettiFromElement(this.completionBlockRef.nativeElement);
@@ -163,8 +166,6 @@ export class LearnComponent {
                 }
             }, 50);
         }
-
-        this.preferencesStore.save();
     }
 
     public isCategorySelected(topic: Topic, category: Category): boolean {

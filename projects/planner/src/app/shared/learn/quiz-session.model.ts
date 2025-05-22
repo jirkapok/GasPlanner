@@ -14,6 +14,7 @@ export class QuizSession {
     public currentQuestionIndex = 0;
     public totalScore = 0;
     public trophyGained = false;
+    private _celebrated = false;
     private hintUsed = false;
 
     constructor(
@@ -42,6 +43,14 @@ export class QuizSession {
         return Math.round((this.totalScore / this.maxPoints) * 100);
     }
 
+    public get celebrated(): boolean {
+        return this._celebrated;
+    }
+
+    public get shouldCelebrate(): boolean {
+        return this.trophyGained && !this.celebrated;
+    }
+
     public get maxPoints(): number {
         return this.totalAnswered * QuizSession.pointsCorrect;
     }
@@ -50,6 +59,7 @@ export class QuizSession {
         return (this.maxPoints !== this.totalScore) && (this.totalAnswered > 0);
     }
 
+    // TODO move to quiz service
     public static fromDto(dto: QuizSessionDto, sourceCategory: Category): QuizSession {
         const session = new QuizSession([sourceCategory.getQuizItemForCategory()], sourceCategory);
         session.correctCount = dto.correctCount;
@@ -59,6 +69,10 @@ export class QuizSession {
         session.totalScore = dto.totalScore;
         session.trophyGained = dto.trophyGained;
         return session;
+    }
+
+    public markCelebrated(): void {
+        this._celebrated = true;
     }
 
     public validateCurrentAnswer(): void {
@@ -79,6 +93,7 @@ export class QuizSession {
         }
 
         this.hintUsed = false;
+        this.finishIfEligible();
     }
 
     public useHint(): void {
@@ -99,18 +114,15 @@ export class QuizSession {
         this.quizzes.push(newQuiz);
     }
 
-    public canFinishSession(): boolean {
+    private get canFinishSession(): boolean {
         return this.totalAnswered >= QuizSession.requiredAnsweredCount &&
             this.correctPercentage >= QuizSession.minimalAcceptableSuccessRate;
     }
 
-    // TODO call from answer question
-    public finishIfEligible(): boolean {
-        if (this.canFinishSession()) {
+    private finishIfEligible(): void {
+        if (this.canFinishSession) {
             this.trophyGained = true;
-            return true;
         }
-        return false;
     }
 
     public toDto(): QuizSessionDto {
@@ -133,6 +145,7 @@ export class QuizSession {
         this.hintUsed = false;
         this.totalScore = 0;
         this.trophyGained = false;
+        this._celebrated = false;
         this.goToNextQuestion();
     }
 }

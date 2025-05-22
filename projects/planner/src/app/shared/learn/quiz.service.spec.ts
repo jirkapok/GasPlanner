@@ -22,7 +22,7 @@ describe('Quiz Service', () => {
         });
 
         it('Has no completion status', () => {
-            const status = sut.getTopicCompletionStatus(firstTopic);
+            const status = sut.topicStatus(firstTopic);
             expect(status.finished).toBe(0);
             expect(status.total).toBe(2);
         });
@@ -39,7 +39,7 @@ describe('Quiz Service', () => {
         });
 
         it('Has some completion status', () => {
-            const status = sut.getTopicCompletionStatus(firstTopic);
+            const status = sut.topicStatus(firstTopic);
             expect(status.finished).toBe(1);
             expect(status.total).toBe(2);
         });
@@ -58,7 +58,7 @@ describe('Quiz Service', () => {
         });
 
         it('Has all completion status', () => {
-            const status = sut.getTopicCompletionStatus(firstTopic);
+            const status = sut.topicStatus(firstTopic);
             expect(status.finished).toBe(2);
             expect(status.total).toBe(2);
         });

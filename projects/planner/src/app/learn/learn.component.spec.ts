@@ -118,7 +118,7 @@ describe('LearnComponent', () => {
 
     it('changes quiz question', () => {
         const expectedCategory = 'Used gas';
-        component.updateTopic(quizService.topics[1], quizService.topics[1].categories[0]);
+        component.select(quizService.topics[1], quizService.topics[1].categories[0]);
         fixture.detectChanges();
 
         expect(component.selectedCategory.name).toBe(expectedCategory);

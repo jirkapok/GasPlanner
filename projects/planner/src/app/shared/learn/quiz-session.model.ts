@@ -8,10 +8,12 @@ export class QuizSession {
     private static readonly pointsCorrect = 2;
     private static readonly pointsHinted = 1;
 
+    // TODO remove there is always only one quiz
     public quizzes: QuizItem[] = [];
+    public currentQuestionIndex = 0;
+
     public correctCount = 0;
     public totalAnswered = 0;
-    public currentQuestionIndex = 0;
     public totalScore = 0;
     public trophyGained = false;
     private _celebrated = false;
@@ -33,6 +35,10 @@ export class QuizSession {
             }
         }
         return this.quizzes[this.currentQuestionIndex];
+    }
+
+    public get canReset(): boolean {
+        return this.totalAnswered > 0;
     }
 
     public get correctPercentage(): number {

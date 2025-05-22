@@ -9,7 +9,7 @@
                 [class.collapsed]="selectedTopic !== topic"
                 (click)="toggleTopic(topic)">
                   {{ topic.name }}
-                  <ng-container *ngIf="getTopicCompletionStatus(topic) as status">
+                  <ng-container *ngIf="topicStatus(topic) as status">
                       <span class="badge text-light ms-2 bg-warning" *ngIf="!status.hasTrophy">
                         {{ status.finished }}/{{ status.total }}
                       </span>
@@ -27,9 +27,9 @@
                         'bg-primary bg-opacity-10 text-primary fw-semibold':
                           isCategorySelected(topic, category)
                       }"
-                      (click)="updateTopic(topic, category)">
+                      (click)="select(topic, category)">
                       {{ category.name }}
-                      <ng-container *ngIf="getQuizStats(category.name) as stats">
+                      <ng-container *ngIf="getQuizStats(category) as stats">
                           <ng-container *ngIf="!stats.finished">
                               <span class="ms-2 badge text-light bg-warning" *ngIf="stats.showScore">
                                 {{ stats.score }} %
@@ -140,7 +140,7 @@
             <p>
               <strong>Score:</strong> {{ correctPercentage }}%
             </p>
-              <button type="button" [disabled]="!showResetButton"
+              <button type="button" [disabled]="!session.canReset"
                 class="btn btn-secondary m-1" (click)="resetSession()"
                 aria-label="Reset Category">
                 <fa-icon [icon]="resetIcon" class="fa-lg"></fa-icon> Reset

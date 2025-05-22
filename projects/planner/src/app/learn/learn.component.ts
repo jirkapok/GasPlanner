@@ -5,7 +5,7 @@ import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal, faCircleInfo, faUndo, faChartSimple } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule } from 'ngx-md';
-import { QuizService } from '../shared/learn/quiz.service';
+import { CategoryStatus, QuizService, TopicStatus } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
 import { QuizSession } from '../shared/learn/quiz-session.model';
 import confetti from 'canvas-confetti';
@@ -31,9 +31,8 @@ export class LearnComponent {
     public readonly helpIcon = faCircleInfo;
     public readonly statsIcon = faChartSimple;
     public readonly resetIcon = faUndo;
-    public readonly topics: Topic[] = [];
-
     public showScore = false;
+    // TODO move session to the quiz services
     public session!: QuizSession;
     public selectedTopic: Topic;
     public selectedCategory: Category;
@@ -44,10 +43,13 @@ export class LearnComponent {
         private preferencesStore: PreferencesStore,
         private viewStates: SubViewStorage,
     ) {
-        this.topics = quizService.topics;
         this.selectedTopic = this.topics[0];
         this.selectedCategory = this.selectedTopic.categories[0];
         this.loadState();
+    }
+
+    public get topics(): Topic[] {
+        return this.quizService.topics;
     }
 
     public get currentQuiz(): QuizItem {
@@ -59,7 +61,7 @@ export class LearnComponent {
     }
 
     public get showSubmitButton(): boolean {
-        return this.currentQuiz !== undefined && !this.currentQuiz.isAnswered;
+        return !this.currentQuiz.isAnswered;
     }
 
     public get showNextQuestionButton(): boolean {
@@ -70,14 +72,10 @@ export class LearnComponent {
         return !this.showScore && this.session.quizzes.length > 0;
     }
 
-    public get showResetButton(): boolean {
-        return this.session.totalAnswered > 0;
-    }
-
-    public updateTopic(topic: Topic, category: Category): void {
+    public select(topic: Topic, category: Category): void {
         this.selectedTopic = topic;
         this.selectedCategory = category;
-        this.session = this.getOrCreateSession(category);
+        this.session = this.quizService.session(category);
         this.saveState();
     }
 
@@ -97,7 +95,7 @@ export class LearnComponent {
     }
 
     public toggleTopic(topic: Topic): void {
-        this.updateTopic(topic, topic.categories[0]);
+        this.select(topic, topic.categories[0]);
     }
 
     public validateCurrentAnswer(): void {
@@ -152,6 +150,7 @@ export class LearnComponent {
         this.session.goToNextQuestion();
     }
 
+    // TODO fix primary button to submit
     public switchToScore(): void {
         this.showScore = true;
 
@@ -172,38 +171,17 @@ export class LearnComponent {
         return this.selectedTopic === topic && this.selectedCategory === category;
     }
 
-    public getTopicCompletionStatus(topic: Topic): { finished: number; total: number; hasTrophy: boolean  } {
-        return this.quizService.getTopicCompletionStatus(topic);
+    public topicStatus(topic: Topic): TopicStatus {
+        return this.quizService.topicStatus(topic);
     }
 
-    public getQuizStats(categoryName: string): { score: number; showScore: boolean; finished: boolean; attempts:number;  required: number } {
-        const session = this.quizService.sessionsByCategory.get(categoryName);
-        if (!session) {
-            return { score: 0, showScore: false, finished: false, attempts:0,  required: QuizSession.requiredAnsweredCount };
-        }
-        return {
-            score: session.correctPercentage,
-            showScore: session.totalAnswered > QuizSession.requiredAnsweredCount,
-            finished: session.trophyGained,
-            attempts: session.totalAnswered,
-            required: QuizSession.requiredAnsweredCount,
-        };
+    public getQuizStats(category: Category): CategoryStatus {
+        return this.quizService.categoryStatus(category);
     }
 
     public resetSession(): void {
         this.session.reset();
         this.preferencesStore.save();
-    }
-
-    private getOrCreateSession(category: Category): QuizSession {
-        const existing = this.quizService.sessionsByCategory.get(category.name);
-        if (existing) {
-            return existing;
-        }
-
-        const session = new QuizSession([category.getQuizItemForCategory()], category);
-        this.quizService.sessionsByCategory.set(category.name, session);
-        return session;
     }
 
     private loadState(): void {
@@ -219,7 +197,7 @@ export class LearnComponent {
         const loadedTopic = foundTopic || this.topics[0];
         const foundCategory = loadedTopic.categories.find(c => c.name === state.category);
         const loadedCategory = foundCategory || loadedTopic.categories[0];
-        this.updateTopic(loadedTopic, loadedCategory);
+        this.select(loadedTopic, loadedCategory);
     }
 
     private saveState(): void {

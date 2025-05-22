@@ -24,22 +24,6 @@ export class QuizItem {
         this.generateCorrectAnswer();
     }
 
-    public randomizeQuizVariables(): void {
-        let indexSafe = 0;
-
-        do {
-            this.variables = this.template.variables.map(variable => variable.nextRandomValue());
-            indexSafe++;
-            // TODO If this happens, it means that the question definition variables are incorrect.
-        } while (Number.isNaN(this.generateCorrectAnswer()) && indexSafe < 100);
-    }
-
-    private generateCorrectAnswer(): number {
-        const expected = this.template.calculateAnswer(this.variables);
-        this.correctAnswer = this.roundValue(expected, this.roundTo, this.roundType);
-        return this.correctAnswer;
-    }
-
     public validateAnswer(): boolean {
         const userAns = (this.userAnswer || '').trim();
         const userNum = parseFloat(userAns);
@@ -48,9 +32,27 @@ export class QuizItem {
             return false;
         }
 
-        this.generateCorrectAnswer();
         const userAnswerRounded = this.roundValue(userNum, this.roundTo, this.roundType);
         return userAnswerRounded === this.correctAnswer;
+    }
+
+    private randomizeQuizVariables(): void {
+        this.variables = this.template.variables.map(variable => variable.nextRandomValue());
+    }
+
+    private generateCorrectAnswer(): void {
+        const expected = this.template.calculateAnswer(this.variables);
+        this.correctAnswer = this.roundValue(expected, this.roundTo, this.roundType);
+    }
+
+    private renderQuestion(): void {
+        let rendered = this.template.question;
+        if (Array.isArray(this.template.variables)) {
+            this.template.variables.forEach((variable, index) => {
+                rendered = rendered.replace(new RegExp(`{${variable.name}}`, 'g'), this.variables[index].toString());
+            });
+        }
+        this.renderedQuestion = rendered;
     }
 
     private roundValue(value: number, roundTo: number, roundType: RoundType): number {
@@ -63,15 +65,5 @@ export class QuizItem {
             default:
                 return Precision.round(value, roundTo);
         }
-    }
-
-    public renderQuestion(): void {
-        let rendered = this.template.question;
-        if (Array.isArray(this.template.variables)) {
-            this.template.variables.forEach((variable, index) => {
-                rendered = rendered.replace(new RegExp(`{${variable.name}}`, 'g'), this.variables[index].toString());
-            });
-        }
-        this.renderedQuestion = rendered;
     }
 }

@@ -51,16 +51,13 @@ describe('Quiz questions definition', () => {
         topics.forEach(topic => {
             topic.categories.forEach(category => {
                 category.questions.forEach(template => {
-                    const question = new QuizItem(template);
-
                     for (let iteration = 0; iteration < 1000; iteration++) {
-                        question.randomizeQuizVariables();
-                        const answer = question.generateCorrectAnswer();
+                        const question = new QuizItem(template);
 
                         question.variables.forEach(v => expect(Number.isFinite(v))
                             .withContext(`Generated invalid variables for: '${template.question}' with variables [${question.variables}].`)
                             .toBeTruthy());
-                        expect(Number.isFinite(answer))
+                        expect(Number.isFinite(question.correctAnswer))
                             .withContext(`Generated invalid answer for: '${template.question}' with variables [${question.variables}].`)
                             .toBeTruthy();
                     }

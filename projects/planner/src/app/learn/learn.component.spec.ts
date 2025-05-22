@@ -21,7 +21,7 @@ import { UnitConversion } from "../shared/UnitConversion";
 import { ReloadDispatcher } from "../shared/reloadDispatcher";
 import { ApplicationSettingsService } from "../shared/ApplicationSettings";
 
-// TODO Add missing test cases for: getQuizStats, resetSession, shouldShowForm, shouldShowFinishButton,
+// TODO Add missing test cases for: categoryStatus, resetSession
 //  submitAnswers, continuePracticing, validateCurrentAnswer
 // TODO replace by Spy object
 const mockPreferencesStore = {

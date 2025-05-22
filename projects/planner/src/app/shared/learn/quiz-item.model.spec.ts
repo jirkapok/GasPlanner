@@ -14,7 +14,6 @@ describe('Quiz Question', () => {
             () => 0);
 
         const question = new QuizItem(questionTemplate);
-        question.renderQuestion();
 
         expect(question.renderedQuestion).toEqual("Question: with 3 and 2 and 1.");
     });

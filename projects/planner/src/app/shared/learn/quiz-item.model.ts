@@ -1,6 +1,5 @@
 import {
-    NitroxCalculator, SacCalculator, DepthConverter,
-    Precision, GasProperties
+    Precision
 } from 'scuba-physics';
 import { QuestionTemplate, RoundType } from './learn.models';
 
@@ -12,6 +11,8 @@ export class QuizItem {
     public variables: number[] = [];
     public isAnswered = false;
     public isCorrect = false;
+
+    /** bound directly to UI */
     public userAnswer?: string;
     public renderedQuestion = '';
 
@@ -20,6 +21,7 @@ export class QuizItem {
         this.roundType = template.roundType;
         this.randomizeQuizVariables();
         this.renderQuestion();
+        this.generateCorrectAnswer();
     }
 
     public randomizeQuizVariables(): void {
@@ -32,16 +34,12 @@ export class QuizItem {
         } while (Number.isNaN(this.generateCorrectAnswer()) && indexSafe < 100);
     }
 
-    // TODO make private
-    public generateCorrectAnswer(): number {
-        if (typeof this.template.calculateAnswer === 'function') {
-            return this.template.calculateAnswer(this.variables);
-        }
-
-        throw new Error('Invalid question template: missing calculateAnswer');
+    private generateCorrectAnswer(): number {
+        const expected = this.template.calculateAnswer(this.variables);
+        this.correctAnswer = this.roundValue(expected, this.roundTo, this.roundType);
+        return this.correctAnswer;
     }
 
-    // TODO validateAnswer with user provided value
     public validateAnswer(): boolean {
         const userAns = (this.userAnswer || '').trim();
         const userNum = parseFloat(userAns);
@@ -50,10 +48,8 @@ export class QuizItem {
             return false;
         }
 
-        const expected = this.generateCorrectAnswer();
-        this.correctAnswer = this.roundValue(expected, this.roundTo, this.roundType);
+        this.generateCorrectAnswer();
         const userAnswerRounded = this.roundValue(userNum, this.roundTo, this.roundType);
-
         return userAnswerRounded === this.correctAnswer;
     }
 

@@ -59,7 +59,6 @@ export class QuizSession {
         return (this.maxPoints !== this.totalScore) && (this.totalAnswered > 0);
     }
 
-    // TODO move to quiz service
     public static fromDto(dto: QuizSessionDto, sourceCategory: Category): QuizSession {
         const session = new QuizSession([sourceCategory.getQuizItemForCategory()], sourceCategory);
         session.correctCount = dto.correctCount;

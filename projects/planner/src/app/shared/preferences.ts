@@ -41,12 +41,12 @@ export class Preferences {
             states: this.toStates(),
             options: this.toAppSettings(),
             dives: this.toDives(),
-            quizSessions: this.quizService.getSerializableSessions()
+            quizSessions: this.quizService.serializeSessions()
         };
     }
 
     public applyApp(loaded: AppPreferences): void {
-        this.quizService.applyApp(loaded);
+        this.quizService.loadFrom(loaded.quizSessions);
 
         this.applyLoaded(loaded);
         this.viewStates.loadFrom(loaded.states);

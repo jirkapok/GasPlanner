@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Topic} from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
-import { AppPreferences, QuizSessionDto } from '../serialization.model';
+import { QuizSessionDto } from '../serialization.model';
 
 @Injectable({
     providedIn: 'root'
@@ -13,9 +13,9 @@ export class QuizService {
 
     constructor() {}
 
-    public applyApp(loaded: AppPreferences): void {
+    public loadFrom(loaded: QuizSessionDto[]): void {
         this.sessionsByCategory.clear();
-        this.restoreSessions(loaded.quizSessions);
+        this.restoreSessions(loaded);
     }
 
     public countGainedTrophies(topic: Topic): number {
@@ -36,7 +36,7 @@ export class QuizService {
         return { finished, total, hasTrophy };
     }
 
-    public getSerializableSessions(): QuizSessionDto[] {
+    public serializeSessions(): QuizSessionDto[] {
         const entries: QuizSessionDto[] = [];
 
         for (const [, session] of this.sessionsByCategory.entries()) {
@@ -48,7 +48,7 @@ export class QuizService {
     }
 
     private restoreSessions(entries: QuizSessionDto[] | undefined): void {
-        if (!Array.isArray(entries)) {
+        if (!entries) {
             return;
         }
 

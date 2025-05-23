@@ -1,7 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ReactiveFormsModule, NonNullableFormBuilder } from '@angular/forms';
 import { DiveOptionsComponent } from './diveoptions.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { PlannerService } from '../../shared/planner.service';
@@ -17,8 +16,7 @@ import { PreferencesStore } from '../../shared/preferencesStore';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
-import { MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { OptionsService } from '../../shared/options.service';
+import { MdbModalService } from "mdb-angular-ui-kit/modal";
 
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
@@ -39,7 +37,8 @@ describe('Dive options component', () => {
                 ApplicationSettingsService,
                 MdbModalService
             ]
-        }).compileComponents();
+        })
+            .compileComponents();
     });
 
     beforeEach(() => {
@@ -47,77 +46,46 @@ describe('Dive options component', () => {
         component = fixture.componentInstance;
     });
 
-    it('Set complex calls view switch', inject(
-        [ViewSwitchService],
-        (viewSwitch: ViewSwitchService) => {
-            const spy = spyOnProperty(viewSwitch, 'isComplex', 'set').and.callThrough();
-            fixture.detectChanges();
-            component.isComplex = false;
-            expect(spy).toHaveBeenCalledWith(false);
-        }
-    ));
-});
-
-describe('DiveOptionsComponent - option methods', () => {
-    let component: DiveOptionsComponent;
-    let fixture: ComponentFixture<DiveOptionsComponent>;
-    let optionsSpy: jasmine.SpyObj<OptionsService>;
-    let dispatcherSpy: jasmine.SpyObj<ReloadDispatcher>;
-
-    beforeEach(async () => {
-        optionsSpy = jasmine.createSpyObj<OptionsService>(
-            'OptionsService',
-            ['useRecreational', 'useRecommended', 'switchAirBreaks']
-        );
-        dispatcherSpy = jasmine.createSpyObj<ReloadDispatcher>(
-            'ReloadDispatcher',
-            ['sendOptionsChanged']
-        );
-
-        await TestBed.configureTestingModule({
-            declarations: [DiveOptionsComponent],
-            imports: [ReactiveFormsModule],
-            providers: [
-                { provide: OptionsService,   useValue: optionsSpy },
-                { provide: ReloadDispatcher, useValue: dispatcherSpy }
-            ],
-            schemas: [NO_ERRORS_SCHEMA]
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(DiveOptionsComponent);
-        component = fixture.componentInstance;
-
-        const emptyRootForm: FormGroup = TestBed.inject(FormBuilder).group({});
-        component.rootForm = emptyRootForm;
-
-        component.ngOnInit();
-        spyOn(component.optionsForm, 'patchValue');
+    it('Set complex calls wiew switch', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
+        const spy = spyOnProperty(viewSwitch, 'isComplex', 'set')
+            .and.callThrough();
         fixture.detectChanges();
-    });
+        component.isComplex = false;
+        expect(spy).toHaveBeenCalledWith(false);
+    }
+    ));
 
-    it('switchAirBreaks should trigger service, dispatch and reload', () => {
-        component.switchAirBreaks();
+    describe('Option methods', () => {
+        let schedules: DiveSchedules;
+        let fb: NonNullableFormBuilder;
 
-        expect(optionsSpy['switchAirBreaks']).toHaveBeenCalledWith();
-        expect(dispatcherSpy['sendOptionsChanged']).toHaveBeenCalledWith();
-        expect(component.optionsForm['patchValue']).toHaveBeenCalled();
-    });
+        beforeEach(inject(
+            [DiveSchedules, NonNullableFormBuilder],
+            (_schedules: DiveSchedules, _fb: NonNullableFormBuilder) => {
+                schedules = _schedules;
+                fb = _fb;
+                component.rootForm = fb.group({});
+                component.ngOnInit();
+                fixture.detectChanges();
+            }
+        ));
 
-    it('useRecreational should trigger service, dispatch and reload', () => {
-        component.useRecreational();
+        it('should call switchAirBreaks on selectedOptions', () => {
+            const switchSpy = spyOn(schedules.selectedOptions, 'switchAirBreaks');
+            component.switchAirBreaks();
+            expect(switchSpy).toHaveBeenCalledWith();
+        });
 
-        expect(optionsSpy['useRecreational']).toHaveBeenCalledWith();
-        expect(dispatcherSpy['sendOptionsChanged']).toHaveBeenCalledWith();
-        expect(component.optionsForm['patchValue']).toHaveBeenCalled();
-    });
+        it('should call useRecreational on selectedOptions', () => {
+            const recSpy = spyOn(schedules.selectedOptions, 'useRecreational');
+            component.useRecreational();
+            expect(recSpy).toHaveBeenCalledWith();
+        });
 
-    it('useRecommended should trigger service, dispatch and reload', () => {
-        component.useRecommended();
-
-        expect(optionsSpy['useRecommended']).toHaveBeenCalledWith();
-        expect(dispatcherSpy['sendOptionsChanged']).toHaveBeenCalledWith();
-        expect(component.optionsForm['patchValue']).toHaveBeenCalled();
+        it('should call useRecommended on selectedOptions', () => {
+            const recoSpy = spyOn(schedules.selectedOptions, 'useRecommended');
+            component.useRecommended();
+            expect(recoSpy).toHaveBeenCalledWith();
+        });
     });
 });
-
-

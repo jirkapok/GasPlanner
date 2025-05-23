@@ -1,6 +1,5 @@
 import { Category } from './learn.models';
 import { QuizSessionDto } from '../serialization.model';
-import { QuizItem } from './quiz-item.model';
 
 export class QuizSession {
     private static readonly minimalAcceptableSuccessRate = 80;

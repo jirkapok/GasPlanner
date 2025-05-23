@@ -10,7 +10,7 @@ import { Category, RoundType, Topic } from '../shared/learn/learn.models';
 import { QuizSession } from '../shared/learn/quiz-session.model';
 import confetti from 'canvas-confetti';
 import { PreferencesStore } from '../shared/preferencesStore';
-import { QuizItem } from '../shared/learn/quiz-item.model';
+import { Question } from '../shared/learn/quiz.question';
 import { LearnViewState } from "../shared/views.model";
 import { KnownViews } from "../shared/viewStates";
 import { SubViewStorage } from "../shared/subViewStorage";
@@ -58,7 +58,7 @@ export class LearnComponent {
         return this.quizService.selectedCategory;
     }
 
-    public get currentQuiz(): QuizItem {
+    public get question(): Question {
         return this.quizService.question;
     }
 

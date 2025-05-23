@@ -3,7 +3,7 @@ import { Category, Topic } from './learn.models';
 import { QuizSession } from './quiz-session.model';
 import { topics } from './quiz.questions';
 import { QuizSessionDto } from '../serialization.model';
-import { QuizItem } from "./quiz-item.model";
+import { Question } from './quiz.question';
 
 export interface TopicStatus {
    finished: number;
@@ -27,7 +27,7 @@ export class QuizService {
     private _selectedTopic: Topic;
     private _selectedCategory: Category;
     private _session: QuizSession;
-    public _question!: QuizItem;
+    public _question!: Question;
     private sessionsByCategory = new Map<string, QuizSession>();
 
     constructor(@Optional()  tops?: Topic[]) {
@@ -50,7 +50,7 @@ export class QuizService {
         return this._session;
     }
 
-    public get question(): QuizItem {
+    public get question(): Question {
         return this._question;
     }
 

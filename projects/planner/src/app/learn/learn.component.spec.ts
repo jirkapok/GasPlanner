@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Urls } from '../shared/navigation.service';
 import { QuizService } from '../shared/learn/quiz.service';
-import { QuizItem } from '../shared/learn/quiz-item.model';
+import { Question } from '../shared/learn/quiz.question';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RoundType, Topic, QuestionTemplate } from '../shared/learn/learn.models';
@@ -40,7 +40,7 @@ describe('LearnComponent', () => {
     let fixture: ComponentFixture<LearnComponent>;
     let quizService: QuizService;
 
-    const createMockQuizItem = (): QuizItem => {
+    const createMockQuizItem = (): Question => {
         const template: QuestionTemplate = {
             question: 'Mock question with {value}',
             variables: [],
@@ -49,7 +49,7 @@ describe('LearnComponent', () => {
             roundType: RoundType.round,
         };
 
-        return new QuizItem(template);
+        return new Question(template);
     };
 
     beforeEach(async () => {

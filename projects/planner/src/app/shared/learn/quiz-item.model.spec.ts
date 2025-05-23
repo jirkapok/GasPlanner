@@ -1,4 +1,4 @@
-import { QuizItem } from "./quiz-item.model";
+import { Question } from './quiz.question';
 import { QuestionTemplate, RoundType, NumberVariable } from "./learn.models";
 
 describe('Quiz Question', () => {
@@ -13,7 +13,7 @@ describe('Quiz Question', () => {
             ],
             () => 0);
 
-        const question = new QuizItem(questionTemplate);
+        const question = new Question(questionTemplate);
 
         expect(question.renderedQuestion).toEqual("Question: with 3 and 2 and 1.");
     });
@@ -24,7 +24,7 @@ describe('Quiz Question', () => {
             roundType,
             [],
             (_) => 1.25);
-        const question = new QuizItem(template);
+        const question = new Question(template);
         question.userAnswer = "1";
         return question;
     };

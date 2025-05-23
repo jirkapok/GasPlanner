@@ -1,6 +1,6 @@
 import { topics } from './quiz.questions';
 import { Topic, Category, QuestionTemplate} from './learn.models';
-import { QuizItem } from "./quiz-item.model";
+import { Question } from './quiz.question';
 
 describe('Quiz questions definition', () => {
     it('All topics have at least one category with one question', () => {
@@ -54,7 +54,7 @@ describe('Quiz questions definition', () => {
                     const calculateSpy = spyOn(template, 'calculateAnswer').and.callThrough();
 
                     for (let iteration = 0; iteration < 1000; iteration++) {
-                        const question = new QuizItem(template);
+                        const question = new Question(template);
 
                         const variables = calculateSpy.calls.mostRecent().args[0];
                         variables.forEach(v => expect(Number.isFinite(v))

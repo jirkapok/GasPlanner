@@ -3,7 +3,7 @@ import {
 } from 'scuba-physics';
 import { QuestionTemplate, RoundType } from './learn.models';
 
-export class QuizItem {
+export class Question {
     /** bound directly to UI */
     public userAnswer?: string;
     public readonly roundTo: number;

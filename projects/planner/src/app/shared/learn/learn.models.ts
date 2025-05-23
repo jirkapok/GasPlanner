@@ -1,7 +1,6 @@
-import { QuizItem } from './quiz-item.model';
+import { Question } from './quiz.question';
 import {
-    DepthConverter, NitroxCalculator, SacCalculator,
-    GasProperties, Precision
+    Precision
 } from 'scuba-physics';
 
 export type VariableOption = number;
@@ -70,10 +69,10 @@ export class Category {
         public questions: QuestionTemplate[]
     ) {}
 
-    public createQuestion(): QuizItem {
+    public createQuestion(): Question {
         const randomIndex = Math.floor(Math.random() * this.questions.length);
         const selectedTemplate = this.questions[randomIndex];
-        return new QuizItem(selectedTemplate);
+        return new Question(selectedTemplate);
     }
 }
 

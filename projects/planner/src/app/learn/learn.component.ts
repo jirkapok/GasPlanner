@@ -66,6 +66,7 @@ export class LearnComponent {
         return this.session.correctPercentage;
     }
 
+    // TODO remove
     public get showSubmitButton(): boolean {
         return !this.currentQuiz.isAnswered;
     }

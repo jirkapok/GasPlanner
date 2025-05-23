@@ -4,55 +4,60 @@ import {
 import { QuestionTemplate, RoundType } from './learn.models';
 
 export class QuizItem {
-    public correctAnswer?: number;
-
-    public roundTo: number;
-    public roundType: RoundType;
-    public variables: number[] = [];
-    public isAnswered = false;
-    public isCorrect = false;
-
     /** bound directly to UI */
     public userAnswer?: string;
-    public renderedQuestion = '';
+    public readonly roundTo: number;
+    public readonly roundType: RoundType;
+    public readonly renderedQuestion: string;
+    public readonly correctAnswer: number;
+    private readonly variables: number[];
+    private _isAnswered = false;
+    private _isCorrect = false;
 
     constructor(private template: QuestionTemplate) {
         this.roundTo = template.roundTo;
         this.roundType = template.roundType;
-        this.randomizeQuizVariables();
-        this.renderQuestion();
-        this.generateCorrectAnswer();
+        this.variables = this.randomizeQuizVariables();
+        this.renderedQuestion = this.renderQuestion();
+        this.correctAnswer = this.generateCorrectAnswer();
     }
 
-    public validateAnswer(): boolean {
+    public get isAnswered(): boolean {
+        return this._isAnswered;
+    }
+
+    public get isCorrect(): boolean {
+        return this._isCorrect;
+    }
+
+    public validateAnswer(): void {
+        this._isAnswered = true;
         const userAns = (this.userAnswer || '').trim();
         const userNum = parseFloat(userAns);
 
         if (Number.isNaN(userNum)) {
-            return false;
+            return;
         }
 
         const userAnswerRounded = this.roundValue(userNum, this.roundTo, this.roundType);
-        return userAnswerRounded === this.correctAnswer;
+        this._isCorrect = userAnswerRounded === this.correctAnswer;
     }
 
-    private randomizeQuizVariables(): void {
-        this.variables = this.template.variables.map(variable => variable.nextRandomValue());
+    private randomizeQuizVariables(): number[] {
+        return this.template.variables.map(variable => variable.nextRandomValue());
     }
 
-    private generateCorrectAnswer(): void {
+    private generateCorrectAnswer(): number {
         const expected = this.template.calculateAnswer(this.variables);
-        this.correctAnswer = this.roundValue(expected, this.roundTo, this.roundType);
+        return this.roundValue(expected, this.roundTo, this.roundType);
     }
 
-    private renderQuestion(): void {
+    private renderQuestion(): string {
         let rendered = this.template.question;
-        if (Array.isArray(this.template.variables)) {
-            this.template.variables.forEach((variable, index) => {
-                rendered = rendered.replace(new RegExp(`{${variable.name}}`, 'g'), this.variables[index].toString());
-            });
-        }
-        this.renderedQuestion = rendered;
+        this.template.variables.forEach((variable, index) => {
+            rendered = rendered.replace(new RegExp(`{${variable.name}}`, 'g'), this.variables[index].toString());
+        });
+        return rendered;
     }
 
     private roundValue(value: number, roundTo: number, roundType: RoundType): number {

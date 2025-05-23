@@ -75,13 +75,9 @@ export class QuizService {
     }
 
     public validateCurrentAnswer(): void {
-        const quiz = this.question;
+        this.question.validateAnswer();
 
-        // TODO move to question
-        quiz.isCorrect = quiz.validateAnswer();
-        quiz.isAnswered = true;
-
-        if (quiz.isCorrect) {
+        if (this.question.isCorrect) {
             this.session.answerCorrectly();
         } else {
             this.session.answerWrong();

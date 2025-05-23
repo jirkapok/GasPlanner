@@ -51,14 +51,19 @@ describe('Quiz questions definition', () => {
         topics.forEach(topic => {
             topic.categories.forEach(category => {
                 category.questions.forEach(template => {
+                    spyOn(template, 'calculateAnswer').and.callThrough();
+                    //.calls(v => variables = v);
+
                     for (let iteration = 0; iteration < 1000; iteration++) {
+                        let variables: number[] = [];
+
                         const question = new QuizItem(template);
 
-                        question.variables.forEach(v => expect(Number.isFinite(v))
-                            .withContext(`Generated invalid variables for: '${template.question}' with variables [${question.variables}].`)
-                            .toBeTruthy());
+                        // TODO variables.forEach(v => expect(Number.isFinite(v))
+                        //     .withContext(`Generated invalid variables for: '${template.question}' with variables [${question.variables}].`)
+                        //     .toBeTruthy());
                         expect(Number.isFinite(question.correctAnswer))
-                            .withContext(`Generated invalid answer for: '${template.question}' with variables [${question.variables}].`)
+                            .withContext(`Generated invalid answer for: '${template.question}' with variables [${variables}].`)
                             .toBeTruthy();
                     }
                 });

@@ -43,11 +43,11 @@ describe('Quiz Question', () => {
         expect(question.correctAnswer).toBeCloseTo(1.3, 1);
     });
 
-    xit('Does create correct answer, even user answer was empty', () => {
+    it('Does create correct answer, even user answer was empty', () => {
         const question = createQuestionWithRounding(RoundType.ceil);
         question.userAnswer = '';
         question.validateAnswer();
 
-        expect(question.correctAnswer).toBeCloseTo(1.2, 1);
+        expect(question.correctAnswer).toBeCloseTo(1.3, 1);
     });
 });

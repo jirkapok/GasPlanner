@@ -1,4 +1,4 @@
-import { QuizSession } from "./quiz-session.model";
+import { QuizSession } from './quiz.session';
 import { Category, QuestionTemplate, RoundType } from "./learn.models";
 
 describe('Quiz Session', () => {

@@ -7,7 +7,7 @@ import { faMedal, faCircleInfo, faUndo, faChartSimple } from '@fortawesome/free-
 import { NgxMdModule } from 'ngx-md';
 import { CategoryStatus, QuizService, TopicStatus } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
-import { QuizSession } from '../shared/learn/quiz-session.model';
+import { QuizSession } from '../shared/learn/quiz.session';
 import confetti from 'canvas-confetti';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { Question } from '../shared/learn/quiz.question';

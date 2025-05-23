@@ -1,6 +1,6 @@
 import { Injectable, Optional } from '@angular/core';
 import { Category, Topic } from './learn.models';
-import { QuizSession } from './quiz-session.model';
+import { QuizSession } from './quiz.session';
 import { topics } from './quiz.questions';
 import { QuizSessionDto } from '../serialization.model';
 import { Question } from './quiz.question';

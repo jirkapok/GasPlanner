@@ -1,4 +1,4 @@
-import { QuizSession } from "./quiz-session.model";
+import { QuizSession } from "./quiz.session";
 import { Category, QuestionTemplate, RoundType, Topic } from "./learn.models";
 import { QuizService } from "./quiz.service";
 

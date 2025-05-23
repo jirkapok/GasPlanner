@@ -1,6 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, NonNullableFormBuilder } from '@angular/forms';
 import { DiveOptionsComponent } from './diveoptions.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { PlannerService } from '../../shared/planner.service';
@@ -52,5 +52,40 @@ describe('Dive options component', () => {
         fixture.detectChanges();
         component.isComplex = false;
         expect(spy).toHaveBeenCalledWith(false);
-    }));
+    }
+    ));
+
+    describe('Option methods', () => {
+        let schedules: DiveSchedules;
+        let fb: NonNullableFormBuilder;
+
+        beforeEach(inject(
+            [DiveSchedules, NonNullableFormBuilder],
+            (_schedules: DiveSchedules, _fb: NonNullableFormBuilder) => {
+                schedules = _schedules;
+                fb = _fb;
+                component.rootForm = fb.group({});
+                component.ngOnInit();
+                fixture.detectChanges();
+            }
+        ));
+
+        it('should call switchAirBreaks on selectedOptions', () => {
+            const switchSpy = spyOn(schedules.selectedOptions, 'switchAirBreaks');
+            component.switchAirBreaks();
+            expect(switchSpy).toHaveBeenCalledWith();
+        });
+
+        it('should call useRecreational on selectedOptions', () => {
+            const recSpy = spyOn(schedules.selectedOptions, 'useRecreational');
+            component.useRecreational();
+            expect(recSpy).toHaveBeenCalledWith();
+        });
+
+        it('should call useRecommended on selectedOptions', () => {
+            const recoSpy = spyOn(schedules.selectedOptions, 'useRecommended');
+            component.useRecommended();
+            expect(recoSpy).toHaveBeenCalledWith();
+        });
+    });
 });

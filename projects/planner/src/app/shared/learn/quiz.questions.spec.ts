@@ -52,7 +52,7 @@ describe('Quiz questions definition', () => {
             topic.categories.forEach(category => {
                 category.questions.forEach(template => {
                     spyOn(template, 'calculateAnswer').and.callThrough();
-                    //.calls(v => variables = v);
+                      //.calls(v => variables = v);
 
                     for (let iteration = 0; iteration < 1000; iteration++) {
                         let variables: number[] = [];

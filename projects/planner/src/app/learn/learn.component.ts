@@ -66,15 +66,6 @@ export class LearnComponent {
         return this.session.correctPercentage;
     }
 
-    // TODO remove
-    public get showSubmitButton(): boolean {
-        return !this.currentQuiz.isAnswered;
-    }
-
-    public get showNextQuestionButton(): boolean {
-        return this.currentQuiz.isAnswered;
-    }
-
     public select(topic: Topic, category: Category): void {
         this.quizService.select(topic, category);
         this.saveState();

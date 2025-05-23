@@ -96,7 +96,7 @@
             <div class="d-flex flex-wrap justify-content-between">
                 <div class="d-flex flex-wrap gap-2 mt-3">
                   <button id="submit-answer"
-                    *ngIf="showSubmitButton"
+                    *ngIf="!currentQuiz.isAnswered"
                     type="submit"
                     class="btn btn-primary"
                     (click)="validateCurrentAnswer()">
@@ -105,7 +105,7 @@
 
                   <button
                     id="next-question"
-                    *ngIf="showNextQuestionButton"
+                    *ngIf="currentQuiz.isAnswered"
                     type="submit"
                     class="btn btn-primary"
                     (click)="goToNextQuestion()">
@@ -113,7 +113,7 @@
                   </button>
 
                   <button
-                    *ngIf="!showNextQuestionButton"
+                    *ngIf="!currentQuiz.isAnswered"
                     type="button"
                     class="btn btn-secondary"
                     (click)="openQuestionHelp()">

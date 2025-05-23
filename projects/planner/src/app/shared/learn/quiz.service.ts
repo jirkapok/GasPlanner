@@ -1,4 +1,4 @@
-import { Injectable, Optional } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
 import { Category, Topic } from './learn.models';
 import { QuizSession } from './quiz.session';
 import { topics } from './quiz.questions';
@@ -30,7 +30,7 @@ export class QuizService {
     public _question!: Question;
     private sessionsByCategory = new Map<string, QuizSession>();
 
-    constructor(@Optional()  tops?: Topic[]) {
+    constructor(@Optional() @Inject(topics) tops?: Topic[]) {
         this.topics = tops || topics;
         this._selectedTopic = this.topics[0];
         this._selectedCategory = this.selectedTopic.categories[0];

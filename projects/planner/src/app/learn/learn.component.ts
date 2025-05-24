@@ -78,7 +78,7 @@ export class LearnComponent {
     public openQuestionHelp(): void {
         const category = this.selectedCategory;
 
-        if (!category || !category.help) {
+        if (!category.help) {
             return;
         }
 

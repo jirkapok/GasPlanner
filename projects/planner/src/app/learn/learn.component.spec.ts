@@ -21,8 +21,6 @@ import { UnitConversion } from "../shared/UnitConversion";
 import { ReloadDispatcher } from "../shared/reloadDispatcher";
 import { ApplicationSettingsService } from "../shared/ApplicationSettings";
 
-// TODO Add missing test cases for: categoryStatus, resetSession
-//  submitAnswers, continuePracticing, validateCurrentAnswer
 // TODO replace by Spy object
 const mockPreferencesStore = {
     load: () => {},
@@ -89,16 +87,43 @@ describe('LearnComponent', () => {
         fixture.detectChanges();
     });
 
-    it('creates learn with default topic', () => {
+    it('Creates learn with default topic', () => {
         expect(component.selectedTopic.name).toBe('Pressure at depth');
         expect(component.selectedCategory.name).toBe('Depth');
     });
 
-    it('changes quiz question', () => {
-        const expectedCategory = 'Maximum operational depth';
-        component.select(quizService.topics[1], quizService.topics[1].categories[0]);
+    it('Select category changes quiz question', () => {
+        const topic = quizService.topics[1];
+        component.select(topic, topic.categories[0]);
         fixture.detectChanges();
 
-        expect(component.selectedCategory.name).toBe(expectedCategory);
+        expect(component.selectedCategory).toBe(topic.categories[0]);
+    });
+
+    it('Reset session resets session and switches to new question', () => {
+        const resetSpy = spyOn(component.quizService.session, 'reset').and.callThrough();
+        const nextQuestionSpy = spyOn(component.quizService, 'goToNextQuestion').and.callThrough();
+        component.resetSession();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(nextQuestionSpy).toHaveBeenCalledWith();
+    });
+
+    it('Submits answer switches to score', () => {
+        for (let index = 0; index < 5; index++) {
+            component.session.answerCorrectly();
+        }
+
+        const validationSpy = spyOn(component.question, 'validateAnswer').and.callThrough();
+        component.validateCurrentAnswer();
+        expect(validationSpy).toHaveBeenCalledWith();
+        expect(component.showScore).toBeTruthy();
+    });
+
+    it('Continue practicing switches to new question', () => {
+        const oldQuestion = component.question;
+        component.continuePracticing();
+
+        expect(component.showScore).toBeFalsy();
+        expect(component.question).not.toBe(oldQuestion);
     });
 });

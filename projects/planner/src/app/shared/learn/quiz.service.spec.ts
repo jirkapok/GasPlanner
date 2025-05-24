@@ -61,4 +61,41 @@ describe('Quiz Service', () => {
         expect(status.hasTrophy).toBeTruthy();
         expect(status.total).toBe(2);
     });
+
+    it('Select selects always some category', () => {
+        const sut = new QuizService(topics);
+        let selectedTopic!: Topic;
+        let selectedCategory!: Category;
+        sut.select(selectedTopic, selectedCategory);
+
+        expect(sut.selectedCategory).not.toBeNull();
+    });
+
+    it('Select forces new question', () => {
+        const sut = new QuizService(topics);
+        const oldQuestion = sut.question;
+        sut.select(topics[0], topics[0].categories[1])
+
+        expect(sut.question).not.toBe(oldQuestion);
+    });
+
+    it('Validate question marks question as answered and adds points to session', () => {
+        const sut = new QuizService(topics);
+        sut.question.userAnswer = sut.question.correctAnswer.toString();
+        sut.validateCurrentAnswer();
+
+        expect(sut.question.isCorrect).toBeTruthy();
+        expect(sut.question.isAnswered).toBeTruthy();
+        expect(sut.session.totalScore).toBe(2);
+    });
+
+    it('Go to next question resets hint', () => {
+        const sut = new QuizService(topics);
+        const oldQuestion = sut.question;
+        sut.session.useHint();
+        sut.goToNextQuestion()
+
+        expect(sut.question).not.toBe(oldQuestion);
+        expect(sut.session.anyHintUsed).toBeFalsy();
+    });
 });

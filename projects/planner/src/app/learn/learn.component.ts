@@ -111,27 +111,6 @@ export class LearnComponent {
         }
     }
 
-    public launchConfetti(): void {
-        confetti({
-            particleCount: 240,
-            spread: 90,
-            origin: { y: 0.6 },
-            colors: ['#00c6ff', '#0072ff', '#ffffff'],
-        });
-    }
-
-    public launchConfettiFromElement(el: HTMLElement): void {
-        const rect = el.getBoundingClientRect();
-        const x = (rect.left + rect.width / 2) / window.innerWidth;
-        const y = (rect.top + rect.height / 2) / window.innerHeight;
-
-        confetti({
-            particleCount: 240,
-            spread: 90,
-            origin: { x, y }
-        });
-    }
-
     public continuePracticing(): void {
         this.showScore = false;
         this.goToNextQuestion();
@@ -141,7 +120,6 @@ export class LearnComponent {
         this.quizService.goToNextQuestion();
     }
 
-    // TODO fix primary button to submit
     public switchToScore(): void {
         this.showScore = true;
 
@@ -174,6 +152,27 @@ export class LearnComponent {
         this.session.reset();
         this.goToNextQuestion();
         this.preferencesStore.save();
+    }
+
+    private launchConfetti(): void {
+        confetti({
+            particleCount: 240,
+            spread: 90,
+            origin: { y: 0.6 },
+            colors: ['#00c6ff', '#0072ff', '#ffffff'],
+        });
+    }
+
+    private launchConfettiFromElement(el: HTMLElement): void {
+        const rect = el.getBoundingClientRect();
+        const x = (rect.left + rect.width / 2) / window.innerWidth;
+        const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+        confetti({
+            particleCount: 240,
+            spread: 90,
+            origin: { x, y }
+        });
     }
 
     private loadState(): void {

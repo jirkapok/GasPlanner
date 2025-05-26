@@ -1,153 +1,142 @@
 <div class="row mt-5">
-  <div class="col-12 col-lg-5 col-xl-4 col-xxl-3 mt-3">
-    <div class="card shadow-sm">
-      <div class="card-body p-0">
-        <div class="accordion" id="topicsAccordion">
-          <div class="accordion-item" *ngFor="let topic of topics">
-            <h2 class="accordion-header">
-              <button class="accordion-button "
-                [class.collapsed]="selectedTopic !== topic"
-                (click)="toggleTopic(topic)">
-                  {{ topic.name }}
-                  <ng-container *ngIf="topicStatus(topic) as status">
-                      <span class="badge text-light ms-2 bg-warning" *ngIf="!status.hasTrophy">
-                        {{ status.finished }}/{{ status.total }}
-                      </span>
-                      <fa-icon [icon]="trophyIcon" class="ms-2 text-success" *ngIf="status.hasTrophy">
-                      </fa-icon>
-                  </ng-container>
-              </button>
-            </h2>
-            <div class="accordion-collapse collapse" [class.show]="selectedTopic === topic">
-              <div class="accordion-body py-2 px-3">
-                <ul class="list-group list-group-flush">
-                  <li *ngFor="let category of topic.categories" class="list-group-item px-0">
-                    <div class="px-3 py-2 rounded cursor-pointer"
-                      [ngClass]="{
-                        'bg-primary bg-opacity-10 text-primary fw-semibold':
-                          isCategorySelected(topic, category)
-                      }"
-                      (click)="select(topic, category)">
-                      {{ category.name }}
-                      <ng-container *ngIf="categoryStatus(category) as stats">
-                          <ng-container *ngIf="!stats.finished">
-                              <span class="ms-2 badge text-light bg-warning" *ngIf="stats.showScore">
-                                {{ stats.score }} %
-                              </span>
-                              <span class="ms-2 badge text-light bg-warning" *ngIf="!stats.showScore">
-                                {{ stats.attempts }}/{{ stats.required }}
-                              </span>
-                          </ng-container>
-                          <fa-icon [icon]="trophyIcon" *ngIf="stats.finished" class="ms-2 text-success small">
-                          </fa-icon>
-                      </ng-container>
+    <div class="col-12 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="accordion" id="topicsAccordion">
+                    <div class="accordion-item" *ngFor="let topic of topics">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button " [class.collapsed]="selectedTopic !== topic"
+                                (click)="toggleTopic(topic)">
+                                {{ topic.name }}
+                                <ng-container *ngIf="topicStatus(topic) as status">
+                                    <span class="badge text-light ms-2 bg-warning" *ngIf="!status.hasTrophy">
+                                        {{ status.finished }}/{{ status.total }}
+                                    </span>
+                                    <fa-icon [icon]="trophyIcon" class="ms-2 text-success" *ngIf="status.hasTrophy">
+                                    </fa-icon>
+                                </ng-container>
+                            </button>
+                        </h2>
+                        <div class="accordion-collapse collapse" [class.show]="selectedTopic === topic">
+                            <div class="accordion-body py-2 px-3">
+                                <ul class="list-group list-group-flush">
+                                    <li *ngFor="let category of topic.categories" class="list-group-item px-0">
+                                        <div class="px-3 py-2 rounded cursor-pointer" [ngClass]="{
+                                                'bg-primary bg-opacity-10 text-primary fw-semibold':
+                                                  isCategorySelected(topic, category)
+                                              }" (click)="select(topic, category)">
+                                            {{ category.name }}
+                                            <ng-container *ngIf="categoryStatus(category) as stats">
+                                                <ng-container *ngIf="!stats.finished">
+                                                    <span class="ms-2 badge text-light bg-warning"
+                                                        *ngIf="stats.showScore">
+                                                        {{ stats.score }} %
+                                                    </span>
+                                                    <span class="ms-2 badge text-light bg-warning"
+                                                        *ngIf="!stats.showScore">
+                                                        {{ stats.attempts }}/{{ stats.required }}
+                                                    </span>
+                                                </ng-container>
+                                                <fa-icon [icon]="trophyIcon" *ngIf="stats.finished"
+                                                    class="ms-2 text-success small">
+                                                </fa-icon>
+                                            </ng-container>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
-    <div class="card shadow-sm position-relative">
-        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-            <div>{{ selectedTopic.name }} / {{ selectedCategory.name }}</div>
-            <div *ngIf="!showScore" class="">
-                <span class="badge bg-primary text-light small m-1">
-                  {{ session.correctAnswers }}/{{ session.totalAnswered }} ({{ correctPercentage }} %)
-                </span>
-                <button type="button" class="btn btn-sm btn-secondary mx-1" (click)="switchToScore()">
-                    <fa-icon [icon]="statsIcon" class="fa-lg"></fa-icon>
-                </button>
-                <button
-                    type="button"
-                    class="btn btn-sm btn-secondary fa-lg"
-                    (click)="openHelp()"
-                    title="Show Help"
-                    aria-label="Open help panel" >
-                    <fa-icon [icon]="helpIcon" class="fa-lg"></fa-icon>
-                </button>
-            </div>
-        </div>
-      <div class="card-body">
-        <form *ngIf="!showScore">
-          <div class="mb-4" *ngIf="question as quiz">
-              <div class="mt-2 fs-5">
-              {{ quiz.renderedQuestion }}
-              </div>
-              <div class="small pb-5">
-                  Round {{ getRoundingExplanation(quiz.roundType) }} your answer to <strong>{{ quiz.roundTo }}</strong> decimal place(s).
-              </div>
-            <input id="answer-input" name="answer-input" type="text" class="form-control mb-2"
-              [(ngModel)]="quiz.userAnswer" [disabled]="quiz.isAnswered"/>
-
-            <div *ngIf="quiz.isAnswered">
-              <div *ngIf="quiz.isCorrect" class="alert alert-success border-0 bg-success bg-opacity-10 text-success small py-2 px-3">
-                Correct!
-              </div>
-              <div *ngIf="!quiz.isCorrect" class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger small py-2 px-3">
-                Incorrect. Correct answer: <strong>{{ quiz.correctAnswer }}</strong>
-              </div>
-            </div>
-            <div class="d-flex flex-wrap justify-content-between">
-                <div class="d-flex flex-wrap gap-2 mt-3">
-                  <button id="submit-answer"
-                    *ngIf="!question.isAnswered"
-                    type="submit"
-                    class="btn btn-primary"
-                    (click)="validateCurrentAnswer()">
-                    Submit Answer
-                  </button>
-
-                  <button
-                    id="next-question"
-                    *ngIf="question.isAnswered"
-                    type="submit"
-                    class="btn btn-primary"
-                    (click)="goToNextQuestion()">
-                    Next Question
-                  </button>
-
-                  <button
-                    *ngIf="!question.isAnswered"
-                    type="button"
-                    class="btn btn-secondary"
-                    (click)="openQuestionHelp()">
-                    Need Hint?
-                  </button>
                 </div>
             </div>
-          </div>
-        </form>
-
-        <div *ngIf="showScore" class="card-body text-center p-4">
-            <h4 class="fw-bold mb-3">
-                <fa-icon [icon]="trophyIcon" class="fa-lg text-success"></fa-icon> Completed!
-            </h4>
-            <p>
-              <strong>Points:</strong> {{ session.totalScore }} out of {{ session.maxPoints }}
-            </p>
-            <p>
-              <strong>Correct Answers:</strong> {{ session.correctAnswers }} / {{ session.totalAnswered }}
-              <span *ngIf="session.anyHintUsed" class="text-warning">(some with hints)</span>
-            </p>
-            <p>
-              <strong>Score:</strong> {{ correctPercentage }}%
-            </p>
-              <button type="button" [disabled]="!session.canReset"
-                class="btn btn-secondary m-1" (click)="resetSession()"
-                aria-label="Reset Category">
-                <fa-icon [icon]="resetIcon" class="fa-lg"></fa-icon> Reset
-              </button>
-              <button class="btn btn-primary m-1" (click)="continuePracticing()" #completionBlock>
-                Continue Practicing
-              </button>
         </div>
-      </div>
     </div>
-  </div>
+
+    <div class="col-12 col-lg-7 col-xl-8 col-xxl-6 mt-3">
+        <div class="card shadow-sm position-relative">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                <div>{{ selectedTopic.name }} / {{ selectedCategory.name }}</div>
+                <div *ngIf="!showScore">
+                    <span class="badge bg-primary text-light small m-1">
+                        {{ session.correctAnswers }}/{{ session.totalAnswered }} ({{ correctPercentage }} %)
+                    </span>
+                    <button type="button" class="btn btn-sm btn-secondary mx-1" (click)="switchToScore()">
+                        <fa-icon [icon]="statsIcon" class="fa-lg"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-secondary fa-lg" (click)="openHelp()" title="Show Help"
+                        aria-label="Open help panel">
+                        <fa-icon [icon]="helpIcon" class="fa-lg"></fa-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-4" *ngIf="!showScore">
+                        <div class="mt-2 fs-5">
+                            {{ question.renderedQuestion }}
+                        </div>
+                        <div class="small pb-5">
+                            Round {{ getRoundingExplanation(question.roundType) }} your answer to <strong>{{ question.roundTo
+                                }}</strong> decimal place(s).
+                        </div>
+                        <input id="answer-input" name="answer-input" type="text" class="form-control mb-2"
+                            [(ngModel)]="question.userAnswer" [disabled]="question.isAnswered" />
+
+                        <div *ngIf="question.isAnswered">
+                            <div *ngIf="question.isCorrect"
+                                class="alert alert-success border-0 bg-success bg-opacity-10 text-success small py-2 px-3">
+                                Correct!
+                            </div>
+                            <div *ngIf="!question.isCorrect"
+                                class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger small py-2 px-3">
+                                Incorrect. Correct answer: <strong>{{ question.correctAnswer }}</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap justify-content-between">
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                <button id="submit-answer" *ngIf="!question.isAnswered" type="submit"
+                                    class="btn btn-primary" (click)="validateCurrentAnswer()">
+                                    Submit Answer
+                                </button>
+
+                                <button id="next-question" *ngIf="question.isAnswered" type="submit"
+                                    class="btn btn-primary" (click)="goToNextQuestion()">
+                                    Next Question
+                                </button>
+
+                                <button *ngIf="!question.isAnswered" type="button" class="btn btn-secondary"
+                                    (click)="openQuestionHelp()">
+                                    Need Hint?
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="showScore" class="card-body text-center p-4">
+                        <h4 class="fw-bold mb-3">
+                            <fa-icon [icon]="trophyIcon" class="fa-lg text-success"></fa-icon> Completed!
+                        </h4>
+                        <p>
+                            <strong>Points:</strong> {{ session.totalScore }} out of {{ session.maxPoints }}
+                        </p>
+                        <p>
+                            <strong>Correct Answers:</strong> {{ session.correctAnswers }} / {{
+                            session.totalAnswered }}
+                            <span *ngIf="session.anyHintUsed" class="text-warning">(some with hints)</span>
+                        </p>
+                        <p>
+                            <strong>Score:</strong> {{ correctPercentage }}%
+                        </p>
+                        <button type="button" [disabled]="!session.canReset" class="btn btn-secondary m-1"
+                            (click)="resetSession()" aria-label="Reset Category">
+                            <fa-icon [icon]="resetIcon" class="fa-lg"></fa-icon> Reset
+                        </button>
+                        <button class="btn btn-primary m-1" type="submit" (click)="continuePracticing()"
+                            #completionBlock>
+                            Continue Practicing
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

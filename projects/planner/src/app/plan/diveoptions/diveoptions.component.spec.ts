@@ -64,20 +64,32 @@ describe('Dive options component', () => {
 
     it('should call switchAirBreaks on selectedOptions', () => {
         const switchSpy = spyOn(schedules.selectedOptions, 'switchAirBreaks');
+        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher),'sendOptionsChanged');
+
         component.switchAirBreaks();
+
         expect(switchSpy).toHaveBeenCalledWith();
+        expect(dispatchSpy).toHaveBeenCalledWith();
     });
 
-    it('should call useRecreational on selectedOptions', () => {
+    it('should call useRecreational on selectedOptions and notify scheduler', () => {
         const recSpy = spyOn(schedules.selectedOptions, 'useRecreational');
+        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged');
+
         component.useRecreational();
+
         expect(recSpy).toHaveBeenCalledWith();
+        expect(dispatchSpy).toHaveBeenCalledWith();
     });
 
-    it('should call useRecommended on selectedOptions', () => {
+    it('should call useRecommended on selectedOptions and notify scheduler', () => {
         const recoSpy = spyOn(schedules.selectedOptions, 'useRecommended');
+        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged');
+
         component.useRecommended();
+
         expect(recoSpy).toHaveBeenCalledWith();
+        expect(dispatchSpy).toHaveBeenCalledWith();
     });
 });
 

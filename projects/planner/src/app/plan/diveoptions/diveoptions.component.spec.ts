@@ -1,6 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { DiveOptionsComponent } from './diveoptions.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { PlannerService } from '../../shared/planner.service';
@@ -21,6 +21,7 @@ import { MdbModalService } from "mdb-angular-ui-kit/modal";
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
     let fixture: ComponentFixture<DiveOptionsComponent>;
+    let schedules: DiveSchedules;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -44,6 +45,10 @@ describe('Dive options component', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(DiveOptionsComponent);
         component = fixture.componentInstance;
+        schedules = TestBed.inject(DiveSchedules);
+
+        component.ngOnInit();
+        fixture.detectChanges();
     });
 
     it('Set complex calls wiew switch', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
@@ -52,5 +57,37 @@ describe('Dive options component', () => {
         fixture.detectChanges();
         component.isComplex = false;
         expect(spy).toHaveBeenCalledWith(false);
-    }));
+    }
+    ));
+
+    it('should call switchAirBreaks on selectedOptions', () => {
+        const switchSpy = spyOn(schedules.selectedOptions, 'switchAirBreaks');
+        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher),'sendOptionsChanged');
+
+        component.switchAirBreaks();
+
+        expect(switchSpy).toHaveBeenCalledWith();
+        expect(dispatchSpy).toHaveBeenCalledWith();
+    });
+
+    it('should call useRecreational on selectedOptions and notify scheduler', () => {
+        const recSpy = spyOn(schedules.selectedOptions, 'useRecreational');
+        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged');
+
+        component.useRecreational();
+
+        expect(recSpy).toHaveBeenCalledWith();
+        expect(dispatchSpy).toHaveBeenCalledWith();
+    });
+
+    it('should call useRecommended on selectedOptions and notify scheduler', () => {
+        const recoSpy = spyOn(schedules.selectedOptions, 'useRecommended');
+        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged');
+
+        component.useRecommended();
+
+        expect(recoSpy).toHaveBeenCalledWith();
+        expect(dispatchSpy).toHaveBeenCalledWith();
+    });
 });
+

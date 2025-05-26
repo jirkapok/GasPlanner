@@ -1,6 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, NonNullableFormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { DiveOptionsComponent } from './diveoptions.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { PlannerService } from '../../shared/planner.service';
@@ -22,7 +22,6 @@ describe('Dive options component', () => {
     let component: DiveOptionsComponent;
     let fixture: ComponentFixture<DiveOptionsComponent>;
     let schedules: DiveSchedules;
-    let fb: NonNullableFormBuilder;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -46,11 +45,10 @@ describe('Dive options component', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(DiveOptionsComponent);
         component = fixture.componentInstance;
-
         schedules = TestBed.inject(DiveSchedules);
-        fb = TestBed.inject(NonNullableFormBuilder);
 
-        component.rootForm = fb.group({});
+        component.rootForm = new FormGroup({});
+
         component.ngOnInit();
         fixture.detectChanges();
     });

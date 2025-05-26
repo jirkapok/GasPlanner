@@ -21,6 +21,8 @@ import { MdbModalService } from "mdb-angular-ui-kit/modal";
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
     let fixture: ComponentFixture<DiveOptionsComponent>;
+    let schedules: DiveSchedules;
+    let fb: NonNullableFormBuilder;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -44,6 +46,13 @@ describe('Dive options component', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(DiveOptionsComponent);
         component = fixture.componentInstance;
+
+        schedules = TestBed.inject(DiveSchedules);
+        fb = TestBed.inject(NonNullableFormBuilder);
+
+        component.rootForm = fb.group({});
+        component.ngOnInit();
+        fixture.detectChanges();
     });
 
     it('Set complex calls wiew switch', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
@@ -55,37 +64,22 @@ describe('Dive options component', () => {
     }
     ));
 
-    describe('Option methods', () => {
-        let schedules: DiveSchedules;
-        let fb: NonNullableFormBuilder;
+    it('should call switchAirBreaks on selectedOptions', () => {
+        const switchSpy = spyOn(schedules.selectedOptions, 'switchAirBreaks');
+        component.switchAirBreaks();
+        expect(switchSpy).toHaveBeenCalledWith();
+    });
 
-        beforeEach(inject(
-            [DiveSchedules, NonNullableFormBuilder],
-            (_schedules: DiveSchedules, _fb: NonNullableFormBuilder) => {
-                schedules = _schedules;
-                fb = _fb;
-                component.rootForm = fb.group({});
-                component.ngOnInit();
-                fixture.detectChanges();
-            }
-        ));
+    it('should call useRecreational on selectedOptions', () => {
+        const recSpy = spyOn(schedules.selectedOptions, 'useRecreational');
+        component.useRecreational();
+        expect(recSpy).toHaveBeenCalledWith();
+    });
 
-        it('should call switchAirBreaks on selectedOptions', () => {
-            const switchSpy = spyOn(schedules.selectedOptions, 'switchAirBreaks');
-            component.switchAirBreaks();
-            expect(switchSpy).toHaveBeenCalledWith();
-        });
-
-        it('should call useRecreational on selectedOptions', () => {
-            const recSpy = spyOn(schedules.selectedOptions, 'useRecreational');
-            component.useRecreational();
-            expect(recSpy).toHaveBeenCalledWith();
-        });
-
-        it('should call useRecommended on selectedOptions', () => {
-            const recoSpy = spyOn(schedules.selectedOptions, 'useRecommended');
-            component.useRecommended();
-            expect(recoSpy).toHaveBeenCalledWith();
-        });
+    it('should call useRecommended on selectedOptions', () => {
+        const recoSpy = spyOn(schedules.selectedOptions, 'useRecommended');
+        component.useRecommended();
+        expect(recoSpy).toHaveBeenCalledWith();
     });
 });
+

@@ -47,8 +47,6 @@ describe('Dive options component', () => {
         component = fixture.componentInstance;
         schedules = TestBed.inject(DiveSchedules);
 
-        component.rootForm = new FormGroup({});
-
         component.ngOnInit();
         fixture.detectChanges();
     });

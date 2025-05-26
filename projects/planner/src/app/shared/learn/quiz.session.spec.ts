@@ -8,6 +8,7 @@ describe('Quiz Session', () => {
 
     const assertSessionInInitialState = (sut: QuizSession) => {
         expect(sut.trophyGained).toBeFalsy();
+        expect(sut.anyHintUsed).toBeFalsy();
         expect(sut.totalScore).toBe(0);
         expect(sut.correctPercentage).toBe(0);
         expect(sut.maxPoints).toBe(0);
@@ -17,12 +18,23 @@ describe('Quiz Session', () => {
         return new QuizSession(category);
     };
 
-    it('Has empty default state', () => {
-        const sut = createSession();
-        assertSessionInInitialState(sut);
-    });
+    describe('Not answered', () => {
+        it('Has empty default state', () => {
+            const sut = createSession();
+            assertSessionInInitialState(sut);
+        });
 
-    // TODO test maxPoints, shouldCelebrate, correctPercentage
+        it('Can`t celebrate', () => {
+            const sut = createSession();
+            expect(sut.shouldCelebrate).toBeFalsy();
+        });
+
+        it('Mark celebrated makes no impact', () => {
+            const sut = createSession();
+            sut.markCelebrated();
+            expect(sut.shouldCelebrate).toBeFalsy();
+        });
+    });
 
     describe('Partially answered', () => {
         it('Correct answer', () => {
@@ -42,6 +54,7 @@ describe('Quiz Session', () => {
             sut.answerCorrectly();
 
             expect(sut.trophyGained).toBeFalsy();
+            expect(sut.anyHintUsed).toBeTruthy();
             expect(sut.totalScore).toBe(1);
             expect(sut.correctPercentage).toBe(50);
             expect(sut.maxPoints).toBe(2);
@@ -67,6 +80,12 @@ describe('Quiz Session', () => {
 
             assertSessionInInitialState(sut);
         });
+
+        it('Can`t celebrate unfinished session', () => {
+            const sut = createSession();
+            sut.answerCorrectly();
+            expect(sut.shouldCelebrate).toBeFalsy();
+        });
     });
 
     describe('Fully answered', () => {
@@ -84,6 +103,7 @@ describe('Quiz Session', () => {
             const sut = createFinishedSession();
 
             expect(sut.trophyGained).toBeTruthy();
+            expect(sut.anyHintUsed).toBeFalsy();
             expect(sut.totalScore).toBe(10);
             expect(sut.correctPercentage).toBe(100);
             expect(sut.maxPoints).toBe(10);
@@ -98,21 +118,33 @@ describe('Quiz Session', () => {
             }
 
             expect(sut.trophyGained).toBeFalsy();
+            expect(sut.anyHintUsed).toBeTruthy();
             expect(sut.totalScore).toBe(5);
             expect(sut.correctPercentage).toBe(50);
             expect(sut.maxPoints).toBe(10);
         });
 
         it('Reset clears session to initial and preserves trophy', () => {
-            const sut = createSession();
-
-            for (let question = 0; question < 5; question++) {
-                sut.answerCorrectly();
-            }
-
+            const sut = createFinishedSession();
             sut.reset();
-
             assertSessionInInitialState(sut);
+        });
+
+        it('Reset clears the celebration status', () => {
+            const sut = createFinishedSession();
+            sut.reset();
+            expect(sut.shouldCelebrate).toBeFalsy();
+        });
+
+        it('Finished session can be celebrated', () => {
+            const sut = createFinishedSession();
+            expect(sut.shouldCelebrate).toBeTruthy();
+        });
+
+        it('Mark celebrated can`t no longer be celebrated', () => {
+            const sut = createFinishedSession();
+            sut.markCelebrated();
+            expect(sut.shouldCelebrate).toBeFalsy();
         });
     });
 });

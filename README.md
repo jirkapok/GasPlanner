@@ -1,6 +1,8 @@
 # Dugong Gas planner
 
-This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations. 
+[![Build status](https://github.com/jirkapok/GasPlanner/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/jirkapok/GasPlanner/actions)
+
+This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations.
 Purpose of the application is to provide easy to use calculations and help scuba divers to learn diving theory and formulas.
 Works also on mobile devices in offline mode. [Why Dugong?](./doc/whydugong.md)
 
@@ -31,15 +33,12 @@ Keep the project Alive!
 
 ## Prerequisites
 
-To work on the application install NodeJs, AngularCli and TypeScript. Recommended development environment is Visual Studio Code. Use `instalEnvironment.ps1` to get initial environment tools and packages.
+To work on the application install NodeJs, AngularCli and TypeScript. Recommended development environment is Visual Studio Code. On Windows you can use `build/installEnvironment.ps1` to get initial environment tools and packages, or you can use Github Codespaces for a ready-to-go hosted development environment.
 
 ## Build
 
-To compile the application compile, first you need to install the dependency from local directory. To do so run `npm run build-lib`.
-Than compile solution by `npm run build` to deploy `dist` directory. To start the app use `npm start` for debugging purpose. See also `build/build.ps1` build script.
-Development state of the art can also be checked using Github Actions:
-
-[![Build status](https://github.com/jirkapok/GasPlanner/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/jirkapok/GasPlanner/actions)
+To compile the application, first you need to install the dependencies from local directory. To do so run `npm run build-lib`.
+Than compile solution by `npm run build` to deploy `dist` directory. To start the app use `npm start` for debugging purpose. See also `build/build.ps1` build script on Windows.
 
 ## Running the tests
 

@@ -4,7 +4,7 @@ import { DepthConverter } from '../physics/depth-converter';
 import { DepthLevelOptions, DepthLevels } from '../depths/DepthLevels';
 import { Event, EventsFactory } from '../algorithm/CalculatedProfile';
 import { GasMixtures } from './GasMixtures';
-import { GasNames } from "./GasNames";
+import { GasNames } from './GasNames';
 
 /**
  * The only issue with gases is, that there is no gas.
@@ -146,7 +146,7 @@ export class Gas {
 
     /** Nitrox fraction in range 0 - 1 */
     public get fN2(): number {
-        return 1 - this._fO2 - this._fHe;
+        return GasMixtures.n2(this.fO2, this.fHe);
     }
 
     /** Oxygen fraction in range 0 - 1 */

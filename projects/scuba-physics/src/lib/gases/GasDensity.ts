@@ -2,6 +2,7 @@ import { Gas } from './Gases';
 import { Segment } from '../depths/Segments';
 import { DepthConverter } from '../physics/depth-converter';
 import { StandardGases } from './StandardGases';
+import { GasMixtures } from './GasMixtures';
 
 export class HighestDensity {
     constructor(
@@ -50,7 +51,7 @@ export class GasDensity {
      * @returns Calculated density in g/l
      */
     public forContent(fO2: number, fHe: number): number {
-        const fN2 = 1 - fO2 - fHe;
+        const fN2 = GasMixtures.n2(fO2, fHe);
         const densityfN2 = this.nitrogen * fN2;
         const densityO2 = this.oxygen * fO2;
         const densityHe = this.helium * fHe;

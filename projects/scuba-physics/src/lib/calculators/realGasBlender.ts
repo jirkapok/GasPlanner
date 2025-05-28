@@ -1,5 +1,6 @@
 import { Compressibility } from '../physics/compressibility';
-import { Gas } from "../gases/Gases";
+import { Gas } from '../gases/Gases';
+import { GasMixtures } from '../gases/GasMixtures';
 
 /** Custom Gas mix crate for the blender, because rounding issues result in different number, when using partials directly */
 export class GasMix {
@@ -22,14 +23,14 @@ export class GasMix {
     }
 
     public get fN2(): number {
-        return 1 - this.fO2 - this.fHe;
+        return GasMixtures.n2(this.fO2, this.fHe);
     }
 
     public get name(): string {
         if (this.fHe > 0) {
             return `TMX ${Math.round(this.fO2 * 100)}/${Math.round(this.fHe * 100)}`;
         } else {
-            return this.fO2 === GasMix.air.fO2 ? "AIR" : `EAN${Math.round(this.fO2 * 100)}`;
+            return this.fO2 === GasMix.air.fO2 ? 'AIR' : `EAN${Math.round(this.fO2 * 100)}`;
         }
     }
 
@@ -51,7 +52,7 @@ export class RealBlender {
     }
 
     public blend(pi: number, gasi: GasMix, pf: number, gasf: GasMix,
-                 gas1: GasMix, gas2: GasMix, gas3: GasMix): string {
+        gas1: GasMix, gas2: GasMix, gas3: GasMix): string {
 
         if (gasi.fO2) {
             if (gasf.fHe > 0) {
@@ -60,7 +61,7 @@ export class RealBlender {
                 return this.blendNitrox(pi, gasi, pf, gasf, gas1, gas3);
             }
         } else {
-            return "Only print the params form.";
+            return 'Only print the params form.';
         }
     }
 
@@ -73,7 +74,7 @@ export class RealBlender {
                     - gas1.fHe * gas2.fN2 * gas3.fO2;
 
         if (!det) {
-            return "Cannot mix with degenerate gases!\n";
+            return 'Cannot mix with degenerate gases!\n';
         }
 
         const ivol = this.compress.normalVolume(pi, gasi.toGas());
@@ -96,12 +97,12 @@ export class RealBlender {
         }
 
         const newmix1 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1),
-        100 * (gasi.fHe * ivol + gas1.fHe * top1) / (ivol + top1));
+            100 * (gasi.fHe * ivol + gas1.fHe * top1) / (ivol + top1));
 
         const p1 = this.compress.pressure(newmix1.toGas(), ivol + top1);
 
         const newmix2 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1 + gas2.fO2 * top2) / (ivol + top1 + top2),
-        100 * (gasi.fHe * ivol + gas1.fHe * top1 + gas2.fHe * top2) / (ivol + top1 + top2));
+            100 * (gasi.fHe * ivol + gas1.fHe * top1 + gas2.fHe * top2) / (ivol + top1 + top2));
 
         const p2 = this.compress.pressure(newmix2.toGas(), ivol + top1 + top2);
 
@@ -117,12 +118,12 @@ ${this.format(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
     }
 
     private blendNitrox(pi: number, gasi: GasMix,
-                        pf: number, gasf: GasMix,
-                        gas1: GasMix, gas2: GasMix): string  {
+        pf: number, gasf: GasMix,
+        gas1: GasMix, gas2: GasMix): string  {
 
 
         if (gas1.fO2 === gas2.fO2) {
-            return "Cannot mix with identical gases!\n";
+            return 'Cannot mix with identical gases!\n';
         }
 
         const ivol = this.compress.normalVolume(pi, gasi.toGas());
@@ -134,7 +135,7 @@ ${this.format(top3)} litres of ${gas3.name} per litre of cylinder volume.`;
         - (gas1.fO2 - gasi.fO2) / (gas1.fO2 - gas2.fO2) * ivol;
 
         if (top1 <= 0) {
-            return "Impossible to blend with these gases!\n";
+            return 'Impossible to blend with these gases!\n';
         }
 
         const newmix = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1));

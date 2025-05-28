@@ -1,8 +1,9 @@
 import { TankFill } from '../consumption/Tanks';
 import { Precision } from '../common/precision';
-import { Compressibility } from "../physics/compressibility";
-import { StandardGases } from "../gases/StandardGases";
-import { Gas } from "../gases/Gases";
+import { Compressibility } from '../physics/compressibility';
+import { StandardGases } from '../gases/StandardGases';
+import { Gas } from '../gases/Gases';
+import { GasMixtures } from '../gases/GasMixtures';
 
 /**
  * Blending result showing amount of each component used
@@ -190,7 +191,7 @@ export class GasBlender {
     }
 
     private static n2(mix: Mix): number {
-        return 1 - mix.o2 - mix.he;
+        return GasMixtures.n2(mix.o2, mix.he);
     }
 
     private static validate(mix: Mix, partName: string): void {

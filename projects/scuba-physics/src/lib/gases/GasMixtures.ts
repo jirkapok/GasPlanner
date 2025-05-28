@@ -3,13 +3,23 @@ import { DepthConverter } from '../physics/depth-converter';
 export class GasMixtures {
     /** Relative partial pressure of oxygen in air at surface */
     public static readonly o2InAir = 0.209;
-    public static readonly nitroxInAir = 1 - GasMixtures.o2InAir;
+    public static readonly nitroxInAir = GasMixtures.n2(GasMixtures.o2InAir);
 
     /** Defines minimum fraction of oxygen in gas mixture of breath able gas. */
     public static readonly minPpO2 = 0.18;
 
     /** Maximum recommended value of equivalent narcotic depth. */
     public static readonly maxEnd = 30;
+
+    /**
+     * Calculates fraction of nitrogen in the mixture in range 0-1
+     * @param fO2 - Fraction of Oxygen in gas mix (0-1).
+     * @param fHe - Fraction of Helium in gas mix (0-1), default 0.
+     **/
+    public static n2(fO2: number, fHe: number = 0): number {
+        return 1 - fO2 - fHe;
+    }
+
     /**
      * Calculates the partial pressure of a gas component from the volume gas fraction and total pressure.
      *
@@ -62,8 +72,8 @@ export class GasMixtures {
      * @returns Depth in bars. May return pressure lower than surface pressure!
      */
     public static ead(fO2: number, depth: number, o2InAir: number = GasMixtures.o2InAir): number {
-        const fN2 = 1 - fO2; // here we are interested only in nitrogen toxicity
-        const nitroxInAir = 1 - o2InAir;
+        const fN2 = GasMixtures.n2(fO2); // here we are interested only in nitrogen toxicity
+        const nitroxInAir = GasMixtures.n2(o2InAir);
         const result = GasMixtures.end(depth, fN2) / nitroxInAir;
         return result;
     }

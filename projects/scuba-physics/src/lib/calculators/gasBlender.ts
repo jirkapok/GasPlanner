@@ -132,65 +132,65 @@ export class GasBlender {
         GasBlender.validate(request.target, 'Target');
         GasBlender.validate(request.topMix, 'Top');
 
-        const finalfN2 = GasBlender.n2(request.target);
-        const finalN2  = finalfN2 * request.target.pressure;
-        const currentfN2 = GasBlender.n2(request.source);
-        const currentN2 = currentfN2 * request.source.pressure;
-        let addN2 = finalN2 - currentN2;
-        addN2 = Precision.round(addN2, 8);
+        const finalfN2 = GasBlender.fN2(request.target);
+        const finalN2Bars  = finalfN2 * request.target.pressure;
+        const currentfN2 = GasBlender.fN2(request.source);
+        const currentN2Bars = currentfN2 * request.source.pressure;
+        let addN2Bars = finalN2Bars - currentN2Bars;
+        addN2Bars = Precision.round(addN2Bars, 8);
 
         // Even the top mix contains more nitrogen than target, we are still able to mix
         // by adding less top mix and more He and O2
-        if(addN2 < 0) {
-            const removeSource = -(addN2 / currentfN2);
-            return GasBlender.mixByRemoving(request, removeSource);
+        if(addN2Bars < 0) {
+            const removeSourceBars = -(addN2Bars / currentfN2);
+            return GasBlender.mixByRemoving(request, removeSourceBars);
         }
 
-        const topfN2 = GasBlender.n2(request.topMix);
-        const addTop = addN2 / topfN2;
-        const targetHe = GasBlender.pressureHe(request.target);
-        const sourceHe = GasBlender.pressureHe(request.source);
-        const topHe = addTop * request.topMix.he;
-        let addHe = targetHe - sourceHe - topHe;
-        addHe = Precision.round(addHe, 8);
+        const topfN2 = GasBlender.fN2(request.topMix);
+        const addTopBars = addN2Bars / topfN2;
+        const targetHeBars = GasBlender.pressureHe(request.target);
+        const sourceHeBars = GasBlender.pressureHe(request.source);
+        const topHeBars = addTopBars * request.topMix.he;
+        let addHeBars = targetHeBars - sourceHeBars - topHeBars;
+        addHeBars = Precision.round(addHeBars, 8);
 
-        if(addHe < 0) {
-            const removeSource = -(addHe / request.source.he);
-            return GasBlender.mixByRemoving(request, removeSource);
+        if(addHeBars < 0) {
+            const removeSourceBars = -(addHeBars / request.source.he);
+            return GasBlender.mixByRemoving(request, removeSourceBars);
         }
 
-        let addO2 = request.target.pressure - request.source.pressure - addHe - addTop;
-        addO2 = Precision.round(addO2, 8);
+        let addO2Bars = request.target.pressure - request.source.pressure - addHeBars - addTopBars;
+        addO2Bars = Precision.round(addO2Bars, 8);
 
-        if(addO2 < 0) {
-            const removeSource = -(addO2 / request.source.o2);
-            return GasBlender.mixByRemoving(request, removeSource);
+        if(addO2Bars < 0) {
+            const removeSourceBars = -(addO2Bars / request.source.o2);
+            return GasBlender.mixByRemoving(request, removeSourceBars);
         }
 
         return {
-            addO2: addO2,
-            addHe: addHe,
-            addTop: addTop,
+            addO2: addO2Bars,
+            addHe: addHeBars,
+            addTop: addTopBars,
             removeFromSource: 0
         };
     }
 
-    private static mixByRemoving(request: MixRequest, removeSource: number) {
+    private static mixByRemoving(request: MixRequest, removeSourceBars: number) {
         const newRequest = GasBlender.copyRequest(request);
         // const expectedRemove = Precision.floor(removeSource, 8);
 
-        if(removeSource > request.source.pressure) {
+        if(removeSourceBars > request.source.pressure) {
             throw new Error('Unable to mix required gas because target contains less he or oxygen than top mix.');
         }
 
-        newRequest.source.pressure -= removeSource;
+        newRequest.source.pressure -= removeSourceBars;
         const result =  GasBlender.mix(newRequest);
         // aggregate the removed pressure from all the recursive calls
-        result.removeFromSource += removeSource;
+        result.removeFromSource += removeSourceBars;
         return result;
     }
 
-    private static n2(mix: Mix): number {
+    private static fN2(mix: Mix): number {
         return GasMixtures.n2(mix.o2, mix.he);
     }
 

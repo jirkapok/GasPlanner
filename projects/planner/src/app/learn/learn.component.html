@@ -112,7 +112,7 @@
                         </div>
                     </div>
                     <div *ngIf="showScore" class="card-body text-center p-4">
-                        <h4 class="fw-bold mb-3">
+                        <h4 class="fw-bold mb-3" *ngIf="session.trophyGained">
                             <fa-icon [icon]="trophyIcon" class="fa-lg text-success"></fa-icon> Completed!
                         </h4>
                         <p>

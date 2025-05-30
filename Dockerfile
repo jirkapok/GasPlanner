@@ -1,4 +1,4 @@
-FROM node:20.11.1 AS builder
+FROM node:22.16 AS builder
 
 WORKDIR /app
 COPY .npmrc package.json package-lock.json ./
@@ -9,7 +9,7 @@ COPY . ./
 RUN npm run build-lib \
     && npm run build
 
-FROM node:20.11.1
+FROM node:22.16-slim
 WORKDIR /app
 
 RUN npm install http-server

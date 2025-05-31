@@ -1,0 +1,9 @@
+.github
+build
+.git
+.vscode
+e2e
+.editorconfig
+.eslintrc.json
+.gitignore
+.nvmrc

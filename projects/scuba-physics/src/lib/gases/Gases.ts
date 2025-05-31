@@ -90,7 +90,7 @@ export class OCGasSource {
     }
 
     /**
-     *  Finds gas with minimum ppO2, but breath able at air break.
+     *  Finds gas with minimum ppO2, but breathable at air break.
      *  Returns currentGas in case no gas meets the criteria.
      *  (usually normoxic)
      *  @param depth current depth in meters

@@ -1,6 +1,6 @@
 # Dugong Gas planner
 
-This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations. 
+This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations.
 Purpose of the application is to provide easy to use calculations and help scuba divers to learn diving theory and formulas.
 Works also on mobile devices in offline mode. [Why Dugong?](./doc/whydugong.md)
 
@@ -20,7 +20,7 @@ None of the authors, contributors, administrators, or anyone else connected with
 * Multiple nitrox and Trimix/Helitrox gases/tanks
 * Environment using water salinity and altitude options
 * Bühlmann ZHL-16C algorithm with Gradient factors
-* Lot of calculators: RMV/SAC, Nitrox, Trimix properties, Redundancies, NDL table ...
+* Lot of calculators: RMV/SAC, Nitrox, Trimix properties, Cylinder Balancing, NDL table ...
 * See more in **[Application help](./doc/readme.md)**
 
 ## Donate

@@ -77,7 +77,7 @@ export class HelpComponent {
                 { label: 'Altitude', path: 'altitude' },
                 { label: 'Weight', path: 'weight' },
                 { label: 'Gas properties', path: 'gas_properties' },
-                { label: 'Redundancies', path: 'redundancies' },
+                { label: 'Cylinder Balancing', path: 'redundancies' },
                 { label: 'Gas blender', path: 'gas_blender' }
             ]
         }

@@ -5,7 +5,7 @@ export class GasMixtures {
     public static readonly o2InAir = 0.209;
     public static readonly nitroxInAir = 1 - GasMixtures.o2InAir;
 
-    /** Defines minimum fraction of oxygen in gas mixture of breath able gas. */
+    /** Defines minimum fraction of oxygen in gas mixture of breathable gas. */
     public static readonly minPpO2 = 0.18;
 
     /** Maximum recommended value of equivalent narcotic depth. */

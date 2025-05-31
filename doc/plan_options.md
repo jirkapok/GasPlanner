@@ -5,7 +5,7 @@ For faster customization or to be able reset options to default values, you can 
 * `Recreational`: Options taught in basic open water courses for most training agencies. This will switch e.g. safety stop to 5 meters (15 ft) and ascent speeds to 9 meters/minute (30 ft/min).
 * `Recommended`: We strongly encourage you to use these values instead of recreational values, because we thing they are safer and they are the default values for this application. This sets e.g. slower ascent closer to surface.
 
-> To be able to see and edit all mentioned dive options you need to switch to Extended (Trimix) view. 
+> To be able to see and edit all mentioned dive options you need to switch to Extended (Trimix) view.
 
 ## Gases
 
@@ -25,9 +25,9 @@ Here you can set respiratory minute volume (RMV) and maximum acceptable partial 
 
 ## Air breaks
 
-Air breaks are used to reduce oxygen toxicity (CNS, OTU) after heavy use of oxygen enriched gas mixtures during decompression ascent. 
+Air breaks are used to reduce oxygen toxicity (CNS, OTU) after heavy use of oxygen enriched gas mixtures during decompression ascent.
 They apply only from minimum 6 m depth stops. Breaks are not generated for deeper stops, even the toxicity limit is already reached.
-They aren`t enabled by default. Default values are 5 minute break on bottom gas (or next breath able gas) after 20 minutes on oxygen as recommended by UTD. GUE recommends 6 minutes break after 16 minutes on oxygen.
+They aren`t enabled by default. Default values are 5 minute break on bottom gas (or next breathable gas) after 20 minutes on oxygen as recommended by UTD. GUE recommends 6 minutes break after 16 minutes on oxygen.
 
 * `Maximum Oxygen stop duration [minutes]`: Maximum time on oxygen during the stop. Default value is 20 minutes. If stop is shorter than this value, no break is generated.
 * `Back gas duration [minutes]`: Duration of the break on back gas or next breathable gas. Default value is 5 minutes.

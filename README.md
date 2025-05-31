@@ -1,6 +1,6 @@
 # Dugong Gas planner
 
-This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations. 
+This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations.
 Purpose of the application is to provide easy to use calculations and help scuba divers to learn diving theory and formulas.
 Works also on mobile devices in offline mode. [Why Dugong?](./doc/whydugong.md)
 

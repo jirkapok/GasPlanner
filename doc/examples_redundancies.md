@@ -2,7 +2,7 @@
 
 ## Formulas
 
-final pressure = (first tank pressure * first tank size + second tank pressure * second tank size) / (sum of tank sizes) 
+final pressure = (first tank pressure * first tank size + second tank pressure * second tank size) / (sum of tank sizes)
 
 ## Example
 

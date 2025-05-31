@@ -178,7 +178,7 @@ describe('Buhlmann Algorithm - Air breaks', () => {
     });
 
     describe('Bottom gas not breathable', () => {
-        it('No air break when not other gas is breath able at 6m', () => {
+        it('No air break when not other gas is breathable at 6m', () => {
             const gases = new Gases();
             gases.add(StandardGases.trimix1070); // hypoxic at 6 m
             gases.add(StandardGases.oxygen);

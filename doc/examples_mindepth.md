@@ -4,7 +4,7 @@
 
 Minimum depth = Minimum ppO2 / oxygen fraction
 
-Where minimum (breath able) partial pressure of oxygen (ppO2) is usually 0.18 bar.
+Where minimum (breathable) partial pressure of oxygen (ppO2) is usually 0.18 bar.
 
 
 ## Example 1

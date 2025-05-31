@@ -20,7 +20,7 @@ None of the authors, contributors, administrators, or anyone else connected with
 * Multiple nitrox and Trimix/Helitrox gases/tanks
 * Environment using water salinity and altitude options
 * Bühlmann ZHL-16C algorithm with Gradient factors
-* Lot of calculators: RMV/SAC, Nitrox, Trimix properties, Redundancies, NDL table ...
+* Lot of calculators: RMV/SAC, Nitrox, Trimix properties, Cylinder Balancing, NDL table ...
 * See more in **[Application help](./doc/readme.md)**
 
 ## Donate

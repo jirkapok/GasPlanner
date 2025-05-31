@@ -1,4 +1,4 @@
-# Redundancies
+# Cylinder Balancing
 
 This calculator allows you to combine gas from two tanks marked as `First tank` and `Second tank` using ideal gas law. Content of the gas does`nt matter, because here we focus on the gas volume only, not its content.
 The result of combining the gas volume is shown in Final pressure. Both tanks will have the same pressure even not the same cylinder volume.

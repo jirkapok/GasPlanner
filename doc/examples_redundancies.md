@@ -1,4 +1,4 @@
-## Example redundancies calculations
+## Example Cylinder Balancing Calculation
 
 ## Formulas
 

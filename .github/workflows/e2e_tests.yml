@@ -1,9 +1,13 @@
 name: E2E Tests
 on:
   push:
-    branches: [ develop, master ]
+    branches:
+    - develop
+    - master
   pull_request:
-    branches: [ develop, master ]
+    branches:
+    - develop
+    - master
 
 jobs:
   test:
@@ -14,7 +18,7 @@ jobs:
 
     - uses: actions/setup-node@v4
       with:
-        node-version: lts/*
+        node-version-file: .nvmrc
 
     - name: Install dependencies
       run: npm ci
@@ -32,4 +36,5 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action@v2.18.0
       if: always()
       with:
-        JUNIT_FILES: test-results/e2e.xml
+        files: |
+            test-results/e2e.xml

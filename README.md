@@ -1,7 +1,5 @@
 # Dugong Gas planner
 
-[![Build status](https://github.com/jirkapok/GasPlanner/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/jirkapok/GasPlanner/actions)
-
 This is a web based application, which allows **recreational** scuba divers to do their simple gas planning calculations.
 Purpose of the application is to provide easy to use calculations and help scuba divers to learn diving theory and formulas.
 Works also on mobile devices in offline mode. [Why Dugong?](./doc/whydugong.md)
@@ -22,7 +20,7 @@ None of the authors, contributors, administrators, or anyone else connected with
 * Multiple nitrox and Trimix/Helitrox gases/tanks
 * Environment using water salinity and altitude options
 * Bühlmann ZHL-16C algorithm with Gradient factors
-* Lot of calculators: RMV/SAC, Nitrox, Trimix properties, Redundancies, NDL table ...
+* Lot of calculators: RMV/SAC, Nitrox, Trimix properties, Cylinder Balancing, NDL table ...
 * See more in **[Application help](./doc/readme.md)**
 
 ## Donate
@@ -39,6 +37,9 @@ To work on the application install NodeJs, AngularCli and TypeScript. Recommende
 
 To compile the application, first you need to install the dependencies from local directory. To do so run `npm run build-lib`.
 Than compile solution by `npm run build` to deploy `dist` directory. To start the app use `npm start` for debugging purpose. See also `build/build.ps1` build script on Windows.
+Development state of the art can also be checked using Github Actions:
+
+[![Build status](https://github.com/jirkapok/GasPlanner/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/jirkapok/GasPlanner/actions)
 
 ## Running the tests
 

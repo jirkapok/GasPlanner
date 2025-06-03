@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HelpModalComponent } from '../../help-modal/help-modal.component';
-import { MdbModalRef, MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 @Injectable({
     providedIn: 'root'
@@ -8,7 +8,8 @@ import { MdbModalRef, MdbModalService } from "mdb-angular-ui-kit/modal";
 export class HelpService {
     private modalRef: MdbModalRef<HelpModalComponent> | null = null;
 
-    // TODO add support for scrolling the help using gestures https://hammerjs.github.io/tips/
+    // TODO add support for scrolling to open/close the help using gestures side panel
+    //  https://hammerjs.github.io/tips/
     constructor(private modalService: MdbModalService) {
     }
 

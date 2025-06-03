@@ -11,10 +11,10 @@ import { QuizSession } from '../shared/learn/quiz.session';
 import confetti from 'canvas-confetti';
 import { PreferencesStore } from '../shared/preferencesStore';
 import { Question } from '../shared/learn/quiz.question';
-import { LearnViewState } from "../shared/views.model";
-import { KnownViews } from "../shared/viewStates";
-import { SubViewStorage } from "../shared/subViewStorage";
-import { HelpService } from "../shared/learn/help.service";
+import { LearnViewState } from '../shared/views.model';
+import { KnownViews } from '../shared/viewStates';
+import { SubViewStorage } from '../shared/subViewStorage';
+import { HelpService } from '../shared/learn/help.service';
 
 @Component({
     selector: 'app-learn',
@@ -101,13 +101,13 @@ export class LearnComponent {
 
     public getRoundingExplanation(roundType: RoundType): string {
         switch (roundType) {
-            case RoundType.floor:
-                return 'down';
-            case RoundType.ceil:
-                return 'up';
-            case RoundType.round:
-            default:
-                return '';
+        case RoundType.floor:
+            return 'down';
+        case RoundType.ceil:
+            return 'up';
+        case RoundType.round:
+        default:
+            return '';
         }
     }
 
@@ -198,6 +198,6 @@ export class LearnComponent {
             id:  KnownViews.learn,
             topic: this.selectedTopic.name,
             category: this.selectedCategory.name
-        }
+        };
     }
 }

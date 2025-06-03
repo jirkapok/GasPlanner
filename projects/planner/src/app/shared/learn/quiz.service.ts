@@ -27,7 +27,7 @@ export class QuizService {
     private _selectedTopic: Topic;
     private _selectedCategory: Category;
     private _session: QuizSession;
-    public _question!: Question;
+    private _question!: Question;
     private sessionsByCategory = new Map<string, QuizSession>();
 
     constructor(@Optional() @Inject(topics) tops?: Topic[]) {

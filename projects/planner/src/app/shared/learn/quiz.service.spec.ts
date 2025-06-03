@@ -1,9 +1,9 @@
-import { QuizSession } from "./quiz.session";
-import { Category, QuestionTemplate, RoundType, Topic } from "./learn.models";
-import { QuizService } from "./quiz.service";
+import { QuizSession } from './quiz.session';
+import { Category, QuestionTemplate, RoundType, Topic } from './learn.models';
+import { QuizService } from './quiz.service';
 
 describe('Quiz Service', () => {
-    let expectedAnswer = 0;
+    const expectedAnswer = 0;
 
     const topics: Topic[] = [
         new Topic('First topic', [
@@ -41,7 +41,7 @@ describe('Quiz Service', () => {
         expect(status.total).toBe(2);
     });
 
-   it('Some categories finished Has some completion status', () => {
+    it('Some categories finished Has some completion status', () => {
         const sut = new QuizService(topics);
         finishCategory(sut, firstTopic.categories[0]);
 
@@ -74,7 +74,7 @@ describe('Quiz Service', () => {
     it('Select forces new question', () => {
         const sut = new QuizService(topics);
         const oldQuestion = sut.question;
-        sut.select(topics[0], topics[0].categories[1])
+        sut.select(topics[0], topics[0].categories[1]);
 
         expect(sut.question).not.toBe(oldQuestion);
     });
@@ -93,7 +93,7 @@ describe('Quiz Service', () => {
         const sut = new QuizService(topics);
         const oldQuestion = sut.question;
         sut.session.useHint();
-        sut.goToNextQuestion()
+        sut.goToNextQuestion();
 
         expect(sut.question).not.toBe(oldQuestion);
         expect(sut.session.anyHintUsed).toBeFalsy();

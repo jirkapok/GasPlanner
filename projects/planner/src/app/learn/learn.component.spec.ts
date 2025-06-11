@@ -21,22 +21,11 @@ import { UnitConversion } from "../shared/UnitConversion";
 import { ReloadDispatcher } from "../shared/reloadDispatcher";
 import { ApplicationSettingsService } from "../shared/ApplicationSettings";
 
-// TODO replace by Spy object
-const mockPreferencesStore = {
-    load: () => {},
-    save: () => {},
-    loadDefault: () => {},
-    saveDefault: () => {},
-    disableDisclaimer: () => {},
-    disclaimerEnabled: () => true,
-    disableShowInstall: () => {},
-    installEnabled: () => true,
-};
-
 describe('LearnComponent', () => {
     let component: LearnComponent;
     let fixture: ComponentFixture<LearnComponent>;
     let quizService: QuizService;
+    let prefs: PreferencesStore;
 
     const createMockQuizItem = (): Question => {
         const template: QuestionTemplate = {
@@ -66,9 +55,7 @@ describe('LearnComponent', () => {
                 provideHttpClientTesting(),
                 Urls,
                 QuizService,
-                { provide: PreferencesStore, useValue: mockPreferencesStore },
-                SubViewStorage, ViewStates,
-                PreferencesStore, Preferences,
+                SubViewStorage, ViewStates, Preferences, PreferencesStore,
                 ViewSwitchService, DiveSchedules,
                 UnitConversion, ReloadDispatcher,
                 ApplicationSettingsService
@@ -80,6 +67,8 @@ describe('LearnComponent', () => {
         fixture = TestBed.createComponent(LearnComponent);
         component = fixture.componentInstance;
         quizService = TestBed.inject(QuizService);
+        prefs = TestBed.inject(PreferencesStore);
+        spyOn(prefs, 'save' )
         fixture.detectChanges();
 
         // Wait for async initialization to complete
@@ -106,6 +95,7 @@ describe('LearnComponent', () => {
         component.resetSession();
         expect(resetSpy).toHaveBeenCalledWith();
         expect(nextQuestionSpy).toHaveBeenCalledWith();
+        expect(prefs.save).toHaveBeenCalled();
     });
 
     it('Submits answer switches to score', () => {
@@ -117,6 +107,7 @@ describe('LearnComponent', () => {
         component.validateCurrentAnswer();
         expect(validationSpy).toHaveBeenCalledWith();
         expect(component.showScore).toBeTruthy();
+        expect(prefs.save).toHaveBeenCalled();
     });
 
     it('Continue practicing switches to new question', () => {

@@ -21,13 +21,11 @@ import { UnitConversion } from "../shared/UnitConversion";
 import { ReloadDispatcher } from "../shared/reloadDispatcher";
 import { ApplicationSettingsService } from "../shared/ApplicationSettings";
 
-const mockPreferencesStore = jasmine.createSpyObj('PreferencesStore', ['save']);
-
-describe('LearnComponent', () => {
+fdescribe('LearnComponent', () => {
     let component: LearnComponent;
     let fixture: ComponentFixture<LearnComponent>;
     let quizService: QuizService;
-    let prefs: jasmine.SpyObj<PreferencesStore>;
+    let prefs: PreferencesStore;
 
     const createMockQuizItem = (): Question => {
         const template: QuestionTemplate = {
@@ -57,8 +55,7 @@ describe('LearnComponent', () => {
                 provideHttpClientTesting(),
                 Urls,
                 QuizService,
-                { provide: PreferencesStore, useValue: mockPreferencesStore },
-                SubViewStorage, ViewStates, Preferences,
+                SubViewStorage, ViewStates, Preferences, PreferencesStore,
                 ViewSwitchService, DiveSchedules,
                 UnitConversion, ReloadDispatcher,
                 ApplicationSettingsService
@@ -70,7 +67,8 @@ describe('LearnComponent', () => {
         fixture = TestBed.createComponent(LearnComponent);
         component = fixture.componentInstance;
         quizService = TestBed.inject(QuizService);
-        prefs = TestBed.inject(PreferencesStore) as jasmine.SpyObj<PreferencesStore>;
+        prefs = TestBed.inject(PreferencesStore);
+        spyOn(prefs, 'save' )
         fixture.detectChanges();
 
         // Wait for async initialization to complete

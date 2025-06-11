@@ -21,7 +21,7 @@ import { UnitConversion } from "../shared/UnitConversion";
 import { ReloadDispatcher } from "../shared/reloadDispatcher";
 import { ApplicationSettingsService } from "../shared/ApplicationSettings";
 
-fdescribe('LearnComponent', () => {
+describe('LearnComponent', () => {
     let component: LearnComponent;
     let fixture: ComponentFixture<LearnComponent>;
     let quizService: QuizService;

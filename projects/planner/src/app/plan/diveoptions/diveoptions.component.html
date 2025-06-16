@@ -163,10 +163,11 @@
                         <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
                             <label for="decoStopDistance" class="form-label" mdbLabel>Distance between deco stops [{{units.length}}]:</label>
                             <input id="decoStopDistance" formControlName="decoStopDistance" class="form-control" type="number"
-                                (input)="applyOptions()" required min="1" max="10" step="1"
+                                (input)="applyOptions()" required
+                                [min]="ranges.decoStopDistance[0]" [max]="ranges.decoStopDistance[1]" step="1"
                                 [class.is-invalid]="decoStopDistanceInvalid" />
                             <div class="invalid-feedback position-absolute">
-                                Needs to be number 1–10
+                                Needs to be number {{ ranges.decoStopDistanceLabel }}
                             </div>
                         </div>
                         <div class="row ms-2">

@@ -171,7 +171,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             maxDecoPO2: [Precision.round(this.options.diverOptions.maxDecoPpO2, 2), this.validators.ppO2],
             maxOxygenDuration: [Precision.round(this.airBreaks.oxygenDuration, 0), this.validators.duration100],
             backGasDuration: [Precision.round(this.airBreaks.bottomGasDuration, 0), this.validators.duration100],
-            decoStopDistance: [Precision.round(this.options.decoStopDistance, 0), this.validators.rangeFor([1, 10])]
+            decoStopDistance: [Precision.round(this.options.decoStopDistance, 0), this.validators.decoStopDistance]
 
         });
 

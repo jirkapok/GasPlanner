@@ -128,6 +128,12 @@ export class OptionsService {
         return this.options.airBreaks;
     }
 
+    public get decoStopDistance(): number {
+    const source = this.options.decoStopDistance;
+    return this.units.fromMeters(source);
+    }
+
+
     public set maxEND(newValue: number) {
         this.options.maxEND = this.units.toMeters(newValue);
     }
@@ -213,6 +219,10 @@ export class OptionsService {
 
     public set salinity(newValue: Salinity) {
         this.options.salinity = newValue;
+    }
+
+    public set decoStopDistance(newValue: number) {
+        this.options.decoStopDistance = this.units.toMeters(newValue);
     }
 
     public useRecreational(): void {

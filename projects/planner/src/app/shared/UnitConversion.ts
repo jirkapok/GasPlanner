@@ -188,6 +188,9 @@ export interface RangeConstants {
     speedLabel: string;
     money: [number, number];
     moneyLabel: string;
+    decoStopDistance: [number, number];
+    decoStopDistanceLabel: string;
+
 }
 
 const perMinute = '/min';
@@ -216,6 +219,8 @@ class MetricRanges implements RangeConstants {
     public readonly nitroxOxygenLabel: string = toLabel(this.nitroxOxygen, '%');
     public readonly lastStopDepth: [number, number] = [3, 6];
     public readonly lastStopDepthLabel: string = toLabel(this.lastStopDepth, this.units.lengthShortcut);
+    public readonly decoStopDistance: [number, number] = [1, 10];
+    public readonly decoStopDistanceLabel: string = toLabel(this.decoStopDistance, this.units.lengthShortcut);
     public readonly ppO2: [number, number] = [0.21, 3];
     public readonly rmvRounding = 2;
     public readonly tankHe: [number, number] = [0, 99];
@@ -257,6 +262,8 @@ class ImperialRanges implements RangeConstants {
     public readonly nitroxOxygenLabel: string = toLabel(this.nitroxOxygen, '%');
     public readonly lastStopDepth: [number, number] = [10, 20];
     public readonly lastStopDepthLabel: string = toLabel(this.lastStopDepth, this.units.lengthShortcut);
+    public readonly decoStopDistance: [number, number] = [3, 30];
+    public readonly decoStopDistanceLabel: string = toLabel(this.decoStopDistance, this.units.lengthShortcut);
     public readonly ppO2: [number, number] = [0.21, 3];
     public readonly rmvRounding = 4;
     public readonly tankHe: [number, number] = [0, 99];

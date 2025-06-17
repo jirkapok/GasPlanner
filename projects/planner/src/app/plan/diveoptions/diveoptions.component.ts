@@ -46,6 +46,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         maxDecoPO2: FormControl<number>;
         maxOxygenDuration: FormControl<number>;
         backGasDuration: FormControl<number>;
+        decoStopDistance: FormControl<number>;
     }>;
 
     constructor(public units: UnitConversion,
@@ -133,6 +134,11 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         return Precision.round(rmv, roundTo);
     }
 
+    public get decoStopDistanceInvalid(): boolean {
+    const control = this.optionsForm.controls.decoStopDistance;
+    return this.inputs.controlInValid(control);
+    }
+
     public set isComplex(newValue: boolean) {
         if (!newValue) {
             this.setAllUsable();
@@ -164,7 +170,9 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             maxPO2: [Precision.round(this.options.diverOptions.maxPpO2, 2), this.validators.ppO2],
             maxDecoPO2: [Precision.round(this.options.diverOptions.maxDecoPpO2, 2), this.validators.ppO2],
             maxOxygenDuration: [Precision.round(this.airBreaks.oxygenDuration, 0), this.validators.duration100],
-            backGasDuration: [Precision.round(this.airBreaks.bottomGasDuration, 0), this.validators.duration100]
+            backGasDuration: [Precision.round(this.airBreaks.bottomGasDuration, 0), this.validators.duration100],
+            decoStopDistance: [Precision.round(this.options.decoStopDistance, 0), this.validators.decoStopDistance]
+
         });
 
         this.dispatcher.optionsReloaded$.pipe(takeUntil(this.unsubscribe$))
@@ -299,6 +307,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         this.options.ascentSpeed6m = Number(values.ascentSpeed6m);
         this.options.ascentSpeed50percTo6m = Number(values.ascentSpeed50percTo6m);
         this.options.ascentSpeed50perc = Number(values.ascentSpeed50perc);
+        this.options.decoStopDistance = Number(values.decoStopDistance);
 
         this.airBreaks.oxygenDuration = Number(values.maxOxygenDuration);
         this.airBreaks.bottomGasDuration = Number(values.backGasDuration);
@@ -328,7 +337,9 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             maxPO2: diver.maxPpO2,
             maxDecoPO2: diver.maxDecoPpO2,
             maxOxygenDuration: Precision.round(this.airBreaks.oxygenDuration),
-            backGasDuration: Precision.round(this.airBreaks.bottomGasDuration)
+            backGasDuration: Precision.round(this.airBreaks.bottomGasDuration),
+            decoStopDistance: Precision.round(this.options.decoStopDistance, 0)
+
         });
     }
 }

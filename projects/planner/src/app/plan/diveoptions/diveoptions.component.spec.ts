@@ -89,5 +89,14 @@ describe('Dive options component', () => {
         expect(recoSpy).toHaveBeenCalledWith();
         expect(dispatchSpy).toHaveBeenCalledWith();
     });
+
+     it('should apply decoStopDistance value from the form', () => {
+        const form: FormGroup = component.optionsForm;
+
+        form.get('decoStopDistance')?.setValue(7);
+        fixture.detectChanges();
+
+        expect(form.get('decoStopDistance')?.value).toBe(7);
+    });
 });
 

@@ -74,6 +74,7 @@ export class SettingsNormalizationService {
         options.descentSpeed = this.fitUnit(u => u, v => v, options.descentSpeed, speedRange);
         options.lastStopDepth = this.fitUnit(u => u, v => v, options.lastStopDepth, this.ranges.lastStopDepth);
         options.maxEND = this.fitUnit(u => u, v => v, options.maxEND, this.ranges.narcoticDepth);
+        options.decoStopDistance = this.fitUnit(u => u, v => v, options.decoStopDistance, this.ranges.decoStopDistance);
     }
 
     private normalizeTanks(tanksService: TanksService): void {

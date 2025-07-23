@@ -17,11 +17,14 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { OptionsService } from '../../shared/options.service';
 
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
     let fixture: ComponentFixture<DiveOptionsComponent>;
     let schedules: DiveSchedules;
+    let optionsService: OptionsService;
+    let reloadDispatcher: ReloadDispatcher;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -36,7 +39,8 @@ describe('Dive options component', () => {
                 ViewStates, SubViewStorage,
                 Preferences, PreferencesStore,
                 ApplicationSettingsService,
-                MdbModalService
+                MdbModalService,
+                OptionsService
             ]
         })
             .compileComponents();
@@ -46,6 +50,8 @@ describe('Dive options component', () => {
         fixture = TestBed.createComponent(DiveOptionsComponent);
         component = fixture.componentInstance;
         schedules = TestBed.inject(DiveSchedules);
+        optionsService = TestBed.inject(OptionsService);
+        reloadDispatcher = TestBed.inject(ReloadDispatcher);
 
         component.ngOnInit();
         fixture.detectChanges();
@@ -90,13 +96,18 @@ describe('Dive options component', () => {
         expect(dispatchSpy).toHaveBeenCalledWith();
     });
 
-     it('should apply decoStopDistance value from the form', () => {
+     it('should propagate new value of decoStopDistance to OptionsService and fire recalculate trigger ', () => {
+
+        spyOn(reloadDispatcher, 'sendOptionsChanged');
+
         const form: FormGroup = component.optionsForm;
+        form.get('decoStopDistance')!.setValue(5);
 
-        form.get('decoStopDistance')?.setValue(7);
-        fixture.detectChanges();
+        component.applyOptions();
 
-        expect(form.get('decoStopDistance')?.value).toBe(7);
+        expect(schedules.selectedOptions.decoStopDistance).toBe(5);
+        expect(reloadDispatcher.sendOptionsChanged).toHaveBeenCalled();
+
     });
 });
 

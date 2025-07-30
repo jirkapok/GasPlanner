@@ -1,6 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { DiveOptionsComponent } from './diveoptions.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { PlannerService } from '../../shared/planner.service';
@@ -16,14 +16,13 @@ import { PreferencesStore } from '../../shared/preferencesStore';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { OptionsService } from '../../shared/options.service';
 
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
     let fixture: ComponentFixture<DiveOptionsComponent>;
     let schedules: DiveSchedules;
-    let optionsService: OptionsService;
     let reloadDispatcher: ReloadDispatcher;
 
     beforeEach(async () => {
@@ -39,18 +38,15 @@ describe('Dive options component', () => {
                 ViewStates, SubViewStorage,
                 Preferences, PreferencesStore,
                 ApplicationSettingsService,
-                MdbModalService,
-                OptionsService
+                MdbModalService, OptionsService
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(DiveOptionsComponent);
         component = fixture.componentInstance;
         schedules = TestBed.inject(DiveSchedules);
-        optionsService = TestBed.inject(OptionsService);
         reloadDispatcher = TestBed.inject(ReloadDispatcher);
 
         component.ngOnInit();
@@ -96,18 +92,15 @@ describe('Dive options component', () => {
         expect(dispatchSpy).toHaveBeenCalledWith();
     });
 
-     it('should propagate new value of decoStopDistance to OptionsService and fire recalculate trigger ', () => {
+    it('should propagate new value of decoStopDistance to OptionsService and fire recalculate trigger ', () => {
+        const dispatcherSpy = spyOn(reloadDispatcher, 'sendOptionsChanged');
 
-        spyOn(reloadDispatcher, 'sendOptionsChanged');
-
-        const form: FormGroup = component.optionsForm;
+        const form = component.optionsForm;
         form.get('decoStopDistance')!.setValue(5);
-
         component.applyOptions();
 
         expect(schedules.selectedOptions.decoStopDistance).toBe(5);
-        expect(reloadDispatcher.sendOptionsChanged).toHaveBeenCalled();
-
+        expect(dispatcherSpy).toHaveBeenCalledWith();
     });
 });
 

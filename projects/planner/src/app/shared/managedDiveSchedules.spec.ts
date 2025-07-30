@@ -115,6 +115,26 @@ describe('Managed Schedules', () => {
         it('Calls scheduler after add', () => {
             expect(dispatcherSpy).toHaveBeenCalledTimes(1);
         });
+
+        it('When adding a new dive in metric units, the default decoStopDistance value should be 3 m', () => {
+
+        const diveMetric = schedules.dives[1];
+        expect(diveMetric.optionsService.decoStopDistance).toBe(3);
+
+        });
+
+        it('When adding a new dive in imperial units, the default decoStopDistance value should be set to 10 ft', inject(
+        [UnitConversion],
+        (units: UnitConversion) => {
+
+        units.imperialUnits = true;
+
+        sut.add();
+
+        const diveImperial = schedules.dives[2];
+        expect(diveImperial.optionsService.decoStopDistance).toBeCloseTo(10, 0);
+
+        }));
     });
 
     describe('Clone dive', () => {

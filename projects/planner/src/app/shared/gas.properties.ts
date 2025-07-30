@@ -86,9 +86,8 @@ export class BoundGasProperties {
     }
 
     public get maxDensity(): number {
-        return this.units.fromGramPerLiter(GasDensity.recommendedMaximum);
+        return this.units.fromGramPerLiter(this.calc.maxDensity);
     }
-
 
     public get mndLimit(): number {
         return this.units.fromMeters(this.calc.narcoticDepthLimit);
@@ -104,6 +103,10 @@ export class BoundGasProperties {
 
     public set mndLimit(newValue: number) {
         this.calc.narcoticDepthLimit = this.units.toMeters(newValue);
+    }
+
+    public set maxDensity(newValue: number) {
+        this.calc.maxDensity = this.units.toGramPerLiter(newValue);
     }
 
     public switchOxygenNarcotic(): void {

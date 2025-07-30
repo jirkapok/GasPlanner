@@ -13,6 +13,7 @@ import { GasViewState } from '../../shared/views.model';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { BoundGasProperties } from '../../shared/gas.properties';
 import { TextConstants } from '../../shared/TextConstants';
+import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 
 interface GasForm {
     o2: FormControl<number>;
@@ -41,8 +42,10 @@ export class GasPropertiesCalcComponent implements OnInit {
         private inputs: InputControls,
         public units: UnitConversion,
         public location: Location,
+        settings: ApplicationSettingsService,
         private viewStates: SubViewStorage) {
         this.calc = new BoundGasProperties(this.units);
+        this.calc.maxDensity = settings.maxGasDensity;
         this.loadState();
         this.saveState();
     }

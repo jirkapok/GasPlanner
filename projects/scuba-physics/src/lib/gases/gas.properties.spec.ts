@@ -159,7 +159,8 @@ describe('Gas properties calculator', () => {
         });
 
         it('Exceeds mnd', () => {
-            sut.depth = 42;
+            sut.narcoticDepthLimit = 35;
+            sut.depth = 36;
             expect(sut.mndExceeded).toBeTruthy();
         });
 
@@ -172,6 +173,12 @@ describe('Gas properties calculator', () => {
         it('Exceeds max. ppO2', () => {
             sut.depth = 70;
             expect(sut.maxPpO2Exceeded).toBeTruthy();
+        });
+
+        it('Exceeds max density', () => {
+            sut.maxDensity = 5.9;
+            sut.depth = 37;
+            expect(sut.densityExceeded).toBeTruthy();
         });
     });
 });

@@ -12,6 +12,7 @@ export class GasProperties {
     public maxPpO2 = 1.4;
     public oxygenNarcotic = true;
     private narcDepthBars = 4;
+    private _maxDensity = GasDensity.recommendedMaximum;
     private readonly _tank = Tank.createDefault();
     private readonly depthConverter = DepthConverter.simple();
     private readonly densityCalc = new DensityAtDepth(this.depthConverter);
@@ -30,11 +31,16 @@ export class GasProperties {
     }
 
     public get mndExceeded(): boolean {
-        return this.end > this.mnd;
+        return this.end > this.narcoticDepthLimit;
     }
 
     public get densityExceeded(): boolean {
-        return this.density > GasDensity.recommendedMaximum;
+        return this.density > this.maxDensity;
+    }
+
+    /** Maximum accepted gas density in g/l */
+    public get maxDensity(): number {
+        return this._maxDensity;
     }
 
     /** Gets or sets narcotic depth in meters to be used to compare with current gas properties. */
@@ -78,7 +84,7 @@ export class GasProperties {
         return this.depthConverter.fromBar(maxDepthPressure);
     }
 
-    /** Gets current mix equivalent air depth. This value makes sense only for Nitrox mixtures. */
+    /** Gets current mix equivalent air depth in meters. This value makes sense only for Nitrox mixtures. */
     public get ead(): number {
         const eadDepthPressure = GasMixtures.ead(this.gas.fO2, this.depthPressure);
 
@@ -89,7 +95,7 @@ export class GasProperties {
         return this.depthConverter.fromBar(eadDepthPressure);
     }
 
-    /** Gets current mix equivalent narcotic depth based on current depth. */
+    /** Gets current mix equivalent narcotic depth based on current depth in meters. */
     public get end(): number {
         let endDepthPressure = this.gas.end(this.depthPressure, this.oxygenNarcotic);
 
@@ -122,5 +128,9 @@ export class GasProperties {
 
     public set narcoticDepthLimit(newValue: number) {
         this.narcDepthBars = this.depthConverter.toBar(newValue);
+    }
+
+    public set maxDensity(newValue: number) {
+        this._maxDensity = newValue;
     }
 }

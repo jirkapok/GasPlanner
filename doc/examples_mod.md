@@ -1,12 +1,10 @@
-# Example Nitrox Maximum operational depth calculation
-
-## Formulas
+**Formulas**
 
 maximum operational depth pressure = partial pressure O2 / O2 fraction in mix
 
 maximum operational depth = convert maximum operational depth pressure to depth
 
-## Example
+**Example**
 
 What is maximum operational depth for gas with 32 % oxygen at partial pressure 1.6 ?
 

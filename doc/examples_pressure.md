@@ -1,12 +1,10 @@
-# Example Depth to pressure conversion
-
-## Formulas
+**Formulas**
 
 pressure = depth / 10 + 1
 
 (expecting 1 bar at surface)
 
-## Example
+**Example**
 
 What is the ambient pressure in bars at depth 24 meters?
 

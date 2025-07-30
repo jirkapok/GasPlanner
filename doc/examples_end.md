@@ -1,11 +1,9 @@
-# Example Equivalent narcotic depth calculations
-
-## Formulas
+**Formulas**
 
 Equivalent narcotic depth = (1 - Helium fraction) * depth
 
 
-## Example
+**Example**
 
 You plan a dive to 45 meters. Team selects Trimix 21/35 as a gas for the dive. What is the equivalent narcotic depth for this gas?
 

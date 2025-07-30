@@ -1,10 +1,8 @@
-# Example Nitrox partial pressure calculation
-
-## Formulas
+**Formulas**
 
 partial pressure O2 = pressure at depth * O2 fraction in mix
 
-## Example
+**Example**
 
 What is the partial pressure of oxygen for Ean50 at 22 meters?
 

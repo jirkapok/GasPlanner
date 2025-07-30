@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal, faCircleInfo, faUndo, faChartSimple } from '@fortawesome/free-solid-svg-icons';
-import { NgxMdModule } from 'ngx-md';
+import { NgxMdModule, NgxMdService } from 'ngx-md';
 import { CategoryStatus, QuizService, TopicStatus } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
 import { QuizSession } from '../shared/learn/quiz.session';
@@ -15,16 +15,21 @@ import { LearnViewState } from '../shared/views.model';
 import { KnownViews } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { HelpService } from '../shared/learn/help.service';
+import { MarkdownCustomization } from '../shared/markdown-customization.service';
+import { Urls } from '../shared/navigation.service';
 
 @Component({
     selector: 'app-learn',
     standalone: true,
     imports: [CommonModule, NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule],
+    providers: [
+        NgxMdService, Urls, QuizService, PreferencesStore, HelpService,
+        MarkdownCustomization, SubViewStorage
+    ],
     templateUrl: './learn.component.html',
     styleUrls: ['./learn.component.scss']
 })
 export class LearnComponent {
-
     @ViewChild('completionBlock', { static: false }) completionBlockRef!: ElementRef<HTMLElement>;
 
     public readonly trophyIcon = faMedal;
@@ -32,14 +37,19 @@ export class LearnComponent {
     public readonly statsIcon = faChartSimple;
     public readonly resetIcon = faUndo;
     public showScore = false;
+    public helpTopic = this.urls.helpMarkdownUrl(Urls.notAvailable);
+    public showHelp = false;
 
     constructor(
         public quizService: QuizService,
+        public urls: Urls,
         private help: HelpService,
         private preferencesStore: PreferencesStore,
+        private markdown: MarkdownCustomization,
         private viewStates: SubViewStorage,
     ) {
         this.loadState();
+        this.markdown.configure();
     }
 
     public get topics(): Topic[] {
@@ -68,6 +78,7 @@ export class LearnComponent {
 
     public select(topic: Topic, category: Category): void {
         this.quizService.select(topic, category);
+        this.showHelp = false;
         this.saveState();
     }
 
@@ -82,8 +93,9 @@ export class LearnComponent {
             return;
         }
 
+        this.helpTopic = this.urls.helpMarkdownUrl(category.help);
+        this.showHelp = true;
         this.session.useHint();
-        this.help.openHelp(category.help);
     }
 
     public toggleTopic(topic: Topic): void {
@@ -118,6 +130,7 @@ export class LearnComponent {
 
     public goToNextQuestion(): void {
         this.quizService.goToNextQuestion();
+        this.showHelp = false;
     }
 
     public switchToScore(): void {

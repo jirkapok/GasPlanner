@@ -18,7 +18,7 @@ export class Urls {
         return Urls.assetsDoc + `${fileName}.md`;
     }
 
-    public helpUrl(document: string, anchor: string | undefined): string {
+    public helpUrl(document: string, anchor?: string): string {
         const anchorPath = anchor ?? '';
         return `/help/${document}/${anchorPath}`;
     }

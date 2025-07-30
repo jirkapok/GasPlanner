@@ -1,7 +1,7 @@
 import { Component,Input } from '@angular/core';
 import { faCircleInfo} from '@fortawesome/free-solid-svg-icons';
 import { Urls } from '../shared/navigation.service';
-import { HelpService } from "../shared/learn/help.service";
+import { HelpService } from '../shared/learn/help.service';
 
 @Component({
     selector: 'app-card-header',

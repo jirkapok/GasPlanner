@@ -6,9 +6,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { MarkdownCustomization } from '../shared/markdown-customization.service';
-import { HelpViewState } from "../shared/views.model";
-import { KnownViews } from "../shared/viewStates";
-import { SubViewStorage } from "../shared/subViewStorage";
+import { HelpViewState } from '../shared/views.model';
+import { KnownViews } from '../shared/viewStates';
+import { SubViewStorage } from '../shared/subViewStorage';
 
 @Component({
     selector: 'app-help',
@@ -178,6 +178,6 @@ export class HelpComponent implements OnInit {
             id:  KnownViews.help,
             document: this.document,
             anchor: this.anchor
-        }
+        };
     }
 }

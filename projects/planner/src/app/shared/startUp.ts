@@ -4,8 +4,7 @@ import { PreferencesStore } from './preferencesStore';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
 import { SubViewStorage } from './subViewStorage';
 import { ViewStates } from './viewStates';
-import { HelpService } from "./learn/help.service"; // adjust path as needed
-
+import { HelpService } from './learn/help.service';
 
 @Injectable()
 export class DashboardStartUp {
@@ -54,11 +53,7 @@ export class DashboardStartUp {
 
         // cant do in constructor, since the state may be changed
         this.viewStore.saveMainView();
-
-        if (this.preferences.quizWelcomeEnabled()) {
-            this.preferences.disableQuizWelcome();
-            this.help.openLearnWelcome();
-        }
+        this.showLearnWelcome();
 
         // in case it fails we need to reset the parameters
         // or in case of navigation to dashboard with only one dive
@@ -107,5 +102,16 @@ export class DashboardStartUp {
                     this.deferredPrompt = null;
                 });
         }
+    }
+
+    private showLearnWelcome(): void {
+        const threeMinutes = 3 * 60 * 1000;
+
+        setTimeout(() => {
+            if (this.preferences.quizWelcomeEnabled()) {
+                this.preferences.disableQuizWelcome();
+                this.help.openLearnWelcome();
+            }
+        }, threeMinutes);
     }
 }

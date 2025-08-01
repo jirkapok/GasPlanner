@@ -212,7 +212,6 @@ export const topics: Topic[] = [
         ])
     ])
 
-    // TODO fix help links for options and dive info.
     // Consider add learn topics:
     // * Partial pressures - oxygen, nitrogen, helium, total
     // * Oxygen toxicity CNS/OTU using simplified table based text book formula

@@ -58,6 +58,7 @@ export class SettingsNormalizationService {
         const defaults = this.units.defaults;
         // options need to be in metrics only
         const targetOptions = options.getOptions();
+        // TODO loading of the last stop depth is overridden by the default value, why?
         targetOptions.decoStopDistance = this.units.toMeters(defaults.stopsDistance);
         targetOptions.minimumAutoStopDepth = this.units.toMeters(defaults.autoStopLevel);
         // unable to fit the stop, the lowest value is always the minimum distance

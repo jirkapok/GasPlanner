@@ -464,4 +464,28 @@ describe('PlannerService', () => {
             expect(_(dive.events).some(e => e.isNoDeco)).toBeFalsy();
         });
     });
+
+    describe('Deco stop distance is applied', () => {
+        xit('contains 5 m step in wayPoints and emergencyAscent', () => {
+
+        optionsService.getOptions().decoStopDistance = 5;
+        planner.calculate(1);
+
+        const tol = 0.1;
+
+        const wayDeltas = dive.wayPoints
+        .map(p => p.endDepth)
+        .map((d, i, a) => i === 0 ? NaN : Math.abs(d - a[i - 1]))
+        .filter(Number.isFinite);
+
+        const emerDeltas = dive.emergencyAscent
+        .map(p => p.endDepth)
+        .map((d, i, a) => i === 0 ? NaN : Math.abs(d - a[i - 1]))
+        .filter(Number.isFinite);
+
+        expect(wayDeltas.some(d => Math.abs(d - 5) <= tol)).toBeTrue();
+        expect(emerDeltas.some(d => Math.abs(d - 5) <= tol)).toBeTrue();
+
+        });
+    });
 });

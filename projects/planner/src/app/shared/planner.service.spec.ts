@@ -465,26 +465,22 @@ describe('PlannerService', () => {
         });
     });
 
-    describe('Deco stop distance is applied', () => {
-        xit('contains 5 m step in wayPoints and emergencyAscent', () => {
+describe('Deco stop distance is applied', () => {
+        it('contains 5 m stop interval when decoStopDistance = 5 m', () => {
+            depthsService.planDuration = 40;
 
-        optionsService.getOptions().decoStopDistance = 5;
-        planner.calculate(1);
+            optionsService.getOptions().decoStopDistance = 5;
+            planner.calculate(1);
 
-        const tol = 0.1;
+            const toIntervals = (depths: number[]) =>
+            depths.slice(1).map((d, i) => Math.abs(d - depths[i]))
+            .filter(interval => interval > 0 && interval <= 10);
 
-        const wayDeltas = dive.wayPoints
-        .map(p => p.endDepth)
-        .map((d, i, a) => i === 0 ? NaN : Math.abs(d - a[i - 1]))
-        .filter(Number.isFinite);
+            const wayStopIntervals  = toIntervals(dive.wayPoints.map(p => p.endDepth));
+            const emerStopIntervals = toIntervals(dive.emergencyAscent.map(p => p.endDepth));
 
-        const emerDeltas = dive.emergencyAscent
-        .map(p => p.endDepth)
-        .map((d, i, a) => i === 0 ? NaN : Math.abs(d - a[i - 1]))
-        .filter(Number.isFinite);
-
-        expect(wayDeltas.some(d => Math.abs(d - 5) <= tol)).toBeTrue();
-        expect(emerDeltas.some(d => Math.abs(d - 5) <= tol)).toBeTrue();
+        expect(wayStopIntervals.includes(5)).toBeTrue();
+        expect(emerStopIntervals.includes(5)).toBeTrue();
 
         });
     });

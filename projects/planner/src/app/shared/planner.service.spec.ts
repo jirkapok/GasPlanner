@@ -466,22 +466,20 @@ describe('PlannerService', () => {
     });
 
 describe('Deco stop distance is applied', () => {
-        it('contains 5 m stop interval when decoStopDistance = 5 m', () => {
-            depthsService.planDuration = 40;
 
+        it('applies 5 m stop interval when decoStopDistance = 5 m', () => {
+            depthsService.planDuration = 40;
             optionsService.getOptions().decoStopDistance = 5;
             planner.calculate(1);
 
-            const toIntervals = (depths: number[]) =>
-            depths.slice(1).map((d, i) => Math.abs(d - depths[i]))
-            .filter(interval => interval > 0 && interval <= 10);
+            const wayDepths = dive.wayPoints.map(p => p.endDepth);
+            const emerDepths = dive.emergencyAscent.map(p => p.endDepth);
 
-            const wayStopIntervals  = toIntervals(dive.wayPoints.map(p => p.endDepth));
-            const emerStopIntervals = toIntervals(dive.emergencyAscent.map(p => p.endDepth));
+            const expectedWayDepths = [30, 30, 15, 15, 10, 10, 5, 5, 3, 3, 0];
+            const expectedEmerDepths = [30, 15, 15, 10, 10, 5, 5, 3, 3, 0];
 
-        expect(wayStopIntervals.includes(5)).toBeTrue();
-        expect(emerStopIntervals.includes(5)).toBeTrue();
-
+            expect(wayDepths).toEqual(expectedWayDepths);
+            expect(emerDepths).toEqual(expectedEmerDepths);
         });
     });
 });

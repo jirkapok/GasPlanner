@@ -464,4 +464,22 @@ describe('PlannerService', () => {
             expect(_(dive.events).some(e => e.isNoDeco)).toBeFalsy();
         });
     });
+
+describe('Deco stop distance is applied', () => {
+
+        it('applies 5 m stop interval when decoStopDistance = 5 m', () => {
+            depthsService.planDuration = 40;
+            optionsService.getOptions().decoStopDistance = 5;
+            planner.calculate(1);
+
+            const wayDepths = dive.wayPoints.map(p => p.endDepth);
+            const emerDepths = dive.emergencyAscent.map(p => p.endDepth);
+
+            const expectedWayDepths = [30, 30, 15, 15, 10, 10, 5, 5, 3, 3, 0];
+            const expectedEmerDepths = [30, 15, 15, 10, 10, 5, 5, 3, 3, 0];
+
+            expect(wayDepths).toEqual(expectedWayDepths);
+            expect(emerDepths).toEqual(expectedEmerDepths);
+        });
+    });
 });

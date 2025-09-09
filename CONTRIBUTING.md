@@ -13,5 +13,6 @@ Create Pull requests to the develop branch and link issue the PR solves.
 ## Bachelor/Master's thesis
 
 * [Denis Lebo](https://github.com/xlebod) - Profiles comparison
+* [Viktor Konupčík](https://github.com/Darkvikis) - Help and learn quizzes
 
 

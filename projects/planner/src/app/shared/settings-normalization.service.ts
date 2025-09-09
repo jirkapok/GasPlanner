@@ -58,11 +58,8 @@ export class SettingsNormalizationService {
         const defaults = this.units.defaults;
         // options need to be in metrics only
         const targetOptions = options.getOptions();
-        // TODO loading of the last stop depth is overridden by the default value, why?
-        targetOptions.decoStopDistance = this.units.toMeters(defaults.stopsDistance);
         targetOptions.minimumAutoStopDepth = this.units.toMeters(defaults.autoStopLevel);
-        // unable to fit the stop, the lowest value is always the minimum distance
-        targetOptions.lastStopDepth = this.units.toMeters(defaults.stopsDistance);
+        // last stop depth and deco stop distance still need to fit to UI ranges.
     }
 
     private normalizeOptions(options: OptionsService): void {
@@ -73,8 +70,8 @@ export class SettingsNormalizationService {
         options.ascentSpeed50percTo6m = this.fitUnit(u => u, v => v, options.ascentSpeed50percTo6m, speedRange);
         options.ascentSpeed6m = this.fitUnit(u => u, v => v, options.ascentSpeed6m, speedRange);
         options.descentSpeed = this.fitUnit(u => u, v => v, options.descentSpeed, speedRange);
-        options.lastStopDepth = this.fitUnit(u => u, v => v, options.lastStopDepth, this.ranges.lastStopDepth);
         options.maxEND = this.fitUnit(u => u, v => v, options.maxEND, this.ranges.narcoticDepth);
+        options.lastStopDepth = this.fitUnit(u => u, v => v, options.lastStopDepth, this.ranges.lastStopDepth);
         options.decoStopDistance = this.fitUnit(u => u, v => v, options.decoStopDistance, this.ranges.decoStopDistance);
     }
 

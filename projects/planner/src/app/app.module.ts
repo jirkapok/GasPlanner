@@ -69,11 +69,8 @@ import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilec
 import {DiveResultsTableDifferenceComponent} from './diff/diveresults/table/diff-diveresults-table.component';
 
 import {MainMenuComponent} from './mainmenu/mainmenu.component';
-import {AboutComponent} from './about/about.component';
-import {AppFooterComponent} from './footer/footer.component';
 import {AppSettingsComponent} from './app-settings/app-settings.component';
 import {DurationPipe} from './pipes/duration.pipe';
-import {AppinfoComponent} from './appinfo/appinfo.component';
 import {CardHeaderComponent} from './card-header/card-header.component';
 
 import {PlannerService} from './shared/planner.service';
@@ -136,12 +133,9 @@ const MDB_MODULES = [
 ];
 
 const COMPONENTS = [
-    AboutComponent,
-    AppFooterComponent,
     AltitudeCalcComponent,
     AltitudeComponent,
     AppComponent,
-    AppinfoComponent,
     AppSettingsComponent,
     CardHeaderComponent,
     CalculatingComponent,

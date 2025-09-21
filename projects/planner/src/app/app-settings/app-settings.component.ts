@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
-    NonNullableFormBuilder, FormGroup, Validators, FormControl
+    NonNullableFormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule
 } from '@angular/forms';
-import { Location } from '@angular/common';
+import { CommonModule, DecimalPipe, Location } from '@angular/common';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
@@ -13,14 +13,31 @@ import { InputControls } from '../shared/inputcontrols';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
-import { ViewState } from "../shared/views.model";
-import { KnownViews } from "../shared/viewStates";
+import { ViewState } from '../shared/views.model';
+import { KnownViews, ViewStates } from '../shared/viewStates';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { Preferences } from '../shared/preferences';
+import { ViewSwitchService } from '../shared/viewSwitchService';
+import { CardHeaderComponent } from '../card-header/card-header.component';
+import { MdbCheckboxModule } from 'mdb-angular-ui-kit/checkbox';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 
 @Component({
     selector: 'app-app-settings',
     templateUrl: './app-settings.component.html',
     styleUrls: ['./app-settings.component.scss'],
-    standalone: false
+    imports: [
+        CommonModule,
+        ReactiveFormsModule, CardHeaderComponent,
+        MdbCheckboxModule, MdbFormsModule
+    ],
+    providers: [
+        DecimalPipe, InputControls, ValidatorGroups,
+        SettingsNormalizationService, ApplicationSettingsService,
+        SubViewStorage, ViewStates,
+        PreferencesStore, Preferences,
+        ViewSwitchService
+    ]
 })
 export class AppSettingsComponent implements OnInit {
     public readonly flagIcon = faFlag;
@@ -163,8 +180,8 @@ export class AppSettingsComponent implements OnInit {
 
     private saveState(): void {
         this.viewStates.saveView<ViewState>({
-           // Not implemented saving of form values, only to be able navigate to the view
-           id:  KnownViews.settings,
+            // Not implemented saving of form values, only to be able navigate to the view
+            id:  KnownViews.settings,
         });
     }
 }

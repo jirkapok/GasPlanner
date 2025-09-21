@@ -18,7 +18,8 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { CardHeaderComponent } from '../card-header/card-header.component';
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
@@ -35,19 +36,14 @@ describe('App settings component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AppSettingsComponent],
-            imports: [ReactiveFormsModule],
+            declarations: [],
+            imports: [
+                ReactiveFormsModule, AppSettingsComponent,
+                CardHeaderComponent
+            ],
             providers: [
-                DecimalPipe,
-                SettingsNormalizationService,
-                UnitConversion, ValidatorGroups,
-                InputControls, ViewStates, SubViewStorage,
-                DiveSchedules, ReloadDispatcher,
-                PreferencesStore, Preferences,
-                PlannerService, WorkersFactoryCommon,
-                ViewSwitchService, ReloadDispatcher,
-                ApplicationSettingsService,
-                MdbModalService
+                MdbModalService, DiveSchedules,
+                UnitConversion, ReloadDispatcher
             ]
         }).compileComponents();
     });

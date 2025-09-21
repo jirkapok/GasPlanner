@@ -67,12 +67,8 @@ import {WaypointsDifferenceComponent} from './diff/waypoints/diff-waypoints.comp
 import {DiveResultsDifferenceComponent} from './diff/diveresults/diff-diveresults.component';
 import {ProfileDifferenceChartComponent} from './diff/profilechart/diff-profilechart.component';
 import {DiveResultsTableDifferenceComponent} from './diff/diveresults/table/diff-diveresults-table.component';
-
 import {MainMenuComponent} from './mainmenu/mainmenu.component';
-import {AppSettingsComponent} from './app-settings/app-settings.component';
 import {DurationPipe} from './pipes/duration.pipe';
-import {CardHeaderComponent} from './card-header/card-header.component';
-
 import {PlannerService} from './shared/planner.service';
 import {PreferencesStore} from './shared/preferencesStore';
 import {UnitConversion} from './shared/UnitConversion';
@@ -114,6 +110,9 @@ import { IgnoredIssuesService } from './shared/IgnoredIssues.service';
 import { BlendPricingService } from './shared/blend-pricing.service';
 import { MdbModalModule } from 'mdb-angular-ui-kit/modal';
 import { ShareDiveService } from './shared/ShareDiveService';
+import { CardHeaderComponent } from './card-header/card-header.component';
+import { AppFooterComponent } from './footer/footer.component';
+import { AppSettingsComponent } from './app-settings/app-settings.component';
 
 const ANGULAR_MODULES = [
     AppRoutingModule,
@@ -136,8 +135,6 @@ const COMPONENTS = [
     AltitudeCalcComponent,
     AltitudeComponent,
     AppComponent,
-    AppSettingsComponent,
-    CardHeaderComponent,
     CalculatingComponent,
     DashboardComponent,
     DepthComponent,
@@ -183,7 +180,10 @@ const COMPONENTS = [
 const STANDALONE = [
     SurfaceIntervalComponent,
     HelpModalComponent,
-    HelpComponent
+    HelpComponent,
+    CardHeaderComponent,
+    AppFooterComponent,
+    AppSettingsComponent
 ];
 
 const SERVICES = [

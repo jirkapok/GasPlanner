@@ -1,14 +1,26 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NonNullableFormBuilder, FormGroup, AbstractControl } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { InputControls } from '../../shared/inputcontrols';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
+import { DecimalPipe, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-altitude',
     templateUrl: './altitude.component.html',
     styleUrls: ['./altitude.component.scss'],
-    standalone: false
+    providers: [
+        InputControls, DecimalPipe,
+        ValidatorGroups, UnitConversion
+    ],
+    imports: [
+        ReactiveFormsModule,
+        MdbFormsModule,
+        MdbDropdownModule,
+        NgIf
+    ],
 })
 export class AltitudeComponent implements OnInit {
     @Output() public inputChange = new EventEmitter<number>();

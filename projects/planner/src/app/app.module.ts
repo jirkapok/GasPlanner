@@ -133,9 +133,7 @@ const MDB_MODULES = [
 
 const COMPONENTS = [
     AltitudeCalcComponent,
-    AltitudeComponent,
     AppComponent,
-    CalculatingComponent,
     DashboardComponent,
     DepthComponent,
     DepthsComplexComponent,
@@ -183,7 +181,9 @@ const STANDALONE = [
     AppFooterComponent,
     AppSettingsComponent,
     MainMenuComponent,
-    DurationPipe
+    DurationPipe,
+    CalculatingComponent,
+    AltitudeComponent
 ];
 
 const SERVICES = [

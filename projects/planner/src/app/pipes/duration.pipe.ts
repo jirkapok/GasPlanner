@@ -4,8 +4,7 @@ import { DateFormats } from '../shared/formaters';
 import { Time } from 'scuba-physics';
 
 @Pipe({
-    name: 'duration',
-    standalone: false
+    name: 'duration'
 })
 export class DurationPipe implements PipeTransform {
     constructor(private datePipe: DatePipe) {}

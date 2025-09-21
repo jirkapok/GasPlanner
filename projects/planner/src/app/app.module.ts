@@ -145,7 +145,6 @@ const COMPONENTS = [
     DiveIssuesComponent,
     DiveOptionsComponent,
     DiverComponent,
-    DurationPipe,
     GasBlenderComponent,
     GaslabelComponent,
     GasPropertiesCalcComponent,
@@ -183,7 +182,8 @@ const STANDALONE = [
     CardHeaderComponent,
     AppFooterComponent,
     AppSettingsComponent,
-    MainMenuComponent
+    MainMenuComponent,
+    DurationPipe
 ];
 
 const SERVICES = [

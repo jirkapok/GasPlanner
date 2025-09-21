@@ -150,7 +150,6 @@ const COMPONENTS = [
     GaslabelComponent,
     GasPropertiesCalcComponent,
     GradientsComponent,
-    MainMenuComponent,
     NdlLimitsComponent,
     NitroxComponent,
     ProfileChartComponent,
@@ -183,7 +182,8 @@ const STANDALONE = [
     HelpComponent,
     CardHeaderComponent,
     AppFooterComponent,
-    AppSettingsComponent
+    AppSettingsComponent,
+    MainMenuComponent
 ];
 
 const SERVICES = [

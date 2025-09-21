@@ -8,20 +8,26 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 import { ShareDiveService } from '../shared/ShareDiveService';
-import { FeatureFlags } from 'scuba-physics';
 import {
     ActivatedRoute,
     NavigationEnd,
-    Router,
-} from "@angular/router";
-import { filter, map, takeUntil } from "rxjs";
-import { Streamed } from "../shared/streamed";
+    Router, RouterLink,
+} from '@angular/router';
+import { filter, map, takeUntil } from 'rxjs';
+import { Streamed } from '../shared/streamed';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { CommonModule } from '@angular/common';
+import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
+import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 
 @Component({
     selector: 'app-mainmenu',
     templateUrl: './mainmenu.component.html',
     styleUrls: ['./mainmenu.component.scss'],
-    standalone: false
+    imports: [
+        CommonModule, RouterLink,
+        FaIconComponent, MdbCollapseModule, MdbDropdownModule
+    ]
 })
 export class MainMenuComponent extends Streamed {
     public isNavbarCollapsed = true;
@@ -52,19 +58,12 @@ export class MainMenuComponent extends Streamed {
             map(() => this.rootRoute(this.route)),
             filter((r: ActivatedRoute) => r.outlet === 'primary'),
         ).subscribe((currentRoute: ActivatedRoute) => {
-            this.inPlanner = currentRoute.snapshot.url.length == 0;
+            this.inPlanner = currentRoute.snapshot.url.length === 0;
         });
     }
 
     public get canDeleteDive(): boolean {
         return !this.schedules.empty;
-    }
-
-    private rootRoute(route: ActivatedRoute): ActivatedRoute {
-        while (route.firstChild) {
-            route = route.firstChild;
-        }
-        return route;
     }
 
     public saveDefaults(): void {
@@ -86,5 +85,12 @@ export class MainMenuComponent extends Streamed {
     public deleteDive(): void {
         const dive = this.schedules.selected;
         this.schedules.remove(dive);
+    }
+
+    private rootRoute(route: ActivatedRoute): ActivatedRoute {
+        while (route.firstChild) {
+            route = route.firstChild;
+        }
+        return route;
     }
 }

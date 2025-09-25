@@ -20,12 +20,19 @@ import { DiveSchedules } from '../shared/dive.schedules';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { CardHeaderComponent } from '../card-header/card-header.component';
+import { ImperialUnits } from 'projects/scuba-physics/src/public-api';
+import { values } from 'lodash';
+import { AppSettings } from '../shared/models';
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
 
     public get imperialRadio(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#imperialRadio')).nativeElement as HTMLInputElement;
+    }
+
+    public get metricRadio(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#metricRadio')).nativeElement as HTMLInputElement;
     }
 }
 
@@ -76,6 +83,59 @@ describe('App settings component', () => {
         it('Applies units change', inject([UnitConversion],
             (units: UnitConversion) => {
                 expect(units.imperialUnits).toBeTruthy();
-            }));
+
+        }));
+    });
+
+    describe('Metric units', () => {
+        let options: OptionsService;
+
+        beforeEach(() => {
+            page.metricRadio.click();
+            component.use();
+            const schedules = TestBed.inject(DiveSchedules);
+            options = schedules.selected.optionsService;
+        })
+
+        it('Max Gas density', () => {
+            expect(component.appSettings.maxGasDensity).toBeCloseTo(5.7, 1);
+
+        });
+
+        it('Should return to default values of max density after changing values', () => {
+
+            component.settingsForm.patchValue({maxDensity:4.5, primaryTankReserve:29,stageTankReserve: 19});
+            fixture.detectChanges();
+
+            component.use();
+
+            component.resetToDefault();
+            expect(component.settingsForm.value.maxDensity).toBeCloseTo(component.appSettings.defaultMaxGasDensity,1);
+            expect(component.settingsForm.value.primaryTankReserve).toBeCloseTo(component.appSettings.defaultPrimaryTankReserve,1);
+            expect(component.settingsForm.value.stageTankReserve).toBeCloseTo(20,1);
+
+        });
+
+        it('should apply ICD ignored after Use', () => {
+
+            component.settingsForm.patchValue({ icdIgnored: true });
+
+            fixture.detectChanges();
+
+            component.use();
+            expect(component.appSettings.icdIgnored).toBeTrue();
+
+        });
+
+        it('should not apply Use after invalid value is filled', () => {
+
+            component.settingsForm.patchValue({ maxDensity: -1});
+
+            fixture.detectChanges();
+
+            component.use();
+            expect(component.settingsForm.invalid).toBeTrue();
+            expect(component.appSettings.maxGasDensity).not.toBe(-1);
+         });
     });
 });

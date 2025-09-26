@@ -20,7 +20,7 @@ import { DiveSchedules } from '../shared/dive.schedules';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { CardHeaderComponent } from '../card-header/card-header.component';
-import { ImperialUnits } from 'projects/scuba-physics/src/public-api';
+import { ImperialUnits } from 'scuba-physics';
 import { values } from 'lodash';
 import { AppSettings } from '../shared/models';
 
@@ -33,6 +33,34 @@ export class AppSettingsPage {
 
     public get metricRadio(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#metricRadio')).nativeElement as HTMLInputElement;
+    }
+
+    public get useButton(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#useButton')).nativeElement as HTMLButtonElement;
+    }
+
+    public get resetToDefault(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#resetToDefault')).nativeElement as HTMLButtonElement;
+    }
+
+     public get maxDensityInput(): HTMLInputElement {
+    return this.fixture.debugElement.query(By.css('[formControlName="maxDensity"]')).nativeElement as HTMLInputElement;
+    }
+
+    public get primaryReserveInput(): HTMLInputElement {
+    return this.fixture.debugElement.query(By.css('[formControlName="primaryTankReserve"]')).nativeElement as HTMLInputElement;
+
+    }
+
+    public get stageReserveInput(): HTMLInputElement {
+    return this.fixture.debugElement.query(By.css('[formControlName="stageTankReserve"]')).nativeElement as HTMLInputElement;
+
+    }
+
+    public setInputValue(input: HTMLInputElement, value: number | string): void {
+    input.value = String(value);
+    input.dispatchEvent(new Event('input'));
+    this.fixture.detectChanges();
     }
 }
 
@@ -97,26 +125,31 @@ describe('App settings component', () => {
             options = schedules.selected.optionsService;
         })
 
-        it('Max Gas density', () => {
+        it('Should set Max Gas density after switch to metric units', () => {
             expect(component.appSettings.maxGasDensity).toBeCloseTo(5.7, 1);
 
         });
 
         it('Should return to default values of max density after changing values', () => {
 
-            component.settingsForm.patchValue({maxDensity:4.5, primaryTankReserve:29,stageTankReserve: 19});
+            page.setInputValue(page.maxDensityInput, 4.5);
+            page.setInputValue(page.primaryReserveInput, 29);
+            page.setInputValue(page.stageReserveInput, 19);
+
+
+            page.useButton.click();
             fixture.detectChanges();
 
-            component.use();
+            page.resetToDefault.click();
+            fixture.detectChanges();
 
-            component.resetToDefault();
-            expect(component.settingsForm.value.maxDensity).toBeCloseTo(component.appSettings.defaultMaxGasDensity,1);
-            expect(component.settingsForm.value.primaryTankReserve).toBeCloseTo(component.appSettings.defaultPrimaryTankReserve,1);
-            expect(component.settingsForm.value.stageTankReserve).toBeCloseTo(20,1);
+            expect(page.maxDensityInput.value).toBeCloseTo(component.appSettings.defaultMaxGasDensity, 1);
+            expect(page.primaryReserveInput.value).toBeCloseTo(component.appSettings.defaultPrimaryTankReserve, 1);
+            expect(page.stageReserveInput.value).toBeCloseTo(20,1);
 
         });
 
-        it('should apply ICD ignored after Use', () => {
+        it('Should apply ICD ignored after Use', () => {
 
             component.settingsForm.patchValue({ icdIgnored: true });
 
@@ -127,7 +160,7 @@ describe('App settings component', () => {
 
         });
 
-        it('should not apply Use after invalid value is filled', () => {
+        it('Should not apply Use after invalid value is filled', () => {
 
             component.settingsForm.patchValue({ maxDensity: -1});
 

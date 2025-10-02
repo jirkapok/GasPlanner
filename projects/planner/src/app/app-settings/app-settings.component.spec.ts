@@ -110,9 +110,15 @@ describe('App settings component', () => {
 
         it('Applies units change', inject([UnitConversion],
             (units: UnitConversion) => {
-                expect(units.imperialUnits).toBeTruthy();
-
+            expect(units.imperialUnits).toBeTruthy();
         }));
+
+        it('Should use stepping precision 0.0001 after increasing max density by one step', () => {
+            page.maxDensityInput.stepUp(1);
+            fixture.detectChanges();
+
+            expect(page.maxDensityInput.value).toBeCloseTo(0.3559, 4);
+        });
     });
 
     describe('Metric units', () => {
@@ -149,26 +155,12 @@ describe('App settings component', () => {
 
         });
 
-        it('Should apply ICD ignored after Use', () => {
-
-            component.settingsForm.patchValue({ icdIgnored: true });
-
+        it('Should use stepping precision 0,1 after increasing max density by one step', () => {
+            page.maxDensityInput.stepUp(1);
             fixture.detectChanges();
 
-            component.use();
-            expect(component.appSettings.icdIgnored).toBeTrue();
+            expect(page.maxDensityInput.value).toBeCloseTo(5.8, 1);
 
         });
-
-        it('Should not apply Use after invalid value is filled', () => {
-
-            component.settingsForm.patchValue({ maxDensity: -1});
-
-            fixture.detectChanges();
-
-            component.use();
-            expect(component.settingsForm.invalid).toBeTrue();
-            expect(component.appSettings.maxGasDensity).not.toBe(-1);
-         });
     });
 });

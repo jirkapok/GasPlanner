@@ -8,7 +8,7 @@ import {
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
     ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto,
-    PlanRequestDto
+    PlanRequestDto, SegmentDto
 } from '../shared/serialization.model';
 import { DtoSerialization } from '../shared/dtoSerialization';
 
@@ -16,7 +16,7 @@ export class PlanningTasks {
     /** 1. Calculate profile */
     public static calculateDecompression(task: ProfileRequestDto): ProfileResultDto {
         const tanks = DtoSerialization.toTanks(task.tanks);
-        const parameters = this.profileParametersFromTask(task, tanks);
+        const parameters = this.profileParametersFromTask(task, tanks, task.plan);
         const algorithm = new BuhlmannAlgorithm();
         const profile = algorithm.decompression(parameters);
         const profileDto = DtoSerialization.fromProfile(profile);
@@ -30,7 +30,9 @@ export class PlanningTasks {
     /** 2.A calculate dive results */
     public static diveInfo(task: DiveInfoRequestDto): DiveInfoResultDto {
         const tanks = DtoSerialization.toTanks(task.tanks);
-        const parameters = this.profileParametersFromTask(task, tanks);
+        // we need to use already calculated profile, since segments were merged and ceilings don't have to fit.
+        const parameters = this.profileParametersFromTask(task, tanks, task.calculatedProfile);
+
         const algorithm = new BuhlmannAlgorithm();
         // Theoretically cant fail, since the profile was already calculated without an issue.
         const statistics = algorithm.decompressionStatistics(parameters);
@@ -132,9 +134,9 @@ export class PlanningTasks {
         return Segments.fromCollection(descent);
     }
 
-    private static profileParametersFromTask(task: PlanRequestDto, tanks: Tank[]): AlgorithmParams {
+    private static profileParametersFromTask(task: PlanRequestDto, tanks: Tank[], profile: SegmentDto[]): AlgorithmParams {
         const gases = Tanks.toGases(tanks);
-        const originPlan = DtoSerialization.toSegments(task.plan, tanks);
+        const originPlan = DtoSerialization.toSegments(profile, tanks);
         const segments = Segments.fromCollection(originPlan);
         const options = DtoSerialization.toOptions(task.options);
         const previousTissues = DtoSerialization.toTissues(task.previousTissues);

@@ -14,13 +14,13 @@ import { BinaryIntervalSearch, SearchContext } from '../common/BinaryIntervalSea
 import { Salinity } from '../physics/pressure-converter';
 import { AirBreakContext, AlgorithmContext, ContextMemento } from './AlgorithmContext';
 import { StandardGases } from '../gases/StandardGases';
-import { LoadedTissues } from "./Tissues.api";
+import { LoadedTissues } from './Tissues.api';
 import {
     AlgorithmParams,
     durationFor, SurfaceIntervalApplied,
     SurfaceIntervalAppliedStatistics,
     SurfaceIntervalParameters
-} from "./BuhlmannAlgorithmParameters";
+} from './BuhlmannAlgorithmParameters';
 
 type CreateAlgorithmContext = (
     gases: Gases, segments: Segments, options: Options,
@@ -38,35 +38,6 @@ export class BuhlmannAlgorithm {
         const rested = this.applySurfaceInterval(surfaceInterval);
         const context = AlgorithmContext.createForCeilings(gases, segments, options, depthConverter, rested.finalTissues);
         return this.swimNoDecoLimit(segments, gases, context);
-    }
-
-    /**
-     * Calculates decompression: generating missing ascent for the planned profile.
-     * For other profile data, like ceiling, Tissue loadings or saturation overpressures history use decompressionStatistics method.
-     * This method is faster then the statistics methods.
-     * @param algorithmParams Not null dive definition all parameters see container definition.
-     */
-    public decompression(algorithmParams: AlgorithmParams): CalculatedProfile {
-        const result = this.decompressionInternal(algorithmParams,
-             AlgorithmContext.createWithoutStatistics,
-             this.toSimpleProfile,
-             (p, e)  => CalculatedProfile.fromErrors(p, e));
-        return result;
-    }
-
-    /**
-     * Calculates decompression: generating missing ascent for the planned profile,
-     * and collects dive statistics like ceilings, tissues overpressures or Tissues loading.
-     * This method is slow, if you dont need the statistics use "decompression" method.
-     * @param algorithmParams Not null dive definition all parameters see container definition.
-     */
-    public decompressionStatistics(algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
-        const result = this.decompressionInternal(algorithmParams,
-            AlgorithmContext.createForFullStatistics,
-            this.toFullProfile,
-            (p, e) => CalculatedProfileStatistics.fromStatisticsErrors(p, e)
-        );
-        return result;
     }
 
     /**
@@ -123,23 +94,43 @@ export class BuhlmannAlgorithm {
         return result as SurfaceIntervalAppliedStatistics;
     }
 
-    private decompressionInternal<TResult extends CalculatedProfile>(
-        algorithmParams: AlgorithmParams,
-        createContext: CreateAlgorithmContext,
-        toResult: (c: AlgorithmContext, a: AlgorithmParams) => TResult,
-        toErrorResult: (segments: Segment[], errors: Event[]) => TResult
-    ): TResult {
+    /**
+     * Does not generate decompression ascent. To use it first use "decompression" method.
+     * Only collects dive statistics like ceilings, tissues overpressures or Tissues loading.
+     * This method is slow.
+     * @param algorithmParams Not null dive definition all parameters see container definition.
+     */
+    public decompressionStatistics(algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
+        const { segments, gases, options, surfaceInterval } = algorithmParams;
+        // TODO validation
+        // (p, e) => CalculatedProfileStatistics.fromStatisticsErrors(p, e)
+
+        const newSegments = segments.copy();
+        const rested = this.applySurfaceInterval(surfaceInterval);
+        const depthConverter = new DepthConverterFactory(options).create();
+        const context = AlgorithmContext.createForFullStatistics(gases, newSegments, options, depthConverter, rested.finalTissues);
+        this.swimPlan(context);
+        return this.toFullProfile(context, algorithmParams);
+    }
+
+    /**
+     * Calculates decompression: generating missing ascent for the planned profile.
+     * For other profile data, like ceiling, Tissue loadings or saturation overpressures history use decompressionStatistics method.
+     * This method is faster then the statistics methods.
+     * @param algorithmParams Not null dive definition all parameters see container definition.
+     */
+    public decompression(algorithmParams: AlgorithmParams): CalculatedProfile {
         const { segments, gases, options, surfaceInterval } = algorithmParams;
         const newSegments = segments.copy();
         const errors = this.validate(segments, gases);
         if (errors.length > 0) {
             const origProfile = newSegments.mergeFlat(segments.length);
-            return toErrorResult(origProfile, errors);
+            return CalculatedProfile.fromErrors(origProfile, errors);
         }
 
         const rested = this.applySurfaceInterval(surfaceInterval);
         const depthConverter = new DepthConverterFactory(options).create();
-        const context = createContext(gases, newSegments, options, depthConverter, rested.finalTissues);
+        const context = AlgorithmContext.createWithoutStatistics(gases, newSegments, options, depthConverter, rested.finalTissues);
         this.swimPlan(context);
         context.markAverageDepth();
         let nextStop = context.nextStop(context.currentDepth);
@@ -154,12 +145,13 @@ export class BuhlmannAlgorithm {
             nextStop = context.nextStop(nextStop);
         }
 
-        return toResult(context, algorithmParams);
+        return this.toSimpleProfile(context, algorithmParams);
     }
 
     private toFullProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
-       const merged = context.segments.mergeFlat(algorithmParams.segments.length);
-       return CalculatedProfileStatistics.fromStatisticsProfile(merged, context.ceilings, context.tissueOverPressures, context.finalTissues, context.tissuesHistory);
+        const merged = context.segments.mergeFlat(algorithmParams.segments.length);
+        return CalculatedProfileStatistics.fromStatisticsProfile(merged, context.ceilings,
+            context.tissueOverPressures, context.finalTissues, context.tissuesHistory);
     }
 
     private toSimpleProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfile {

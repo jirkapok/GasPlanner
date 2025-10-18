@@ -320,13 +320,8 @@ export class ProfileEvents {
             context.lastCeilingIndex++;
             this.addNdlEnd(context, ceiling);
 
-            // TODO reports broken ceiling
-            // http://localhost:4200/?t=1-15-0-200-0.209-0&de=0-40-180-1,40-40-1200-1&di=20,30&o=0,9,3,3,4,18,2,0.85,0.4,6,1.6,30,1.4,10,1,1,0,2,1,0,20,5&ao=1,0
-            // 1767 seconds / 8 m
             const ceilingOk = context.belowCeiling(ceiling);
             if (!ceilingOk && context.fixedBrokenCeiling) {
-                const duration = ceiling.time - context.currentSegmentStartTime;
-                const diverDepth = context.current.depthAt(duration);
                 const event = EventsFactory.createBrokenCeiling(ceiling.time, ceiling.depth);
                 context.events.add(event);
                 context.fixedBrokenCeiling = false;

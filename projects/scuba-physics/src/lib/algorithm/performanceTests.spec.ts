@@ -12,7 +12,7 @@ import { Tank } from '../consumption/Tanks';
 import { Diver } from '../consumption/Diver';
 import { DepthConverter } from '../physics/depth-converter';
 import { Consumption, ConsumptionOptions } from '../consumption/consumption';
-import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
+import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
 
 // Lets assign reserve to all asserts on slower machines at github.
 describe('Performance', () => {
@@ -56,7 +56,7 @@ describe('Performance', () => {
         const algorithm = new BuhlmannAlgorithm();
         const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
 
-        assertDuration(`Decompression calculation duration`, 150,
+        assertDuration('Decompression calculation duration', 150,
             () => algorithm.decompression(parameters));
     });
 
@@ -66,7 +66,7 @@ describe('Performance', () => {
 
         const simpleDive = AlgorithmParams.forSimpleDive(6, StandardGases.air, options);
 
-        assertDuration(`No Decompression Limit calculation duration`, 50,
+        assertDuration('No Decompression Limit calculation duration', 50,
             () => algorithm.noDecoLimit(simpleDive));
     });
 
@@ -91,7 +91,7 @@ describe('Performance', () => {
         segments.add(5, tank.gas, Time.oneMinute);
         segments.addFlat(tank.gas, Time.oneMinute * 10);
 
-        assertDuration(`Consumption Max bottom time duration`, 1000,
+        assertDuration('Consumption Max bottom time duration', 1000,
             () => consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options));
     });
 });

@@ -51,16 +51,12 @@ export class BuhlmannAlgorithm {
         const result = this.applySurfaceIntervalInternal(
             surfaceInterval,
             AlgorithmContext.createWithoutStatistics,
-            () => {
-                return {
-                    finalTissues: Tissues.createLoadedAt(surfaceInterval.altitude)
-                };
-            },
-            (context) => {
-                return {
-                    finalTissues: context.finalTissues
-                };
-            }
+            () => ({
+                finalTissues: Tissues.createLoadedAt(surfaceInterval.altitude)
+            }),
+            (context) => ({
+                finalTissues: context.finalTissues
+            })
         );
 
         return result as SurfaceIntervalApplied;
@@ -77,18 +73,14 @@ export class BuhlmannAlgorithm {
         const result = this.applySurfaceIntervalInternal(
             surfaceInterval,
             AlgorithmContext.createForFullStatistics,
-            () => {
-                return {
-                    finalTissues: Tissues.createLoadedAt(surfaceInterval.altitude),
-                    tissueOverPressures: []
-                };
-            },
-            (context) => {
-                return {
-                    finalTissues: context.finalTissues,
-                    tissueOverPressures: context.tissueOverPressures
-                };
-            }
+            () => ({
+                finalTissues: Tissues.createLoadedAt(surfaceInterval.altitude),
+                tissueOverPressures: []
+            }),
+            (context) => ({
+                finalTissues: context.finalTissues,
+                tissueOverPressures: context.tissueOverPressures
+            })
         );
 
         return result as SurfaceIntervalAppliedStatistics;
@@ -102,9 +94,7 @@ export class BuhlmannAlgorithm {
      */
     public decompressionStatistics(algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
         const { segments, gases, options, surfaceInterval } = algorithmParams;
-        // TODO validation
-        // (p, e) => CalculatedProfileStatistics.fromStatisticsErrors(p, e)
-
+        // No validation here, since profile is already calculated
         const newSegments = segments.copy();
         const rested = this.applySurfaceInterval(surfaceInterval);
         const depthConverter = new DepthConverterFactory(options).create();

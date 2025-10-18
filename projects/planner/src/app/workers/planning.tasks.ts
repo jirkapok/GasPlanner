@@ -40,7 +40,8 @@ export class PlanningTasks {
         // we can't speedup the prediction from already obtained profile,
         // since it may happen, the deco starts during ascent.
         // we cant use the maxDepth, because its purpose is only for single level dives
-        const noDecoLimit = algorithm.noDecoLimit(parameters);
+        const ndlParameters = this.profileParametersFromTask(task, tanks, task.plan);
+        const noDecoLimit = algorithm.noDecoLimit(ndlParameters);
 
         const depthConverter = new DepthConverterFactory(task.options).create();
         const originalProfile = DtoSerialization.toSegments(task.calculatedProfile, tanks);

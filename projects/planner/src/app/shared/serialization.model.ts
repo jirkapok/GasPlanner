@@ -95,6 +95,7 @@ export interface DiveInfoResultDto {
     offgasingStartTime: number;
     offgasingStartDepth: number;
     ceilings: Ceiling[];
+    /* not used yet */
     tissues: LoadedTissueDto[][];
     tissueOverPressures: TissueOverPressures[];
 }

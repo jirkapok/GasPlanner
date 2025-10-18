@@ -125,7 +125,7 @@ export class DtoSerialization {
         })).value() as LoadedTissues;
     }
 
-    // TODO reuse unused method toTissuesHistory
+    /* Not used yet */
     public static toTissuesHistory(tissuesHistory: LoadedTissueDto[][]): LoadedTissues[] {
         return _(tissuesHistory).map(t => DtoSerialization.toTissues(t))
             .value();

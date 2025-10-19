@@ -1,16 +1,25 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { Precision, Tank, TankTemplate } from 'scuba-physics';
-import { AbstractControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
+import { AbstractControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import {ITankSize, TankBound} from '../../shared/models';
 import { InputControls } from '../../shared/inputcontrols';
+import { CommonModule, DecimalPipe, NgFor } from '@angular/common';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 
 @Component({
     selector: 'app-tank-size',
     templateUrl: './tank.size.component.html',
     styleUrls: ['./tank.size.component.scss'],
-    standalone: false
+    imports: [
+        CommonModule, ReactiveFormsModule,
+        MdbFormsModule, MdbDropdownModule, NgFor
+    ],
+    providers: [
+        UnitConversion, InputControls, DecimalPipe, ValidatorGroups
+    ]
 })
 export class TankSizeComponent implements OnInit {
     @Input() public sizeForm!: FormGroup;
@@ -19,7 +28,7 @@ export class TankSizeComponent implements OnInit {
     @Output() public sizeChange = new EventEmitter<number>();
     @Output() public applyTemplate = new EventEmitter<TankTemplate>();
 
-    constructor(private units: UnitConversion,
+    constructor(public units: UnitConversion,
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups) {

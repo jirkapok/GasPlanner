@@ -5,7 +5,6 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import _ from 'lodash';
 import { SacComponent } from './sac.component';
-import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { OptionsService } from '../../shared/options.service';
 import { SacCalculatorService } from '../../shared/sac-calculator.service';
@@ -22,6 +21,8 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 class SacPage {
     constructor(private fixture: ComponentFixture<SacComponent>) { }
@@ -31,6 +32,8 @@ class SacPage {
     }
 
     public applyTemplateButton(text: string): HTMLLinkElement {
+        const dropButton = this.fixture.debugElement.query(By.css('.dropdown-toggle'));
+        dropButton.nativeElement.click();
         const allButtons = this.fixture.debugElement.queryAll(By.css('.dropdown-item'));
         const button = _(allButtons)
             .filter(de => (<HTMLElement>de.nativeElement).innerText === text)
@@ -46,7 +49,7 @@ describe('Sac component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SacComponent, TankSizeComponent],
+            declarations: [ SacComponent ],
             providers: [
                 WorkersFactoryCommon, UnitConversion,
                 OptionsService, DecimalPipe,
@@ -54,13 +57,14 @@ describe('Sac component', () => {
                 SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, PlannerService,
                 ViewSwitchService, ReloadDispatcher, DiveSchedules,
-                ApplicationSettingsService, MdbModalService
+                ApplicationSettingsService, MdbModalService,
+                provideNoopAnimations()
             ],
             imports: [
                 RouterTestingModule.withRoutes([]),
-                ReactiveFormsModule]
-        })
-            .compileComponents();
+                ReactiveFormsModule, TankSizeComponent
+            ]
+        }).compileComponents();
     });
 
     beforeEach(() => {
@@ -151,6 +155,5 @@ describe('Sac component', () => {
             expect(component.calc.tankSize).toBeCloseTo(5.654, 3);
             expect(component.tank.workingPressure).toBeCloseTo(3000);
         });
-
     });
 });

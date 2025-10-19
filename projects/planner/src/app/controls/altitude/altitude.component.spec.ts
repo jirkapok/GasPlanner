@@ -7,9 +7,6 @@ describe('Altitude', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [],
-            providers: [],
-            imports: []
         }).compileComponents();
     });
 

@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { GaslabelComponent } from './gaslabel.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule, DecimalPipe, NgIf } from '@angular/common';
 
 describe('Gas label component', () => {
     let component: GaslabelComponent;
@@ -10,13 +8,7 @@ describe('Gas label component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [],
-            providers: [ UnitConversion ],
-            imports: [
-                CommonModule,
-                ReactiveFormsModule,
-                DecimalPipe, NgIf
-            ]
+            providers: [ UnitConversion ]
         }).compileComponents();
     });
 

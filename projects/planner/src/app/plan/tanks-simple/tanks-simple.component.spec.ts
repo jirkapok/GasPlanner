@@ -6,7 +6,6 @@ import { By } from '@angular/platform-browser';
 import { TanksSimpleComponent } from './tanks-simple.component';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../../controls/oxygen/oxygen.component';
-import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { PlannerService } from '../../shared/planner.service';
 import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
@@ -20,6 +19,7 @@ import { Preferences } from '../../shared/preferences';
 import { PreferencesStore } from '../../shared/preferencesStore';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -55,16 +55,16 @@ describe('Tanks Simple component', () => {
         await TestBed.configureTestingModule({
             declarations: [
                 TanksSimpleComponent, OxygenComponent,
-                OxygenDropDownComponent, TankSizeComponent
+                OxygenDropDownComponent
             ],
             providers: [
                 WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls, DiveSchedules,
                 ValidatorGroups, PreferencesStore, Preferences,
                 DecimalPipe, ViewSwitchService, WayPointsService,
-                SubViewStorage, ViewStates, ReloadDispatcher
+                SubViewStorage, ViewStates, ReloadDispatcher,
             ],
-            imports: [ReactiveFormsModule]
+            imports: [ ReactiveFormsModule, TankSizeComponent ]
         })
             .compileComponents();
     });

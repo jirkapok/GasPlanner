@@ -7,7 +7,6 @@ import { DebugElement } from '@angular/core';
 import _ from 'lodash';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../../controls/oxygen/oxygen.component';
-import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { PlannerService } from '../../shared/planner.service';
 import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
@@ -84,7 +83,7 @@ describe('Tanks Complex component', () => {
         await TestBed.configureTestingModule({
             declarations: [
                 TanksComplexComponent, OxygenComponent,
-                OxygenDropDownComponent, TankSizeComponent
+                OxygenDropDownComponent
             ],
             providers: [
                 WorkersFactoryCommon, UnitConversion,

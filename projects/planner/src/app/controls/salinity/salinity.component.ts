@@ -1,11 +1,18 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Salinity } from 'scuba-physics';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 
 @Component({
     selector: 'app-salinity',
     templateUrl: './salinity.component.html',
     styleUrls: ['./salinity.component.scss'],
-    standalone: false
+    imports: [
+        CommonModule, ReactiveFormsModule,
+        MdbFormsModule, MdbDropdownModule
+    ],
 })
 export class SalinityComponent {
     @Input()
@@ -20,12 +27,12 @@ export class SalinityComponent {
 
     public get salinityOption(): string {
         switch (this.salinity) {
-            case Salinity.salt:
-                return this.saltName;
-            case Salinity.brackish:
-                return this.brackishName;
-            default:
-                return this.freshName;
+        case Salinity.salt:
+            return this.saltName;
+        case Salinity.brackish:
+            return this.brackishName;
+        default:
+            return this.freshName;
         }
     }
 

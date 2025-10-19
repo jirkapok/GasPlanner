@@ -155,11 +155,9 @@ const COMPONENTS = [
     PlanTabsComponent,
     RedundanciesComponent,
     SacComponent,
-    SalinityComponent,
     TankChartComponent,
     TanksComplexComponent,
     TanksSimpleComponent,
-    TankSizeComponent,
     WayPointsComponent,
     WeightCalcComponent,
     WaypointsDifferenceComponent,
@@ -183,7 +181,9 @@ const STANDALONE = [
     DurationPipe,
     CalculatingComponent,
     AltitudeComponent,
-    GaslabelComponent
+    GaslabelComponent,
+    SalinityComponent,
+    TankSizeComponent,
 ];
 
 const SERVICES = [

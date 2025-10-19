@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { PlannerService } from '../../shared/planner.service';
-import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { GaslabelComponent } from './gaslabel.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule, DecimalPipe, NgIf } from '@angular/common';
 
 describe('Gas label component', () => {
     let component: GaslabelComponent;
@@ -10,34 +10,34 @@ describe('Gas label component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [GaslabelComponent],
-            providers: [WorkersFactoryCommon, UnitConversion, PlannerService],
-            imports: []
-        })
-            .compileComponents();
+            declarations: [],
+            providers: [ UnitConversion ],
+            imports: [
+                CommonModule,
+                ReactiveFormsModule,
+                DecimalPipe, NgIf
+            ]
+        }).compileComponents();
     });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(GaslabelComponent);
         component = fixture.componentInstance;
+        component.units.imperialUnits = true;
         fixture.detectChanges();
     });
 
-    it('Imperial units adjusts mod', inject([UnitConversion],
-        (units: UnitConversion) => {
-            units.imperialUnits = true;
+    describe('Imperial units', () => {
+        it('Adjust mod', () => {
             expect(component.gasMod).toBeCloseTo(185, 5);
-        }));
+        });
 
-    it('Imperial units adjusts deco mod', inject([UnitConversion],
-        (units: UnitConversion) => {
-            units.imperialUnits = true;
+        it('Adjust deco mod', () => {
             expect(component.gasDecoMod).toBeCloseTo(216, 5);
-        }));
+        });
 
-    it('Imperial units adjusts mnd', inject([UnitConversion],
-        (units: UnitConversion) => {
-            units.imperialUnits = true;
+        it('Adjust mnd', () => {
             expect(component.gasMnd).toBeCloseTo(98, 5);
-        }));
+        });
+    });
 });

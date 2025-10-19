@@ -28,7 +28,7 @@ interface TanksForm {
     selector: 'app-tanks-complex',
     templateUrl: './tanks-complex.component.html',
     styleUrls: ['./tanks-complex.component.scss'],
-    standalone: false
+    standalone: false,
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

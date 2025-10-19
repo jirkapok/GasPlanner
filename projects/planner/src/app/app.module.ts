@@ -144,7 +144,6 @@ const COMPONENTS = [
     DiveOptionsComponent,
     DiverComponent,
     GasBlenderComponent,
-    GaslabelComponent,
     GasPropertiesCalcComponent,
     GradientsComponent,
     NdlLimitsComponent,
@@ -183,7 +182,8 @@ const STANDALONE = [
     MainMenuComponent,
     DurationPipe,
     CalculatingComponent,
-    AltitudeComponent
+    AltitudeComponent,
+    GaslabelComponent
 ];
 
 const SERVICES = [

@@ -5,7 +5,6 @@ import { By } from '@angular/platform-browser';
 import { TankTemplate } from 'scuba-physics';
 import { DebugElement } from '@angular/core';
 import _ from 'lodash';
-import { GaslabelComponent } from '../../controls/gaslabel/gaslabel.component';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../../controls/oxygen/oxygen.component';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
@@ -84,8 +83,8 @@ describe('Tanks Complex component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [
-                TanksComplexComponent, GaslabelComponent,
-                OxygenComponent, OxygenDropDownComponent, TankSizeComponent
+                TanksComplexComponent, OxygenComponent,
+                OxygenDropDownComponent, TankSizeComponent
             ],
             providers: [
                 WorkersFactoryCommon, UnitConversion,

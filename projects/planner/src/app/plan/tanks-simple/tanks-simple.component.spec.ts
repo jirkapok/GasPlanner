@@ -4,7 +4,6 @@ import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { TanksSimpleComponent } from './tanks-simple.component';
-import { GaslabelComponent } from '../../controls/gaslabel/gaslabel.component';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../../controls/oxygen/oxygen.component';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
@@ -54,8 +53,10 @@ describe('Tanks Simple component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TanksSimpleComponent, GaslabelComponent,
-                OxygenComponent, OxygenDropDownComponent, TankSizeComponent],
+            declarations: [
+                TanksSimpleComponent, OxygenComponent,
+                OxygenDropDownComponent, TankSizeComponent
+            ],
             providers: [
                 WorkersFactoryCommon, UnitConversion,
                 PlannerService, InputControls, DiveSchedules,

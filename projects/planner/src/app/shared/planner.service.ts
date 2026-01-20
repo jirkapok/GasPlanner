@@ -23,6 +23,7 @@ import { WayPoint } from './wayPoint';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { IgnoredIssuesService } from './IgnoredIssues.service';
 import { BoundEvent } from "./models";
+import { ComputerProfile } from "./serialization.model.computer";
 
 
 @Injectable()
@@ -181,6 +182,9 @@ export class PlannerService extends Streamed {
             diveInfoResult.tissueOverPressures,
             filteredEvents
         );
+
+        const computerProfile = ComputerProfile.calculate(diveResult);
+        const serializedProfile = JSON.stringify(computerProfile);
         this.fireFinishedEvents(dive);
     }
 

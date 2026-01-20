@@ -19,6 +19,7 @@ import { DiveResults } from '../../shared/diveresults';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import {MdbModalService} from 'mdb-angular-ui-kit/modal';
 
 export class ComplexDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
@@ -62,8 +63,7 @@ describe('Depths Complex Component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DepthsComplexComponent],
-            imports: [ReactiveFormsModule],
+            imports: [ReactiveFormsModule, DepthsComplexComponent],
             providers: [
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls,
@@ -73,6 +73,7 @@ describe('Depths Complex Component', () => {
                 PreferencesStore, Preferences,
                 DiveResults, ReloadDispatcher,
                 ApplicationSettingsService,
+                MdbModalService
             ]
         })
             .compileComponents();

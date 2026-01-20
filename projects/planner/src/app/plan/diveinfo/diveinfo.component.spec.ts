@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MdbTabComponent, MdbTabsComponent } from "mdb-angular-ui-kit/tabs";
+import { MdbTabComponent, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 
 import { DiveInfoComponent } from './diveinfo.component';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -13,7 +13,8 @@ import { Preferences } from '../../shared/preferences';
 import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
-import { ShareDiveService } from "../../shared/ShareDiveService";
+import { ShareDiveService } from '../../shared/ShareDiveService';
+import {MdbModalService} from 'mdb-angular-ui-kit/modal';
 
 describe('DiveInfoComponent', () => {
     let component: DiveInfoComponent;
@@ -21,15 +22,15 @@ describe('DiveInfoComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                DiveInfoComponent, MdbTabComponent, MdbTabsComponent
-            ],
+            imports: [DiveInfoComponent],
+            declarations: [MdbTabComponent, MdbTabsComponent],
             providers: [
                 UnitConversion, PlannerService, SubViewStorage,
                 WorkersFactoryCommon, WayPointsService,
                 ViewStates, PreferencesStore, Preferences,
                 ViewSwitchService, ReloadDispatcher,
-                DiveSchedules, ShareDiveService
+                DiveSchedules, ShareDiveService,
+                MdbModalService
             ]
         });
         fixture = TestBed.createComponent(DiveInfoComponent);

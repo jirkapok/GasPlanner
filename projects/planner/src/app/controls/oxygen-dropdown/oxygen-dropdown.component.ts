@@ -1,16 +1,19 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision, StandardGases, Tank } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { IGasContent } from '../../shared/models';
+import { NgIf, NgFor } from '@angular/common';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 
 @Component({
     selector: 'app-oxygen-dropdown',
     templateUrl: './oxygen-dropdown.component.html',
     styleUrls: ['./oxygen-dropdown.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, NgIf, MdbFormsModule, MdbDropdownModule, NgFor]
 })
 export class OxygenDropDownComponent implements OnInit {
     @Input() public showBestMix = true;

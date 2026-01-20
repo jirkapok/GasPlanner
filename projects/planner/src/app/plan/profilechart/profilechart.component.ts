@@ -15,12 +15,16 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 
 @Component({
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
-    standalone: false
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;

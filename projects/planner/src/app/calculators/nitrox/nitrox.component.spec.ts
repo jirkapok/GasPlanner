@@ -42,19 +42,18 @@ describe('Nitrox component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [NitroxComponent, OxygenDropDownComponent],
-            providers: [
-                UnitConversion, InputControls, DecimalPipe,
-                NitroxCalculatorService, ValidatorGroups,
-                ViewStates, PreferencesStore, Preferences,
-                PlannerService, WorkersFactoryCommon,
-                ViewSwitchService, SubViewStorage,
-                ReloadDispatcher, DiveSchedules,
-                OptionsService, ApplicationSettingsService,
-                MdbModalService
-            ],
-            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule]
-        }).compileComponents();
+    providers: [
+        UnitConversion, InputControls, DecimalPipe,
+        NitroxCalculatorService, ValidatorGroups,
+        ViewStates, PreferencesStore, Preferences,
+        PlannerService, WorkersFactoryCommon,
+        ViewSwitchService, SubViewStorage,
+        ReloadDispatcher, DiveSchedules,
+        OptionsService, ApplicationSettingsService,
+        MdbModalService
+    ],
+    imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, NitroxComponent, OxygenDropDownComponent]
+}).compileComponents();
     });
 
     beforeEach(() => {

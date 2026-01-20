@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faFaucet, faExclamationTriangle, faSackDollar } from '@fortawesome/free-solid-svg-icons';
-import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
+import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
     Precision, StandardGases, Tank, GasMixtures
 } from 'scuba-physics';
@@ -12,6 +12,10 @@ import { BlenderViewState, TankMix } from '../../shared/views.model';
 import { KnownViews } from '../../shared/viewStates';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { BlendPricingService } from '../../shared/blend-pricing.service';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { NgClass, NgIf, DecimalPipe } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 
 interface IGasBlenderForm {
     sourceO2: FormControl<number>;
@@ -31,7 +35,7 @@ interface IGasBlenderForm {
     selector: 'app-gas-blender',
     templateUrl: './gas-blender.component.html',
     styleUrls: ['./gas-blender.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, CardHeaderComponent, NgClass, FaIconComponent, OxygenDropDownComponent, NgIf, DecimalPipe]
 })
 export class GasBlenderComponent implements OnInit {
     public readonly calcIcon = faFaucet;

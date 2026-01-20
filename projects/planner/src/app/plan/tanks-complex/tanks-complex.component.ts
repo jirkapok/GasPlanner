@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { Precision, TankTemplate, GasToxicity } from 'scuba-physics';
 import { takeUntil } from 'rxjs';
-import { FormArray, NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormArray, NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { InputControls } from '../../shared/inputcontrols';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
@@ -11,6 +11,13 @@ import { TankBound } from '../../shared/models';
 import { TanksService } from '../../shared/tanks.service';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
+import { NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
+import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
+import { GaslabelComponent } from '../../controls/gaslabel/gaslabel.component';
 
 interface TankRow {
     tankSize: FormControl<number>;
@@ -28,7 +35,18 @@ interface TanksForm {
     selector: 'app-tanks-complex',
     templateUrl: './tanks-complex.component.html',
     styleUrls: ['./tanks-complex.component.scss'],
-    standalone: false,
+    imports: [
+        ReactiveFormsModule,
+        CardHeaderComponent,
+        MdbAccordionModule,
+        NgFor,
+        NgIf,
+        FaIconComponent,
+        TankSizeComponent,
+        OxygenDropDownComponent,
+        GaslabelComponent,
+        DecimalPipe,
+    ],
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FormsModule, NonNullableFormBuilder } from '@angular/forms';
-import { Location } from '@angular/common';
-import { RouterTestingModule } from '@angular/router/testing';
+import { DecimalPipe, Location } from '@angular/common';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { RouterModule } from '@angular/router';
 import { Salinity } from 'scuba-physics';
 import { NdlLimitsComponent } from './ndl-limits.component';
 import { NdlService } from '../../shared/ndl.service';
@@ -18,7 +19,7 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { InputControls } from '../../shared/inputcontrols';
 
 describe('NdlLimits component', () => {
     let component: NdlLimitsComponent;
@@ -26,7 +27,6 @@ describe('NdlLimits component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [NdlLimitsComponent],
             providers: [
                 FormsModule, UnitConversion,
                 NdlService, PlannerService,
@@ -36,11 +36,11 @@ describe('NdlLimits component', () => {
                 ReloadDispatcher, DiveSchedules,
                 OptionsService, ValidatorGroups,
                 ApplicationSettingsService,
-                MdbModalService
+                MdbModalService, InputControls,
+                DecimalPipe
             ],
-            imports: [RouterTestingModule.withRoutes([])]
-        })
-            .compileComponents();
+            imports: [RouterModule.forRoot([]), NdlLimitsComponent]
+        }).compileComponents();
     });
 
     beforeEach(() => {

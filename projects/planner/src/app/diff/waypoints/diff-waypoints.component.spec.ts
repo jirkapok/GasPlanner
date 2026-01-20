@@ -12,15 +12,15 @@ describe('WaypointsDifferenceComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [WaypointsDifferenceComponent],
-            providers: [
-                UnitConversion,
-                ProfileComparatorService,
-                DiveSchedules,
-                ReloadDispatcher,
-                SelectedDiffWaypoint
-            ]
-        });
+    imports: [WaypointsDifferenceComponent],
+    providers: [
+        UnitConversion,
+        ProfileComparatorService,
+        DiveSchedules,
+        ReloadDispatcher,
+        SelectedDiffWaypoint
+    ]
+});
         fixture = TestBed.createComponent(WaypointsDifferenceComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

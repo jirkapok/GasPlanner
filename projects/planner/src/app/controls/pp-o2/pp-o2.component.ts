@@ -1,15 +1,16 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 
 @Component({
     selector: 'app-pp-o2',
     templateUrl: './pp-o2.component.html',
     styleUrls: ['./pp-o2.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, MdbFormsModule]
 })
 export class PpO2Component implements OnInit {
     @Input() public maxPpO2 = 1.4;

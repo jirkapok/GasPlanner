@@ -23,17 +23,17 @@ describe('GasPropertiesCalcComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [GasPropertiesCalcComponent],
-            providers: [
-                UnitConversion, ValidatorGroups, InputControls,
-                DecimalPipe, SubViewStorage, ViewStates,
-                PreferencesStore, PlannerService, WorkersFactoryCommon,
-                Preferences, ViewSwitchService,
-                ReloadDispatcher, DiveSchedules,
-                ApplicationSettingsService,
-                MdbModalService
-            ]
-        });
+    imports: [GasPropertiesCalcComponent],
+    providers: [
+        UnitConversion, ValidatorGroups, InputControls,
+        DecimalPipe, SubViewStorage, ViewStates,
+        PreferencesStore, PlannerService, WorkersFactoryCommon,
+        Preferences, ViewSwitchService,
+        ReloadDispatcher, DiveSchedules,
+        ApplicationSettingsService,
+        MdbModalService
+    ]
+});
         fixture = TestBed.createComponent(GasPropertiesCalcComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

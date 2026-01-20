@@ -25,20 +25,21 @@ describe('WeightCalcComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [WeightCalcComponent],
-            providers: [
-                UnitConversion, ValidatorGroups, InputControls,
-                DecimalPipe, SubViewStorage, ViewStates,
-                PreferencesStore, PlannerService, WorkersFactoryCommon,
-                Preferences, ViewSwitchService,
-                ReloadDispatcher, DiveSchedules,
-                ApplicationSettingsService,
-                MdbModalService
-            ],
-            imports: [
-                RouterTestingModule.withRoutes([]),
-                ReactiveFormsModule]
-        }).compileComponents();
+    providers: [
+        UnitConversion, ValidatorGroups, InputControls,
+        DecimalPipe, SubViewStorage, ViewStates,
+        PreferencesStore, PlannerService, WorkersFactoryCommon,
+        Preferences, ViewSwitchService,
+        ReloadDispatcher, DiveSchedules,
+        ApplicationSettingsService,
+        MdbModalService
+    ],
+    imports: [
+        RouterTestingModule.withRoutes([]),
+        ReactiveFormsModule,
+        WeightCalcComponent
+    ]
+}).compileComponents();
     });
 
     beforeEach(() => {

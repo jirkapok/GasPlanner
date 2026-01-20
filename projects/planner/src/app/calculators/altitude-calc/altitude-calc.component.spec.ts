@@ -22,17 +22,17 @@ describe('AltitudeCalcComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [AltitudeCalcComponent],
-            providers: [
-                UnitConversion, ValidatorGroups, InputControls,
-                DecimalPipe, SubViewStorage, ViewStates,
-                PreferencesStore, PlannerService, WorkersFactoryCommon,
-                Preferences, ViewSwitchService,
-                ReloadDispatcher, DiveSchedules,
-                ApplicationSettingsService,
-                MdbModalService
-            ]
-        });
+    imports: [AltitudeCalcComponent],
+    providers: [
+        UnitConversion, ValidatorGroups, InputControls,
+        DecimalPipe, SubViewStorage, ViewStates,
+        PreferencesStore, PlannerService, WorkersFactoryCommon,
+        Preferences, ViewSwitchService,
+        ReloadDispatcher, DiveSchedules,
+        ApplicationSettingsService,
+        MdbModalService
+    ]
+});
         fixture = TestBed.createComponent(AltitudeCalcComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

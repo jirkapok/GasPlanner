@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, NgIf, DecimalPipe } from '@angular/common';
 import { faFileLines, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import {
-    NonNullableFormBuilder, FormGroup, FormControl
-} from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Tank, Precision } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
@@ -14,6 +12,11 @@ import { SubViewStorage } from '../../shared/subViewStorage';
 import { BoundGasProperties } from '../../shared/gas.properties';
 import { TextConstants } from '../../shared/TextConstants';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
+import { PpO2Component } from '../../controls/pp-o2/pp-o2.component';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 interface GasForm {
     o2: FormControl<number>;
@@ -27,7 +30,7 @@ interface GasForm {
     selector: 'app-gas-props-calc',
     templateUrl: './gas.props.component.html',
     styleUrls: ['./gas.props.component.scss'],
-    standalone: false
+    imports: [CardHeaderComponent, ReactiveFormsModule, OxygenDropDownComponent, NgIf, PpO2Component, MdbFormsModule, FaIconComponent, DecimalPipe]
 })
 export class GasPropertiesCalcComponent implements OnInit {
     public calcIcon = faFileLines;

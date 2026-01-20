@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import { Salinity, Precision, AirBreakOptions } from 'scuba-physics';
@@ -13,12 +13,21 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { PreferencesStore } from '../../shared/preferencesStore';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { NgIf } from '@angular/common';
+import { SalinityComponent } from '../../controls/salinity/salinity.component';
+import { AltitudeComponent } from '../../controls/altitude/altitude.component';
+import { GradientsComponent } from '../../controls/gradients/gradients.component';
+import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
+import { DiverComponent } from '../diver/diver.component';
 
 @Component({
     selector: 'app-diveoptions',
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, CardHeaderComponent, NgIf, SalinityComponent, AltitudeComponent, GradientsComponent, MdbTabsModule, MdbFormsModule, MdbDropdownModule, DiverComponent]
 })
 export class DiveOptionsComponent extends Streamed implements OnInit {
     @Input() public formValid = true;

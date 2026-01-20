@@ -22,17 +22,17 @@ describe('RedundanciesComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [RedundanciesComponent],
-            providers: [
-                UnitConversion, ValidatorGroups, InputControls,
-                DecimalPipe, SubViewStorage, ViewStates,
-                PreferencesStore, PlannerService, WorkersFactoryCommon,
-                Preferences, ViewSwitchService,
-                ReloadDispatcher, DiveSchedules,
-                ApplicationSettingsService,
-                MdbModalService
-            ]
-        });
+    imports: [RedundanciesComponent],
+    providers: [
+        UnitConversion, ValidatorGroups, InputControls,
+        DecimalPipe, SubViewStorage, ViewStates,
+        PreferencesStore, PlannerService, WorkersFactoryCommon,
+        Preferences, ViewSwitchService,
+        ReloadDispatcher, DiveSchedules,
+        ApplicationSettingsService,
+        MdbModalService
+    ]
+});
 
         const units = TestBed.inject(UnitConversion);
         units.imperialUnits = true;

@@ -8,12 +8,15 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { DiveResults } from '../../shared/diveresults';
 import { BoundEvent } from "../../shared/models";
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { DurationPipe } from '../../pipes/duration.pipe';
 
 @Component({
     selector: 'app-dive-issues',
     templateUrl: './dive-issues.component.html',
     styleUrls: ['./dive-issues.component.scss'],
-    standalone: false
+    imports: [NgIf, FaIconComponent, NgFor, DecimalPipe, DurationPipe]
 })
 export class DiveIssuesComponent {
     public exclamation = faExclamationCircle;

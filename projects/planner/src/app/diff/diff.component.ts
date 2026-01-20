@@ -8,12 +8,19 @@ import { Streamed } from '../shared/streamed';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { DiffViewState } from '../shared/views.model';
 import { DiveSchedules } from '../shared/dive.schedules';
+import { DiffTabsComponent } from './tabs/diff-tabs.component';
+import { NgIf } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { ProfileDifferenceChartComponent } from './profilechart/diff-profilechart.component';
+import { WaypointsDifferenceComponent } from './waypoints/diff-waypoints.component';
+import { DiveResultsDifferenceComponent } from './diveresults/diff-diveresults.component';
+import { GasConsumedDifferenceComponent } from './gasconsumed/diff-gas-consumed/diff-gas-consumed.component';
 
 @Component({
     selector: 'app-diff',
     templateUrl: './diff.component.html',
     styleUrls: ['./diff.component.scss'],
-    standalone: false
+    imports: [DiffTabsComponent, NgIf, FaIconComponent, ProfileDifferenceChartComponent, WaypointsDifferenceComponent, DiveResultsDifferenceComponent, GasConsumedDifferenceComponent]
 })
 export class DiffComponent extends Streamed implements OnInit {
     public readonly exclamation = faExclamationCircle;

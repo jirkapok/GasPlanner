@@ -7,6 +7,7 @@ import { SelectedWaypoint } from '../../shared/selectedwaypointService';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ResamplingService } from '../../shared/ResamplingService';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 describe('ProfileChartComponent', () => {
     let component: ProfileChartComponent;
@@ -14,12 +15,12 @@ describe('ProfileChartComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [ProfileChartComponent],
+            imports: [ProfileChartComponent],
             providers: [
                 WorkersFactoryCommon, ReloadDispatcher,
                 WayPointsService, SelectedWaypoint,
                 UnitConversion, DiveSchedules,
-                ResamplingService,
+                ResamplingService, MdbModalService
             ]
         });
 

@@ -1,7 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {
-    NonNullableFormBuilder, FormGroup, FormControl
-} from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
@@ -13,6 +11,11 @@ import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { DepthComponent } from '../depth/depth.component';
+import { NgIf, DecimalPipe } from '@angular/common';
+import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
 
 interface SimpleDepthsForm {
     surfaceInterval: FormControl<string | null>;
@@ -24,7 +27,7 @@ interface SimpleDepthsForm {
     selector: 'app-depths-simple',
     templateUrl: './depths-simple.component.html',
     styleUrls: ['./depths-simple.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, DepthComponent, NgIf, SurfaceIntervalComponent, DecimalPipe]
 })
 export class DepthsSimpleComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

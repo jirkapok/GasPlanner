@@ -1,7 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray,  FormControl,
-    NonNullableFormBuilder, FormGroup
-} from '@angular/forms';
+import { FormArray, FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
 import { faLayerGroup, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +11,12 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DepthsService } from '../../shared/depths.service';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
+import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 
 interface LevelRow {
     duration: FormControl<number>;
@@ -28,7 +32,7 @@ interface DepthsForm {
     selector: 'app-depths-complex',
     templateUrl: './depths-complex.component.html',
     styleUrls: ['./depths-complex.component.scss'],
-    standalone: false
+    imports: [CardHeaderComponent, ReactiveFormsModule, NgIf, SurfaceIntervalComponent, MdbAccordionModule, NgFor, FaIconComponent, MdbDropdownModule, DecimalPipe]
 })
 export class DepthsComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

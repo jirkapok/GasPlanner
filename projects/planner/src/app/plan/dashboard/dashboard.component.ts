@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
+import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { faExclamationTriangle, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import { Streamed } from '../../shared/streamed';
@@ -9,12 +9,23 @@ import { DashboardStartUp } from '../../shared/startUp';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ShareDiveService } from "../../shared/ShareDiveService";
+import { NgIf, NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { PlanTabsComponent } from '../plan.tabs/plan.tabs.component';
+import { TanksSimpleComponent } from '../tanks-simple/tanks-simple.component';
+import { TanksComplexComponent } from '../tanks-complex/tanks-complex.component';
+import { DepthsSimpleComponent } from '../depths-simple/depths-simple.component';
+import { DepthsComplexComponent } from '../depths-complex/depths-complex.component';
+import { DiveOptionsComponent } from '../diveoptions/diveoptions.component';
+import { ProfileChartComponent } from '../profilechart/profilechart.component';
+import { WayPointsComponent } from '../waypoints/waypoints.component';
+import { DiveInfoComponent } from '../diveinfo/diveinfo.component';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, NgIf, FaIconComponent, PlanTabsComponent, NgClass, TanksSimpleComponent, TanksComplexComponent, DepthsSimpleComponent, DepthsComplexComponent, DiveOptionsComponent, ProfileChartComponent, WayPointsComponent, DiveInfoComponent]
 })
 export class DashboardComponent extends Streamed implements OnInit {
     public exclamation = faExclamationTriangle;

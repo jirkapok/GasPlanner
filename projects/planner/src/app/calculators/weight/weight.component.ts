@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, NgIf, DecimalPipe } from '@angular/common';
 import { faWeightHanging } from '@fortawesome/free-solid-svg-icons';
-import {
-    NonNullableFormBuilder, FormGroup, FormControl, AbstractControl
-} from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, FormControl, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import {
     Precision, Tank, TankTemplate, AirWeight
 } from 'scuba-physics';
@@ -15,6 +13,9 @@ import { WeightViewState } from '../../shared/views.model';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { TankBound } from '../../shared/models';
 import { ApplicationSettingsService } from "../../shared/ApplicationSettings";
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 
 interface WeightForm {
     workPressure?: FormControl<number>;
@@ -25,7 +26,7 @@ interface WeightForm {
     selector: 'app-weight-calc',
     templateUrl: './weight.component.html',
     styleUrls: ['./weight.component.scss'],
-    standalone: false
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, NgIf, DecimalPipe]
 })
 export class WeightCalcComponent implements OnInit {
     public calcIcon = faWeightHanging;

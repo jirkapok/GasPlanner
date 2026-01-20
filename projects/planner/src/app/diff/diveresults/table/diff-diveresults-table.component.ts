@@ -4,12 +4,16 @@ import { UnitConversion } from '../../../shared/UnitConversion';
 import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
 import { ResultsComparison } from '../../../shared/diff/results-comparison.service';
 import { DiveResults } from '../../../shared/diveresults';
+import { CalculatingComponent } from '../../../controls/calculating/calculating.component';
+import { NgIf, DecimalPipe } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { DurationPipe } from '../../../pipes/duration.pipe';
 
 @Component({
     selector: 'app-diff-diveresults-table',
     templateUrl: './diff-diveresults-table.component.html',
     styleUrls: ['./diff-diveresults-table.component.scss', '../../diff.component.scss'],
-    standalone: false
+    imports: [CalculatingComponent, NgIf, FaIconComponent, DecimalPipe, DurationPipe]
 })
 export class DiveResultsTableDifferenceComponent {
     public constructor(

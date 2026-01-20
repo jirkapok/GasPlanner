@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { Location, NgIf, DecimalPipe } from '@angular/common';
+import { FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { faLungs } from '@fortawesome/free-solid-svg-icons';
 import { Diver, Precision, Tank, TankTemplate, FeatureFlags } from 'scuba-physics';
 import { SacCalculatorService } from '../../shared/sac-calculator.service';
@@ -13,6 +13,9 @@ import { TankBound } from '../../shared/models';
 import { SacViewState } from '../../shared/views.model';
 import { KnownViews } from '../../shared/viewStates';
 import { SubViewStorage } from '../../shared/subViewStorage';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 interface SacForm {
     depth: FormControl<number>;
     tankSize: FormControl<number>;
@@ -26,7 +29,7 @@ interface SacForm {
     selector: 'app-sac',
     templateUrl: './sac.component.html',
     styleUrls: ['./sac.component.scss'],
-    standalone: false
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, NgIf, DecimalPipe]
 })
 export class SacComponent implements OnInit {
     public calcIcon = faLungs;

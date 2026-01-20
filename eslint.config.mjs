@@ -76,7 +76,7 @@ export default defineConfig([{
             style: "camelCase",
         }],
 
-        "@angular-eslint/prefer-standalone": "off",
+        "@angular-eslint/prefer-standalone": "warn",
         "@angular-eslint/no-input-rename": "error",
         "@angular-eslint/no-output-on-prefix": "error",
         "@angular-eslint/no-output-rename": "error",
@@ -114,6 +114,7 @@ export default defineConfig([{
         "arrow-body-style": "error",
         "brace-style": ["error", "1tbs"],
         "constructor-super": "error",
+        "object-curly-spacing": ["error", "always"],
         curly: "error",
         "eol-last": "error",
         eqeqeq: ["error", "smart"],

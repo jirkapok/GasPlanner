@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faBatteryHalf } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
-import { NonNullableFormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Precision, TankTemplate, GasToxicity } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
@@ -11,6 +11,11 @@ import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { TanksService } from '../../shared/tanks.service';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
+import { NgIf, DecimalPipe } from '@angular/common';
+import { OxygenComponent } from '../../controls/oxygen/oxygen.component';
 
 interface TankForm {
     firstTankSize: FormControl<number>;
@@ -23,7 +28,7 @@ interface TankForm {
     selector: 'app-tanks-simple',
     templateUrl: './tanks-simple.component.html',
     styleUrls: ['./tanks-simple.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, NgIf, OxygenComponent, DecimalPipe]
 })
 export class TanksSimpleComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

@@ -1,7 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-    NonNullableFormBuilder, FormGroup
-} from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
@@ -9,12 +7,14 @@ import { Streamed } from '../../shared/streamed';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { DiverOptions } from '../../shared/models';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { PpO2Component } from '../../controls/pp-o2/pp-o2.component';
 
 @Component({
     selector: 'app-diver',
     templateUrl: './diver.component.html',
     styleUrls: ['./diver.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, MdbFormsModule, PpO2Component]
 })
 export class DiverComponent extends Streamed implements OnInit {
     @Input() public diver: DiverOptions = new DiverOptions();

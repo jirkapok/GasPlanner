@@ -5,12 +5,15 @@ import { takeUntil } from 'rxjs';
 import { DiveSchedule } from '../../shared/dive.schedules';
 import { ManagedDiveSchedules } from '../../shared/managedDiveSchedules';
 import { Streamed } from '../../shared/streamed';
+import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
+import { NgFor, NgIf } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-plan-tabs',
     templateUrl: './plan.tabs.component.html',
     styleUrls: ['./plan.tabs.component.scss'],
-    standalone: false
+    imports: [MdbTabsModule, NgFor, NgIf, FaIconComponent]
 })
 export class PlanTabsComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;

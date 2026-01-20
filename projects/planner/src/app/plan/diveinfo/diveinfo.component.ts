@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { formatNumber } from '@angular/common';
+import { formatNumber, NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { takeUntil } from 'rxjs';
 import {
     faSlidersH, faShareFromSquare, faExclamationTriangle
@@ -16,12 +16,19 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { TextConstants } from '../../shared/TextConstants';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ShareDiveService } from '../../shared/ShareDiveService';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
+import { CalculatingComponent } from '../../controls/calculating/calculating.component';
+import { TankChartComponent } from '../tank-chart/tank-chart.component';
+import { DiveIssuesComponent } from '../dive-issues/dive-issues.component';
+import { DurationPipe } from '../../pipes/duration.pipe';
 
 @Component({
     selector: 'app-diveinfo',
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss'],
-    standalone: false
+    imports: [CardHeaderComponent, FaIconComponent, MdbTabsModule, CalculatingComponent, NgIf, NgFor, TankChartComponent, DiveIssuesComponent, DecimalPipe, DurationPipe]
 })
 export class DiveInfoComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;

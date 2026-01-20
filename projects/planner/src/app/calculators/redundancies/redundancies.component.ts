@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, NgIf, DecimalPipe } from '@angular/common';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
-import { FormControl, FormGroup, NonNullableFormBuilder} from '@angular/forms';
+import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { TankTemplate, Precision } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { ITankSize } from '../../shared/models';
@@ -11,6 +11,9 @@ import {RedundanciesService} from '../../shared/redundancies.service';
 import {RedundanciesViewState, TankFillState} from '../../shared/views.model';
 import {KnownViews} from '../../shared/viewStates';
 import {SubViewStorage} from '../../shared/subViewStorage';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 
 interface RedundanciesForm {
     firstTankSize: FormControl<number>;
@@ -24,7 +27,7 @@ interface RedundanciesForm {
     selector: 'app-redundancies',
     templateUrl: './redundancies.component.html',
     styleUrls: ['./redundancies.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, NgIf, DecimalPipe]
 })
 export class RedundanciesComponent implements OnInit {
     public calcIcon = faCalculator;

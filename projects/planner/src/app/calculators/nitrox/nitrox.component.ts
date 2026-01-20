@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, NgIf, DecimalPipe } from '@angular/common';
 import { faPercent } from '@fortawesome/free-solid-svg-icons';
-import { FormControl, NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision } from 'scuba-physics';
 import { NitroxCalculatorService } from '../../shared/nitrox-calculator.service';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
@@ -14,6 +14,9 @@ import { NitroxViewState } from '../../shared/views.model';
 import { KnownViews } from '../../shared/viewStates';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 
 interface NitroxForm {
     mod?: FormControl<number>;
@@ -26,7 +29,7 @@ interface NitroxForm {
     selector: 'app-nitrox',
     templateUrl: './nitrox.component.html',
     styleUrls: ['./nitrox.component.scss'],
-    standalone: false
+    imports: [CardHeaderComponent, ReactiveFormsModule, NgIf, MdbFormsModule, OxygenDropDownComponent, DecimalPipe]
 })
 export class NitroxComponent implements OnInit {
     public calcIcon = faPercent;

@@ -11,12 +11,12 @@ describe('DiveIssuesComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DiveIssuesComponent],
-            providers: [
-                UnitConversion, DiveSchedules,
-                ReloadDispatcher
-            ]
-        });
+    imports: [DiveIssuesComponent],
+    providers: [
+        UnitConversion, DiveSchedules,
+        ReloadDispatcher
+    ]
+});
         fixture = TestBed.createComponent(DiveIssuesComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

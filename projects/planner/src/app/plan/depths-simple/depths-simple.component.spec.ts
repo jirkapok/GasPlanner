@@ -1,6 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { By } from '@angular/platform-browser';
 import { HighestDensity, Time } from 'scuba-physics';
 import { DepthsService } from '../../shared/depths.service';
@@ -21,6 +22,7 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
 import { DepthComponent } from '../depth/depth.component';
+
 
 export class SimpleDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
@@ -54,18 +56,16 @@ describe('Depths Simple Component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ DepthsSimpleComponent, DepthComponent ],
-            imports: [ ReactiveFormsModule, SurfaceIntervalComponent ],
+            imports: [ReactiveFormsModule, SurfaceIntervalComponent, DepthsSimpleComponent, DepthComponent],
             providers: [
                 WorkersFactoryCommon, PlannerService,
                 UnitConversion, InputControls, DiveSchedules,
                 OptionsService, ValidatorGroups,
-                DecimalPipe, ViewSwitchService,  WayPointsService,
+                DecimalPipe, ViewSwitchService, WayPointsService,
                 SubViewStorage, ViewStates, PreferencesStore,
-                Preferences, ReloadDispatcher
+                Preferences, ReloadDispatcher, MdbModalService
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     });
 
     beforeEach(() => {

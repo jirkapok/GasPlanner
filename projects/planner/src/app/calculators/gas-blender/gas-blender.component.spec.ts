@@ -48,18 +48,17 @@ describe('GasBlenderComponent', () => {
     let simplePage: GasBlenderPage;
     beforeEach(async() => {
         await TestBed.configureTestingModule({
-            declarations: [GasBlenderComponent],
-            imports: [ReactiveFormsModule],
-            providers: [
-                UnitConversion,
-                GasBlenderService, BlendPricingService,
-                ValidatorGroups, InputControls, DecimalPipe,
-                SubViewStorage, ViewStates, PreferencesStore,
-                Preferences, ViewSwitchService, DiveSchedules,
-                ReloadDispatcher, ApplicationSettingsService,
-                MdbModalService
-            ]
-        }).compileComponents();
+    imports: [ReactiveFormsModule, GasBlenderComponent],
+    providers: [
+        UnitConversion,
+        GasBlenderService, BlendPricingService,
+        ValidatorGroups, InputControls, DecimalPipe,
+        SubViewStorage, ViewStates, PreferencesStore,
+        Preferences, ViewSwitchService, DiveSchedules,
+        ReloadDispatcher, ApplicationSettingsService,
+        MdbModalService
+    ]
+}).compileComponents();
     });
 
     beforeEach(() => {

@@ -10,7 +10,12 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { Preferences } from '../shared/preferences';
 import { ViewSwitchService } from '../shared/viewSwitchService';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { ResamplingService } from '../shared/ResamplingService';
+import { SelectedDiffWaypoint } from '../shared/diff/selected-diff-waypoint.service';
+import { GasesComparisonService } from '../shared/diff/gases-comparison.service';
+import { ResultsComparison } from '../shared/diff/results-comparison.service';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 describe('DiffComponent', () => {
     let component: DiffComponent;
@@ -18,15 +23,17 @@ describe('DiffComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DiffComponent],
+            imports: [DiffComponent],
             providers: [
                 ProfileComparatorService,
                 DiveSchedules, UnitConversion,
                 ViewStates, SubViewStorage,
                 PreferencesStore, Preferences,
                 ViewSwitchService, ReloadDispatcher,
-                ApplicationSettingsService,
-                MdbModalService
+                ApplicationSettingsService, ResamplingService,
+                SelectedDiffWaypoint, GasesComparisonService,
+                ResultsComparison, MdbModalService,
+                provideNoopAnimations()
             ]
         });
         fixture = TestBed.createComponent(DiffComponent);

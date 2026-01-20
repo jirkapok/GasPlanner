@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, DecimalPipe } from '@angular/common';
 import { faMountainSun } from '@fortawesome/free-solid-svg-icons';
-import {
-    NonNullableFormBuilder, FormGroup, FormControl
-} from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Precision, AltitudeCalculator } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
@@ -11,6 +9,9 @@ import { InputControls } from '../../shared/inputcontrols';
 import { KnownViews } from '../../shared/viewStates';
 import { AltitudeViewState } from '../../shared/views.model';
 import { SubViewStorage } from '../../shared/subViewStorage';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { AltitudeComponent } from '../../controls/altitude/altitude.component';
 
 interface AltitudeDepthForm {
     pressure: FormControl<number>;
@@ -22,7 +23,7 @@ interface AltitudeDepthForm {
     selector: 'app-altitude-calc',
     templateUrl: './altitude-calc.component.html',
     styleUrls: ['./altitude-calc.component.scss'],
-    standalone: false
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, AltitudeComponent, DecimalPipe]
 })
 export class AltitudeCalcComponent implements OnInit {
     public calcIcon = faMountainSun;

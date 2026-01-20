@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { Location } from '@angular/common';
+import { Location, NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { faTable } from '@fortawesome/free-solid-svg-icons';
 import {
     Options, Salinity, Tank, GasToxicity, Precision
@@ -14,12 +14,18 @@ import { SubViewStorage } from '../../shared/subViewStorage';
 import { KnownViews } from '../../shared/viewStates';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { CardHeaderComponent } from '../../card-header/card-header.component';
+import { OxygenComponent } from '../../controls/oxygen/oxygen.component';
+import { PpO2Component } from '../../controls/pp-o2/pp-o2.component';
+import { SalinityComponent } from '../../controls/salinity/salinity.component';
+import { AltitudeComponent } from '../../controls/altitude/altitude.component';
+import { GradientsComponent } from '../../controls/gradients/gradients.component';
 
 @Component({
     selector: 'app-ndl-limits',
     templateUrl: './ndl-limits.component.html',
     styleUrls: ['./ndl-limits.component.scss'],
-    standalone: false
+    imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent, NgIf, NgFor, DecimalPipe]
 })
 export class NdlLimitsComponent implements OnInit {
     public icon = faTable;

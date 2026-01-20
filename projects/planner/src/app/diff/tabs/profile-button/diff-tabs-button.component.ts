@@ -3,6 +3,7 @@ import {
     animate, keyframes, state, style, transition, trigger
 } from '@angular/animations';
 import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-diff-tabs-button',
@@ -28,7 +29,7 @@ import { ProfileComparatorService } from '../../../shared/diff/profileComparator
                 ]))]),
         ]),
     ],
-    standalone: false
+    imports: [NgClass]
 })
 export class DiffTabsButtonComponent {
     @Input({required: true}) index = 0;

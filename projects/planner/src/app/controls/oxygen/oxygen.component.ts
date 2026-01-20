@@ -1,14 +1,16 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { TankBound } from '../../shared/models';
+import { OxygenDropDownComponent } from '../oxygen-dropdown/oxygen-dropdown.component';
+import { GaslabelComponent } from '../gaslabel/gaslabel.component';
 
 @Component({
     selector: 'app-oxygen',
     templateUrl: './oxygen.component.html',
     styleUrls: ['./oxygen.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, OxygenDropDownComponent, GaslabelComponent]
 })
 export class OxygenComponent implements OnInit {
     @Input() public tank = new TankBound(new Tank(15, 200, 21), this.units);

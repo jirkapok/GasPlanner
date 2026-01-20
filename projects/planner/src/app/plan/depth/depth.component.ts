@@ -1,15 +1,16 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NonNullableFormBuilder, FormGroup } from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 
 @Component({
     selector: 'app-depth',
     templateUrl: './depth.component.html',
     styleUrls: ['./depth.component.scss'],
-    standalone: false
+    imports: [ReactiveFormsModule, MdbFormsModule]
 })
 export class DepthComponent implements OnInit {
     @Input() public depthForm!: FormGroup;

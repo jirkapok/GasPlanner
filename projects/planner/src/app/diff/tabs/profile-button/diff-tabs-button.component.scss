@@ -1,4 +1,4 @@
-@import "node_modules/mdb-angular-ui-kit/assets/scss/free/_variables.scss";
+@use "mdb-angular-ui-kit/assets/scss/free/_variables.scss";
 
 // Background of btn cannot be transparent, but must be solid so that header can hide behind it and "fade out"
 // The normal, sane way of sliding the header in/out would have been to animate opacity, but that doesn't work with the
@@ -29,15 +29,15 @@ button {
 }
 
 .primary-header {
-    background-color: $primary;
-    color: $white;
+    background-color: variables.$primary;
+    color: variables.$white;
     transform: rotateX(180deg);
     backface-visibility: hidden;
 }
 
 .secondary-header {
-    background-color: $success;
-    color: $white;
+    background-color: variables.$success;
+    color: variables.$white;
     backface-visibility: hidden;
 }
 

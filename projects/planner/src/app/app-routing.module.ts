@@ -1,17 +1,14 @@
 import {
     ActivatedRouteSnapshot,
     CanActivateFn,
-    provideRouter,
     Router,
-    RouterModule,
     Routes,
     UrlTree,
-    withComponentInputBinding
 } from '@angular/router';
 import { Location } from '@angular/common';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { DashboardComponent } from './plan/dashboard/dashboard.component';
-import { NgModule, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { KnownViews, ViewStates } from './shared/viewStates';
 import { AboutComponent } from './about/about.component';
 import { DiffComponent } from './diff/diff.component';
@@ -43,7 +40,7 @@ const canActivateDashboard: CanActivateFn = (route: ActivatedRouteSnapshot): boo
     return true;
 };
 
-const routes: Routes = [
+export const routes: Routes = [
     { path: KnownViews.settings, component: AppSettingsComponent },
     { path: KnownViews.sac, component: SacComponent },
     { path: KnownViews.nitrox, component: NitroxComponent },
@@ -56,7 +53,7 @@ const routes: Routes = [
     { path: KnownViews.redundancies, component: RedundanciesComponent },
     { path: KnownViews.blender, component: GasBlenderComponent },
     { path: KnownViews.learn, component: LearnComponent },
-    { path: `${KnownViews.help}/:document/:anchor`, component: HelpComponent },
+    { path: `${KnownViews.help}/:document/:anchor`, component: HelpComponent }, // TODO fix Standard gases route
     { path: `${KnownViews.help}/:document`, component: HelpComponent },
     { path: KnownViews.help, redirectTo: `${KnownViews.help}/application`, pathMatch: 'full' },
     {
@@ -65,15 +62,3 @@ const routes: Routes = [
         canActivate: [canActivateDashboard]
     },
 ];
-
-@NgModule({
-    imports: [
-        RouterModule.forRoot(routes)
-    ],
-    exports: [RouterModule],
-    providers: [
-        provideRouter(routes, withComponentInputBinding()),
-    ],
-    declarations: []
-})
-export class AppRoutingModule { }

@@ -1,10 +1,8 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { ClipboardModule } from 'ngx-clipboard';
@@ -15,8 +13,7 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 
 import { environment } from '../environments/environment';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { routes } from './app-routing.module';
 import { NgxMdModule } from 'ngx-md';
 
 import { SacComponent } from './calculators/sac/sac.component';
@@ -108,16 +105,15 @@ import { ResamplingService } from './shared/ResamplingService';
 import { ApplicationSettingsService } from './shared/ApplicationSettings';
 import { IgnoredIssuesService } from './shared/IgnoredIssues.service';
 import { BlendPricingService } from './shared/blend-pricing.service';
-import { MdbModalModule } from 'mdb-angular-ui-kit/modal';
+import { MdbModalModule, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { ShareDiveService } from './shared/ShareDiveService';
 import { CardHeaderComponent } from './card-header/card-header.component';
 import { AppFooterComponent } from './footer/footer.component';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
+import { provideRouter } from '@angular/router';
 
 const ANGULAR_MODULES = [
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    BrowserModule,
+    CommonModule,
     FontAwesomeModule,
     ReactiveFormsModule
 ];
@@ -128,12 +124,12 @@ const MDB_MODULES = [
     MdbFormsModule,
     MdbTabsModule,
     MdbAccordionModule,
-    MdbModalModule
+    MdbModalModule,
+    MdbModalService,
 ];
 
-const COMPONENTS = [
+const STANDALONE = [
     AltitudeCalcComponent,
-    AppComponent,
     DashboardComponent,
     DepthComponent,
     DepthsComplexComponent,
@@ -167,10 +163,7 @@ const COMPONENTS = [
     DiffTabsComponent,
     DiffTabsButtonComponent,
     GasConsumedDifferenceComponent,
-    GasConsumedDifferenceTankComponent
-];
-
-const STANDALONE = [
+    GasConsumedDifferenceTankComponent,
     SurfaceIntervalComponent,
     HelpModalComponent,
     HelpComponent,
@@ -187,6 +180,7 @@ const STANDALONE = [
 ];
 
 const SERVICES = [
+    MdbModalService,
     provideHttpClient(withInterceptorsFromDi()),
     { provide: WorkersFactoryCommon, useClass: WorkersFactory },
     DatePipe,
@@ -231,7 +225,7 @@ const SERVICES = [
     ShareDiveService
 ];
 
-@NgModule({
+export const CONFIG = {
     imports: [
         ...ANGULAR_MODULES,
         ...MDB_MODULES,
@@ -244,10 +238,12 @@ const SERVICES = [
             // or after 30 seconds (whichever comes first).
             registrationStrategy: 'registerWhenStable:30000'
         }),
-        ...COMPONENTS
     ],
     exports: [],
-    providers: SERVICES,
-    bootstrap: [AppComponent]
-})
-export class AppModule { }
+    providers: [
+        ...SERVICES,
+        provideAnimations(),
+        provideRouter(routes),
+    ],
+    bootstrap: []
+};

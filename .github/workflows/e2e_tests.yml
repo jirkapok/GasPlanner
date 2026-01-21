@@ -21,10 +21,10 @@ jobs:
         node-version-file: .nvmrc
 
     - name: Install dependencies
-      run: npm ci
+      run: npm ci --legacy-peer-deps
 
     - run: npm run build-lib
-    - run: npm install ./dist/scuba-physics --no-package-lock
+    - run: npm install ./dist/scuba-physics --no-package-lock --legacy-peer-deps
 
     - name: Install Playwright Browsers
       run: npx playwright install chromium

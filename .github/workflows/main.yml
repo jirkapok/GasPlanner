@@ -23,13 +23,13 @@ jobs:
         with:
            node-version-file: .nvmrc
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
 
       - run: npm run test-lib-ci --configuration=ci
 
       - run: npm run build-lib
 
-      - run: npm install ./dist/scuba-physics --no-package-lock
+      - run: npm install ./dist/scuba-physics --no-package-lock --legacy-peer-deps
 
       - run: npm run test-ci --configuration=ci
 

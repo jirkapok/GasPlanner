@@ -13,7 +13,7 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 
 import { environment } from '../environments/environment';
-import { routes } from './app-routing.module';
+import { routes } from './app.routes';
 import { NgxMdModule } from 'ngx-md';
 
 import { SacComponent } from './calculators/sac/sac.component';

@@ -4,7 +4,7 @@ import { takeUntil } from 'rxjs';
 import {
     faSlidersH, faShareFromSquare, faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons';
-import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
+import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 
 import { Tank, GasToxicity } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
@@ -28,7 +28,11 @@ import { DurationPipe } from '../../pipes/duration.pipe';
     selector: 'app-diveinfo',
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss'],
-    imports: [CardHeaderComponent, FaIconComponent, MdbTabsModule, CalculatingComponent, NgIf, NgFor, TankChartComponent, DiveIssuesComponent, DecimalPipe, DurationPipe]
+    imports: [
+        CardHeaderComponent, FaIconComponent, MdbTabsModule,
+        CalculatingComponent, NgIf, NgFor, TankChartComponent,
+        DiveIssuesComponent, DecimalPipe, DurationPipe
+    ]
 })
 export class DiveInfoComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;

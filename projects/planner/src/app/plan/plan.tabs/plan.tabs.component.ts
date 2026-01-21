@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { faPlus, faRotate } from '@fortawesome/free-solid-svg-icons';
-import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs/tabs.component';
+import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 import { takeUntil } from 'rxjs';
 import { DiveSchedule } from '../../shared/dive.schedules';
 import { ManagedDiveSchedules } from '../../shared/managedDiveSchedules';

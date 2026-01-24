@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import {RouterModule} from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -22,7 +22,7 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 class SacPage {
     constructor(private fixture: ComponentFixture<SacComponent>) { }
@@ -45,6 +45,7 @@ class SacPage {
 describe('Sac component', () => {
     let component: SacComponent;
     let fixture: ComponentFixture<SacComponent>;
+    let viewStates: ViewStates;
     let sacPage: SacPage;
 
     beforeEach(async () => {
@@ -57,7 +58,7 @@ describe('Sac component', () => {
                 Preferences, PreferencesStore, PlannerService,
                 ViewSwitchService, ReloadDispatcher, DiveSchedules,
                 ApplicationSettingsService, MdbModalService,
-                provideNoopAnimations()
+                provideAnimations()
             ],
             imports: [
                 RouterModule.forRoot([]),
@@ -67,17 +68,19 @@ describe('Sac component', () => {
         }).compileComponents();
     });
 
-    beforeEach(() => {
+    function setTestSuite(imperialUnits: boolean): void {
+        viewStates = TestBed.inject(ViewStates);
+        viewStates.reset();
         fixture = TestBed.createComponent(SacComponent);
         component = fixture.componentInstance;
-        const viewStates = TestBed.inject(ViewStates);
-        viewStates.reset();
+        component.units.imperialUnits = imperialUnits;
         fixture.detectChanges();
         sacPage = new SacPage(fixture);
-    });
+    }
 
     it('use applies rmv to diver', inject([OptionsService, SacCalculatorService],
         (options: OptionsService) => {
+            setTestSuite(false);
             options.diverOptions.rmv = 30;
             component.use();
             const applied = options.diverOptions.rmv;
@@ -85,6 +88,10 @@ describe('Sac component', () => {
         }));
 
     describe('Metric units', () => {
+        beforeEach(() => {
+            setTestSuite(false);
+        });
+
         it('Working pressure is not visible', () => {
             expect(sacPage.workingPressure).toBeUndefined();
         });
@@ -110,12 +117,9 @@ describe('Sac component', () => {
         });
     });
 
-    xdescribe('Imperial units', () => {
+    describe('Imperial units', () => {
         beforeEach(() => {
-            component.units.imperialUnits = true;
-            const views = TestBed.inject(ViewStates);
-            views.reset(); // simulates normalization service applied
-            component.ngOnInit();
+            setTestSuite(true);
         });
 
         it('adjusts tank', () => {

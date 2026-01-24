@@ -18,7 +18,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
         MdbFormsModule, MdbDropdownModule, NgFor
     ],
     providers: [
-        UnitConversion, InputControls, DecimalPipe, ValidatorGroups
+        InputControls, DecimalPipe
     ]
 })
 export class TankSizeComponent implements OnInit {

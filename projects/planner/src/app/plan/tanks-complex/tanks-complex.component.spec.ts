@@ -19,9 +19,10 @@ import { ViewStates } from '../../shared/viewStates';
 import { Preferences } from '../../shared/preferences';
 import { PreferencesStore } from '../../shared/preferencesStore';
 import { SubViewStorage } from '../../shared/subViewStorage';
-import {DiveSchedules} from '../../shared/dive.schedules';
-import {ReloadDispatcher} from '../../shared/reloadDispatcher';
-import {MdbModalService} from 'mdb-angular-ui-kit/modal';
+import { DiveSchedules } from '../../shared/dive.schedules';
+import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -54,10 +55,10 @@ export class ComplexTanksPage {
     }
 
     public applyGasButton(index: number, text: string): HTMLLinkElement {
-        const id = `#o2Item-${index}`;
-        const o2Element = this.debugElement(id);
+        const dropDownButton = this.fixture.debugElement.query(By.css('#o2Menu')).nativeElement as HTMLButtonElement;
+        dropDownButton.click();
 
-        const allButtons = o2Element.queryAll(By.css('.dropdown-item'));
+        const allButtons = this.fixture.debugElement.queryAll(By.css('.dropdown-item'));
         const button = _(allButtons)
             .filter(de => (<HTMLElement>de.nativeElement).innerText === text)
             .head()?.nativeElement as HTMLLinkElement;
@@ -74,7 +75,7 @@ export class ComplexTanksPage {
     }
 }
 
-xdescribe('Tanks Complex component', () => {
+describe('Tanks Complex component', () => {
     let component: TanksComplexComponent;
     let fixture: ComponentFixture<TanksComplexComponent>;
     let complexPage: ComplexTanksPage;
@@ -88,10 +89,13 @@ xdescribe('Tanks Complex component', () => {
                 ValidatorGroups, DecimalPipe, ViewSwitchService,
                 WayPointsService, SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, DiveSchedules,
-                ReloadDispatcher, MdbModalService
+                ReloadDispatcher, MdbModalService,
+                provideAnimations(),
             ],
-            imports: [ReactiveFormsModule, TanksComplexComponent, OxygenComponent,
-                OxygenDropDownComponent]
+            imports: [
+                ReactiveFormsModule, TanksComplexComponent,
+                OxygenDropDownComponent, OxygenComponent,
+            ]
         }).compileComponents();
     });
 
@@ -180,6 +184,17 @@ xdescribe('Tanks Complex component', () => {
         expect(complexPage.heInput(0).value).toBe('45');
     });
 
+    it('He field affects O2 field tank is reloaded', () => {
+        fixture.detectChanges();
+        const applyOxygen = complexPage.applyGasButton(0, 'Oxygen');
+        applyOxygen.click();
+
+        complexPage.heInput(0).value = '70';
+        complexPage.heInput(0).dispatchEvent(new Event('input'));
+
+        expect(complexPage.o2Input(0).value).toBe('30');
+    });
+
     it('Assign tank template rebinds new size and working pressure', () => {
         fixture.detectChanges();
 
@@ -191,16 +206,5 @@ xdescribe('Tanks Complex component', () => {
         component.assignTankTemplate(0, template);
         fixture.detectChanges();
         expect(complexPage.sizeInput(0).value).toBe('30');
-    });
-
-    it('He field affects O2 field tank is reloaded', () => {
-        fixture.detectChanges();
-        const applyOxygen = complexPage.applyGasButton(0, 'Oxygen');
-        applyOxygen.click();
-
-        complexPage.heInput(0).value = '70';
-        complexPage.heInput(0).dispatchEvent(new Event('input'));
-
-        expect(complexPage.o2Input(0).value).toBe('30');
     });
 });

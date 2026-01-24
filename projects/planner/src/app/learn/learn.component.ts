@@ -20,7 +20,6 @@ import { Urls } from '../shared/navigation.service';
 
 @Component({
     selector: 'app-learn',
-    standalone: true,
     imports: [CommonModule, NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule],
     providers: [
         NgxMdService, Urls, QuizService, PreferencesStore, HelpService,

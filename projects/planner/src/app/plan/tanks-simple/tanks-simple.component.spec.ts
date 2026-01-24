@@ -20,7 +20,8 @@ import { PreferencesStore } from '../../shared/preferencesStore';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
-import {MdbModalService} from 'mdb-angular-ui-kit/modal';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { BrowserAnimationsModule, } from '@angular/platform-browser/animations';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -41,8 +42,10 @@ export class SimpleTanksPage {
         return this.oxygenDebug.nativeElement as HTMLInputElement;
     }
 
-    public get btnBestMix(): HTMLInputElement {
-        return this.fixture.debugElement.query(By.css('#btnBestMix')).nativeElement as HTMLInputElement;
+    public get btnBestMix(): HTMLLIElement {
+        const dropDownButton = this.fixture.debugElement.query(By.css('#o2Menu')).nativeElement as HTMLButtonElement;
+        dropDownButton.click();
+        return this.fixture.debugElement.query(By.css('#btnBestMix')).nativeElement as HTMLLIElement;
     }
 }
 
@@ -65,7 +68,8 @@ describe('Tanks Simple component', () => {
             imports: [
                 ReactiveFormsModule, TankSizeComponent,
                 TanksSimpleComponent, OxygenComponent,
-                OxygenDropDownComponent]
+                OxygenDropDownComponent, BrowserAnimationsModule
+            ]
         }).compileComponents();
     });
 
@@ -111,7 +115,7 @@ describe('Tanks Simple component', () => {
         });
     });
 
-    xit('Assign best mix rebinds the control', () => {
+    it('Assign best mix rebinds the control', () => {
         fixture.detectChanges();
         // can't call component.assignBestMix();, because it needs to be triggered by the dropdown
         simplePage.btnBestMix.click();

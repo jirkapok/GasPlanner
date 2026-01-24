@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DiffTabsComponent } from './diff-tabs.component';
-import {DiveSchedules} from '../../shared/dive.schedules';
-import {UnitConversion} from '../../shared/UnitConversion';
-import {ReloadDispatcher} from '../../shared/reloadDispatcher';
-import {ProfileComparatorService} from '../../shared/diff/profileComparatorService';
+import { DiveSchedules } from '../../shared/dive.schedules';
+import { UnitConversion } from '../../shared/UnitConversion';
+import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
-xdescribe('DiffTabsComponent', () => {
+describe('DiffTabsComponent', () => {
     let component: DiffTabsComponent;
     let fixture: ComponentFixture<DiffTabsComponent>;
 
@@ -15,7 +16,8 @@ xdescribe('DiffTabsComponent', () => {
             imports: [DiffTabsComponent],
             providers: [
                 DiveSchedules, UnitConversion,
-                ReloadDispatcher, ProfileComparatorService
+                ReloadDispatcher, ProfileComparatorService,
+                provideAnimations()
             ]
         });
 

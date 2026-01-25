@@ -1,3 +1,5 @@
 <form>
-    <app-diff-tabs-button *ngFor="let dive of schedules.dives; let i = index" [index]="i" [title]="dive.title"/>
+  @for (dive of schedules.dives; track dive; let i = $index) {
+    <app-diff-tabs-button [index]="i" [title]="dive.title"/>
+  }
 </form>

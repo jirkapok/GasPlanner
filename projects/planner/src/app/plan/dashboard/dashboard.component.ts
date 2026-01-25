@@ -9,7 +9,7 @@ import { DashboardStartUp } from '../../shared/startUp';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ShareDiveService } from "../../shared/ShareDiveService";
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { PlanTabsComponent } from '../plan.tabs/plan.tabs.component';
 import { TanksSimpleComponent } from '../tanks-simple/tanks-simple.component';
@@ -25,7 +25,7 @@ import { DiveInfoComponent } from '../diveinfo/diveinfo.component';
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
-    imports: [ReactiveFormsModule, NgIf, FaIconComponent, PlanTabsComponent, NgClass, TanksSimpleComponent, TanksComplexComponent, DepthsSimpleComponent, DepthsComplexComponent, DiveOptionsComponent, ProfileChartComponent, WayPointsComponent, DiveInfoComponent]
+    imports: [ReactiveFormsModule, FaIconComponent, PlanTabsComponent, NgClass, TanksSimpleComponent, TanksComplexComponent, DepthsSimpleComponent, DepthsComplexComponent, DiveOptionsComponent, ProfileChartComponent, WayPointsComponent, DiveInfoComponent]
 })
 export class DashboardComponent extends Streamed implements OnInit {
     public exclamation = faExclamationTriangle;

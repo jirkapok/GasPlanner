@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import _ from 'lodash';
 import { NgxMdModule  } from 'ngx-md';
-import { NgForOf, NgClass, Location } from '@angular/common';
+import { NgClass, Location } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
@@ -12,7 +12,7 @@ import { SubViewStorage } from '../shared/subViewStorage';
 
 @Component({
     selector: 'app-help',
-    imports: [NgxMdModule, FontAwesomeModule, NgForOf, NgClass],
+    imports: [NgxMdModule, FontAwesomeModule, NgClass],
     providers: [MarkdownCustomization],
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']

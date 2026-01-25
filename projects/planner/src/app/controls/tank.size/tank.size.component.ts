@@ -5,7 +5,7 @@ import { AbstractControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import {ITankSize, TankBound} from '../../shared/models';
 import { InputControls } from '../../shared/inputcontrols';
-import { CommonModule, DecimalPipe, NgFor } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 
@@ -14,9 +14,10 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     templateUrl: './tank.size.component.html',
     styleUrls: ['./tank.size.component.scss'],
     imports: [
-        CommonModule, ReactiveFormsModule,
-        MdbFormsModule, MdbDropdownModule, NgFor
-    ],
+    ReactiveFormsModule,
+    MdbFormsModule,
+    MdbDropdownModule
+],
     providers: [
         InputControls, DecimalPipe
     ]

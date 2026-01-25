@@ -13,7 +13,7 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
-import { NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
@@ -36,17 +36,15 @@ interface TanksForm {
     templateUrl: './tanks-complex.component.html',
     styleUrls: ['./tanks-complex.component.scss'],
     imports: [
-        ReactiveFormsModule,
-        CardHeaderComponent,
-        MdbAccordionModule,
-        NgFor,
-        NgIf,
-        FaIconComponent,
-        TankSizeComponent,
-        OxygenDropDownComponent,
-        GaslabelComponent,
-        DecimalPipe,
-    ],
+    ReactiveFormsModule,
+    CardHeaderComponent,
+    MdbAccordionModule,
+    FaIconComponent,
+    TankSizeComponent,
+    OxygenDropDownComponent,
+    GaslabelComponent,
+    DecimalPipe
+],
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

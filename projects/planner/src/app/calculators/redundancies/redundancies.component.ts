@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { Location, NgIf, DecimalPipe } from '@angular/common';
+import { Location, DecimalPipe } from '@angular/common';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { TankTemplate, Precision } from 'scuba-physics';
@@ -27,7 +27,7 @@ interface RedundanciesForm {
     selector: 'app-redundancies',
     templateUrl: './redundancies.component.html',
     styleUrls: ['./redundancies.component.scss'],
-    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, NgIf, DecimalPipe]
+    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, DecimalPipe]
 })
 export class RedundanciesComponent implements OnInit {
     public calcIcon = faCalculator;

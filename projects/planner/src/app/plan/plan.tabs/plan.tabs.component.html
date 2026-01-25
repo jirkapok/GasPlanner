@@ -1,19 +1,25 @@
 <div>
-    <mdb-tabs #tabs [pills]="true">
-        <mdb-tab *ngFor="let dive of this.schedules.dives; let i = index">
-            <ng-template mdbTabTitle>
-                <div class="d-flex align-items-center" (mouseup)="tabClick($event, dive)">
-                    <fa-icon *ngIf="!dive.diveResult.calculated" [icon]="reloadIcon" class="me-1 fa-xl small text-info"></fa-icon>
-                    <div class="justifycontent-center">{{dive.title}}</div>
-                    <button *ngIf="!schedules.empty" type="button" class="btn-close ms-2" aria-label="Close"
-                        (click)="closeTab(dive)"></button>
-                </div>
-            </ng-template>
-        </mdb-tab>
-        <mdb-tab>
-            <ng-template mdbTabTitle>
-                <fa-icon id="add-dive" [icon]="addIcon" class="p-0 m-0 fa-xl" (click)="addTab()"></fa-icon>
-            </ng-template>
-        </mdb-tab>
-    </mdb-tabs>
+  <mdb-tabs #tabs [pills]="true">
+    @for (dive of this.schedules.dives; track dive; let i = $index) {
+      <mdb-tab>
+        <ng-template mdbTabTitle>
+          <div class="d-flex align-items-center" (mouseup)="tabClick($event, dive)">
+            @if (!dive.diveResult.calculated) {
+              <fa-icon [icon]="reloadIcon" class="me-1 fa-xl small text-info"></fa-icon>
+            }
+            <div class="justifycontent-center">{{dive.title}}</div>
+            @if (!schedules.empty) {
+              <button type="button" class="btn-close ms-2" aria-label="Close"
+              (click)="closeTab(dive)"></button>
+            }
+          </div>
+        </ng-template>
+      </mdb-tab>
+    }
+    <mdb-tab>
+      <ng-template mdbTabTitle>
+        <fa-icon id="add-dive" [icon]="addIcon" class="p-0 m-0 fa-xl" (click)="addTab()"></fa-icon>
+      </ng-template>
+    </mdb-tab>
+  </mdb-tabs>
 </div>

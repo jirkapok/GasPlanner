@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location, NgIf, DecimalPipe } from '@angular/common';
+import { Location, DecimalPipe } from '@angular/common';
 import { faWeightHanging } from '@fortawesome/free-solid-svg-icons';
 import { NonNullableFormBuilder, FormGroup, FormControl, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -26,7 +26,7 @@ interface WeightForm {
     selector: 'app-weight-calc',
     templateUrl: './weight.component.html',
     styleUrls: ['./weight.component.scss'],
-    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, NgIf, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, DecimalPipe]
 })
 export class WeightCalcComponent implements OnInit {
     public calcIcon = faWeightHanging;

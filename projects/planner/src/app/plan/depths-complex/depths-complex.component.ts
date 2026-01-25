@@ -12,7 +12,7 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DepthsService } from '../../shared/depths.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
-import { NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -32,7 +32,7 @@ interface DepthsForm {
     selector: 'app-depths-complex',
     templateUrl: './depths-complex.component.html',
     styleUrls: ['./depths-complex.component.scss'],
-    imports: [CardHeaderComponent, ReactiveFormsModule, NgIf, SurfaceIntervalComponent, MdbAccordionModule, NgFor, FaIconComponent, MdbDropdownModule, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, SurfaceIntervalComponent, MdbAccordionModule, FaIconComponent, MdbDropdownModule, DecimalPipe]
 })
 export class DepthsComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

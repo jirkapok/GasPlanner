@@ -6,14 +6,14 @@ import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.s
 import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
-import { NgIf, NgFor, NgClass, DecimalPipe } from '@angular/common';
+import { NgClass, DecimalPipe } from '@angular/common';
 import { DurationPipe } from '../../pipes/duration.pipe';
 
 @Component({
     selector: 'app-diff-waypoints',
     templateUrl: './diff-waypoints.component.html',
     styleUrls: ['./diff-waypoints.component.scss', '../diff.component.scss'],
-    imports: [FaIconComponent, CalculatingComponent, NgIf, NgFor, NgClass, DecimalPipe, DurationPipe]
+    imports: [FaIconComponent, CalculatingComponent, NgClass, DecimalPipe, DurationPipe]
 })
 export class WaypointsDifferenceComponent {
     public tasks = faTasks;

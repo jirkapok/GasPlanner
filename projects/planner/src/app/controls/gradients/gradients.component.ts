@@ -4,7 +4,7 @@ import { OptionDefaults, Precision } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
 import { Gradients, StandardGradientsService } from '../../shared/standard-gradients.service';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 
@@ -12,7 +12,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     selector: 'app-gradients',
     templateUrl: './gradients.component.html',
     styleUrls: ['./gradients.component.scss'],
-    imports: [ReactiveFormsModule, NgIf, NgClass, MdbFormsModule, MdbDropdownModule]
+    imports: [ReactiveFormsModule, NgClass, MdbFormsModule, MdbDropdownModule]
 })
 export class GradientsComponent implements OnInit {
     @Input() public showTitle = false;

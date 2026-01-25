@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location, NgIf, DecimalPipe } from '@angular/common';
+import { Location, DecimalPipe } from '@angular/common';
 import { faPercent } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision } from 'scuba-physics';
@@ -29,7 +29,7 @@ interface NitroxForm {
     selector: 'app-nitrox',
     templateUrl: './nitrox.component.html',
     styleUrls: ['./nitrox.component.scss'],
-    imports: [CardHeaderComponent, ReactiveFormsModule, NgIf, MdbFormsModule, OxygenDropDownComponent, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, OxygenDropDownComponent, DecimalPipe]
 })
 export class NitroxComponent implements OnInit {
     public calcIcon = faPercent;

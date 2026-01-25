@@ -1,9 +1,10 @@
 <div class="row mt-5">
-    <div class="col col-12 col-md-4 col-lg-3 col-xxl-2 mt-3">
-      <div class="card shadow-sm">
-        <div class="card-body p-0">
-          <div class="accordion" id="helpAccordion">
-            <div class="accordion-item" *ngFor="let section of sections">
+  <div class="col col-12 col-md-4 col-lg-3 col-xxl-2 mt-3">
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <div class="accordion" id="helpAccordion">
+          @for (section of sections; track section) {
+            <div class="accordion-item">
               <h2 class="accordion-header">
                 <button
                   class="accordion-button"
@@ -15,31 +16,34 @@
               <div class="accordion-collapse collapse" [class.show]="isActiveSection(section)">
                 <div class="accordion-body py-2 px-3">
                   <ul class="list-group list-group-flush">
-                    <li *ngFor="let item of section.items" class="list-group-item px-0">
+                    @for (item of section.items; track item) {
+                      <li class="list-group-item px-0">
                         <div
-                        mdbRipple
-                        class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
+                          mdbRipple
+                          class="d-flex justify-content-between align-items-center px-3 py-2 rounded cursor-pointer"
                         [ngClass]="{
                             'bg-primary bg-opacity-10 text-primary fw-semibold': isActiveDocument(item)
                           }"
-                        (click)="updatePath(item)">
-                        {{ item.label }}
-                      </div>
-                    </li>
+                          (click)="updatePath(item)">
+                          {{ item.label }}
+                        </div>
+                      </li>
+                    }
                   </ul>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col col-12 col-md-8 col-lg-9 col-xxl-6 mt-3">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <ngx-md [path]="path" [sanitizeHtml]="false" (loaded)="scrollToAnchor()"></ngx-md>
+          }
         </div>
       </div>
     </div>
   </div>
+
+  <div class="col col-12 col-md-8 col-lg-9 col-xxl-6 mt-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <ngx-md [path]="path" [sanitizeHtml]="false" (loaded)="scrollToAnchor()"></ngx-md>
+      </div>
+    </div>
+  </div>
+</div>

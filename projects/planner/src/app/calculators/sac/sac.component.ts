@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Location, NgIf, DecimalPipe } from '@angular/common';
+import { Location, DecimalPipe } from '@angular/common';
 import { FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { faLungs } from '@fortawesome/free-solid-svg-icons';
 import { Diver, Precision, Tank, TankTemplate, FeatureFlags } from 'scuba-physics';
@@ -29,7 +29,7 @@ interface SacForm {
     selector: 'app-sac',
     templateUrl: './sac.component.html',
     styleUrls: ['./sac.component.scss'],
-    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, NgIf, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, DecimalPipe]
 })
 export class SacComponent implements OnInit {
     public calcIcon = faLungs;

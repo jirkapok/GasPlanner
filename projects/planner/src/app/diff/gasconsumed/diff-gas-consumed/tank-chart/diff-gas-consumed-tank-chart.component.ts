@@ -4,14 +4,14 @@ import { StandardGases } from 'scuba-physics';
 import { faArrowLeft, faArrowRight, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ProfileComparatorService } from '../../../../shared/diff/profileComparatorService';
 import { ConsumedGasDifference } from '../../../../shared/diff/gases-comparison.service';
-import { NgIf, NgClass, DecimalPipe } from '@angular/common';
+import { NgClass, DecimalPipe } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-diff-gas-consumed-tank-chart',
     templateUrl: './diff-gas-consumed-tank-chart.component.html',
     styleUrl: './diff-gas-consumed-tank-chart.component.scss',
-    imports: [NgIf, FaIconComponent, NgClass, DecimalPipe]
+    imports: [FaIconComponent, NgClass, DecimalPipe]
 })
 export class GasConsumedDifferenceTankComponent {
     @Input({required: true})

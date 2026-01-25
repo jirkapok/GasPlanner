@@ -1,19 +1,21 @@
 <div class="mb-2" [formGroup]="altitudeForm">
-    <label for="altitudeField" class="form-label" mdbLabel>Altitude [{{units.altitude}}]:</label>
-    <div class="input-group dropdown" mdbDropdown>
-        <input id="altitudeField" class="form-control" type="number" (input)="altitudeChanged()" required
-            [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1" formControlName="altitude"
-            [class.is-invalid]="altitudeInvalid" />
-        <button class="btn btn-default dropdown-toggle dropdown-toggle-split" type="button" aria-expanded="false"
-            mdbDropdownToggle></button>
-        <ul mdbDropdownMenu class="dropdown-menu dropdown-menu-end">
-            <li class="dropdown-item" (click)="seaLevel()"><a>Sea level</a></li>
-            <li class="dropdown-item" (click)="setHill()"><a>{{ smallHill }}</a></li>
-            <li class="dropdown-item" (click)="setMountains()"><a>{{ mountains }}</a></li>
-            <li class="dropdown-item" (click)="setHighMountains()"><a>{{ highMountains }}</a></li>
-        </ul>
+  <label for="altitudeField" class="form-label" mdbLabel>Altitude [{{units.altitude}}]:</label>
+  <div class="input-group dropdown" mdbDropdown>
+    <input id="altitudeField" class="form-control" type="number" (input)="altitudeChanged()" required
+      [min]="units.ranges.altitude[0]" [max]="units.ranges.altitude[1]" step="1" formControlName="altitude"
+      [class.is-invalid]="altitudeInvalid" />
+      <button class="btn btn-default dropdown-toggle dropdown-toggle-split" type="button" aria-expanded="false"
+      mdbDropdownToggle></button>
+      <ul mdbDropdownMenu class="dropdown-menu dropdown-menu-end">
+        <li class="dropdown-item" (click)="seaLevel()"><a>Sea level</a></li>
+        <li class="dropdown-item" (click)="setHill()"><a>{{ smallHill }}</a></li>
+        <li class="dropdown-item" (click)="setMountains()"><a>{{ mountains }}</a></li>
+        <li class="dropdown-item" (click)="setHighMountains()"><a>{{ highMountains }}</a></li>
+      </ul>
     </div>
-    <div class="text-danger form-text position-absolute" *ngIf="altitudeInvalid">
+    @if (altitudeInvalid) {
+      <div class="text-danger form-text position-absolute">
         Needs to be number {{units.ranges.altitudeLabel}}
-    </div>
-</div>
+      </div>
+    }
+  </div>

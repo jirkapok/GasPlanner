@@ -5,7 +5,7 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
-import { DecimalPipe, NgIf } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-altitude',
@@ -16,11 +16,10 @@ import { DecimalPipe, NgIf } from '@angular/common';
         ValidatorGroups, UnitConversion
     ],
     imports: [
-        ReactiveFormsModule,
-        MdbFormsModule,
-        MdbDropdownModule,
-        NgIf
-    ],
+    ReactiveFormsModule,
+    MdbFormsModule,
+    MdbDropdownModule
+],
 })
 export class AltitudeComponent implements OnInit {
     @Output() public inputChange = new EventEmitter<number>();

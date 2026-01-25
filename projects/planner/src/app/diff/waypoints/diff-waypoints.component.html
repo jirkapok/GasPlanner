@@ -1,55 +1,59 @@
 <div class="card">
-    <div class="card-header">
-        <div class="float-start">
-            <fa-icon [icon]="tasks" class="me-3"></fa-icon>
-            <span>Dive way points</span>
-        </div>
+  <div class="card-header">
+    <div class="float-start">
+      <fa-icon [icon]="tasks" class="me-3"></fa-icon>
+      <span>Dive way points</span>
     </div>
-    <div id="body" class="hide card-minheight card-max-height-md">
-        <app-calculating [show]="!profileDiff.profilesCalculated"></app-calculating>
+  </div>
+  <div id="body" class="hide card-minheight card-max-height-md">
+    <app-calculating [show]="!profileDiff.profilesCalculated"></app-calculating>
 
-        <table *ngIf="profileDiff.profilesCalculated"
-            id="waypointsDiffTable" class="table table-sm p-0 text-center table-hover" >
-            <thead class="table-light sticky-top">
-            <tr>
-                <th colspan="1" ></th>
-                <th colspan="2" class="fw-bold px-1 bg-primary text-light">
-                    <div class="profile-title">Profile A</div>
-                    {{profileDiff.profileATitle}}
-                </th>
-                <th colspan="2" class="fw-bold px-1 bg-success text-light">
-                    <div class="profile-title">Profile B</div>
-                    {{profileDiff.profileBTitle}}
-                </th>
+    @if (profileDiff.profilesCalculated) {
+      <table
+        id="waypointsDiffTable" class="table table-sm p-0 text-center table-hover" >
+        <thead class="table-light sticky-top">
+          <tr>
+            <th colspan="1" ></th>
+            <th colspan="2" class="fw-bold px-1 bg-primary text-light">
+              <div class="profile-title">Profile A</div>
+              {{profileDiff.profileATitle}}
+            </th>
+            <th colspan="2" class="fw-bold px-1 bg-success text-light">
+              <div class="profile-title">Profile B</div>
+              {{profileDiff.profileBTitle}}
+            </th>
+          </tr>
+          <tr>
+            <th class="fw-bold px-1">Run [min]</th>
+            <th class="fw-bold px-1 vertical-left-border">Depth [{{units.length}}]</th>
+            <th class="fw-bold px-1 vertical-right-border">Duration [min]</th>
+            <th class="fw-bold px-1">Depth [{{units.length}}]</th>
+            <th class="fw-bold px-1">Duration [min]</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of profileDiff.difference; track row) {
+            <tr [ngClass]="{'table-active': row.selected }"
+              (mouseover)="highlightRow(row)" (mouseleave)="highlightRow(undefined)">
+              <td class="px-1 vertical-right-border">
+                {{ row.runTime | duration:profileDiff.totalDuration }}
+              </td>
+              <td class="px-1">
+                {{ row.depthA  | number: '1.0-0'}}
+              </td>
+              <td class="px-1 vertical-right-border">
+                {{ row.durationA | duration:profileDiff.totalDuration }}
+              </td>
+              <td class="px-1">
+                {{ row.depthB | number:'1.0-0' }}
+              </td>
+              <td class="px-1">
+                {{ row.durationB | duration:profileDiff.totalDuration }}
+              </td>
             </tr>
-            <tr>
-                <th class="fw-bold px-1">Run [min]</th>
-                <th class="fw-bold px-1 vertical-left-border">Depth [{{units.length}}]</th>
-                <th class="fw-bold px-1 vertical-right-border">Duration [min]</th>
-                <th class="fw-bold px-1">Depth [{{units.length}}]</th>
-                <th class="fw-bold px-1">Duration [min]</th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let row of profileDiff.difference" [ngClass]="{'table-active': row.selected }"
-                    (mouseover)="highlightRow(row)" (mouseleave)="highlightRow(undefined)">
-                    <td class="px-1 vertical-right-border">
-                        {{ row.runTime | duration:profileDiff.totalDuration }}
-                    </td>
-                    <td class="px-1">
-                        {{ row.depthA  | number: '1.0-0'}}
-                    </td>
-                    <td class="px-1 vertical-right-border">
-                        {{ row.durationA | duration:profileDiff.totalDuration }}
-                    </td>
-                    <td class="px-1">
-                        {{ row.depthB | number:'1.0-0' }}
-                    </td>
-                    <td class="px-1">
-                        {{ row.durationB | duration:profileDiff.totalDuration }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
 </div>

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
     NonNullableFormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule
 } from '@angular/forms';
-import { CommonModule, DecimalPipe, Location } from '@angular/common';
+import { DecimalPipe, Location } from '@angular/common';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
@@ -27,10 +27,11 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
     templateUrl: './app-settings.component.html',
     styleUrls: ['./app-settings.component.scss'],
     imports: [
-        CommonModule,
-        ReactiveFormsModule, CardHeaderComponent,
-        MdbCheckboxModule, MdbFormsModule
-    ],
+    ReactiveFormsModule,
+    CardHeaderComponent,
+    MdbCheckboxModule,
+    MdbFormsModule
+],
     providers: [
         DecimalPipe, InputControls, ValidatorGroups,
         SettingsNormalizationService, ApplicationSettingsService,

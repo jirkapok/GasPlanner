@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location, NgIf, DecimalPipe } from '@angular/common';
+import { Location, DecimalPipe } from '@angular/common';
 import { faFileLines, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Tank, Precision } from 'scuba-physics';
@@ -30,7 +30,7 @@ interface GasForm {
     selector: 'app-gas-props-calc',
     templateUrl: './gas.props.component.html',
     styleUrls: ['./gas.props.component.scss'],
-    imports: [CardHeaderComponent, ReactiveFormsModule, OxygenDropDownComponent, NgIf, PpO2Component, MdbFormsModule, FaIconComponent, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, OxygenDropDownComponent, PpO2Component, MdbFormsModule, FaIconComponent, DecimalPipe]
 })
 export class GasPropertiesCalcComponent implements OnInit {
     public calcIcon = faFileLines;

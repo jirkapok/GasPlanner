@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { Location, NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { Location, DecimalPipe } from '@angular/common';
 import { faTable } from '@fortawesome/free-solid-svg-icons';
 import {
     Options, Salinity, Tank, GasToxicity, Precision
@@ -25,7 +25,7 @@ import { GradientsComponent } from '../../controls/gradients/gradients.component
     selector: 'app-ndl-limits',
     templateUrl: './ndl-limits.component.html',
     styleUrls: ['./ndl-limits.component.scss'],
-    imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent, NgIf, NgFor, DecimalPipe]
+    imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent, DecimalPipe]
 })
 export class NdlLimitsComponent implements OnInit {
     public icon = faTable;

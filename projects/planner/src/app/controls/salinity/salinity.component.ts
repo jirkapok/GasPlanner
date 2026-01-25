@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Salinity } from 'scuba-physics';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule } from '@angular/forms';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
@@ -10,9 +10,10 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     templateUrl: './salinity.component.html',
     styleUrls: ['./salinity.component.scss'],
     imports: [
-        CommonModule, ReactiveFormsModule,
-        MdbFormsModule, MdbDropdownModule
-    ],
+    ReactiveFormsModule,
+    MdbFormsModule,
+    MdbDropdownModule
+],
 })
 export class SalinityComponent {
     @Input()

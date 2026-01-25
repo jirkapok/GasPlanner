@@ -14,7 +14,7 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { PreferencesStore } from '../../shared/preferencesStore';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
-import { NgIf } from '@angular/common';
+
 import { SalinityComponent } from '../../controls/salinity/salinity.component';
 import { AltitudeComponent } from '../../controls/altitude/altitude.component';
 import { GradientsComponent } from '../../controls/gradients/gradients.component';
@@ -27,7 +27,7 @@ import { DiverComponent } from '../diver/diver.component';
     selector: 'app-diveoptions',
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.scss'],
-    imports: [ReactiveFormsModule, CardHeaderComponent, NgIf, SalinityComponent, AltitudeComponent, GradientsComponent, MdbTabsModule, MdbFormsModule, MdbDropdownModule, DiverComponent]
+    imports: [ReactiveFormsModule, CardHeaderComponent, SalinityComponent, AltitudeComponent, GradientsComponent, MdbTabsModule, MdbFormsModule, MdbDropdownModule, DiverComponent]
 })
 export class DiveOptionsComponent extends Streamed implements OnInit {
     @Input() public formValid = true;

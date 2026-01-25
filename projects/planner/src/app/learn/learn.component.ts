@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgForOf, NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal, faCircleInfo, faUndo, faChartSimple } from '@fortawesome/free-solid-svg-icons';
 import { NgxMdModule, NgxMdService } from 'ngx-md';
@@ -20,7 +20,7 @@ import { Urls } from '../shared/navigation.service';
 
 @Component({
     selector: 'app-learn',
-    imports: [CommonModule, NgxMdModule, FontAwesomeModule, NgForOf, NgIf, NgClass, FormsModule],
+    imports: [CommonModule, NgxMdModule, FontAwesomeModule, NgClass, FormsModule],
     providers: [
         NgxMdService, Urls, QuizService, PreferencesStore, HelpService,
         MarkdownCustomization, SubViewStorage

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { formatNumber, NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { formatNumber, DecimalPipe } from '@angular/common';
 import { takeUntil } from 'rxjs';
 import {
     faSlidersH, faShareFromSquare, faExclamationTriangle
@@ -29,10 +29,15 @@ import { DurationPipe } from '../../pipes/duration.pipe';
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss'],
     imports: [
-        CardHeaderComponent, FaIconComponent, MdbTabsModule,
-        CalculatingComponent, NgIf, NgFor, TankChartComponent,
-        DiveIssuesComponent, DecimalPipe, DurationPipe
-    ]
+    CardHeaderComponent,
+    FaIconComponent,
+    MdbTabsModule,
+    CalculatingComponent,
+    TankChartComponent,
+    DiveIssuesComponent,
+    DecimalPipe,
+    DurationPipe
+]
 })
 export class DiveInfoComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;

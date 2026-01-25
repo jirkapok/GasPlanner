@@ -1,142 +1,186 @@
 <div class="card">
-    <app-card-header
-        cardTitle="Dive Info"
-        helpDocument="diveinfo"
-        [headerIcon]="icon">
-        <button class="btn btn-sm btn-secondary ms-2" type="button" (click)="sharePlan()" title="Share the dive address">
-            <fa-icon [icon]="iconShare" class="me-2"></fa-icon>Share
-        </button>
-        </app-card-header>
+  <app-card-header
+    cardTitle="Dive Info"
+    helpDocument="diveinfo"
+    [headerIcon]="icon">
+    <button class="btn btn-sm btn-secondary ms-2" type="button" (click)="sharePlan()" title="Share the dive address">
+      <fa-icon [icon]="iconShare" class="me-2"></fa-icon>Share
+    </button>
+  </app-card-header>
 
-    <div class="card-body card-minheight">
-        <mdb-tabs #tabs>
-            <mdb-tab title="Results">
-                <app-calculating [show]="!dive.calculated"></app-calculating>
-                <div class="pb-3">
-                    <table class="table table-sm">
-                        <tbody>
-                            <tr>
-                                <td>Total dive time [min]:</td>
-                                <td class="table-active">
-                                    <strong id="total-dive-time-value" *ngIf="dive.calculated">{{ dive.totalDuration | duration:dive.totalDuration
-                                        }} </strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Time to surface [min]:</td>
-                                <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ dive.timeToSurface | number:'1.0-0' }}</strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Average depth [{{units.length}}]:</td>
-                                <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ averageDepth | number:'1.0-1' }}</strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Rock bottom at [min]:</td>
-                                <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ dive.emergencyAscentStart |
-                                        duration:dive.totalDuration }} </strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>No decompression time [min]:
-                                    <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="applyNdlDuration()"
-                                            *ngIf="showApply" title="Set dive time to no deco limit"
-                                    >Use</button>
-                                </td>
-                                <td class="table-active">
-                                    <strong *ngIf="dive.diveInfoCalculated">{{ noDeco | number:'1.0-0' }}</strong>
-                                </td>
-                            </tr>
-                            <tr *ngIf="dive.showMaxBottomTime">
-                                <td>Maximum bottom time [min]:
-                                    <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="applyMaxDuration()"
-                                         *ngIf="showApply" title="Set dive time to maximum by consumed gas"
-                                    >Use</button>
-                                </td>
-                                <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ dive.maxTime | number:'1.0-0' }}</strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Surface gradient [%]:</td>
-                                <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ surfaceGradient  | number:'1.0-0' }}</strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Offgasing start [min]:</td>
-                                <td class="table-active">
-                                    <span *ngIf="dive.calculated">
-                                        <strong>{{ offgasingStartTime | duration:dive.totalDuration }}</strong>
-                                        (at {{ offgasingStartDepth | number:'1.0-0' }} {{ units.length }})
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr *ngIf="isComplex">
-                                <td>
-                                    Highest gas density [{{units.density}}]:<br>
-                                </td>
-                                <td class="table-active">
-                                    <span  *ngIf="dive.calculated">
-                                         <strong >{{ highestDensity | number:'1.0-2' }}</strong>
-                                         ({{densityText}})
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr *ngIf="dive.needsReturn">
-                                <td>Turn time [min]:</td>
-                                <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ dive.turnTime | number:'1.0-0' }}</strong>
-                                </td>
-                            </tr>
-                            <tr *ngIf="dive.needsReturn">
-                                <td>Turn pressure [{{units.pressure}}]:</td>
-                                <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ dive.turnPressure | number:'1.0-0' }}</strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>OTU toxicity [OTU]:</td>
-                                <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{ dive.otu | number:'1.0-0' }}</strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>CNS toxicity [%]:</td>
-                                <td class="table-active">
-                                    <strong *ngIf="dive.calculated">{{cnsText}}</strong>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </mdb-tab>
-            <mdb-tab>
-                <ng-template mdbTabTitle>
-                    <span>Consumed</span>
-                    <fa-icon *ngIf="dive.notEnoughGas" [icon]="warnIcon" class="ms-2 fa-xl text-danger"></fa-icon>
-                </ng-template>
-                <app-calculating [show]="!dive.calculated"></app-calculating>
-                <ng-container *ngIf="dive.showResults">
-                    <app-tankchart *ngFor="let tank of tanks" [tank]="tank" [showId]="isComplex" [toxicity]="toxicity">
-                    </app-tankchart>
-                </ng-container>
-            </mdb-tab>
-            <mdb-tab>
-                <ng-template mdbTabTitle>
-                    <span>Issues</span>
-                    <fa-icon *ngIf="dive.hasErrorEvent || dive.hasWarningEvent" [class.text-danger]="dive.hasErrorEvent"
-                             [class.text-warning]="!dive.hasErrorEvent && dive.hasWarningEvent"
-                             [icon]="warnIcon" class="ms-2 fa-xl">
-                    </fa-icon>
-                </ng-template>
-                <app-calculating [show]="!dive.calculated"></app-calculating>
-                <app-dive-issues></app-dive-issues>
-            </mdb-tab>
-        </mdb-tabs>
-    </div>
+  <div class="card-body card-minheight">
+    <mdb-tabs #tabs>
+      <mdb-tab title="Results">
+        <app-calculating [show]="!dive.calculated"></app-calculating>
+        <div class="pb-3">
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <td>Total dive time [min]:</td>
+                <td class="table-active">
+                  @if (dive.calculated) {
+                    <strong id="total-dive-time-value">{{ dive.totalDuration | duration:dive.totalDuration
+                    }} </strong>
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td>Time to surface [min]:</td>
+                <td class="table-active">
+                  @if (dive.calculated) {
+                    <strong>{{ dive.timeToSurface | number:'1.0-0' }}</strong>
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td>Average depth [{{units.length}}]:</td>
+                <td class="table-active">
+                  @if (dive.calculated) {
+                    <strong>{{ averageDepth | number:'1.0-1' }}</strong>
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td>Rock bottom at [min]:</td>
+                <td class="table-active">
+                  @if (dive.calculated) {
+                    <strong>{{ dive.emergencyAscentStart |
+                    duration:dive.totalDuration }} </strong>
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td>No decompression time [min]:
+                  @if (showApply) {
+                    <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="applyNdlDuration()"
+                      title="Set dive time to no deco limit"
+                    >Use</button>
+                  }
+                </td>
+                <td class="table-active">
+                  @if (dive.diveInfoCalculated) {
+                    <strong>{{ noDeco | number:'1.0-0' }}</strong>
+                  }
+                </td>
+              </tr>
+              @if (dive.showMaxBottomTime) {
+                <tr>
+                  <td>Maximum bottom time [min]:
+                    @if (showApply) {
+                      <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="applyMaxDuration()"
+                        title="Set dive time to maximum by consumed gas"
+                      >Use</button>
+                    }
+                  </td>
+                  <td class="table-active">
+                    @if (dive.calculated) {
+                      <strong>{{ dive.maxTime | number:'1.0-0' }}</strong>
+                    }
+                  </td>
+                </tr>
+              }
+              <tr>
+                <td>Surface gradient [%]:</td>
+                <td class="table-active">
+                  @if (dive.calculated) {
+                    <strong>{{ surfaceGradient  | number:'1.0-0' }}</strong>
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td>Offgasing start [min]:</td>
+                <td class="table-active">
+                  @if (dive.calculated) {
+                    <span>
+                      <strong>{{ offgasingStartTime | duration:dive.totalDuration }}</strong>
+                      (at {{ offgasingStartDepth | number:'1.0-0' }} {{ units.length }})
+                    </span>
+                  }
+                </td>
+              </tr>
+              @if (isComplex) {
+                <tr>
+                  <td>
+                    Highest gas density [{{units.density}}]:<br>
+                  </td>
+                  <td class="table-active">
+                    @if (dive.calculated) {
+                      <span >
+                        <strong >{{ highestDensity | number:'1.0-2' }}</strong>
+                        ({{densityText}})
+                      </span>
+                    }
+                  </td>
+                </tr>
+              }
+              @if (dive.needsReturn) {
+                <tr>
+                  <td>Turn time [min]:</td>
+                  <td class="table-active">
+                    @if (dive.calculated) {
+                      <strong>{{ dive.turnTime | number:'1.0-0' }}</strong>
+                    }
+                  </td>
+                </tr>
+              }
+              @if (dive.needsReturn) {
+                <tr>
+                  <td>Turn pressure [{{units.pressure}}]:</td>
+                  <td class="table-active">
+                    @if (dive.calculated) {
+                      <strong>{{ dive.turnPressure | number:'1.0-0' }}</strong>
+                    }
+                  </td>
+                </tr>
+              }
+              <tr>
+                <td>OTU toxicity [OTU]:</td>
+                <td class="table-active">
+                  @if (dive.calculated) {
+                    <strong>{{ dive.otu | number:'1.0-0' }}</strong>
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td>CNS toxicity [%]:</td>
+                <td class="table-active">
+                  @if (dive.calculated) {
+                    <strong>{{cnsText}}</strong>
+                  }
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mdb-tab>
+      <mdb-tab>
+        <ng-template mdbTabTitle>
+          <span>Consumed</span>
+          @if (dive.notEnoughGas) {
+            <fa-icon [icon]="warnIcon" class="ms-2 fa-xl text-danger"></fa-icon>
+          }
+        </ng-template>
+        <app-calculating [show]="!dive.calculated"></app-calculating>
+        @if (dive.showResults) {
+          @for (tank of tanks; track tank) {
+            <app-tankchart [tank]="tank" [showId]="isComplex" [toxicity]="toxicity">
+            </app-tankchart>
+          }
+        }
+      </mdb-tab>
+      <mdb-tab>
+        <ng-template mdbTabTitle>
+          <span>Issues</span>
+          @if (dive.hasErrorEvent || dive.hasWarningEvent) {
+            <fa-icon [class.text-danger]="dive.hasErrorEvent"
+              [class.text-warning]="!dive.hasErrorEvent && dive.hasWarningEvent"
+              [icon]="warnIcon" class="ms-2 fa-xl">
+            </fa-icon>
+          }
+        </ng-template>
+        <app-calculating [show]="!dive.calculated"></app-calculating>
+        <app-dive-issues></app-dive-issues>
+      </mdb-tab>
+    </mdb-tabs>
+  </div>
 </div>

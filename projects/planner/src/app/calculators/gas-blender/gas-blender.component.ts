@@ -13,7 +13,7 @@ import { KnownViews } from '../../shared/viewStates';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { BlendPricingService } from '../../shared/blend-pricing.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
-import { NgClass, NgIf, DecimalPipe } from '@angular/common';
+import { NgClass, DecimalPipe } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 
@@ -35,7 +35,7 @@ interface IGasBlenderForm {
     selector: 'app-gas-blender',
     templateUrl: './gas-blender.component.html',
     styleUrls: ['./gas-blender.component.scss'],
-    imports: [ReactiveFormsModule, CardHeaderComponent, NgClass, FaIconComponent, OxygenDropDownComponent, NgIf, DecimalPipe]
+    imports: [ReactiveFormsModule, CardHeaderComponent, NgClass, FaIconComponent, OxygenDropDownComponent, DecimalPipe]
 })
 export class GasBlenderComponent implements OnInit {
     public readonly calcIcon = faFaucet;

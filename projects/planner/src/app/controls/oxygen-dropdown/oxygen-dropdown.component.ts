@@ -5,7 +5,7 @@ import { InputControls } from '../../shared/inputcontrols';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { IGasContent } from '../../shared/models';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 
@@ -13,7 +13,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     selector: 'app-oxygen-dropdown',
     templateUrl: './oxygen-dropdown.component.html',
     styleUrls: ['./oxygen-dropdown.component.scss'],
-    imports: [ReactiveFormsModule, NgIf, MdbFormsModule, MdbDropdownModule, NgFor]
+    imports: [ReactiveFormsModule, MdbFormsModule, MdbDropdownModule]
 })
 export class OxygenDropDownComponent implements OnInit {
     @Input() public showBestMix = true;

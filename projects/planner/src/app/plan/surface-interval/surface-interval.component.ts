@@ -7,7 +7,7 @@ import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 import { MaskitoDirective } from '@maskito/angular';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
-import { NgIf } from '@angular/common';
+
 import { takeUntil } from 'rxjs';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
@@ -22,9 +22,11 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
     templateUrl: './surface-interval.component.html',
     styleUrls: ['./surface-interval.component.scss'],
     imports: [
-        MaskitoDirective, ReactiveFormsModule,
-        MdbDropdownModule, MdbFormsModule, NgIf
-    ]
+    MaskitoDirective,
+    ReactiveFormsModule,
+    MdbDropdownModule,
+    MdbFormsModule
+]
 })
 export class SurfaceIntervalComponent extends Streamed implements OnInit {
     @Input() public form!: FormGroup;

@@ -1,120 +1,152 @@
-<div *ngIf="dive.calculated && dive.failed" class="alert alert-danger">
+@if (dive.calculated && dive.failed) {
+  <div class="alert alert-danger">
     <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
     <span>There was an error while calculating profile.</span>
-</div>
+  </div>
+}
 
-<div *ngIf="dive.diveInfoCalculated && dive.notEnoughTime" class="alert alert-danger">
+@if (dive.diveInfoCalculated && dive.notEnoughTime) {
+  <div class="alert alert-danger">
     <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
     <span>Not enough time to realize the dive (duration needs to be at least {{ minimumDuration |
-        number:'1.0-0' }} min)! Set longer planed dive time.</span>
-</div>
+    number:'1.0-0' }} min)! Set longer planed dive time.</span>
+  </div>
+}
 
-<ng-container *ngIf="!dive.hasErrors">
-    <div *ngIf="dive.calculated && dive.notEnoughGas" class="alert alert-danger">
+@if (!dive.hasErrors) {
+  @if (dive.calculated && dive.notEnoughGas) {
+    <div class="alert alert-danger">
+      <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
+      @if (dive.showMaxBottomTime) {
+        <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
+          {{ dive.maxTime | number:'1.0-0' }} min. Use larger tank, fill it with more gas, reduce dive
+        duration or planned depth.</span>
+      }
+      @if (!dive.showMaxBottomTime) {
+        <span>Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
+          shorter than currently planned dive. Use larger tank, fill it with more gas, reduce dive
+        duration or planned depth.</span>
+      }
+    </div>
+  }
+  @for (event of events; track event) {
+    @if (event.isBrokenCeiling) {
+      <div class="alert alert-danger">
         <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
-        <span *ngIf="dive.showMaxBottomTime">Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
-            {{ dive.maxTime | number:'1.0-0' }} min. Use larger tank, fill it with more gas, reduce dive
-            duration or planned depth.</span>
-        <span *ngIf="!dive.showMaxBottomTime">Not enough gas to realize the dive! Maximum bottom time for current amount of gas is
-            shorter than currently planned dive. Use larger tank, fill it with more gas, reduce dive
-            duration or planned depth.</span>
-    </div>
-
-    <ng-container *ngFor="let event of events">
-        <div *ngIf="event.isBrokenCeiling" class="alert alert-danger">
-            <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>Exceeded minimum safe (ceiling) depth! Change your plan to higher depth at this point.</span>
-        </div>
-        <div *ngIf="event.isLowPpO2" class="alert alert-danger">
-            <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>Reached low partial pressure of oxygen (minimum depth exceeded)! There is a risk of hypoxia.
-                Use gas with higher oxygen content.</span>
-        </div>
-        <div *ngIf="event.isHighPpO2" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>Reached high partial pressure of oxygen (maximum depth exceeded)! There is a risk of oxygen toxicity.
-                Reduce the depth or use gas with lower oxygen content.</span>
-        </div>
-        <div *ngIf="event.isHighDescentSpeed" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>High descent speed! Descent longer time or descent to lower depth.</span>
-        </div>
-        <div *ngIf="event.isHighAscentSpeed" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>High ascent speed! Ascent to higher depth only or ascent longer time.</span>
-        </div>
-        <div *ngIf="event.isHighN2Switch" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>Gas switch to gas with higher nitrogen content is not recommended!
-                There is a risk od isobaric counter diffusion (IDC).
-                Switch to another gas with higher helium content or lower nitrogen content.</span>
-        </div>
-        <div *ngIf="event.isMndExceeded" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>Exceeded maximum narcotic depth for selected gas! Reduce the depth or use gas with higher helium
-                content.</span>
-        </div>
-        <div *ngIf="event.isHighDensity" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>Exceeded maximum recommended gas density! Reduce the depth or use gas with higher helium content (i.e. lower density).</span>
-        </div>
-
-        <div *ngIf="event.isMinDepth" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>Dives planned to shallow depth for long time may lead to saturation diving! Reduce the dive duration shorter than 5 hours.</span>
-        </div>
-
-        <div *ngIf="event.isMaxDepth" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>Exceeded maximum depth where the algorithm was well tested on real life data! Reduce the maximum depth.</span>
-        </div>
-
-        <div *ngIf="event.isMissingAirbreak" class="alert alert-warning">
-            <fa-icon [icon]="warning" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>It is recommended to don't breath pure oxygen longer than 20 minutes.
-                Use air break option to generate proper gas switches or manually add switch to bottom gas.</span>
-        </div>
-        <div *ngIf="event.isNoDeco" class="alert alert-info">
-            <fa-icon [icon]="info" class="me-2"></fa-icon>
-            <strong>{{ event.timeStamp | duration:event.timeStamp
-                }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
-            <span>No decompression time for current depth exceeded (For no decompression dive set dive time
-            maximum
-            to {{ noDeco | number:'1.0-0' }} min)!</span>
-        </div>
-    </ng-container>
-
-    <div *ngIf="dive.diveInfoCalculated && dive.otuExceeded" class="alert alert-warning">
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>Exceeded minimum safe (ceiling) depth! Change your plan to higher depth at this point.</span>
+      </div>
+    }
+    @if (event.isLowPpO2) {
+      <div class="alert alert-danger">
+        <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>Reached low partial pressure of oxygen (minimum depth exceeded)! There is a risk of hypoxia.
+        Use gas with higher oxygen content.</span>
+      </div>
+    }
+    @if (event.isHighPpO2) {
+      <div class="alert alert-warning">
         <fa-icon [icon]="warning" class="me-2"></fa-icon>
-        <span>Exceeded 80 % of maximum single exposure oxygen toxicity units
-            ({{ dive.otu | number:'1.0-0'}}/{{ otuLimit }} OTU)! There is a high risk of lungs injury.
-            Reduce amount of oxygen in your gases, dive duration or target depths.</span>
-    </div>
-
-    <div *ngIf="dive.diveInfoCalculated && dive.cnsExceeded" class="alert alert-warning">
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>Reached high partial pressure of oxygen (maximum depth exceeded)! There is a risk of oxygen toxicity.
+        Reduce the depth or use gas with lower oxygen content.</span>
+      </div>
+    }
+    @if (event.isHighDescentSpeed) {
+      <div class="alert alert-warning">
         <fa-icon [icon]="warning" class="me-2"></fa-icon>
-        <span>Exceeded 80 % of maximum single exposure oxygen toxicity
-            ({{ dive.cns | number:'1.0-0'}} %)! There is a high risk of CNS injury.
-            Reduce amount of oxygen in your gases, dive duration or target depths.</span>
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>High descent speed! Descent longer time or descent to lower depth.</span>
+      </div>
+    }
+    @if (event.isHighAscentSpeed) {
+      <div class="alert alert-warning">
+        <fa-icon [icon]="warning" class="me-2"></fa-icon>
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>High ascent speed! Ascent to higher depth only or ascent longer time.</span>
+      </div>
+    }
+    @if (event.isHighN2Switch) {
+      <div class="alert alert-warning">
+        <fa-icon [icon]="warning" class="me-2"></fa-icon>
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>Gas switch to gas with higher nitrogen content is not recommended!
+          There is a risk od isobaric counter diffusion (IDC).
+        Switch to another gas with higher helium content or lower nitrogen content.</span>
+      </div>
+    }
+    @if (event.isMndExceeded) {
+      <div class="alert alert-warning">
+        <fa-icon [icon]="warning" class="me-2"></fa-icon>
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>Exceeded maximum narcotic depth for selected gas! Reduce the depth or use gas with higher helium
+        content.</span>
+      </div>
+    }
+    @if (event.isHighDensity) {
+      <div class="alert alert-warning">
+        <fa-icon [icon]="warning" class="me-2"></fa-icon>
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>Exceeded maximum recommended gas density! Reduce the depth or use gas with higher helium content (i.e. lower density).</span>
+      </div>
+    }
+    @if (event.isMinDepth) {
+      <div class="alert alert-warning">
+        <fa-icon [icon]="warning" class="me-2"></fa-icon>
+        <strong>{{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>Dives planned to shallow depth for long time may lead to saturation diving! Reduce the dive duration shorter than 5 hours.</span>
+      </div>
+    }
+    @if (event.isMaxDepth) {
+      <div class="alert alert-warning">
+        <fa-icon [icon]="warning" class="me-2"></fa-icon>
+        <strong>{{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>Exceeded maximum depth where the algorithm was well tested on real life data! Reduce the maximum depth.</span>
+      </div>
+    }
+    @if (event.isMissingAirbreak) {
+      <div class="alert alert-warning">
+        <fa-icon [icon]="warning" class="me-2"></fa-icon>
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>It is recommended to don't breath pure oxygen longer than 20 minutes.
+        Use air break option to generate proper gas switches or manually add switch to bottom gas.</span>
+      </div>
+    }
+    @if (event.isNoDeco) {
+      <div class="alert alert-info">
+        <fa-icon [icon]="info" class="me-2"></fa-icon>
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span>No decompression time for current depth exceeded (For no decompression dive set dive time
+          maximum
+        to {{ noDeco | number:'1.0-0' }} min)!</span>
+      </div>
+    }
+  }
+  @if (dive.diveInfoCalculated && dive.otuExceeded) {
+    <div class="alert alert-warning">
+      <fa-icon [icon]="warning" class="me-2"></fa-icon>
+      <span>Exceeded 80 % of maximum single exposure oxygen toxicity units
+        ({{ dive.otu | number:'1.0-0'}}/{{ otuLimit }} OTU)! There is a high risk of lungs injury.
+      Reduce amount of oxygen in your gases, dive duration or target depths.</span>
     </div>
-</ng-container>
+  }
+  @if (dive.diveInfoCalculated && dive.cnsExceeded) {
+    <div class="alert alert-warning">
+      <fa-icon [icon]="warning" class="me-2"></fa-icon>
+      <span>Exceeded 80 % of maximum single exposure oxygen toxicity
+        ({{ dive.cns | number:'1.0-0'}} %)! There is a high risk of CNS injury.
+      Reduce amount of oxygen in your gases, dive duration or target depths.</span>
+    </div>
+  }
+}

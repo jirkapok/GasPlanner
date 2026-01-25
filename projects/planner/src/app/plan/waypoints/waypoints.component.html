@@ -1,43 +1,51 @@
 <div class="card">
-    <app-card-header
+  <app-card-header
     cardTitle="Dive way points"
     helpDocument="waypoints_table"
     [headerIcon]="tasks">
-        <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': stops.stopsOnly }" type="button"
-                data-toggle="button" [attr.aria-pressed]="stops.stopsOnly"
-                autocomplete="off" (click)="stops.switchFilter()" title="Filter to show stops only">
-            <fa-icon [icon]="filterIcon" class="fa-lg"></fa-icon>
-        </button>
-    </app-card-header>
-    <div class="card-body card-minheight table-responsive">
-        <table id="dive-waypoints-table" class="table table-sm p-0">
-            <thead class="table-light">
-                <tr>
-                    <th></th>
-                    <th class="fw-bold px-1">Depth [{{units.length}}]</th>
-                    <th class="fw-bold px-1">Duration [min]</th>
-                    <th class="fw-bold px-1">Run [min]</th>
-                    <th *ngIf="isComplex" class="fw-bold px-1">Gas</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngIf="!stops.profileCalculated">
-                    <td colspan="5">
-                        <app-calculating [show]="true"></app-calculating>
-                    </td>
-                </tr>
-                <tr *ngFor="let point of stops.wayPoints" [ngClass]="{'table-active': point.selected }"
-                    (mouseover)="highlightRow(point)" (mouseleave)="highlightRow(undefined)">
-                    <td class="px-1 text-center">
-                        <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)"
-                            [title]="iconTitle(point)"></fa-icon>
-                    </td>
-                    <td class="px-1">{{ point.endDepth| number:'1.0-0' }}</td>
-                    <td class="px-1">{{ point.duration | duration:stops.totalDuration }}</td>
-                    <td class="px-1">{{ point.endTime | duration:stops.totalDuration }}</td>
-                    <td *ngIf="isComplex" class="px-1">{{ point.gasName }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': stops.stopsOnly }" type="button"
+      data-toggle="button" [attr.aria-pressed]="stops.stopsOnly"
+      autocomplete="off" (click)="stops.switchFilter()" title="Filter to show stops only">
+      <fa-icon [icon]="filterIcon" class="fa-lg"></fa-icon>
+    </button>
+  </app-card-header>
+  <div class="card-body card-minheight table-responsive">
+    <table id="dive-waypoints-table" class="table table-sm p-0">
+      <thead class="table-light">
+        <tr>
+          <th></th>
+          <th class="fw-bold px-1">Depth [{{units.length}}]</th>
+          <th class="fw-bold px-1">Duration [min]</th>
+          <th class="fw-bold px-1">Run [min]</th>
+          @if (isComplex) {
+            <th class="fw-bold px-1">Gas</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @if (!stops.profileCalculated) {
+          <tr>
+            <td colspan="5">
+              <app-calculating [show]="true"></app-calculating>
+            </td>
+          </tr>
+        }
+        @for (point of stops.wayPoints; track point) {
+          <tr [ngClass]="{'table-active': point.selected }"
+            (mouseover)="highlightRow(point)" (mouseleave)="highlightRow(undefined)">
+            <td class="px-1 text-center">
+              <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)"
+              [title]="iconTitle(point)"></fa-icon>
+            </td>
+            <td class="px-1">{{ point.endDepth| number:'1.0-0' }}</td>
+            <td class="px-1">{{ point.duration | duration:stops.totalDuration }}</td>
+            <td class="px-1">{{ point.endTime | duration:stops.totalDuration }}</td>
+            @if (isComplex) {
+              <td class="px-1">{{ point.gasName }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>

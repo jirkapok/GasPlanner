@@ -16,7 +16,7 @@ import {
 import { filter, map, takeUntil } from 'rxjs';
 import { Streamed } from '../shared/streamed';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { CommonModule } from '@angular/common';
+
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 
@@ -25,9 +25,11 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     templateUrl: './mainmenu.component.html',
     styleUrls: ['./mainmenu.component.scss'],
     imports: [
-        CommonModule, RouterLink,
-        FaIconComponent, MdbCollapseModule, MdbDropdownModule
-    ]
+    RouterLink,
+    FaIconComponent,
+    MdbCollapseModule,
+    MdbDropdownModule
+]
 })
 export class MainMenuComponent extends Streamed {
     public isNavbarCollapsed = true;

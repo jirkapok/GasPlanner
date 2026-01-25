@@ -1,50 +1,54 @@
 <div class="row mt-5">
-    <div class="col col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
-        <div class="card">
-            <app-card-header
-                cardTitle="Weight calculator"
-                [headerIcon]="calcIcon"
-                helpDocument="weight">
-            </app-card-header>
-            <div class="card-body">
-                <form [formGroup]="weightForm">
-                    <div>
-                        <div class="pt-2 mb-4">
-                            <label for="tankSize" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
-                            <app-tank-size [sizeForm]="weightForm" [tank]="tank" controlName="tankSize"
-                                (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event)">
-                            </app-tank-size>
-                            <div class="text-danger form-text position-absolute" *ngIf="tankSizeInvalid">Needs to be number {{ranges.tankSizeLabel}}</div>
-                        </div>
-                    </div>
-                    <div class="pt-2 mb-4" *ngIf="units.imperialUnits">
-                        <label for="workPressure" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
-                        </label>
-                        <input class="form-control" type="number" (input)="inputChanged()" id="workPressure"
-                            formControlName="workPressure" required [min]="ranges.tankPressure[0]"
-                            [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="workPressureInvalid" />
-                        <div class="invalid-feedback position-absolute">Needs to be number
-                            {{ranges.tankPressureLabel}}</div>
-                    </div>
-                    <div class="pt-2 mb-4">
-                        <label for="consumed" class="form-label" mdbLabel>Consumed [{{units.pressure}}]:
-                        </label>
-                        <input class="form-control" type="number" (input)="inputChanged()" id="consumed"
-                            formControlName="consumed" required [min]="ranges.consumed[0]"
-                            [max]="ranges.consumed[1]" step="1" [class.is-invalid]="consumedInvalid" />
-                        <div class="invalid-feedback position-absolute">Needs to be number
-                            {{ranges.consumedLabel}}</div>
-                    </div>
-                    <div class="pt-2 mb-4 form-outline">
-                        <label for="weight" class="form-label" mdbLabel>Lost weight [{{units.weight}}]:</label>
-                        <input class="form-control" name="weight" id="weight" type="number"
-                            [value]="weight | number: '1.0-2'" readonly />
-                    </div>
-                </form>
+  <div class="col col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+    <div class="card">
+      <app-card-header
+        cardTitle="Weight calculator"
+        [headerIcon]="calcIcon"
+        helpDocument="weight">
+      </app-card-header>
+      <div class="card-body">
+        <form [formGroup]="weightForm">
+          <div>
+            <div class="pt-2 mb-4">
+              <label for="tankSize" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
+              <app-tank-size [sizeForm]="weightForm" [tank]="tank" controlName="tankSize"
+                (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event)">
+              </app-tank-size>
+              @if (tankSizeInvalid) {
+                <div class="text-danger form-text position-absolute">Needs to be number {{ranges.tankSizeLabel}}</div>
+              }
             </div>
-        </div>
-        <div class="form-group mt-3">
+          </div>
+          @if (units.imperialUnits) {
+            <div class="pt-2 mb-4">
+              <label for="workPressure" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
+              </label>
+              <input class="form-control" type="number" (input)="inputChanged()" id="workPressure"
+                formControlName="workPressure" required [min]="ranges.tankPressure[0]"
+                [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="workPressureInvalid" />
+                <div class="invalid-feedback position-absolute">Needs to be number
+                {{ranges.tankPressureLabel}}</div>
+              </div>
+            }
+            <div class="pt-2 mb-4">
+              <label for="consumed" class="form-label" mdbLabel>Consumed [{{units.pressure}}]:
+              </label>
+              <input class="form-control" type="number" (input)="inputChanged()" id="consumed"
+                formControlName="consumed" required [min]="ranges.consumed[0]"
+                [max]="ranges.consumed[1]" step="1" [class.is-invalid]="consumedInvalid" />
+                <div class="invalid-feedback position-absolute">Needs to be number
+                {{ranges.consumedLabel}}</div>
+              </div>
+              <div class="pt-2 mb-4 form-outline">
+                <label for="weight" class="form-label" mdbLabel>Lost weight [{{units.weight}}]:</label>
+                <input class="form-control" name="weight" id="weight" type="number"
+                  [value]="weight | number: '1.0-2'" readonly />
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="form-group mt-3">
             <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
+          </div>
         </div>
-    </div>
-</div>
+      </div>

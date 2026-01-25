@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Precision, Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
-import { CommonModule, DecimalPipe, NgIf } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -9,10 +9,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     templateUrl: './gaslabel.component.html',
     styleUrls: ['./gaslabel.component.scss'],
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        DecimalPipe, NgIf
-    ],
+    CommonModule,
+    ReactiveFormsModule,
+    DecimalPipe
+],
     providers: [ UnitConversion ]
 })
 export class GaslabelComponent {

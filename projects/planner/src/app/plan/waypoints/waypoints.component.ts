@@ -9,7 +9,7 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { StopsFilter } from '../../shared/stopsFilter.service';
 import { WayPoint, SwimAction } from '../../shared/wayPoint';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
-import { NgClass, NgIf, NgFor, DecimalPipe } from '@angular/common';
+import { NgClass, DecimalPipe } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { DurationPipe } from '../../pipes/duration.pipe';
@@ -18,7 +18,7 @@ import { DurationPipe } from '../../pipes/duration.pipe';
     selector: 'app-waypoints',
     templateUrl: './waypoints.component.html',
     styleUrls: ['./waypoints.component.scss'],
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, NgIf, CalculatingComponent, NgFor, DecimalPipe, DurationPipe]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, DecimalPipe, DurationPipe]
 })
 export class WayPointsComponent {
     public down = faArrowDown;

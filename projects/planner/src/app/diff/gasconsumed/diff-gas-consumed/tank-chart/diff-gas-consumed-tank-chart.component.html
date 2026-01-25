@@ -1,89 +1,115 @@
 <div class="my-2">
-    <div>
-        <strong class="text-start">{{ gasName }}</strong>
+  <div>
+    <strong class="text-start">{{ gasName }}</strong>
+  </div>
+  <div style="position: relative">
+    <div class="difference-text">
+      <small><strong>Difference</strong></small>
     </div>
-    <div style="position: relative">
-        <div class="difference-text">
-            <small><strong>Difference</strong></small>
-        </div>
-        <div class="d-flex flex-row justify-content-around">
-            <small><strong class="text-start text-muted">{{ profileDiff.profileATitle }}</strong></small>
-            <small><strong class="text-start text-muted">{{ profileDiff.profileBTitle }}</strong></small>
-        </div>
+    <div class="d-flex flex-row justify-content-around">
+      <small><strong class="text-start text-muted">{{ profileDiff.profileATitle }}</strong></small>
+      <small><strong class="text-start text-muted">{{ profileDiff.profileBTitle }}</strong></small>
     </div>
-    <div style="position: relative">
-        <div class="difference-text">
-            <small>
-                <fa-icon *ngIf="gasDiff.gasRemainingDifference > 0" [icon]="faArrowLeft" class="text-success"/>
-                <strong *ngIf="gasDiff.gasRemainingDifference != 0">
-                    {{ gasDiff.absoluteRemainingDifference | number:'1.0-0' }}
-                </strong>
-                <fa-icon *ngIf="gasDiff.gasRemainingDifference < 0" [icon]="faArrowRight" class="text-success"/>
-                <fa-icon *ngIf="gasDiff.gasRemainingDifference === 0" [icon]="faMinus"/>
-            </small>
-        </div>
-        <div class="d-flex flex-row z-index-1">
-            <div class="legend-bars rounded bg-primary m-1"></div>
-            <div class="d-flex flex-row justify-content-between w-100">
-                <small *ngIf="gasTotalProfileA != 0 else missingTank" class="text-start text-muted">
-                    Gas remaining:
-                    {{ gasDiff.remainingProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
-                </small>
-                <small *ngIf="gasTotalProfileB != 0 else missingTank" class="text-end text-muted">
-                    Gas remaining:
-                    {{ gasDiff.remainingProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
-                </small>
-            </div>
-        </div>
+  </div>
+  <div style="position: relative">
+    <div class="difference-text">
+      <small>
+        @if (gasDiff.gasRemainingDifference > 0) {
+          <fa-icon [icon]="faArrowLeft" class="text-success"/>
+        }
+        @if (gasDiff.gasRemainingDifference != 0) {
+          <strong>
+            {{ gasDiff.absoluteRemainingDifference | number:'1.0-0' }}
+          </strong>
+        }
+        @if (gasDiff.gasRemainingDifference < 0) {
+          <fa-icon [icon]="faArrowRight" class="text-success"/>
+        }
+        @if (gasDiff.gasRemainingDifference === 0) {
+          <fa-icon [icon]="faMinus"/>
+        }
+      </small>
     </div>
-    <div style="position: relative">
-        <div class="difference-text">
-            <small>
-                <fa-icon *ngIf="gasDiff.gasReserveDifference > 0" [icon]="faArrowLeft" class="text-success"/>
-                <strong *ngIf="gasDiff.gasReserveDifference != 0">
-                    {{ gasDiff.absoluteReserveDifference | number:'1.0-0' }}
-                </strong>
-                <fa-icon *ngIf="gasDiff.gasReserveDifference < 0" [icon]="faArrowRight" class="text-success"/>
-                <fa-icon *ngIf="gasDiff.gasReserveDifference === 0" [icon]="faMinus"/>
-            </small>
-        </div>
-        <div class="d-flex flex-row">
-            <div class="legend-bars rounded bg-warning m-1"></div>
-            <div class="d-flex flex-row justify-content-between w-100">
-                <small *ngIf="gasTotalProfileA != 0 else whiteSpace" class="text-start text-muted">
-                    Reserve:
-                    {{ gasReserveProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
-                </small>
-                <small *ngIf="gasTotalProfileB != 0" class="text-end text-muted">
-                    Reserve:
-                    {{ gasReserveProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
-                </small>
-            </div>
-        </div>
+    <div class="d-flex flex-row z-index-1">
+      <div class="legend-bars rounded bg-primary m-1"></div>
+      <div class="d-flex flex-row justify-content-between w-100">
+        @if (gasTotalProfileA != 0) {
+          <small class="text-start text-muted">
+            Gas remaining:
+            {{ gasDiff.remainingProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
+          </small>
+        } @else {
+          <small class="text-start text-muted">
+            Not available
+          </small>
+        }
+        @if (gasTotalProfileB != 0) {
+          <small class="text-end text-muted">
+            Gas remaining:
+            {{ gasDiff.remainingProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
+          </small>
+        } @else {
+          <small class="text-start text-muted">
+            Not available
+          </small>
+        }
+      </div>
     </div>
-    <div class="progress gas-bar mt-1 mb-2">
-        <div class="reserve-bar rounded-progress"></div>
-        <div class="combined_wrapper" [ngClass]="{'flip': gasDiff.remainingRight }" >
-            <div role="progressbar"
-                 class="progress-bar rounded-progress bg-primary"
-                 [style.width]="gasDiff.gasRemainingPercentageDifference + '%'">
-                {{ gasDiff.absoluteRemainingDifference | number:'1.0-0' }}</div>
-        </div>
-        <div class="combined_wrapper" [ngClass]="{'flip': gasDiff.reserveRight }" >
-            <div role="progressbar"
-                 class="progress-bar rounded-progress bg-warning"
-                 [style.width]="gasDiff.gasReservePercentageDifference + '%'">
-                {{ gasDiff.absoluteReserveDifference | number:'1.0-0' }}</div>
-        </div>
+  </div>
+  <div style="position: relative">
+    <div class="difference-text">
+      <small>
+        @if (gasDiff.gasReserveDifference > 0) {
+          <fa-icon [icon]="faArrowLeft" class="text-success"/>
+        }
+        @if (gasDiff.gasReserveDifference != 0) {
+          <strong>
+            {{ gasDiff.absoluteReserveDifference | number:'1.0-0' }}
+          </strong>
+        }
+        @if (gasDiff.gasReserveDifference < 0) {
+          <fa-icon [icon]="faArrowRight" class="text-success"/>
+        }
+        @if (gasDiff.gasReserveDifference === 0) {
+          <fa-icon [icon]="faMinus"/>
+        }
+      </small>
     </div>
+    <div class="d-flex flex-row">
+      <div class="legend-bars rounded bg-warning m-1"></div>
+      <div class="d-flex flex-row justify-content-between w-100">
+        @if (gasTotalProfileA != 0) {
+          <small class="text-start text-muted">
+            Reserve:
+            {{ gasReserveProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
+          </small>
+        } @else {
+          <small></small>
+        }
+        @if (gasTotalProfileB != 0) {
+          <small class="text-end text-muted">
+            Reserve:
+            {{ gasReserveProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
+          </small>
+        }
+      </div>
+    </div>
+  </div>
+  <div class="progress gas-bar mt-1 mb-2">
+    <div class="reserve-bar rounded-progress"></div>
+    <div class="combined_wrapper" [ngClass]="{'flip': gasDiff.remainingRight }" >
+      <div role="progressbar"
+        class="progress-bar rounded-progress bg-primary"
+        [style.width]="gasDiff.gasRemainingPercentageDifference + '%'">
+      {{ gasDiff.absoluteRemainingDifference | number:'1.0-0' }}</div>
+    </div>
+    <div class="combined_wrapper" [ngClass]="{'flip': gasDiff.reserveRight }" >
+      <div role="progressbar"
+        class="progress-bar rounded-progress bg-warning"
+        [style.width]="gasDiff.gasReservePercentageDifference + '%'">
+      {{ gasDiff.absoluteReserveDifference | number:'1.0-0' }}</div>
+    </div>
+  </div>
 </div>
 
 
-<ng-template #missingTank>
-    <small class="text-start text-muted">
-        Not available
-    </small>
-</ng-template>
-<ng-template #whiteSpace>
-    <small></small>
-</ng-template>

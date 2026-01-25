@@ -53,7 +53,7 @@ export const routes: Routes = [
     { path: KnownViews.redundancies, component: RedundanciesComponent },
     { path: KnownViews.blender, component: GasBlenderComponent },
     { path: KnownViews.learn, component: LearnComponent },
-    { path: `${KnownViews.help}/:document/:anchor`, component: HelpComponent }, // TODO fix Standard gases route
+    { path: `${KnownViews.help}/:document/:anchor`, component: HelpComponent },
     { path: `${KnownViews.help}/:document`, component: HelpComponent },
     { path: KnownViews.help, redirectTo: `${KnownViews.help}/application`, pathMatch: 'full' },
     {

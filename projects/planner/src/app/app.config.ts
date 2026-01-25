@@ -110,7 +110,7 @@ import { ShareDiveService } from './shared/ShareDiveService';
 import { CardHeaderComponent } from './card-header/card-header.component';
 import { AppFooterComponent } from './footer/footer.component';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 const ANGULAR_MODULES = [
     CommonModule,
@@ -243,7 +243,7 @@ export const CONFIG = {
     providers: [
         ...SERVICES,
         provideAnimations(),
-        provideRouter(routes),
+        provideRouter(routes, withComponentInputBinding()),
     ],
     bootstrap: []
 };

@@ -12,7 +12,7 @@ module.exports = function (config) {
       require('karma-verbose-reporter'),
       require('karma-junit-reporter'),
       require('karma-coverage'),
-      
+
     ],
     client: {
       jasmine: {
@@ -27,7 +27,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../coverage/planner'),
+      dir: require('path').join(__dirname, 'coverage/planner'),
       subdir: '.',
       reporters: [
           'verbose',
@@ -36,7 +36,7 @@ module.exports = function (config) {
       ]
     },
     junitReporter: {
-        outputDir: '../../test-results/planner', // results will be saved as $outputDir/$browserName.xml
+        outputDir: 'test-results/planner', // results will be saved as $outputDir/$browserName.xml
         suite: 'scuba-physics'
     },
     reporters: ['progress', 'kjhtml', 'junit'],

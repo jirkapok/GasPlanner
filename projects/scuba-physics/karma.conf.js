@@ -11,7 +11,6 @@ module.exports = function (config) {
       require('karma-jasmine-html-reporter'),
       require('karma-junit-reporter'),
       require('karma-coverage'),
-      
     ],
     client: {
       jasmine: {
@@ -34,7 +33,7 @@ module.exports = function (config) {
       ]
     },
     junitReporter: {
-        outputDir: '../../test-results/scuba-physic', // results will be saved as $outputDir/$browserName.xml
+        outputDir: 'test-results/scuba-physic', // results will be saved as $outputDir/$browserName.xml
         suite: 'scuba-physics'
     },
     reporters: ['progress', 'kjhtml', 'junit'],

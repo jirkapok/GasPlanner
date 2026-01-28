@@ -12,7 +12,6 @@ module.exports = function (config) {
       require('karma-verbose-reporter'),
       require('karma-junit-reporter'),
       require('karma-coverage'),
-
     ],
     client: {
       jasmine: {
@@ -27,7 +26,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, 'coverage/planner'),
+      dir: require('path').join(__dirname, '../../coverage/planner'),
       subdir: '.',
       reporters: [
           'verbose',
